@@ -1,0 +1,94 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2011 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 1.1 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is Vulnerability Manager.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service.waf;
+
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+
+/**
+ * @author bbeverly
+ * @author mcollins
+ * 
+ */
+public class SnortGenerator extends RealTimeProtectionGenerator {
+
+	// Intended use:
+	// STR_FIND_PARAM_START + param_name + STR_FIND_PARAM_MID + target_payload +
+	// STR_FIND_END
+	public static final String STR_FIND_PARAM_START = "/(\\n|^|\\?|\\&)(";
+	public static final String STR_FIND_PARAM_MID = "=[^\\&|\\n]*(";
+	public static final String STR_FIND_PARAM_END = "))/i\"";
+	
+	public SnortGenerator(WafRuleDao wafRuleDao) {
+		this.wafRuleDao = wafRuleDao;
+		this.defaultDirective = "drop";
+	}
+	
+	@Override
+	public String[] getSupportedVulnerabilityTypes() {
+		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
+				GenericVulnerability.CWE_SQL_INJECTION, 
+				GenericVulnerability.CWE_DIRECT_REQUEST,
+				GenericVulnerability.CWE_PATH_TRAVERSAL,
+				GenericVulnerability.CWE_XPATH_INJECTION,
+				GenericVulnerability.CWE_DIRECTORY_INDEXING,
+				GenericVulnerability.CWE_LDAP_INJECTION,
+				GenericVulnerability.CWE_OS_COMMAND_INJECTION,
+				GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
+				GenericVulnerability.CWE_EVAL_INJECTION };
+	}
+	
+	@Override
+	protected String generateRuleWithParameter(String uri, String action, String id,
+			String payload, String parameter, String message) {
+		payload = payload.replace(";", "\\;");
+		
+		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:\""
+			+ uri + "\"; msg:\"" + message + "\"; flow: to_server,established; pcre:\""
+			+ STR_FIND_PARAM_START + parameter + STR_FIND_PARAM_MID + payload
+			+ STR_FIND_PARAM_END
+			+ "; classtype:Web-application-attack; sid:" + id + ";)";
+	}
+	
+	@Override
+	protected String generateRuleForExactUrl(String uri, String action,
+			String id, String payload, String message) {
+		payload = payload.replace(";", "\\;");
+		
+		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (pcre:\"/"
+			+ pcreRegexEscape(uri) + "(" 
+			+ payload + ")/i\";msg:\"" + message + "\"; flow: to_server,established;"
+			+ "classtype:Web-application-attack; sid:" + id + ";)";
+	}
+
+	@Override
+	protected String generateRuleWithPayloadInUrl(String uri, String action,
+			String id, String payload, String message) {
+		payload = payload.replace(";", "\\;");
+		
+		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:\""
+			+ uri + "\"; msg:\"" + message + "\"; flow: to_server,established; pcre:\"/("
+			+ payload + ")/i\"; classtype:Web-application-attack; sid:" + id + ";)";
+	}
+}

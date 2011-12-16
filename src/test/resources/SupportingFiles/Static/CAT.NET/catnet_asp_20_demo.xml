@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Analysis>
+    <AnalysisEngineVersion>1.0.3455.36250</AnalysisEngineVersion>
+    <StartTimeStamp>Friday, November 06, 2009 7:22:22 AM</StartTimeStamp>
+    <StopTimeStamp>Friday, November 06, 2009 7:22:27 AM</StopTimeStamp>
+    <ElapsedTime>00:00:04.4914491</ElapsedTime>
+    <User>DENIMGROUP\jraim</User>
+    <DataFlowSuperGraph>
+      <Nodes>7923</Nodes>
+      <Edges>9186</Edges>
+    </DataFlowSuperGraph>
+    <Targets>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\WindowsService\bin\Debug\TheAppService.exe</Target>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\Common\bin\Debug\Common.dll</Target>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\DataTier\bin\Debug\DataTier.dll</Target>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\UnitTest\bin\Debug\UnitTest.dll</Target>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\BusinessTier\bin\Debug\BusinessTier.dll</Target>
+      <Target>C:\Workspaces\myApps\TheApp\Dev\Web\bin\Web.dll</Target>
+    </Targets>
+  </Analysis>
+  <Rules>
+    <Rule>
+      <Name>Process Command Execution</Name>
+      <Identifier>ACESEC02</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>File Canonicalization</Name>
+      <Identifier>ACESEC03</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>Exception Information</Name>
+      <Identifier>ACESEC04</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>LDAP Injection</Name>
+      <Identifier>ACESEC08</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>XPath Injection</Name>
+      <Identifier>ACESEC07</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>SQL Injection</Name>
+      <Identifier>ACESEC01</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>Redirection to User Controlled Site</Name>
+      <Identifier>ACESEC06</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>Cross-Site Scripting</Name>
+      <Identifier>ACESEC05</Identifier>
+      <TotalResults>2</TotalResults>
+      <Results>
+        <Result>
+          <Identifier>f643295e-b0f4-450d-bef7-b5fc51837ea6</Identifier>
+          <ResulstHash>lhKN/PV4ewPKg8emXW2zkYY7Iok=</ResulstHash>
+          <Color>2</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.HttpRequest}get_QueryString()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		UserDetail.aspx.vb:24 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		UserDetail.aspx.vb:39.</ProblemDescription>
+          <Transformations>
+            <Origin line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from HttpRequest.get_QueryString</ActualInputVariable>
+              <Method>System.Collections.Specialized.NameValueCollection.get_Item</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from NameValueCollection.get_Item</ActualInputVariable>
+              <Method>System.Web.Security.Membership.GetUser</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <PropertyIndirection line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>Web.UserDetail.userUnderEdit</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from Membership.GetUser</ActualInputVariable>
+            </PropertyIndirection>
+            <CallResult line="39" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>litUserName.Text = userUnderEdit.UserName</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>Web.UserDetail.userUnderEdit</InputVariable>
+              <ActualInputVariable>Web.UserDetail.userUnderEdit</ActualInputVariable>
+              <Method>System.Web.Security.MembershipUser.get_UserName</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="39" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>litUserName.Text = userUnderEdit.UserName</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from MembershipUser.get_UserName</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Literal.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>51b560b3-5d45-441d-a9ac-7a9f76e4b791</Identifier>
+          <ResulstHash>bqk3BTxqTLHGEDEtwb26pILnWD0=</ResulstHash>
+          <Color>2</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.HttpRequest}get_QueryString()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		UserDetail.aspx.vb:24 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		UserDetail.aspx.vb:40.</ProblemDescription>
+          <Transformations>
+            <Origin line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from HttpRequest.get_QueryString</ActualInputVariable>
+              <Method>System.Collections.Specialized.NameValueCollection.get_Item</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from NameValueCollection.get_Item</ActualInputVariable>
+              <Method>System.Web.Security.Membership.GetUser</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <PropertyIndirection line="24" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>userUnderEdit = Membership.GetUser(Request.QueryString("UserName"))</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>Web.UserDetail.userUnderEdit</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from Membership.GetUser</ActualInputVariable>
+            </PropertyIndirection>
+            <CallResult line="40" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>litEmailAddress.Text = userUnderEdit.Email</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>Web.UserDetail.userUnderEdit</InputVariable>
+              <ActualInputVariable>Web.UserDetail.userUnderEdit</ActualInputVariable>
+              <Method>System.Web.Security.MembershipUser.get_Email</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="40" file="C:\Workspaces\myApps\TheApp\Dev\Web\admin\UserDetail.aspx.vb">
+              <StatementMethod>Web.UserDetail.Page_Load</StatementMethod>
+              <Statement>litEmailAddress.Text = userUnderEdit.Email</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from MembershipUser.get_Email</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Literal.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+      </Results>
+    </Rule>
+  </Rules>
+</Report>

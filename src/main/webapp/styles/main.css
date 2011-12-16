@@ -1,0 +1,534 @@
+* {
+	margin: 0;
+}
+
+html {
+	background: #43678b url(../images/hdr-bg-repeat.png) top left repeat-x;
+}
+
+body {
+	color: #333;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 90%;
+}
+
+.clear {
+	clear: both;
+}
+
+.errors {
+	color: red;
+}
+
+.suggest_link {
+	background-color: #FFFFFF;
+	padding: 2px 6px 2px 6px;
+}
+
+.suggest_link_over {
+	background-color: #3366CC;
+	padding: 2px 6px 2px 6px;
+}
+
+.search_suggest {
+	position: absolute; 
+	background-color: #FFFFFF; 
+	text-align: left; 
+	border: 1px solid #000000;			
+}
+	
+#wrapper {
+	min-height: 91%;
+	height: auto !important;
+	height: 91%;
+	background-color: #effbff;
+}
+
+#main {
+	background: url(../images/hdr-bg-repeat.png) top left repeat-x;
+	text-align: left;
+}
+
+#logoBar {
+}
+
+#logo {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+}
+
+#menu {
+	padding-top: 41px;
+	padding-bottom: 43px;
+	background: url(../images/main-top-gradient.png) left bottom repeat-x;
+}
+
+#menu a {
+	color:#fff;
+	text-decoration:none;
+}
+
+#menu table {
+	margin-left: 380px;
+	color: #fff;
+	width: 460px;
+}
+
+#menu table tr td {
+	height: 32px;
+	padding:0 0 0 5px; 
+	background: url(../images/btn-bg-out.png) left center repeat-x;
+	text-align:center;
+}
+
+#menu table tr td a {
+	color: #fff;
+	font-weight: bold;
+	font-size: 96%;
+}
+
+#menu table tr td:hover {
+	background: url(../images/btn-bg-over.png) right center repeat-x;
+}
+
+body#apps #tab-apps,
+body#wafs #tab-wafs,
+body#reports #tab-reports,
+body#config #tab-config {
+	background: url(../images/btn-bg-over.png) right center repeat-x;
+}
+
+body#apps #tab-apps a,
+body#wafs #tab-wafs a,
+body#reports #tab-reports a,
+body#config #tab-config a {
+	color: #43678b;
+	
+}
+
+body#apps #tab-apps a:hover,
+body#wafs #tab-wafs a:hover,
+body#reports #tab-reports a:hover,
+body#config #tab-config a:hover {
+	
+	z-index:2;
+}
+
+#logout {
+	color: #43678b;
+}
+
+#logout a {
+	color: #43678b;
+}
+
+#main-inner {
+	padding: 10px 14px 0;
+}
+
+#main-inner .corner {
+	background-image: url(../images/main-corners.png);
+	height: 10px;
+	width: 10px;
+	position: relative;
+}
+
+#main-inner .corners {
+	height: 10px;
+}
+
+#main-inner .corners .center {
+	height: 10px;
+	background-color: #EFFBFF;
+	margin: 0 10px;
+}
+
+#main-inner .top-corners .left {
+	background-position: 0 0;
+	float: left;
+}
+
+#main-inner .top-corners  .right {
+	background-position: 0 -10px;
+	float: right;
+}
+
+#main-inner .bottom-corners .left {
+	background-position: 0 -20px;
+	float: left;
+}
+
+#main-inner .bottom-corners  .right {
+	background-position: 0 -30px;
+	float: right;
+}
+
+#main-content {
+	padding-top: 114px;
+	background-color: #ffffff;
+	padding: 2px 15px 30px;
+	min-height: 450px;
+	font-size: .9em;
+}
+
+#main-content h2 {
+	font-size: 1.7em;
+	padding-bottom: 15px;
+}
+
+#main-content h3 {
+	font-size: 1.25em;
+	font-weight: bold;
+	padding-top: 25px;
+	padding-bottom: 10px;
+}
+
+#main-content .top {
+	padding-top: 43px;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
+ul#breadcrumbs {
+	float: left;
+	position: relative;
+	font-size: 12px;
+	font-weight: bold;
+	color: #5C8998;
+	margin-bottom: 15px;
+	margin-left: -15px;
+	padding-left: 15px;
+	background: url(../images/breadcrumbs-bg.gif) 0 1px no-repeat;
+}
+
+ul#breadcrumbs li {
+	float: left;
+	postion: relative;
+	list-style-type: square;
+	list-style-position: inside;
+	margin-left: 8px;
+}
+
+ul#breadcrumbs li.first {
+	list-style-type: none;
+	margin-left: 0;
+}
+
+#wrapper,#footer div {
+	width: 100%;
+}
+
+#footer {
+	padding-top: 40px;
+	background: #43678b;
+}
+
+#footer div#poweredBy {
+	width:890px;
+	text-align: center;
+	position:relative; 
+	color:#FFFFFF;
+	padding-bottom:5px; 
+	font-size:12px;
+	font-weight:bold;
+}
+
+#footer div#bottomLogo{
+	width:890px;
+	background: #43678b;
+	padding-top:5px;
+	position: relative;
+	text-align: center;
+}
+
+#footer div#copyright {
+	position:relative; 
+	color:#FFFFFF; 
+	padding-bottom:10px; 
+	font-size:8px; 
+	padding-right:5px; 
+	bottom:0%; 
+	right:0%; 
+	width:845px; 
+	text-align:right;
+}
+	                                                                                                                                            
+a {
+	color: #43678b;
+}
+
+a:hover {
+	color: #e49518;
+}
+
+a.sortheader {
+	color: #ffffff;	
+}
+
+/**
+	Non-Decorator Styling
+**/
+.label {
+	font-weight: bold;
+}
+
+.inputValue {
+	padding-left: 10px;
+	padding-right: 20px;
+	white-space: nowrap;
+}
+
+.subHeader {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.short {
+	width: 75px;
+}
+
+.medium {
+	width: 125px;
+}
+
+.long {
+	width: 200px;
+}
+
+ul.squareList li {
+	list-style-type: square;
+	padding: 0 0 15px 5px;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+ul.wafRuleList {
+	padding-left: 15px;
+}
+
+ul.wafRuleList li {
+	list-style-type: disc;
+	padding: 0 0 15px 5px;
+}
+
+/**
+	Data Table
+ **/
+table.dataTable {
+	border: 1px;
+}
+
+table.dataTable td {
+	padding-top: 10px;
+}
+
+/**
+	Formatted Table
+ **/
+table.formattedTable thead tr {
+	background-color: #43678b;
+	color: #fff;
+}
+
+table.formattedTable thead tr th {
+	border: 1px solid black;
+	border-left-style: none;
+	border-right-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.formattedTable thead tr th.first {
+	border: 1px solid black;
+	border-right-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.formattedTable thead tr th.last {
+	border: 1px solid black;
+	border-left-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.formattedTable tr.bodyRow {
+	background-color: #efefef;
+}
+
+table.formattedTable tr.bodySubRow {
+	background-color: #fff;
+}
+
+table.formattedTable tr.bodyRow td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.formattedTable tr.bodySubRow td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.formattedTable td.mainEntry {
+	font-weight: bold;
+	color: #38616d;
+}
+
+table.formattedTable td.subEntry {
+	font-weight: bold;
+}
+
+table.formattedTable tr.bodyRow td.details {
+	border: 1px solid black; 
+	border-right-style: none;
+}
+
+table.formattedTable tr.bodySubRow td.details {
+	border: 1px solid black; 
+	border-right-style: none;
+}
+
+table.formattedTable tr.footer {
+
+}
+
+table.formattedTable tr.footer td {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.formattedTable tr.footer td.first {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.formattedTable tr.footer td.last {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.formattedTable tr.footer a {
+
+}
+
+table.formattedTable tr.footer td.pagination div.pager span {
+	color: #A3CBD9;
+}
+
+table.formattedTable tr.footer td.pagination div.pager span.active {
+	color: #000;
+	font-weight: bold;
+}
+
+/**
+	Filtered Table
+ **/
+table.filteredTable thead tr.darkBackground {
+	background-color: #38616d;
+	color: #fff;
+}
+
+table.filteredTable thead tr th {
+	border: 1px solid black;
+	border-left-style: none;
+	border-right-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.filteredTable thead tr th.first {
+	border: 1px solid black;
+	border-right-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.filteredTable thead tr th.last {
+	border: 1px solid black;
+	border-left-style: none;
+	padding: 2px 7px;
+	text-align: center;
+	font-weight: bold;
+}
+
+table.filteredTable tr.bodyRow {
+	background-color: #efefef;
+}
+
+table.filteredTable tr.bodySubRow {
+	background-color: #fff;
+}
+
+table.filteredTable tr.bodyRow td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.bodySubRow td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.filteredTable td.mainEntry {
+	font-weight: bold;
+	color: #38616d;
+}
+
+table.filteredTable td.subEntry {
+	font-weight: bold;
+}
+
+table.filteredTable tr.bodyRow td.details {
+	border: 1px solid black; 
+	border-right-style: none;
+}
+
+table.filteredTable tr.bodySubRow td.details {
+	border: 1px solid black; 
+	border-right-style: none;
+}
+
+table.filteredTable tr.footer {
+
+}
+
+table.filteredTable tr.footer td {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.footer td.first {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.footer td.last {
+	border-style: none;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.footer a {
+
+}
+
+table.filteredTable tr.footer td.pagination div.pager span {
+	color: #A3CBD9;
+}
+
+table.filteredTable tr.footer td.pagination div.pager span.active {
+	color: #000;
+	font-weight: bold;
+}

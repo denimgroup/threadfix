@@ -1,0 +1,352 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2011 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 1.1 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is Vulnerability Manager.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.data.entities;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
+
+import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+
+@Entity
+@Table(name = "Application")
+public class Application extends AuditableEntity {
+
+	private static final long serialVersionUID = 1175222046579045669L;
+
+	public static final int NAME_LENGTH = 60;
+	public static final int URL_LENGTH = 255;
+	
+	@NotEmpty(message = "{errors.required}")
+	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
+	private String name;
+
+	@URL(message = "{errors.url}")
+	@NotEmpty(message = "{errors.required}")
+	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
+	private String url;
+	
+	@Size(max = 255, message = "{errors.maxlength} 255.")
+	private String projectRoot;
+
+	private Organization organization;
+	private Waf waf;
+	
+	@Size(max = 50, message = "{errors.maxlength} 50.")
+	private String projectName;
+	
+	@Size(max = 25, message = "{errors.maxlength} 25.")
+	private String projectId;
+	
+	@Size(max = 50, message = "{errors.maxlength} 50.")
+	private String component;
+	private DefectTracker defectTracker;
+	
+	@Size(max = 50, message = "{errors.maxlength} 50.")
+	private String userName;
+	
+	@Size(max = 50, message = "{errors.maxlength} 50.")
+	private String password;
+	private List<Defect> defectList;
+
+	private List<ApplicationChannel> channelList;
+	private List<Scan> scans;
+	private List<Vulnerability> vulnerabilities;
+
+	// these are here so we don't generate them more than we need to
+	private List<Integer> reportList = null;
+	private List<Finding> findingList = null;
+	private List<ApplicationChannel> uploadableChannels = null;
+
+	@Column(length = NAME_LENGTH, nullable = false)
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(length = 255)
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Column(length = 50)
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	@Column(length = 25)
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
+	@Column(length = 50, nullable = true)
+	public String getComponent() {
+		return component;
+	}
+
+	public void setComponent(String component) {
+		this.component = component;
+	}
+	
+	@Column(length = 50)
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	@Column(length = 50)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "defectTrackerId")
+	public DefectTracker getDefectTracker() {
+		return defectTracker;
+	}
+
+	public void setDefectTracker(DefectTracker defectTracker) {
+		this.defectTracker = defectTracker;
+	}
+
+	@OneToMany(mappedBy = "application")
+	public List<Defect> getDefectList() {
+		return defectList;
+	}
+
+	public void setDefectList(List<Defect> defectList) {
+		this.defectList = defectList;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "organizationId")
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "wafId")
+	public Waf getWaf() {
+		return waf;
+	}
+
+	public void setWaf(Waf waf) {
+		this.waf = waf;
+	}
+
+	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+	public List<ApplicationChannel> getChannelList() {
+		return channelList;
+	}
+
+	public void setChannelList(List<ApplicationChannel> channelList) {
+		this.channelList = channelList;
+	}
+
+	@OneToMany(mappedBy = "application")
+	@OrderBy("importTime DESC")
+	public List<Scan> getScans() {
+		return scans;
+	}
+
+	public void setScans(List<Scan> scans) {
+		this.scans = scans;
+	}
+
+	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+	@OrderBy("genericSeverity, genericVulnerability")
+	public List<Vulnerability> getVulnerabilities() {
+		return vulnerabilities;
+	}
+
+	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
+		this.vulnerabilities = vulnerabilities;
+	}
+	
+	@Column(length = 256)
+	public String getProjectRoot() {
+		return projectRoot;
+	}
+	
+	public void setProjectRoot(String projectRoot) {
+		this.projectRoot = projectRoot;
+	}
+	
+	/*
+	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
+	 */
+	@Transient
+	public List<Integer> getVulnerabilityReport() {
+		if (reportList != null) {
+			return reportList;
+		}
+
+		List<Vulnerability> vulnList = getVulnerabilities();
+
+		if (vulnList == null) {
+			return null;
+		}
+
+		reportList = new ArrayList<Integer>();
+		for (int i = 0; i < 6; i++) {
+			reportList.add(0);
+		}
+
+		String name = null;
+
+		for (Vulnerability vulnerability : getVulnerabilities()) {
+			if (vulnerability != null && vulnerability.isActive() && !vulnerability.getIsFalsePositive()) {
+				if (vulnerability.getGenericSeverity() != null) {
+					name = vulnerability.getGenericSeverity().getName();
+	
+					if (name.equals("Info")) {
+						reportList.set(0, reportList.get(0) + 1);
+					} else if (name.equals("Low")) {
+						reportList.set(1, reportList.get(1) + 1);
+					} else if (name.equals("Medium")) {
+						reportList.set(2, reportList.get(2) + 1);
+					} else if (name.equals("High")) {
+						reportList.set(3, reportList.get(3) + 1);
+					} else if (name.equals("Critical")) {
+						reportList.set(4, reportList.get(4) + 1);
+					}
+				}
+
+				reportList.set(5, reportList.get(5) + 1);
+			}
+		}
+
+		return reportList;
+	}
+
+	@Transient
+	public List<Finding> getFindingList() {
+		if (findingList != null)
+			return findingList;
+		List<Finding> findings = new ArrayList<Finding>();
+		for (Vulnerability vuln : getVulnerabilities()) {
+			for (Finding finding : vuln.getFindings()) {
+				if (finding != null) {
+					findings.add(finding);
+				}
+			}
+		}
+		findingList = findings;
+		return findings;
+	}
+	
+	@Transient
+	public List<Vulnerability> getActiveVulnerabilities() {
+		List<Vulnerability> result = new ArrayList<Vulnerability>();
+		for(Vulnerability vuln : vulnerabilities) {
+			if(vuln.isActive() && !vuln.getIsFalsePositive()){
+				result.add(vuln);
+			}
+		}
+		return result;
+	}
+	
+	@Transient
+	public List<Vulnerability> getClosedVulnerabilities() {
+		List<Vulnerability> result = new ArrayList<Vulnerability>();
+		for(Vulnerability vuln : vulnerabilities) {
+			if(!vuln.isActive()){
+				result.add(vuln);
+			}
+		}
+		return result;
+	}
+	
+	@Transient
+	public List<ApplicationChannel> getUploadableChannels() {
+		
+		if (uploadableChannels != null)
+			return uploadableChannels;
+		
+		List<ApplicationChannel> normalList = getChannelList();
+		if (normalList == null || normalList.size() == 0)
+			return new ArrayList<ApplicationChannel>();
+		
+		Set<String> doNotIncludeSet = new HashSet<String>();
+		doNotIncludeSet.add(ChannelType.MANUAL);
+		doNotIncludeSet.add(ChannelType.SENTINEL);
+		
+		if (!ChannelImporterFactory.isFortifyChannelImporterDefined())
+			doNotIncludeSet.add(ChannelType.FORTIFY);
+		
+		List<ApplicationChannel> returnList = new ArrayList<ApplicationChannel>();
+	
+		for (ApplicationChannel channel : normalList) {
+			if (channel != null && channel.getChannelType() != null 
+					&& channel.getChannelType().getName() != null
+					&& !doNotIncludeSet.contains(channel.getChannelType().getName())) {
+				returnList.add(channel);
+			}
+		}
+		uploadableChannels = returnList;
+		return returnList;
+	}
+	
+}

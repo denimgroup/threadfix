@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<w3afrun start="1309962285" startstr="Wed Jul 06 09:24:45 2011" xmloutputversion="1.00">
+    <scaninfo target="http://192.168.1.20/demo/">
+        <audit>
+            <plugin name="xpath"/>
+            <plugin name="xss"/>
+            <plugin name="osCommanding"/>
+            <plugin name="blindSqli"/>
+            <plugin name="xsrf"/>
+            <plugin name="formatString"/>
+            <plugin name="sqli"/>
+            <plugin name="LDAPi"/>
+            <plugin name="eval"/>
+            <plugin name="responseSplitting"/>
+        </audit>
+        <bruteforce/>
+        <grep>
+            <plugin name="httpAuthDetect"/>
+            <plugin name="error500"/>
+            <plugin name="collectCookies"/>
+        </grep>
+        <evasion/>
+        <output>
+            <plugin name="xmlFile">
+                <config parameter="fileName" value="output-w3af.xml"/>
+            </plugin>
+            <plugin name="textFile">
+                <config parameter="verbose" value="True"/>
+                <config parameter="fileName" value="output-w3af.txt"/>
+                <config parameter="httpFileName" value="output-http.txt"/>
+                <config parameter="showCaller" value="False"/>
+            </plugin>
+            <plugin name="console">
+                <config parameter="verbose" value="False"/>
+            </plugin>
+        </output>
+        <mangle/>
+        <discovery>
+            <plugin name="fingerprint_WAF"/>
+            <plugin name="detectTransparentProxy"/>
+            <plugin name="detectReverseProxy"/>
+            <plugin name="webSpider">
+                <config parameter="onlyForward" value="True"/>
+                <config parameter="followRegex" value=".*"/>
+                <config parameter="ignoreRegex" value=""/>
+            </plugin>
+            <plugin name="urlFuzzer"/>
+            <plugin name="findBackdoor"/>
+            <plugin name="afd"/>
+            <plugin name="allowedMethods"/>
+        </discovery>
+    </scaninfo>
+    <vulnerability id="[3893]" method="POST" name="XPATH injection vulnerability" plugin="xpath" severity="Medium" url="http://192.168.1.20/demo/XPathInjection2.php" var="username">
+        XPATH injection was found at: &quot;http://192.168.1.20/demo/XPathInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=d'z&quot;0&amp;password=FrAmE30.&quot;. The modified parameter was &quot;username&quot;. This vulnerability was found in the request with id 3893.
+    </vulnerability>
+    <vulnerability id="[3894]" method="POST" name="XPATH injection vulnerability" plugin="xpath" severity="Medium" url="http://192.168.1.20/demo/XPathInjection2.php" var="password">
+        XPATH injection was found at: &quot;http://192.168.1.20/demo/XPathInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=John8212&amp;password=d'z&quot;0&quot;. The modified parameter was &quot;password&quot;. This vulnerability was found in the request with id 3894.
+    </vulnerability>
+    <vulnerability id="[3956]" method="POST" name="Cross site scripting vulnerability" plugin="xss" severity="Medium" url="http://192.168.1.20/demo/EvalInjection2.php" var="command">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/EvalInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;command=&lt;ScRIPt+SrC=http://YNwU/x.js&gt;&lt;/ScRIPt&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 3956.
+    </vulnerability>
+    <vulnerability id="[4021]" method="POST" name="Cross site scripting vulnerability" plugin="xss" severity="Medium" url="http://192.168.1.20/demo/XSS-reflected2.php" var="username">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/XSS-reflected2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=&lt;SCrIPT&gt;alert(&quot;CARP&quot;)&lt;/SCrIPT&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 4021.
+    </vulnerability>
+    <vulnerability id="[4044]" method="POST" name="Cross site scripting vulnerability" plugin="xss" severity="Medium" url="http://192.168.1.20/demo/XSS-cookie.php" var="cookie">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/XSS-cookie.php&quot;, using HTTP method POST. The sent post-data was: &quot;cookie=&lt;SCrIPT&gt;alert(&quot;xJjP&quot;)&lt;/SCrIPT&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 4044.
+    </vulnerability>
+    <vulnerability id="[4078, 4100]" method="POST" name="Permanent cross site scripting vulnerability" plugin="xss" severity="High" url="http://192.168.1.20/demo/XSS-cookie.php" var="cookie">
+        Permanent Cross Site Scripting was found at: http://192.168.1.20/demo/XSS-cookie.php . Using method: POST. The XSS was sent to the URL: http://192.168.1.20/demo/XSS-cookie.php. The sent post data is: &quot;cookie=&lt;ScRIpT&gt;fake_alert(String.fromCharCode(VcRd))&lt;/SCriPT&gt;&quot; . This vulnerability was found in the requests with ids 4078 and 4100.
+    </vulnerability>
+    <vulnerability id="[4268]" method="POST" name="OS commanding vulnerability" plugin="osCommanding" severity="High" url="http://192.168.1.20/demo/OSCommandInjection2.php" var="fileName">
+        OS Commanding was found at: &quot;http://192.168.1.20/demo/OSCommandInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;fileName=%7Cping+-n+3+localhost&quot;. This vulnerability was found in the request with id 4268.
+    </vulnerability>
+    <vulnerability id="[4518, 4519]" method="POST" name="Blind SQL injection vulnerability" plugin="" severity="High" url="http://192.168.1.20/demo/SQLI2.php" var="username">
+        Blind SQL injection was found at: &quot;http://192.168.1.20/demo/SQLI2.php&quot;, using HTTP method POST. The injectable parameter is: &quot;username&quot;. This vulnerability was found in the requests with ids 4518 to 4519.
+    </vulnerability>
+    <vulnerability id="[4803]" method="POST" name="SQL injection vulnerability" plugin="sqli" severity="High" url="http://192.168.1.20/demo/SQLI2.php" var="username">
+        SQL injection in a MySQL database was found at: &quot;http://192.168.1.20/demo/SQLI2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=d'z&quot;0&quot;. This vulnerability was found in the request with id 4803.
+    </vulnerability>
+    <vulnerability id="[22]" method="None" name="Unhandled error in web application" plugin="error500" severity="Medium" url="http://192.168.1.20/demo/" var="None">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 22.
+    </vulnerability>
+    <vulnerability id="[23]" method="None" name="Unhandled error in web application" plugin="error500" severity="Medium" url="http://192.168.1.20/demo/" var="None">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 23.
+    </vulnerability>
+    <vulnerability id="[4746]" method="POST" name="Format string vulnerability" plugin="formatString" severity="Medium" url="http://192.168.1.20/demo/FormatString2.php" var="name">
+        A possible (detection is really hard...) format string was found at: &quot;http://192.168.1.20/demo/FormatString2.php&quot;, using HTTP method POST. The sent post-data was: &quot;name=%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n&quot;. This vulnerability was found in the request with id 4746.
+    </vulnerability>
+    <vulnerability id="[4916]" method="POST" name="eval() input injection vulnerability" plugin="eval" severity="High" url="http://192.168.1.20/demo/EvalInjection2.php" var="command">
+        eval() input injection was found at: &quot;http://192.168.1.20/demo/EvalInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;command=sleep(9)%3B&quot;. This vulnerability was found in the request with id 4916.
+    </vulnerability>
+    <vulnerability id="[4860]" method="POST" name="LDAP injection vulnerability" plugin="LDAPi" severity="High" url="http://192.168.1.20/demo/LDAPInjection2.php" var="username">
+        LDAP injection was found at: &quot;http://192.168.1.20/demo/LDAPInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=%5E(%23%24%21%40%23%24)(()))%2A%2A%2A%2A%2A%2A&amp;password=FrAmE30.&quot;. The modified parameter was &quot;username&quot;. This vulnerability was found in the request with id 4860.
+    </vulnerability>
+    <information id="[3893]" name="XPATH injection vulnerability" plugin="xpath" url="http://192.168.1.20/demo/XPathInjection2.php">
+        XPATH injection was found at: &quot;http://192.168.1.20/demo/XPathInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=d'z&quot;0&amp;password=FrAmE30.&quot;. The modified parameter was &quot;username&quot;. This vulnerability was found in the request with id 3893.
+    </information>
+    <information id="[3894]" name="XPATH injection vulnerability" plugin="xpath" url="http://192.168.1.20/demo/XPathInjection2.php">
+        XPATH injection was found at: &quot;http://192.168.1.20/demo/XPathInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=John8212&amp;password=d'z&quot;0&quot;. The modified parameter was &quot;password&quot;. This vulnerability was found in the request with id 3894.
+    </information>
+    <information id="[3956]" name="Cross site scripting vulnerability" plugin="xss" url="http://192.168.1.20/demo/EvalInjection2.php">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/EvalInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;command=&lt;ScRIPt+SrC=http://YNwU/x.js&gt;&lt;/ScRIPt&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 3956.
+    </information>
+    <information id="[4021]" name="Cross site scripting vulnerability" plugin="xss" url="http://192.168.1.20/demo/XSS-reflected2.php">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/XSS-reflected2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=&lt;SCrIPT&gt;alert(&quot;CARP&quot;)&lt;/SCrIPT&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 4021.
+    </information>
+    <information id="[4044]" name="Cross site scripting vulnerability" plugin="xss" url="http://192.168.1.20/demo/XSS-cookie.php">
+        Cross Site Scripting was found at: &quot;http://192.168.1.20/demo/XSS-cookie.php&quot;, using HTTP method POST. The sent post-data was: &quot;cookie=&lt;SCrIPT&gt;alert(&quot;xJjP&quot;)&lt;/SCrIPT&gt;&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 4044.
+    </information>
+    <information id="[4078, 4100]" name="Permanent cross site scripting vulnerability" plugin="xss" url="http://192.168.1.20/demo/XSS-cookie.php">
+        Permanent Cross Site Scripting was found at: http://192.168.1.20/demo/XSS-cookie.php . Using method: POST. The XSS was sent to the URL: http://192.168.1.20/demo/XSS-cookie.php. The sent post data is: &quot;cookie=&lt;ScRIpT&gt;fake_alert(String.fromCharCode(VcRd))&lt;/SCriPT&gt;&quot; . This vulnerability was found in the requests with ids 4078 and 4100.
+    </information>
+    <information id="[4268]" name="OS commanding vulnerability" plugin="osCommanding" url="http://192.168.1.20/demo/OSCommandInjection2.php">
+        OS Commanding was found at: &quot;http://192.168.1.20/demo/OSCommandInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;fileName=%7Cping+-n+3+localhost&quot;. This vulnerability was found in the request with id 4268.
+    </information>
+    <information id="[33]" name="Found reverse proxy" plugin="detectReverseProxy" url="http://192.168.1.20/demo/">
+        The remote web server seems to have a reverse proxy installed. This information was found in the request with id 33.
+    </information>
+    <information name="Active filter detected" plugin="afd" url="None">
+        The remote network has an active filter. IMPORTANT: The result of all the other plugins will be unaccurate, web applications could be vulnerable but &quot;protected&quot; by the active filter.
+    </information>
+    <information id="[4518, 4519]" name="Blind SQL injection vulnerability" plugin="" url="http://192.168.1.20/demo/SQLI2.php">
+        Blind SQL injection was found at: &quot;http://192.168.1.20/demo/SQLI2.php&quot;, using HTTP method POST. The injectable parameter is: &quot;username&quot;. This vulnerability was found in the requests with ids 4518 to 4519.
+    </information>
+    <information id="[99]" name="Potentially interesting file" plugin="urlFuzzer" url="http://192.168.1.20/demo.zip">
+        A potentially interesting file was found at: &quot;http://192.168.1.20/demo.zip&quot;. This information was found in the request with id 99.
+    </information>
+    <information id="[1166]" name="Potentially interesting file" plugin="urlFuzzer" url="http://192.168.1.20/demo/PredictableResource.php.bak">
+        A potentially interesting file was found at: &quot;http://192.168.1.20/demo/PredictableResource.php.bak&quot;. This information was found in the request with id 1166.
+    </information>
+    <information id="[4803]" name="SQL injection vulnerability" plugin="sqli" url="http://192.168.1.20/demo/SQLI2.php">
+        SQL injection in a MySQL database was found at: &quot;http://192.168.1.20/demo/SQLI2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=d'z&quot;0&quot;. This vulnerability was found in the request with id 4803.
+    </information>
+    <information id="[22]" name="Unhandled error in web application" plugin="error500" url="http://192.168.1.20/demo/">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 22.
+    </information>
+    <information id="[23]" name="Unhandled error in web application" plugin="error500" url="http://192.168.1.20/demo/">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 23.
+    </information>
+    <information id="[4746]" name="Format string vulnerability" plugin="formatString" url="http://192.168.1.20/demo/FormatString2.php">
+        A possible (detection is really hard...) format string was found at: &quot;http://192.168.1.20/demo/FormatString2.php&quot;, using HTTP method POST. The sent post-data was: &quot;name=%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n%25n&quot;. This vulnerability was found in the request with id 4746.
+    </information>
+    <information id="[4916]" name="eval() input injection vulnerability" plugin="eval" url="http://192.168.1.20/demo/EvalInjection2.php">
+        eval() input injection was found at: &quot;http://192.168.1.20/demo/EvalInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;command=sleep(9)%3B&quot;. This vulnerability was found in the request with id 4916.
+    </information>
+    <information id="[17]" name="Allowed methods for http://192.168.1.20/demo/" plugin="allowedMethods" url="http://192.168.1.20/demo/">
+        The URL &quot;http://192.168.1.20/demo/&quot; has the following allowed methods: GET, HEAD, OPTIONS, POST, TRACE. This information was found in the request with id 17.
+    </information>
+    <information id="[4860]" name="LDAP injection vulnerability" plugin="LDAPi" url="http://192.168.1.20/demo/LDAPInjection2.php">
+        LDAP injection was found at: &quot;http://192.168.1.20/demo/LDAPInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;username=%5E(%23%24%21%40%23%24)(()))%2A%2A%2A%2A%2A%2A&amp;password=FrAmE30.&quot;. The modified parameter was &quot;username&quot;. This vulnerability was found in the request with id 4860.
+    </information>
+</w3afrun>

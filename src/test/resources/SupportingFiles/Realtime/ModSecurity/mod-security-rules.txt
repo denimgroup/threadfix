@@ -1,0 +1,60 @@
+# RULES
+
+# mod_security rules all use the Apache directive SecRule. The most common type is REQUEST_URI, although several other options exist. 
+# The text "phase:2,chain,deny" specifies what part of processing to run the rule (phase), whether there are more rules (chain), and the directive (deny)
+# msg specifies the text that is inserted into log files.
+# id is an ID that is used in logs to link back to rules.
+
+# This rule pattern is useful when you need to protect a known address and a known parameter with a known payload.
+# The first line contains a regex in the first pair of quotes for the URI.
+# The second line contains the name of the parameter followed by regex for the payload in quotes.
+# Threadfix currently creates rules for Eval Injection, SQL Injection, OS Command Injection, XSS, LDAP Injection, Format String, and XPath Injection vulns,
+# although rules could theoretically be generated for any type of injection flaw.
+
+SecRule REQUEST_URI "^\/demo\/EvalInjection2\.php""phase:2,chain,deny,msg:'SQL Injection attempt: /demo/EvalInjection2.php [command]',id:'100000',severity:'2'"
+SecRule ARGS:command "'|\%27|\"|\%22|--|\%2D\%2D"
+		
+SecRule REQUEST_URI "^\/demo\/SQLI2\.php""phase:2,chain,deny,msg:'SQL Injection attempt: /demo/SQLI2.php [username]',id:'100001',severity:'2'"
+SecRule ARGS:username "'|\%27|\"|\%22|--|\%2D\%2D"
+
+SecRule REQUEST_URI "^\/demo\/LDAPInjection2\.php""phase:2,chain,deny,msg:'SQL Injection attempt: /demo/LDAPInjection2.php [username]',id:'100002',severity:'2'"
+SecRule ARGS:username "'|\%27|\"|\%22|--|\%2D\%2D"
+
+SecRule REQUEST_URI "^\/demo\/PathTraversal\.php""phase:2,chain,deny,msg:'Path Traversal attempt: /demo/PathTraversal.php [action]',id:'100003',severity:'2'"
+SecRule ARGS:action ".|\%2e"
+
+SecRule REQUEST_URI "^\/demo\/OSCommandInjection2\.php""phase:2,chain,deny,msg:'OS Command Injection attempt: /demo/OSCommandInjection2.php [fileName]',id:'100004',severity:'2'"
+SecRule ARGS:fileName "&|\||;|%7C|%26|%3B"
+
+SecRule REQUEST_URI "^\/demo\/XSS-cookie\.php""phase:2,chain,deny,msg:'Cross-site Scripting attempt: /demo/XSS-cookie.php [cookie]',id:'100005',severity:'2'"
+SecRule ARGS:cookie "<|\%3C|>|\%3E"
+
+SecRule REQUEST_URI "^\/demo\/XSS-reflected2\.php""phase:2,chain,deny,msg:'Cross-site Scripting attempt: /demo/XSS-reflected2.php [username]',id:'100006',severity:'2'"
+SecRule ARGS:username "<|\%3C|>|\%3E"
+
+SecRule REQUEST_URI "^\/demo\/LDAPInjection2\.php""phase:2,chain,deny,msg:'LDAP Injection attempt: /demo/LDAPInjection2.php [username]',id:'100007',severity:'2'"
+SecRule ARGS:username "\\|\(|\)|\*|\%5c|\%2a|\%28|\%29"
+
+SecRule REQUEST_URI "^\/demo\/EvalInjection2\.php""phase:2,chain,deny,msg:'Eval Injection attempt: /demo/EvalInjection2.php [command]',id:'100008',severity:'2'"
+SecRule ARGS:command ";|\%3b"
+
+SecRule REQUEST_URI "^\/demo\/EvalInjection2\.php""phase:2,chain,deny,msg:'Cross-site Scripting attempt: /demo/EvalInjection2.php [command]',id:'100010',severity:'2'"
+SecRule ARGS:command "<|\%3C|>|\%3E"
+
+SecRule REQUEST_URI "^\/demo\/FormatString2\.php""phase:2,chain,deny,msg:'Format String Injection attempt: /demo/FormatString2.php [name]',id:'100011',severity:'2'"
+SecRule ARGS:name "\%|\%25"
+
+SecRule REQUEST_URI "^\/demo\/XPathInjection2\.php""phase:2,chain,deny,msg:'XPath Injection attempt: /demo/XPathInjection2.php [username]',id:'100012',severity:'2'"
+SecRule ARGS:username "'|\%27|\"|\%22"
+
+SecRule REQUEST_URI "^\/demo\/XPathInjection2\.php""phase:2,chain,deny,msg:'XPath Injection attempt: /demo/XPathInjection2.php [password]',id:'100013',severity:'2'"
+SecRule ARGS:password "'|\%27|\"|\%22"
+
+# These rules protect against a single URL (Directory Indexing and Direct Request Vulnerabilities).
+# There is no parameter, and all of the protection is in the initial regex.
+
+SecRule REQUEST_URI "^\/demo\/PredictableResource\.php\.bak( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)""phase:2,deny,msg:'Direct Request attempt: /demo/PredictableResource.php.bak',id:'100014',severity:'2'"
+
+SecRule REQUEST_URI "^\/demo\.zip( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)""phase:2,deny,msg:'Direct Request attempt: /demo.zip',id:'100015',severity:'2'"
+
+SecRule REQUEST_URI "^\/demo\/DirectoryIndexing\/( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)""phase:2,deny,msg:'Directory Indexing attempt: /demo/DirectoryIndexing/',id:'100009',severity:'2'"

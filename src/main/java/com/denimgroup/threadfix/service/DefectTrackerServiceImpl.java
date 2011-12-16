@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2011 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 1.1 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is Vulnerability Manager.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.denimgroup.threadfix.data.dao.DefectDao;
+import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
+import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
+import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+
+@Service
+@Transactional(readOnly = true)
+public class DefectTrackerServiceImpl implements DefectTrackerService {
+
+	private DefectTrackerDao defectTrackerDao = null;
+	private DefectTrackerTypeDao defectTrackerTypeDao = null;
+	private DefectDao defectDao = null;
+
+	@Autowired
+	public DefectTrackerServiceImpl(DefectTrackerDao defectTrackerDao,
+			DefectTrackerTypeDao defectTrackerTypeDao, DefectDao defectDao) {
+		this.defectTrackerDao = defectTrackerDao;
+		this.defectTrackerTypeDao = defectTrackerTypeDao;
+		this.defectDao = defectDao;
+	}
+
+	@Override
+	public List<DefectTracker> loadAllDefectTrackers() {
+		return defectTrackerDao.retrieveAll();
+	}
+
+	@Override
+	public DefectTracker loadDefectTracker(int defectId) {
+		return defectTrackerDao.retrieveById(defectId);
+	}
+
+	@Override
+	public DefectTracker loadDefectTracker(String name) {
+		return defectTrackerDao.retrieveByName(name);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void storeDefectTracker(DefectTracker defectTracker) {
+		defectTrackerDao.saveOrUpdate(defectTracker);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void deleteById(int defectTrackerId) {
+		defectDao.deleteByDefectTrackerId(defectTrackerId);
+		defectTrackerDao.deleteById(defectTrackerId);
+	}
+
+	@Override
+	public List<DefectTrackerType> loadAllDefectTrackerTypes() {
+		return defectTrackerTypeDao.retrieveAll();
+	}
+
+	@Override
+	public DefectTrackerType loadDefectTrackerType(int defectId) {
+		return defectTrackerTypeDao.retrieveById(defectId);
+	}
+
+	@Override
+	public DefectTrackerType loadDefectTrackerType(String name) {
+		return defectTrackerTypeDao.retrieveByName(name);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void storeDefectTrackerType(DefectTrackerType defectTrackerType) {
+		defectTrackerTypeDao.saveOrUpdate(defectTrackerType);
+	}
+
+}
