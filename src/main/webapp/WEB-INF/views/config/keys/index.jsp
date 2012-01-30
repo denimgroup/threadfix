@@ -8,7 +8,8 @@
 	<h2>API Keys</h2>
 	
 	<div id="helpText">
-		ThreadFix API Keys are used to access the RPC SOAP interface.
+		ThreadFix API Keys are used to access the REST interface.<br/>
+		The REST interface is still in progress.
 	</div>
 	
 	<table class="formattedTable">
