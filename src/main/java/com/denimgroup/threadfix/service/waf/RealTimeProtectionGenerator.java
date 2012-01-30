@@ -150,7 +150,7 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return
 	 */
 	protected abstract String generateRuleWithParameter(String uri, String action, String id,
-			String payload, String parameter, String message);
+			String genericVulnName, String parameter);
 	
 	/**
 	 * 
@@ -162,7 +162,7 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return
 	 */
 	protected abstract String generateRuleForExactUrl(String uri, String action, String id,
-			String payload, String message);
+			String genericVulnName);
 	
 	/**
 	 * 
@@ -174,7 +174,7 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return
 	 */
 	protected abstract String generateRuleWithPayloadInUrl(String uri, String action, String id,
-			String payload, String message);
+			String genericVulnName);
 
 	/**
 	 * 
@@ -284,18 +284,18 @@ public abstract class RealTimeProtectionGenerator {
 		if (parameter != null && !parameter.isEmpty()) {
 			if (stringInList(genericVulnName, getVulnerabilitiesWithParameters())) {
 				rule = generateRuleWithParameter(uri, action, id, 
-					PAYLOAD_MAP.get(genericVulnName), parameter, MESSAGE_MAP.get(genericVulnName));
+					genericVulnName, parameter);
 			}
 		}
 	
 		if (rule == null && stringInList(genericVulnName, getVulnerabilitiesWithPayloadInUrl())) { 
 			rule = generateRuleWithPayloadInUrl(uri, action, id, 
-					PAYLOAD_MAP.get(genericVulnName), MESSAGE_MAP.get(genericVulnName));
+					genericVulnName);
 		}
 		
 		if (rule == null && stringInList(genericVulnName, getVulnerabilitiesAtExactUrl())) { 
 			rule = generateRuleForExactUrl(uri, action, id, 
-					PAYLOAD_MAP.get(genericVulnName), MESSAGE_MAP.get(genericVulnName));
+					genericVulnName);
 		}
 		
 		if (rule != null) {

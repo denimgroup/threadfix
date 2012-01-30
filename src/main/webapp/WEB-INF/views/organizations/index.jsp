@@ -1,29 +1,29 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Organizations</title>
+	<title>Home</title>
 </head>
 
 <body id="apps">
-	<h2>Organizations</h2>
+	<h2>Teams</h2>
+	<div id="helpText">A Team is a group of developers who are responsible for the same application or applications.</div>
 	
 	<table class="formattedTable">
 		<thead>
 			<tr>
-				<th class="medium first">Organization</th>
+				<th class="medium first">Team Name</th>
 				<th class="short">No. of Apps</th>
-				<th class="short">Total Open</th>
+				<th class="short">Open Vulns</th>
 				<th class="short">Critical</th>
 				<th class="short">High</th>
 				<th class="short">Medium</th>
-				<th class="short">Low</th>
-				<th class="short last">Info</th>
+				<th class="short last">Low</th>
 			</tr>
 		</thead>
 		<tbody id="orgTableBody">
 		<c:if test="${ empty organizationList }">
 			<tr class="bodyRow">
-				<td colspan="8" style="text-align:center;">No organizations found.</td>
+				<td colspan="8" style="text-align:center;">No teams found.</td>
 			</tr>
 		</c:if>
 		<c:forEach var="org" items="${ organizationList }">
@@ -44,12 +44,11 @@
 				<td><c:out value="${ org.vulnerabilityReport[3] }"/></td>
 				<td><c:out value="${ org.vulnerabilityReport[2] }"/></td>
 				<td><c:out value="${ org.vulnerabilityReport[1] }"/></td>
-				<td><c:out value="${ org.vulnerabilityReport[0] }"/></td>
 			</tr>
 		</c:forEach>
 			<tr class="footer">
 				<td colspan="4" class="first">
-					<a id="addOrganization" href="<spring:url value="/organizations/new" />">Add Organization</a>
+					<a id="addOrganization" href="<spring:url value="/organizations/new" />">Add Team</a>
 				</td>
 				<td colspan="3" class="last pagination" style="text-align:right"></td>
 			</tr>

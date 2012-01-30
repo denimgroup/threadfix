@@ -62,19 +62,14 @@
 				</chart>
 				<timeSeriesDataset>
 					<timeSeries>
-						<seriesExpression><![CDATA["New"]]></seriesExpression>
-						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
-						<valueExpression><![CDATA[$F{newVulns} != null ? $F{newVulns} : new Integer(0)]]></valueExpression>
-					</timeSeries>
-					<timeSeries>
 						<seriesExpression><![CDATA["Total"]]></seriesExpression>
 						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
 						<valueExpression><![CDATA[$F{totVulns} != null ? $F{totVulns} : new Integer(0)]]></valueExpression>
 					</timeSeries>
 					<timeSeries>
-						<seriesExpression><![CDATA["Fixed"]]></seriesExpression>
+						<seriesExpression><![CDATA["New"]]></seriesExpression>
 						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
-						<valueExpression><![CDATA[$F{fixedVulns} != null ? $F{fixedVulns} : new Integer(0)]]></valueExpression>
+						<valueExpression><![CDATA[$F{newVulns} != null ? $F{newVulns} : new Integer(0)]]></valueExpression>
 					</timeSeries>
 					<timeSeries>
 						<seriesExpression><![CDATA["Resurfaced"]]></seriesExpression>
@@ -86,14 +81,19 @@
 						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
 						<valueExpression><![CDATA[$F{oldVulns} != null ? $F{oldVulns} : new Integer(0)]]></valueExpression>
 					</timeSeries>
+					<timeSeries>
+						<seriesExpression><![CDATA["Fixed"]]></seriesExpression>
+						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
+						<valueExpression><![CDATA[$F{fixedVulns} != null ? $F{fixedVulns} : new Integer(0)]]></valueExpression>
+					</timeSeries>
 				</timeSeriesDataset>
 				<timeSeriesPlot>
 					<plot>
-						<seriesColor seriesOrder="0" color="#A00B3E"/>
-						<seriesColor seriesOrder="1" color="#BF73E8"/>
-						<seriesColor seriesOrder="2" color="#E2E617"/>
-						<seriesColor seriesOrder="3" color="#B21D46"/>
-						<seriesColor seriesOrder="4" color="#ABA72B"/>
+						<seriesColor seriesOrder="0" color="#000000"/>
+						<seriesColor seriesOrder="1" color="#96160B"/>
+						<seriesColor seriesOrder="2" color="#CA4E00"/>
+						<seriesColor seriesOrder="3" color="#967832"/>
+						<seriesColor seriesOrder="4" color="#002F5D"/>
 					</plot>
 					<timeAxisFormat>
 						<axisFormat>

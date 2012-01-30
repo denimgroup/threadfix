@@ -31,6 +31,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "DataFlowElement")
 public class DataFlowElement extends BaseEntity implements Comparable<DataFlowElement> {
@@ -104,6 +106,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 
 	@ManyToOne
 	@JoinColumn(name = "findingId")
+	@JsonIgnore
 	public Finding getFinding() {
 		return finding;
 	}

@@ -31,6 +31,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -41,6 +42,7 @@ public class WafType extends BaseEntity {
 
 	public static final String MOD_SECURITY = "mod_security";
 	public static final String SNORT = "Snort";
+	public static final String BIG_IP_ASM = "BIG-IP ASM";
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
@@ -74,6 +76,7 @@ public class WafType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "wafType")
+	@JsonIgnore
 	public List<Waf> getWafs() {
 		return wafs;
 	}
@@ -83,6 +86,7 @@ public class WafType extends BaseEntity {
 	}
 	
 	@OneToMany(mappedBy = "wafType")
+	@JsonIgnore
 	public List<WafRuleDirective> getWafRuleDirectives() {
 		return wafRuleDirectives;
 	}

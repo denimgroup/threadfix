@@ -36,6 +36,7 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "SurfaceLocation")
@@ -70,6 +71,7 @@ public class SurfaceLocation extends BaseEntity {
 	private URL url;
 
 	@OneToOne(mappedBy = "surfaceLocation")
+	@JsonIgnore
 	public Finding getFinding() {
 		return finding;
 	}
@@ -79,6 +81,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = HOST_LENGTH)
+	@JsonIgnore
 	public String getHost() {
 		return host;
 	}
@@ -97,6 +100,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PATH_LENGTH)
+	@JsonIgnore
 	public String getPath() {
 		return path;
 	}
@@ -106,6 +110,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Basic
+	@JsonIgnore
 	public int getPort() {
 		return port;
 	}
@@ -115,6 +120,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = 15)
+	@JsonIgnore
 	public String getProtocol() {
 		return protocol;
 	}
@@ -124,6 +130,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = QUERY_LENGTH)
+	@JsonIgnore
 	public String getQuery() {
 		return query;
 	}

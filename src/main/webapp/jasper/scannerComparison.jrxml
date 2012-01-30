@@ -26,7 +26,7 @@
 			<staticText>
 				<reportElement x="293" y="22" width="156" height="20"/>
 				<textElement/>
-				<text><![CDATA[Scanner Report For Application]]></text>
+				<text><![CDATA[Channel Comparison Summary]]></text>
 			</staticText>
 		</band>
 	</title>

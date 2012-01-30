@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -283,9 +284,25 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 		NodeList resultNodeList = vulnScan.getElementsByTagName("attack_vector");
 		LinkedList<Finding> findings = new LinkedList<Finding>();
 
+		String firstPath = null;
+		String firstParameter = null;
+		
 		for (int i = 0; i < resultNodeList.getLength(); i++) {
 			Finding finding = parseSingleFinding((Element) resultNodeList.item(i), cv);
-			if (finding != null) {
+			
+			if (finding == null || finding.getSurfaceLocation() == null)
+				continue;
+			
+			if (findings.size() == 0) {
+				firstPath = finding.getSurfaceLocation().getPath();
+				firstParameter = finding.getSurfaceLocation().getParameter();
+				finding.setChannelSeverity(cs);
+				findings.addFirst(finding);
+			
+			} else if (finding != null 
+					&& !finding.getSurfaceLocation().getPath().equals(firstPath)
+					&& (firstParameter == null || 
+							!firstParameter.equals(finding.getSurfaceLocation().getParameter()))) {
 				finding.setChannelSeverity(cs);
 				findings.addFirst(finding);
 			}
@@ -296,7 +313,7 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 		}
 
 		updateVulnerabilityTimes(vulnNode, findings);
-
+		
 		for (Finding f : findings) {
 			if (f != null) {
 				scan.getFindings().add(f);
@@ -393,11 +410,6 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 		if (url == null || url.trim().equals("")) {
 			return null;
 		} else {
-			url = url.substring(url.indexOf('/') + 1);
-			url = url.substring(url.indexOf('/') + 1);
-			url = url.substring(url.indexOf('/'));
-			if (url.indexOf('?') > 0)
-				url = url.substring(0, url.indexOf('?'));
 			return url;
 		}
 	}
@@ -424,23 +436,21 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 	}
 
 	/**
-	 * @param path
+	 * @param url
 	 * @param param
-	 * @return
+	 * @return A Surface Location created by parsing a URL from the URL and adding the correct parameter.
 	 */
-	private SurfaceLocation getSurfaceLocation(String path, String param) {
-		// It doesn't matter if one or both parameters are null
+	private SurfaceLocation getSurfaceLocation(String url, String param) {
 		SurfaceLocation location = new SurfaceLocation();
-
-		if (path != null) {
-			location.setPath(path);
-			int index = path.indexOf(':');
-			if (index > 0 && index < path.length()) {
-				location.setProtocol(path.substring(0, index));
-			}
+		
+		try {
+			location.setUrl(new URL(url));
+		} catch (MalformedURLException e) {
+			// This code is wrong or Sentinel has malformed URLs
+			log.warn("MalformedURLException in getSurfaceLocation in SentinelChannelImporter.", e);
 		}
-
 		location.setParameter(param);
+		
 		return location;
 	}
 
@@ -538,7 +548,7 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 		Element element = (Element) vulnNode;
 		Calendar openedDate = getDateFromString(element.getAttribute("opened"));
 		Calendar closedDate = getDateFromString(element.getAttribute("closed"));
-		boolean open = (closedDate == null);
+		boolean open = closedDate == null;
 
 		for (Finding finding : findings) {
 			if (finding != null && finding.getVulnerability() != null) {
@@ -597,7 +607,7 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 		try {
 			url = new URL(urlStr);
 
-			log.debug("Sending request to " + urlStr);
+			log.info("Sending request to Sentinel.");
 
 			URLConnection conn = url.openConnection();
 			conn.setReadTimeout(60000); // milliseconds
@@ -614,7 +624,7 @@ public class SentinelChannelImporter extends AbstractChannelImporter {
 			rd.close();
 			result = sb.toString();
 
-			log.debug("Got a response");
+			log.info("Got a response from the Sentinel Servers");
 		} catch (IOException e) {
 			log.warn("Didn't get a response from Sentinel servers, ensure that the URL is correct.", e);
 		}

@@ -47,8 +47,10 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.waf.BigIPASMGenerator;
 
 @Controller
 @RequestMapping("/wafs")
@@ -107,6 +109,15 @@ public class WafsController {
 			}
 		}
 		
+		String prefix = null, suffix = null;
+		
+		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
+			prefix = BigIPASMGenerator.XML_START;
+			suffix = BigIPASMGenerator.XML_END;
+		}
+		
+		mav.addObject("prefix", prefix);
+		mav.addObject("suffix", suffix);
 		mav.addObject("hasApps", hasApps);
 		mav.addObject("lastDirective", lastDirective);
 		mav.addObject("directives", directives);
@@ -137,11 +148,19 @@ public class WafsController {
 			wafService.generateWafRules(waf, new WafRuleDirective());
 		
 		StringBuffer buffer = new StringBuffer();
+		
+		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
+			buffer.append(BigIPASMGenerator.XML_START);
+		}
+		
 		for (WafRule rule : waf.getWafRules()) {
-			buffer.append(rule.getRule()).append("\r\n");
+			buffer.append(rule.getRule()).append("\n");
+		}
+		
+		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
+			buffer.append(BigIPASMGenerator.XML_END);
 		}
 
-		buffer.append('\n');
 		String pageString = buffer.toString();
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=\"wafrules_" + wafId
@@ -152,11 +171,14 @@ public class WafsController {
 		sb.append(pageString);
 
 		InputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
-
+		
 		byte[] outputByte = new byte[65535];
-		// copy binary contect to output stream
-		while (in.read(outputByte, 0, 65535) != -1) {
-			out.write(outputByte, 0, 65535);
+		
+		// copy binary content to output stream
+		int numToTransfer = in.read(outputByte, 0, 65535);
+		while (numToTransfer != -1) {
+			out.write(outputByte, 0, numToTransfer);
+			numToTransfer = in.read(outputByte, 0, 65535);
 		}
 		in.close();
 		out.flush();

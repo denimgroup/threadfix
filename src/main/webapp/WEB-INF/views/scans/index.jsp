@@ -7,6 +7,10 @@
 <body id="apps">
 	<h2><c:out value="${ application.name }"/></h2>
 	
+	<div id="helpText">
+		This page lists all of the scans that have been uploaded to this Application.
+	</div>
+	
 	<h3>Application Scans</h3>
 	<table class="formattedTable">
 		<thead>
@@ -46,5 +50,5 @@
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
-    <a href="${ fn:escapeXml(appUrl) }">Back to Application</a>
+    <a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a>
 </body>

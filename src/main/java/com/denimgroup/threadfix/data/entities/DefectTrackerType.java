@@ -30,6 +30,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "DefectTrackerType")
 public class DefectTrackerType extends BaseEntity {
@@ -63,6 +65,7 @@ public class DefectTrackerType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "defectTrackerType")
+	@JsonIgnore
 	public List<DefectTracker> getDefectTrackerList() {
 		return defectTrackerList;
 	}

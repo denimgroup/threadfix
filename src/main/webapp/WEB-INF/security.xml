@@ -25,6 +25,7 @@
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/styles/*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/images/*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<security:intercept-url pattern="/rest/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/configuration/users*" access="ROLE_ADMIN"/>
 		<security:intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
 		<security:form-login login-page="/login.jsp"/>

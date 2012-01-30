@@ -32,6 +32,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "ApplicationChannel")
 public class ApplicationChannel extends AuditableEntity {
@@ -47,6 +49,7 @@ public class ApplicationChannel extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
+	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}
@@ -75,6 +78,7 @@ public class ApplicationChannel extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "applicationChannel")
+	@JsonIgnore
 	public List<Scan> getScanList() {
 		return scanList;
 	}

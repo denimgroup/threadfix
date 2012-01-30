@@ -10,6 +10,10 @@
 	</form:form>
 
 	<h2>Manage Users</h2>
+	
+	<div id="helpText">
+		Here you can create, edit, and delete users.
+	</div>
 
 	<table class="formattedTable">
 		<thead>

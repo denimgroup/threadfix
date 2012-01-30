@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -45,12 +47,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.Node;
+import com.denimgroup.threadfix.webapp.viewmodels.PathTree;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
@@ -63,15 +70,17 @@ public class EditApplicationController {
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
 	private DefectService defectService;
+	private ScanMergeService scanMergeService;
 
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
-			DefectService defectService) {
+			DefectService defectService, ScanMergeService scanMergeService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
 		this.defectService = defectService;
+		this.scanMergeService = scanMergeService;
 	}
 
 	@ModelAttribute("defectTrackerList")
@@ -91,7 +100,7 @@ public class EditApplicationController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", "password", "waf.id", "projectName" });
+		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", "password", "waf.id", "projectName", "projectRoot" });
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -104,15 +113,30 @@ public class EditApplicationController {
 			throw new ResourceNotFoundException();
 		}
 		
+		List<String> pathList = new ArrayList<String>();
+		for (Vulnerability vuln : application.getVulnerabilities()) {
+			if (vuln != null && vuln.getFindings() != null) {
+				for (Finding finding : vuln.getFindings()) {
+					if (finding != null && finding.getSourceFileLocation() != null) {
+						pathList.add(finding.getSourceFileLocation());
+					}
+				}
+			}
+		}
+		pathList = removeDuplicates(pathList);
+		PathTree pathTree = new PathTree(new Node("root"));
+		pathTree = getTreeStructure(pathList, pathTree, application);
+		
 		ModelAndView mav = new ModelAndView("applications/form");
-		mav.addObject(applicationService.loadApplication(appId));
+		mav.addObject(application);
+		mav.addObject("pathTree", pathTree);
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@PathVariable("orgId") int orgId,
-			@Valid @ModelAttribute Application application, BindingResult result,
-			SessionStatus status) {
+			@Valid @ModelAttribute Application application,
+			BindingResult result, SessionStatus status) {
 		
 		if (application.getName() != null && application.getName().trim().equals("")
 				&& !result.hasFieldErrors("name")) {
@@ -151,6 +175,15 @@ public class EditApplicationController {
 			
 			applicationService.storeApplication(application);
 			
+			if (application.getProjectRoot() != null && !application.getProjectRoot().trim().equals("")) {
+				Application app = applicationService.loadApplication(application.getId());
+				
+				scanMergeService.updateSurfaceLocation(app);
+				scanMergeService.updateVulnerabilities(app);
+				
+				applicationService.storeApplication(app);
+			}
+			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
@@ -158,5 +191,30 @@ public class EditApplicationController {
 			status.setComplete();
 			return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/" + application.getId();
 		}
+	}
+	
+	private List<String> removeDuplicates(List<String> pathList) {
+		List<String> distinctPath = new ArrayList<String>();
+		for (int outerCounter = 0; outerCounter < pathList.size(); outerCounter++) {
+			int innerCounter = 0;
+			for (; innerCounter < outerCounter; innerCounter++) {
+				if (pathList.get(outerCounter).equals(pathList.get(innerCounter))) {
+					break;
+				}
+			}
+			if (innerCounter == outerCounter)
+				distinctPath.add(pathList.get(outerCounter));
+		}
+		Collections.sort(distinctPath);
+		return distinctPath;
+	}
+
+	private PathTree getTreeStructure(List<String> pathList, PathTree pathTree, Application application) {
+		for (String pathSegment : pathList) {
+			if (pathSegment == null)
+				continue;
+			pathTree.addPath(pathSegment);
+		}
+		return pathTree;
 	}
 }

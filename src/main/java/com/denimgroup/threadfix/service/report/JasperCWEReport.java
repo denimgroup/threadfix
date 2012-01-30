@@ -173,5 +173,4 @@ public class JasperCWEReport implements JRDataSource {
 		}
 		return days;
 	}
-	
 }

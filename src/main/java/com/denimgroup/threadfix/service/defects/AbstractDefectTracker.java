@@ -41,8 +41,11 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * 
  */
 public abstract class AbstractDefectTracker {
+	
+	protected final static String LOGIN_FAILURE_STRING = "Login Failure";
+	protected final static String INCORRECT_CONFIGURATION = "Your configuration is invalid: check your URL.";
 
-	// Common log for all importers.
+	// Common log for all Defect Tracker Exporters.
 	protected final Log log = LogFactory.getLog(this.getClass());
 
 	/**
@@ -52,6 +55,9 @@ public abstract class AbstractDefectTracker {
 	 */
 	public abstract String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
 
+	public abstract String getBugURL(String endpointURL, String bugID);
+	
+	public abstract String getInitialStatusString();
 	/**
 	 * @param defect
 	 * @return

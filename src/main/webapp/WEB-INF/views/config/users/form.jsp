@@ -51,13 +51,20 @@
 <c:choose>
 	<c:when test="${ user.new }">
 		<input id="addUserButton" type="submit" value="Add User" />
+		<span style="padding-left: 10px">
+			<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
+		</span>
 	</c:when>
 	<c:otherwise>
 		<input id="updateUserButton" type="submit" value="Update User" />
+		<span style="padding-left: 10px">
+		<spring:url value="/configuration/users" var="userUrl">
+			<spring:param name="userId" value="${ user.id }"/>
+		</spring:url>
+			<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Users Index</a>
+		</span>
 	</c:otherwise>
 </c:choose>
-		<span style="padding-left: 10px">
-			<a id="cancelLink" href="<spring:url value="/configuration/users" />">Cancel</a>
-		</span>
+		
 	</form:form>
 </body>

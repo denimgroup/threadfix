@@ -119,7 +119,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					
 					if (!result.hasErrors()) { 
 						if (!dt.hasValidCredentials()) {
-							result.rejectValue("userName", "errors.invalid", new String [] { "User / password combination" }, null);
+							result.rejectValue("userName", "errors.invalid", new String [] { "The User / password combination (or possibly the Defect Tracker endpoint URL)" }, null);
 							application.setUserName(null);
 							application.setPassword(null);
 							application.setProjectName(null);

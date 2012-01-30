@@ -24,7 +24,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -222,6 +222,6 @@
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
-	<span style="padding-left: 10px"><a href="${ fn:escapeXml(appUrl) }">Cancel</a></span>
+	<span style="padding-left: 10px"><a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
 </form:form>
 </body>

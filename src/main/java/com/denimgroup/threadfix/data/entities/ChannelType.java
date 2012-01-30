@@ -31,6 +31,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -105,6 +106,7 @@ public class ChannelType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "channelType")
+	@JsonIgnore
 	public List<ChannelVulnerability> getChannelVulnerabilities() {
 		return channelVulnerabilities;
 	}
@@ -114,6 +116,7 @@ public class ChannelType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "channelType")
+	@JsonIgnore
 	public List<ChannelSeverity> getChannelSeverities() {
 		return channelSeverities;
 	}
@@ -123,6 +126,7 @@ public class ChannelType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "channelType")
+	@JsonIgnore
 	public List<ApplicationChannel> getChannels() {
 		return applicationChannels;
 	}
@@ -132,6 +136,7 @@ public class ChannelType extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "channelType")
+	@JsonIgnore
 	public List<VulnerabilityMapLog> getVulnerabilityMapLogs() {
 		return vulnerabilityMapLogs;
 	}

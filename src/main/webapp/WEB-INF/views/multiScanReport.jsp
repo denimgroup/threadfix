@@ -24,4 +24,4 @@
 	</c:forEach>
 </c:if>
 
-<a href="<c:url value="../editorganization/detail.html?orgId=${ org.id }"/>">Back to Organization page</a>
+<a href="<c:url value="../editorganization/detail.html?orgId=${ org.id }"/>">Home</a>

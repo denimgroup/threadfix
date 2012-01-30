@@ -8,6 +8,10 @@
 <body id="apps">
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings</h2>
 
+	<div id="helpText">
+		This page lists various statistics about a set of scan results from one scan file.<br/>
+	</div>
+
 	<h3>Vulnerability Counts:</h3>
 	<table class="dataTable">
 		<tbody>
@@ -187,13 +191,7 @@
 		</c:otherwise>
 	</c:choose>
 		</tbody>
-		<tfoot>
-			<tr class="footer">
-				<td colspan="#{ fn:escapeXml(columnCount) }" class="pagination" style="text-align:right"></td>
-			</tr>
-		</tfoot>
 	</table>
-	
 	
 	<spring:url value="/organizations/{orgId}/applications/{appId}/scans" var="scanUrl">
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />

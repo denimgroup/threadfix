@@ -4,33 +4,56 @@
 	<title><c:out value="${ application.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/confirm.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/table_filter_app_page.js"></script>
 </head>
 
 <body id="apps">
-	<h2 id="nameText"><c:out value="${ application.name }"/></h2>
+	<spring:url value="/organizations/{orgId}" var="orgUrl">
+		<spring:param name="orgId" value="${ application.organization.id }"/>
+	</spring:url>
+	<spring:url value="{appId}/edit" var="editUrl">
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	<spring:url value="{appId}/delete" var="deleteUrl">
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	
+	<div style="font-size:150%">Team: <a id="organizationText" href="${fn:escapeXml(orgUrl)}"><c:out value="${ application.organization.name }"/></a></div>
+	<br>
+	<h2 style="padding-bottom:5px;" id="nameText">Application: <c:out value="${ application.name }"/>
+	<span style="font-size:60%;padding-left:10px;">
+		<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
+		<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a>
+	</span>
+	</h2>
 	
 	<c:if test="${ not empty message }">
 		<center class="errors" ><c:out value="${ message }"/> <a href="<spring:url value=""/>">Refresh the page.</a></center>
 	</c:if>
 	
+	<div style="padding-top:10px;" id="helpText">
+		Applications are used to store, unify, and manipulate scan results from security scanners.
+		<c:if test="${ empty application.scans }">
+			<br/><br/>To get started, click Upload Scan to start uploading security scans.
+		</c:if>
+	</div>
+	<h3 style="padding-top:10px;">Information</h3>
+
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">URL:</td>
 				<td class="inputValue">
-					<spring:url value="/organizations/{orgId}" var="orgUrl">
-						<spring:param name="orgId" value="${ application.organization.id }"/>
-					</spring:url>
-					<a id="organizationText" href="${fn:escapeXml(orgUrl)}"><c:out value="${ application.organization.name }"/></a>
+					<a id="urlText" href="<spring:url value="${ application.url }" />"><c:out value="${ application.url }" /></a>
 				</td>
+			</tr>
+			<tr>
 				<td class="label">Defect Tracker:</td>
 		<c:choose>
 			<c:when test="${ empty application.defectTracker }">
 				<td class="inputValue">
-					<spring:url value="{appId}/edit" var="editUrl">
-						<spring:param name="appId" value="${ application.id }"/>
-					</spring:url>
-					<a href="${ editUrl }">None Selected</a>
+					<spring:url value="/configuration/defecttrackers/new" var="newDTUrl"/>
+					No Defect Tracker found.
 				</td>
 			</c:when>
 			<c:otherwise>
@@ -45,79 +68,45 @@
 		</c:choose>
 			</tr>
 			<tr>
-				<td class="label">URL:</td>
-				<td class="inputValue">
-					<a id="urlText" href="<spring:url value="${ application.url }" />"><c:out value="${ application.url }" /></a>
-				</td>
 				<td class="label">WAF:</td>
-		<c:choose>
-			<c:when test="${ empty application.waf }">
-				<td class="inputValue">
-					<a href="${ fn:escapeXml(editUrl) }">None Selected</a>
-				</td>
-			</c:when>
-			<c:otherwise>
-				<td class="inputValue">
-					<spring:url value="/wafs/{wafId}" var="wafUrl">
-						<spring:param name="wafId" value="${ application.waf.id }"/>
-					</spring:url>
-					<a id="wafText" href="${ fn:escapeXml(wafUrl) }"><c:out value="${ application.waf.name }"/></a>
-					<em>(<c:out value="${ application.waf.wafType.name }"/>)</em>
-				</td>
-			</c:otherwise>
-		</c:choose>
+				<c:choose>
+					<c:when test="${ empty application.waf }">
+						<td class="inputValue">
+							No WAF found.
+						</td>
+					</c:when>
+					<c:otherwise>
+						<td class="inputValue">
+							<spring:url value="/wafs/{wafId}" var="wafUrl">
+								<spring:param name="wafId" value="${ application.waf.id }"/>
+							</spring:url>
+							<a id="wafText" href="${ fn:escapeXml(wafUrl) }"><c:out value="${ application.waf.name }"/></a>
+							<em>(<c:out value="${ application.waf.wafType.name }"/>)</em>
+						</td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
+			
 		</tbody>
 	</table>
-	<br />
-	<spring:url value="{appId}/edit" var="editUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit Application</a> | 
-	<spring:url value="{appId}/delete" var="deleteUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">Delete Application</a> | 
-	<spring:url value="{appId}/scans" var="scanUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="viewScansLink" href="${ fn:escapeXml(scanUrl) }">View Scans</a> | 
-	<spring:url value="{appId}/scans/upload" var="uploadUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
-	<spring:url value="{appId}/scans/sentinel" var="sentinelUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="importSentinelLink" href="${ fn:escapeXml(sentinelUrl) }">Import Sentinel</a> |
-		<spring:url value="{appId}/scans/new" var="addFindingUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Add Finding Manually</a>
-	<br/>
-	<spring:url value="{appId}/path" var="pathUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="viewPathLink" href="${ fn:escapeXml(pathUrl) }">View Path</a> |
-	<spring:url value="{appId}/path/surface_structure" var="surfaceStructureUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="viewSurfaceStructureLink" href="${ fn:escapeXml(surfaceStructureUrl) }">View Surface Structure</a> |
-		<spring:url value="{appId}/path/code_structure" var="codeStructureUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="viewCodeStructureLink" href="${ fn:escapeXml(codeStructureUrl) }">View Code Structure</a> |
-	<spring:url value="{appId}/falsepositives/mark" var="markFPUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="markFalsePositivesLink" href="${ fn:escapeXml(markFPUrl) }">Mark False Positives</a> |
-	<spring:url value="{appId}/falsepositives/unmark" var="unmarkFPUrl">
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<a id="unmarkMarkedFalsePositivesLink" href="${ fn:escapeXml(unmarkFPUrl) }">Unmark marked False Positives</a>
-	
 
-	<h3>Vulnerabilities</h3>
+	<div id="links" style="padding-bottom:10px;padding-top:10px">
+		<spring:url value="{appId}/scans/upload" var="uploadUrl">
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
+		<spring:url value="{appId}/scans/sentinel" var="sentinelUrl">
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<a id="importSentinelLink" href="${ fn:escapeXml(sentinelUrl) }">Import Sentinel</a> |
+			<spring:url value="{appId}/scans/new" var="addFindingUrl">
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Manually Add Vulnerabilities</a>
+	</div>
+	
+	<c:if test="${ not empty application.scans }"> 
+	<h3 style="padding-top:10px;">All Open Vulnerabilities</h3>
 	
 	<p>Listing <c:out value="${ fn:length(application.activeVulnerabilities ) }"/>
 		<c:choose>
@@ -137,8 +126,24 @@
 				<c:out value="${ fn:length(application.scans) }"/> scans.
 			</c:otherwise>
 		</c:choose>
+		<spring:url value="{appId}/scans" var="scanUrl">
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		
+		<a id="viewScansLink" href="${ fn:escapeXml(scanUrl) }">View Scans</a>
+		<c:if test="${ falsePositiveCount > 0 }">
+			<spring:url value="{appId}/falsepositives/unmark" var="unmarkFPUrl">
+				<spring:param name="appId" value="${ application.id }"/>
+			</spring:url>
+			<span style="padding-left:2px;"><a id="unmarkMarkedFalsePositivesLink" href="${ fn:escapeXml(unmarkFPUrl) }">
+				<c:if test="${ falsePositiveCount == 1 }">
+					View / Unmark 1 False Positive</c:if>
+				<c:if test="${ falsePositiveCount > 1 }">
+					View / Unmark <c:out value="${ falsePositiveCount }"/> False Positives</c:if>
+			</a></span>
+		</c:if>
 	</p>
-	
+
 	<c:choose>
 		<c:when test="${ not empty application.closedVulnerabilities }">
 			<spring:url value="{appId}/closedVulnerabilities" var="closedVulnUrl">	
@@ -155,27 +160,69 @@
 		</c:choose></a>
 		</c:when>
 	</c:choose>
+
+	<spring:url value="{appId}/falsepositives/mark" var="markFPUrl">
+       	<spring:param name="appId" value="${ application.id }" />
+   	</spring:url>
+	<form:form modelAttribute="falsePositiveModel" method="post" action="${ fn:escapeXml(markFPUrl) }">
 	
-	<br/>
+	<table class="dataTable">
+			<tbody>
+				<tr>
+					<td rowspan="4" style="padding-bottom:10px; vertical-align:top">
+						<div class="buttonGroup" id="vulnerabilityFilters">
+							<table style="margin:0px;padding:0px;margin-left:auto;">
+								<tr>
+									<td colspan="2"><b>Vulnerability Name:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input type="text" id="descriptionFilterInput" /></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Severity:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input type="text" id="severityFilterInput" /></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Location:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input type="text" id="locationFilterInput"/></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Parameter:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input type="text" id="parameterFilterInput" /></td>
+								</tr>
+								<tr>
+									<td><a href="#" onClick="Filter();">Filter</a>&nbsp;|&nbsp;</td>
+									<td><a href="#" onClick="ClearFilters();">Clear Filters</a>&nbsp;|&nbsp;</td>
+									<td><a href="#" onClick="toggleFilters(false);">Hide Filters</a></td>
+								</tr>
+							</table>
+						</div>
+						<div id="showFilters" style="display:none;">
+							<a href="#" onClick="toggleFilters(true);">Show Filters</a>
+						</div>
+						<script>toggleFilters(false);</script>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	
-	<table class="formattedTable sortable" id="anyid">
+	<table class="formattedTable sortable filteredTable" id="anyid">
 		<thead>
 			<tr>
 				<th class="first">If Merged</th>
-			    <th>Generic Vulnerability</th>
-				<th>Generic Severity</th>
+			    <th>Vulnerability Name</th>
+				<th>Severity</th>
 				<th>Path</th>
 				<th>Parameter</th>
 				<th>Defect</th>
-				<th>Status</th>
+				<th>Defect Status</th>
 				<th>WAF Rule</th>
-				<th class="last unsortable">WAF Events</th>
+				<th class="unsortable">WAF Events</th>
+				<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:if test="${ empty application.activeVulnerabilities }">
 			<tr class="bodyRow">
-				<td colspan="9" style="text-align:center;">No vulnerabilities found.</td>
+				<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
 			</tr>
 		</c:if>
 		<c:forEach var="vuln" items="${application.activeVulnerabilities}">
@@ -217,10 +264,10 @@
 				<td>
 				<c:choose>
 					<c:when test="${ not empty vuln.defect }">
-						<c:out value="${ vuln.isOpen }"/>
+						<c:out value="${ vuln.defect.status }"/>
 					</c:when>
 					<c:otherwise>
-						OPEN
+						No Defect
 					</c:otherwise>
 				</c:choose>
 				</td>
@@ -237,15 +284,25 @@
 				<td>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
 				</td>
+				<td>
+					<form:checkbox path="vulnerabilityIds" value="${ vuln.id }"/>									
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
 		<tfoot>
 			<tr class="footer">
-				<td colspan="9" class="pagination" style="text-align:right"></td>
+				<td colspan="10" class="pagination" style="text-align:right"></td>
+			</tr>
+			<tr class="footer">
+				<td colspan="10" style="text-align:right">
+					<input type="submit" value="Mark Selected as False Positives">
+				</td>
 			</tr>
 		</tfoot>
 	</table>
+	
+	</form:form>
 
 	<table class="dataTable">
 		<tbody>
@@ -273,4 +330,6 @@
 			</tr>
 		</tbody>
 	</table>
+	
+	</c:if>
 </body>

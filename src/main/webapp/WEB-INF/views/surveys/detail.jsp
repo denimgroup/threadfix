@@ -9,7 +9,7 @@
 	
 	<table class="dataTable">
 		<tr>
-			<td class="label">Organization:</td>
+			<td class="label">Team:</td>
 			<td class="inputValue">
 				<spring:url value="/organizations/{orgId}" var="orgUrl">
 					<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
@@ -126,16 +126,15 @@
 					<c:set var="ranking" value="${surveyResult.practiceRankings[practice.id]}" />
 					<c:choose>
 						<c:when test="${ranking.level >= level.number}">
-							<c:set var="iconImage" value="/images/icn_pass.png" />
+							<div style="color:green">Pass</div>
 						</c:when>
 						<c:when test="${(ranking.level == (level.number - 1)) && ranking.plus}">
-							<c:set var="iconImage" value="/images/icn_caution.png" />
+							<div style="color:blue">Caution</div>
 						</c:when>
 						<c:otherwise>
-							<c:set var="iconImage" value="/images/icn_fail.png" />
+							<div style="color:red">Fail</div>
 						</c:otherwise>
 					</c:choose>
-					<img style="float: left; margin-right: 16px;" src="<c:url value='${iconImage}' />" />
 					<h4>Level - <c:out value="${level.number}" /></h4>
 				</td>
 			</tr>

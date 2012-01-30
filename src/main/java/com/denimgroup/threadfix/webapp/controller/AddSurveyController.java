@@ -71,20 +71,14 @@ public class AddSurveyController {
 
 			model.addAttribute(surveyResult);
 			model.addAttribute(surveyService.loadAll());
-
-			return "surveys/select";
+			
+			surveyResult.setSurvey(surveyService.loadSurvey(1));
+			surveyResult.generateEmptyAnswers();
+			return "surveys/form";
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 		}
-	}
-
-	@RequestMapping(params = "surveys/continue", method = RequestMethod.POST)
-	public String processSelect(@PathVariable("orgId") int orgId,
-			@ModelAttribute SurveyResult surveyResult) {
-		surveyResult.setSurvey(surveyService.loadSurvey(surveyResult.getSurvey().getId()));
-		surveyResult.generateEmptyAnswers();
-		return "surveys/form";
 	}
 
 	@RequestMapping(params = "surveys/save", method = RequestMethod.POST)

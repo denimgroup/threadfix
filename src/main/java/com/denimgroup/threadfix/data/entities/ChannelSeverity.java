@@ -33,6 +33,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "ChannelSeverity")
 public class ChannelSeverity extends BaseEntity {
@@ -48,6 +50,7 @@ public class ChannelSeverity extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "channelTypeId")
+	@JsonIgnore
 	public ChannelType getChannelType() {
 		return channelType;
 	}
@@ -75,6 +78,7 @@ public class ChannelSeverity extends BaseEntity {
 	}
 
 	@OneToOne(mappedBy = "channelSeverity")
+	@JsonIgnore
 	public SeverityMap getSeverityMap() {
 		return severityMap;
 	}
@@ -84,6 +88,7 @@ public class ChannelSeverity extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "channelSeverity")
+	@JsonIgnore
 	public List<Finding> getFindings() {
 		return findings;
 	}

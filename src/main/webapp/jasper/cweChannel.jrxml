@@ -25,9 +25,9 @@
 	<pageHeader>
 		<band height="45" splitType="Stretch">
 			<staticText>
-				<reportElement x="186" y="0" width="200" height="20"/>
+				<reportElement x="176" y="0" width="200" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[CWE CHANNEL REPORT]]></text>
+				<text><![CDATA[Channel Comparison By Vulnerability Types]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="22" width="300" height="20"/>

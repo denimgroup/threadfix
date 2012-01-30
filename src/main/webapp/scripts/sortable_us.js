@@ -110,6 +110,7 @@ function ts_resortTable(lnk, clid) {
 	if (itm.match(/^\d\d[\/\.-]\d\d[\/\.-]\d\d\d{2}?$/)) sortfn = ts_sort_date;
 	if (itm.match(/^-?[£$€Û¢´]\d/)) sortfn = ts_sort_numeric;
 	if (itm.match(/^-?(\d+[,\.]?)+(E[-+][\d]+)?%?$/)) sortfn = ts_sort_numeric;
+	if (itm.match(/(Info|Low|Medium|High|Critical)/)) sortfn = ts_sort_severity;
 	SORT_COLUMN_INDEX = column;
 	var firstRow = new Array();
 	var newRows = new Array();
@@ -235,6 +236,22 @@ function ts_sort_date(a,b) {
 		return -1;
 	}
 	return 1;
+}
+function ts_sort_severity(a,b) {
+	var aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
+	num1 = severity_to_num(aa);
+	var bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
+	num2 = severity_to_num(bb);
+	return num1 - num2;
+}
+function severity_to_num(severity) {
+	switch(severity) {
+		case "Info": return 1;
+		case "Low": return 2;
+		case "Medium": return 3;
+		case "High": return 4;
+		case "Critical": return 5;
+	}
 }
 function ts_sort_numeric(a,b) {
 	var aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);

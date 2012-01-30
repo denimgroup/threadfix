@@ -16,4 +16,4 @@
 
 <br/><br/>
 
-<a href="/threadfix/organizations">Back to Organization index</a>
+<a href="/threadfix/organizations">Back to Home Page</a>

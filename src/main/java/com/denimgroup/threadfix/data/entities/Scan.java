@@ -41,6 +41,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "Scan")
 public class Scan extends BaseEntity {
@@ -72,6 +74,7 @@ public class Scan extends BaseEntity {
 	
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "applicationChannelId")
+	@JsonIgnore
 	public ApplicationChannel getApplicationChannel() {
 		return applicationChannel;
 	}
@@ -91,6 +94,7 @@ public class Scan extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
+	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}
@@ -172,6 +176,7 @@ public class Scan extends BaseEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<Finding> getUnmappedFindings() {
 		if (unmappedFindings == null) {
 			generateFindingLists();
@@ -180,6 +185,7 @@ public class Scan extends BaseEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<Finding> getMappedFindings() {
 		if (mappedFindings == null) {
 			generateFindingLists();
@@ -259,6 +265,7 @@ public class Scan extends BaseEntity {
 	// These two functions establish the order the integers come in and this
 	// order should not be changed.
 	@Transient
+	@JsonIgnore
 	public List<Integer> getReportList() {
 		List<Integer> integerList = new ArrayList<Integer>();
 		integerList.add(getId());
@@ -270,6 +277,7 @@ public class Scan extends BaseEntity {
 		return integerList;
 	}
 	
+	@JsonIgnore
 	public static ScanTimeComparator getTimeComparator() {
 		return new ScanTimeComparator();
 	}

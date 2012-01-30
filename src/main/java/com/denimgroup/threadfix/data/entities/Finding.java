@@ -36,6 +36,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "Finding")
 public class Finding extends AuditableEntity {
@@ -82,6 +84,7 @@ public class Finding extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "scanId")
+	@JsonIgnore
 	public Scan getScan() {
 		return scan;
 	}

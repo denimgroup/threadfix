@@ -23,7 +23,7 @@
 	<spring:url value="{userId}/delete" var="deleteUrl">
 		<spring:param name="userId" value="${ user.id }"/>
 	</spring:url>
-	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Organization?')">Delete</a> | 
-	<a id="backToListLink" href="<spring:url value="/configuration/users" />">Back to List</a>
+	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this User?')">Delete</a> | 
+	<a id="backToListLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
 	<br />
 </body>

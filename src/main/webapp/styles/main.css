@@ -225,6 +225,15 @@ ul#breadcrumbs li.first {
 	width: 100%;
 }
 
+div#helpText {
+	background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid;
+    color: black;
+    margin: 10px 0;
+    padding: 15px;
+    display: inline-block;
+}
+
 #footer {
 	padding-top: 40px;
 	background: #43678b;

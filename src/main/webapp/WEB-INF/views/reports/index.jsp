@@ -43,16 +43,16 @@
 							<form:select path="reportId">
 								<option value="1">Trending Report</option>
 								<option value="2">Point in Time Report</option>
-								<option value="3">CWE Report</option>
-								<option value="4">CWE Channel Report</option>
-								<option value="5">Scanner Comparison Summary</option>
-								<option value="6">Scanner Comparison By Vulnerability</option>
+								<option value="3">Vulnerability Progress By Type</option>
+								<option value="4">Channel Comparison By Vulnerability Types</option>
+								<option value="5">Channel Comparison Summary</option>
+								<option value="6">Channel Comparison Detail</option>
 							</form:select>
 						</div>
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Organization:</td>
+					<td class="label">Team:</td>
 					<td class="inputValue">
 						<div id="orgDropDown">
 							<form:select path="organizationId" id="orgSelect">

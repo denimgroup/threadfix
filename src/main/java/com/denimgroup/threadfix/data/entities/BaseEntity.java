@@ -31,6 +31,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * A base class for all entities that ensures Serialization and PK generation.
  * 
@@ -67,6 +69,7 @@ public class BaseEntity implements Serializable {
 	}
 
 	@Transient
+	@JsonIgnore
 	public boolean isNew() {
 		return this.getId() == null;
 	}

@@ -29,6 +29,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "SeverityMap")
 public class SeverityMap extends BaseEntity {
@@ -40,6 +42,7 @@ public class SeverityMap extends BaseEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "channelSeverityId")
+	@JsonIgnore
 	public ChannelSeverity getChannelSeverity() {
 		return channelSeverity;
 	}

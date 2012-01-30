@@ -6,20 +6,21 @@
 </head>
 
 <body id="apps">
-	<h2 id="name"><c:out value="${ organization.name }"/></h2>
+	<h2 id="name">Team Overview</h2>
+	<h3 style="padding-top:5px;"><c:out value="${ organization.name }"/></h3>
+	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
 	
-	<h3 class="top">Applications</h3>
+	<h3 style="padding-top:5px;">Applications</h3>
 	<table class="formattedTable">
 		<thead>
 			<tr>
 				<th class="medium first">Name</th>
 				<th class="long">URL</th>
-				<th class="short">Total Open</th>
+				<th class="short">Open Vulns</th>
 				<th class="short">Critical</th>
 				<th class="short">High</th>
 				<th class="short">Medium</th>
-				<th class="short">Low</th>
-				<th class="short last">Info</th>
+				<th class="short last">Low</th>
 			</tr>
 		</thead>
 		<tbody id="applicationsTableBody">
@@ -45,7 +46,6 @@
 				<td><c:out value="${ app.vulnerabilityReport[3] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[2] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[1] }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[0] }"/></td>
 			</tr>
 			</c:forEach>
 		</c:otherwise>
@@ -70,21 +70,22 @@
 		</div>
 	</c:if>
 	
-	<h3>Surveys</h3>
+	<h3>Maturity Assessments</h3>
+	<div id="helpText">Maturity Assessments are designed to help evaluate a team's existing software security practices.</div>
 	<table class="formattedTable">
 		<thead>
 			<tr>
-				<th class="long first">Survey</th>
+				<th class="long first">Maturity Assessment</th>
 				<th class="medium">User</th>
 				<th class="medium">Status</th>
-				<th class="last">Start On</th>
+				<th class="last">Started On</th>
 			</tr>
 		</thead>
 		<tbody>
 	<c:choose>
 		<c:when test="${ empty organization.surveyResults }">
 			<tr class="bodyRow">
-				<td colspan="4" style="text-align:center;"> No surveys found.</td>
+				<td colspan="4" style="text-align:center;"> No Maturity Assessments found.</td>
 			</tr>
 		</c:when>
 		<c:otherwise>
@@ -123,8 +124,8 @@
 					<spring:url value="{orgId}/surveys/new" var="newSurveyUrl">
 						<spring:param name="orgId" value="${ organization.id }" />
 					</spring:url>
-					<a href="${ fn:escapeXml(newSurveyUrl) }">Take a Survey</a>
-				</td>
+					<a href="${ fn:escapeXml(newSurveyUrl) }">Take a Maturity Assessment</a>
+				</td>  
 				<td colspan="2" class="pagination last" style="text-align:right"></td>
 			</tr>
 		</tbody>
@@ -133,10 +134,10 @@
 	<spring:url value="{orgId}/edit" var="editUrl">
 		<spring:param name="orgId" value="${ organization.id }"/>
 	</spring:url>
-	<a id="editOrganizationLink" href="${ fn:escapeXml(editUrl) }">Edit Organization</a> | 
+	<a id="editOrganizationLink" href="${ fn:escapeXml(editUrl) }">Edit Team</a> | 
 	<spring:url value="{orgId}/delete" var="deleteUrl">
 		<spring:param name="orgId" value="${ organization.id }"/>
 	</spring:url>
-	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Organization?')">Delete Organization</a> | 
-	<a id="backToList" href="<spring:url value="/organizations" />">Back to List</a>
+	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a> | 
+	<a id="backToList" href="<spring:url value="/organizations" />">Home</a>
 </body>

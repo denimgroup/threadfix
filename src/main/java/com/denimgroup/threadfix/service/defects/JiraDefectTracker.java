@@ -56,9 +56,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	private String password;
 	private String projectName;
 	private String loginToken;
-
-	private final static String LOGIN_FAILURE_STRING = "Login Failure";
-
+	
 	/**
 	 * Parse through the returned structure and return a hashmap of the results.
 	 * 
@@ -108,6 +106,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			} else {
 				e.printStackTrace();
 			}
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
+			return false;
 		}
 		return true;
 	}
@@ -141,6 +142,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		} catch (MalformedURLException e) {
 			log.error(String.format("Invalid URL for JIRA connection: '%1$s'.", url), e);
 			return null;
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
+			return null;
 		}
 
 		XmlRpcClient client = new XmlRpcClient();
@@ -172,15 +176,18 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		} catch (XmlRpcException e) {
 			String message = "Error logging in to JIRA. Check credentials?";
 			log.error(message, e);
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
 		}
 
 		if (loginToken == null || loginToken.equals("")) {
 			String message = "JIRA returned a null or empty login token.";
 			log.warn(message);
+			return LOGIN_FAILURE_STRING;
+		} else {
+			log.info("Successfully logged into JIRA repository.");
+			return loginToken;
 		}
-
-		log.info("Successfully logged into JIRA repository.");
-		return loginToken;
 	}
 
 	/**
@@ -198,6 +205,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		} catch (XmlRpcException e) {
 			String msg = "Error while logging out of JIRA repository.";
 			log.error(msg, e);
+			return;
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
 			return;
 		}
 
@@ -264,8 +274,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				jiraId = key;
 			}
 		} catch (XmlRpcException e) {
-			log.warn("Exception occured while creating Defect: " + e.getMessage());
-			e.printStackTrace();
+			log.warn("XmlRpcException occured while creating Defect.", e);
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
 		}
 
 		return jiraId;
@@ -320,6 +331,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			return retVal;
 		} catch (XmlRpcException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			log.warn("Illegal argument exception encountered while trying to contact JIRA RPC endpoint - check URL.", e);
 		}
 
 		return null;
@@ -405,7 +418,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		login(client);
 
 		if (this.loginToken == null)
-			return "Login failed - check credentials";
+			return LOGIN_FAILURE_STRING;
 
 		if (projectName == null || projectName.trim().equals(""))
 			return "Project name was blank - check credentials.";
@@ -534,6 +547,18 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidProjectName() {
 		return projectExists(projectName);
+	}
+	
+	@Override
+	public String getInitialStatusString() {
+		// TODO Figure out what the actual string is
+		return "OPEN";
+	}
+	
+	// TODO
+	@Override
+	public String getBugURL(String endpointURL, String bugID) {
+		return endpointURL;
 	}
 
 }

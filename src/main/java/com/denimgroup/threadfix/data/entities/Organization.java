@@ -35,6 +35,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -84,6 +85,7 @@ public class Organization extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<Application> getActiveApplications() {
 		if (activeApps == null) {
 			activeApps = new ArrayList<Application>();
@@ -100,6 +102,7 @@ public class Organization extends AuditableEntity {
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
 	 */
 	@Transient
+	@JsonIgnore
 	public List<Integer> getVulnerabilityReport() {
 
 		int[] calculations = new int[6];

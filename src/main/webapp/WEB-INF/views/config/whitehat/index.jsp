@@ -9,6 +9,11 @@
 <body id="config">
 	<h2>WhiteHat Sentinel</h2>
 	
+	<div id="helpText">
+		This Sentinel API Key is used to pull scan results from the Sentinel Web Services.<br/>
+		If you are having problems, make sure that your API Key is correct and that your application URLs correspond to the WhiteHat Sentinel URLs.
+	</div>
+	
 	<table class="dataTable">
 		<tbody>
 			<tr>

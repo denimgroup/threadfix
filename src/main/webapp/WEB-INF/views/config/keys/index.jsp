@@ -7,6 +7,10 @@
 <body>
 	<h2>API Keys</h2>
 	
+	<div id="helpText">
+		ThreadFix API Keys are used to access the RPC SOAP interface.
+	</div>
+	
 	<table class="formattedTable">
 		<thead>
 			<tr>

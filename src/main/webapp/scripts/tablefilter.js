@@ -19,7 +19,6 @@ function toggleFilters(show){
 		grabEBI("vulnerabilityFilters").style.display = "none";
 		ClearFilters();
 	}
-	
 }
 
 function ClearFilters(){

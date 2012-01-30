@@ -34,6 +34,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -60,6 +61,7 @@ public class WafRuleDirective extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafTypeId")
+	@JsonIgnore
 	public WafType getWafType() {
 		return wafType;
 	}
@@ -69,6 +71,7 @@ public class WafRuleDirective extends BaseEntity {
 	}
 	
 	@OneToMany(mappedBy = "wafRuleDirective", cascade = CascadeType.ALL)
+	@JsonIgnore
 	public List<WafRule> getWafRules() {
 		return wafRules;
 	}

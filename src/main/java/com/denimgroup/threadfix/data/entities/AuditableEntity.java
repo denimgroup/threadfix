@@ -30,6 +30,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * A base class for all entities that require Created and Modified dates.
  * 
@@ -58,6 +60,7 @@ public class AuditableEntity extends BaseEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+	@JsonIgnore
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}

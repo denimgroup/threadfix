@@ -278,12 +278,15 @@ public class ReportsController {
 				// For each finding, if the path to the channel type ID is not null, put an X in the table
 				for (Finding finding : vuln.getFindings()) {
 					if (finding != null && finding.getScan() != null 
-						&& finding.getScan().getApplicationChannel() != null 
-						&& finding.getScan().getApplicationChannel().getChannelType() != null
-						&& finding.getScan().getApplicationChannel().getChannelType().getId() != null) {
-							tempList.set(channelIdToTablePositionMap.get(
-									finding.getScan().getApplicationChannel().getChannelType().getId())
-									, "X");
+							&& finding.getScan().getApplicationChannel() != null 
+							&& finding.getScan().getApplicationChannel().getChannelType() != null
+							&& finding.getScan().getApplicationChannel().getChannelType().getId() != null) 
+					{
+						Integer tablePosition = channelIdToTablePositionMap.get(
+								finding.getScan().getApplicationChannel().getChannelType().getId());
+						if (tablePosition != null) {
+							tempList.set(tablePosition, "X");
+						}
 					}
 				}
 				

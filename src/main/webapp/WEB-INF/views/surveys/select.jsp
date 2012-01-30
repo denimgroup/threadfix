@@ -11,7 +11,7 @@
 	<form:form modelAttribute="surveyResult" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">Team:</td>
 				<td class="inputValue">
 					<c:out value="${ surveyResult.organization.name }" />
 				</td>

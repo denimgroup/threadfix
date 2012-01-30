@@ -33,6 +33,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -92,6 +93,7 @@ public class Waf extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "waf")
+	@JsonIgnore
 	public List<Application> getApplications() {
 		return applicationList;
 	}

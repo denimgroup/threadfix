@@ -164,6 +164,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	}
     			for (String regex : entryPointRegexPatterns) {
     				if (isRegexMatch(path, regex)) {
+    					skipNonceCheck = true;
     					skipNonceGeneration = true;
     					break;
     				}

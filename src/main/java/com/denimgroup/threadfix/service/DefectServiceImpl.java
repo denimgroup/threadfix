@@ -146,6 +146,8 @@ public class DefectServiceImpl implements DefectService {
 			defect.setNativeId(defectId);
 			defect.setVulnerabilities(vulnsWithoutDefects);
 			defect.setApplication(application);
+			defect.setStatus(dt.getInitialStatusString());
+			defect.setDefectURL(dt.getBugURL(application.getDefectTracker().getUrl(), defectId));
 			defectDao.saveOrUpdate(defect);
 
 			for (Vulnerability vulnerability : vulnsWithoutDefects) {
@@ -277,7 +279,7 @@ public class DefectServiceImpl implements DefectService {
 		}
 		
 		if (numUpdated == 0) {
-			log.warn("No vulnerabilities were updated - check your configuration.");
+			log.warn("No vulnerabilities were updated.");
 		} else {
 			log.info("Updated information for " + numUpdated + " vulnerabilities.");
 		}

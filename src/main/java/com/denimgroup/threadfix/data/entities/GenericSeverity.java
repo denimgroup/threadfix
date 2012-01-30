@@ -32,6 +32,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -57,6 +58,7 @@ public class GenericSeverity extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "genericSeverity")
+	@JsonIgnore
 	public List<SeverityMap> getSeverityMapping() {
 		return severityMapping;
 	}
@@ -66,6 +68,7 @@ public class GenericSeverity extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "genericSeverity", cascade = CascadeType.ALL)
+	@JsonIgnore
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}

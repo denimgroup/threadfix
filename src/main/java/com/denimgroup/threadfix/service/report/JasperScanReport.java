@@ -72,9 +72,11 @@ public class JasperScanReport implements JRDataSource {
 			oldVulnsByChannelMap.put(appChannelId, scan.getNumberTotalVulnerabilities());
 		}
 		
-		Integer numTotal = scan.getNumberTotalVulnerabilities();
+		// TODO Take a look at cleaning this up after we decide on the format for this report
 		Integer numOld = scan.getNumberOldVulnerabilities();
+		Integer numTotal = scan.getNumberTotalVulnerabilities();
 		
+		// This code counts in the old vulns from other channels.
 		if (numTotal == null) numTotal = 0;
 		if (numOld == null) numOld = 0;
 		for (Integer key : oldVulnsByChannelMap.keySet()) {
@@ -85,7 +87,7 @@ public class JasperScanReport implements JRDataSource {
 			numOld += oldVulnsByChannelMap.get(key);
 		}
 		
-		resultsHash.put("oldVulns", numOld);
+		resultsHash.put("oldVulns", numOld - scan.getNumberResurfacedVulnerabilities());
 		resultsHash.put("totVulns", numTotal);
 	}
 

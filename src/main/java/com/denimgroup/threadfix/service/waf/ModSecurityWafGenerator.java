@@ -58,7 +58,11 @@ public class ModSecurityWafGenerator extends RealTimeProtectionGenerator {
 	
 	@Override
 	protected String generateRuleWithParameter(String uri, String action, String id,
-			String payload, String parameter, String message) {
+			String genericVulnName, String parameter) {
+		
+		String payload = PAYLOAD_MAP.get(genericVulnName);
+		String message = MESSAGE_MAP.get(genericVulnName);
+		
 		return RULE_START_URI + pcreRegexEscape(uri) + "\""
 			+ "\"phase:2,chain," + action + ",msg:'" + message + ": " + uri
 			+ " [" + parameter + "]',id:'" + id + "',severity:'2'\"\n"
@@ -67,7 +71,11 @@ public class ModSecurityWafGenerator extends RealTimeProtectionGenerator {
 	
 	@Override
 	protected String generateRuleWithPayloadInUrl(String uri, String action, String id,
-			String payload, String message) {
+			String genericVulnName) {
+
+		String payload = PAYLOAD_MAP.get(genericVulnName);
+		String message = MESSAGE_MAP.get(genericVulnName);
+		
 		return RULE_START_URI + pcreRegexEscape(uri) + "[^?]*(" + payload + ")\""
 			+ "\"phase:2," + action + ",msg:'" + message + ": " + uri
 			+ "',id:'" + id + "',severity:'2'\"\n";
@@ -75,7 +83,11 @@ public class ModSecurityWafGenerator extends RealTimeProtectionGenerator {
 	
 	@Override
 	protected String generateRuleForExactUrl(String uri, String action, String id,
-			String payload, String message) {
+			String genericVulnName) {
+
+		String payload = PAYLOAD_MAP.get(genericVulnName);
+		String message = MESSAGE_MAP.get(genericVulnName);
+		
 		return RULE_START_URI + pcreRegexEscape(uri) + "(" + payload + ")"
 			+ "\"\"phase:2," + action + ",msg:'" + message + ": " + uri
 			+ "',id:'" + id + "',severity:'2'\"\n";

@@ -766,20 +766,20 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (newString.toLowerCase().contains(oldString.toLowerCase()))
 			return oldString;
 
-		newString = newString.replace("\\", "/").toLowerCase();
-		oldString = oldString.replace("\\", "/").toLowerCase();
+		String newLower = newString.replace("\\", "/").toLowerCase();
+		String oldLower = oldString.replace("\\", "/").toLowerCase();
 
 		String returnString = "";
 
-		for (String string : oldString.split("/")) {
+		for (String string : oldLower.split("/")) {
 			String tempString = returnString.concat(string + "/");
-			if (newString.startsWith(tempString))
+			if (newLower.startsWith(tempString))
 				returnString = tempString;
 			else
 				break;
 		}
 
-		return returnString;
+		return oldString.replace("\\", "/").substring(0, returnString.length());
 	}
 
 	private void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
@@ -815,7 +815,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		
 		if (applicationChannel != null && applicationChannel.getScanList() != null)
 			for (Scan oldScan : applicationChannel.getScanList())
-				if (oldScan.getFindings() != null && oldScan.getFindings().size() != 0)
+				if (oldScan != null && oldScan.getId() != null && oldScan.getFindings() != null && oldScan.getFindings().size() != 0)
 					oldFindings.addAll(oldScan.getFindings());
 		
 		for (Finding finding : oldFindings)

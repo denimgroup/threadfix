@@ -21,7 +21,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">Team:</td>
 				<td class="inputValue"><c:out value="${ application.organization.name }"/></td>
 				<td class="label">Defect Tracker:</td>
 				<c:choose>

@@ -30,8 +30,8 @@
 	<variable name="lowCount" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
 	</variable>
-	<variable name="informationalCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	<variable name="totalCount" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount}]]></variableExpression>
 	</variable>
 	<variable name="highAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
@@ -45,8 +45,17 @@
 	<variable name="lowAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
 	</variable>
-	<variable name="informationalAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	<variable name="criticalPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{criticalCount} != 0 ? (100 * $V{criticalCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="highPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{highCount} != 0 ? (100 * $V{highCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="mediumPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{mediumCount} != 0 ? (100 * $V{mediumCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="lowPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{lowCount} != 0 ? (100 * $V{lowCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<background>
 		<band/>
@@ -85,9 +94,9 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="200">
+		<band height="210">
 			<staticText>
-				<reportElement x="0" y="0" width="60" height="20"/>
+				<reportElement x="110" y="40" width="60" height="20"/>
 				<box>
 					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
@@ -98,7 +107,7 @@
 				<text><![CDATA[Severity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="60" y="0" width="45" height="20"/>
+				<reportElement x="170" y="40" width="45" height="20"/>
 				<box>
 					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
@@ -109,48 +118,70 @@
 				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="20" width="60" height="20"/>
+				<reportElement x="215" y="40" width="60" height="20"/>
 				<box>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[C]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="40" width="60" height="20"/>
-				<box>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[H]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="60" width="60" height="20"/>
-				<box>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="80" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Avg Age]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="40" width="75" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="60" width="60" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<text><![CDATA[L]]></text>
+				<text><![CDATA[Critical ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="80" width="60" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[High ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="100" width="60" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Medium ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="120" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Low ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="60" y="40" width="45" height="20"/>
+				<reportElement x="170" y="80" width="45" height="20"/>
 				<box>
 					<rightPen lineWidth="0.75"/>
 				</box>
@@ -160,7 +191,7 @@
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{highCount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="60" width="45" height="20"/>
+				<reportElement x="170" y="100" width="45" height="20"/>
 				<box>
 					<rightPen lineWidth="0.75"/>
 				</box>
@@ -170,9 +201,9 @@
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{mediumCount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="80" width="45" height="20"/>
+				<reportElement x="170" y="120" width="45" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -181,7 +212,7 @@
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="20" width="45" height="20"/>
+				<reportElement x="170" y="60" width="45" height="20"/>
 				<box>
 					<rightPen lineWidth="0.75"/>
 				</box>
@@ -190,9 +221,94 @@
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{criticalCount}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="215" y="80" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{highCount} != 0 ? $V{highAgeSum} / $V{highCount} : new Integer(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="60" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{criticalCount} != 0 ? $V{criticalAgeSum} / $V{criticalCount} : new Integer(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="100" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{mediumCount} != 0 ? $V{mediumAgeSum} / $V{mediumCount} : new Integer(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="120" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount} != 0 ? $V{lowAgeSum} / $V{lowCount} : new Integer(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="60" width="75" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{criticalPercent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="80" width="75" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{highPercent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="100" width="75" height="20"/>
+				<box>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{mediumPercent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="120" width="75" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{lowPercent}]]></textFieldExpression>
+			</textField>
 			<pieChart>
-				<chart>
-					<reportElement x="380" y="0" width="372" height="200"/>
+				<chart isShowLegend="false" customizerClass="com.denimgroup.threadfix.service.report.PointInTimeChartCustomizer">
+					<reportElement x="360" y="10" width="372" height="200"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -214,103 +330,12 @@
 						<keyExpression><![CDATA["Low"]]></keyExpression>
 						<valueExpression><![CDATA[$V{lowCount}]]></valueExpression>
 					</pieSeries>
-					<pieSeries>
-						<keyExpression><![CDATA["Information"]]></keyExpression>
-						<valueExpression><![CDATA[$V{informationalCount}]]></valueExpression>
-					</pieSeries>
 				</pieDataset>
-				<piePlot>
+				<piePlot labelFormat="{0}">
 					<plot/>
+					<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
 				</piePlot>
 			</pieChart>
-			<staticText>
-				<reportElement x="0" y="100" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[I]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="60" y="100" width="45" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{informationalCount}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="105" y="0" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Avg Age]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="105" y="40" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{highCount} != 0 ? $V{highAgeSum} / $V{highCount} : new Integer(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="105" y="20" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{criticalCount} != 0 ? $V{criticalAgeSum} / $V{criticalCount} : new Integer(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="105" y="60" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{mediumCount} != 0 ? $V{mediumAgeSum} / $V{mediumCount} : new Integer(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="105" y="80" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount} != 0 ? $V{lowAgeSum} / $V{lowCount} : new Integer(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="105" y="100" width="60" height="20"/>
-				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
-					<rightPen lineWidth="0.75" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{informationalCount} != 0 ? $V{informationalAgeSum} / $V{informationalCount} : new Integer(0)]]></textFieldExpression>
-			</textField>
 		</band>
 	</summary>
 	<noData>

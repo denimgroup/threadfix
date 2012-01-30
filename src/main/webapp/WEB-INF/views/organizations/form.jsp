@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ organization.new }">New </c:if>Organization</title>
+	<title><c:if test="${ organization.new }">New </c:if>Team</title>
 </head>
 
 <body id="apps">
-	<h2><c:if test="${ organization.new }">New </c:if>Organization</h2>
+	<h2><c:if test="${ organization.new }">New </c:if>Team</h2>
 	
 <spring:url value="" var="emptyUrl"></spring:url>	
 <form:form modelAttribute="organization" method="post" autocomplete="off" action="${ fn:escapeXml( emptyUrl) }">
@@ -25,16 +25,18 @@
 	<br/>
 <c:choose>
 <c:when test="${ organization.new }">
-	<input id="submitButton" type="submit" value="Add Organization" />
+	<input id="submitButton" type="submit" value="Add Team" />
 	<spring:url value="/organizations" var="orgUrl" />
+	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Home</a></span>
 </c:when>
 <c:otherwise>
-	<input id="updateButton"type="submit" value="Update Organization" />
+	<input id="updateButton"type="submit" value="Update Team" />
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ organization.id }" />
 	</spring:url>
+	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Back to Team <c:out value="${ organization.name }"/></a></span>
 </c:otherwise>
 </c:choose>
-	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Cancel</a></span>
+	
 </form:form>
 </body>

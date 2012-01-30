@@ -39,6 +39,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -149,6 +150,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = 50)
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -178,6 +180,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "organizationId")
+	@JsonIgnore
 	public Organization getOrganization() {
 		return organization;
 	}
@@ -188,6 +191,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
+	@JsonIgnore
 	public Waf getWaf() {
 		return waf;
 	}
@@ -207,6 +211,7 @@ public class Application extends AuditableEntity {
 
 	@OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
+	@JsonIgnore
 	public List<Scan> getScans() {
 		return scans;
 	}
@@ -217,6 +222,7 @@ public class Application extends AuditableEntity {
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@OrderBy("genericSeverity, genericVulnerability")
+	@JsonIgnore
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
@@ -238,6 +244,7 @@ public class Application extends AuditableEntity {
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
 	 */
 	@Transient
+	@JsonIgnore
 	public List<Integer> getVulnerabilityReport() {
 		if (reportList != null) {
 			return reportList;
@@ -282,6 +289,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Transient
+	@JsonIgnore
 	public List<Finding> getFindingList() {
 		if (findingList != null)
 			return findingList;
@@ -298,6 +306,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<Vulnerability> getActiveVulnerabilities() {
 		List<Vulnerability> result = new ArrayList<Vulnerability>();
 		for(Vulnerability vuln : vulnerabilities) {
@@ -309,6 +318,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<Vulnerability> getClosedVulnerabilities() {
 		List<Vulnerability> result = new ArrayList<Vulnerability>();
 		for(Vulnerability vuln : vulnerabilities) {
@@ -320,6 +330,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public List<ApplicationChannel> getUploadableChannels() {
 		
 		if (uploadableChannels != null)
@@ -348,5 +359,4 @@ public class Application extends AuditableEntity {
 		uploadableChannels = returnList;
 		return returnList;
 	}
-	
 }

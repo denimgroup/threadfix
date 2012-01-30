@@ -9,9 +9,6 @@
 	
 	<ul class="squareList" style="padding-left:15px">
 	    <li>
-	        <a id="channelsLink" href="<spring:url value="configuration/channels" htmlEscape="true"/>">Channels</a>
-	    </li>
-	    <li>
 	    	<a id="defectTrackersLink" href="<spring:url value="configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
 	    </li>
 	    <li>

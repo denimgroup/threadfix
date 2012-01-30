@@ -34,6 +34,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "SecurityEvent")
 public class SecurityEvent extends BaseEntity {
@@ -57,6 +59,7 @@ public class SecurityEvent extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafRuleId")
+	@JsonIgnore
 	public WafRule getWafRule() {
 		return wafRule;
 	}

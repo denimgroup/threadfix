@@ -34,6 +34,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -88,6 +89,7 @@ public class DefectTracker extends AuditableEntity {
 
 	@OneToMany
 	@JoinColumn(name = "defectTrackerId")
+	@JsonIgnore
 	public List<Application> getApplications() {
 		return applications;
 	}
@@ -97,6 +99,7 @@ public class DefectTracker extends AuditableEntity {
 	}
 
 	@Transient
+	@JsonIgnore
 	public String getDisplayName() {
 		return this.toString();
 	}

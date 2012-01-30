@@ -33,6 +33,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -85,6 +86,7 @@ public class WafRule extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafId")
+	@JsonIgnore
 	public Waf getWaf() {
 		return waf;
 	}
@@ -95,6 +97,7 @@ public class WafRule extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
+	@JsonIgnore
 	public Vulnerability getVulnerability() {
 		return vulnerability;
 	}
@@ -104,6 +107,7 @@ public class WafRule extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "wafRule")
+	@JsonIgnore
 	public List<SecurityEvent> getSecurityEvents() {
 		return securityEvents;
 	}

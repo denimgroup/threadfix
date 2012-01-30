@@ -7,6 +7,11 @@
 <body id="config">
 	<h2><c:choose><c:when test="${ viewAll }">All</c:when><c:otherwise>Open</c:otherwise></c:choose> Job Statuses</h2>
 	
+	<div id="helpText">
+		Job Statuses are used to keep track of the asynchronous jobs that ThreadFix is processing.<br/>
+		These jobs include scan uploads, defect tracker requests, and Sentinel imports.
+	</div>
+	
 	<table class="formattedTable">
 		<thead>
 			<tr>

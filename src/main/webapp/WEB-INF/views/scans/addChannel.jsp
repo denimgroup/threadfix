@@ -6,6 +6,10 @@
 
 <body id="apps">
 	<h2><c:out value="${ application.name }"/> New Channel</h2>
+	
+	<div id="helpText">
+		Application Channels are used to upload scans from a particular scanning tool to your ThreadFix application.
+	</div>
 
 <spring:url value="/organizations/{orgId}/applications/{appId}/addChannel" var="submitUrl">
 	<spring:param name="orgId" value="${ application.organization.id }" />
@@ -34,6 +38,6 @@
 	<spring:param name="orgId" value="${ application.organization.id }" />
 	<spring:param name="appId" value="${ application.id }" />
 </spring:url>
-<span style="padding-left: 10px"><a id="cancelButton" href="${ fn:escapeXml(appUrl) }">Cancel</a></span>
+<span style="padding-left: 10px"><a id="cancelButton" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
 </form:form>
 </body>

@@ -86,16 +86,17 @@ public class PathController {
 		
 		List<String> pathList = new ArrayList<String>();
 		for (Vulnerability vuln : application.getVulnerabilities()) {
-			if (vuln != null && vuln.getFindings() != null)
+			if (vuln != null && vuln.getFindings() != null) {
 				for (Finding finding : vuln.getFindings()) {
 					if (finding != null && finding.getSourceFileLocation() != null) {
 						pathList.add(finding.getSourceFileLocation());
 					}
 				}
+			}
 		}
 		pathList = removeDuplicates(pathList);
 		PathTree pt = new PathTree(new Node("root"));
-		pt = getTreeStructure(pathList, pt);
+		pt = getTreeStructure(pathList, pt, application);
 		mav.addObject(application);
 		mav.addObject("pathTree", pt);
 		return mav;
@@ -112,6 +113,7 @@ public class PathController {
 			throw new ResourceNotFoundException();
 		}
 		
+		// TODO validate this attachment - not a high priority as it doesn't affect anything really
 		app.setProjectRoot(application.getProjectRoot());
 		applicationService.storeApplication(app);
 		scanMergeService.updateSurfaceLocation(app);
@@ -119,55 +121,6 @@ public class PathController {
 		status.setComplete();
 		return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/"
 				+ String.valueOf(appId);
-	}
-
-	@RequestMapping(value = "/surface_structure")
-	public ModelAndView getSurfaceStructure(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId) {
-		Application application = applicationService.loadApplication(appId);
-		
-		if (application == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		boolean flag = false;
-		if (application.getVulnerabilities() != null)
-			for (Vulnerability vulnerability : application.getVulnerabilities())
-				if (vulnerability != null && vulnerability.getSurfaceLocation() != null
-						&& vulnerability.getSurfaceLocation().getPath() != null) {
-					flag = true;
-					break;
-				}
-		
-		ModelAndView mav = new ModelAndView("path/surface_structure");
-		mav.addObject(application);
-		mav.addObject("sufficientInformation", flag);
-		return mav;
-	}
-
-	@RequestMapping(value = "/code_structure")
-	public ModelAndView getCodeStructure(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId) {
-		Application application = applicationService.loadApplication(appId);
-				
-		if (application == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		boolean flag = false;
-		if (application.getFindingList() != null)
-			for (Finding finding : application.getFindingList())
-				if (finding != null && finding.getIsStatic()) {
-					flag = true;
-					break;
-				}
-		
-		ModelAndView mav = new ModelAndView("path/code_structure");
-		mav.addObject(application);
-		mav.addObject("static", flag);
-		return mav;
 	}
 
 	private List<String> removeDuplicates(List<String> pathList) {
@@ -186,9 +139,12 @@ public class PathController {
 		return distinctPath;
 	}
 
-	private PathTree getTreeStructure(List<String> pathList, PathTree pt) {
-		for (String s : pathList)
-			pt.addPath(s);
-		return pt;
+	private PathTree getTreeStructure(List<String> pathList, PathTree pathTree, Application application) {
+		for (String pathSegment : pathList) {
+			if (pathSegment == null)
+				continue;
+			pathTree.addPath(pathSegment);
+		}
+		return pathTree;
 	}
 }

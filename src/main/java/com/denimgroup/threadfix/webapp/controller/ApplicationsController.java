@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
@@ -41,11 +43,14 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -55,12 +60,14 @@ public class ApplicationsController {
 
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
+	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService) {
+			DefectTrackerService defectTrackerService, VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
+		this.vulnerabilityService = vulnerabilityService;
 	}
 
 	@InitBinder
@@ -77,6 +84,8 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 		
+		int falsePositives = 0;
+		
 		Object message = null;
 		if (request.getSession() != null) {
 			message = request.getSession().getAttribute("scanSuccessMessage");
@@ -85,8 +94,17 @@ public class ApplicationsController {
 			}
 		}
 		
+		if (application.getVulnerabilities() != null && application.getVulnerabilities().size() > 0) {
+			List<Vulnerability> vulns = vulnerabilityService.getFalsePositiveVulns(application);
+			if (vulns != null) {
+				falsePositives = vulns.size();
+			}
+		}
+		
+		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);
 		model.addAttribute(application);
+		model.addAttribute("falsePositiveCount", falsePositives);
 		return "applications/detail";
 	}
 	

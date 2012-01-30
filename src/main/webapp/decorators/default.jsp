@@ -5,11 +5,11 @@
 	<%@ include file="/common/meta.jsp" %>
 	<title><decorator:title/> | <spring:message code="webapp.name"/></title>
 
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/reset-fonts-grids.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
-	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/base/jquery-ui.css" rel="Stylesheet" />	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/delete.js"></script>
 	<script type="text/javascript">

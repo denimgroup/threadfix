@@ -24,6 +24,6 @@
 		</table>
 		<br/>
 		<input type="submit" value="Create API Key" />
-		<span style="padding-left: 10px"><a href="<spring:url value="/configuration/keys"/>">Cancel</a></span>
+		<span style="padding-left: 10px"><a href="<spring:url value="/configuration/keys"/>">Back to API Key Index</a></span>
 	</form:form>
 </body>

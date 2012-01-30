@@ -7,6 +7,13 @@
 <body id="config">
 	<h2>Defect Tracker Details</h2>
 	
+	<c:if test="${ empty defectTracker.applications }">
+		<div id="helpText">
+			Now that you have set up a Defect Tracker, the next step is to attach it to an application.<br/>
+			To do that, go to an Add Application or Edit Application page and complete the form there.
+		</div>
+	</c:if>
+	
 	<table class="dataTable">
 		<tbody>
 			<tr>
@@ -32,6 +39,6 @@
 		<spring:param name="defectTrackerId" value="${ defectTracker.id }"/>
 	</spring:url>
 	<a id="deleteButton" onclick="return confirm('If you delete this Tracker, all the associated Defects will also be deleted. Are you sure?')" href="${ fn:escapeXml(deleteUrl) }">Delete</a> | 
-	<a id="backToListLink" href="<spring:url value="/configuration/defecttrackers" />">Back to List</a>
+	<a id="backToListLink" href="<spring:url value="/configuration/defecttrackers" />">Back to Defect Tracker Index</a>
 	<br />
 </body>

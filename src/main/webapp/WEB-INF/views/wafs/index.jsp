@@ -7,7 +7,9 @@
 <body id="wafs">
 	<h2>WAFs</h2>
 	
-	<a id="addWafLink" href="<spring:url value="/wafs/new" />">Add WAF</a><br/>
+	<div id="helpText" style="width:630px;">
+		A ThreadFix WAF is used to generate rules for a WAF or IDS/IPS program that is used to filter web traffic.
+	</div>
 	
 	<table class="formattedTable">
 		<thead>
@@ -37,4 +39,6 @@
 		</c:forEach>
 		</tbody>
 	</table>
+	
+	<div style="padding-top:10px" id="link"><a id="addWafLink" href="<spring:url value="/wafs/new" />">Add WAF</a></div>
 </body>

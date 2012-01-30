@@ -32,7 +32,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -51,7 +51,9 @@
 		<c:when test="${ empty defectTrackerList }">
 			<tr>
 				<td class="label">Defect Tracker:</td>
-				<td class="inputValue"><a id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers"/>">Configure</a></td>
+				<td class="inputValue">
+					No Defect Trackers were found. <a id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
+				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 		</c:when>
@@ -63,6 +65,7 @@
 						<form:option value="0" label="<none>"/>
 						<form:options items="${defectTrackerList}" itemValue="id" itemLabel="displayName"/>
 					</form:select>
+					 <a style="padding-left:10px;" id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="defectTracker.id" cssClass="errors" />
@@ -112,16 +115,18 @@
 		</tbody>
 	</table>
 	<br/>
-
 	
 	<h3>WAF</h3>
 	<table class="dataTable">
 	<tbody>
+	<spring:url value="/wafs/new" var="newWAFUrl"/>
 	<c:choose>
 		<c:when test="${ empty wafList }">
 			<tr>
 				<td class="label">WAF:</td>
-				<td class="inputValue"><a id="configureWafsButton" href="/threadfix/wafs">Configure</a></td>
+				<td class="inputValue">
+					No WAFs were found. <a id="configureWafsButton" href="${ newWAFUrl }">Create a WAF</a>
+				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 		</c:when>
@@ -133,6 +138,7 @@
 						<form:option value="0" label="<none>" />
 						<form:options items="${ wafList }" itemValue="id" itemLabel="name"/>
 					</form:select>
+					<a style="padding-left:10px;" id="configureWafsButton" href="${ newWAFUrl }">Create a new WAF</a>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="waf.id" cssClass="errors" />
@@ -144,12 +150,52 @@
 	</table>
 	<br/>
 	
+	<c:if test="${ not application.new and fn:length(pathTree.printout ) != 0}">
+		<h3>Project Root</h3>
+		<div style="padding-bottom:10px">Please select the proper root for the application:</div>
+		<table class="formattedTable sortable" id="anyid">
+				<thead>
+					<tr>
+						<th class="first" colspan="${ pathTree.depth }">Path</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:forEach var="path" items="${pathTree.printout}">
+					<tr class="bodyRow">
+						<spring:url value="{appId}/path/hint" var="hintUrl">
+							<spring:param name="appId" value="${ application.id }"/>
+						</spring:url>
+						<c:forEach var="str" items="${ path }">
+							<c:choose>
+								<c:when test="${ empty str }">
+									<td><c:out value="${ str }"/></td>
+								</c:when>
+								<c:otherwise>
+									<td>
+										<form:radiobutton path="projectRoot" name="hint" value="${ str }"/>
+										<c:out value="${ str }"/>
+									</td>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</tr>
+				</c:forEach>
+				</tbody>
+				<tfoot>
+					<tr class="footer">
+						<td colspan="${ pathTree.depth }" class="pagination" style="text-align:right"></td>
+					</tr>
+				</tfoot>
+			</table>
+	</c:if>
+	
 <c:choose>
 <c:when test="${ application.new }">
 	<input id="addApplicationButton" type="submit" value="Add Application" />
 	<spring:url value="/organizations/{orgId}" var="appUrl">
 		<spring:param name="orgId" value="${ application.organization.id }" />
 	</spring:url>
+	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Team <c:out value="${ application.organization.name }"/></a></span>
 </c:when>
 <c:otherwise>
 	<c:if test="${ not empty application.defectTracker.id }">
@@ -162,8 +208,8 @@
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
+	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
 </c:otherwise>
 </c:choose>
-	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Cancel</a></span>
 </form:form>
 </body>

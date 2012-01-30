@@ -31,12 +31,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "Defect")
 public class Defect extends AuditableEntity {
 
 	private static final long serialVersionUID = -3912326857875561633L;
+	
+	public static final int STATUS_LENGTH = 255;
+	public static final int URL_LENGTH = 255;
 
 	public enum TrackerType {
 		BUGZILLA, JIRA
@@ -46,6 +52,12 @@ public class Defect extends AuditableEntity {
 
 	private Application application;
 	private List<Vulnerability> vulnerabilities;
+	
+	@Size(max = STATUS_LENGTH, message = "{errors.maxlength} " + STATUS_LENGTH + ".")
+	private String status;
+	
+	@Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
+	private String defectURL;
 
 	/**
 	 * Stores the ID used by the defect tracking system.
@@ -60,9 +72,36 @@ public class Defect extends AuditableEntity {
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
 	}
+	
+	@Column(length = 255, nullable = false)
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		if (status.length() > STATUS_LENGTH) {
+			this.status = status.substring(0,STATUS_LENGTH-2);
+		} else {
+			this.status = status;
+		}
+	}
+	
+	@Column(length = 255)
+	public String getDefectURL() {
+		return defectURL;
+	}
+
+	public void setDefectURL(String defectURL) {
+		if (defectURL.length() > STATUS_LENGTH) {
+			this.defectURL = defectURL.substring(0, STATUS_LENGTH-2);
+		} else {
+			this.defectURL = defectURL;
+		}
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
+	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}

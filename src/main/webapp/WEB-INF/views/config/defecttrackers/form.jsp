@@ -7,6 +7,10 @@
 <body id="config">
 	<h2><c:if test="${ defectTracker.new }">New </c:if>Defect Tracker</h2>
 	
+	<div id="helpText">
+		To set up the Defect Tracker, enter the RPC endpoint address of your tracker instance.
+	</div>
+	
 <spring:url value="" var="emptyUrl"></spring:url>	
 <form:form modelAttribute="defectTracker" method="post" action="${ fn:escapeXml(emptyUrl) }">
 	<table class="dataTable">
@@ -47,14 +51,16 @@
 <c:when test="${ defectTracker.new }">
 	<input id="addDefectTrackerButton" type="submit" value="Add Defect Tracker" />
 	<spring:url value="/configuration/defecttrackers" var="dtUrl" />
+	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(dtUrl) }">Back to Defect Tracker Index</a></span>
 </c:when>
 <c:otherwise>
 	<input id="updateDefectTrackerButton" type="submit" onclick="return confirm('If you are editing the URL, make sure that the Threadfix Defects have the correct IDs. If you are editing the type, all associated Defects will be deleted.')" value="Update Defect Tracker" />
 	<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="dtUrl">
 		<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
 	</spring:url>
+	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(dtUrl) }">Back to Defect Tracker <c:out value="${ defectTracker.name }"/></a></span>
 </c:otherwise>
 </c:choose>
-	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(dtUrl) }">Cancel</a></span>
+	
 </form:form>
 </body>

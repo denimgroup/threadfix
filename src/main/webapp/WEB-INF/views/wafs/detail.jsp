@@ -7,6 +7,11 @@
 <body id="wafs">
 	<h2 id="nameText" ><c:out value="${ waf.name }"/></h2>
 	
+	<div id="helpText">
+		This page is used to generate rules and upload WAF logs to correlate their results with your existing Vulnerabilities.
+		<c:if test="${ empty waf.applications }"><br/>To get started, link this WAF to an application in either the New Application or Edit Application pages.</c:if>
+	</div>
+	
 	<table class="dataTable">
 		<tbody>
 			<tr>
@@ -31,7 +36,7 @@
 		<a id="deleteButton" onclick="return alert('Remove the Applications from this WAF and try again.')">Delete WAF</a> | 
 	</c:if>	
 	
-	<a id="backToListLink" href="<spring:url value="/wafs" />">Back to List</a>
+	<a id="backToListLink" href="<spring:url value="/wafs" />">Back to WAF Index</a>
 	
 	<br />
 	
@@ -98,7 +103,7 @@
 	</spring:url>
 	<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
 	<c:choose>
-		<c:when test="${empty waf.wafType.wafRuleDirectives}">
+		<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
 			No Directives Found.  
 		</c:when>
 		<c:otherwise>
@@ -128,9 +133,9 @@
 
 	<div id="wafrule">
 		<pre>
-			<c:forEach var="wafRule" items="${ currentRules }">
-<c:out value="${ wafRule.rule }"/>
-			</c:forEach>
+<c:out value="${ prefix }"/>
+<c:forEach var="wafRule" items="${ currentRules }"><c:out value="${ wafRule.rule }"/>
+</c:forEach><c:out value="${ suffix }"/>
 		</pre>	
 	</div>
 	<form id="form1" name="form1" method="post">

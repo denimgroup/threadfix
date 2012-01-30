@@ -15,10 +15,6 @@
 			<property name="useCodeAsDefaultMessage" value="true" />
 		</bean>
 	
-	<bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
-    	<property name="baseAddress" value="http://localhost:8080/services/"/>
-	</bean>
-	
 	<bean id="RPCServiceEndpoint" class="com.denimgroup.threadfix.service.RPCServiceEndpoint"/>	
 	
 	<bean id="CsrfPreventionFilter" class="com.denimgroup.threadfix.webapp.filter.CsrfPreventionFilter"/>	

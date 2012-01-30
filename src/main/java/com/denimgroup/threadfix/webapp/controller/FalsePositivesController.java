@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,34 +61,16 @@ public class FalsePositivesController {
 		this.vulnerabilityService = vulnerabilityService;
 	}
 
-	@RequestMapping(value = "/mark", method = RequestMethod.GET)
-	public String defectList(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId, ModelMap model) {
-
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()){
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-
-		List<Vulnerability> unmarkedVulns = vulnerabilityService.getNonFalsePositiveVulns(application);
-		
-		model.addAttribute(new FalsePositiveModel());
-		model.addAttribute(application);
-		model.addAttribute("vulns", unmarkedVulns);
-		model.addAttribute("buttonText", "Mark as False Positives");
-		return "falsepositives/index";
-	}
-
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
 	public String onSubmit(@ModelAttribute FalsePositiveModel falsePositiveModel,
-			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId, ModelMap model) {
+			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId, ModelMap model,
+			HttpServletRequest request) {
 
 		if (falsePositiveModel == null || falsePositiveModel.getVulnerabilityIds() == null
 				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
 			String error = "You must select at least one vulnerability.";
-			model.addAttribute("error", error);
-			return defectList(orgId, appId, model);
+			request.getSession().setAttribute("scanSuccessMessage", error);
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
 		
 		vulnerabilityService.markListAsFalsePositive(falsePositiveModel.getVulnerabilityIds());

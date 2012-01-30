@@ -8,13 +8,15 @@
 <body id="apps">
 	<h2><c:out value="${ defect.application.defectTracker.name }"/> Defect <c:out value="${ defect.nativeId }"/> Details</h2>
 	<c:out value="${ message }"/>
+	Bug Status: <c:out value="${ defect.status }"/>
 	<br/>
-	Bug Tracker URL: <a href="${ fn:escapeXml(defect.application.defectTracker.url) }"><c:out value="${fn:escapeXml(defect.application.defectTracker.url)}"/></a>
+	<br/>
+	Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
 	<br/><br/>
 	<spring:url value="../../../{appId}" var="appUrl">
 		<spring:param name="appId" value="${ defect.application.id }" />
 	</spring:url>
-	<a href="${ fn:escapeXml(appUrl) }">Back to Application</a>
+	<a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ defect.application.name }"/></a>
 	<br/>
 	<br/>
 	
@@ -26,7 +28,6 @@
 				<th>Generic Severity</th>
 				<th>Path</th>
 				<th>Parameter</th>
-				<th>Status</th>
 				<th>WAF Rule</th>
 				<th class="last unsortable">WAF Events</th>
 			</tr>
@@ -61,16 +62,7 @@
 				<td><c:out value="${ vuln.genericSeverity.name }"/></td>
 				<td><c:out value="${ vuln.surfaceLocation.path }"/></td>
 				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
-				<td>
-				<c:choose>
-					<c:when test="${ not empty vuln.defect }">
-						<c:out value="${ vuln.isOpen }"/>
-					</c:when>
-					<c:otherwise>
-						OPEN
-					</c:otherwise>
-				</c:choose>
-				</td>
+
 				<td>
 			<c:choose>
 				<c:when test="${ not empty vuln.wafRules }">

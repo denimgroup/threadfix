@@ -43,7 +43,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * This provides an example of creating and checking the status of defects in
  * Bugzilla.
  * 
- * TODO write update function 
+ * TODO write update function
  * 
  * @author dcornell
  */
@@ -54,8 +54,6 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	private String serverPassword;
 	private String serverProject;
 	private String serverProjectId;
-
-	private final static String LOGIN_FAILURE_STRING = "Login Failure";
 
 	/*
 	 * (non-Javadoc)
@@ -82,7 +80,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 
 			// TODO Pass this information back to the user
-			if (loginStatus.equals(LOGIN_FAILURE_STRING)) {
+			if (loginStatus.equals(LOGIN_FAILURE_STRING) || loginStatus.equals(INCORRECT_CONFIGURATION)) {
 				log.warn("Login Failed, check credentials");
 				return null;
 			}
@@ -127,6 +125,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		} catch (XmlRpcException e) {
 			log.debug("Exception occured while creating Defect: " + e.getMessage());
 			e.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			log.error(e2);
 		}
 
 		return bugzillaId;
@@ -201,6 +201,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 		} catch (XmlRpcException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			log.error(e2);
 		}
 
 		return retVal;
@@ -262,6 +264,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			log.error("Exception occurred while retrieve the components of a project: "
 					+ xre.getMessage());
 			xre.printStackTrace();
+		}  catch (IllegalArgumentException e2) {
+			log.error(e2);
 		}
 
 		return new ProjectMetadata(projectComponents, projectVersions, projectSeverities);
@@ -304,6 +308,9 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				// next one
 				e.printStackTrace();
 				continue;
+			} catch (IllegalArgumentException e2) {
+				log.error(e2);
+				continue;
 			}
 
 			if (queryResult instanceof HashMap) {
@@ -317,6 +324,12 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 					}
 
 					Boolean isOpen = (Boolean) currentBugHash.get("is_open");
+					
+					Object result = currentBugHash.get("status");
+					if (result instanceof String) {
+						defect.setStatus((String) result);
+					}
+					
 					returnList.put(defect, isOpen);
 				}
 			} else {
@@ -344,7 +357,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		}
 
 		// TODO Pass this information back to the user
-		if (loginStatus.equals(LOGIN_FAILURE_STRING)) {
+		if (loginStatus.equals(LOGIN_FAILURE_STRING) || loginStatus.equals(INCORRECT_CONFIGURATION)) {
 			return "Bugzilla login failed, check your credentials.";
 		}
 
@@ -412,6 +425,13 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return LOGIN_FAILURE_STRING;
 			}
 			e.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			if (e2.getMessage().contains("Host name may not be null")) {
+				return INCORRECT_CONFIGURATION;
+			} else {
+				e2.printStackTrace();
+				return INCORRECT_CONFIGURATION;
+			}
 		}
 
 		if (loginResult == null) {
@@ -544,7 +564,11 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				}
 			}
 		} catch (XmlRpcException e) {
-			e.printStackTrace();
+			log.warn("The RPC connection encountered an error while trying to check a Bugzilla product name.", e);
+			return false;
+		} catch (IllegalArgumentException e2) {
+			log.error("Encountered an error while trying to check a Bugzilla product name. Check the URL.", e2);
+			return false;
 		}
 		
 		return false;
@@ -579,6 +603,13 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			productList = productList.substring(0, productList.length() - 1);
 		} catch (XmlRpcException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			if (e2.getMessage().contains("Host name may not be null")) {
+				return INCORRECT_CONFIGURATION;
+			} else {
+				e2.printStackTrace();
+				return INCORRECT_CONFIGURATION;
+			}
 		}
 
 		return productList;
@@ -592,8 +623,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 		
-		if (status == null || status.equals(LOGIN_FAILURE_STRING)) {
-			log.warn(LOGIN_FAILURE_STRING);
+		if (status == null || status.equals(LOGIN_FAILURE_STRING) || status.equals(INCORRECT_CONFIGURATION)) {
+			log.warn(status);
 			return null;
 		}
 
@@ -621,6 +652,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 		} catch (XmlRpcException xre) {
 			xre.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			return null;
 		}
 		return null;
 	}
@@ -630,7 +663,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		if (LOGIN_FAILURE_STRING.equals(status)) {
+		if (LOGIN_FAILURE_STRING.equals(status) || INCORRECT_CONFIGURATION.equals(status)) {
 			return "Authentication failed";
 		} else {
 			return getProducts(client);
@@ -642,12 +675,26 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		return !LOGIN_FAILURE_STRING.equals(status);
+		return !LOGIN_FAILURE_STRING.equals(status) && !INCORRECT_CONFIGURATION.equals(status);
 	}
 
 	@Override
 	public boolean hasValidProjectName() {
 		XmlRpcClient client = initializeClient();
 		return projectExists(serverProject, client);
+	}
+
+	@Override
+	public String getInitialStatusString() {
+		return "OPEN";
+	}
+
+	@Override
+	public String getBugURL(String endpointURL, String bugID) {
+		if (endpointURL != null && bugID != null && endpointURL.endsWith("xmlrpc.cgi")) {
+			return endpointURL.replace("xmlrpc.cgi", "show_bug.cgi?id="+bugID);
+		} else {
+			return endpointURL + "show_bug.cgi?id=" + bugID;
+		}
 	}
 }

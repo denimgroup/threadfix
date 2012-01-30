@@ -10,7 +10,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Organization:</td>
+				<td class="label">Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
@@ -27,16 +27,14 @@
 		<table>
 			<tr>
 				<td>
-					<input name="surveys/save" value="Save" type="image" src="<spring:url value="/images/save_survey_button.png" />" 
-						onmouseover="javascript:this.src='<spring:url value="/images/save_survey_button_hover.png" />';" 
-						onmouseout="javascript:this.src='<spring:url value="/images/save_survey_button.png" />';" />
+					<input name="surveys/save" value="Save Assessment" type="submit" />
 				</td>
 				<td style="padding-left:10px">
-					<input type="submit" value="Submit Survey" />
+					<input type="submit" value="Submit Assessment" />
 				</td>
 				<td style="padding-left:10px">
 					<c:if test="${ saveConfirm }">
-						<span style="font-weight: bold">Survey saved successfully.</span>
+						<span style="font-weight: bold">Maturity Assessment saved successfully.</span>
 					</c:if>
 				</td>
 			</tr>

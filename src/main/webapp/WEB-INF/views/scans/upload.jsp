@@ -11,6 +11,10 @@
 	<center class="errors" ><c:out value="${ message }"/></center>
 </c:if>
 
+	<div id="helpText">
+		This page is used to upload scans from application scanner tools into your ThreadFix application.
+	</div>
+
 <c:choose>
 	<c:when test="${ empty application.channelList }">
 	<table class="dataTable">
@@ -64,7 +68,7 @@
 			<spring:param name="orgId" value="${ application.organization.id }" />
 			<spring:param name="appId" value="${ application.id }" />
 		</spring:url>
-		<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Cancel</a></span>
+		<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
 	</form:form>
 	</c:otherwise>
 </c:choose>
