@@ -47,6 +47,7 @@
 								<option value="4">Channel Comparison By Vulnerability Types</option>
 								<option value="5">Channel Comparison Summary</option>
 								<option value="6">Channel Comparison Detail</option>
+								<option value="7">Monthly Progress Report</option>
 							</form:select>
 						</div>
 					</td>

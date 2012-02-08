@@ -59,6 +59,11 @@ public class Scan extends BaseEntity {
 	private Integer numberTotalVulnerabilities;
 	private Integer numberRepeatResults;
 	private Integer numberRepeatFindings;
+	
+	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	
+	// TODO probably rename this - it's for the graphs
+	private Integer numberOldVulnerabilitiesInitiallyFromThisChannel;
 
 	private List<Finding> findings;
 	
@@ -111,6 +116,15 @@ public class Scan extends BaseEntity {
 	public void setFindings(List<Finding> findings) {
 		this.findings = findings;
 	}
+	
+	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
+		return scanRepeatFindingMaps;
+	}
+
+	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
+		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
+	}
 
 	@Column
 	public Integer getNumberClosedVulnerabilities() {
@@ -137,6 +151,24 @@ public class Scan extends BaseEntity {
 
 	public void setNumberOldVulnerabilities(Integer numberOldVulnerabilities) {
 		this.numberOldVulnerabilities = numberOldVulnerabilities;
+	}
+	
+	/**
+	 * Keeping track of this information allows us to produce scans without extensive recalculation, 
+	 * because we don't have to track down which application channel we should count a vulnerability for.
+	 * 
+	 * This may lead to a small bug if a vuln is opened in one channel, then found in another and 
+	 * subsequently closed there. This needs to be looked into.
+	 * @return
+	 */
+	@Column
+	public Integer getNumberOldVulnerabilitiesInitiallyFromThisChannel() {
+		return numberOldVulnerabilitiesInitiallyFromThisChannel;
+	}
+
+	public void setNumberOldVulnerabilitiesInitiallyFromThisChannel(
+			Integer numberOldVulnerabilitiesInitiallyFromThisChannel) {
+		this.numberOldVulnerabilitiesInitiallyFromThisChannel = numberOldVulnerabilitiesInitiallyFromThisChannel;
 	}
 
 	@Column

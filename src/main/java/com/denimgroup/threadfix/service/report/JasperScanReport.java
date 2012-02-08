@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.service.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +12,22 @@ import net.sf.jasperreports.engine.JRField;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Scan;
 
+/**
+ * This class provides the data source for the Trending Report.
+ * @author mcollins
+ *
+ */
 public class JasperScanReport implements JRDataSource {
 	private List<Scan> scanList = new ArrayList<Scan>();
 	private int index = 0;
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
 	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<Integer, Integer>();
-			
+	
 	public JasperScanReport(List<Integer> applicationIdList, ScanDao scanDao) {
 		if (scanDao != null && applicationIdList != null)
 			this.scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+		
+		Collections.sort(this.scanList, Scan.getTimeComparator());
 
 		index = -1;
 	}
@@ -53,8 +61,9 @@ public class JasperScanReport implements JRDataSource {
 	private void buildHash() {
 		Scan scan = scanList.get(index);
 		
-		if (scan == null)
+		if (scan == null) {
 			return;
+		}
 					
 		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
 		resultsHash.put("fixedVulns", scan.getNumberClosedVulnerabilities());
@@ -66,18 +75,22 @@ public class JasperScanReport implements JRDataSource {
 		if (scan.getImportTime() != null)
 			resultsHash.put("importTime", scan.getImportTime());
 		
+		// Take out from the count old vulns from other channels.
+		Integer adjustedTotal = scan.getNumberTotalVulnerabilities() -
+								scan.getNumberOldVulnerabilities() +
+								scan.getNumberOldVulnerabilitiesInitiallyFromThisChannel();
+		
 		Integer appChannelId = null;
 		if (scan.getApplicationChannel() != null && scan.getApplicationChannel().getId() != null) {
 			appChannelId = scan.getApplicationChannel().getId();
-			oldVulnsByChannelMap.put(appChannelId, scan.getNumberTotalVulnerabilities());
+
+			oldVulnsByChannelMap.put(appChannelId, adjustedTotal);
 		}
 		
-		// TODO Take a look at cleaning this up after we decide on the format for this report
-		Integer numOld = scan.getNumberOldVulnerabilities();
-		Integer numTotal = scan.getNumberTotalVulnerabilities();
+		Integer numOld = scan.getNumberOldVulnerabilitiesInitiallyFromThisChannel();
+		Integer numTotal = adjustedTotal;
 		
 		// This code counts in the old vulns from other channels.
-		if (numTotal == null) numTotal = 0;
 		if (numOld == null) numOld = 0;
 		for (Integer key : oldVulnsByChannelMap.keySet()) {
 			if (key == null || oldVulnsByChannelMap.get(key) == null || 

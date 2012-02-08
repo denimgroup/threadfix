@@ -67,10 +67,12 @@ public class Finding extends AuditableEntity {
 	@Size(max = SOURCE_FILE_LOCATION_LENGTH, message = "{errors.maxlength} " + SOURCE_FILE_LOCATION_LENGTH + ".")
 	private String sourceFileLocation;
 	private boolean isStatic;
-	
+	private boolean isFirstFindingForVuln;
+
 	private User user;
 
 	private List<DataFlowElement> dataFlowElements;
+	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
@@ -147,6 +149,15 @@ public class Finding extends AuditableEntity {
 	public boolean getIsStatic() {
 		return isStatic;
 	}
+	
+	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
+	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
+		return scanRepeatFindingMaps;
+	}
+
+	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
+		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
+	}
 
 	public void setIsStatic(boolean isStatic) {
 		this.isStatic = isStatic;
@@ -189,5 +200,13 @@ public class Finding extends AuditableEntity {
 	public String getLongDescription() {
 		return longDescription;
 	}
+	
+	@Column(nullable = false)
+	public boolean isFirstFindingForVuln() {
+		return isFirstFindingForVuln;
+	}
 
+	public void setFirstFindingForVuln(boolean isFirstFindingForVuln) {
+		this.isFirstFindingForVuln = isFirstFindingForVuln;
+	}
 }

@@ -76,4 +76,12 @@ public interface OrganizationService {
 	 * @param organizationId
 	 */
 	void deactivateOrganization(Organization organization);
+	
+	/**
+	 * This method is meant to be used with REST methods 
+	 * to take the validation out of the Controller layer.
+	 * @param organization
+	 * @return boolean
+	 */
+	boolean isValidOrganization(Organization organization);
 }

@@ -653,7 +653,7 @@
 		<hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
 		<hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
 		<itext.version>2.1.7</itext.version>
-		<jasperreports.version>3.7.6</jasperreports.version>
+		<jasperreports.version>4.5.0</jasperreports.version>
 		<javassist.version>3.12.0.GA</javassist.version>
 		<jstl.version>1.2</jstl.version>
 		<jta.version>1.1</jta.version>

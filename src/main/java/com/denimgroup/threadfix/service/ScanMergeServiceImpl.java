@@ -40,13 +40,12 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
@@ -70,6 +69,7 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -201,8 +201,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	public Integer saveRPCScanAndRun(Integer channelId, String scanContents) {
-		if (channelId == null || scanContents == null) {
+	public Scan saveRPCScanAndRun(Integer channelId, MultipartFile file) {
+		if (channelId == null || file == null) {
 			log.error("Unable to run RPC scan due to null input.");
 			return null;
 		}
@@ -214,20 +214,21 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (applicationChannel != null && applicationChannel.getId() != null) {
 			if (applicationChannel.getScanCounter() == null)
 				applicationChannel.setScanCounter(1);
-			fileName = "scan-file-rpc-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
+			fileName = "scan-file-rest-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
 			applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
 			applicationChannelDao.saveOrUpdate(applicationChannel);
 		} else {
-			fileName = "scan-file-rpc-" + String.valueOf(new Random().nextLong());
+			fileName = "scan-file-rest-" + String.valueOf(new Random().nextLong());
 		}
 		
 		File diskFile = new File(fileName);
 		
-		byte[] tempContents = Base64.decodeBase64(scanContents.getBytes());
 		try {
-			FileUtils.writeByteArrayToFile(diskFile, tempContents);
+			file.transferTo(diskFile);
+		} catch (IllegalStateException e) {
+			log.warn("Encountered IllegalStateException while attempting to copy to disk.");
 		} catch (IOException e) {
-			log.error("Failed to write RPC scan file to disk.",e);
+			log.warn("Encountered IOException while attempting to copy to disk.");
 		}
 		
 		Scan scan = processScanFile(channelId, fileName);
@@ -239,7 +240,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
 
-		return scan.getId();
+		return scan;
 	}
 
 	/**
@@ -782,6 +783,13 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return oldString.replace("\\", "/").substring(0, returnString.length());
 	}
 
+	/**
+	 * This method weeds out all of the repeat Findings to provide a cleaner
+	 * merge later in appMerge().
+	 * 
+	 * @param scan
+	 * @param applicationChannel
+	 */
 	private void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
 		if (scan == null || applicationChannel == null) {
 			log.warn("Insufficient data to complete Application Channel-wide merging process.");
@@ -795,8 +803,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		List<Finding> newFindings = new ArrayList<Finding>();
 		Map<String, Finding> scanHash = new HashMap<String, Finding>();
 		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<String, Vulnerability>();
+		Map<String, Finding> oldNativeIdFindingHash = new HashMap<String, Finding>();
 		Set<Integer> alreadySeenVulnIds = new TreeSet<Integer>();
-		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0;
+		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, 
+			numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
 		
 		log.info("Starting Application Channel-wide merging process with " + scan.getFindings().size() + " findings.");
 		for (Finding finding : scan.getFindings()) {
@@ -818,20 +828,37 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				if (oldScan != null && oldScan.getId() != null && oldScan.getFindings() != null && oldScan.getFindings().size() != 0)
 					oldFindings.addAll(oldScan.getFindings());
 		
-		for (Finding finding : oldFindings)
-			if (finding != null && finding.getNativeId() != null && !finding.getNativeId().isEmpty())
+		for (Finding finding : oldFindings) {
+			if (finding != null && finding.getNativeId() != null && !finding.getNativeId().isEmpty()) {
 				oldNativeIdVulnHash.put(finding.getNativeId(), finding.getVulnerability());
+				oldNativeIdFindingHash.put(finding.getNativeId(), finding);
+			}
+		}
 		
 		for (String nativeId : scanHash.keySet()) {
 			if (oldNativeIdVulnHash.containsKey(nativeId)) {
 				numberRepeatFindings += 1;
 				numberRepeatResults += scanHash.get(nativeId).getNumberMergedResults();
+				// add it to the old finding maps so that we can know that it was here later
+				// the constructor maps everything correctly
+				new ScanRepeatFindingMap(oldNativeIdFindingHash.get(nativeId), scan);
+				log.info("Adding a map");
 			}
 			
 			if (oldNativeIdVulnHash.containsKey(nativeId) && oldNativeIdVulnHash.get(nativeId) != null &&
 					!alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(nativeId).getId())) {
 				Vulnerability vulnerability = oldNativeIdVulnHash.get(nativeId);
 				alreadySeenVulnIds.add(vulnerability.getId());
+				
+				if (applicationChannel.getId() != null
+						&& vulnerability.getOriginalFinding() != null 
+						&& vulnerability.getOriginalFinding().getScan() != null
+						&& vulnerability.getOriginalFinding().getScan().getApplicationChannel() != null
+						&& applicationChannel.getId().equals(vulnerability.getOriginalFinding()
+								.getScan().getApplicationChannel().getId())) {
+					oldVulnerabilitiesInitiallyFromThisChannel += 1;
+				}
+					
 				old += 1;
 				total += 1;
 			
@@ -877,10 +904,16 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scan.setNumberResurfacedVulnerabilities(resurfaced);
 		scan.setNumberRepeatResults(numberRepeatResults);
 		scan.setNumberRepeatFindings(numberRepeatFindings);
+		scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
 		
 		scan.setFindings(newFindings);
 	}
-
+	
+	/**
+	 * This method does the actual vulnerability merging across the app.
+	 * @param scan
+	 * @param appId
+	 */
 	private void appMerge(Scan scan, int appId) {
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
 		
@@ -912,6 +945,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			for (Vulnerability vuln : vulns) {
 				match = doesMatch(finding, vuln);
 				if (match) {
+					finding.setFirstFindingForVuln(false);
+					
 					// Again, we don't want to count old vulns that we match
 					// against more than once
 					// so we keep track of those using a hash.
@@ -922,6 +957,29 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 									.getNumberNewVulnerabilities() - 1);
 							scan.setNumberOldVulnerabilities(scan
 									.getNumberOldVulnerabilities() + 1);
+							Finding previousFinding = vuln.getOriginalFinding();
+							
+							// Update records for the vuln origin
+							if (previousFinding != null && previousFinding.getScan() != null 
+									&& previousFinding.getScan() != null
+									&& previousFinding.getScan().getApplicationChannel() != null
+									&& scan.getApplicationChannel().getId().equals(
+											previousFinding.getScan().getApplicationChannel().getId())) {
+								// must be older
+								scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(scan
+										.getNumberOldVulnerabilitiesInitiallyFromThisChannel() + 1);
+							} else if (previousFinding != null && previousFinding.getScan()
+									.getImportTime().after(scan.getImportTime())) {
+								// replace as oldest finding for vuln
+								// first, switch the flags. Then update new / old counts on both scans.
+								finding.setFirstFindingForVuln(true);
+								scan.setNumberNewVulnerabilities(scan
+										.getNumberNewVulnerabilities() + 1);
+								scan.setNumberOldVulnerabilities(scan
+										.getNumberOldVulnerabilities() - 1);
+								
+								correctExistingScans(previousFinding);
+							}
 						}
 					} else if (hasStatistics) {
 						scan.setNumberNewVulnerabilities(scan
@@ -954,6 +1012,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				for (Vulnerability newVuln : newVulns) {
 					match = doesMatch(finding, newVuln);
 					if (match) {
+						finding.setFirstFindingForVuln(false);
+						
 						numMergedInsideScan += 1;
 						if (hasStatistics) {
 							scan.setNumberTotalVulnerabilities(scan
@@ -986,6 +1046,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				newVuln.setFindings(new ArrayList<Finding>());
 				newVuln.getFindings().add(finding);
 				newVulns.add(newVuln);
+				finding.setFirstFindingForVuln(true);
 				finding.setVulnerability(newVuln);
 			}
 		}
@@ -1000,7 +1061,39 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.info("Finished application merge.");
 		}
 	}
+	
+	/**
+	 * This method corrects newer scans that were uploaded first in a different channel.
+	 * They need to have their counts updated slightly.
+	 * 
+	 * @param finding
+	 */
+	private void correctExistingScans(Finding finding) {
+		finding.setFirstFindingForVuln(false);
+		finding.getScan().setNumberNewVulnerabilities(finding.getScan()
+				.getNumberNewVulnerabilities() - 1);
+		finding.getScan().setNumberOldVulnerabilities(finding.getScan()
+				.getNumberOldVulnerabilities() + 1);
+		
+		if (finding.getScanRepeatFindingMaps() != null) {
+			for (ScanRepeatFindingMap map : finding.getScanRepeatFindingMaps()) {
+				if (map.getScan() != null && 
+						map.getScan().getNumberOldVulnerabilitiesInitiallyFromThisChannel() != null) {
+					map.getScan().setNumberOldVulnerabilitiesInitiallyFromThisChannel(
+						map.getScan().getNumberOldVulnerabilitiesInitiallyFromThisChannel() - 1);
+				}
+			}
+		}
 
+		scanDao.saveOrUpdate(finding.getScan());
+	}
+
+	/**
+	 * This is the method that determines whether a finding matches a vulnerability.
+	 * @param finding
+	 * @param vuln
+	 * @return
+	 */
 	private boolean doesMatch(Finding finding, Vulnerability vuln) {
 		if (finding == null || vuln == null)
 			return false;
@@ -1028,6 +1121,13 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return false;
 	}
 
+	/**
+	 * If a static finding is merged to a vulnerability with at least one static finding,
+	 * this method is used to figure out whether they should be merged.
+	 * @param oldFinding
+	 * @param newFinding
+	 * @return
+	 */
 	private boolean staticToStaticMatch(Finding oldFinding, Finding newFinding) {
 		if (oldFinding == null || newFinding == null)
 			return false;

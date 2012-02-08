@@ -101,7 +101,7 @@ public class ReportsServiceImpl implements ReportsService {
 	 */
 	@Override
 	public StringBuffer getReport(String path, String fileName, String format,
-			Map<Object, Object> parameters, List<Integer> applicationIdList, HttpServletResponse response) throws IOException{
+			Map<String, Object> parameters, List<Integer> applicationIdList, HttpServletResponse response) throws IOException{
 
 		if (fileName == null || fileName.trim().equals(""))
 			return null;
@@ -147,6 +147,8 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			if (fileName.equals("trending.jrxml")) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
+			} else if (fileName.equals("monthlyBarChart.jrxml")) {
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (fileName.equals("cwe.jrxml")) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperCWEReport(applicationIdList,vulnerabilityDao));
 			} else if (fileName.equals("scannerComparison.jrxml")) {

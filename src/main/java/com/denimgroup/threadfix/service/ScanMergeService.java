@@ -23,8 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
  * @author mcollins
@@ -98,7 +101,7 @@ public interface ScanMergeService {
 	 * @param fileName
 	 * @return
 	 */
-	Integer saveRPCScanAndRun(Integer channelId, String scanContents);
+	Scan saveRPCScanAndRun(Integer channelId, MultipartFile file);
 
 	
 }

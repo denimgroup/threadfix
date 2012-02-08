@@ -76,5 +76,10 @@ public class ApplicationChannelServiceImpl implements ApplicationChannelService 
 						.getId());
 		return dbAppChannel != null;
 	}
+	
+	@Override
+	public ApplicationChannel retrieveByAppIdAndChannelId(int appId, int id) {
+		return applicationChannelDao.retrieveByAppIdAndChannelId(appId, id);
+	}
 
 }

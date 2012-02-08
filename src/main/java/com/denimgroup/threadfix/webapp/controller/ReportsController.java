@@ -98,7 +98,7 @@ public class ReportsController {
 			BindingResult result, SessionStatus status, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String reportFile = null;
 
-		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 6) {
+		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 7) {
 			log.warn("An incorrect report ID was passed through, returning an error page.");
 			request.getSession().setAttribute("reportsError", "An invalid report type was chosen.");
 			return "redirect:/reports";
@@ -129,11 +129,13 @@ public class ReportsController {
 			break;
 		case 6:
 			return scannerComparisonByVulnerability(model, applicationIdList);
+		case 7:
+			reportFile = "monthlyBarChart.jrxml";
 		}
 
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 
-		Map<Object, Object> params = new HashMap<Object, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("appId", applicationIdList);
 		String path = request.getSession().getServletContext().getRealPath("/");
 		StringBuffer report = null;
@@ -150,9 +152,13 @@ public class ReportsController {
 			InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
 
 			byte[] outputByte = new byte[65535];
+			
+			int remainingSize = in.read(outputByte, 0, 65535);
+			
 			// copy binary contect to output stream
-			while (in.read(outputByte, 0, 65535) != -1) {
-				out.write(outputByte, 0, 65535);
+			while (remainingSize != -1) {
+				out.write(outputByte, 0, remainingSize);
+				remainingSize = in.read(outputByte, 0, 65535);
 			}
 			in.close();
 			out.flush();

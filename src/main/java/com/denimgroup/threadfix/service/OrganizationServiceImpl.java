@@ -101,5 +101,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 		
 		organizationDao.saveOrUpdate(organization);
 	}
+	
+	// TODO make this better
+	public boolean isValidOrganization(Organization organization) {
+
+		return organization != null && organization.getName() != null 
+				&& !organization.getName().trim().isEmpty() 
+				&& organization.getName().length() < Organization.NAME_LENGTH
+				&& loadOrganization(organization.getName()) == null;
+
+	}
 
 }

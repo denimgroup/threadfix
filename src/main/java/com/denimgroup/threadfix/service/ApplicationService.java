@@ -83,4 +83,11 @@ public interface ApplicationService {
 	boolean validateApplicationDefectTracker(Application application,
 			BindingResult result);
 
+	/**
+	 * This method is used to validate incoming REST application parameters.
+	 * @param application
+	 * @return
+	 */
+	boolean checkApplication(Application application);
+
 }
