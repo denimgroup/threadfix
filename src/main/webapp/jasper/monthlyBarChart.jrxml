@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+	name="trending" pageWidth="792" pageHeight="612" orientation="Landscape" 
+	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
+	topMargin="20" bottomMargin="20">
+	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<field name="newVulns" class="java.lang.Integer"/>
+	<field name="oldVulns" class="java.lang.Integer"/>
+	<field name="totVulns" class="java.lang.Integer"/>
+	<field name="fixedVulns" class="java.lang.Integer"/>
+	<field name="resurfacedVulns" class="java.lang.Integer"/>
+	<field name="importTime" class="java.util.Calendar"/>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band height="50">
+			<staticText>
+				<reportElement x="301" y="0" width="150" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Trending Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="222" y="25" width="309" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + ($P{appId}.size() > 1 ? "All" : $F{name})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="210">
+			<stackedBarChart>
+				<chart>
+					<reportElement x="0" y="10" width="800" height="200"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Top">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Old"]]></seriesExpression>
+						<categoryExpression><![CDATA[new SimpleDateFormat("yyyy-MMMM").format($F{importTime}.getTime())]]></categoryExpression>
+						<valueExpression><![CDATA[$F{oldVulns} != null ? $F{oldVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["New"]]></seriesExpression>
+						<categoryExpression><![CDATA[new SimpleDateFormat("yyyy-MMMM").format($F{importTime}.getTime())]]></categoryExpression>
+						<valueExpression><![CDATA[$F{newVulns} != null ? $F{newVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Resurfaced"]]></seriesExpression>
+						<categoryExpression><![CDATA[new SimpleDateFormat("yyyy-MMMM").format($F{importTime}.getTime())]]></categoryExpression>
+						<valueExpression><![CDATA[$F{resurfacedVulns} != null ? $F{resurfacedVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot labelRotation="45.0">
+						<seriesColor seriesOrder="0" color="#002F5D"/>
+						<seriesColor seriesOrder="1" color="#96160B"/>
+						<seriesColor seriesOrder="2" color="#CA4E00"/>
+					</plot>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="20">
+			<staticText>
+				<reportElement x="222" y="0" width="309" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[No Data Found For Trending Report]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

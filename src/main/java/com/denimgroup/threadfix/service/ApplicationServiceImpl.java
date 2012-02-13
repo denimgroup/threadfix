@@ -124,7 +124,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 							application.setPassword(null);
 							application.setProjectName(null);
 						} else if (!dt.hasValidProjectName()) {
-							result.rejectValue("projectName", "errors.invalid", new String [] { "Project Name" }, null);
+							result.rejectValue("projectName", "errors.detail", new String [] { "The selected Project Name was invalid. Please ensure that your Defect Tracker contains at least one project and select one here." }, null);
 							application.setProjectName(null);
 						} else {
 							application.setProjectId(dt.getProjectIdByName());
