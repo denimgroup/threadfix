@@ -254,8 +254,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			bugMap.put("project", projectName);
 			bugMap.put("type", "1");
 			bugMap.put("summary", summary);
-			bugMap.put("assignee", "dgtestuser");
-			bugMap.put("reporter", "dgtestuser");
+			bugMap.put("assignee", username);
+			bugMap.put("reporter", username);
 			bugMap.put("description", description);
 
 			List<Object> createVector = new Vector<Object>(2);
@@ -509,6 +509,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		this.projectName = projectName;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public String getProductNames() {
 		XmlRpcClient client = initializeClient();
@@ -517,13 +518,32 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (LOGIN_FAILURE_STRING.equals(status)) {
 			return "Authentication failed";
 		}
+		String returnString = "";
 
-		boolean projectStatus = projectExists(this.getProjectName(), client);
+		// Retrieve projects (Ignoring warnings from Veracode site code)
+		try {
+			Vector loginTokenVector = new Vector(1);
+			loginTokenVector.add(loginToken);
+		
+			Object projects = client.execute("jira1.getProjectsNoSchemes", loginTokenVector);
+			
+			if (projects instanceof Object[]) {
+				for (Object project : (Object[]) projects) {
+					if (project instanceof Map<?,?>) {
+						returnString += ((Map) project).get("key") + ",";
+					}
+				}
+			}
+			
+		} catch (XmlRpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		if (projectStatus)
-			return "Connection successful.";
+		if ("".equals(returnString))
+			return INCORRECT_CONFIGURATION;
 		else
-			return "Project not found.";
+			return returnString;
 	}
 
 	@Override
@@ -555,10 +575,18 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		return "OPEN";
 	}
 	
-	// TODO
 	@Override
 	public String getBugURL(String endpointURL, String bugID) {
-		return endpointURL;
+		String returnString = endpointURL;
+		
+		if (endpointURL.endsWith("rpc/xmlrpc"))
+			returnString = endpointURL.replace("rpc/xmlrpc", "browse/" + bugID);
+		else if (endpointURL.endsWith("atlassian.net/"))
+			returnString = endpointURL + "browse/" + bugID;
+		else if (endpointURL.endsWith("attlassian.net"))
+			returnString = endpointURL + "/browse/" + bugID;
+		
+		return returnString;
 	}
 
 }

@@ -30,7 +30,5 @@
 	<a href="${ fn:escapeXml(jsonUrl) }" id="jsonLink">Test Key</a>	
 	<br/>
 	<div id="results"></div>
-	
-	
 			
 </body>

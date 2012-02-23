@@ -1570,4 +1570,46 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	}
+
+	/**
+	 * This method has a lot of code duplication with processScanFile(). We should consolidate.
+	 */
+	@Override
+	public Scan processRemoteScan(Scan scan) {
+		
+		if (scan == null) {
+			log.warn("The remote import failed.");
+			return null;
+		}
+		
+		ApplicationChannel applicationChannel = scan.getApplicationChannel();
+		
+		if (scan.getFindings() != null && applicationChannel != null 
+				&& applicationChannel.getChannelType() != null
+				&& applicationChannel.getChannelType().getName() != null) {
+			log.info("The " + applicationChannel.getChannelType().getName() + 
+				" import was successful" + 
+				" and found " + scan.getFindings().size() + " findings.");
+		}
+	
+		findOrParseProjectRoot(applicationChannel, scan);
+		channelMerge(scan, applicationChannel);
+		appMerge(scan, applicationChannel.getApplication().getId());
+	
+		scan.setApplicationChannel(applicationChannel);
+		scan.setApplication(applicationChannel.getApplication());
+	
+		if (scan.getNumberTotalVulnerabilities() != null && scan.getNumberNewVulnerabilities() != null)
+			log.info(applicationChannel.getChannelType().getName() + " scan completed processing with " 
+					+ scan.getNumberTotalVulnerabilities() + " total Vulnerabilities ("
+					+ scan.getNumberNewVulnerabilities() + " new).");
+		else
+			log.info(applicationChannel.getChannelType().getName() + " scan completed.");
+		
+		cleanFindings(scan);
+		processFindings(scan);
+		scanDao.saveOrUpdate(scan);
+		
+		return scan;
+	}
 }

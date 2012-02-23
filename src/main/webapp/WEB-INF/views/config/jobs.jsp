@@ -17,8 +17,8 @@
 			<tr>
 				<th class="medium first">Type</th>
 				<th>Status</th>
-				<th class="medium last">Updated On</th>
-				<th>Trackback URL</th>
+				<th class="medium">Updated On</th>
+				<th class="medium last">Trackback URL</th>
 			</tr>
 		</thead>
 		<tbody>

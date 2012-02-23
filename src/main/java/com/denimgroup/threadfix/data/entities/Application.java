@@ -89,6 +89,7 @@ public class Application extends AuditableEntity {
 	private List<ApplicationChannel> channelList;
 	private List<Scan> scans;
 	private List<Vulnerability> vulnerabilities;
+	private List<RemoteProviderApplication> remoteProviderApplications;
 
 	// these are here so we don't generate them more than we need to
 	private List<Integer> reportList = null;
@@ -238,6 +239,16 @@ public class Application extends AuditableEntity {
 	
 	public void setProjectRoot(String projectRoot) {
 		this.projectRoot = projectRoot;
+	}
+	
+	@OneToMany(mappedBy = "application")
+	public List<RemoteProviderApplication> getRemoteProviderApplications() {
+		return remoteProviderApplications;
+	}
+
+	public void setRemoteProviderApplications(
+			List<RemoteProviderApplication> remoteProviderApplications) {
+		this.remoteProviderApplications = remoteProviderApplications;
 	}
 	
 	/*

@@ -102,6 +102,11 @@ public interface ScanMergeService {
 	 * @return
 	 */
 	Scan saveRPCScanAndRun(Integer channelId, MultipartFile file);
-
 	
+	/**
+	 * 
+	 * @param scan
+	 * @return
+	 */
+	Scan processRemoteScan(Scan scan);
 }

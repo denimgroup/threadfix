@@ -32,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -83,7 +82,7 @@ public class EditDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("defectTrackerId") int defectTrackerId, Model model) {
+	public ModelAndView editForm(@PathVariable("defectTrackerId") int defectTrackerId) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		
 		if (defectTracker == null) {

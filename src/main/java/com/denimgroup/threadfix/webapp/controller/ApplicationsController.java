@@ -109,8 +109,8 @@ public class ApplicationsController {
 	}
 	
 	@RequestMapping("/{appId}/closedVulnerabilities")
-	public String viewClosedVulnerabilities(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			ModelMap model) {
+	public String viewClosedVulnerabilities(@PathVariable("orgId") int orgId, 
+			@PathVariable("appId") int appId, ModelMap model) {
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));

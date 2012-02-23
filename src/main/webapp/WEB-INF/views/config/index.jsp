@@ -20,7 +20,10 @@
 		</li>
 	</security:authorize>
 	    <li>
-	    	<a id="whiteHatSentinelLink" href="<spring:url value="configuration/whitehat" htmlEscape="true"/>">WhiteHat Sentinel</a>
+	    	<a id="remoteProvidersLink" href="<spring:url value="configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
+	    </li>
+		<li>
+	    	<a id="whiteHatLink" href="<spring:url value="configuration/whitehat" htmlEscape="true"/>">WhiteHat Sentinel</a>
 	    </li>
 		<li>
 	    	<a id="apiKeysLink" href="<spring:url value="configuration/keys" htmlEscape="true"/>">API Keys</a>
