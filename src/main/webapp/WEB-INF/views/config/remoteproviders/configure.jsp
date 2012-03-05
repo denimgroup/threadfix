@@ -39,6 +39,15 @@
 					<form:errors path="password" cssClass="errors" />
 				</td>
 			</tr>
+			<tr>
+				<td class="label">API Key:</td>
+				<td class="inputValue">
+					<form:input id="apiKeyInput" path="apiKeyString" size="50" maxlength="60" />
+				</td>
+				<td style="padding-left:5px">
+					<form:errors path="apiKeyString" cssClass="errors" />
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	

@@ -107,29 +107,4 @@ public class ScanController {
 		mav.addObject("vulnData", scan.getReportList());
 		return mav;
 	}
-
-	@RequestMapping(value = "/sentinel", method = RequestMethod.GET)
-	public String processSentinelRequest(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId) {
-		Application application = applicationService.loadApplication(appId);
-		
-		if (application == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		List<Application> applications = new ArrayList<Application>();
-		applications.add(application);
-		
-		ChannelType sentinelChannelType = channelTypeService.loadChannel(ChannelType.SENTINEL);
-		String sentinelApiKey = sentinelChannelType.getApiKey();
-		
-		if (sentinelApiKey != null) {
-			queueSender.importSentinelAppScans(application.getOrganization()
-					.getId(), appId, sentinelApiKey);
-			return "redirect:/jobs/open";
-		} else {
-			return "redirect:/configuration/whitehat";
-		}
-	}
 }

@@ -88,6 +88,8 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 		
 		Set<String> doNotIncludeList = new HashSet<String>();
 		doNotIncludeList.add(ChannelType.SENTINEL);
+		doNotIncludeList.add(ChannelType.VERACODE);
+		doNotIncludeList.add(ChannelType.QUALYSGUARD_WAS);
 		doNotIncludeList.add(ChannelType.MANUAL);
 		
 		if (!ChannelImporterFactory.isFortifyChannelImporterDefined())

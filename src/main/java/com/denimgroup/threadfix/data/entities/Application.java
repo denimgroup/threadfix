@@ -279,20 +279,21 @@ public class Application extends AuditableEntity {
 				if (vulnerability.getGenericSeverity() != null) {
 					name = vulnerability.getGenericSeverity().getName();
 	
-					if (name.equals("Info")) {
+					if (name.equals(GenericSeverity.INFO)) {
 						reportList.set(0, reportList.get(0) + 1);
-					} else if (name.equals("Low")) {
+					} else if (name.equals(GenericSeverity.LOW)) {
 						reportList.set(1, reportList.get(1) + 1);
-					} else if (name.equals("Medium")) {
+					} else if (name.equals(GenericSeverity.MEDIUM)) {
 						reportList.set(2, reportList.get(2) + 1);
-					} else if (name.equals("High")) {
+					} else if (name.equals(GenericSeverity.HIGH)) {
 						reportList.set(3, reportList.get(3) + 1);
-					} else if (name.equals("Critical")) {
+					} else if (name.equals(GenericSeverity.CRITICAL)) {
 						reportList.set(4, reportList.get(4) + 1);
 					}
 				}
 
-				reportList.set(5, reportList.get(5) + 1);
+				if (name != null && !name.equals(GenericSeverity.INFO))
+					reportList.set(5, reportList.get(5) + 1);
 			}
 		}
 
@@ -354,6 +355,8 @@ public class Application extends AuditableEntity {
 		Set<String> doNotIncludeSet = new HashSet<String>();
 		doNotIncludeSet.add(ChannelType.MANUAL);
 		doNotIncludeSet.add(ChannelType.SENTINEL);
+		doNotIncludeSet.add(ChannelType.VERACODE);
+		doNotIncludeSet.add(ChannelType.QUALYSGUARD_WAS);
 		
 		if (!ChannelImporterFactory.isFortifyChannelImporterDefined())
 			doNotIncludeSet.add(ChannelType.FORTIFY);

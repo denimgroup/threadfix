@@ -91,66 +91,6 @@ public class QueueSenderImpl implements QueueSender {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.denimgroup.threadfix.service.queue.QueueSender#importSentinelScans
-	 * (int)
-	 */
-	@Override
-	public void importSentinelScans(int orgId, String apiKey) {
-		
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		log.info("User " + userName + " is importing results from Sentinel for organization with ID " + orgId + ".");
-		
-		MapMessage sentinelMap = new ActiveMQMapMessage();
-		try {
-			sentinelMap.setInt("orgId", orgId);
-			sentinelMap.setString("type", QueueConstants.SENTINEL_TYPE);
-			sentinelMap.setString("urlPath", "/organizations/"
-					+ orgId);
-			sentinelMap.setString("urlText", "Go to Organization");
-			sentinelMap.setString("apiKey", apiKey);
-		} catch (JMSException e) {
-			log.error(jmsErrorString);
-			e.printStackTrace();
-		}
-
-		sendMap(sentinelMap);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.denimgroup.threadfix.service.queue.QueueSender#importSentinelAppScans
-	 * (int)
-	 */
-	@Override
-	public void importSentinelAppScans(int orgId, int appId, String apiKey) {
-		
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		log.info("User " + userName + " added a Sentinel import for Application " + appId);
-		
-		
-		MapMessage sentinelMap = new ActiveMQMapMessage();
-		try {
-			sentinelMap.setInt("appId", appId);
-			sentinelMap.setString("type", QueueConstants.SENTINEL_APP_TYPE);
-			sentinelMap.setString("urlPath", "/organizations/"
-					+ orgId + "/applications/" + appId);
-			sentinelMap.setString("urlText", "Go to Application");
-			sentinelMap.setString("apiKey", apiKey);
-		} catch (JMSException e) {
-			log.error(jmsErrorString);
-			e.printStackTrace();
-		}
-
-		sendMap(sentinelMap);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * com.denimgroup.threadfix.service.queue.QueueSender#addScanToQueue(java
 	 * .lang.String, java.lang.Integer)
 	 */

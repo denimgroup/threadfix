@@ -571,10 +571,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		}
 			
 		try {
-			if (diskZipFile.exists()) {
-				log.info("The file was on disk, wrapping it in a ZipFile and returning.");
-				return new ZipFile(diskZipFile);
-			}
 
 			FileOutputStream out = new FileOutputStream(diskZipFile);
 			byte buf[] = new byte[1024];

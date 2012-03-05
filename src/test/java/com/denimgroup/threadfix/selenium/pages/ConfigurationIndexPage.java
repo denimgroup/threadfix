@@ -28,28 +28,19 @@ import org.openqa.selenium.WebElement;
 
 public class ConfigurationIndexPage extends BasePage {
 	
-	private WebElement channelsLink;
 	private WebElement defectTrackersLink;
 	private WebElement jobStatusesLink;
 	private WebElement manageUsersLink;
-	private WebElement whiteHatSentinelLink;
 	private WebElement apiKeysLink;
 	
 	public ConfigurationIndexPage(WebDriver webdriver) {
 		super(webdriver);
 
-		channelsLink = driver.findElementById("channelsLink");
 		defectTrackersLink = driver.findElementById("defectTrackersLink");
 		jobStatusesLink = driver.findElementById("jobStatusesLink");
 		manageUsersLink = driver.findElementById("manageUsersLink");
-		whiteHatSentinelLink = driver.findElementById("whiteHatSentinelLink");
 		apiKeysLink = driver.findElementById("apiKeysLink");
 		
-	}
-	
-	public OrganizationIndexPage clickChannelsLink() {
-		channelsLink.click();
-		return new OrganizationIndexPage(driver);
 	}
 
 	public DefectTrackerIndexPage clickDefectTrackersLink() {
@@ -65,11 +56,6 @@ public class ConfigurationIndexPage extends BasePage {
 	public UserIndexPage clickManageUsersLink() {
 		manageUsersLink.click();
 		return new UserIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickWhiteHatSentinelLink() {
-		whiteHatSentinelLink.click();
-		return new OrganizationIndexPage(driver);
 	}
 
 	public OrganizationIndexPage clickApiKeysLink() {

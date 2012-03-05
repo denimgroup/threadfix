@@ -42,16 +42,6 @@ public interface QueueSender {
 	void startImportScans();
 
 	/**
-	 * @param orgId
-	 */
-	void importSentinelScans(int orgId, String apiKey);
-
-	/**
-	 * @param appId
-	 */
-	void importSentinelAppScans(int orgId, int appId, String apiKey);
-
-	/**
 	 * @param fileName
 	 * @param channelId
 	 */

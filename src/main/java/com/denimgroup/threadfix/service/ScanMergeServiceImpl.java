@@ -53,7 +53,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
@@ -67,7 +66,6 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
@@ -75,7 +73,6 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
-import com.denimgroup.threadfix.service.channel.SentinelChannelImporter;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -95,7 +92,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	private ApplicationDao applicationDao = null;
 	private UserDao userDao = null;
-	private OrganizationDao organizationDao = null;
 
 	// This string makes getting the applicationRoot simpler.
 	private String projectRoot = null;
@@ -108,7 +104,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			GenericVulnerabilityDao genericVulnerabilityDao,
 			ApplicationChannelDao applicationChannelDao,
 			VulnerabilityMapLogDao vulnerabilityMapLogDao,
-			OrganizationDao organizationDao, ApplicationDao applicationDao,
+			ApplicationDao applicationDao,
 			UserDao userDao) {
 		this.scanDao = scanDao;
 		this.channelTypeDao = channelTypeDao;
@@ -120,84 +116,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
-		this.organizationDao = organizationDao;
-	}
-	
-	@Override
-	public void processSentinelScan(int orgId, String apiKey) {
-		Organization org = organizationDao.retrieveById(orgId);
-		processSentinelScan(org, apiKey);
-	}
-
-	@Override
-	public void processSentinelAppScan(int appId,
-			String apiKey) {
-		Application app = applicationDao.retrieveById(appId);
-		processSentinelAppScan(app, apiKey);
-	}
-
-	@Transactional(readOnly = false)
-	public void processSentinelScan(
-			Organization organization, String apiKey) {
-		if (organization == null || organization.getActiveApplications() == null
-				|| organization.getActiveApplications().size() == 0) {
-			log.error("Sentinel scan failed, there were no active Applications specified.");
-			return;
-		}
-
-		log.info("Processing Sentinel Results for Organization " + organization.getName() + ".");
-		
-		SentinelChannelImporter importer = new SentinelChannelImporter(
-				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				vulnerabilityMapLogDao);
-
-		List<Scan> scanList = importer.parseSentinelInput(organization, apiKey);
-		if (scanList == null) {
-			log.warn("The Sentinel importer failed to retrieve any scans.");
-			return;
-		}
-
-		for (Scan scan : scanList) {
-			if (scan != null) {
-				channelMerge(scan, scan.getApplicationChannel());
-				appMerge(scan, scan.getApplication().getId());
-				processFindings(scan);
-				scanDao.saveOrUpdate(scan);
-			}
-		}
-	}
-
-	@Transactional(readOnly = false)
-	public void processSentinelAppScan(
-			Application application, String apiKey) {
-		if (application == null || !application.isActive()) {
-			log.error("The Sentinel import failed, the application supplied was null or inactive.");
-			return;
-		}
-
-		log.info("Processing Sentinel Results for Application " + application.getName() + ".");
-		
-		SentinelChannelImporter importer = new SentinelChannelImporter(
-				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				vulnerabilityMapLogDao);
-
-		List<Scan> scanList = importer.parseSentinelAppInput(application,
-				apiKey);
-		if (scanList == null) {
-			log.warn("Sentinel processing failed to return any scans.");
-			return;
-		}
-		
-		log.info("Sentinel processing was successful.");
-		
-		for (Scan scan : scanList) {
-			if (scan != null) {
-				channelMerge(scan, scan.getApplicationChannel());
-				appMerge(scan, application.getId());
-				processFindings(scan);
-				scanDao.saveOrUpdate(scan);
-			}
-		}
 	}
 
 	@Override

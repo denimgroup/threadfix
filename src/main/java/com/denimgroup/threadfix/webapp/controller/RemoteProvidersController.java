@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -87,10 +88,19 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 		log.info("Processing request for Remote Provider index.");
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
+		
+		Object message = null;
+		if (request != null && request.getSession() != null) {
+			message = request.getSession().getAttribute("error");
+			if (message != null) {
+				request.getSession().removeAttribute("error");
+			}
+		}
 
+		model.addAttribute("message", message);
 		model.addAttribute("remoteProviders", typeList);
 		return "config/remoteproviders/index";
 	}
@@ -106,21 +116,25 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
-	public String importScan(@PathVariable("typeId") int typeId,
-			@PathVariable("appId") int appId) {
+	public String importScan(@PathVariable("typeId") int typeId, 
+			HttpServletRequest request, @PathVariable("appId") int appId) {
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
 		if (remoteProviderApplication == null || remoteProviderApplication.getApplication() == null) {
-			// TODO add an error to the session
+			request.getSession().setAttribute("error", "The scan request failed because it could not find the requested application.");
+
 			return "redirect:/configuration/remoteproviders/";
 		}
 		
-		remoteProviderApplicationService.importScanForApplication(remoteProviderApplication);
-
-		return "redirect:/organizations/" + 
-				remoteProviderApplication.getApplication().getOrganization().getId() + 
-				"/applications/" +
-				remoteProviderApplication.getApplication().getId();
+		if (remoteProviderApplicationService.importScanForApplication(remoteProviderApplication)) {
+			return "redirect:/organizations/" + 
+					remoteProviderApplication.getApplication().getOrganization().getId() + 
+					"/applications/" +
+					remoteProviderApplication.getApplication().getId();
+		} else {
+			request.getSession().setAttribute("error", "No new scans were found.");
+			return "redirect:/configuration/remoteproviders/";
+		}
 	}
 	
 	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.GET)
@@ -142,6 +156,8 @@ public class RemoteProvidersController {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
+			
+			// TODO move to service layer
 			Application application = applicationService.loadApplication(
 					remoteProviderApplication.getApplication().getId());
 			
@@ -157,6 +173,16 @@ public class RemoteProvidersController {
 			
 			if (application.getChannelList() == null || application.getChannelList().size() == 0) {
 				application.setChannelList(new ArrayList<ApplicationChannel>());
+			}
+			
+			for (ApplicationChannel applicationChannel : application.getChannelList()) {
+				if (applicationChannel.getChannelType().getName().equals(type.getName())) {
+					remoteProviderApplication.setApplicationChannel(applicationChannel);
+					break;
+				}
+			}
+			
+			if (remoteProviderApplication.getApplicationChannel() == null) {
 				ApplicationChannel channel = new ApplicationChannel();
 				channel.setApplication(application);
 				if (remoteProviderApplication.getRemoteProviderType() != null && 
@@ -166,15 +192,6 @@ public class RemoteProvidersController {
 				}
 				remoteProviderApplication.setApplicationChannel(channel);
 				application.getChannelList().add(channel);
-				
-			} else {
-				
-				for (ApplicationChannel applicationChannel : application.getChannelList()) {
-					if (applicationChannel.getChannelType().getName().equals(type.getName())) {
-						remoteProviderApplication.setApplicationChannel(applicationChannel);
-						break;
-					}
-				}
 			}
 			
 			remoteProviderApplicationService.store(remoteProviderApplication);
@@ -207,24 +224,50 @@ public class RemoteProvidersController {
 			// TODO move to service layer
 			if (databaseRemoteProviderType == null || databaseRemoteProviderType.getUsername() == null ||
 					(remoteProviderType != null && remoteProviderType.getUsername() != null &&
-					!databaseRemoteProviderType.getUsername().equals(remoteProviderType.getUsername()))) {
+					!databaseRemoteProviderType.getUsername().equals(remoteProviderType.getUsername())) ||
+					(remoteProviderType != null && remoteProviderType.getApiKeyString() != null &&
+					!databaseRemoteProviderType.getApiKeyString().equals(remoteProviderType.getApiKeyString()))) {
 			
-				log.warn("Provider username has changed, deleting old apps.");
+				List<RemoteProviderApplication> apps = remoteProviderApplicationService.getApplications(
+																					remoteProviderType);
 				
-				remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
-
-				remoteProviderType.setRemoteProviderApplications(
-						remoteProviderApplicationService.getApplications(remoteProviderType));
-				
-				if (remoteProviderType.getRemoteProviderApplications() != null) {
-					for (RemoteProviderApplication remoteProviderApplication : remoteProviderType.getRemoteProviderApplications()) {
-						remoteProviderApplicationService.store(remoteProviderApplication);
+				if (apps == null) {
+					// Here the apps coming back were null. For now let's put an error page.
+					// TODO finalize this process.
+					String field = null;
+					if (remoteProviderType.getApiKeyString() != null && !remoteProviderType.
+								getApiKeyString().trim().equals("")) {
+						field = "apiKeyString";
+					} else {
+						field = "username";
 					}
+					
+					result.rejectValue(field, "errors.other", 
+							"We were unable to connect to the provider with these credentials.");
+					
+					return "config/remoteproviders/configure";
+				} else {
+					
+					log.warn("Provider username has changed, deleting old apps.");
+					
+					remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
+	
+					remoteProviderType.setRemoteProviderApplications(apps);
+					
+					if (remoteProviderType.getRemoteProviderApplications() != null) {
+						for (RemoteProviderApplication remoteProviderApplication : 
+								remoteProviderType.getRemoteProviderApplications()) {
+							remoteProviderApplicationService.store(remoteProviderApplication);
+						}
+					}
+					
+					remoteProviderTypeService.store(remoteProviderType);
+
+					status.setComplete();
+					return "redirect:/configuration/remoteproviders";
 				}
 			}
 			
-			remoteProviderTypeService.store(remoteProviderType);
-
 			status.setComplete();
 			return "redirect:/configuration/remoteproviders";
 		}

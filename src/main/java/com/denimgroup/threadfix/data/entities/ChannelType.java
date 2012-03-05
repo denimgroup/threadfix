@@ -55,6 +55,7 @@ public class ChannelType extends BaseEntity {
 	public static final String FORTIFY = "Fortify 360";
 	public static final String NESSUS = "Nessus";
 	public static final String ARACHNI = "Arachni";
+	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
 
 	private String name;
 	private String version;

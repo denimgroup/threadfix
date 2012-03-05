@@ -103,9 +103,6 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.W3AF)) {
 			channelImporter = new W3afChannelImporter(channelTypeDao, channelVulnerabilityDao,
 					channelSeverityDao, vulnerabilityMapLogDao);
-		} else if (channelName.equals(ChannelType.VERACODE)) {
-			channelImporter = new VeracodeChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, vulnerabilityMapLogDao);
 		} else if (channelName.equals(ChannelType.WEBINSPECT)) {
 			channelImporter = new WebInspectChannelImporter(channelTypeDao, channelVulnerabilityDao,
 					channelSeverityDao, vulnerabilityMapLogDao);

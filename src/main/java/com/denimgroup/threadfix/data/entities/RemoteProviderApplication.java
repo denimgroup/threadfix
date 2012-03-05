@@ -1,11 +1,15 @@
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -19,13 +23,24 @@ public class RemoteProviderApplication extends BaseEntity  {
 	public static final int NATIVE_ID_LENGTH = 50;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
-	public String nativeId;
+	private String nativeId;
 	
-	public RemoteProviderType remoteProviderType;
+	private RemoteProviderType remoteProviderType;
 	
-	public Application application;
-	public ApplicationChannel applicationChannel;
+	private Application application;
+	private ApplicationChannel applicationChannel;
+	
+	private Calendar lastImportTime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	public Calendar getLastImportTime() {
+		return lastImportTime;
+	}
+
+	public void setLastImportTime(Calendar lastImportTime) {
+		this.lastImportTime = lastImportTime;
+	}
+	
 	@Column(length = NATIVE_ID_LENGTH)
 	public String getNativeId() {
 		return nativeId;

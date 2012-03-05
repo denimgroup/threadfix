@@ -61,7 +61,6 @@ public class ScanTests extends BaseTest {
 		fileMap.put("Mavituna Security Netsparker", getScanFilePath("Dynamic","NetSparker","netsparker-demo-site.xml") );
 		fileMap.put("Skipfish", getScanFilePath("Dynamic","Skipfish","skipfish-demo-site.zip") );
 		fileMap.put("w3af", getScanFilePath("Dynamic","w3af","w3af-demo-site.xml") );
-		fileMap.put("Veracode", null);
 		fileMap.put("OWASP Zed Attack Proxy", getScanFilePath("Dynamic","ZAP","zaproxy-normal.xml") );
 		fileMap.put("Nessus", getScanFilePath("Dynamic","Nessus","nessus_report_TFTarget.xml") );
 		fileMap.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
@@ -147,7 +146,7 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			organizationIndexPage = organizationIndexPage.clickAddOrganizationButton()
+			applicationDetailPage = organizationIndexPage.clickAddOrganizationButton()
 														 .setNameInput(mapEntry.getKey() + "normaltest")
 														 .clickSubmitButtonValid()
 														 .clickAddApplicationLink()
@@ -159,8 +158,14 @@ public class ScanTests extends BaseTest {
 														 .clickAddChannelButton()
 														 .setFileInput(mapEntry.getValue())
 														 .setChannelSelect(mapEntry.getKey())
-														 .clickUploadScanButton()
-														 .clickDeleteLink()
+														 .clickUploadScanButton();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.out.println("Thread interrupted. Continuing.");
+			}
+			
+			organizationIndexPage = applicationDetailPage.clickDeleteLink()
 														 .clickDeleteButton();
 		}
 	}
@@ -196,9 +201,15 @@ public class ScanTests extends BaseTest {
 												  .setFileInput(mapEntry.getValue())
 												  .setChannelSelect(mapEntry.getKey())
 												  .clickUploadScanButtonInvalid();
-			
+
 			assertTrue("The correct error text was not present.", uploadScanPage.getScanError().equals(appWasAlreadyUploadedErrorText));
-														 
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.out.println("Thread interrupted. Continuing.");
+			}
+			
 			organizationIndexPage = uploadScanPage.clickCancelLink()
 												  .clickDeleteLink()
 												  .clickDeleteButton();

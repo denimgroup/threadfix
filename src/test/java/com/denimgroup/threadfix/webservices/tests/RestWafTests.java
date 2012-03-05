@@ -9,6 +9,10 @@ import com.denimgroup.threadfix.webapp.controller.RestController;
 import com.denimgroup.threadfix.webapp.controller.WafRestController;
 
 public class RestWafTests extends BaseRestTest {
+	
+//	public static void main(String[] args) {
+//		httpPost("https://qualysapi.qualys.com/api/2.0/fo/report")
+//	}
 
 	@Test
 	public void indexTest() {
@@ -21,6 +25,10 @@ public class RestWafTests extends BaseRestTest {
 		assertTrue(wafListing != null);
 
 		// TODO more tests on the actual content
+//		
+//		Request:
+//			curl -u "USERNAME:PASSWORD"
+//			"https://qualysapi.qualys.com/qps/rest/3.0/download/was/wasscan/
 
 		// Bad Key
 		indexUrl = BASE_URL + "/teams/?apiKey=" + BAD_API_KEY;

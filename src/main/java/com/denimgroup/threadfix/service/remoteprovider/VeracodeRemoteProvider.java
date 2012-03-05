@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,29 +72,18 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 		setChannelType(ChannelType.VERACODE);
 	}
-	
+
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
-		log.info("Made it into Veracode getScan() method. Username = "
-				+ remoteProviderApplication.getRemoteProviderType().getUsername()
-				+ ", password = "
-				+ remoteProviderApplication.getRemoteProviderType().getPassword()
-				+ ", native ID = "
-				+ remoteProviderApplication.getNativeId()
-				+ ", app name = "
-				+ remoteProviderApplication.getApplication().getName());
 		
 		username = remoteProviderApplication.getRemoteProviderType().getUsername();
 		password = remoteProviderApplication.getRemoteProviderType().getPassword();
 		
+		// This block tries to get the latest build for the app and dies if it fails.
 		InputStream appBuildsInputStream = getUrl(GET_APP_BUILDS_URI,username,password);
-		
 		String appName = remoteProviderApplication.getNativeId();
-		
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
-		
 		parse(appBuildsInputStream, parser);
-		
 		String buildId = parser.map.get(appName);
 		
 		if (buildId == null) {
@@ -103,11 +93,12 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			System.out.println("Retrieved build ID " + buildId + " for application " + appName);
 		}
 
+		// This block tries to parse the scan corresponding to the build.
 		inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
 
 		VeracodeSAXParser scanParser = new VeracodeSAXParser();
 		Scan resultScan = parseSAXInput(scanParser);
-		
+		resultScan.setImportTime(date);
 		resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 		
 		return resultScan;
@@ -223,14 +214,29 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public class VeracodeApplicationIdMapParser extends DefaultHandler {
 		
 		public Map<String, String> map = new HashMap<String, String>();
+		public Map<String, Calendar> dateMap = new HashMap<String, Calendar>();
 		
 		private String currentAppName = null;
-
+		private String currentBuildId = null;
+		
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if (qName.equals("application")) {
 	    		currentAppName = atts.getValue("app_name");
 	    	} else if (currentAppName != null && qName.equals("build")) {
+	    		currentBuildId = atts.getValue("build_id");
 	    		map.put(currentAppName, atts.getValue("build_id"));
+	    	} else if (currentAppName != null && currentBuildId != null 
+	    			&& qName.equals("analysis_unit")) {
+	    		
+	    		String dateString = atts.getValue("published_date");
+	    		if (dateString != null && dateString.length() > 5)
+	    			dateString = dateString.substring(0,dateString.length() - 5);
+	    		
+	    		Calendar calendar = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss", dateString);
+	    		if (dateMap.get(currentAppName) == null || dateMap.get(currentAppName).before(calendar)) {
+	    			map.put(currentAppName, currentBuildId);
+	    			dateMap.put(currentAppName, calendar);
+	    		}
 	    	}
 	    }
 	}

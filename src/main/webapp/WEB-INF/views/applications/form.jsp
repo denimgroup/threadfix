@@ -153,9 +153,9 @@
 	<c:if test="${ not application.new and fn:length(pathTree.printout ) != 0}">
 		<h3>Project Root</h3>
 		<div style="padding-bottom:10px">Please select the proper root for the application:</div>
-		<table class="formattedTable sortable" id="anyid">
+		<table class="filteredTable sortable">
 				<thead>
-					<tr>
+					<tr class="darkBackground">
 						<th class="first" colspan="${ pathTree.depth }">Path</th>
 					</tr>
 				</thead>
@@ -181,11 +181,6 @@
 					</tr>
 				</c:forEach>
 				</tbody>
-				<tfoot>
-					<tr class="footer">
-						<td colspan="${ pathTree.depth }" class="pagination" style="text-align:right"></td>
-					</tr>
-				</tfoot>
 			</table>
 	</c:if>
 	

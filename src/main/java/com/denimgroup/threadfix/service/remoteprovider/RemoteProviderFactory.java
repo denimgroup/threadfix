@@ -66,9 +66,13 @@ public class RemoteProviderFactory {
 		if (providerType == null) {
 			return null;
 		} else if (providerType.equals(RemoteProviderType.SENTINEL)) {
-			return new WhiteHatRemoteProvider();
+			return new WhiteHatRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
+					channelSeverityDao, vulnerabilityMapLogDao);
 		} else if (providerType.equals(RemoteProviderType.VERACODE)) {
 			return new VeracodeRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
+					channelSeverityDao, vulnerabilityMapLogDao);
+		} else if (providerType.equals(RemoteProviderType.QUALYSGUARD_WAS)) {
+			return new QualysRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
 					channelSeverityDao, vulnerabilityMapLogDao);
 		} else {
 			return null;

@@ -35,24 +35,6 @@ import com.denimgroup.threadfix.data.entities.Scan;
  */
 public interface ScanMergeService {
 	
-
-	/**
-	 * Retrieve and parse Sentinel results for a whole application.
-	 * 
-	 * @param orgId
-	 * @return
-	 */
-	void processSentinelScan(int orgId, String apiKey);
-
-	/**
-	 * Retrieve and parse Sentinel results for just one application.
-	 * 
-	 * @param appId
-	 * @return
-	 */
-	void processSentinelAppScan(int appId, String apiKey);
-
-	
 	/**
 	 * Iterate through all the sourceFileLocations in the Findings of the Application
 	 * and calculate a new path based on the current projectRoot. This is best used

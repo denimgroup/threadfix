@@ -31,10 +31,7 @@ public interface QueueConstants {
 
 	static final String DEFECT_TRACKER_SYNC_REQUEST = "DEFECT_TRACKER_SYNC_REQUEST";
 	static final String IMPORT_SCANS_REQUEST = "IMPORT_SCANS_REQUEST";
-	static final String IMPORT_SENTINEL_REQUEST = "IMPORT_SENTINEL_REQUEST";
 
-	static final String SENTINEL_TYPE = "Sentinel";
-	static final String SENTINEL_APP_TYPE = "Sentinel for App";
 	static final String NORMAL_SCAN_TYPE = "Scan";
 	static final String DEFECT_TRACKER_VULN_UPDATE_TYPE = "Defect Tracker Vuln Update";
 	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";

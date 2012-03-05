@@ -21,6 +21,7 @@ public class RemoteProviderType extends BaseEntity  {
 	
 	public static final String SENTINEL = ChannelType.SENTINEL;
 	public static final String VERACODE = ChannelType.VERACODE;
+	public static final String QUALYSGUARD_WAS = ChannelType.QUALYSGUARD_WAS;
 
 	public static final int NAME_LENGTH = 60;
 	public static final int API_KEY_LENGTH = 200;
@@ -31,22 +32,22 @@ public class RemoteProviderType extends BaseEntity  {
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
-	public String name;
+	private String name;
 	
-	public boolean hasApiKey;
-	
-	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
-	public String apiKeyString;
-	
-	public boolean hasUserNamePassword;
+	private boolean hasApiKey;
 	
 	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
-	public String username;
-	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
-	public String password;
+	private String apiKeyString;
 	
-	public List<RemoteProviderApplication> remoteProviderApplications;
-	public ChannelType channelType;
+	private boolean hasUserNamePassword;
+	
+	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
+	private String username;
+	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
+	private String password;
+	
+	private List<RemoteProviderApplication> remoteProviderApplications;
+	private ChannelType channelType;
 	
 	@Column(nullable = false)
 	public boolean hasApiKey() {

@@ -146,17 +146,30 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	public void importScanForApplication(RemoteProviderApplication remoteProviderApplication) {
+	public boolean importScanForApplication(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null)
-			return;
+			return false;
 		
 		Scan resultScan = getRemoteProviderFactory().fetchScan(remoteProviderApplication);
 		
 		if (resultScan != null && resultScan.getFindings() != null && resultScan.getFindings().size() != 0) {
-			log.info("Scan was parsed and has findings, passing to ScanMergeService.");
-			scanMergeService.processRemoteScan(resultScan);
+			if (remoteProviderApplication.getLastImportTime() == null || 
+					(resultScan.getImportTime() != null &&
+					remoteProviderApplication.getLastImportTime().before(resultScan.getImportTime()))) {
+				
+				log.info("Scan was parsed and has findings, passing to ScanMergeService.");
+				
+				remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+			
+				scanMergeService.processRemoteScan(resultScan);
+				return true;
+			} else {
+				log.warn("Remote Scan was not newer than the last imported scan for this RemoteProviderApplication.");
+				return false;
+			}
 		} else {
-			log.info("Remote Scan import died.");
+			log.warn("Remote Scan import returned a null scan or a scan with no findings.");
+			return false;
 		}
 	}
 	

@@ -11,6 +11,10 @@
 
 	<h2>Remote Providers</h2>
 	
+	<c:if test="${ not empty message }">
+		<center class="errors" ><c:out value="${ message }"/></center>
+	</c:if>
+	
 	<div id="helpText">
 		Remote Providers are links to services which
 		import vulnerability data into ThreadFix.
@@ -21,6 +25,7 @@
 			<tr>
 				<th class="medium first">Name</th>
 				<th class="medium">User name</th>
+				<th class="medium">API Key</th>
 				<th class="medium last">Configure</th>
 			</tr>
 		</thead>
@@ -38,6 +43,11 @@
 				<td>
 					<c:if test="${ not empty provider.username }">
 						<c:out value="${ provider.username }" />
+					</c:if>
+				</td>
+				<td>
+					<c:if test="${ not empty provider.apiKeyString }">
+						<c:out value="${ provider.apiKeyString }" />
 					</c:if>
 				</td>
 				<td>

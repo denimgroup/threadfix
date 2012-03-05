@@ -116,13 +116,7 @@ public class QueueListener implements MessageListener {
 		if (message instanceof MapMessage) {
 			MapMessage map = (MapMessage) message;
 			try {
-				if (map.getString("type").equals(QueueConstants.SENTINEL_TYPE)) {
-					processSentinelRequest(map.getInt("orgId"), map.getString("apiKey"),
-							map.getInt("jobStatusId"));
-				} else if (map.getString("type").equals(QueueConstants.SENTINEL_APP_TYPE)) {
-					processSentinelAppRequest(map.getInt("appId"), map.getString("apiKey"),
-							map.getInt("jobStatusId"));
-				} else if (map.getString("type").equals(QueueConstants.NORMAL_SCAN_TYPE)) {
+				if (map.getString("type").equals(QueueConstants.NORMAL_SCAN_TYPE)) {
 					processScanRequest(map.getInt("channelId"), map.getString("fileName"),
 							map.getInt("jobStatusId"), map.getString("userName"));
 				} else if (map.getString("type").equals(
@@ -176,28 +170,6 @@ public class QueueListener implements MessageListener {
 		}
 
 		closeJobStatus("Defect was created successfully.");
-	}
-
-	/**
-	 * @param orgId
-	 * @param jobStatusId
-	 */
-	private void processSentinelRequest(int orgId, String apiKey, Integer jobStatusId) {
-		getJobStatus(jobStatusId);
-		updateJobStatus("Processing Scan from Sentinel web service.");
-		scanMergeService.processSentinelScan(orgId, apiKey);
-		closeJobStatus("Finished processing Sentinel Scans");
-	}
-
-	/**
-	 * @param appId
-	 * @param jobStatusId
-	 */
-	private void processSentinelAppRequest(int appId, String apiKey, Integer jobStatusId) {
-		getJobStatus(jobStatusId);
-		updateJobStatus("Processing Scan for a specific application from Sentinel web service.");
-		scanMergeService.processSentinelAppScan(appId, apiKey);
-		closeJobStatus("Finished processing Sentinel Scans");
 	}
 
 	/**

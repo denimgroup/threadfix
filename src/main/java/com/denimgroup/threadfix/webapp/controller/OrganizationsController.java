@@ -100,19 +100,4 @@ public class OrganizationsController {
 			throw new ResourceNotFoundException();
 		}
 	}
-
-	@RequestMapping(value = "/{orgId}/scans/sentinel", method = RequestMethod.GET)
-	public String processSentinelRequest(@PathVariable("orgId") int orgId) {
-		Organization organization = organizationService.loadOrganization(orgId);
-		if (organization == null) {
-			return "redirect:/applications/index";
-		}
-
-		ChannelType channelType = channelTypeService.loadChannel(ChannelType.SENTINEL);
-		if (channelType == null || channelType.getApiKey() == null)
-			return "redirect:/configuration/whitehat";
-
-		queueSender.importSentinelScans(orgId, channelType.getApiKey());
-		return "redirect:/jobs/open";
-	}
 }

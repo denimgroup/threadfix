@@ -40,6 +40,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class GenericSeverity extends BaseEntity {
 
 	private static final long serialVersionUID = 8187838743225832281L;
+	
+	public static final String INFO = "Info";
+	public static final String LOW = "Low";
+	public static final String MEDIUM = "Medium";
+	public static final String HIGH = "High";
+	public static final String CRITICAL = "Critical";
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")

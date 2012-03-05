@@ -20,7 +20,7 @@
 	
 	<div style="font-size:150%">Team: <a id="organizationText" href="${fn:escapeXml(orgUrl)}"><c:out value="${ application.organization.name }"/></a></div>
 	<br>
-	<h2 style="padding-bottom:5px;" id="nameText">Application: <c:out value="${ application.name }"/>
+	<h2 style="padding-bottom:5px;">Application: <span id="nameText"><c:out value="${ application.name }"/></span>
 	<span style="font-size:60%;padding-left:10px;">
 		<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
 		<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a>
@@ -95,11 +95,7 @@
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
-		<spring:url value="{appId}/scans/sentinel" var="sentinelUrl">
-			<spring:param name="appId" value="${ application.id }"/>
-		</spring:url>
-		<a id="importSentinelLink" href="${ fn:escapeXml(sentinelUrl) }">Import Sentinel</a> |
-			<spring:url value="{appId}/scans/new" var="addFindingUrl">
+		<spring:url value="{appId}/scans/new" var="addFindingUrl">
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Manually Add Vulnerabilities</a>

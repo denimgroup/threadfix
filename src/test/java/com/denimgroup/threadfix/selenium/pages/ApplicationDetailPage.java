@@ -25,42 +25,11 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 public class ApplicationDetailPage extends BasePage {
-
-	private WebElement editLink;
-	private WebElement deleteLink;
-	private WebElement viewScansLink;
-	private WebElement uploadScanLink;
-	private WebElement importSentinelLink;
-	private WebElement addFindingManuallyLink;
-	private WebElement viewPathLink;
-	private WebElement viewSurfaceStructureLink;
-	private WebElement viewCodeStructureLink;
-	private WebElement markFalsePositivesLink;
-	private WebElement unmarkMarkedFalsePositivesLink;
-	private WebElement nameText;
-	private WebElement urlText;
-	private WebElement organizationText;
 	
 	public ApplicationDetailPage(WebDriver webdriver) {
 		super(webdriver);
-		
-		editLink = driver.findElementById("editLink");
-		deleteLink = driver.findElementById("deleteLink");
-		viewScansLink = driver.findElementById("viewScansLink");
-		uploadScanLink = driver.findElementById("uploadScanLink");
-		importSentinelLink = driver.findElementById("importSentinelLink");
-		addFindingManuallyLink = driver.findElementById("addFindingManuallyLink");
-		viewPathLink = driver.findElementById("viewPathLink");
-		viewSurfaceStructureLink = driver.findElementById("viewSurfaceStructureLink");
-		viewCodeStructureLink = driver.findElementById("viewCodeStructureLink");
-		markFalsePositivesLink = driver.findElementById("markFalsePositivesLink");
-		unmarkMarkedFalsePositivesLink = driver.findElementById("unmarkMarkedFalsePositivesLink");
-		nameText = driver.findElementById("nameText");
-		urlText = driver.findElementById("urlText");
-		organizationText = driver.findElementById("organizationText");
 	}
 	
 	public String getWafText(){
@@ -68,11 +37,11 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getNameText(){
-		return nameText.getText();
+		return driver.findElementById("nameText").getText();
 	}
 	
 	public String getUrlText(){
-		return urlText.getText();
+		return driver.findElementById("urlText").getText();
 	}
 	
 	public String getDefectTrackerText() {
@@ -80,16 +49,16 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getOrganizationText(){
-		return organizationText.getText();
+		return driver.findElementById("organizationText").getText();
 	}
 	
 	public ApplicationEditPage clickEditLink() {
-		editLink.click();
+		driver.findElementById("editLink").click();
 		return new ApplicationEditPage(driver);
 	}
 
 	public OrganizationDetailPage clickDeleteLink() {
-		deleteLink.click();
+		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
@@ -98,52 +67,27 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public OrganizationIndexPage clickViewScansLink() {
-		viewScansLink.click();
+		driver.findElementById("viewScansLink").click();
 		return new OrganizationIndexPage(driver);
 	}
 
 	public UploadScanPage clickUploadScanLink() {
-		uploadScanLink.click();
+		driver.findElementById("uploadScanLink").click();
 		return new UploadScanPage(driver);
 	}
 	
 	public AddChannelPage clickUploadScanLinkFirstTime() {
-		uploadScanLink.click();
+		driver.findElementById("uploadScanLink").click();
 		return new AddChannelPage(driver);
 	}
 
 	public OrganizationIndexPage clickImportSentinelLink() {
-		importSentinelLink.click();
+		driver.findElementById("importSentinelLink").click();
 		return new OrganizationIndexPage(driver);
 	}
 
 	public OrganizationIndexPage clickAddFindingManuallyLink() {
-		addFindingManuallyLink.click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickViewPathLink() {
-		viewPathLink.click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickViewSurfaceStructureLink() {
-		viewSurfaceStructureLink.click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickViewCodeStructureLink() {
-		viewCodeStructureLink.click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickMarkFalsePositivesLink() {
-		markFalsePositivesLink.click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickUnmarkMarkedFalsePositivesLink() {
-		unmarkMarkedFalsePositivesLink.click();
+		driver.findElementById("addFindingManuallyLink").click();
 		return new OrganizationIndexPage(driver);
 	}
 

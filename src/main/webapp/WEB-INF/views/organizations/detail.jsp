@@ -6,8 +6,8 @@
 </head>
 
 <body id="apps">
-	<h2 id="name">Team Overview</h2>
-	<h3 style="padding-top:5px;"><c:out value="${ organization.name }"/></h3>
+	<h2>Team Overview</h2>
+	<h3 id="name" style="padding-top:5px;"><c:out value="${ organization.name }"/></h3>
 	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
 	
 	<h3 style="padding-top:5px;">Applications</h3>
@@ -61,14 +61,6 @@
 			</tr>
 		</tbody>
 	</table>
-	<c:if test="${not empty organization.applications}">
-		<div style="padding-left:7px">
-			<spring:url value="{orgId}/scans/sentinel" var="sentinelUrl">
-				<spring:param name="orgId" value="${ organization.id }"/>
-			</spring:url>
-			<a id="importSentinelLink" href="${ fn:escapeXml(sentinelUrl) }">Import Sentinel</a>
-		</div>
-	</c:if>
 	
 	<h3>Maturity Assessments</h3>
 	<div id="helpText">Maturity Assessments are designed to help evaluate a team's existing software security practices.</div>
