@@ -90,8 +90,9 @@ public class HibernateFindingDao implements FindingDao {
 		return currentSession
 				.createSQLQuery(
 						"select distinct(path) from SurfaceLocation where id in "
-								+ "(select surfaceLocationId from Finding where scanId = :scanId) and path like('%"
-								+ hint + "%') order by path")
+								+ "(select surfaceLocationId from Finding where scanId = :scanId) and path like "
+								+ ":hint order by path")
+				.setString("hint", "%" + hint + "%")
 				.setInteger("scanId", scanId).list();
 	}
 

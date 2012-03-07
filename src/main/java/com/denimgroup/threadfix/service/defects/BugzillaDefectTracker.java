@@ -697,4 +697,38 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			return endpointURL + "show_bug.cgi?id=" + bugID;
 		}
 	}
+
+	@Override
+	public boolean hasValidUrl() {
+		log.info("Checking Bugzilla URL.");
+		XmlRpcClient client = initializeClient();
+		
+		Map<String, String> loginMap = new HashMap<String, String>();
+		loginMap.put("login", " ");
+		loginMap.put("password", " ");
+		loginMap.put("rememberlogin", "Bugzilla_remember");
+
+		Object[] loginArray = new Object[1];
+		loginArray[0] = loginMap;
+
+		try {
+			client.execute("User.login", loginArray);
+			log.warn("Shouldn't be here, check configurations.");
+			return true;
+		} catch (XmlRpcException e) {
+			if (e.getMessage().contains("The username or password you entered is not valid")) {
+				log.info("The URL was good, received an authentication warning.");
+				return true;
+			} else if (e.getMessage().contains("I/O error while communicating with HTTP server")) {
+				log.warn("Unable to retrieve a RPC response from that URL. Returning false.");
+				return false;
+			} else {
+				log.warn("Something went wrong. Check out the error. Returning false.", e);
+				return false;
+			}
+		} catch (IllegalArgumentException e2) {
+			System.out.println("IllegalArgumentException was tripped. Returning false.");
+			return false;
+		}
+	}
 }

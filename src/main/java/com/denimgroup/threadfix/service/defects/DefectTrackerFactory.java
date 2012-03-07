@@ -37,6 +37,38 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 public class DefectTrackerFactory {
 
 	private final Log log = LogFactory.getLog(this.getClass());
+	private static final Log staticLog = LogFactory.getLog("DefectTrackerFactory");
+	
+	public static boolean checkTrackerUrl(String url, DefectTrackerType type) {
+		staticLog.info("Checking Defect Tracker URL.");
+		
+		if (type != null && type.getName() != null && url != null) {
+			
+			String name = type.getName();
+			
+			AbstractDefectTracker tracker = null;
+			
+			DefectTracker emptyTracker = new DefectTracker();
+			emptyTracker.setUrl(url);
+			
+			if (name.equals(DefectTrackerType.JIRA)) {
+				tracker = getJiraDefectTracker(emptyTracker,null,null);
+			} else if (name.equals(DefectTrackerType.BUGZILLA)) {
+				tracker = getBugzillaDefectTracker(emptyTracker,null,null);
+			} else {
+				staticLog.warn("Defect Tracker type was not found.");
+				return false;
+			}
+			
+			if (tracker != null) {
+				staticLog.info("Passing check to Defect Tracker.");
+				return tracker.hasValidUrl();
+			}
+		}
+		
+		staticLog.warn("Incorrectly configured Defect Tracker in checkTrackerURL. Returning false.");
+		return false;
+	}
 	
 	/**
 	 * Returns an AbstractDefectTracker implementation based on the
@@ -112,7 +144,7 @@ public class DefectTrackerFactory {
 	 * @param projectName
 	 * @return
 	 */
-	public BugzillaDefectTracker getBugzillaDefectTracker(DefectTracker defectTracker,
+	public static BugzillaDefectTracker getBugzillaDefectTracker(DefectTracker defectTracker,
 			String userName, String password) {
 		BugzillaDefectTracker bugzilla = new BugzillaDefectTracker();
 		bugzilla.setServerURL(defectTracker.getUrl());
@@ -152,7 +184,7 @@ public class DefectTrackerFactory {
 	 * @param projectName
 	 * @return
 	 */
-	public JiraDefectTracker getJiraDefectTracker(DefectTracker defectTracker, String userName,
+	public static JiraDefectTracker getJiraDefectTracker(DefectTracker defectTracker, String userName,
 			String password) {
 		JiraDefectTracker jira = new JiraDefectTracker();
 		jira.setUrl(defectTracker.getUrl());

@@ -55,9 +55,25 @@ public abstract class AbstractDefectTracker {
 	 */
 	public abstract String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
 
+	/**
+	 * 
+	 * @param endpointURL
+	 * @param bugID
+	 * @return
+	 */
 	public abstract String getBugURL(String endpointURL, String bugID);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract String getInitialStatusString();
+	
+	/**
+	 * 
+	 */
+	public abstract boolean hasValidUrl();
+	
 	/**
 	 * @param defect
 	 * @return

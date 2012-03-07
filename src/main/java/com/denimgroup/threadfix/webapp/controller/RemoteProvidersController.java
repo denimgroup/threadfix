@@ -152,7 +152,8 @@ public class RemoteProvidersController {
 	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.POST)
 	public String configureAppSubmit(@PathVariable("typeId") int typeId,
 			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication, 
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status,
+			Model model) {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
@@ -160,6 +161,13 @@ public class RemoteProvidersController {
 			// TODO move to service layer
 			Application application = applicationService.loadApplication(
 					remoteProviderApplication.getApplication().getId());
+			
+			if (application == null) {
+				result.rejectValue("application.id", "errors.invalid", new String[] {"Application"},"Application choice was invalid.");
+				model.addAttribute("remoteProviderApplication",remoteProviderApplication);
+				model.addAttribute("organizationList", organizationService.loadAllActive());
+				return "config/remoteproviders/edit";
+			}
 			
 			if (application.getRemoteProviderApplications() == null) {
 				application.setRemoteProviderApplications(new ArrayList<RemoteProviderApplication>());
@@ -174,6 +182,14 @@ public class RemoteProvidersController {
 			if (application.getChannelList() == null || application.getChannelList().size() == 0) {
 				application.setChannelList(new ArrayList<ApplicationChannel>());
 			}
+			
+			Integer previousId = null;
+			
+			if (remoteProviderApplication.getApplicationChannel() != null) {
+				previousId = remoteProviderApplication.getApplicationChannel().getId();
+			}
+			
+			remoteProviderApplication.setApplicationChannel(null);
 			
 			for (ApplicationChannel applicationChannel : application.getChannelList()) {
 				if (applicationChannel.getChannelType().getName().equals(type.getName())) {
@@ -194,8 +210,12 @@ public class RemoteProvidersController {
 				application.getChannelList().add(channel);
 			}
 			
-			remoteProviderApplicationService.store(remoteProviderApplication);
-			applicationService.storeApplication(application);
+			if (remoteProviderApplication.getApplicationChannel() == null
+					|| previousId == null
+					|| !previousId.equals(remoteProviderApplication.getApplicationChannel().getId())) {
+				remoteProviderApplicationService.store(remoteProviderApplication);
+				applicationService.storeApplication(application);
+			}
 
 			status.setComplete();
 			return "redirect:/configuration/remoteproviders";

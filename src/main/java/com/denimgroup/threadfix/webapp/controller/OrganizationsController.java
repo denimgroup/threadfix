@@ -34,11 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.queue.QueueSender;
 
 /**
  * @author bbeverly
@@ -51,15 +48,10 @@ public class OrganizationsController {
 	private final Log log = LogFactory.getLog(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
-	private QueueSender queueSender;
-	private ChannelTypeService channelTypeService;
 	
 	@Autowired
-	public OrganizationsController(OrganizationService organizationService,
-			QueueSender queueSender, ChannelTypeService channelTypeService) {
+	public OrganizationsController(OrganizationService organizationService) {
 		this.organizationService = organizationService;
-		this.queueSender = queueSender;
-		this.channelTypeService = channelTypeService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

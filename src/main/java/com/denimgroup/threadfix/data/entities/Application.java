@@ -223,7 +223,6 @@ public class Application extends AuditableEntity {
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@OrderBy("genericSeverity, genericVulnerability")
-	@JsonIgnore
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}

@@ -105,6 +105,8 @@ public class AddDefectTrackerController {
 			} else if (defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()) == null) {
 				result.rejectValue("defectTrackerType.id", "errors.invalid", 
 						new String [] { defectTracker.getDefectTrackerType().getId().toString() }, null );
+			} else if (!defectTrackerService.checkUrl(defectTracker)) {
+				result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
 			}
 			
 			if (result.hasErrors())

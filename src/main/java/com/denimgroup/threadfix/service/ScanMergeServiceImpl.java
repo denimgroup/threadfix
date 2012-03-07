@@ -760,7 +760,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				// add it to the old finding maps so that we can know that it was here later
 				// the constructor maps everything correctly
 				new ScanRepeatFindingMap(oldNativeIdFindingHash.get(nativeId), scan);
-				log.info("Adding a map");
 			}
 			
 			if (oldNativeIdVulnHash.containsKey(nativeId) && oldNativeIdVulnHash.get(nativeId) != null &&
@@ -1141,6 +1140,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 						.getPath();
 				String staticPath = staticFinding.getSurfaceLocation()
 						.getPath();
+				
+				if (!dynamicPath.startsWith("/"))
+					dynamicPath = "/".concat(dynamicPath);
+				if (!staticPath.startsWith("/"))
+					staticPath = "/".concat(staticPath);
 
 				if (dynamicPath != null && !dynamicPath.trim().equals("")
 						&& staticPath != null && !staticPath.trim().equals("")

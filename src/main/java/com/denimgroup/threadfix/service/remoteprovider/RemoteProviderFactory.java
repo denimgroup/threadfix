@@ -96,7 +96,18 @@ public class RemoteProviderFactory {
 		if (provider == null)
 			return null;
 		
-		return provider.getScan(remoteProviderApplication);
+		Scan returnScan = provider.getScan(remoteProviderApplication);
+		
+		if (remoteProviderApplication.getApplicationChannel() != null) { 
+			if (remoteProviderApplication.getApplicationChannel().getScanCounter() == null) {
+				remoteProviderApplication.getApplicationChannel().setScanCounter(1);
+			} else {
+				remoteProviderApplication.getApplicationChannel().setScanCounter(
+						remoteProviderApplication.getApplicationChannel().getScanCounter() + 1);
+			}
+		}
+		
+		return returnScan;
 	}
 	
 }

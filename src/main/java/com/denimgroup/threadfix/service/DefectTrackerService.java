@@ -33,6 +33,13 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
  * 
  */
 public interface DefectTrackerService {
+	
+	/**
+	 * 
+	 * @param defectTracker
+	 * @return
+	 */
+	boolean checkUrl(DefectTracker defectTracker);
 
 	/**
 	 * @return

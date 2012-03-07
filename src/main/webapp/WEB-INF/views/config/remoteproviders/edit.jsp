@@ -46,6 +46,9 @@
 						</c:forEach>
 					</form:select>
 				</td>
+				<td style="padding-left:5px">
+					<form:errors path="application.organization.id" cssClass="errors" />
+				</td>
 			</tr>
 			<tr>
 				<td class="label" style="padding-right:10px">Application:</td>
@@ -53,6 +56,9 @@
 					<form:select path="application.id" id="appSelect">
 						<option value="-1"></option>
 					</form:select>
+				</td>
+				<td style="padding-left:5px">
+					<form:errors path="application.id" cssClass="errors" />
 				</td>
 			</tr>
 		</tbody>

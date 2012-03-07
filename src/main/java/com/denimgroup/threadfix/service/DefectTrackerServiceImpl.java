@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
 @Service
 @Transactional(readOnly = true)
@@ -98,6 +99,15 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	@Transactional(readOnly = false)
 	public void storeDefectTrackerType(DefectTrackerType defectTrackerType) {
 		defectTrackerTypeDao.saveOrUpdate(defectTrackerType);
+	}
+
+	@Override
+	public boolean checkUrl(DefectTracker defectTracker) {
+		if (defectTracker != null && defectTracker.getDefectTrackerType() != null) {
+			return DefectTrackerFactory.checkTrackerUrl(defectTracker.getUrl(), defectTrackerTypeDao.retrieveById(defectTracker.getDefectTrackerType().getId()));
+		} else {
+			return false;
+		}
 	}
 
 }

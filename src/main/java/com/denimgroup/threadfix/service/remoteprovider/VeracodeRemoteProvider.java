@@ -23,10 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.remoteprovider;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -170,33 +168,6 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		connection.setRequestProperty("Authorization", "Basic " + encodedLogin);
 	}
 
-	public String consumeXMLResponse(InputStream is) {
-		StringBuilder ret = new StringBuilder();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(is));
-
-			String input = null;
-			while ((input = br.readLine()) != null) {
-				ret.append(input + "\n");
-			}
-
-			return ret.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return null;
-	}
-	
 	public class VeracodeApplicationBuildsParser extends DefaultHandler {
 		
 		public List<RemoteProviderApplication> list = new ArrayList<RemoteProviderApplication>();

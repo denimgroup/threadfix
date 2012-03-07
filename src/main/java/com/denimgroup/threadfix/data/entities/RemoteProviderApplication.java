@@ -12,6 +12,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "RemoteProviderApplication")
 public class RemoteProviderApplication extends BaseEntity  {
@@ -52,6 +54,7 @@ public class RemoteProviderApplication extends BaseEntity  {
 
 	@ManyToOne
 	@JoinColumn(name = "remoteProviderTypeId")
+	@JsonIgnore
 	public RemoteProviderType getRemoteProviderType() {
 		return remoteProviderType;
 	}
@@ -62,6 +65,7 @@ public class RemoteProviderApplication extends BaseEntity  {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
+	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}

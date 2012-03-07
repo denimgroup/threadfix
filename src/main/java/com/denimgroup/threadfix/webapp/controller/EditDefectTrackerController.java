@@ -107,6 +107,8 @@ public class EditDefectTrackerController {
 		DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
 		if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
 			result.rejectValue("name", "errors.nameTaken");
+		} else if (!defectTrackerService.checkUrl(defectTracker)) {
+			result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
 		}
 		
 		if (result.hasErrors()) {

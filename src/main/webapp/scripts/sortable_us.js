@@ -164,6 +164,19 @@ function ts_resortTable(lnk, clid) {
 	}		
 	span.innerHTML = ARROW;
 	alternate(t);
+	
+	repaginate();
+}
+
+function repaginate() {
+	spans = document.getElementsByTagName("span");
+	for (ti=0;ti<spans.length;ti++) {
+		thisSpan = spans[ti];
+		if ((' '+thisSpan.className+' ').indexOf("page-number") != -1) {
+			thisSpan.click();
+			break;
+		}
+	}
 }
 
 function getParent(el, pTagName) {

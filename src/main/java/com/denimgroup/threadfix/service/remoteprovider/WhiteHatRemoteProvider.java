@@ -198,21 +198,16 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private boolean creatingVuln = false;
 		
 		private void addFinding() {
-			
-			System.out.println(map);
-			
 			Finding finding = constructFinding(map);
 			
 			if (finding == null) {
-				log.warn("finding was null. look into this.");
+				log.warn("Finding was null.");
 			} else {
 				finding.setNativeId(map.get("nativeId"));
 			}
-			//System.out.println(map);
 			
 			saxFindingList.add(finding);
 			finding = new Finding();
-			log.info("Added a Finding.");
 		}
 		
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
@@ -220,7 +215,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	if ("vulnerability".equals(qName) && "open".equals(atts.getValue("status"))) {
 	    		creatingVuln = true;
 	    		map.clear();
-	    		//map = new HashMap<String,String>();
+
 	    		map.put("nativeId", atts.getValue("id"));
 	    		map.put(CHANNEL_VULN_KEY, atts.getValue("class"));
 	    		map.put(CHANNEL_SEVERITY_KEY, atts.getValue("severity"));

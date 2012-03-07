@@ -23,9 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +35,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -53,17 +47,13 @@ public class ScanController {
 	private final Log log = LogFactory.getLog(UsersController.class);
 
 	private ScanService scanService;
-	private QueueSender queueSender;
 	private ApplicationService applicationService;
-	private ChannelTypeService channelTypeService;
 
 	@Autowired
-	public ScanController(ScanService scanService, QueueSender queueSender,
-			ApplicationService applicationService, ChannelTypeService channelTypeService) {
+	public ScanController(ScanService scanService,
+			ApplicationService applicationService) {
 		this.scanService = scanService;
-		this.queueSender = queueSender;
 		this.applicationService = applicationService;
-		this.channelTypeService = channelTypeService;
 	}
 
 	@InitBinder

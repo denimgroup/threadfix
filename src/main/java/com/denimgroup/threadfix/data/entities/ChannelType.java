@@ -98,15 +98,6 @@ public class ChannelType extends BaseEntity {
 		this.url = url;
 	}
 
-	@Column(length = 255, nullable = true)
-	public String getApiKey() {
-		return apiKey;
-	}
-
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
-
 	@OneToMany(mappedBy = "channelType")
 	@JsonIgnore
 	public List<ChannelVulnerability> getChannelVulnerabilities() {

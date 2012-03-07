@@ -57,6 +57,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	private String projectName;
 	private String loginToken;
 	
+	public static String AUTHENTICATION_FAILURE_STRING = "java.lang.Exception: com.atlassian.jira.rpc.exception.RemoteAuthenticationException: Invalid username or password.";
+	
 	/**
 	 * Parse through the returned structure and return a hashmap of the results.
 	 * 
@@ -520,7 +522,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 		String returnString = "";
 
-		// Retrieve projects (Ignoring warnings from Veracode site code)
 		try {
 			Vector loginTokenVector = new Vector(1);
 			loginTokenVector.add(loginToken);
@@ -587,6 +588,54 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			returnString = endpointURL + "/browse/" + bugID;
 		
 		return returnString;
+	}
+
+	@Override
+	public boolean hasValidUrl() {
+		log.info("Checking JIRA RPC Endpoint URL.");
+		List<String> loginTokenVector = new Vector<String>(2);
+		loginTokenVector.add(" ");
+		loginTokenVector.add(" ");
+				
+		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+		
+		// This should be ok. If a request to JIRA's servers takes more than 5 seconds it may not be.
+		config.setConnectionTimeout(5000);
+
+		try {
+			config.setServerURL(new URL(getUrlWithRpc()));
+		} catch (MalformedURLException e) {
+			log.warn("Checked URL was malformed. Returning false.");
+			return false;
+		} catch (IllegalArgumentException e) {
+			log.warn("IllegalArgumentException. Something isn't right, returning false.");
+			return false;
+		}
+
+		XmlRpcClient client = new XmlRpcClient();
+		client.setConfig(config);
+		client.setTransportFactory(new XmlRpcCommonsTransportFactory(client));
+
+		try {
+			client.execute("jira1.login", loginTokenVector);
+			log.warn("Somehow the JIRA client didn't throw an exception despite having invalid credentials. This merits investigation.");
+			return true;
+		} catch (XmlRpcException e) {
+			if (e.getMessage() != null &&
+					AUTHENTICATION_FAILURE_STRING.equals(e.getMessage())) {
+				log.info("Found the URL and it told us to authenticate. The URL is valid.");
+				return true;
+			} else if (e.getMessage().contains("I/O error while communicating with HTTP server")) {
+				log.warn("Unable to retrieve a RPC response from that URL. Returning false.");
+				return false;
+			} else {
+				log.info("A different error was returned from the server, returning false. Check the stacktrace.", e);
+				return false;
+			}
+		} catch (ClassCastException e) {
+			log.info("A ClassCastException was thrown, which happens sometimes when a non-JIRA RPC endpoint is given to JIRA. Returning false.");
+			return false;
+		}
 	}
 
 }
