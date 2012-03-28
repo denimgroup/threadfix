@@ -35,6 +35,11 @@ import com.denimgroup.threadfix.data.entities.User;
 public interface UserDao {
 
 	/**
+	 * @param id
+	 */
+	void deleteById(int id);
+
+	/**
 	 * @return
 	 */
 	List<User> retrieveAll();
@@ -55,9 +60,4 @@ public interface UserDao {
 	 * @param user
 	 */
 	void saveOrUpdate(User user);
-
-	/**
-	 * @param id
-	 */
-	void deleteById(int id);
 }

@@ -43,6 +43,18 @@ public class HibernateChannelTypeDao implements ChannelTypeDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ChannelType> retrieveAll() {
+		return sessionFactory.getCurrentSession()
+				.createQuery("from ChannelType channelType order by channelType.name").list();
+	}
+
+	@Override
 	public ChannelType retrieveById(int id) {
 		return (ChannelType) sessionFactory.getCurrentSession().get(ChannelType.class, id);
 	}
@@ -57,17 +69,5 @@ public class HibernateChannelTypeDao implements ChannelTypeDao {
 	@Override
 	public void saveOrUpdate(ChannelType channelType) {
 		sessionFactory.getCurrentSession().saveOrUpdate(channelType);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ChannelType> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from ChannelType channelType order by channelType.name").list();
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 }

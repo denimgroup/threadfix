@@ -50,6 +50,32 @@ public class HibernateDefectDao implements DefectDao {
 	}
 
 	@Override
+	public void deleteByApplicationId(Integer applicationId) {
+		sessionFactory.getCurrentSession()
+			.createQuery("update Vulnerability set defect = null where application = :appId")
+			.setInteger("appId", applicationId)
+			.executeUpdate();
+		sessionFactory.getCurrentSession()
+			.createQuery("delete Defect where application = :appId")
+			.setInteger("appId", applicationId)
+			.executeUpdate();
+	}
+
+	@Override
+	public void deleteByDefectTrackerId(Integer defectTrackerId) {
+		sessionFactory.getCurrentSession()
+			.createQuery("update Vulnerability set defect = null where application in " +
+					"(from Application where defectTracker = :defectTracker)")
+			.setInteger("defectTracker", defectTrackerId)
+			.executeUpdate();
+		sessionFactory.getCurrentSession()
+			.createQuery("delete Defect where application in " +
+					"(from Application where defectTracker = :defectTracker)")
+			.setInteger("defectTracker", defectTrackerId)
+			.executeUpdate();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Defect> retrieveAll() {
 		return sessionFactory.getCurrentSession()
@@ -71,32 +97,6 @@ public class HibernateDefectDao implements DefectDao {
 	@Override
 	public void saveOrUpdate(Defect defect) {
 		sessionFactory.getCurrentSession().saveOrUpdate(defect);
-	}
-
-	@Override
-	public void deleteByDefectTrackerId(Integer defectTrackerId) {
-		sessionFactory.getCurrentSession()
-			.createQuery("update Vulnerability set defect = null where application in " +
-					"(from Application where defectTracker = :defectTracker)")
-			.setInteger("defectTracker", defectTrackerId)
-			.executeUpdate();
-		sessionFactory.getCurrentSession()
-			.createQuery("delete Defect where application in " +
-					"(from Application where defectTracker = :defectTracker)")
-			.setInteger("defectTracker", defectTrackerId)
-			.executeUpdate();
-	}
-
-	@Override
-	public void deleteByApplicationId(Integer applicationId) {
-		sessionFactory.getCurrentSession()
-			.createQuery("update Vulnerability set defect = null where application = :appId")
-			.setInteger("appId", applicationId)
-			.executeUpdate();
-		sessionFactory.getCurrentSession()
-			.createQuery("delete Defect where application = :appId")
-			.setInteger("appId", applicationId)
-			.executeUpdate();
 	}
 
 }

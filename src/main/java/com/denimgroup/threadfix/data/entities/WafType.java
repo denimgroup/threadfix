@@ -43,6 +43,8 @@ public class WafType extends BaseEntity {
 	public static final String MOD_SECURITY = "mod_security";
 	public static final String SNORT = "Snort";
 	public static final String BIG_IP_ASM = "BIG-IP ASM";
+	public static final String IMPERVA_SECURE_SPHERE = "Imperva SecureSphere";
+	public static final String DENY_ALL_RWEB = "DenyAll rWeb";
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")

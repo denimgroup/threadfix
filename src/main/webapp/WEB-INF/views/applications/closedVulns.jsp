@@ -10,10 +10,10 @@
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ application.organization.id }"/>
 	</spring:url>
-	<spring:url value="{appId}/edit" var="editUrl">
+	<spring:url value="edit" var="editUrl">
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
-	<spring:url value="{appId}/delete" var="deleteUrl">
+	<spring:url value="delete" var="deleteUrl">
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
 	
@@ -86,15 +86,15 @@
 	</table>
 
 	<div id="links" style="padding-bottom:10px;padding-top:10px">
-		<spring:url value="{appId}/scans/upload" var="uploadUrl">
+		<spring:url value="scans/upload" var="uploadUrl">
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
-		<spring:url value="{appId}/scans/sentinel" var="sentinelUrl">
+		<spring:url value="scans/sentinel" var="sentinelUrl">
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<a id="importSentinelLink" href="${ fn:escapeXml(sentinelUrl) }">Import Sentinel</a> |
-			<spring:url value="{appId}/scans/new" var="addFindingUrl">
+			<spring:url value="scans/new" var="addFindingUrl">
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Add Finding Manually</a>
@@ -158,7 +158,7 @@
 			<tr class="bodyRow">
 				<td>
 					<c:if test="${ fn:length(vuln.findings) > 1 }">
-						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
+						<spring:url value="vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 				        	<spring:param name="appId" value="${ application.id }" />
 					    	<spring:param name="vulnerabilityId" value="${ vuln.id }" />
 				    	</spring:url>
@@ -168,7 +168,7 @@
 					</c:if>
 				</td>
 				<td>
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
+					<spring:url value="vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 				        <spring:param name="appId" value="${ application.id }" />
 					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
 				    </spring:url>
@@ -181,7 +181,7 @@
 				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
 				<td>
 				<c:if test="${ not empty vuln.defect }">
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">
+					<spring:url value="vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">
 				        <spring:param name="appId" value="${ application.id }" />
 					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
 				    </spring:url>

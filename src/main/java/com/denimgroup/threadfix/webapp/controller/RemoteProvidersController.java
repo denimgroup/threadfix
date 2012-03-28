@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -194,6 +196,13 @@ public class RemoteProvidersController {
 			for (ApplicationChannel applicationChannel : application.getChannelList()) {
 				if (applicationChannel.getChannelType().getName().equals(type.getName())) {
 					remoteProviderApplication.setApplicationChannel(applicationChannel);
+					if (applicationChannel.getScanList() != null && applicationChannel.getScanList().size() > 0) {
+						List<Scan> scans = applicationChannel.getScanList();
+						Collections.sort(scans,Scan.getTimeComparator());
+						remoteProviderApplication.setLastImportTime(scans.get(scans.size() - 1).getImportTime());
+					} else {
+						remoteProviderApplication.setLastImportTime(null);
+					}
 					break;
 				}
 			}
@@ -206,6 +215,7 @@ public class RemoteProvidersController {
 					channel.setChannelType(remoteProviderApplication.getRemoteProviderType().getChannelType());
 					applicationChannelService.storeApplicationChannel(channel);
 				}
+				remoteProviderApplication.setLastImportTime(null);
 				remoteProviderApplication.setApplicationChannel(channel);
 				application.getChannelList().add(channel);
 			}
@@ -213,6 +223,7 @@ public class RemoteProvidersController {
 			if (remoteProviderApplication.getApplicationChannel() == null
 					|| previousId == null
 					|| !previousId.equals(remoteProviderApplication.getApplicationChannel().getId())) {
+				
 				remoteProviderApplicationService.store(remoteProviderApplication);
 				applicationService.storeApplication(application);
 			}

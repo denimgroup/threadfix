@@ -52,15 +52,15 @@ public interface SecurityEventDao {
 	SecurityEvent retrieveByName(String name);
 
 	/**
-	 * @param securityEvent
-	 */
-	void saveOrUpdate(SecurityEvent securityEvent);
-
-	/**
 	 * 
 	 * @param nativeId
 	 * @param wafId
 	 * @return
 	 */
 	SecurityEvent retrieveByNativeIdAndWafId(String nativeId, String wafId);
+
+	/**
+	 * @param securityEvent
+	 */
+	void saveOrUpdate(SecurityEvent securityEvent);
 }

@@ -40,6 +40,13 @@ public interface ScanDao {
 	List<Scan> retrieveAll();
 
 	/**
+	 * 
+	 * @param applicationId
+	 * @return
+	 */
+	List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList);
+
+	/**
 	 * @param id
 	 * @return
 	 */
@@ -49,11 +56,4 @@ public interface ScanDao {
 	 * @param scan
 	 */
 	void saveOrUpdate(Scan scan);
-
-	/**
-	 * 
-	 * @param applicationId
-	 * @return
-	 */
-	List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList);
 }

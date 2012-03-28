@@ -50,6 +50,11 @@ public class HibernateUserDao implements UserDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<User> retrieveAll() {
 		return sessionFactory.getCurrentSession().createQuery("from User user order by user.name")
@@ -75,11 +80,6 @@ public class HibernateUserDao implements UserDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(user);
 		}
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 
 }

@@ -35,9 +35,10 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 public class ApplicationRestController extends RestController {
 	
 	public static final String CREATION_FAILED = "New Application creation failed.";
-	public static final String LOOKUP_FAILED = "Application Lookup failed.";
+	public static final String LOOKUP_FAILED = "Application lookup failed.";
 	public static final String ADD_CHANNEL_FAILED = "Adding an Application Channel failed.";
 	public static final String SET_WAF_FAILED = "Call to setWaf failed.";
+	public static final String CHANNEL_LOOKUP_FAILED = "Application Channel lookup failed.";
 	
 	private OrganizationService organizationService;
 	private ApplicationService applicationService;
@@ -145,6 +146,36 @@ public class ApplicationRestController extends RestController {
 	}
 	
 	/**
+	 * Return details about a specific application.
+	 * @param request
+	 * @param appName
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
+	public @ResponseBody Object applicationDetail(HttpServletRequest request) {
+		
+		String appName = request.getParameter("name");
+
+		if (!checkKey(request)) {
+			return API_KEY_ERROR;
+		}
+		
+		if (appName == null) {
+			return LOOKUP_FAILED;
+		}
+		
+		log.info("Received REST request for Applications with teamId = " + appName + ".");
+		
+		Application application = applicationService.loadApplication(appName);
+		
+		if (application == null) {
+			log.warn(LOOKUP_FAILED);
+			return LOOKUP_FAILED;
+		}
+		return application;
+	}
+	
+	/**
 	 * Allows the user to upload a scan to an existing application channel.
 	 * @param appId
 	 * @param request
@@ -226,6 +257,55 @@ public class ApplicationRestController extends RestController {
 			
 			log.info(channelName + " was successfully added to Application " + application.getName() + ".");
 			return applicationChannel;
+		}
+	}
+	
+	/**
+	 * Allows the user to add a channel to an existing application.
+	 * @param request
+	 * @param appId
+	 * @param channelName
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="/{appId}/lookupChannel", method=RequestMethod.GET)
+	public @ResponseBody Object searchForChannel(HttpServletRequest request,
+			@PathVariable("appId") int appId) {
+		
+		String channelName = request.getParameter("channelName");
+		
+		if (channelName != null) {
+			log.info("Received REST POST request to add channel " + channelName + 
+				" to the application with ID " + appId +".");
+		}
+
+		if (!checkKey(request)) {
+			return API_KEY_ERROR;
+		}
+		
+		if (channelName == null) {
+			log.warn("Missing parameter channelName.");
+			return CHANNEL_LOOKUP_FAILED;
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		
+		ChannelType type = channelTypeService.loadChannel(channelName);
+				
+		if (application == null) {
+			log.warn("Invalid Application ID.");
+			return CHANNEL_LOOKUP_FAILED;
+		} else if (type == null) {
+			log.warn("Invalid Channel Name.");
+			return CHANNEL_LOOKUP_FAILED;
+		} else {
+			ApplicationChannel applicationChannel = applicationChannelService.retrieveByAppIdAndChannelId(appId, type.getId());
+			if (applicationChannel != null) {
+				log.info("Returning existing ApplicationChannel ID.");
+				return applicationChannel;
+			}
+				
+			log.warn("Channel not found.");
+			return CHANNEL_LOOKUP_FAILED;
 		}
 	}
 	

@@ -76,6 +76,10 @@ public class RealTimeProtectionGeneratorFactory {
 			return new SnortGenerator(wafRuleDao);
 		} else if (wafName.equals(WafType.BIG_IP_ASM)) {
 			return new BigIPASMGenerator(wafRuleDao);
+		} else if (wafName.equals(WafType.IMPERVA_SECURE_SPHERE)) {
+			return new ImpervaSecureSphereGenerator(wafRuleDao);
+		} else if (wafName.equals(WafType.DENY_ALL_RWEB)) {
+			return new DenyAllRWebGenerator(wafRuleDao);
 		} else {
 			log.warn("Invalid WAF type name '"
 					+ wafName

@@ -546,6 +546,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		else
 			return returnString;
 	}
+	
+	
 
 	@Override
 	public ProjectMetadata getProjectMetadata() {

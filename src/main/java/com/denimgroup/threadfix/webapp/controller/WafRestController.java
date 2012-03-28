@@ -79,6 +79,32 @@ public class WafRestController extends RestController {
 		return waf;
 	}
 	
+	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
+	public @ResponseBody Object wafLookup(HttpServletRequest request) {
+		
+		if (request.getParameter("name") == null) {
+			log.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
+		} else {
+			log.info("Received REST request for WAF with a missing name parameter.");
+		}
+
+		if (!checkKey(request)) {
+			return API_KEY_ERROR;
+		}
+		
+		if (request.getParameter("name") == null) {
+			return LOOKUP_FAILED;
+		}
+		
+		Waf waf = wafService.loadWaf(request.getParameter("name"));
+		
+		if (waf == null) {
+			log.warn("Invalid WAF Name.");
+			return LOOKUP_FAILED;
+		}
+		return waf;
+	}
+	
 	/**
 	 * Returns the current set of rules from the WAF, generating new ones if none are present.
 	 * @param request

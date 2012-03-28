@@ -50,6 +50,11 @@ public class HibernateApplicationDao implements ApplicationDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Application> retrieveAll() {
 		return sessionFactory.getCurrentSession()
@@ -82,11 +87,6 @@ public class HibernateApplicationDao implements ApplicationDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(application);
 		}
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 
 }

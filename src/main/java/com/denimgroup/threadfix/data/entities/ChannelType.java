@@ -29,10 +29,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "ChannelType")
@@ -60,10 +58,6 @@ public class ChannelType extends BaseEntity {
 	private String name;
 	private String version;
 	private String url;
-	
-	@NotEmpty(message = "{errors.required}")
-	@Size(max = 255, message = "{errors.maxlength} " + 255 + ".")
-	private String apiKey;
 
 	private List<ChannelVulnerability> channelVulnerabilities;
 	private List<ChannelSeverity> channelSeverities;

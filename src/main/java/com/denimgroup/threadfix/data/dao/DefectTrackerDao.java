@@ -35,6 +35,11 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 public interface DefectTrackerDao {
 
 	/**
+	 * @param id
+	 */
+	void deleteById(int id);
+
+	/**
 	 * @return
 	 */
 	List<DefectTracker> retrieveAll();
@@ -55,10 +60,5 @@ public interface DefectTrackerDao {
 	 * @param defectTracker
 	 */
 	void saveOrUpdate(DefectTracker defectTracker);
-
-	/**
-	 * @param id
-	 */
-	void deleteById(int id);
 
 }

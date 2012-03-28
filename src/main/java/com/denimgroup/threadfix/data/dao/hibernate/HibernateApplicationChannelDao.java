@@ -51,12 +51,27 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<ApplicationChannel> retrieveAll() {
 		return sessionFactory.getCurrentSession().createCriteria(ApplicationChannel.class)
 				.createAlias("channelType", "ct").createAlias("application", "app")
 				.createAlias("application.organization", "org").addOrder(Order.asc("org.name"))
 				.addOrder(Order.asc("app.name")).addOrder(Order.asc("ct.name")).list();
+	}
+
+	@Override
+	public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
+		return (ApplicationChannel) sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"from ApplicationChannel appChannel where appChannel.application = :appId "
+								+ "and appChannel.channelType = :channelId")
+				.setInteger("appId", appId).setInteger("channelId", channelId).uniqueResult();
 	}
 
 	@Override
@@ -68,21 +83,6 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 	@Override
 	public void saveOrUpdate(ApplicationChannel applicationChannel) {
 		sessionFactory.getCurrentSession().saveOrUpdate(applicationChannel);
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
-	public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
-		return (ApplicationChannel) sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from ApplicationChannel appChannel where appChannel.application = :appId "
-								+ "and appChannel.channelType = :channelId")
-				.setInteger("appId", appId).setInteger("channelId", channelId).uniqueResult();
 	}
 
 }

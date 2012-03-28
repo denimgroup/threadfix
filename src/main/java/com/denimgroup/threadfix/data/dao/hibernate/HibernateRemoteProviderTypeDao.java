@@ -49,15 +49,15 @@ public class HibernateRemoteProviderTypeDao implements RemoteProviderTypeDao {
 	}
 
 	@Override
+	public RemoteProviderType retrieveById(int id) {
+		return (RemoteProviderType) sessionFactory.getCurrentSession().get(RemoteProviderType.class, id);
+	}
+
+	@Override
 	public RemoteProviderType retrieveByName(String name) {
 		return (RemoteProviderType) sessionFactory.getCurrentSession()
 			.createQuery("from RemoteProviderType type where type.name = :name")
 			.setString("name", name).uniqueResult();
-	}
-
-	@Override
-	public RemoteProviderType retrieveById(int id) {
-		return (RemoteProviderType) sessionFactory.getCurrentSession().get(RemoteProviderType.class, id);
 	}
 
 	@Override

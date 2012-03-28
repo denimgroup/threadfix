@@ -55,22 +55,11 @@ public interface WafRuleDao {
 	WafRule retrieveByRule(String rule);
 
 	/**
-	 * @param wafRule
-	 */
-	void saveOrUpdate(WafRule wafRule);
-
-	/**
 	 * @param vuln
 	 * @param waf
 	 * @return
 	 */
 	WafRule retrieveByVulnerabilityAndWafAndDirective(Vulnerability vuln, Waf waf, WafRuleDirective directive);
-
-	/**
-	 * @param nativeId
-	 * @return
-	 */
-	WafRule retrieveByWafAndNativeId(String wafId, String nativeId);
 
 	/**
 	 * 
@@ -80,5 +69,16 @@ public interface WafRuleDao {
 	 */
 	List<WafRule> retrieveByWafAndDirective(Waf waf,
 			WafRuleDirective lastWafRuleDirective);
+
+	/**
+	 * @param nativeId
+	 * @return
+	 */
+	WafRule retrieveByWafAndNativeId(String wafId, String nativeId);
+
+	/**
+	 * @param wafRule
+	 */
+	void saveOrUpdate(WafRule wafRule);
 
 }

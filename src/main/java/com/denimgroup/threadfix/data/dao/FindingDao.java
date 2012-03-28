@@ -40,12 +40,6 @@ public interface FindingDao {
 	List<Finding> retrieveAll();
 
 	/**
-	 * @param id
-	 * @return
-	 */
-	Finding retrieveById(int id);
-	
-	/**
 	 * Find a list of possible sourceFileLocations
 	 * 
 	 * @param hint
@@ -54,13 +48,10 @@ public interface FindingDao {
 	List<String> retrieveByHint(String hint, Integer appId);
 	
 	/**
-	 * The most recent Static Findings matching the application and User
-	 * 
-	 * @param appId
-	 * @param userId
+	 * @param id
 	 * @return
 	 */
-	List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId);
+	Finding retrieveById(int id);
 	
 	/**
 	 * A list of the most recent Dynamic Findings matching the application and User
@@ -70,6 +61,15 @@ public interface FindingDao {
 	 * @return
 	 */
 	List<Finding> retrieveLatestDynamicByAppAndUser(int appId, int userId);
+	
+	/**
+	 * The most recent Static Findings matching the application and User
+	 * 
+	 * @param appId
+	 * @param userId
+	 * @return
+	 */
+	List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId);
 
 	/**
 	 * @param finding

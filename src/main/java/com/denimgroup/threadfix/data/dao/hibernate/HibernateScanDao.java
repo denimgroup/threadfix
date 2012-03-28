@@ -57,6 +57,13 @@ public class HibernateScanDao implements ScanDao {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
+		return sessionFactory.getCurrentSession()
+			.createQuery("from Scan scan where scan.application.id in (:idList)").setParameterList("idList", applicationIdList).list();
+	}
+
+	@Override
 	public Scan retrieveById(int id) {
 		return (Scan) sessionFactory.getCurrentSession().get(Scan.class, id);
 	}
@@ -64,12 +71,5 @@ public class HibernateScanDao implements ScanDao {
 	@Override
 	public void saveOrUpdate(Scan scan) {
 		sessionFactory.getCurrentSession().saveOrUpdate(scan);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
-		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList)").setParameterList("idList", applicationIdList).list();
 	}
 }

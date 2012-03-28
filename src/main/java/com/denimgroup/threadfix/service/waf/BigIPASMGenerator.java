@@ -38,11 +38,11 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	public BigIPASMGenerator(WafRuleDao wafRuleDao) {
 		this.wafRuleDao = wafRuleDao;
 	}
-	
-	public static final String XML_START = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+
+	public final static String XML_START = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
 											"<signatures export_version=\"11.1.0\">";
 	
-	public static final String XML_END = "</signatures>";
+	public final static String XML_END = "</signatures>";
 	
 	// BIG IP only accepts certain types of vulnerabilities in its type field. Here they are.
 	public String [] acceptedTypes = { "Cross Site Scripting (XSS)", "SQL-Injection", "Command Execution", 

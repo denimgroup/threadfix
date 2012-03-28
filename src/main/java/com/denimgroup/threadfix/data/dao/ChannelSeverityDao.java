@@ -35,6 +35,13 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 public interface ChannelSeverityDao {
 
 	/**
+	 *Returns a ChannelSeverity list based on the channel
+	 * @param channelType
+	 * @return
+	 */
+	List<ChannelSeverity> retrieveByChannel(ChannelType channelType);
+	
+	/**
 	 * Returns a single ChannelSeverity rating based on the channel and name.
 	 * 
 	 * @param channelType
@@ -46,13 +53,6 @@ public interface ChannelSeverityDao {
 	 * @return
 	 */
 	ChannelSeverity retrieveByCode(ChannelType channelType, String code);
-	
-	/**
-	 *Returns a ChannelSeverity list based on the channel
-	 * @param channelType
-	 * @return
-	 */
-	List<ChannelSeverity> retrieveByChannel(ChannelType channelType);
 	
 	/**
 	 * @param channelSeverityId

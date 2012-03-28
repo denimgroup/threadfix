@@ -213,6 +213,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	}
 	
 	public class VeracodeSAXParser extends DefaultHandler {
+		
+		private boolean inStaticFlaws = true;
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
@@ -223,6 +225,10 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    		date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", atts.getValue("last_update_time"));
 	    		if (date == null)
 	    			date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", atts.getValue("generation_date"));
+	    	}
+	    	
+	    	if ("dynamicflaws".equals(qName)) {
+	    		inStaticFlaws = false;
 	    	}
 	    	
 	    	// TODO look through more Veracode scans and see if the inputvector component is the parameter.
@@ -244,7 +250,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    			finding.setNativeId(atts.getValue("issueid"));
 	    			
 	    			// TODO revise this method of deciding whether the finding is static.	    			
-    				finding.setIsStatic(true);
+    				finding.setIsStatic(inStaticFlaws);
     				if (atts.getValue("sourcefile") != null && atts.getValue("sourcefilepath") != null) {
     					String sourceFileLocation = atts.getValue("sourcefilepath") + atts.getValue("sourcefile");
     					finding.setSourceFileLocation(sourceFileLocation);
@@ -261,6 +267,15 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	        		saxFindingList.add(finding);
 	    		}
+	    	}
+	    }
+	    
+	    @Override
+	    public void endElement (String uri, String localName, String qName) throws SAXException {	    	
+	    	if (qName.equals("dynamicflaws")) {
+	    		if ("dynamicflaws".equals(qName)) {
+		    		inStaticFlaws = true;
+		    	}
 	    	}
 	    }
 	}

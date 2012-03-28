@@ -50,6 +50,11 @@ public class HibernateRoleDao implements RoleDao {
 	}
 
 	@Override
+	public void deleteById(int roleId) {
+		sessionFactory.getCurrentSession().delete(retrieveById(roleId));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Role> retrieveAll() {
 		return sessionFactory.getCurrentSession().createQuery("from Role role order by role.name")
@@ -71,10 +76,5 @@ public class HibernateRoleDao implements RoleDao {
 	@Override
 	public void saveOrUpdate(Role role) {
 		sessionFactory.getCurrentSession().saveOrUpdate(role);
-	}
-
-	@Override
-	public void deleteById(int roleId) {
-		sessionFactory.getCurrentSession().delete(retrieveById(roleId));
 	}
 }

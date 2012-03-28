@@ -51,6 +51,11 @@ public class HibernateDefectTrackerDao implements DefectTrackerDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<DefectTracker> retrieveAll() {
 		return sessionFactory.getCurrentSession().createCriteria(DefectTracker.class, "def")
@@ -77,10 +82,5 @@ public class HibernateDefectTrackerDao implements DefectTrackerDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(defectTracker);
 		}
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 }

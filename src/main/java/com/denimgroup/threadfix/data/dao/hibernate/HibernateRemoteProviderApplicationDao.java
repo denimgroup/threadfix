@@ -43,15 +43,10 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	}
 
 	@Override
-	public RemoteProviderApplication retrieveById(int id) {
-		return (RemoteProviderApplication) sessionFactory.getCurrentSession().get(RemoteProviderApplication.class, id);
+	public void deleteRemoteProviderApplication(RemoteProviderApplication app) {
+		sessionFactory.getCurrentSession().delete(app);
 	}
 
-	@Override
-	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication) {
-		sessionFactory.getCurrentSession().saveOrUpdate(remoteProviderApplication);
-	}
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderApplication> retrieveAllWithTypeId(int id) {
@@ -59,10 +54,15 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 			.createQuery("from RemoteProviderApplication app where app.remoteProviderType = :type")
 			.setInteger("type", id).list();
 	}
+	
+	@Override
+	public RemoteProviderApplication retrieveById(int id) {
+		return (RemoteProviderApplication) sessionFactory.getCurrentSession().get(RemoteProviderApplication.class, id);
+	}
 
 	@Override
-	public void deleteRemoteProviderApplication(RemoteProviderApplication app) {
-		sessionFactory.getCurrentSession().delete(app);
+	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication) {
+		sessionFactory.getCurrentSession().saveOrUpdate(remoteProviderApplication);
 	}
 
 }

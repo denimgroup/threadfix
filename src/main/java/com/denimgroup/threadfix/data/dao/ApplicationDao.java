@@ -35,6 +35,11 @@ import com.denimgroup.threadfix.data.entities.Application;
 public interface ApplicationDao {
 
 	/**
+	 * @param id
+	 */
+	void deleteById(int id);
+
+	/**
 	 * @return
 	 */
 	List<Application> retrieveAll();
@@ -60,10 +65,5 @@ public interface ApplicationDao {
 	 * @param application
 	 */
 	void saveOrUpdate(Application application);
-
-	/**
-	 * @param id
-	 */
-	void deleteById(int id);
 
 }

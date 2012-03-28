@@ -69,16 +69,16 @@ public class HibernateSecurityEventDao implements SecurityEventDao {
 	}
 
 	@Override
-	public void saveOrUpdate(SecurityEvent securityEvent) {
-		sessionFactory.getCurrentSession().saveOrUpdate(securityEvent);
-	}
-	
-	@Override
 	public SecurityEvent retrieveByNativeIdAndWafId(String nativeId, String wafId) {
 		return (SecurityEvent) sessionFactory.getCurrentSession()
 			.createQuery("from SecurityEvent securityEvent where securityEvent.nativeId = :nativeId " +
 					"and securityEvent.wafRule.waf = :wafId")
 			.setString("nativeId", nativeId).setString("wafId", wafId).uniqueResult();
+	}
+	
+	@Override
+	public void saveOrUpdate(SecurityEvent securityEvent) {
+		sessionFactory.getCurrentSession().saveOrUpdate(securityEvent);
 	}
 	
 

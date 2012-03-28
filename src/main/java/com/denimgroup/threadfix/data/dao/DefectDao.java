@@ -35,6 +35,18 @@ import com.denimgroup.threadfix.data.entities.Defect;
 public interface DefectDao {
 
 	/**
+	 * 
+	 * @param applicationId
+	 */
+	void deleteByApplicationId(Integer applicationId);
+
+	/**
+	 * 
+	 * @param defectTrackerId
+	 */
+	void deleteByDefectTrackerId(Integer defectTrackerId);
+
+	/**
 	 * @return
 	 */
 	List<Defect> retrieveAll();
@@ -44,28 +56,16 @@ public interface DefectDao {
 	 * @return
 	 */
 	Defect retrieveById(int id);
-
+	
 	/**
 	 * @param nativeId
 	 * @return
 	 */
 	Defect retrieveByNativeId(String nativeId);
-
+	
 	/**
 	 * @param defect
 	 */
 	void saveOrUpdate(Defect defect);
-	
-	/**
-	 * 
-	 * @param defectTrackerId
-	 */
-	void deleteByDefectTrackerId(Integer defectTrackerId);
-	
-	/**
-	 * 
-	 * @param applicationId
-	 */
-	void deleteByApplicationId(Integer applicationId);
 
 }

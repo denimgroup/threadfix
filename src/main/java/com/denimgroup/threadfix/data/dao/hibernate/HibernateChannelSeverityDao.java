@@ -44,6 +44,16 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<ChannelSeverity> retrieveByChannel(ChannelType channelType) {
+		return sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"from ChannelSeverity cs where cs.channelType = :channelTypeId")
+				.setInteger("channelTypeId", channelType.getId()).list();
+	}
+
+	@Override
 	public ChannelSeverity retrieveByCode(ChannelType channelType, String code) {
 		return (ChannelSeverity) sessionFactory
 				.getCurrentSession()
@@ -53,16 +63,6 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 				.setString("code", code)
 				.setInteger("channelTypeId", channelType.getId())
 				.uniqueResult();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ChannelSeverity> retrieveByChannel(ChannelType channelType) {
-		return sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from ChannelSeverity cs where cs.channelType = :channelTypeId")
-				.setInteger("channelTypeId", channelType.getId()).list();
 	}
 
 	@Override

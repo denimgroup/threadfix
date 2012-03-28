@@ -50,7 +50,7 @@ public class RemoteProviderType extends BaseEntity  {
 	private ChannelType channelType;
 	
 	@Column(nullable = false)
-	public boolean hasApiKey() {
+	public boolean getHasApiKey() {
 		return hasApiKey;
 	}
 
@@ -68,7 +68,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(nullable = false)
-	public boolean hasUserNamePassword() {
+	public boolean getHasUserNamePassword() {
 		return hasUserNamePassword;
 	}
 	

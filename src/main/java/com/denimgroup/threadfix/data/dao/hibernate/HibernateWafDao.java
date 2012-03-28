@@ -50,6 +50,11 @@ public class HibernateWafDao implements WafDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Waf> retrieveAll() {
 		return sessionFactory.getCurrentSession().createQuery("from Waf waf order by waf.name")
@@ -75,10 +80,5 @@ public class HibernateWafDao implements WafDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(waf);
 		}
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 }

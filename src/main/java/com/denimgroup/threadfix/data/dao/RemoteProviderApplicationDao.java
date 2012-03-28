@@ -31,17 +31,10 @@ public interface RemoteProviderApplicationDao {
 
 	/**
 	 * 
-	 * @param id
-	 * @return
+	 * @param app
 	 */
-	public RemoteProviderApplication retrieveById(int id);
+	public void deleteRemoteProviderApplication(RemoteProviderApplication app);
 	
-	/**
-	 * 
-	 * @param remoteProviderApplication
-	 */
-	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication);
-
 	/**
 	 * 
 	 * @param id
@@ -51,8 +44,15 @@ public interface RemoteProviderApplicationDao {
 
 	/**
 	 * 
-	 * @param app
+	 * @param id
+	 * @return
 	 */
-	public void deleteRemoteProviderApplication(RemoteProviderApplication app);
+	public RemoteProviderApplication retrieveById(int id);
+
+	/**
+	 * 
+	 * @param remoteProviderApplication
+	 */
+	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication);
 
 }

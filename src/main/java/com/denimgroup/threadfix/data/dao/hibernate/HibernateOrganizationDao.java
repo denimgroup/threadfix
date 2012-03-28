@@ -50,6 +50,11 @@ public class HibernateOrganizationDao implements OrganizationDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Organization> retrieveAll() {
 		return sessionFactory.getCurrentSession()
@@ -88,11 +93,6 @@ public class HibernateOrganizationDao implements OrganizationDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(organization);
 		}
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
 	}
 
 }

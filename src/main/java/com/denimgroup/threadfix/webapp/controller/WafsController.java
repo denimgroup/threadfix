@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.waf.BigIPASMGenerator;
+import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 
 @Controller
 @RequestMapping("/wafs")
@@ -111,10 +112,11 @@ public class WafsController {
 		
 		String prefix = null, suffix = null;
 		
-		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
-			prefix = BigIPASMGenerator.XML_START;
-			suffix = BigIPASMGenerator.XML_END;
-		}
+		String name = waf.getWafType().getName();
+		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
+			prefix = RealTimeProtectionGenerator.getStart(name);
+			suffix = RealTimeProtectionGenerator.getEnd(name);
+		} 
 		
 		mav.addObject("prefix", prefix);
 		mav.addObject("suffix", suffix);

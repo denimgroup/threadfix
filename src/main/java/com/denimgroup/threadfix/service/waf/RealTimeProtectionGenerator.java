@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.data.entities.WafType;
 
 /**
  * 
@@ -113,6 +114,10 @@ public abstract class RealTimeProtectionGenerator {
 		MESSAGE_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, "Eval Injection attempt");
 	}
 	
+	/**
+	 * 
+	 * @return A String array of generic vulnerability types that should have parameters.
+	 */
 	protected String[] getVulnerabilitiesWithParameters() {
 		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
 				GenericVulnerability.CWE_SQL_INJECTION, 
@@ -124,57 +129,66 @@ public abstract class RealTimeProtectionGenerator {
 				GenericVulnerability.CWE_EVAL_INJECTION };
 	}
 	
+	/**
+	 * 
+	 * @return A String array of generic vulnerability types that have their payload in the URL.
+	 */
 	protected String[] getVulnerabilitiesWithPayloadInUrl() {
 		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
 				GenericVulnerability.CWE_SQL_INJECTION };
 	}
 
+	/**
+	 * 
+	 * @return A String array of generic vulnerability types that need protection at an exact URL.
+	 */
 	protected String[] getVulnerabilitiesAtExactUrl() {
 		return new String[] { GenericVulnerability.CWE_DIRECTORY_INDEXING,
 				GenericVulnerability.CWE_DIRECT_REQUEST };
 	}
 	
 	/**
+	 * This method is used to determine whether a rule can be generated for a given vulnerability.
 	 * @return
 	 */
 	protected abstract String[] getSupportedVulnerabilityTypes();
 	
 	/**
-	 * 
+	 * This method should be overwritten by classes that use the default makeRule implementation.
 	 * @param uri
 	 * @param action
 	 * @param id
 	 * @param payload
 	 * @param parameter
 	 * @param message
-	 * @return
+	 * @return A rule filtering the URL for a given parameter payload.
 	 */
-	protected abstract String generateRuleWithParameter(String uri, String action, String id,
-			String genericVulnName, String parameter);
+	protected String generateRuleWithParameter(String uri, String action, String id,
+			String genericVulnName, String parameter) { return null; }
 	
 	/**
-	 * 
+	 * This method should be overwritten by classes that use the default makeRule implementation.
 	 * @param uri
 	 * @param action
 	 * @param id
 	 * @param payload
 	 * @param message
-	 * @return
+	 * @return A rule prohibiting access to the exact URI.
 	 */
-	protected abstract String generateRuleForExactUrl(String uri, String action, String id,
-			String genericVulnName);
+	protected String generateRuleForExactUrl(String uri, String action, String id,
+			String genericVulnName) { return null; }
 	
 	/**
-	 * 
+	 * This method should be overwritten by classes that use the default makeRule implementation.
 	 * @param uri
 	 * @param action
 	 * @param id
 	 * @param payload
 	 * @param message
-	 * @return
+	 * @return A rule filtering the URL for a given payload.
 	 */
-	protected abstract String generateRuleWithPayloadInUrl(String uri, String action, String id,
-			String genericVulnName);
+	protected String generateRuleWithPayloadInUrl(String uri, String action, String id,
+			String genericVulnName) { return null; }
 
 	/**
 	 * 
@@ -278,7 +292,7 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return
 	 */
 	protected String generateRuleText(String genericVulnName, String uri, String action, 
-			String id, String parameter) {
+			String id, String parameter, Vulnerability vuln) {
 		String rule = null;
 		
 		if (parameter != null && !parameter.isEmpty()) {
@@ -343,7 +357,7 @@ public abstract class RealTimeProtectionGenerator {
 		if (surfaceLocation.getParameter() != null && !surfaceLocation.getParameter().isEmpty())
 			param = surfaceLocation.getParameter().replaceFirst("param=", "");
 	
-		String rule = generateRuleText(vulnType, vulnUrl, action, currentId.toString(), param);
+		String rule = generateRuleText(vulnType, vulnUrl, action, currentId.toString(), param, vulnerability);
 	
 		if (rule != null) {
 			WafRule newRule = new WafRule();
@@ -384,4 +398,36 @@ public abstract class RealTimeProtectionGenerator {
 			
 		return false;
 	}
+	
+	public static boolean hasStartAndEnd(String type) {
+		return type.equals(WafType.BIG_IP_ASM) || 
+			   type.equals(WafType.DENY_ALL_RWEB) ||
+			   type.equals(WafType.IMPERVA_SECURE_SPHERE);
+	}
+	
+	public static String getStart(String type) {
+		if (type.equals(WafType.BIG_IP_ASM)) {
+			return BigIPASMGenerator.XML_START;
+		} else if (type.equals(WafType.DENY_ALL_RWEB)) {
+			return DenyAllRWebGenerator.XML_START;
+		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
+			return ImpervaSecureSphereGenerator.XML_START;
+		} else {
+			return null;
+		}
+	}
+	
+	public static String getEnd(String type) {
+		if (type.equals(WafType.BIG_IP_ASM)) {
+			return BigIPASMGenerator.XML_END;
+		} else if (type.equals(WafType.DENY_ALL_RWEB)) {
+			return DenyAllRWebGenerator.XML_END;
+		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
+			return ImpervaSecureSphereGenerator.XML_END;
+		} else {
+			return null;
+		}
+	}
+	
+	
 }

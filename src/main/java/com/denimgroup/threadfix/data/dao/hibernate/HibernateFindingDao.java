@@ -58,12 +58,6 @@ public class HibernateFindingDao implements FindingDao {
 	}
 
 	@Override
-	public Finding retrieveById(int id) {
-		return (Finding) sessionFactory.getCurrentSession().get(Finding.class,
-				id);
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<String> retrieveByHint(String hint, Integer appId) {
 		Session currentSession = sessionFactory.getCurrentSession();
@@ -97,31 +91,11 @@ public class HibernateFindingDao implements FindingDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		Integer channelTypeId = (Integer) currentSession.createQuery(
-				"select id from ChannelType where name = 'Manual'")
-				.uniqueResult();
-		Integer applicationChannelId = (Integer) currentSession
-				.createQuery(
-						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
-				.setInteger("appId", appId)
-				.setInteger("channelTypeId", channelTypeId).uniqueResult();
-		if(applicationChannelId == null)return null;
-		Integer scanId = (Integer) currentSession
-				.createQuery(
-						"select id from Scan where applicationId = :appId and applicationChannelId = :applicationChannelId")
-				.setInteger("appId", appId)
-				.setInteger("applicationChannelId", applicationChannelId)
-				.uniqueResult();
-		if(scanId == null)return null;
-		return currentSession
-				.createQuery(
-						"from Finding where scanId = :scanId and userId = :userId and isStatic = 1 order by createdDate desc")
-				.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
+	public Finding retrieveById(int id) {
+		return (Finding) sessionFactory.getCurrentSession().get(Finding.class,
+				id);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Finding> retrieveLatestDynamicByAppAndUser(int appId, int userId) {
@@ -145,6 +119,32 @@ public class HibernateFindingDao implements FindingDao {
 		return currentSession
 				.createQuery(
 						"from Finding where scanId = :scanId and userId = :userId and isStatic = 0 order by createdDate desc")
+				.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Integer channelTypeId = (Integer) currentSession.createQuery(
+				"select id from ChannelType where name = 'Manual'")
+				.uniqueResult();
+		Integer applicationChannelId = (Integer) currentSession
+				.createQuery(
+						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
+				.setInteger("appId", appId)
+				.setInteger("channelTypeId", channelTypeId).uniqueResult();
+		if(applicationChannelId == null)return null;
+		Integer scanId = (Integer) currentSession
+				.createQuery(
+						"select id from Scan where applicationId = :appId and applicationChannelId = :applicationChannelId")
+				.setInteger("appId", appId)
+				.setInteger("applicationChannelId", applicationChannelId)
+				.uniqueResult();
+		if(scanId == null)return null;
+		return currentSession
+				.createQuery(
+						"from Finding where scanId = :scanId and userId = :userId and isStatic = 1 order by createdDate desc")
 				.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
 	}
 

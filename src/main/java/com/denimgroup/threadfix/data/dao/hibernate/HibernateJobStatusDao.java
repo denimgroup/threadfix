@@ -57,16 +57,6 @@ public class HibernateJobStatusDao implements JobStatusDao {
 				.list();
 	}
 
-	@Override
-	public JobStatus retrieveById(int id) {
-		return (JobStatus) sessionFactory.getCurrentSession().get(JobStatus.class, id);
-	}
-
-	@Override
-	public void saveOrUpdate(JobStatus jobStatus) {
-		sessionFactory.getCurrentSession().saveOrUpdate(jobStatus);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<JobStatus> retrieveAllOpen() {
@@ -76,6 +66,16 @@ public class HibernateJobStatusDao implements JobStatusDao {
 						"from JobStatus jobStatus where jobStatus.open = :open "
 								+ "order by jobStatus.modifiedDate desc").setBoolean("open", true)
 				.list();
+	}
+
+	@Override
+	public JobStatus retrieveById(int id) {
+		return (JobStatus) sessionFactory.getCurrentSession().get(JobStatus.class, id);
+	}
+
+	@Override
+	public void saveOrUpdate(JobStatus jobStatus) {
+		sessionFactory.getCurrentSession().saveOrUpdate(jobStatus);
 	}
 
 }

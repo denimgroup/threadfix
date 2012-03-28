@@ -33,9 +33,10 @@ import com.denimgroup.threadfix.data.entities.EmptyScan;
  */
 public interface EmptyScanDao {
 	/**
-	 * @param finding
+	 * 
+	 * @return
 	 */
-	void saveOrUpdate(EmptyScan emptyScan);
+	List<EmptyScan> retrieveAllUnprocessed();
 	
 	/**
 	 * 
@@ -45,8 +46,7 @@ public interface EmptyScanDao {
 	EmptyScan retrieveById(Integer emptyScanId);
 	
 	/**
-	 * 
-	 * @return
+	 * @param finding
 	 */
-	List<EmptyScan> retrieveAllUnprocessed();
+	void saveOrUpdate(EmptyScan emptyScan);
 }

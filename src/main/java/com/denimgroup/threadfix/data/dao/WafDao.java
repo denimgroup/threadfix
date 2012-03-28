@@ -35,6 +35,11 @@ import com.denimgroup.threadfix.data.entities.Waf;
 public interface WafDao {
 
 	/**
+	 * @param id
+	 */
+	void deleteById(int id);
+
+	/**
 	 * @return
 	 */
 	List<Waf> retrieveAll();
@@ -55,9 +60,4 @@ public interface WafDao {
 	 * @param waf
 	 */
 	void saveOrUpdate(Waf waf);
-
-	/**
-	 * @param id
-	 */
-	void deleteById(int id);
 }

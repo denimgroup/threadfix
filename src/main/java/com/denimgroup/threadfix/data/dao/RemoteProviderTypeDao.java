@@ -31,9 +31,9 @@ public interface RemoteProviderTypeDao {
 
 	public List<RemoteProviderType> retrieveAll();
 	
-	public RemoteProviderType retrieveByName(String name);
-	
 	public RemoteProviderType retrieveById(int id);
+	
+	public RemoteProviderType retrieveByName(String name);
 	
 	public void saveOrUpdate(RemoteProviderType remoteProviderType);
 	

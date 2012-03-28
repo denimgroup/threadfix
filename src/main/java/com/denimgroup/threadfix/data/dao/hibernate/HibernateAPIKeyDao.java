@@ -48,6 +48,11 @@ public class HibernateAPIKeyDao implements APIKeyDao {
 	}
 
 	@Override
+	public void deleteById(int id) {
+		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<APIKey> retrieveAll() {
 		return sessionFactory.getCurrentSession()
@@ -60,20 +65,15 @@ public class HibernateAPIKeyDao implements APIKeyDao {
 	}
 
 	@Override
-	public void saveOrUpdate(APIKey apiKey) {
-		sessionFactory.getCurrentSession().saveOrUpdate(apiKey);
-	}
-
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-	
-	@Override
 	public APIKey retrieveByKey(String key) {
 		return (APIKey) sessionFactory.getCurrentSession()
 			.createQuery("from APIKey apiKey where apiKey.apiKey = :key")
 			.setString("key", key).uniqueResult();
+	}
+	
+	@Override
+	public void saveOrUpdate(APIKey apiKey) {
+		sessionFactory.getCurrentSession().saveOrUpdate(apiKey);
 	}
 
 }

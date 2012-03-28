@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -152,6 +153,28 @@ public class ApplicationsController {
 			return "Authentication failed";
 		}
 
-		return dt.getProductNames();
+		return productSort(dt.getProductNames());
+	}
+	
+	private String productSort(String products) {
+		if (products == null) {
+			return "Authentication failed";
+		}
+		String[] splitArray = products.split(",", 0);
+		
+		if (splitArray.length == 0) {
+			return "Authentication failed";
+		}
+		
+		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
+		StringBuilder result = new StringBuilder();
+		
+		for (String product : splitArray) {
+			if (product != null && !product.trim().equals("")) {
+				result.append(',').append(product);
+			}
+		}
+		
+		return result.substring(1);
 	}
 }

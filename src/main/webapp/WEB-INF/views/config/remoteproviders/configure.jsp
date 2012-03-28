@@ -21,6 +21,7 @@
 	<form:form modelAttribute="remoteProviderType" method="post" autocomplete="off" action="${ fn:escapeXml( emptyUrl) }">
 	<table class="dataTable">
 		<tbody>
+		<c:if test="${remoteProviderType.hasUserNamePassword }">
 			<tr>
 				<td class="label">Username:</td>
 				<td class="inputValue">
@@ -39,6 +40,8 @@
 					<form:errors path="password" cssClass="errors" />
 				</td>
 			</tr>
+			</c:if>
+			<c:if test="${remoteProviderType.hasApiKey}">
 			<tr>
 				<td class="label">API Key:</td>
 				<td class="inputValue">
@@ -48,11 +51,12 @@
 					<form:errors path="apiKeyString" cssClass="errors" />
 				</td>
 			</tr>
+			</c:if>
 		</tbody>
 	</table>
 	
 	<input style="margin-top:10px;" id="submitButton" type="submit" value="Save" onclick="return confirm('If you have changed your username or API key, all existing apps will be deleted.')" />
-	<span style="padding-left: 10px"><a href="<spring:url value="configuration/remoteproviders" htmlEscape="true"/>">Back to Index</a></span>
+	<span style="padding-left: 10px"><a href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Back to Index</a></span>
 		
 	</form:form>
 	

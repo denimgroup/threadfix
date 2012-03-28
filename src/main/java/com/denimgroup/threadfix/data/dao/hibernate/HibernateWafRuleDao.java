@@ -73,19 +73,6 @@ public class HibernateWafRuleDao implements WafRuleDao {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
-	public void saveOrUpdate(WafRule wafRule) {
-		sessionFactory.getCurrentSession().saveOrUpdate(wafRule);
-	}
-
-	@Override
-	public WafRule retrieveByWafAndNativeId(String wafId, String nativeId) {
-		return (WafRule) sessionFactory.getCurrentSession()
-			.createQuery("from WafRule wafRule where wafRule.nativeId = :nativeId and wafRule.waf = :wafId")
-			.setString("nativeId", nativeId).setString("wafId", wafId).uniqueResult();
-	}
-
-	@Override
 	public WafRule retrieveByVulnerabilityAndWafAndDirective(
 			Vulnerability vuln, Waf waf, WafRuleDirective directive) {
 		return (WafRule) sessionFactory
@@ -106,6 +93,19 @@ public class HibernateWafRuleDao implements WafRuleDao {
 				"and wafRule.wafRuleDirective = :directiveId")
 			.setInteger("wafId", waf.getId())
 			.setInteger("directiveId", directive.getId()).list();
+	}
+
+	@Override
+	public WafRule retrieveByWafAndNativeId(String wafId, String nativeId) {
+		return (WafRule) sessionFactory.getCurrentSession()
+			.createQuery("from WafRule wafRule where wafRule.nativeId = :nativeId and wafRule.waf = :wafId")
+			.setString("nativeId", nativeId).setString("wafId", wafId).uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void saveOrUpdate(WafRule wafRule) {
+		sessionFactory.getCurrentSession().saveOrUpdate(wafRule);
 	}
 
 

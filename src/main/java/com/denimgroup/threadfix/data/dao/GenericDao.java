@@ -36,6 +36,14 @@ import java.util.List;
 public interface GenericDao<T> {
 
 	/**
+	 * Retrieves all objects of the specified type.
+	 * 
+	 * @return A list of all objects of the specified type or an empty list if
+	 *         no objects exist
+	 */
+	List<T> retrieveAll();
+
+	/**
 	 * Retrieves the object by the specified id.
 	 * 
 	 * @param id
@@ -45,12 +53,13 @@ public interface GenericDao<T> {
 	T retrieveById(int id);
 
 	/**
-	 * Retrieves all objects of the specified type.
+	 * If the ID on the objects are valid, then they will be updated. If the IDs
+	 * are not valid, new objects will be persisted.
 	 * 
-	 * @return A list of all objects of the specified type or an empty list if
-	 *         no objects exist
+	 * @param objectsToPersist
+	 *            A list of objects to persist.
 	 */
-	List<T> retrieveAll();
+	void saveOrUpdate(List<T> objectsToPersist);
 
 	/**
 	 * If the ID on the object is valid, then it will be updated. If the ID is
@@ -60,14 +69,5 @@ public interface GenericDao<T> {
 	 *            The object to save or update.
 	 */
 	void saveOrUpdate(T objectToPersist);
-
-	/**
-	 * If the ID on the objects are valid, then they will be updated. If the IDs
-	 * are not valid, new objects will be persisted.
-	 * 
-	 * @param objectsToPersist
-	 *            A list of objects to persist.
-	 */
-	void saveOrUpdate(List<T> objectsToPersist);
 
 }

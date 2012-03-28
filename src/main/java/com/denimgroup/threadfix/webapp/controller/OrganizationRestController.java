@@ -51,6 +51,29 @@ public class OrganizationRestController extends RestController {
 			return org;
 		}
 	}
+	
+	@RequestMapping(headers = "Accept=application/json", value="/lookup", method = RequestMethod.GET)
+	public @ResponseBody Object teamNameLookup(HttpServletRequest request) {
+		
+		String teamName = request.getParameter("name");
+		
+		log.info("Received REST request for Team with ID " + teamName + ".");
+
+		if (!checkKey(request)) {
+			return API_KEY_ERROR;
+		}
+
+		Organization org = organizationService.loadOrganization(teamName);
+
+		if (org == null) {
+			log.warn("Team lookup failed for ID " + teamName + ".");
+			return LOOKUP_FAILED;
+		} else {
+			log.info("REST request for Team with ID " + teamName
+					+ " completed successfully.");
+			return org;
+		}
+	}
 
 	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST)
 	public @ResponseBody Object newTeam(HttpServletRequest request) {
