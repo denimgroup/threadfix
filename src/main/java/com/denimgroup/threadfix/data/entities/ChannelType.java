@@ -54,6 +54,7 @@ public class ChannelType extends BaseEntity {
 	public static final String NESSUS = "Nessus";
 	public static final String ARACHNI = "Arachni";
 	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
+	public static final String ACUNETIX_WVS = "Acunetix WVS";
 
 	private String name;
 	private String version;

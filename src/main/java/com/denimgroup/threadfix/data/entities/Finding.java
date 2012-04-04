@@ -151,6 +151,7 @@ public class Finding extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
+	@JsonIgnore
 	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
 		return scanRepeatFindingMaps;
 	}

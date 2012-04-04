@@ -79,6 +79,13 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
+		if (remoteProviderApplication.getRemoteProviderType() == null) {
+			return null;
+		}
+		
+		password = remoteProviderApplication.getRemoteProviderType().getPassword();
+		username = remoteProviderApplication.getRemoteProviderType().getUsername();
+		
 		String app = mostRecentScanForApp(remoteProviderApplication);
 		
 		if (app == null || app.trim().equals("")) {
@@ -108,6 +115,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 		InputStream stream = null;
 		
+		// POST with no parameters
+		// TODO include filters
 		stream = httpPost(GET_APPS_URL,new String[]{},new String[]{});
 		
 		if (stream == null) {
@@ -130,22 +139,23 @@ public class QualysRemoteProvider extends RemoteProvider {
 	}
 	
 	// TODO improve this algorithm and check for cases where Qualys has more than one app
+	// TODO import all the unimported scans for the app instead of just the most recent
 	public String mostRecentScanForApp(RemoteProviderApplication app) {
 		if (app == null || app.getNativeId() == null) {
 			return null;
 		}
 
+		// POST with no parameters
+		// TODO include filters
 		InputStream stream = httpPost(GET_SCANS_FOR_APP_URL,new String[]{},new String[]{});
-				
-		QualysScansForAppParser parser = new QualysScansForAppParser();
 		
+		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		
 		String scan = null;
-		
 		Calendar previousDate = null;
 
-		// This is inefficient, we need to find a better way.
+		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
 			Calendar mapDate = null;
 			
@@ -187,12 +197,11 @@ public class QualysRemoteProvider extends RemoteProvider {
 				post.addParameter(paramNames[i], paramVals[i]);
 			}
 			
-			
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
-				System.err.println("Status : " + status);
+				log.warn("Status was not 200.");
+				log.warn("Status : " + status);
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
@@ -229,7 +238,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.warn("Status was not 200.");
+				log.warn("Status : " + status);
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();

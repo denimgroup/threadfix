@@ -59,6 +59,7 @@ public class ScanRepeatFindingMap extends BaseEntity {
 	
 	/**
 	 * This constructor maps everything correctly, so just creating the object is enough.
+	 * Maybe not a good decision but this is only used in one place.
 	 * @param finding
 	 * @param scan
 	 */

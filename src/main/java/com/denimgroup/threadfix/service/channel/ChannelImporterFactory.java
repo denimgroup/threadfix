@@ -121,6 +121,9 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.ARACHNI)){
 			channelImporter = new ArachniChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.ACUNETIX_WVS)){
+			channelImporter = new AcunetixChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.FORTIFY) && isFortifyChannelImporterDefined()) {
 			try {
 				Class<?> fortifyClass = Class.forName("com.denimgroup.threadfix.service.channel.FortifyChannelImporter");

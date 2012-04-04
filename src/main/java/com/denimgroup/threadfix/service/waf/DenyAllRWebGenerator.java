@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
@@ -35,9 +38,11 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	public static final String XML_START = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
 												"<eaccess>";
 	public static final String XML_END = "</eaccess>";
+
+	String template = "security_blacklist add-filter {id} --pattern \"{pattern}\" --type URI -d {note} --action {action}";
 	
 	public DenyAllRWebGenerator(WafRuleDao wafRuleDao) {
-		this.wafRuleDao = wafRuleDao;//return returnString;
+		this.wafRuleDao = wafRuleDao;
 		this.defaultDirective = "drop";
 	}
 	
@@ -55,53 +60,73 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 				GenericVulnerability.CWE_EVAL_INJECTION };
 	}
 	
+	// TODO Test all of these POSIX payloads
+	
+	// this one needs a ton of \ chars for some reason
+	public static final String POSIX_SQL_INJECTION = "['\\\\\\\\\\\\\"-]";
+	public static final String POSIX_XSS = "[<>]";
+	public static final String POSIX_PATH_TRAVERSAL = "[.\\\\]";
+	public static final String POSIX_HTTP_RESPONSE_SPLITTING = "%5cn|%5cr|%0d|%0a";
+	public static final String POSIX_XPATH_INJECTION = "['\\\\\\\\\\\\\"]";
+	public static final String POSIX_DIRECTORY_INDEXING = "[ .$?/]";
+	public static final String POSIX_LDAP_INJECTION = "[\\()*]";
+	public static final String POSIX_OS_COMMAND_INJECTION = "[&|;]";
+	public static final String POSIX_FORMAT_STRING_INJECTION = "[%]";
+	public static final String POSIX_EVAL_INJECTION = "[;]";
+
+	protected static Map<String, String> POSIX_PAYLOAD_MAP = new HashMap<String, String>();
+	static {
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, POSIX_XSS);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, POSIX_SQL_INJECTION);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, POSIX_PATH_TRAVERSAL);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, POSIX_HTTP_RESPONSE_SPLITTING);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, POSIX_XPATH_INJECTION);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, POSIX_DIRECTORY_INDEXING);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, POSIX_LDAP_INJECTION);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, POSIX_OS_COMMAND_INJECTION);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, POSIX_FORMAT_STRING_INJECTION);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, POSIX_DIRECTORY_INDEXING);
+		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, POSIX_EVAL_INJECTION);
+	}
+	
 	@Override
 	protected String generateRuleWithParameter(String uri, String action, String id,
 			String genericVulnName, String parameter) {
 		
-		String payload = PAYLOAD_MAP.get(genericVulnName);
-
-		// TODO make sure the >< characters are filtered.
+		String payload = POSIX_PAYLOAD_MAP.get(genericVulnName);
 		payload = payload.replace(";", "\\;");
-		payload = payload.replace(">", "%gt;");
-		payload = payload.replace("<", "%lt;");
-		payload = payload.replace("&", "&amp;");
+		String pattern = uri + ".*" + parameter + "=.*" + payload;
 
-		return "<rules title=\"" + genericVulnName + "\" uid=\"" + id + "\">\n" +
-					"<rule action=\"" + action + "\" part=\"uri\">\n" +
-						"<pattern groups=\"OnlyIfUri.php\" pid=\"" + id + "\">\"-ie2: " + uri + ".*" +
-								parameter + "=.*(" + payload + ")\"</pattern>\n" +
-					"</rule>\n" +
-				"</rules>\n";
+		return template.replaceFirst("\\{pattern\\}", pattern)
+					   .replaceFirst("\\{note\\}", id)
+					   .replaceFirst("\\{action\\}", action);
 	}
 	
 	@Override
 	protected String generateRuleForExactUrl(String uri, String action,
 			String id, String genericVulnName) {
 		
-		return "<rules title=\"" + genericVulnName + "\" uid=\"" + id + "\">\n" +
-					"<rule action=\"" + action + "\" part=\"uri\">\n" +
-						"<pattern groups=\"OnlyIfUri.php\" pid=\"" + id + "\">\"-ie2: " + uri + "\"</pattern>\n" +
-					"</rule>\n" +
-				"</rules>\n";
+		String payload = POSIX_PAYLOAD_MAP.get(genericVulnName);
+		payload = payload.replace(";", "\\;");
+		payload = payload.replace("\"", "\\\"");
+		String pattern = uri;
+
+		return template.replaceFirst("\\{pattern\\}", pattern)
+					   .replaceFirst("\\{note\\}", id)
+					   .replaceFirst("\\{action\\}", action);
 	}
 
 	@Override
 	protected String generateRuleWithPayloadInUrl(String uri, String action,
 			String id, String genericVulnName) {
 		
-		String payload = PAYLOAD_MAP.get(genericVulnName);
-
+		String payload = POSIX_PAYLOAD_MAP.get(genericVulnName);
 		payload = payload.replace(";", "\\;");
-		payload = payload.replace(">", "%gt;");
-		payload = payload.replace("<", "%lt;");
-		payload = payload.replace("&", "&amp;");
+		payload = payload.replace("\"", "\\\"");
+		String pattern = uri + ".*" + payload + "";
 		
-		return "<rules title=\"" + genericVulnName + "\" uid=\"" + id + "\">\n" +
-					"<rule action=\"" + action + "\" part=\"uri\">\n" +
-						"<pattern groups=\"OnlyIfUri.php\" pid=\"" + id + "\">\"-ie2: " + 
-							uri + ".*" +".*(" + payload + ")\"</pattern>\n" +
-					"</rule>\n" +
-				"</rules>\n";
+		return template.replaceFirst("\\{pattern\\}", pattern)
+					   .replaceFirst("\\{note\\}", id)
+					   .replaceFirst("\\{action\\}", action);
 	}
 }

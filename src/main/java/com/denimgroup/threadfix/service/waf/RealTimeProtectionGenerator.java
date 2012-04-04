@@ -401,15 +401,12 @@ public abstract class RealTimeProtectionGenerator {
 	
 	public static boolean hasStartAndEnd(String type) {
 		return type.equals(WafType.BIG_IP_ASM) || 
-			   type.equals(WafType.DENY_ALL_RWEB) ||
 			   type.equals(WafType.IMPERVA_SECURE_SPHERE);
 	}
 	
 	public static String getStart(String type) {
 		if (type.equals(WafType.BIG_IP_ASM)) {
 			return BigIPASMGenerator.XML_START;
-		} else if (type.equals(WafType.DENY_ALL_RWEB)) {
-			return DenyAllRWebGenerator.XML_START;
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.XML_START;
 		} else {
@@ -420,8 +417,6 @@ public abstract class RealTimeProtectionGenerator {
 	public static String getEnd(String type) {
 		if (type.equals(WafType.BIG_IP_ASM)) {
 			return BigIPASMGenerator.XML_END;
-		} else if (type.equals(WafType.DENY_ALL_RWEB)) {
-			return DenyAllRWebGenerator.XML_END;
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.XML_END;
 		} else {
