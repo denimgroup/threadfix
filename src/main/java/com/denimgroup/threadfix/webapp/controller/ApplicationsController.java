@@ -44,11 +44,9 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -64,17 +62,14 @@ public class ApplicationsController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private VulnerabilityService vulnerabilityService;
-	private RemoteProviderApplicationService remoteProviderApplicationService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, 
-			VulnerabilityService vulnerabilityService,
-			RemoteProviderApplicationService remoteProviderApplicationService) {
+			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.vulnerabilityService = vulnerabilityService;
-		this.remoteProviderApplicationService = remoteProviderApplicationService;
 	}
 
 	@InitBinder
@@ -140,16 +135,7 @@ public class ApplicationsController {
 				applicationService.deactivateApplication(application);
 				status.setComplete();
 			}
-			
-			if (application.getRemoteProviderApplications() != null &&
-					application.getRemoteProviderApplications().size() > 0) {
-				for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
-					app.setApplication(null);
-					app.setLastImportTime(null);
-					app.setApplicationChannel(null);
-					remoteProviderApplicationService.store(app);
-				}
-			}
+
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();

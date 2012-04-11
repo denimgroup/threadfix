@@ -33,8 +33,10 @@ import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
+import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
@@ -44,11 +46,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	private ApplicationDao applicationDao = null;
 	private DefectTrackerDao defectTrackerDao = null;
+	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
 
 	@Autowired
-	public ApplicationServiceImpl(ApplicationDao applicationDao, DefectTrackerDao defectTrackerDao) {
+	public ApplicationServiceImpl(ApplicationDao applicationDao, 
+			DefectTrackerDao defectTrackerDao,
+			RemoteProviderApplicationDao remoteProviderApplicationDao) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
+		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 	}
 
 	@Override
@@ -81,6 +87,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteById(int applicationId) {
+		removeRemoteApplicationLinks(loadApplication(applicationId));
 		applicationDao.deleteById(applicationId);
 	}
 
@@ -89,7 +96,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deactivateApplication(Application application) {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
+		removeRemoteApplicationLinks(application);
 		applicationDao.saveOrUpdate(application);
+	}
+	
+	private void removeRemoteApplicationLinks(Application application) {
+		if (application.getRemoteProviderApplications() != null &&
+				application.getRemoteProviderApplications().size() > 0) {
+			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
+				app.setApplication(null);
+				app.setLastImportTime(null);
+				app.setApplicationChannel(null);
+				remoteProviderApplicationDao.saveOrUpdate(app);
+			}
+		}
 	}
 	
 	@Override
