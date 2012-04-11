@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -123,11 +124,18 @@ public class FindingsController {
 			vulnerability = vulnerabilityService.loadVulnerability(id);
 		
 		if (finding != null && vulnerability != null) {
+			
+			if (finding.getVulnerability() != null && 
+					finding.getVulnerability().getFindings().size() == 1) {
+				finding.getVulnerability().closeVulnerability(Calendar.getInstance());
+				vulnerabilityService.storeVulnerability(finding.getVulnerability());
+			}
+			
 			finding.setVulnerability(vulnerability);
 			findingService.storeFinding(finding);
 		}
 			
-		return merge(findingId, scanId, model, orgId, appId);
+		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId;
 	}
 
 }

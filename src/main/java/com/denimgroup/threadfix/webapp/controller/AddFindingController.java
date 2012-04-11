@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -275,6 +277,16 @@ public class AddFindingController {
 			String userName = SecurityContextHolder.getContext()
 					.getAuthentication().getName();
 			finding.setIsStatic(false);
+			
+			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null) {
+				try {
+					URL resultURL = new URL(finding.getSurfaceLocation().getPath());
+					finding.getSurfaceLocation().setUrl(resultURL);
+				} catch (MalformedURLException e) {
+					log.info("Path was not given in URL format, leaving it as it was.");
+				}
+			}
+			
 			scanMergeService.processManualFinding(finding, appId, userName);
 
 			log.debug(userName + " has added a new dynamic finding to the Application " + 

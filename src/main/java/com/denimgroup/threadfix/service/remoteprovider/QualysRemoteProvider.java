@@ -86,13 +86,13 @@ public class QualysRemoteProvider extends RemoteProvider {
 		password = remoteProviderApplication.getRemoteProviderType().getPassword();
 		username = remoteProviderApplication.getRemoteProviderType().getUsername();
 		
-		String app = mostRecentScanForApp(remoteProviderApplication);
+		String appId = mostRecentScanForApp(remoteProviderApplication);
 		
-		if (app == null || app.trim().equals("")) {
+		if (appId == null || appId.trim().equals("")) {
 			return null;
 		}
 				
-		inputStream = httpGet(GET_SCAN_URL + app);
+		inputStream = httpGet(GET_SCAN_URL + appId);
 
 		QualysWASSAXParser scanParser = new QualysWASSAXParser();
 		Scan resultScan = parseSAXInput(scanParser);

@@ -167,7 +167,6 @@ public class WafRestController extends RestController {
 		}
 	}
 	
-	// TODO flesh out
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/uploadLog", method=RequestMethod.POST)
 	public @ResponseBody Object uploadWafLog(HttpServletRequest request, 
 			@PathVariable("wafId") int wafId, @RequestParam("file") MultipartFile file) {

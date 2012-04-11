@@ -4,6 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -13,6 +25,9 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.commons.httpclient.params.HttpConnectionParams;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
@@ -31,9 +46,9 @@ public abstract class BaseRestTest {
 	
 	protected final Log log = LogFactory.getLog(BaseRestTest.class);
 	
-	public static final String GOOD_API_KEY = "QRUusnkGqKE6zAlGwsFVHcxPWW8qlfPpwcaLmXBo6gCA";
-	public static final String BAD_API_KEY = "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
-	public static final String BASE_URL = "https://satoffice043:8443/threadfix/rest/";
+	public static final String GOOD_API_KEY = "Sy8bIjCGIQ8lALgjeBBIcGRxCCUngVPY3d4v18Cqwfw";
+	public static final String BAD_API_KEY =  "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
+	public static final String BASE_URL = "http://satoffice043:8080/threadfix/rest";
 
 	public String httpPostFile(String request, String fileName, String[] paramNames,
 			String[] paramVals) {
@@ -44,6 +59,8 @@ public abstract class BaseRestTest {
 	
 	public String httpPostFile(String request, File file, String[] paramNames,
 			String[] paramVals) {
+		
+		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
 		PostMethod filePost = new PostMethod(request);
 		
@@ -86,7 +103,9 @@ public abstract class BaseRestTest {
 
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
-
+		
+		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+	
 		PostMethod post = new PostMethod(request);
 		
 		post.setRequestHeader("Accept", "application/json");
@@ -107,7 +126,7 @@ public abstract class BaseRestTest {
 			if (responseStream != null) {
 				return IOUtils.toString(responseStream);
 			}
-
+	
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (HttpException e) {
@@ -115,11 +134,15 @@ public abstract class BaseRestTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+	
 		return "There was an error and the POST request was not finished.";
 	}
 
 	public String httpGet(String urlStr) {
+		
+		System.out.println("Requesting " + urlStr);
+		
+		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlStr);
 		
 		get.setRequestHeader("Accept", "application/json");
@@ -196,5 +219,79 @@ public abstract class BaseRestTest {
 	 */
 	protected String getRandomString(int length) {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+	}
+	
+	/**
+	 * These two classes allow the self-signed SSL cert to work. We might be able to cut this down.
+	 * @author mcollins
+	 *
+	 */
+	public class AcceptAllTrustManager implements X509TrustManager {
+	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+	    public X509Certificate[] getAcceptedIssuers() { return null; }
+	}
+	
+	public class AcceptAllTrustFactory implements ProtocolSocketFactory {
+	
+		private SSLContext sslContext = null;
+	
+		private SSLContext createAcceptAllSSLContext() {
+			try {
+				AcceptAllTrustManager acceptAllTrustManager = new AcceptAllTrustManager();
+				SSLContext context = SSLContext.getInstance("TLS");
+				context.init(null,
+						new AcceptAllTrustManager[] { acceptAllTrustManager },
+						null);
+				return context;
+			} catch (KeyManagementException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	
+	    private SSLContext getSSLContext() {
+	        if(this.sslContext == null) {
+	            this.sslContext = createAcceptAllSSLContext();
+	        }
+	
+	        return this.sslContext;
+	    }
+	
+	    public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) throws IOException {
+	        return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
+	    }
+	
+	    public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, final HttpConnectionParams params) throws IOException {
+	        if(params == null) {
+	            throw new IllegalArgumentException("Parameters may not be null");
+	        }
+	
+	        int timeout = params.getConnectionTimeout();
+	        SocketFactory socketFactory = getSSLContext().getSocketFactory();
+	
+	        if(timeout == 0) {
+	            return socketFactory.createSocket(host, port, localAddress, localPort);
+	        }
+	
+	        else {
+	            Socket socket = socketFactory.createSocket();
+	            SocketAddress localAddr = new InetSocketAddress(localAddress, localPort);
+	            SocketAddress remoteAddr = new InetSocketAddress(host, port);
+	            socket.bind(localAddr);
+	            socket.connect(remoteAddr, timeout);
+	            return socket;
+	        }
+	    }
+	
+	    public Socket createSocket(String host, int port) throws IOException {
+	        return getSSLContext().getSocketFactory().createSocket(host, port);
+	    }
+	
+	    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
+	        return getSSLContext().getSocketFactory().createSocket(socket, host, port, autoClose);
+	    }
 	}
 }

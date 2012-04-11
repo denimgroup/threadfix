@@ -307,7 +307,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 				String temp = getRegexResult(path, "(.+\\." + val + ")");
 				if (temp != null) {
-					path = temp.toLowerCase();
+					path = temp;
 					break;
 				}
 			}
@@ -517,12 +517,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if(!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
 		} else {
-			finding.setSurfaceLocation(new SurfaceLocation());
 			String path = getStaticFindingPathGuess(finding);
 			if (path != null && scan.getApplication().getProjectRoot() != null && 
 					scan.getApplication().getProjectRoot().toLowerCase() != null &&
-					path.contains(scan.getApplication().getProjectRoot().toLowerCase()))
-				path = path.substring(path.indexOf(scan.getApplication().getProjectRoot().toLowerCase()));
+					path.toLowerCase().contains(scan.getApplication().getProjectRoot().toLowerCase())) {
+				path = path.substring(path.toLowerCase().indexOf(scan.getApplication().getProjectRoot().toLowerCase()));
+			}
 			finding.getSurfaceLocation().setPath(path);
 		}
 		
@@ -532,6 +532,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		appMerge(tempScan, applicationId);
 
 		scan.getFindings().add(finding);
+		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);

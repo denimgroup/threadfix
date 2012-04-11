@@ -356,7 +356,7 @@ public class ApplicationRestController extends RestController {
 		} else {
 			application.setWaf(waf);
 			applicationService.storeApplication(application);
-			return waf;
+			return application;
 		}
 	}
 }

@@ -37,34 +37,36 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class ChannelType extends BaseEntity {
 
 	private static final long serialVersionUID = 1665587716223810215L;
+	
 	// Types of channels
-	public static final String CAT_NET = "Microsoft CAT.NET";
-	public static final String APPSCAN_DYNAMIC = "IBM Rational AppScan";
-	public static final String NETSPARKER = "Mavituna Security Netsparker";
-	public static final String SENTINEL = "WhiteHat Sentinel";
-	public static final String MANUAL = "Manual";
-	public static final String SKIPFISH = "Skipfish";
-	public static final String W3AF = "w3af";
-	public static final String VERACODE = "Veracode";
-	public static final String WEBINSPECT = "WebInspect";
-	public static final String BURPSUITE = "Burp Suite";
-	public static final String FINDBUGS = "FindBugs";
-	public static final String ZAPROXY = "OWASP Zed Attack Proxy";
-	public static final String FORTIFY = "Fortify 360";
-	public static final String NESSUS = "Nessus";
-	public static final String ARACHNI = "Arachni";
-	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
 	public static final String ACUNETIX_WVS = "Acunetix WVS";
+	public static final String APPSCAN_DYNAMIC = "IBM Rational AppScan";
+	public static final String ARACHNI = "Arachni";
+	public static final String BRAKEMAN = "Brakeman";
+	public static final String BURPSUITE = "Burp Suite";
+	public static final String CAT_NET = "Microsoft CAT.NET";
+	public static final String FINDBUGS = "FindBugs";
+	public static final String FORTIFY = "Fortify 360";
+	public static final String MANUAL = "Manual";
+	public static final String NESSUS = "Nessus";
+	public static final String NETSPARKER = "Mavituna Security Netsparker";
+	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
+	public static final String SENTINEL = "WhiteHat Sentinel";
+	public static final String SKIPFISH = "Skipfish";
+	public static final String VERACODE = "Veracode";
+	public static final String W3AF = "w3af";
+	public static final String WEBINSPECT = "WebInspect";
+	public static final String ZAPROXY = "OWASP Zed Attack Proxy";
 
-	private String name;
-	private String version;
-	private String url;
-
-	private List<ChannelVulnerability> channelVulnerabilities;
-	private List<ChannelSeverity> channelSeverities;
 	private List<ApplicationChannel> applicationChannels;
-	private List<VulnerabilityMapLog> vulnerabilityMapLogs;
+	private List<ChannelSeverity> channelSeverities;
+	private List<ChannelVulnerability> channelVulnerabilities;
 	private List<RemoteProviderType> remoteProviderTypes;
+	private List<VulnerabilityMapLog> vulnerabilityMapLogs;
+	
+	private String name;
+	private String url;
+	private String version;
 
 	@Column(length = 50, nullable = false)
 	public String getName() {

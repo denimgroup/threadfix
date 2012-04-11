@@ -243,7 +243,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    			url = atts.getValue("location");
 
 	    		Finding finding = constructFinding(url,
-	    										   atts.getValue("inputvector"),
+	    										   atts.getValue("vuln_parameter"),
 	    										   atts.getValue("cweid"),
 	    										   atts.getValue("severity"));
 	    		if (finding != null) {

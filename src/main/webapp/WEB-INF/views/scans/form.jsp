@@ -56,52 +56,40 @@
 							onkeyup="searchCweSuggest(event);" autocomplete="off"  
 							onKeyPress = "return disableEnterKey(event);"
 							size="50" maxlength="60"/>
-					<div id="search_cwe_suggest" class="search_suggest"></div>
+					<div id="search_cwe_suggest" class="search_suggest" style="visibility: hidden"></div>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="channelVulnerability.code" cssClass="errors" />
 				</td>
 			</tr>
-			<tr class="static">
-				<td valign="top">Recently Found:</td>
-				<td class="inputValue">
-					<table border="0">
-						<tbody>
-							<tr>
-								<td width="200" valign="top">
-									<select size="5" id="cv_static_select">
-										<c:forEach var="cv" items="${ staticChannelVulnerablilityList }">
-											<option value="${ cv }">
-												<c:out value="${ cv }"></c:out>
-											</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr class="dynamic">
-				<td valign="top">Recently Found:</td>
-				<td class="inputValue">
-					<table border="0">
-						<tbody>
-							<tr>
-								<td width="200" valign="top">
-									<select size="5" id="cv_dynamic_select">
-										<c:forEach var="cv" items="${ dynamicChannelVulnerablilityList }">
-											<option value="${ cv }">
-												<c:out value="${ cv }"></c:out>
-											</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
+			<c:if test="${ not empty staticChannelVulnerablilityList }">
+				<tr class="static">
+					<td class="label" valign="top">Recently Found:</td>
+					<td class="inputValue">
+						<select size="5" onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" id="cv_static_select">
+							<c:forEach var="cv" items="${ staticChannelVulnerablilityList }">
+								<option value="${ cv }">
+									<c:out value="${ cv }"></c:out>
+								</option>
+							</c:forEach>
+						</select>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="${ not empty dynamicChannelVulnerablilityList }">
+				<tr class="dynamic">
+					<td class="label" valign="top">Recently Found:</td>
+					<td class="inputValue">
+						<select onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" size="5" id="cv_dynamic_select">
+							<c:forEach var="cv" items="${ dynamicChannelVulnerablilityList }">
+								<option value="${ cv }">
+									<c:out value="${ cv }"></c:out>
+								</option>
+							</c:forEach>
+						</select>
+					</td>
+				</tr>
+			</c:if>
 			<tr class="dynamic">
 				<td class="label">URL:</td>
 				<td class="inputValue">
@@ -114,7 +102,7 @@
 							onkeyup="searchUrlDynamicSuggest(event);" autocomplete="off"  
 							onKeyPress = "return disableEnterKey(event);"
 							size="50" maxlength="255"/>
-					<div id="search_url_dynamic_suggest" class="search_suggest"></div>
+					<div id="search_url_dynamic_suggest" class="search_suggest" style="visibility: hidden"></div>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="surfaceLocation.path" cssClass="errors" />
@@ -132,52 +120,40 @@
 							onkeyup="searchUrlStaticSuggest(event);" autocomplete="off"  
 							onKeyPress = "return disableEnterKey(event);"
 							size="50" maxlength="255"/>
-					<div id="search_url_static_suggest" class="search_suggest"></div>
+					<div id="search_url_static_suggest" class="search_suggest" style="visibility: hidden"></div>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="surfaceLocation.path" cssClass="errors" />
 				</td>
 			</tr>
-			<tr class="dynamic">
-				<td valign="top">Recently Found:</td>
-				<td class="inputValue">
-					<table border="0">
-						<tbody>
-							<tr>
-								<td width="200" valign="top">
-									<select size="5" id="url_dynamic_select">
-										<c:forEach var="path" items="${ dynamicPathList}">
-											<option value="${ path }">
-												<c:out value="${ path }"/>
-											</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr class="static">
-				<td valign="top">Recently Found:</td>
-				<td class="inputValue">
-					<table border="0">
-						<tbody>
-							<tr>
-								<td width="200" valign="top">
-									<select size="5" id="url_static_select">
-										<c:forEach var="path" items="${ staticPathList}">
-											<option value="${ path }">
-												<c:out value="${ path }"/>
-											</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
+			<c:if test="${ not empty dynamicPathList }">
+				<tr class="dynamic">
+					<td class="label" valign="top">Recently Found:</td>
+					<td class="inputValue">
+						<select size="5" onclick="$('#urlDynamicSearch').val(this.options[this.selectedIndex].value);" id="url_dynamic_select">
+							<c:forEach var="path" items="${ dynamicPathList}">
+								<option value="${ path }">
+									<c:out value="${ path }"/>
+								</option>
+							</c:forEach>
+						</select>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="${ not empty staticPathList }">
+				<tr class="static">
+					<td class="label" valign="top">Recently Found:</td>
+					<td class="inputValue">
+						<select size="5" onclick="$('#urlStaticSearch').val(this.options[this.selectedIndex].value);" id="url_static_select">
+							<c:forEach var="path" items="${ staticPathList}">
+								<option value="${ path }">
+									<c:out value="${ path }"/>
+								</option>
+							</c:forEach>
+						</select>
+					</td>
+				</tr>
+			</c:if>
 			<tr class="static">
 				<td class="label">Line Number:</td>
 				<td class="inputValue">

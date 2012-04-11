@@ -46,6 +46,7 @@
 			<thead>
 				<tr>
 					<th class="first">Select</th>
+					<th>Open</th>
 					<th>Vuln ID</th>
 					<th>Generic Vuln Name</th>
 					<th>Path</th>
@@ -64,6 +65,14 @@
 				<tr class="bodyRow">
 					<td style="text-align:center">
 						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }"></input>
+					</td>
+					<td>
+						<c:if test="${ vulnerability.active }">
+							Open
+						</c:if>
+						<c:if test="${ not vulnerability.active }">
+							Closed
+						</c:if>
 					</td>
 					<td style="text-align:center">
 						<c:out value="${ vulnerability.id }"/>

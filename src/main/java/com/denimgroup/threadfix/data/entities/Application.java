@@ -192,7 +192,6 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
-	@JsonIgnore
 	public Waf getWaf() {
 		return waf;
 	}

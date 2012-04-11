@@ -29,10 +29,12 @@ function disableEnterKey(e)
 
 function searchCweSuggest(e) {
     var key;
-    if(window.event)
+    if (window.event) {
          key = window.event.keyCode; //IE
-    else if (e)
+	} else if (e) {
          key = e.which; //firefox
+	} 
+    
     if (key == 13) {
     	//Enter key
     	setCweSearch(document.getElementById('search_cwe_suggest').childNodes[current].innerHTML);
@@ -71,19 +73,22 @@ function searchCweSuggest(e) {
 			});
 		} else {
 			$("#search_cwe_suggest").html('');
+			$('#search_cwe_suggest').css('visibility', 'hidden');
 		}
 	}
 }
 
 function searchUrlStaticSuggest(e) {
     var key;
-    var suggest = $("#search_url_static_suggest");
-    if(window.event)
-         key = window.event.keyCode; //IE
-    else if (e)
-         key = e.which; //firefox
+    var suggest = document.getElementById("search_url_static_suggest");
+    if (window.event) {
+        key = window.event.keyCode; //IE
+	} else if (e) {
+        key = e.which; //firefox
+	} 
+   
     if (key == 13) {
-    	setUrlStaitcSearch(suggest.childNodes[current].innerHTML);
+    	setUrlStaticSearch(suggest.childNodes[current].innerHTML);
     	e.cancel = true;
     } else if (key == 38) {
 		// Up key
@@ -119,18 +124,21 @@ function searchUrlStaticSuggest(e) {
 			});
 		} else {
 			$("#search_url_suggest").html('');
+			$('#search_cwe_suggest').css('visibility', 'hidden');
 		}
 	}
 }
 
 function searchUrlDynamicSuggest(e) {
     var key;
-    var suggest = $("#search_url_dynamic_suggest");
-    if(window.event)
-         key = window.event.keyCode; //IE
-    else if (e)
-         key = e.which; //firefox
-    if (key == 13) {
+    var suggest = document.getElementById("search_url_dynamic_suggest");
+    if (window.event) {
+        key = window.event.keyCode; //IE
+	} else if (e) {
+        key = e.which; //firefox
+	} 
+   
+   if (key == 13) {
     	setUrlDynamicSearch(suggest.childNodes[current].innerHTML);
     	e.cancel = true;
     } else if (key == 38) {
@@ -167,6 +175,7 @@ function searchUrlDynamicSuggest(e) {
 			});
 		} else {
 			$("#search_url_suggest").html('');
+			$('#search_cwe_suggest').css('visibility', 'hidden');
 		}
 	}
 }
@@ -184,6 +193,12 @@ showCweResponse = function(text) {
 		suggest += 'class="suggest_link">' + str[i] + '</div>';
 		ss.html(ss.html() + suggest);
 	}
+	
+	if (! Boolean(text)) {
+		$('#search_cwe_suggest').css('visibility', 'hidden');
+	} else {
+		$('#search_cwe_suggest').css('visibility', 'visible');
+	}
 };
 
 showUrlStaticResponse = function(text) {
@@ -195,9 +210,15 @@ showUrlStaticResponse = function(text) {
 	for (i = 0; i < len; i++) {
 		var suggest = '<div onmouseover="javascript:suggestOver(this);" ';
 		suggest += 'onmouseout="javascript:suggestOut(this);" ';
-		suggest += 'onclick="javascript:setUrlSearch(this.innerHTML);" ';
+		suggest += 'onclick="javascript:setUrlStaticSearch(this.innerHTML);" ';
 		suggest += 'class="suggest_link">' + str[i] + '</div>';
 		ss.html(ss.html() + suggest);
+	}
+
+	if (! Boolean(text)) {
+		$('#search_url_static_suggest').css('visibility', 'hidden');
+	} else {
+		$('#search_url_static_suggest').css('visibility', 'visible');
 	}
 };
 
@@ -210,9 +231,15 @@ showUrlDynamicResponse = function(text) {
 	for (i = 0; i < len; i++) {
 		var suggest = '<div onmouseover="javascript:suggestOver(this);" ';
 		suggest += 'onmouseout="javascript:suggestOut(this);" ';
-		suggest += 'onclick="javascript:setUrlSearch(this.innerHTML);" ';
+		suggest += 'onclick="javascript:setUrlDynamicSearch(this.innerHTML);" ';
 		suggest += 'class="suggest_link">' + str[i] + '</div>';
 		ss.html(ss.html() + suggest);
+	}
+	
+	if (! Boolean(text)) {
+		$('#search_url_dynamic_suggest').css('visibility', 'hidden');
+	} else {
+		$('#search_url_dynamic_suggest').css('visibility', 'visible');
 	}
 };
 
@@ -225,15 +252,18 @@ function suggestOut(div_value) {
 
 function setCweSearch(value) {
 	$('#txtSearch').val(value);
+	$('#search_cwe_suggest').css('visibility', 'hidden');
 	$('#search_cwe_suggest').html('');
 }
 
 function setUrlStaticSearch(value) {
 	$('#urlStaticSearch').val(value);
-	$('#search_url_suggest').html('');
+	$('#search_url_static_suggest').css('visibility', 'hidden');
+	$('#search_url_static_suggest').html('');
 }
 
 function setUrlDynamicSearch(value) {
 	$('#urlDynamicSearch').val(value);
-	$('#search_url_suggest').html('');
+	$('#search_url_dynamic_suggest').css('visibility', 'hidden');
+	$('#search_url_dynamic_suggest').html('');
 }

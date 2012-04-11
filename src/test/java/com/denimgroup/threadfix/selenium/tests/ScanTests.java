@@ -65,6 +65,8 @@ public class ScanTests extends BaseTest {
 		fileMap.put("Nessus", getScanFilePath("Dynamic","Nessus","nessus_report_TFTarget.xml") );
 		fileMap.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
 		fileMap.put("WebInspect", null);
+		fileMap.put("Brakeman", null);
+		fileMap.put("Acunetix WVS", null);
 		fileMap.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
 	}
 		

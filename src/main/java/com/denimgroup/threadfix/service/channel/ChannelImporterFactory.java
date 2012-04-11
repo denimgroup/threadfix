@@ -88,12 +88,31 @@ public class ChannelImporterFactory {
 		ChannelImporter channelImporter = null;
 		String channelName = applicationChannel.getChannelType().getName();
 
-		if (channelName.equals(ChannelType.CAT_NET)) {
-			channelImporter = new CatNetChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, vulnerabilityMapLogDao);
+
+		if (channelName.equals(ChannelType.ACUNETIX_WVS)){
+			channelImporter = new AcunetixChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.APPSCAN_DYNAMIC)) {
 			channelImporter = new AppScanWebImporter(channelTypeDao, channelVulnerabilityDao,
 					channelSeverityDao, genericVulnerabilityDao, vulnerabilityMapLogDao);
+		} else if (channelName.equals(ChannelType.ARACHNI)){
+			channelImporter = new ArachniChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.BRAKEMAN)){
+			channelImporter = new BrakemanChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.BURPSUITE)) {
+			channelImporter = new BurpSuiteChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.CAT_NET)) {
+				channelImporter = new CatNetChannelImporter(channelTypeDao, channelVulnerabilityDao,
+						channelSeverityDao, vulnerabilityMapLogDao);
+		} else if (channelName.equals(ChannelType.FINDBUGS)){
+			channelImporter = new FindBugsChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.NESSUS)){
+			channelImporter = new NessusChannelImporter(channelTypeDao, channelVulnerabilityDao, 
+					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.NETSPARKER)) {
 			channelImporter = new NetsparkerChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
@@ -106,23 +125,8 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.WEBINSPECT)) {
 			channelImporter = new WebInspectChannelImporter(channelTypeDao, channelVulnerabilityDao,
 					channelSeverityDao, vulnerabilityMapLogDao);
-		} else if (channelName.equals(ChannelType.BURPSUITE)) {
-			channelImporter = new BurpSuiteChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.FINDBUGS)){
-			channelImporter = new FindBugsChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.ZAPROXY)){
 			channelImporter = new ZaproxyChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.NESSUS)){
-			channelImporter = new NessusChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.ARACHNI)){
-			channelImporter = new ArachniChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.ACUNETIX_WVS)){
-			channelImporter = new AcunetixChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.FORTIFY) && isFortifyChannelImporterDefined()) {
 			try {
