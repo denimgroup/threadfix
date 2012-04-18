@@ -105,6 +105,11 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("ReportItem".equals(qName)) {
+	    		
+	    		if (currentChannelVulnCode.startsWith("GHDB")) {
+	    			currentChannelVulnCode = "Google Hacking Database vulnerability found.";
+	    		}
+	    		
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		

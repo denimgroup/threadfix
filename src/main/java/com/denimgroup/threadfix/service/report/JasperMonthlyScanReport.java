@@ -17,66 +17,134 @@ public class JasperMonthlyScanReport implements JRDataSource {
 	private List<Scan> scanList = new ArrayList<Scan>();
 	private int index = 0;
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
-	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<Integer, Integer>();
-			
-	public JasperMonthlyScanReport(List<Integer> applicationIdList, ScanDao scanDao) {
+
+	private List<Scan> normalizedScans = new ArrayList<Scan>();
+	
+	private Map<Integer, Integer> channelIdOldVulnCountHash = new HashMap<Integer, Integer>();
+
+	public JasperMonthlyScanReport(List<Integer> applicationIdList,
+			ScanDao scanDao) {
 		if (scanDao != null && applicationIdList != null)
-			this.scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+			this.scanList = scanDao
+					.retrieveByApplicationIdList(applicationIdList);
 
 		Collections.sort(this.scanList, Scan.getTimeComparator());
-		
-		// Insert empty scans for the between months so that the monthly reporting doesn't skip any
-		insertEmptyScans(this.scanList);
-		
-		Collections.sort(this.scanList, Scan.getTimeComparator());
-		
+
+		normalizeForMonths();
+
 		index = -1;
 	}
+
+	public void normalizeForMonths() {
+		int previousYear = -1, previousMonth = -1;
+		Scan currentScan = null;
+
+		for (Scan scan : this.scanList) {
+			if (previousYear == -1) {
+				currentScan = scan;
+				previousYear = scan.getImportTime().get(Calendar.YEAR);
+				previousMonth = scan.getImportTime().get(Calendar.MONTH);
+				addToHash(currentScan);
+			} else {
+				if (scan.getImportTime().get(Calendar.YEAR) == previousYear
+						&& scan.getImportTime().get(Calendar.MONTH) == previousMonth) {
+					// Merge the two scans
+
+				} else {
+					// Add the previous one to the list
+					finalizeScan(currentScan);
+					
+					// add a new current entry
+					currentScan = scan;
+					previousYear = scan.getImportTime().get(Calendar.YEAR);
+					previousMonth = scan.getImportTime().get(Calendar.MONTH);
+					addToHash(currentScan);
+				}
+			}
+		}
+		
+		insertEmptyScans(normalizedScans);
+	}
+	
+	public void addToHash(Scan initialScan) {
+		if (initialScan.getApplicationChannel() != null && initialScan.getApplicationChannel().getId() != null) {
+            Integer appChannelId = initialScan.getApplicationChannel().getId();
+            channelIdOldVulnCountHash.put(appChannelId, initialScan.getNumberOldVulnerabilitiesInitiallyFromThisChannel());
+		}
+	}
+	
+	public void merge(Scan scan, Scan scanToMerge) {
+		if (scanToMerge.getApplicationChannel() != null && scanToMerge.getApplicationChannel().getId() != null) {
+            Integer appChannelId = scanToMerge.getApplicationChannel().getId();
+            channelIdOldVulnCountHash.put(appChannelId, scanToMerge.getNumberOldVulnerabilitiesInitiallyFromThisChannel());
+		}
+		
+		scan.setNumberNewVulnerabilities(scanToMerge.getNumberNewVulnerabilities() + scan.getNumberNewVulnerabilities());
+		scan.setNumberResurfacedVulnerabilities(scanToMerge.getNumberResurfacedVulnerabilities() + scan.getNumberResurfacedVulnerabilities());
+	}
+	
+	public void finalizeScan(Scan currentScan) {
+		int total = 0;
+		for (Integer number : channelIdOldVulnCountHash.values()) {
+			total += number;
+		}
+		currentScan.setNumberOldVulnerabilities(total);
+		
+		normalizedScans.add(currentScan);
+	}
+	
 	
 	public void insertEmptyScans(List<Scan> scanList) {
-		
+
 		Scan previousScan = null;
 		List<Scan> scansToInsert = new ArrayList<Scan>();
-		
+
 		for (Scan scan : scanList) {
 			if (previousScan == null) {
 				previousScan = scan;
 				continue;
 			}
 			if (scan.getImportTime().after(previousScan.getImportTime())
-					&& (scan.getImportTime().get(Calendar.YEAR) != previousScan.getImportTime().get(Calendar.YEAR)
-					|| scan.getImportTime().get(Calendar.MONTH) != previousScan.getImportTime().get(Calendar.MONTH))) {
-				scansToInsert.addAll(getScansBetween(previousScan,scan));
+					&& (scan.getImportTime().get(Calendar.YEAR) != previousScan
+							.getImportTime().get(Calendar.YEAR) || scan
+							.getImportTime().get(Calendar.MONTH) != previousScan
+							.getImportTime().get(Calendar.MONTH))) {
+				scansToInsert.addAll(getScansBetween(previousScan, scan));
 			}
 			previousScan = scan;
 		}
-		
+
 		scanList.addAll(scansToInsert);
+		Collections.sort(scanList, Scan.getTimeComparator());
 	}
-	
-	//skipping null checks for now
+
+	// skipping null checks for now
 	public List<Scan> getScansBetween(Scan firstScan, Scan secondScan) {
 		List<Scan> betweenScans = new ArrayList<Scan>();
-		
+
 		Scan tempScan = firstScan;
-		
-		while(true) {
+
+		while (true) {
 			if (secondScan.getImportTime().after(tempScan.getImportTime())
-					&& (secondScan.getImportTime().get(Calendar.YEAR) != tempScan.getImportTime().get(Calendar.YEAR)
-					|| secondScan.getImportTime().get(Calendar.MONTH) != tempScan.getImportTime().get(Calendar.MONTH))) {
-				
+					&& (secondScan.getImportTime().get(Calendar.YEAR) != tempScan
+							.getImportTime().get(Calendar.YEAR) || secondScan
+							.getImportTime().get(Calendar.MONTH) != tempScan
+							.getImportTime().get(Calendar.MONTH))) {
+
 				Calendar newCalendar = Calendar.getInstance();
 				newCalendar.setTime(tempScan.getImportTime().getTime());
 				newCalendar.add(Calendar.MONTH, 1);
-				
+
 				if (secondScan.getImportTime().after(newCalendar)
-						&& (secondScan.getImportTime().get(Calendar.YEAR) != newCalendar.get(Calendar.YEAR)
-						|| secondScan.getImportTime().get(Calendar.MONTH) != newCalendar.get(Calendar.MONTH))) {
+						&& (secondScan.getImportTime().get(Calendar.YEAR) != newCalendar
+								.get(Calendar.YEAR) || secondScan
+								.getImportTime().get(Calendar.MONTH) != newCalendar
+								.get(Calendar.MONTH))) {
 					Scan newScan = new Scan();
 					newScan.setNumberClosedVulnerabilities(0);
 					newScan.setNumberNewVulnerabilities(0);
 					newScan.setNumberResurfacedVulnerabilities(0);
-					newScan.setNumberOldVulnerabilities(0);
+					newScan.setNumberOldVulnerabilities(firstScan.getNumberOldVulnerabilities());
 					newScan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(0);
 					newScan.setNumberTotalVulnerabilities(0);
 					newScan.setImportTime(newCalendar);
@@ -89,15 +157,17 @@ public class JasperMonthlyScanReport implements JRDataSource {
 				break;
 			}
 		}
-		
+
 		return betweenScans;
 	}
 
 	@Override
 	public Object getFieldValue(JRField field) {
-		if (field == null) return null;
+		if (field == null)
+			return null;
 		String name = field.getName();
-		if (name == null) return null;
+		if (name == null)
+			return null;
 
 		if (resultsHash.containsKey(name))
 			return resultsHash.get(name);
@@ -108,55 +178,34 @@ public class JasperMonthlyScanReport implements JRDataSource {
 	@Override
 	public boolean next() {
 		if (scanList != null && index < scanList.size() - 1) {
-			if (index == -1) 
+			if (index == -1)
 				index = 0;
 			else
 				index++;
 			buildHash();
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
-	private void buildHash() {
-		Scan scan = scanList.get(index);
-		
-		if (scan == null)
-			return;
-					
-		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
-		resultsHash.put("resurfacedVulns", scan.getNumberResurfacedVulnerabilities());
 
-		if (scan.getApplication() != null && scan.getApplication().getName() != null)
+	public void buildHash() {
+		resultsHash.clear();
+
+		Scan scan = scanList.get(index);
+
+		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
+		resultsHash.put("resurfacedVulns",
+				scan.getNumberResurfacedVulnerabilities());
+		resultsHash.put("oldVulns", scan.getNumberOldVulnerabilities()
+									- scan.getNumberResurfacedVulnerabilities());
+
+		if (scan.getApplication() != null
+				&& scan.getApplication().getName() != null)
 			resultsHash.put("name", scan.getApplication().getName());
-		
+
 		if (scan.getImportTime() != null)
 			resultsHash.put("importTime", scan.getImportTime());
-		
-		Integer appChannelId = null;
-		if (scan.getApplicationChannel() != null && scan.getApplicationChannel().getId() != null) {
-			appChannelId = scan.getApplicationChannel().getId();
-			
-			// Take out from the count old vulns from other channels.
-			Integer adjustedTotal = scan.getNumberTotalVulnerabilities() -
-									scan.getNumberOldVulnerabilities() +
-									scan.getNumberOldVulnerabilitiesInitiallyFromThisChannel();
-			
-			oldVulnsByChannelMap.put(appChannelId, adjustedTotal);
-		}
-		
-		// This code counts in the old vulns from other channels.
-		Integer numOld = scan.getNumberOldVulnerabilitiesInitiallyFromThisChannel();
-		if (numOld == null) numOld = 0;
-		
-		for (Integer key : oldVulnsByChannelMap.keySet()) {
-			if (key == null || oldVulnsByChannelMap.get(key) == null || 
-					(appChannelId != null && appChannelId.equals(key)))
-				continue;
-			numOld += oldVulnsByChannelMap.get(key);
-		}
-		
-		resultsHash.put("oldVulns", numOld - scan.getNumberResurfacedVulnerabilities());
+
 	}
+
 }
