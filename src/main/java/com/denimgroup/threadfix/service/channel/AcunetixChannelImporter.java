@@ -110,6 +110,10 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    			currentChannelVulnCode = "Google Hacking Database vulnerability found.";
 	    		}
 	    		
+	    		if (currentChannelVulnCode.endsWith(" (verified)")) {
+	    			currentChannelVulnCode = currentChannelVulnCode.replace(" (verified)", "");
+	    		}
+	    		
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		

@@ -9,7 +9,6 @@
 	
 	<div id="helpText">
 		ThreadFix API Keys are used to access the REST interface.<br/>
-		The REST interface is still in progress.
 	</div>
 	
 	<table class="formattedTable">

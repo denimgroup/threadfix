@@ -65,6 +65,10 @@ public class RemoteProvidersController {
 	
 	private final Log log = LogFactory.getLog(RemoteProvidersController.class);
 	
+	// TODO decide on a better set of contents here
+	private String USE_OLD_PASSWORD = "no password here.";
+	private String API_KEY_PREFIX = "************************";
+	
 	private RemoteProviderTypeService remoteProviderTypeService;
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private OrganizationService organizationService;
@@ -94,6 +98,12 @@ public class RemoteProvidersController {
 		log.info("Processing request for Remote Provider index.");
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
 		
+		for (RemoteProviderType type : typeList) {
+			if (type != null && type.getApiKeyString() != null) {
+				type.setApiKeyString(mask(type.getApiKeyString()));
+			}
+		}
+		
 		Object message = null;
 		if (request != null && request.getSession() != null) {
 			message = request.getSession().getAttribute("error");
@@ -105,6 +115,20 @@ public class RemoteProvidersController {
 		model.addAttribute("message", message);
 		model.addAttribute("remoteProviders", typeList);
 		return "config/remoteproviders/index";
+	}
+	
+	private String mask(String input) {
+		if (input != null) {
+			if (input.length() > 5) {
+				String replaced = input.replace(input.substring(0,input.length() - 4), API_KEY_PREFIX);
+				return replaced;
+			} else {
+				// should never get here, but let's not return the info anyway
+				return API_KEY_PREFIX;
+			}
+		} else {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value="/{typeId}/update", method = RequestMethod.GET)
@@ -237,6 +261,14 @@ public class RemoteProvidersController {
 	public ModelAndView configureStart(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for Remote Provider config page.");
 		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
+		 
+		if (remoteProviderType.getPassword() != null) {
+			// This will prevent actual password data being sent to the page
+			remoteProviderType.setPassword(USE_OLD_PASSWORD);
+		}
+		if (remoteProviderType.getApiKeyString() != null) {
+			remoteProviderType.setApiKeyString(mask(remoteProviderType.getApiKeyString()));
+		}
 		
 		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/configure");
 		modelAndView.addObject(remoteProviderType);
@@ -253,9 +285,26 @@ public class RemoteProvidersController {
 			RemoteProviderType databaseRemoteProviderType = remoteProviderTypeService.load(typeId);
 			
 			// TODO move to service layer
-			if (databaseRemoteProviderType == null || databaseRemoteProviderType.getUsername() == null ||
+			
+			if (remoteProviderType.getPassword() != null &&
+					remoteProviderType.getPassword().equals(USE_OLD_PASSWORD) &&
+					databaseRemoteProviderType != null &&
+					databaseRemoteProviderType.getPassword() != null) {
+				remoteProviderType.setPassword(databaseRemoteProviderType.getPassword());
+			}
+			
+			if (remoteProviderType.getApiKeyString() != null &&
+					remoteProviderType.getApiKeyString().startsWith(API_KEY_PREFIX) &&
+					databaseRemoteProviderType != null &&
+					databaseRemoteProviderType.getApiKeyString() != null) {
+				remoteProviderType.setApiKeyString(databaseRemoteProviderType.getApiKeyString());
+			}
+			
+			if (databaseRemoteProviderType == null || 
 					(remoteProviderType != null && remoteProviderType.getUsername() != null &&
 					!databaseRemoteProviderType.getUsername().equals(remoteProviderType.getUsername())) ||
+					(remoteProviderType != null && remoteProviderType.getPassword() != null &&
+					!databaseRemoteProviderType.getPassword().equals(remoteProviderType.getPassword())) ||
 					(remoteProviderType != null && remoteProviderType.getApiKeyString() != null &&
 					!databaseRemoteProviderType.getApiKeyString().equals(remoteProviderType.getApiKeyString()))) {
 			
@@ -297,6 +346,8 @@ public class RemoteProvidersController {
 					status.setComplete();
 					return "redirect:/configuration/remoteproviders";
 				}
+			} else {
+				log.info("No change was made to the credentials.");
 			}
 			
 			status.setComplete();

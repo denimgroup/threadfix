@@ -69,8 +69,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
-		log.info("Made it into WhiteHat getScan() method. API Key = "
-				+ remoteProviderApplication.getRemoteProviderType().getApiKeyString());
+		log.info("Made it into WhiteHat getScan() method.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKeyString();
 		
@@ -93,7 +92,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		String url = VULNS_URL + "?key=" + apiKey + EXTRA_PARAMS + siteId;
 		
-		log.info("Requesting site " + url);
+		log.info("Requesting site ID " + siteId);
 
 		inputStream = httpGet(url);
 

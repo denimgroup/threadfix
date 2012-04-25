@@ -1,8 +1,10 @@
 package com.denimgroup.threadfix.service.channel;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +23,15 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 
+/**
+ * This class currently handles JSON output from either the flat JSONArray version
+ * or the JSONObject version with the date and other information included.
+ * 
+ * @author mcollins
+ */
 public class BrakemanChannelImporter extends AbstractChannelImporter {
+	
+	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
 	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<String, Integer>();
@@ -67,6 +77,18 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		this.channelType = channelTypeDao.retrieveByName(ChannelType.BRAKEMAN);
 	}
 	
+	public Calendar getDate(String jsonString) {
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);
+			JSONObject scanInfo = jsonObject.getJSONObject("scan_info");
+			String dateString = scanInfo.getString("timestamp");
+			return getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy",dateString);
+		} catch (JSONException e) {
+			log.warn("JSON input was probably version 1.");
+			return null;
+		}
+	}
+	
 	@Override
 	public Scan parseInput() {
 		if (inputStream == null) {
@@ -76,10 +98,48 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		Scan scan = new Scan();
 		scan.setFindings(new ArrayList<Finding>());
 		scan.setApplicationChannel(applicationChannel);
+		
+		boolean isVersion2 = false;
+		
+		String inputString = null;
+		
+		try {
+			inputString = IOUtils.toString(inputStream);
+		} catch (IOException e) {
+			log.warn("Something went wrong with the input stream. Weird.", e);
+		}
+		
+		if (inputString == null) {
+			return null;
+		}
+		
+		JSONObject resultingObject = null;
+		
+		if (inputString.trim().startsWith("{")) {
+			try {
+				resultingObject = new JSONObject(inputString);
+				if (resultingObject != null) {
+					isVersion2 = true;
+				}
+			} catch (JSONException e) {
+				log.info("JSONException raised when trying to create a JSON Object. Probably version 1.");
+			}
+		}
 	
 		try {
-			JSONArray jsonArray = new JSONArray(IOUtils.toString(inputStream));
-						
+			JSONArray jsonArray = null;
+			
+			if (isVersion2) {
+				jsonArray = resultingObject.getJSONArray("warnings");
+				scan.setImportTime(getDate(inputString));
+			} else {
+				jsonArray = new JSONArray(inputString);
+			}
+			
+			if (jsonArray == null) {
+				return null;
+			}
+									
 			for (int index = 0; index < jsonArray.length(); index++) {
 				Object item = jsonArray.get(index);
 				
@@ -89,8 +149,14 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					String severityCode = String.valueOf(CONFIDENCE_MAP.get(jsonItem.getString("confidence")) +
 											SEVERITIES_MAP.get(jsonItem.getString("warning_type")));
 					
+					String parameter = null;
+					
+					if (isVersion2) {
+						parameter = jsonItem.getString("user_input");
+					}
+					
 					Finding finding = constructFinding(jsonItem.getString("file"),
-													   null,
+													   parameter,
 													   jsonItem.getString("warning_type"),
 													   severityCode);
 					
@@ -102,6 +168,11 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 							DataFlowElement element = new DataFlowElement();
 							element.setLineText(jsonItem.getString("code"));
 							element.setSourceFileName(jsonItem.getString("file"));
+							if (isVersion2) {
+								String lineString = jsonItem.getString("line");
+								if (!lineString.equals("null"))
+									element.setLineNumber(Integer.valueOf(lineString));
+							}
 							finding.setDataFlowElements(Arrays.asList(new DataFlowElement[] {element}));
 						}
 						
@@ -112,16 +183,102 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		
 		} catch (JSONException e) {
 			log.warn(e);
-		} catch (IOException e) {
-			log.warn(e);
 		}
 		
 		return scan;
 	}
 
+	private String getTestStatus() {	    	
+    	if (!correctFormat)
+    		testStatus = WRONG_FORMAT_ERROR;
+    	else if (hasDate)
+    		testStatus = checkTestDate();
+    	if (SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings)
+    		testStatus = EMPTY_SCAN_ERROR;
+    	else if (testStatus == null)
+    		testStatus = SUCCESSFUL_SCAN;
+    	
+    	return testStatus;
+    }
+	
 	@Override
 	public String checkFile() {
-		return SUCCESSFUL_SCAN;
+		
+		boolean done = false;
+		
+		byte[] byteArray = null;
+		try {
+			byteArray = IOUtils.toByteArray(inputStream);
+			inputStream = new ByteArrayInputStream(byteArray);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (byteArray == null) {
+			return WRONG_FORMAT_ERROR;
+		}
+		
+		String jsonString = new String(byteArray);
+		
+		// Check the first character to avoid a possible exception
+		if (jsonString.trim().startsWith("[")) {
+			try {
+				JSONArray array = new JSONArray(jsonString);
+				if (array != null) {
+					done = true;
+					log.info("Scan is using the old JSON output format.");
+					if (array.length() > 0) {
+						hasFindings = true;
+						JSONObject oneFinding = array.getJSONObject(0);
+						if (oneFinding != null) {
+							correctFormat = oneFinding.get("location") != null &&
+											oneFinding.get("file") != null &&
+											oneFinding.get("message") != null &&
+											oneFinding.get("confidence") != null &&
+											oneFinding.get("code") != null &&
+											oneFinding.get("warning_type") != null;										
+						}
+					}
+				}
+			} catch (JSONException e) {
+				log.warn(e);
+			}
+		}
+		
+		// Output Version 2
+		// Check the first character to avoid a possible exception
+		if (!done && jsonString.trim().startsWith("{")) {
+			try {
+				JSONObject object = new JSONObject(jsonString);
+				if (object != null) {
+					log.info("Scan is using the new JSON output format.");
+					
+					testDate = getDate(jsonString);
+					hasDate = testDate != null;
+					
+					JSONArray array = object.getJSONArray("warnings");
+					
+					if (array.length() > 0) {
+						hasFindings = true;
+						JSONObject oneFinding = array.getJSONObject(0);
+						if (oneFinding != null) {
+							correctFormat = oneFinding.get("location") != null &&
+											oneFinding.get("file") != null &&
+											oneFinding.get("message") != null &&
+											oneFinding.get("confidence") != null &&
+											oneFinding.get("code") != null &&
+											oneFinding.get("user_input") != null &&
+											oneFinding.get("line") != null &&
+											oneFinding.get("warning_type") != null;										
+						}
+					}
+				}
+			} catch (JSONException e) {
+				log.warn(e);
+			}
+		}
+
+		return getTestStatus();
 	}
 
 }
