@@ -116,7 +116,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 		
 		InputStream stream = httpGet(SITES_URL + "?key=" + apiKey);
-		
+				
 		parse(stream, parser);
 		
 		try {

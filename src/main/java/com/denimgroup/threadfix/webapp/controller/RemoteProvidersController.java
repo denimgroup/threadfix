@@ -302,11 +302,11 @@ public class RemoteProvidersController {
 			
 			if (databaseRemoteProviderType == null || 
 					(remoteProviderType != null && remoteProviderType.getUsername() != null &&
-					!databaseRemoteProviderType.getUsername().equals(remoteProviderType.getUsername())) ||
+					!remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername())) ||
 					(remoteProviderType != null && remoteProviderType.getPassword() != null &&
-					!databaseRemoteProviderType.getPassword().equals(remoteProviderType.getPassword())) ||
+					!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) ||
 					(remoteProviderType != null && remoteProviderType.getApiKeyString() != null &&
-					!databaseRemoteProviderType.getApiKeyString().equals(remoteProviderType.getApiKeyString()))) {
+					!remoteProviderType.getApiKeyString().equals(databaseRemoteProviderType.getApiKeyString()))) {
 			
 				List<RemoteProviderApplication> apps = remoteProviderApplicationService.getApplications(
 																					remoteProviderType);
@@ -315,8 +315,7 @@ public class RemoteProvidersController {
 					// Here the apps coming back were null. For now let's put an error page.
 					// TODO finalize this process.
 					String field = null;
-					if (remoteProviderType.getApiKeyString() != null && !remoteProviderType.
-								getApiKeyString().trim().equals("")) {
+					if (remoteProviderType.getHasApiKey()) {
 						field = "apiKeyString";
 					} else {
 						field = "username";
