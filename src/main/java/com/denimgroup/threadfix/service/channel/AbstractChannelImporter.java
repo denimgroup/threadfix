@@ -87,6 +87,11 @@ import com.denimgroup.threadfix.data.entities.VulnerabilityMapLog;
  * to parseSAXInput(). You can easily create Findings using constructFinding(). 
  * If you add your findings to the saxFindingList and the date inside the
  * date field from this class everything will parse correctly.
+ * 
+ * <br><br>
+ * 
+ * Note that RemoteProviders also implement this class.
+ * 
  * @author mcollins
  * 
  */

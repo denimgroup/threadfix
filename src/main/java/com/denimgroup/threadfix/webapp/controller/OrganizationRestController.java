@@ -24,6 +24,16 @@ public class OrganizationRestController extends RestController {
 	public static final String CREATION_FAILED = "New Team creation failed.";
 	public static final String LOOKUP_FAILED = "Team Lookup failed.";
 	
+	private final static String DETAIL = "teamIDLookup", 
+		LOOKUP = "teamNameLookup",
+		NEW = "newTeam",
+		INDEX = "teamList";
+	
+	// TODO finalize which methods need to be restricted
+	static {
+		restrictedMethods.add(NEW);
+	}
+	
 	@Autowired
 	public OrganizationRestController(OrganizationService organizationService,
 			APIKeyService apiKeyService) {
@@ -36,8 +46,9 @@ public class OrganizationRestController extends RestController {
 			HttpServletRequest request) {
 		log.info("Received REST request for Team with ID " + teamId + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, DETAIL);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 
 		Organization org = organizationService.loadOrganization(teamId);
@@ -59,8 +70,9 @@ public class OrganizationRestController extends RestController {
 		
 		log.info("Received REST request for Team with ID " + teamName + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, LOOKUP);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 
 		Organization org = organizationService.loadOrganization(teamName);
@@ -79,8 +91,9 @@ public class OrganizationRestController extends RestController {
 	public @ResponseBody Object newTeam(HttpServletRequest request) {
 		log.info("Received REST request for new Team.");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, NEW);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 
 		if (request.getParameter("name") != null) {
@@ -107,8 +120,9 @@ public class OrganizationRestController extends RestController {
 	public @ResponseBody Object teamList(HttpServletRequest request) {
 		log.info("Received REST request for Team list.");
 		
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, INDEX);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		List<Organization> organizations = organizationService.loadAll();

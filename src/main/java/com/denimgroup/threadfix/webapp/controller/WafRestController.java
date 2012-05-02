@@ -31,6 +31,20 @@ public class WafRestController extends RestController {
 	private WafService wafService;
 	private LogParserService logParserService;
 	
+	private final static String INDEX = "wafIndex", 
+		DETAIL = "wafDetail", 
+		LOOKUP = "wafLookup",
+		RULES = "getRules",
+		NEW = "newWaf",
+		LOG = "uploadWafLog";
+	
+	// TODO decide which methods need to be restricted
+	static {
+		restrictedMethods.add(NEW);
+		restrictedMethods.add(LOG);
+		restrictedMethods.add(RULES);
+	}
+	
 	@Autowired
 	public WafRestController(APIKeyService apiKeyService, 
 			WafService wafService, LogParserService logParserService) {
@@ -49,8 +63,9 @@ public class WafRestController extends RestController {
 	public @ResponseBody Object wafIndex(HttpServletRequest request) {
 		log.info("Received REST request for WAFs");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, INDEX);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		List<Waf> wafs = wafService.loadAll();
@@ -66,8 +81,9 @@ public class WafRestController extends RestController {
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for WAF with ID = " + wafId + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, DETAIL);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);
@@ -88,8 +104,9 @@ public class WafRestController extends RestController {
 			log.info("Received REST request for WAF with a missing name parameter.");
 		}
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, LOOKUP);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		if (request.getParameter("name") == null) {
@@ -116,8 +133,9 @@ public class WafRestController extends RestController {
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for rules from WAF with ID = " + wafId + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, RULES);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);
@@ -134,8 +152,9 @@ public class WafRestController extends RestController {
 	public @ResponseBody Object newWaf(HttpServletRequest request) {
 		log.info("Received REST request for a new WAF.");
 		
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, NEW);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		String name = request.getParameter("name");
@@ -172,8 +191,9 @@ public class WafRestController extends RestController {
 			@PathVariable("wafId") int wafId, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request for a new WAF.");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, LOG);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);

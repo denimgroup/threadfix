@@ -59,6 +59,11 @@ public class HibernateWafRuleDao implements WafRuleDao {
 		return sessionFactory.getCurrentSession()
 				.createQuery("from WafRule wafRule order by wafRule.id").list();
 	}
+	
+	@Override
+	public void delete(WafRule rule) {
+		sessionFactory.getCurrentSession().delete(rule);
+	}
 
 	@Override
 	public WafRule retrieveById(int id) {

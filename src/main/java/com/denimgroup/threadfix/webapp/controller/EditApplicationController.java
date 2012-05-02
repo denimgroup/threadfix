@@ -170,6 +170,10 @@ public class EditApplicationController {
 				result.rejectValue("name", "errors.nameTaken");
 			}
 			
+			Integer databaseWafId = null;
+			if (databaseApplication.getWaf() != null)
+				databaseWafId = databaseApplication.getWaf().getId();
+			
 			if (result.hasErrors())
 				return "applications/form";
 			
@@ -180,9 +184,13 @@ public class EditApplicationController {
 				
 				scanMergeService.updateSurfaceLocation(app);
 				scanMergeService.updateVulnerabilities(app);
-				
+								
 				applicationService.storeApplication(app);
 			}
+			
+			// remove any outdated vuln -> waf rule links
+			// TODO clean this up
+			applicationService.updateWafRules(applicationService.loadApplication(application.getId()), databaseWafId);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			

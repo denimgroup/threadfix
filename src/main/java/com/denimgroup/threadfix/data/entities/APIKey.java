@@ -35,6 +35,8 @@ public class APIKey extends BaseEntity {
 
 	private String key;
 	private String note;
+	
+	private boolean isRestrictedKey;
 
 	@Column(length = 50, nullable = false)
 	public String getApiKey() {
@@ -52,5 +54,14 @@ public class APIKey extends BaseEntity {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+	
+	@Column(nullable = false)
+	public boolean getIsRestrictedKey() {
+		return isRestrictedKey;
+	}
+	
+	public void setIsRestrictedKey(boolean restricted) {
+		this.isRestrictedKey = restricted;
 	}
 }

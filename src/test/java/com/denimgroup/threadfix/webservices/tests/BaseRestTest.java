@@ -46,9 +46,12 @@ public abstract class BaseRestTest {
 	
 	protected final Log log = LogFactory.getLog(BaseRestTest.class);
 	
-	public static final String GOOD_API_KEY = "Sy8bIjCGIQ8lALgjeBBIcGRxCCUngVPY3d4v18Cqwfw";
-	public static final String BAD_API_KEY =  "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
-	public static final String BASE_URL = "http://satoffice043:8080/threadfix/rest";
+	public static final String GOOD_API_KEY = "N9pxlhcBimM019qNkDLaQp9KTQTxmTdI1BqDcKLFUr4";
+	public static final String BAD_API_KEY  = "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
+	public static final String RESTRICTED_API_KEY = "73s5nQ69zLENqjk3YEKjMV45pljqYaf8mnTbXDpRPjk";
+	public static final String BASE_URL = "https://localhost:8443/threadfix/rest";
+	public static final String RESTRICTED_URL_NOT_RETURNED = "The restricted URL error was not returned correctly.";
+	public static final String RESTRICTED_URL_RETURNED = "The restricted URL error was returned when it shouldn't have been.";
 
 	public String httpPostFile(String request, String fileName, String[] paramNames,
 			String[] paramVals) {

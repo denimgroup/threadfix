@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,13 +79,19 @@ public class APIKeyController {
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String newSubmit(@RequestParam String note) {
-		APIKey newAPIKey = apiKeyService.createAPIKey(note);
+	public String newSubmit(HttpServletRequest request, @RequestParam String note) {
+		
+		boolean restricted = true;
+		
+		if (request.isUserInRole("ROLE_ADMIN")) {
+			restricted = request.getParameter("isRestrictedKey") != null;
+		}
+		
+		APIKey newAPIKey = apiKeyService.createAPIKey(note, restricted);
 		apiKeyService.storeAPIKey(newAPIKey);
 		
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		log.debug(currentUser + " has created an API key with the key " + newAPIKey.getApiKey() +
-				", the note " + note +
+		log.debug(currentUser + " has created an API key with the note " + note +
 				", and the ID " + newAPIKey.getId());
 		return "redirect:/configuration/keys";
 	}
@@ -116,11 +124,18 @@ public class APIKeyController {
 	}
 	
 	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.POST)
-	public String saveEdit(@PathVariable("keyId") int keyId, @RequestParam String note) {
+	public String saveEdit(HttpServletRequest request, 
+			@PathVariable("keyId") int keyId, @RequestParam String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
+		
+		boolean restricted = request.getParameter("isRestrictedKey") != null;
 		
 		if (note != null) {
 			apiKey.setNote(note);
+			
+			if (request.isUserInRole("ROLE_ADMIN")) {
+				apiKey.setIsRestrictedKey(restricted);
+			}
 			apiKeyService.storeAPIKey(apiKey);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));

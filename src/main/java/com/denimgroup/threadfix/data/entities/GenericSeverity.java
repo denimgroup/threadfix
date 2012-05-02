@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,6 +48,18 @@ public class GenericSeverity extends BaseEntity {
 	public static final String MEDIUM = "Medium";
 	public static final String HIGH = "High";
 	public static final String CRITICAL = "Critical";
+	
+	/**
+	 * This field is helpful when you need to compare severities numerically.
+	 */
+	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<String, Integer>();
+	static {
+		NUMERIC_MAP.put(INFO, 1);
+		NUMERIC_MAP.put(LOW, 2);
+		NUMERIC_MAP.put(MEDIUM, 3);
+		NUMERIC_MAP.put(HIGH, 4);
+		NUMERIC_MAP.put(CRITICAL, 5);
+	}
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")

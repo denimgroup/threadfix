@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.webservices.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		
 		// Bad Key
 		teamsUrl = BASE_URL + "/teams/?apiKey=" + BAD_API_KEY;
-		assertTrue(httpGet(teamsUrl).equals(RestController.API_KEY_ERROR));
+		assertTrue(httpGet(teamsUrl).equals(RestController.API_KEY_NOT_FOUND_ERROR));
 	}
 	
 	@Test
@@ -42,7 +43,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		// Bad Key
 		String error = httpPost(creationUrl, new String[] {"apiKey", "name"}, 
 							new String[] {BAD_API_KEY, "Normal Team Name"});
-		assertTrue(error.equals(RestController.API_KEY_ERROR));
+		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 		
 		String response = httpPost(creationUrl, new String[] {"apiKey", "name"}, new String[] {GOOD_API_KEY, getRandomString(2000)});
 		assertTrue(response.equals(OrganizationRestController.CREATION_FAILED));
@@ -78,7 +79,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		
 		// Bad Key
 		String error = httpGet(baseLookupUrl + "1" + apiKeySegment + BAD_API_KEY);
-		assertTrue(error.equals(RestController.API_KEY_ERROR));
+		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 		
 		if (httpGet(lookupUrl).equals(OrganizationRestController.LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/new", 
@@ -100,5 +101,38 @@ public class RestOrganizationTests extends BaseRestTest {
 		// Bad ID
 		String badLookupUrl = baseLookupUrl + "100000000" + apiKeySegment + GOOD_API_KEY;
 		assertTrue(httpGet(badLookupUrl).equals(OrganizationRestController.LOOKUP_FAILED));
+	}
+	
+	/**
+	 * Test restricted URLs using ThreadFixRestClient. This test will need
+	 * to be updated if the permissions change or any methods are added.
+	 */
+	@Test
+	public void testRestrictedMethods() {
+		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+		goodClient.setKey(GOOD_API_KEY);
+		
+		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
+		restrictedClient.setKey(RESTRICTED_API_KEY);
+		
+		String teamName = getRandomString(23);
+		Integer teamId = getId(getJSONObject(goodClient.createTeam(teamName)));
+
+		String result = restrictedClient.createTeam(getRandomString(15));
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+
+		result = restrictedClient.searchForTeamById(teamId.toString());
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.searchForTeamByName(teamName);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = httpGet(BASE_URL + "/teams/?apiKey=" + RESTRICTED_API_KEY);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
 	}
 }

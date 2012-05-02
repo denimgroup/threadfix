@@ -7,6 +7,12 @@
 <body id="apps">
 	<h2><c:out value="${ surveyResult.survey.name }" /></h2>
 	
+	<div id="helpText">The Software Assurance Maturity Model Interview Template was authored by Nick Coblentz. 
+						<br> It is included here under the Creative Commons Attribution-ShareAlike 3.0 License.
+						<br> To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/3.0/">http://creativecommons.org/licenses/by-sa/3.0/</a>
+						<br> The Software Assurance Maturity Model (SAMM) was created by Pravir Chandra.
+	</div>
+	
 	<table class="dataTable">
 		<tbody>
 			<tr>

@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.webservices.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;
 import com.denimgroup.threadfix.webapp.controller.RestController;
 import com.denimgroup.threadfix.webapp.controller.WafRestController;
@@ -28,7 +30,7 @@ public class RestWafTests extends BaseRestTest {
 
 		// Bad Key
 		indexUrl = BASE_URL + "/teams/?apiKey=" + BAD_API_KEY;
-		assertTrue(httpGet(indexUrl).equals(RestController.API_KEY_ERROR));
+		assertTrue(httpGet(indexUrl).equals(RestController.API_KEY_NOT_FOUND_ERROR));
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class RestWafTests extends BaseRestTest {
 		
 		// Bad Key
 		wafDetailUrl = BASE_URL + "/teams/?apiKey=" + BAD_API_KEY;
-		assertTrue(httpGet(wafDetailUrl).equals(RestController.API_KEY_ERROR));
+		assertTrue(httpGet(wafDetailUrl).equals(RestController.API_KEY_NOT_FOUND_ERROR));
 	}
 	
 	@Test
@@ -351,6 +353,48 @@ public class RestWafTests extends BaseRestTest {
 		
 		assertTrue(getJSONArray(result) != null);
 		assertTrue(getJSONArray(result).length() != 0);
+	}
+	
+	/**
+	 * Test restricted URLs using ThreadFixRestClient. This test will need
+	 * to be updated if the permissions change or any methods are added.
+	 */
+	@Test
+	public void testRestrictedMethods() {
+		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+		goodClient.setKey(GOOD_API_KEY);
+		
+		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
+		restrictedClient.setKey(RESTRICTED_API_KEY);
+		
+		String response = httpGet(BASE_URL + "/wafs?apiKey=" + GOOD_API_KEY);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				response.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		String wafName = getRandomString(16);
+		String wafId = getId(getJSONObject(goodClient.createWaf(wafName, WafType.MOD_SECURITY)))
+							.toString();
+		
+		String result = restrictedClient.searchForWafById(wafId);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.searchForWafByName(wafName);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.getRules(wafId);
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		URL url = this.getClass().getResource(
+				"/SupportingFiles/Realtime/ModSecurity/mod-security-log.txt");
+		File testFile = new File(url.getFile());
+		result = httpPostFile(BASE_URL + "/wafs/" + wafId + "/uploadLog", 
+				testFile,
+				new String[] { "apiKey" },
+				new String[] {  RESTRICTED_API_KEY });
+		
 	}
 
 }

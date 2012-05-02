@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +35,13 @@ import org.springframework.validation.BindingResult;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
@@ -47,14 +52,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private ApplicationDao applicationDao = null;
 	private DefectTrackerDao defectTrackerDao = null;
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
+	private WafRuleDao wafRuleDao = null;
+	private VulnerabilityDao vulnerabilityDao = null;
 
 	@Autowired
 	public ApplicationServiceImpl(ApplicationDao applicationDao, 
 			DefectTrackerDao defectTrackerDao,
-			RemoteProviderApplicationDao remoteProviderApplicationDao) {
+			RemoteProviderApplicationDao remoteProviderApplicationDao,
+			WafRuleDao wafRuleDao,
+			VulnerabilityDao vulnerabilityDao) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
+		this.wafRuleDao = wafRuleDao;
+		this.vulnerabilityDao = vulnerabilityDao;
 	}
 
 	@Override
@@ -189,5 +200,33 @@ public class ApplicationServiceImpl implements ApplicationService {
 				
 		Application databaseApplication = loadApplication(application.getName().trim());
 		return databaseApplication == null;
+	}
+	
+	@Override
+	public void updateWafRules(Application application, Integer dbApplicationWafId) {
+		if (application == null || application.getId() == null || 
+				dbApplicationWafId == null)
+			return;
+
+		// if the new app doesn't have a WAF or the IDs don't match, need to remove the rules
+		if (application.getWaf() == null || 
+				(application.getVulnerabilities() != null &&
+				 application.getWaf().getId() != null &&
+				 !dbApplicationWafId.equals(application.getWaf().getId()))) {
+			
+			// Database vulns are still in session, also the vulns themselves shouldn't have changed
+			// since we were only editing the information about the Application object and not its 
+			// vulnerabilities.
+			for (Vulnerability vulnerability : application.getVulnerabilities()) {
+				if (vulnerability != null && vulnerability.getWafRules() != null) {
+					for (WafRule wafRule : vulnerability.getWafRules()) {
+						wafRuleDao.delete(wafRule);
+					}
+					vulnerability.setWafRuleGeneratedTime(null);
+					vulnerability.setWafRules(new ArrayList<WafRule>());
+					vulnerabilityDao.saveOrUpdate(vulnerability);
+				}
+			}
+		}
 	}
 }

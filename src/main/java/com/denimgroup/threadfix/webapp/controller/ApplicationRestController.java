@@ -48,6 +48,22 @@ public class ApplicationRestController extends RestController {
 	private ApplicationChannelService applicationChannelService;
 	private WafService wafService;
 	
+	private final static String DETAIL = "applicationDetail", 
+		LOOKUP = "applicationLookup",
+		NEW = "newApplication",
+		SET_WAF = "setWaf",
+		CHANNEL_LOOKUP = "searchForChannel",
+		UPLOAD = "uploadScan",
+		ADD_CHANNEL = "addChannel";
+
+	// TODO finalize which methods need to be restricted
+	static {
+		restrictedMethods.add(NEW);
+		restrictedMethods.add(UPLOAD);
+		restrictedMethods.add(SET_WAF);
+		restrictedMethods.add(ADD_CHANNEL);
+	}
+	
 	@Autowired
 	public ApplicationRestController(OrganizationService organizationService,
 			APIKeyService apiKeyService, ApplicationService applicationService,
@@ -77,8 +93,9 @@ public class ApplicationRestController extends RestController {
 			@PathVariable("teamId") int teamId) {
 		log.info("Received REST request for a new Application.");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, NEW);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		// By not using @RequestParam notations, we can catch the error in the code
@@ -132,8 +149,9 @@ public class ApplicationRestController extends RestController {
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for Applications with teamId = " + appId + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, DETAIL);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		Application application = applicationService.loadApplication(appId);
@@ -152,12 +170,13 @@ public class ApplicationRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody Object applicationDetail(HttpServletRequest request) {
+	public @ResponseBody Object applicationLookup(HttpServletRequest request) {
 		
 		String appName = request.getParameter("name");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, LOOKUP);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		if (appName == null) {
@@ -188,8 +207,9 @@ public class ApplicationRestController extends RestController {
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, UPLOAD);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		String returnValue = scanService.checkFile(channelId, file);
@@ -222,8 +242,9 @@ public class ApplicationRestController extends RestController {
 				" to the application with ID " + appId +".");
 		}
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, ADD_CHANNEL);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		if (channelName == null) {
@@ -278,8 +299,9 @@ public class ApplicationRestController extends RestController {
 				" to the application with ID " + appId +".");
 		}
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, CHANNEL_LOOKUP);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		if (channelName == null) {
@@ -340,8 +362,9 @@ public class ApplicationRestController extends RestController {
 			return SET_WAF_FAILED;
 		}
 
-		if (!checkKey(request)) {
-			return API_KEY_ERROR;
+		String result = checkKey(request, SET_WAF);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
 		}
 		
 		Application application = applicationService.loadApplication(appId);
@@ -354,7 +377,16 @@ public class ApplicationRestController extends RestController {
 			log.warn("Invalid WAF ID");
 			return SET_WAF_FAILED;
 		} else {
+			
+			// Delete WAF rules if the WAF has changed
+			Integer oldWafId = null;
+			
+			if (application.getWaf() != null && application.getWaf().getId() != null) {
+				oldWafId = application.getWaf().getId();
+			}
+			
 			application.setWaf(waf);
+			applicationService.updateWafRules(application, oldWafId);
 			applicationService.storeApplication(application);
 			return application;
 		}

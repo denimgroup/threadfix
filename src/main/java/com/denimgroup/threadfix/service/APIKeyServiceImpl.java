@@ -60,6 +60,11 @@ public class APIKeyServiceImpl implements APIKeyService {
 	public APIKey loadAPIKey(int apiKeyId) {
 		return apiKeyDao.retrieveById(apiKeyId);
 	}
+	
+	@Override
+	public APIKey loadAPIKey(String key) {		
+		return apiKeyDao.retrieveByKey(key);
+	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -74,7 +79,7 @@ public class APIKeyServiceImpl implements APIKeyService {
 	}
 
 	@Override
-	public APIKey createAPIKey(String note) {
+	public APIKey createAPIKey(String note, boolean restricted) {
 		APIKey key = new APIKey();
 		
 		if (note != null && note.length() > 255)
@@ -86,7 +91,7 @@ public class APIKeyServiceImpl implements APIKeyService {
 			keyString = keyString.substring(0, 49);
 		
 		key.setNote(note);
-		
+		key.setIsRestrictedKey(restricted);
 		key.setApiKey(keyString);
 		
 		return key;
@@ -127,10 +132,5 @@ public class APIKeyServiceImpl implements APIKeyService {
 				(byte)((data >> 8) & 0xff),
 				(byte)((data >> 0) & 0xff),
 		};
-	}
-
-	@Override
-	public boolean checkKey(String key) {		
-		return apiKeyDao.retrieveByKey(key) != null;
 	}
 }

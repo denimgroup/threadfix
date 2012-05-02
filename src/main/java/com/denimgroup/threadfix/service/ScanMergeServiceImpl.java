@@ -906,20 +906,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 								.getNumberTotalVulnerabilities() - 1);
 					}
 
-					vuln.getFindings().add(finding);
-					// update the generic severity
-					if (vuln.getGenericSeverity() != null
-							&& vuln.getGenericSeverity().getId() != null
-							&& finding.getChannelSeverity() != null
-							&& getGenericSeverity(finding.getChannelSeverity()) != null
-							&& getGenericSeverity(finding.getChannelSeverity())
-									.getId() != null
-							&& vuln.getGenericSeverity().getId().intValue() > getGenericSeverity(
-									finding.getChannelSeverity()).getId()
-									.intValue())
-						vuln.setGenericSeverity(getGenericSeverity(finding
-								.getChannelSeverity()));
-					finding.setVulnerability(vuln);
+					addToVuln(vuln, finding);
 					break;
 				}
 			}
@@ -940,8 +927,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 									.getNumberNewVulnerabilities() - 1);
 						}
 
-						newVuln.getFindings().add(finding);
-						finding.setVulnerability(newVuln);
+						addToVuln(newVuln, finding);
 						break;
 					}
 				}
@@ -978,6 +964,26 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		} else {
 			log.info("Finished application merge.");
 		}
+	}
+	
+	private void addToVuln(Vulnerability vuln, Finding finding) {
+		vuln.getFindings().add(finding);
+		
+		// update the generic severity
+		if (vuln.getGenericSeverity() == null || 
+				(vuln.getGenericSeverity().getName() != null
+				&& finding.getChannelSeverity() != null
+				&& getGenericSeverity(finding.getChannelSeverity()) != null
+				&& getGenericSeverity(finding.getChannelSeverity())
+						.getName() != null
+				&& GenericSeverity.NUMERIC_MAP.get(vuln.getGenericSeverity().getName()) < 
+				   GenericSeverity.NUMERIC_MAP.get(
+						   getGenericSeverity(finding.getChannelSeverity()).getName()))) {
+			vuln.setGenericSeverity(getGenericSeverity(finding
+					.getChannelSeverity()));
+		}
+		
+		finding.setVulnerability(vuln);
 	}
 	
 	/**

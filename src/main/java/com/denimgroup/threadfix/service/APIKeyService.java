@@ -28,7 +28,7 @@ import java.util.List;
 import com.denimgroup.threadfix.data.entities.APIKey;
 
 /**
- * @author bbeverly
+ * @author mcollins
  * 
  */
 public interface APIKeyService {
@@ -43,6 +43,13 @@ public interface APIKeyService {
 	 * @return
 	 */
 	APIKey loadAPIKey(int apiKeyId);
+	
+	/**
+	 * Load the API key from the database
+	 * @param key
+	 * @return
+	 */
+	APIKey loadAPIKey(String key);
 
 	/**
 	 * @param apiKey
@@ -59,13 +66,6 @@ public interface APIKeyService {
 	 * @param note
 	 * @return
 	 */
-	APIKey createAPIKey(String note);
-
-	/**
-	 * Check to see if the key is in the database
-	 * @param key
-	 * @return
-	 */
-	boolean checkKey(String key);
+	APIKey createAPIKey(String note, boolean restricted);
 	
 }

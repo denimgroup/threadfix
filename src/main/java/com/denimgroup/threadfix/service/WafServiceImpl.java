@@ -89,7 +89,16 @@ public class WafServiceImpl implements WafService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteById(int wafId) {
-		wafDao.deleteById(wafId);
+		Waf waf = loadWaf(wafId);
+		
+		if (waf != null) {
+			if (waf.getWafRules() != null) {
+				for (WafRule rule : waf.getWafRules()) {
+					wafRuleDao.delete(rule);
+				}
+			}
+			wafDao.deleteById(wafId);
+		}
 	}
 
 	@Override

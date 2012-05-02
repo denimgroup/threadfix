@@ -49,7 +49,6 @@ import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
@@ -194,17 +193,6 @@ public class ScanServiceImpl implements ScanService {
 				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
 				genericVulnerabilityDao, vulnerabilityMapLogDao);
 		
-		if (channel.getChannelType() != null && channel.getChannelType().getName() != null){
-			if (channel.getChannelType().getName().equals(ChannelType.SENTINEL)) {
-				log.debug("The Sentinel importer should not be accessed this way. Use the links.");
-				return ChannelImporter.SENTINEL_ERROR;
-			} else if (channel.getChannelType().getName().equals(ChannelType.MANUAL)) {
-				log.debug("You cannot upload a scan to the Manual channel.");
-				return ChannelImporter.MANUAL_ERROR;
-			}
-		}
-		
-		
 		ChannelImporter importer = factory.getChannelImporter(channel);
 		
 		if (importer == null) {
@@ -333,12 +321,6 @@ public class ScanServiceImpl implements ScanService {
 		if (importer == null) {
 			if (!diskFile.delete()) {
 				diskFile.deleteOnExit();
-			}
-			if (applicationChannel.getChannelType() != null && applicationChannel.getChannelType().getName() != null){
-				if (applicationChannel.getChannelType().getName().equals(ChannelType.SENTINEL))
-					return ChannelImporter.SENTINEL_ERROR;
-				if (applicationChannel.getChannelType().getName().equals(ChannelType.MANUAL))
-					return ChannelImporter.MANUAL_ERROR;
 			}
 			return ChannelImporter.OTHER_ERROR;
 		}

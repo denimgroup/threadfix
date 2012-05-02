@@ -89,5 +89,14 @@ public interface ApplicationService {
 	 * @return
 	 */
 	boolean checkApplication(Application application);
+	
+	/**
+	 * Removes WAF rules from an Application if the WAF has changed or been removed.
+	 * Don't save the Application after using this method as it does not handle removing
+	 * WAF rules from the application because the application may be out of session,
+	 * causing it to throw an error when you try to access the WAF rules at all.
+	 * @param application
+	 */
+	void updateWafRules(Application application, Integer dbApplicationWafId);
 
 }

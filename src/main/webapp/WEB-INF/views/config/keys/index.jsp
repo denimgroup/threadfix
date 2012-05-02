@@ -18,6 +18,9 @@
 				<th class="short">Note</th>
 				<th class="short">Edit</th>
 				<th class="short">Delete</th>
+				<security:authorize ifAnyGranted="ROLE_ADMIN">
+					<th class="short last">Restricted</th>
+				</security:authorize>
 			</tr>
 		</thead>
 		<tbody>
@@ -48,6 +51,11 @@
 							<input type="submit" onclick="return confirm('Are you sure you want to delete this API Key?')" value="Delete"/>
 						</form:form>
 					</td>
+					<security:authorize ifAnyGranted="ROLE_ADMIN">
+						<td>
+							<c:out value="${ key.isRestrictedKey }"/>
+						</td>
+					</security:authorize>
 				</tr>
 			</c:forEach>
 			<tr class="footer">

@@ -20,6 +20,17 @@
 						<form:errors path="note" cssClass="errors" />
 					</td>
 				</tr>
+				<security:authorize ifAnyGranted="ROLE_ADMIN">
+				<tr>
+					<td class="label">Restricted?</td>
+					<td class="inputValue">
+						<form:checkbox path="isRestrictedKey"/>
+					</td>
+					<td style="padding-left:5px">
+						<form:errors path="isRestrictedKey" cssClass="errors" />
+					</td>
+				</tr>
+				</security:authorize>
 			</tbody>
 		</table>
 		<br/>

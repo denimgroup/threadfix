@@ -47,10 +47,8 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.waf.BigIPASMGenerator;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 
 @Controller
@@ -151,16 +149,23 @@ public class WafsController {
 		
 		StringBuffer buffer = new StringBuffer();
 		
-		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
-			buffer.append(BigIPASMGenerator.XML_START);
+		String prefix = null, suffix = null;
+		String name = waf.getWafType().getName();
+		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
+			prefix = RealTimeProtectionGenerator.getStart(name);
+			suffix = RealTimeProtectionGenerator.getEnd(name);
+		} 
+		
+		if (prefix != null) {
+			buffer.append(prefix);
 		}
 		
 		for (WafRule rule : waf.getWafRules()) {
 			buffer.append(rule.getRule()).append("\n");
 		}
 		
-		if (WafType.BIG_IP_ASM.equals(waf.getWafType().getName())) {
-			buffer.append(BigIPASMGenerator.XML_END);
+		if (suffix != null) {
+			buffer.append(suffix);
 		}
 
 		String pageString = buffer.toString();

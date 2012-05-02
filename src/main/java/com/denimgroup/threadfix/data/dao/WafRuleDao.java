@@ -81,4 +81,9 @@ public interface WafRuleDao {
 	 */
 	void saveOrUpdate(WafRule wafRule);
 
+	/**
+	 * @param rule
+	 */
+	void delete(WafRule rule);
+
 }

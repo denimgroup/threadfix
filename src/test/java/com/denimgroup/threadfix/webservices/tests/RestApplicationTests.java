@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.webservices.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;
 import com.denimgroup.threadfix.webapp.controller.OrganizationRestController;
 import com.denimgroup.threadfix.webapp.controller.RestController;
@@ -39,7 +41,7 @@ public class RestApplicationTests extends BaseRestTest {
 				new String[] { "apiKey", "name", "url" },
 				new String[] { BAD_API_KEY, getRandomString(20),
 						"http://normal.url.com" }).equals(
-				RestController.API_KEY_ERROR));
+				RestController.API_KEY_NOT_FOUND_ERROR));
 
 		if (httpGet(getTeamUrl)
 				.equals(OrganizationRestController.LOOKUP_FAILED)) {
@@ -132,7 +134,7 @@ public class RestApplicationTests extends BaseRestTest {
 		// Bad Key
 		String error = httpGet(baseLookupUrl + "1" + apiKeySegment
 				+ BAD_API_KEY);
-		assertTrue(error.equals(RestController.API_KEY_ERROR));
+		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 
 		// If we're in an empty database, we may have to create some objects
 		// first
@@ -185,7 +187,7 @@ public class RestApplicationTests extends BaseRestTest {
 		String response = httpPost(url,
 				new String[] { "apiKey", "channelName" }, new String[] {
 						BAD_API_KEY, "Arachni" });
-		assertTrue(response.equals(RestController.API_KEY_ERROR));
+		assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 
 		// bad channel name
 		response = httpPost(url, new String[] { "apiKey", "channelName" },
@@ -258,7 +260,7 @@ public class RestApplicationTests extends BaseRestTest {
 		// bad key
 		String response = httpPost(addWafUrl, paramArray, new String[] {
 				BAD_API_KEY, String.valueOf(wafId) });
-		assertTrue(response.equals(RestController.API_KEY_ERROR));
+		assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 
 		// waf ID testing
 
@@ -325,7 +327,7 @@ public class RestApplicationTests extends BaseRestTest {
 
 		Integer channelId = getId(getJSONObject(httpPost(addChannelUrl,
 				new String[] { "apiKey", "channelName" }, new String[] {
-						GOOD_API_KEY, "Arachni" })));
+						GOOD_API_KEY, ChannelType.ARACHNI })));
 
 		URL url = this.getClass().getResource(
 				"/SupportingFiles/Dynamic/Arachni/php-demo.xml");
@@ -335,6 +337,62 @@ public class RestApplicationTests extends BaseRestTest {
 				new String[] { GOOD_API_KEY, String.valueOf(channelId) });
 		assertTrue(response != null);
 		assertTrue(getJSONObject(response) != null);
-
+	}
+	
+	/**
+	 * Test restricted URLs using ThreadFixRestClient. This test will need
+	 * to be updated if the permissions change or any methods are added.
+	 */
+	@Test
+	public void testRestrictedMethods() {
+		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+		goodClient.setKey(GOOD_API_KEY);
+		
+		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
+		restrictedClient.setKey(RESTRICTED_API_KEY);
+		
+		Integer teamId = getId(getJSONObject(goodClient.createTeam(getRandomString(23))));
+		
+		String result = restrictedClient.createApplication(teamId.toString(), 
+				getRandomString(15), "http://notimportant.com");
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		String appName = getRandomString(15);
+		String appId = getId(getJSONObject(goodClient.createApplication(teamId.toString(), 
+				appName, "http://notimportant.com"))).toString();
+		
+		String wafId = getId(getJSONObject(goodClient.createWaf(getRandomString(16), WafType.MOD_SECURITY)))
+							.toString();
+		
+		result = restrictedClient.searchForApplicationById(appId.toString());
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.searchForApplicationByName(appName);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.addWaf(appId, wafId);
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		result = restrictedClient.addApplicationChannel(appId, ChannelType.W3AF);
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		String appChannelId = getId(getJSONObject(goodClient.addApplicationChannel(appId, 
+								ChannelType.W3AF))).toString();
+		
+		result = restrictedClient.searchForApplicationChannel(appId, ChannelType.W3AF);
+		assertFalse(RESTRICTED_URL_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
+		String filePath = this.getClass().getResource(
+							"/SupportingFiles/Dynamic/Arachni/php-demo.xml").getFile();
+		result = restrictedClient.uploadScan(appChannelId, filePath);
+		assertTrue(RESTRICTED_URL_NOT_RETURNED,
+				result.equals(RestController.RESTRICTED_URL_ERROR));
+		
 	}
 }

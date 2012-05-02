@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
  * @author bbeverly
+ * @author mcollins
  * 
  */
 public interface ChannelImporter {
@@ -44,8 +45,6 @@ public interface ChannelImporter {
 	public static final String WRONG_FORMAT_ERROR = "Scan file is in the wrong format.";
 	public static final String NULL_INPUT_ERROR = "The scan could not be completed because there was null input";
 	public static final String OTHER_ERROR = "The scan file encountered an unknown error.";
-	public static final String SENTINEL_ERROR = "Sentinel does not accept scan uploads. Please click an 'Update Sentinel' link to import results from the web service.";
-	public static final String MANUAL_ERROR = "The Manual channel does not accept scan uploads. Please click 'Add Finding Manually' on the application page.";
 	public static final String BADLY_FORMED_XML = "The XML was not well-formed and could not be parsed.";
 	
 	/**

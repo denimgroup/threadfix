@@ -65,6 +65,90 @@ public class QualysRemoteProvider extends RemoteProvider {
 	private static final String GET_SCAN_URL = "https://qualysapi.qualys.com/qps/rest/3.0/download/was/wasscan/";
 	private static final String GET_APPS_URL = "https://qualysapi.qualys.com/qps/rest/3.0/search/was/webapp";
 	
+	private static Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
+	static {
+		SEVERITIES_MAP.put("150000", "5");
+		SEVERITIES_MAP.put("150001", "5");
+		SEVERITIES_MAP.put("150002", "5");
+		SEVERITIES_MAP.put("150003", "5");
+		SEVERITIES_MAP.put("150004", "2");
+		SEVERITIES_MAP.put("150005", "2");
+		SEVERITIES_MAP.put("150006", "1");
+		SEVERITIES_MAP.put("150007", "1");
+		SEVERITIES_MAP.put("150008", "1");
+		SEVERITIES_MAP.put("150009", "1");
+		SEVERITIES_MAP.put("150010", "1");
+		SEVERITIES_MAP.put("150011", "3");
+		SEVERITIES_MAP.put("150012", "5");
+		SEVERITIES_MAP.put("150013", "5");
+		SEVERITIES_MAP.put("150014", "1");
+		SEVERITIES_MAP.put("150015", "1");
+		SEVERITIES_MAP.put("150016", "2");
+		SEVERITIES_MAP.put("150017", "1");
+		SEVERITIES_MAP.put("150018", "2");
+		SEVERITIES_MAP.put("150019", "2");
+		SEVERITIES_MAP.put("150020", "1");
+		SEVERITIES_MAP.put("150021", "1");
+		SEVERITIES_MAP.put("150022", "3");
+		SEVERITIES_MAP.put("150023", "2");
+		SEVERITIES_MAP.put("150024", "1");
+		SEVERITIES_MAP.put("150025", "1");
+		SEVERITIES_MAP.put("150026", "1");
+		SEVERITIES_MAP.put("150028", "1");
+		SEVERITIES_MAP.put("150029", "1");
+		SEVERITIES_MAP.put("150030", "1");
+		SEVERITIES_MAP.put("150032", "3");
+		SEVERITIES_MAP.put("150033", "3");
+		SEVERITIES_MAP.put("150034", "3");
+		SEVERITIES_MAP.put("150035", "1");
+		SEVERITIES_MAP.put("150036", "1");
+		SEVERITIES_MAP.put("150037", "1");
+		SEVERITIES_MAP.put("150038", "1");
+		SEVERITIES_MAP.put("150039", "1");
+		SEVERITIES_MAP.put("150040", "1");
+		SEVERITIES_MAP.put("150041", "1");
+		SEVERITIES_MAP.put("150042", "3");
+		SEVERITIES_MAP.put("150043", "1");
+		SEVERITIES_MAP.put("150044", "3");
+		SEVERITIES_MAP.put("150045", "3");
+		SEVERITIES_MAP.put("150046", "5");
+		SEVERITIES_MAP.put("150047", "5");
+		SEVERITIES_MAP.put("150048", "5");
+		SEVERITIES_MAP.put("150049", "4");
+		SEVERITIES_MAP.put("150051", "3");
+		SEVERITIES_MAP.put("150054", "1");
+		SEVERITIES_MAP.put("150055", "5");
+		SEVERITIES_MAP.put("150057", "5");
+		SEVERITIES_MAP.put("150058", "1");
+		SEVERITIES_MAP.put("150060", "5");
+		SEVERITIES_MAP.put("150061", "1");
+		SEVERITIES_MAP.put("150062", "5");
+		SEVERITIES_MAP.put("150063", "5");
+		SEVERITIES_MAP.put("150064", "1");
+		SEVERITIES_MAP.put("150065", "2");
+		SEVERITIES_MAP.put("150066", "1");
+		SEVERITIES_MAP.put("150067", "3");
+		SEVERITIES_MAP.put("150071", "3");
+		SEVERITIES_MAP.put("150076", "4");
+		SEVERITIES_MAP.put("150077", "1");
+		SEVERITIES_MAP.put("150078", "1");
+		SEVERITIES_MAP.put("150079", "3");
+		SEVERITIES_MAP.put("150081", "1");
+		SEVERITIES_MAP.put("150082", "1");
+		SEVERITIES_MAP.put("150083", "1");
+		SEVERITIES_MAP.put("150084", "1");
+		SEVERITIES_MAP.put("150085", "3");
+		SEVERITIES_MAP.put("150086", "3");
+		SEVERITIES_MAP.put("150087", "1");
+		SEVERITIES_MAP.put("150088", "1");
+		SEVERITIES_MAP.put("150089", "3");
+		SEVERITIES_MAP.put("150090", "5");
+		SEVERITIES_MAP.put("150092", "5");
+		SEVERITIES_MAP.put("150093", "5");
+		SEVERITIES_MAP.put("150094", "1");
+		SEVERITIES_MAP.put("150095", "1");
+	}
+	
 	@Autowired
 	public QualysRemoteProvider(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
@@ -389,6 +473,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    	} else if ("param".equals(qName)) {
 	    		getParameter = true;
 	    	} else if ("instances".equals(qName)) {
+	    		currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
+	    		
 	    		Finding finding = constructFinding(currentPath, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		add(finding);

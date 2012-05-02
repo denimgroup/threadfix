@@ -105,11 +105,12 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 		}
 		String time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(calendarToUse.getTime());
 		
+		// TODO test this rule generation
 		if (genericVulnName != null && VULN_MAP.keySet().contains(genericVulnName)) {
 			return "<vulnerability id=\"" + id + "\" vuln-type=\"" + VULN_MAP.get(genericVulnName) + 
 									"\" severity=\"" + severity + "\">" +
-						"<source src-type=\"ThreadFix\" scan-id=\"" + scanId +"\"" +
-								"scan-date=\"" + time + "\" src-reference=\"1\" />" +
+						"<source src-type=\"app-scan\" scan-id=\"" + scanId +"\"" +
+								" scan-date=\"" + time + "\" src-reference=\"1\" />" +
 						"<parameters>" +
 							"<url>" + uri + "</url>" +
 							"<param-name>" + parameter + "</param-name>" +
