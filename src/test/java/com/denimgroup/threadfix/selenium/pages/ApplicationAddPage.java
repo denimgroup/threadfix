@@ -122,6 +122,11 @@ public class ApplicationAddPage extends BasePage {
 	public String getUserNameInput(){
 		return driver.findElementById("username").getText();
 	}
+	
+	public ApplicationAddPage setCriticalitySelect(String code){
+		 new Select(driver.findElementById("criticalityId")).selectByVisibleText(code);
+		 return this;
+	}
 
 	public ApplicationAddPage setUserNameInput(String text){
 		driver.findElementById("username").clear();

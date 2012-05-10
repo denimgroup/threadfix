@@ -98,5 +98,25 @@ public interface ApplicationService {
 	 * @param application
 	 */
 	void updateWafRules(Application application, Integer dbApplicationWafId);
+	
+	/**
+	 * Performs necessary checks and keeps the controller layer clean.
+	 * @param application
+	 * @param result
+	 */
+	void validateAfterEdit(Application application, BindingResult result);
+	
+	/**
+	 * Performs necessary checks and keeps the controller layer clean.
+	 * @param application
+	 * @param result
+	 */
+	void validateAfterCreate(Application application, BindingResult result);
+	
+	/**
+	 * If the project root has been updated, this method updates the associated vulns.
+	 * @param application
+	 */
+	public void updateProjectRoot(Application application);
 
 }

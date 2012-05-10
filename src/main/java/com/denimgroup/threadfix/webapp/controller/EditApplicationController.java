@@ -46,14 +46,15 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.Node;
@@ -69,18 +70,17 @@ public class EditApplicationController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
-	private DefectService defectService;
-	private ScanMergeService scanMergeService;
+	private ApplicationCriticalityService applicationCriticalityService = null;
 
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
-			DefectService defectService, ScanMergeService scanMergeService) {
+			DefectService defectService,
+			ApplicationCriticalityService applicationCriticalityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
-		this.defectService = defectService;
-		this.scanMergeService = scanMergeService;
+		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
 	@ModelAttribute("defectTrackerList")
@@ -93,6 +93,11 @@ public class EditApplicationController {
 		return wafService.loadAll();
 	}
 	
+	@ModelAttribute
+	public List<ApplicationCriticality> populateApplicationCriticalities() {
+		return applicationCriticalityService.loadAll();
+	}
+	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
@@ -100,7 +105,8 @@ public class EditApplicationController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", "password", "waf.id", "projectName", "projectRoot" });
+		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", 
+				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id" });
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -138,59 +144,13 @@ public class EditApplicationController {
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
 		
-		if (application.getName() != null && application.getName().trim().equals("")
-				&& !result.hasFieldErrors("name")) {
-			result.rejectValue("name", null, null, "This field cannot be blank");
-		}
+		applicationService.validateAfterEdit(application, result);
 		
 		if (result.hasErrors()) {
 			return "applications/form";
 		} else {
-			if (application.getWaf() != null && application.getWaf().getId() == 0) {
-				application.setWaf(null);
-			}
-			
-			if (application.getWaf() != null && application.getWaf().getId() != null) {
-				Waf waf = wafService.loadWaf(application.getWaf().getId());
-				
-				if (waf == null) {
-					result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
-				} else {
-					application.setWaf(waf);
-				}
-			}	
-			
-			boolean hasNewDefectTracker = applicationService.validateApplicationDefectTracker(application, result);
-			
-			if (hasNewDefectTracker || (application.getDefectTracker() == null && application.getDefectList() != null))
-				defectService.deleteByApplicationId(application.getId());
-			
-			Application databaseApplication = applicationService.loadApplication(application.getName().trim());
-			if (databaseApplication != null && !databaseApplication.getId().equals(application.getId())) {
-				result.rejectValue("name", "errors.nameTaken");
-			}
-			
-			Integer databaseWafId = null;
-			if (databaseApplication.getWaf() != null)
-				databaseWafId = databaseApplication.getWaf().getId();
-			
-			if (result.hasErrors())
-				return "applications/form";
-			
 			applicationService.storeApplication(application);
-			
-			if (application.getProjectRoot() != null && !application.getProjectRoot().trim().equals("")) {
-				Application app = applicationService.loadApplication(application.getId());
-				
-				scanMergeService.updateSurfaceLocation(app);
-				scanMergeService.updateVulnerabilities(app);
-								
-				applicationService.storeApplication(app);
-			}
-			
-			// remove any outdated vuln -> waf rule links
-			// TODO clean this up
-			applicationService.updateWafRules(applicationService.loadApplication(application.getId()), databaseWafId);
+			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			

@@ -16,6 +16,7 @@
 			<tr>
 				<th class="medium first">Name</th>
 				<th class="long">URL</th>
+				<th class="short">Criticality</th>
 				<th class="short">Open Vulns</th>
 				<th class="short">Critical</th>
 				<th class="short">High</th>
@@ -41,6 +42,7 @@
 					<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
 				</td>
 				<td><c:out value="${ app.url }"/></td>
+				<td><c:out value="${ app.applicationCriticality.name }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[5] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[4] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[3] }"/></td>

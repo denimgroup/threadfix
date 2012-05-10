@@ -16,12 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -47,6 +49,7 @@ public class ApplicationRestController extends RestController {
 	private ChannelTypeService channelTypeService;
 	private ApplicationChannelService applicationChannelService;
 	private WafService wafService;
+	private ApplicationCriticalityService applicationCriticalityService;
 	
 	private final static String DETAIL = "applicationDetail", 
 		LOOKUP = "applicationLookup",
@@ -70,7 +73,8 @@ public class ApplicationRestController extends RestController {
 			ScanService scanService, ScanMergeService scanMergeService,
 			ChannelTypeService channelTypeService,
 			ApplicationChannelService applicationChannelService,
-			WafService wafService) {
+			WafService wafService,
+			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
 		this.apiKeyService = apiKeyService;
 		this.applicationService = applicationService;
@@ -79,6 +83,7 @@ public class ApplicationRestController extends RestController {
 		this.channelTypeService = channelTypeService;
 		this.applicationChannelService = applicationChannelService;
 		this.wafService = wafService;
+		this.applicationCriticalityService = applicationCriticalityService;
 	}
 	
 	/**
@@ -128,6 +133,10 @@ public class ApplicationRestController extends RestController {
 			application.setOrganization(organization);
 			application.setName(name.trim());
 			application.setUrl(url.trim());
+			// TODO include this as a parameter
+			application.setApplicationCriticality(
+					applicationCriticalityService.loadApplicationCriticality(
+							ApplicationCriticality.LOW));
 		}
 		
 		if (applicationService.checkApplication(application)) {

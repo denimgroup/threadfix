@@ -18,9 +18,11 @@
 				<th class="short">Note</th>
 				<th class="short">Edit</th>
 				<th class="short">Delete</th>
-				<security:authorize ifAnyGranted="ROLE_ADMIN">
-					<th class="short last">Restricted</th>
-				</security:authorize>
+				<c:if test="${ not empty apiKeyList }">
+					<security:authorize ifAnyGranted="ROLE_ADMIN">
+						<th class="short last">Restricted</th>
+					</security:authorize>
+				</c:if>
 			</tr>
 		</thead>
 		<tbody>

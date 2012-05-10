@@ -62,6 +62,12 @@ public interface ApplicationChannelService {
 	 */
 	boolean isDuplicate(ApplicationChannel applicationChannel);
 
+	/**
+	 * 
+	 * @param appId
+	 * @param id
+	 * @return
+	 */
 	ApplicationChannel retrieveByAppIdAndChannelId(int appId, int id);
 
 }

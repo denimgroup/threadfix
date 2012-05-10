@@ -41,6 +41,17 @@
 				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
+			<tr>
+				<td class="label">Criticality:</td>
+				<td class="inputValue">
+					<form:select id="criticalityId" path="applicationCriticality.id">
+						<form:options items="${applicationCriticalityList}" itemValue="id" itemLabel="name"/>
+					</form:select>
+				</td>
+				<td style="padding-left:5px" colspan="2" >
+					<form:errors path="applicationCriticality.id" cssClass="errors" />
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	

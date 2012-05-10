@@ -68,6 +68,7 @@ public class Application extends AuditableEntity {
 
 	private Organization organization;
 	private Waf waf;
+	private ApplicationCriticality applicationCriticality;
 	
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String projectName;
@@ -84,6 +85,7 @@ public class Application extends AuditableEntity {
 	
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String password;
+	
 	private List<Defect> defectList;
 
 	private List<ApplicationChannel> channelList;
@@ -247,6 +249,16 @@ public class Application extends AuditableEntity {
 	public void setRemoteProviderApplications(
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "applicationCriticalityId")
+	public ApplicationCriticality getApplicationCriticality() {
+		return applicationCriticality;
+	}
+
+	public void setApplicationCriticality(ApplicationCriticality applicationCriticality) {
+		this.applicationCriticality = applicationCriticality;
 	}
 	
 	/*

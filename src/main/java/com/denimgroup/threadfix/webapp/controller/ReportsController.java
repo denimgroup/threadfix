@@ -98,7 +98,7 @@ public class ReportsController {
 			BindingResult result, SessionStatus status, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String reportFile = null;
 
-		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 7) {
+		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 8) {
 			log.warn("An incorrect report ID was passed through, returning an error page.");
 			request.getSession().setAttribute("reportsError", "An invalid report type was chosen.");
 			return "redirect:/reports";
@@ -131,6 +131,9 @@ public class ReportsController {
 			return scannerComparisonByVulnerability(model, applicationIdList);
 		case 7:
 			reportFile = "monthlyBarChart.jrxml";
+			break;
+		case 8:
+			return "redirect:/reports/portfolio";
 		}
 
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");

@@ -86,7 +86,10 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-			
+			<tr>
+				<td class="label">Criticality:</td>
+				<td class="inputValue"><c:out value="${ application.applicationCriticality.name }"/></td>
+			</tr>
 		</tbody>
 	</table>
 

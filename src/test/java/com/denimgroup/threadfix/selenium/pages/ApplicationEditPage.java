@@ -80,6 +80,11 @@ public class ApplicationEditPage extends BasePage {
 		return this;
 	}
 	
+	public ApplicationEditPage setCriticalitySelect(String code){
+		 new Select(driver.findElementById("criticalityId")).selectByVisibleText(code);
+		 return this;
+	}
+	
 	public String getUrlError() {
 		return driver.findElementById("url.errors").getText();
 	}

@@ -4,15 +4,38 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRField;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
 
+/**
+ * The current strategy for this report is to keep Sets of the vulnerability IDs
+ * representing the new / old / reopened vulns for each month.
+ * All the collected scans are iterated through, following this process:
+ * <br>
+ * <br>Vulns are added to the new vuln set if the scan contains the first finding for the vuln.
+ * <br>If a vuln is reopened by a scan, it is added to the reopened set.
+ * <br>At the end of every month, all vulns are moved to the old vulns set for future months.
+ * <br>If a vuln is closed by a scan, it is removed from all three sets.
+ * <br>
+ * <br>For each month, this method should yield counts for:
+ * <br>All the new vulns that weren't also closed in the same month, 
+ * <br>The number of old vulnerabilities from previous months still open at the end of the month, 
+ * <br>And the number of vulnerabilities that resurfaced and were still open at the end of the month.
+ * 
+ * @author mcollins
+ *
+ */
 public class JasperMonthlyScanReport implements JRDataSource {
 	private List<Scan> scanList = new ArrayList<Scan>();
 	private int index = 0;
@@ -20,7 +43,9 @@ public class JasperMonthlyScanReport implements JRDataSource {
 
 	private List<Scan> normalizedScans = new ArrayList<Scan>();
 	
-	private Map<Integer, Integer> channelIdOldVulnCountHash = new HashMap<Integer, Integer>();
+	Set<Integer> newVulns = new HashSet<Integer>(),
+			 	 oldVulns = new HashSet<Integer>(),
+			 	 reopenedVulns = new HashSet<Integer>();
 
 	public JasperMonthlyScanReport(List<Integer> applicationIdList,
 			ScanDao scanDao) {
@@ -35,66 +60,116 @@ public class JasperMonthlyScanReport implements JRDataSource {
 		index = -1;
 	}
 
-	public void normalizeForMonths() {
+	private void normalizeForMonths() {
+		newVulns.clear();
+		oldVulns.clear();
+		reopenedVulns.clear();
+		
 		int previousYear = -1, previousMonth = -1;
 		Scan currentScan = null;
-
+		
 		for (Scan scan : this.scanList) {
 			if (previousYear == -1) {
-				currentScan = scan;
+				// Start the process off with all new vulns from the first scan.
 				previousYear = scan.getImportTime().get(Calendar.YEAR);
 				previousMonth = scan.getImportTime().get(Calendar.MONTH);
-				addToHash(currentScan);
+				
+				initializeSets(scan);
+				currentScan = scan;
+				
 			} else {
-				if (scan.getImportTime().get(Calendar.YEAR) == previousYear
-						&& scan.getImportTime().get(Calendar.MONTH) == previousMonth) {
-					// Merge the two scans
-
-				} else {
-					// Add the previous one to the list
-					finalizeScan(currentScan);
+				
+				adjustSets(scan);
+				
+				if (scan.getImportTime().get(Calendar.YEAR) != previousYear
+						|| scan.getImportTime().get(Calendar.MONTH) != previousMonth) {
+					addScanToReportList(currentScan);
 					
+					moveAllToOld();
+										
 					// add a new current entry
-					currentScan = scan;
 					previousYear = scan.getImportTime().get(Calendar.YEAR);
 					previousMonth = scan.getImportTime().get(Calendar.MONTH);
-					addToHash(currentScan);
+					
+					currentScan = scan;
 				}
 			}
 		}
 		
+		// include the last scan
+		addScanToReportList(currentScan);
+		
 		insertEmptyScans(normalizedScans);
 	}
 	
-	public void addToHash(Scan initialScan) {
-		if (initialScan.getApplicationChannel() != null && initialScan.getApplicationChannel().getId() != null) {
-            Integer appChannelId = initialScan.getApplicationChannel().getId();
-            channelIdOldVulnCountHash.put(appChannelId, initialScan.getNumberOldVulnerabilitiesInitiallyFromThisChannel());
+	/**
+	 * Set initial set contents
+	 * @param scan
+	 */
+	private void initializeSets(Scan scan) {
+		if (scan == null || scan.getFindings() == null) {
+			return;
+		}
+		
+		for (Finding finding : scan.getFindings()) {
+			if (finding == null || finding.getVulnerability() == null)
+				continue;
+
+			newVulns.add(finding.getVulnerability().getId());
 		}
 	}
 	
-	public void merge(Scan scan, Scan scanToMerge) {
-		if (scanToMerge.getApplicationChannel() != null && scanToMerge.getApplicationChannel().getId() != null) {
-            Integer appChannelId = scanToMerge.getApplicationChannel().getId();
-            channelIdOldVulnCountHash.put(appChannelId, scanToMerge.getNumberOldVulnerabilitiesInitiallyFromThisChannel());
+	// At the end of each month, all existing vulns are old vulns
+	private void moveAllToOld() {
+		oldVulns.addAll(newVulns);
+		oldVulns.addAll(reopenedVulns);
+		newVulns.clear();
+		reopenedVulns.clear();
+	}
+
+	// adjust the counts based on new Scan contents
+	private void adjustSets(Scan scan) {
+		if (scan != null) {
+			// if the scan closes a vuln, remove it from all fields
+			if (scan.getScanCloseVulnerabilityMaps() != null &&
+					!scan.getScanCloseVulnerabilityMaps().isEmpty()) {
+				for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
+					newVulns.remove(map.getVulnerability().getId());
+					oldVulns.remove(map.getVulnerability().getId());
+					reopenedVulns.remove(map.getVulnerability().getId());
+				}
+			}
+			
+			// if the scan reopens a vuln, add it to that count.
+			if (scan.getScanReopenVulnerabilityMaps() != null &&
+					!scan.getScanReopenVulnerabilityMaps().isEmpty()) {
+				for (ScanReopenVulnerabilityMap map : scan.getScanReopenVulnerabilityMaps()) {
+					reopenedVulns.add(map.getVulnerability().getId());
+				}
+			}
+			
+			// if there are any new vulns introduced by the scan, add those to the new vulns.
+			if (scan.getFindings() != null) {
+				for (Finding finding : scan.getFindings()) {
+					if (finding.isFirstFindingForVuln()) {
+						newVulns.add(finding.getVulnerability().getId());
+					}
+				}
+			}
 		}
-		
-		scan.setNumberNewVulnerabilities(scanToMerge.getNumberNewVulnerabilities() + scan.getNumberNewVulnerabilities());
-		scan.setNumberResurfacedVulnerabilities(scanToMerge.getNumberResurfacedVulnerabilities() + scan.getNumberResurfacedVulnerabilities());
 	}
 	
-	public void finalizeScan(Scan currentScan) {
-		int total = 0;
-		for (Integer number : channelIdOldVulnCountHash.values()) {
-			total += number;
-		}
-		currentScan.setNumberOldVulnerabilities(total);
-		
+	// adjust the scan numbers and add it to the list
+	// the adjusted scan numbers are not and should not be saved
+	private void addScanToReportList(Scan currentScan) {
+		currentScan.setNumberOldVulnerabilities(oldVulns.size());
+		currentScan.setNumberNewVulnerabilities(newVulns.size());
+		currentScan.setNumberResurfacedVulnerabilities(reopenedVulns.size());
 		normalizedScans.add(currentScan);
 	}
 	
-	
-	public void insertEmptyScans(List<Scan> scanList) {
+	// in order to get the bars to show up we need to add empty scans
+	private void insertEmptyScans(List<Scan> scanList) {
 
 		Scan previousScan = null;
 		List<Scan> scansToInsert = new ArrayList<Scan>();
@@ -119,7 +194,7 @@ public class JasperMonthlyScanReport implements JRDataSource {
 	}
 
 	// skipping null checks for now
-	public List<Scan> getScansBetween(Scan firstScan, Scan secondScan) {
+	private List<Scan> getScansBetween(Scan firstScan, Scan secondScan) {
 		List<Scan> betweenScans = new ArrayList<Scan>();
 
 		Scan tempScan = firstScan;
@@ -144,7 +219,9 @@ public class JasperMonthlyScanReport implements JRDataSource {
 					newScan.setNumberClosedVulnerabilities(0);
 					newScan.setNumberNewVulnerabilities(0);
 					newScan.setNumberResurfacedVulnerabilities(0);
-					newScan.setNumberOldVulnerabilities(firstScan.getNumberOldVulnerabilities());
+					newScan.setNumberOldVulnerabilities(firstScan.getNumberOldVulnerabilities() +
+														firstScan.getNumberNewVulnerabilities() +
+														firstScan.getNumberResurfacedVulnerabilities());
 					newScan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(0);
 					newScan.setNumberTotalVulnerabilities(0);
 					newScan.setImportTime(newCalendar);
@@ -177,7 +254,7 @@ public class JasperMonthlyScanReport implements JRDataSource {
 
 	@Override
 	public boolean next() {
-		if (scanList != null && index < scanList.size() - 1) {
+		if (normalizedScans != null && index < normalizedScans.size() - 1) {
 			if (index == -1)
 				index = 0;
 			else
@@ -188,16 +265,15 @@ public class JasperMonthlyScanReport implements JRDataSource {
 			return false;
 	}
 
-	public void buildHash() {
+	private void buildHash() {
 		resultsHash.clear();
 
-		Scan scan = scanList.get(index);
+		Scan scan = normalizedScans.get(index);
 
 		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
 		resultsHash.put("resurfacedVulns",
 				scan.getNumberResurfacedVulnerabilities());
-		resultsHash.put("oldVulns", scan.getNumberOldVulnerabilities()
-									- scan.getNumberResurfacedVulnerabilities());
+		resultsHash.put("oldVulns", scan.getNumberOldVulnerabilities());
 
 		if (scan.getApplication() != null
 				&& scan.getApplication().getName() != null)

@@ -31,7 +31,10 @@
 	<c:if test="${ not empty error }">
 		<center class="errors" ><c:out value="${ error }"/></center>
 	</c:if>
-
+	
+	<div id="helpText">This page is used to generate various reports.
+	<br/>Please note that the Portfolio Report does not filter on a Team / Application basis.</div>
+	
 	<spring:url value="" var="emptyUrl"></spring:url>	
 	<form:form modelAttribute="reportParameters" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
@@ -48,6 +51,7 @@
 								<option value="5">Channel Comparison Summary</option>
 								<option value="6">Channel Comparison Detail</option>
 								<option value="7">Monthly Progress Report</option>
+								<option value="8">Portfolio Report</option>
 							</form:select>
 						</div>
 					</td>

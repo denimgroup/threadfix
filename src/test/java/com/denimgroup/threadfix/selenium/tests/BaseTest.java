@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -44,5 +45,13 @@ public abstract class BaseTest {
 	public FirefoxDriver getDriver(){
 		System.out.println("Getting Driver");
 		return driver;
+	}
+	
+	/**
+	 * This method is a wrapper for RandomStringUtils.random with a preset character set.
+	 * @return random string
+	 */
+	protected String getRandomString(int length) {
+		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 }

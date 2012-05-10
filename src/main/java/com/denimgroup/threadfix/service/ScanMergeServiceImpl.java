@@ -782,10 +782,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			
 				if (!vulnerability.isActive()) {
 					resurfaced += 1;
-					if (scan.getImportTime() != null)
-						vulnerability.openVulnerability(scan.getImportTime());
-					else
-						vulnerability.openVulnerability(Calendar.getInstance());
+					vulnerability.reopenVulnerability(scan, scan.getImportTime());
 					vulnerabilityDao.saveOrUpdate(vulnerability);
 				}
 			} else {
@@ -801,9 +798,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			if (!scanHash.containsKey(nativeId) && oldNativeIdVulnHash.get(nativeId) != null && 
 					oldNativeIdVulnHash.get(nativeId).isActive()) {
 				if (scan.getImportTime() != null)
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan.getImportTime());
+					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan, scan.getImportTime());
 				else
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(Calendar.getInstance());
+					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan, Calendar.getInstance());
 				vulnerabilityDao.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
 				closed += 1;
 			}

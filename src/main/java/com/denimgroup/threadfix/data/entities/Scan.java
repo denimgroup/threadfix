@@ -61,6 +61,8 @@ public class Scan extends BaseEntity {
 	private Integer numberRepeatFindings;
 	
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	private List<ScanReopenVulnerabilityMap> scanReopenVulnerabilityMaps;
+	private List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMaps;
 	
 	// TODO probably rename this - it's for the graphs
 	private Integer numberOldVulnerabilitiesInitiallyFromThisChannel;
@@ -124,6 +126,24 @@ public class Scan extends BaseEntity {
 
 	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
 		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
+	}
+	
+	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+	public List<ScanReopenVulnerabilityMap> getScanReopenVulnerabilityMaps() {
+		return scanReopenVulnerabilityMaps;
+	}
+
+	public void setScanReopenVulnerabilityMaps(List<ScanReopenVulnerabilityMap> ScanReopenVulnerabilityMaps) {
+		this.scanReopenVulnerabilityMaps = ScanReopenVulnerabilityMaps;
+	}
+	
+	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+	public List<ScanCloseVulnerabilityMap> getScanCloseVulnerabilityMaps() {
+		return scanCloseVulnerabilityMaps;
+	}
+
+	public void setScanCloseVulnerabilityMaps(List<ScanCloseVulnerabilityMap> ScanCloseVulnerabilityMaps) {
+		this.scanCloseVulnerabilityMaps = ScanCloseVulnerabilityMaps;
 	}
 
 	@Column

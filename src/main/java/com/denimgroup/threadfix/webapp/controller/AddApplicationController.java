@@ -44,9 +44,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -62,28 +64,37 @@ public class AddApplicationController {
 	private ApplicationService applicationService = null;
 	private DefectTrackerService defectTrackerService = null;
 	private WafService wafService = null;
+	private ApplicationCriticalityService applicationCriticalityService = null;
 
 	private final Log log = LogFactory.getLog(AddApplicationController.class);
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", "password", "waf.id", "projectName" });
+		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", 
+				"userName", "password", "waf.id", "projectName", "applicationCriticality.id" });
 	}
 	
 	@Autowired
 	public AddApplicationController(OrganizationService organizationService,
 			ApplicationService applicationService,
 			DefectTrackerService defectTrackerService,
-			WafService wafService) {
+			WafService wafService,
+			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
+		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
 	@ModelAttribute
 	public List<DefectTracker> populateDefectTrackers() {
 		return defectTrackerService.loadAllDefectTrackers();
+	}
+	
+	@ModelAttribute
+	public List<ApplicationCriticality> populateApplicationCriticalities() {
+		return applicationCriticalityService.loadAll();
 	}
 
 	@ModelAttribute
@@ -115,29 +126,11 @@ public class AddApplicationController {
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status) {
 		
-		if (application.getName() != null && application.getName().trim().equals("")
-				&& !result.hasFieldErrors("name")) {
-			result.rejectValue("name", null, null, "This field cannot be blank");
-		}
+		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {
 			return "applications/form";
 		} else {
-			Application databaseApplication = applicationService.loadApplication(application.getName().trim());
-			if (databaseApplication != null)
-				result.rejectValue("name", "errors.nameTaken");
-
-			if (application.getWaf() != null && application.getWaf().getId() == 0)
-				application.setWaf(null);
-			
-			if (application.getWaf() != null && (application.getWaf().getId() == null  
-					|| wafService.loadWaf(application.getWaf().getId()) == null))
-				result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
-
-			applicationService.validateApplicationDefectTracker(application, result);
-			
-			if (result.hasErrors())
-				return "applications/form";
 
 			applicationService.storeApplication(application);
 			

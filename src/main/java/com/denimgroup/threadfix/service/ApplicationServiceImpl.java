@@ -32,15 +32,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -53,19 +57,31 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private DefectTrackerDao defectTrackerDao = null;
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
 	private WafRuleDao wafRuleDao = null;
+	private WafDao wafDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private ApplicationCriticalityDao applicationCriticalityDao = null;
+	private DefectDao defectDao = null;
+	private ScanMergeService scanMergeService = null;
 
 	@Autowired
 	public ApplicationServiceImpl(ApplicationDao applicationDao, 
 			DefectTrackerDao defectTrackerDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			WafRuleDao wafRuleDao,
-			VulnerabilityDao vulnerabilityDao) {
+			VulnerabilityDao vulnerabilityDao,
+			WafDao wafDao,
+			ApplicationCriticalityDao applicationCriticalityDao,
+			DefectDao defectDao,
+			ScanMergeService scanMergeService) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.wafRuleDao = wafRuleDao;
 		this.vulnerabilityDao = vulnerabilityDao;
+		this.wafDao = wafDao;
+		this.applicationCriticalityDao = applicationCriticalityDao;
+		this.defectDao = defectDao;
+		this.scanMergeService = scanMergeService;
 	}
 
 	@Override
@@ -228,5 +244,94 @@ public class ApplicationServiceImpl implements ApplicationService {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void validateAfterEdit(Application application, BindingResult result) {
+		if (application.getName() != null && application.getName().trim().equals("")
+				&& !result.hasFieldErrors("name")) {
+			result.rejectValue("name", null, null, "This field cannot be blank");
+			return;
+		}
+
+		if (application.getApplicationCriticality() == null ||
+				application.getApplicationCriticality().getId() == null ||
+				applicationCriticalityDao.retrieveById(
+						application.getApplicationCriticality().getId()) == null) {
+			result.rejectValue("applicationCriticality.id", "errors.invalid", new String [] { "Criticality" }, null);
+		}
+		
+		if (application.getWaf() != null && application.getWaf().getId() == 0) {
+			application.setWaf(null);
+		}
+		
+		if (application.getWaf() != null && application.getWaf().getId() != null) {
+			Waf waf = wafDao.retrieveById(application.getWaf().getId());
+			
+			if (waf == null) {
+				result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
+			} else {
+				application.setWaf(waf);
+			}
+		}	
+		
+		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
+		
+		if (hasNewDefectTracker || (application.getDefectTracker() == null && application.getDefectList() != null))
+			defectDao.deleteByApplicationId(application.getId());
+		
+		Application databaseApplication = loadApplication(application.getName().trim());
+		if (databaseApplication != null && !databaseApplication.getId().equals(application.getId())) {
+			result.rejectValue("name", "errors.nameTaken");
+		}
+		
+		Integer databaseWafId = null;
+		if (databaseApplication != null && databaseApplication.getWaf() != null)
+			databaseWafId = databaseApplication.getWaf().getId();
+		
+		// remove any outdated vuln -> waf rule links
+		updateWafRules(loadApplication(application.getId()), databaseWafId);
+	}
+	
+	@Override
+	public void updateProjectRoot(Application application) {
+		if (application != null && application.getProjectRoot() != null && !application.getProjectRoot().trim().equals("")) {
+			Application app = loadApplication(application.getId());
+			
+			scanMergeService.updateSurfaceLocation(app);
+			scanMergeService.updateVulnerabilities(app);
+							
+			storeApplication(app);
+		}
+	}
+	
+	@Override
+	public void validateAfterCreate(Application application, BindingResult result) {
+		
+		if (application.getName() != null && application.getName().trim().equals("")
+				&& !result.hasFieldErrors("name")) {
+			result.rejectValue("name", null, null, "This field cannot be blank");
+			return;
+		}
+		
+		if (application.getApplicationCriticality() == null ||
+				application.getApplicationCriticality().getId() == null ||
+				applicationCriticalityDao.retrieveById(
+						application.getApplicationCriticality().getId()) == null) {
+			result.rejectValue("applicationCriticality.id", "errors.invalid", new String [] { "Criticality" }, null);
+		}
+		
+		Application databaseApplication = loadApplication(application.getName().trim());
+		if (databaseApplication != null)
+			result.rejectValue("name", "errors.nameTaken");
+
+		if (application.getWaf() != null && application.getWaf().getId() == 0)
+			application.setWaf(null);
+		
+		if (application.getWaf() != null && (application.getWaf().getId() == null  
+				|| wafDao.retrieveById(application.getWaf().getId()) == null))
+			result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
+
+		validateApplicationDefectTracker(application, result);
 	}
 }
