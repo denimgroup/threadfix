@@ -43,8 +43,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
-import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
-
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -367,9 +365,6 @@ public class Application extends AuditableEntity {
 		doNotIncludeSet.add(ChannelType.SENTINEL);
 		doNotIncludeSet.add(ChannelType.VERACODE);
 		doNotIncludeSet.add(ChannelType.QUALYSGUARD_WAS);
-		
-		if (!ChannelImporterFactory.isFortifyChannelImporterDefined())
-			doNotIncludeSet.add(ChannelType.FORTIFY);
 		
 		List<ApplicationChannel> returnList = new ArrayList<ApplicationChannel>();
 	

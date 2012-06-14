@@ -84,6 +84,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		parse(appBuildsInputStream, parser);
 		String buildId = parser.map.get(appName);
 		
+		// TESTING, REMOVE LATER
 		if (buildId == null) {
 			System.out.println("No build ID was parsed.");
 			return null; // we failed.
@@ -93,7 +94,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 		// This block tries to parse the scan corresponding to the build.
 		inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
-
+		
 		VeracodeSAXParser scanParser = new VeracodeSAXParser();
 		Scan resultScan = parseSAXInput(scanParser);
 		resultScan.setImportTime(date);

@@ -19,7 +19,7 @@ import com.denimgroup.threadfix.service.APIKeyService;
  */
 public abstract class RestController {
 
-	protected final Log log = LogFactory.getLog(RestController.class);
+	protected final Log log = LogFactory.getLog(this.getClass());
 
 	public final static String API_KEY_SUCCESS = "Authentication was successful.";
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
@@ -32,7 +32,7 @@ public abstract class RestController {
 	 * and use the checkRestriction method with the name of the requested method as
 	 * a parameter.
 	 * <br/><br/>
-	 * TODO move to a configuration file? All in code right now.
+	 * TODO move to a configuration file. All in code right now.
 	 */
 	protected static Set<String> restrictedMethods = new HashSet<String>();
 
@@ -76,5 +76,4 @@ public abstract class RestController {
 			return API_KEY_NOT_FOUND_ERROR;
 		}
 	}
-	
 }

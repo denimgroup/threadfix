@@ -43,6 +43,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 public class AcunetixChannelImporter extends AbstractChannelImporter {
 	
 	String detailsPattern = "input <b><font color=\"dark\">([^<]+)</font>";
+	String pathPattern = "(.*) \\([a-z0-9]{25,50}\\)";
 
 	@Autowired
 	public AcunetixChannelImporter(ChannelTypeDao channelTypeDao,
@@ -133,6 +134,12 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		getChannelVulnText = false;
 	    	} else if (getUrlText) {
 	    		currentUrlText = getText(ch, start, length);
+	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
+	    			String possibleString = getRegexResult(currentUrlText, pathPattern);
+	    			if (possibleString != null) {
+	    				currentUrlText = possibleString;
+	    			}
+	    		}
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getText(ch, start, length);

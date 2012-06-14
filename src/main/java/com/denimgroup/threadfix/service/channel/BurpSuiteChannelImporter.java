@@ -47,6 +47,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
  *
  */
 public class BurpSuiteChannelImporter extends AbstractChannelImporter {
+	
+	private String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 
 	@Autowired
 	public BurpSuiteChannelImporter(ChannelTypeDao channelTypeDao,
@@ -99,21 +101,30 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	public class BurpSuiteSAXParser extends DefaultHandler {
 		
-		private Boolean getChannelVulnText    = false;
-		private Boolean getUrlText            = false;
-		private Boolean getParamText          = false;
-		private Boolean getSeverityText       = false;
-		private Boolean getHostText           = false;
+		private boolean getChannelVulnText    = false;
+		private boolean getUrlText            = false;
+		private boolean getParamText          = false;
+		private boolean getSeverityText       = false;
+		private boolean getHostText           = false;
+		private boolean getBackupParameter    = false;
+		private boolean getSerialNumber       = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
 		private String currentHostText        = null;
+		private String currentBackupParameter = null;
+		private String currentSerialNumber    = null;
 	    
-	    public void add(Finding finding) {
+		private void add(Finding finding) {
 			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
+				if (currentSerialNumber != null) {
+					finding.setNativeId(currentSerialNumber);
+				} else {
+					finding.setNativeId(getNativeId(finding));
+				}
+				
 	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
     		}
@@ -130,18 +141,30 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		getChannelVulnText = true;
 	    	} else if ("location".equals(qName)) {
 	    		getUrlText = true;
+	    	} else if ("serialNumber".equals(qName)) {
+	    		getSerialNumber = true;
 	    	} else if ("host".equals(qName)) {
 	    		getHostText = true;
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
 	    	} else if ("issues".equals(qName)) {
-	    		date = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
+	    		date = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", 
+	    				atts.getValue("exportTime"));
+	    	} else if ("request".equals(qName)) {
+	    		getBackupParameter = true;
 	    	}
 	    }
 
 	    public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("issue".equals(qName)) {
+	    		
+	    		// This is a temporary fix, we should take another look at why burp did this
+	    		// before deciding on a final strategy
+	    		if (currentParameter != null && currentParameter.equals(TEMPLATE_NAME)) {
+	    			currentParameter = currentBackupParameter;
+	    		}
+	    		
 	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		
@@ -151,6 +174,8 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		currentSeverityCode    = null;
 	    		currentParameter       = null;
 	    		currentUrlText         = null;
+	    		currentSerialNumber    = null;
+	    		currentBackupParameter = null;
 	    	}
 	    }
 
@@ -174,10 +199,25 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getParamText) {
 	    		currentParameter = getText(ch, start, length);
 	    		getParamText = false;
+	    	} else if (getSerialNumber) {
+	    		currentSerialNumber = getText(ch, start, length);
+	    		getSerialNumber = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getText(ch, start, length);
 	    		getSeverityText = false;
-	    	}
+	    	} else if (getBackupParameter) {
+	    		String tempURL = getText(ch,start,length);
+	    		if (tempURL != null && tempURL.contains("HTTP")) {
+	    			tempURL = tempURL.substring(0, tempURL.indexOf("HTTP"));
+	    		}
+	    		
+	    		if (tempURL != null && tempURL.contains("=") 
+	    				&& tempURL.indexOf('=') == tempURL.lastIndexOf('=')) {
+	    			currentBackupParameter = getRegexResult(tempURL, "\\?(.*?)=");
+	    		}
+	    		
+	    		getBackupParameter = false;
+	    	} 
 	    }
 	}
 
@@ -210,9 +250,11 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	setTestStatus();
 	    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    public void startElement (String uri, String name, String qName, Attributes atts) 
+	    		throws SAXException {	    	
 	    	if ("issues".equals(qName)) {
-	    		testDate = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
+	    		testDate = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", 
+	    				atts.getValue("exportTime"));
 	    		if (testDate != null)
 	    			hasDate = true;
 	    		correctFormat = atts.getValue("burpVersion") != null;

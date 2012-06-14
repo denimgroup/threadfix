@@ -277,9 +277,15 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				findingMap.get(CHANNEL_VULN_KEY), findingMap.get(CHANNEL_SEVERITY_KEY));
 	}
 	
-	/*
+	/**
+	 *
 	 * This method can be used to construct a finding out of the 
 	 * important common information that findings have.
+	 * @param url
+	 * @param parameter
+	 * @param channelVulnerabilityCode
+	 * @param channelSeverityCode
+	 * @return
 	 */
 	protected Finding constructFinding(String url, String parameter, 
     		String channelVulnerabilityCode, String channelSeverityCode) {
@@ -694,8 +700,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		return testStatus;
 	}
 
-	// This method checks through the XML with a blank parser to determine
-	// whether SAX parsing will fail due to an exception.
+	/**
+	 * This method checks through the XML with a blank parser to determine
+	 * whether SAX parsing will fail due to an exception.
+	 */
 	protected boolean isBadXml(InputStream inputStream) {
 		try {
 			readSAXInput(new DefaultHandler());
@@ -708,8 +716,12 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		return false;
 	}
 	
-	// This method with one argument sets up the SAXParser and inputStream correctly
-	// and executes the parsing. With two it adds a completion code and exception handling.
+	/**
+	 *  This method with one argument sets up the SAXParser and inputStream correctly
+	 * and executes the parsing. With two it adds a completion code and exception handling.
+	 * @param handler
+	 * @param completionCode
+	 */
 	protected void readSAXInput(DefaultHandler handler, String completionCode) {
 		try {
 			readSAXInput(handler);
@@ -749,6 +761,14 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		inputStream = new ByteArrayInputStream(byteArray);
 	}
 	
+	/**
+	 * This method requires that the AbstractChannelImporter fields
+	 * applicationChannel and testDate have valid values.
+	 * 
+	 * It returns either a duplicate, old scan, or unidentified error,
+	 * or a success code.
+	 * @return
+	 */
 	protected String checkTestDate() {
 		if (applicationChannel == null || testDate == null)
 			return OTHER_ERROR;

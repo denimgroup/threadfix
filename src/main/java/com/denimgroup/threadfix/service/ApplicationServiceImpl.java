@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,7 +125,32 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
 		removeRemoteApplicationLinks(application);
+		String possibleName = getNewName(application);
+		if (applicationDao.retrieveByName(possibleName) == null) {
+			application.setName(possibleName);
+		}
 		applicationDao.saveOrUpdate(application);
+	}
+	
+	private String getNewName(Application application) {
+		if (application != null) {			
+			int length = application.getName().length();
+			int possibleSize = Application.NAME_LENGTH - length;
+			
+			String addOnString = null;
+			if (possibleSize > 8) {
+				addOnString = " [del-" + getRandomString(possibleSize - 8) + "]";
+			} else if (possibleSize > 3) {
+				addOnString = getRandomString(possibleSize - 2);
+			}
+			return application.getName() + addOnString;
+		}
+		return null;
+	}
+	
+	private String getRandomString(int length) {
+		return RandomStringUtils.random(length,
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
 	private void removeRemoteApplicationLinks(Application application) {

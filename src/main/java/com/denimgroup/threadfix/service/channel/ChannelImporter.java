@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
+ * 
+ * 
  * @author bbeverly
  * @author mcollins
  * 
@@ -56,7 +58,10 @@ public interface ChannelImporter {
 	
 	/**
 	 * Before files go on the queue, they need to be checked to make sure they are valid.
-	 * @return a status string.
+	 * 
+	 * @return a status string. The success code is the SUCCESSFUL_SCAN field 
+	 * in the ChannelImporter interface. Other return codes are also given in
+	 * the interface and are all simply echoed to the user as an error.
 	 */
 	String checkFile();
 

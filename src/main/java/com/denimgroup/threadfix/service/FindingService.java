@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.denimgroup.threadfix.data.entities.Finding;
 
 /**
@@ -74,5 +76,21 @@ public interface FindingService {
 	 * @param finding
 	 */
 	void storeFinding(Finding finding);
+	
+	/**
+	 * Parse a finding out of the parameters of an HTTP request. 
+	 * Used for REST to cut down on Controller complexity.
+	 * @param request
+	 * @return
+	 */
+	Finding parseFindingFromRequest(HttpServletRequest request);
+	
+	/**
+	 * Check the possible Finding params in a request.
+	 * Used for REST to cut down on Controller complexity.
+	 * @param request
+	 * @return
+	 */
+	String checkRequestForFindingParameters(HttpServletRequest request);
 
 }

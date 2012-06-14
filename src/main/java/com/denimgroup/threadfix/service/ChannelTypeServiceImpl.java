@@ -38,7 +38,6 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
 
 @Service
 @Transactional(readOnly = true)
@@ -91,9 +90,6 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 		doNotIncludeList.add(ChannelType.VERACODE);
 		doNotIncludeList.add(ChannelType.QUALYSGUARD_WAS);
 		doNotIncludeList.add(ChannelType.MANUAL);
-		
-		if (!ChannelImporterFactory.isFortifyChannelImporterDefined())
-			doNotIncludeList.add(ChannelType.FORTIFY);
 		
 		if (application != null && application.getChannelList() != null && 
 				application.getChannelList().size() != 0) {

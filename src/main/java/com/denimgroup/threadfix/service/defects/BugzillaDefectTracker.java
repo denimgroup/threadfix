@@ -108,7 +108,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			bugMap.put("description", description);
 			bugMap.put("op_sys", "All");
 			bugMap.put("platform", "PC");
-			bugMap.put("priority", "P5");
+			//bugMap.put("priority", "P5");
 			bugMap.put("severity", severity);
 			bugMap.put("status", "NEW");
 

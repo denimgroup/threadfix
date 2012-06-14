@@ -23,11 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -50,8 +45,6 @@ public class ChannelImporterFactory {
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	
-	private final Log log = LogFactory.getLog(this.getClass());
-
 	/**
 	 * @param channelTypeDao
 	 * @param channelVulnerabilityDao
@@ -105,11 +98,14 @@ public class ChannelImporterFactory {
 			channelImporter = new BurpSuiteChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.CAT_NET)) {
-				channelImporter = new CatNetChannelImporter(channelTypeDao, channelVulnerabilityDao,
+			channelImporter = new CatNetChannelImporter(channelTypeDao, channelVulnerabilityDao,
 						channelSeverityDao, vulnerabilityMapLogDao);
 		} else if (channelName.equals(ChannelType.FINDBUGS)){
 			channelImporter = new FindBugsChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.FORTIFY)) {
+			channelImporter = new FortifyChannelImporter(channelTypeDao, channelVulnerabilityDao,
+					channelSeverityDao, genericVulnerabilityDao, vulnerabilityMapLogDao);
 		} else if (channelName.equals(ChannelType.NESSUS)){
 			channelImporter = new NessusChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
@@ -128,35 +124,6 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.ZAPROXY)){
 			channelImporter = new ZaproxyChannelImporter(channelTypeDao, channelVulnerabilityDao, 
 					vulnerabilityMapLogDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.FORTIFY) && isFortifyChannelImporterDefined()) {
-			try {
-				Class<?> fortifyClass = Class.forName("com.denimgroup.threadfix.service.channel.FortifyChannelImporter");
-				
-				Constructor<?>[] constructors = fortifyClass.getConstructors();
-				for (Constructor<?> constructor : constructors) {
-					if (constructor.getParameterAnnotations() != null && constructor.getParameterAnnotations().length == 5) {
-						channelImporter = (ChannelImporter) constructor.newInstance(channelTypeDao, channelVulnerabilityDao,
-								channelSeverityDao, genericVulnerabilityDao, vulnerabilityMapLogDao);
-					}
-						
-				}
-				
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-			
-			if (channelImporter == null) {
-				log.error("The Fortify importer has not been correctly added. Put the JAR in the lib directory of threadfix under the webapps folder in tomcat.");
-			}
-			
 		} else {
 			return null;
 		}
@@ -167,13 +134,4 @@ public class ChannelImporterFactory {
 		return channelImporter;
 	}
 	
-	public static boolean isFortifyChannelImporterDefined() {
-		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			classLoader.loadClass("com.denimgroup.threadfix.service.channel.FortifyChannelImporter");
-			return true;
-		} catch (ClassNotFoundException e) {
-			return false;
-		}
-	}	
 }

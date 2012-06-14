@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
 	<title>ThreadFix</title>
-	
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
 	<script type="text/javascript">
 		$(document).ready(function() {

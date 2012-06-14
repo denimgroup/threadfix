@@ -132,6 +132,7 @@ public class ApplicationsController {
 				applicationService.deleteById(appId);
 				status.setComplete();
 			} else if (application.isActive()) {
+				
 				applicationService.deactivateApplication(application);
 				status.setComplete();
 			}

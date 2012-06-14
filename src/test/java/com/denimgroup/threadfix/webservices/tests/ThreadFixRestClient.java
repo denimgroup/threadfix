@@ -111,11 +111,41 @@ public class ThreadFixRestClient {
 		util.setUrl(url);
 	}
 
+	// TODO remove the 0 and 4 in the URL.
+	// Doesn't matter now but the numbers are not right.
 	public String uploadScan(String applicationChannelId, String filePath) {
 		String result = util.httpPostFile(util.getUrl() + "/teams/0/applications/4/upload", 
 				filePath,
 				new String[] { "apiKey",       "channelId" },
 				new String[] {  util.getKey(), applicationChannelId });
+		return result;
+	}
+	
+	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
+			String nativeId, String parameter, String longDescription,
+			String fullUrl, String path) {
+		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+					"/addFinding", 
+				new String[] { "apiKey", "vulnType", "severity", 
+								"nativeId", "parameter", "longDescription",
+								"fullUrl", "path" },
+				new String[] {  util.getKey(), vulnType, severity, 
+								nativeId, parameter, longDescription,
+								fullUrl, path });
+		return result;
+	}
+	
+	public String addStaticFinding(String applicationId, String vulnType, String severity, 
+			String nativeId, String parameter, String longDescription,
+			String filePath, String column, String lineText, String lineNumber) {
+		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+				"/addFinding", 
+				new String[] { "apiKey", "vulnType", "severity", 
+								"nativeId", "parameter", "longDescription",
+								"filePath", "column", "lineText", "lineNumber"},
+				new String[] {  util.getKey(), vulnType, severity, 
+								nativeId, parameter, longDescription,
+								filePath, column, lineText, lineNumber });
 		return result;
 	}
 

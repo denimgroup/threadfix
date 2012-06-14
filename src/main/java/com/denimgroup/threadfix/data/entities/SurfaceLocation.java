@@ -183,6 +183,7 @@ public class SurfaceLocation extends BaseEntity {
 	 *            The URL object to store.
 	 */
 	public void setUrl(URL url) {
+		if (url == null) return;
 		this.url = url;
 		this.host = url.getHost();
 		this.path = url.getPath();
