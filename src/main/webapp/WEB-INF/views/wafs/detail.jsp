@@ -130,15 +130,11 @@
 	</c:forEach>
 	
 	<h3>WAF Rules:</h3>
-
-	<div id="wafrule">
-		<pre>
-<c:out value="${ prefix }"/>
-<c:forEach var="wafRule" items="${ currentRules }"><c:out value="${ wafRule.rule }"/>
-</c:forEach><c:out value="${ suffix }"/>
-		</pre>	
-	</div>
 	<form id="form1" name="form1" method="post">
 		<input id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
-	</form>
+	</form><br/>
+	<div id="wafrule">
+		<pre><c:out value="${ rulesText }"/></pre>	
+	</div>
+	
 </body>

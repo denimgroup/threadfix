@@ -207,14 +207,14 @@ public abstract class RealTimeProtectionGenerator {
 			return new ArrayList<WafRule>();
 		}
 
-		log.debug("About to generate rules for " + applications.size() + " applications");
+		log.debug("About to generate rules for " + applications.size() + " applications.");
 
 		int numVulns = 0;
 		for (Application a : applications) {
 			if (a != null && a.isActive())
 				numVulns += a.getVulnerabilities().size();
 		}
-		log.debug("This will involve " + numVulns + " vulnerabilities");
+		log.debug("This will involve " + numVulns + " vulnerabilities.");
 
 		List<WafRule> allRules = new ArrayList<WafRule>();
 
@@ -349,10 +349,9 @@ public abstract class RealTimeProtectionGenerator {
 		if (!stringInList(vulnType, getSupportedVulnerabilityTypes()))
 			return null;
 		
-		String vulnUrl = surfaceLocation.getUrl().getFile();
-		if (surfaceLocation.getHost() != null && vulnUrl.contains(surfaceLocation.getHost()))
-			vulnUrl = vulnUrl.substring(vulnUrl.indexOf(surfaceLocation.getHost()) + surfaceLocation.getHost().length());
+		String vulnUrl = surfaceLocation.getPath();
 		
+		// TODO remove this, it should be unnecessary.
 		String param = null;
 		if (surfaceLocation.getParameter() != null && !surfaceLocation.getParameter().isEmpty())
 			param = surfaceLocation.getParameter().replaceFirst("param=", "");
@@ -386,7 +385,7 @@ public abstract class RealTimeProtectionGenerator {
 	}
 
 	/**
-	 * 
+	 * TODO avoid this method by using a set for the acceptable Strings?
 	 * @param string
 	 * @param list
 	 * @return
@@ -404,9 +403,9 @@ public abstract class RealTimeProtectionGenerator {
 			   type.equals(WafType.IMPERVA_SECURE_SPHERE);
 	}
 	
-	public static String getStart(String type) {
+	public static String getStart(String type, List<WafRule> rules) {
 		if (type.equals(WafType.BIG_IP_ASM)) {
-			return BigIPASMGenerator.XML_START;
+			return BigIPASMGenerator.getStart(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.XML_START;
 		} else {
@@ -414,9 +413,9 @@ public abstract class RealTimeProtectionGenerator {
 		}
 	}
 	
-	public static String getEnd(String type) {
+	public static String getEnd(String type, List<WafRule> rules) {
 		if (type.equals(WafType.BIG_IP_ASM)) {
-			return BigIPASMGenerator.XML_END;
+			return BigIPASMGenerator.getEnd(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.XML_END;
 		} else {
@@ -424,5 +423,8 @@ public abstract class RealTimeProtectionGenerator {
 		}
 	}
 	
+	public static boolean shouldDisplay(WafRule rule) {
+		return true;
+	}
 	
 }

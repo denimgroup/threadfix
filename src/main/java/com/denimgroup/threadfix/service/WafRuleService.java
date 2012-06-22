@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 
 /**
@@ -50,10 +49,4 @@ public interface WafRuleService {
 	 */
 	void storeWafRule(WafRule wafRule);
 
-	/**
-	 * 
-	 * @param waf
-	 * @return
-	 */
-	List<WafRule> loadCurrentRules(Waf waf);
 }

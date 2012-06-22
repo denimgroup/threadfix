@@ -45,25 +45,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 
 @Controller
 @RequestMapping("/wafs")
 public class WafsController {
 
 	private WafService wafService = null;
-	private WafRuleService wafRuleService = null;
 	
 	private final Log log = LogFactory.getLog(WafsController.class);
 
 	@Autowired
-	public WafsController(WafService wafService, WafRuleService wafRuleService) {
+	public WafsController(WafService wafService) {
 		this.wafService = wafService;
-		this.wafRuleService = wafRuleService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -82,9 +77,6 @@ public class WafsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		mav.addObject(waf);
-		List<WafRule> currentRules = wafRuleService.loadCurrentRules(waf);
-		mav.addObject("currentRules", currentRules);
 		WafRuleDirective lastDirective = null;
 		List<WafRuleDirective> directives = null;
 		
@@ -108,16 +100,10 @@ public class WafsController {
 			}
 		}
 		
-		String prefix = null, suffix = null;
+		String rulesText = wafService.getAllRuleText(waf);
 		
-		String name = waf.getWafType().getName();
-		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
-			prefix = RealTimeProtectionGenerator.getStart(name);
-			suffix = RealTimeProtectionGenerator.getEnd(name);
-		} 
-		
-		mav.addObject("prefix", prefix);
-		mav.addObject("suffix", suffix);
+		mav.addObject(waf);
+		mav.addObject("rulesText", rulesText);
 		mav.addObject("hasApps", hasApps);
 		mav.addObject("lastDirective", lastDirective);
 		mav.addObject("directives", directives);
@@ -147,38 +133,13 @@ public class WafsController {
 		if (waf.getWafRules() == null)
 			wafService.generateWafRules(waf, new WafRuleDirective());
 		
-		StringBuffer buffer = new StringBuffer();
-		
-		String prefix = null, suffix = null;
-		String name = waf.getWafType().getName();
-		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
-			prefix = RealTimeProtectionGenerator.getStart(name);
-			suffix = RealTimeProtectionGenerator.getEnd(name);
-		} 
-		
-		if (prefix != null) {
-			buffer.append(prefix);
-		}
-		
-		for (WafRule rule : waf.getWafRules()) {
-			buffer.append(rule.getRule()).append("\n");
-		}
-		
-		if (suffix != null) {
-			buffer.append(suffix);
-		}
-
-		String pageString = buffer.toString();
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=\"wafrules_" + wafId
 				+ ".txt\"");
-
-		ServletOutputStream out = response.getOutputStream();
-		StringBuffer sb = new StringBuffer();
-		sb.append(pageString);
-
-		InputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
 		
+		String pageString = wafService.getAllRuleText(waf);
+		ServletOutputStream out = response.getOutputStream();
+		InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
 		byte[] outputByte = new byte[65535];
 		
 		// copy binary content to output stream

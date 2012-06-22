@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 
 @Service
@@ -58,16 +57,6 @@ public class WafRuleServiceImpl implements WafRuleService {
 	@Transactional(readOnly = false)
 	public void storeWafRule(WafRule wafRule) {
 		wafRuleDao.saveOrUpdate(wafRule);
-	}
-
-	@Override
-	public List<WafRule> loadCurrentRules(Waf waf) {
-		if (waf == null)
-			return null;
-		else if (waf.getLastWafRuleDirective() == null || waf.getLastWafRuleDirective().getId() == null)
-			return waf.getWafRules();
-		else
-			return wafRuleDao.retrieveByWafAndDirective(waf, waf.getLastWafRuleDirective());
 	}
 
 }

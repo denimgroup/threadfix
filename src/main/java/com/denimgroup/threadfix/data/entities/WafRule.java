@@ -38,13 +38,28 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "WafRule")
-public class WafRule extends BaseEntity {
+public class WafRule extends AuditableEntity {
 
 	private static final long serialVersionUID = 1723103296983210781L;
+	
+	public static final int PARAMETER_LENGTH = 255;
+	public static final int PATH_LENGTH = 255;
+	public static final int RULE_LENGTH = 10000;
 
 	@NotEmpty(message = "{errors.required}")
-	@Size(max = 1024, message = "{errors.maxlength} 1024.")
+	@Size(max = PATH_LENGTH, message = "{errors.maxlength} " + PATH_LENGTH + ".")
 	private String rule;
+	
+	@Size(max = PARAMETER_LENGTH, message = "{errors.maxlength} " + PARAMETER_LENGTH + ".")
+	private String parameter;
+	
+	@Size(max = PATH_LENGTH, message = "{errors.maxlength} " + PATH_LENGTH + ".")
+	private String path;
+	
+	// This field is used to remove rules that are handled specially 
+	// from inclusion with the normal rules. Right now just used by BIG-IP
+	// to prevent CSRF rules from going into the URL section.
+	private boolean isNormalRule = true;
 	
 	@Size(max = 25, message = "{errors.maxlength} 25.")
 	private String nativeId;
@@ -57,13 +72,41 @@ public class WafRule extends BaseEntity {
 	
 	private List<SecurityEvent> securityEvents;
 
-	@Column(length = 1024)
+	@Column(length = RULE_LENGTH)
 	public String getRule() {
 		return rule;
 	}
 
 	public void setRule(String rule) {
 		this.rule = rule;
+	}
+	
+	@Column(length = PATH_LENGTH)
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	@Column(length = PARAMETER_LENGTH)
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+	
+	// TODO switch to independent rule
+	@Column(nullable = false)
+	public boolean getIsNormalRule() {
+		return isNormalRule;
+	}
+
+	public void setIsNormalRule(boolean isNormalRule) {
+		this.isNormalRule = isNormalRule;
 	}
 
 	@Column(length = 1024)

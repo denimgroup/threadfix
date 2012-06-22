@@ -35,15 +35,16 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
  */
 public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 
-	public static final String XML_START = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
-												"<eaccess>";
-	public static final String XML_END = "</eaccess>";
-
-	String template = "security_blacklist add-filter {id} --pattern \"{pattern}\" --type URI -d {note} --action {action}";
+	// templateStart + pattern + templateMiddle + id + templateEnd + action = rule
+	// the {id} is the denyall filter id, not the threadfix wafrule id.
+	
+	String templateStart  = "security_blacklist add-filter {id} --pattern \"";
+	String templateMiddle = "\" --type URI -d ";
+	String templateEnd    = " --action ";
 	
 	public DenyAllRWebGenerator(WafRuleDao wafRuleDao) {
 		this.wafRuleDao = wafRuleDao;
-		this.defaultDirective = "drop";
+		this.defaultDirective = "deny";
 	}
 	
 	@Override
@@ -61,14 +62,15 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	}
 	
 	// TODO Test all of these POSIX payloads
+	// Canonicalization knocks down the number of characters we need to filter
 	
-	// this one needs a ton of \ chars for some reason
+	// things need to be double-escaped
 	public static final String POSIX_SQL_INJECTION = "['\\\\\\\\\\\\\"-]";
 	public static final String POSIX_XSS = "[<>]";
-	public static final String POSIX_PATH_TRAVERSAL = "[.\\\\]";
+	public static final String POSIX_PATH_TRAVERSAL = "[\\.\\\\]";
 	public static final String POSIX_HTTP_RESPONSE_SPLITTING = "%5cn|%5cr|%0d|%0a";
 	public static final String POSIX_XPATH_INJECTION = "['\\\\\\\\\\\\\"]";
-	public static final String POSIX_DIRECTORY_INDEXING = "[ .$?/]";
+	public static final String POSIX_DIRECTORY_INDEXING = "[ \\.$?]";
 	public static final String POSIX_LDAP_INJECTION = "[\\()*]";
 	public static final String POSIX_OS_COMMAND_INJECTION = "[&|;]";
 	public static final String POSIX_FORMAT_STRING_INJECTION = "[%]";
@@ -95,11 +97,10 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 		
 		String payload = POSIX_PAYLOAD_MAP.get(genericVulnName);
 		payload = payload.replace(";", "\\;");
+		payload = payload.replace("\"", "\\\"");
 		String pattern = uri + ".*" + parameter + "=.*" + payload;
 
-		return template.replaceFirst("\\{pattern\\}", pattern)
-					   .replaceFirst("\\{note\\}", id)
-					   .replaceFirst("\\{action\\}", action);
+		return templateStart + pattern + templateMiddle + id + templateEnd + action;
 	}
 	
 	@Override
@@ -109,11 +110,9 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 		String payload = POSIX_PAYLOAD_MAP.get(genericVulnName);
 		payload = payload.replace(";", "\\;");
 		payload = payload.replace("\"", "\\\"");
-		String pattern = uri;
+		String pattern = uri + payload;
 
-		return template.replaceFirst("\\{pattern\\}", pattern)
-					   .replaceFirst("\\{note\\}", id)
-					   .replaceFirst("\\{action\\}", action);
+		return templateStart + pattern + templateMiddle + id + templateEnd + action;
 	}
 
 	@Override
@@ -125,8 +124,6 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 		payload = payload.replace("\"", "\\\"");
 		String pattern = uri + ".*" + payload + "";
 		
-		return template.replaceFirst("\\{pattern\\}", pattern)
-					   .replaceFirst("\\{note\\}", id)
-					   .replaceFirst("\\{action\\}", action);
+		return templateStart + pattern + templateMiddle + id + templateEnd + action;
 	}
 }

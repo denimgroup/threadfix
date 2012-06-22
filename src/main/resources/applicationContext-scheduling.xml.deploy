@@ -23,7 +23,6 @@
 		</amq:persistenceAdapter>
 	</amq:broker>
 	
-
 	<!--
 		CachingConnectionFactory Definition, sessionCacheSize property is the
 		number of sessions to cache

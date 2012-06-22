@@ -61,7 +61,9 @@ public abstract class AbstractDefectTracker {
 	 * @param bugID
 	 * @return
 	 */
-	public abstract String getBugURL(String endpointURL, String bugID);
+	public String getBugURL(String endpointURL, String bugID) {
+		return "";
+	}
 	
 	/**
 	 * 

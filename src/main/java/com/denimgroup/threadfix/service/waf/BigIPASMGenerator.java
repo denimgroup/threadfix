@@ -23,145 +23,374 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.WafRule;
+import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 
+/**
+ * This class uses a different system for generating rules because 
+ * BIG-IP accepts a large policy XML that is a combination of rules instead of
+ * standalone rules like mod_security or Snort do.
+ * <br><br>
+ * 
+ * @author mcollins
+ *
+ */
 public class BigIPASMGenerator extends RealTimeProtectionGenerator {
-
+	
+	//TODO change structure of getStart / getEnd here and in other classes
+	
+	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	public BigIPASMGenerator(WafRuleDao wafRuleDao) {
 		this.wafRuleDao = wafRuleDao;
+		defaultDirective = "transparent";
 	}
 
-	public final static String XML_START = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-											"<signatures export_version=\"11.1.0\">";
-	
-	public final static String XML_END = "</signatures>";
-	
-	// BIG IP only accepts certain types of vulnerabilities in its type field. Here they are.
-	public String [] acceptedTypes = { "Cross Site Scripting (XSS)", "SQL-Injection", "Command Execution", 
-			"Server Side Code Injection", "LDAP Injection", "XPath Injection", "Path Traversal", 
-			"Directory Indexing", "Information Leakage", "Predictable Resource Location", "Buffer Overflow", 
-			"Denial of Service", "Authentication/Authorization Attacks", "Abuse of Functionality", 
-			"Vulnerability Scan", "Detection Evasion", "Other Application Activity", 
-			"Other Application Attacks", "Trojan/Backdoor/Spyware", "Non-browser client", 
-			"Remote File Include", "HTTP Parser Attack", "HTTP Request Smuggling Attack", "Forceful Browsing", 
-			"Brute Force Attack", "Injection Attempt", "Parameter Tampering", "XML Parser Attack", 
-			"Session Hijacking", "HTTP Response Splitting", "Web Scraping", "Malicious File Upload", 
-			"JSON Parser Attack", "Cross-site Request Forgery"};
-	
-	public static Map<String, String> CWE_BIG_IP_TYPE_MAP = new HashMap<String, String>();
+	/**
+	 * This map is used to skip a lot of if/then statements when selecting a set of attack signatures.
+	 */
+	private static Map<String, String[]> vulnTypeSignatureMap = new HashMap<String, String[]>();
 	static {
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "Cross Site Scripting (XSS)");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, "SQL-Injection");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, "Forceful Browsing");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, "Path Traversal");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, "XPath Injection");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, "Directory Indexing");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, "LDAP Injection");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, "Command Execution");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, "Other Application Attacks");
-		CWE_BIG_IP_TYPE_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, "Server Side Code Injection");
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, BigIPStrings.SIGS_XSS);
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_PATH_TRAVERSAL, BigIPStrings.SIGS_PATH_TRAVERSAL);
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_SQL_INJECTION, BigIPStrings.SIGS_SQLI);
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_XPATH_INJECTION, BigIPStrings.SIGS_XPATH);
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_BLIND_XPATH_INJECTION, BigIPStrings.SIGS_XPATH);
+		vulnTypeSignatureMap.put(GenericVulnerability.CWE_FILE_UPLOAD, BigIPStrings.SIGS_FILE_UPLOAD);
 	}
 	
+	private static Map<String, String> vulnTypeSigSetMap = new HashMap<String, String>();
+	static {
+		vulnTypeSigSetMap.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "299999994");
+		vulnTypeSigSetMap.put(GenericVulnerability.CWE_PATH_TRAVERSAL, "299999990");
+		vulnTypeSigSetMap.put(GenericVulnerability.CWE_SQL_INJECTION, "299999994");
+		vulnTypeSigSetMap.put(GenericVulnerability.CWE_XPATH_INJECTION, "299999989");
+		vulnTypeSigSetMap.put(GenericVulnerability.CWE_BLIND_XPATH_INJECTION, "299999989");
+	}
+
 	@Override
 	public String[] getSupportedVulnerabilityTypes() {
-		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
-				GenericVulnerability.CWE_SQL_INJECTION, 
-				GenericVulnerability.CWE_DIRECT_REQUEST,
+		return new String[] { 
+				GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
 				GenericVulnerability.CWE_PATH_TRAVERSAL,
+				GenericVulnerability.CWE_SQL_INJECTION,
+				GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY,
 				GenericVulnerability.CWE_XPATH_INJECTION,
-				GenericVulnerability.CWE_DIRECTORY_INDEXING,
-				GenericVulnerability.CWE_LDAP_INJECTION,
-				GenericVulnerability.CWE_OS_COMMAND_INJECTION,
-				GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
-				GenericVulnerability.CWE_EVAL_INJECTION };
+				GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+				GenericVulnerability.CWE_INFORMATION_EXPOSURE,
+				GenericVulnerability.CWE_PRIVACY_VIOLATION,
+				GenericVulnerability.CWE_FILE_UPLOAD,
+				GenericVulnerability.CWE_GENERIC_INJECTION,
+				GenericVulnerability.CWE_DEBUG_CODE
+				
+		};
 	}
 	
 	@Override
-	protected String generateRuleWithParameter(String uri, String action, String id,
-			String genericVulnName, String parameter) {
-		
-		String payload = PAYLOAD_MAP.get(genericVulnName);
-		String message = MESSAGE_MAP.get(genericVulnName);
-		
-		String escapedURI = pcreRegexEscape(uri);
-		
-		String parameterMatching = "(\\?" + parameter + "=|\\?.*&" + parameter + 
-				"=|\\n.*[\\n&\\r]" + parameter + "=|\\r.*[\\n&\\r]" + parameter + "=)(" +
-				payload + ")";
-		
-		String pcre = "/" + escapedURI + parameterMatching + "/";
-		
-		return genBigIPRule(id, pcre, null, message, genericVulnName);
-	}
-	
-	@Override
-	protected String generateRuleForExactUrl(String uri, String action,
-			String id, String genericVulnName) {
-		
-		String message = MESSAGE_MAP.get(genericVulnName);
-		
-		String pcre = "/" + pcreRegexEscape(uri) + "/O";
-		
-		return genBigIPRule(id, pcre, null, message, genericVulnName);
-	}
-
-	@Override
-	protected String generateRuleWithPayloadInUrl(String uri, String action,
-			String id, String genericVulnName) {
-		
-		String payload = PAYLOAD_MAP.get(genericVulnName);
-		String message = MESSAGE_MAP.get(genericVulnName);
-		
-		String pcre = "/(" + payload + ")/U";
-		
-		return genBigIPRule(id, pcre, null, message, genericVulnName);
-	}
-	
-	// TODO add severity in here as the risk field once everything else works
-	private String genBigIPRule(String id, String pcre, String date, String doc, String type) {
-		
-		String bigIPType = CWE_BIG_IP_TYPE_MAP.get(type);
-		
-		if (!stringInList(bigIPType, acceptedTypes)) {
+	protected WafRule makeRule(Integer currentId, Vulnerability vulnerability, WafRuleDirective directive) {
+		if (currentId == null || vulnerability == null 
+				|| vulnerability.getSurfaceLocation() == null
+				|| vulnerability.getGenericVulnerability() == null
+				|| vulnerability.getGenericVulnerability().getName() == null) {
 			return null;
 		}
 		
-		String stringDate = date;
+		SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
+	
+		String vulnType = vulnerability.getGenericVulnerability().getName();
+		// Check if the vuln is supported
+		if (!stringInList(vulnType, getSupportedVulnerabilityTypes()))
+			return null;
 		
-		if (stringDate == null) {
-			Date tempDate = Calendar.getInstance().getTime();
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			stringDate = format.format(tempDate);
+		String parameter = surfaceLocation.getParameter();
+		String path      = surfaceLocation.getPath();
+		
+		WafRule rule = new WafRule();
+		rule.setIsNormalRule(false);
+		rule.setWafRuleDirective(directive);
+		rule.setNativeId(currentId.toString());
+		
+		//CSRF is handled on a by-url basis in its own tag
+		if (GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY.equals(vulnType)) {
+			rule.setVulnerabilityDesc("CSRF");
+			rule.setRule("<csrf_urls>" + path + "</csrf_urls>");
+			return rule;
 		}
 		
-		// TODO Implement a more general solution
-		String filteredRegEx = pcre.replace("\"", "\\x034");
-		filteredRegEx = filteredRegEx.replace("'","\\x27");
-		filteredRegEx = filteredRegEx.replace("\\r","\\x0D");
-		filteredRegEx = filteredRegEx.replace("\\n","\\x0A");
-		filteredRegEx = filteredRegEx.replace("&", "\\x26");
-		filteredRegEx = filteredRegEx.replace(">", "\\x3E");
-		filteredRegEx = filteredRegEx.replace("<", "\\x3C");
+		// Possibly turn on Response Scrubbing if CCN or SSN might be present
+		if (GenericVulnerability.CWE_INFORMATION_EXPOSURE.equals(vulnType) ||
+				GenericVulnerability.CWE_PRIVACY_VIOLATION.equals(vulnType)) {
+			for (Finding finding : vulnerability.getFindings()) {
+				if (finding != null && finding.getChannelVulnerability() != null && 
+						finding.getChannelVulnerability().getName()!= null &&
+						(finding.getChannelVulnerability().getName().contains("Credit Card") ||
+						 finding.getChannelVulnerability().getName().contains("Social Security"))) {
+					rule.setRule("Response Scrubbing");
+					return rule;
+				}
+			}
+			return null;
+		}
 		
-		return "<sig>" +
-				"<rev>" +
-				"<sig_name>" + id + "</sig_name>" +
-				"<rule>pcre:\"" + filteredRegEx + "\";</rule>" +
-				"<last_update>" + stringDate + "</last_update>" +
-				"<apply_to>Request</apply_to>" +
-				"<risk>3</risk>" +
-				"<accuracy>3</accuracy>" +
-				"<doc>" + doc + "</doc>" +
-				"<attack_type>" + bigIPType + "</attack_type>" +
-				"</rev>" +
-				"</sig>";
+		// Possibly turn on Illegal methods
+		// TODO improve detection of these vulns
+		if (GenericVulnerability.CWE_GENERIC_INJECTION.equals(vulnType) ||
+				GenericVulnerability.CWE_DEBUG_CODE.equals(vulnType)) {
+			for (Finding finding : vulnerability.getFindings()) {
+				if (finding != null && finding.getChannelVulnerability() != null && 
+						finding.getChannelVulnerability().getName()!= null &&
+						finding.getChannelVulnerability().getName().contains("HTTP Method")) {
+					rule.setRule("Illegal Method");
+					return rule;
+				}
+			}
+			return null;
+		}
+
+		// The general case: set the path, parameter, and type
+		if (path != null && (parameter != null || GenericVulnerability.CWE_FILE_UPLOAD.equals(vulnType))) {
+			rule.setParameter(parameter);
+			rule.setPath(path);
+			rule.setRule("BIG-IP");
+			rule.setVulnerabilityDesc(vulnType);
+			return rule;
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Generate the first part of the policy.
+	 * 
+	 * The general strategy is to compose a non-repeating structure of URL/param pairs,
+	 * keeping track of corresponding attack signatures and combining them if necessary,
+	 * then expanding that into the policy string using string templates.
+	 * <br/><br/>
+	 * Non-attack signature related rules are handled separately, adding to the length and
+	 * complexity of this method.
+	 * 
+	 * TODO split into smaller methods
+	 * @param rules
+	 * @return
+	 */
+	public static String getStart(List<WafRule> rules) { 
+		 if (rules == null || rules.size() == 0) {
+			 return null;
+		 }
+		 String directive = null;
+		 
+		 StringBuilder csrfStrings =  new StringBuilder();
+		 List<String> csrfStringList = new ArrayList<String>();
+		 
+		 StringBuilder ruleTextBuilder = new StringBuilder();
+		 
+		 // First keys are paths
+		 // Second keys are parameters
+		 // Set<String> values are the signatures
+		 Map<String, Map<String, Set<String>>> ruleMap = 
+			 new HashMap<String, Map<String,Set<String>>>();
+		 Map<String, String> dateMap = new HashMap<String, String>();
+		 
+		 boolean directoryTraversalsOn = false;
+		 boolean responseScrubbingOn = false;
+		 boolean illegalMethodOn = false;
+		 
+		 // Construct the map<string, map<string, set<string>>> structure
+		 for (WafRule rule : rules) {
+			 if (rule == null || rule.getRule() == null) {
+				 continue;
+			 }
+			 
+			 // get values from rule
+			 String path = rule.getPath();
+			 String parameter = rule.getParameter();
+			 String[] attackSignatures = vulnTypeSignatureMap.get(rule.getVulnerabilityDesc());
+
+			 String date = null;
+			 if (rule.getCreatedDate() != null) {
+				 date = dateFormatter.format(rule.getCreatedDate());
+			 } else {
+				 date = dateFormatter.format(Calendar.getInstance().getTime());
+			 }
+			 
+			 // Add the entry
+			 if (path != null && parameter != null) {
+				 if (ruleMap.get(path) == null) {
+					 if (date == null) {
+						 date = dateFormatter.format(Calendar.getInstance().getTime());
+					 }
+					 dateMap.put(path, date);
+					 
+					 Map<String, Set<String>> entry = new HashMap<String,Set<String>>();
+					 ruleMap.put(path, entry);
+				 }
+				 
+				 if (ruleMap.get(path).get(parameter) == null) {
+					 ruleMap.get(path).put(parameter, new TreeSet<String>());
+				 }
+				 
+				 if (attackSignatures != null && attackSignatures.length > 0) {
+					 ruleMap.get(path).get(parameter)
+					 	.addAll(Arrays.asList(attackSignatures));
+				 }
+			 }
+			 
+			 if (directive == null && rule != null && 
+					 rule.getWafRuleDirective() != null) {
+				 directive = rule.getWafRuleDirective().getDirective();
+			 }
+			 
+			 // check for any of the special cases
+			 if (rule != null && rule.getVulnerabilityDesc() != null &&
+					 rule.getVulnerabilityDesc().startsWith("CSRF")) {
+				 csrfStringList.add(rule.getRule());
+			 } else if (!directoryTraversalsOn && 
+					 rule != null && rule.getVulnerabilityDesc() != null &&
+					 rule.getVulnerabilityDesc()
+					 	.equals(GenericVulnerability.CWE_PATH_TRAVERSAL)) {
+				 directoryTraversalsOn = true;
+			 } else if (!responseScrubbingOn &&
+					 rule.getRule().equals("Response Scrubbing")) {
+				 responseScrubbingOn = true;
+			 } else if (!illegalMethodOn &&
+					 rule.getRule().equals("Illegal Method")) {
+				 illegalMethodOn = true;
+			 }
+		 }
+		 
+		 Collections.sort(csrfStringList);
+		 
+		 for (String rule : csrfStringList) {
+			 csrfStrings.append("\n    ").append(rule);
+		 }
+		 		 
+		 // this does the expansion of the big data structure
+		 expandRules(ruleMap, dateMap, ruleTextBuilder);
+			 
+		 StringBuilder start = new StringBuilder();
+		 
+		 // handle special cases and expand the rest of the policy
+		 String directoryTraversal = directoryTraversalsOn ? "enabled" : "disabled";
+		 String responseScrubbing = responseScrubbingOn ? "true" : "false";
+		 String illegalMethod = illegalMethodOn ? "true" : "false";
+		 
+		 if (csrfStrings.length() == 0) {
+			 start.append(BigIPStrings.XML_START_BEFORE_CSRF)
+			 	  .append(BigIPStrings.XML_START_AFTER_CSRF
+			 	  	.replaceFirst("\\{directive\\}", directive)
+			 	  	.replaceAll("\\{responseScrubbing\\}", responseScrubbing))
+			 	  .append(BigIPStrings.XML_START_CSRF_DISABLED);
+		 } else {
+			 start.append(BigIPStrings.XML_START_BEFORE_CSRF)
+				  .append(csrfStrings.toString())
+				  .append(BigIPStrings.XML_START_AFTER_CSRF
+					.replaceFirst("\\{directive\\}", directive)
+					.replaceAll("\\{responseScrubbing\\}", responseScrubbing))
+				  .append(BigIPStrings.XML_START_CSRF_ENABLED);
+		 }
+		 
+		 start.append(BigIPStrings.XML_START_FINAL
+				 			.replaceAll("\\{date\\}", 
+				 					dateFormatter.format(Calendar.getInstance().getTime()))
+				 			.replaceAll("\\{directoryTraversal\\}", directoryTraversal)
+				 			.replaceAll("\\{illegalMethod\\}", illegalMethod)
+			 				);
+		 start.append(ruleTextBuilder);
+		 
+		 return start.toString();
+	}
+	
+	/**
+	 * Take the map structure that is constructed and append all of the rule text
+	 * onto the supplied StringBuilder
+	 * @param ruleMap
+	 * @param dateMap
+	 * @param ruleTextBuilder
+	 */
+	private static void expandRules(Map<String, Map<String, Set<String>>> ruleMap, 
+			Map<String, String> dateMap, StringBuilder ruleTextBuilder) {
+		if (ruleMap == null || dateMap == null || ruleTextBuilder == null) {
+			return;
+		}
+	
+		for (Entry<String, Map<String, Set<String>>> entry : ruleMap.entrySet()) {
+			if (entry == null) {
+				continue;
+			}
+			 
+			String date = dateMap.get(entry.getKey());
+			 
+			ruleTextBuilder.append(BigIPStrings.TEMPLATE_URL
+					 				.replaceFirst("\\{path\\}", entry.getKey())
+					 				.replaceFirst("\\{date\\}", date));
+			 
+			for (Entry<String, Set<String>> paramEntry : entry.getValue().entrySet()) {
+				ruleTextBuilder.append(BigIPStrings.TEMPLATE_PARAM
+						 			.replaceFirst("\\{parameter\\}", paramEntry.getKey())
+						 			.replaceFirst("\\{date\\}", date));
+				 
+				for (String attackSignature : paramEntry.getValue()) {
+					ruleTextBuilder.append(BigIPStrings.TEMPLATE_ATTACK_SIGNATURE
+							 		.replaceFirst("\\{signatureNumber\\}", attackSignature));
+				}
+				 
+				ruleTextBuilder.append(BigIPStrings.TEMPLATE_PARAM_END);
+			}
+			 
+			ruleTextBuilder.append(BigIPStrings.TEMPLATE_URL_END);
+		}
+	}
+
+	public static String getEnd(List<WafRule> rules) { 
+		if (rules == null || rules.size() == 0) {
+			 return null;
+		}
+		
+		// using a set ensures that we don't include the same signature set 
+		// more than one time. 
+		Set<String> signatureSet =  new TreeSet<String>();
+				 
+		for (WafRule rule : rules) {
+			if (rule != null && rule.getVulnerability() != null &&
+					rule.getVulnerability().getGenericVulnerability() != null &&
+					rule.getVulnerability().getGenericVulnerability().getName() != null &&
+					vulnTypeSigSetMap.get(rule.getVulnerability()
+							.getGenericVulnerability().getName()) != null) {
+				signatureSet.add(vulnTypeSigSetMap.get(rule.getVulnerability()
+						.getGenericVulnerability().getName()));
+			}
+		}
+
+		String signatureString = "";
+		if (signatureSet.size() > 0) {
+			StringBuilder signatures = new StringBuilder();
+			 
+			for (String signature : signatureSet) {
+				signatures.append(BigIPStrings.TEMPLATE_SIGNATURE_SET.replaceFirst("\\{id\\}", signature));
+			}
+			
+			signatureString = signatures.toString();
+		}
+		 
+		return BigIPStrings.XML_END_BEFORE_SIGNATURES +
+			   signatureString + 
+			   BigIPStrings.XML_END_AFTER_SIGNATURES;
 	}
 }

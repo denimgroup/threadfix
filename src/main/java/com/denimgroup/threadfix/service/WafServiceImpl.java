@@ -171,5 +171,54 @@ public class WafServiceImpl implements WafService {
 			}
 		}
 	}
+	
+	@Override
+	public String getAllRuleText(Waf waf) {
+		if (waf == null || waf.getWafRules() == null ||
+				waf.getWafRules().size() == 0){
+			return null;
+		}
+		
+		StringBuffer buffer = new StringBuffer();
+		
+		String prefix = null, suffix = null, ruleEnd = null;
+		String name = waf.getWafType().getName();
+		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
+			prefix = RealTimeProtectionGenerator.getStart(name, waf.getWafRules());
+			suffix = RealTimeProtectionGenerator.getEnd(name, waf.getWafRules());
+		} 
+		
+		if (prefix != null) {
+			buffer.append(prefix);
+		}
+		List<WafRule> rules = loadCurrentRules(waf);
+		
+		if (rules != null) {
+			for (WafRule rule : rules) {
+				if (rule != null && rule.getIsNormalRule()) {
+					buffer.append(rule.getRule()).append("\n");
+					if (ruleEnd != null) {
+						buffer.append(ruleEnd);
+					}
+				}
+			}
+		}
+		
+		if (suffix != null) {
+			buffer.append(suffix);
+		}
+
+		return buffer.toString();
+	}
+	
+	@Override
+	public List<WafRule> loadCurrentRules(Waf waf) {
+		if (waf == null)
+			return null;
+		else if (waf.getLastWafRuleDirective() == null || waf.getLastWafRuleDirective().getId() == null)
+			return waf.getWafRules();
+		else
+			return wafRuleDao.retrieveByWafAndDirective(waf, waf.getLastWafRuleDirective());
+	}
 
 }

@@ -547,7 +547,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		Map<String,Object[]> productsMap = null;
 		try {
 			productsMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get_accessible_products", new Object[] {});
+					"Product.get_enterable_products", new Object[] {});
 			Object[] ids = productsMap.get("ids");
 	
 			for (Object i : ids) {
@@ -630,7 +630,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 		try {
 			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get_accessible_products", new Object[] {});
+					"Product.get_enterable_products", new Object[] {});
 			Object[] ids = productsMap.get("ids");
 
 			Map<String,Object[]> params = new HashMap<String, Object[]>();

@@ -145,7 +145,7 @@ public class WafRestController extends RestController {
 			return LOOKUP_FAILED;
 		}
 		wafService.generateWafRules(waf, waf.getLastWafRuleDirective());
-		return waf.getWafRules();
+		return wafService.getAllRuleText(waf);
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
