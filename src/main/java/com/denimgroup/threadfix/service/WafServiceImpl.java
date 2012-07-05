@@ -127,9 +127,14 @@ public class WafServiceImpl implements WafService {
 		if (directive == null && waf.getLastWafRuleDirective() != null)
 			directive = waf.getLastWafRuleDirective();
 
-		RealTimeProtectionGeneratorFactory factory = new RealTimeProtectionGeneratorFactory(wafRuleDao);
+		RealTimeProtectionGeneratorFactory factory = new RealTimeProtectionGeneratorFactory(
+															wafRuleDao, wafRuleDirectiveDao);
 		RealTimeProtectionGenerator generator = factory.getTracker(waf.getWafType().getName());
 		if (generator != null) {
+			if (directive == null) {
+				directive = generator.getDefaultDirective(waf);
+			}
+			
 			List<WafRule> wafRuleList = generator.generateRules(waf, directive);
 			waf.setWafRules(wafRuleList);
 			waf.setLastWafRuleDirective(directive);
@@ -141,11 +146,13 @@ public class WafServiceImpl implements WafService {
 	@Override
 	@Transactional(readOnly = false)
 	public void generateWafRules(Waf waf, String directiveName) {
-		if (waf == null || waf.getId() == null || waf.getWafType() == null || waf.getWafType().getId() == null)
+		if (waf == null || waf.getId() == null || waf.getWafType() == null 
+				|| waf.getWafType().getId() == null)
 			return;
 		WafRuleDirective directive = null;
 		if (directiveName != null && !directiveName.isEmpty()) {
-			WafRuleDirective tempDirective = wafRuleDirectiveDao.retrieveByWafTypeIdAndDirective(waf.getWafType(), directiveName);
+			WafRuleDirective tempDirective = wafRuleDirectiveDao.retrieveByWafTypeIdAndDirective(
+														waf.getWafType(), directiveName);
 			if (tempDirective != null)
 				directive = tempDirective;
 		}

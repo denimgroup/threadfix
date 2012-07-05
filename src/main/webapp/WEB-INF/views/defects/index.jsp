@@ -73,7 +73,7 @@
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td class="label">Compocnent:</td>
+					<td class="label">Component:</td>
 					<td class="inputValue">
 						<form:select path="selectedComponent">
 							<form:options items="${projectMetadata.components}"/>
@@ -123,6 +123,22 @@
 					<td class="inputValue">
 						<form:select path="severity">
 							<form:options items="${projectMetadata.severities}"/>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Priority:</td>
+					<td class="inputValue">
+						<form:select path="priority">
+							<form:options items="${projectMetadata.priorities}"/>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Status:</td>
+					<td class="inputValue">
+						<form:select path="status">
+							<form:options items="${projectMetadata.statuses}"/>
 						</form:select>
 					</td>
 				</tr>

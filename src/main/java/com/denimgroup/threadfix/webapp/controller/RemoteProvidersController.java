@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,14 +44,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.ApplicationChannelService;
-import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
@@ -65,32 +57,23 @@ public class RemoteProvidersController {
 	
 	private final Log log = LogFactory.getLog(RemoteProvidersController.class);
 	
-	// TODO decide on a better set of contents here
-	private String USE_OLD_PASSWORD = "no password here.";
-	private String API_KEY_PREFIX = "************************";
-	
 	private RemoteProviderTypeService remoteProviderTypeService;
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private OrganizationService organizationService;
-	private ApplicationService applicationService;
-	private ApplicationChannelService applicationChannelService;
 	
 	@Autowired
 	public RemoteProvidersController(RemoteProviderTypeService remoteProviderTypeService,
 			RemoteProviderApplicationService remoteProviderApplicationService,
-			OrganizationService organizationService,
-			ApplicationService applicationService,
-			ApplicationChannelService applicationChannelService) {
+			OrganizationService organizationService) {
 		this.remoteProviderTypeService = remoteProviderTypeService;
 		this.remoteProviderApplicationService = remoteProviderApplicationService;
 		this.organizationService = organizationService;
-		this.applicationService = applicationService;
-		this.applicationChannelService = applicationChannelService;
 	}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "apiKeyString", "username", "password", "application.id", "application.organization.id" });
+		dataBinder.setAllowedFields(new String[] { "apiKeyString", "username", 
+				"password", "application.id", "application.organization.id" });
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -120,11 +103,12 @@ public class RemoteProvidersController {
 	private String mask(String input) {
 		if (input != null) {
 			if (input.length() > 5) {
-				String replaced = input.replace(input.substring(0,input.length() - 4), API_KEY_PREFIX);
+				String replaced = input.replace(input.substring(0,input.length() - 4), 
+						RemoteProviderTypeService.API_KEY_PREFIX);
 				return replaced;
 			} else {
 				// should never get here, but let's not return the info anyway
-				return API_KEY_PREFIX;
+				return RemoteProviderTypeService.API_KEY_PREFIX;
 			}
 		} else {
 			return null;
@@ -147,7 +131,8 @@ public class RemoteProvidersController {
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
 		if (remoteProviderApplication == null || remoteProviderApplication.getApplication() == null) {
-			request.getSession().setAttribute("error", "The scan request failed because it could not find the requested application.");
+			request.getSession().setAttribute("error", 
+					"The scan request failed because it could not find the requested application.");
 
 			return "redirect:/configuration/remoteproviders/";
 		}
@@ -183,73 +168,12 @@ public class RemoteProvidersController {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
+			remoteProviderApplicationService.processApp(result, remoteProviderApplication);
 			
-			// TODO move to service layer
-			Application application = applicationService.loadApplication(
-					remoteProviderApplication.getApplication().getId());
-			
-			if (application == null) {
-				result.rejectValue("application.id", "errors.invalid", new String[] {"Application"},"Application choice was invalid.");
+			if (result.hasErrors()) {
 				model.addAttribute("remoteProviderApplication",remoteProviderApplication);
 				model.addAttribute("organizationList", organizationService.loadAllActive());
 				return "config/remoteproviders/edit";
-			}
-			
-			if (application.getRemoteProviderApplications() == null) {
-				application.setRemoteProviderApplications(new ArrayList<RemoteProviderApplication>());
-			}
-			if (!application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
-				application.getRemoteProviderApplications().add(remoteProviderApplication);
-				remoteProviderApplication.setApplication(application);
-			}
-			
-			ChannelType type = remoteProviderApplication.getRemoteProviderType().getChannelType();
-			
-			if (application.getChannelList() == null || application.getChannelList().size() == 0) {
-				application.setChannelList(new ArrayList<ApplicationChannel>());
-			}
-			
-			Integer previousId = null;
-			
-			if (remoteProviderApplication.getApplicationChannel() != null) {
-				previousId = remoteProviderApplication.getApplicationChannel().getId();
-			}
-			
-			remoteProviderApplication.setApplicationChannel(null);
-			
-			for (ApplicationChannel applicationChannel : application.getChannelList()) {
-				if (applicationChannel.getChannelType().getName().equals(type.getName())) {
-					remoteProviderApplication.setApplicationChannel(applicationChannel);
-					if (applicationChannel.getScanList() != null && applicationChannel.getScanList().size() > 0) {
-						List<Scan> scans = applicationChannel.getScanList();
-						Collections.sort(scans,Scan.getTimeComparator());
-						remoteProviderApplication.setLastImportTime(scans.get(scans.size() - 1).getImportTime());
-					} else {
-						remoteProviderApplication.setLastImportTime(null);
-					}
-					break;
-				}
-			}
-			
-			if (remoteProviderApplication.getApplicationChannel() == null) {
-				ApplicationChannel channel = new ApplicationChannel();
-				channel.setApplication(application);
-				if (remoteProviderApplication.getRemoteProviderType() != null && 
-						remoteProviderApplication.getRemoteProviderType().getChannelType() != null) {
-					channel.setChannelType(remoteProviderApplication.getRemoteProviderType().getChannelType());
-					applicationChannelService.storeApplicationChannel(channel);
-				}
-				remoteProviderApplication.setLastImportTime(null);
-				remoteProviderApplication.setApplicationChannel(channel);
-				application.getChannelList().add(channel);
-			}
-			
-			if (remoteProviderApplication.getApplicationChannel() == null
-					|| previousId == null
-					|| !previousId.equals(remoteProviderApplication.getApplicationChannel().getId())) {
-				
-				remoteProviderApplicationService.store(remoteProviderApplication);
-				applicationService.storeApplication(application);
 			}
 
 			status.setComplete();
@@ -264,7 +188,7 @@ public class RemoteProvidersController {
 		 
 		if (remoteProviderType.getPassword() != null) {
 			// This will prevent actual password data being sent to the page
-			remoteProviderType.setPassword(USE_OLD_PASSWORD);
+			remoteProviderType.setPassword(RemoteProviderTypeService.USE_OLD_PASSWORD);
 		}
 		if (remoteProviderType.getApiKeyString() != null) {
 			remoteProviderType.setApiKeyString(mask(remoteProviderType.getApiKeyString()));
@@ -282,75 +206,22 @@ public class RemoteProvidersController {
 		if (result.hasErrors()) {
 			return "config/remoteproviders/configure";
 		} else {
-			RemoteProviderType databaseRemoteProviderType = remoteProviderTypeService.load(typeId);
+			remoteProviderTypeService.checkConfiguration(remoteProviderType, 
+					result, typeId);
 			
-			// TODO move to service layer
-			
-			if (remoteProviderType.getPassword() != null &&
-					remoteProviderType.getPassword().equals(USE_OLD_PASSWORD) &&
-					databaseRemoteProviderType != null &&
-					databaseRemoteProviderType.getPassword() != null) {
-				remoteProviderType.setPassword(databaseRemoteProviderType.getPassword());
-			}
-			
-			if (remoteProviderType.getApiKeyString() != null &&
-					remoteProviderType.getApiKeyString().startsWith(API_KEY_PREFIX) &&
-					databaseRemoteProviderType != null &&
-					databaseRemoteProviderType.getApiKeyString() != null) {
-				remoteProviderType.setApiKeyString(databaseRemoteProviderType.getApiKeyString());
-			}
-			
-			if (databaseRemoteProviderType == null || 
-					(remoteProviderType != null && remoteProviderType.getUsername() != null &&
-					!remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername())) ||
-					(remoteProviderType != null && remoteProviderType.getPassword() != null &&
-					!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) ||
-					(remoteProviderType != null && remoteProviderType.getApiKeyString() != null &&
-					!remoteProviderType.getApiKeyString().equals(databaseRemoteProviderType.getApiKeyString()))) {
-			
-				List<RemoteProviderApplication> apps = remoteProviderApplicationService.getApplications(
-																					remoteProviderType);
-				
-				if (apps == null) {
-					// Here the apps coming back were null. For now let's put an error page.
-					// TODO finalize this process.
-					String field = null;
-					if (remoteProviderType.getHasApiKey()) {
-						field = "apiKeyString";
-					} else {
-						field = "username";
-					}
-					
-					result.rejectValue(field, "errors.other", 
-							"We were unable to connect to the provider with these credentials.");
-					
-					return "config/remoteproviders/configure";
-				} else {
-					
-					log.warn("Provider username has changed, deleting old apps.");
-					
-					remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
-	
-					remoteProviderType.setRemoteProviderApplications(apps);
-					
-					if (remoteProviderType.getRemoteProviderApplications() != null) {
-						for (RemoteProviderApplication remoteProviderApplication : 
-								remoteProviderType.getRemoteProviderApplications()) {
-							remoteProviderApplicationService.store(remoteProviderApplication);
-						}
-					}
-					
-					remoteProviderTypeService.store(remoteProviderType);
-
-					status.setComplete();
-					return "redirect:/configuration/remoteproviders";
-				}
-			} else {
-				log.info("No change was made to the credentials.");
+			if (result.hasErrors()) {
+				return "config/remoteproviders/configure";
 			}
 			
 			status.setComplete();
 			return "redirect:/configuration/remoteproviders";
 		}
+	}
+	
+	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
+	public String clearConfiguration(@PathVariable("typeId") int typeId) {
+
+		remoteProviderTypeService.clearConfiguration(typeId);
+		return "redirect:/configuration/remoteproviders";
 	}
 }

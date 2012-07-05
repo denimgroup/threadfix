@@ -75,5 +75,10 @@ public interface FindingDao {
 	 * @param finding
 	 */
 	void saveOrUpdate(Finding finding);
+	
+	/**
+	 * @param finding
+	 */
+	void delete(Finding finding);
 
 }

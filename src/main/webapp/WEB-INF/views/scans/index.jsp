@@ -17,13 +17,14 @@
 			<tr>
 				<th class="first">Channel</th>
 				<th class="long">Scan Date</th>
-				<th class="short last">Total Vulns</th>
+				<th class="short">Total Vulns</th>
+				<th class="medium last">Delete Scan</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="wafTableBody">
 		<c:if test="${ empty application.scans }">
 			<tr class="bodyRow">
-				<td colspan="3" style="text-align:center;">No scans found.</td>
+				<td colspan="4" style="text-align:center;">No scans found.</td>
 			</tr>
 		</c:if>
 		<c:forEach var="scan" items="${ application.scans }">
@@ -37,11 +38,19 @@
 				        <fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 				    </a>
 				</td>
-				<td><c:out value="${ scan.numberTotalVulnerabilities}"/></td>
+				<td><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
+				<td>
+					<spring:url value="scans/{scanId}/delete" var="deleteUrl">
+	                    <spring:param name="scanId" value="${ scan.id }"/>
+	                </spring:url>
+	                <form:form method="post" action="${ fn:escapeXml(deleteUrl) }" >
+	                    <input onclick="return confirm('Are you sure you want to delete this scan and all of its results? This will also delete any WAF rules and defects associated with orphaned vulnerabilities.')" id="deleteScanButton" type="submit" value="Delete Scan" />
+                    </form:form>
+				</td>
 			</tr>
 		</c:forEach>
 			<tr class="footer">
-				<td colspan="3" class="last pagination" style="text-align:right"></td>
+				<td colspan="4" class="last pagination" style="text-align:right"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -50,5 +59,5 @@
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
-    <a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a>
+    <a id="backToApplicationLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a>
 </body>

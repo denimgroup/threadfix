@@ -26,6 +26,9 @@ package com.denimgroup.threadfix.data.dao;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 
 /**
  * Basic DAO class for the Scan entity.
@@ -56,4 +59,28 @@ public interface ScanDao {
 	 * @param scan
 	 */
 	void saveOrUpdate(Scan scan);
+
+	/**
+	 * 
+	 * @param scan
+	 */
+	void delete(Scan scan);
+	
+	/**
+	 * Delete a close map. These are saved by cascade but not always deleted that way.
+	 * @param scan
+	 */
+	void deleteMap(ScanCloseVulnerabilityMap map);
+	
+	/**
+	 * Delete a reopen map. These are saved by cascade but not always deleted that way.
+	 * @param scan
+	 */
+	void deleteMap(ScanReopenVulnerabilityMap map);
+	
+	/**
+	 * Delete a duplicate map. These are saved by cascade but not always deleted that way.
+	 * @param scan
+	 */
+	void deleteMap(ScanRepeatFindingMap map);
 }

@@ -67,21 +67,9 @@ public abstract class AbstractDefectTracker {
 	
 	/**
 	 * 
-	 * @return
-	 */
-	public abstract String getInitialStatusString();
-	
-	/**
-	 * 
 	 */
 	public abstract boolean hasValidUrl();
 	
-	/**
-	 * @param defect
-	 * @return
-	 */
-	public abstract String getStatus(Defect defect);
-
 	/**
 	 * @return
 	 */

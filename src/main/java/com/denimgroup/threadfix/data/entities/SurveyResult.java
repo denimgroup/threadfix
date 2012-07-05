@@ -38,6 +38,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "SurveyResult")
 public class SurveyResult extends AuditableEntity {
@@ -69,6 +71,7 @@ public class SurveyResult extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "organizationId")
+	@JsonIgnore
 	public Organization getOrganization() {
 		return this.organization;
 	}

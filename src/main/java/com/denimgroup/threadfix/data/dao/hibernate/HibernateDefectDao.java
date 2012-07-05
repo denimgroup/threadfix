@@ -98,5 +98,10 @@ public class HibernateDefectDao implements DefectDao {
 	public void saveOrUpdate(Defect defect) {
 		sessionFactory.getCurrentSession().saveOrUpdate(defect);
 	}
+	
+	@Override
+	public void delete(Defect defect) {
+		sessionFactory.getCurrentSession().delete(defect);
+	}
 
 }

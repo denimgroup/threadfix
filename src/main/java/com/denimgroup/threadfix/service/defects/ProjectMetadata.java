@@ -30,11 +30,16 @@ public class ProjectMetadata {
 	private List<String> components;
 	private List<String> versions;
 	private List<String> severities;
+	private List<String> statuses;
+	private List<String> priorities;
 
-	public ProjectMetadata(List<String> components, List<String> versions, List<String> severities) {
+	public ProjectMetadata(List<String> components, List<String> versions, 
+			List<String> severities, List<String> statuses, List<String> priorities) {
 		this.components = components;
 		this.versions = versions;
 		this.severities = severities;
+		this.statuses = statuses;
+		this.priorities = priorities;
 	}
 
 	public List<String> getComponents() {
@@ -59,6 +64,22 @@ public class ProjectMetadata {
 
 	public void setSeverities(List<String> severities) {
 		this.severities = severities;
+	}
+	
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
+	}
+	
+	public List<String> getPriorities() {
+		return priorities;
+	}
+
+	public void setPriorities(List<String> priorities) {
+		this.priorities = priorities;
 	}
 
 }

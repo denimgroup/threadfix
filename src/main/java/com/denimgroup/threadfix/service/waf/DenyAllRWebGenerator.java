@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
 /**
@@ -42,8 +43,9 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	String templateMiddle = "\" --type URI -d ";
 	String templateEnd    = " --action ";
 	
-	public DenyAllRWebGenerator(WafRuleDao wafRuleDao) {
+	public DenyAllRWebGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		this.defaultDirective = "deny";
 	}
 	

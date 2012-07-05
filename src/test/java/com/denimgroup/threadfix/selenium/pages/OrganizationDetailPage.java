@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -88,6 +92,28 @@ public class OrganizationDetailPage extends BasePage {
 		} else {
 			return null;
 		}
+	}
+	
+	public Map<String, Integer> getVulnCountForApps() {
+		Map<String, Integer> map = new HashMap<String,Integer>();
+		
+		// get app names
+		List<WebElement> appLinks = applicationsTableBody.findElements(By.xpath(".//tr/td/a"));
+		List<WebElement> counts   = applicationsTableBody.findElements(By.id("vulnCountCell"));
+		
+		if (appLinks.size() != counts.size()) {
+			return null;
+		}
+		
+		for (int i = 0; i < appLinks.size(); i++) {
+			try {
+				map.put(appLinks.get(i).getText(), Integer.valueOf(counts.get(i).getText()));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return map;
 	}
 
 	public ApplicationAddPage clickAddApplicationLink() {

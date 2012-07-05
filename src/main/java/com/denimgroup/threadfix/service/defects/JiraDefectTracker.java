@@ -291,7 +291,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	 * com.denimgroup.threadfix.service.defects.AbstractDefectTracker#getStatus
 	 * (com.denimgroup.threadfix .data.entities.Defect)
 	 */
-	@Override
 	public String getStatus(Defect defect) {
 
 		try {
@@ -571,13 +570,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public boolean hasValidProjectName() {
 		return projectExists(projectName);
 	}
-	
-	@Override
-	public String getInitialStatusString() {
-		// TODO Figure out what the actual string is
-		return "OPEN";
-	}
-	
+
 	@Override
 	public String getBugURL(String endpointURL, String bugID) {
 		String returnString = endpointURL;

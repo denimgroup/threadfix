@@ -9,7 +9,7 @@
 	
 	<div id="helpText">
 		Job Statuses are used to keep track of the asynchronous jobs that ThreadFix is processing.<br/>
-		These jobs include scan uploads, defect tracker requests, and Sentinel imports.
+		These jobs include scan uploads and defect tracker requests.
 	</div>
 	
 	<table class="formattedTable">

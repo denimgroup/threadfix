@@ -32,6 +32,25 @@ public class DefectViewModel {
 	private String selectedComponent;
 	private String version;
 	private String severity;
+	private String priority;
+	private String status;
+	
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	private List<Integer> vulnerabilityIds;
 
 	public String getSummary() {

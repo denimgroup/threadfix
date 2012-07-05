@@ -58,14 +58,6 @@ public interface DefectService {
 	void storeDefect(Defect defect);
 
 	/**
-	 * Get the status of a single Vulnerability from the defect tracker.
-	 * 
-	 * @param vuln
-	 * @return
-	 */
-	String getDefectStatus(Vulnerability vuln);
-
-	/**
 	 * Construct a new Defect based on the parameters and submit it to a tracker.
 	 * @param vulns
 	 * @param summary
@@ -76,7 +68,7 @@ public interface DefectService {
 	 * @return
 	 */
 	Defect createDefect(List<Vulnerability> vulns, String summary, String preamble,
-			String component, String version, String severity);
+			String component, String version, String severity, String priority, String status);
 
 	/**
 	 * Get the error message associated with the submission of the list of Vulnerabilities.

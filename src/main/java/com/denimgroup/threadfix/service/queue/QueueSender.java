@@ -60,6 +60,7 @@ public interface QueueSender {
 	 * @param version
 	 * @param severity
 	 */
-	void addSubmitDefect(List<Integer> vulns, String summary, String preamble, String component,
-			String version, String severity, Integer orgId, Integer applicationId);
+	void addSubmitDefect(List<Integer> vulns, String summary, String preamble, 
+			String component, String version, String severity, String priority, 
+			String status, Integer orgId, Integer applicationId);
 }

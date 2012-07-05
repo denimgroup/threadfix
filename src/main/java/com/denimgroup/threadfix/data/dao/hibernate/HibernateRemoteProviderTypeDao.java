@@ -45,7 +45,8 @@ public class HibernateRemoteProviderTypeDao implements RemoteProviderTypeDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderType> retrieveAll() {
-		return sessionFactory.getCurrentSession().createQuery("from RemoteProviderType remoteProviderType").list();
+		return sessionFactory.getCurrentSession().createQuery("from RemoteProviderType " +
+				"remoteProviderType order by remoteProviderType.name").list();
 	}
 
 	@Override

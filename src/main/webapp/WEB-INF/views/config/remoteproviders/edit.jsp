@@ -65,7 +65,7 @@
 	</table>
 	
 	<input style="margin-top:13px" id="submitButton" type="submit" value="Update Application" />
-	<span style="padding-left: 10px"><a href="<spring:url value="/configuration/remoteproviders/"/>">Back to Remote Provider Index</a></span>
+	<span style="padding-left: 10px"><a id="backToIndexLink" href="<spring:url value="/configuration/remoteproviders/"/>">Back to Remote Provider Index</a></span>
 	</form:form>
 	
 </body>

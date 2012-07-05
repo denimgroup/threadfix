@@ -31,30 +31,30 @@
 					<td colspan="4" style="text-align:center;">No keys found.</td>
 				</tr>
 			</c:if>
-			<c:forEach var="key" items="${ apiKeyList }">
+			<c:forEach var="key" items="${ apiKeyList }" varStatus="status">
 				<tr class="bodyRow">
-					<td>
+					<td id="key${ status.count }">
 						<c:out value="${ key.apiKey }"></c:out>
 					</td>
-					<td>
+					<td id="note${ status.count }">
 						<c:out value="${ key.note }"></c:out>
 					</td>
 					<td>
 						<spring:url value="/configuration/keys/{keyId}/edit" var="keyEditUrl">
 							<spring:param name="keyId" value="${ key.id }" />
 						</spring:url>
-						<a href="${ fn:escapeXml(keyEditUrl) }">Edit</a> 
+						<a id="edit${ status.count }" href="${ fn:escapeXml(keyEditUrl) }">Edit</a> 
 					</td>
 					<td>
 						<spring:url value="/configuration/keys/{keyId}/delete" var="keyDeleteUrl">
 							<spring:param name="keyId" value="${ key.id }" />
 						</spring:url>
 						<form:form method="POST" action="${ fn:escapeXml(keyDeleteUrl) }">
-							<input type="submit" onclick="return confirm('Are you sure you want to delete this API Key?')" value="Delete"/>
+							<input id="delete${ status.count }" type="submit" onclick="return confirm('Are you sure you want to delete this API Key?')" value="Delete"/>
 						</form:form>
 					</td>
 					<security:authorize ifAnyGranted="ROLE_ADMIN">
-						<td>
+						<td id="restricted${ status.count }">
 							<c:out value="${ key.isRestrictedKey }"/>
 						</td>
 					</security:authorize>
@@ -62,7 +62,7 @@
 			</c:forEach>
 			<tr class="footer">
 				<td colspan="4" class="first">
-					<a href="<spring:url value="/configuration/keys/new" />">Create New Key</a>
+					<a id="createNewKeyLink" href="<spring:url value="/configuration/keys/new" />">Create New Key</a>
 				</td>
 				<td colspan="3" class="last pagination" style="text-align:right"></td>
 			</tr>

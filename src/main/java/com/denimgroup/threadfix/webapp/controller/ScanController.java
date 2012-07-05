@@ -37,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -48,12 +49,15 @@ public class ScanController {
 
 	private ScanService scanService;
 	private ApplicationService applicationService;
+	private ScanDeleteService scanDeleteService;
 
 	@Autowired
 	public ScanController(ScanService scanService,
-			ApplicationService applicationService) {
+			ApplicationService applicationService,
+			ScanDeleteService scanDeleteService) {
 		this.scanService = scanService;
 		this.applicationService = applicationService;
+		this.scanDeleteService = scanDeleteService;
 	}
 
 	@InitBinder
@@ -96,5 +100,18 @@ public class ScanController {
 		mav.addObject(scan);
 		mav.addObject("vulnData", scan.getReportList());
 		return mav;
+	}
+	
+	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
+	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId, 
+			@PathVariable("appId") Integer appId,
+			@PathVariable("scanId") Integer scanId) {
+		if (scanId != null) {
+			Scan scan = scanService.loadScan(scanId);
+			if (scan != null) {
+				scanDeleteService.deleteScan(scan);
+			}
+		}
+		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
 	}
 }

@@ -43,7 +43,7 @@
 				</td>
 				<td><c:out value="${ app.url }"/></td>
 				<td><c:out value="${ app.applicationCriticality.name }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[5] }"/></td>
+				<td id="vulnCountCell"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[4] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[3] }"/></td>
 				<td><c:out value="${ app.vulnerabilityReport[2] }"/></td>

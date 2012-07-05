@@ -62,7 +62,6 @@ public class ApplicationRestController extends RestController {
 	// TODO finalize which methods need to be restricted
 	static {
 		restrictedMethods.add(NEW);
-		restrictedMethods.add(UPLOAD);
 		restrictedMethods.add(SET_WAF);
 		restrictedMethods.add(ADD_CHANNEL);
 	}

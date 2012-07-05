@@ -66,9 +66,9 @@ public class ApplicationDetailPage extends BasePage {
 		return new OrganizationDetailPage(driver);
 	}
 
-	public OrganizationIndexPage clickViewScansLink() {
+	public ScanIndexPage clickViewScansLink() {
 		driver.findElementById("viewScansLink").click();
-		return new OrganizationIndexPage(driver);
+		return new ScanIndexPage(driver);
 	}
 
 	public UploadScanPage clickUploadScanLink() {

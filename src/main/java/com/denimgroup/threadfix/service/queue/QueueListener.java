@@ -127,7 +127,8 @@ public class QueueListener implements MessageListener {
 					processSubmitDefect(map.getObject("vulnerabilityIds"),
 							map.getString("summary"), map.getString("preamble"),
 							map.getString("component"), map.getString("version"),
-							map.getString("severity"), map.getInt("jobStatusId"));
+							map.getString("severity"), map.getString("priority"),
+							map.getString("status"), map.getInt("jobStatusId"));
 				}
 			} catch (JMSException e) {
 				log.warn("The JMS message threw an error.");
@@ -143,7 +144,8 @@ public class QueueListener implements MessageListener {
 	 * @param jobStatusId
 	 */
 	private void processSubmitDefect(Object vulnerabilityIds, String summary, String preamble,
-			String component, String version, String severity, Integer jobStatusId) {
+			String component, String version, String severity, String priority,
+			String status, Integer jobStatusId) {
 
 		getJobStatus(jobStatusId);
 
@@ -156,8 +158,8 @@ public class QueueListener implements MessageListener {
 		}
 
 		Vulnerability vuln = vulnerabilities.get(0);
-		Defect defect = defectService.createDefect(vulnerabilities, summary, preamble, component,
-				version, severity);
+		Defect defect = defectService.createDefect(vulnerabilities, summary, 
+				preamble, component, version, severity, priority, status);
 
 		if (defect == null) {
 			if (vuln.getApplication() == null) {

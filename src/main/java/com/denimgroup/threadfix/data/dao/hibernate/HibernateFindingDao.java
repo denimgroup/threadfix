@@ -145,12 +145,17 @@ public class HibernateFindingDao implements FindingDao {
 		return currentSession
 				.createQuery(
 						"from Finding where scanId = :scanId and userId = :userId and isStatic = 1 order by createdDate desc")
-				.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
+						.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
 	}
 
 	@Override
 	public void saveOrUpdate(Finding finding) {
 		sessionFactory.getCurrentSession().saveOrUpdate(finding);
+	}
+
+	@Override
+	public void delete(Finding finding) {
+		sessionFactory.getCurrentSession().delete(finding);
 	}
 
 }

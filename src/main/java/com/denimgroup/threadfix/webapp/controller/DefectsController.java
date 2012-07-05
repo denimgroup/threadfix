@@ -101,7 +101,8 @@ public class DefectsController {
 		queueSender.addSubmitDefect(defectViewModel.getVulnerabilityIds(),
 				defectViewModel.getSummary(), defectViewModel.getPreamble(),
 				defectViewModel.getSelectedComponent(), defectViewModel.getVersion(),
-				defectViewModel.getSeverity(), orgId, appId);
+				defectViewModel.getSeverity(), defectViewModel.getPriority(),
+				defectViewModel.getStatus(), orgId, appId);
 		return new ModelAndView("redirect:/jobs/open");
 	}
 

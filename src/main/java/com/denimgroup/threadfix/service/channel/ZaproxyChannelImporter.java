@@ -89,6 +89,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("report".equals(qName)) {
 	    		getDate = true;
+	    	} else if ("OWASPZAPReport".equals(qName)) {
+	    		date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
 	    	} else if ("uri".equals(qName)) {
 	    		getUri = true;
 	    	} else if ("alert".equals(qName)) {
@@ -184,6 +186,14 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	if ("report".equals(qName)) {
 	    		getDate = true;
 	    		correctFormat = true;
+	    	}
+	    	
+	    	if ("OWASPZAPReport".equals(qName)) {
+	    		correctFormat = true;
+	    		testDate = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
+	    		if (testDate != null) {
+    				hasDate = true;
+    			}
 	    	}
 	    	
 	    	if ("alertitem".equals(qName)) {

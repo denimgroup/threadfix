@@ -39,6 +39,7 @@ import org.openqa.selenium.WebDriver;
 import com.denimgroup.threadfix.selenium.pages.AddChannelPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 
@@ -50,6 +51,7 @@ public class ScanTests extends BaseTest {
 	public UploadScanPage uploadScanPage;
 	public AddChannelPage addChannelPage;
 	public OrganizationIndexPage organizationIndexPage;
+	public OrganizationDetailPage organizationDetailPage;
 	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	

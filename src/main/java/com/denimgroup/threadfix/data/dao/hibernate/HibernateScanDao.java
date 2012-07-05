@@ -31,6 +31,9 @@ import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 
 /**
  * Hibernate Scan DAO implementation. Most basic methods are implemented in the
@@ -71,5 +74,25 @@ public class HibernateScanDao implements ScanDao {
 	@Override
 	public void saveOrUpdate(Scan scan) {
 		sessionFactory.getCurrentSession().saveOrUpdate(scan);
+	}
+	
+	@Override
+	public void delete(Scan scan) {
+		sessionFactory.getCurrentSession().delete(scan);
+	}
+
+	@Override
+	public void deleteMap(ScanCloseVulnerabilityMap map) {
+		sessionFactory.getCurrentSession().delete(map);
+	}
+
+	@Override
+	public void deleteMap(ScanReopenVulnerabilityMap map) {
+		sessionFactory.getCurrentSession().delete(map);
+	}
+
+	@Override
+	public void deleteMap(ScanRepeatFindingMap map) {
+		sessionFactory.getCurrentSession().delete(map);
 	}
 }

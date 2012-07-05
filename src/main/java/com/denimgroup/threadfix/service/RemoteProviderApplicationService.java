@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
+import org.springframework.validation.BindingResult;
+
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
@@ -34,43 +36,50 @@ public interface RemoteProviderApplicationService {
 	 * @param id
 	 * @return
 	 */
-	public RemoteProviderApplication load(int id);
+	RemoteProviderApplication load(int id);
 	
 	/**
 	 * 
 	 * @param remoteProviderApplication
 	 */
-	public void store(RemoteProviderApplication remoteProviderApplication);
+	void store(RemoteProviderApplication remoteProviderApplication);
 	
 	/**
 	 * 
 	 * @param remoteProviderType
 	 */
-	public void updateApplications(RemoteProviderType remoteProviderType);
+	void updateApplications(RemoteProviderType remoteProviderType);
 	
 	/**
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public List<RemoteProviderApplication> loadAllWithTypeId(int id);
+	List<RemoteProviderApplication> loadAllWithTypeId(int id);
 	
 	/**
 	 * 
 	 * @param remoteProviderType
 	 * @return
 	 */
-	public List<RemoteProviderApplication> getApplications(RemoteProviderType remoteProviderType);
+	List<RemoteProviderApplication> getApplications(RemoteProviderType remoteProviderType);
 	
 	/**
 	 * 
 	 * @param remoteProviderType
 	 */
-	public void deleteApps(RemoteProviderType remoteProviderType);
+	void deleteApps(RemoteProviderType remoteProviderType);
 
 	/**
 	 * 
 	 * @param appId
 	 */
-	public boolean importScanForApplication(RemoteProviderApplication remoteProviderApplication);
+	boolean importScanForApplication(RemoteProviderApplication remoteProviderApplication);
+	
+	/**
+	 * 
+	 * @param result
+	 * @param remoteProviderApplication
+	 */
+	void processApp(BindingResult result, RemoteProviderApplication remoteProviderApplication);
 }

@@ -59,8 +59,9 @@ public class HibernateDefectTrackerDao implements DefectTrackerDao {
 	@SuppressWarnings("unchecked")
 	public List<DefectTracker> retrieveAll() {
 		return sessionFactory.getCurrentSession().createCriteria(DefectTracker.class, "def")
-				.createAlias("defectTrackerType", "dtt").addOrder(Order.asc("dtt.name"))
-				.addOrder(Order.asc("def.url")).list();
+				.createAlias("defectTrackerType", "dtt")
+				.addOrder(Order.asc("dtt.name"))
+				.addOrder(Order.asc("def.name")).list();
 	}
 
 	@Override

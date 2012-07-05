@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.waf;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
 /**
@@ -36,8 +37,9 @@ public class ModSecurityWafGenerator extends RealTimeProtectionGenerator {
 	
 	public static final String MOD_SECURITY_PATH_TRAVERSAL = ".|\\%2e";
 	
-	public ModSecurityWafGenerator(WafRuleDao wafRuleDao) {
+	public ModSecurityWafGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		this.defaultDirective = "deny";
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, MOD_SECURITY_PATH_TRAVERSAL);
 	}

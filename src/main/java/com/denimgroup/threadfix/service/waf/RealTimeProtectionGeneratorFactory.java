@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.WafType;
 
@@ -37,11 +38,14 @@ import com.denimgroup.threadfix.data.entities.WafType;
 public class RealTimeProtectionGeneratorFactory {
 
 	private WafRuleDao wafRuleDao;
+	private WafRuleDirectiveDao wafRuleDirectiveDao;
 	
 	private final Log log = LogFactory.getLog(RealTimeProtectionGeneratorFactory.class);
 
-	public RealTimeProtectionGeneratorFactory(WafRuleDao wafRuleDao) {
+	public RealTimeProtectionGeneratorFactory(WafRuleDao wafRuleDao,
+			WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 	}
 	
 	/**
@@ -71,19 +75,20 @@ public class RealTimeProtectionGeneratorFactory {
 			return null;
 
 		if (wafName.equals(WafType.MOD_SECURITY)) {
-			return new ModSecurityWafGenerator(wafRuleDao);
+			return new ModSecurityWafGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else if (wafName.equals(WafType.SNORT)) {
-			return new SnortGenerator(wafRuleDao);
+			return new SnortGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else if (wafName.equals(WafType.BIG_IP_ASM)) {
-			return new BigIPASMGenerator(wafRuleDao);
+			return new BigIPASMGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else if (wafName.equals(WafType.IMPERVA_SECURE_SPHERE)) {
-			return new ImpervaSecureSphereGenerator(wafRuleDao);
+			return new ImpervaSecureSphereGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else if (wafName.equals(WafType.DENY_ALL_RWEB)) {
-			return new DenyAllRWebGenerator(wafRuleDao);
+			return new DenyAllRWebGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else {
 			log.warn("Invalid WAF type name '"
 					+ wafName
-					+ "'  Unable to find suitable RealTimeProtectionGenerator implementation class.  Returning null");
+					+ "'. Unable to find suitable RealTimeProtectionGenerator" 
+					+ " implementation class.  Returning null");
 			return null;
 		}
 	}

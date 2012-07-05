@@ -76,6 +76,7 @@ public class Organization extends AuditableEntity {
 
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "organization")
 	@OrderBy("createdDate DESC")
+	@JsonIgnore
 	public List<SurveyResult> getSurveyResults() {
 		return surveyResults;
 	}

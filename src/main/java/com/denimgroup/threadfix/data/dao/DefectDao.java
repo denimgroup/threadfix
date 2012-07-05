@@ -67,5 +67,10 @@ public interface DefectDao {
 	 * @param defect
 	 */
 	void saveOrUpdate(Defect defect);
+	
+	/**
+	 * @param defect
+	 */
+	void delete(Defect defect);
 
 }

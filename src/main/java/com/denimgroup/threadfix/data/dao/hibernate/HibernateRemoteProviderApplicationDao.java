@@ -51,13 +51,16 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderApplication> retrieveAllWithTypeId(int id) {
 		return sessionFactory.getCurrentSession()
-			.createQuery("from RemoteProviderApplication app where app.remoteProviderType = :type")
+			.createQuery("from RemoteProviderApplication app " +
+					"where app.remoteProviderType = :type " +
+					"order by app.nativeId")
 			.setInteger("type", id).list();
 	}
 	
 	@Override
 	public RemoteProviderApplication retrieveById(int id) {
-		return (RemoteProviderApplication) sessionFactory.getCurrentSession().get(RemoteProviderApplication.class, id);
+		return (RemoteProviderApplication) sessionFactory.getCurrentSession().get(
+				RemoteProviderApplication.class, id);
 	}
 
 	@Override

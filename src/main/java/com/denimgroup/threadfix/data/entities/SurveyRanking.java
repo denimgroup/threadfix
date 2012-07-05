@@ -34,6 +34,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "SurveyRanking")
 public class SurveyRanking extends BaseEntity {
@@ -75,6 +77,7 @@ public class SurveyRanking extends BaseEntity {
 
 	@OneToOne
 	@JoinColumn(name = "surveyResultId")
+	@JsonIgnore
 	public SurveyResult getSurveyResult() {
 		return surveyResult;
 	}

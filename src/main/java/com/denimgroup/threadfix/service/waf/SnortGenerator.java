@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.waf;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
 /**
@@ -40,8 +41,9 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 	public static final String STR_FIND_PARAM_MID = "=[^\\&|\\n]*(";
 	public static final String STR_FIND_PARAM_END = "))/i\"";
 	
-	public SnortGenerator(WafRuleDao wafRuleDao) {
+	public SnortGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		this.defaultDirective = "drop";
 	}
 	

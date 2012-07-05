@@ -34,7 +34,7 @@
 			</tbody>
 		</table>
 		<br/>
-		<input type="submit" value="Update API Key" />
+		<input id="updateApiKeyButton" type="submit" value="Update API Key" />
 		<span style="padding-left: 10px"><a href="<spring:url value="/configuration/keys"/>">Back to API Key</a></span>
 	</form:form>
 </body>

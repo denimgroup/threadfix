@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
@@ -62,6 +63,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
 public abstract class RealTimeProtectionGenerator {
 	
 	protected WafRuleDao wafRuleDao;
+	protected WafRuleDirectiveDao wafRuleDirectiveDao;
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	protected String defaultDirective = "deny";
@@ -207,14 +209,15 @@ public abstract class RealTimeProtectionGenerator {
 			return new ArrayList<WafRule>();
 		}
 
-		log.debug("About to generate rules for " + applications.size() + " applications.");
+		log.info("About to generate rules for the WAF " + waf.getName() + 
+				": " + applications.size() + " applications.");
 
 		int numVulns = 0;
 		for (Application a : applications) {
 			if (a != null && a.isActive())
 				numVulns += a.getVulnerabilities().size();
 		}
-		log.debug("This will involve " + numVulns + " vulnerabilities.");
+		log.info("This will involve " + numVulns + " vulnerabilities.");
 
 		List<WafRule> allRules = new ArrayList<WafRule>();
 
@@ -244,11 +247,11 @@ public abstract class RealTimeProtectionGenerator {
 	protected List<WafRule> generateRules(Application application, WafRuleDirective directive) {
 		if (application == null || application.getVulnerabilities() == null
 				|| application.getVulnerabilities().size() == 0 || application.getWaf() == null
-				|| application.getWaf() == null) {
+				|| application.getWaf().getWafType() == null) {
 			return null;
 		}
 
-		log.debug("About to attempt to generate rules for "
+		log.info("Generating rules for "
 				+ application.getVulnerabilities().size() + " vulnerabilities");
 
 		List<WafRule> rules = new ArrayList<WafRule>();
@@ -425,6 +428,15 @@ public abstract class RealTimeProtectionGenerator {
 	
 	public static boolean shouldDisplay(WafRule rule) {
 		return true;
+	}
+	
+	public WafRuleDirective getDefaultDirective(Waf waf) {
+		if (waf != null && waf.getWafType() != null) {
+			return wafRuleDirectiveDao.retrieveByWafTypeIdAndDirective(
+						waf.getWafType(), defaultDirective);
+		} else {
+			return null;
+		}
 	}
 	
 }

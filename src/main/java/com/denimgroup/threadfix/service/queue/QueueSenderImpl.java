@@ -159,8 +159,9 @@ public class QueueSenderImpl implements QueueSender {
 	 * .lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addSubmitDefect(List<Integer> vulnerabilityIds, String summary, String preamble,
-			String component, String version, String severity, Integer orgId, Integer applicationId) {
+	public void addSubmitDefect(List<Integer> vulnerabilityIds, String summary, 
+			String preamble, String component, String version, String severity, 
+			String priority, String status, Integer orgId, Integer applicationId) {
 		
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
@@ -175,6 +176,8 @@ public class QueueSenderImpl implements QueueSender {
 			submitDefectMap.setString("component", component);
 			submitDefectMap.setString("version", version);
 			submitDefectMap.setString("severity", severity);
+			submitDefectMap.setString("priority", priority);
+			submitDefectMap.setString("status", status);
 			submitDefectMap.setString("type", QueueConstants.SUBMIT_DEFECT_TYPE);
 			submitDefectMap.setString("urlPath", "/organizations/"
 					+ orgId + "/applications/" + applicationId + "/defects");

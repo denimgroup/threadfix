@@ -119,6 +119,10 @@ public class RemoteProviderType extends BaseEntity  {
 		return remoteProviderApplications;
 	}
 
+	/**
+	 * Sort whenever a new collection is set.
+	 * @param remoteProviderApplications
+	 */
 	public void setRemoteProviderApplications(
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;

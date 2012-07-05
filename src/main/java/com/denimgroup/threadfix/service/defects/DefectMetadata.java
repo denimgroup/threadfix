@@ -35,13 +35,15 @@ public class DefectMetadata {
 	private String component;
 	private String version;
 	private String severity;
+	private String priority;
+	private String status;
 
 	/**
 	 * @param description
 	 * @param preamble
 	 */
 	public DefectMetadata(String description, String preamble, String component, String version,
-			String severity) {
+			String severity, String priority, String status) {
 		if (description == null) {
 			throw new RuntimeException("Description cannot be null");
 		}
@@ -51,6 +53,8 @@ public class DefectMetadata {
 		this.component = component;
 		this.version = version;
 		this.severity = severity;
+		this.priority = priority;
+		this.status = status;
 	}
 
 	/**
@@ -81,5 +85,13 @@ public class DefectMetadata {
 
 	public String getSeverity() {
 		return severity;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public String getPriority() {
+		return priority;
 	}
 }

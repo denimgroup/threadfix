@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
@@ -58,8 +59,9 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public BigIPASMGenerator(WafRuleDao wafRuleDao) {
+	public BigIPASMGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		defaultDirective = "transparent";
 	}
 

@@ -53,6 +53,13 @@ import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 @Service
 @Transactional(readOnly = true)
 public class ApplicationServiceImpl implements ApplicationService {
+	
+	private String invalidProjectName = "The selected Project Name was invalid. " +
+			"Please ensure that your Defect Tracker contains at least one project " +
+			"and select one here.";
+	
+	private String invalidCredentials = "The User / password combination " +
+			"(or possibly the Defect Tracker endpoint URL)";
 
 	private ApplicationDao applicationDao = null;
 	private DefectTrackerDao defectTrackerDao = null;
@@ -166,18 +173,22 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 	
 	@Override
-	public boolean validateApplicationDefectTracker(Application application, BindingResult result) {
+	public boolean validateApplicationDefectTracker(Application application, 
+			BindingResult result) {
 		if (application == null || result == null)
 			return false;
 		
-		if (application.getDefectTracker() != null && application.getDefectTracker().getId() == 0) {
+		if (application.getDefectTracker() != null 
+				&& application.getDefectTracker().getId() == 0) {
 			application.setDefectTracker(null);
 			application.setUserName(null);
 			application.setPassword(null);
 		} else if (application.getDefectTracker() != null){
-			DefectTracker defectTracker = defectTrackerDao.retrieveById(application.getDefectTracker().getId());
+			DefectTracker defectTracker = defectTrackerDao.retrieveById(
+					application.getDefectTracker().getId());
 			if (defectTracker == null) {
-				result.rejectValue("defectTracker.id", "errors.invalid", new String [] { "Defect Tracker choice" }, null);
+				result.rejectValue("defectTracker.id", "errors.invalid", 
+						new String [] { "Defect Tracker choice" }, null);
 				application.setUserName(null);
 				application.setPassword(null);
 				application.setProjectName(null);
@@ -185,19 +196,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.setDefectTracker(defectTracker);
 				AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
 				if (dt != null) {
-					if (application.getUserName() == null || application.getUserName().isEmpty())
-						result.rejectValue("userName", "errors.required", new String [] { "User Name" }, null);
-					if (application.getPassword() == null || application.getPassword().isEmpty())
-						result.rejectValue("password", "errors.required", new String [] { "Password" }, null);
+					if (application.getUserName() == null 
+							|| application.getUserName().isEmpty())
+						result.rejectValue("userName", "errors.required", 
+								new String [] { "User Name" }, null);
+					if (application.getPassword() == null 
+							|| application.getPassword().isEmpty())
+						result.rejectValue("password", "errors.required", 
+								new String [] { "Password" }, null);
 					
 					if (!result.hasErrors()) { 
 						if (!dt.hasValidCredentials()) {
-							result.rejectValue("userName", "errors.invalid", new String [] { "The User / password combination (or possibly the Defect Tracker endpoint URL)" }, null);
+							result.rejectValue("userName", "errors.invalid", 
+									new String [] { invalidCredentials }, null);
 							application.setUserName(null);
 							application.setPassword(null);
 							application.setProjectName(null);
 						} else if (!dt.hasValidProjectName()) {
-							result.rejectValue("projectName", "errors.detail", new String [] { "The selected Project Name was invalid. Please ensure that your Defect Tracker contains at least one project and select one here." }, null);
+							result.rejectValue("projectName", "errors.detail", 
+									new String [] { invalidProjectName }, null);
 							application.setProjectName(null);
 						} else {
 							application.setProjectId(dt.getProjectIdByName());
@@ -213,12 +230,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	/**
 	 * 
 	 * @param application
-	 * @return true if the application has a different defect tracker than the database version, 
-	 * 		   false otherwise
+	 * @return true if the application has a different defect tracker 
+	 * 			than the database version, false otherwise
 	 */
 	private boolean checkNewDefectTracker(Application application) {
 		if (application == null || application.getId() == null || 
-				application.getDefectTracker() == null || application.getDefectTracker().getId() == null)
+				application.getDefectTracker() == null || 
+				application.getDefectTracker().getId() == null)
 			return false;
 		
 		Application databaseApplication = applicationDao.retrieveById(application.getId());
@@ -228,13 +246,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 				databaseApplication.getDefectTracker().getId() == null)
 			return false;
 		
-		return !application.getDefectTracker().getId().equals(databaseApplication.getDefectTracker().getId());
+		return !application.getDefectTracker().getId().equals(
+				databaseApplication.getDefectTracker().getId());
 	}
 	
 	@Override
 	public boolean checkApplication(Application application) {
-		if (application == null || application.getName() == null || application.getUrl() == null
-				|| application.getName().trim().isEmpty() || application.getUrl().trim().isEmpty()
+		if (application == null || application.getName() == null 
+				|| application.getUrl() == null
+				|| application.getName().trim().isEmpty()  
+				|| application.getUrl().trim().isEmpty()
 				|| application.getName().length() > Application.NAME_LENGTH
 				|| application.getUrl().length() > Application.URL_LENGTH) {
 			return false;
@@ -256,9 +277,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 				 application.getWaf().getId() != null &&
 				 !dbApplicationWafId.equals(application.getWaf().getId()))) {
 			
-			// Database vulns are still in session, also the vulns themselves shouldn't have changed
-			// since we were only editing the information about the Application object and not its 
-			// vulnerabilities.
+			// Database vulns are still in session, also the vulns themselves 
+			// shouldn't have changed since we were only editing the information 
+			// about the Application object and not its vulnerabilities.
 			for (Vulnerability vulnerability : application.getVulnerabilities()) {
 				if (vulnerability != null && vulnerability.getWafRules() != null) {
 					for (WafRule wafRule : vulnerability.getWafRules()) {
@@ -284,7 +305,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.getApplicationCriticality().getId() == null ||
 				applicationCriticalityDao.retrieveById(
 						application.getApplicationCriticality().getId()) == null) {
-			result.rejectValue("applicationCriticality.id", "errors.invalid", new String [] { "Criticality" }, null);
+			result.rejectValue("applicationCriticality.id", "errors.invalid", 
+					new String [] { "Criticality" }, null);
 		}
 		
 		if (application.getWaf() != null && application.getWaf().getId() == 0) {
@@ -295,7 +317,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			Waf waf = wafDao.retrieveById(application.getWaf().getId());
 			
 			if (waf == null) {
-				result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
+				result.rejectValue("waf.id", "errors.invalid", 
+						new String [] { "WAF Choice" }, null);
 			} else {
 				application.setWaf(waf);
 			}
@@ -303,11 +326,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
 		
-		if (hasNewDefectTracker || (application.getDefectTracker() == null && application.getDefectList() != null))
+		if (hasNewDefectTracker || (application.getDefectTracker() == null 
+				&& application.getDefectList() != null)) {
 			defectDao.deleteByApplicationId(application.getId());
+			if (application.getVulnerabilities() != null) {
+				for (Vulnerability vuln : application.getVulnerabilities()) {
+					vuln.setDefect(null);
+				}
+			}
+		}
 		
 		Application databaseApplication = loadApplication(application.getName().trim());
-		if (databaseApplication != null && !databaseApplication.getId().equals(application.getId())) {
+		if (databaseApplication != null && !databaseApplication.getId().equals(
+				application.getId())) {
 			result.rejectValue("name", "errors.nameTaken");
 		}
 		
@@ -321,7 +352,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void updateProjectRoot(Application application) {
-		if (application != null && application.getProjectRoot() != null && !application.getProjectRoot().trim().equals("")) {
+		if (application != null && application.getProjectRoot() != null 
+				&& !application.getProjectRoot().trim().equals("")) {
 			Application app = loadApplication(application.getId());
 			
 			scanMergeService.updateSurfaceLocation(app);
@@ -344,7 +376,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.getApplicationCriticality().getId() == null ||
 				applicationCriticalityDao.retrieveById(
 						application.getApplicationCriticality().getId()) == null) {
-			result.rejectValue("applicationCriticality.id", "errors.invalid", new String [] { "Criticality" }, null);
+			result.rejectValue("applicationCriticality.id", "errors.invalid", 
+					new String [] { "Criticality" }, null);
 		}
 		
 		Application databaseApplication = loadApplication(application.getName().trim());
@@ -356,7 +389,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		if (application.getWaf() != null && (application.getWaf().getId() == null  
 				|| wafDao.retrieveById(application.getWaf().getId()) == null))
-			result.rejectValue("waf.id", "errors.invalid", new String [] { "WAF Choice" }, null);
+			result.rejectValue("waf.id", "errors.invalid", 
+					new String [] { "WAF Choice" }, null);
 
 		validateApplicationDefectTracker(application, result);
 	}

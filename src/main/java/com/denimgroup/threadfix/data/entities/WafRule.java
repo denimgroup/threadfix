@@ -42,8 +42,8 @@ public class WafRule extends AuditableEntity {
 
 	private static final long serialVersionUID = 1723103296983210781L;
 	
-	public static final int PARAMETER_LENGTH = 255;
-	public static final int PATH_LENGTH = 255;
+	public static final int PARAMETER_LENGTH = 1024;
+	public static final int PATH_LENGTH = 1024;
 	public static final int RULE_LENGTH = 10000;
 
 	@NotEmpty(message = "{errors.required}")
