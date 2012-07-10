@@ -50,6 +50,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		tagMap.put("name", CHANNEL_VULN_KEY);
 		tagMap.put("code", CHANNEL_SEVERITY_KEY);
 		tagMap.put("variable", PARAMETER_KEY);
+		tagMap.put("var", PARAMETER_KEY);
 		tagMap.put("url", PATH_KEY);
 	}
 	

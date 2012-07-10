@@ -32,8 +32,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -59,11 +61,15 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
  * @author drivera
@@ -72,11 +78,12 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 @Service
 public class ReportsServiceImpl implements ReportsService {
 	private final Log log = LogFactory.getLog(ReportsServiceImpl.class);
-	
+
 	private SessionFactory sessionFactory = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ScanDao scanDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private ApplicationDao applicationDao = null;
 
 	/**
 	 * @param sessionFactory
@@ -84,11 +91,12 @@ public class ReportsServiceImpl implements ReportsService {
 	 */
 	@Autowired
 	public ReportsServiceImpl(SessionFactory sessionFactory, ChannelTypeDao channelTypeDao,
-			ScanDao scanDao, VulnerabilityDao vulnerabilityDao) {
+			ScanDao scanDao, VulnerabilityDao vulnerabilityDao, ApplicationDao applicationDao) {
 		this.sessionFactory = sessionFactory;
 		this.channelTypeDao = channelTypeDao;
 		this.scanDao = scanDao;
 		this.vulnerabilityDao = vulnerabilityDao;
+		this.applicationDao = applicationDao;
 	}
 
 	/*
@@ -114,6 +122,7 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			if (fileName.contains("cweChannel")) {
 				inputStream = addCorrectColumns(inputStream, applicationIdList);
+				parameters.put("badFindingIds", getFindingsToSkip(applicationIdList));
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -248,6 +257,43 @@ public class ReportsServiceImpl implements ReportsService {
 		return returnChannels;
 	}
 	
+	public Set<Integer> getFindingsToSkip(List<Integer> applicationIdList) {
+		Set<Integer> findingIdsToSkip = new HashSet<Integer>();
+		Set<Integer> vulnSeenChannels = new HashSet<Integer>();
+		
+		for (Integer appId : applicationIdList) {
+			Application app = applicationDao.retrieveById(appId);
+			if (app == null || app.getVulnerabilities() == null) {
+				continue;
+			}
+			
+			for (Vulnerability vuln : app.getVulnerabilities()) {
+				if (vuln == null || vuln.getFindings() == null) {
+					continue;
+				}
+				vulnSeenChannels.clear();
+				
+				for (Finding finding : vuln.getFindings()) {
+					if (finding != null && finding.getId() != null
+							&& finding.getScan() != null
+							&& finding.getScan().getApplicationChannel() != null
+							&& finding.getScan().getApplicationChannel().getId() != null
+							) {
+						if (vulnSeenChannels.contains(
+								finding.getScan().getApplicationChannel().getId())) {
+							findingIdsToSkip.add(finding.getId());
+						} else {
+							vulnSeenChannels.add(
+									finding.getScan().getApplicationChannel().getId());
+						}
+					}
+				}
+			}
+		}
+		
+		return findingIdsToSkip;
+	}
+	
 	public InputStream addCorrectColumns(InputStream inputStream, List<Integer> applicationIdList) {
 		log.debug("Adding the correct headers to the CWE Channel report Input Stream.");
 		
@@ -264,7 +310,7 @@ public class ReportsServiceImpl implements ReportsService {
 			String location = String.valueOf(base + (count*increment));
 			
 			String sumLine = ", SUM(CASE WHEN scan.applicationChannel.channelType.id = " 
-				+ id + " THEN 1 ELSE 0 END) as count_" + id + "\n";
+				+ id + " AND ID NOT IN ( \\$P\\{badFindingIds\\} ) THEN 1 ELSE 0 END) as count_" + id + "\n";
 			string = string.replaceFirst("FROM Finding", sumLine + "FROM Finding");
 			
 			String fieldTag = "<field name=\"count_" + id + "\" class=\"java.lang.Long\"/>\n";

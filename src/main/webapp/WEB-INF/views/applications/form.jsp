@@ -4,6 +4,12 @@
 	<title><c:if test="${ application.new }">New </c:if>Application</title>
 	
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/authentication.js"></script>
+
+	<c:if test="${ not empty application.defectTracker.id }"> 
+		<script>
+			var initialDefectTrackerId = <c:out value="${ application.defectTracker.id }"/> 
+		</script>
+	</c:if>
 </head>
 
 <body id="apps">
@@ -81,7 +87,7 @@
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="defectTracker.id" cssClass="errors" />
 				</td>
-			</tr>			
+			</tr>
 			<tr class="defecttracker_row">
 				<td class="label">Username:</td>
 				<td class="inputValue">
@@ -165,57 +171,57 @@
 		<h3>Project Root</h3>
 		<div style="padding-bottom:10px">Please select the proper root for the application:</div>
 		<table class="filteredTable sortable">
-				<thead>
-					<tr class="darkBackground">
-						<th class="first" colspan="${ pathTree.depth }">Path</th>
-					</tr>
-				</thead>
-				<tbody>
-				<c:forEach var="path" items="${pathTree.printout}">
-					<tr class="bodyRow">
-						<spring:url value="{appId}/path/hint" var="hintUrl">
-							<spring:param name="appId" value="${ application.id }"/>
-						</spring:url>
-						<c:forEach var="str" items="${ path }">
-							<c:choose>
-								<c:when test="${ empty str }">
-									<td><c:out value="${ str }"/></td>
-								</c:when>
-								<c:otherwise>
-									<td>
-										<form:radiobutton path="projectRoot" name="hint" value="${ str }"/>
-										<c:out value="${ str }"/>
-									</td>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</tr>
-				</c:forEach>
-				</tbody>
-			</table>
+			<thead>
+				<tr class="darkBackground">
+					<th class="first" colspan="${ pathTree.depth }">Path</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:forEach var="path" items="${pathTree.printout}">
+				<tr class="bodyRow">
+					<spring:url value="{appId}/path/hint" var="hintUrl">
+						<spring:param name="appId" value="${ application.id }"/>
+					</spring:url>
+					<c:forEach var="str" items="${ path }">
+						<c:choose>
+							<c:when test="${ empty str }">
+								<td><c:out value="${ str }"/></td>
+							</c:when>
+							<c:otherwise>
+								<td>
+									<form:radiobutton path="projectRoot" name="hint" value="${ str }"/>
+									<c:out value="${ str }"/>
+								</td>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</tr>
+			</c:forEach>
+			</tbody>
+		</table>
 	</c:if>
 	
-<c:choose>
-<c:when test="${ application.new }">
-	<input id="addApplicationButton" type="submit" value="Add Application" />
-	<spring:url value="/organizations/{orgId}" var="appUrl">
-		<spring:param name="orgId" value="${ application.organization.id }" />
-	</spring:url>
-	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Team <c:out value="${ application.organization.name }"/></a></span>
-</c:when>
-<c:otherwise>
-	<c:if test="${ not empty application.defectTracker.id }">
-		<input id="updateApplicationButton" type="submit" onclick="return confirm('If you are switching Defect Trackers, you will lose all defects associated with this application.')" value="Update Application" />
-	</c:if>
-	<c:if test="${ empty application.defectTracker.id }">
-		<input id="updateApplicationButton" type="submit" value="Update Application" />
-	</c:if>
-	<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
-		<spring:param name="orgId" value="${ application.organization.id }" />
-		<spring:param name="appId" value="${ application.id }" />
-	</spring:url>
-	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
-</c:otherwise>
-</c:choose>
+	<c:choose>
+		<c:when test="${ application.new }">
+			<input id="addApplicationButton" type="submit" value="Add Application" />
+			<spring:url value="/organizations/{orgId}" var="appUrl">
+				<spring:param name="orgId" value="${ application.organization.id }" />
+			</spring:url>
+			<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Team <c:out value="${ application.organization.name }"/></a></span>
+		</c:when>
+		<c:otherwise>
+			<c:if test="${ not empty application.defectTracker.id }">
+				<input id="updateApplicationButton" type="submit" onclick="if (initialDefectTrackerId && (new Number(initialDefectTrackerId).toString()) !== $('#defectTrackerId').val()) { return confirm('Since you are switching Defect Trackers, you will lose all defects associated with this application.') }" value="Update Application" />
+			</c:if>
+			<c:if test="${ empty application.defectTracker.id }">
+				<input id="updateApplicationButton" type="submit" value="Update Application" />
+			</c:if>
+			<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+				<spring:param name="orgId" value="${ application.organization.id }" />
+				<spring:param name="appId" value="${ application.id }" />
+			</spring:url>
+			<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
+		</c:otherwise>
+	</c:choose>
 </form:form>
 </body>

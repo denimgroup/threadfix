@@ -32,6 +32,15 @@ public class ApplicationDetailPage extends BasePage {
 		super(webdriver);
 	}
 	
+	public String getElementText(String id) {
+		return driver.findElementById(id).getText();
+	}
+	
+	public ApplicationDetailPage clickRefreshLink() {
+		driver.findElementById("refreshLink").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
 	public String getWafText(){
 		return driver.findElementById("wafText").getText();
 	}

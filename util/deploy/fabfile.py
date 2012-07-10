@@ -9,16 +9,18 @@ env.password = 'password'
 source_code_loc='https://code.google.com/p/threadfix'
 local_working_folder_loc = '/path/to/file' #where fabfile is running from
 server_base_loc = '/home/denimgroup/artifacts' #where to deploy to
-local_path = '/threadfix/src/main/resources' #path to .deploy files
+local_path = 'threadfix/src/main/resources' #path to .deploy files
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
 @task
+@runs_once
 def remove_old_code():
     local("rm -rf threadfix")
 
 # gets the new version of the source code locally
 @task
+@runs_once
 def clone_code():
     with settings(warn_only=True):
         result = local('git clone %s' % source_code_loc)
@@ -27,17 +29,19 @@ def clone_code():
 
 # exchanges the debug versions for the deploy versions
 @task
+@runs_once
 def exchange_files():
     with settings(warn_only = True):
         res1 = local('mv %s%s/log4j.xml.deploy %s%s/log4j.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
         res2 = local('mv %s%s/jdbc.properties.deploy %s%s/jdbc.properties' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-        res3 = local('mv %s%s/applicationContext-scheduling.xml.deploy %s%s/applicationContext-scheduling.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
+        res3 = local('mv %s/%s/applicationContext-scheduling.xml.deploy %s/%s/applicationContext-scheduling.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
     res = res1 and res2 and res3
     if res.failed and confirm('Deploy files were not found. Abort recommended. Abort?'):
         abort('Aborting because deploy files not found.')
 
 # creates the WAR file from the source code
 @task
+@runs_once
 def build_war():
     with lcd('%s/threadfix' % local_working_folder_loc):
         res = local('mvn package')
@@ -69,7 +73,7 @@ def verify_site():
     if testing:
         print("Successful launch verified using HTTP response.")
     else:
-        print('WARNING: The HTTP response was not 200. Startup was probably not successful.')
+        print('WARNING: The HTTP response was not successful.')
 
 @task
 def slow_deploy():
@@ -94,4 +98,3 @@ def deploy():
     build_war()
     deploy_war()
     verify_site()
-

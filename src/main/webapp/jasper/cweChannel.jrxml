@@ -9,6 +9,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="badFindingIds" class="java.util.List" isForPrompting="false"/>
 	<queryString language="hql">
 		<![CDATA[SELECT vulnerability.genericVulnerability.name as description
 				 FROM Finding

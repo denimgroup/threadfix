@@ -2,6 +2,26 @@
 
 <head>
 	<title><c:if test="${ defectTracker.new }">New </c:if>Defect Tracker</title>
+	<script>
+	function displayWarning(){
+		var displayUrl = (typeof(initialUrl) !== 'undefined') && (initialUrl !== $('#urlInput').val()); 
+		var displayType = (typeof(initialTrackerTypeId) !== 'undefined') && initialTrackerTypeId !== $('#defectTrackerTypeSelect').val(); 
+		var message = ''; 
+		if (displayUrl) {
+			message = message + 'The URL has changed, make sure that the Threadfix Defects have the correct IDs in the new location.';
+		}
+		if (displayUrl && displayType) {
+			message = message + '\n\n';
+		}
+		if (displayType) {
+			message = message + 'The type has changed, all associated Defects will be deleted.';
+		}	
+		if (displayUrl || displayType) {
+			return confirm(message);
+		}
+		return true;
+	}
+	</script>
 </head>
 
 <body id="config">
@@ -27,6 +47,11 @@
 				<tr>
 					<td class="label">URL:</td>
 					<td class="inputValue">
+						<c:if test="${ not empty defectTracker.url }">
+							<script>
+								var initialUrl = '<c:out value="${ defectTracker.url }"/>';
+							</script>
+						</c:if>
 						<form:input id="urlInput" path="url" cssClass="focus" size="50" maxlength="255"/>
 					</td>
 					<td style="padding-left: 5px">
@@ -36,6 +61,11 @@
 				<tr>	
 					<td class="label">Type:</td>
 					<td class="inputValue">
+						<c:if test="${ not empty defectTracker.defectTrackerType.id }">
+							<script>
+								var initialTrackerTypeId = '<c:out value="${ defectTracker.defectTrackerType.id }"/>';
+							</script>
+						</c:if>
 						<form:select id="defectTrackerTypeSelect" path="defectTrackerType.id">
 							<form:options items="${ defectTrackerTypeList }" itemValue="id" itemLabel="name" />
 						</form:select>
@@ -54,7 +84,8 @@
 	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(dtUrl) }">Back to Defect Tracker Index</a></span>
 </c:when>
 <c:otherwise>
-	<input id="updateDefectTrackerButton" type="submit" onclick="return confirm('If you are editing the URL, make sure that the Threadfix Defects have the correct IDs. If you are editing the type, all associated Defects will be deleted.')" value="Update Defect Tracker" />
+
+	<input id="updateDefectTrackerButton" type="submit" onclick="return displayWarning()" value="Update Defect Tracker" />
 	<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="dtUrl">
 		<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
 	</spring:url>

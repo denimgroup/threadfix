@@ -207,7 +207,8 @@ public class ScanTests extends BaseTest {
 												  .setChannelSelect(mapEntry.getKey())
 												  .clickUploadScanButtonInvalid();
 
-			assertTrue("The correct error text was not present.", uploadScanPage.getScanError().equals(appWasAlreadyUploadedErrorText));
+			assertTrue("The correct error text was not present.", 
+					uploadScanPage.getScanError().equals(appWasAlreadyUploadedErrorText));
 			
 			try {
 				Thread.sleep(1000);
@@ -218,6 +219,70 @@ public class ScanTests extends BaseTest {
 			organizationIndexPage = uploadScanPage.clickCancelLink()
 												  .clickDeleteLink()
 												  .clickDeleteButton();
+		}
+	}
+	
+	String XSS = "Failure to Preserve Web Page Structure ('Cross-site Scripting')";
+	String SQLI = "Improper Sanitization of Special Elements used in an SQL Command ('SQL Injection')";
+	
+	@Test
+	public void microsoftCatNetScan() {
+		String key = "Microsoft CAT.NET";
+		
+		String[][] expectedResults = {
+				{ XSS, "Critical", "/zigguratutilityweb/contactus.aspx", "email"},
+				{ XSS, "Critical", "/zigguratutilityweb/contactus.aspx", "txtSubject"},
+				{ XSS, "Critical", "/zigguratutilityweb/message.aspx", ""},
+				{ XSS, "Critical", "/zigguratutilityweb/makepayment.aspx", "txtAmount"},
+				{ XSS, "Critical", "/zigguratutilityweb/contactus.aspx", "txtMessage"},
+				{ XSS, "Critical", "/zigguratutilityweb/makepayment.aspx", "txtCardNumber"},
+				{ XSS, "Critical", "/zigguratutilityweb/makepayment.aspx", "txtAmount"},
+				{ SQLI, "Critical", "/zigguratutilityweb/loginpage.aspx", "txtPassword"},
+				{ SQLI, "Critical", "/zigguratutilityweb/loginpage.aspx", "txtUsername"},
+				{ SQLI, "Critical", "/zigguratutilityweb/viewstatement.aspx", "StatementID"},
+				{ SQLI, "Critical", "/zigguratutilityweb/makepayment.aspx", "txtAmount"},
+			};
+		
+		runScanTest(key, expectedResults);
+	}
+	
+	public void runScanTest(String scannerName, String[][] expectedResults) {
+		organizationIndexPage = loginPage.login("user", "password");
+		
+		applicationDetailPage = organizationIndexPage.clickAddOrganizationButton()
+													 .setNameInput(scannerName + getRandomString(10))
+													 .clickSubmitButtonValid()
+													 .clickAddApplicationLink()
+													 .setNameInput(scannerName + getRandomString(10))
+													 .setUrlInput("http://" + scannerName)
+													 .clickAddApplicationButton()
+													 .clickUploadScanLinkFirstTime()
+													 .setChannelTypeSelect(scannerName)
+													 .clickAddChannelButton()
+													 .setFileInput(fileMap.get(scannerName))
+													 .setChannelSelect(scannerName)
+													 .clickUploadScanButton();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		applicationDetailPage = applicationDetailPage.clickRefreshLink();
+		
+		for (int i=1; i <= expectedResults.length; i++) {
+			System.out.println("i = " + i);
+			
+			assertTrue(applicationDetailPage.getElementText("vulnName" + i)
+											.equals(expectedResults[i-1][0]));
+			
+			assertTrue(applicationDetailPage.getElementText("severity" + i)
+					.equals(expectedResults[i-1][1]));
+			
+			assertTrue(applicationDetailPage.getElementText("path" + i)
+					.equals(expectedResults[i-1][2]));
+			
+			assertTrue(applicationDetailPage.getElementText("parameter" + i)
+					.equals(expectedResults[i-1][3]));
 		}
 	}
 }

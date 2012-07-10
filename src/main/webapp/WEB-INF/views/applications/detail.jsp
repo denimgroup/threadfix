@@ -28,7 +28,7 @@
 	</h2>
 	
 	<c:if test="${ not empty message }">
-		<center class="errors" ><c:out value="${ message }"/> <a href="<spring:url value=""/>">Refresh the page.</a></center>
+		<center class="errors" ><c:out value="${ message }"/> <a id="refreshLink" href="<spring:url value=""/>">Refresh the page.</a></center>
 	</c:if>
 	
 	<div style="padding-top:10px;" id="helpText">
@@ -224,7 +224,7 @@
 				<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
 			</tr>
 		</c:if>
-		<c:forEach var="vuln" items="${application.activeVulnerabilities}">
+		<c:forEach var="vuln" items="${application.activeVulnerabilities}" varStatus="vulnStatus">
 			<tr class="bodyRow">
 				<td>
 					<c:if test="${ fn:length(vuln.findings) > 1 }">
@@ -242,13 +242,11 @@
 				        <spring:param name="appId" value="${ application.id }" />
 					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
 				    </spring:url>
-				    <a href="${ fn:escapeXml(vulnerabilityUrl) }">
-				        <c:out value="${ vuln.genericVulnerability.name }"/>
-				    </a>
+				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }"><c:out value="${ vuln.genericVulnerability.name }"/></a>
 				</td>
-				<td><c:out value="${ vuln.genericSeverity.name }"/></td>
-				<td><c:out value="${ vuln.surfaceLocation.path }"/></td>
-				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
+				<td id="severity${ vulnStatus.count }"><c:out value="${ vuln.genericSeverity.name }"/></td>
+				<td id="path${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.path }"/></td>
+				<td id="parameter${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
 				<td>
 				<c:if test="${ not empty vuln.defect }">
 					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">
