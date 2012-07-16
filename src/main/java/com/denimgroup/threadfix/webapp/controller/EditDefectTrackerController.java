@@ -100,21 +100,23 @@ public class EditDefectTrackerController {
 			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
 			SessionStatus status) {
 		
-		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
+		DefectTracker databaseDefectTracker = null;
+		
+		if (defectTracker == null || defectTracker.getName() == null || 
+				defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
+		} else {
+			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
+			if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
+				result.rejectValue("name", "errors.nameTaken");
+			} else if (!defectTrackerService.checkUrl(defectTracker)) {
+				result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
+			}
 		}
-		
-		DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
-		if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
-			result.rejectValue("name", "errors.nameTaken");
-		} else if (!defectTrackerService.checkUrl(defectTracker)) {
-			result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
-		}
-		
+
 		if (result.hasErrors()) {
 			return "config/defecttrackers/form";
-		} else {
-			
+		} else {	
 			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 			if (databaseDefectTracker != null && databaseDefectTracker.getDefectTrackerType() != null &&
 					defectTracker != null && defectTracker.getDefectTrackerType() != null &&
@@ -127,7 +129,9 @@ public class EditDefectTrackerController {
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
+			if (defectTracker != null) {
+				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
+			}
 			
 			status.setComplete();
 			return "redirect:/configuration/defecttrackers/" + defectTrackerId;

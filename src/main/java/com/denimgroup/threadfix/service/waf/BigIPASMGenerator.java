@@ -118,8 +118,9 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	
 		String vulnType = vulnerability.getGenericVulnerability().getName();
 		// Check if the vuln is supported
-		if (!stringInList(vulnType, getSupportedVulnerabilityTypes()))
+		if (!stringInList(vulnType, getSupportedVulnerabilityTypes())) {
 			return null;
+		}
 		
 		String parameter = surfaceLocation.getParameter();
 		String path      = surfaceLocation.getPath();
@@ -393,6 +394,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		 
 		return BigIPStrings.XML_END_BEFORE_SIGNATURES +
 			   signatureString + 
-			   BigIPStrings.XML_END_AFTER_SIGNATURES;
+			   BigIPStrings.xmlAfterSignatures;
 	}
+
 }

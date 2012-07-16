@@ -100,8 +100,13 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    public DataFlowElement getDataFlowElement(Attributes atts, int position) {
 	    	String start = atts.getValue("start");
 	    	Integer lineNum = null;
-	    	if (start != null)
-	    		lineNum = Integer.valueOf(start);
+	    	if (start != null) {
+	    		try {
+	    			lineNum = Integer.valueOf(start);
+	    		} catch (NumberFormatException e) {
+	    			log.error("FindBugs had a non-integer value in its line number field.");
+	    		}
+	    	}
 	    	
 	    	return new DataFlowElement(null, lineNum, atts.getValue("sourcefile"), position);
 	    }

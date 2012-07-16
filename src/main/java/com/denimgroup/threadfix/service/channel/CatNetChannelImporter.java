@@ -207,18 +207,20 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 				return null;
 			}
 
-			if (lineText.contains("=")) {
-				lineText = lineText.substring(lineText.indexOf('='));
+			String editedLineText = lineText;
+			
+			if (editedLineText.contains("=")) {
+				editedLineText = editedLineText.substring(lineText.indexOf('='));
 			}
 
 			List<String> retVals = new ArrayList<String>();
 			String regexResult = null;
 
 			while (true) {
-				regexResult = getRegexResult(lineText, regex);
-				if (regexResult != null && lineText.contains(regexResult)) {
+				regexResult = getRegexResult(editedLineText, regex);
+				if (regexResult != null && editedLineText.contains(regexResult)) {
 					retVals.add(regexResult);
-					lineText = lineText.substring(lineText.indexOf(regexResult) + regexResult.length());
+					editedLineText = editedLineText.substring(editedLineText.indexOf(regexResult) + regexResult.length());
 				} else
 					break;
 			}
@@ -259,8 +261,17 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("CallResult".equals(qName) || "MethodBoundary".equals(qName)) {
+	    		
+	    		Integer lineNum = null;
+	    		
+	    		try {
+	    			lineNum = Integer.valueOf(currentDataFlowLineNum);
+	    		} catch (NumberFormatException e) {
+	    			log.error("CAT.NET file contained a non-numeric value in its line number field.");
+	    		}
+	    		
 	    		DataFlowElement newElement = new DataFlowElement(currentDataFlowFile, 
-	    				Integer.valueOf(currentDataFlowLineNum), currentDataFlowLineText, currentSequenceNumber);
+	    				lineNum, currentDataFlowLineText, currentSequenceNumber);
 
 	    		if (dataFlowElements != null)
 	    			dataFlowElements.add(newElement);
@@ -359,15 +370,17 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    }
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if (!hasDate && "StartTimeStamp".equals(qName))
+	    	if (!hasDate && "StartTimeStamp".equals(qName)) {
 	    		getDate = true;
+	    	}
 	    	
-	    	if ("Report".equals(qName))
+	    	if ("Report".equals(qName)) {
 	    		report = true;
-	    	else if ("Analysis".equals(qName))
+	    	} else if ("Analysis".equals(qName)) {
 	    		analysis = true;
-	    	else if ("Rules".equals(qName))
+	    	} else if ("Rules".equals(qName)) {
 	    		rules = true;
+	    	}
 	    	
 	    	if (!hasFindings && "Result".equals(qName)) {
 	    		hasFindings = true;	

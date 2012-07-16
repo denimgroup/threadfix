@@ -88,6 +88,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		severityMap.put("Cross-Site Scripting (XSS) in path", "HIGH");
 		severityMap.put("Cross-Site Scripting in HTML \"script\" tag.", "HIGH");
 		severityMap.put("Cross-Site Scripting in HTML tag.", "HIGH");
+		severityMap.put("Cross-Site Scripting in HTML &quot;script&quot; tag.", "HIGH");
 		severityMap.put("Cross-Site Scripting (XSS) in URI", "HIGH");
 		severityMap.put("The TRACE HTTP method is enabled.", "MEDIUM");
 		severityMap.put("Found a CAPTCHA protected form.", "INFORMATIONAL");
@@ -154,8 +155,18 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("issue".equals(qName)) {
+	    		// TODO instead look into why this error occurs
+	    		
+	    		if (findingMap.get(CHANNEL_VULN_KEY) != null && 
+	    				findingMap.get(CHANNEL_VULN_KEY).equals("Cross-Site Scripting in HTML ")) {
+	    			findingMap.put(CHANNEL_VULN_KEY, 
+	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
+	    		}
+	    		
 	    		findingMap.put(CHANNEL_SEVERITY_KEY, severityMap.get(findingMap.get(CHANNEL_VULN_KEY)));
+
 	    		Finding finding = constructFinding(findingMap);
+	    		
 	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;

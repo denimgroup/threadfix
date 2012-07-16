@@ -77,14 +77,16 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			BindingResult result, int typeId) {
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
 				
-		if (remoteProviderType.getPassword() != null &&
+		if (remoteProviderType != null &&
+				remoteProviderType.getPassword() != null &&
 				remoteProviderType.getPassword().equals(USE_OLD_PASSWORD) &&
 				databaseRemoteProviderType != null &&
 				databaseRemoteProviderType.getPassword() != null) {
 			remoteProviderType.setPassword(databaseRemoteProviderType.getPassword());
 		}
 		
-		if (remoteProviderType.getApiKeyString() != null &&
+		if (remoteProviderType != null &&
+				remoteProviderType.getApiKeyString() != null &&
 				remoteProviderType.getApiKeyString().startsWith(USE_OLD_PASSWORD) &&
 				databaseRemoteProviderType != null &&
 				databaseRemoteProviderType.getApiKeyString() != null) {

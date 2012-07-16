@@ -94,33 +94,46 @@ public class LogParserServiceImpl implements LogParserService {
 	@Override
 	@Transactional(readOnly = false)
 	public List<SecurityEvent> parseInput() {
-		if (wafId == null || (fileAsString == null && fileAsMultipartFile == null))
+		if (wafId == null || (fileAsString == null && fileAsMultipartFile == null)) {
 			return null;
+		}
 		
-		Waf waf = wafDao.retrieveById(Integer.valueOf(wafId));
-		if (waf == null || waf.getWafType() == null)
+		Waf waf = null;
+		
+		try {
+			Integer intWafId = Integer.valueOf(wafId);
+			waf = wafDao.retrieveById(intWafId);
+		} catch (NumberFormatException e) {
+			log.error("The WAF id given was non-numeric and no WAF could be retrieved. Returning null.");
+		}
+		
+		if (waf == null || waf.getWafType() == null) {
 			return null;
+		}
 		
 		WafLogParserFactory factory = new WafLogParserFactory(wafRuleDao, securityEventDao);
 		WafLogParser parser = factory.getTracker(waf.getWafType().getName());
-		if (parser == null)
+		if (parser == null) {
 			return null;
+		}
 		
 		parser.setWafId(String.valueOf(wafId));
 		
-		if (fileAsString != null)
+		if (fileAsString != null) {
 			parser.setFileAsString(fileAsString);
-		else
+		} else {
 			parser.setFile(fileAsMultipartFile);
+		}
 		
 		log.info("About to parse " + waf.getWafType().getName() + " log file.");
 		
 		List<SecurityEvent> events = parser.parseInput();
 		
-		if (events.size() != 0)
+		if (events.size() != 0) {
 			log.info("Found " + events.size() + " security events in the " + waf.getWafType().getName() + " log.");
-		else
+		} else {
 			log.warn("Found no security events in the " + waf.getWafType().getName() + " log.");
+		}
 		
 		return events;
 	}

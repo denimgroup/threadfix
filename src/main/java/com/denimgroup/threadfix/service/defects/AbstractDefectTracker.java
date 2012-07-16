@@ -42,8 +42,8 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public abstract class AbstractDefectTracker {
 	
-	protected final static String LOGIN_FAILURE_STRING = "Login Failure";
-	protected final static String INCORRECT_CONFIGURATION = "Your configuration is invalid: check your URL.";
+	protected final static String LOGIN_FAILURE = "Login Failure";
+	protected final static String BAD_CONFIGURATION = "Your configuration is invalid: check your URL.";
 
 	// Common log for all Defect Tracker Exporters.
 	protected final Log log = LogFactory.getLog(this.getClass());
@@ -61,9 +61,7 @@ public abstract class AbstractDefectTracker {
 	 * @param bugID
 	 * @return
 	 */
-	public String getBugURL(String endpointURL, String bugID) {
-		return "";
-	}
+	public abstract String getBugURL(String endpointURL, String bugID);
 	
 	/**
 	 * 
@@ -111,37 +109,36 @@ public abstract class AbstractDefectTracker {
 	 * @param metadata
 	 * @return
 	 */
-	protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
+	protected String makeDescription(final List<Vulnerability> vulnerabilities, final DefectMetadata metadata) {
 
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer stringBuilder = new StringBuffer(128);
 
-		String preamble = metadata.getPreamble();
+		final String preamble = metadata.getPreamble();
 
 		if (preamble != null && !"".equals(preamble)) {
-			sb.append("General information\n");
-			sb.append(preamble);
-			sb.append('\n');
+			stringBuilder.append("General information\n");
+			stringBuilder.append(preamble);
+			stringBuilder.append('\n');
 		}
 
 		int vulnIndex = 0;
 
 		if (vulnerabilities != null) {
-			for (Vulnerability v : vulnerabilities) {
+			for (Vulnerability vulnerability : vulnerabilities) {
 
-				sb.append("Vulnerability[" + vulnIndex + "]:\n");
-				sb.append(v.getGenericVulnerability().getName());
-				sb.append('\n');
+				stringBuilder.append("Vulnerability[" + vulnIndex + "]:\n" +
+						vulnerability.getGenericVulnerability().getName() + '\n');
 
-				SurfaceLocation asl = v.getSurfaceLocation();
-				sb.append("Vulnerability attack surface location:\n");
-				sb.append("URL: " + asl.getUrl() + "\n");
-				sb.append("Parameter: " + asl.getParameter());
-				sb.append("\n\n");
-
+				final SurfaceLocation asl = vulnerability.getSurfaceLocation();
+				stringBuilder.append("Vulnerability attack surface location:\n" +
+										"URL: " + asl.getUrl() + "\n" +
+										"Parameter: " + asl.getParameter() +
+										"\n\n");
+				
 				vulnIndex++;
 			}
 		}
-		return sb.toString();
+		return stringBuilder.toString();
 	}
 
 }

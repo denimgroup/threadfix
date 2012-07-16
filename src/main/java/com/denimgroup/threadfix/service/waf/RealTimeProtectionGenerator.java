@@ -86,7 +86,7 @@ public abstract class RealTimeProtectionGenerator {
 	// These maps allow you to easily add new types of vulnerabilities if they :
 	// 1. Follow one of the patterns
 	// 2. Have a known payload
-	protected static Map<String, String> PAYLOAD_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<String, String>();
 	static {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION);
@@ -101,7 +101,7 @@ public abstract class RealTimeProtectionGenerator {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION);
 	}
 	
-	protected static Map<String, String> MESSAGE_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> MESSAGE_MAP = new HashMap<String, String>();
 	static {
 		MESSAGE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "Cross-site Scripting attempt");
 		MESSAGE_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, "SQL Injection attempt");
@@ -166,7 +166,11 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return A rule filtering the URL for a given parameter payload.
 	 */
 	protected String generateRuleWithParameter(String uri, String action, String id,
-			String genericVulnName, String parameter) { return null; }
+			String genericVulnName, String parameter) { 
+		log.warn("The RealTimeProtectionGenerator implementation of generateRuleWithParameter() has been called."
+				+ " This indicates an incomplete subclassing implementation.");
+		return null; 
+	}
 	
 	/**
 	 * This method should be overwritten by classes that use the default makeRule implementation.
@@ -178,7 +182,11 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return A rule prohibiting access to the exact URI.
 	 */
 	protected String generateRuleForExactUrl(String uri, String action, String id,
-			String genericVulnName) { return null; }
+			String genericVulnName) { 
+		log.warn("The RealTimeProtectionGenerator implementation of generateRuleForExactUrl() has been called."
+				+ " This indicates an incomplete subclassing implementation.");
+		return null; 
+	}
 	
 	/**
 	 * This method should be overwritten by classes that use the default makeRule implementation.
@@ -190,7 +198,11 @@ public abstract class RealTimeProtectionGenerator {
 	 * @return A rule filtering the URL for a given payload.
 	 */
 	protected String generateRuleWithPayloadInUrl(String uri, String action, String id,
-			String genericVulnName) { return null; }
+			String genericVulnName) { 
+		log.warn("The RealTimeProtectionGenerator implementation of generateRuleWithPayloadInUrl() has been called."
+				+ " This indicates an incomplete subclassing implementation.");
+		return null; 
+	}
 
 	/**
 	 * 
@@ -378,7 +390,7 @@ public abstract class RealTimeProtectionGenerator {
 	protected String pcreRegexEscape(String toEscape) {
 		String [] characters = { "[", "]", "\\", "^", "$", ".", "?", "*", "+", "|", "(", ")", "/" };
 		
-		String returnString = new String(toEscape);
+		String returnString = toEscape;
 		
 		for (String character : characters)
 			if (returnString.contains(character))
@@ -425,11 +437,7 @@ public abstract class RealTimeProtectionGenerator {
 			return null;
 		}
 	}
-	
-	public static boolean shouldDisplay(WafRule rule) {
-		return true;
-	}
-	
+		
 	public WafRuleDirective getDefaultDirective(Waf waf) {
 		if (waf != null && waf.getWafType() != null) {
 			return wafRuleDirectiveDao.retrieveByWafTypeIdAndDirective(

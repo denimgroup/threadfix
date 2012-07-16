@@ -52,53 +52,53 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	
 	// TODO run through more files and determine whether this method is still valuable
 	// or whether we can use only the 'action' parameter and the column parsing.
-	private static Map<String, String> INPUT_METHOD_REGEX_MAP = new HashMap<String, String>();
-	public static Map<String, String> SPECIAL_REGEX_MAP = new HashMap<String, String>();
+	private static final Map<String, String> FACT_REGEX_MAP = new HashMap<String, String>();
+	private static final Map<String, String> SPECIAL_REGEX_MAP = new HashMap<String, String>();
 	static {
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_Item",
+		FACT_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_Item",
 				"Request\\[\"([a-zA-Z0-9_]+)\"\\]");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Web.UI.WebControls.TextBox.get_Text",
+		FACT_REGEX_MAP.put("Direct : System.Web.UI.WebControls.TextBox.get_Text",
 				"([a-zA-Z0-9_]+)\\.Text");
-		INPUT_METHOD_REGEX_MAP.put("Direct : javax.servlet.ServletRequest.getParameter",
+		FACT_REGEX_MAP.put("Direct : javax.servlet.ServletRequest.getParameter",
 				"getParameter\\(\"([a-zA-Z0-9_]+)\"\\)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Data.Common.DbDataReader.get_Item",
+		FACT_REGEX_MAP.put("Direct : System.Data.Common.DbDataReader.get_Item",
 				"reader\\[\"([a-zA-Z0-9_]+)\"\\]");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Web.UI.WebControls.Label.set_Text",
+		FACT_REGEX_MAP.put("Direct : System.Web.UI.WebControls.Label.set_Text",
 				"^\\s*([a-zA-Z0-9_]+).Text");
-		INPUT_METHOD_REGEX_MAP.put("Direct : Customer.HydrateCustomer",
+		FACT_REGEX_MAP.put("Direct : Customer.HydrateCustomer",
 				"Customer.HydrateCustomer\\(([a-zA-Z0-9_]+)\\)");
-		INPUT_METHOD_REGEX_MAP.put("get_Item(return)", "Request\\[\"([a-zA-Z0-9_]+)\"\\]");
-		INPUT_METHOD_REGEX_MAP.put("get_Item()", "Request\\[\"([a-zA-Z0-9_]+)\"\\]");
-		INPUT_METHOD_REGEX_MAP.put("get_Item(...) : HttpSessionState.get_Item may return NULL",
+		FACT_REGEX_MAP.put("get_Item(return)", "Request\\[\"([a-zA-Z0-9_]+)\"\\]");
+		FACT_REGEX_MAP.put("get_Item()", "Request\\[\"([a-zA-Z0-9_]+)\"\\]");
+		FACT_REGEX_MAP.put("get_Item(...) : HttpSessionState.get_Item may return NULL",
 				"Session\\[\"?([a-zA-Z0-9_]+)\"?\\]");
-		INPUT_METHOD_REGEX_MAP.put("get_Text(return)", "([a-zA-Z0-9_]+).Text");
-		INPUT_METHOD_REGEX_MAP.put("get_QueryString(return)", "Session\\[\"?([a-zA-Z0-9_]+)\"?\\]");
-		INPUT_METHOD_REGEX_MAP.put("WEB, XSS",
+		FACT_REGEX_MAP.put("get_Text(return)", "([a-zA-Z0-9_]+).Text");
+		FACT_REGEX_MAP.put("get_QueryString(return)", "Session\\[\"?([a-zA-Z0-9_]+)\"?\\]");
+		FACT_REGEX_MAP.put("WEB, XSS",
 				"action=\\\"<\\%= ?Request.([a-zA-Z0-9_]+) ?\\%>\\\"");
-		INPUT_METHOD_REGEX_MAP.put("Direct : builtin_echo",
+		FACT_REGEX_MAP.put("Direct : builtin_echo",
 				"POST\\[\"?([a-zA-Z0-9_]+)\"?\\]");// TODO LOOK AT THIS
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_RawUrl",
+		FACT_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_RawUrl",
 				"Request.([a-zA-Z0-9_]+)");
-		INPUT_METHOD_REGEX_MAP.put("Name: System.Web.SessionState.HttpSessionState.set_Item",
+		FACT_REGEX_MAP.put("Name: System.Web.SessionState.HttpSessionState.set_Item",
 				" *([a-zA-Z0-9_\\.]+\\[\\\"[a-zA-Z0-9_]+\\\"\\])");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.IO.TextWriter.Write",
+		FACT_REGEX_MAP.put("Direct : System.IO.TextWriter.Write",
 				"<% ?=? ?([a-zA-Z0-9_]+) ?%>");
-		INPUT_METHOD_REGEX_MAP.put("ReadToEnd()", "([a-zA-Z0-9_]+)\\.ReadToEnd\\(\\)");
-		INPUT_METHOD_REGEX_MAP.put("GetSqlStringCommand()",
+		FACT_REGEX_MAP.put("ReadToEnd()", "([a-zA-Z0-9_]+)\\.ReadToEnd\\(\\)");
+		FACT_REGEX_MAP.put("GetSqlStringCommand()",
 				"Database\\.GetSqlStringCommand\\(([a-zA-Z0-9_]+)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Web.SessionState.HttpSessionState.set_Item",
+		FACT_REGEX_MAP.put("Direct : System.Web.SessionState.HttpSessionState.set_Item",
 				"Session\\[\"?([a-zA-Z0-9_]+)\"?\\]");
-		INPUT_METHOD_REGEX_MAP.put("read request",
+		FACT_REGEX_MAP.put("read request",
 				"[rR]equest\\.?[a-zA-Z_]*\\(\\\"?([a-zA-Z0-9_]+)\\\"?\\)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : connection.execute",
+		FACT_REGEX_MAP.put("Direct : connection.execute",
 				"\\.[eE]xecute\\(([a-zA-Z0-9_]+)\\)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : response.write",
+		FACT_REGEX_MAP.put("Direct : response.write",
 				"<\\% ?=? ?([ a-zA-Z0-9_\\.\\\"\\(\\)]+) ?\\%>\\\"");
-		INPUT_METHOD_REGEX_MAP.put("Direct : fopen",
+		FACT_REGEX_MAP.put("Direct : fopen",
 				"fopen\\(\"?($?[a-zA-Z0-9_]+)\"?\\)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : system",
+		FACT_REGEX_MAP.put("Direct : system",
 				"system\\(\"?($?[a-zA-Z0-9_]+)\"?\\)");
-		INPUT_METHOD_REGEX_MAP.put("Direct : System.Data.SqlClient.SqlCommand.SqlCommand", 
+		FACT_REGEX_MAP.put("Direct : System.Data.SqlClient.SqlCommand.SqlCommand", 
 				"SqlCommand\\($?\"?([a-zA-Z0-9_]+)\"?\\)");
 		
 		SPECIAL_REGEX_MAP.put("get_Item", "\\[\"?([a-zA-Z0-9_]+)\"?\\]");
@@ -351,9 +351,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    					dataFlowElementMap.fact != null) {
 	    				String line = snippetMap.get(dataFlowElementMap.snippet);
 	    				
-	    				if (INPUT_METHOD_REGEX_MAP.containsKey(dataFlowElementMap.fact)) {
+	    				if (FACT_REGEX_MAP.containsKey(dataFlowElementMap.fact)) {
 	    					currentParameter = getRegexResult(line, 
-	    							INPUT_METHOD_REGEX_MAP.get(dataFlowElementMap.fact));
+	    							FACT_REGEX_MAP.get(dataFlowElementMap.fact));
 	    				}
 	    				
 	    				// Try to get it out by simply looking at the column and grabbing 

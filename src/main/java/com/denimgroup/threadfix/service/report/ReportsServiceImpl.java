@@ -84,6 +84,8 @@ public class ReportsServiceImpl implements ReportsService {
 	private ScanDao scanDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
 	private ApplicationDao applicationDao = null;
+	
+	int amountToAdd = 0;
 
 	/**
 	 * @param sessionFactory
@@ -117,6 +119,11 @@ public class ReportsServiceImpl implements ReportsService {
 		File file = new File(path + "jasper/" + fileName);
 		InputStream inputStream = null;
 
+		// This variable is used to extend the width of the pdf if that is necessary.
+		// it is a class variable to save retrieval of all the channel types; 
+		// we can just calculate it in addCorrectColumns() when we already have that information.
+		amountToAdd = 0;
+		
 		try {
 			inputStream = new FileInputStream(file);
 			
@@ -168,16 +175,19 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			if(format.equals("PDF")) {
 				response.setContentType( "application/pdf" );
-				response.setHeader("Content-Disposition", "attachment; filename=\"report_csv_" + applicationIdList
+				response.setHeader("Content-Disposition", "attachment; filename=\"threadfix_report_" + applicationIdList
 						+ ".pdf\"");
 
 				ServletOutputStream out = response.getOutputStream();
-
+				
+				jasperPrint.setPageWidth(jasperPrint.getPageWidth() + amountToAdd);
+				
 				byte[] pdfByteArray = JasperExportManager.exportReportToPdf(jasperPrint);
 				
 				out.write(pdfByteArray, 0, pdfByteArray.length);
 				out.flush();
 				out.close();
+				return null;
 			}
 			
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -192,7 +202,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
-					Boolean.valueOf(true));
+					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
 					"/threadfix/jasper/images/");
 
@@ -302,6 +312,16 @@ public class ReportsServiceImpl implements ReportsService {
 		List<ChannelType> channelTypeList = getChannelTypesInUse(applicationIdList);
 		
 		Integer base = 300, increment = 140, count = 0;
+		
+		amountToAdd = increment * (channelTypeList.size() - 4) + 50;
+		if (amountToAdd < 0) 
+			amountToAdd = 50;
+		
+		string = string.replace("<reportElement x=\"0\" y=\"43\" width=\"772\" height=\"1\"/>", 
+					"<reportElement x=\"0\" y=\"43\" width=\"" + (772 + amountToAdd) + "\" height=\"1\"/>");
+		
+		string = string.replace("<reportElement x=\"346\" y=\"0\" width=\"200\" height=\"20\"/>", 
+				"<reportElement x=\"" + (296 + (amountToAdd / 2)) + "\" y=\"0\" width=\"200\" height=\"20\"/>");
 		
 		for (ChannelType channelType : channelTypeList) {
 			if (channelType == null || channelType.getId() == null)

@@ -48,7 +48,9 @@ import com.denimgroup.threadfix.data.entities.Scan;
  */
 public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	
-	private String TEMPLATE_NAME = "name of an arbitrarily supplied request";
+	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
+	private static final String REST_URL_PARAM = "REST URL parameter";
+	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
 
 	@Autowired
 	public BurpSuiteChannelImporter(ChannelTypeDao channelTypeDao,
@@ -137,7 +139,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	if ("name".equals(qName)) {
+	    	if ("type".equals(qName)) {
 	    		getChannelVulnText = true;
 	    	} else if ("location".equals(qName)) {
 	    		getUrlText = true;
@@ -163,6 +165,12 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		// before deciding on a final strategy
 	    		if (currentParameter != null && currentParameter.equals(TEMPLATE_NAME)) {
 	    			currentParameter = currentBackupParameter;
+	    		}
+	    		
+	    		if (currentParameter != null && 
+	    				(currentParameter.startsWith(REST_URL_PARAM) || 
+	    				 currentParameter.startsWith(MANUAL_INSERTION_POINT))) {
+	    			currentParameter = "";
 	    		}
 	    		
 	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 

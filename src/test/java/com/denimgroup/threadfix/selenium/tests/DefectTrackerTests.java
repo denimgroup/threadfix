@@ -42,7 +42,7 @@ public class DefectTrackerTests extends BaseTest {
 	private WebDriver driver;
 	private static LoginPage loginPage;
 	
-	String TEST_BUGZILLA_URL = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+	private static final String TEST_BUGZILLA_URL = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
 	
 	String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" +
 			"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" +
@@ -226,7 +226,7 @@ public class DefectTrackerTests extends BaseTest {
 		// Test empty and whitespace input
 		editDefectTrackerPage.setNameInput(emptyString);
 		editDefectTrackerPage = editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid();
-		System.out.println("Output is '" + editDefectTrackerPage.getNameErrorsText() + "'");
+		log.debug("Output is '" + editDefectTrackerPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(editDefectTrackerPage.getNameErrorsText()));
 		
 		editDefectTrackerPage.setNameInput(whiteSpaceString);

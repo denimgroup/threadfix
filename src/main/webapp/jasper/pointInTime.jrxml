@@ -66,7 +66,7 @@
 	<pageHeader>
 		<band height="40">
 			<textField>
-				<reportElement x="222" y="20" width="309" height="20"/>
+				<reportElement x="215" y="20" width="309" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>

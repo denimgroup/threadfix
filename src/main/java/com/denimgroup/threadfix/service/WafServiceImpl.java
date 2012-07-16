@@ -124,21 +124,24 @@ public class WafServiceImpl implements WafService {
 			return;
 		}
 		
-		if (directive == null && waf.getLastWafRuleDirective() != null)
-			directive = waf.getLastWafRuleDirective();
+		WafRuleDirective editedDirective = directive;
+		
+		if (editedDirective == null && waf.getLastWafRuleDirective() != null) {
+			editedDirective = waf.getLastWafRuleDirective();
+		}
 
 		RealTimeProtectionGeneratorFactory factory = new RealTimeProtectionGeneratorFactory(
 															wafRuleDao, wafRuleDirectiveDao);
 		RealTimeProtectionGenerator generator = factory.getTracker(waf.getWafType().getName());
 		if (generator != null) {
-			if (directive == null) {
-				directive = generator.getDefaultDirective(waf);
+			if (editedDirective == null) {
+				editedDirective = generator.getDefaultDirective(waf);
 			}
 			
-			List<WafRule> wafRuleList = generator.generateRules(waf, directive);
+			List<WafRule> wafRuleList = generator.generateRules(waf, editedDirective);
 			waf.setWafRules(wafRuleList);
-			waf.setLastWafRuleDirective(directive);
-			saveOrUpdateRules(waf, directive);
+			waf.setLastWafRuleDirective(editedDirective);
+			saveOrUpdateRules(waf, editedDirective);
 			storeWaf(waf);
 		}
 	}
@@ -203,7 +206,7 @@ public class WafServiceImpl implements WafService {
 		if (rules != null) {
 			for (WafRule rule : rules) {
 				if (rule != null && rule.getIsNormalRule()) {
-					buffer.append(rule.getRule()).append("\n");
+					buffer.append(rule.getRule()).append('\n');
 					if (ruleEnd != null) {
 						buffer.append(ruleEnd);
 					}

@@ -53,8 +53,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 	
-	private static String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
-	private static String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
+	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
+	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 
 	private String password = null;
 	private String username = null;
@@ -84,12 +84,11 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		parse(appBuildsInputStream, parser);
 		String buildId = parser.map.get(appName);
 		
-		// TESTING, REMOVE LATER
 		if (buildId == null) {
-			System.out.println("No build ID was parsed.");
+			log.warn("No build ID was parsed.");
 			return null; // we failed.
 		} else {
-			System.out.println("Retrieved build ID " + buildId + " for application " + appName);
+			log.warn("Retrieved build ID " + buildId + " for application " + appName);
 		}
 
 		// This block tries to parse the scan corresponding to the build.
@@ -259,7 +258,11 @@ public class VeracodeRemoteProvider extends RemoteProvider {
     					if (atts.getValue("line") != null) {
     						DataFlowElement dataFlowElement = new DataFlowElement();
     						dataFlowElement.setFinding(finding);
-    						dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
+    						try {
+    							dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
+    						} catch (NumberFormatException e) {
+    							log.error("Non-numeric value found in Veracode results when trying to parse line number.");
+    						}
     						dataFlowElement.setSourceFileName(sourceFileLocation);
     						finding.setDataFlowElements(new ArrayList<DataFlowElement>());
     						finding.getDataFlowElements().add(dataFlowElement);

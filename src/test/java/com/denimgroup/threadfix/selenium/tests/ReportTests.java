@@ -96,10 +96,10 @@ public class ReportTests extends BaseTest {
 			organizationIndexPage = organizationDetailPage.clickOrganizationHeaderLink();
 		}
 		
-		System.out.println("Critical: " + (100.0 * appsNeverScannedByCriticality[3] / appsByCriticality[3]) );
-		System.out.println("High: " + (100.0 * appsNeverScannedByCriticality[2] / appsByCriticality[2]) );
-		System.out.println("Medium: " + (100.0 * appsNeverScannedByCriticality[1] / appsByCriticality[1]) );
-		System.out.println("Low: " + (100.0 * appsNeverScannedByCriticality[0] / appsByCriticality[0]) );
+		log.debug("Critical: " + (100.0 * appsNeverScannedByCriticality[3] / appsByCriticality[3]) );
+		log.debug("High: " + (100.0 * appsNeverScannedByCriticality[2] / appsByCriticality[2]) );
+		log.debug("Medium: " + (100.0 * appsNeverScannedByCriticality[1] / appsByCriticality[1]) );
+		log.debug("Low: " + (100.0 * appsNeverScannedByCriticality[0] / appsByCriticality[0]) );
 	}
 	
 }

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,11 @@ public class ExceptionLogServiceImpl implements ExceptionLogService {
 	@Override
 	public void storeExceptionLog(ExceptionLog exceptionLog) {
 		exceptionLogDao.saveOrUpdate(exceptionLog);
+	}
+
+	@Override
+	public List<ExceptionLog> loadAll() {
+		return exceptionLogDao.retrieveAll();
 	}
 
 

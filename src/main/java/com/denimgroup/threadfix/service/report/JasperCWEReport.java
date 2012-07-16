@@ -117,7 +117,7 @@ public class JasperCWEReport implements JRDataSource {
 				
 				Map<String, Object> genericVulnEntry = new HashMap<String,Object>();
 				genericVulnEntry.put("description", statsMapKey);
-				genericVulnEntry.put("total", new Long(sortingHashKey));
+				genericVulnEntry.put("total", Long.valueOf(sortingHashKey));
 				
 				Map<String, Integer> statsMapEntry = statsMap.get(statsMapKey);
 				

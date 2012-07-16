@@ -82,15 +82,17 @@ public class APIKeyServiceImpl implements APIKeyService {
 	public APIKey createAPIKey(String note, boolean restricted) {
 		APIKey key = new APIKey();
 		
-		if (note != null && note.length() > 255)
-			note = note.substring(0, 254);
+		String editedNote = note;
+		
+		if (editedNote != null && editedNote.length() > 255)
+			editedNote = editedNote.substring(0, 254);
 		
 		String keyString = generateNewSecureRandomKey();
 		
 		if (keyString != null && keyString.length() > 50)
 			keyString = keyString.substring(0, 49);
 		
-		key.setNote(note);
+		key.setNote(editedNote);
 		key.setIsRestrictedKey(restricted);
 		key.setApiKey(keyString);
 		

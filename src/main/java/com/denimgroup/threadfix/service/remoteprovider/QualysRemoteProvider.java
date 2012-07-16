@@ -65,7 +65,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	private static final String GET_SCAN_URL = "https://qualysapi.qualys.com/qps/rest/3.0/download/was/wasscan/";
 	private static final String GET_APPS_URL = "https://qualysapi.qualys.com/qps/rest/3.0/search/was/webapp";
 	
-	private static Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
+	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
 	static {
 		SEVERITIES_MAP.put("150000", "5");
 		SEVERITIES_MAP.put("150001", "5");

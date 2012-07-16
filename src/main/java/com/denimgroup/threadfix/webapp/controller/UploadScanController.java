@@ -96,7 +96,7 @@ public class UploadScanController {
 		}
 		
 		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue)) {
-			scanService.saveFileAndAddToQueue(Integer.valueOf(channelId), file);
+			scanService.saveFileAndAddToQueue(channelId, file);
 		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue)) {
 			Integer emptyScanId = scanService.saveEmptyScanAndGetId(channelId, file);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");

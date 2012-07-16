@@ -37,10 +37,10 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 public class DefectTrackerFactory {
 
 	private final Log log = LogFactory.getLog(this.getClass());
-	private static final Log staticLog = LogFactory.getLog("DefectTrackerFactory");
+	private static final Log STATIC_LOG = LogFactory.getLog("DefectTrackerFactory");
 	
 	public static boolean checkTrackerUrl(String url, DefectTrackerType type) {
-		staticLog.info("Checking Defect Tracker URL.");
+		STATIC_LOG.info("Checking Defect Tracker URL.");
 		
 		if (type != null && type.getName() != null && url != null) {
 			
@@ -56,17 +56,17 @@ public class DefectTrackerFactory {
 			} else if (name.equals(DefectTrackerType.BUGZILLA)) {
 				tracker = getBugzillaDefectTracker(emptyTracker,null,null);
 			} else {
-				staticLog.warn("Defect Tracker type was not found.");
+				STATIC_LOG.warn("Defect Tracker type was not found.");
 				return false;
 			}
 			
 			if (tracker != null) {
-				staticLog.info("Passing check to Defect Tracker.");
+				STATIC_LOG.info("Passing check to Defect Tracker.");
 				return tracker.hasValidUrl();
 			}
 		}
 		
-		staticLog.warn("Incorrectly configured Defect Tracker in checkTrackerURL. Returning false.");
+		STATIC_LOG.warn("Incorrectly configured Defect Tracker in checkTrackerURL. Returning false.");
 		return false;
 	}
 	

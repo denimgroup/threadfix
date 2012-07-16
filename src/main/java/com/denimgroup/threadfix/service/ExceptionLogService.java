@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.List;
+
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 
 /**
@@ -35,5 +37,11 @@ public interface ExceptionLogService {
 	 * @param defect
 	 */
 	void storeExceptionLog(ExceptionLog exceptionLog);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	List<ExceptionLog> loadAll();
 
 }

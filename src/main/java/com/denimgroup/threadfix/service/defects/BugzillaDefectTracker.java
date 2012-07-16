@@ -52,7 +52,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	private String serverProject;
 	private String serverProjectId;
 		
-	private static Map<String, String> bugzillaVersionMap = new HashMap<String,String>();
+	private static Map<String, String> versionMap = new HashMap<String,String>();
 	
 	private List<String> statuses = new ArrayList<String>();
 	private List<String> components = new ArrayList<String>();
@@ -77,8 +77,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 
 			// TODO Pass this information back to the user
-			if (loginStatus.equals(LOGIN_FAILURE_STRING) 
-					|| loginStatus.equals(INCORRECT_CONFIGURATION)) {
+			if (loginStatus.equals(LOGIN_FAILURE) 
+					|| loginStatus.equals(BAD_CONFIGURATION)) {
 				log.warn("Login Failed, check credentials");
 				return null;
 			}
@@ -210,8 +210,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		}
 
 		// TODO Pass this information back to the user
-		if (loginStatus.equals(LOGIN_FAILURE_STRING) 
-				|| loginStatus.equals(INCORRECT_CONFIGURATION)) {
+		if (loginStatus.equals(LOGIN_FAILURE) 
+				|| loginStatus.equals(BAD_CONFIGURATION)) {
 			return "Bugzilla login failed, check your credentials.";
 		}
 
@@ -230,8 +230,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		if (loginResponse == null) {
 			return;
 		}
-		if (loginResponse.equals(LOGIN_FAILURE_STRING) 
-				|| loginResponse.equals(INCORRECT_CONFIGURATION)) {
+		if (loginResponse.equals(LOGIN_FAILURE) 
+				|| loginResponse.equals(BAD_CONFIGURATION)) {
 			log.warn("Login Failed, check credentials");
 			return;
 		}
@@ -337,15 +337,15 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			loginResult = client.execute("User.login", loginArray);
 		} catch (XmlRpcException e) {
 			if (e.getMessage().contains("The username or password you entered is not valid")) {
-				return LOGIN_FAILURE_STRING;
+				return LOGIN_FAILURE;
 			}
 			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			if (e2.getMessage().contains("Host name may not be null")) {
-				return INCORRECT_CONFIGURATION;
+				return BAD_CONFIGURATION;
 			} else {
 				e2.printStackTrace();
-				return INCORRECT_CONFIGURATION;
+				return BAD_CONFIGURATION;
 			}
 		}
 
@@ -453,8 +453,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	}
 
 	public String getVersion() {
-		if (bugzillaVersionMap.get(serverURL) != null) {
-			return bugzillaVersionMap.get(serverURL);
+		if (versionMap.get(serverURL) != null) {
+			return versionMap.get(serverURL);
 		}
 		
 		Object createResult = executeMethod("Bugzilla.version", new Object[] {});
@@ -463,10 +463,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			Map<?,?> item = (Map<?,?>) createResult;
 			if (item.get("version") != null) {
 				log.info("Bugzilla instance is version " + item.get("version"));
-				bugzillaVersionMap.put(serverURL, item.get("version").toString());
+				versionMap.put(serverURL, item.get("version").toString());
 			}
 		}
-		return bugzillaVersionMap.get(serverURL);
+		return versionMap.get(serverURL);
 	}
 
 	/**
@@ -513,10 +513,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			if (e2.getMessage().contains("Host name may not be null")) {
-				return INCORRECT_CONFIGURATION;
+				return BAD_CONFIGURATION;
 			} else {
 				e2.printStackTrace();
-				return INCORRECT_CONFIGURATION;
+				return BAD_CONFIGURATION;
 			}
 		}
 
@@ -546,8 +546,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 		
-		if (status == null || status.equals(LOGIN_FAILURE_STRING) || 
-				status.equals(INCORRECT_CONFIGURATION)) {
+		if (status == null || status.equals(LOGIN_FAILURE) || 
+				status.equals(BAD_CONFIGURATION)) {
 			log.warn(status);
 			return null;
 		}
@@ -588,8 +588,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		}
 		String status = login(client);
 		
-		if (status == null || status.equals(LOGIN_FAILURE_STRING) || 
-				status.equals(INCORRECT_CONFIGURATION)) {
+		if (status == null || status.equals(LOGIN_FAILURE) || 
+				status.equals(BAD_CONFIGURATION)) {
 			log.warn(status);
 			return null;
 		}
@@ -627,7 +627,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		if (LOGIN_FAILURE_STRING.equals(status) || INCORRECT_CONFIGURATION.equals(status)) {
+		if (LOGIN_FAILURE.equals(status) || BAD_CONFIGURATION.equals(status)) {
 			return "Authentication failed";
 		} else {
 			return getProducts(client);
@@ -639,8 +639,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		return !LOGIN_FAILURE_STRING.equals(status) 
-				&& !INCORRECT_CONFIGURATION.equals(status);
+		return !LOGIN_FAILURE.equals(status) 
+				&& !BAD_CONFIGURATION.equals(status);
 	}
 
 	@Override
@@ -653,12 +653,15 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	public String getBugURL(String endpointURL, String bugID) {
 		if (endpointURL != null && bugID != null && endpointURL.endsWith("xmlrpc.cgi")) {
 			return endpointURL.replace("xmlrpc.cgi", "show_bug.cgi?id="+bugID);
-		} else {
+		} else  if (endpointURL != null) {
 			if (endpointURL.endsWith("/")) {
 				return endpointURL + "show_bug.cgi?id=" + bugID;
 			} else {
 				return endpointURL + "/show_bug.cgi?id=" + bugID;
 			}
+		} else {
+			log.error("getBugURL() in BugzillaDefectTracker was given a null endpointURL.");
+			return null;
 		}
 	}
 
@@ -693,7 +696,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return false;
 			}
 		} catch (IllegalArgumentException e2) {
-			System.out.println("IllegalArgumentException was tripped. Returning false.");
+			log.warn("IllegalArgumentException was tripped. Returning false.");
 			return false;
 		}
 	}

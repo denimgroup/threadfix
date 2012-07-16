@@ -57,7 +57,7 @@
 		<c:choose>
 			<c:when test="${ empty similarVulns }">
 				<tr class="bodyRow">
-					<td colspan="5" style="text-align:center;">No similar vulnerabilities found.</td>
+					<td colspan="6" style="text-align:center;">No similar vulnerabilities found.</td>
 				</tr>
 			</c:when>
 			<c:otherwise>

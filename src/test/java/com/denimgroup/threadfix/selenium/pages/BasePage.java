@@ -25,10 +25,14 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public abstract class BasePage {
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	public final static int NUM_SECONDS_TO_WAIT = 5;
 	
@@ -38,7 +42,7 @@ public abstract class BasePage {
 		driver = (FirefoxDriver) webdriver;
 		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
 		
-		System.out.println("Loading " + this.getClass().toString());
+		log.debug("Loading " + this.getClass().toString());
 	}
 	
 	public LoginPage logout() {

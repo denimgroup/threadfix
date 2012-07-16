@@ -135,7 +135,7 @@ public class PortfolioReportController {
 				if (totalScans == 0 || lowerBound == null || upperBound == null) {
 					teamRow = Arrays.asList(new String[] { "Team: " + team.getName(), "0", "Never" });
 				} else {
-					if (lowerBound == upperBound) {
+					if (lowerBound.equals(upperBound)) {
 						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(), totalScans.toString(), 
 								lowerBound.toString() + " days ago"});
 					} else {

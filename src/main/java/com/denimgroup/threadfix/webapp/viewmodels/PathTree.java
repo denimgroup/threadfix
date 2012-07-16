@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PathTree {
-
+	
 	private Node root;
 	private int depth;
 	private List<List<String>> printout;
@@ -67,11 +67,13 @@ public class PathTree {
 	}
 
 	public void addPath(String path) {
-		path = path.trim();
-		path = path.replaceAll("^[\\\\|/]", "");
-		path = path.replaceAll("[\\\\|/]$", "");
+		String editedPath = path;
+		
+		editedPath = editedPath.trim();
+		editedPath = editedPath.replaceAll("^[\\\\|/]", "");
+		editedPath = editedPath.replaceAll("[\\\\|/]$", "");
 		List<String> pathList = new ArrayList<String>();
-		String[] pathArray = path.split("[\\\\|/]");
+		String[] pathArray = editedPath.split("[\\\\|/]");
 		Node node = root;
 		for (int i = 0; i < pathArray.length; i++) {
 			boolean found = false;
@@ -95,29 +97,4 @@ public class PathTree {
 		}
 		printout.add(pathList);
 	}
-
-	public void print(Node node) {
-		if (node.getChildNode().size() == 0 && !node.getData().equals("root")) {
-			System.out.println(node.getData());
-		} else if (!node.getData().equals("root")) {
-			System.out.print(node.getData() + "/");
-		}
-		for (Node childNode : node.getChildNode()) {
-			print(childNode);
-		}
-	}
-
-	// test
-	public static void main(String args[]) {
-		Node root = new Node("root");
-		PathTree pt = new PathTree(root);
-		pt.addPath("\\web\\services\\username.jsp");
-		pt.addPath("\\web/main\\");
-		pt.addPath("/web/main/index/home.jsp");
-		pt.addPath("src/main/login.jsp");
-		pt.addPath("src/test/login.jsp");
-		System.out.println(pt.getPrintout());
-		System.out.println(pt.getDepth());
-	}
-
 }

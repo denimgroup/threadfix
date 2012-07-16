@@ -24,11 +24,16 @@
 
 package com.denimgroup.threadfix.service.defects;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author bbeverly
  * 
  */
 public class DefectMetadata {
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
 
 	private String description;
 	private String preamble;
@@ -45,7 +50,7 @@ public class DefectMetadata {
 	public DefectMetadata(String description, String preamble, String component, String version,
 			String severity, String priority, String status) {
 		if (description == null) {
-			throw new RuntimeException("Description cannot be null");
+			log.warn("Description should never be null");
 		}
 
 		this.description = description;

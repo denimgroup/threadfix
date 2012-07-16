@@ -188,15 +188,17 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		// objects.
 		SurfaceLocation surfaceLocation = null;
 		for (Finding finding : scan.getFindings()) {
-			if (finding == null)
+			if (finding == null) {
 				continue;
+			}
 
 			finding.setScan(scan);
 
 			surfaceLocation = finding.getSurfaceLocation();
 
-			if (surfaceLocation != null)
+			if (surfaceLocation != null) {
 				surfaceLocation.setFinding(finding);
+			}
 
 			if (finding.getDataFlowElements() != null) {
 				for (DataFlowElement dataFlowElement : finding
@@ -215,8 +217,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				}
 				finding.getVulnerability().setApplication(
 						finding.getScan().getApplication());
-				if (finding.getVulnerability().getId() == null)
+				if (finding.getVulnerability().getId() == null) {
 					vulnerabilityDao.saveOrUpdate(finding.getVulnerability());
+				}
 
 				if ((finding.getVulnerability().getOpenTime() == null) ||
 						(finding.getVulnerability().getOpenTime().compareTo(scan.getImportTime()) > 0))
@@ -1477,25 +1480,29 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
 	private String hashFindingInfo(String type, String url, String param) {
-		if (param == null)
-			param = "";
+		StringBuffer toHash = new StringBuffer();
+		
+		if (type != null) {
+			toHash = toHash.append(type.toLowerCase().trim());
+		}
+		
+		if (url != null) {
+			if (url.indexOf('/') == 0 || url.indexOf('\\') == 0) {
+				toHash = toHash.append(url.substring(1).toLowerCase().trim());
+			} else {
+				toHash = toHash.append(url.toLowerCase().trim());
+			}
+		}
+		
+		if (param != null) {
+			toHash = toHash.append(param.toLowerCase().trim());
+		}
 
-		if (type == null)
-			type = "";
-
-		if (url == null)
-			url = "";
-		else if (url.indexOf('/') == 0)
-			url = url.substring(1);
-
-		String toHash = type.toLowerCase().trim() + url.toLowerCase().trim()
-		+ param.toLowerCase().trim();
 		try {
-			MessageDigest message = MessageDigest.getInstance("MD5");
-			message.update(toHash.getBytes(), 0, toHash.length());
-			return new BigInteger(1, message.digest()).toString(16);
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
+			return new BigInteger(1, messageDigest.digest()).toString(16);
 		} catch (NoSuchAlgorithmException e) {
-			log.error("MD5 algorithm not found, there is probably a configuration issue.");
 			e.printStackTrace();
 			return null;
 		}
@@ -1520,6 +1527,13 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.info("The " + applicationChannel.getChannelType().getName() + 
 					" import was successful" + 
 					" and found " + scan.getFindings().size() + " findings.");
+		}
+		
+		if (applicationChannel == null || 
+				applicationChannel.getApplication() == null || 
+				applicationChannel.getApplication().getId() == null) {
+			log.error("An incorrectly configured application made it to processRemoteScan()");
+			return scan;
 		}
 		
 		findOrParseProjectRoot(applicationChannel, scan);

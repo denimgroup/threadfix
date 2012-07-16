@@ -77,7 +77,7 @@
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="2" width="150" height="20"/>
+				<reportElement x="10" y="0" width="150" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{CHANNELTYPE_NAME}]]></textFieldExpression>
 			</textField>

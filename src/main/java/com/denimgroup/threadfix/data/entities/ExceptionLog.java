@@ -37,7 +37,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "ExceptionLog")
-public class ExceptionLog extends BaseEntity {
+public final class ExceptionLog extends BaseEntity {
 
 	private static final long serialVersionUID = 5149357883041480368L;
 
@@ -47,6 +47,13 @@ public class ExceptionLog extends BaseEntity {
 	private String exceptionToString;
 	private String message;
 	private String uuid;
+	private String type;
+	
+	/**
+	 * This is to make Spring happy and allow us to retrieve items from the database. 
+	 * Use the other one.
+	 */
+	public ExceptionLog(){}
 	
 	public ExceptionLog(Exception e) {
 		if (e == null || e.getStackTrace() == null)
@@ -60,6 +67,7 @@ public class ExceptionLog extends BaseEntity {
 		setExceptionStackTrace(byteArrayOutputStream.toString());
 		setTime(Calendar.getInstance());
 		setMessage(e.getMessage());
+		setType(e.getClass().getSimpleName());
 		setExceptionToString(e.toString());
 		setUUID(java.util.UUID.randomUUID().toString());
 		
@@ -90,6 +98,15 @@ public class ExceptionLog extends BaseEntity {
 	
 	public void setUUID(String uuid) {
 		this.uuid = uuid;
+	}
+	
+	@Column(length = 256)
+	public String getType() {
+		return type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	@Column(length = 256)

@@ -51,22 +51,22 @@ import com.denimgroup.threadfix.data.entities.Scan;
  */
 public class NessusChannelImporter extends AbstractChannelImporter {
 	
-	private static final String simpleHttpRegex = "(http[^\n]*)";
-	private static final String urlColonRegex   = "URL  : ([^\n]*)\n";
-	private static final String pageColonRegex  = "Page : ([^\n]*)\n";
+	private static final String SIMPLE_HTTP_REGEX = "(http[^\n]*)";
+	private static final String URL_COLON_REGEX   = "URL  : ([^\n]*)\n";
+	private static final String PAGE_COLON_REGEX  = "Page : ([^\n]*)\n";
 	
-	private static final String inputNameColonParamRegex = "Input name : ([^\n]*)\n";
+	private static final String INPUT_NAME_COLON_PARAM_REGEX = "Input name : ([^\n]*)\n";
 	
-	private static final Map<String,String> pathParseMap = new HashMap<String,String>();
+	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<String,String>();
 	static {
-		pathParseMap.put("26194", pageColonRegex);
-		pathParseMap.put("11411", urlColonRegex);
-		pathParseMap.put("40984", simpleHttpRegex);
+		PATH_PARSE_MAP.put("26194", PAGE_COLON_REGEX);
+		PATH_PARSE_MAP.put("11411", URL_COLON_REGEX);
+		PATH_PARSE_MAP.put("40984", SIMPLE_HTTP_REGEX);
 	}
 	
-	private static final Map<String,String> paramParseMap = new HashMap<String,String>();
+	private static final Map<String,String> PARAM_PARSE_MAP = new HashMap<String,String>();
 	static {
-		paramParseMap.put("26194", inputNameColonParamRegex);
+		PARAM_PARSE_MAP.put("26194", INPUT_NAME_COLON_PARAM_REGEX);
 	}
 
 	@Autowired
@@ -119,7 +119,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	if (stringResult == null || stringResult.trim().isEmpty())
 	    		return;
 	    	
-	    	if (pathParseMap.containsKey(currentChannelVulnCode)) {
+	    	if (PATH_PARSE_MAP.containsKey(currentChannelVulnCode)) {
 	    		parseRegexMatchesAndAdd(stringResult);
 	    	} else {
 	    		parseGenericPattern(stringResult);
@@ -128,15 +128,15 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	    
 	    private void parseRegexMatchesAndAdd(String stringResult) {
-	    	String paramRegex = null,    pathRegex  = pathParseMap.get(currentChannelVulnCode);
+	    	String paramRegex = null,    pathRegex  = PATH_PARSE_MAP.get(currentChannelVulnCode);
     		Matcher paramMatcher = null, pathMatcher = Pattern.compile(pathRegex).matcher(stringResult);
     		
-    		if (paramParseMap.containsKey(currentChannelVulnCode)) {
-    			paramRegex = paramParseMap.get(currentChannelVulnCode);
+    		if (PARAM_PARSE_MAP.containsKey(currentChannelVulnCode)) {
+    			paramRegex = PARAM_PARSE_MAP.get(currentChannelVulnCode);
     			paramMatcher = Pattern.compile(paramRegex).matcher(stringResult);
     		}
     		
-    		int count = 1;
+    		//int count = 1;
     		while (pathMatcher.find()) {
     			String param = null;
     			if (paramMatcher != null && paramMatcher.find(pathMatcher.start())) {
@@ -152,7 +152,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		Finding finding = constructFinding(path, param, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		add(finding);
-	    		count++;
+	    		//count++;
     		}
 	    }
 	    
@@ -229,8 +229,10 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	} else if (getNameText) {
 	    		String text = getText(ch,start,length);
 	    		
-	    		if ("TARGET".equals(text))
+	    		if ("TARGET".equals(text)) {
 	    			getHost = true;
+	    		}
+	    		
 	    		getNameText = false;
 	    	} else if (getHost) {
 	    		String text = getText(ch,start,length);
@@ -269,14 +271,17 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    private void setTestStatus() {
 	    	correctFormat = clientDataTag && reportTag;
 	    	
-	    	if (!correctFormat)
+	    	if (!correctFormat) {
 	    		testStatus = WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
+	    	} else if (hasDate) {
 	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
+	    	}
+	    	
+	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings) {
 	    		testStatus = EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
+	    	} else if (testStatus == null) {
 	    		testStatus = SUCCESSFUL_SCAN;
+	    	}
 	    }
 
 	    ////////////////////////////////////////////////////////////////////

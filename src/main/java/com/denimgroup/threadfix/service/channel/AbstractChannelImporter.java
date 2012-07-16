@@ -241,22 +241,27 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
 	protected String hashFindingInfo(String type, String url, String param) {
-		if (param == null)
-			param = "";
+		StringBuffer toHash = new StringBuffer();
+		
+		if (type != null) {
+			toHash = toHash.append(type.toLowerCase().trim());
+		}
+		
+		if (url != null) {
+			if (url.indexOf('/') == 0 || url.indexOf('\\') == 0) {
+				toHash = toHash.append(url.substring(1).toLowerCase().trim());
+			} else {
+				toHash = toHash.append(url.toLowerCase().trim());
+			}
+		}
+		
+		if (param != null) {
+			toHash = toHash.append(param.toLowerCase().trim());
+		}
 
-		if (type == null)
-			type = "";
-
-		if (url == null)
-			url = "";
-		else if (url.indexOf('/') == 0)
-			url = url.substring(1);
-
-		String toHash = type.toLowerCase().trim() + url.toLowerCase().trim()
-				+ param.toLowerCase().trim();
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-			messageDigest.update(toHash.getBytes(), 0, toHash.length());
+			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
 			return new BigInteger(1, messageDigest.digest()).toString(16);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -348,9 +353,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected String convertSourceFileNameToUrl(String sourceFileName, String applicationRoot) {
 		if (sourceFileName == null)
 			return null;
+		
+		String editedSourceFileName = sourceFileName;
 
-		if (sourceFileName.contains("\\"))
-			sourceFileName = sourceFileName.replace("\\", "/");
+		if (editedSourceFileName.contains("\\"))
+			editedSourceFileName = editedSourceFileName.replace("\\", "/");
 
 		boolean parsedFlag = false;
 
@@ -366,28 +373,28 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				"js", "cgi", "ascx" };
 
 		for (String val : prefixVals) {
-			if (!sourceFileName.toLowerCase().contains(val))
+			if (!editedSourceFileName.toLowerCase().contains(val))
 				continue;
 
-			String temp = getRegexResult(sourceFileName.toLowerCase(), "(/" + val + "/.+)");
+			String temp = getRegexResult(editedSourceFileName.toLowerCase(), "(/" + val + "/.+)");
 			if (temp != null) {
-				sourceFileName = temp;
+				editedSourceFileName = temp;
 				parsedFlag = true;
 				break;
 			}
 		}
 
 		for (String val : suffixVals) {
-			if (!sourceFileName.contains(val))
+			if (!editedSourceFileName.contains(val))
 				continue;
 
-			String temp = getRegexResult(sourceFileName, "(.+\\." + val + ")");
+			String temp = getRegexResult(editedSourceFileName, "(.+\\." + val + ")");
 			if (temp != null)
 				return temp.toLowerCase();
 		}
 
 		if (parsedFlag) {
-			return sourceFileName;
+			return editedSourceFileName;
 		} else {
 			return null;
 		}

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,6 +49,14 @@ public class HibernateExceptionLogDao implements ExceptionLogDao {
 	@Override
 	public void saveOrUpdate(ExceptionLog exceptionLog) {
 		sessionFactory.getCurrentSession().saveOrUpdate(exceptionLog);
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ExceptionLog> retrieveAll() {
+		return sessionFactory.getCurrentSession()
+				.createQuery("from ExceptionLog log order by log.time desc")
+				.list();
 	}
 
 }

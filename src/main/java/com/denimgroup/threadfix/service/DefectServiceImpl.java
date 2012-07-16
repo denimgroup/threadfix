@@ -98,21 +98,23 @@ public class DefectServiceImpl implements DefectService {
 			log.warn("Unable to load Defect Tracker.");
 			return null;
 		}
+		
+		String editedSummary = summary, editedPreamble = preamble;
 
 		// TODO handle error cases better.
-		if (summary == null || summary.equals("")) {
+		if (editedSummary == null || editedSummary.equals("")) {
 			if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
-				summary = createMessage(vuln);
+				editedSummary = createMessage(vuln);
 			} else {
-				summary = "No summary could be parsed.";
+				editedSummary = "No editedSummary could be parsed.";
 			}
 		}
 
-		if (preamble == null || preamble.equals("")) {
+		if (editedPreamble == null || editedPreamble.equals("")) {
 			if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
-				preamble = createMessage(vuln);
+				editedPreamble = createMessage(vuln);
 			} else {
-				preamble = "No preamble could be parsed.";
+				editedPreamble = "No editedPreamble could be parsed.";
 			}
 		}
 
@@ -139,7 +141,7 @@ public class DefectServiceImpl implements DefectService {
 			log.info("About to submit a defect to the defect tracker.");
 		
 		String defectId = dt.createDefect(vulnsWithoutDefects, 
-				new DefectMetadata(summary, preamble,
+				new DefectMetadata(editedSummary, editedPreamble,
 				component, version, severity, priority, status));
 
 		if (defectId != null) {

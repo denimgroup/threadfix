@@ -33,7 +33,7 @@
 	</c:if>
 	
 	<div id="helpText">This page is used to generate various reports.
-	<br/>Please note that the Portfolio Report does not filter on a Team / Application basis.</div>
+	<br/>Please note that the Portfolio Report does not filter on a Team / Application basis and is only available in the HTML format.</div>
 	
 	<spring:url value="" var="emptyUrl"></spring:url>	
 	<form:form modelAttribute="reportParameters" action="${ fn:escapeXml(emptyUrl) }">

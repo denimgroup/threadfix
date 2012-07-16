@@ -62,6 +62,8 @@ import com.denimgroup.threadfix.service.queue.QueueSender;
 public class ScanServiceImpl implements ScanService {
 	
 	private final Log log = LogFactory.getLog("ScanService");
+	
+	private static Random random = new Random();
 
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
@@ -299,7 +301,7 @@ public class ScanServiceImpl implements ScanService {
 				applicationChannel.setScanCounter(1);
 			fileName = "scan-file-rpc-test-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
 		} else {
-			fileName = "scan-file-rpc-test-" + String.valueOf(new Random().nextLong());
+			fileName = "scan-file-rpc-test-" + String.valueOf(random.nextLong());
 		}
 		
 		File diskFile = new File(fileName);

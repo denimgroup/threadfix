@@ -108,11 +108,13 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	 		if (param == null || param.isEmpty())
 	 			return null;
 	 		
+	 		String editedParam = param;
+	 		
 	 		for (String character : paramChars)
-	 			if (param.contains(character))
-	 				param = param.substring(0, param.indexOf(character));
+	 			if (editedParam.contains(character))
+	 				editedParam = editedParam.substring(0, editedParam.indexOf(character));
 
-	 		return param;
+	 		return editedParam;
 	 	}
 	    
 		public void add(Finding finding) {

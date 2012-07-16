@@ -92,7 +92,7 @@ public class HibernateWafRuleDao implements WafRuleDao {
 	@Override
 	public List<WafRule> retrieveByWafAndDirective(Waf waf,
 			WafRuleDirective directive) {
-		return (List<WafRule>) sessionFactory
+		return sessionFactory
 			.getCurrentSession()
 			.createQuery( "from WafRule wafRule where wafRule.waf = :wafId " +
 				"and wafRule.wafRuleDirective = :directiveId")

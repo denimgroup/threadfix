@@ -93,17 +93,14 @@ public class SurveyServiceImpl implements SurveyService {
 	}
 
 	@Override
-	public Survey constructSurvey(InputStream inputStream) {
+	public Survey constructSurvey(InputStream inputStream) throws DocumentException {
 		Document document = null;
-		try {
-			document = new SAXReader().read(inputStream);
-		} catch (DocumentException e) {
-			throw new RuntimeException(e);
-		}
+		
+		document = new SAXReader().read(inputStream);
 
 		Element rootElement = document.getRootElement();
 		if (!rootElement.getName().equals("survey")) {
-			throw new RuntimeException("The root element of the XML document should be 'survey'.");
+			throw new DocumentException("The root element of the XML document should be 'survey'.");
 		}
 
 		return constructSurvey(rootElement);

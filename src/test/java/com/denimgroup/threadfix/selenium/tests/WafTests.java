@@ -89,7 +89,7 @@ public class WafTests extends BaseTest {
 		// Test empty and whitespace input
 		addWafPage.setNameInput(emptyString);
 		addWafPage = addWafPage.clickAddWafButtonInvalid();
-		System.out.println("Output is '" + addWafPage.getNameErrorsText() + "'");
+		log.debug("Output is '" + addWafPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(addWafPage.getNameErrorsText()));
 		
 		addWafPage.setNameInput(whiteSpaceString);
@@ -192,7 +192,7 @@ public class WafTests extends BaseTest {
 		// Test empty and whitespace input
 		editWafPage.setNameInput(emptyString);
 		editWafPage = editWafPage.clickUpdateWafButtonInvalid();
-		System.out.println("Output is '" + editWafPage.getNameErrorsText() + "'");
+		log.debug("Output is '" + editWafPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(editWafPage.getNameErrorsText()));
 		
 		editWafPage.setNameInput(whiteSpaceString);

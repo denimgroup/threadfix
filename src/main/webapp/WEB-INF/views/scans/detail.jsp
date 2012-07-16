@@ -145,9 +145,9 @@
 	</table>
 	
 	<h3>Unmapped Findings:</h3>
-	<table class="formattedTable sortable" id="2">
+	<table class="filteredTable sortable" id="2">
 		<thead>
-			<tr>
+			<tr class="darkBackground">
 				<th class="first">Severity</th>
 				<th>Vulnerability Type</th>
 				<th>Path</th>
@@ -158,13 +158,13 @@
 		<tbody>
 	<c:choose>
 		<c:when test="${ empty scan.unmappedFindings }">
-			<tr class="bodyRow">
+			<tr class="bodyRowNoPage">
 				<td colspan="5" style="text-align: center;"> All Findings were successfully mapped.</td>
 			</tr>
 		</c:when>
 		<c:otherwise>
 		<c:forEach var="finding" items="${ scan.unmappedFindings }">
-			<tr class="bodyRow">
+			<tr class="bodyRowNoPage">
 				<td>
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>

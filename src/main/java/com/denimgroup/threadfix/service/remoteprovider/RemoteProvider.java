@@ -60,11 +60,13 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	// These are to make AbstractChannelImporter happy while still getting all of the utility methods from it.
 	@Override
 	public Scan parseInput() {
+		log.warn("parseInput() called in a Remote Provider. This should never happen.");
 		return null;
 	}
 
 	@Override
 	public String checkFile() {
+		log.warn("checkFile() called in a Remote Provider. This should never happen.");
 		return null;
 	}
 	

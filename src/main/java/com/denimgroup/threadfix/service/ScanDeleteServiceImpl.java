@@ -292,7 +292,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			}
 		}
 		
-		if (scan.getScanReopenVulnerabilityMaps() != null) {
+		if (scan != null && scan.getScanReopenVulnerabilityMaps() != null) {
 			for (ScanReopenVulnerabilityMap map : scan.getScanReopenVulnerabilityMaps()) {
 				if (map != null && map.getVulnerability() != null) {
 
@@ -389,16 +389,18 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			findingDao.saveOrUpdate(finding);
 		}
 		
-		log.info("Updating new / old vuln stats for the Scan with ID " + 
-				earliestFinding.getScan().getId());
-		
-		earliestFinding.getScan().setNumberNewVulnerabilities(
-				earliestFinding.getScan().getNumberNewVulnerabilities() + 1);
-		earliestFinding.getScan().setNumberOldVulnerabilities(
-				earliestFinding.getScan().getNumberOldVulnerabilities() - 1);
-		scanDao.saveOrUpdate(earliestFinding.getScan());
-		
-		vuln.setOpenTime(earliestFinding.getScan().getImportTime());
+		if (earliestFinding != null) {
+			log.info("Updating new / old vuln stats for the Scan with ID " + 
+					earliestFinding.getScan().getId());
+			
+			earliestFinding.getScan().setNumberNewVulnerabilities(
+					earliestFinding.getScan().getNumberNewVulnerabilities() + 1);
+			earliestFinding.getScan().setNumberOldVulnerabilities(
+					earliestFinding.getScan().getNumberOldVulnerabilities() - 1);
+			scanDao.saveOrUpdate(earliestFinding.getScan());
+			
+			vuln.setOpenTime(earliestFinding.getScan().getImportTime());
+		}
 		
 	}	
 	/**

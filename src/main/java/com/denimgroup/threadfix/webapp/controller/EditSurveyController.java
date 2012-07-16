@@ -75,7 +75,8 @@ public class EditSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		if (surveyResult.isSubmitted()) {
-			throw new RuntimeException("Cannot save already submitted survey.");
+			log.error("Cannot save already submitted survey");
+			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();
 		}
 
 		if (surveyResult.getSurveyAnswers() != null) {
@@ -102,7 +103,8 @@ public class EditSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		if (surveyResult.isSubmitted()) {
-			throw new RuntimeException("Cannot save already submitted survey.");
+			log.error("Cannot save already submitted survey");
+			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();
 		}
 
 		surveyResult.calculateRankings();

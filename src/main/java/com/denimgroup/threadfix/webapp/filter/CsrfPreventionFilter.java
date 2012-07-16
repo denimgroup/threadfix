@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -48,11 +50,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import com.denimgroup.threadfix.data.dao.CsrfFilterLogDao;
-import com.denimgroup.threadfix.data.entities.CsrfFilterLog;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes
@@ -75,9 +73,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     private final List<String> entryPointRegexPatterns = new ArrayList<String>();
     
     private int nonceCacheSize = 5;
-    
-    @Autowired
-    private CsrfFilterLogDao csrfFilterLogDao;
 
     public static final String CSRF_NONCE_SESSION_ATTR_NAME =
         "org.apache.catalina.filters.CSRF_NONCE";
@@ -180,22 +175,19 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             String previousNonce = req.getParameter(CSRF_NONCE_REQUEST_PARAM);
             if (!skipNonceCheck) {
                 if (nonceCache != null && !nonceCache.contains(previousNonce)) {
-                	String nonceStatus = null;
-                	if (previousNonce == null) {
-                		log.warn("CSRF Filter has stopped a request from IP " + request.getRemoteAddr() + 
-                				" because it did not have a nonce. The requested URL was " + req.getServletPath());
-                		nonceStatus = "Missing nonce";
-                	} else {
-                		log.warn("CSRF Filter has stopped a request from IP " + request.getRemoteAddr() + 
-                				" because it did not have the correct nonce. The requested URL was " + req.getServletPath());
-                		nonceStatus = "Incorrect nonce: " + previousNonce;
-                	}
                 	
-                	CsrfFilterLog csrfFilterLog = new CsrfFilterLog(req, nonceStatus);
-                	csrfFilterLogDao.saveOrUpdate(csrfFilterLog);
+                	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
                 	
-                    res.sendError(HttpServletResponse.SC_NO_CONTENT);
-                    return;
+                	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+                	
+                	log.warn("CSRF Filter blocked a request:" +
+              			  " reason: " + nonceStatus + 
+              			 ", address: " + request.getRemoteAddr() + 
+              			 ", path: " + req.getServletPath() + 
+              			 ", time: " + dateFormatter.format(Calendar.getInstance().getTime()));
+
+                  res.sendError(HttpServletResponse.SC_NO_CONTENT);
+                  return;
                 }
             }
             

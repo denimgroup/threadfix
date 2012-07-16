@@ -444,7 +444,7 @@ table.formattedTable tr.footer td.pagination div.pager span.active {
 	Filtered Table
  **/
 table.filteredTable thead tr.darkBackground {
-	background-color: #38616d;
+	background-color: #43678b;
 	color: #fff;
 }
 
@@ -487,6 +487,24 @@ table.filteredTable tr.bodyRow td {
 }
 
 table.filteredTable tr.bodySubRow td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.bodyRowNoPage {
+	background-color: #efefef;
+}
+
+table.filteredTable tr.bodySubRowNoPage {
+	background-color: #fff;
+}
+
+table.filteredTable tr.bodyRowNoPage td {
+	border: 1px solid black;
+	padding: 5px 7px;
+}
+
+table.filteredTable tr.bodySubRowNoPage td {
 	border: 1px solid black;
 	padding: 5px 7px;
 }
@@ -540,4 +558,18 @@ table.filteredTable tr.footer td.pagination div.pager span {
 table.filteredTable tr.footer td.pagination div.pager span.active {
 	color: #000;
 	font-weight: bold;
+}
+
+th.header { 
+    background-image: url(../images/sort_bg.gif);
+    background-repeat:no-repeat;
+    background-position: right;  
+} 
+
+th.headerSortUp { 
+    background-image: url(../images/sort_asc.gif); 
+}
+
+th.headerSortDown { 
+    background-image: url(../images/sort_desc.gif); 
 }

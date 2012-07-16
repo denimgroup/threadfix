@@ -214,7 +214,7 @@ public class WafRestController extends RestController {
 		}
 				
 		logParserService.setFileAsString(logContents);
-		logParserService.setWafId(Integer.valueOf(wafId));
+		logParserService.setWafId(wafId);
 		List<SecurityEvent> events = logParserService.parseInput();
 		
 		if (events == null || events.size() == 0) {

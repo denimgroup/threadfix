@@ -27,6 +27,8 @@ package com.denimgroup.threadfix.service;
 import java.io.InputStream;
 import java.util.List;
 
+import org.dom4j.DocumentException;
+
 import com.denimgroup.threadfix.data.entities.Survey;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
 
@@ -50,8 +52,9 @@ public interface SurveyService {
 	/**
 	 * @param inputStream
 	 * @return
+	 * @throws DocumentException 
 	 */
-	Survey constructSurvey(InputStream inputStream);
+	Survey constructSurvey(InputStream inputStream) throws DocumentException;
 
 	/**
 	 * @param survey

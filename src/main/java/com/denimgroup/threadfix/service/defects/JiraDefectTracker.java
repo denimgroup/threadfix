@@ -57,7 +57,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	private String projectName;
 	private String loginToken;
 	
-	public static String AUTHENTICATION_FAILURE_STRING = "java.lang.Exception: com.atlassian.jira.rpc.exception.RemoteAuthenticationException: Invalid username or password.";
+	public static final String AUTH_FAILURE_STRING = 
+			"java.lang.Exception: com.atlassian.jira.rpc.exception" +
+			".RemoteAuthenticationException: Invalid username or password.";
 	
 	/**
 	 * Parse through the returned structure and return a hashmap of the results.
@@ -185,7 +187,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (loginToken == null || loginToken.equals("")) {
 			String message = "JIRA returned a null or empty login token.";
 			log.warn(message);
-			return LOGIN_FAILURE_STRING;
+			return LOGIN_FAILURE;
 		} else {
 			log.info("Successfully logged into JIRA repository.");
 			return loginToken;
@@ -419,7 +421,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		login(client);
 
 		if (this.loginToken == null)
-			return LOGIN_FAILURE_STRING;
+			return LOGIN_FAILURE;
 
 		if (projectName == null || projectName.trim().equals(""))
 			return "Project name was blank - check credentials.";
@@ -516,7 +518,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		if (LOGIN_FAILURE_STRING.equals(status)) {
+		if (LOGIN_FAILURE.equals(status)) {
 			return "Authentication failed";
 		}
 		String returnString = "";
@@ -541,7 +543,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 
 		if ("".equals(returnString))
-			return INCORRECT_CONFIGURATION;
+			return BAD_CONFIGURATION;
 		else
 			return returnString;
 	}
@@ -563,7 +565,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		XmlRpcClient client = initializeClient();
 		String status = login(client);
 
-		return !LOGIN_FAILURE_STRING.equals(status);
+		return !LOGIN_FAILURE.equals(status);
 	}
 
 	@Override
@@ -617,7 +619,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			return true;
 		} catch (XmlRpcException e) {
 			if (e.getMessage() != null &&
-					AUTHENTICATION_FAILURE_STRING.equals(e.getMessage())) {
+					AUTH_FAILURE_STRING.equals(e.getMessage())) {
 				log.info("Found the URL and it told us to authenticate. The URL is valid.");
 				return true;
 			} else if (e.getMessage().contains("I/O error while communicating with HTTP server")) {

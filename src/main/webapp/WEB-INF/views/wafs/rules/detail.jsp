@@ -8,7 +8,7 @@
 	<spring:url value="/wafs/{wafId}" var="wafUrl">
 		<spring:param name="wafId" value="${ wafRule.waf.id }"/>
 	</spring:url>
-	<a href="${ fn:escapeXml(wafUrl) }">Back to Waf ${ wafRule.waf.name} </a>
+	<a href="${ fn:escapeXml(wafUrl) }">Back to WAF ${ wafRule.waf.name} </a>
 	
 	<h3>WAF Rule ${ wafRule.nativeId } Statistics:</h3>
 	

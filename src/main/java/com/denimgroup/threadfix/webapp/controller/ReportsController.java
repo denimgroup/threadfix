@@ -111,6 +111,12 @@ public class ReportsController {
 			return "redirect:/reports";
 		}
 		
+		if (reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7
+				&& reportParameters.getFormatId() == 2) {
+			request.getSession().setAttribute("reportsError", "The CSV format is not available for this report.");
+			return "redirect:/reports";
+		}
+		
 		switch (reportParameters.getReportId()) {
 		case 1:
 			reportFile = "trending.jrxml";
@@ -148,7 +154,7 @@ public class ReportsController {
 			String pageString = report.toString();
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", "attachment; filename=\"report_csv_" + applicationIdList
-					+ ".txt\"");
+					+ ".csv\"");
 
 			ServletOutputStream out = response.getOutputStream();
 
@@ -158,7 +164,7 @@ public class ReportsController {
 			
 			int remainingSize = in.read(outputByte, 0, 65535);
 			
-			// copy binary contect to output stream
+			// copy binary content to output stream
 			while (remainingSize != -1) {
 				out.write(outputByte, 0, remainingSize);
 				remainingSize = in.read(outputByte, 0, 65535);

@@ -72,14 +72,22 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	private static final String [] SKIPFISH_PAYLOADS = { "--\\x3e\\x22\\x3e\\x27\\x3e\\x27\\x22", 
 														"\\x3e\\x27\\x3e\\x22\\x3e\\x3",
 														"./",
-														".\\" };
+														".\\",
+														"'\"",
+														"\\x27\\x22",
+														"-->\">'>'\"<",
+														"%3B%3F"};
 	
 	private static final String [] SKIPFISH_PAYLOAD_REGEXES = { "--\\\\x3e\\\\x22\\\\x3e\\\\x27\\\\x3e\\\\x27\\\\x22", 
 																"\\\\x3e\\\\x27\\\\x3e\\\\x22\\\\x3e\\\\x3",
 																"\\.",
-																"\\."};
+																"\\.",
+																"'\"",
+																"\\\\x27\\\\x22",
+																"-->\\\">'>'\\\"<",
+																"%3B%3F"};
+	
 	private static final String REGEX_START = "[\\?\\&]([0-9a-zA-Z_\\-]+)=[^\\&]+";
-	private static final String [] REQUEST_PAYLOADS = { "'\"", "-->\">'>'\"<", "./", ".\\" };
 	
 	private static final String INTERESTING_FILE_CODE = "40401";
 	private static final String DIRECTORY_LISTING = "Directory listing";
@@ -267,7 +275,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 			
 			if (channelVulnerability != null && channelVulnerability.getCode() != null && channelVulnerability.getCode().equals(INTERESTING_FILE_CODE)) {
 				Object extra = findingMap.get("extra");
-				if (extra != null && extra.getClass().equals(String.class) && 
+				if (extra != null && extra instanceof String && 
 						((String) extra).equals(DIRECTORY_LISTING)) {
 					ChannelVulnerability temp = getChannelVulnerability(INTERESTING_FILE_CODE + " " + DIRECTORY_LISTING);
 					if (temp != null)
@@ -283,15 +291,24 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 			String path = null, param = null, channelVulnName = null;
 
 			Object url = findingMap.get("url");
-			if (url != null && url.getClass().equals(String.class)) {
+			if (url != null && url instanceof String) {
+				Object extraObject = findingMap.get("extra");
+				
+				if (extraObject != null && extraObject instanceof String) {
+					if (((String) extraObject).startsWith("response suggests arithmetic evaluation on server side")) {
+						if (((String) url).contains("-") && ((String) url).contains("?"))
+							param = getRegexResult((String) url, REGEX_START + "-");
+					}
+				}
+				
 				if (((String) url).contains("?")) {
 					for (int index = 0; index < SKIPFISH_PAYLOADS.length; index ++) {
 						// If it has the payload, find the correct parameter and save it.
-						if (((String) url).contains(SKIPFISH_PAYLOADS[index]))
+						if (param == null && ((String) url).contains(SKIPFISH_PAYLOADS[index]))
 							param = getRegexResult((String) url, REGEX_START + SKIPFISH_PAYLOAD_REGEXES[index]);
 					}
 					path = ((String) url).substring(0, ((String) url).indexOf('?'));
-				} else if (zipFile != null)
+				} else if (zipFile != null && param == null)
 					param = attemptToParseParamFromHTMLRequest(findingMap);
 
 				if (path == null)
@@ -372,11 +389,20 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		
 		boolean parseFlag = false;
 		
-		for (String payload : REQUEST_PAYLOADS) {
+		for (String payload : SKIPFISH_PAYLOADS) {
 			if (requestString.contains(payload)) {
 				requestString = requestString.substring(0, requestString.indexOf(payload));
 				parseFlag = true;
 				break;
+			}
+		}
+		
+		Object extraObject = findingMap.get("extra");
+		
+		if (extraObject != null && extraObject instanceof String) {
+			if (((String) extraObject).startsWith("response suggests arithmetic evaluation on server side")) {
+				requestString = requestString.substring(0, requestString.indexOf("-"));
+				parseFlag = true;
 			}
 		}
 		

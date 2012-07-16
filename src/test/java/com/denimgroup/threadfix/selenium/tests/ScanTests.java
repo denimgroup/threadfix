@@ -167,7 +167,7 @@ public class ScanTests extends BaseTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				System.out.println("Thread interrupted. Continuing.");
+				log.debug("Thread interrupted. Continuing.");
 			}
 			
 			organizationIndexPage = applicationDetailPage.clickDeleteLink()
@@ -213,7 +213,7 @@ public class ScanTests extends BaseTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				System.out.println("Thread interrupted. Continuing.");
+				log.debug("Thread interrupted. Continuing.");
 			}
 			
 			organizationIndexPage = uploadScanPage.clickCancelLink()
@@ -222,8 +222,8 @@ public class ScanTests extends BaseTest {
 		}
 	}
 	
-	String XSS = "Failure to Preserve Web Page Structure ('Cross-site Scripting')";
-	String SQLI = "Improper Sanitization of Special Elements used in an SQL Command ('SQL Injection')";
+	public static final String XSS = "Failure to Preserve Web Page Structure ('Cross-site Scripting')";
+	public static final String SQLI = "Improper Sanitization of Special Elements used in an SQL Command ('SQL Injection')";
 	
 	@Test
 	public void microsoftCatNetScan() {
@@ -270,7 +270,7 @@ public class ScanTests extends BaseTest {
 		applicationDetailPage = applicationDetailPage.clickRefreshLink();
 		
 		for (int i=1; i <= expectedResults.length; i++) {
-			System.out.println("i = " + i);
+			log.debug("i = " + i);
 			
 			assertTrue(applicationDetailPage.getElementText("vulnName" + i)
 											.equals(expectedResults[i-1][0]));

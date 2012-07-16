@@ -170,8 +170,13 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 							element.setSourceFileName(jsonItem.getString("file"));
 							if (isVersion2) {
 								String lineString = jsonItem.getString("line");
-								if (!lineString.equals("null"))
-									element.setLineNumber(Integer.valueOf(lineString));
+								if (!lineString.equals("null")) {
+									try {
+										element.setLineNumber(Integer.valueOf(lineString));
+									} catch (NumberFormatException e) {
+										log.error("Non-numeric value found in Brakeman JSON file.");
+									}
+								}
 							}
 							finding.setDataFlowElements(Arrays.asList(new DataFlowElement[] {element}));
 						}

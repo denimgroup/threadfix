@@ -24,11 +24,15 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public abstract class BaseTest {
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	private FirefoxDriver driver;
 
@@ -43,7 +47,7 @@ public abstract class BaseTest {
 	}
 	
 	public FirefoxDriver getDriver(){
-		System.out.println("Getting Driver");
+		log.debug("Getting Driver");
 		return driver;
 	}
 	

@@ -49,9 +49,9 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 public class WhiteHatRemoteProvider extends RemoteProvider {
 	
-	private static String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
-	private static String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
-	private static String EXTRA_PARAMS = "&display_attack_vectors=1&query_status=open&query_site=";
+	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
+	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
+	private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_status=open&query_site=";
 	
 	private String apiKey = null;
 
@@ -130,14 +130,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		return parser.getApplications();
 	}
 	
-	public static InputStream httpGet(String urlStr) {
+	public InputStream httpGet(String urlStr) {
 		GetMethod get = new GetMethod(urlStr);
 		
 		HttpClient client = new HttpClient();
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.warn("Request status was not 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();
@@ -206,7 +206,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			}
 			
 			saxFindingList.add(finding);
-			finding = new Finding();
 		}
 		
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {

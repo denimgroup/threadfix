@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service.waf;
 public class BigIPStrings {
 	
 	// TODO move signature sets to normalized database setup
-	public static String[] SIGS_XSS = {
+	public static final String[] SIGS_XSS = {
 		"200000091", 
 		"200000092", "200000093", "200000094", "200000095", "200000096", "200000097", 
 		"200000098", "200000099", "200000106", "200000107", "200000108", "200000109", 
@@ -127,7 +127,7 @@ public class BigIPStrings {
 		"250000032", "250000033", "250000034", "250000035", "250000036", "250000037", 
 	};
 
-	public static String[] SIGS_XPATH = {
+	public static final String[] SIGS_XPATH = {
 		"200006000", "200006001",
 		"200006002", "200006003", "200006004", "200006005", "200006006",
 		"200006007", "200006008", "200006009", "200006010", "200006011",
@@ -137,7 +137,7 @@ public class BigIPStrings {
 		"200006027", "200006028", "200006029", "200006030", "200006031" 
 	};
 	
-	public static String[] SIGS_SQLI = {
+	public static final String[] SIGS_SQLI = {
 		"200000070", 
 		"200000071", "200000072", "200000073", "200000074", "200000075", "200000076", 
 		"200000081", "200000082", "200000083", "200000084", "200000085", "200000086", 
@@ -216,16 +216,16 @@ public class BigIPStrings {
 		"250000067", "250000068", "250000069", "250000070", "250000071", "250000072", 
 	};
 	
-	public static String[] SIGS_PATH_TRAVERSAL = {
+	public static final String[] SIGS_PATH_TRAVERSAL = {
 		"200000180", "200000190", "200007000", 
 		"200007002", "200007003", "200007004", "200007005", "200007006", "200007007", 
 		"200007008", "200007009", "200007010", "200007011", "200007012", "200007013", 
 	};
 	
-	public static String[] SIGS_FILE_UPLOAD = {};
+	public static final String[] SIGS_FILE_UPLOAD = {};
 	
 	// TODO move XML_* to files or other storage mechanism?
-	public static String XML_START_BEFORE_CSRF = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+	public static final String XML_START_BEFORE_CSRF = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
 	"\n<policy bigip_version=\"11.2.0\" name=\"ThreadFixPolicy\">" +
 	"\n  <encoding>utf-8</encoding>" +
 	"\n  <maximum_http_length>8192</maximum_http_length>" +
@@ -247,7 +247,7 @@ public class BigIPStrings {
 	"\n    <enforcement_mode>enforcing</enforcement_mode>" +
 	"\n    <expiration_time_in_seconds>0</expiration_time_in_seconds>";
 	
-	public static String XML_START_AFTER_CSRF = "\n  </csrf>" +
+	public static final String XML_START_AFTER_CSRF = "\n  </csrf>" +
 	"\n  <allowed_response_code>400</allowed_response_code>" +
 	"\n  <allowed_response_code>401</allowed_response_code>" +
 	"\n  <allowed_response_code>404</allowed_response_code>" +
@@ -329,7 +329,7 @@ public class BigIPStrings {
 	"\n      <policy_builder_tracking>enabled</policy_builder_tracking>" +
 	"\n    </violation>";
 	
-	public static String XML_START_CSRF_ENABLED =
+	public static final String XML_START_CSRF_ENABLED =
 	"\n    <violation id=\"CSRF\" name=\"CSRF attack detected\">" +
 	"\n      <alarm>true</alarm>" +
 	"\n      <block>true</block>" +
@@ -337,7 +337,7 @@ public class BigIPStrings {
 	"\n      <policy_builder_tracking>enabled</policy_builder_tracking>" +
 	"\n    </violation>";
 	
-	public static String XML_START_CSRF_DISABLED =
+	public static final String XML_START_CSRF_DISABLED =
 	"\n    <violation id=\"CSRF\" name=\"CSRF attack detected\">" +
 	"\n      <alarm>false</alarm>" +
 	"\n      <block>false</block>" +
@@ -345,7 +345,7 @@ public class BigIPStrings {
 	"\n      <policy_builder_tracking>enabled</policy_builder_tracking>" +
 	"\n    </violation>";
 	
-	public static String XML_START_FINAL = "\n    <violation id=\"MALFORMED_XML\" name=\"Malformed XML data\">" +
+	public static final String XML_START_FINAL = "\n    <violation id=\"MALFORMED_XML\" name=\"Malformed XML data\">" +
 	"\n      <alarm>false</alarm>" +
 	"\n      <block>false</block>" +
 	"\n      <learn>false</learn>" +
@@ -1289,7 +1289,7 @@ public class BigIPStrings {
 	"\n  </file_types>" +
 	"\n  <urls>";
 	
-	public static String XML_END_BEFORE_SIGNATURES = 
+	public static final String XML_END_BEFORE_SIGNATURES = 
 	"\n    <url name=\"*\" protocol=\"HTTPS\" type=\"wildcard\">" +
 	"\n      <perform_tightening>false</perform_tightening>" +
 	"\n      <check_flows>false</check_flows>" +
@@ -2549,7 +2549,7 @@ public class BigIPStrings {
 	"\n  </headers>" +
 	"\n  <attack_signatures>";
 	
-	public static String XML_END_AFTER_SIGNATURES = 
+	public static String xmlAfterSignatures = 
 	"\n    <signature_set>" +
 	"\n      <set id=\"299999999\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></set>" +
 	"\n      <alarm>true</alarm>" +
@@ -11545,7 +11545,7 @@ public class BigIPStrings {
 	"\n  </ip_reputation>" +
 	"\n</policy>";
 	
-	public static String TEMPLATE_URL = "\n    <url name=\"{path}\" protocol=\"HTTP\" type=\"explicit\">" +
+	public static final String TEMPLATE_URL = "\n    <url name=\"{path}\" protocol=\"HTTP\" type=\"explicit\">" +
 	"\n      <perform_tightening>false</perform_tightening>" +
 	"\n      <check_flows>false</check_flows>" +
 	"\n      <is_entry_point>false</is_entry_point>" +
@@ -11555,7 +11555,7 @@ public class BigIPStrings {
 	"\n      <in_staging>false</in_staging>" +
 	"\n      <last_updated>{date}</last_updated>";
 	
-	public static String TEMPLATE_URL_END = "\n      <content_profile>" +
+	public static final String TEMPLATE_URL_END = "\n      <content_profile>" +
 	"\n        <header_name>*</header_name>" +
 	"\n        <header_value>*</header_value>" +
 	"\n        <header_order>0</header_order>" +
@@ -11564,7 +11564,7 @@ public class BigIPStrings {
 	"\n      </content_profile>" +
 	"\n    </url>";
 	
-	public static String TEMPLATE_PARAM = 
+	public static final String TEMPLATE_PARAM = 
 	"\n      <parameter name=\"{parameter}\" type=\"explicit\">" +
 	"\n        <perform_tightening>false</perform_tightening>" +
 	"\n        <is_mandatory>false</is_mandatory>" +
@@ -11585,9 +11585,9 @@ public class BigIPStrings {
 	"\n        <in_classification>false</in_classification>" +
 	"\n        <disallow_file_upload_of_executables>true</disallow_file_upload_of_executables>";
 	
-	public static String TEMPLATE_PARAM_END ="\n      </parameter>";
+	public static final String TEMPLATE_PARAM_END ="\n      </parameter>";
 		
-	public static String TEMPLATE_SIGNATURE_SET = 
+	public static final String TEMPLATE_SIGNATURE_SET = 
 		"\n    <signature_set>" +
 		"\n      <set id=\"{id}\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></set>" +
 		"\n      <alarm>true</alarm>" +
@@ -11595,6 +11595,6 @@ public class BigIPStrings {
 		"\n      <learn>true</learn>" +
 		"\n    </signature_set>";
 	
-	public static String TEMPLATE_ATTACK_SIGNATURE =
+	public static final String TEMPLATE_ATTACK_SIGNATURE =
 		"\n        <attack_signature sig_id=\"{signatureNumber}\">enabled</attack_signature>";
 }
