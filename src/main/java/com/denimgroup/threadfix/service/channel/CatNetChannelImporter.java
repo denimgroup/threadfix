@@ -36,7 +36,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -92,12 +91,11 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	 */
 	@Autowired
 	public CatNetChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelVulnerabilityDao channelVulnerabilityDao, 
+			ChannelSeverityDao channelSeverityDao){
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 
 		setChannelType(ChannelType.CAT_NET);
 

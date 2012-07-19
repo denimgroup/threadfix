@@ -62,7 +62,6 @@ public class ChannelType extends BaseEntity {
 	private List<ChannelSeverity> channelSeverities;
 	private List<ChannelVulnerability> channelVulnerabilities;
 	private List<RemoteProviderType> remoteProviderTypes;
-	private List<VulnerabilityMapLog> vulnerabilityMapLogs;
 	
 	private String name;
 	private String url;
@@ -123,16 +122,6 @@ public class ChannelType extends BaseEntity {
 
 	public void setChannels(List<ApplicationChannel> applicationChannels) {
 		this.applicationChannels = applicationChannels;
-	}
-
-	@OneToMany(mappedBy = "channelType")
-	@JsonIgnore
-	public List<VulnerabilityMapLog> getVulnerabilityMapLogs() {
-		return vulnerabilityMapLogs;
-	}
-
-	public void setVulnerabilityMapLogs(List<VulnerabilityMapLog> vulnerabilityMapLogs) {
-		this.vulnerabilityMapLogs = vulnerabilityMapLogs;
 	}
 	
 	@OneToMany(mappedBy = "channelType")

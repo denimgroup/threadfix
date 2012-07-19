@@ -47,7 +47,6 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -71,7 +70,6 @@ public class ScanServiceImpl implements ScanService {
 	private ChannelSeverityDao channelSeverityDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
-	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	private EmptyScanDao emptyScanDao = null;
 	private QueueSender queueSender = null;
 
@@ -81,7 +79,6 @@ public class ScanServiceImpl implements ScanService {
 			ChannelSeverityDao channelSeverityDao,
 			GenericVulnerabilityDao genericVulnerabilityDao,
 			ApplicationChannelDao applicationChannelDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao,
 			EmptyScanDao emptyScanDao,
 			QueueSender queueSender) {
 		this.scanDao = scanDao;
@@ -89,7 +86,6 @@ public class ScanServiceImpl implements ScanService {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
 		this.applicationChannelDao = applicationChannelDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		this.emptyScanDao = emptyScanDao;
 		this.queueSender = queueSender;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
@@ -193,7 +189,7 @@ public class ScanServiceImpl implements ScanService {
 		
 		ChannelImporterFactory factory = new ChannelImporterFactory(
 				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao, vulnerabilityMapLogDao);
+				genericVulnerabilityDao);
 		
 		ChannelImporter importer = factory.getChannelImporter(channel);
 		
@@ -315,7 +311,7 @@ public class ScanServiceImpl implements ScanService {
 		
 		ChannelImporterFactory factory = new ChannelImporterFactory(
 				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao, vulnerabilityMapLogDao);
+				genericVulnerabilityDao);
 		
 		ChannelImporter importer = factory
 				.getChannelImporter(applicationChannel);

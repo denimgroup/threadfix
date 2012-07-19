@@ -34,7 +34,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -103,11 +102,9 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	@Autowired
 	public ArachniChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao,
 			ChannelSeverityDao channelSeverityDao) {
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		this.channelSeverityDao = channelSeverityDao;
 		
 		this.channelType = channelTypeDao.retrieveByName(ChannelType.ARACHNI);

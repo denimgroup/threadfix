@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 
@@ -43,7 +42,6 @@ public class ChannelImporterFactory {
 	private ChannelSeverityDao channelSeverityDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
-	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	
 	/**
 	 * @param channelTypeDao
@@ -54,14 +52,13 @@ public class ChannelImporterFactory {
 	 */
 	@Autowired
 	public ChannelImporterFactory(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelVulnerabilityDao channelVulnerabilityDao,
+			ChannelSeverityDao channelSeverityDao,
+			GenericVulnerabilityDao genericVulnerabilityDao) {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
 		this.channelTypeDao = channelTypeDao;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 	}
 
 	/**
@@ -83,47 +80,47 @@ public class ChannelImporterFactory {
 
 
 		if (channelName.equals(ChannelType.ACUNETIX_WVS)){
-			channelImporter = new AcunetixChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new AcunetixChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.APPSCAN_DYNAMIC)) {
 			channelImporter = new AppScanWebImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, genericVulnerabilityDao, vulnerabilityMapLogDao);
+					channelSeverityDao, genericVulnerabilityDao);
 		} else if (channelName.equals(ChannelType.ARACHNI)){
-			channelImporter = new ArachniChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new ArachniChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.BRAKEMAN)){
-			channelImporter = new BrakemanChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new BrakemanChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.BURPSUITE)) {
-			channelImporter = new BurpSuiteChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new BurpSuiteChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.CAT_NET)) {
-			channelImporter = new CatNetChannelImporter(channelTypeDao, channelVulnerabilityDao,
-						channelSeverityDao, vulnerabilityMapLogDao);
+			channelImporter = new CatNetChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.FINDBUGS)){
-			channelImporter = new FindBugsChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new FindBugsChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.FORTIFY)) {
 			channelImporter = new FortifyChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, genericVulnerabilityDao, vulnerabilityMapLogDao);
+					channelSeverityDao, genericVulnerabilityDao);
 		} else if (channelName.equals(ChannelType.NESSUS)){
-			channelImporter = new NessusChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new NessusChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.NETSPARKER)) {
-			channelImporter = new NetsparkerChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new NetsparkerChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.SKIPFISH)) {
-			channelImporter = new SkipfishChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, vulnerabilityMapLogDao);
+			channelImporter = new SkipfishChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.W3AF)) {
-			channelImporter = new W3afChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, vulnerabilityMapLogDao);
+			channelImporter = new W3afChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.WEBINSPECT)) {
-			channelImporter = new WebInspectChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, vulnerabilityMapLogDao);
+			channelImporter = new WebInspectChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.ZAPROXY)){
-			channelImporter = new ZaproxyChannelImporter(channelTypeDao, channelVulnerabilityDao, 
-					vulnerabilityMapLogDao, channelSeverityDao);
+			channelImporter = new ZaproxyChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else {
 			return null;
 		}

@@ -394,7 +394,12 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		 
 		return BigIPStrings.XML_END_BEFORE_SIGNATURES +
 			   signatureString + 
-			   BigIPStrings.xmlAfterSignatures;
+			   BigIPStrings.XML_AFTER_SIGNATURES_1 +
+			   BigIPStrings.XML_AFTER_SIGNATURES_2 +
+			   BigIPStrings.XML_AFTER_SIGNATURES_3 +
+			   BigIPStrings.XML_AFTER_SIGNATURES_4 +
+			   BigIPStrings.XML_AFTER_SIGNATURES_5 +
+			   BigIPStrings.XML_AFTER_SIGNATURES_6;
 	}
 
 }

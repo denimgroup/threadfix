@@ -37,7 +37,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
@@ -66,13 +65,11 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	@Autowired
 	public AppScanWebImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			GenericVulnerabilityDao genericVulnerabilityDao) {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelSeverityDao = channelSeverityDao;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 
 		setChannelType(ChannelType.APPSCAN_DYNAMIC);
 	}

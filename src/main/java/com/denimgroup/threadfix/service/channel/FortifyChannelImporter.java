@@ -39,7 +39,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -126,14 +125,13 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	 */
 	@Autowired
 	public FortifyChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelVulnerabilityDao channelVulnerabilityDao, 
+			ChannelSeverityDao channelSeverityDao,
+			GenericVulnerabilityDao genericVulnerabilityDao) {
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 
 		setChannelType(ChannelType.FORTIFY);
 		doSAXExceptionCheck = false;

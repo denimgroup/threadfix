@@ -69,7 +69,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
@@ -77,7 +76,6 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.VulnerabilityMapLog;
 
 /**
  * 
@@ -124,7 +122,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected ChannelSeverityDao channelSeverityDao;
 	protected ChannelTypeDao channelTypeDao;
 	protected GenericVulnerabilityDao genericVulnerabilityDao;
-	protected VulnerabilityMapLogDao vulnerabilityMapLogDao;
 
 	protected String inputFileName;
 	
@@ -490,11 +487,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				if (channelType != null)
 					log.warn("A " + channelType.getName() + " channel vulnerability with code "
 						+ code + " was requested but not found.");
-				writeLogFile(code, "This channel vulnerability was not found");
 				return null;
 			} else {
 				if (vuln.getGenericVulnerability() == null) {
-					writeLogFile(vuln.getName(), "no generic vuln found");
+					log.warn("The " + channelType.getName() + " channel vulnerability with code "
+							+ code + " has no generic mapping.");
 				}
 			}
 
@@ -504,28 +501,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	}
 
 
-	/*
-	 * This method writes to the vulnerabilityMapLog table in the database.
-	 * Now it is used to record instances where channel vulnerabilities
-	 * did not have the proper mapping in the database.
-	 */
-	@Transactional(readOnly = false)
-	protected void writeLogFile(String channelVulnName, String comment) {
-		if (channelVulnName == null || channelType == null)
-			return;
 
-		if (vulnerabilityMapLogDao == null
-				|| vulnerabilityMapLogDao.retrieveByChannelVulnNameAndChannelType(channelVulnName,
-						channelType) != null)
-			return;
-			
-		VulnerabilityMapLog mapLog = new VulnerabilityMapLog();
-		mapLog.setChannelType(channelType);
-		mapLog.setComment(comment);
-		mapLog.setResolved(false);
-		mapLog.setChannelVulnName(channelVulnName);
-		vulnerabilityMapLogDao.saveOrUpdate(mapLog);
-	}
 
 	// return the parsed date object, or the null if parsing fails.
 	protected Calendar getCalendarFromString(String formatString, String dateString) {

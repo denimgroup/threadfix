@@ -2549,7 +2549,7 @@ public class BigIPStrings {
 	"\n  </headers>" +
 	"\n  <attack_signatures>";
 	
-	public static String xmlAfterSignatures = 
+	public static final String XML_AFTER_SIGNATURES_1 = 
 	"\n    <signature_set>" +
 	"\n      <set id=\"299999999\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></set>" +
 	"\n      <alarm>true</alarm>" +
@@ -3997,7 +3997,9 @@ public class BigIPStrings {
 	"\n    <signature signature_id=\"200001238\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
-	"\n    </signature>" +
+	"\n    </signature>";
+	
+	public static final String XML_AFTER_SIGNATURES_2 =
 	"\n    <signature signature_id=\"200001239\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
@@ -5494,7 +5496,9 @@ public class BigIPStrings {
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
 	"\n    </signature>" +
-	"\n    <signature signature_id=\"200002155\">" +
+	"\n    <signature signature_id=\"200002155\">";
+	
+	public static final String XML_AFTER_SIGNATURES_3 =
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
 	"\n    </signature>" +
@@ -6993,7 +6997,9 @@ public class BigIPStrings {
 	"\n    <signature signature_id=\"200003083\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
-	"\n    </signature>" +
+	"\n    </signature>";
+	
+	public static final String XML_AFTER_SIGNATURES_4 =
 	"\n    <signature signature_id=\"200003084\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
@@ -8491,7 +8497,9 @@ public class BigIPStrings {
 	"\n      <in_staging>true</in_staging>" +
 	"\n    </signature>" +
 	"\n    <signature signature_id=\"200009168\">" +
-	"\n      <enabled>false</enabled>" +
+	"\n      <enabled>false</enabled>";
+	
+	public static final String XML_AFTER_SIGNATURES_5 =
 	"\n      <in_staging>true</in_staging>" +
 	"\n    </signature>" +
 	"\n    <signature signature_id=\"200009169\">" +
@@ -9989,7 +9997,9 @@ public class BigIPStrings {
 	"\n    <signature signature_id=\"200019084\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +
-	"\n    </signature>" +
+	"\n    </signature>";
+	
+	public static final String XML_AFTER_SIGNATURES_6 =
 	"\n    <signature signature_id=\"200019085\">" +
 	"\n      <enabled>false</enabled>" +
 	"\n      <in_staging>true</in_staging>" +

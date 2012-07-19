@@ -22,7 +22,7 @@ public class RemoteProviderApplication extends BaseEntity  {
 
 	// Veracode Build numbers / whatever WhiteHat has.
 	// TODO checking on this
-	public static final int NATIVE_ID_LENGTH = 50;
+	public static final int NATIVE_ID_LENGTH = 1024;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;

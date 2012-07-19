@@ -43,7 +43,6 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
@@ -62,7 +61,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
 	private ChannelSeverityDao channelSeverityDao = null;
 	private ChannelTypeDao channelTypeDao = null;
-	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
 	private ScanMergeService scanMergeService = null;
 	private ApplicationDao applicationDao = null;
@@ -72,7 +70,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	public RemoteProviderApplicationServiceImpl(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao, 
 			ChannelSeverityDao channelSeverityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ScanMergeService scanMergeService,
 			ApplicationDao applicationDao,
@@ -80,7 +77,6 @@ public class RemoteProviderApplicationServiceImpl implements
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.scanMergeService = scanMergeService;
 		this.applicationDao = applicationDao;
@@ -119,7 +115,18 @@ public class RemoteProviderApplicationServiceImpl implements
 			Set<String> appIds = new TreeSet<String>();
 			if (appsForType != null && appsForType.size() > 0) {
 				for (RemoteProviderApplication app : appsForType) {
-					appIds.add(app.getNativeId());
+					if (app == null || app.getNativeId() == null) {
+						continue;
+					}
+					
+					if (app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
+						log.warn("A Remote Provider application came out of the database with more than " 
+									+ RemoteProviderApplication.NATIVE_ID_LENGTH 
+									+ " characters in it. This shouldn't be possible.");
+						appIds.add(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
+					} else {
+						appIds.add(app.getNativeId());
+					}
 				}
 			}
 			
@@ -160,6 +167,19 @@ public class RemoteProviderApplicationServiceImpl implements
 		}
 		
 		for (RemoteProviderApplication app : newApps) {
+			if (app == null) {
+				continue;
+			}
+			
+			if (app.getNativeId() != null && 
+					app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
+				log.warn("A Remote Provider application was parsed that has more than " 
+							+ RemoteProviderApplication.NATIVE_ID_LENGTH 
+							+ " characters in it. The name is being trimmed but this"
+							+ " should not prevent use of the application");
+				app.setNativeId(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
+			}
+			
 			app.setRemoteProviderType(remoteProviderType);
 		}
 		
@@ -211,7 +231,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	private RemoteProviderFactory getRemoteProviderFactory() {
 		return new RemoteProviderFactory(channelTypeDao, 
-				channelVulnerabilityDao, channelSeverityDao, vulnerabilityMapLogDao);
+				channelVulnerabilityDao, channelSeverityDao);
 	}
 
 	@Override

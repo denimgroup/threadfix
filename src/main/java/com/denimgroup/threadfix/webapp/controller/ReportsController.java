@@ -111,7 +111,7 @@ public class ReportsController {
 			return "redirect:/reports";
 		}
 		
-		if (reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7
+		if ((reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7)
 				&& reportParameters.getFormatId() == 2) {
 			request.getSession().setAttribute("reportsError", "The CSV format is not available for this report.");
 			return "redirect:/reports";

@@ -31,7 +31,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -62,12 +61,10 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	@Autowired
 	public WebInspectChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelSeverityDao channelSeverityDao) {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		
 		setChannelType(ChannelType.WEBINSPECT);
 	}

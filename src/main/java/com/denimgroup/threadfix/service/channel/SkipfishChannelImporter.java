@@ -47,7 +47,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
@@ -109,12 +108,10 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	@Autowired
 	public SkipfishChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelSeverityDao channelSeverityDao) {
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 
 		setChannelType(ChannelType.SKIPFISH);
 	}

@@ -118,7 +118,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				result.rejectValue(field, "errors.other", 
 						"We were unable to connect to the provider with these credentials.");
 				
-				} else {
+			} else {
 				
 				log.warn("Provider username has changed, deleting old apps.");
 				

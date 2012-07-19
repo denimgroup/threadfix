@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -40,16 +39,14 @@ public class RemoteProviderFactory {
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
 	private ChannelSeverityDao channelSeverityDao = null;
 	private ChannelTypeDao channelTypeDao = null;
-	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	
 	@Autowired
 	public RemoteProviderFactory(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao) {
+			ChannelVulnerabilityDao channelVulnerabilityDao, 
+			ChannelSeverityDao channelSeverityDao) {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 	}
 
 	public List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType) {
@@ -67,13 +64,13 @@ public class RemoteProviderFactory {
 			return null;
 		} else if (providerType.equals(RemoteProviderType.SENTINEL)) {
 			return new WhiteHatRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao, vulnerabilityMapLogDao);
+					channelSeverityDao);
 		} else if (providerType.equals(RemoteProviderType.VERACODE)) {
 			return new VeracodeRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao, vulnerabilityMapLogDao);
+					channelSeverityDao);
 		} else if (providerType.equals(RemoteProviderType.QUALYSGUARD_WAS)) {
 			return new QualysRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao, vulnerabilityMapLogDao);
+					channelSeverityDao);
 		} else {
 			return null;
 		}

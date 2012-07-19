@@ -56,7 +56,6 @@ import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityMapLogDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
@@ -89,7 +88,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ApplicationChannelDao applicationChannelDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
-	private VulnerabilityMapLogDao vulnerabilityMapLogDao = null;
 	private ApplicationDao applicationDao = null;
 	private UserDao userDao = null;
 
@@ -106,7 +104,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			ChannelSeverityDao channelSeverityDao,
 			GenericVulnerabilityDao genericVulnerabilityDao,
 			ApplicationChannelDao applicationChannelDao,
-			VulnerabilityMapLogDao vulnerabilityMapLogDao,
 			ApplicationDao applicationDao,
 			UserDao userDao) {
 		this.scanDao = scanDao;
@@ -116,7 +113,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.vulnerabilityDao = vulnerabilityDao;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		this.applicationChannelDao = applicationChannelDao;
-		this.vulnerabilityMapLogDao = vulnerabilityMapLogDao;
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
 	}
@@ -406,7 +402,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		// pick the appropriate parser
 		ChannelImporterFactory factory = new ChannelImporterFactory(
 				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao, vulnerabilityMapLogDao);
+				genericVulnerabilityDao);
 		ChannelImporter importer = factory
 		.getChannelImporter(applicationChannel);
 
