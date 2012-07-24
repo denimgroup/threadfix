@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,27 +34,29 @@ public class ScanIndexPage extends BasePage {
 
 	private WebElement scanTable;
 	private WebElement backToApplicationLink;
-			
+
 	public ScanIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		scanTable = driver.findElementById("wafTableBody");
 		backToApplicationLink = driver.findElementById("backToApplicationLink");
 	}
-	
+
 	public ScanIndexPage clickDeleteScanButton(int index) {
-		
-		List<WebElement> stuff = scanTable.findElements(By.xpath(".//tr/td/input"));
-		
-		if (stuff.size() > index) {
-			stuff.get(index).click();
+
+		List<WebElement> scanDeleteButtonArray = scanTable.findElements(By
+				.id("deleteScanButton"));
+
+		if (scanDeleteButtonArray.size() > index) {
+			scanDeleteButtonArray.get(index).click();
+			Alert alert = driver.switchTo().alert();
+			alert.accept();
 			return new ScanIndexPage(driver);
 		}
 		return null;
 	}
-	
-	public ApplicationDetailPage goBack() {
+
+	public ApplicationDetailPage clickBackToAppLink() {
 		backToApplicationLink.click();
 		return new ApplicationDetailPage(driver);
 	}
-
 }

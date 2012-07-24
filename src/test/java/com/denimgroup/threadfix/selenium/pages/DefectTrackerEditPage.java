@@ -74,11 +74,13 @@ public class DefectTrackerEditPage extends BasePage {
 		return this;
 	}
 
-	public DefectTrackerDetailPage clickUpdateDefectTrackerButton() {
+	public DefectTrackerDetailPage clickUpdateDefectTrackerButton(boolean dealWithAlert) {
 		updateDefectTrackerButton.click();
 		
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
+		if (dealWithAlert) {
+			Alert alert = driver.switchTo().alert();
+			alert.accept();
+		}
 		
 		return new DefectTrackerDetailPage(driver);
 	}
@@ -88,11 +90,13 @@ public class DefectTrackerEditPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 
-	public DefectTrackerEditPage clickUpdateDefectTrackerButtonInvalid() {
+	public DefectTrackerEditPage clickUpdateDefectTrackerButtonInvalid(boolean isAlertPresent) {
 		updateDefectTrackerButton.click();
 		
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
+		if (isAlertPresent) {
+			Alert alert = driver.switchTo().alert();
+			alert.accept();
+		}
 		
 		return new DefectTrackerEditPage(driver);
 	}

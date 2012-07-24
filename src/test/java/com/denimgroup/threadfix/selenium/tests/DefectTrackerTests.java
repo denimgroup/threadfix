@@ -174,7 +174,7 @@ public class DefectTrackerTests extends BaseTest {
 		
 		defectTrackerEditPage.setNameInput(editedDefectTrackerName);
 		
-		defectTrackerDetailPage = defectTrackerEditPage.clickUpdateDefectTrackerButton();
+		defectTrackerDetailPage = defectTrackerEditPage.clickUpdateDefectTrackerButton(false);
 		assertTrue("Editing did not change the name.", editedDefectTrackerName.equals(defectTrackerDetailPage.getNameText()));
 		
 		defectTrackerIndexPage = defectTrackerDetailPage.clickConfigurationHeaderLink().clickDefectTrackersLink();
@@ -216,7 +216,7 @@ public class DefectTrackerTests extends BaseTest {
 		DefectTrackerEditPage editDefectTrackerPage = defectTrackerDetailPage.clickEditLink();
 		
 		// Test submission with no changes
-		defectTrackerDetailPage = editDefectTrackerPage.clickUpdateDefectTrackerButton();
+		defectTrackerDetailPage = editDefectTrackerPage.clickUpdateDefectTrackerButton(false);
 		assertTrue("DefectTracker Page did not save the name correctly.", newDefectTrackerName.equals(defectTrackerDetailPage.getNameText()));
 		assertTrue("DefectTracker Page did not save the type correctly.", type2.equals(defectTrackerDetailPage.getTypeText()));
 		assertTrue("DefectTracker Page did not save the url correctly.", TEST_BUGZILLA_URL.equals(defectTrackerDetailPage.getUrlText()));
@@ -225,17 +225,17 @@ public class DefectTrackerTests extends BaseTest {
 		
 		// Test empty and whitespace input
 		editDefectTrackerPage.setNameInput(emptyString);
-		editDefectTrackerPage = editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid();
+		editDefectTrackerPage = editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid(false);
 		log.debug("Output is '" + editDefectTrackerPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(editDefectTrackerPage.getNameErrorsText()));
 		
 		editDefectTrackerPage.setNameInput(whiteSpaceString);
-		editDefectTrackerPage = editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid();
+		editDefectTrackerPage = editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid(false);
 		assertTrue("The correct error text was not present", emptyInputError.equals(editDefectTrackerPage.getNameErrorsText()));
 		
 		// Test browser length limit
 		editDefectTrackerPage.setNameInput(longInput);
-		defectTrackerDetailPage = editDefectTrackerPage.clickUpdateDefectTrackerButton();
+		defectTrackerDetailPage = editDefectTrackerPage.clickUpdateDefectTrackerButton(false);
 		
 		newDefectTrackerName = defectTrackerDetailPage.getNameText();
 		
@@ -244,7 +244,7 @@ public class DefectTrackerTests extends BaseTest {
 		// Test name duplication checking
 		editDefectTrackerPage = defectTrackerDetailPage.clickEditLink();
 		editDefectTrackerPage.setNameInput(defectTrackerNameDuplicateTest);
-		editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid();
+		editDefectTrackerPage.clickUpdateDefectTrackerButtonInvalid(false);
 		assertTrue(editDefectTrackerPage.getNameErrorsText().equals("That name is already taken."));
 					
 		// Delete and logout

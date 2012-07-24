@@ -62,14 +62,14 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new FindBugsSAXParser());
 	}
 	
-	private Calendar getCalendarFromTimeInMillisString(String timeInMillis) {
+	private static Calendar getCalendarFromTimeInMillisString(String timeInMillis) {
 		try {
 			Long timeLong = Long.valueOf(timeInMillis);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(timeLong);
 			return calendar;
 		} catch (NumberFormatException e) {
-			log.warn("Invalid date timestamp in FindBugs file.", e);
+			//log.warn("Invalid date timestamp in FindBugs file.", e);
 			return null;
 		}
 	}
@@ -188,6 +188,36 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    	else if (testStatus == null)
 	    		testStatus = SUCCESSFUL_SCAN;
 	    }
+	    
+	    private String checkTestDate() {
+			if (applicationChannel == null || testDate == null)
+				return OTHER_ERROR;
+			
+			List<Scan> scanList = applicationChannel.getScanList();
+			
+			for (Scan scan : scanList) {
+				if (scan != null && scan.getImportTime() != null) {
+					int result = scan.getImportTime().compareTo(testDate);
+					
+					if (result == 0) {
+						return DUPLICATE_ERROR;
+					} else if (result > 0) {
+						return OLD_SCAN_ERROR;
+					} else if (scan.getImportTime().getTimeInMillis() % 1000 == 0
+							&& (scan.getImportTime().getTimeInMillis() / 1000) ==
+							   (testDate.getTimeInMillis() / 1000)){
+						
+						// MySQL doesn't support milliseconds. FindBugs does. 
+						// This should make it work.
+						
+						return DUPLICATE_ERROR;
+					}
+				}
+			}
+			
+			log.info("Scan time compare returning success.");
+			return SUCCESSFUL_SCAN;
+		}
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
@@ -204,8 +234,8 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    			testDate = getCalendarFromTimeInMillisString(timeString);
 	    		}
 	    		
-	    		if (testDate != null)
-	    			hasDate = true;
+	    		hasDate = testDate != null;
+	    		
 	    		correctFormat = true;
 	    	}
 	    	

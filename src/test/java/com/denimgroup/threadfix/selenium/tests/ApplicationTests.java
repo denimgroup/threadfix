@@ -818,7 +818,7 @@ public class ApplicationTests extends BaseTest {
 												  .setPasswordInput(badPassword)
 												  .clickJsonLink()
 												  .getJsonResultText();
-		assertTrue("DT JSON check returned the wrong message on error.", 
+		assertTrue("DT JSON check returned the wrong message on error: " + resultString, 
 				resultString.equals("Authentication failed"));
 		assertFalse("DT product select was enabled after failed authentication.", 
 				applicationEditPage.isProductSelectEnabled());

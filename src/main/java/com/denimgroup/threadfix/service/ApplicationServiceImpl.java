@@ -51,7 +51,7 @@ import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
 	
 	private String invalidProjectName = "The selected Project Name was invalid. " +

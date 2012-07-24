@@ -223,7 +223,7 @@ public class ApplicationRestController extends RestController {
 		String returnValue = scanService.checkFile(channelId, file);
 		
 		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue)) {
-			Scan scan = scanMergeService.saveRPCScanAndRun(channelId, file);
+			Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, file);
 			return scan;
 		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue)) {
 			return "You attempted to upload an empty scan.";

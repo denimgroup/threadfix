@@ -96,6 +96,14 @@ public class ApplicationsController {
 			}
 		}
 		
+		Object error = null;
+		if (request.getSession() != null) {
+			error = request.getSession().getAttribute("scanErrorMessage");
+			if (error != null) {
+				request.getSession().removeAttribute("scanErrorMessage");
+			}
+		}
+		
 		if (application.getVulnerabilities() != null && application.getVulnerabilities().size() > 0) {
 			List<Vulnerability> vulns = vulnerabilityService.getFalsePositiveVulns(application);
 			if (vulns != null) {
@@ -105,6 +113,7 @@ public class ApplicationsController {
 		
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);
+		model.addAttribute("error", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositives);
 		return "applications/detail";

@@ -31,6 +31,7 @@ public class ConfigurationIndexPage extends BasePage {
 	private WebElement defectTrackersLink;
 	private WebElement jobStatusesLink;
 	private WebElement manageUsersLink;
+	private WebElement remoteProvidersLink;
 	private WebElement apiKeysLink;
 	
 	public ConfigurationIndexPage(WebDriver webdriver) {
@@ -39,6 +40,7 @@ public class ConfigurationIndexPage extends BasePage {
 		defectTrackersLink = driver.findElementById("defectTrackersLink");
 		jobStatusesLink = driver.findElementById("jobStatusesLink");
 		manageUsersLink = driver.findElementById("manageUsersLink");
+		remoteProvidersLink = driver.findElementById("remoteProvidersLink");
 		apiKeysLink = driver.findElementById("apiKeysLink");
 		
 	}
@@ -58,8 +60,14 @@ public class ConfigurationIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 
-	public OrganizationIndexPage clickApiKeysLink() {
+	public ApiKeysIndexPage clickApiKeysLink() {
 		apiKeysLink.click();
-		return new OrganizationIndexPage(driver);
+		return new ApiKeysIndexPage(driver);
 	}
+	
+	public RemoteProvidersIndexPage clickRemoteProvidersLink() {
+		remoteProvidersLink.click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
 }

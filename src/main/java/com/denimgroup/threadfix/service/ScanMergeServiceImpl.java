@@ -91,6 +91,25 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ApplicationDao applicationDao = null;
 	private UserDao userDao = null;
 
+	// These generic types should have parameters
+	private static final String[] VULNS_WITH_PARAMS = { 
+			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
+			GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+			GenericVulnerability.CWE_EVAL_INJECTION,
+			GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
+			GenericVulnerability.CWE_LDAP_INJECTION,
+			GenericVulnerability.CWE_XPATH_INJECTION,
+			GenericVulnerability.CWE_SQL_INJECTION,
+			GenericVulnerability.CWE_OS_COMMAND_INJECTION,
+			GenericVulnerability.CWE_GENERIC_INJECTION
+		};
+	
+	private static final Set<String> VULNS_WITH_PARAMETERS_SET = new TreeSet<String>();
+	
+	static {
+		Collections.addAll(VULNS_WITH_PARAMETERS_SET, VULNS_WITH_PARAMS);
+	}
+
 	// This string makes getting the applicationRoot simpler.
 	private String projectRoot = null;
 	
@@ -118,7 +137,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	public Scan saveRPCScanAndRun(Integer channelId, MultipartFile file) {
+	public Scan saveRemoteScanAndRun(Integer channelId, MultipartFile file) {
 		if (channelId == null || file == null) {
 			log.error("Unable to run RPC scan due to null input.");
 			return null;
@@ -179,6 +198,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.warn("There were no findings to process.");
 			return;
 		}
+		
+		int numWithoutPath = 0, numWithoutParam = 0; 
 
 		// we need to set up appropriate relationships between the scan's many
 		// objects.
@@ -194,6 +215,17 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 			if (surfaceLocation != null) {
 				surfaceLocation.setFinding(finding);
+				if (surfaceLocation.getParameter() == null && 
+						finding.getChannelVulnerability() != null &&
+						finding.getChannelVulnerability().getGenericVulnerability() != null &&
+						VULNS_WITH_PARAMETERS_SET.contains(
+								finding.getChannelVulnerability().getGenericVulnerability().getName())
+						) {
+					numWithoutParam ++;
+				}
+				if (surfaceLocation.getPath() == null || surfaceLocation.getPath().trim().equals("")) {
+					numWithoutPath++;
+				}
 			}
 
 			if (finding.getDataFlowElements() != null) {
@@ -221,6 +253,16 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 						(finding.getVulnerability().getOpenTime().compareTo(scan.getImportTime()) > 0))
 					finding.getVulnerability().setOpenTime(scan.getImportTime());
 			}
+		}
+		
+		if (numWithoutParam > 0) {
+			log.warn("There are " + numWithoutParam + " injection-based findings missing parameters. " +
+					"This could indicate a bug in the ThreadFix parser.");
+		}
+		
+		if (numWithoutPath > 0) {
+			log.warn("There are " + numWithoutPath + " findings missing paths. " +
+					"This probably means there is a bug in the ThreadFix parser.");
 		}
 	}
 
@@ -389,8 +431,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 
 		File file = new File(fileName);
-		ApplicationChannel applicationChannel = applicationChannelDao
-		.retrieveById(channelId);
+		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
 
 		if (applicationChannel == null
 				|| applicationChannel.getChannelType() == null
@@ -407,17 +448,20 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		.getChannelImporter(applicationChannel);
 
 		if (importer == null) {
-			log.warn("Unable to find suitable ChannelImporter implementation for " + applicationChannel.getChannelType().getName() + ". Returning null.");
+			log.warn("Unable to find suitable ChannelImporter implementation for "
+						+ applicationChannel.getChannelType().getName() + ". Returning null.");
 			return null;
 		}
 
-		log.info("Processing file " + fileName + " on channel " + applicationChannel.getChannelType().getName() + ".");
+		log.info("Processing file " + fileName + " on channel " 
+					+ applicationChannel.getChannelType().getName() + ".");
 
 		importer.setFileName(fileName);
 		Scan scan = importer.parseInput();
 
 		if (scan == null) {
-			log.warn("The " + applicationChannel.getChannelType().getName() + " import failed for file " + fileName + ".");
+			log.warn("The " + applicationChannel.getChannelType().getName() 
+							+ " import failed for file " + fileName + ".");
 			return null;
 		}
 
@@ -427,6 +471,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 					" and found " + scan.getFindings().size() + " findings.");
 		}
 
+		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
 		channelMerge(scan, applicationChannel);
 		appMerge(scan, applicationChannel.getApplication().getId());
@@ -624,9 +669,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (applicationChannel.getApplication() != null
 				&& applicationChannel.getApplication().getProjectRoot() != null
 				&& !applicationChannel.getApplication().getProjectRoot().trim()
-				.equals(""))
-			projectRoot = applicationChannel.getApplication().getProjectRoot()
-			.toLowerCase();
+				.equals("")) {
+			projectRoot = applicationChannel.getApplication()
+											.getProjectRoot()
+											.toLowerCase();
+		}
 
 		// These next two if statements handle the automatic project root
 		// parsing.
@@ -661,7 +708,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 						&& dataFlowElements.get(0).getSourceFileName() != null) {
 					if (commonPrefix == null)
 						commonPrefix = dataFlowElements.get(0)
-						.getSourceFileName();
+													   .getSourceFileName();
 					else
 						commonPrefix = findCommonPrefix(dataFlowElements.get(0)
 								.getSourceFileName(), commonPrefix);
@@ -1532,6 +1579,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return scan;
 		}
 		
+		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
 		channelMerge(scan, applicationChannel);
 		appMerge(scan, applicationChannel.getApplication().getId());

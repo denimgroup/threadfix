@@ -157,12 +157,12 @@ public class RestWafTests extends BaseRestTest {
 							new String[] {"apiKey", "wafId"},
 							new String[] {GOOD_API_KEY, String.valueOf(wafId)} );
 		assertTrue(response != null);
-		assertTrue(response != ApplicationRestController.SET_WAF_FAILED);
+		assertTrue(!response.equals(ApplicationRestController.SET_WAF_FAILED));
 		assertTrue(getJSONObject(response) != null);
 		
 		try {
 			JSONObject app = getJSONObject(response);
-			System.out.println(app);
+			log.debug(app);
 			assertTrue(app.get("waf") != null);
 			assertTrue(getId((JSONObject)app.get("waf")) == wafId);
 		} 
@@ -203,12 +203,12 @@ public class RestWafTests extends BaseRestTest {
 							new String[] {"apiKey", "wafId"},
 							new String[] {GOOD_API_KEY, String.valueOf(wafId)} );
 		assertTrue(response != null);
-		assertTrue(response != ApplicationRestController.SET_WAF_FAILED);
+		assertTrue(!response.equals(ApplicationRestController.SET_WAF_FAILED));
 		assertTrue(getJSONObject(response) != null);
 		
 		try {
 			JSONObject app = getJSONObject(response);
-			System.out.println(app);
+			log.debug(app);
 			assertTrue(app.get("waf") != null);
 			assertTrue(getId((JSONObject)app.get("waf")) == wafId);
 		} 
@@ -302,12 +302,12 @@ public class RestWafTests extends BaseRestTest {
 							new String[] {"apiKey", "wafId"},
 							new String[] {GOOD_API_KEY, String.valueOf(wafId)} );
 		assertTrue(response != null);
-		assertTrue(response != ApplicationRestController.SET_WAF_FAILED);
+		assertTrue(!response.equals(ApplicationRestController.SET_WAF_FAILED));
 		assertTrue(getJSONObject(response) != null);
 		
 		try {
 			JSONObject app = getJSONObject(response);
-			System.out.println(app);
+			log.debug(app);
 			assertTrue(app.get("waf") != null);
 			assertTrue(getId((JSONObject)app.get("waf")) == wafId);
 		} 

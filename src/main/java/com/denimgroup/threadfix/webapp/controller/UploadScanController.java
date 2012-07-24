@@ -86,7 +86,15 @@ public class UploadScanController {
 	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		
-		String returnValue = scanService.checkFile(channelId, file);
+		String returnValue = null;
+		
+		try {
+			returnValue = scanService.checkFile(channelId, file);
+		} catch (OutOfMemoryError e) {
+			log.error("OutOfMemoryError thrown while checking file. Logging and re-throwing.", e);
+			request.getSession().setAttribute("scanErrorMessage", "OutOfMemoryError encountered while checking file.");
+			throw e;
+		}
 		
 		Application app = applicationService.loadApplication(appId);
 		

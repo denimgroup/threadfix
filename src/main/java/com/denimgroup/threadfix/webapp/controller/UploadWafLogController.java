@@ -69,6 +69,10 @@ public class UploadWafLogController {
 			throw new ResourceNotFoundException();
 		}
 		
+		if (file == null) {
+			return "redirect:/wafs/" + wafId;
+		}
+		
 		// TODO put in a check to make sure the file is in the right format
 		logParserService.setFile(file);
 		logParserService.setWafId(wafId);

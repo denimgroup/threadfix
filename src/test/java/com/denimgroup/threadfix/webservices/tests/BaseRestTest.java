@@ -44,7 +44,7 @@ import org.json.JSONObject;
  */
 public abstract class BaseRestTest {
 	
-	protected final Log log = LogFactory.getLog(BaseRestTest.class);
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	public static final String GOOD_API_KEY = "iy3F2A9ChoI91kTNx4NMUPyaInIrOkioGYCXUubAY";
 	public static final String BAD_API_KEY  = "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
@@ -84,7 +84,7 @@ public abstract class BaseRestTest {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.debug("Status was not 200.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -121,7 +121,7 @@ public abstract class BaseRestTest {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.debug("Status was not 200.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
@@ -143,7 +143,7 @@ public abstract class BaseRestTest {
 
 	public String httpGet(String urlStr) {
 		
-		System.out.println("Requesting " + urlStr);
+		log.debug("Requesting " + urlStr);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlStr);
@@ -154,7 +154,7 @@ public abstract class BaseRestTest {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.debug("Status was not 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();
@@ -232,7 +232,7 @@ public abstract class BaseRestTest {
 	public class AcceptAllTrustManager implements X509TrustManager {
 	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-	    public X509Certificate[] getAcceptedIssuers() { return null; }
+	    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[]{}; }
 	}
 	
 	public class AcceptAllTrustFactory implements ProtocolSocketFactory {

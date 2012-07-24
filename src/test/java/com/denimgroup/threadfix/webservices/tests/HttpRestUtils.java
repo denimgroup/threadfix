@@ -30,11 +30,15 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HttpRestUtils {
+	
+	protected final Log log = LogFactory.getLog("HttpRestUtils");
 	
 	public final String API_KEY_ERROR = "Authentication failed, check your API Key.";
 	
@@ -51,7 +55,7 @@ public class HttpRestUtils {
 	public String httpPostFile(String request, File file, String[] paramNames,
 			String[] paramVals) {
 		
-		System.out.println("Requesting " + request);
+		log.debug("Requesting " + request);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
@@ -74,7 +78,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.warn("Status was not 200.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -97,7 +101,7 @@ public class HttpRestUtils {
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
 		
-		System.out.println("Requesting " + request);
+		log.debug("Requesting " + request);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils().new AcceptAllTrustFactory(), 443));
 
@@ -114,7 +118,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.warn("Status was not 200.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
@@ -136,7 +140,7 @@ public class HttpRestUtils {
 
 	public String httpGet(String urlStr) {
 		
-		System.out.println("Requesting " + urlStr);
+		log.debug("Requesting " + urlStr);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlStr);
@@ -147,7 +151,7 @@ public class HttpRestUtils {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				log.warn("Status was not 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();
@@ -250,7 +254,7 @@ public class HttpRestUtils {
 	public class AcceptAllTrustManager implements X509TrustManager {
 	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-	    public X509Certificate[] getAcceptedIssuers() { return null; }
+	    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[]{}; }
 	}
 
 	public class AcceptAllTrustFactory implements ProtocolSocketFactory {

@@ -285,20 +285,29 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire.version}</version>
 				<configuration>
-					<skip>true</skip>
+					<skip>false</skip>
+					<systemProperties>
+				    	<property>
+				    		<name>url</name>
+				    		<value>${fileName}</value>
+				    	</property>
+				    </systemProperties>
 				</configuration>
 				<executions>
 					<execution>
 						<id>selenium-test</id>
-						<phase>integration-test</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
 						</goals>
 						<configuration>
 							<skip>false</skip>
 							<includes>
-								<include>**/Test*Selenium.java</include>
+								<include>**/*Tests.java</include>
 							</includes>
+							<excludes>
+								<exclude>**/*Rest*.java</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>

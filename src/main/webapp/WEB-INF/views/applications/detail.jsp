@@ -31,6 +31,10 @@
 		<center class="errors" ><c:out value="${ message }"/> <a id="refreshLink" href="<spring:url value=""/>">Refresh the page.</a></center>
 	</c:if>
 	
+	<c:if test="${ not empty error }">
+		<center class="errors" ><c:out value="${ error }"/></center>
+	</c:if>
+	
 	<div style="padding-top:10px;" id="helpText">
 		Applications are used to store, unify, and manipulate scan results from security scanners.
 		<c:if test="${ empty application.scans }">

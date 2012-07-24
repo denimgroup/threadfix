@@ -28,13 +28,19 @@ import org.openqa.selenium.WebElement;
 
 public class LoginPage extends BasePage {
 
-	final String url = "http://localhost:8080/threadfix/login.jsp";
+	static String url = "http://localhost:8080/threadfix/login.jsp";
 	private WebElement usernameField;
 	private WebElement passwordField;
 	private WebElement loginButton;
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);
+		
+		String maybeUrl = System.getProperty("url");
+		if (maybeUrl != null) {
+			url = maybeUrl;
+		}
+		
 		webdriver.get(url);
 		usernameField = driver.findElementById("username");
 		passwordField = driver.findElementById("password");

@@ -197,18 +197,29 @@ public class QueueListener implements MessageListener {
 			
 		getJobStatus(jobStatusId);
 		updateJobStatus("Processing Scan from file.");
-		boolean finished = scanMergeService.processScan(channelId, fileName);
+		
+		boolean finished = false;
+		
+		try {
+			finished = scanMergeService.processScan(channelId, fileName);
+		} catch (OutOfMemoryError e) {
+			closeJobStatus("Scan encountered an out of memory error and did not complete correctly.");
+			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
+			throw e;
+		}
 
 		if (finished) {
 			closeJobStatus("Scan completed.");
 			if (fullLog) {
-				log.info("The " + appChannel.getChannelType().getName() + " scan from User " + userName + " on Application " + appChannel.getApplication().getName()
+				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					+ userName + " on Application " + appChannel.getApplication().getName()
 					+ " (filename " + fileName + ") completed successfully.");
 			}
 		} else {
 			closeJobStatus("Scan encountered an error.");
 			if (fullLog) {
-				log.info("The " + appChannel.getChannelType().getName() + " scan from User " + userName + " on Application " + appChannel.getApplication().getName()
+				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					+ userName + " on Application " + appChannel.getApplication().getName()
 					+ " (filename " + fileName + ") did not complete successfully.");
 			}
 		}

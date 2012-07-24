@@ -72,4 +72,12 @@ public abstract class BasePage {
 		return new ConfigurationIndexPage(driver);
 	}
 	
+	public void sleep(int num) {
+		try {
+			Thread.sleep(num);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

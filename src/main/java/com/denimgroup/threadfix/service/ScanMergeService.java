@@ -83,7 +83,7 @@ public interface ScanMergeService {
 	 * @param fileName
 	 * @return
 	 */
-	Scan saveRPCScanAndRun(Integer channelId, MultipartFile file);
+	Scan saveRemoteScanAndRun(Integer channelId, MultipartFile file);
 	
 	/**
 	 * 
