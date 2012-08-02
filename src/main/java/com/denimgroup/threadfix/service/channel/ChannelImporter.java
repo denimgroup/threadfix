@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -69,16 +66,6 @@ public interface ChannelImporter {
 	 * @param applicationChannel
 	 */
 	void setChannel(ApplicationChannel applicationChannel);
-
-	/**
-	 * Sets the file containing the scan results.
-	 * 
-	 * @param file
-	 *            The file containing the scan results.
-	 * @throws IOException
-	 *             Thrown if the file cannot be accessed.
-	 */
-	void setFile(MultipartFile file) throws IOException;
 	
 	/**
 	 * Set the input stream directly

@@ -83,4 +83,11 @@ public interface ScanDao {
 	 * @param scan
 	 */
 	void deleteMap(ScanRepeatFindingMap map);
+
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getFindingCount(Integer scanId);
 }

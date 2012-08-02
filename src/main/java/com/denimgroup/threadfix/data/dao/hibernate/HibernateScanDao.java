@@ -26,10 +26,13 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
@@ -94,5 +97,15 @@ public class HibernateScanDao implements ScanDao {
 	@Override
 	public void deleteMap(ScanRepeatFindingMap map) {
 		sessionFactory.getCurrentSession().delete(map);
+	}
+	
+	@Override
+	public long getFindingCount(Integer scanId) {
+		return (Long) sessionFactory.getCurrentSession()
+							 .createCriteria(Finding.class)
+							 .setProjection(Projections.rowCount())
+							 .add(Restrictions.eq("scan.id", scanId))
+							 .uniqueResult();
+
 	}
 }

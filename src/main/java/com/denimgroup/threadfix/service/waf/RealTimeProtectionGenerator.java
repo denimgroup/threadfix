@@ -422,7 +422,7 @@ public abstract class RealTimeProtectionGenerator {
 		if (type.equals(WafType.BIG_IP_ASM)) {
 			return BigIPASMGenerator.getStart(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
-			return ImpervaSecureSphereGenerator.XML_START;
+			return ImpervaSecureSphereGenerator.getStart(rules);
 		} else {
 			return null;
 		}
@@ -432,7 +432,7 @@ public abstract class RealTimeProtectionGenerator {
 		if (type.equals(WafType.BIG_IP_ASM)) {
 			return BigIPASMGenerator.getEnd(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
-			return ImpervaSecureSphereGenerator.XML_END;
+			return ImpervaSecureSphereGenerator.getEnd(rules);
 		} else {
 			return null;
 		}

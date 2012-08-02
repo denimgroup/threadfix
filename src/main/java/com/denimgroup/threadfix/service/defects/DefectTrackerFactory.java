@@ -169,6 +169,7 @@ public class DefectTrackerFactory {
 
 		JiraDefectTracker jira = new JiraDefectTracker();
 		jira.setProjectName(application.getProjectName());
+		jira.setProjectId(application.getProjectId());
 		jira.setPassword(application.getPassword());
 		jira.setUrl(application.getDefectTracker().getUrl());
 		jira.setUsername(application.getUserName());

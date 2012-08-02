@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,7 +44,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
@@ -137,13 +135,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	public Scan saveRemoteScanAndRun(Integer channelId, MultipartFile file) {
-		if (channelId == null || file == null) {
+	public Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
+		if (channelId == null || fileName == null) {
 			log.error("Unable to run RPC scan due to null input.");
 			return null;
 		}
-
-		String fileName = null;
 
 		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
 
@@ -156,16 +152,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			applicationChannelDao.saveOrUpdate(applicationChannel);
 		} else {
 			fileName = "scan-file-rest-" + String.valueOf(random.nextLong());
-		}
-
-		File diskFile = new File(fileName);
-
-		try {
-			file.transferTo(diskFile);
-		} catch (IllegalStateException e) {
-			log.warn("Encountered IllegalStateException while attempting to copy to disk.");
-		} catch (IOException e) {
-			log.warn("Encountered IOException while attempting to copy to disk.");
 		}
 
 		Scan scan = processScanFile(channelId, fileName);
@@ -903,8 +889,26 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			initialOld = scan.getNumberOldVulnerabilities();
 		}
 
+		long interval = 0, count = 0, soFar = 0;
+		boolean counting = false;
+		
+		if (scan.getFindings().size() > 10000) {
+			counting = true;
+			interval = scan.getFindings().size() / 10;
+		}
+		
 		log.info("Starting Application-wide merge process with " + scan.getFindings().size() + " findings.");
 		for (Finding finding : scan.getFindings()) {
+			
+			if (counting) {
+				count++;
+				if (count > interval) {
+					soFar += count;
+					count = 0;
+					log.info("Processed " + soFar + " out of " + scan.getFindings().size() + " findings.");
+				}
+			}
+			
 			boolean match = false;
 
 			for (Vulnerability vuln : vulns) {
@@ -1040,6 +1044,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 * @param finding
 	 */
 	private void correctExistingScans(Finding finding) {
+		finding.getVulnerability().setSurfaceLocation(
+				finding.getVulnerability().getOriginalFinding().getSurfaceLocation());
 		finding.setFirstFindingForVuln(false);
 		finding.getScan().setNumberNewVulnerabilities(finding.getScan()
 				.getNumberNewVulnerabilities() - 1);
@@ -1437,6 +1443,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		Vulnerability vulnerability = new Vulnerability();
 		vulnerability.openVulnerability(Calendar.getInstance());
 		vulnerability.setGenericVulnerability(genericVulnerability);
+		vulnerability.setSurfaceLocation(finding.getSurfaceLocation());
 
 		String vulnName = genericVulnerability.getName();
 

@@ -29,10 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +59,6 @@ public class ScanServiceImpl implements ScanService {
 	
 	private final Log log = LogFactory.getLog("ScanService");
 	
-	private static Random random = new Random();
-
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
@@ -109,15 +104,13 @@ public class ScanServiceImpl implements ScanService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void saveFileAndAddToQueue(Integer channelId, MultipartFile file) {
-		if (file == null || channelId == null)
+	public void addFileToQueue(Integer channelId, String fileName) {
+		if (fileName == null || channelId == null)
 			return;
 		
 		ApplicationChannel applicationChannel = applicationChannelDao
 			.retrieveById(channelId);
 		
-		String fileName = saveFile(applicationChannel, file);
-
 		Integer appId = applicationChannel.getApplication().getId();
 		Integer orgId = applicationChannel.getApplication()
 				.getOrganization().getId();
@@ -125,10 +118,17 @@ public class ScanServiceImpl implements ScanService {
 		queueSender.addScanToQueue(fileName, channelId, orgId, appId);
 	}
 
-	private String saveFile(ApplicationChannel applicationChannel, MultipartFile file) {
-		if (applicationChannel == null || applicationChannel.getId() == null || 
-				file == null) {
+	@Override
+	public String saveFile(Integer channelId, MultipartFile file) {
+		if (channelId == null || file == null) {
 			log.warn("The scan upload file failed to save, it had null input.");
+			return null;
+		}
+		
+		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+		
+		if (applicationChannel == null) {
+			log.warn("Unable to retrieve Application Channel - scan save failed.");
 			return null;
 		}
 		
@@ -174,8 +174,8 @@ public class ScanServiceImpl implements ScanService {
 	}
 	
 	@Override
-	public String checkFile(Integer channelId, MultipartFile file) {
-		if (channelId == null || file == null) {
+	public String checkFile(Integer channelId, String fileName) {
+		if (channelId == null || fileName == null) {
 			log.warn("Scan file checking failed because there was null input.");
 			return ChannelImporter.NULL_INPUT_ERROR;
 		}
@@ -197,13 +197,8 @@ public class ScanServiceImpl implements ScanService {
 			log.warn("No importer could be loaded for the ApplicationChannel.");
 			return ChannelImporter.OTHER_ERROR;
 		}
-		
-		try {
-			importer.setFile(file);
-		} catch (IOException e) {
-			log.warn("There was an IO error setting the file for the scan.", e);
-			return ChannelImporter.OTHER_ERROR;
-		}
+				
+		importer.setFileName(fileName);
 		
 		String result = importer.checkFile();
 		
@@ -216,11 +211,8 @@ public class ScanServiceImpl implements ScanService {
 	}
 
 	@Override
-	public Integer saveEmptyScanAndGetId(Integer channelId, MultipartFile file) {
-		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+	public Integer saveEmptyScanAndGetId(Integer channelId, String fileName) {
 			
-		String fileName = saveFile(applicationChannel, file);
-		
 		if (fileName == null) {
 			log.warn("Saving the empty file failed. Check filesystem permissions.");
 			return null;
@@ -276,64 +268,13 @@ public class ScanServiceImpl implements ScanService {
 				if (!file.delete())
 					file.deleteOnExit();
 			}
+			
 			emptyScanDao.saveOrUpdate(emptyScan);
 		}
 	}
-
+	
 	@Override
-	public String checkRPCFile(Integer channelId, String scanContents) {
-		if (channelId == null || scanContents == null)
-			return ChannelImporter.NULL_INPUT_ERROR;
-		
-		String fileName = null;
-		
-		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
-		
-		if (applicationChannel == null)
-			return ChannelImporter.OTHER_ERROR;
-		
-		if (applicationChannel.getId() != null) {
-			if (applicationChannel.getScanCounter() == null)
-				applicationChannel.setScanCounter(1);
-			fileName = "scan-file-rpc-test-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
-		} else {
-			fileName = "scan-file-rpc-test-" + String.valueOf(random.nextLong());
-		}
-		
-		File diskFile = new File(fileName);
-		
-		byte[] tempContents = Base64.decodeBase64(scanContents.getBytes());
-		try {
-			FileUtils.writeByteArrayToFile(diskFile, tempContents);
-		} catch (IOException e) {
-			log.warn("Writing the RPC file to disk failed.",e);
-		}
-		
-		ChannelImporterFactory factory = new ChannelImporterFactory(
-				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao);
-		
-		ChannelImporter importer = factory
-				.getChannelImporter(applicationChannel);
-		
-		if (importer == null) {
-			if (!diskFile.delete()) {
-				diskFile.deleteOnExit();
-			}
-			return ChannelImporter.OTHER_ERROR;
-		}
-		
-		importer.setFileName(fileName);
-		
-		String result = importer.checkFile();
-		
-		importer.deleteScanFile();
-		
-		if (result == null) {
-			log.warn("The checkFile() method of the importer returned null, check to make sure that it is implemented correctly.");
-			return ChannelImporter.OTHER_ERROR;
-		} else {
-			return result;
-		}
+	public long getFindingCount(Integer scanId) {
+		return scanDao.getFindingCount(scanId);
 	}
 }

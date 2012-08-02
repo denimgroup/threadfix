@@ -81,4 +81,12 @@ public interface FindingDao {
 	 */
 	void delete(Finding finding);
 
+	/**
+	 * 
+	 * @param scanId
+	 * @param page
+	 * @return
+	 */
+	List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId, int page);
+
 }

@@ -3,10 +3,21 @@
 <head>
 	<title>Findings</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<spring:url value="{scanId}/table" var="tableUrl">
+		<spring:param name="scanId" value="${ scan.id }"/>
+	</spring:url>
+	<script type="text/javascript">
+	window.onload = function()
+    {
+		refillElement('#toReplace', '<c:out value="${ tableUrl }"/>', 1);
+    };
+    </script>
 </head>
 
 <body id="apps">
-	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings</h2>
+	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
+	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings</h2>
 
 	<div id="helpText">
 		This page lists various statistics about a set of scan results from one scan file.<br/>
@@ -43,11 +54,14 @@
 		<tbody>
 			<tr>
 				<td class="label">Total Scan Results</td>
-				<td class="inputValue"><c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + fn:length(scan.findings) }"/></td>
+				<td class="inputValue">
+					<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + fn:length(scan.findings) }"/>
+				</td>
 			</tr>
 			<tr>
 				<td class="label">Total Repeat Findings (not included below)</td>
-				<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings (<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
+				<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings 
+									(<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
 			</tr>
 			<tr>
 				<td class="label">Total Findings</td>
@@ -81,8 +95,8 @@
 	</table>
 	<br />
 	
-	<h3>Successfully Mapped Findings:</h3>
-	<table class="formattedTable sortable" id="1">
+	<div id="toReplace">
+	<table class="formattedTable" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
@@ -94,55 +108,12 @@
 			</tr>
 		</thead>
 		<tbody>
-	<c:choose>
-		<c:when test="${ empty scan.mappedFindings }">
 			<tr class="bodyRow">
-				<td colspan="6" style="text-align: center;"> No Findings were mapped to vulnerabilities.</td>
+				<td colspan="6" style="text-align: center;">Loading Findings.</td>
 			</tr>
-		</c:when>
-		<c:otherwise>
-		<c:forEach var="finding" items="${ scan.mappedFindings }">
-			<tr class="bodyRow">
-				<td>
-					<c:out value="${ finding.channelSeverity.name }"/>
-				</td>
-				<td>
-					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
-					<spring:param name="scanId" value="${ scan.id }" />
-						<spring:param name="findingId" value="${ finding.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(findingUrl) }">
-					    <c:out value="${ finding.channelVulnerability.name }"/>
-					</a>
-				</td>
-				<td>
-					<c:out value="${ finding.surfaceLocation.path }"/>
-				</td>
-				<td>
-					<c:out value="${ finding.surfaceLocation.parameter }"/>
-				</td>
-				<td>
-					<spring:url value="../vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				    	<spring:param name="vulnerabilityId" value="${ finding.vulnerability.id }" />
-			    	</spring:url>
-			    	<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-						<c:out value="${ finding.vulnerability.id }"/>
-					</a>
-				</td>
-				<td>
-					<c:out value="${ finding.numberMergedResults }"/>
-				</td>
-			</tr>
-		</c:forEach>
-		</c:otherwise>
-	</c:choose>
 		</tbody>
-		<tfoot>
-			<tr class="footer">
-				<td colspan="4" class="pagination" style="text-align:right"></td>
-			</tr>
-		</tfoot>
 	</table>
+	</div>
 	
 	<h3>Unmapped Findings:</h3>
 	<table class="filteredTable sortable" id="2">

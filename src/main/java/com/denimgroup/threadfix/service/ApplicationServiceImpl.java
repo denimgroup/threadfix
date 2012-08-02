@@ -49,14 +49,14 @@ import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
 @Service
 @Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
 	
 	private String invalidProjectName = "The selected Project Name was invalid. " +
-			"Please ensure that your Defect Tracker contains at least one project " +
-			"and select one here.";
+			"Either a non-existent project or a project with no components was selected.";
 	
 	private String invalidCredentials = "The User / password combination " +
 			"(or possibly the Defect Tracker endpoint URL)";
@@ -393,5 +393,51 @@ public class ApplicationServiceImpl implements ApplicationService {
 					new String [] { "WAF Choice" }, null);
 
 		validateApplicationDefectTracker(application, result);
+	}
+
+	@Override
+	public List<Vulnerability> getVulnTable(int appId, TableSortBean bean) {
+		if (bean != null) {
+			int page = bean.getPage();
+			int sort = bean.getSort();
+			int field = bean.getField();
+			
+			String description = null, severity = null, path = null, param = null;
+						
+			if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
+				description = bean.getDescriptionFilter();
+			
+			if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
+				severity = bean.getSeverityFilter();
+			
+			if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
+				path = bean.getLocationFilter();
+			
+			if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
+				param = bean.getParameterFilter();
+						
+			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, page, sort, field,
+										description, severity, path, param);
+		} else {
+			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null);
+		}
+	}
+	
+	public long getCount(Integer appId, TableSortBean bean) {
+		String description = null, severity = null, path = null, param = null;
+				
+		if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
+			description = bean.getDescriptionFilter();
+		
+		if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
+			severity = bean.getSeverityFilter();
+		
+		if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
+			path = bean.getLocationFilter();
+		
+		if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
+			param = bean.getParameterFilter();
+		
+		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param);
 	}
 }

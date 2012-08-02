@@ -67,11 +67,16 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
-		log.info("Made it into WhiteHat getScan() method.");
+		log.info("Retrieving a WhiteHat scan.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKeyString();
 		
 		InputStream labelSiteIdStream = httpGet(SITES_URL + "?key=" + apiKey);
+		
+		if (labelSiteIdStream == null) {
+			log.warn("Received a bad response from WhiteHat servers, returning null.");
+			return null;
+		}
 		
 		String appName = remoteProviderApplication.getNativeId();
 		
@@ -93,11 +98,23 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		log.info("Requesting site ID " + siteId);
 
 		inputStream = httpGet(url);
+		
+		if (inputStream == null) {
+			log.warn("Received a bad response from WhiteHat servers, returning null.");
+			return null;
+		}
 
 		WhiteHatVulnerabilitiesParser scanParser = new WhiteHatVulnerabilitiesParser();
 		Scan resultScan = parseSAXInput(scanParser);
 		
+		if (resultScan == null) {
+			log.warn("No scan was parsed, returning null.");
+			return null;
+		}
+		
 		resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+		
+		log.info("WhiteHat scan successfully parsed.");
 		
 		return resultScan;
 	}

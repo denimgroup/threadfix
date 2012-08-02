@@ -3,8 +3,14 @@
 <head>
 	<title><c:out value="${ application.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/confirm.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/table_filter_app_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<script type="text/javascript">
+	window.onload = function()
+    {
+		toggleFilters(false, null, null);//refillElement('#toReplace', '${ application.id }/table', 1);
+    };
+    </script>
+	
 </head>
 
 <body id="apps">
@@ -111,9 +117,9 @@
 	<c:if test="${ not empty application.scans }"> 
 	<h3 style="padding-top:10px;">All Open Vulnerabilities</h3>
 	
-	<p>Listing <c:out value="${ fn:length(application.activeVulnerabilities ) }"/>
+	<p>Listing <c:out value="${ numVulns }"/>
 		<c:choose>
-			<c:when test="${ fn:length(application.activeVulnerabilities ) == 1 }">
+			<c:when test="${ numVulns == 1 }">
 				vulnerability
 			</c:when>
 			<c:otherwise>
@@ -169,6 +175,10 @@
    	</spring:url>
 	<form:form modelAttribute="falsePositiveModel" method="post" action="${ fn:escapeXml(markFPUrl) }">
 	
+	<spring:url value="{appId}/table" var="tableUrl">
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	
 	<table class="dataTable">
 			<tbody>
 				<tr>
@@ -192,116 +202,53 @@
 									<td style="padding-left:5px; padding-top:3px"><input type="text" id="parameterFilterInput" /></td>
 								</tr>
 								<tr>
-									<td><a href="#" onClick="Filter();">Filter</a>&nbsp;|&nbsp;</td>
-									<td><a href="#" onClick="ClearFilters();">Clear Filters</a>&nbsp;|&nbsp;</td>
-									<td><a href="#" onClick="toggleFilters(false);">Hide Filters</a></td>
+									<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
+									<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
+									<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
 								</tr>
 							</table>
 						</div>
 						<div id="showFilters" style="display:none;">
-							<a href="#" onClick="toggleFilters(true);">Show Filters</a>
+							<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
 						</div>
-						<script>toggleFilters(false);</script>
+						<script>toggleFilters(false, '#toReplace', '${ tableUrl }');</script>
 					</td>
 				</tr>
 			</tbody>
 		</table>
+    
+    <div id="toReplace">
+   
+		<table class="formattedTable sortable filteredTable" id="anyid">
+			<thead>
+				<tr>
+					<th class="first">If Merged</th>
+				    <th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 1)">Vulnerability Name</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 2)">Severity</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 3)">Path</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 4)">Parameter</th>
+					<th>Defect</th>
+					<th>Defect Status</th>
+					<th>WAF Rule</th>
+					<th class="unsortable">WAF Events</th>
+					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="bodyRow">
+					<td colspan="10" style="text-align:center;">Loading Vulnerabilities.</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class="footer">
+					<td colspan="10" style="text-align:right">
+						<input type="submit" value="Mark Selected as False Positives">
+					</td>
+				</tr>
+			</tfoot>
+		</table>
 	
-	<table class="formattedTable sortable filteredTable" id="anyid">
-		<thead>
-			<tr>
-				<th class="first">If Merged</th>
-			    <th>Vulnerability Name</th>
-				<th>Severity</th>
-				<th>Path</th>
-				<th>Parameter</th>
-				<th>Defect</th>
-				<th>Defect Status</th>
-				<th>WAF Rule</th>
-				<th class="unsortable">WAF Events</th>
-				<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
-			</tr>
-		</thead>
-		<tbody>
-		<c:if test="${ empty application.activeVulnerabilities }">
-			<tr class="bodyRow">
-				<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
-			</tr>
-		</c:if>
-		<c:forEach var="vuln" items="${application.activeVulnerabilities}" varStatus="vulnStatus">
-			<tr class="bodyRow">
-				<td>
-					<c:if test="${ fn:length(vuln.findings) > 1 }">
-						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				        	<spring:param name="appId" value="${ application.id }" />
-					    	<spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    	</spring:url>
-				    	<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-				        	<c:out value="${ fn:length(vuln.findings) }"/>
-				    	</a>
-					</c:if>
-				</td>
-				<td>
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				        <spring:param name="appId" value="${ application.id }" />
-					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    </spring:url>
-				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }"><c:out value="${ vuln.genericVulnerability.name }"/></a>
-				</td>
-				<td id="severity${ vulnStatus.count }"><c:out value="${ vuln.genericSeverity.name }"/></td>
-				<td id="path${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.path }"/></td>
-				<td id="parameter${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
-				<td>
-				<c:if test="${ not empty vuln.defect }">
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">
-				        <spring:param name="appId" value="${ application.id }" />
-					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    </spring:url>
-					<a href="${ fn:escapeXml(defectUrl) }">
-				        <c:out value="${ vuln.defect.nativeId }" />
-				    </a>
-				</c:if>
-				</td>
-				<td>
-				<c:choose>
-					<c:when test="${ not empty vuln.defect }">
-						<c:out value="${ vuln.defect.status }"/>
-					</c:when>
-					<c:otherwise>
-						No Defect
-					</c:otherwise>
-				</c:choose>
-				</td>
-				<td>
-			<c:choose>
-				<c:when test="${ not empty vuln.wafRules }">
-					Yes
-				</c:when>
-				<c:otherwise>
-					No
-				</c:otherwise>
-			</c:choose>
-				</td>
-				<td>
-					<c:out value="${ vuln.noOfSecurityEvents }" />
-				</td>
-				<td>
-					<form:checkbox path="vulnerabilityIds" value="${ vuln.id }"/>									
-				</td>
-			</tr>
-		</c:forEach>
-		</tbody>
-		<tfoot>
-			<tr class="footer">
-				<td colspan="10" class="pagination" style="text-align:right"></td>
-			</tr>
-			<tr class="footer">
-				<td colspan="10" style="text-align:right">
-					<input type="submit" value="Mark Selected as False Positives">
-				</td>
-			</tr>
-		</tfoot>
-	</table>
+	</div>
 	
 	</form:form>
 

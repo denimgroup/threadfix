@@ -46,6 +46,7 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
+import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
 @Service
 @Transactional(readOnly = true)
@@ -224,5 +225,9 @@ public class FindingServiceImpl implements FindingService {
 	}
 	
 	
+	@Override
+	public List<Finding> getFindingTable(Integer scanId, TableSortBean bean) {
+		return findingDao.retrieveFindingsByScanIdAndPage(scanId, bean.getPage());
+	}
 
 }

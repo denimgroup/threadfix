@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,20 +61,14 @@ public class DefectsController {
 		this.applicationService = applicationService;
 	}
 
-	@ModelAttribute("projectMetadata")
-	public ProjectMetadata populateprojectMetadata(@PathVariable("appId") int appId) {
-		Application application = applicationService.loadApplication(appId);
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
-		return dt.getProjectMetadata();
-	}
-
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView defectList(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			ModelMap model) {
-		return defectSubmissionPage(orgId, appId, null);
+			ModelMap model, HttpServletRequest request) {
+		return defectSubmissionPage(orgId, appId, null, request);
 	}
 	
-	private ModelAndView defectSubmissionPage(int orgId, int appId, String message) {
+	private ModelAndView defectSubmissionPage(int orgId, int appId, String message,
+			HttpServletRequest request) {
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
@@ -81,6 +77,22 @@ public class DefectsController {
 		
 		ModelAndView modelAndView = new ModelAndView("defects/index");
 
+		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+		ProjectMetadata data = null;
+
+		if (dt != null) {
+			data = dt.getProjectMetadata();
+		}
+		
+		if (data == null || data.getComponents() == null || 
+				data.getComponents().size() == 0) {
+			request.getSession().setAttribute("error", 
+					"No components were found for the configured Defect Tracker project. " +
+					"Please configure your project so that is has a component.");
+			return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
+		}
+		
+		modelAndView.addObject("projectMetadata", data);
 		modelAndView.addObject("message", message);
 		modelAndView.addObject(new DefectViewModel());
 		modelAndView.addObject(application);
@@ -89,13 +101,14 @@ public class DefectsController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView onSubmit(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			@ModelAttribute DefectViewModel defectViewModel, ModelMap model) {
+			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
+			HttpServletRequest request) {
 		
 		if (defectViewModel.getVulnerabilityIds() == null
 				|| defectViewModel.getVulnerabilityIds().size() == 0) {
 			log.info("No vulnerabilities selected for Defect submission.");
 			String message = "You must select at least one vulnerability";
-			return defectSubmissionPage(orgId, appId, message);
+			return defectSubmissionPage(orgId, appId, message, request);
 		}
 
 		queueSender.addSubmitDefect(defectViewModel.getVulnerabilityIds(),

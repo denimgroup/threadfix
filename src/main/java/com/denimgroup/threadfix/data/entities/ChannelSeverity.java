@@ -44,6 +44,7 @@ public class ChannelSeverity extends BaseEntity {
 	private ChannelType channelType;
 	private String name;
 	private String code;
+	private int numericValue;
 	private SeverityMap severityMap;
 
 	private List<Finding> findings;
@@ -95,5 +96,13 @@ public class ChannelSeverity extends BaseEntity {
 
 	public void setFindings(List<Finding> findings) {
 		this.findings = findings;
+	}
+
+	public int getNumericValue() {
+		return numericValue;
+	}
+
+	public void setNumericValue(int numericValue) {
+		this.numericValue = numericValue;
 	}
 }

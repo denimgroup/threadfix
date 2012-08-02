@@ -56,28 +56,19 @@ public interface ScanService {
 	 * filename and ApplicationChannel id.
 	 * 
 	 * @param channelId
-	 * @param file
+	 * @param fileName
 	 * @param queueSender
 	 */
-	void saveFileAndAddToQueue(Integer channelId, MultipartFile file);
+	void addFileToQueue(Integer channelId, String fileName);
 	
 	/**
 	 * This method delegates the checking to the appropriate importer and returns the code
 	 * that the importer returns.
 	 * @param channelId
-	 * @param file
-	 * @return
-	 */
-	String checkFile(Integer channelId, MultipartFile file);
-	
-	/**
-	 * 
-	 * @param channelId
-	 * @param scanContents
 	 * @param fileName
 	 * @return
 	 */
-	String checkRPCFile(Integer channelId, String scanContents);
+	String checkFile(Integer channelId, String fileName);
 	
 	/**
 	 * 
@@ -85,7 +76,7 @@ public interface ScanService {
 	 * @param file
 	 * @return
 	 */
-	Integer saveEmptyScanAndGetId(Integer channelId, MultipartFile file);
+	Integer saveEmptyScanAndGetId(Integer channelId, String fileName);
 
 	/**
 	 * 
@@ -98,5 +89,20 @@ public interface ScanService {
 	 * @param emptyScanId
 	 */
 	void deleteEmptyScan(Integer emptyScanId);
-	
+
+	/**
+	 * 
+	 * @param channelId
+	 * @param file
+	 * @return
+	 */
+	String saveFile(Integer channelId, MultipartFile file);
+
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getFindingCount(Integer scanId);
+
 }

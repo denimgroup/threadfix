@@ -379,8 +379,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		if (earliestFinding != null) {
+			earliestFinding.getVulnerability().setSurfaceLocation(
+					earliestFinding.getSurfaceLocation());
 			earliestFinding.setFirstFindingForVuln(true);
 			findingDao.saveOrUpdate(earliestFinding);
+			vulnerabilityDao.saveOrUpdate(earliestFinding.getVulnerability());
 		}
 		
 		if (finding != null && !earliestFinding.getId().equals(finding.getId())) {
@@ -567,6 +570,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			vuln.getFindings().removeAll(findingsToRemove);
 			
 			if (changeFirstFinding && newFirstFinding != null) {
+				if (newFirstFinding.getVulnerability() != null) {
+					newFirstFinding.getVulnerability().setSurfaceLocation(
+						newFirstFinding.getSurfaceLocation());
+				}
+		
 				newFirstFinding.setFirstFindingForVuln(true);
 				log.info("Updating number new vulnerabilities for Scan with ID " + 
 						newFirstFinding.getScan().getId());

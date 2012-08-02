@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service.channel;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,11 +53,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -139,24 +136,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	@Override
 	public void setChannel(ApplicationChannel applicationChannel) {
 		this.applicationChannel = applicationChannel;
-	}
-
-	/**
-	 * Sets the filename containing the scan results.
-	 * 
-	 * @param file
-	 *            The file containing the scan results.
-	 * @throws IOException
-	 *             Thrown if the file cannot be accessed.
-	 */
-	@Override
-	public void setFile(MultipartFile file) {
-		try {
-			this.inputFileName = file.getOriginalFilename();
-			this.inputStream = file.getInputStream();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -476,10 +455,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return null;
 
 		if (channelVulnerabilityMap.containsKey(code)) {
-			// CSVLogFile used to capture output for fortify csv and other
-			// importers as necessary.
-			// writeCSVLogFile(code, channelVulnerabilityMap.get(code),
-			// channelVulnerabilityMap.get(code).getName());
 			return channelVulnerabilityMap.get(code);
 		} else {
 			ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByCode(channelType, code);
@@ -490,7 +465,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				return null;
 			} else {
 				if (vuln.getGenericVulnerability() == null) {
-					log.warn("The " + channelType.getName() + " channel vulnerability with code "
+					log.info("The " + channelType.getName() + " channel vulnerability with code "
 							+ code + " has no generic mapping.");
 				}
 			}
@@ -669,15 +644,25 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return NULL_INPUT_ERROR;
 		}
 		
-		if (doSAXExceptionCheck && isBadXml(inputStream)) {
-			log.warn("Bad XML format - ensure correct, uniform encoding.");
-			return BADLY_FORMED_XML;
+		if (doSAXExceptionCheck) {
+			if (isBadXml(inputStream)) {
+				log.warn("Bad XML format - ensure correct, uniform encoding.");
+				return BADLY_FORMED_XML;
+			}
+			try {
+				inputStream = new FileInputStream(inputFileName);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		readSAXInput(handler, FILE_CHECK_COMPLETED);
-
-		if (inputFileName != null) 
-			deleteScanFile();
+		try {
+			readSAXInput(handler, FILE_CHECK_COMPLETED);
+			inputStream = new FileInputStream(inputFileName);
+		} catch (FileNotFoundException e) {
+			log.error("The scan file was not found on the filesystem after the test. " +
+					"Normal scan processing will probably fail.", e);
+		}
 		
 		log.info(testStatus);
 		return testStatus;
@@ -691,8 +676,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		try {
 			readSAXInput(new DefaultHandler());
 		} catch (SAXException e) {
+			log.warn("Trying to read XML returned the error " + e.getMessage());
 			return true;
 		} catch (IOException e) {
+			log.warn("Trying to read XML returned the error " + e.getMessage());
 			return true;
 		}
 
@@ -720,11 +707,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(handler);
 		xmlReader.setErrorHandler(handler);
-		
-		byte [] byteArray = IOUtils.toByteArray(inputStream);
-		
+				
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
-		inputStream = new BufferedInputStream(new ByteArrayInputStream(byteArray));
+		inputStream = new BufferedInputStream(inputStream);
 		
 		// UTF-8 contains 3 characters at the start of a file, which is a problem.
 		// The SAX parser sees them as characters in the prolog and throws an exception.
@@ -741,7 +726,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		source.setEncoding("UTF-8");
 		xmlReader.parse(source);
 		closeInputStream();
-		inputStream = new ByteArrayInputStream(byteArray);
 	}
 	
 	/**

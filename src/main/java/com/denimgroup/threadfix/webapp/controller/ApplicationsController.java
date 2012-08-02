@@ -104,13 +104,16 @@ public class ApplicationsController {
 			}
 		}
 		
-		if (application.getVulnerabilities() != null && application.getVulnerabilities().size() > 0) {
+		long numVulns = applicationService.getCount(appId, new TableSortBean());
+		
+		if (numVulns > 0) {
 			List<Vulnerability> vulns = vulnerabilityService.getFalsePositiveVulns(application);
 			if (vulns != null) {
 				falsePositives = vulns.size();
 			}
 		}
-		
+        
+		model.addAttribute("numVulns", numVulns);
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);
 		model.addAttribute("error", error);
@@ -141,7 +144,6 @@ public class ApplicationsController {
 				applicationService.deleteById(appId);
 				status.setComplete();
 			} else if (application.isActive()) {
-				
 				applicationService.deactivateApplication(application);
 				status.setComplete();
 			}
@@ -188,5 +190,26 @@ public class ApplicationsController {
 		}
 		
 		return result.substring(1);
+	}
+	
+	@RequestMapping(value="/{appId}/table", method = RequestMethod.POST)
+	public String getTableVulns(@PathVariable("appId") Integer appId,
+			@RequestBody TableSortBean bean,
+			ModelMap model) {
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}		
+		
+		long numVulns = applicationService.getCount(appId, bean);
+		long numPages = (numVulns / 100);
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("numVulns", numVulns);
+		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+		model.addAttribute(application);
+		return "applications/vulnTable";
 	}
 }

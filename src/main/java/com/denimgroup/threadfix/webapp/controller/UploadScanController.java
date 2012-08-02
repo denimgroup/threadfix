@@ -73,7 +73,8 @@ public class UploadScanController {
 		
 		if (application.getUploadableChannels() == null || application.getUploadableChannels().size() == 0) {
 			log.info("The Application didn't have any channels, redirecting to the Add Channel page.");
-			return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/addChannel");
+			return new ModelAndView("redirect:/organizations/" + orgId + 
+									"/applications/" + appId + "/addChannel");
 		}
 		
 		ModelAndView mav = new ModelAndView("scans/upload");
@@ -83,16 +84,25 @@ public class UploadScanController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, HttpServletRequest request,
+	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, 
+			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		
 		String returnValue = null;
 		
+		String fileName = scanService.saveFile(channelId, file);
+		
+		if (fileName == null || fileName.equals("")) {
+			log.warn("Saving the file to disk did not return a file name. Returning to scan upload page.");
+			return index(appId, orgId, "Unable to save the file to disk.");
+		}
+		
 		try {
-			returnValue = scanService.checkFile(channelId, file);
+			returnValue = scanService.checkFile(channelId, fileName);
 		} catch (OutOfMemoryError e) {
 			log.error("OutOfMemoryError thrown while checking file. Logging and re-throwing.", e);
-			request.getSession().setAttribute("scanErrorMessage", "OutOfMemoryError encountered while checking file.");
+			request.getSession().setAttribute("scanErrorMessage", 
+					"OutOfMemoryError encountered while checking file.");
 			throw e;
 		}
 		
@@ -104,23 +114,26 @@ public class UploadScanController {
 		}
 		
 		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue)) {
-			scanService.saveFileAndAddToQueue(channelId, file);
+			scanService.addFileToQueue(channelId, fileName);
 		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue)) {
-			Integer emptyScanId = scanService.saveEmptyScanAndGetId(channelId, file);
+			Integer emptyScanId = scanService.saveEmptyScanAndGetId(channelId, fileName);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");
 			confirmPage.addObject("scanId", emptyScanId);
 			return confirmPage;
 		} else {
-			if (app.getId() != null && app.getOrganization() != null && app.getOrganization().getId() != null) {
+			if (app.getId() != null && app.getOrganization() != null 
+					&& app.getOrganization().getId() != null) {
 				return index(app.getOrganization().getId(), app.getId(), returnValue);
 			} else {
-				log.warn("The request included an invalidly configured Application, throwing ResourceNotFoundException.");
+				log.warn("The request included an invalidly configured " +
+						"Application, throwing ResourceNotFoundException.");
 				throw new ResourceNotFoundException();
 			}
 		}
 
 		if (app.getOrganization() != null) {
-			request.getSession().setAttribute("scanSuccessMessage", "The scan was successfully added to the queue for processing.");
+			request.getSession().setAttribute("scanSuccessMessage", 
+					"The scan was successfully added to the queue for processing.");
 			return new ModelAndView("redirect:/organizations/" + app.getOrganization().getId() + 
 					"/applications/" + app.getId());
 		} else {
@@ -145,7 +158,8 @@ public class UploadScanController {
 		}
 
 		if (app.getOrganization() != null && app.getOrganization().getId() != null) {
-			request.getSession().setAttribute("scanSuccessMessage", "The empty scan was successfully added to the queue for processing.");
+			request.getSession().setAttribute("scanSuccessMessage", 
+					"The empty scan was successfully added to the queue for processing.");
 			return new ModelAndView("redirect:/organizations/" + app.getOrganization().getId() + 
 					"/applications/" + app.getId());
 		} else {

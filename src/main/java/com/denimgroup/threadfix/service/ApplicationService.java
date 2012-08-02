@@ -28,6 +28,8 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
 /**
  * @author bbeverly
@@ -117,6 +119,21 @@ public interface ApplicationService {
 	 * If the project root has been updated, this method updates the associated vulns.
 	 * @param application
 	 */
-	public void updateProjectRoot(Application application);
+	void updateProjectRoot(Application application);
+
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<Vulnerability> getVulnTable(int appId, TableSortBean bean);
+
+	/**
+	 * 
+	 * @param appId
+	 * @param bean
+	 * @return
+	 */
+	long getCount(Integer appId, TableSortBean bean);
 
 }

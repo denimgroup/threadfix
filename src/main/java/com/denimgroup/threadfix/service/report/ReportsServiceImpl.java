@@ -209,8 +209,7 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.exportReport();
 
 		} catch (JRException ex) {
-			log.error("Encountered a Jasper exception, the report was probably not exported correctly.");
-			ex.printStackTrace();
+			log.error("Encountered a Jasper exception, the report was probably not exported correctly.",ex);
 		}
 
 		log.debug("Returning report.");
@@ -219,8 +218,7 @@ public class ReportsServiceImpl implements ReportsService {
 			if (inputStream != null)
 				inputStream.close();
 		} catch (IOException e) {
-			log.warn("Failed to close an InputStream");
-			e.printStackTrace();
+			log.warn("Failed to close an InputStream", e);
 		}
 		
 		return report;
@@ -267,9 +265,14 @@ public class ReportsServiceImpl implements ReportsService {
 		return returnChannels;
 	}
 	
+	// We don't want to count multiple findings that merged to one vuln from the same channel
+	// it skews the numbers.
 	public Set<Integer> getFindingsToSkip(List<Integer> applicationIdList) {
 		Set<Integer> findingIdsToSkip = new HashSet<Integer>();
 		Set<Integer> vulnSeenChannels = new HashSet<Integer>();
+		
+		// MySQL doesn't work if there are no elements here.
+		findingIdsToSkip.add(0);
 		
 		for (Integer appId : applicationIdList) {
 			Application app = applicationDao.retrieveById(appId);
@@ -330,7 +333,7 @@ public class ReportsServiceImpl implements ReportsService {
 			String location = String.valueOf(base + (count*increment));
 			
 			String sumLine = ", SUM(CASE WHEN scan.applicationChannel.channelType.id = " 
-				+ id + " AND ID NOT IN ( \\$P\\{badFindingIds\\} ) THEN 1 ELSE 0 END) as count_" + id + "\n";
+				+ id + " AND id NOT IN ( \\$P\\{badFindingIds\\} ) THEN 1 ELSE 0 END) as count_" + id + "\n";
 			string = string.replaceFirst("FROM Finding", sumLine + "FROM Finding");
 			
 			String fieldTag = "<field name=\"count_" + id + "\" class=\"java.lang.Long\"/>\n";

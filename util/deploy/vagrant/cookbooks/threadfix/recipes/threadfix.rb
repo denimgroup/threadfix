@@ -77,20 +77,6 @@ script "deploy WAR" do
   EOH
 end
 
-script "move_files" do
-  interpreter "bash"
-  user "root"
-  cwd "/home/vagrant"
-  code <<-EOH
-    service tomcat6 stop
-	mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/jdbc.properties
-	mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml
-	mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/log4j.xml.deploy /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/log4j.xml
-	chown tomcat6 /var/lib/tomcat6
-	service tomcat6 start
-  EOH
-end
-
 script "import_db" do
   interpreter "bash"
   user "root"

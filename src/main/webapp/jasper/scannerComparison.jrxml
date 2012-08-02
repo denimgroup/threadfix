@@ -65,7 +65,7 @@
 			<staticText>
 				<reportElement x="10" y="31" width="170" height="20"/>
 				<textElement/>
-				<text><![CDATA[Total Vulnerabilities for Application:]]></text>
+				<text><![CDATA[Total Vulnerabilities:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="180" y="31" width="100" height="20"/>

@@ -28,6 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
 /**
  * @author bbeverly
@@ -92,5 +93,13 @@ public interface FindingService {
 	 * @return
 	 */
 	String checkRequestForFindingParameters(HttpServletRequest request);
+
+	/**
+	 * 
+	 * @param scanId
+	 * @param bean
+	 * @return
+	 */
+	List<Finding> getFindingTable(Integer scanId, TableSortBean bean);
 
 }

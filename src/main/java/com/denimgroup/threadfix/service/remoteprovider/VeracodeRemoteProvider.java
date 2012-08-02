@@ -71,6 +71,11 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
+		if (remoteProviderApplication == null || 
+				remoteProviderApplication.getApplicationChannel() == null) {
+			log.error("Veracode getScan() called with invalid parameters. Returning null");
+			return null;
+		}
 		
 		username = remoteProviderApplication.getRemoteProviderType().getUsername();
 		password = remoteProviderApplication.getRemoteProviderType().getPassword();
@@ -92,10 +97,23 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		// This block tries to parse the scan corresponding to the build.
 		inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
 		
+		if (inputStream == null) {
+			log.warn("Received a bad response from Veracode servers, returning null.");
+			return null;
+		}
+		
 		VeracodeSAXParser scanParser = new VeracodeSAXParser();
 		Scan resultScan = parseSAXInput(scanParser);
+		
+		if (resultScan == null) {
+			log.warn("No scan was parsed, returning null.");
+			return null;
+		}
+		
 		resultScan.setImportTime(date);
 		resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+		
+		log.info("Veracode scan was successfully parsed.");
 		
 		return resultScan;
 	}
@@ -108,6 +126,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			return null;
 		}
 		
+		log.info("Fetching Veracode applications.");
+		
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
 		
@@ -116,6 +136,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		stream = getUrl(GET_APP_BUILDS_URI,username,password);
 		
 		if (stream == null) {
+			log.warn("Got a bad response from Veracode. Check your username and password.");
 			return null;
 		}
 		
@@ -129,6 +150,12 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		if (parser.list != null && parser.list.size() > 0) {
+			log.info("Number of Veracode applications found: " + parser.list.size());
+		} else {
+			log.warn("No Veracode applications were found. Check your configuration.");
 		}
 		
 		return parser.list;

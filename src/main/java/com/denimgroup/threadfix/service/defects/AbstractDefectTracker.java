@@ -23,11 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
@@ -109,7 +121,7 @@ public abstract class AbstractDefectTracker {
 	 * @param metadata
 	 * @return
 	 */
-	protected String makeDescription(final List<Vulnerability> vulnerabilities, final DefectMetadata metadata) {
+	protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
 
 		final StringBuffer stringBuilder = new StringBuffer(128);
 
@@ -139,6 +151,145 @@ public abstract class AbstractDefectTracker {
 			}
 		}
 		return stringBuilder.toString();
+	}
+	
+	//The following methods help with REST interfaces.
+	protected InputStream getUrl(String urlString, String username, String password) {
+		URL url = null;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		InputStream is = null;
+		HttpsURLConnection m_connect;
+		try {
+			m_connect = (HttpsURLConnection) url.openConnection();
+
+			setupAuthorization(m_connect, username, password);
+			
+			m_connect.addRequestProperty("Content-Type", "application/json");
+			m_connect.addRequestProperty("Accept", "application/json");
+
+			is = m_connect.getInputStream();
+			
+			return is;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return is;
+	}
+	
+	protected String getUrlAsString(String urlString, String username, String password) {
+		InputStream responseStream = getUrl(urlString,username,password);
+		
+		if (responseStream == null) {
+			return null;
+		}
+		
+		String test = null;
+		try {
+			test = IOUtils.toString(responseStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return test;
+	}
+	
+	protected InputStream postUrl(String urlString, String data, String username, String password) {
+		URL url = null;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		HttpsURLConnection m_connect;
+		try {
+			m_connect = (HttpsURLConnection) url.openConnection();
+
+			setupAuthorization(m_connect, username, password);
+			
+			m_connect.addRequestProperty("Content-Type", "application/json");
+			m_connect.addRequestProperty("Accept", "application/json");
+			
+			m_connect.setDoOutput(true);
+		    OutputStreamWriter wr = new OutputStreamWriter(m_connect.getOutputStream());
+		    wr.write(data);
+		    wr.flush();
+
+			InputStream is = m_connect.getInputStream();
+			
+			return is;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected String postUrlAsString(String urlString, String data, String username, String password) {
+		InputStream responseStream = postUrl(urlString,data,username,password);
+		
+		if (responseStream == null) {
+			return null;
+		}
+		
+		String test = null;
+		try {
+			test = IOUtils.toString(responseStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return test;
+	}
+	
+	protected void setupAuthorization(HttpsURLConnection connection,
+			String username, String password) {
+		String login = username + ":" + password;
+		String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+		//String encodedLogin = Base64.encodeBase64String(login.getBytes());
+		connection.setRequestProperty("Authorization", "Basic " + encodedLogin);
+	}
+	
+	protected JSONArray getJSONArray(String responseContents) {
+		try {
+			return new JSONArray(responseContents);
+		} catch (JSONException e) {
+			log.warn("JSON Parsing failed.");
+			return null;
+		}
+	}
+	
+	/**
+	 * Convenience method to wrap the exception catching.
+	 * @param responseContents
+	 * @return
+	 */
+	protected JSONObject getJSONObject(String responseContents) {
+		try {
+			return new JSONObject(responseContents);
+		} catch (JSONException e) {
+			log.warn("JSON Parsing failed.");
+			return null;
+		}
+	}
+	
+	/**
+	 * Convenience method to wrap the exception catching.
+	 * @param object
+	 * @return
+	 */
+	protected Integer getId(JSONObject object) {
+		try {
+			return object.getInt("id");
+		} catch (JSONException e) {
+			log.warn("Failed when trying to parse an ID out of the object.");
+			return null;
+		}
 	}
 
 }

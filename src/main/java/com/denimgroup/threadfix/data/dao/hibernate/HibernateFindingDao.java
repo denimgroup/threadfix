@@ -25,8 +25,11 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -158,4 +161,24 @@ public class HibernateFindingDao implements FindingDao {
 		sessionFactory.getCurrentSession().delete(finding);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId, int page) {
+
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+				Finding.class);
+
+		criteria.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("scan.id", scanId))
+				.createAlias("channelSeverity", "severity")
+				.createAlias("channelVulnerability", "vuln")
+				.createAlias("surfaceLocation", "surface")
+				.setFirstResult((page - 1) * 100)
+				.setMaxResults(100)
+				.addOrder(Order.desc("severity.numericValue"))
+				.addOrder(Order.asc("vuln.name"))
+				.addOrder(Order.asc("surface.path"));
+
+		return criteria.list();
+	}
 }

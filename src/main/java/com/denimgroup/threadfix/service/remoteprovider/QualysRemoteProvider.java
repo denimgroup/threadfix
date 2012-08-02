@@ -161,7 +161,9 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 	@Override
 	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
-		if (remoteProviderApplication.getRemoteProviderType() == null) {
+		if (remoteProviderApplication == null || 
+				remoteProviderApplication.getRemoteProviderType() == null) {
+			log.error("Null input to Qualys getScan(), returning null.");
 			return null;
 		}
 		
@@ -171,26 +173,39 @@ public class QualysRemoteProvider extends RemoteProvider {
 		String appId = mostRecentScanForApp(remoteProviderApplication);
 		
 		if (appId == null || appId.trim().equals("")) {
+			log.warn("The most recent scan for the Qualys application was not valid.");
 			return null;
 		}
 				
 		inputStream = httpGet(GET_SCAN_URL + appId);
+		
+		if (inputStream == null) {
+			log.warn("Got a bad response from Qualys servers. Returning null.");
+			return null;
+		}
 
 		QualysWASSAXParser scanParser = new QualysWASSAXParser();
 		Scan resultScan = parseSAXInput(scanParser);
 		
-		resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-		
-		return resultScan;
+		if (resultScan != null) {
+			log.info("The Qualys scan import was successful.");
+			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+			return resultScan;
+		} else {
+			log.warn("The Qualys scan import failed!!");
+			return null;
+		}
 	}
 
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
 		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
-			log.warn("Insufficient credentials.");
+			log.error("Insufficient credentials given to Qualys fetchApplications().");
 			return null;
 		}
+		
+		log.info("Fetching Qualys applications.");
 		
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
@@ -202,6 +217,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		stream = httpPost(GET_APPS_URL,new String[]{},new String[]{});
 		
 		if (stream == null) {
+			log.warn("Response from Qualys servers was null, check your credentials.");
 			return null;
 		}
 		
@@ -215,6 +231,12 @@ public class QualysRemoteProvider extends RemoteProvider {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		if (parser.list != null && parser.list.size() >0) {
+			log.info("Number of Qualys applications: " + parser.list.size());
+		} else {
+			log.warn("No Qualys applications were found. Check your configuration.");
 		}
 		
 		return parser.list;

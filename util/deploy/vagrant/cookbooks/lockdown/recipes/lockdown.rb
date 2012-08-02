@@ -29,10 +29,14 @@
 # Do extra configuration to forward traffic through mod_jk / mod_security to a backend 
 # tomcat server with security manager on.
 
-execute "update packages" do
+execute "apt-get update" do
   command "apt-get update"
-  command "apt-get -y upgrade"
   action :run
+end
+
+execute "apt-get upgrade" do
+	command "apt-get -y upgrade"
+	action :run
 end
 
 server_package = package "libapache2-mod-jk"

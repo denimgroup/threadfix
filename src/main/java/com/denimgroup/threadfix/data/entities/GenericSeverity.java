@@ -64,6 +64,8 @@ public class GenericSeverity extends BaseEntity {
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
 	private String name;
+	
+	private Integer intValue;
 
 	private List<SeverityMap> severityMapping;
 	private List<Vulnerability> vulnerabilities;
@@ -95,5 +97,14 @@ public class GenericSeverity extends BaseEntity {
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
+	}
+
+	@Column(nullable=false)
+	public Integer getIntValue() {
+		return intValue;
+	}
+
+	public void setIntValue(Integer intValue) {
+		this.intValue = intValue;
 	}
 }

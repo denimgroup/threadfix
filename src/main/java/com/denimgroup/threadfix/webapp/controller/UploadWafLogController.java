@@ -69,7 +69,8 @@ public class UploadWafLogController {
 			throw new ResourceNotFoundException();
 		}
 		
-		if (file == null) {
+		if (file == null || file.getOriginalFilename() == null ||
+				file.getOriginalFilename().equals("")) {
 			return "redirect:/wafs/" + wafId;
 		}
 		

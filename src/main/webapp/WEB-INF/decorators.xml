@@ -1,6 +1,8 @@
 <decorators defaultdir="/decorators">
     <excludes>
     	<pattern>/login*</pattern>
+    	<pattern>/organizations/*/applications/*/table*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
     </excludes>
     <decorator name="default" page="default.jsp">
         <pattern>/*</pattern>

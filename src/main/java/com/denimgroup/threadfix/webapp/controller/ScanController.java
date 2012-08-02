@@ -27,9 +27,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -50,14 +53,17 @@ public class ScanController {
 	private ScanService scanService;
 	private ApplicationService applicationService;
 	private ScanDeleteService scanDeleteService;
+	private FindingService findingService;
 
 	@Autowired
 	public ScanController(ScanService scanService,
 			ApplicationService applicationService,
-			ScanDeleteService scanDeleteService) {
+			ScanDeleteService scanDeleteService,
+			FindingService findingService) {
 		this.scanService = scanService;
 		this.applicationService = applicationService;
 		this.scanDeleteService = scanDeleteService;
+		this.findingService = findingService;
 	}
 
 	@InitBinder
@@ -113,5 +119,25 @@ public class ScanController {
 			}
 		}
 		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
+	}
+	
+	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
+	public String scanTable(Model model,
+			@RequestBody TableSortBean bean,
+			@PathVariable("scanId") Integer scanId) {
+		Scan scan = scanService.loadScan(scanId);
+		if (scan == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+			throw new ResourceNotFoundException();
+		}		
+		
+		long numFindings = scanService.getFindingCount(scanId);
+		long numPages = (numFindings / 100);
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("numFindings", numFindings);
+		model.addAttribute("findingList", findingService.getFindingTable(scanId, bean));
+		model.addAttribute(scan);
+		return "scans/table";
 	}
 }
