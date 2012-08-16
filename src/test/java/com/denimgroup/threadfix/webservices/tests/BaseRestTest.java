@@ -69,6 +69,9 @@ public abstract class BaseRestTest {
 		
 		filePost.setRequestHeader("Accept", "application/json");
 		
+		String result = null;
+		InputStream responseStream = null;
+		
 		try {
 			Part[] parts = new Part[paramNames.length + 1];
 			parts[paramNames.length] = new FilePart("file", file);
@@ -87,10 +90,10 @@ public abstract class BaseRestTest {
 				log.debug("Status was not 200.");
 			}
 			
-			InputStream responseStream = filePost.getResponseBodyAsStream();
+			responseStream = filePost.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
-				return IOUtils.toString(responseStream);
+				result = IOUtils.toString(responseStream);
 			}
 
 		} catch (FileNotFoundException e1) {
@@ -99,9 +102,21 @@ public abstract class BaseRestTest {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (responseStream != null) {
+				try {
+					responseStream.close();
+				} catch (IOException e) {
+					log.warn("IOException encountered while attempting to close a stream.", e);
+				}
+			}
 		}
-
-		return "There was an error and the POST request was not finished.";
+		
+		if (result == null) {
+			return "There was an error and the POST request was not finished.";
+		} else {
+			return result;
+		}
 	}
 
 	public String httpPost(String request, String[] paramNames,

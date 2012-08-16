@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,28 +45,17 @@ public class DefectTrackerFactory {
 	public static boolean checkTrackerUrl(String url, DefectTrackerType type) {
 		STATIC_LOG.info("Checking Defect Tracker URL.");
 		
-		if (type != null && type.getName() != null && url != null) {
+		if (url != null) {
 			
-			String name = type.getName();
-			
-			AbstractDefectTracker tracker = null;
-			
-			DefectTracker emptyTracker = new DefectTracker();
-			emptyTracker.setUrl(url);
-			
-			if (name.equals(DefectTrackerType.JIRA)) {
-				tracker = getJiraDefectTracker(emptyTracker,null,null);
-			} else if (name.equals(DefectTrackerType.BUGZILLA)) {
-				tracker = getBugzillaDefectTracker(emptyTracker,null,null);
-			} else {
-				STATIC_LOG.warn("Defect Tracker type was not found.");
+			AbstractDefectTracker tracker = new DefectTrackerFactory().getTracker(type);
+
+			if (tracker == null) {
 				return false;
 			}
-			
-			if (tracker != null) {
-				STATIC_LOG.info("Passing check to Defect Tracker.");
-				return tracker.hasValidUrl();
-			}
+
+			STATIC_LOG.info("Passing check to Defect Tracker.");
+			tracker.setUrl(url);
+			return tracker.hasValidUrl();
 		}
 		
 		STATIC_LOG.warn("Incorrectly configured Defect Tracker in checkTrackerURL. Returning false.");
@@ -72,7 +64,9 @@ public class DefectTrackerFactory {
 	
 	/**
 	 * Returns an AbstractDefectTracker implementation based on the
-	 * defecttrackertype name.
+	 * DefectTrackerType name.
+	 * 
+	 * Be sure to decrypt the application credentials if you want this to work.
 	 * 
 	 * @param application
 	 * @return
@@ -84,17 +78,15 @@ public class DefectTrackerFactory {
 			log.warn("Application was not configured with a Defect Tracker correctly.");
 			return null;
 		}
-
-		if (application.getDefectTracker().getDefectTrackerType().getName()
-				.equals(DefectTrackerType.JIRA)) {
-			return getJiraDefectTracker(application);
-		} else if (application.getDefectTracker().getDefectTrackerType().getName()
-				.equals(DefectTrackerType.BUGZILLA)) {
-			return getBugzillaDefectTracker(application);
-		} else {
-			log.warn("An unsupported Defect Tracker type was requested.");
+			
+		AbstractDefectTracker tracker = getTracker(application.getDefectTracker()
+															  .getDefectTrackerType());
+		
+		if (tracker == null) {
 			return null;
 		}
+		
+		return configureTracker(tracker, application);
 	}
 
 	public AbstractDefectTracker getTrackerByType(DefectTracker defectTracker, String userName,
@@ -103,96 +95,85 @@ public class DefectTrackerFactory {
 			log.warn("getDefectTrackerByType was given an incorrect type.");
 			return null;
 		}
-		if (defectTracker.getDefectTrackerType().getName().equals(DefectTrackerType.BUGZILLA)) {
-			return getBugzillaDefectTracker(defectTracker, userName, password);
-		} else if (defectTracker.getDefectTrackerType().getName().equals(DefectTrackerType.JIRA)) {
-			return getJiraDefectTracker(defectTracker, userName, password);
+		
+		AbstractDefectTracker tracker = getTracker(defectTracker.getDefectTrackerType());
+		
+		if (tracker == null) {
+			return null;
+		}
+		
+		return configureTracker(tracker, defectTracker.getUrl(), userName, password);
+	}
+	
+	private AbstractDefectTracker getTracker(DefectTrackerType type) {
+		if (type == null || type.getName() == null ) {
+			return null;
+		}
+		
+		if (type.getName().equals(DefectTrackerType.BUGZILLA)) {
+			return new BugzillaDefectTracker();
+		} else if (type.getName().equals(DefectTrackerType.JIRA)) {
+			return new JiraDefectTracker();
 		} else {
-			log.warn("An unsupported Defect Tracker type was requested.");
+			
+			// Must be a legitimate Java identifier
+			if (type.getFullClassName() != null && type.getName().matches("^[A-Za-z_][a-zA-Z0-9_]*$")) {
+				Exception exception = null;
+	
+				log.info("A non-standard Defect Tracker type was requested. Attempting to load using Class.forName()");
+				
+				try {
+					Class<?> customTrackerClass = Class.forName(type.getFullClassName());
+	
+					Constructor<?>[] constructors = customTrackerClass.getConstructors();
+					for (Constructor<?> constructor : constructors) {
+						if (constructor.getParameterAnnotations() != null && constructor.getParameterAnnotations().length == 0) {
+							return (AbstractDefectTracker) constructor.newInstance();
+						}
+					}
+	
+				} catch (ClassNotFoundException e) {
+					exception = e;
+				} catch (IllegalArgumentException e) {
+					exception = e;
+				} catch (InstantiationException e) {
+					exception = e;
+				} catch (IllegalAccessException e) {
+					exception = e;
+				} catch (InvocationTargetException e) {
+					exception = e;
+				}
+	
+				if (exception != null) {
+					log.error("The custom importer has not been correctly added. " +
+							"Put the JAR in the lib directory of threadfix under the webapps folder in tomcat.", exception);
+				}
+			}
+				
+			log.warn("Failed to load a Defect Tracker implementation.");
 			return null;
 		}
 	}
 
-	/**
-	 * Gets a Bugzilla defect tracker using credentials from an
-	 * applicationdefecttracker.
-	 * 
-	 * @param application
-	 * @return
-	 */
-	public BugzillaDefectTracker getBugzillaDefectTracker(Application application) {
-		if (application == null || application.getDefectTracker() == null) {
-			return null;
-		}
+	private AbstractDefectTracker configureTracker(AbstractDefectTracker tracker, String url, 
+			String username, String password) {
+		
+		tracker.setUrl(url);
+		tracker.setUsername(username);
+		tracker.setPassword(password);
 
-		BugzillaDefectTracker bugzilla = new BugzillaDefectTracker();
-		bugzilla.setServerPassword(application.getPassword());
-		bugzilla.setServerURL(application.getDefectTracker().getUrl());
-		bugzilla.setServerUsername(application.getUserName());
-		bugzilla.setServerProject(application.getProjectName());
-		bugzilla.setServerProjectId(application.getProjectId());
-
-		return bugzilla;
+		return tracker;
 	}
+	
+	private AbstractDefectTracker configureTracker(
+			AbstractDefectTracker tracker, Application application) {
 
-	/**
-	 * Gets a Bugzilla defect tracker using user name, password, and project
-	 * name
-	 * 
-	 * @param userName
-	 * @param password
-	 * @param projectName
-	 * @return
-	 */
-	public static BugzillaDefectTracker getBugzillaDefectTracker(DefectTracker defectTracker,
-			String userName, String password) {
-		BugzillaDefectTracker bugzilla = new BugzillaDefectTracker();
-		bugzilla.setServerURL(defectTracker.getUrl());
-		bugzilla.setServerUsername(userName);
-		bugzilla.setServerPassword(password);
-		// bugzilla.setServerProject(projectName);
+		tracker.setProjectName(application.getProjectName());
+		tracker.setProjectId(application.getProjectId());
+		tracker.setPassword(application.getPassword());
+		tracker.setUrl(application.getDefectTracker().getUrl());
+		tracker.setUsername(application.getUserName());
 
-		return bugzilla;
-	}
-
-	/**
-	 * Gets a Jira defect tracker using credentials from an
-	 * applicationdefecttracker.
-	 * 
-	 * @param application
-	 * @return
-	 */
-	public JiraDefectTracker getJiraDefectTracker(Application application) {
-		if (application == null || application.getDefectTracker() == null) {
-			return null;
-		}
-
-		JiraDefectTracker jira = new JiraDefectTracker();
-		jira.setProjectName(application.getProjectName());
-		jira.setProjectId(application.getProjectId());
-		jira.setPassword(application.getPassword());
-		jira.setUrl(application.getDefectTracker().getUrl());
-		jira.setUsername(application.getUserName());
-
-		return jira;
-	}
-
-	/**
-	 * Gets a Jira defect tracker using user name, password, and project name
-	 * 
-	 * @param userName
-	 * @param password
-	 * @param projectName
-	 * @return
-	 */
-	public static JiraDefectTracker getJiraDefectTracker(DefectTracker defectTracker, String userName,
-			String password) {
-		JiraDefectTracker jira = new JiraDefectTracker();
-		jira.setUrl(defectTracker.getUrl());
-		jira.setUsername(userName);
-		jira.setPassword(password);
-		// jira.setPassword(projectName);
-
-		return jira;
+		return tracker;
 	}
 }

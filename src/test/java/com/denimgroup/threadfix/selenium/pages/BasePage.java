@@ -34,7 +34,7 @@ public abstract class BasePage {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	public final static int NUM_SECONDS_TO_WAIT = 5;
+	public final static int NUM_SECONDS_TO_WAIT = 10;
 	
 	protected FirefoxDriver driver;
 	

@@ -30,7 +30,7 @@
 	<spring:url value="" var="emptyUrl"></spring:url>	
 	<form:form modelAttribute="remoteProviderApplication" action="${ fn:escapeXml(emptyUrl) }">
 	
-	<table cellspacing="10" class="dataTable">
+	<table style="border-spacing:10" class="dataTable">
 		<tbody>
 			<tr>
 				<td class="label">Team:</td>

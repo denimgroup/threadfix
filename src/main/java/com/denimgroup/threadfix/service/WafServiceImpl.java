@@ -196,7 +196,7 @@ public class WafServiceImpl implements WafService {
 		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
 			prefix = RealTimeProtectionGenerator.getStart(name, waf.getWafRules());
 			suffix = RealTimeProtectionGenerator.getEnd(name, waf.getWafRules());
-		} 
+		}
 		
 		if (prefix != null) {
 			buffer.append(prefix);

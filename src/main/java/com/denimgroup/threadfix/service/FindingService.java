@@ -102,4 +102,12 @@ public interface FindingService {
 	 */
 	List<Finding> getFindingTable(Integer scanId, TableSortBean bean);
 
+	/**
+	 * 
+	 * @param scanId
+	 * @param bean
+	 * @return
+	 */
+	Object getUnmappedFindingTable(Integer scanId, TableSortBean bean);
+
 }

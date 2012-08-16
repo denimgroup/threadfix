@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,13 +51,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * @author mcollins
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
-	
-	private String url;
-	private String username;
-	private String password;
-	private String projectName;
-	private String projectId;
-			
+				
 	// HELPER METHODS
 	
 	// I want to parse this into a java.net.URL object and then work with it, but I'm 
@@ -88,11 +85,38 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 
 		try {
-			url.openConnection().getInputStream();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+
+			return connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED;
 		} catch (IOException e) {
-			if (e.getMessage().contains("401")) {
-				return true;
-			}
+			log.warn("IOException encountered while trying to find the response code.", e);
+		}
+		return false;
+	}
+	
+	private boolean hasXSeraphLoginReason() {
+		URL url = null;
+		try {
+			url = new URL(getUrlWithRest() + "user?username=" + getUsername());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		try {
+			HttpsURLConnection m_connect = (HttpsURLConnection) url.openConnection();
+
+			setupAuthorization(m_connect, username, password);
+			
+			m_connect.addRequestProperty("Content-Type", "application/json");
+			m_connect.addRequestProperty("Accept", "application/json");
+			
+			String headerResult = m_connect.getHeaderField("X-Seraph-LoginReason");
+
+			return headerResult != null && headerResult.equals("AUTHENTICATION_DENIED");
+		} catch (IOException e) {
+			log.warn("IOException encountered while trying to find the response code.", e);
 		}
 		return false;
 	}
@@ -145,6 +169,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidCredentials() {
 		log.info("Checking JIRA credentials.");
+		lastError = null;
 		
 		String response = getUrlAsString(getUrlWithRest() + "user?username=" + 
 											getUsername(),getUsername(),getPassword());
@@ -157,6 +182,11 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			} else {
 				log.info("JIRA Credentials are invalid.");
 			}
+			
+			if (hasXSeraphLoginReason()) {
+				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
+			}
+						
 			return valid;
 		} catch (JSONException e) {
 			log.info("JIRA credentials check did not return JSON, something is wrong.");
@@ -191,6 +221,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	
 	@Override
 	public String getProductNames() {
+		
+		lastError = null;
 	
 		Map<String, String> nameIdMap = getNameFieldMap("project/","key");
 		
@@ -203,8 +235,25 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			}
 			return builder.substring(0,builder.length()-1);
 		} else {
+			if (!hasValidUrl()) {
+				lastError = "Supplied endpoint was invalid.";
+			} else if (hasXSeraphLoginReason()) {
+				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
+			} else if (!hasValidCredentials()) {
+				lastError = "Invalid username / password combination";
+			} else if (nameIdMap != null) {
+				lastError = "No projects were found. Check your JIRA instance.";
+			} else {
+				lastError = "Not sure what the error is.";
+			}
+			
 			return null;
 		}
+	}
+	
+	@Override
+	public String getLastError() {
+		return lastError;
 	}
 
 	@Override
@@ -357,48 +406,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 		
 		return returnString;
-	}
-
-	// GETTERS && SETTERS
-	
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public String getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
 	}
 
 }

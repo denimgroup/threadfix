@@ -230,4 +230,9 @@ public class FindingServiceImpl implements FindingService {
 		return findingDao.retrieveFindingsByScanIdAndPage(scanId, bean.getPage());
 	}
 
+	@Override
+	public Object getUnmappedFindingTable(Integer scanId, TableSortBean bean) {
+		return findingDao.retrieveUnmappedFindingsByScanIdAndPage(scanId, bean.getPage());
+	}
+
 }

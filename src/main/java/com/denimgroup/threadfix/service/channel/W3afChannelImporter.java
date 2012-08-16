@@ -135,7 +135,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 			
 			inputValue = reader.readLine();
 		}
-		
+		closeInputStream(inputStream);
 		inputStream = new ByteArrayInputStream(contents.toString().getBytes("UTF-8"));
 	}
 

@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -24,30 +25,65 @@ public class RemoteProviderType extends BaseEntity  {
 	public static final String QUALYSGUARD_WAS = ChannelType.QUALYSGUARD_WAS;
 
 	public static final int NAME_LENGTH = 60;
-	public static final int API_KEY_LENGTH = 200;
+	public static final int API_KEY_LENGTH = 1024;
 	
 	// TODO Check actual limits (Veracode right now) and use those
-	public static final int USERNAME_LENGTH = 100;
-	public static final int PASSWORD_LENGTH = 100;
-
+	public static final int USERNAME_LENGTH = 1024;
+	public static final int PASSWORD_LENGTH = 1024;
+	//No components were found for the configured Defect Tracker project.
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
 	
 	private boolean hasApiKey;
 	
+	private boolean encrypted = false;
+	
 	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
-	private String apiKeyString;
+	private String encryptedApiKey;
 	
 	private boolean hasUserNamePassword;
 	
-	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
+	@Size(max = USERNAME_LENGTH, message = "{errors.maxlength} " + USERNAME_LENGTH + ".")
+	private String encryptedUsername;
+	@Size(max = PASSWORD_LENGTH, message = "{errors.maxlength} " + PASSWORD_LENGTH + ".")
+	private String encryptedPassword;
+	@Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
 	private String username;
-	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
+	@Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
 	private String password;
+	@Size(max = 100, message = "{errors.maxlength} " + 100 + ".")
+	private String apiKey;
 	
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private ChannelType channelType;
+
+	@Transient
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	@Transient
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Transient
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
 	
 	@Column(nullable = false)
 	public boolean getHasApiKey() {
@@ -59,12 +95,12 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = API_KEY_LENGTH)
-	public String getApiKeyString() {
-		return apiKeyString;
+	public String getEncryptedApiKey() {
+		return encryptedApiKey;
 	}
 
-	public void setApiKeyString(String apiKeyString) {
-		this.apiKeyString = apiKeyString;
+	public void setEncryptedApiKey(String encryptedApiKey) {
+		this.encryptedApiKey = encryptedApiKey;
 	}
 
 	@Column(nullable = false)
@@ -77,21 +113,21 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = USERNAME_LENGTH)
-	public String getUsername() {
-		return username;
+	public String getEncryptedUsername() {
+		return encryptedUsername;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEncryptedUsername(String encryptedUsername) {
+		this.encryptedUsername = encryptedUsername;
 	}
 
 	@Column(length = PASSWORD_LENGTH)
-	public String getPassword() {
-		return password;
+	public String getEncryptedPassword() {
+		return encryptedPassword;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 
 	@ManyToOne
@@ -126,5 +162,13 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setRemoteProviderApplications(
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
+	}
+
+	public boolean isEncrypted() {
+		return encrypted;
+	}
+
+	public void setEncrypted(boolean encrypted) {
+		this.encrypted = encrypted;
 	}
 }

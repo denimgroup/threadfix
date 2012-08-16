@@ -40,17 +40,10 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
- * 
  * @author dcornell
  * @author mcollins
  */
 public class BugzillaDefectTracker extends AbstractDefectTracker {
-	
-	private String serverURL;
-	private String serverUsername;
-	private String serverPassword;
-	private String serverProject;
-	private String serverProjectId;
 		
 	private static Map<String, String> versionMap = new HashMap<String,String>();
 	
@@ -83,7 +76,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return null;
 			}
 
-			if (!projectExists(serverProject, client)) {
+			if (!projectExists(projectName, client)) {
 				log.warn("The project name wasn't found on the server.");
 				return null;
 			}
@@ -100,7 +93,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 
 			Map<String, String> bugMap = new HashMap<String, String>();
-			bugMap.put("product", serverProject);
+			bugMap.put("product", projectName);
 			bugMap.put("component", metadata.getComponent());
 			bugMap.put("summary", metadata.getDescription());
 			bugMap.put("version", metadata.getVersion());
@@ -215,9 +208,9 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			return "Bugzilla login failed, check your credentials.";
 		}
 
-		if (!projectExists(serverProject, client)) {
+		if (!projectExists(projectName, client)) {
 			return "The project specified does not exist - please specify a different"
-					+ " one or create " + serverProject + " in Bugzilla.";
+					+ " one or create " + projectName + " in Bugzilla.";
 		}
 
 		return null;
@@ -247,22 +240,26 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		createResult = executeMethod("Bug.legal_values", bugArray);
 		statuses.addAll(getValues(createResult));
 		
+		if (statuses.contains("UNCONFIRMED")) {
+			statuses.remove("UNCONFIRMED");
+		}
+		
 		bugMap.put("field", "priority");
 		bugArray = new Object[] { bugMap }; // maybe useless line
 		createResult = executeMethod("Bug.legal_values", bugArray);
 		priorities.addAll(getValues(createResult));
 		
-		serverProjectId = getProjectIdByName();
+		projectId = getProjectIdByName();
 		
 		Map<String, String> queryMap = new HashMap<String, String>();
 		queryMap.put("field", "version");
-		queryMap.put("product_id", serverProjectId);
+		queryMap.put("product_id", projectId);
 		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
 		versions.addAll(getValues(createResult));
 		
 		queryMap = new HashMap<String, String>();
 		queryMap.put("field", "component");
-		queryMap.put("product_id", serverProjectId);
+		queryMap.put("product_id", projectId);
 		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
 		components.addAll(getValues(createResult));
 	}
@@ -325,8 +322,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	private String login(XmlRpcClient client) {
 
 		Map<String, String> loginMap = new HashMap<String, String>();
-		loginMap.put("login", this.serverUsername);
-		loginMap.put("password", this.serverPassword);
+		loginMap.put("login", this.username);
+		loginMap.put("password", this.password);
 		loginMap.put("rememberlogin", "Bugzilla_remember");
 
 		Object[] loginArray = new Object[1];
@@ -378,83 +375,9 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
-	public String getServerURLWithRpc() {
-		if (serverURL == null || serverURL.trim().equals("")) {
-			return null;
-		}
-
-		if (serverURL.contains("xmlrpc.cgi")) {
-			return serverURL;
-		}
-
-		String tempUrl = serverURL.trim();
-		if (tempUrl.endsWith("/")) {
-			tempUrl = tempUrl.concat("xmlrpc.cgi");
-		} else {
-			tempUrl = tempUrl.concat("/xmlrpc.cgi");
-		}
-
-		return tempUrl;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getServerURL() {
-		return serverURL;
-	}
-
-	/**
-	 * @param serverURL
-	 */
-	public void setServerURL(String serverURL) {
-		this.serverURL = serverURL;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getServerProject() {
-		return serverProject;
-	}
-
-	/**
-	 * @param serverProject
-	 */
-	public void setServerProject(String serverProject) {
-		this.serverProject = serverProject;
-	}
-
-	public String getServerProjectId() {
-		return serverProjectId;
-	}
-
-	public void setServerProjectId(String serverProjectId) {
-		this.serverProjectId = serverProjectId;
-	}
-
-	public String getServerUsername() {
-		return serverUsername;
-	}
-
-	public void setServerUsername(String serverUsername) {
-		this.serverUsername = serverUsername;
-	}
-
-	public String getServerPassword() {
-		return serverPassword;
-	}
-
-	public void setServerPassword(String serverPassword) {
-		this.serverPassword = serverPassword;
-	}
-
 	public String getVersion() {
-		if (versionMap.get(serverURL) != null) {
-			return versionMap.get(serverURL);
+		if (versionMap.get(url) != null) {
+			return versionMap.get(url);
 		}
 		
 		Object createResult = executeMethod("Bugzilla.version", new Object[] {});
@@ -463,10 +386,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			Map<?,?> item = (Map<?,?>) createResult;
 			if (item.get("version") != null) {
 				log.info("Bugzilla instance is version " + item.get("version"));
-				versionMap.put(serverURL, item.get("version").toString());
+				versionMap.put(url, item.get("version").toString());
 			}
 		}
-		return versionMap.get(serverURL);
+		return versionMap.get(url);
 	}
 
 	/**
@@ -475,7 +398,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	 * @return
 	 */
 	public boolean projectExists(String projectName, XmlRpcClient client) {
-		serverProject = projectName;
+		this.projectName = projectName;
 		return getProjectIdByName() != null;
 	}
 
@@ -540,7 +463,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	
 	@SuppressWarnings("unchecked")
 	private String getProjectIdByNameVersion3() {
-		if (serverProject == null)
+		if (projectName == null)
 			return null;
 		
 		XmlRpcClient client = initializeClient();
@@ -568,10 +491,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			for (int i = 0; i < products.length; i++) {
 				Map<String,Object> product = (HashMap<String, Object>) products[i];
 				String productName = (String) product.get("name");
-				if (serverProject.equals(productName)) {
+				if (projectName.equals(productName)) {
 					Integer temp = (Integer) product.get("id");
-					serverProjectId = Integer.toString(temp);
-					return serverProjectId;
+					projectId = Integer.toString(temp);
+					return projectId;
 				}
 			}
 		} catch (XmlRpcException xre) {
@@ -596,7 +519,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		
 		// get Product info
 		Map<String, Object[]> bugMap = new HashMap<String, Object[]>();
-		Object[] names = new Object[] { serverProject };
+		Object[] names = new Object[] { projectName };
 		bugMap.put("names", names);
 		Object[] bugArray = new Object[] { bugMap };
 
@@ -628,7 +551,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		String status = login(client);
 
 		if (LOGIN_FAILURE.equals(status) || BAD_CONFIGURATION.equals(status)) {
-			return "Authentication failed";
+			lastError = status;
+			return null;
 		} else {
 			return getProducts(client);
 		}
@@ -646,7 +570,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidProjectName() {
 		XmlRpcClient client = initializeClient();
-		return projectExists(serverProject, client);
+		return projectExists(projectName, client);
 	}
 
 	@Override
@@ -699,5 +623,24 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			log.warn("IllegalArgumentException was tripped. Returning false.");
 			return false;
 		}
+	}
+	
+	public String getServerURLWithRpc() {
+		if (url == null || url.trim().equals("")) {
+			return null;
+		}
+	
+		if (url.contains("xmlrpc.cgi")) {
+			return url;
+		}
+	
+		String tempUrl = url.trim();
+		if (tempUrl.endsWith("/")) {
+			tempUrl = tempUrl.concat("xmlrpc.cgi");
+		} else {
+			tempUrl = tempUrl.concat("/xmlrpc.cgi");
+		}
+	
+		return tempUrl;
 	}
 }

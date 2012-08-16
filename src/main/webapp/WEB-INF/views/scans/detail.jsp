@@ -7,10 +7,14 @@
 	<spring:url value="{scanId}/table" var="tableUrl">
 		<spring:param name="scanId" value="${ scan.id }"/>
 	</spring:url>
+	<spring:url value="{scanId}/unmappedTable" var="unmappedTableUrl">
+		<spring:param name="scanId" value="${ scan.id }"/>
+	</spring:url>
 	<script type="text/javascript">
 	window.onload = function()
     {
 		refillElement('#toReplace', '<c:out value="${ tableUrl }"/>', 1);
+		refillElement('#toReplace2', '<c:out value="${ unmappedTableUrl }"/>', 1);
     };
     </script>
 </head>
@@ -22,28 +26,34 @@
 	<div id="helpText">
 		This page lists various statistics about a set of scan results from one scan file.<br/>
 	</div>
+	
+	<spring:url value="/organizations/{orgId}/applications/{appId}/scans" var="scanUrl">
+		<spring:param name="orgId" value="${ scan.application.organization.id }" />
+		<spring:param name="appId" value="${ scan.application.id }" />
+	</spring:url>
+	<div><a href="${ fn:escapeXml(scanUrl) }">Back to Scan Index</a></div>
 
 	<h3>Vulnerability Counts:</h3>
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Total Vulns</td>
+				<td class="label">Total Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">New Vulns</td>
+				<td class="label">New Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Old Vulns</td>
+				<td class="label">Old Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[3] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Resurfaced Vulns</td>
+				<td class="label">Resurfaced Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[4] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Closed Vulns</td>
+				<td class="label">Closed Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[5] }"/></td>
 			</tr>
 		</tbody>
@@ -55,7 +65,8 @@
 			<tr>
 				<td class="label">Total Scan Results</td>
 				<td class="inputValue">
-					<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + fn:length(scan.findings) }"/>
+					<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
+										totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
 				</td>
 			</tr>
 			<tr>
@@ -65,7 +76,8 @@
 			</tr>
 			<tr>
 				<td class="label">Total Findings</td>
-				<td class="inputValue"><c:out value="${ fn:length(scan.findings) }"/></td>
+				<td class="inputValue"><c:out value="${ totalFindings + 
+											scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 			</tr>
 			<tr>
 				<td class="label">Duplicate Results Skipped</td>
@@ -73,11 +85,11 @@
 			</tr>
 			<tr>
 				<td class="label">Total Findings matched to Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ fn:length(scan.mappedFindings) }"/></td>
+				<td class="inputValue"><c:out value="${ totalFindings }"/></td>
 			</tr>
 			<tr>
 				<td class="label">Total Findings not matched to Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ fn:length(scan.unmappedFindings) }"/></td>
+				<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 			</tr>
 			<tr>
 				<td class="label">Findings merged to Vulnerabilities from other Findings in this Scan</td>
@@ -95,74 +107,75 @@
 	</table>
 	<br />
 	
-	<div id="toReplace">
-	<table class="formattedTable" id="1">
-		<thead>
-			<tr>
-				<th class="first">Severity</th>
-				<th>Vulnerability Type</th>
-				<th>Path</th>
-				<th>Parameter</th>
-				<th>Vulnerability Link</th>
-				<th class="last">Number Merged Results</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr class="bodyRow">
-				<td colspan="6" style="text-align: center;">Loading Findings.</td>
-			</tr>
-		</tbody>
-	</table>
-	</div>
+	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings == 0 }">
+		<h3>Findings</h3>
+		<table class="formattedTable" id="1">
+			<thead>
+				<tr>
+					<th class="first">Severity</th>
+					<th>Vulnerability Type</th>
+					<th>Path</th>
+					<th>Parameter</th>
+					<th>Vulnerability Link</th>
+					<th class="last">Number Merged Results</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="bodyRow">
+					<c:if test="${ scan.numberRepeatFindings != 0 }">
+						<td colspan="6" style="text-align: center;">All Findings were linked to Findings from previous scans.</td>
+					</c:if>
+					<c:if test="${ scan.numberRepeatFindings == 0 }">
+						<td colspan="6" style="text-align: center;">No Findings were found.</td>
+					</c:if>
+				</tr>
+			</tbody>
+		</table>
+	</c:if>
 	
-	<h3>Unmapped Findings:</h3>
-	<table class="filteredTable sortable" id="2">
-		<thead>
-			<tr class="darkBackground">
-				<th class="first">Severity</th>
-				<th>Vulnerability Type</th>
-				<th>Path</th>
-				<th>Parameter</th>
-				<th class="last">Number Merged Results</th>
-			</tr>
-		</thead>
-		<tbody>
-	<c:choose>
-		<c:when test="${ empty scan.unmappedFindings }">
-			<tr class="bodyRowNoPage">
-				<td colspan="5" style="text-align: center;"> All Findings were successfully mapped.</td>
-			</tr>
-		</c:when>
-		<c:otherwise>
-		<c:forEach var="finding" items="${ scan.unmappedFindings }">
-			<tr class="bodyRowNoPage">
-				<td>
-					<c:out value="${ finding.channelSeverity.name }"/>
-				</td>
-				<td>
-					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
-					<spring:param name="scanId" value="${ scan.id }" />
-						<spring:param name="findingId" value="${ finding.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(findingUrl) }">
-					    <c:out value="${ finding.channelVulnerability.name }"/>
-					</a>
-				</td>
-				<td>
-					<c:out value="${ finding.surfaceLocation.path }"/>
-				</td>
-				<td>
-					<c:out value="${ finding.surfaceLocation.parameter }"/>
-				</td>
-				<td>
-					<c:out value="${ finding.numberMergedResults }"/>
-				</td>
-			</tr>
-		</c:forEach>
-		</c:otherwise>
-	</c:choose>
-		</tbody>
-	</table>
+	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
+		<div id="toReplace">
+		<h3>Successfully Mapped Findings</h3>
+		<table class="formattedTable" id="1">
+			<thead>
+				<tr>
+					<th class="first">Severity</th>
+					<th>Vulnerability Type</th>
+					<th>Path</th>
+					<th>Parameter</th>
+					<th>Vulnerability Link</th>
+					<th class="last">Number Merged Results</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="bodyRow">
+					<td colspan="6" style="text-align: center;">Loading Findings.</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		
+		<div id="toReplace2">
+		<h3>Unmapped Findings</h3>
+		<table class="formattedTable" id="2">
+			<thead>
+				<tr>
+					<th class="first">Severity</th>
+					<th>Vulnerability Type</th>
+					<th>Path</th>
+					<th>Parameter</th>
+					<th>Vulnerability Link</th>
+					<th class="last">Number Merged Results</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="bodyRow">
+					<td colspan="6" style="text-align: center;">Loading Findings.</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</c:if>
 	
 	<spring:url value="/organizations/{orgId}/applications/{appId}/scans" var="scanUrl">
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />

@@ -160,7 +160,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	}
 
 	@Override
-	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
+	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
 				remoteProviderApplication.getRemoteProviderType() == null) {
 			log.error("Null input to Qualys getScan(), returning null.");
@@ -170,31 +170,36 @@ public class QualysRemoteProvider extends RemoteProvider {
 		password = remoteProviderApplication.getRemoteProviderType().getPassword();
 		username = remoteProviderApplication.getRemoteProviderType().getUsername();
 		
-		String appId = mostRecentScanForApp(remoteProviderApplication);
+		List<String> scanIds = mostRecentScanForApp(remoteProviderApplication);
 		
-		if (appId == null || appId.trim().equals("")) {
-			log.warn("The most recent scan for the Qualys application was not valid.");
+		if (scanIds == null || scanIds.size() == 0) {
+			log.warn("No valid scans were found.");
 			return null;
 		}
-				
-		inputStream = httpGet(GET_SCAN_URL + appId);
 		
-		if (inputStream == null) {
-			log.warn("Got a bad response from Qualys servers. Returning null.");
-			return null;
-		}
-
-		QualysWASSAXParser scanParser = new QualysWASSAXParser();
-		Scan resultScan = parseSAXInput(scanParser);
+		List<Scan> scanList = new ArrayList<Scan>();
 		
-		if (resultScan != null) {
-			log.info("The Qualys scan import was successful.");
-			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-			return resultScan;
-		} else {
-			log.warn("The Qualys scan import failed!!");
-			return null;
+		for (String scanId : scanIds) {
+			inputStream = httpGet(GET_SCAN_URL + scanId);
+			
+			if (inputStream == null) {
+				log.warn("Got a bad response from Qualys servers for scan ID " + scanId + ". Trying the next scan.");
+				continue;
+			}
+	
+			QualysWASSAXParser scanParser = new QualysWASSAXParser();
+			Scan resultScan = parseSAXInput(scanParser);
+			
+			if (resultScan != null) {
+				log.info("The Qualys scan import for scan ID " + scanId + " was successful.");
+				resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+				scanList.add(resultScan);
+			} else {
+				log.warn("The Qualys scan import for scan ID " + scanId + " failed!!");
+			}
 		}
+		
+		return scanList;
 	}
 
 	@Override
@@ -233,7 +238,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			e.printStackTrace();
 		}
 		
-		if (parser.list != null && parser.list.size() >0) {
+		if (parser.list != null && parser.list.size() > 0) {
 			log.info("Number of Qualys applications: " + parser.list.size());
 		} else {
 			log.warn("No Qualys applications were found. Check your configuration.");
@@ -242,9 +247,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		return parser.list;
 	}
 	
-	// TODO improve this algorithm and check for cases where Qualys has more than one app
-	// TODO import all the unimported scans for the app instead of just the most recent
-	public String mostRecentScanForApp(RemoteProviderApplication app) {
+	public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
 		if (app == null || app.getNativeId() == null) {
 			return null;
 		}
@@ -256,35 +259,34 @@ public class QualysRemoteProvider extends RemoteProvider {
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		
-		String scan = null;
-		Calendar previousDate = null;
+		List<String> scanIds = new ArrayList<String>();
 
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
 			Calendar mapDate = null;
-			
-			if (map.get("launchedDate") != null) {
-				mapDate = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("launchedDate"));
-			}
-			
-			if (app.getNativeId().equals(map.get("webAppName")) &&
-					(previousDate == null || 
-						previousDate.before(mapDate))) {
-				scan = map.get("id");
-				previousDate = mapDate;
+
+			if (app.getNativeId().equals(map.get("webAppName")) && map.get("date") != null) {
+				mapDate = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
+				if (app.getLastImportTime() == null || mapDate.after(app.getLastImportTime())) {
+					scanIds.add(map.get("id"));
+				}
 			}
 		}
 		
-		log.info("Returning scan ID " + scan + " for application " + app.getNativeId());
+		log.info("Returning scan IDs " + scanIds + " for application " + app.getNativeId());
 
-		return scan;
+		return scanIds;
+	}
+	
+	public QualysRemoteProvider() {
+		
 	}
 	
 	// UTILITIES
 	
 	private InputStream httpPost(String request, String[] paramNames,
 			String[] paramVals) {
-
+		
 		PostMethod post = new PostMethod(request);
 		
 		post.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
@@ -300,9 +302,13 @@ public class QualysRemoteProvider extends RemoteProvider {
 			for (int i = 0; i < paramNames.length; i++) {
 				post.addParameter(paramNames[i], paramVals[i]);
 			}
+
+			
 			
 			HttpClient client = new HttpClient();
+			
 			int status = client.executeMethod(post);
+
 			if (status != 200) {
 				log.warn("Status was not 200.");
 				log.warn("Status : " + status);

@@ -28,6 +28,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,7 @@ import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
@@ -54,6 +59,8 @@ import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 @Service
 @Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
+	
+	private final Log log = LogFactory.getLog(ApplicationServiceImpl.class);
 	
 	private String invalidProjectName = "The selected Project Name was invalid. " +
 			"Either a non-existent project or a project with no components was selected.";
@@ -193,6 +200,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.setPassword(null);
 				application.setProjectName(null);
 			} else {
+				
 				application.setDefectTracker(defectTracker);
 				AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
 				if (dt != null) {
@@ -207,8 +215,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 					
 					if (!result.hasErrors()) { 
 						if (!dt.hasValidCredentials()) {
-							result.rejectValue("userName", "errors.invalid", 
-									new String [] { invalidCredentials }, null);
+							if (dt.getLastError() == null) {
+								result.rejectValue("userName", "errors.invalid", 
+										new String [] { invalidCredentials }, null);
+							} else {
+								result.rejectValue("userName", "errors.detail", 
+										new String [] { dt.getLastError() }, null);
+							}
 							application.setUserName(null);
 							application.setPassword(null);
 							application.setProjectName(null);
@@ -217,6 +230,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 									new String [] { invalidProjectName }, null);
 							application.setProjectName(null);
 						} else {
+							encryptCredentials(application);
 							application.setProjectId(dt.getProjectIdByName());
 							return checkNewDefectTracker(application);
 						}
@@ -300,6 +314,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 			return;
 		}
+		
+		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim()));
 
 		if (application.getApplicationCriticality() == null ||
 				application.getApplicationCriticality().getId() == null ||
@@ -322,8 +338,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 			} else {
 				application.setWaf(waf);
 			}
-		}	
+		}
 		
+		// The password was set to the temp password so that it wouldn't show up on the page.
+		// If the credentials haven't changed, re-decrypt the password to get the original.
+		if (application.getPassword() != null && application.getPassword().equals(Application.TEMP_PASSWORD) && 
+				databaseApplication != null && databaseApplication.getUserName() != null && 
+				databaseApplication.getUserName().equals(application.getUserName()) &&
+				databaseApplication.getDefectTracker() != null && 
+				application.getDefectTracker() != null &&
+				databaseApplication.getDefectTracker().getId().equals(
+						application.getDefectTracker().getId())) {
+			decryptCredentials(application);
+		}
+			
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
 		
 		if (hasNewDefectTracker || (application.getDefectTracker() == null 
@@ -336,7 +364,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 		}
 		
-		Application databaseApplication = loadApplication(application.getName().trim());
 		if (databaseApplication != null && !databaseApplication.getId().equals(
 				application.getId())) {
 			result.rejectValue("name", "errors.nameTaken");
@@ -405,39 +432,98 @@ public class ApplicationServiceImpl implements ApplicationService {
 			String description = null, severity = null, path = null, param = null;
 						
 			if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
-				description = bean.getDescriptionFilter();
+				description = bean.getDescriptionFilter().trim();
 			
 			if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
-				severity = bean.getSeverityFilter();
+				severity = bean.getSeverityFilter().trim();
 			
 			if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
-				path = bean.getLocationFilter();
+				path = bean.getLocationFilter().trim();
 			
 			if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
-				param = bean.getParameterFilter();
+				param = bean.getParameterFilter().trim();
 						
 			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, page, sort, field,
-										description, severity, path, param);
+										description, severity, path, param, bean.isOpen(), bean.isFalsePositive());
 		} else {
-			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null);
+			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null, 
+					true, false);
 		}
 	}
 	
+	@Override
 	public long getCount(Integer appId, TableSortBean bean) {
 		String description = null, severity = null, path = null, param = null;
-				
+		
 		if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
-			description = bean.getDescriptionFilter();
+			description = bean.getDescriptionFilter().trim();
 		
 		if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
-			severity = bean.getSeverityFilter();
+			severity = bean.getSeverityFilter().trim();
 		
 		if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
-			path = bean.getLocationFilter();
+			path = bean.getLocationFilter().trim();
 		
 		if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
-			param = bean.getParameterFilter();
+			param = bean.getParameterFilter().trim();
 		
-		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param);
+		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param, 
+														bean.isOpen(), bean.isFalsePositive());
+	}
+	
+	@Override
+	public long getVulnCount(Integer appId, boolean open) {
+		return vulnerabilityDao.getVulnCount(appId, open);
+	}
+	
+	public Application encryptCredentials(Application application) {
+		try {
+			if (application != null && application.getPassword() != null && application.getPassword() != null) {
+				application.setEncryptedPassword(ESAPI.encryptor().encrypt(application.getPassword()));
+				application.setEncryptedUserName(ESAPI.encryptor().encrypt(application.getUserName()));
+			}
+		} catch (EncryptionException e) {
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+		}
+		return application;
+	}
+	
+	@Override
+	public Application decryptCredentials(Application application) {
+		try {
+			if (application != null && application.getEncryptedPassword() != null && application.getEncryptedUserName() != null) {
+				application.setPassword(ESAPI.encryptor().decrypt(application.getEncryptedPassword()));
+				application.setUserName(ESAPI.encryptor().decrypt(application.getEncryptedUserName()));
+			}
+		} catch (EncryptionException e) {
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+		}
+		return application;
+	}
+
+	@Override
+	public void generateVulnerabilityReports(List<Organization> organizations) {
+		if (organizations == null) {
+			return;
+		}
+		for (Organization org : organizations) {
+			generateVulnerabilityReports(org);
+		}
+	}
+	
+	@Override
+	public void generateVulnerabilityReports(Organization organization) {
+		if (organization == null || organization.getActiveApplications() == null) {
+			return;
+		}
+		
+		for (Application app : organization.getActiveApplications()) {
+			generateVulnerabilityReport(app);
+		}
+	}
+	
+	
+	public void generateVulnerabilityReport(Application application) {
+		application.setVulnerabilityReport(applicationDao.loadVulnerabilityReport(application));
 	}
 }

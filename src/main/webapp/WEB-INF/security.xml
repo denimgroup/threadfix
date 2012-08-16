@@ -31,7 +31,7 @@
 		<security:intercept-url pattern="/configuration/logs**" access="ROLE_ADMIN"/>
 		<security:intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
 		<security:form-login login-page="/login.jsp"/>
-		<security:remember-me services-ref="rememberMeServices" key="threadfix" /> 
+		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
 	</security:http>
 	
     <security:authentication-manager>

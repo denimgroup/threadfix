@@ -29,6 +29,15 @@
 # Do extra configuration to forward traffic through mod_jk / mod_security to a backend 
 # tomcat server with security manager on.
 
+gem_package "ruby-shadow"
+
+ruby_block "require shadow library" do
+  block do
+    Gem.clear_paths  # <-- Necessary to ensure that the new library is found
+    require 'shadow' # <-- gem is 'ruby-shadow', but library is 'shadow'
+  end
+end
+
 execute "apt-get update" do
   command "apt-get update"
   action :run
@@ -46,6 +55,9 @@ server_package = package "libapache-mod-security"
 server_package.run_action(:install)
 
 server_package = package "libxml2-dev"
+server_package.run_action(:install)
+
+server_package = package "make"
 server_package.run_action(:install)
 
 template "/etc/libapache2-mod-jk/workers.properties" do
@@ -141,7 +153,23 @@ script "configure firewall" do
 	ufw allow 22
 	ufw allow 443
 	ufw allow 80
+  EOH
+end
+
+script "enable firewall" do
+  interpreter "bash"
+  user "root"
+  code <<-EOH
 	ufw enable
+  EOH
+end
+
+script "apt-get upgrade" do
+  interpreter "bash"
+  user "root"
+  cwd "/vagrant"
+  code <<-EOH
+	gem install ruby-shadow
   EOH
 end
 

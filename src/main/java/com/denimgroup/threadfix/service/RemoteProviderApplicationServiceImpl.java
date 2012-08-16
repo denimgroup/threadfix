@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -100,6 +101,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	@Override
 	public void updateApplications(RemoteProviderType remoteProviderType) {
+
 		List<RemoteProviderApplication> newApps = getRemoteProviderFactory()
 				.fetchApplications(remoteProviderType);
 		
@@ -198,35 +200,59 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	public boolean importScanForApplication(
+	public boolean importScansForApplication(
 			RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null)
 			return false;
 		
-		Scan resultScan = getRemoteProviderFactory().fetchScan(remoteProviderApplication);
+		List<Scan> resultScans = getRemoteProviderFactory().fetchScans(remoteProviderApplication);
 		
-		if (resultScan != null && resultScan.getFindings() != null 
-				&& resultScan.getFindings().size() != 0) {
-			if (remoteProviderApplication.getLastImportTime() == null || 
-					(resultScan.getImportTime() != null &&
-					remoteProviderApplication.getLastImportTime().before(
-							resultScan.getImportTime()))) {
-				
-				log.info("Scan was parsed and has findings, passing to ScanMergeService.");
-				
-				remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+		boolean success = false;
+		if (resultScans != null && resultScans.size() > 0) {
+			Collections.sort(resultScans, new Comparator<Scan>() {
+				public int compare(Scan scan1, Scan scan2){
+					Calendar scan1Time = scan1.getImportTime();
+					Calendar scan2Time = scan2.getImportTime();
+					
+					if (scan1Time == null || scan2Time == null) 
+						return 0;
+					
+					return scan1Time.compareTo(scan2Time);
+				}
+			});
 			
-				scanMergeService.processRemoteScan(resultScan);
-				return true;
-			} else {
-				log.warn("Remote Scan was not newer than the last imported scan " +
-						"for this RemoteProviderApplication.");
-				return false;
+			for (Scan resultScan : resultScans) {
+				if (resultScan == null || resultScan.getFindings() == null 
+						|| resultScan.getFindings().size() == 0) {
+					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
+					
+				} else if (remoteProviderApplication.getLastImportTime() != null && 
+							(resultScan.getImportTime() == null ||
+							remoteProviderApplication.getLastImportTime().after(
+									resultScan.getImportTime()))) {
+					log.warn("Remote Scan was not newer than the last imported scan " +
+							"for this RemoteProviderApplication.");
+					
+				} else {
+					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
+					
+					remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+					
+					if (resultScan.getApplicationChannel().getScanList() == null) {
+						resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
+					}
+					
+					if (!resultScan.getApplicationChannel().getScanList().contains(resultScan)) {
+						resultScan.getApplicationChannel().getScanList().add(resultScan);
+					}
+				
+					scanMergeService.processRemoteScan(resultScan);
+					success = true;
+				}
 			}
-		} else {
-			log.warn("Remote Scan import returned a null scan or a scan with no findings.");
-			return false;
 		}
+		
+		return success;
 	}
 	
 	private RemoteProviderFactory getRemoteProviderFactory() {

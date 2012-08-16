@@ -459,13 +459,17 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	private String getStringFromInputStream(InputStream stream) {
 		Writer writer = new StringWriter();
 		String returnValue = null;
+		
 		try {
 			IOUtils.copy(stream, writer, "UTF-8");
 			returnValue = writer.toString();
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			closeInputStream(stream);
 		}
+		
 		return returnValue;
 	}
 

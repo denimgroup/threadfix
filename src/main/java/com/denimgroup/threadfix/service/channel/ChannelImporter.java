@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.channel;
 
 import java.io.InputStream;
+import java.util.Calendar;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -85,5 +86,11 @@ public interface ChannelImporter {
 	 * Delete the scan file from disk, if it has been saved there.
 	 */
 	void deleteScanFile();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	Calendar getTestDate();
 
 }

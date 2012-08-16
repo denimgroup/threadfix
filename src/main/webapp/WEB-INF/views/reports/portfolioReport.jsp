@@ -4,7 +4,7 @@
 	<title>Scanner Comparison By Vulnerability</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/confirm.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
-	<script type="text/javascript" language="javascript" src="<%=request.getContextPath()%>/scripts/tablefilter2.js"></script> 
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/tablefilter2.js"></script> 
 	<style type="text/css">
 		input {width:100%}
 	</style>

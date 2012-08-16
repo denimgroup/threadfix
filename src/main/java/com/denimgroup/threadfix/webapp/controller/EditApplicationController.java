@@ -71,7 +71,7 @@ public class EditApplicationController {
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
 	private ApplicationCriticalityService applicationCriticalityService = null;
-
+	
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
@@ -117,6 +117,12 @@ public class EditApplicationController {
 		if (application == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
+		}
+		
+		applicationService.decryptCredentials(application);
+		
+		if (application.getPassword() != null && !"".equals(application.getPassword())) {
+			application.setPassword(Application.TEMP_PASSWORD);
 		}
 		
 		List<String> pathList = new ArrayList<String>();

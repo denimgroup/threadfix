@@ -35,12 +35,9 @@ public class WafDetailPage extends BasePage {
 	private WebElement wafTypeText;
 	private WebElement editLink;
 	private WebElement backToListLink;
-	private WebElement generateWafRulesButton;
-	private WebElement downloadWafRulesButton;
 	private WebElement applicationsTableBody;
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement deleteButton;
-	private Select wafDirectiveSelect;
 	
 	public WafDetailPage(WebDriver webdriver) {
 		super(webdriver);
@@ -49,11 +46,8 @@ public class WafDetailPage extends BasePage {
 		wafTypeText = driver.findElementById("wafTypeText");
 		editLink = driver.findElementById("editLink");
 		backToListLink = driver.findElementById("backToListLink");
-		generateWafRulesButton = driver.findElementById("generateWafRulesButton");
-		downloadWafRulesButton = driver.findElementById("downloadWafRulesButton");
 		applicationsTableBody = driver.findElementById("applicationsTableBody");
 		deleteButton = driver.findElementById("deleteButton");
-		wafDirectiveSelect = new Select(driver.findElementById("wafDirectiveSelect"));
 	}
 
 	public String getNameText(){
@@ -75,12 +69,12 @@ public class WafDetailPage extends BasePage {
 	}
 
 	public OrganizationIndexPage clickGenerateWafRulesButton() {
-		generateWafRulesButton.click();
+		driver.findElementById("generateWafRulesButton").click();
 		return new OrganizationIndexPage(driver);
 	}
 
 	public OrganizationIndexPage clickDownloadWafRulesButton() {
-		downloadWafRulesButton.click();
+		driver.findElementById("downloadWafRulesButton").click();
 		return new OrganizationIndexPage(driver);
 	}
 
@@ -122,11 +116,11 @@ public class WafDetailPage extends BasePage {
 	}
 
 	public String getWafDirectiveSelect(){
-		return wafDirectiveSelect.getFirstSelectedOption().getText();
+		return new Select(driver.findElementById("wafDirectiveSelect")).getFirstSelectedOption().getText();
 	}
 
 	public void setWafDirectiveSelect(String code){
-		wafDirectiveSelect.selectByVisibleText(code);
+		new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
 	}
 	
 }

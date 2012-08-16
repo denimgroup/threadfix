@@ -168,6 +168,12 @@ public class ScanServiceImpl implements ScanService {
 			out.close();
 		} catch (IOException e) {
 			log.warn("Writing the file stream to disk encountered an IOException.", e);
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				log.warn("IOException encountered while attempting to close a stream.", e);
+			}
 		}
 		
 		return inputFileName;
@@ -201,6 +207,11 @@ public class ScanServiceImpl implements ScanService {
 		importer.setFileName(fileName);
 		
 		String result = importer.checkFile();
+		
+		if (result == null || (!result.equals(ChannelImporter.SUCCESSFUL_SCAN)
+				&& !result.equals(ChannelImporter.EMPTY_SCAN_ERROR))) {
+			importer.deleteScanFile();
+		}
 		
 		if (result == null) {
 			log.warn("The checkFile() method of the importer returned null, check to make sure that it is implemented correctly.");
@@ -276,5 +287,22 @@ public class ScanServiceImpl implements ScanService {
 	@Override
 	public long getFindingCount(Integer scanId) {
 		return scanDao.getFindingCount(scanId);
+	}
+
+	@Override
+	public long getUnmappedFindingCount(Integer scanId) {
+		return scanDao.getFindingCountUnmapped(scanId);
+	}
+
+	// TODO bounds checking I suppose (or turn everything into longs) (do the second one)
+	@Override
+	public void loadStatistics(Scan scan) {
+		if (scan == null || scan.getId() == null) {
+			return;
+		}
+		scan.setNumWithoutGenericMappings((int) scanDao.getNumberWithoutGenericMappings(scan.getId()));
+		scan.setTotalNumberSkippedResults((int) scanDao.getTotalNumberSkippedResults(scan.getId()));
+		scan.setNumWithoutChannelVulns((int) scanDao.getNumberWithoutChannelVulns(scan.getId()));
+		scan.setTotalNumberFindingsMergedInScan((int) scanDao.getTotalNumberFindingsMergedInScan(scan.getId()));
 	}
 }

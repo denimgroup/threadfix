@@ -46,19 +46,19 @@ function refillElementSort(elementId, endPoint, page, field)
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "descriptionFilter" : "' + $("#descriptionFilterInput").val() + '"';
+		data += ', "descriptionFilter" : ' + JSON.stringify($("#descriptionFilterInput").val().trim());
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "severityFilter" : "' + $("#severityFilterInput").val() + '"';
+		data += ', "severityFilter" : ' + JSON.stringify($("#severityFilterInput").val().trim());
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "locationFilter" : "' + $("#locationFilterInput").val() + '"';
+		data += ', "locationFilter" : ' + JSON.stringify($("#locationFilterInput").val().trim());
 	}
 		
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "parameterFilter" : "' + $("#parameterFilterInput").val() + '"';
+		data += ', "parameterFilter" : ' + JSON.stringify($("#parameterFilterInput").val().trim());
 	}
 	
 	data += "}";
@@ -70,7 +70,12 @@ function refillElementSort(elementId, endPoint, page, field)
 		contentType : "application/json",
 		dataType : "text",
 		success : function(text) {
-			$(elementId).html(text);
+			if (text.search('<head>') == -1) {
+				$(elementId).html(text);
+			} else {
+				// Kind of a hack
+				window.location = window.location.pathname.replace("threadfix/*","threadfix/login.jsp");
+			}
 		},
 		error : function (xhr, ajaxOptions, thrownError){
 			alert("Request for table data failed.");
@@ -114,11 +119,11 @@ function filter(elementId, endPoint) {
 
 function ToggleCheckboxes(tableId, cb_col){
 	var chkAll = $("#chkSelectAll");
-	var checked = chkAll.checked;
+	var checked = chkAll.attr("checked");
 	var t = $("#" + tableId);
-	var rows = t.getElementsByTagName("tr");
+	var rows = t.find("tr");
 	
-	for(var k=1; k<rows.length - 1; k++)
+	for(var k=1; k<rows.length; k++)
 	{
 		var checkbox = rows[k].children[cb_col].children[0];
 		if (checkbox != null && checkbox.type == 'checkbox' && $(rows[k]).hasClass('bodyRow')) {  

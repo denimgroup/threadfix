@@ -35,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -54,11 +53,8 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
  * 
  */
 @Component
-@Transactional
 public class QueueListener implements MessageListener {
-	// TODO fix the logging to update the DB when progress is made.
-	// TODO Maybe handle file scans and sentinel differently. Sentinel takes
-	// way longer than normal files.
+
 	private final Log log = LogFactory.getLog(QueueListener.class);
 
 	private ScanMergeService scanMergeService;
@@ -148,10 +144,12 @@ public class QueueListener implements MessageListener {
 			String status, Integer jobStatusId) {
 
 		getJobStatus(jobStatusId);
-
+		updateJobStatus("Submitting defect.");
+		
 		@SuppressWarnings("unchecked")
 		List<Vulnerability> vulnerabilities = vulnerabilityService
 				.loadVulnerabilityList((List<Integer>) vulnerabilityIds);
+		
 		if (vulnerabilities == null) {
 			closeJobStatus("No vulnerabilities could be found");
 			return;
@@ -162,7 +160,7 @@ public class QueueListener implements MessageListener {
 				preamble, component, version, severity, priority, status);
 
 		if (defect == null) {
-			if (vuln.getApplication() == null) {
+			if (vuln == null || vuln.getApplication() == null) {
 				closeJobStatus("The defect could not be created.");
 				return;
 			} else {

@@ -5,6 +5,8 @@
 
 <html lang="en">
 <head>
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
@@ -12,6 +14,10 @@
 		$(document).ready(function() {
 			$(".focus").focus();
 		});
+	</script>
+	
+	<script type="text/javascript">
+  		if(top != self) top.location.replace(location);
 	</script>
 </head>
 
@@ -25,6 +31,8 @@
 	</div>
 
 	<form method="post" action="${ fn:escapeXml(loginUrl) }" autocomplete="off">
+		<!-- Attempts to change this will only result in the CSRF filter blocking the user -->
+		<input type='hidden' name='spring-security-redirect' value='/organizations'/>
 		<div style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-191px;">
 			<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg" alt="Denim Group" width="177px" height="81px"/>
 		</div>

@@ -72,7 +72,7 @@ public class RemoteProvidersController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "apiKeyString", "username", 
+		dataBinder.setAllowedFields(new String[] { "apiKey", "username", 
 				"password", "application.id", "application.organization.id" });
 	}
 	
@@ -82,8 +82,8 @@ public class RemoteProvidersController {
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
 		
 		for (RemoteProviderType type : typeList) {
-			if (type != null && type.getApiKeyString() != null) {
-				type.setApiKeyString(mask(type.getApiKeyString()));
+			if (type != null && type.getApiKey() != null) {
+				type.setApiKey(mask(type.getApiKey()));
 			}
 		}
 		
@@ -137,11 +137,22 @@ public class RemoteProvidersController {
 			return "redirect:/configuration/remoteproviders/";
 		}
 		
-		if (remoteProviderApplicationService.importScanForApplication(remoteProviderApplication)) {
+		if (remoteProviderApplication != null) {
+			remoteProviderTypeService.decryptCredentials(
+					remoteProviderApplication.getRemoteProviderType());
+		}
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		if (remoteProviderApplicationService.importScansForApplication(remoteProviderApplication)) {
 			return "redirect:/organizations/" + 
-					remoteProviderApplication.getApplication().getOrganization().getId() + 
-					"/applications/" +
-					remoteProviderApplication.getApplication().getId();
+						remoteProviderApplication.getApplication().getOrganization().getId() + 
+						"/applications/" +
+						remoteProviderApplication.getApplication().getId();
 		} else {
 			request.getSession().setAttribute("error", "No new scans were found.");
 			return "redirect:/configuration/remoteproviders/";
@@ -190,8 +201,8 @@ public class RemoteProvidersController {
 			// This will prevent actual password data being sent to the page
 			remoteProviderType.setPassword(RemoteProviderTypeService.USE_OLD_PASSWORD);
 		}
-		if (remoteProviderType.getApiKeyString() != null) {
-			remoteProviderType.setApiKeyString(mask(remoteProviderType.getApiKeyString()));
+		if (remoteProviderType.getApiKey() != null) {
+			remoteProviderType.setApiKey(mask(remoteProviderType.getApiKey()));
 		}
 		
 		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/configure");

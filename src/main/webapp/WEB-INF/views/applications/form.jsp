@@ -107,11 +107,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2">
+				<td>
 				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
 					<spring:param name="orgId" value="${ application.organization.id }" />
 					</spring:url>
-				<a href="${ fn:escapeXml(testUrl) }" id="jsonLink">Test Connection</a>
+				<a href="javascript:jsonTest('${ fn:escapeXml(testUrl) }');" id="jsonLink">Test Connection</a>
+				</td>
+				<td>
+				<div id="toReplace">
+				</div>
 				</td>
 			</tr>
 			<tr class="defecttracker_row">
@@ -211,7 +215,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:if test="${ not empty application.defectTracker.id }">
-				<input id="updateApplicationButton" type="submit" onclick="if (initialDefectTrackerId && (new Number(initialDefectTrackerId).toString()) !== $('#defectTrackerId').val()) { return confirm('Since you are switching Defect Trackers, you will lose all defects associated with this application.') }" value="Update Application" />
+				<input id="updateApplicationButton" type="submit" onclick="if (initialDefectTrackerId && (new Number(initialDefectTrackerId).toString()) !== $('#defectTrackerId').val()) { return confirm('Since you are switching Defect Trackers, you will lose all defects associated with this application.'); }" value="Update Application" />
 			</c:if>
 			<c:if test="${ empty application.defectTracker.id }">
 				<input id="updateApplicationButton" type="submit" value="Update Application" />

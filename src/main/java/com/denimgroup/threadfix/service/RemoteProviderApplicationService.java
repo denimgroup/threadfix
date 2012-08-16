@@ -74,7 +74,7 @@ public interface RemoteProviderApplicationService {
 	 * 
 	 * @param appId
 	 */
-	boolean importScanForApplication(RemoteProviderApplication remoteProviderApplication);
+	boolean importScansForApplication(RemoteProviderApplication remoteProviderApplication);
 	
 	/**
 	 * 

@@ -89,4 +89,12 @@ public interface FindingDao {
 	 */
 	List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId, int page);
 
+	/**
+	 * 
+	 * @param scanId
+	 * @param page
+	 * @return
+	 */
+	Object retrieveUnmappedFindingsByScanIdAndPage(Integer scanId, int page);
+
 }

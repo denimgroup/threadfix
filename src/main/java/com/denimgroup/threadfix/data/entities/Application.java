@@ -48,6 +48,8 @@ import org.hibernate.validator.constraints.URL;
 public class Application extends AuditableEntity {
 
 	private static final long serialVersionUID = 1175222046579045669L;
+	
+	public static final String TEMP_PASSWORD = "this is not the password";
 
 	public static final int NAME_LENGTH = 60;
 	public static final int URL_LENGTH = 255;
@@ -78,11 +80,17 @@ public class Application extends AuditableEntity {
 	private String component;
 	private DefectTracker defectTracker;
 	
-	@Size(max = 50, message = "{errors.maxlength} 50.")
+	@Size(max = 80, message = "{errors.maxlength} 80.")
 	private String userName;
 	
-	@Size(max = 50, message = "{errors.maxlength} 50.")
+	@Size(max = 80, message = "{errors.maxlength} 80.")
 	private String password;
+
+	@Size(max = 1024, message = "{errors.maxlength} 1024.")
+	private String encryptedPassword;
+	
+	@Size(max = 1024, message = "{errors.maxlength} 1024.")
+	private String encryptedUserName;
 	
 	private List<Defect> defectList;
 
@@ -141,7 +149,7 @@ public class Application extends AuditableEntity {
 		this.component = component;
 	}
 	
-	@Column(length = 50)
+	@Transient
 	public String getUserName() {
 		return userName;
 	}
@@ -150,14 +158,33 @@ public class Application extends AuditableEntity {
 		this.userName = userName;
 	}
 
-	@Column(length = 50)
-	@JsonIgnore
+	@Transient
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@Column(length = 1024)
+	@JsonIgnore
+	public String getEncryptedPassword() {
+		return encryptedPassword;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
+	}
+
+	@Column(length = 1024)
+	@JsonIgnore
+	public String getEncryptedUserName() {
+		return encryptedUserName;
+	}
+
+	public void setEncryptedUserName(String encryptedUserName) {
+		this.encryptedUserName = encryptedUserName;
 	}
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -265,47 +292,11 @@ public class Application extends AuditableEntity {
 	@Transient
 	@JsonIgnore
 	public List<Integer> getVulnerabilityReport() {
-		if (reportList != null) {
-			return reportList;
-		}
-
-		List<Vulnerability> vulnList = getVulnerabilities();
-
-		if (vulnList == null) {
-			return null;
-		}
-
-		reportList = new ArrayList<Integer>();
-		for (int i = 0; i < 6; i++) {
-			reportList.add(0);
-		}
-
-		String name = null;
-
-		for (Vulnerability vulnerability : getVulnerabilities()) {
-			if (vulnerability != null && vulnerability.isActive() && !vulnerability.getIsFalsePositive()) {
-				if (vulnerability.getGenericSeverity() != null) {
-					name = vulnerability.getGenericSeverity().getName();
-	
-					if (name.equals(GenericSeverity.INFO)) {
-						reportList.set(0, reportList.get(0) + 1);
-					} else if (name.equals(GenericSeverity.LOW)) {
-						reportList.set(1, reportList.get(1) + 1);
-					} else if (name.equals(GenericSeverity.MEDIUM)) {
-						reportList.set(2, reportList.get(2) + 1);
-					} else if (name.equals(GenericSeverity.HIGH)) {
-						reportList.set(3, reportList.get(3) + 1);
-					} else if (name.equals(GenericSeverity.CRITICAL)) {
-						reportList.set(4, reportList.get(4) + 1);
-					}
-				}
-
-				if (name != null && !name.equals(GenericSeverity.INFO))
-					reportList.set(5, reportList.get(5) + 1);
-			}
-		}
-
 		return reportList;
+	}
+	
+	public void setVulnerabilityReport(List<Integer> vulnReport) {
+		this.reportList = vulnReport;
 	}
 
 	@Transient

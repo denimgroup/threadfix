@@ -91,8 +91,10 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		Scan scan = null;
-		if (scanId != null)
+		if (scanId != null) {
 			scan = scanService.loadScan(scanId);
+			scanService.loadStatistics(scan);
+		}
 		if (scan == null) {
 			if (orgId != null && appId != null)
 				return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
@@ -102,7 +104,10 @@ public class ScanController {
 				return new ModelAndView("redirect:/");
 		}
 		
+		long numFindings = scanService.getFindingCount(scanId);
+		
 		ModelAndView mav = new ModelAndView("scans/detail");
+		mav.addObject("totalFindings", numFindings);
 		mav.addObject(scan);
 		mav.addObject("vulnData", scan.getReportList());
 		return mav;
@@ -129,15 +134,61 @@ public class ScanController {
 		if (scan == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
-		}		
-		
+		}
+
 		long numFindings = scanService.getFindingCount(scanId);
 		long numPages = (numFindings / 100);
+		
+		if (numFindings % 100 == 0) {
+			numPages -= 1;
+		}
+		
+		if (bean.getPage() > numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+		
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+				
 		model.addAttribute("numPages", numPages);
 		model.addAttribute("page", bean.getPage());
 		model.addAttribute("numFindings", numFindings);
 		model.addAttribute("findingList", findingService.getFindingTable(scanId, bean));
 		model.addAttribute(scan);
 		return "scans/table";
+	}
+	
+	@RequestMapping(value = "/{scanId}/unmappedTable", method = RequestMethod.POST)
+	public String unmappedScanTable(Model model,
+			@RequestBody TableSortBean bean,
+			@PathVariable("scanId") Integer scanId) {
+		Scan scan = scanService.loadScan(scanId);
+		if (scan == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+			throw new ResourceNotFoundException();
+		}
+
+		long numFindings = scanService.getUnmappedFindingCount(scanId);
+		long numPages = (numFindings / 100);
+		
+		if (numFindings % 100 == 0) {
+			numPages -= 1;
+		}
+		
+		if (bean.getPage() >= numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+		
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+		
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("numFindings", numFindings);
+		model.addAttribute("findingList", findingService.getUnmappedFindingTable(scanId, bean));
+		model.addAttribute(scan);
+		return "scans/unmappedTable";
 	}
 }

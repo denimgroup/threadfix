@@ -111,20 +111,23 @@ public class HibernateFindingDao implements FindingDao {
 						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
 				.setInteger("appId", appId)
 				.setInteger("channelTypeId", channelTypeId).uniqueResult();
-		if(applicationChannelId == null)return null;
+		if (applicationChannelId == null)
+			return null;
 		Integer scanId = (Integer) currentSession
 				.createQuery(
 						"select id from Scan where applicationId = :appId and applicationChannelId = :applicationChannelId")
 				.setInteger("appId", appId)
 				.setInteger("applicationChannelId", applicationChannelId)
 				.uniqueResult();
-		if(scanId == null)return null;
+		if (scanId == null)
+			return null;
 		return currentSession
 				.createQuery(
 						"from Finding where scanId = :scanId and userId = :userId and isStatic = 0 order by createdDate desc")
-				.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
+				.setInteger("scanId", scanId).setInteger("userId", userId)
+				.setMaxResults(10).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId) {
@@ -137,18 +140,21 @@ public class HibernateFindingDao implements FindingDao {
 						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
 				.setInteger("appId", appId)
 				.setInteger("channelTypeId", channelTypeId).uniqueResult();
-		if(applicationChannelId == null)return null;
+		if (applicationChannelId == null)
+			return null;
 		Integer scanId = (Integer) currentSession
 				.createQuery(
 						"select id from Scan where applicationId = :appId and applicationChannelId = :applicationChannelId")
 				.setInteger("appId", appId)
 				.setInteger("applicationChannelId", applicationChannelId)
 				.uniqueResult();
-		if(scanId == null)return null;
+		if (scanId == null)
+			return null;
 		return currentSession
 				.createQuery(
 						"from Finding where scanId = :scanId and userId = :userId and isStatic = 1 order by createdDate desc")
-						.setInteger("scanId", scanId).setInteger("userId", userId).setMaxResults(10).list();
+				.setInteger("scanId", scanId).setInteger("userId", userId)
+				.setMaxResults(10).list();
 	}
 
 	@Override
@@ -163,18 +169,39 @@ public class HibernateFindingDao implements FindingDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId, int page) {
+	public List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId,
+			int page) {
 
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 				Finding.class);
 
 		criteria.add(Restrictions.eq("active", true))
 				.add(Restrictions.eq("scan.id", scanId))
+				.add(Restrictions.isNotNull("vulnerability"))
 				.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
-				.setFirstResult((page - 1) * 100)
-				.setMaxResults(100)
+				.setFirstResult((page - 1) * 100).setMaxResults(100)
+				.addOrder(Order.desc("severity.numericValue"))
+				.addOrder(Order.asc("vuln.name"))
+				.addOrder(Order.asc("surface.path"));
+
+		return criteria.list();
+	}
+
+	@Override
+	public Object retrieveUnmappedFindingsByScanIdAndPage(Integer scanId,
+			int page) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+				Finding.class);
+
+		criteria.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("scan.id", scanId))
+				.add(Restrictions.isNull("vulnerability"))
+				.createAlias("channelSeverity", "severity")
+				.createAlias("channelVulnerability", "vuln")
+				.createAlias("surfaceLocation", "surface")
+				.setFirstResult((page - 1) * 100).setMaxResults(100)
 				.addOrder(Order.desc("severity.numericValue"))
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));

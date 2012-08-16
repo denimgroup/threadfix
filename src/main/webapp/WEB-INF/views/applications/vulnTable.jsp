@@ -40,8 +40,8 @@
 			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ numPages + 1 })">Last (<c:out value="${ numPages + 1}"/>)</a>
 		</c:if>
 		
+		<input class="refillElementOnEnter" type="text" id="pageInput" />
 		<a href="javascript:refillElementDropDownPage('#toReplace', '${ tableUrl }')">Go to page</a>
-		<input type="text" id="pageInput" />
 	</div>
 	</c:if>
 	
@@ -138,4 +138,16 @@
 			</tr>
 		</tfoot>
 	</table>
+	
+	<script>
+	$('.disableSubmitOnEnter').keypress(function(e){
+	    if ( e.which == 13 ) return false;
+	});
+	$('.refillElementOnEnter').keypress(function(e) {
+		if (e.which == 13) {
+			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>');
+			return false;
+		}
+	});
+	</script>
 </body>

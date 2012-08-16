@@ -53,6 +53,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,6 +138,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	public void setChannel(ApplicationChannel applicationChannel) {
 		this.applicationChannel = applicationChannel;
 	}
+	
+	@Override
+	public Calendar getTestDate() {
+		return testDate;
+	}
 
 	/**
 	 * Sets the filename containing the scan results.
@@ -161,27 +167,27 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 
 	@Override
 	public void deleteScanFile() {
-		try {
-			inputStream.close();
-			File file = new File(inputFileName);
-			if (file.exists()) {
-				if (!file.delete()) {
-					log.warn("Scan file deletion failed, calling deleteOnExit()");
-					file.deleteOnExit();
-				}
+		
+		closeInputStream(inputStream);
+		
+		File file = new File(inputFileName);
+		if (file.exists()) {
+			if (!file.delete()) {
+				log.warn("Scan file deletion failed, calling deleteOnExit()");
+				file.deleteOnExit();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
 	protected void deleteZipFile() {
-		if (zipFile != null)
+		if (zipFile != null) {
 			try {
 				zipFile.close();
 			} catch (IOException e) {
 				log.warn("Closing zip file failed in deleteZipFile() in AbstractChannelImporter.", e);
 			}
+		}
+		
 		if (diskZipFile != null && !diskZipFile.delete()) {
 			log.warn("Zip file deletion failed, calling deleteOnExit()");
 			diskZipFile.deleteOnExit();
@@ -401,10 +407,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	/**
 	 * @param stream
 	 */
-	protected void closeInputStream() {
-		if (inputStream != null) {
+	protected void closeInputStream(InputStream stream) {
+		if (stream != null) {
 			try {
-				inputStream.close();
+				stream.close();
 			} catch (IOException ex) {
 				log.warn("Closing an input stream failed.");
 			}
@@ -461,12 +467,12 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			if (vuln == null) {
 				if (channelType != null)
 					log.warn("A " + channelType.getName() + " channel vulnerability with code "
-						+ code + " was requested but not found.");
+						+ StringEscapeUtils.escapeHtml(code) + " was requested but not found.");
 				return null;
 			} else {
 				if (vuln.getGenericVulnerability() == null) {
 					log.info("The " + channelType.getName() + " channel vulnerability with code "
-							+ code + " has no generic mapping.");
+						+ StringEscapeUtils.escapeHtml(code) + " has no generic mapping.");
 				}
 			}
 
@@ -474,9 +480,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return vuln;
 		}
 	}
-
-
-
 
 	// return the parsed date object, or the null if parsing fails.
 	protected Calendar getCalendarFromString(String formatString, String dateString) {
@@ -538,6 +541,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			log.warn("The attempt to unpack the zip stream returned null.");
 			return null;
 		}
+		
+		ZipFile zipFile = null;
 			
 		try {
 
@@ -549,18 +554,18 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				out.write(buf, 0, len);
 			
 			out.close();
-			ZipFile zipFile = new ZipFile(diskZipFile);
+			zipFile = new ZipFile(diskZipFile);
 			
 			log.debug("Saved zip file to disk. Returning zip file.");
-			
-			return zipFile;
 		} catch (ZipException e) {
 			log.warn("There was a ZipException while trying to save and open the file - probably not in a zip format.");
 		} catch (IOException e) {
 			log.warn("There was an IOException error in the unpackZipStream method: " + e + ".");
+		} finally {
+			closeInputStream(inputStream);
 		}
 		
-		return null;
+		return zipFile;
 	}
 	
 	/**
@@ -599,8 +604,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		if (inputStream == null)
 			return null;
 		
-		if (saxFindingList == null)
-			saxFindingList = new ArrayList<Finding>();
+		saxFindingList = new ArrayList<Finding>();
 				
 		readSAXInput(handler, "Done Parsing.");
 		
@@ -649,6 +653,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				log.warn("Bad XML format - ensure correct, uniform encoding.");
 				return BADLY_FORMED_XML;
 			}
+			closeInputStream(inputStream);
 			try {
 				inputStream = new FileInputStream(inputFileName);
 			} catch (FileNotFoundException e) {
@@ -656,13 +661,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			}
 		}
 		
-		try {
-			readSAXInput(handler, FILE_CHECK_COMPLETED);
-			inputStream = new FileInputStream(inputFileName);
-		} catch (FileNotFoundException e) {
-			log.error("The scan file was not found on the filesystem after the test. " +
-					"Normal scan processing will probably fail.", e);
-		}
+		readSAXInput(handler, FILE_CHECK_COMPLETED);
+		closeInputStream(inputStream);
 		
 		log.info(testStatus);
 		return testStatus;
@@ -681,6 +681,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		} catch (IOException e) {
 			log.warn("Trying to read XML returned the error " + e.getMessage());
 			return true;
+		} finally {
+			closeInputStream(inputStream);
 		}
 
 		return false;
@@ -700,6 +702,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		} catch (SAXException e) {
 			if (!e.getMessage().equals(completionCode))
 				e.printStackTrace();
+		} finally {
+			closeInputStream(inputStream);
 		}
 	}
 	
@@ -711,7 +715,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
 		inputStream = new BufferedInputStream(inputStream);
 		
-		// UTF-8 contains 3 characters at the start of a file, which is a problem.
+		// UTF-8 contains 3 characters at the start of a file, which is a problem. = null;
 		// The SAX parser sees them as characters in the prolog and throws an exception.
 		// This code removes them if they are present.
 		inputStream.mark(4);
@@ -725,7 +729,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		InputSource source = new InputSource(fileReader);
 		source.setEncoding("UTF-8");
 		xmlReader.parse(source);
-		closeInputStream();
 	}
 	
 	/**

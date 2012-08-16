@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -87,6 +88,39 @@ public class HibernateApplicationDao implements ApplicationDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(application);
 		}
+	}
+	
+	/**
+	 * This implementation is a little gross but way better than iterating through
+	 * all of the vulns on the TF side
+	 */
+	@Override
+	public List<Integer> loadVulnerabilityReport(Application application) {
+		if (application == null) {
+			return null;
+		}
+		
+		List<Integer> ints = new ArrayList<Integer>();
+		
+		for (int i = 1; i < 6; i++) {
+			long result = (Long) sessionFactory.getCurrentSession()
+				.createQuery("select count(*) from Vulnerability vuln " +
+						"where genericSeverity.intValue = :value " +
+						"and application = :app and active = true")
+				.setInteger("value", i)
+				.setInteger("app", application.getId())
+				.uniqueResult();
+
+			ints.add((int) result);
+		}
+		
+		long result = (Long) sessionFactory.getCurrentSession()
+				.createQuery("select count(*) from Vulnerability vuln " +
+						"where application = :app and active = true")
+				.setInteger("app", application.getId())
+				.uniqueResult();
+		ints.add((int) result);
+		return ints;
 	}
 
 }

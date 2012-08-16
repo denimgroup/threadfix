@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -68,10 +66,6 @@ public class Scan extends BaseEntity {
 	private Integer numberOldVulnerabilitiesInitiallyFromThisChannel;
 
 	private List<Finding> findings;
-	
-	// The rest of the variables are just caches for the scan display page
-	private List<Finding> mappedFindings = null;
-	private List<Finding> unmappedFindings = null;
 	
 	private Integer numWithoutChannelVulns = null;
 	private Integer numWithoutGenericMappings = null;
@@ -228,90 +222,40 @@ public class Scan extends BaseEntity {
 	}
 	
 	@Transient
-	@JsonIgnore
-	public List<Finding> getUnmappedFindings() {
-		if (unmappedFindings == null) {
-			generateFindingLists();
-		}
-		return unmappedFindings;
-	}
-	
-	@Transient
-	@JsonIgnore
-	public List<Finding> getMappedFindings() {
-		if (mappedFindings == null) {
-			generateFindingLists();
-		}
-		return mappedFindings;
-	}
-	
-	@Transient
 	public Integer getNumWithoutGenericMappings() {
-		if (numWithoutGenericMappings == null)
-			generateFindingLists();
 		return numWithoutGenericMappings;
 	}
 	
+	public void setNumWithoutGenericMappings(Integer numWithoutGenericMappings) {
+		this.numWithoutGenericMappings = numWithoutGenericMappings;
+	}
+
 	@Transient
 	public Integer getNumWithoutChannelVulns() {
-		if (numWithoutChannelVulns == null)
-			generateFindingLists();
 		return numWithoutChannelVulns;
+	}
+	
+	public void setNumWithoutChannelVulns(Integer numWithoutChannelVulns) {
+		this.numWithoutChannelVulns = numWithoutChannelVulns;
 	}
 	
 	@Transient
 	public Integer getTotalNumberSkippedResults() {
-		if (totalNumberSkippedResults == null)
-			generateFindingLists();
 		return totalNumberSkippedResults;
+	}
+	
+	public void setTotalNumberSkippedResults(Integer totalNumberSkippedResults) {
+		this.totalNumberSkippedResults = totalNumberSkippedResults;
 	}
 	
 	@Transient
 	public Integer getTotalNumberFindingsMergedInScan() {
-		if (totalNumberFindingsMergedInScan == null)
-			generateFindingLists();
 		return totalNumberFindingsMergedInScan;
 	}
 	
-	// This method calculates the scan information for the scan view page
-	@Transient
-	private void generateFindingLists() {
-		unmappedFindings = new ArrayList<Finding>();
-		mappedFindings = new ArrayList<Finding>();
-		numWithoutChannelVulns = 0;
-		numWithoutGenericMappings = 0;
-		totalNumberSkippedResults = 0;
-		totalNumberFindingsMergedInScan = 0;
-		
-		Set<Integer> vulnIdSet = new TreeSet<Integer>();
-		
-		if (getFindings() == null || getFindings().size() == 0)
-			return;
-		
-		for (Finding finding : getFindings()) {
-			if (finding == null)
-				continue;
-			
-			totalNumberSkippedResults += finding.getNumberMergedResults() - 1;
-			
-			if (finding.getVulnerability() == null) {
-				unmappedFindings.add(finding);
-				
-				if (finding.getChannelVulnerability() == null) {
-					numWithoutChannelVulns++;
-				} else if (finding.getChannelVulnerability().getVulnerabilityMaps() == null ||
-						finding.getChannelVulnerability().getVulnerabilityMaps().size() == 0) {
-					numWithoutGenericMappings++;
-				}
-			} else {
-				mappedFindings.add(finding);
-				if (vulnIdSet.contains(finding.getVulnerability().getId())) {
-					totalNumberFindingsMergedInScan++;
-				} else {
-					vulnIdSet.add(finding.getVulnerability().getId());
-				}
-			}
-		}
+	public void setTotalNumberFindingsMergedInScan(
+			Integer totalNumberFindingsMergedInScan) {
+		this.totalNumberFindingsMergedInScan = totalNumberFindingsMergedInScan;
 	}
 
 	// These two functions establish the order the integers come in and this

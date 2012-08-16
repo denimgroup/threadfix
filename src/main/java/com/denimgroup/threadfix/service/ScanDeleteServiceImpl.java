@@ -17,7 +17,9 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
@@ -65,11 +67,38 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	public void deleteScan(Scan scan) {
 		// if the scan is missing one of these it is probably malformed
 		if (scan == null || scan.getApplication() == null
-				|| scan.getApplicationChannel() == null) {
+				|| scan.getApplicationChannel() == null
+				|| scan.getApplicationChannel().getChannelType() == null) {
 			return;
 		}
 		
 		log.info("Deleting scan with ID " + scan.getId());
+		
+		ChannelType type = scan.getApplicationChannel().getChannelType();
+		
+		if (scan.getApplication().getRemoteProviderApplications() != null) {
+			for (RemoteProviderApplication app : scan.getApplication().getRemoteProviderApplications()) {
+				if (app != null && app.getRemoteProviderType() != null 
+						&& app.getRemoteProviderType().getChannelType() != null &&
+						app.getRemoteProviderType().getChannelType().getId() != null &&
+						app.getRemoteProviderType().getChannelType().getId().equals(type.getId()) &&
+						app.getLastImportTime() != null && scan.getImportTime() != null && 
+						app.getLastImportTime().equals(scan.getImportTime()) &&
+						app.getApplicationChannel() != null && app.getApplicationChannel().getScanList() != null){
+					// This means that we are deleting the last scan for the importer and that we need to update the
+					// last import time so that we can import more scans.
+					
+					Calendar latestTime = null;
+					for (Scan remoteScan : app.getApplicationChannel().getScanList()) {
+						if (!remoteScan.getId().equals(scan.getId()) && (latestTime == null ||
+								latestTime.before(scan.getImportTime()))) {
+							latestTime = remoteScan.getImportTime();
+						}
+					}
+					app.setLastImportTime(latestTime);
+				}
+			}
+		}
 		
 		Integer scanId = scan.getId();
 		Integer scanApplicationChannelId = scan.getApplicationChannel().getId();
@@ -130,11 +159,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		// make sure they come in an order that makes sense.
 		correctScanStatistics(appScanList, scan);
 		
-		for (Finding finding : scan.getFindings()) {
-			findingDao.delete(finding);
-		}
-		
-		scanDao.delete(scan);
+		scanDao.deleteFindingsAndScan(scan);
 		
 		log.info("The scan deletion has finished.");
 	}
@@ -322,7 +347,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 							&& map.getFinding().getScan().getId() != null
 							&& map.getFinding().getScan().getId().equals(scanToDelete.getId())) {
 						
-						log.info("Moving Finding with ID " + map.getFinding().getId() + 
+						log.debug("Moving Finding with ID " + map.getFinding().getId() + 
 								" to scan with ID " + scan.getId() + " and deleting mapping.");
 						scan.setNumberRepeatFindings(scan.getNumberRepeatFindings() -1);
 						scan.setNumberRepeatResults(
@@ -393,7 +418,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		if (earliestFinding != null) {
-			log.info("Updating new / old vuln stats for the Scan with ID " + 
+			log.debug("Updating new / old vuln stats for the Scan with ID " + 
 					earliestFinding.getScan().getId());
 			
 			earliestFinding.getScan().setNumberNewVulnerabilities(
@@ -418,7 +443,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		for (Scan scan : scanList) {
-			if (scan.getImportTime().before(toDelete.getImportTime())) {
+			if (!scan.getImportTime().after(toDelete.getImportTime())) {
 				continue;
 			}
 			
@@ -486,6 +511,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				updateVulnStatus(vuln);
 			}
 			
+			
 			if (closeMapsToDelete.size() > 0) {
 				for (ScanCloseVulnerabilityMap map : closeMapsToDelete) {
 					scan.getScanCloseVulnerabilityMaps().remove(map);
@@ -528,6 +554,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		if (app.getVulnerabilities() == null || app.getVulnerabilities().size() == 0) {
 			return;
 		}
+		
+		//if (app.getScans().size() == 1 && app.getScans().get(0).getId().equals(scan.getId()))
 		
 		for (Vulnerability vuln : app.getVulnerabilities()) {
 			if (vuln == null) continue;
@@ -576,7 +604,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 		
 				newFirstFinding.setFirstFindingForVuln(true);
-				log.info("Updating number new vulnerabilities for Scan with ID " + 
+				log.debug("Updating number new vulnerabilities for Scan with ID " + 
 						newFirstFinding.getScan().getId());
 				newFirstFinding.getScan().setNumberNewVulnerabilities(
 						newFirstFinding.getScan().getNumberNewVulnerabilities() + 1);
@@ -600,13 +628,13 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		for (Vulnerability vuln : vulnsToRemove) {
-			log.info("Deleting vulnerability with ID " + vuln.getId());
+			log.debug("Deleting vulnerability with ID " + vuln.getId());
 			app.getVulnerabilities().remove(vuln);
 			
 			// Since WAF Rules can only have one vulnerability, just delete them.
 			if (vuln.getWafRules() != null && vuln.getWafRules().size() > 0) {
 				for (WafRule wafRule : vuln.getWafRules()) {
-					log.info("Deleting WAF Rule with ID " + wafRule.getId() 
+					log.debug("Deleting WAF Rule with ID " + wafRule.getId() 
 							+ " because it was attached to the Vulnerability with ID " + vuln.getId());
 					wafRuleDao.delete(wafRule);
 				}
@@ -625,7 +653,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					}
 				}
 				if (!keepIt) {
-					log.info("Deleting orphaned defect with ID " + vuln.getDefect().getId() + ".");
+					log.debug("Deleting orphaned defect with ID " + vuln.getDefect().getId() + ".");
 					defectDao.delete(vuln.getDefect());
 				}
 			}

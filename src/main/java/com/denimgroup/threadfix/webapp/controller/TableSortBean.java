@@ -4,8 +4,20 @@ public class TableSortBean {
 	
 	int page, sort, field;
 	String descriptionFilter, severityFilter, locationFilter, parameterFilter;
-	
+	boolean open, falsePositive;
 
+	public boolean isOpen() {
+		return open;
+	}
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+	public boolean isFalsePositive() {
+		return falsePositive;
+	}
+	public void setFalsePositive(boolean falsePositive) {
+		this.falsePositive = falsePositive;
+	}
 	public String getDescriptionFilter() {
 		return descriptionFilter;
 	}

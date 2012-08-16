@@ -2,6 +2,7 @@
 
 <head>
     <title><c:out value="${ surveyResult.survey.name }" /></title>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/survey-sections.js"></script>
 </head>
 
 <body id="apps">
@@ -21,7 +22,7 @@
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
 					</spring:url>
-					<a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ surveyResult.organization.name }"/></a>
+					<a href="${ fn:escapeXml(orgUrl) }" onclick="return confirmExit();"><c:out value="${ surveyResult.organization.name }"/></a>
 				</td>
 			</tr>
 		</tbody>
@@ -43,50 +44,62 @@
 						<span style="font-weight: bold">Maturity Assessment saved successfully.</span>
 					</c:if>
 				</td>
+				<td>
+					<a href="${ fn:escapeXml(orgUrl) }" onclick="return confirmExit();">Return to Team Page</a>
+				</td>
 			</tr>
 		</table>
 		
-		<table class="summary">
+		<table class="summary" id="table">
 			<thead>
 				<tr>
-					<th>&nbsp;</th>
-					<th style="width:30px;text-align:center"><b>Yes</b></th>
-					<th style="width:30px;text-align:center"><b>No</b></th>
-					<th style="text-align:center"><b>Comments</b></th>
-				
+					<th class="toFix">&nbsp;</th>
+					<th class="toFix" style="width:30px;text-align:center"><b>Yes</b></th>
+					<th class="toFix" style="width:30px;text-align:center"><b>No</b></th>
+					<th class="toFix" style="text-align:center"><b>Comments</b></th>
 				</tr>
 			</thead>
 			<tbody>
 			<c:forEach var="section" items="${surveyResult.survey.surveySections}">
 				<tr style="background: <c:out value='${section.color}' />" >
 					<td colspan="4">
-						<h2 style="color: #FFF;"><c:out value="${section.sectionName}" /></h2>
+						<h2 style="color: #FFF;padding-left:8px;padding-top:8px">
+							<a style="color:white" href="javascript:toggle('section<c:out value='${section.id }'/>');">
+								<c:out value="${section.sectionName}" />
+							</a>
+						</h2>
 					</td>
 				</tr>
 				<c:forEach var="practice" items="${section.surveyPractices}">
-					<tr style="background: <c:out value='${section.lightColor}' />" >
+					<tr class="section<c:out value="${ section.id }"/>" 
+								style="background: <c:out value='${ section.lightColor }' />" >
 						<td colspan="4">
-							<h3 style="color: <c:out value='${section.color}' />" ><c:out value="${practice.name}" /></h3>
+							<h3 style="padding-left:8px;">
+								<a style="color:<c:out value='${section.color}' />" href="javascript:toggle('practice<c:out value='${ practice.id }'/>');">
+									<c:out value="${practice.name}" />
+								</a>
+							</h3>
 						</td>
 					</tr>
 				<c:forEach var="level"  items="${surveyResult.survey.surveyLevels}">
-					<tr style="background: <c:out value='${section.lightColor}' />" >
+					<tr class="section<c:out value="${ section.id }"/>  practice<c:out value="${ practice.id }"/>" 
+								style="background:<c:out value='${section.lightColor}' />" >
 						<td colspan="4">
-							<h4>Level - <c:out value="${level.number}" /></h4>
+							<h4 style="padding-left:8px;">Level - <c:out value="${level.number}" /></h4>
 						</td>
 					</tr>
 				<c:forEach var="question" items="${practice.objectivesMap[level.number].surveyQuestions}">
 					<c:set var="answer" value="${surveyResult.questionAnswers[question.id]}" />
 					<c:set var="answerName" value="questionAnswers[${question.id}]" />
-					<tr>
-						<td><b>${question.surveyQuestion}</b></td>
+					<tr class="section<c:out value="${ section.id }"/>  practice<c:out value="${ practice.id }"/>">
+						<td style="padding-left:8px"><b>${question.surveyQuestion}</b></td>
 						<td style="text-align:center">
-							<input type="radio" name="<c:out value="${answerName}.answer" />" value="true"
+							<input onchange="markEdited();" type="radio" name="<c:out value="${answerName}.answer" />" value="true"
 								<c:if test="${answer.answer}">checked="checked"</c:if> 
 							/>
 						</td>
 						<td style="text-align:center">
-							<input type="radio" name="<c:out value="${answerName}.answer" />" value="false" 
+							<input onchange="markEdited();" type="radio" name="<c:out value="${answerName}.answer" />" value="false" 
 								<c:if test="${!answer.answer}">checked="checked"</c:if>
 							/>
 						</td>
@@ -95,16 +108,16 @@
 				<c:forEach var="assertion" items="${question.surveyAssertions}" varStatus="row">
 					<c:set var="answer" value="${surveyResult.assertionAnswers[assertion.id]}" />
 					<c:set var="answerName" value="assertionAnswers[${assertion.id}]" />
-					<tr>
+					<tr class="section<c:out value="${ section.id }"/>  practice<c:out value="${ practice.id }"/>">
 						<td style="padding-left: 32px"><c:out value="${assertion.description}" /></td>
 						<td style="text-align:center">
-							<input type="checkbox" name="<c:out value="${answerName}.answer" />"
+							<input onchange="markEdited();" type="checkbox" name="<c:out value="${answerName}.answer" />"
 								<c:if test="${answer.answer}">checked="checked"</c:if> 
 							/>
-							<input type="hidden" name="<c:out value="_${answerName}.answer" />" />
+							<input onchange="markEdited();" type="hidden" name="<c:out value="_${answerName}.answer" />" />
 						</td>
 						<td></td>
-						<td style="padding-top:7px;<c:if test='${fn:length(question.surveyAssertions)-1 == row.index}'>padding-bottom:7px;</c:if>"><input type="text" name="<c:out value="${answerName}.comment" />" value="<c:out value='${answer.comment}' />" /></td>
+						<td style="padding-top:7px;<c:if test='${fn:length(question.surveyAssertions)-1 == row.index}'>padding-bottom:7px;</c:if>"><input onchange="markEdited();" type="text" name="<c:out value="${answerName}.comment" />" value="<c:out value='${answer.comment}' />" /></td>
 					</tr>
 				</c:forEach>
 				</c:forEach>

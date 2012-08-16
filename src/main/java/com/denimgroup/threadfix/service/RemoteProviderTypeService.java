@@ -75,5 +75,12 @@ public interface RemoteProviderTypeService {
 	 * @return
 	 */
 	void clearConfiguration(int id);
+
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	RemoteProviderType decryptCredentials(RemoteProviderType type);
 	
 }

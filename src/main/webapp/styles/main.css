@@ -231,7 +231,7 @@ div#helpText {
     color: black;
     margin: 10px 0;
     padding: 15px;
-    display: inline-block;
+    display: none;
 }
 
 #footer {

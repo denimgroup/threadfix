@@ -37,6 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -219,14 +220,22 @@ public class AddFindingController {
 			SessionStatus status, ModelMap model) {
 		if (result.hasErrors()) {
 			model.addAttribute("static",true);
+			FieldError originalError = result.getFieldError("dataFlowElements[0].lineNumber");
+			if (originalError != null && originalError.getDefaultMessage()
+					.startsWith("Failed to convert property value of type " +
+							"'java.lang.String' to required type 'int'")) {
+				result.rejectValue("dataFlowElements[0]", "errors.invalid", new String [] { "Line number" }, null);
+			}
 			return "scans/form";
 		} else {
 			if (finding != null && ((finding.getChannelVulnerability() == null) || 
 									(finding.getChannelVulnerability().getCode() == null) ||
 									(finding.getChannelVulnerability().getCode().isEmpty()))) {
-				result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
+				result.rejectValue("channelVulnerability.code", "errors.required", new String[]{ "Vulnerability" }, null);
+			} else if (!channelVulnerabilityService.isValidManualName(finding.getChannelVulnerability().getCode())) {
+				result.rejectValue("channelVulnerability.code", "errors.invalid", new String[]{ "Vulnerability" }, null);
 			}
-				
+			
 			if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
 				result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
 			}
@@ -263,6 +272,8 @@ public class AddFindingController {
 									(finding.getChannelVulnerability().getCode() == null) ||
 									(finding.getChannelVulnerability().getCode().isEmpty()))) {
 				result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
+			} else if (!channelVulnerabilityService.isValidManualName(finding.getChannelVulnerability().getCode())) {
+				result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
 			}
 			
 			if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
@@ -307,7 +318,7 @@ public class AddFindingController {
 				.loadSuggested(prefix);
 		if (cVulnList == null)
 			return "";
-		
+
 		StringBuffer buffer = new StringBuffer();
 		for (ChannelVulnerability gVuln : cVulnList) {
 			if (gVuln == null || gVuln.getName() == null || gVuln.getName().trim().equals(""))
@@ -324,7 +335,7 @@ public class AddFindingController {
 		List<String> sourceFileList = findingService.loadSuggested(hint, appId);
 		if (sourceFileList == null || sourceFileList.size() == 0)
 			return "";
-		
+
 		StringBuffer buffer = new StringBuffer();
 		for (String sourceFile : sourceFileList) {
 			if (sourceFile == null || sourceFile.equals(""))

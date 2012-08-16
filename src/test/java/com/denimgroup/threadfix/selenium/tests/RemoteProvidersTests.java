@@ -159,7 +159,7 @@ public class RemoteProvidersTests extends BaseTest {
 
 	@Test
 	public void configureQualys() {
-		if (QUALYS_USER.equals("password") || QUALYS_PASS.equals("username")) {
+		if (QUALYS_PASS.equals("password") || QUALYS_USER.equals("username")) {
 			return;
 		}
 		organizationIndexPage = loginPage.login("user", "password");

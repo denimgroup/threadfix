@@ -41,7 +41,7 @@
 					<fmt:formatDate value="${ jobStatus.startDate }" type="both" timeStyle="short" dateStyle="short" />
 				</td>
 				<td>
-					<a href="<spring:url value="${ jobStatus.urlPath }"/>"><c:out value="${ jobStatus.urlText }"/></a>
+					<a href="<spring:url value="${ fn:escapeXml(jobStatus.urlPath) }"/>"><c:out value="${ jobStatus.urlText }"/></a>
 				</td>
 			</c:forEach>
 		</c:otherwise>

@@ -28,6 +28,13 @@
 
 # The scripts included with this project are not intended to be generic.
 
+execute "apt-get update" do
+  command "apt-get update"
+end
+
+execute "apt-get upgrade" do
+  command "apt-get -y upgrade"
+end
 
 client_package = package "unzip" 
 client_package.run_action(:install)
@@ -41,8 +48,10 @@ curl_package.run_action(:install)
 git_package = package "git" 
 git_package.run_action(:install)
 
-maven_package = package "maven" 
-maven_package.run_action(:install)
+maven_package = package "maven" do
+  notifies :run, "execute[apt-get update]", :immediately
+  notifies :run, "execute[apt-get upgrade]", :immediately
+end
 
 template "/home/vagrant/fabfile.py" do
   source "fabfile.py.erb"
@@ -60,10 +69,10 @@ end
 
 script "run fabric" do
   interpreter "bash"
-  user "vagrant"
+  user "root"
   cwd "/home/vagrant"
   code <<-EOH
-    fab deploy
+    sudo fab deploy
   EOH
 end
 
@@ -72,8 +81,17 @@ script "deploy WAR" do
   user "root"
   cwd "/home/vagrant"
   code <<-EOH
-    fab deploy_war
-	fab verify_site
+    sudo fab deploy_war
+	sudo sleep 5;
+  EOH
+end
+
+script "verify WAR" do
+  interpreter "bash"
+  user "root"
+  cwd "/home/vagrant"
+  code <<-EOH
+	sudo fab verify_site
   EOH
 end
 

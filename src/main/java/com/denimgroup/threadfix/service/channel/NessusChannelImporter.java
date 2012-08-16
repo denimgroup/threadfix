@@ -25,7 +25,9 @@ package com.denimgroup.threadfix.service.channel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +56,13 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	private static final String URL_COLON_REGEX   = "URL  : ([^\n]*)\n";
 	private static final String PAGE_COLON_REGEX  = "Page : ([^\n]*)\n";
 	
+	private static final String CSRF_PATH_START = "The following CGIs are not protected by a random token :";
+	private static final String CSRF_VULN_CODE = "56818";
+	
 	private static final String INPUT_NAME_COLON_PARAM_REGEX = "Input name : ([^\n]*)\n";
+	
+	private static final List<String> SSL_VULNS = 
+			Arrays.asList(new String[]{"26928", "60108", "57620", "53360", "42873", "35291"});
 	
 	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<String,String>();
 	static {
@@ -118,11 +126,34 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if (PATH_PARSE_MAP.containsKey(currentChannelVulnCode)) {
 	    		parseRegexMatchesAndAdd(stringResult);
+	    	} else if (SSL_VULNS.contains(currentChannelVulnCode)){
+	    		Finding finding = constructFinding("Application Server", null, 
+	    				currentChannelVulnCode, currentSeverityCode);
+	    		add(finding);
+	    	} else if (CSRF_VULN_CODE.equals(currentChannelVulnCode)){
+	    		parseCSRFAndAdd(stringResult);
 	    	} else {
 	    		parseGenericPattern(stringResult);
 	    	}
+	    	
+    		currentChannelVulnCode = null;
+    		currentSeverityCode = null;
 	    }
 
+	    private void parseCSRFAndAdd(String stringResult) {
+	    	if (stringResult != null && stringResult.contains(CSRF_PATH_START)) {
+	    		String smallerPart = stringResult.substring(stringResult.indexOf(CSRF_PATH_START) + CSRF_PATH_START.length());
+	    		if (smallerPart.contains("\n")) {
+	    			for (String line : smallerPart.split("\n")) {
+	    				if (line != null && !line.trim().equals("")) {
+	    					Finding finding = constructFinding(line.trim(), null, 
+	    		    				currentChannelVulnCode, currentSeverityCode);
+	    		    		add(finding);
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
 	    
 	    private void parseRegexMatchesAndAdd(String stringResult) {
 	    	String paramRegex = null,    pathRegex  = PATH_PARSE_MAP.get(currentChannelVulnCode);
@@ -140,7 +171,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
     				param = paramMatcher.group(1);
     			}
     				
-    			
     			String path = pathMatcher.group(1);
     			
     			if (path != null && host != null && !path.startsWith("http"))
@@ -149,7 +179,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		Finding finding = constructFinding(path, param, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		add(finding);
-	    		//count++;
     		}
 	    }
 	    
@@ -180,6 +209,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    			}
 	    		}
 	    	}
+    		currentChannelVulnCode = null;
+    		currentSeverityCode = null;
 	    }
 	    
 	    ////////////////////////////////////////////////////////////////////
@@ -191,6 +222,11 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("ReportItem".equals(qName)) {
 	    		currentChannelVulnCode = atts.getValue("pluginID");
+	    		
+	    		if ("26928".equals(currentChannelVulnCode)) {
+	    			System.out.println("Look at dis shit");;
+	    		}
+	    		
 	    		currentSeverityCode = atts.getValue("severity");
 	    	} else if ("plugin_output".equals(qName)) {
 	    		pluginOutputString = new StringBuilder();
@@ -208,8 +244,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		parseFindingString();
 	    		pluginOutputString = null;
 	    		getFindings = false;
-	    		currentChannelVulnCode = null;
-	    		currentSeverityCode = null;
 	    	}
 	    }
 	    

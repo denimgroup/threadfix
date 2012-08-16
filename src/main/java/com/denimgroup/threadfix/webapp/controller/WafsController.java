@@ -80,11 +80,13 @@ public class WafsController {
 		WafRuleDirective lastDirective = null;
 		List<WafRuleDirective> directives = null;
 		
-		if ((waf.getLastWafRuleDirective() != null) && (waf.getWafType().getId().equals(waf.getLastWafRuleDirective().getWafType().getId()))) {
+		if ((waf.getLastWafRuleDirective() != null) && (waf.getWafType().getId().equals(
+				waf.getLastWafRuleDirective().getWafType().getId()))) {
 			lastDirective = waf.getLastWafRuleDirective();
 			directives = waf.getWafType().getWafRuleDirectives();
 			directives.remove(lastDirective);
-		} else if (waf.getWafType() != null && waf.getWafType().getWafRuleDirectives() != null && waf.getWafType().getWafRuleDirectives().size() >= 1) {
+		} else if (waf.getWafType() != null && waf.getWafType().getWafRuleDirectives() != null 
+						&& waf.getWafType().getWafRuleDirectives().size() >= 1) {
 			lastDirective = waf.getWafType().getWafRuleDirectives().get(0);
 			directives = waf.getWafType().getWafRuleDirectives();
 			directives.remove(0);
@@ -133,11 +135,16 @@ public class WafsController {
 		if (waf.getWafRules() == null)
 			wafService.generateWafRules(waf, new WafRuleDirective());
 		
+		String pageString = wafService.getAllRuleText(waf);
+		
+		if (pageString == null) {
+			return detail(wafId);
+		}
+		
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=\"wafrules_" + wafId
 				+ ".txt\"");
 		
-		String pageString = wafService.getAllRuleText(waf);
 		ServletOutputStream out = response.getOutputStream();
 		InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
 		byte[] outputByte = new byte[65535];

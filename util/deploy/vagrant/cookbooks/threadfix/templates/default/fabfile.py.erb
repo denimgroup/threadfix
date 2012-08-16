@@ -20,7 +20,7 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('cp -r /source threadfix')#git clone %s' % source_code_loc)
+        result = local('git clone %s' % source_code_loc)
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
@@ -41,6 +41,7 @@ def exchange_files():
 @runs_once
 def build_war():
     with lcd('%s/threadfix' % local_working_folder_loc):
+        local('sudo ln -s /usr/lib/jvm/java-6-openjdk-i386 /usr/lib/jvm/default-java')
         res = local('mvn package -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')

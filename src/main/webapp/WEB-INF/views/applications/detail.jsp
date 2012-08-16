@@ -54,7 +54,7 @@
 			<tr>
 				<td class="label">URL:</td>
 				<td class="inputValue">
-					<a id="urlText" href="<spring:url value="${ application.url }" />"><c:out value="${ application.url }" /></a>
+					<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
 				</td>
 			</tr>
 			<tr>
@@ -154,13 +154,13 @@
 	</p>
 
 	<c:choose>
-		<c:when test="${ not empty application.closedVulnerabilities }">
+		<c:when test="${ numClosedVulns != 0}">
 			<spring:url value="{appId}/closedVulnerabilities" var="closedVulnUrl">	
 				<spring:param name="appId" value="${ application.id }"/>
 			</spring:url>	
-			<a href="${ fn:escapeXml(closedVulnUrl) }">View <c:out value="${ fn:length(application.closedVulnerabilities ) }"/> closed 
+			<a href="${ fn:escapeXml(closedVulnUrl) }">View <c:out value="${ numClosedVulns }"/> closed 
 			<c:choose>
-			<c:when test="${ fn:length(application.closedVulnerabilities ) == 1 }">
+			<c:when test="${ numClosedVulns == 1 }">
 				Vulnerability.
 			</c:when>
 			<c:otherwise>
@@ -180,42 +180,42 @@
 	</spring:url>
 	
 	<table class="dataTable">
-			<tbody>
-				<tr>
-					<td rowspan="4" style="padding-bottom:10px; vertical-align:top">
-						<div class="buttonGroup" id="vulnerabilityFilters">
-							<table style="margin:0px;padding:0px;margin-left:auto;">
-								<tr>
-									<td colspan="2"><b>Vulnerability Name:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="descriptionFilterInput" /></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Severity:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="severityFilterInput" /></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Location:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="locationFilterInput"/></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Parameter:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="parameterFilterInput" /></td>
-								</tr>
-								<tr>
-									<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
-									<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
-									<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
-								</tr>
-							</table>
-						</div>
-						<div id="showFilters" style="display:none;">
-							<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
-						</div>
-						<script>toggleFilters(false, '#toReplace', '${ tableUrl }');</script>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<tbody>
+			<tr>
+				<td rowspan="4" style="padding-bottom:10px; vertical-align:top">
+					<div class="buttonGroup" id="vulnerabilityFilters">
+						<table style="margin:0px;padding:0px;margin-left:auto;">
+							<tr>
+								<td colspan="2"><b>Vulnerability Name:</b></td>
+								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="descriptionFilterInput" /></td>
+							</tr>
+							<tr>
+								<td colspan="2"><b>Severity:</b></td>
+								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="severityFilterInput" /></td>
+							</tr>
+							<tr>
+								<td colspan="2"><b>Location:</b></td>
+								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="locationFilterInput"/></td>
+							</tr>
+							<tr>
+								<td colspan="2"><b>Parameter:</b></td>
+								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="parameterFilterInput" /></td>
+							</tr>
+							<tr>
+								<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
+								<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
+								<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
+							</tr>
+						</table>
+					</div>
+					<div id="showFilters" style="display:none;">
+						<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
+					</div>
+					<script>toggleFilters(false, '#toReplace', '${ tableUrl }');</script>
+				</td>
+			</tr>
+		</tbody>
+	</table>
     
     <div id="toReplace">
    

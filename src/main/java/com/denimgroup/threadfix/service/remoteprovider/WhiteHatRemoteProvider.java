@@ -66,10 +66,10 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	}
 
 	@Override
-	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
+	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		log.info("Retrieving a WhiteHat scan.");
 
-		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKeyString();
+		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
 		
 		InputStream labelSiteIdStream = httpGet(SITES_URL + "?key=" + apiKey);
 		
@@ -116,17 +116,19 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		log.info("WhiteHat scan successfully parsed.");
 		
-		return resultScan;
+		List<Scan> scans = new ArrayList<Scan>();
+		scans.add(resultScan);
+		return scans;
 	}
 
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
-		if (remoteProviderType == null || remoteProviderType.getApiKeyString() == null) {
+		if (remoteProviderType == null || remoteProviderType.getApiKey() == null) {
 			log.warn("Insufficient credentials.");
 			return null;
 		}
 		
-		apiKey = remoteProviderType.getApiKeyString();
+		apiKey = remoteProviderType.getApiKey();
 		
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 		
@@ -148,24 +150,22 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	public InputStream httpGet(String urlStr) {
 		GetMethod get = new GetMethod(urlStr);
 		
+		InputStream responseStream = null;
+		
 		HttpClient client = new HttpClient();
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				log.warn("Request status was not 200.");
+				log.warn("Request status was not 200. It was " + status);
 			}
 			
-			InputStream responseStream = get.getResponseBodyAsStream();
-			
-			if (responseStream != null) {
-				return responseStream;
-			}
+			responseStream = get.getResponseBodyAsStream();
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return responseStream;
 	}
 	
 	public class WhiteHatSitesParser extends DefaultHandler {

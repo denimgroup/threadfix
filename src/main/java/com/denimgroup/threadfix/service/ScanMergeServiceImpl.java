@@ -310,9 +310,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			sourceFileName = sourceFileName.replace("\\", "/");
 
 		if (sourceFileName.toLowerCase()
-				.contains(applicationRoot.toLowerCase())) {
-			return getRegexResult(sourceFileName.toLowerCase(), "(/"
-					+ applicationRoot.toLowerCase() + "/.+)");
+				.contains("/" + applicationRoot.toLowerCase())) {
+			
+			int index = sourceFileName.toLowerCase().indexOf("/" + applicationRoot.toLowerCase());
+			
+			return sourceFileName.substring(index);
 		}
 
 		return null;
@@ -588,8 +590,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		if (applicationChannel != null
 				&& applicationChannel.getScanList() != null
-				&& applicationChannel.getScanList().get(0) != null)
+				&& applicationChannel.getScanList().size() != 0) {
 			return applicationChannel.getScanList().get(0);
+		}
 
 		Scan newManualScan = initializeNewManualScan(applicationId);
 
@@ -623,6 +626,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scan.setNumberClosedVulnerabilities(0);
 		scan.setNumberTotalVulnerabilities(0);
 		scan.setNumberResurfacedVulnerabilities(0);
+		scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(0);
 
 		return scan;
 	}
@@ -792,11 +796,26 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		for (String nativeId : scanHash.keySet()) {
 			if (oldNativeIdVulnHash.containsKey(nativeId)) {
+				Finding oldFinding = oldNativeIdFindingHash.get(nativeId),
+						newFinding = scanHash.get(nativeId);
+				
+				// If the finding has been newly marked a false positive, update the existing finding / vuln
+				if (newFinding.isMarkedFalsePositive() &&
+						!oldFinding.isMarkedFalsePositive()) {
+					log.info("A previously imported finding has been marked a false positive " +
+							"in the scan results. Marking the finding and Vulnerability.");
+					oldFinding.setMarkedFalsePositive(true);
+					if (oldFinding.getVulnerability() != null) {
+						oldFinding.getVulnerability().setIsFalsePositive(true);
+						vulnerabilityDao.saveOrUpdate(oldFinding.getVulnerability());
+					}
+				}
+				
 				numberRepeatFindings += 1;
-				numberRepeatResults += scanHash.get(nativeId).getNumberMergedResults();
+				numberRepeatResults += newFinding.getNumberMergedResults();
 				// add it to the old finding maps so that we can know that it was here later
 				// the constructor maps everything correctly
-				new ScanRepeatFindingMap(oldNativeIdFindingHash.get(nativeId), scan);
+				new ScanRepeatFindingMap(oldFinding, scan);
 			}
 
 			if (oldNativeIdVulnHash.containsKey(nativeId) && oldNativeIdVulnHash.get(nativeId) != null &&
@@ -895,6 +914,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (scan.getFindings().size() > 10000) {
 			counting = true;
 			interval = scan.getFindings().size() / 10;
+			log.info("The scan has more than 10,000 findings, ThreadFix will print a message every " + interval + " (~10%) findings processed.");
 		}
 		
 		log.info("Starting Application-wide merge process with " + scan.getFindings().size() + " findings.");
@@ -1444,6 +1464,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		vulnerability.openVulnerability(Calendar.getInstance());
 		vulnerability.setGenericVulnerability(genericVulnerability);
 		vulnerability.setSurfaceLocation(finding.getSurfaceLocation());
+		
+		if (finding.isMarkedFalsePositive()) {
+			log.info("Creating a false positive vulnerability from a finding marked false positive.");
+			vulnerability.setIsFalsePositive(finding.isMarkedFalsePositive());
+		}
 
 		String vulnName = genericVulnerability.getName();
 
@@ -1563,12 +1588,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 */
 	@Override
 	public Scan processRemoteScan(Scan scan) {
-
+		
 		if (scan == null) {
 			log.warn("The remote import failed.");
 			return null;
 		}
-
+		
 		ApplicationChannel applicationChannel = scan.getApplicationChannel();
 
 		if (scan.getFindings() != null && applicationChannel != null 

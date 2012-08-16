@@ -49,13 +49,17 @@ public class DefectServiceImpl implements DefectService {
 
 	private DefectDao defectDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private ApplicationService applicationService = null;
 
 	private final Log log = LogFactory.getLog(DefectService.class);
 	
 	@Autowired
-	public DefectServiceImpl(DefectDao defectDao, VulnerabilityDao vulnerabilityDao) {
+	public DefectServiceImpl(DefectDao defectDao, 
+			VulnerabilityDao vulnerabilityDao,
+			ApplicationService applicationService) {
 		this.defectDao = defectDao;
 		this.vulnerabilityDao = vulnerabilityDao;
+		this.applicationService = applicationService;
 	}
 
 	@Override
@@ -93,6 +97,11 @@ public class DefectServiceImpl implements DefectService {
 		Vulnerability vuln = allVulns.get(0);
 
 		Application application = vuln.getApplication();
+		
+		if (application != null) {
+			applicationService.decryptCredentials(application);
+		}
+		
 		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker.");
@@ -201,6 +210,11 @@ public class DefectServiceImpl implements DefectService {
 			return noDefectTrackerError;
 
 		Application application = vuln.getApplication();
+		
+		if (application != null) {
+			applicationService.decryptCredentials(application);
+		}
+		
 		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
 		if (dt == null)
 			return noDefectTrackerError;
@@ -231,6 +245,10 @@ public class DefectServiceImpl implements DefectService {
 		if (application == null) {
 			log.warn("Application wasn't found, exiting.");
 			return;
+		}
+		
+		if (application != null) {
+			applicationService.decryptCredentials(application);
 		}
 
 		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);

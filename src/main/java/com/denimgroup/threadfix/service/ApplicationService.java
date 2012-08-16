@@ -28,6 +28,7 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
@@ -135,5 +136,32 @@ public interface ApplicationService {
 	 * @return
 	 */
 	long getCount(Integer appId, TableSortBean bean);
+
+	/**
+	 * 
+	 * @param application
+	 * @return
+	 */
+	Application decryptCredentials(Application application);
+
+	/**
+	 * 
+	 * @param organizations
+	 */
+	void generateVulnerabilityReports(List<Organization> organizations);
+
+	/**
+	 * 
+	 * @param organization
+	 */
+	void generateVulnerabilityReports(Organization organization);
+
+	/**
+	 * 
+	 * @param appId
+	 * @param open
+	 * @return
+	 */
+	long getVulnCount(Integer appId, boolean open);
 
 }

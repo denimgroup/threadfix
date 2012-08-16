@@ -104,8 +104,121 @@ public class HibernateScanDao implements ScanDao {
 		return (Long) sessionFactory.getCurrentSession()
 							 .createCriteria(Finding.class)
 							 .setProjection(Projections.rowCount())
+							 .add(Restrictions.isNotNull("vulnerability"))
 							 .add(Restrictions.eq("scan.id", scanId))
 							 .uniqueResult();
+	}
+	
+	@Override
+	public long getFindingCountUnmapped(Integer scanId) {
+		return (Long) sessionFactory.getCurrentSession()
+							 .createCriteria(Finding.class)
+							 .setProjection(Projections.rowCount())
+							 .add(Restrictions.eq("scan.id", scanId))
+							 .add(Restrictions.isNull("vulnerability"))
+							 .uniqueResult();
 
+	}
+	
+	// These should probably be saved in the scans and then updated when necessary (scan deletions, database updates)
+	// That could be messy but querying the database every time is not absolutely necessary.
+
+	@Override
+	public long getTotalNumberSkippedResults(Integer scanId) {
+		Object response = sessionFactory.getCurrentSession()
+										 .createQuery("select sum( finding.numberMergedResults ) " +
+										 		"from Finding finding where scan = :scan")
+										 .setInteger("scan", scanId)
+										 .uniqueResult();
+		long totalMergedResults = 0, totalResults = 0;
+		if (response != null) {
+			totalMergedResults = (Long) response;
+		}
+		
+		response = (Long) sessionFactory.getCurrentSession()
+										 .createQuery("select count(*) from Finding finding where scan = :scan")
+										 .setInteger("scan", scanId)
+										 .uniqueResult();
+		
+		if (response != null) {
+			totalResults = (Long) response;
+		}
+		
+		return totalMergedResults - totalResults;
+	}
+
+	@Override
+	public long getNumberWithoutChannelVulns(Integer scanId) {
+		return (Long) sessionFactory.getCurrentSession()
+				 .createCriteria(Finding.class)
+				 .add(Restrictions.isNull("channelVulnerability"))
+				 .add(Restrictions.eq("scan.id", scanId))
+				 .setProjection(Projections.rowCount())
+				 .uniqueResult();
+	}
+
+	@Override
+	public long getNumberWithoutGenericMappings(Integer scanId) {
+		return (Long) sessionFactory.getCurrentSession()
+				 .createCriteria(Finding.class)
+				 .createAlias("channelVulnerability", "vuln")
+				 .add(Restrictions.isEmpty( "vuln.vulnerabilityMaps" ))
+				 .add(Restrictions.eq("scan.id", scanId))
+				 .setProjection(Projections.rowCount())
+				 .uniqueResult();
+	}
+	
+	@Override
+	public long getTotalNumberFindingsMergedInScan(Integer scanId) {
+		long numUniqueVulnerabilities = (Long) sessionFactory.getCurrentSession()
+				 .createCriteria(Finding.class)
+				 .createAlias("vulnerability", "vuln")
+				 .add(Restrictions.eq("scan.id", scanId))
+				 .setProjection(Projections.countDistinct("vuln.id"))
+				 .uniqueResult();
+		
+		long numFindingsWithVulnerabilities = (Long) sessionFactory.getCurrentSession()
+				 .createCriteria(Finding.class)
+				 .add(Restrictions.isNotNull("vulnerability"))
+				 .add(Restrictions.eq("scan.id", scanId))
+				 .setProjection(Projections.rowCount())
+				 .uniqueResult();
+		
+		return numFindingsWithVulnerabilities - numUniqueVulnerabilities;
+	}
+	
+	/**
+	 * TODO make cascades behave such that this method is unnecessary
+	 */
+	@Override
+	public void deleteFindingsAndScan(Scan scan) {
+		if (scan == null) 
+			return;
+		
+		@SuppressWarnings("unchecked")
+		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
+				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan)")
+					  .setInteger("scan", scan.getId())
+					  .list();
+		
+		sessionFactory.getCurrentSession()
+					  .createQuery("delete from DataFlowElement element " +
+					  		"where element.finding in (select id from Finding where scan = :scan)")
+					  .setInteger("scan", scan.getId())
+					  .executeUpdate();
+		
+		sessionFactory.getCurrentSession()
+					  .createQuery("delete from Finding finding " +
+					  		"where scan = :scan")
+					  .setInteger("scan", scan.getId())
+					  .executeUpdate();
+		
+		sessionFactory.getCurrentSession()
+					  .createQuery("delete from SurfaceLocation " +
+					  		"where id in (:ids)")
+					  .setParameterList("ids", surfaceLocationIds)
+					  .executeUpdate();
+		
+		sessionFactory.getCurrentSession().delete(scan);
 	}
 }

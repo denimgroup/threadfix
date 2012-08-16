@@ -51,22 +51,22 @@ public class LoginPage extends BasePage {
 		return new LoginPage(webdriver);
 	}
 	
-	public OrganizationIndexPage login(String user, String password){	
+	public OrganizationIndexPage login(String user, String password) {	
 		setUsername(user);
 		setPassword(password);
 		clickLogin();
 		return new OrganizationIndexPage(driver);
 	}
 	
-	private void setUsername(String user){
+	private void setUsername(String user) {
 		usernameField.sendKeys(user);
 	}
 	
-	private void setPassword(String password){
+	private void setPassword(String password) {
 		passwordField.sendKeys(password);
 	}
 	
-	private OrganizationIndexPage clickLogin(){
+	private OrganizationIndexPage clickLogin() {
 		loginButton.click();
 		return new OrganizationIndexPage(driver);
 	}

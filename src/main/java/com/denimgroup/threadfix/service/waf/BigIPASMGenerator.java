@@ -64,7 +64,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		defaultDirective = "transparent";
 	}
-
+	
 	/**
 	 * This map is used to skip a lot of if/then statements when selecting a set of attack signatures.
 	 */
@@ -391,7 +391,8 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 			
 			signatureString = signatures.toString();
 		}
-		 
+		
+		//  Java complains about super long strings, so I cut it into pieces.
 		return BigIPStrings.XML_END_BEFORE_SIGNATURES +
 			   signatureString + 
 			   BigIPStrings.XML_AFTER_SIGNATURES_1 +

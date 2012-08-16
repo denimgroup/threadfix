@@ -72,6 +72,14 @@ template "/etc/tomcat6/server.xml" do
   notifies :restart, resources(:service => "tomcat")
 end
 
+template "/var/lib/tomcat6/conf/context.xml" do
+  source "context.xml.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, resources(:service => "tomcat")
+end
+
 # This template ensures that we always run with the tomcat security manager
 template "/etc/init.d/tomcat6" do
   source "tomcat6.erb"
@@ -79,5 +87,14 @@ template "/etc/init.d/tomcat6" do
   group "root"
   mode "0755"
   action :create
+  notifies :restart, resources(:service => "tomcat")
+end
+
+#This template increases the memory limit for tomcat
+template "/usr/share/tomcat6/bin/catalina.sh" do
+  source "catalina.sh.erb"
+  owner "root"
+  group "root"
+  mode "0755"
   notifies :restart, resources(:service => "tomcat")
 end

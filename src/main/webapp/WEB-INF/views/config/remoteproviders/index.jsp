@@ -46,8 +46,8 @@
 					</c:if>
 				</td>
 				<td id="apiKey${status.count }">
-					<c:if test="${ not empty provider.apiKeyString }">
-						<c:out value="${ provider.apiKeyString }" />
+					<c:if test="${ not empty provider.apiKey }">
+						<c:out value="${ provider.apiKey }" />
 					</c:if>
 				</td>
 				<td>

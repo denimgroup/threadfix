@@ -195,7 +195,6 @@ public class ApplicationEditPage extends BasePage {
 	public String getSecondJsonResultText() {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		String result = driver.findElementById("jsonResult2").getText();
-		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
 		return result;
 	}
 

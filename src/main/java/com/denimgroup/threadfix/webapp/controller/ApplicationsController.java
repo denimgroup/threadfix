@@ -24,12 +24,12 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,10 +44,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -61,15 +59,12 @@ public class ApplicationsController {
 
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
-	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService, 
-			VulnerabilityService vulnerabilityService) {
+			DefectTrackerService defectTrackerService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
-		this.vulnerabilityService = vulnerabilityService;
 	}
 
 	@InitBinder
@@ -85,9 +80,7 @@ public class ApplicationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
 		}
-		
-		int falsePositives = 0;
-		
+				
 		Object message = null;
 		if (request.getSession() != null) {
 			message = request.getSession().getAttribute("scanSuccessMessage");
@@ -103,22 +96,21 @@ public class ApplicationsController {
 				request.getSession().removeAttribute("scanErrorMessage");
 			}
 		}
+
+		TableSortBean falsePositiveBean = new  TableSortBean();
+		falsePositiveBean.setFalsePositive(true);
 		
-		long numVulns = applicationService.getCount(appId, new TableSortBean());
-		
-		if (numVulns > 0) {
-			List<Vulnerability> vulns = vulnerabilityService.getFalsePositiveVulns(application);
-			if (vulns != null) {
-				falsePositives = vulns.size();
-			}
-		}
+		long numVulns = applicationService.getVulnCount(appId, true);
+		long numClosedVulns = applicationService.getVulnCount(appId, false);
+		long falsePositiveCount = applicationService.getCount(appId, falsePositiveBean);
         
 		model.addAttribute("numVulns", numVulns);
+		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);
 		model.addAttribute("error", error);
 		model.addAttribute(application);
-		model.addAttribute("falsePositiveCount", falsePositives);
+		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		return "applications/detail";
 	}
 	
@@ -130,9 +122,50 @@ public class ApplicationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
 		}
-
+		
+		TableSortBean basicBean = new TableSortBean();
+		basicBean.setOpen(false);
+		long numVulns = applicationService.getCount(appId, basicBean);
+		
+		model.addAttribute("numVulns", numVulns);
 		model.addAttribute(application);
 		return "applications/closedVulns";
+	}
+	
+	@RequestMapping(value="/{appId}/closedVulnerabilities/table", method = RequestMethod.POST)
+	public String getClosedTableVulns(@PathVariable("appId") Integer appId,
+			@RequestBody TableSortBean bean,
+			ModelMap model) {
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		bean.setOpen(false);
+		bean.setFalsePositive(false);
+		
+		long numVulns = applicationService.getCount(appId, bean);
+		long numPages = (numVulns / 100);
+		if (numVulns % 100 == 0) {
+			numPages -= 1;
+		}
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("numVulns", numVulns);
+		
+		if (bean.getPage() > numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+		
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+		
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+		model.addAttribute(application);
+		return "applications/closedTable";
 	}
 
 	@RequestMapping("/{appId}/delete")
@@ -166,8 +199,16 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return "Authentication failed";
 		}
+		
+		String result = dt.getProductNames();
+		
+		if (result == null || result.equals("Authentication failed")) {
+			return "{ \"message\" : \"Authentication failed\", " +
+					"\"error\" : " + JSONObject.quote(dt.getLastError())  + "}";
+		}
 
-		return productSort(dt.getProductNames());
+		return "{ \"message\" : \"Authentication success\", " +
+				"\"names\" : " + JSONObject.quote(productSort(dt.getProductNames()))  + "}";
 	}
 	
 	private String productSort(String products) {
@@ -201,15 +242,66 @@ public class ApplicationsController {
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
-		}		
+		}
+		
+		bean.setOpen(true);
+		bean.setFalsePositive(false);
 		
 		long numVulns = applicationService.getCount(appId, bean);
 		long numPages = (numVulns / 100);
+		if (numVulns % 100 == 0) {
+			numPages -= 1;
+		}
 		model.addAttribute("numPages", numPages);
-		model.addAttribute("page", bean.getPage());
 		model.addAttribute("numVulns", numVulns);
+		
+		if (bean.getPage() > numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+		
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+		
+		model.addAttribute("page", bean.getPage());
 		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
 		model.addAttribute(application);
 		return "applications/vulnTable";
+	}
+	
+	@RequestMapping(value="/{appId}/defectTable", method = RequestMethod.POST)
+	public String getDefectTableVulns(@PathVariable("appId") Integer appId,
+			@RequestBody TableSortBean bean,
+			ModelMap model) {
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		bean.setOpen(true);
+		bean.setFalsePositive(false);
+		
+		long numVulns = applicationService.getCount(appId, bean);
+		long numPages = (numVulns / 100);
+		if (numVulns % 100 == 0) {
+			numPages -= 1;
+		}
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("numVulns", numVulns);
+		
+		if (bean.getPage() > numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+		
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+		
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+		model.addAttribute(application);
+		return "defects/defectVulnTable";
 	}
 }

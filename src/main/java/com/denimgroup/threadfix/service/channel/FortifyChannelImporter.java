@@ -48,7 +48,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
  * Parses the SCA Fortify fpr output file.
  */
 public class FortifyChannelImporter extends AbstractChannelImporter {
-	
+
 	// TODO run through more files and determine whether this method is still valuable
 	// or whether we can use only the 'action' parameter and the column parsing.
 	private static final Map<String, String> FACT_REGEX_MAP = new HashMap<String, String>();
@@ -136,7 +136,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		setChannelType(ChannelType.FORTIFY);
 		doSAXExceptionCheck = false;
 	}
-	
+
 	private int getNumber(String input) {
 		if (input == null) {
 			return -1;
@@ -154,13 +154,13 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		InputStream fvdlInputStream = null;
 
 		zipFile = unpackZipStream();
-		//zipFile.
+
 		auditXmlStream = getFileFromZip("audit.xml");
 		fvdlInputStream = getFileFromZip("audit.fvdl");
 
 		if (zipFile == null || fvdlInputStream == null)
 			return null;
-				
+
 		inputStream = fvdlInputStream;
 		Scan returnScan = parseSAXInput(new FortifySAXParser());
 		Calendar auditXmlDate = getTime(auditXmlStream);

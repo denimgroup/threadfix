@@ -34,6 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -51,7 +52,7 @@ public class FalsePositivesController {
 
 	private ApplicationService applicationService;
 	private VulnerabilityService vulnerabilityService;
-	
+
 	private final Log log = LogFactory.getLog(FalsePositivesController.class);
 
 	@Autowired
@@ -62,34 +63,40 @@ public class FalsePositivesController {
 	}
 
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
-	public String onSubmit(@ModelAttribute FalsePositiveModel falsePositiveModel,
-			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId, ModelMap model,
-			HttpServletRequest request) {
+	public String onSubmit(
+			@ModelAttribute FalsePositiveModel falsePositiveModel,
+			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+			ModelMap model, HttpServletRequest request) {
 
-		if (falsePositiveModel == null || falsePositiveModel.getVulnerabilityIds() == null
+		if (falsePositiveModel == null
+				|| falsePositiveModel.getVulnerabilityIds() == null
 				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
 			String error = "You must select at least one vulnerability.";
-			request.getSession().setAttribute("scanSuccessMessage", error);
-			return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			request.getSession().setAttribute("scanErrorMessage", error);
+			return "redirect:/organizations/" + orgId + "/applications/"
+					+ appId;
 		}
-		
-		vulnerabilityService.markListAsFalsePositive(falsePositiveModel.getVulnerabilityIds());
+
+		vulnerabilityService.markListAsFalsePositive(falsePositiveModel
+				.getVulnerabilityIds());
 
 		return "redirect:/organizations/" + orgId + "/applications/" + appId;
 	}
-	
+
 	@RequestMapping(value = "/unmark", method = RequestMethod.GET)
-	public String defectList2(@PathVariable("orgId") int orgId,
+	public String defectList(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, ModelMap model) {
 
 		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()){
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application",
+					appId));
 			throw new ResourceNotFoundException();
 		}
 
-		List<Vulnerability> markedVulns = vulnerabilityService.getFalsePositiveVulns(application);
-		
+		List<Vulnerability> markedVulns = vulnerabilityService
+				.getFalsePositiveVulns(application);
+
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute(application);
 		model.addAttribute("vulns", markedVulns);
@@ -98,18 +105,58 @@ public class FalsePositivesController {
 	}
 
 	@RequestMapping(value = "/unmark", method = RequestMethod.POST)
-	public String onSubmit2(@ModelAttribute FalsePositiveModel falsePositiveModel,
-			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId, ModelMap model) {
+	public String onSubmit2(
+			@ModelAttribute FalsePositiveModel falsePositiveModel,
+			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+			ModelMap model) {
 
-		if (falsePositiveModel == null || falsePositiveModel.getVulnerabilityIds() == null
+		if (falsePositiveModel == null
+				|| falsePositiveModel.getVulnerabilityIds() == null
 				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
 			String error = "You must select at least one vulnerability.";
-			model.addAttribute("error", error);
-			return defectList2(orgId, appId, model);
+			model.addAttribute("scanErrorMessage", error);
+			return defectList(orgId, appId, model);
+		}
+
+		vulnerabilityService.markListAsNotFalsePositive(falsePositiveModel
+				.getVulnerabilityIds());
+
+		return "redirect:/organizations/" + orgId + "/applications/" + appId;
+	}
+	
+	@RequestMapping(value="/table", method = RequestMethod.POST)
+	public String getTableVulns(@PathVariable("appId") Integer appId,
+			@RequestBody TableSortBean bean,
+			ModelMap model) {
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}		
+		
+		bean.setOpen(false);
+		bean.setFalsePositive(true);
+		
+		long numVulns = applicationService.getCount(appId, bean);
+		long numPages = (numVulns / 100);
+		if (numVulns % 100 == 0) {
+			numPages -= 1;
+		}
+		model.addAttribute("numPages", numPages);
+		model.addAttribute("numVulns", numVulns);
+		
+		if (bean.getPage() > numPages) {
+			bean.setPage((int) (numPages + 1));
 		}
 		
-		vulnerabilityService.markListAsNotFalsePositive(falsePositiveModel.getVulnerabilityIds());
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
 		
-		return "redirect:/organizations/" + orgId + "/applications/" + appId;
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+		model.addAttribute(application);
+		return "falsepositives/table";
 	}
 }

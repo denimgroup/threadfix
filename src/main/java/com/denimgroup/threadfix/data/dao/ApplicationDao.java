@@ -66,4 +66,11 @@ public interface ApplicationDao {
 	 */
 	void saveOrUpdate(Application application);
 
+	/**
+	 * 
+	 * @param application
+	 * @return
+	 */
+	List<Integer> loadVulnerabilityReport(Application application);
+
 }

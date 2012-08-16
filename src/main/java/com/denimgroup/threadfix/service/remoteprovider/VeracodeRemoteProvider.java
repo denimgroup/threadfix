@@ -51,13 +51,13 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
-	
+
 	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
 	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 
 	private String password = null;
 	private String username = null;
-	
+
 	@Autowired
 	public VeracodeRemoteProvider(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao, 
@@ -70,7 +70,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	}
 
 	@Override
-	public Scan getScan(RemoteProviderApplication remoteProviderApplication) {
+	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
 				remoteProviderApplication.getApplicationChannel() == null) {
 			log.error("Veracode getScan() called with invalid parameters. Returning null");
@@ -85,37 +85,54 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		String appName = remoteProviderApplication.getNativeId();
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
 		parse(appBuildsInputStream, parser);
-		String buildId = parser.map.get(appName);
 		
-		if (buildId == null) {
-			log.warn("No build ID was parsed.");
+		List<String> buildIds = parser.map.get(appName);
+		
+		if (buildIds == null || buildIds.size() == 0) {
+			log.warn("No build IDs were parsed.");
 			return null; // we failed.
 		} else {
-			log.warn("Retrieved build ID " + buildId + " for application " + appName);
+			log.warn("Retrieved build IDs " + buildIds + " for application " + appName);
 		}
+		
+		List<Scan> scans = new ArrayList<Scan>();
+		
+		for (String buildId : buildIds) {
+			if (buildId == null || buildId.trim().equals("")) {
+				log.warn("Build ID was null or empty. This should never happen.");
+				continue; // we failed.
+			} else if (parser.dateMap.get(buildId).before(remoteProviderApplication.getLastImportTime())) {
+				log.info("Build ID " + buildId + " was scanned before the most recent scan in ThreadFix.");
+				continue;
+			}
+				
+			log.warn("Importing scan for build ID " + buildId + " and application " + appName);
+	
+			// This block tries to parse the scan corresponding to the build.
+			inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
 
-		// This block tries to parse the scan corresponding to the build.
-		inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
-		
-		if (inputStream == null) {
-			log.warn("Received a bad response from Veracode servers, returning null.");
-			return null;
+			if (inputStream == null) {
+				log.warn("Received a bad response from Veracode servers, returning null.");
+				continue;
+			}
+			
+			VeracodeSAXParser scanParser = new VeracodeSAXParser();
+			Scan resultScan = parseSAXInput(scanParser);
+			
+			if (resultScan == null) {
+				log.error("No scan was parsed, something is broken.");
+				continue;
+			}
+			
+			resultScan.setImportTime(parser.dateMap.get(buildId));
+			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+			
+			log.info("Veracode scan (Build ID " + buildId + ") was successfully parsed.");
+			
+			scans.add(resultScan);
 		}
 		
-		VeracodeSAXParser scanParser = new VeracodeSAXParser();
-		Scan resultScan = parseSAXInput(scanParser);
-		
-		if (resultScan == null) {
-			log.warn("No scan was parsed, returning null.");
-			return null;
-		}
-		
-		resultScan.setImportTime(date);
-		resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-		
-		log.info("Veracode scan was successfully parsed.");
-		
-		return resultScan;
+		return scans;
 	}
 
 	@Override
@@ -209,7 +226,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	
 	public class VeracodeApplicationIdMapParser extends DefaultHandler {
 		
-		public Map<String, String> map = new HashMap<String, String>();
+		public Map<String, List<String>> map = new HashMap<String, List<String>>();
 		public Map<String, Calendar> dateMap = new HashMap<String, Calendar>();
 		
 		private String currentAppName = null;
@@ -218,9 +235,10 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if (qName.equals("application")) {
 	    		currentAppName = atts.getValue("app_name");
+	    		map.put(currentAppName, new ArrayList<String>());
 	    	} else if (currentAppName != null && qName.equals("build")) {
 	    		currentBuildId = atts.getValue("build_id");
-	    		map.put(currentAppName, atts.getValue("build_id"));
+	    		map.get(currentAppName).add(currentBuildId);
 	    	} else if (currentAppName != null && currentBuildId != null 
 	    			&& qName.equals("analysis_unit")) {
 	    		
@@ -229,10 +247,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    			dateString = dateString.substring(0,dateString.length() - 5);
 	    		
 	    		Calendar calendar = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss", dateString);
-	    		if (dateMap.get(currentAppName) == null || dateMap.get(currentAppName).before(calendar)) {
-	    			map.put(currentAppName, currentBuildId);
-	    			dateMap.put(currentAppName, calendar);
-	    		}
+	    		dateMap.put(currentBuildId, calendar);
 	    	}
 	    }
 	}
@@ -240,12 +255,15 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public class VeracodeSAXParser extends DefaultHandler {
 		
 		private boolean inStaticFlaws = true;
+		
+		private Finding lastFinding = null;
+		private boolean mitigationProposed = false;
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) {	    	
+	    public void startElement (String uri, String name, String qName, Attributes atts) {
 	    	if ("detailedreport".equals(qName)) {
 	    		date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", atts.getValue("last_update_time"));
 	    		if (date == null)
@@ -293,9 +311,24 @@ public class VeracodeRemoteProvider extends RemoteProvider {
     						finding.getDataFlowElements().add(dataFlowElement);
     					}
     				}
-
+    				lastFinding = finding;
+    				mitigationProposed = false;
 	        		saxFindingList.add(finding);
 	    		}
+	    	}
+	    	
+	    	if (mitigationProposed && "mitigation".equals(qName) &&
+	    			atts.getValue("action") != null &&
+	    			atts.getValue("action").equals("Mitigation Accepted")) {
+	    		mitigationProposed = false;
+	    		lastFinding.setMarkedFalsePositive(true);
+	    		log.info("The false positive mitigation was accepted.");
+	    	}
+	    	
+	    	if ("mitigation".equals(qName) && atts.getValue("action") != null
+	    			&& atts.getValue("action").equals("Mitigated as Potential False Positive")) {
+	    		mitigationProposed = true;
+	    		log.info("Found a Finding with false positive mitigation proposed.");
 	    	}
 	    }
 	    

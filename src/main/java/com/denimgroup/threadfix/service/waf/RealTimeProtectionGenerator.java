@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -168,7 +169,7 @@ public abstract class RealTimeProtectionGenerator {
 	protected String generateRuleWithParameter(String uri, String action, String id,
 			String genericVulnName, String parameter) { 
 		log.warn("The RealTimeProtectionGenerator implementation of generateRuleWithParameter() has been called."
-				+ " This indicates an incomplete subclassing implementation.");
+				+ " This indicates that the class extending RealTimeProtectionGenerator is incomplete.");
 		return null; 
 	}
 	
@@ -184,7 +185,7 @@ public abstract class RealTimeProtectionGenerator {
 	protected String generateRuleForExactUrl(String uri, String action, String id,
 			String genericVulnName) { 
 		log.warn("The RealTimeProtectionGenerator implementation of generateRuleForExactUrl() has been called."
-				+ " This indicates an incomplete subclassing implementation.");
+				+ " This indicates that the class extending RealTimeProtectionGenerator is incomplete.");
 		return null; 
 	}
 	
@@ -200,7 +201,7 @@ public abstract class RealTimeProtectionGenerator {
 	protected String generateRuleWithPayloadInUrl(String uri, String action, String id,
 			String genericVulnName) { 
 		log.warn("The RealTimeProtectionGenerator implementation of generateRuleWithPayloadInUrl() has been called."
-				+ " This indicates an incomplete subclassing implementation.");
+				+ " This indicates that the class extending RealTimeProtectionGenerator is incomplete.");
 		return null; 
 	}
 
@@ -221,7 +222,7 @@ public abstract class RealTimeProtectionGenerator {
 			return new ArrayList<WafRule>();
 		}
 
-		log.info("About to generate rules for the WAF " + waf.getName() + 
+		log.info("About to generate rules for the WAF " + StringEscapeUtils.escapeHtml(waf.getName()) + 
 				": " + applications.size() + " applications.");
 
 		int numVulns = 0;
@@ -331,7 +332,7 @@ public abstract class RealTimeProtectionGenerator {
 			String vulnName = MESSAGE_MAP.get(genericVulnName);
 			if (vulnName != null) {
 				vulnName = vulnName.replaceFirst(" attempt", "");
-				log.debug("New " + vulnName + " rule was " + rule.trim());
+				log.debug("New " + StringEscapeUtils.escapeHtml(vulnName) + " rule was " + StringEscapeUtils.escapeHtml(rule.trim()));
 			}
 		}
 			

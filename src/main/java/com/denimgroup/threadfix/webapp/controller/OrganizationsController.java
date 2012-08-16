@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 
 /**
@@ -48,15 +51,20 @@ public class OrganizationsController {
 	private final Log log = LogFactory.getLog(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
+	private ApplicationService applicationService = null;
 	
 	@Autowired
-	public OrganizationsController(OrganizationService organizationService) {
+	public OrganizationsController(OrganizationService organizationService,
+								   ApplicationService applicationService) {
 		this.organizationService = organizationService;
+		this.applicationService = applicationService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
-		model.addAttribute(organizationService.loadAllActive());
+		List<Organization> organizations = organizationService.loadAllActive();
+		applicationService.generateVulnerabilityReports(organizations);
+		model.addAttribute(organizations);
 		return "organizations/index";
 	}
 
@@ -65,6 +73,7 @@ public class OrganizationsController {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null && organization.isActive()) {
 			ModelAndView mav = new ModelAndView("organizations/detail");
+			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject(organization);
 			return mav;
 		} else {

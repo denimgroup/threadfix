@@ -492,7 +492,7 @@ public class ApplicationTests extends BaseTest {
 		String orgName = "AppDTCreationTimeOrg";
 		String appName = "AppDTCreationTimeApp";
 		String appUrl = "http://testUrl.com";
-		String dtName = "DG Bugzilla";
+		String dtName = "DG Bugzilla 1234";
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
@@ -541,7 +541,7 @@ public class ApplicationTests extends BaseTest {
 		String orgName = "AppDTCreationTimeOrg";
 		String appName = "AppDTCreationTimeApp";
 		String appUrl = "http://testUrl.com";
-		String dtName1 = "DG Bugzilla";
+		String dtName1 = "DG Bugzilla 6347";
 		String dtType1 = "Bugzilla";
 		String dtName2 = "DG Bugzilla 2";
 		String dtType2 = "Bugzilla";
@@ -608,7 +608,7 @@ public class ApplicationTests extends BaseTest {
 		String orgName = "AppBothCreationTimeOrg";
 		String appName = "AppBothCreationTimeApp";
 		String appUrl = "http://testUrl3.com";
-		String dtName = "DG Bugzilla 2";
+		String dtName = "DG Bugzilla 2373468";
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
@@ -728,7 +728,7 @@ public class ApplicationTests extends BaseTest {
 												  .clickJsonLink()
 												  .getJsonResultText();
 		assertTrue("DT JSON check returned the wrong message on error.", 
-				resultString.equals("Authentication failed"));
+				resultString.equals("Invalid username / password combination"));
 		assertFalse("DT product select was enabled after failed authentication.", 
 				applicationAddPage.isProductSelectEnabled());
 		
@@ -759,7 +759,7 @@ public class ApplicationTests extends BaseTest {
 		String orgName = "AppDTEditValidationOrg";
 		String appName = "AppDTEditValidationApp";
 		String appUrl = "http://testUrl3.com";
-		String dtName = "DG Bugzilla 2";
+		String dtName = "DG Bugzilla 584383";
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
@@ -819,7 +819,7 @@ public class ApplicationTests extends BaseTest {
 												  .clickJsonLink()
 												  .getJsonResultText();
 		assertTrue("DT JSON check returned the wrong message on error: " + resultString, 
-				resultString.equals("Authentication failed"));
+				resultString.equals("Invalid username / password combination"));
 		assertFalse("DT product select was enabled after failed authentication.", 
 				applicationEditPage.isProductSelectEnabled());
 		

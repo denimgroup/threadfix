@@ -105,4 +105,18 @@ public interface ScanService {
 	 */
 	long getFindingCount(Integer scanId);
 
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getUnmappedFindingCount(Integer scanId);
+
+	/**
+	 * Set the number of skipped results, the number without channel vulns, 
+	 * and the number without generic vulns. We may want to just save these in the database at some point.
+	 * @param scan
+	 */
+	void loadStatistics(Scan scan);
+
 }

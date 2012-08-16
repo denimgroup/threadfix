@@ -50,15 +50,15 @@
 				<tr>
 					<td class="label">API Key:</td>
 					<td class="inputValue">
-						<c:if test="${ not empty remoteProviderType.apiKeyString }">
+						<c:if test="${ not empty remoteProviderType.apiKey }">
 							<script>
-								initialApiKey = '<c:out value="${ remoteProviderType.apiKeyString }"/>';
+								initialApiKey = '<c:out value="${ remoteProviderType.apiKey }"/>';
 							</script>
 						</c:if>
-						<form:input id="apiKeyInput" path="apiKeyString" size="50" maxlength="60" />
+						<form:input id="apiKeyInput" path="apiKey" size="50" maxlength="60" />
 					</td>
 					<td style="padding-left:5px">
-						<form:errors path="apiKeyString" cssClass="errors" />
+						<form:errors path="apiKey" cssClass="errors" />
 					</td>
 				</tr>
 			</c:if>

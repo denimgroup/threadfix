@@ -36,7 +36,7 @@
 		listener container definition using the jms namespace, concurrency is
 		the max number of concurrent listeners that can be started
 	-->
-	<jms:listener-container concurrency="10">
+	<jms:listener-container concurrency="1">
 		<jms:listener id="QueueListener" destination="requestQueue"
 			ref="queueListener" />
 	</jms:listener-container>

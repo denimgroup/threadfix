@@ -40,25 +40,27 @@
 	
 	<br />
 	
-	<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
-		<spring:param name="wafId" value="${ waf.id }"/>
-	</spring:url>
-	<form:form method="post" action="${ fn:escapeXml(uploadUrl) }" enctype="multipart/form-data">
-		<form:errors path="*" cssClass="errors" />
-		<table class="dataTable">
-			<tbody>
-				<tr>
-					<td class="label">Log File:</td>
-					<td class="inputValue">
-						<input type="file" name="file" size="50" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br />
-		<input type="submit" value="Upload File"/>
-		<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
-	</form:form>
+	<c:if test="${not empty waf.wafRules }">
+		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
+			<spring:param name="wafId" value="${ waf.id }"/>
+		</spring:url>
+		<form:form method="post" action="${ fn:escapeXml(uploadUrl) }" enctype="multipart/form-data">
+			<form:errors path="*" cssClass="errors" />
+			<table class="dataTable">
+				<tbody>
+					<tr>
+						<td class="label">Log File:</td>
+						<td class="inputValue">
+							<input type="file" name="file" size="50" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<input type="submit" value="Upload File"/>
+			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
+		</form:form>
+	</c:if>
 	
 	<h3>Applications</h3>
 	<table class="formattedTable">
@@ -98,43 +100,45 @@
 		</tbody>
 	</table>
 	
-	<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
-		<spring:param name="wafId" value="${ waf.id }"/>
-	</spring:url>
-	<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
-	<c:choose>
-		<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
-			No Directives Found.  
-		</c:when>
-		<c:otherwise>
-			<select id="wafDirectiveSelect" name="wafDirective" >
-				<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
-				<c:forEach var="directive" items="${ directives }">
-					<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
-				</c:forEach>
-			</select>
-		</c:otherwise>
-	</c:choose>
-	<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
-	</form:form>
-	
-	<h3>WAF Rule Statistics (click to see details):</h3>
-	
-	<c:forEach var="wafRule" items="${ waf.wafRules }">
-		<spring:url value="/wafs/{wafId}/rules/{wafRuleId}" var="generateRulesUrl">
+	<c:if test="${not empty waf.applications}">
+		<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
 			<spring:param name="wafId" value="${ waf.id }"/>
-			<spring:param name="wafRuleId" value="${ wafRule.id }"/>
 		</spring:url>
-		<a href="${ fn:escapeXml(generateRulesUrl) }"> <c:out value="${ wafRule.nativeId }"/> - fired <c:out value="${fn:length(wafRule.securityEvents)}" /> times</a>
-		<br/>
-	</c:forEach>
-	
-	<h3>WAF Rules:</h3>
-	<form id="form1" name="form1" method="post">
-		<input id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
-	</form><br/>
-	<div id="wafrule">
-		<pre><c:out value="${ rulesText }"/></pre>	
-	</div>
+		<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
+		<c:choose>
+			<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
+				No Directives Found.  
+			</c:when>
+			<c:otherwise>
+				<select id="wafDirectiveSelect" name="wafDirective" >
+					<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
+					<c:forEach var="directive" items="${ directives }">
+						<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
+					</c:forEach>
+				</select>
+			</c:otherwise>
+		</c:choose>
+		<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
+		</form:form>
+		
+		<h3>WAF Rule Statistics (click to see details):</h3>
+		
+		<c:forEach var="wafRule" items="${ waf.wafRules }">
+			<spring:url value="/wafs/{wafId}/rules/{wafRuleId}" var="generateRulesUrl">
+				<spring:param name="wafId" value="${ waf.id }"/>
+				<spring:param name="wafRuleId" value="${ wafRule.id }"/>
+			</spring:url>
+			<a href="${ fn:escapeXml(generateRulesUrl) }"> <c:out value="${ wafRule.nativeId }"/> - fired <c:out value="${fn:length(wafRule.securityEvents)}" /> times</a>
+			<br/>
+		</c:forEach>
+		
+		<h3>WAF Rules:</h3>
+		<form id="form1" name="form1" method="post">
+			<input id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
+		</form><br/>
+		<div id="wafrule">
+			<pre><c:out value="${ rulesText }"/></pre>	
+		</div>
+	</c:if>
 	
 </body>

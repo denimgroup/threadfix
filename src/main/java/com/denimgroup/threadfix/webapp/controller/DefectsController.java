@@ -76,6 +76,10 @@ public class DefectsController {
 		}
 		
 		ModelAndView modelAndView = new ModelAndView("defects/index");
+		
+		if (application != null) {
+			applicationService.decryptCredentials(application);
+		}
 
 		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
 		ProjectMetadata data = null;
@@ -86,7 +90,7 @@ public class DefectsController {
 		
 		if (data == null || data.getComponents() == null || 
 				data.getComponents().size() == 0) {
-			request.getSession().setAttribute("error", 
+			request.getSession().setAttribute("scanErrorMessage", 
 					"No components were found for the configured Defect Tracker project. " +
 					"Please configure your project so that is has a component.");
 			return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);

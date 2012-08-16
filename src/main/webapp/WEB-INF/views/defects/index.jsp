@@ -1,9 +1,16 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Defects</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/tablefilter.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
+	<title>Defect Submission</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<spring:url value="defectTable" var="tableUrl" />
+	<script type="text/javascript">
+	window.onload = function()
+    {
+		toggleFilters(false, '#toReplace', '${ tableUrl }');
+		//toggleFilters(true, '#toReplace', '${ tableUrl }');
+    };
+    </script>
 </head>
 
 <body id="apps">
@@ -80,34 +87,25 @@
 						</form:select>
 					</td>
 					<td rowspan="4" style="padding-left:20px; vertical-align:top">
-						<div class="buttonGroup" id="vulnerabilityFilters">
-							<table style="margin:0px;padding:0px;margin-left:auto;">
+						<table>
 								<tr>
-									<td colspan="2"><b>Filter by description:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="descriptionFilterInput" /></td>
+									<td class="label">Summary:</td>
 								</tr>
 								<tr>
-									<td colspan="2"><b>Filter by severity:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="severityFilterInput" /></td>
+									<td class="inputValue">
+										<form:input path="summary"/>
+									</td>
 								</tr>
 								<tr>
-									<td colspan="2"><b>Filter by location:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="locationFilterInput"/></td>
+									<td class="label">Preamble:</td>
 								</tr>
 								<tr>
-									<td colspan="2"><b>Filter by parameter:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input type="text" id="parameterFilterInput" /></td>
+									<td class="inputValue">
+										<form:textarea path="preamble" />
+									</td>
 								</tr>
-								<tr>
-									<td><a href="#" onClick="Filter();">Filter</a>&nbsp;|&nbsp;</td>
-									<td><a href="#" onClick="ClearFilters();">Clear Filters</a>&nbsp;|&nbsp;</td>
-									<td><a href="#" onClick="toggleFilters(false);">Hide Filters</a></td>
-								</tr>
-							</table>
-						</div>
-						<div id="showFilters" style="display:none;">
-							<a href="#" onClick="toggleFilters(true);">Show Filters</a>
-						</div>
+							</tbody>
+						</table>	
 					</td>
 				</tr>
 				<tr>
@@ -142,87 +140,70 @@
 						</form:select>
 					</td>
 				</tr>
+			</tbody>
+		</table>
+		
+		<table class="dataTable">
+			<tbody>
 				<tr>
-					<td class="label">Summary:</td>
-				</tr>
-				<tr>
-					<td class="inputValue">
-						<form:input path="summary"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Preamble:</td>
-				</tr>
-				<tr>
-					<td class="inputValue">
-						<form:textarea path="preamble" />
+					<td rowspan="4" style="padding-bottom:10px; vertical-align:top">
+						<div class="buttonGroup" id="vulnerabilityFilters">
+							<table style="margin:0px;padding:0px;margin-left:auto;">
+								<tr>
+									<td colspan="2"><b>Vulnerability Name:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="descriptionFilterInput" /></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Severity:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="severityFilterInput" /></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Location:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="locationFilterInput"/></td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Parameter:</b></td>
+									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="parameterFilterInput" /></td>
+								</tr>
+								<tr>
+									<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
+									<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
+									<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
+								</tr>
+							</table>
+						</div>
+						<div id="showFilters" style="display:none;">
+							<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
+						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<fieldset>
-		<br/>
-			<div class="buttonGroup">			
-				<table id="vulnerabilities" class="formattedTable sortable">
-					<thead>
-						<tr>
-							<th class="first">Defect Id</th>
-							<th>Status</th>
-							<th>Generic Vulnerability (Description)</th>
-							<th>Generic Severity</th>
-							<th>Location</th>
-							<th>Parameter</th>
-							<th class="last unsortable">Select (All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('vulnerabilities',6)">)</th>
-						</tr>
-					</thead>
-					<tbody>
-			<c:choose>
-				<c:when test="${ empty application.vulnerabilities }">
-						<tr class="bodyRow">
-							<td colspan="7" style="text-align:center;"> No Vulnerabilities found.</td>
-						</tr>
-				</c:when>
-				<c:otherwise>
-					<c:forEach var="vuln" items="${ application.vulnerabilities }">
-						<tr class="bodyRow">
-							<td><c:out value="${ vuln.defect.nativeId }"/></td>
-							<td><c:out value="${ vuln.isOpen }"/></td>
-							<td>
-								<spring:url value="vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-								    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
-							    </spring:url>
-							    <a href="${ fn:escapeXml(vulnerabilityUrl) }">
-							        <c:out value="${ vuln.genericVulnerability.name }"/>
-							    </a>
-						    </td>
-							<td><c:out value="${ vuln.genericSeverity.name }"/></td>
-							<td><c:out value="${ vuln.surfaceLocation.path }"/></td>
-							<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
-							<td style="padding-left:80px">
-							<c:choose>
-								<c:when test="${ empty vuln.defect.id }">
-									<form:checkbox path="vulnerabilityIds" value="${ vuln.id }"/>									
-								</c:when>
-								<c:otherwise>
-									<form:checkbox path="vulnerabilityIds" value="${ vuln.id }" checked="checked" disabled="true" />
-								</c:otherwise>
-							</c:choose>
-							</td>
-						</tr>
-					</c:forEach>
-				</c:otherwise>
-			</c:choose>
-					</tbody>
-					<tfoot>
-						<tr class="footer">
-							<td colspan="7" class="pagination" style="text-align:right"></td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
+		
+		<div id="toReplace">
+			<table id="vulnerabilities" class="formattedTable sortable">
+				<thead>
+					<tr>
+						<th class="first">Defect Id</th>
+						<th>Status</th>
+						<th>Generic Vulnerability (Description)</th>
+						<th>Generic Severity</th>
+						<th>Location</th>
+						<th>Parameter</th>
+						<th class="last unsortable">Select (All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('vulnerabilities',6)">)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="bodyRow">
+						<td colspan="7" style="text-align:center;">
+							Loading Vulnerabilities.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 			
-			<input type="submit" value="Add Defect">
-		</fieldset>
+		<input type="submit" value="Add Defect">
 	</form:form>
 	</div>
 </body>

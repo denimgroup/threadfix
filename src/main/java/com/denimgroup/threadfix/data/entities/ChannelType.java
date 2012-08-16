@@ -57,6 +57,7 @@ public class ChannelType extends BaseEntity {
 	public static final String W3AF = "w3af";
 	public static final String WEBINSPECT = "WebInspect";
 	public static final String ZAPROXY = "OWASP Zed Attack Proxy";
+	public static final String APPSCAN_SOURCE = "IBM Rational AppScan Source Edition";
 
 	private List<ApplicationChannel> applicationChannels;
 	private List<ChannelSeverity> channelSeverities;

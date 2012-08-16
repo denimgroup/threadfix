@@ -14,7 +14,7 @@
 	Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
 	<br/><br/>
 	<spring:url value="../../../{appId}" var="appUrl">
-		<spring:param name="appId" value="${ defect.application.id }" />
+		<spring:param name="appId" value="${ fn:escapeXml(defect.application.id) }" />
 	</spring:url>
 	<a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ defect.application.name }"/></a>
 	<br/>
@@ -64,14 +64,14 @@
 				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
 
 				<td>
-			<c:choose>
-				<c:when test="${ not empty vuln.wafRules }">
-					Yes
-				</c:when>
-				<c:otherwise>
-					No
-				</c:otherwise>
-			</c:choose>
+				<c:choose>
+					<c:when test="${ not empty vuln.wafRules }">
+						Yes
+					</c:when>
+					<c:otherwise>
+						No
+					</c:otherwise>
+				</c:choose>
 				</td>
 				<td>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
@@ -85,5 +85,4 @@
 			</tr>
 		</tfoot>
 	</table>
-	
 </body>

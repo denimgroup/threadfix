@@ -16,10 +16,16 @@
 		$(document).ready(function() {
 			$(".focus").focus();
 		});
-	</script>
-	
-	<script type="text/javascript">
+		
   		if(top != self) top.location.replace(location);
+  		
+  		function toggleHelp() {
+  			if ($("#helpText").css('display') === 'none') {
+  				$("#[id=helpText]").css('display','inline-block');
+  			} else {
+  				$("#[id=helpText]").css('display','none');
+  			}
+  		}
 	</script>
 	
 	<!--[if lt IE 7]>

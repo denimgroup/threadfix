@@ -104,6 +104,8 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			inputString = IOUtils.toString(inputStream);
 		} catch (IOException e) {
 			log.warn("Something went wrong with the input stream. Weird.", e);
+		} finally {
+			closeInputStream(inputStream);
 		}
 		
 		if (inputString == null) {
@@ -211,10 +213,11 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		byte[] byteArray = null;
 		try {
 			byteArray = IOUtils.toByteArray(inputStream);
+			closeInputStream(inputStream);
 			inputStream = new ByteArrayInputStream(byteArray);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		
 		if (byteArray == null) {
 			return WRONG_FORMAT_ERROR;

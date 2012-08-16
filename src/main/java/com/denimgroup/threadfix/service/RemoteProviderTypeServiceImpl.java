@@ -27,6 +27,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,17 +56,69 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
 	@Override
 	public List<RemoteProviderType> loadAll() {
-		return remoteProviderTypeDao.retrieveAll();
+		List<RemoteProviderType> remoteProviderList = remoteProviderTypeDao.retrieveAll();
+		
+		if (remoteProviderList != null && remoteProviderList.size() > 0) {
+			for (RemoteProviderType type : remoteProviderList) {
+				decryptCredentials(type);
+			}
+		}
+		
+		return remoteProviderList;
 	}
 
 	@Override
 	public RemoteProviderType load(String name) {
-		return remoteProviderTypeDao.retrieveByName(name);
+		return decryptCredentials(remoteProviderTypeDao.retrieveByName(name));
 	}
 
 	@Override
 	public RemoteProviderType load(int id) {
-		return remoteProviderTypeDao.retrieveById(id);
+		return decryptCredentials(remoteProviderTypeDao.retrieveById(id));
+	}
+	
+	/**
+	 * Put the unencrypted credentials back into the object.
+	 * @param type
+	 * @return
+	 */
+	private RemoteProviderType encryptCredentials(RemoteProviderType type) {
+		try {
+			if (type != null && type.getHasApiKey() && type.getApiKey() != null) {
+				type.setEncryptedApiKey(ESAPI.encryptor().encrypt(type.getApiKey()));
+			} else if (type != null && type.getHasUserNamePassword() && 
+					type.getUsername() != null && type.getPassword() != null) {
+				type.setEncryptedUsername(ESAPI.encryptor().encrypt(type.getUsername()));
+				type.setEncryptedPassword(ESAPI.encryptor().encrypt(type.getPassword()));
+			}
+		} catch (EncryptionException e) {
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+		}
+		
+		return type;
+	}
+	
+	/**
+	 * Move the unencrypted credentials in the transient fields into the 
+	 * encrypted fields that will be saved.
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public RemoteProviderType decryptCredentials(RemoteProviderType type) {
+		try {
+			if (type != null && type.getHasApiKey() && type.getEncryptedApiKey() != null) {
+				type.setApiKey(ESAPI.encryptor().decrypt(type.getEncryptedApiKey()));
+			} else if (type != null && type.getHasUserNamePassword() && 
+					type.getEncryptedUsername() != null && type.getEncryptedPassword() != null) {
+				type.setUsername(ESAPI.encryptor().decrypt(type.getEncryptedUsername()));
+				type.setPassword(ESAPI.encryptor().decrypt(type.getEncryptedPassword()));
+			}
+		} catch (EncryptionException e) {
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+		}
+		
+		return type;
 	}
 
 	@Override
@@ -75,7 +129,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	@Override
 	public void checkConfiguration(RemoteProviderType remoteProviderType, 
 			BindingResult result, int typeId) {
-		RemoteProviderType databaseRemoteProviderType = load(typeId);
+		RemoteProviderType databaseRemoteProviderType = decryptCredentials(load(typeId));
 				
 		if (remoteProviderType != null &&
 				remoteProviderType.getPassword() != null &&
@@ -86,11 +140,11 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		}
 		
 		if (remoteProviderType != null &&
-				remoteProviderType.getApiKeyString() != null &&
-				remoteProviderType.getApiKeyString().startsWith(USE_OLD_PASSWORD) &&
+				remoteProviderType.getApiKey() != null &&
+				remoteProviderType.getApiKey().startsWith(USE_OLD_PASSWORD) &&
 				databaseRemoteProviderType != null &&
-				databaseRemoteProviderType.getApiKeyString() != null) {
-			remoteProviderType.setApiKeyString(databaseRemoteProviderType.getApiKeyString());
+				databaseRemoteProviderType.getApiKey() != null) {
+			remoteProviderType.setApiKey(databaseRemoteProviderType.getApiKey());
 		}
 		
 		if (databaseRemoteProviderType == null || 
@@ -98,9 +152,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				!remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername())) ||
 				(remoteProviderType != null && remoteProviderType.getPassword() != null &&
 				!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) ||
-				(remoteProviderType != null && remoteProviderType.getApiKeyString() != null &&
-				!remoteProviderType.getApiKeyString().equals(
-						databaseRemoteProviderType.getApiKeyString()))) {
+				(remoteProviderType != null && remoteProviderType.getApiKey() != null &&
+				!remoteProviderType.getApiKey().equals(
+						databaseRemoteProviderType.getApiKey()))) {
 		
 			List<RemoteProviderApplication> apps = remoteProviderApplicationService
 													.getApplications(remoteProviderType);
@@ -110,14 +164,13 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				// TODO finalize this process.
 				String field = null;
 				if (remoteProviderType.getHasApiKey()) {
-					field = "apiKeyString";
+					field = "apiKey";
 				} else {
 					field = "username";
 				}
 				
 				result.rejectValue(field, "errors.other", 
 						"We were unable to connect to the provider with these credentials.");
-				
 			} else {
 				
 				log.warn("Provider username has changed, deleting old apps.");
@@ -132,8 +185,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 						remoteProviderApplicationService.store(remoteProviderApplication);
 					}
 				}
-				
-				store(remoteProviderType);
+								
+				store(encryptCredentials(remoteProviderType));
 			}
 		} else {
 			log.info("No change was made to the credentials.");
@@ -145,9 +198,10 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		RemoteProviderType type = load(id);
 		
 		if (type != null) {
-			type.setApiKeyString(null);
-			type.setUsername(null);
-			type.setPassword(null);
+			type.setEncrypted(false);
+			type.setEncryptedApiKey(null);
+			type.setEncryptedUsername(null);
+			type.setEncryptedPassword(null);
 			if (type.getRemoteProviderApplications() != null) {
 				remoteProviderApplicationService.deleteApps(type);
 			}

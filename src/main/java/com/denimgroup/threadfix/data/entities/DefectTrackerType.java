@@ -43,6 +43,7 @@ public class DefectTrackerType extends BaseEntity {
 
 	private String name;
 	private String version;
+	private String fullClassName;
 
 	private List<DefectTracker> defectTrackerList;
 
@@ -72,5 +73,14 @@ public class DefectTrackerType extends BaseEntity {
 
 	public void setDefectTrackerList(List<DefectTracker> defectTrackerList) {
 		this.defectTrackerList = defectTrackerList;
+	}
+
+	@Column(length=512)
+	public String getFullClassName() {
+		return fullClassName;
+	}
+
+	public void setFullClassName(String fullClassName) {
+		this.fullClassName = fullClassName;
 	}
 }

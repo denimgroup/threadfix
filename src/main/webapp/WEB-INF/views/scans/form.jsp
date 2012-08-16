@@ -162,6 +162,9 @@
 							onKeyPress = "return disableEnterKey(event);"
 							size="50" maxlength="255"/>
 				</td>
+				<td style="padding-left:5px" colspan="2" >
+					<form:errors path="dataFlowElements[0]" cssClass="errors" />
+				</td>
 			</tr>
 			<tr>
 				<td class="label">Parameter:</td>

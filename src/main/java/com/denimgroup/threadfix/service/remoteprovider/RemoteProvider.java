@@ -49,7 +49,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	
 	protected RemoteProviderType remoteProviderType;
 	
-	public abstract Scan getScan(RemoteProviderApplication remoteProviderApplication);
+	public abstract List<Scan> getScans(RemoteProviderApplication remoteProviderApplication);
 	
 	public abstract List<RemoteProviderApplication> fetchApplications();
 	

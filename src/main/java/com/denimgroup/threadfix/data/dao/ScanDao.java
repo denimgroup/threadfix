@@ -90,4 +90,45 @@ public interface ScanDao {
 	 * @return
 	 */
 	long getFindingCount(Integer scanId);
+
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getFindingCountUnmapped(Integer scanId);
+	
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getTotalNumberSkippedResults(Integer scanId);
+	
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getNumberWithoutChannelVulns(Integer scanId);
+	
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getNumberWithoutGenericMappings(Integer scanId);
+
+	/**
+	 * 
+	 * @param scanId
+	 * @return
+	 */
+	long getTotalNumberFindingsMergedInScan(Integer scanId);
+
+	/**
+	 * 
+	 * @param scan
+	 */
+	void deleteFindingsAndScan(Scan scan);
 }

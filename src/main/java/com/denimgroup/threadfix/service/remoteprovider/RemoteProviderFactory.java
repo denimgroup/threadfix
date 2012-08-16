@@ -82,7 +82,7 @@ public class RemoteProviderFactory {
 	 * @param remoteProviderApplication
 	 * @return
 	 */
-	public Scan fetchScan(RemoteProviderApplication remoteProviderApplication) {
+	public List<Scan> fetchScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
 				remoteProviderApplication.getRemoteProviderType() == null) {
 			return null;
@@ -93,7 +93,7 @@ public class RemoteProviderFactory {
 		if (provider == null)
 			return null;
 		
-		Scan returnScan = provider.getScan(remoteProviderApplication);
+		List<Scan> scanList = provider.getScans(remoteProviderApplication);
 		
 		if (remoteProviderApplication.getApplicationChannel() != null) { 
 			if (remoteProviderApplication.getApplicationChannel().getScanCounter() == null) {
@@ -104,7 +104,7 @@ public class RemoteProviderFactory {
 			}
 		}
 		
-		return returnScan;
+		return scanList;
 	}
 	
 }

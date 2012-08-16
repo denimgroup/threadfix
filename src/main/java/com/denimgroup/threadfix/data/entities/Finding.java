@@ -37,6 +37,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "Finding")
@@ -47,7 +48,7 @@ public class Finding extends AuditableEntity {
 	public static final int LONG_DESCRIPTION_LENGTH = 2047;
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
-
+	
 	private Vulnerability vulnerability;
 	
 	private Scan scan;
@@ -68,6 +69,7 @@ public class Finding extends AuditableEntity {
 	private String sourceFileLocation;
 	private boolean isStatic;
 	private boolean isFirstFindingForVuln;
+	private boolean isMarkedFalsePositive = false;
 
 	private User user;
 
@@ -135,7 +137,8 @@ public class Finding extends AuditableEntity {
 		this.surfaceLocation = surfaceLocation;
 	}
 
-	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "finding")
+	@Cascade( { org.hibernate.annotations.CascadeType.ALL } )
 	@OrderBy("sequence DESC")
 	public List<DataFlowElement> getDataFlowElements() {
 		return dataFlowElements;
@@ -209,5 +212,14 @@ public class Finding extends AuditableEntity {
 
 	public void setFirstFindingForVuln(boolean isFirstFindingForVuln) {
 		this.isFirstFindingForVuln = isFirstFindingForVuln;
+	}
+
+	@Column
+	public boolean isMarkedFalsePositive() {
+		return isMarkedFalsePositive;
+	}
+
+	public void setMarkedFalsePositive(boolean isMarkedFalsePositive) {
+		this.isMarkedFalsePositive = isMarkedFalsePositive;
 	}
 }
