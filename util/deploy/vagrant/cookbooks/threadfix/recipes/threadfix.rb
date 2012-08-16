@@ -82,6 +82,7 @@ script "deploy WAR" do
   cwd "/home/vagrant"
   code <<-EOH
     sudo fab deploy_war
+    sudo service tomcat6 start
 	sudo sleep 5;
   EOH
 end
