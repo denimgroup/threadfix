@@ -16,6 +16,19 @@
 
 	<repositories>
 		<repository>
+		    <id>lib</id>
+		    <name>lib</name>
+		    <releases>
+		        <enabled>true</enabled>
+		        <checksumPolicy>ignore</checksumPolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>true</enabled>
+		        <checksumPolicy>ignore</checksumPolicy>
+		    </snapshots>
+		    <url>file://${project.basedir}/lib</url>
+		</repository>
+		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Repository Group</name>
 			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
@@ -28,18 +41,6 @@
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
-		</repository>
-		<repository>
-		    <id>lib</id>
-		    <name>lib</name>
-		    <releases>
-		        <enabled>true</enabled>
-		        <checksumPolicy>ignore</checksumPolicy>
-		    </releases>
-		    <snapshots>
-		        <enabled>false</enabled>
-		    </snapshots>
-		    <url>file://${project.basedir}/lib</url>
 		</repository>
 	</repositories>
 
