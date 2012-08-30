@@ -37,6 +37,9 @@ public class RemoteProviderType extends BaseEntity  {
 	
 	private boolean hasApiKey;
 	
+	// TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
+	private boolean isEuropean = false;
+	
 	private boolean encrypted = false;
 	
 	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
@@ -170,5 +173,14 @@ public class RemoteProviderType extends BaseEntity  {
 
 	public void setEncrypted(boolean encrypted) {
 		this.encrypted = encrypted;
+	}
+
+	// These have clunky names to make Hibernate happy.
+	public boolean getIsEuropean() {
+		return isEuropean;
+	}
+
+	public void setIsEuropean(boolean isEuropean) {
+		this.isEuropean = isEuropean;
 	}
 }

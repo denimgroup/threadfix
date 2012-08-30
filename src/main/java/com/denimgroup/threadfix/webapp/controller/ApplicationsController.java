@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,8 +45,10 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -59,12 +62,15 @@ public class ApplicationsController {
 
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
+	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService) {
+			DefectTrackerService defectTrackerService,
+			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
+		this.vulnerabilityService = vulnerabilityService;
 	}
 
 	@InitBinder
@@ -263,8 +269,11 @@ public class ApplicationsController {
 			bean.setPage(1);
 		}
 		
+		List<Vulnerability> vulnList = applicationService.getVulnTable(appId, bean);
+		
+		model.addAttribute("ages", vulnerabilityService.getAges(vulnList));
 		model.addAttribute("page", bean.getPage());
-		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+		model.addAttribute("vulnerabilities", vulnList);
 		model.addAttribute(application);
 		return "applications/vulnTable";
 	}

@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Imports the results of a WebInspect scan (xml output).
@@ -222,7 +223,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new WebInspectSAXValidator());
 	}
 	
@@ -230,6 +231,14 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 		private boolean hasFindings = false, hasDate = false, correctFormat = false;
 		private boolean grabDate = false;
 		private String currentResponseText = null;
+		
+		private int tagNumber = 0;
+		
+		private boolean passedTags = true;
+		
+		private String[] firstTags = new String[] 
+				{"Sessions", "Session", "URL", "Scheme", 
+				"Host","Port","AttackParamDescriptor"};
 				
 	    private void setTestStatus() {
 	    	if (!correctFormat)
@@ -250,12 +259,16 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	    	setTestStatus();
 	    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) {	    	
-	    	if ("Session".equals(qName))
-	    		hasFindings = true;
+	    public void startElement (String uri, String name, String qName, Attributes atts) {
+	    	if (tagNumber < firstTags.length) {
+	    		passedTags = passedTags && firstTags[tagNumber].equals(qName);
+	    		tagNumber++;
+	    	} else {
+	    		correctFormat = passedTags;
+	    	}
 	    	
-	    	if (!correctFormat && "Sessions".equals(qName))
-	    		correctFormat = true;
+	    	if ("Issue".equals(qName))
+	    		hasFindings = true;
 	    	
 	    	if (!hasDate && "RawResponse".equals(qName))
 	    		grabDate = true;

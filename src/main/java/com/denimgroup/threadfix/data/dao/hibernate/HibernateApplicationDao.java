@@ -32,6 +32,8 @@ import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.JobStatus;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented
@@ -52,7 +54,20 @@ public class HibernateApplicationDao implements ApplicationDao {
 
 	@Override
 	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
+		Application app = retrieveById(id);
+		if (app.getChannelList() != null) {
+			for (ApplicationChannel channel : app.getChannelList()) {
+				if (channel != null && channel.getJobStatusList() != null) {
+					for (JobStatus status : channel.getJobStatusList()) {
+						if (status != null) {
+							status.setApplicationChannel(null);
+							sessionFactory.getCurrentSession().saveOrUpdate(status);
+						}
+					}
+				}
+			}
+		}
+		sessionFactory.getCurrentSession().delete(app);
 	}
 
 	@Override
@@ -122,5 +137,4 @@ public class HibernateApplicationDao implements ApplicationDao {
 		ints.add((int) result);
 		return ints;
 	}
-
 }

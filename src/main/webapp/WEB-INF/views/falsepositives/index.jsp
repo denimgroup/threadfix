@@ -164,7 +164,7 @@
 					<tfoot>
 						<tr class="footer">
 							<td colspan="10" style="text-align: right"><input
-								type="submit" value="Mark Selected as False Positives">
+								type="submit" value="Unmark as False Positives">
 							</td>
 						</tr>
 					</tfoot>

@@ -45,6 +45,7 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Imports the results of a dynamic AppScan scan.
@@ -272,7 +273,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new AppScanSAXValidator());
 	}
 	

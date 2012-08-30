@@ -91,7 +91,7 @@ script "update owners" do
   cwd "/home/vagrant"
   code <<-EOH
     sudo fab change_owners
-    sudo service tomcat6 start
+    sudo service tomcat7 start
 	sudo sleep 5;
   EOH
 end
@@ -111,6 +111,6 @@ script "import_db" do
   cwd "/vagrant"
   code <<-EOH
     echo "use threadfix;" > /tmp/db.sql
-	cat /tmp/db.sql /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/import.sql | /usr/bin/mysql -u threadfix -ptfpassword
+	cat /tmp/db.sql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/import.sql | /usr/bin/mysql -u threadfix -ptfpassword
   EOH
 end

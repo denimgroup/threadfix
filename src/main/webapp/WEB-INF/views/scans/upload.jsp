@@ -2,6 +2,14 @@
 
 <head>
 	<title><c:out value="${ application.name }"/> Scan Upload</title>
+	<script>
+		var lastId = 0;
+		function display(currentId) {
+			$("#info" + currentId).css('display','');
+			$("#info" + lastId).css('display','none');
+			lastId = currentId;
+		}
+	</script>
 </head>
 
 <body id="apps">
@@ -44,9 +52,19 @@
 					<td class="inputValue">
 						<select id="channelSelect" name="channelId">
 							<c:forEach var="channel" items="${ application.uploadableChannels }">
-								<option value="${ channel.id }"><c:out value="${ channel.channelType.name }"/></option>
+								<option onclick="display(<c:out value="${ channel.id }"/>)" value="${ channel.id }"><c:out value="${ channel.channelType.name }"/></option>
 							</c:forEach>
 						</select>
+						<c:forEach var="channel" items="${ application.uploadableChannels }">
+							<c:if test="${ not empty channel.channelType.exportInfo }">
+								<span style="padding-left: 8px; display: none;" id="info${ channel.id }">
+									<a href="javascript:alert('<c:out value='${ channel.channelType.exportInfo }'/>');">Which file format do I need?</a>
+								</span>
+							</c:if>
+						</c:forEach>
+						<c:if test="${ not empty application.uploadableChannels }">
+							<script>display(<c:out value="${ application.uploadableChannels[0].id}"/>);</script>
+						</c:if>
 					</td>
 				</tr>
 				<tr>

@@ -62,6 +62,15 @@
 					</td>
 				</tr>
 			</c:if>
+			<c:if test="${ isQualys }">
+				<tr>
+					<td class="label">Region:</td>
+					<td class="inputValue">
+						<form:radiobutton path="isEuropean" value="false"/> US 
+						<form:radiobutton path="isEuropean" value="true"/> EU
+					</td>
+				</tr>
+			</c:if>
 		</tbody>
 	</table>
 	<c:if test="${remoteProviderType.hasUserNamePassword }">

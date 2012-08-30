@@ -338,7 +338,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void init(FilterConfig filterConfig) throws ServletException {
         Enumeration<String> paramNames = filterConfig.getInitParameterNames();
         while (paramNames.hasMoreElements()) {

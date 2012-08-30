@@ -30,6 +30,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -75,6 +76,7 @@ public class HibernateScanDao implements ScanDao {
 	}
 
 	@Override
+	@Transactional
 	public void saveOrUpdate(Scan scan) {
 		sessionFactory.getCurrentSession().saveOrUpdate(scan);
 	}
@@ -213,12 +215,15 @@ public class HibernateScanDao implements ScanDao {
 					  .setInteger("scan", scan.getId())
 					  .executeUpdate();
 		
-		sessionFactory.getCurrentSession()
-					  .createQuery("delete from SurfaceLocation " +
-					  		"where id in (:ids)")
-					  .setParameterList("ids", surfaceLocationIds)
-					  .executeUpdate();
+		if (surfaceLocationIds != null && surfaceLocationIds.size() > 0) {
+			sessionFactory.getCurrentSession()
+						  .createQuery("delete from SurfaceLocation " +
+						  		"where id in (:ids)")
+						  .setParameterList("ids", surfaceLocationIds)
+						  .executeUpdate();
+		}
 		
 		sessionFactory.getCurrentSession().delete(scan);
 	}
+	
 }

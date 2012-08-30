@@ -23,11 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * @author bbeverly
@@ -59,7 +61,7 @@ public interface ScanService {
 	 * @param fileName
 	 * @param queueSender
 	 */
-	void addFileToQueue(Integer channelId, String fileName);
+	void addFileToQueue(Integer channelId, String fileName, Calendar calendar);
 	
 	/**
 	 * This method delegates the checking to the appropriate importer and returns the code
@@ -68,7 +70,7 @@ public interface ScanService {
 	 * @param fileName
 	 * @return
 	 */
-	String checkFile(Integer channelId, String fileName);
+	ScanCheckResultBean checkFile(Integer channelId, String fileName);
 	
 	/**
 	 * 

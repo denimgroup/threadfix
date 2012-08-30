@@ -5,14 +5,12 @@
 	name="trending" pageWidth="792" pageHeight="612" orientation="Landscape" 
 	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
-	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
 	<field name="newVulns" class="java.lang.Integer"/>
-	<field name="oldVulns" class="java.lang.Integer"/>
 	<field name="totVulns" class="java.lang.Integer"/>
-	<field name="fixedVulns" class="java.lang.Integer"/>
 	<field name="resurfacedVulns" class="java.lang.Integer"/>
 	<field name="importTime" class="java.util.Calendar"/>
-	<field name="name" class="java.lang.String"/>
+	<field name="appName" class="java.lang.String"/>
+	<field name="orgName" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -20,7 +18,7 @@
 		<band/>
 	</title>
 	<pageHeader>
-		<band height="40">
+		<band height="60">
 			<staticText>
 				<reportElement x="301" y="0" width="150" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -33,7 +31,14 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + ($P{appId}.size() > 1 ? "All" : $F{name})]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $F{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="40" width="309" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $F{appName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -52,7 +57,7 @@
 	<summary>
 		<band height="200">
 			<timeSeriesChart>
-				<chart>
+				<chart customizerClass="com.denimgroup.threadfix.service.report.TrendingChartCustomizer">
 					<reportElement x="0" y="0" width="752" height="200"/>
 					<chartTitle/>
 					<chartSubtitle/>
@@ -76,24 +81,12 @@
 						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
 						<valueExpression><![CDATA[$F{resurfacedVulns} != null ? $F{resurfacedVulns} : new Integer(0)]]></valueExpression>
 					</timeSeries>
-					<timeSeries>
-						<seriesExpression><![CDATA["Old"]]></seriesExpression>
-						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
-						<valueExpression><![CDATA[$F{oldVulns} != null ? $F{oldVulns} : new Integer(0)]]></valueExpression>
-					</timeSeries>
-					<timeSeries>
-						<seriesExpression><![CDATA["Fixed"]]></seriesExpression>
-						<timePeriodExpression><![CDATA[$F{importTime}.getTime()]]></timePeriodExpression>
-						<valueExpression><![CDATA[$F{fixedVulns} != null ? $F{fixedVulns} : new Integer(0)]]></valueExpression>
-					</timeSeries>
 				</timeSeriesDataset>
 				<timeSeriesPlot>
 					<plot>
 						<seriesColor seriesOrder="0" color="#000000"/>
 						<seriesColor seriesOrder="1" color="#96160B"/>
 						<seriesColor seriesOrder="2" color="#CA4E00"/>
-						<seriesColor seriesOrder="3" color="#967832"/>
-						<seriesColor seriesOrder="4" color="#002F5D"/>
 					</plot>
 					<timeAxisFormat>
 						<axisFormat>

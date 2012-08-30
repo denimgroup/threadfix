@@ -23,14 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.JobStatusDao;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 
 @Service
@@ -82,7 +85,7 @@ public class JobStatusServiceImpl implements JobStatusService {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional(readOnly = false, propagation=Propagation.NOT_SUPPORTED)
 	public void updateJobStatus(JobStatus jobStatus, String status) {
 		if (jobStatus == null) {
 			return;
@@ -97,7 +100,7 @@ public class JobStatusServiceImpl implements JobStatusService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer createNewJobStatus(String type, String initialStatus, String urlPath,
-			String urlText) {
+			String urlText, Calendar date, ApplicationChannel channel) {
 		JobStatus jobStatus = new JobStatus();
 
 		Date now = new Date();
@@ -108,6 +111,8 @@ public class JobStatusServiceImpl implements JobStatusService {
 		jobStatus.setModifiedDate(now);
 		jobStatus.setUrlPath(urlPath);
 		jobStatus.setUrlText(urlText);
+		jobStatus.setScanDate(date);
+		jobStatus.setApplicationChannel(channel);
 		jobStatus.setOpen(true);
 
 		storeJobStatus(jobStatus);

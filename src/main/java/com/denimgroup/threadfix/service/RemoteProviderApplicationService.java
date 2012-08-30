@@ -82,4 +82,10 @@ public interface RemoteProviderApplicationService {
 	 * @param remoteProviderApplication
 	 */
 	void processApp(BindingResult result, RemoteProviderApplication remoteProviderApplication);
+
+	/**
+	 * 
+	 * @return
+	 */
+	List<RemoteProviderApplication> loadAllWithMappings();
 }

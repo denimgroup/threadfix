@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.channel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -67,6 +68,7 @@ public class ChannelImporterFactory {
 	 * @param applicationChannel
 	 * @return
 	 */
+	@Transactional
 	public ChannelImporter getChannelImporter(ApplicationChannel applicationChannel) {
 
 		if (applicationChannel == null || applicationChannel.getChannelType() == null

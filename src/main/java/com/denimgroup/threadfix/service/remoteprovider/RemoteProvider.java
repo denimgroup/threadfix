@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.channel.AbstractChannelImporter;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
 	
@@ -65,7 +66,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		log.warn("checkFile() called in a Remote Provider. This should never happen.");
 		return null;
 	}

@@ -23,9 +23,37 @@ public class JasperScanReport implements JRDataSource {
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
 	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<Integer, Integer>();
 	
+	private String appName = null;
+	private String orgName = null;
+	
 	public JasperScanReport(List<Integer> applicationIdList, ScanDao scanDao) {
 		if (scanDao != null && applicationIdList != null)
 			this.scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+		
+		if (applicationIdList.size() > 1) {
+			appName = "All";
+		} else if (scanList != null && scanList.get(0) != null &&
+				scanList.get(0).getApplication() != null) {
+			appName = scanList.get(0).getApplication().getName();
+		} else {
+			// we shouldn't ever get here
+			appName = "No Application Name Found.";
+		}
+				
+		if (scanList != null && scanList.size() > 1) {
+			for (Scan scan : scanList) {
+				if (scan != null && scan.getApplication() != null 
+						&& scan.getApplication().getOrganization() != null 
+						&& scan.getApplication().getOrganization().getName() != null) {
+					if (orgName == null) {
+						orgName = scan.getApplication().getOrganization().getName();
+					} else if (!orgName.equals(scan.getApplication().getOrganization().getName())){
+						orgName = "All";
+						break;
+					}
+				}
+			}
+		}
 		
 		Collections.sort(this.scanList, Scan.getTimeComparator());
 
@@ -66,11 +94,9 @@ public class JasperScanReport implements JRDataSource {
 		}
 					
 		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
-		resultsHash.put("fixedVulns", scan.getNumberClosedVulnerabilities());
 		resultsHash.put("resurfacedVulns", scan.getNumberResurfacedVulnerabilities());
-
-		if (scan.getApplication() != null && scan.getApplication().getName() != null)
-			resultsHash.put("name", scan.getApplication().getName());
+		resultsHash.put("appName", appName);
+		resultsHash.put("orgName", orgName);
 		
 		if (scan.getImportTime() != null)
 			resultsHash.put("importTime", scan.getImportTime());
@@ -87,20 +113,16 @@ public class JasperScanReport implements JRDataSource {
 			oldVulnsByChannelMap.put(appChannelId, adjustedTotal);
 		}
 		
-		Integer numOld = scan.getNumberOldVulnerabilitiesInitiallyFromThisChannel();
 		Integer numTotal = adjustedTotal;
 		
 		// This code counts in the old vulns from other channels.
-		if (numOld == null) numOld = 0;
 		for (Integer key : oldVulnsByChannelMap.keySet()) {
 			if (key == null || oldVulnsByChannelMap.get(key) == null || 
 					(appChannelId != null && appChannelId.equals(key)))
 				continue;
 			numTotal += oldVulnsByChannelMap.get(key);
-			numOld += oldVulnsByChannelMap.get(key);
 		}
 		
-		resultsHash.put("oldVulns", numOld - scan.getNumberResurfacedVulnerabilities());
 		resultsHash.put("totVulns", numTotal);
 	}
 

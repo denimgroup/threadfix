@@ -50,10 +50,7 @@ public class PortfolioReportController {
 	
 	private final Log log = LogFactory.getLog(PortfolioReportController.class);
 
-	private OrganizationService organizationService;
-
-	private int[][] appsByCriticality = null;
-	
+	private OrganizationService organizationService;	
 
 	@Autowired
 	public PortfolioReportController(OrganizationService organizationService) {
@@ -75,7 +72,7 @@ public class PortfolioReportController {
 		Calendar now = Calendar.getInstance();
 		
 		List<Organization> teams = organizationService.loadAll();
-		appsByCriticality = new int[][] {{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		int[][] appsByCriticality = new int[][] {{0, 0, 0, 0, 0, 0, 0, 0, 0},
 										 {0, 0, 0, 0, 0, 0, 0, 0, 0},
 										 {0, 0, 0, 0, 0, 0, 0, 0, 0},
 										 {0, 0, 0, 0, 0, 0, 0, 0, 0}};
@@ -110,12 +107,18 @@ public class PortfolioReportController {
 					if (app == null || !app.isActive())
 						continue;
 					
-					updateCriticalityCounts(app, now);
+					updateCriticalityCounts(appsByCriticality, app, now);
 					numberApplications += 1;
+					
+					String criticality = "";
+					if (app.getApplicationCriticality() != null && 
+							app.getApplicationCriticality().getName() != null) {
+						criticality = app.getApplicationCriticality().getName();
+					}
 					
 					if (app.getScans() == null || app.getScans().isEmpty()) {
 						numberApplicationsNeverScanned += 1;
-						appRows.add(Arrays.asList(new String[] {app.getName(), "0", "Never"}));
+						appRows.add(Arrays.asList(new String[] {app.getName(), criticality, "0", "Never"}));
 					} else {
 						totalScans += app.getScans().size();
 						numberScans += app.getScans().size();
@@ -127,19 +130,22 @@ public class PortfolioReportController {
 							upperBound = daysSinceLatestScan;
 						}
 						appRows.add(Arrays.asList(new String[] {
-								app.getName(), String.valueOf(app.getScans().size()), daysSinceLatestScan.toString() + " days ago"
+								app.getName(), 
+								criticality, 
+								String.valueOf(app.getScans().size()), 
+								daysSinceLatestScan.toString() + " days ago"
 							}));
 					}
 				}
 				
 				if (totalScans == 0 || lowerBound == null || upperBound == null) {
-					teamRow = Arrays.asList(new String[] { "Team: " + team.getName(), "0", "Never" });
+					teamRow = Arrays.asList(new String[] { "Team: " + team.getName(),"", "0", "Never" });
 				} else {
 					if (lowerBound.equals(upperBound)) {
-						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(), totalScans.toString(), 
+						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
 								lowerBound.toString() + " days ago"});
 					} else {
-						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(), totalScans.toString(), 
+						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
 								lowerBound.toString() + "-" + upperBound.toString() + " days ago"});
 					}
 				}
@@ -161,12 +167,12 @@ public class PortfolioReportController {
 		model.addAttribute("totalApps", numberApplications);
 		model.addAttribute("totalScans", numberScans);
 		model.addAttribute("numberApplicationsNeverScanned", numberApplicationsNeverScanned);
-		model.addAttribute("appsByCriticality", createDateTable());
+		model.addAttribute("appsByCriticality", createDateTable(appsByCriticality));
 		model.addAttribute("tableContents", tableContents);
 		return "reports/portfolioReport";
 	}
 	
-	private String[][] createDateTable() {
+	private String[][] createDateTable(int[][] appsByCriticality) {
 		String[] titles = { "Low", "Medium", "High", "Critical"};
 		String[][] returnArray = new String[5][10];
 		int[] totals = {0,0,0,0,0,0,0,0,0};
@@ -213,7 +219,7 @@ public class PortfolioReportController {
 	 * Update the app counts by criticality so that we can use those stats in the report.
 	 * @param app
 	 */
-	private void updateCriticalityCounts(Application app, Calendar now) {
+	private void updateCriticalityCounts(int[][] appsByCriticality, Application app, Calendar now) {
 
 		if (app != null && app.getApplicationCriticality() != null &&
 				app.getApplicationCriticality().getName() != null) {

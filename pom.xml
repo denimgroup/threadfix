@@ -16,17 +16,17 @@
 
 	<repositories>
 		<repository>
-		    <id>lib</id>
-		    <name>lib</name>
-		    <releases>
-		        <enabled>true</enabled>
-		        <checksumPolicy>ignore</checksumPolicy>
-		    </releases>
-		    <snapshots>
-		        <enabled>true</enabled>
-		        <checksumPolicy>ignore</checksumPolicy>
-		    </snapshots>
-		    <url>file://${project.basedir}/lib</url>
+			<id>lib</id>
+			<name>lib</name>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<url>file://${project.basedir}/lib</url>
 		</repository>
 		<repository>
 			<id>jboss-public-repository-group</id>
@@ -157,14 +157,10 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<!--
-				<plugin> <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.5</version> <inherited>true</inherited> <configuration>
-				<forkMode>once</forkMode> <reportFormat>xml</reportFormat>
-				<classesDirectory>${project.build.directory}/generated-classes/emma/classes</classesDirectory>
-				</configuration> </plugin>
-			-->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<version>2.5</version> <inherited>true</inherited> <configuration> <forkMode>once</forkMode> 
+				<reportFormat>xml</reportFormat> <classesDirectory>${project.build.directory}/generated-classes/emma/classes</classesDirectory> 
+				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>emma-maven-plugin</artifactId>
@@ -213,13 +209,13 @@
 					<skip>${cargo.deployer.skip}</skip>
 					<wait>true</wait>
 					<container>
-						<containerId>tomcat6x</containerId>
+						<containerId>tomcat7x</containerId>
 						<type>remote</type>
 					</container>
 					<configuration>
 						<type>runtime</type>
 						<properties>
-							<!--  Change this depending on the server hosting -->
+							<!-- Change this depending on the server hosting -->
 							<cargo.tomcat.manager.url>http://sattest1.denimgroup.com:8080/manager</cargo.tomcat.manager.url>
 							<cargo.remote.username>admin</cargo.remote.username>
 							<cargo.remote.password>admin</cargo.remote.password>
@@ -300,11 +296,11 @@
 				<configuration>
 					<skip>false</skip>
 					<systemProperties>
-				    	<property>
-				    		<name>url</name>
-				    		<value>${fileName}</value>
-				    	</property>
-				    </systemProperties>
+						<property>
+							<name>url</name>
+							<value>${fileName}</value>
+						</property>
+					</systemProperties>
 				</configuration>
 				<executions>
 					<execution>
@@ -529,7 +525,7 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -549,8 +545,8 @@
 			<version>${log4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.opensymphony.quartz</groupId>
-			<artifactId>quartz-all</artifactId>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
 			<version>${quartz.version}</version>
 		</dependency>
 		<dependency>
@@ -596,12 +592,12 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>2.23.1</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.23.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -691,8 +687,8 @@
 		<jta.version>1.1</jta.version>
 		<log4j.version>1.2.16</log4j.version>
 		<persistence.version>1.0</persistence.version>
-		<quartz.version>1.6.1</quartz.version>
-		<servlet-api.version>2.5</servlet-api.version>
+		<quartz.version>1.8.6</quartz.version>
+		<servlet-api.version>3.0.1</servlet-api.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
@@ -706,7 +702,7 @@
 		<hsqldb.version>1.8.0.10</hsqldb.version>
 		<junit.version>4.8.1</junit.version>
 		<selenium-client.version>1.0.2</selenium-client.version>
-		
+
 		<!-- Plugin versions -->
 		<cargo.version>1.0.3</cargo.version>
 		<emma.version>1.0-alpha-2</emma.version>

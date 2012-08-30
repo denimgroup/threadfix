@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Imports the results of a W3AF scan (xml output).
@@ -184,7 +185,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		
 		try {
 			removeTagFromInputStream("httpresponse");

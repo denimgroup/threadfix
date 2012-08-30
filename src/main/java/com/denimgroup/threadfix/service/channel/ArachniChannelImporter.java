@@ -37,6 +37,7 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * 
@@ -186,7 +187,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new ArachniSAXValidator());
 	}
 	

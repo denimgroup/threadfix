@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ waf.new }">New </c:if>WAF</title>
+	<title><c:if test="${ waf['new'] }">New </c:if>WAF</title>
 </head>
 
 <body id="wafs">
-	<h2><c:if test="${ waf.new }">New </c:if>WAF</h2>
+	<h2><c:if test="${ waf['new'] }">New </c:if>WAF</h2>
 	
 <spring:url value="" var="emptyUrl"></spring:url>
 <form:form modelAttribute="waf" method="post" action="${ fn:escapeXml(emptyUrl) }">
@@ -35,7 +35,7 @@
 	</table>
 	<br />
 <c:choose>
-<c:when test="${ waf.new }">
+<c:when test="${ waf['new'] }">
 	<input id="addWafButton" type="submit" value="Add WAF" />
 	<spring:url value="/wafs" var="wafUrl" />
 </c:when>

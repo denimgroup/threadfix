@@ -227,6 +227,7 @@
 					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 2)">Severity</th>
 					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 3)">Path</th>
 					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 4)">Parameter</th>
+					<th>Age</th>
 					<th>Defect</th>
 					<th>Defect Status</th>
 					<th>WAF Rule</th>
@@ -236,12 +237,12 @@
 			</thead>
 			<tbody>
 				<tr class="bodyRow">
-					<td colspan="10" style="text-align:center;">Loading Vulnerabilities.</td>
+					<td colspan="11" style="text-align:center;">Loading Vulnerabilities.</td>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr class="footer">
-					<td colspan="10" style="text-align:right">
+					<td colspan="11" style="text-align:right">
 						<input type="submit" value="Mark Selected as False Positives">
 					</td>
 				</tr>

@@ -73,7 +73,7 @@ public class RemoteProvidersController {
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "apiKey", "username", 
-				"password", "application.id", "application.organization.id" });
+				"password", "application.id", "application.organization.id", "isEuropean" });
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -205,15 +205,19 @@ public class RemoteProvidersController {
 			remoteProviderType.setApiKey(mask(remoteProviderType.getApiKey()));
 		}
 		
+		boolean isQualys = remoteProviderType.getName() != null && 
+				remoteProviderType.getName().equals(RemoteProviderType.QUALYSGUARD_WAS);
+		
 		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/configure");
 		modelAndView.addObject(remoteProviderType);
+		modelAndView.addObject("isQualys",isQualys);
 		return modelAndView;
 	}
 	
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public String configureFinish(@PathVariable("typeId") int typeId,
 			@Valid @ModelAttribute RemoteProviderType remoteProviderType, 
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status, Model model) {
 		if (result.hasErrors()) {
 			return "config/remoteproviders/configure";
 		} else {
@@ -221,6 +225,9 @@ public class RemoteProvidersController {
 					result, typeId);
 			
 			if (result.hasErrors()) {
+				boolean isQualys = remoteProviderType.getName() != null && 
+						remoteProviderType.getName().equals(RemoteProviderType.QUALYSGUARD_WAS);
+				model.addAttribute("isQualys", isQualys);
 				return "config/remoteproviders/configure";
 			}
 			

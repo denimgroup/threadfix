@@ -53,6 +53,7 @@
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2)">Severity</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3)">Path</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4)">Parameter</th>
+				<th>Age (days)</th>
 				<th>Defect</th>
 				<th>Defect Status</th>
 				<th>WAF Rule</th>
@@ -89,6 +90,7 @@
 				<td id="severity${ vulnStatus.count }"><c:out value="${ vuln.genericSeverity.name }"/></td>
 				<td id="path${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.path }"/></td>
 				<td id="parameter${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
+				<td><c:out value="${ ages[vulnStatus.count - 1] }"/></td>
 				<td>
 				<c:if test="${ not empty vuln.defect }">
 					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">

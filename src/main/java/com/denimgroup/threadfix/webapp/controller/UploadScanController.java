@@ -88,7 +88,7 @@ public class UploadScanController {
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		
-		String returnValue = null;
+		ScanCheckResultBean returnValue = null;
 		
 		String fileName = scanService.saveFile(channelId, file);
 		
@@ -112,10 +112,12 @@ public class UploadScanController {
 			log.warn(ResourceNotFoundException.getLogMessage("Application",appId));
 			throw new ResourceNotFoundException();
 		}
-		
-		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue)) {
-			scanService.addFileToQueue(channelId, fileName);
-		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue)) {
+
+		if (returnValue != null && returnValue.getScanCheckResult() != null &&
+				ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
+			scanService.addFileToQueue(channelId, fileName, returnValue.getTestDate());
+		} else if (returnValue != null && returnValue.getScanCheckResult() != null &&
+				ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
 			Integer emptyScanId = scanService.saveEmptyScanAndGetId(channelId, fileName);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");
 			confirmPage.addObject("scanId", emptyScanId);
@@ -123,10 +125,10 @@ public class UploadScanController {
 		} else {
 			if (app.getId() != null && app.getOrganization() != null 
 					&& app.getOrganization().getId() != null) {
-				return index(app.getOrganization().getId(), app.getId(), returnValue);
+				return index(app.getOrganization().getId(), app.getId(), returnValue.getScanCheckResult());
 			} else {
 				log.warn("The request included an invalidly configured " +
-						"Application, throwing ResourceNotFoundException.");
+						 "Application, throwing ResourceNotFoundException.");
 				throw new ResourceNotFoundException();
 			}
 		}

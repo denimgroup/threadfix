@@ -67,6 +67,7 @@ public class ChannelType extends BaseEntity {
 	private String name;
 	private String url;
 	private String version;
+	private String exportInfo;
 
 	@Column(length = 50, nullable = false)
 	public String getName() {
@@ -93,6 +94,15 @@ public class ChannelType extends BaseEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	@Column(length = 1024, nullable = true)
+	public String getExportInfo() {
+		return exportInfo;
+	}
+
+	public void setExportInfo(String exportInfo) {
+		this.exportInfo = exportInfo;
 	}
 
 	@OneToMany(mappedBy = "channelType")

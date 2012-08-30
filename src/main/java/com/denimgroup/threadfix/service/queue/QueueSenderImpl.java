@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -37,6 +38,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.service.JobStatusService;
 
 /**
@@ -73,7 +75,7 @@ public class QueueSenderImpl implements QueueSender {
 	 */
 	@Override
 	public void startDefectTrackerSync() {
-		send(QueueConstants.DEFECT_TRACKER_SYNC_REQUEST);
+		send(QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE);
 	}
 
 	/*
@@ -95,7 +97,8 @@ public class QueueSenderImpl implements QueueSender {
 	 * .lang.String, java.lang.Integer)
 	 */
 	@Override
-	public void addScanToQueue(String fileName, Integer channelId, Integer orgId, Integer appId) {
+	public void addScanToQueue(String fileName, Integer channelId, Integer orgId, Integer appId,
+			Calendar calendar, ApplicationChannel applicationChannel) {
 
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
@@ -115,7 +118,7 @@ public class QueueSenderImpl implements QueueSender {
 			e.printStackTrace();
 		}
 
-		sendMap(scanMap);
+		sendMap(scanMap, calendar, applicationChannel);
 	}
 
 	/*
@@ -148,7 +151,7 @@ public class QueueSenderImpl implements QueueSender {
 			e.printStackTrace();
 		}
 
-		sendMap(defectTrackerVulnMap);
+		sendMap(defectTrackerVulnMap, null, null);
 	}
 
 	/*
@@ -187,7 +190,7 @@ public class QueueSenderImpl implements QueueSender {
 			e.printStackTrace();
 		}
 
-		sendMap(submitDefectMap);
+		sendMap(submitDefectMap, null, null);
 	}
 
 	/**
@@ -200,11 +203,12 @@ public class QueueSenderImpl implements QueueSender {
 	/**
 	 * @param map
 	 */
-	private void sendMap(MapMessage map) {
+	private void sendMap(MapMessage map, Calendar calendar, ApplicationChannel applicationChannel) {
 		try {
 			if (map.getString("type") != null) {
 				Integer jobStatusId = jobStatusService.createNewJobStatus(map.getString("type"),
-						"Sent to Queue", map.getString("urlPath"), map.getString("urlText"));
+						"Sent to Queue", map.getString("urlPath"), map.getString("urlText"), 
+						calendar, applicationChannel);
 				map.setInt("jobStatusId", jobStatusId);
 				jmsTemplate.convertAndSend("requestQueue", map);
 			}

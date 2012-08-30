@@ -23,29 +23,60 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "JobStatus")
 public class JobStatus extends BaseEntity {
 
 	private static final long serialVersionUID = 8339606417348417904L;
+	
+	private ApplicationChannel applicationChannel;
 
 	private String status;
 	private String type;
 	private String urlText;
 	private String urlPath;
+	private Calendar scanDate;
 	private Date startDate;
 	private Date endDate;
 	private Date modifiedDate;
 	private boolean open = true;
+	private boolean startedProcessing = false;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = true)
+	public Calendar getScanDate() {
+		return scanDate;
+	}
+
+	public void setScanDate(Calendar scanDate) {
+		this.scanDate = scanDate;
+	}
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "applicationChannelId", nullable=true)
+	@JsonIgnore
+	public ApplicationChannel getApplicationChannel() {
+		return applicationChannel;
+	}
+
+	public void setApplicationChannel(ApplicationChannel applicationChannel) {
+		this.applicationChannel = applicationChannel;
+	}
+	
 	@Column(length = 128, nullable = true)
 	public String getStatus() {
 		return status;
@@ -120,4 +151,12 @@ public class JobStatus extends BaseEntity {
 		this.open = open;
 	}
 
+	@Column(nullable = false)
+	public boolean getHasStartedProcessing() {
+		return startedProcessing;
+	}
+
+	public void setHasStartedProcessing(boolean startedProcessing) {
+		this.startedProcessing = startedProcessing;
+	}
 }

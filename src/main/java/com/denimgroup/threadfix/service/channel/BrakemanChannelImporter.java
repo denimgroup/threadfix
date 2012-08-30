@@ -21,6 +21,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * This class currently handles JSON output from either the flat JSONArray version
@@ -206,7 +207,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
     }
 	
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		
 		boolean done = false;
 		
@@ -220,7 +221,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		} 
 		
 		if (byteArray == null) {
-			return WRONG_FORMAT_ERROR;
+			return new ScanCheckResultBean(WRONG_FORMAT_ERROR);
 		}
 		
 		String jsonString = new String(byteArray);
@@ -283,7 +284,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			}
 		}
 
-		return getTestStatus();
+		return new ScanCheckResultBean(getTestStatus(), testDate);
 	}
 
 }

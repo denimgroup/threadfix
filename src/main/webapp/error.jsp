@@ -8,7 +8,9 @@
 
 A system error occurred.
 
-<br/><br/>
+<c:out value="${ exception }"/>
+
+<br/><br/><!-- error.jsp -->
 
 <a href="/threadfix/organizations">Home</a>
 

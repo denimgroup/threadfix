@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ defectTracker.new }">New </c:if>Defect Tracker</title>
+	<title><c:if test="${ defectTracker['new'] }">New </c:if>Defect Tracker</title>
 	<script>
 	function displayWarning(){
 		var displayUrl = (typeof(initialUrl) !== 'undefined') && (initialUrl !== $('#urlInput').val()); 
@@ -25,7 +25,7 @@
 </head>
 
 <body id="config">
-	<h2><c:if test="${ defectTracker.new }">New </c:if>Defect Tracker</h2>
+	<h2><c:if test="${ defectTracker['new'] }">New </c:if>Defect Tracker</h2>
 	
 	<div id="helpText">
 		To set up the Defect Tracker, enter the RPC endpoint address of your tracker instance.
@@ -78,7 +78,7 @@
 	</table>
 	<br/>
 <c:choose>
-<c:when test="${ defectTracker.new }">
+<c:when test="${ defectTracker['new'] }">
 	<input id="addDefectTrackerButton" type="submit" value="Add Defect Tracker" />
 	<spring:url value="/configuration/defecttrackers" var="dtUrl" />
 	<span style="padding-left: 10px"><a id="cancelLink" href="${ fn:escapeXml(dtUrl) }">Back to Defect Tracker Index</a></span>

@@ -58,6 +58,8 @@ public class Scan extends BaseEntity {
 	private Integer numberRepeatResults;
 	private Integer numberRepeatFindings;
 	
+	private User user;
+	
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 	private List<ScanReopenVulnerabilityMap> scanReopenVulnerabilityMaps;
 	private List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMaps;
@@ -102,6 +104,17 @@ public class Scan extends BaseEntity {
 
 	public void setApplication(Application application) {
 		this.application = application;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "userId")
+	@JsonIgnore
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)

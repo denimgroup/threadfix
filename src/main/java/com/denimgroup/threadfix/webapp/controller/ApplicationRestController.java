@@ -222,15 +222,15 @@ public class ApplicationRestController extends RestController {
 		
 		String fileName = scanService.saveFile(channelId, file);
 		
-		String returnValue = scanService.checkFile(channelId, fileName);
+		ScanCheckResultBean returnValue = scanService.checkFile(channelId, fileName);
 		
-		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue)) {
+		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
 			Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, fileName);
 			return scan;
-		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue)) {
+		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
 			return "You attempted to upload an empty scan.";
 		} else {
-			return "The scan upload attempt returned this message: " + returnValue;
+			return "The scan upload attempt returned this message: " + returnValue.getScanCheckResult();
 		}
 	}
 	

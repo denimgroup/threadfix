@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
+import java.util.Calendar;
 import java.util.List;
+
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 
 /**
  * @author bbeverly
@@ -45,7 +48,8 @@ public interface QueueSender {
 	 * @param fileName
 	 * @param channelId
 	 */
-	void addScanToQueue(String fileName, Integer channelId, Integer orgId, Integer appId);
+	void addScanToQueue(String fileName, Integer channelId, Integer orgId, Integer appId,
+			Calendar calendar, ApplicationChannel applicationChannel);
 
 	/**
 	 * @param appId

@@ -74,6 +74,7 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * 
@@ -470,7 +471,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 						+ StringEscapeUtils.escapeHtml(code) + " was requested but not found.");
 				return null;
 			} else {
-				if (vuln.getGenericVulnerability() == null) {
+				if (channelVulnerabilityDao.hasMappings(vuln.getId())) {
 					log.info("The " + channelType.getName() + " channel vulnerability with code "
 						+ StringEscapeUtils.escapeHtml(code) + " has no generic mapping.");
 				}
@@ -640,18 +641,18 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param handler
 	 * @return
 	 */
-	protected String testSAXInput(DefaultHandler handler) {
+	protected ScanCheckResultBean testSAXInput(DefaultHandler handler) {
 		log.debug("Starting SAX Test.");
 		
 		if (inputStream == null) {
 			log.warn(NULL_INPUT_ERROR);
-			return NULL_INPUT_ERROR;
+			return new ScanCheckResultBean(NULL_INPUT_ERROR);
 		}
 		
 		if (doSAXExceptionCheck) {
 			if (isBadXml(inputStream)) {
 				log.warn("Bad XML format - ensure correct, uniform encoding.");
-				return BADLY_FORMED_XML;
+				return new ScanCheckResultBean(BADLY_FORMED_XML);
 			}
 			closeInputStream(inputStream);
 			try {
@@ -665,7 +666,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		closeInputStream(inputStream);
 		
 		log.info(testStatus);
-		return testStatus;
+		return new ScanCheckResultBean(testStatus, testDate);
 	}
 
 	/**

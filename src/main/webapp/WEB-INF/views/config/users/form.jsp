@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ user.new }">New </c:if>User</title>
+	<title><c:if test="${ user['new'] }">New </c:if>User</title>
 </head>
 
 <body id="config">
-	<h2><c:if test="${ user.new }">New </c:if>User</h2>
+	<h2><c:if test="${ user['new'] }">New </c:if>User</h2>
 	
 	<spring:url value="" var="emptyUrl"></spring:url>
 	<form:form modelAttribute="user" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
@@ -49,7 +49,7 @@
 		</table>
 		<br/>
 <c:choose>
-	<c:when test="${ user.new }">
+	<c:when test="${ user['new'] }">
 		<input id="addUserButton" type="submit" value="Add User" />
 		<span style="padding-left: 10px">
 			<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>

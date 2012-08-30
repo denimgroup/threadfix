@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -66,6 +67,16 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	@Override
 	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication) {
 		sessionFactory.getCurrentSession().saveOrUpdate(remoteProviderApplication);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RemoteProviderApplication> retrieveAllWithMappings() {
+		return (List<RemoteProviderApplication>) sessionFactory.getCurrentSession()
+							 .createCriteria(RemoteProviderApplication.class)
+							 .add(Restrictions.isNotNull("application"))
+							 .list();
+		
 	}
 
 }

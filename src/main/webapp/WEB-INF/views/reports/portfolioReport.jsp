@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/tablefilter2.js"></script> 
 	<style type="text/css">
-		input {width:100%}
+		input { width:100% }
 	</style>
 </head>
 
@@ -59,13 +59,14 @@
 	<table class="formattedTable">
 		<thead>
 			<tr>
-				<th class="medium first"></th>
+				<th class="first"></th>
+				<th class="medium">Criticality</th>
 				<th class="short"># Scans</th>
 				<th class="medium last">Most Recent Scan</th>
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach var="row" items="${tableContents}">
+		<c:forEach var="row" items="${ tableContents }">
 			<tr class="bodyRow">
 				<c:if test="${ empty row }">
 					<td colspan="4"></td>

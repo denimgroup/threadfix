@@ -45,6 +45,8 @@ public class ApplicationChannel extends AuditableEntity {
 
 	private List<Scan> scanList;
 	
+	private List<JobStatus> jobStatusList;
+	
 	private Integer scanCounter;
 
 	@ManyToOne
@@ -85,5 +87,15 @@ public class ApplicationChannel extends AuditableEntity {
 
 	public void setScanList(List<Scan> scanList) {
 		this.scanList = scanList;
+	}
+
+	@OneToMany(mappedBy = "applicationChannel")
+	@JsonIgnore
+	public List<JobStatus> getJobStatusList() {
+		return jobStatusList;
+	}
+
+	public void setJobStatusList(List<JobStatus> jobStatusList) {
+		this.jobStatusList = jobStatusList;
 	}
 }

@@ -35,16 +35,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.JobStatus;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.JobStatusService;
+import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 
@@ -63,6 +67,8 @@ public class QueueListener implements MessageListener {
 	private JobStatusService jobStatusService;
 	private VulnerabilityService vulnerabilityService;
 	private ApplicationChannelService applicationChannelService = null;
+	private RemoteProviderApplicationService remoteProviderApplicationService = null;
+	private RemoteProviderTypeService remoteProviderTypeService = null;
 
 	private JobStatus currentJobStatus;
 
@@ -76,13 +82,18 @@ public class QueueListener implements MessageListener {
 	@Autowired
 	public QueueListener(ScanMergeService scanMergeService, JobStatusService jobStatusService,
 			ApplicationService applicationService, DefectService defectService,
-			VulnerabilityService vulnerabilityService, ApplicationChannelService applicationChannelService) {
+			VulnerabilityService vulnerabilityService, 
+			ApplicationChannelService applicationChannelService,
+			RemoteProviderApplicationService remoteProviderApplicationService,
+			RemoteProviderTypeService remoteProviderTypeService) {
 		this.scanMergeService = scanMergeService;
 		this.jobStatusService = jobStatusService;
 		this.applicationService = applicationService;
 		this.defectService = defectService;
 		this.vulnerabilityService = vulnerabilityService;
 		this.applicationChannelService = applicationChannelService;
+		this.remoteProviderApplicationService = remoteProviderApplicationService;
+		this.remoteProviderTypeService = remoteProviderTypeService;
 	}
 
 	/*
@@ -91,11 +102,21 @@ public class QueueListener implements MessageListener {
 	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
 	 */
 	@Override
+	@Transactional
 	public void onMessage(Message message) {
 		if (message instanceof TextMessage) {
 			TextMessage textMessage = (TextMessage) message;
 			try {
-				log.info(textMessage.getText());
+				String text = textMessage.getText();
+				
+				log.info("Processing text message: " + text);
+				
+				if (text.equals(QueueConstants.IMPORT_SCANS_REQUEST)) {
+					importScans();
+				} else if (text.equals(QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE)) {
+					syncTrackers();
+				}
+				
 			} catch (JMSException je) {
 				log.warn("The JMS message threw an error.");
 				je.printStackTrace();
@@ -131,6 +152,45 @@ public class QueueListener implements MessageListener {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void syncTrackers() {
+		log.info("Syncing status with all Defect Trackers.");
+		
+		List<Application> apps = applicationService.loadAll();
+		if (apps == null) {
+			log.info("No applications found. Exiting.");
+			return;
+		}
+		
+		for (Application application : apps) {
+			if (application != null &&
+					application.getDefectTracker() != null) {
+				defectService.updateVulnsFromDefectTracker(application);
+			}
+		}
+		
+		log.info("Finished updating Defect status for all Applications.");
+	}
+
+	private void importScans() {
+		log.info("Importing scans for all Remote Provider Applications.");
+		List<RemoteProviderApplication> apps = remoteProviderApplicationService.loadAllWithMappings();
+		
+		if (apps == null || apps.size() == 0) {
+			log.info("No apps with mappings found. Exiting.");
+			return;
+		}
+		
+		for (RemoteProviderApplication remoteProviderApplication : apps) {
+			if (remoteProviderApplication == null || remoteProviderApplication.getRemoteProviderType() == null) {
+				continue;
+			}
+			remoteProviderTypeService.decryptCredentials(remoteProviderApplication.getRemoteProviderType());
+			remoteProviderApplicationService.importScansForApplication(remoteProviderApplication);
+		}
+		
+		log.info("Completed requests for scan imports.");
 	}
 
 	/**
@@ -181,6 +241,9 @@ public class QueueListener implements MessageListener {
 		// TODO Move the jobStatus updating to the importer to improve messages
 		// once the messages persist
 		
+		getJobStatus(jobStatusId);
+		updateJobStatus("Job recieved");
+		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
 		boolean fullLog = (userName != null && appChannel != null && appChannel.getApplication() != null
@@ -193,13 +256,13 @@ public class QueueListener implements MessageListener {
 					" (filename " + fileName + ").");
 		}
 			
-		getJobStatus(jobStatusId);
+		
 		updateJobStatus("Processing Scan from file.");
 		
 		boolean finished = false;
 		
 		try {
-			finished = scanMergeService.processScan(channelId, fileName);
+			finished = scanMergeService.processScan(channelId, fileName, currentJobStatus, userName);
 		} catch (OutOfMemoryError e) {
 			closeJobStatus("Scan encountered an out of memory error and did not complete correctly.");
 			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
@@ -257,6 +320,9 @@ public class QueueListener implements MessageListener {
 	 */
 	private void updateJobStatus(String status) {
 		if (currentJobStatus != null) {
+			if (!currentJobStatus.getHasStartedProcessing()) {
+				currentJobStatus.setHasStartedProcessing(true);
+			}
 			jobStatusService.updateJobStatus(currentJobStatus, status);
 		}
 	}

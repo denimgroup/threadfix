@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.Calendar;
 import java.util.List;
 
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 
 /**
@@ -80,6 +82,7 @@ public interface JobStatusService {
 	 * @param urlText
 	 * @return
 	 */
-	Integer createNewJobStatus(String type, String initialStatus, String urlPath, String urlText);
+	Integer createNewJobStatus(String type, String initialStatus, String urlPath, String urlText,
+								Calendar date, ApplicationChannel channel);
 
 }

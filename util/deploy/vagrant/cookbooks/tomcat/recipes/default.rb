@@ -19,23 +19,12 @@
 
 include_recipe "java"
 
-tomcat_pkgs = value_for_platform(
-  ["debian","ubuntu"] => {
-    "default" => ["tomcat6","tomcat6-admin"]
-  },
-  ["centos","redhat","fedora"] => {
-    "default" => ["tomcat6","tomcat6-admin-webapps"]
-  },
-  "default" => ["tomcat6"]
-)
-tomcat_pkgs.each do |pkg|
-  package pkg do
-    action :install
-  end
+package "tomcat7" do
+  action :install
 end
 
 service "tomcat" do
-  service_name "tomcat6"
+  service_name "tomcat7"
   case node["platform"]
   when "centos","redhat","fedora"
     supports :restart => true, :status => true
@@ -45,26 +34,29 @@ service "tomcat" do
   action [:enable, :start]
 end
 
+=begin
+
 case node["platform"]
 when "centos","redhat","fedora"
-  template "/etc/sysconfig/tomcat6" do
-    source "sysconfig_tomcat6.erb"
+  template "/etc/sysconfig/tomcat7" do
+    source "sysconfig_tomcat7.erb"
     owner "root"
     group "root"
     mode "0644"
     notifies :restart, resources(:service => "tomcat")
   end
 else  
-  template "/etc/default/tomcat6" do
-    source "default_tomcat6.erb"
+  template "/etc/default/tomcat7" do
+    source "default_tomcat7.erb"
     owner "root"
     group "root"
     mode "0644"
     notifies :restart, resources(:service => "tomcat")
   end
 end
+=end
 
-template "/etc/tomcat6/server.xml" do
+template "/etc/tomcat7/server.xml" do
   source "server.xml.erb"
   owner "root"
   group "root"
@@ -72,7 +64,8 @@ template "/etc/tomcat6/server.xml" do
   notifies :restart, resources(:service => "tomcat")
 end
 
-template "/var/lib/tomcat6/conf/context.xml" do
+=begin
+template "/var/lib/tomcat7/conf/context.xml" do
   source "context.xml.erb"
   owner "root"
   group "root"
@@ -81,20 +74,23 @@ template "/var/lib/tomcat6/conf/context.xml" do
 end
 
 # This template ensures that we always run with the tomcat security manager
-template "/etc/init.d/tomcat6" do
-  source "tomcat6.erb"
+template "/etc/init.d/tomcat7" do
+  source "tomcat7.erb"
   owner "root"
   group "root"
   mode "0755"
   action :create
   notifies :restart, resources(:service => "tomcat")
 end
+=end
 
 #This template increases the memory limit for tomcat
-template "/usr/share/tomcat6/bin/catalina.sh" do
-  source "catalina.sh.erb"
+template "/usr/share/tomcat7/bin/setenv.sh" do
+  source "setenv.sh.erb"
   owner "root"
   group "root"
   mode "0755"
   notifies :restart, resources(:service => "tomcat")
 end
+
+

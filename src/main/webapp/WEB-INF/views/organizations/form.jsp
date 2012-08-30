@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ organization.new }">New </c:if>Team</title>
+	<title><c:if test="${ organization['new'] }">New </c:if>Team</title>
 </head>
 
 <body id="apps">
-	<h2><c:if test="${ organization.new }">New </c:if>Team</h2>
+	<h2><c:if test="${ organization['new'] }">New </c:if>Team</h2>
 	
 <spring:url value="" var="emptyUrl"></spring:url>	
 <form:form modelAttribute="organization" method="post" autocomplete="off" action="${ fn:escapeXml( emptyUrl) }">
@@ -24,7 +24,7 @@
 	</table>
 	<br/>
 <c:choose>
-<c:when test="${ organization.new }">
+<c:when test="${ organization['new'] }">
 	<input id="submitButton" type="submit" value="Add Team" />
 	<spring:url value="/organizations" var="orgUrl" />
 	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Home</a></span>

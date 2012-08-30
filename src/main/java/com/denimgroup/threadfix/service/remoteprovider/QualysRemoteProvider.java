@@ -48,6 +48,7 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
@@ -59,10 +60,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 	private String username = null;
 	private String password = null;
-	
-	private static final String GET_SCANS_FOR_APP_URL = "https://qualysapi.qualys.com/qps/rest/3.0/search/was/wasscan";
-	private static final String GET_SCAN_URL = "https://qualysapi.qualys.com/qps/rest/3.0/download/was/wasscan/";
-	private static final String GET_APPS_URL = "https://qualysapi.qualys.com/qps/rest/3.0/search/was/webapp";
+
 	
 	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
 	static {
@@ -180,7 +178,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		List<Scan> scanList = new ArrayList<Scan>();
 		
 		for (String scanId : scanIds) {
-			inputStream = httpGet(GET_SCAN_URL + scanId);
+			inputStream = httpGet(getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId);
 			
 			if (inputStream == null) {
 				log.warn("Got a bad response from Qualys servers for scan ID " + scanId + ". Trying the next scan.");
@@ -219,7 +217,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 		// POST with no parameters
 		// TODO include filters
-		stream = httpPost(GET_APPS_URL,new String[]{},new String[]{});
+		stream = httpPost(getAppsUrl(remoteProviderType),new String[]{},new String[]{});
 		
 		if (stream == null) {
 			log.warn("Response from Qualys servers was null, check your credentials.");
@@ -254,7 +252,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// POST with no parameters
 		// TODO include filters
-		InputStream stream = httpPost(GET_SCANS_FOR_APP_URL,new String[]{},new String[]{});
+		InputStream stream = httpPost(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{});
 		
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
@@ -282,6 +280,28 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 	}
 	
+	private String getScansForAppUrl(RemoteProviderType type) {
+		return "https://qualysapi.qualys." + 
+				getLocation(type.getIsEuropean()) + 
+				"/qps/rest/3.0/search/was/wasscan";
+	}
+	
+	private String getScanUrl(RemoteProviderType type) {
+		return "https://qualysapi.qualys." + 
+				getLocation(type.getIsEuropean()) + 
+				"/qps/rest/3.0/download/was/wasscan/";
+	}
+	
+	private String getAppsUrl(RemoteProviderType type) {
+		return "https://qualysapi.qualys." + 
+				getLocation(type.getIsEuropean()) + 
+				"/qps/rest/3.0/search/was/webapp";
+	}
+	
+	private String getLocation(boolean isEuropean) {
+		return isEuropean ? "eu" : "com";
+	}
+	
 	// UTILITIES
 	
 	private InputStream httpPost(String request, String[] paramNames,
@@ -303,8 +323,6 @@ public class QualysRemoteProvider extends RemoteProvider {
 				post.addParameter(paramNames[i], paramVals[i]);
 			}
 
-			
-			
 			HttpClient client = new HttpClient();
 			
 			int status = client.executeMethod(post);

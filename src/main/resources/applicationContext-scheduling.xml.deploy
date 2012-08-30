@@ -19,10 +19,10 @@
 
 	<amq:broker brokerName="broker">
 		<amq:persistenceAdapter>
-			<amq:kahaDB directory="/var/lib/tomcat6/activemq-data" journalMaxFileLength="32mb"/>
+			<amq:kahaDB directory="/var/lib/tomcat7/activemq-data" journalMaxFileLength="32mb"/>
 		</amq:persistenceAdapter>
 	</amq:broker>
-	
+
 	<!--
 		CachingConnectionFactory Definition, sessionCacheSize property is the
 		number of sessions to cache
@@ -42,7 +42,7 @@
 		listener container definition using the jms namespace, concurrency is
 		the max number of concurrent listeners that can be started
 	-->
-	<jms:listener-container concurrency="10">
+	<jms:listener-container concurrency="1">
 		<jms:listener id="QueueListener" destination="requestQueue"
 			ref="queueListener" />
 	</jms:listener-container>
@@ -61,21 +61,18 @@
 
 	<!-- cron based trigger for synchronization with Defect Trackers -->
 	<!-- run every morning at 2 AM -->
-	<!-- 
 	<bean id="defectTrackerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
 		p:jobDetail-ref="defectTrackerJob" p:cronExpression="2 0 0 * * ?" />
-	-->
+
 	<!-- cron based trigger for Import Scans -->
 	<!-- run every morning at 6 AM -->
-	<!-- 
 	<bean id="importScansCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
 		p:jobDetail-ref="importScansJob" p:cronExpression="6 0 0 * * ?" />
- 	-->
+		
 	<!--
 		SchedulerFactoryBean to set up cron triggers for importing scans and
 		defect tracker synchronization
 	-->
-	<!-- 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
@@ -84,5 +81,4 @@
 			</list>
 		</property>
 	</bean>
-	 -->
 </beans>

@@ -108,7 +108,7 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n<vulnerability id=\"" + id + "\" vuln-type=\"" + VULN_TYPE_MAP.get(genericVulnName) + 
 									"\" severity=\"" + severity + "\">" +
-					"\n    <source src-type=\"ImpervaPartner\" scan-id=\"" + scanId +"\"" +
+					"\n    <source src-type=\"ThreadFix\" scan-id=\"" + scanId +"\"" +
 								" scan-date=\"" + time + "\" src-reference=\"13\" />" +
 					"\n    <parameters>" +
 					"\n        <url>" + uri + "</url>");

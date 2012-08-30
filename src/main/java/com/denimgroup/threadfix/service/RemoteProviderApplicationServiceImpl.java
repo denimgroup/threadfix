@@ -200,6 +200,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
+	@Transactional
 	public boolean importScansForApplication(
 			RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null)
@@ -228,7 +229,7 @@ public class RemoteProviderApplicationServiceImpl implements
 					
 				} else if (remoteProviderApplication.getLastImportTime() != null && 
 							(resultScan.getImportTime() == null ||
-							remoteProviderApplication.getLastImportTime().after(
+							!remoteProviderApplication.getLastImportTime().before(
 									resultScan.getImportTime()))) {
 					log.warn("Remote Scan was not newer than the last imported scan " +
 							"for this RemoteProviderApplication.");
@@ -237,6 +238,8 @@ public class RemoteProviderApplicationServiceImpl implements
 					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
 					
 					remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+					
+					remoteProviderApplicationDao.saveOrUpdate(remoteProviderApplication);
 					
 					if (resultScan.getApplicationChannel().getScanList() == null) {
 						resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
@@ -334,5 +337,10 @@ public class RemoteProviderApplicationServiceImpl implements
 			store(remoteProviderApplication);
 			applicationDao.saveOrUpdate(application);
 		}
+	}
+	
+	@Override
+	public List<RemoteProviderApplication> loadAllWithMappings() {
+		return remoteProviderApplicationDao.retrieveAllWithMappings();
 	}
 }

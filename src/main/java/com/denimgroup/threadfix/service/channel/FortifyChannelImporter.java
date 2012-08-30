@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -43,6 +44,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -149,6 +151,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Override
+	@Transactional
 	public Scan parseInput() {
 		InputStream auditXmlStream = null;
 		InputStream fvdlInputStream = null;
@@ -171,6 +174,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 				returnScan.setImportTime(auditXmlDate);
 			}
 		}
+		
+		
 
 		return returnScan;
 	}
@@ -529,6 +534,14 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
+		@Override
+		public void endDocument() {
+			nativeIdDataFlowElementsMap = null;
+			rawFindingList = null;
+			dataFlowElementMaps = null;
+			nodeSnippetMap = null;
+		}
+		
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts) throws SAXException
 	    {
@@ -551,7 +564,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    		currentMap.column = atts.getValue("colStart");
 		    		currentMap.snippet = atts.getValue("snippet");
 		    		currentMap.fileName = atts.getValue("path");
-		    	} else if ("Fact".equals(qName) && "Call".equals(atts.getValue("type"))){
+		    	} else if (!skipToNextVuln && "Fact".equals(qName) && "Call".equals(atts.getValue("type"))){
 		    		getFact = true;
 		    	} else if ("CreatedTS".equals(qName) && atts.getValue("date") != null
 		    			&& atts.getValue("time") != null) {
@@ -596,9 +609,11 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    	} else if ("Entry".equals(qName) || "Configuration".equals(qName)) {
 		    		if (currentMap != null) {
 		    			dataFlowElementMaps.add(currentMap);
+		    			currentMap = null;
 		    		}
 		    	} else if ("Trace".equals(qName)) {
 		    		skipToNextVuln = true;
+		    		currentMap = null;
 		    	}
 	    	}
 	    }
@@ -641,7 +656,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	}
 	    
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		InputStream auditXmlStream = null;
 		InputStream fvdlInputStream = null;
 
@@ -650,7 +665,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		fvdlInputStream = getFileFromZip("audit.fvdl");
 
 		if (zipFile == null || fvdlInputStream == null)
-			return WRONG_FORMAT_ERROR;
+			return new ScanCheckResultBean(WRONG_FORMAT_ERROR);
 						
 		testDate = getTime(auditXmlStream);
 		

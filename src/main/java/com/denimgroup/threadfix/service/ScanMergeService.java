@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
@@ -61,6 +62,17 @@ public interface ScanMergeService {
 	boolean processScan(Integer channelId, String fileName);
 	
 	/**
+	 * This method does the actual scan processing work. It is usually called from QueueListener or 
+	 * one of the RPC methods.
+	 * 
+	 * @param channelId
+	 * @param fileName
+	 * @return
+	 */
+	boolean processScan(Integer channelId, String fileName, JobStatus status,
+			String userName);
+	
+	/**
 	 * Given new Finding information, create a Scan or link to the manual scan
 	 * and put the new Finding on it.
 	 * 
@@ -89,4 +101,5 @@ public interface ScanMergeService {
 	 * @return
 	 */
 	Scan processRemoteScan(Scan scan);
+
 }

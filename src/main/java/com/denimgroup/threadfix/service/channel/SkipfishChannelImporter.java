@@ -53,6 +53,7 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Parses the Skipfish output file. The zip upload will go look at the relevant request.dat file and try to
@@ -489,13 +490,13 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Override
-	public String checkFile() {
+	public ScanCheckResultBean checkFile() {
 		String returnValue = null;
 		
 		InputStream sampleFileInputStream = getSampleFileInputStream();
 		
 		if (sampleFileInputStream == null)
-			return WRONG_FORMAT_ERROR;
+			return new ScanCheckResultBean(WRONG_FORMAT_ERROR);
 		
 		List<?> map = null;
 		if (returnValue == null)
@@ -524,7 +525,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 			returnValue = SUCCESSFUL_SCAN;
 		
 		deleteZipFile();
-		return returnValue;
+		return new ScanCheckResultBean(returnValue, testDate);
 	}
 	
 	// For each category, find the channel vuln and severity and pass the other work off to another method.

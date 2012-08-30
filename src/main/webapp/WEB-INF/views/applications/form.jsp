@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:if test="${ application.new }">New </c:if>Application</title>
+	<title><c:if test="${ application['new'] }">New </c:if>Application</title>
 	
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/authentication.js"></script>
 
@@ -13,7 +13,7 @@
 </head>
 
 <body id="apps">
-	<h2><c:if test="${ application.new }">New </c:if>Application</h2>
+	<h2><c:if test="${ application['new'] }">New </c:if>Application</h2>
 	
 <spring:url value="" var="saveUrl"></spring:url>
 <form:form modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
@@ -171,7 +171,7 @@
 	</table>
 	<br/>
 	
-	<c:if test="${ not application.new and fn:length(pathTree.printout ) != 0}">
+	<c:if test="${ not application['new'] and fn:length(pathTree.printout ) != 0}">
 		<h3>Project Root</h3>
 		<div style="padding-bottom:10px">Please select the proper root for the application:</div>
 		<table class="filteredTable sortable">
@@ -206,7 +206,7 @@
 	</c:if>
 	
 	<c:choose>
-		<c:when test="${ application.new }">
+		<c:when test="${ application['new'] }">
 			<input id="addApplicationButton" type="submit" value="Add Application" />
 			<spring:url value="/organizations/{orgId}" var="appUrl">
 				<spring:param name="orgId" value="${ application.organization.id }" />

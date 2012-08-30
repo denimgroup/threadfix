@@ -23,12 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -75,6 +77,7 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 	}
 
 	@Override
+	@Transactional
 	public ApplicationChannel retrieveById(int id) {
 		return (ApplicationChannel) sessionFactory.getCurrentSession().get(
 				ApplicationChannel.class, id);
@@ -85,4 +88,13 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 		sessionFactory.getCurrentSession().saveOrUpdate(applicationChannel);
 	}
 
+	@Override
+	public Calendar getMostRecentQueueScanTime(Integer channelId) {
+		return (Calendar) sessionFactory
+				.getCurrentSession()
+				.createQuery("select scanDate from JobStatus status " +
+							 "where applicationChannel = :channelId and hasStartedProcessing is false " +
+							 "order by scanDate desc")
+				.setInteger("channelId", channelId).setMaxResults(1).uniqueResult();
+	}
 }

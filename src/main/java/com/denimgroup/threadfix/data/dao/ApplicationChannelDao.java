@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -62,5 +63,12 @@ public interface ApplicationChannelDao {
 	 * @param applicationChannel
 	 */
 	void saveOrUpdate(ApplicationChannel applicationChannel);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	Calendar getMostRecentQueueScanTime(Integer channelId);
 
 }
