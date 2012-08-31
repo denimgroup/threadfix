@@ -56,23 +56,23 @@ def deploy_war():
     local('sudo mv %s/threadfix/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
     with cd(server_target_loc):        
         local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
-        local('sudo chown tomcat6 %s/threadfix' % (server_target_loc))
-    local('sudo service tomcat6 stop')   #stop tomcat
-    local('sudo ln -fs %s/threadfix /var/lib/tomcat6/webapps' % server_target_loc) #update symlink in webapps
+        local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
+    local('sudo service tomcat7 stop')   #stop tomcat
+    local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
     local('sudo cp %s/threadfix/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
 	# We need to move the mysql / deploy config files to replace the development ones
-    #local('sudo mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/jdbc.properties') 
-    #local('sudo mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml') 
-    #local('sudo mv /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/log4j.xml.deploy /var/lib/tomcat6/webapps/threadfix/WEB-INF/classes/log4j.xml') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/log4j.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/log4j.xml') 
     
 @task
 def change_owners() :
     # This directory must be writable so that reports work
-    local('sudo mkdir /var/lib/tomcat6/webapps/threadfix/jasper/images')
+    local('sudo mkdir /var/lib/tomcat7/webapps/threadfix/jasper/images')
     # Tomcat must own these directories so that logs, scans, and report images are writable
-    local('sudo chown tomcat6 /var/lib/tomcat6') 
-    local('sudo chown tomcat6 /var/lib/tomcat6/webapps/threadfix/jasper/images') 
-    local('sudo service tomcat6 start')  #start tomcat
+    local('sudo chown tomcat7 /var/lib/tomcat7') 
+    local('sudo chown tomcat7 /var/lib/tomcat7/webapps/threadfix/jasper/images') 
+    local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
 @task
@@ -108,4 +108,3 @@ def deploy():
     build_war()
     #deploy_war()
     #verify_site()
-
