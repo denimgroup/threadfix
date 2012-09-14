@@ -18,11 +18,19 @@ for more information.
 The main Google Code site for ThreadFix can be found here:
 https://code.google.com/p/threadfix/
 
+The Google Group for ThreadFix can be found here:
+https://groups.google.com/forum/#!forum/threadfix
+
 Instructions on setting up a development environment can be found here:
 https://code.google.com/p/threadfix/wiki/EnvironmentSetup
 
 Further documentation can be found online here:
 https://code.google.com/p/threadfix/w/list
 
-This is currently pre-release software and should not be used in production.
-Please send any questions to Dan Cornell dan at denimgroup dot com.
+Submit bugs to the Google Code tracker:
+https://code.google.com/p/threadfix/issues/list
+
+If you are interested in commercial support for ThreadFix, or help getting
+your rollout up and running, please contact Denim Group:
+http://www.denimgroup.com/threadfix
+
