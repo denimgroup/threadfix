@@ -28,12 +28,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserDetailPage;
 import com.denimgroup.threadfix.selenium.pages.UserEditPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -41,7 +41,8 @@ import com.denimgroup.threadfix.selenium.pages.UserNewPage;
 
 public class UserTests extends BaseTest {
 
-	private WebDriver driver;
+	private RemoteWebDriver driver;
+	UserChangePasswordPage newuserChangePwdpage;
 	private static LoginPage loginPage;
 	
 	@Before
@@ -116,10 +117,19 @@ public class UserTests extends BaseTest {
 		assertTrue("Role error not present", newUserPage.getRoleError().equals("Role is a required field."));
 		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
 		
+		// Test length
+		newUserPage.setNameInput("Test User");
+		newUserPage.setPasswordInput("test");
+		newUserPage.setPasswordConfirmInput("test");
+		
+		newUserPage = newUserPage.clickAddUserButtonInvalid();
+		
+		assertTrue("Password length error not present", newUserPage.getPasswordError().equals("Password has a minimum length of 12."));
+		
 		// Test non-matching passwords
 		newUserPage.setNameInput("new name");
-		newUserPage.setPasswordInput("password 1");
-		newUserPage.setPasswordConfirmInput("password 2");
+		newUserPage.setPasswordInput("lengthy password 1");
+		newUserPage.setPasswordConfirmInput("lengthy password 2");
 		newUserPage.setRoleSelect("Administrator");
 		
 		newUserPage = newUserPage.clickAddUserButtonInvalid();
@@ -127,12 +137,12 @@ public class UserTests extends BaseTest {
 		
 		// Create a user
 		newUserPage.setNameInput(longInput);
-		newUserPage.setPasswordInput(longInput);
-		newUserPage.setPasswordConfirmInput(longInput);
+		newUserPage.setPasswordInput("dummy password");
+		newUserPage.setPasswordConfirmInput("dummy password");
 		newUserPage.setRoleSelect("Administrator");
 				
 		UserDetailPage userDetailPage = newUserPage.clickAddUserButton();
-		assertTrue("User name limit was not correct", userDetailPage.getNameText().length() == User.NAME_LENGTH);
+		assertTrue("User name limit was not correct", userDetailPage.getNameText().length() == 25);
 		
 		String userName = userDetailPage.getNameText();
 		
@@ -142,8 +152,8 @@ public class UserTests extends BaseTest {
 		
 		newUserPage.setNameInput(userName);
 		newUserPage.setRoleSelect("Administrator");
-		newUserPage.setPasswordConfirmInput("1");
-		newUserPage.setPasswordInput("1");
+		newUserPage.setPasswordConfirmInput("dummy password");
+		newUserPage.setPasswordInput("dummy password");
 		
 		newUserPage = newUserPage.clickAddUserButtonInvalid();
 		assertTrue("Name uniqueness error is not correct.", newUserPage.getNameError().equals("That name is already taken."));
@@ -189,14 +199,11 @@ public class UserTests extends BaseTest {
 		// Test that we are able to log in the second time.
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
-		
-		loginPage = userDetailPage.logout()
-								    .login(editedUserName, editedPassword)
+		userDetailPage.logout().login(editedUserName, editedPassword)
 								    .clickConfigurationHeaderLink()
 								    .clickManageUsersLink()
 								    .clickUserNameLink(userName)
-								    .clickDeleteLink()
-								    .logout();
+								    .clickDeleteLinkSameUser();
 	}
 	
 	@Test 
@@ -248,19 +255,28 @@ public class UserTests extends BaseTest {
 
 		// Test non-matching passwords
 		editUserPage.setNameInput("new name");
-		editUserPage.setPasswordInput("password 1");
-		editUserPage.setPasswordConfirmInput("password 2");
+		editUserPage.setPasswordInput("lengthy password 1");
+		editUserPage.setPasswordConfirmInput("lengthy password 2");
 		editUserPage.setRoleSelect("Administrator");
 		
 		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
 		assertTrue("Password matching error is not correct.", editUserPage.getPasswordError().equals("Passwords do not match."));
 		
+		// Test length
+		editUserPage.setNameInput("Test User");
+		editUserPage.setPasswordInput("test");
+		editUserPage.setPasswordConfirmInput("test");
+		
+		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
+		
+		assertTrue("Password length error not present", editUserPage.getPasswordError().equals("Password has a minimum length of 12."));
+		
 		// Test name uniqueness check
 		
 		editUserPage.setNameInput(userNameDuplicateTest);
 		editUserPage.setRoleSelect("Administrator");
-		editUserPage.setPasswordConfirmInput("1");
-		editUserPage.setPasswordInput("1");
+		editUserPage.setPasswordConfirmInput("lengthy password 2");
+		editUserPage.setPasswordInput("lengthy password 2");
 		
 		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
 		assertTrue("Name uniqueness error is not correct.", editUserPage.getNameError().equals("That name is already taken."));
@@ -273,6 +289,99 @@ public class UserTests extends BaseTest {
 								.clickUserNameLink(userNameDuplicateTest)
 								.clickDeleteLink()
 								.logout();
+	}
+	
+	
+	@Test
+	public void navigationTest() {
+		OrganizationIndexPage organizationIndexPage = loginPage.login("user", "password");
+		@SuppressWarnings("unused")
+		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
+		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
+		configPage.clickchangeMyPasswordLink();
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		String PageText =  driver.findElementByTagName("h2").getText();
+		assertTrue("User Password Change Page not found", PageText.contains("User Password Change"));
+	}
+	
+	@Test
+	public void testValidation() {
+		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
+				"password");
+		@SuppressWarnings("unused")
+		ConfigurationIndexPage configurationIndexPage = organizationIndexPage
+				.clickConfigurationHeaderLink();
+		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
+		configPage.clickchangeMyPasswordLink();
+
+		// Current Pwd
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage.fillAllClickSave(" ", "password1234",
+				"password1234");
+		String error = driver.findElementById("currentPassword.errors")
+				.getText();
+		assertTrue("Error cannot be Verified",
+				error.contains("That was not the correct password."));
+
+		// New Pwd
+
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage.fillAllClickSave("password", "            ",
+				"password1234");
+		String errornew = driver.findElementById("password.errors").getText();
+		assertTrue("Error cannot be Verified",
+				errornew.contains("Passwords do not match."));
+
+		// Confirm Pwd
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage
+				.fillAllClickSave("password", "password1234 ", "  ");
+		String errorconfirm = driver.findElementById("password.errors")
+				.getText();
+		assertTrue("Error cannot be Verified",
+				errorconfirm.contains("Passwords do not match."));
+
+		// PwdLength
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage.fillAllClickSave("password", "password","password");
+		String errorlength = driver.findElementById("password.errors").getText();
+		assertTrue("Error cannot be Verified",
+				errorlength.contains("Password has a minimum length of 12."));
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage.clickBackToListLink();
+		String PageText = driver.findElementByTagName("h2").getText();
+		assertTrue("User Password not Changed",
+				PageText.contains("Configuration"));
+
+	}
+	
+	@Test
+	public void testChangePwd(){
+		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
+				"password1234");
+		@SuppressWarnings("unused")
+		ConfigurationIndexPage configurationIndexPage = organizationIndexPage
+				.clickConfigurationHeaderLink();
+		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
+		configPage.clickchangeMyPasswordLink();
+
+		newuserChangePwdpage = new UserChangePasswordPage(driver);
+		newuserChangePwdpage.fillAllClickSave("password1234","password1234", "password1234");
+		organizationIndexPage = new OrganizationIndexPage(driver);
+		String PageText = driver.findElementByTagName("h2").getText();
+		assertTrue("IndexPage not found",PageText.contains("Teams"));
+		organizationIndexPage.logout();
+	}
+		
+		@Test
+		public void testNewlogin(){
+		loginPage = LoginPage.open(driver);
+		@SuppressWarnings("unused")
+		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
+				"password1234");
+		String PageHeader = driver.findElementByTagName("h2").getText();
+		assertTrue("IndexPage not found",PageHeader.contains("Teams"));
+		
 	}
 	
 }

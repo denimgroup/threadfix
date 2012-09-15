@@ -137,4 +137,13 @@ public class HibernateApplicationDao implements ApplicationDao {
 		ints.add((int) result);
 		return ints;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getTeamNames(List<Integer> appIds) {
+		return (List<String>) sessionFactory.getCurrentSession()
+				.createQuery("select distinct organization.name from Application application " +
+						"where id in (:idList)")
+						.setParameterList("idList", appIds).list();
+	}
 }

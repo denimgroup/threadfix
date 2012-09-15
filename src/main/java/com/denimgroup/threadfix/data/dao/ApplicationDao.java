@@ -72,5 +72,12 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	List<Integer> loadVulnerabilityReport(Application application);
+	
+	/**
+	 * 
+	 * @param appIds
+	 * @return
+	 */
+	List<String> getTeamNames(List<Integer> appIds);
 
 }

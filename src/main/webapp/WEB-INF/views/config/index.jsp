@@ -20,6 +20,9 @@
 	    <li>
 	    	<a id="remoteProvidersLink" href="<spring:url value="configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
 	    </li>
+	    <li>
+	    	<a id="changePasswordLink" href="<spring:url value="configuration/users/password" htmlEscape="true"/>">Change My Password</a>
+	    </li>
 	    
 		<security:authorize ifAnyGranted="ROLE_ADMIN">
 			<li>

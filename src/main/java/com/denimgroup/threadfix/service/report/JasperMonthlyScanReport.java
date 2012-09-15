@@ -52,11 +52,13 @@ public class JasperMonthlyScanReport implements JRDataSource {
 		if (scanDao != null && applicationIdList != null)
 			this.scanList = scanDao
 					.retrieveByApplicationIdList(applicationIdList);
-
-		Collections.sort(this.scanList, Scan.getTimeComparator());
-
-		normalizeForMonths();
-
+		
+		if (this.scanList != null && this.scanList.size() > 0) {			
+			Collections.sort(this.scanList, Scan.getTimeComparator());
+	
+			normalizeForMonths();
+		}
+		
 		index = -1;
 	}
 
@@ -261,8 +263,9 @@ public class JasperMonthlyScanReport implements JRDataSource {
 				index++;
 			buildHash();
 			return true;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	private void buildHash() {

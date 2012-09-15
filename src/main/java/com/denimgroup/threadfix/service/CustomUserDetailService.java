@@ -59,7 +59,8 @@ public class CustomUserDetailService implements UserDetailsService {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		grantedAuthorities.add(new GrantedAuthorityImpl(user.getRole().getName()));
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
-				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt());
+				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
+				user.isHasChangedInitialPassword());
 
 		return userDetails;
 	}

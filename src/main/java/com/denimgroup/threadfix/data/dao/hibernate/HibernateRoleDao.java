@@ -77,4 +77,14 @@ public class HibernateRoleDao implements RoleDao {
 	public void saveOrUpdate(Role role) {
 		sessionFactory.getCurrentSession().saveOrUpdate(role);
 	}
+
+	@Override
+	public boolean isAdmin(int id) {
+		String result = (String) sessionFactory.getCurrentSession()
+				.createQuery("select name from Role where id = :id")
+				.setInteger("id", id)
+				.uniqueResult();
+		
+		return result != null && result.equals(Role.ADMIN);
+	}
 }

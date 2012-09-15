@@ -226,12 +226,20 @@ ul#breadcrumbs li.first {
 }
 
 div#helpText {
-	background: none repeat scroll 0 0 #EEEEEE;
+	background: none repeat scroll 0 0 #EFEFEF;
     border: 1px solid;
     color: black;
     margin: 10px 0;
     padding: 15px;
     display: none;
+}
+
+div#passwordNag {
+	background: none repeat scroll 0 0 #EFEFEF;
+    border: 1px solid;
+    color: black;
+    margin: 10px 0;
+    padding: 15px;
 }
 
 #footer {

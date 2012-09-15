@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
 /**
@@ -50,26 +51,39 @@ public class HibernateUserDao implements UserDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
+	public void delete(User user) {
+		sessionFactory.getCurrentSession().delete(user);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<User> retrieveAll() {
-		return sessionFactory.getCurrentSession().createQuery("from User user order by user.name")
+	public List<User> retrieveAllActive() {
+		return sessionFactory.getCurrentSession().createQuery("from User user where active = true order by user.name")
 				.list();
+	}
+	
+	@Override
+	public Long countActiveAdmins() {
+		return (Long) sessionFactory
+						.getCurrentSession()
+						.createQuery("select count(*) from User user where active = true" +
+								" and user.role.name = :admin")
+						.setString("admin", Role.ADMIN)
+						.uniqueResult();
 	}
 
 	@Override
 	public User retrieveById(int id) {
-		return (User) sessionFactory.getCurrentSession().get(User.class, id);
+		return (User) sessionFactory.getCurrentSession()
+				.createQuery("from User where id = :id and active = true")
+				.setInteger("id", id)
+				.uniqueResult();
 	}
 
 	@Override
 	public User retrieveByName(String name) {
 		return (User) sessionFactory.getCurrentSession()
-				.createQuery("from User user where user.name = :name").setString("name", name)
+				.createQuery("from User user where active = true and user.name = :name").setString("name", name)
 				.uniqueResult();
 	}
 

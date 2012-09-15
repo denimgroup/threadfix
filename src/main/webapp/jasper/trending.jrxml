@@ -5,12 +5,12 @@
 	name="trending" pageWidth="792" pageHeight="612" orientation="Landscape" 
 	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<field name="newVulns" class="java.lang.Integer"/>
 	<field name="totVulns" class="java.lang.Integer"/>
 	<field name="resurfacedVulns" class="java.lang.Integer"/>
 	<field name="importTime" class="java.util.Calendar"/>
-	<field name="appName" class="java.lang.String"/>
-	<field name="orgName" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -22,23 +22,23 @@
 			<staticText>
 				<reportElement x="301" y="0" width="150" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Trending Report]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="222" y="20" width="309" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $F{orgName}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="222" y="40" width="309" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $F{appName}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -62,7 +62,7 @@
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend position="Top">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true"/>
 					</chartLegend>
 				</chart>
 				<timeSeriesDataset>
@@ -109,7 +109,7 @@
 			<staticText>
 				<reportElement x="222" y="0" width="309" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[No Data Found For Trending Report]]></text>
 			</staticText>

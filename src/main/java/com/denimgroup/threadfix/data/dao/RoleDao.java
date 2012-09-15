@@ -60,5 +60,12 @@ public interface RoleDao {
 	 * @param role
 	 */
 	void saveOrUpdate(Role role);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	boolean isAdmin(int id);
 
 }

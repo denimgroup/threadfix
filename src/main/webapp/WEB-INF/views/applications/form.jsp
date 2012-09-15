@@ -171,40 +171,6 @@
 	</table>
 	<br/>
 	
-	<c:if test="${ not application['new'] and fn:length(pathTree.printout ) != 0}">
-		<h3>Project Root</h3>
-		<div style="padding-bottom:10px">Please select the proper root for the application:</div>
-		<table class="filteredTable sortable">
-			<thead>
-				<tr class="darkBackground">
-					<th class="first" colspan="${ pathTree.depth }">Path</th>
-				</tr>
-			</thead>
-			<tbody>
-			<c:forEach var="path" items="${pathTree.printout}">
-				<tr class="bodyRow">
-					<spring:url value="{appId}/path/hint" var="hintUrl">
-						<spring:param name="appId" value="${ application.id }"/>
-					</spring:url>
-					<c:forEach var="str" items="${ path }">
-						<c:choose>
-							<c:when test="${ empty str }">
-								<td><c:out value="${ str }"/></td>
-							</c:when>
-							<c:otherwise>
-								<td>
-									<form:radiobutton path="projectRoot" name="hint" value="${ str }"/>
-									<c:out value="${ str }"/>
-								</td>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</tr>
-			</c:forEach>
-			</tbody>
-		</table>
-	</c:if>
-	
 	<c:choose>
 		<c:when test="${ application['new'] }">
 			<input id="addApplicationButton" type="submit" value="Add Application" />

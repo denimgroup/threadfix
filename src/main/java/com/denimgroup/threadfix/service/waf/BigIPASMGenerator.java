@@ -57,7 +57,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	
 	//TODO change structure of getStart / getEnd here and in other classes
 	
-	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public BigIPASMGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;

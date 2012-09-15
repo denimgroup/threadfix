@@ -34,6 +34,12 @@ public class ResourceNotFoundException extends RuntimeException {
 	public ResourceNotFoundException(){}
 
 	public static String getLogMessage(String notFoundClass, Integer notFoundId) {
-		return notFoundClass + " with ID " + notFoundId + " was requested but not found and a ResourceNotFoundException was thrown.";
+		return notFoundClass + " with ID " + notFoundId + 
+				" was requested but not found and a ResourceNotFoundException was thrown.";
+	}
+	
+	public static String getLogMessage(String notFoundClass, String name) {
+		return notFoundClass + " with name " + name + 
+				" was requested but not found and a ResourceNotFoundException was thrown.";
 	}
 }

@@ -37,12 +37,12 @@ public interface UserDao {
 	/**
 	 * @param id
 	 */
-	void deleteById(int id);
+	void delete(User user);
 
 	/**
 	 * @return
 	 */
-	List<User> retrieveAll();
+	List<User> retrieveAllActive();
 
 	/**
 	 * @param id
@@ -60,4 +60,10 @@ public interface UserDao {
 	 * @param user
 	 */
 	void saveOrUpdate(User user);
+
+	/**
+	 * 
+	 * @return
+	 */
+	Long countActiveAdmins();
 }

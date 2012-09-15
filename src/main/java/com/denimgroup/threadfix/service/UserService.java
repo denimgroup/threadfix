@@ -59,7 +59,7 @@ public interface UserService {
 	/**
 	 * @param userId
 	 */
-	void deleteById(int userId);
+	void delete(User user);
 
 	/**
 	 * @param user
@@ -92,4 +92,24 @@ public interface UserService {
 	 * @param roleId
 	 */
 	void deleteRole(int roleId);
+
+	/**
+	 * 
+	 * @return
+	 */
+	Long countActiveAdmins();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	boolean isAdmin(User user);
+	
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @return
+	 */
+	boolean isCorrectPassword(User user, String password);
 }

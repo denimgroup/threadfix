@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.service.report;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import net.sf.jasperreports.engine.JRChart;
 import net.sf.jasperreports.engine.JRChartCustomizer;
@@ -29,6 +30,9 @@ public class PointInTimeChartCustomizer implements JRChartCustomizer {
 		plot.setLabelGenerator(generator);
 		
 		plot.setLabelBackgroundPaint(new Color(255,255,255));
+		
+		Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
+		plot.setLabelFont(font);
 	}
 
 }

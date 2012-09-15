@@ -33,6 +33,7 @@ public class ConfigurationIndexPage extends BasePage {
 	private WebElement manageUsersLink;
 	private WebElement remoteProvidersLink;
 	private WebElement apiKeysLink;
+	private static WebElement changeMyPasswordLink;
 	
 	public ConfigurationIndexPage(WebDriver webdriver) {
 		super(webdriver);
@@ -42,7 +43,7 @@ public class ConfigurationIndexPage extends BasePage {
 		manageUsersLink = driver.findElementById("manageUsersLink");
 		remoteProvidersLink = driver.findElementById("remoteProvidersLink");
 		apiKeysLink = driver.findElementById("apiKeysLink");
-		
+		changeMyPasswordLink = driver.findElementById("changePasswordLink");
 	}
 
 	public DefectTrackerIndexPage clickDefectTrackersLink() {
@@ -70,4 +71,12 @@ public class ConfigurationIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
+	public UserChangePasswordPage clickchangeMyPasswordLink() {
+		changeMyPasswordLink.click();
+		return new UserChangePasswordPage(driver);
+	}
+	
+
+
+
 }

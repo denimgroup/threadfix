@@ -1,6 +1,8 @@
 package com.denimgroup.threadfix.service.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +78,10 @@ public class JasperScannerComparisonReport implements JRDataSource {
 			return 100.0 * (total - scannerVulnCountMap.get(scannerNames.get(index))) / total;
 		} else if (name.equals("FP_COUNT")) {
 			return scannerFPCountMap.get(scannerNames.get(index));
+		} else if (name.equals("FP_PERCENT")) {
+			return 100.0 
+					* scannerFPCountMap.get(scannerNames.get(index)) 
+					/ scannerVulnCountMap.get(scannerNames.get(index));
 		} else {
 			return null;
 		}
@@ -139,5 +145,19 @@ public class JasperScannerComparisonReport implements JRDataSource {
 		}
 		
 		scannerNames = new ArrayList<String>(scannerVulnCountMap.keySet());
+		
+		// Sort in descending order by number of vulns found.
+		Collections.sort(scannerNames, new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				if (o1 != null && o2 != null &&
+						scannerVulnCountMap != null 
+						&& scannerVulnCountMap.get(o1) != null
+						&& scannerVulnCountMap.get(o2) != null) {
+					return scannerVulnCountMap.get(o2).compareTo(scannerVulnCountMap.get(o1));
+				} else {
+					return 0;
+				}
+			}
+		});
 	}
 }

@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -71,13 +72,21 @@ public class UsersController {
 	public ModelAndView detail(@PathVariable("userId") int userId) {
 		User user = userService.loadUser(userId);
 		
+		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
+		
 		if (user == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
 			throw new ResourceNotFoundException();
 		}
 		
+		boolean lastAdmin = userService.isAdmin(user) && 1 == userService.countActiveAdmins();
+		
 		ModelAndView mav = new ModelAndView("config/users/detail");
 		mav.addObject(user);
+		mav.addObject("lastUser", lastAdmin);
+		mav.addObject("isThisUser", isThisUser);
 		return mav;
 	}
 
@@ -85,11 +94,26 @@ public class UsersController {
 	public String deleteUser(@PathVariable("userId") int userId, SessionStatus status) {
 		// TODO - fix delete functionality - should just disable a user
 		User user = userService.loadUser(userId);
+		
+		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
+		
 		if (user != null) {
-			userService.deleteById(userId);
-			status.setComplete();
-			log.debug("");
-			return "redirect:/configuration/users";
+			if (userService.isAdmin(user) && 
+					1 == userService.countActiveAdmins()) {
+				return "redirect:/configuration/users/" + userId;
+			} else {
+				userService.delete(user);
+				
+				status.setComplete();
+								
+				if (isThisUser) {
+					return "redirect:/j_spring_security_logout";
+				} else {
+					return "redirect:/configuration/users";
+				}
+			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
 			throw new ResourceNotFoundException();

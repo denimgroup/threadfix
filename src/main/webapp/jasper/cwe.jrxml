@@ -2,13 +2,15 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-	name="cwe" pageWidth="792" pageHeight="612" orientation="Landscape" 
+	name="cwe" pageWidth="1120" pageHeight="612" orientation="Landscape" 
 	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<field name="description" class="java.lang.String"/>
 	<field name="total" class="java.lang.Long"/>
 	<field name="percentClosed" class="java.lang.Long"/>
@@ -21,39 +23,65 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="45" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<staticText>
-				<reportElement x="225" y="0" width="200" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="0" y="0" width="1100" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Vulnerability Progress By Type]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="1100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="1100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="0" y="22" width="300" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="0" y="92" width="470" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
 				<text><![CDATA[Description]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="22" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="470" y="92" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
 				<text><![CDATA[Total Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="22" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Percentage of Closed]]></text>
+				<reportElement x="570" y="92" width="110" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Percentage Fixed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="22" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Average Age of Open]]></text>
+				<reportElement x="680" y="92" width="240" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Average Age of Remaining Vulnerabilities]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="600" y="22" width="120" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="920" y="92" width="150" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
 				<text><![CDATA[Average Time to Close]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="43" width="750" height="1"/>
+				<reportElement x="0" y="113" width="1070" height="1"/>
 			</line>
 		</band>
 	</pageHeader>
@@ -63,28 +91,38 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="300" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="0" y="0" width="470" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
 			<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="0" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="470" y="0" width="65" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="570" y="0" width="85" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{percentClosed}+"%"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="500" y="0" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="680" y="0" width="207" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{averageAgeOpen}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="600" y="0" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="920" y="0" width="110" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{averageTimeToClose}]]></textFieldExpression>
 			</textField>
 		</band>

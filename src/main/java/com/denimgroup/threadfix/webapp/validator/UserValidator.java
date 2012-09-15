@@ -58,8 +58,10 @@ public class UserValidator implements Validator {
 			}
 		}
 
-		if (user.getUnencryptedPassword() != null && user.getUnencryptedPassword().length() > 25) {
-			errors.rejectValue("password", null, "Password has a maximum length of 25.");
+		if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null && 
+				user.getUnencryptedPassword().length() < 12 &&
+				user.getUnencryptedPassword().length() != 0) {
+			errors.rejectValue("password", null, "Password has a minimum length of 12.");
 		}
 
 		// Confirm password

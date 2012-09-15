@@ -85,8 +85,6 @@ public class ReportsServiceImpl implements ReportsService {
 	private VulnerabilityDao vulnerabilityDao = null;
 	private ApplicationDao applicationDao = null;
 	
-	int amountToAdd = 0;
-
 	/**
 	 * @param sessionFactory
 	 * @param organizationService
@@ -111,19 +109,33 @@ public class ReportsServiceImpl implements ReportsService {
 	 */
 	@Override
 	public StringBuffer getReport(String path, String fileName, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList, HttpServletResponse response) throws IOException{
+			Map<String, Object> parameters, List<Integer> applicationIdList, 
+			HttpServletResponse response) throws IOException {
 
 		if (fileName == null || fileName.trim().equals(""))
 			return null;
 
 		File file = new File(path + "jasper/" + fileName);
 		InputStream inputStream = null;
-
-		// This variable is used to extend the width of the pdf if that is necessary.
-		// it is a class variable to save retrieval of all the channel types; 
-		// we can just calculate it in addCorrectColumns() when we already have that information.
-		amountToAdd = 0;
 		
+		if (parameters != null) {
+			List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
+			if (teamNames != null && teamNames.size() == 1) {
+				parameters.put("orgName", teamNames.get(0));
+			} else if (teamNames != null) {
+				parameters.put("orgName", "All");
+			}
+			
+			if (applicationIdList.size() == 1) {
+				Application app = applicationDao.retrieveById(applicationIdList.get(0));
+				if (app != null) {
+					parameters.put("appName", app.getName());
+				}
+			} else {
+				parameters.put("appName", "All");
+			}
+		}
+
 		try {
 			inputStream = new FileInputStream(file);
 			
@@ -179,9 +191,7 @@ public class ReportsServiceImpl implements ReportsService {
 						+ ".pdf\"");
 
 				ServletOutputStream out = response.getOutputStream();
-				
-				jasperPrint.setPageWidth(jasperPrint.getPageWidth() + amountToAdd);
-				
+								
 				byte[] pdfByteArray = JasperExportManager.exportReportToPdf(jasperPrint);
 				
 				out.write(pdfByteArray, 0, pdfByteArray.length);
@@ -314,17 +324,25 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		List<ChannelType> channelTypeList = getChannelTypesInUse(applicationIdList);
 		
-		Integer base = 300, increment = 140, count = 0;
+		Integer base = 470, increment = 140, count = 0;
+		int amountToAdd = (increment * channelTypeList.size());
+		String width = ((Integer) (base + amountToAdd)).toString();
 		
-		amountToAdd = increment * (channelTypeList.size() - 4) + 50;
-		if (amountToAdd < 0) 
-			amountToAdd = 50;
+		string = string.replace("<reportElement x=\"0\" y=\"113\" width=\"772\" height=\"1\"/>", 
+					"<reportElement x=\"0\" y=\"113\" width=\"" + width + "\" height=\"1\"/>");
 		
-		string = string.replace("<reportElement x=\"0\" y=\"43\" width=\"772\" height=\"1\"/>", 
-					"<reportElement x=\"0\" y=\"43\" width=\"" + (772 + amountToAdd) + "\" height=\"1\"/>");
+		string = string.replace("<reportElement x=\"346\" y=\"0\" width=\"200\" height=\"40\"/>", 
+				"<reportElement x=\"0\" y=\"0\" width=\"" + width + "\" height=\"40\"/>");
 		
-		string = string.replace("<reportElement x=\"346\" y=\"0\" width=\"200\" height=\"20\"/>", 
-				"<reportElement x=\"" + (296 + (amountToAdd / 2)) + "\" y=\"0\" width=\"200\" height=\"20\"/>");
+		string = string.replace("<reportElement x=\"0\" y=\"40\" width=\"800\" height=\"20\"/>", 
+				"<reportElement x=\"0\" y=\"40\" width=\"" + width + "\" height=\"20\"/>");
+		
+		string = string.replace("<reportElement x=\"0\" y=\"60\" width=\"800\" height=\"20\"/>", 
+				"<reportElement x=\"0\" y=\"60\" width=\"" + width + "\" height=\"20\"/>");
+		
+		//<reportElement x="0" y="45" width="800" height="20"/>
+		
+		string = string.replace("pageWidth=\"792\"", "pageWidth=\"" + width + "\"");
 		
 		for (ChannelType channelType : channelTypeList) {
 			if (channelType == null || channelType.getId() == null)
@@ -341,7 +359,9 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			String textFieldTag = "\n<textField>\n"
 				+ "<reportElement x=\"" + location + "\" y=\"0\" width=\"" + increment + "\" height=\"20\"/>\n"
-				+ "\t<textElement verticalAlignment=\"Middle\"/>\n"
+				+ "\t<textElement verticalAlignment=\"Middle\">\n"
+				+ "\t\t<font size=\"12\" pdfFontName=\"Helvetica-Bold\"/>\n"
+				+ "\t</textElement>\n"
 				+ "\t<textFieldExpression class=\"java.lang.Long\"><![CDATA[\\$F{count_"
 				+ id
 				+ "}]]></textFieldExpression>\n"
@@ -349,8 +369,10 @@ public class ReportsServiceImpl implements ReportsService {
 			string = string.replaceFirst("</band>	</detail", textFieldTag + "</band>	</detail");
 			
 			String headerText = "<staticText>\n"
-				+ "<reportElement x=\"" + location + "\" y=\"22\" width=\"" + increment + "\" height=\"20\"/>\n"
-				+ "<textElement verticalAlignment=\"Middle\"/>\n"
+				+ "<reportElement x=\"" + location + "\" y=\"90\" width=\"" + increment + "\" height=\"20\"/>\n"
+				+ "<textElement verticalAlignment=\"Middle\">\n"
+				+ "\t<font size=\"12\" pdfFontName=\"Helvetica-Bold\"/>\n"
+				+ "</textElement>\n"
 				+ "<text><![CDATA[" + channelType.getName() + "]]></text>\n"
 				+ "</staticText>\n";
 			string = string.replaceFirst("<line>", headerText + "<line>");

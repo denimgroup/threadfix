@@ -37,7 +37,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 
@@ -47,23 +49,26 @@ public class UploadScanController {
 
 	private ScanService scanService;
 	private ApplicationService applicationService;
+	private ChannelTypeService channelTypeService;
 	
 	private final Log log = LogFactory.getLog(UploadScanController.class);
 
 	@Autowired
 	public UploadScanController(ScanService scanService,
-			ApplicationService applicationService) {
+			ApplicationService applicationService,
+			ChannelTypeService channelTypeService) {
 		this.scanService = scanService;
 		this.applicationService = applicationService;
+		this.channelTypeService = channelTypeService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
-		return index(orgId, appId, null);
+		return index(orgId, appId, null, null);
 	}
 	
-	private ModelAndView index(int orgId, int appId, String message) {
+	private ModelAndView index(int orgId, int appId, String message, ChannelType type) {
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
@@ -80,6 +85,7 @@ public class UploadScanController {
 		ModelAndView mav = new ModelAndView("scans/upload");
 		mav.addObject(application);
 		mav.addObject("message",message);
+		mav.addObject("type",type);
 		return mav;
 	}
 	
@@ -94,7 +100,7 @@ public class UploadScanController {
 		
 		if (fileName == null || fileName.equals("")) {
 			log.warn("Saving the file to disk did not return a file name. Returning to scan upload page.");
-			return index(appId, orgId, "Unable to save the file to disk.");
+			return index(appId, orgId, "Unable to save the file to disk.", null);
 		}
 		
 		try {
@@ -125,7 +131,17 @@ public class UploadScanController {
 		} else {
 			if (app.getId() != null && app.getOrganization() != null 
 					&& app.getOrganization().getId() != null) {
-				return index(app.getOrganization().getId(), app.getId(), returnValue.getScanCheckResult());
+				ChannelType channelType = null;
+				
+				if (returnValue.getScanCheckResult() != null ||
+						returnValue.getScanCheckResult().equals(ChannelImporter.BADLY_FORMED_XML) ||
+						returnValue.getScanCheckResult().equals(ChannelImporter.WRONG_FORMAT_ERROR) ||
+						returnValue.getScanCheckResult().equals(ChannelImporter.OTHER_ERROR)) {
+					channelType = channelTypeService.loadChannel(channelId);
+				}
+ 				
+				return index(app.getOrganization().getId(), app.getId(), 
+								returnValue.getScanCheckResult(), channelType);
 			} else {
 				log.warn("The request included an invalidly configured " +
 						 "Application, throwing ResourceNotFoundException.");

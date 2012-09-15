@@ -10,11 +10,11 @@
 <body id="apps">
 	<h2>New Finding</h2>
 
-	<c:if test="${ not static }">
+	<c:if test="${ not isStatic }">
 		<input type="radio" name="group" value="dynamic" checked>Dynamic
 		<input type="radio" name="group" value="static">Static
 	</c:if>
-	<c:if test="${ static }">
+	<c:if test="${ isStatic }">
 		<input type="radio" name="group" value="dynamic">Dynamic
 		<input type="radio" name="group" value="static" checked>Static
 	</c:if>

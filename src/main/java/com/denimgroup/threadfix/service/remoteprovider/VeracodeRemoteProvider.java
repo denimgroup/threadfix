@@ -84,9 +84,13 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		InputStream appBuildsInputStream = getUrl(GET_APP_BUILDS_URI,username,password);
 		String appName = remoteProviderApplication.getNativeId();
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
-		parse(appBuildsInputStream, parser);
 		
-		List<String> buildIds = parser.map.get(appName);
+		List<String> buildIds = null;
+		
+		if (appBuildsInputStream != null) {
+			parse(appBuildsInputStream, parser);
+			buildIds = parser.map.get(appName);
+		}
 		
 		if (buildIds == null || buildIds.size() == 0) {
 			log.warn("No build IDs were parsed.");

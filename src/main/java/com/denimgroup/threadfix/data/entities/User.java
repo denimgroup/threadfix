@@ -40,7 +40,7 @@ public class User extends AuditableEntity {
 
 	private static final long serialVersionUID = -5821877436246475858L;
 	
-	public static final int NAME_LENGTH = 25;
+	public static final int NAME_LENGTH = 40;
 	public static final int PASSWORD_LENGTH = 256;
 
 	private String name;
@@ -48,6 +48,7 @@ public class User extends AuditableEntity {
 	private String salt;
 	private boolean approved = true;
 	private boolean locked = false;
+	private Boolean hasChangedInitialPassword = false;
 	private Date lastLoginDate = new Date();
 	private Date lastPasswordChangedDate = new Date();
 	private int failedPasswordAttempts = 0;
@@ -57,6 +58,7 @@ public class User extends AuditableEntity {
 
 	private String unencryptedPassword;
 	private String passwordConfirm;
+	private String currentPassword;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -169,4 +171,24 @@ public class User extends AuditableEntity {
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
+
+	@Transient
+	public String getCurrentPassword() {
+		return currentPassword;
+	}
+
+	public void setCurrentPassword(String currentPassword) {
+		this.currentPassword = currentPassword;
+	}
+
+	//Hibernate naming conventions make this nasty although there may be a good way to do it
+	@Column
+	public Boolean isHasChangedInitialPassword() {
+		return hasChangedInitialPassword;
+	}
+
+	public void setHasChangedInitialPassword(Boolean hasChangedInitialPassword) {
+		this.hasChangedInitialPassword = hasChangedInitialPassword;
+	}
+
 }

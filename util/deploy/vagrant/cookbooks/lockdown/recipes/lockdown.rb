@@ -89,6 +89,32 @@ script "get crs" do
   EOH
 end
 
+script "Move old SSH banner" do
+  interpreter "bash"
+  user "root"
+  cwd "/vagrant"
+  code <<-EOH
+	sudo mv /etc/motd /etc/motd.bak
+	sudo rm /etc/legal
+  EOH
+end
+
+template "/etc/motd" do
+  source "motd.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+script "Reset SSH service" do
+  interpreter "bash"
+  user "root"
+  cwd "/vagrant"
+  code <<-EOH
+	sudo /etc/init.d/ssh restart
+  EOH
+end
+
 template "/etc/apache2/httpd.conf" do
   source "httpd.conf.erb"
   owner "root"
@@ -160,7 +186,7 @@ script "enable firewall" do
   interpreter "bash"
   user "root"
   code <<-EOH
-	ufw enable
+	echo "y" | sudo ufw enable
   EOH
 end
 
@@ -179,4 +205,11 @@ user "tfuser" do
   home "/home/tfuser"
   shell "/bin/bash"
   password "$1$qWfox.Mo$7S8/IUESEURVhu6fCB/mK1"
+end
+
+template "/home/vagrant/configure.sh" do
+  source "configure.sh.erb"
+  owner "root"
+  group "root"
+  mode "0644"
 end

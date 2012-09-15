@@ -16,7 +16,7 @@ function setupPagination(currenttable) {
 			|| typeof (table.attr("itemsPerPage")) != "undefined") {
 		numPerPage = table.attr("itemsPerPage");
 	} else {
-		numPerPage = 100;
+		numPerPage = 101;
 	}
     	
     	var repaginate = function() {

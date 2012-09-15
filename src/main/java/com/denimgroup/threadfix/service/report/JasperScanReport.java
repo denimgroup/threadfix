@@ -23,38 +23,10 @@ public class JasperScanReport implements JRDataSource {
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
 	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<Integer, Integer>();
 	
-	private String appName = null;
-	private String orgName = null;
-	
 	public JasperScanReport(List<Integer> applicationIdList, ScanDao scanDao) {
 		if (scanDao != null && applicationIdList != null)
 			this.scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
-		
-		if (applicationIdList.size() > 1) {
-			appName = "All";
-		} else if (scanList != null && scanList.get(0) != null &&
-				scanList.get(0).getApplication() != null) {
-			appName = scanList.get(0).getApplication().getName();
-		} else {
-			// we shouldn't ever get here
-			appName = "No Application Name Found.";
-		}
 				
-		if (scanList != null && scanList.size() > 1) {
-			for (Scan scan : scanList) {
-				if (scan != null && scan.getApplication() != null 
-						&& scan.getApplication().getOrganization() != null 
-						&& scan.getApplication().getOrganization().getName() != null) {
-					if (orgName == null) {
-						orgName = scan.getApplication().getOrganization().getName();
-					} else if (!orgName.equals(scan.getApplication().getOrganization().getName())){
-						orgName = "All";
-						break;
-					}
-				}
-			}
-		}
-		
 		Collections.sort(this.scanList, Scan.getTimeComparator());
 
 		index = -1;
@@ -75,10 +47,11 @@ public class JasperScanReport implements JRDataSource {
 	@Override
 	public boolean next() {
 		if (scanList != null && index < scanList.size() - 1) {
-			if (index == -1) 
+			if (index == -1) {
 				index = 0;
-			else
+			} else {
 				index++;
+			}
 			buildHash();
 			return true;
 		}
@@ -95,8 +68,6 @@ public class JasperScanReport implements JRDataSource {
 					
 		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
 		resultsHash.put("resurfacedVulns", scan.getNumberResurfacedVulnerabilities());
-		resultsHash.put("appName", appName);
-		resultsHash.put("orgName", orgName);
 		
 		if (scan.getImportTime() != null)
 			resultsHash.put("importTime", scan.getImportTime());

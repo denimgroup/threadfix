@@ -2,6 +2,12 @@
 
 <head>
 	<title><c:if test="${ user['new'] }">New </c:if>User</title>
+	<script>
+		function confirmRoles() {
+			return $("#roleSelect").children("option").filter(":selected").text() !== "User" || 
+				confirm("You are switching roles from Administrator to User and will be logged out after this change.");
+		}
+	</script>
 </head>
 
 <body id="config">
@@ -34,7 +40,7 @@
 			<tr>
 				<td class="label">Password:</td>
 				<td class="inputValue">
-					<form:password id="passwordInput" path="unencryptedPassword" size="30" maxlength="25" />
+					<form:password id="passwordInput" path="unencryptedPassword" />
 				</td>
 				<td style="padding-left: 5px">
 					<form:errors path="password" cssClass="errors" />
@@ -43,7 +49,7 @@
 			<tr>
 				<td class="label">Confirm:</td>
 				<td class="inputValue">
-					<form:password id="passwordConfirmInput" path="passwordConfirm" size="30" maxlength="25" />
+					<form:password id="passwordConfirmInput" path="passwordConfirm" />
 				</td>
 			</tr>
 		</table>
@@ -56,7 +62,12 @@
 		</span>
 	</c:when>
 	<c:otherwise>
-		<input id="updateUserButton" type="submit" value="Update User" />
+		<c:if test="${ isThisUser }">
+			<input onclick="return confirmRoles()" id="updateUserButton" type="submit" value="Update User" />
+		</c:if>
+		<c:if test="${ not isThisUser }">
+			<input id="updateUserButton" type="submit" value="Update User" />
+		</c:if>
 		<span style="padding-left: 10px">
 		<spring:url value="/configuration/users" var="userUrl">
 			<spring:param name="userId" value="${ user.id }"/>

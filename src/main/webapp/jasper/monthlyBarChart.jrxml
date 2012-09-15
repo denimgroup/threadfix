@@ -6,6 +6,8 @@
 	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<field name="newVulns" class="java.lang.Integer"/>
 	<field name="oldVulns" class="java.lang.Integer"/>
 	<field name="totVulns" class="java.lang.Integer"/>
@@ -20,20 +22,27 @@
 		<band/>
 	</title>
 	<pageHeader>
-		<band height="50">
+		<band height="80" splitType="Stretch">
 			<staticText>
-				<reportElement x="301" y="0" width="150" height="25"/>
+				<reportElement x="0" y="0" width="800" height="40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Trending Report]]></text>
+				<text><![CDATA[Monthly Progress Report]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="222" y="25" width="309" height="25"/>
+				<reportElement x="0" y="40" width="800" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + ($P{appId}.size() > 1 ? "All" : $F{name})]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="800" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -57,7 +66,7 @@
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend position="Top">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true"/>
 					</chartLegend>
 				</chart>
 				<categoryDataset>
@@ -88,13 +97,13 @@
 		</band>
 	</summary>
 	<noData>
-		<band height="20">
+		<band height="25">
 			<staticText>
-				<reportElement x="222" y="0" width="309" height="20"/>
+				<reportElement x="0" y="0" width="800" height="25"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[No Data Found For Trending Report]]></text>
+				<text><![CDATA[No Data Found For Monthly Progress Report]]></text>
 			</staticText>
 		</band>
 	</noData>

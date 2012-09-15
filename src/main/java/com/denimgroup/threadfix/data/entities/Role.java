@@ -37,6 +37,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "Role")
 public class Role extends BaseEntity {
+	
+	public static final String ADMIN = "ROLE_ADMIN";
+	public static final String USER = "ROLE_USER";
 
 	private static final long serialVersionUID = -1609499610449048270L;
 

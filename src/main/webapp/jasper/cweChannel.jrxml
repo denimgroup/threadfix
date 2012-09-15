@@ -3,12 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
 	name="cwe_channel" pageWidth="792" pageHeight="612" orientation="Landscape" 
-	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
+	whenNoDataType="NoDataSection" columnWidth="300" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="badFindingIds" class="java.util.List" isForPrompting="false"/>
 	<queryString language="hql">
 		<![CDATA[SELECT vulnerability.genericVulnerability.name as description
@@ -24,19 +26,37 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="45" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<staticText>
-				<reportElement x="346" y="0" width="200" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="346" y="0" width="200" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Channel Comparison By Vulnerability Types]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="800" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="800" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="0" y="22" width="300" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="0" y="90" width="470" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
 				<text><![CDATA[Description]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="43" width="772" height="1"/>
+				<reportElement x="0" y="113" width="772" height="1"/>
 			</line>
 		</band>
 	</pageHeader>
@@ -46,8 +66,10 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="300" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="0" y="0" width="470" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -64,9 +86,9 @@
 	<noData>
 		<band height="50">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="20"/>
+				<reportElement x="0" y="0" width="350" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NO DATA FOUND FOR SAMPLE REPORT]]></text>
 			</staticText>

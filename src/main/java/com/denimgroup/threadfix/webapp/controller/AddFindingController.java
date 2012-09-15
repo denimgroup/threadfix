@@ -241,7 +241,7 @@ public class AddFindingController {
 			}
 			
 			if (result.hasErrors()) {
-				model.addAttribute("static",true);
+				model.addAttribute("isStatic",true);
 				return "scans/form";
 			}
 			
@@ -281,7 +281,7 @@ public class AddFindingController {
 			}
 			
 			if (result.hasErrors()) {
-				model.addAttribute("static",false);
+				model.addAttribute("isStatic",false);
 				return "scans/form";
 			}
 			

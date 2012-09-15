@@ -17,6 +17,11 @@
 	
 <c:if test="${ not empty message }">
 	<center class="errors" ><c:out value="${ message }"/></center>
+	<c:if test="${ not empty type }">
+		<center class="errors">This error could be caused by trying to upload a scan in an incorrect format.</center>
+		<center class="errors">The last scan was uploaded to the channel <c:out value="${ type.name }"/></center>
+		<center class="errors"><c:out value="${ type.exportInfo }"/></center>
+	</c:if>
 </c:if>
 
 	<div id="helpText">

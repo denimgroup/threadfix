@@ -173,7 +173,10 @@ public abstract class AbstractDefectTracker {
 			for (Vulnerability vulnerability : vulnerabilities) {
 
 				stringBuilder.append("Vulnerability[" + vulnIndex + "]:\n" +
-						vulnerability.getGenericVulnerability().getName() + '\n');
+						vulnerability.getGenericVulnerability().getName() + '\n' +
+						"CWE-ID: " + vulnerability.getGenericVulnerability().getId() + '\n' + 
+						"http://cwe.mitre.org/data/definitions/" + 
+						vulnerability.getGenericVulnerability().getId() + ".html" + '\n');
 
 				final SurfaceLocation asl = vulnerability.getSurfaceLocation();
 				stringBuilder.append("Vulnerability attack surface location:\n" +

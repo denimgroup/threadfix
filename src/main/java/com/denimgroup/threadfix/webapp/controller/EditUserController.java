@@ -80,8 +80,13 @@ public class EditUserController {
 			throw new ResourceNotFoundException();
 		}
 		
+		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		boolean isThisUser = currentUser != null && user.getName().equals(currentUser);
+		
 		ModelAndView mav = new ModelAndView("config/users/form");
 		mav.addObject(user);
+		mav.addObject("isThisUser", isThisUser);
 		return mav;
 	}
 
@@ -99,13 +104,34 @@ public class EditUserController {
 				return "config/users/form";
 			}
 			
+			boolean isDowngradingPermissions = userService.isAdmin(databaseUser) && 
+					!userService.isAdmin(user);
+			
+			if (isDowngradingPermissions &&
+					userService.countActiveAdmins() == 1) {
+				log.info("A request was made that would leave ThreadFix with 0 admin users. " +
+						"The change will not be saved.");
+				result.rejectValue("role.id", null, "This is the last Admin account so it cannot be switched to User.");
+				return "config/users/form";
+			}
+			
 			userService.storeUser(user);
 			
-			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
-			
 			status.setComplete();
-			return "redirect:/configuration/users/" + userId;
+			
+			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+			
+			// For now, we'll say that if the name matches then they are the same.
+			// This may not hold for AD scenarios.
+			boolean currentUserEdited = currentUser.equals(user.getName());
+			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
+
+			if (currentUserEdited && databaseUser != null && isDowngradingPermissions) {
+				log.info("The current user's permissions have been downgraded. Logging out.");
+				return "redirect:/j_spring_security_logout";
+			} else {
+				return "redirect:/configuration/users/" + userId;
+			}
 		}
 	}
 }

@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -48,8 +46,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -57,8 +53,6 @@ import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.Node;
-import com.denimgroup.threadfix.webapp.viewmodels.PathTree;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
@@ -124,24 +118,9 @@ public class EditApplicationController {
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
-		
-		List<String> pathList = new ArrayList<String>();
-		for (Vulnerability vuln : application.getVulnerabilities()) {
-			if (vuln != null && vuln.getFindings() != null) {
-				for (Finding finding : vuln.getFindings()) {
-					if (finding != null && finding.getSourceFileLocation() != null) {
-						pathList.add(finding.getSourceFileLocation());
-					}
-				}
-			}
-		}
-		pathList = removeDuplicates(pathList);
-		PathTree pathTree = new PathTree(new Node("root"));
-		pathTree = getTreeStructure(pathList, pathTree, application);
-		
+
 		ModelAndView mav = new ModelAndView("applications/form");
 		mav.addObject(application);
-		mav.addObject("pathTree", pathTree);
 		return mav;
 	}
 
@@ -149,6 +128,7 @@ public class EditApplicationController {
 	public String processSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
+		
 		
 		applicationService.validateAfterEdit(application, result);
 		
@@ -165,30 +145,5 @@ public class EditApplicationController {
 			status.setComplete();
 			return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/" + application.getId();
 		}
-	}
-	
-	private List<String> removeDuplicates(List<String> pathList) {
-		List<String> distinctPath = new ArrayList<String>();
-		for (int outerCounter = 0; outerCounter < pathList.size(); outerCounter++) {
-			int innerCounter = 0;
-			for (; innerCounter < outerCounter; innerCounter++) {
-				if (pathList.get(outerCounter).equals(pathList.get(innerCounter))) {
-					break;
-				}
-			}
-			if (innerCounter == outerCounter)
-				distinctPath.add(pathList.get(outerCounter));
-		}
-		Collections.sort(distinctPath);
-		return distinctPath;
-	}
-
-	private PathTree getTreeStructure(List<String> pathList, PathTree pathTree, Application application) {
-		for (String pathSegment : pathList) {
-			if (pathSegment == null)
-				continue;
-			pathTree.addPath(pathSegment);
-		}
-		return pathTree;
 	}
 }

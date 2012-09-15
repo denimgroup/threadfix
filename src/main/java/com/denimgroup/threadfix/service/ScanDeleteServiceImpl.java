@@ -409,15 +409,13 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			earliestFinding.setFirstFindingForVuln(true);
 			findingDao.saveOrUpdate(earliestFinding);
 			vulnerabilityDao.saveOrUpdate(earliestFinding.getVulnerability());
-		}
 		
-		if (finding != null && !earliestFinding.getId().equals(finding.getId())) {
-			// set it to be the first finding
-			finding.setFirstFindingForVuln(false);
-			findingDao.saveOrUpdate(finding);
-		}
-		
-		if (earliestFinding != null) {
+			if (finding != null && !earliestFinding.getId().equals(finding.getId())) {
+				// set it to be the first finding
+				finding.setFirstFindingForVuln(false);
+				findingDao.saveOrUpdate(finding);
+			}
+			
 			log.debug("Updating new / old vuln stats for the Scan with ID " + 
 					earliestFinding.getScan().getId());
 			

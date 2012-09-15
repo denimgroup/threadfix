@@ -147,11 +147,21 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			remoteProviderType.setApiKey(databaseRemoteProviderType.getApiKey());
 		}
 		
-		if (databaseRemoteProviderType == null || 
+		// If the username hasn't changed but the password has, update the apps instead of deleting them.
+		
+		if (databaseRemoteProviderType != null &&
+				remoteProviderType != null && remoteProviderType.getUsername() != null &&
+				remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername()) &&
+				remoteProviderType != null && remoteProviderType.getPassword() != null &&
+				!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) {
+			
+			log.warn("Provider password has changed, updating applications.");
+			
+			remoteProviderApplicationService.updateApplications(remoteProviderType);
+			
+		} else if (databaseRemoteProviderType == null || 
 				(remoteProviderType != null && remoteProviderType.getUsername() != null &&
 				!remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername())) ||
-				(remoteProviderType != null && remoteProviderType.getPassword() != null &&
-				!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) ||
 				(remoteProviderType != null && remoteProviderType.getApiKey() != null &&
 				!remoteProviderType.getApiKey().equals(
 						databaseRemoteProviderType.getApiKey()))) {
@@ -172,7 +182,6 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				result.rejectValue(field, "errors.other", 
 						"We were unable to connect to the provider with these credentials.");
 			} else {
-				
 				log.warn("Provider username has changed, deleting old apps.");
 				
 				remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);

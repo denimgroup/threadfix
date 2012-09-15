@@ -23,7 +23,19 @@
 	<spring:url value="{userId}/delete" var="deleteUrl">
 		<spring:param name="userId" value="${ user.id }"/>
 	</spring:url>
-	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this User?')">Delete</a> | 
+	
+	<c:choose>
+		<c:when test="${ lastUser }">
+			<a id="deleteLink" href="javascript:alert('You cannot delete the last administrator account.')">Delete</a> | 
+		</c:when>
+		<c:when test="${ isThisUser }">
+			<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')">Delete</a> | 
+		</c:when>
+		<c:otherwise>
+			<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this User?')">Delete</a> | 
+		</c:otherwise>
+	</c:choose>
+
 	<a id="backToListLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
 	<br />
 </body>

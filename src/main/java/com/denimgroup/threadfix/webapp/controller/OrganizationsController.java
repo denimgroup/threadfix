@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 
@@ -65,6 +67,13 @@ public class OrganizationsController {
 		List<Organization> organizations = organizationService.loadAllActive();
 		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
+		
+		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (test instanceof ThreadFixUserDetails) {
+			model.addAttribute("shouldChangePassword",!((ThreadFixUserDetails) test).hasChangedInitialPassword());
+		}
+		
 		return "organizations/index";
 	}
 

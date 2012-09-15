@@ -59,6 +59,15 @@ public class UserDetailPage extends BasePage {
 		
 		return new UserIndexPage(driver);
 	}
+	
+	public LoginPage clickDeleteLinkSameUser() {
+		deleteLink.click();
+		
+		Alert alert = driver.switchTo().alert();
+		alert.accept();
+		
+		return new LoginPage(driver);
+	}
 
 	public UserIndexPage clickBackToListLink() {
 		backToListLink.click();

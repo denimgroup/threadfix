@@ -44,6 +44,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.service.OrganizationService;
 
+// TODO split into a service? This is all in the controller layer.
 @Controller
 @RequestMapping("/reports/portfolio")
 public class PortfolioReportController {
@@ -67,11 +68,32 @@ public class PortfolioReportController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model, HttpServletRequest request) {
+	public String index(ModelMap model, HttpServletRequest request, int teamId) {
+		
+		Organization org = null;
+		String teamName = null;
+		
+		if (teamId != 0) {
+			org = organizationService.loadOrganization(teamId);
+			if (org != null && org.getName() != null) {
+				teamName = org.getName();
+			}
+		} 
+		
+		if (teamName == null) {
+			teamName = "All";
+		}
 		
 		Calendar now = Calendar.getInstance();
+		List<Organization> teams;
 		
-		List<Organization> teams = organizationService.loadAll();
+		if (org == null) {
+			teams = organizationService.loadAll();
+		} else {
+			teams = new ArrayList<Organization>();
+			teams.add(org);
+		}
+		
 		int[][] appsByCriticality = new int[][] {{0, 0, 0, 0, 0, 0, 0, 0, 0},
 										 {0, 0, 0, 0, 0, 0, 0, 0, 0},
 										 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -89,19 +111,25 @@ public class PortfolioReportController {
 		List<List<String>> tableContents = new ArrayList<List<String>>();
 		List<String> blankRow = null;
 		
+		List<Boolean> oldArray = new ArrayList<Boolean>();
+		
 		// each time through generate a team row for the Team and 
 		for (Organization team : teams) {
 			if (team == null || !team.isActive()) {
 				continue;
-			}
+			}			
 			
 			List<String> teamRow = null;
 			List<List<String>> appRows = new ArrayList<List<String>>();
 			
 			if (team.getActiveApplications() == null || team.getApplications().isEmpty()) {
 				teamRow = Arrays.asList(new String[] { "Team: " + team.getName(), "0", "Never" });
+				oldArray.add(true);
 			} else {
 				Integer totalScans = 0, lowerBound = null, upperBound = null;
+				
+				int startCount = oldArray.size();
+				oldArray.add(false);
 				
 				for (Application app : team.getApplications()) {
 					if (app == null || !app.isActive())
@@ -119,6 +147,7 @@ public class PortfolioReportController {
 					if (app.getScans() == null || app.getScans().isEmpty()) {
 						numberApplicationsNeverScanned += 1;
 						appRows.add(Arrays.asList(new String[] {app.getName(), criticality, "0", "Never"}));
+						oldArray.add(false);
 					} else {
 						totalScans += app.getScans().size();
 						numberScans += app.getScans().size();
@@ -133,8 +162,9 @@ public class PortfolioReportController {
 								app.getName(), 
 								criticality, 
 								String.valueOf(app.getScans().size()), 
-								daysSinceLatestScan.toString() + " days ago"
+								daysSinceLatestScan.toString()
 							}));
+						oldArray.add(daysSinceLatestScan > 365);
 					}
 				}
 				
@@ -143,17 +173,20 @@ public class PortfolioReportController {
 				} else {
 					if (lowerBound.equals(upperBound)) {
 						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
-								lowerBound.toString() + " days ago"});
+								lowerBound.toString()});
 					} else {
 						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
-								lowerBound.toString() + "-" + upperBound.toString() + " days ago"});
+								lowerBound.toString() + "-" + upperBound.toString()});
 					}
 				}
-			}	
+				
+				oldArray.set(startCount, upperBound > 365);
+			}
 			
 			tableContents.add(teamRow);
 			tableContents.addAll(appRows);
 			tableContents.add(blankRow);
+			oldArray.add(false);
 		}
 		
 		if (tableContents.size() == 0) {
@@ -169,6 +202,8 @@ public class PortfolioReportController {
 		model.addAttribute("numberApplicationsNeverScanned", numberApplicationsNeverScanned);
 		model.addAttribute("appsByCriticality", createDateTable(appsByCriticality));
 		model.addAttribute("tableContents", tableContents);
+		model.addAttribute("old",oldArray);
+		model.addAttribute("teamName", teamName);
 		return "reports/portfolioReport";
 	}
 	

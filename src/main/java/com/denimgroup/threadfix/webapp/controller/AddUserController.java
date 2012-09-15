@@ -90,7 +90,8 @@ public class AddUserController {
 				return "config/users/form";
 			}
 			
-			if (user.getRole() == null || user.getRole().getId() == null || userService.loadRole(user.getRole().getId()) == null) {
+			if (user.getRole() == null || user.getRole().getId() == null 
+					|| userService.loadRole(user.getRole().getId()) == null) {
 				result.rejectValue("role.id", "errors.invalid", new String [] { "Role Choice" }, null);
 				return "config/users/form";
 			}

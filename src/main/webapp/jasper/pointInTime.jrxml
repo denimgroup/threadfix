@@ -6,6 +6,8 @@
 	whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" 
 	topMargin="20" bottomMargin="20">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="hql">
 		<![CDATA[SELECT vulnerability.genericSeverity.name as severity, 
 						vulnerability.openTime as importTime, 
@@ -64,21 +66,28 @@
 		<band/>
 	</title>
 	<pageHeader>
-		<band height="40">
-			<textField>
-				<reportElement x="215" y="20" width="309" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + ($P{appId}.size() > 1 ? "All" : $F{name})]]></textFieldExpression>
-			</textField>
+		<band height="80">
 			<staticText>
-				<reportElement x="301" y="0" width="150" height="20"/>
+				<reportElement x="0" y="0" width="792" height="40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
+					<font size="22" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Point in Time Report]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="792" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="792" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -145,7 +154,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Critical ]]></text>
 			</staticText>
@@ -155,7 +164,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[High ]]></text>
 			</staticText>
@@ -165,7 +174,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Medium ]]></text>
 			</staticText>
@@ -176,7 +185,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Low ]]></text>
 			</staticText>
@@ -186,7 +195,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{highCount}]]></textFieldExpression>
 			</textField>
@@ -196,7 +205,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" />
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{mediumCount}]]></textFieldExpression>
 			</textField>
@@ -207,7 +216,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount}]]></textFieldExpression>
 			</textField>
@@ -217,7 +226,7 @@
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{criticalCount}]]></textFieldExpression>
 			</textField>
@@ -228,7 +237,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{highCount} != 0 ? $V{highAgeSum} / $V{highCount} : new Integer(0)]]></textFieldExpression>
 			</textField>
@@ -239,7 +248,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{criticalCount} != 0 ? $V{criticalAgeSum} / $V{criticalCount} : new Integer(0)]]></textFieldExpression>
 			</textField>
@@ -250,7 +259,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{mediumCount} != 0 ? $V{mediumAgeSum} / $V{mediumCount} : new Integer(0)]]></textFieldExpression>
 			</textField>
@@ -261,7 +270,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount} != 0 ? $V{lowAgeSum} / $V{lowCount} : new Integer(0)]]></textFieldExpression>
 			</textField>
@@ -271,7 +280,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{criticalPercent}]]></textFieldExpression>
 			</textField>
@@ -281,7 +290,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{highPercent}]]></textFieldExpression>
 			</textField>
@@ -291,7 +300,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{mediumPercent}]]></textFieldExpression>
 			</textField>
@@ -302,7 +311,7 @@
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="12" />
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{lowPercent}]]></textFieldExpression>
 			</textField>
@@ -343,7 +352,7 @@
 			<staticText>
 				<reportElement x="222" y="0" width="309" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[No Data Found For Point in Time Report]]></text>
 			</staticText>

@@ -56,6 +56,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.webapp.controller.PortfolioReportController;
 
 @Controller
 @RequestMapping("/reports")
@@ -95,7 +96,8 @@ public class ReportsController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(ModelMap model, @ModelAttribute ReportParameters reportParameters,
-			BindingResult result, SessionStatus status, HttpServletRequest request, HttpServletResponse response) throws IOException{
+			BindingResult result, SessionStatus status, HttpServletRequest request, 
+			HttpServletResponse response) throws IOException{
 		String reportFile = null;
 
 		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 8) {
@@ -139,7 +141,9 @@ public class ReportsController {
 			reportFile = "monthlyBarChart.jrxml";
 			break;
 		case 8:
-			return "redirect:/reports/portfolio";
+			// TODO probably do this in a more idiomatic way
+			return new PortfolioReportController(organizationService).index(
+					model, request, reportParameters.getOrganizationId());
 		}
 
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
