@@ -48,7 +48,7 @@ then
             sudo touch .mysql_pass
             TF="/var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/"
             sudo cp $TF/jdbc.properties $TF/jdbc.properties.bak
-            sudo sed -i 's/tfpassword/$pass1/g' $TF/jdbc.properties
+            sudo sed -i "s/tfpassword/$pass1/g" $TF/jdbc.properties
             break
         else
             echo -e "The password needs to be at least 12 characters in length."
@@ -79,7 +79,7 @@ then
         LENGTH="${#pass1}"
         if [ $LENGTH -gt 11 ];
         then
-            echo -e "tfuser:$pass1" | chpasswd
+            sudo echo -e "tfuser:$pass1" | sudo chpasswd
             sudo touch .tfuser_pass
             break
         else
@@ -95,13 +95,13 @@ if [ "` ls -a | grep .esapi_key`" = "" ];
 then
     echo "Changing ESAPI master key"
 
-    sudo unzip /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/esapi-2.0.2-SNAPSHOT.jar -d /home/vagrant
-    sudo unzip /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/log4j-1.2.16.jar -d /home/vagrant
+    sudo unzip -n -qq /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/esapi-2.0.2-SNAPSHOT.jar -d /home/vagrant
+    sudo unzip -n -qq /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/log4j-1.2.16.jar -d /home/vagrant
 
     sudo cp /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/ESAPI.properties /home/vagrant/ESAPI.properties
-    
+
     sudo touch encrypt.sh && sudo chown tfuser encrypt.sh
-    
+
     sudo echo "java org.owasp.esapi.reference.crypto.JavaEncryptor" > encrypt.sh
 
     NEWKEY="`bash encrypt.sh | grep Encryptor.MasterKey`"
@@ -116,8 +116,8 @@ then
 
     sudo cp /home/vagrant/ESAPI.properties /home/vagrant/ESAPI.properties.new
 
-    sudo sed -i "s/$OLDSALT/$NEWSALT/g" /home/vagrant/ESAPI.properties.new
-    sudo sed -i "s/$OLDKEY/$NEWKEY/g" /home/vagrant/ESAPI.properties.new
+    sudo sed -i "s/$OLDSALT2/$NEWSALT2/g" /home/vagrant/ESAPI.properties.new
+    sudo sed -i "s/$OLDKEY2/$NEWKEY2/g" /home/vagrant/ESAPI.properties.new
 
     sudo cp /home/vagrant/ESAPI.properties.new /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/ESAPI.properties
 
@@ -125,6 +125,7 @@ then
 
     sudo touch .esapi_key
 fi
+
 
 echo "Also be sure to log in to ThreadFix and configure your users "
 echo "as per the instructions at this address:"
