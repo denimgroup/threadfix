@@ -37,9 +37,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 
@@ -49,17 +50,17 @@ public class UploadScanController {
 
 	private ScanService scanService;
 	private ApplicationService applicationService;
-	private ChannelTypeService channelTypeService;
+	private ApplicationChannelService applicationChannelService;
 	
 	private final Log log = LogFactory.getLog(UploadScanController.class);
 
 	@Autowired
 	public UploadScanController(ScanService scanService,
 			ApplicationService applicationService,
-			ChannelTypeService channelTypeService) {
+			ApplicationChannelService applicationChannelService) {
 		this.scanService = scanService;
 		this.applicationService = applicationService;
-		this.channelTypeService = channelTypeService;
+		this.applicationChannelService = applicationChannelService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -133,11 +134,12 @@ public class UploadScanController {
 					&& app.getOrganization().getId() != null) {
 				ChannelType channelType = null;
 				
-				if (returnValue.getScanCheckResult() != null ||
-						returnValue.getScanCheckResult().equals(ChannelImporter.BADLY_FORMED_XML) ||
+				if (returnValue.getScanCheckResult() != null && 
+						(returnValue.getScanCheckResult().equals(ChannelImporter.BADLY_FORMED_XML) ||
 						returnValue.getScanCheckResult().equals(ChannelImporter.WRONG_FORMAT_ERROR) ||
-						returnValue.getScanCheckResult().equals(ChannelImporter.OTHER_ERROR)) {
-					channelType = channelTypeService.loadChannel(channelId);
+						returnValue.getScanCheckResult().equals(ChannelImporter.OTHER_ERROR))) {
+					ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
+					channelType = appChannel.getChannelType();
 				}
  				
 				return index(app.getOrganization().getId(), app.getId(), 
