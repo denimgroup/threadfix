@@ -309,12 +309,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void validateAfterEdit(Application application, BindingResult result) {
-		if (application.getName() != null && application.getName().trim().equals("")
-				&& !result.hasFieldErrors("name")) {
-			result.rejectValue("name", null, null, "This field cannot be blank");
+		if (application.getName() != null && application.getName().trim().equals("")) {
+			if (!result.hasFieldErrors("name")) {
+				result.rejectValue("name", null, null, "This field cannot be blank");
+			}
 			return;
 		}
-		
+						
 		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim()));
 
 		if (application.getApplicationCriticality() == null ||
@@ -357,9 +358,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (hasNewDefectTracker || (application.getDefectTracker() == null 
 				&& application.getDefectList() != null)) {
 			defectDao.deleteByApplicationId(application.getId());
-			if (application.getVulnerabilities() != null) {
-				for (Vulnerability vuln : application.getVulnerabilities()) {
+			
+			List<Vulnerability> vulns = applicationDao.getVulns(application);
+			
+			if (vulns != null) {
+				for (Vulnerability vuln : vulns) {
 					vuln.setDefect(null);
+					vulnerabilityDao.saveOrUpdate(vuln);
 				}
 			}
 		}

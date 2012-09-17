@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
  * Basic DAO class for the Application entity.
@@ -79,5 +80,11 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	List<String> getTeamNames(List<Integer> appIds);
+	
+	/**
+	 * 
+	 * @param app
+	 */
+	List<Vulnerability> getVulns(Application app);
 
 }

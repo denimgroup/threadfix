@@ -129,8 +129,14 @@ public class EditApplicationController {
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
 		
+		if(!result.hasErrors()) {
+			applicationService.validateAfterEdit(application, result);
+		}
 		
-		applicationService.validateAfterEdit(application, result);
+		if (application.getName() != null && application.getName().trim().equals("")
+				&& !result.hasFieldErrors("name")) {
+			result.rejectValue("name", null, null, "This field cannot be blank");
+		}
 		
 		if (result.hasErrors()) {
 			return "applications/form";

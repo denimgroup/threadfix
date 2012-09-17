@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.JobStatus;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented
@@ -145,5 +146,12 @@ public class HibernateApplicationDao implements ApplicationDao {
 				.createQuery("select distinct organization.name from Application application " +
 						"where id in (:idList)")
 						.setParameterList("idList", appIds).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Vulnerability> getVulns(Application app) {
+		return (List<Vulnerability>) sessionFactory.getCurrentSession()
+				.createQuery("from Vulnerability vuln where vuln.application = :appId")
+						.setInteger("appId", app.getId()).list();
 	}
 }
