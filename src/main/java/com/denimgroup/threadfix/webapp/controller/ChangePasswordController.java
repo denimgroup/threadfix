@@ -103,7 +103,7 @@ public class ChangePasswordController {
 				userService.storeUser(user);
 				status.setComplete();
 				log.info("The User " + currentUserName + " has completed the password change.");
-				return "redirect:/";
+				return "redirect:/configuration";
 			} else {
 				log.info("An incorrect password was submitted during a password change attempt.");
 				result.rejectValue("currentPassword", null,"That was not the correct password.");

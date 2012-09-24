@@ -12,7 +12,7 @@
 		<div id="passwordNag" style="width:600px;font-weight:bold;">Our records indicate that you haven't changed your 
 			password since your account was created. You should change it by going here:
 			<spring:url value="/configuration/users/password" var="passwordChangeUrl"/>
-			<a href="${ fn:escapeXml(passwordChangeUrl) }">Change My Password</a>
+			<a id="changePasswordLink" href="${ fn:escapeXml(passwordChangeUrl) }">Change My Password</a>
 		</div>
 	</c:if>
 	

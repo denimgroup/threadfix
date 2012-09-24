@@ -84,11 +84,14 @@ public class APIKeysTests extends BaseTest {
 	}
 
 	@Test
-	public void editkey() {
+	public void editKey() {
 		driver.findElementById("configurationHeader").click();
 		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
 		configPage.clickApiKeysLink();
 		apiIndexPage = new ApiKeysIndexPage(driver);
+		apiIndexPage.clickNewLink();
+		CreateApiKeyPage createApiPage = new CreateApiKeyPage(driver);
+		createApiPage.clickCreate();
 		apiIndexPage.clickEdit(0);
 		EditApiKeyPage editApiPage = new EditApiKeyPage(driver);
 		editApiPage.fillAllClickSave("Sample ThreadFix REST key", false);
@@ -102,7 +105,12 @@ public class APIKeysTests extends BaseTest {
 	public void markRestricted() {
 		driver.findElementById("configurationHeader").click();
 		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		apiIndexPage = configPage.clickApiKeysLink();
+		configPage.clickApiKeysLink();
+		apiIndexPage = new ApiKeysIndexPage(driver);
+		apiIndexPage.clickNewLink();
+		CreateApiKeyPage createApiPage = new CreateApiKeyPage(driver);
+		createApiPage.clickCreate();
+		apiIndexPage = new ApiKeysIndexPage(driver);
 		EditApiKeyPage editApiPage = apiIndexPage.clickEdit(0);
 		editApiPage.fillAllClickSave("Sample ThreadFix REST key 2", true);
 		apiIndexPage = new ApiKeysIndexPage(driver);

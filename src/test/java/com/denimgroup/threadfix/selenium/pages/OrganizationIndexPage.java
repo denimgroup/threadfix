@@ -65,4 +65,13 @@ public class OrganizationIndexPage extends BasePage {
 			return null;
 		}
 	}
+	
+	public UserChangePasswordPage clickChangePasswordLinkIfPresent() {
+		if (driver.findElementById("changePasswordLink") != null) {
+			driver.findElementById("changePasswordLink").click();
+			return new UserChangePasswordPage(driver);
+		} else {
+			return null;
+		}
+	}
 }

@@ -108,5 +108,4 @@ public class UploadScanPage extends BasePage {
 	public String getScanError() {
 		return driver.findElementByClassName("errors").getText();
 	}
-
 }

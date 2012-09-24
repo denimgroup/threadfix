@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -80,4 +81,11 @@ public abstract class BasePage {
 		}
 	}
 	
+	public boolean isElementPresent(String elementId) {
+		try {
+			return driver.findElementById(elementId) != null;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
+	}
 }

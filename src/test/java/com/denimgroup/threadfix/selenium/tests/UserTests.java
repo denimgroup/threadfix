@@ -42,7 +42,7 @@ import com.denimgroup.threadfix.selenium.pages.UserNewPage;
 public class UserTests extends BaseTest {
 
 	private RemoteWebDriver driver;
-	UserChangePasswordPage newuserChangePwdpage;
+	private UserChangePasswordPage changePasswordPage;
 	private static LoginPage loginPage;
 	
 	@Before
@@ -294,94 +294,96 @@ public class UserTests extends BaseTest {
 	
 	@Test
 	public void navigationTest() {
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user", "password");
-		@SuppressWarnings("unused")
-		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickchangeMyPasswordLink();
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		String PageText =  driver.findElementByTagName("h2").getText();
+		loginPage.login("user", "password")
+				.clickConfigurationHeaderLink()
+				.clickChangeMyPasswordLink();
+		
+		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("User Password Change Page not found", PageText.contains("User Password Change"));
 	}
 	
 	@Test
 	public void testValidation() {
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
-				"password");
-		@SuppressWarnings("unused")
-		ConfigurationIndexPage configurationIndexPage = organizationIndexPage
-				.clickConfigurationHeaderLink();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickchangeMyPasswordLink();
+		changePasswordPage = loginPage.login("user", "password")
+									  .clickConfigurationHeaderLink()
+									  .clickChangeMyPasswordLink()
+									  .setCurrentPassword(" ")
+									  .setNewPassword("password1234")
+									  .setConfirmPassword("password1234")
+									  .clickUpdateInvalid();
 
-		// Current Pwd
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage.fillAllClickSave(" ", "password1234",
-				"password1234");
-		String error = driver.findElementById("currentPassword.errors")
-				.getText();
-		assertTrue("Error cannot be Verified",
-				error.contains("That was not the correct password."));
+		assertTrue("Incorrect password error not present",
+				changePasswordPage.getErrorText("currentPassword")
+					.contains("That was not the correct password."));
 
 		// New Pwd
-
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage.fillAllClickSave("password", "            ",
-				"password1234");
-		String errornew = driver.findElementById("password.errors").getText();
-		assertTrue("Error cannot be Verified",
-				errornew.contains("Passwords do not match."));
+		changePasswordPage = changePasswordPage.setCurrentPassword("password")
+	  				  						   .setNewPassword("                     ")
+	  				  						   .setConfirmPassword("password1234")
+	  				  						   .clickUpdateInvalid();
+		
+		assertTrue("Password match error not present",
+				changePasswordPage.getErrorText("password")
+					.contains("Passwords do not match."));
 
 		// Confirm Pwd
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage
-				.fillAllClickSave("password", "password1234 ", "  ");
-		String errorconfirm = driver.findElementById("password.errors")
-				.getText();
-		assertTrue("Error cannot be Verified",
-				errorconfirm.contains("Passwords do not match."));
+		changePasswordPage = changePasswordPage.setCurrentPassword("password")
+						  					   .setConfirmPassword("                  ")
+						  					   .setNewPassword("password1234")
+						  					   .clickUpdateInvalid();
+		
+		assertTrue("Password match error not present",
+				changePasswordPage.getErrorText("password")
+					.contains("Passwords do not match."));
 
 		// PwdLength
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage.fillAllClickSave("password", "password","password");
-		String errorlength = driver.findElementById("password.errors").getText();
-		assertTrue("Error cannot be Verified",
-				errorlength.contains("Password has a minimum length of 12."));
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage.clickBackToListLink();
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("User Password not Changed",
-				PageText.contains("Configuration"));
-
+		changePasswordPage = changePasswordPage.setCurrentPassword("password")
+						  				   	   .setConfirmPassword("      ")
+						  				   	   .setNewPassword("password124")
+						  				   	   .clickUpdateInvalid();
+		
+		assertTrue("Length error missing",
+				changePasswordPage.getErrorText("password")
+					.contains("Password has a minimum length of 12."));
+		
+		changePasswordPage.logout();
 	}
-	
+
 	@Test
-	public void testChangePwd(){
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
-				"password1234");
-		@SuppressWarnings("unused")
-		ConfigurationIndexPage configurationIndexPage = organizationIndexPage
-				.clickConfigurationHeaderLink();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickchangeMyPasswordLink();
-
-		newuserChangePwdpage = new UserChangePasswordPage(driver);
-		newuserChangePwdpage.fillAllClickSave("password1234","password1234", "password1234");
-		organizationIndexPage = new OrganizationIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("IndexPage not found",PageText.contains("Teams"));
-		organizationIndexPage.logout();
-	}
+	public void testChangePassword() {
+		OrganizationIndexPage orgIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
+													  .clickManageUsersLink()
+													  .clickAddUserLink()
+													  .setNameInput("testuser")
+													  .setPasswordConfirmInput("testpassword")
+													  .setPasswordInput("testpassword")
+													  .setRoleSelect("Administrator")
+													  .clickAddUserButton()
+													  .logout()
+													  .login("testuser", "testpassword");
+											   
+		assertTrue("Change password link not present.", orgIndexPage.isElementPresent("changePasswordLink"));		
 		
-		@Test
-		public void testNewlogin(){
-		loginPage = LoginPage.open(driver);
-		@SuppressWarnings("unused")
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user",
-				"password1234");
-		String PageHeader = driver.findElementByTagName("h2").getText();
-		assertTrue("IndexPage not found",PageHeader.contains("Teams"));
+		orgIndexPage = orgIndexPage.clickChangePasswordLinkIfPresent()
+								   .setConfirmPassword("newtestpassword")
+								   .setNewPassword("newtestpassword")
+								   .setCurrentPassword("testpassword")
+								   .clickUpdate()
+								   .logout()
+								   .login("testuser", "newtestpassword");
 		
+		assertFalse("Change password link present.", orgIndexPage.isElementPresent("changePasswordLink"));
+		
+		UserIndexPage userIndexPage = orgIndexPage.clickConfigurationHeaderLink()
+												  .clickManageUsersLink()
+												  .clickUserNameLink("testuser")
+												  .clickDeleteLinkSameUser()
+												  .login("user", "password")
+												  .clickConfigurationHeaderLink()
+												  .clickManageUsersLink();
+		
+		assertFalse("User was not deleted", userIndexPage.isUserNamePresent("testuser"));
+		
+		userIndexPage.logout();
 	}
-	
 }

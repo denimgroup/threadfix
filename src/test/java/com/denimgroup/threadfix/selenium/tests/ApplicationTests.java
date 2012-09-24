@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
+import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.WafAddPage;
@@ -488,7 +489,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testAddDefectTrackerAtApplicationCreationTimeAndDelete() {
-		String dtUrl = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+		String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppDTCreationTimeOrg";
 		String appName = "AppDTCreationTimeApp";
 		String appUrl = "http://testUrl.com";
@@ -496,7 +497,7 @@ public class ApplicationTests extends BaseTest {
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
-		String projectName = "Threadfix";
+		String projectName = "TestProduct";
 		
 		// create stuff
 		applicationDetailPage = loginPage.login("user", "password")
@@ -537,7 +538,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testSwitchDefectTrackers() {
-		String dtUrl = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+		String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppDTCreationTimeOrg";
 		String appName = "AppDTCreationTimeApp";
 		String appUrl = "http://testUrl.com";
@@ -547,7 +548,7 @@ public class ApplicationTests extends BaseTest {
 		String dtType2 = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
-		String projectName = "Threadfix";
+		String projectName = "TestProduct";
 		
 		// create stuff
 		applicationDetailPage = loginPage.login("user", "password")
@@ -604,7 +605,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testAddBothAtApplicationCreationTimeAndDelete() {
-		String dtUrl = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+		String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppBothCreationTimeOrg";
 		String appName = "AppBothCreationTimeApp";
 		String appUrl = "http://testUrl3.com";
@@ -612,7 +613,7 @@ public class ApplicationTests extends BaseTest {
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";
-		String projectName = "Threadfix";
+		String projectName = "TestProduct";
 		String wafName = "DG mod_security";
 		String wafType = "mod_security";
 		
@@ -666,7 +667,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testApplicationAddPageDefectTrackerValidation() {
-		String dtUrl = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+		String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppDTValidationOrg";
 		String appName = "AppDTValidationApp";
 		String appUrl = "http://testUrl3.com";
@@ -755,7 +756,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testApplicationEditPageDefectTrackerValidation() {
-		String dtUrl = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+		String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppDTEditValidationOrg";
 		String appName = "AppDTEditValidationApp";
 		String appUrl = "http://testUrl3.com";

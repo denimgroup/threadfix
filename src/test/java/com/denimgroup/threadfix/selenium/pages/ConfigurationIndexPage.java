@@ -71,7 +71,7 @@ public class ConfigurationIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public UserChangePasswordPage clickchangeMyPasswordLink() {
+	public UserChangePasswordPage clickChangeMyPasswordLink() {
 		changeMyPasswordLink.click();
 		return new UserChangePasswordPage(driver);
 	}

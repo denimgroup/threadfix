@@ -32,6 +32,8 @@ public class DefectTrackerIndexPage extends BasePage {
 	private WebElement defectTrackerTableBody;
 	private WebElement lastItemFoundInDefectTrackerTableBodyLink;
 	private WebElement addDefectTrackerLink;
+	
+	public static final String DT_URL = "http://10.2.10.145/bugzilla/xmlrpc.cgi";
 
 	public DefectTrackerIndexPage(WebDriver webdriver) {
 		super(webdriver);
