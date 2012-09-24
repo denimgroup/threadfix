@@ -51,35 +51,39 @@ public class UserNewPage extends BasePage {
 		return nameInput.getAttribute("value");
 	}
 
-	public void setNameInput(String text){
+	public UserNewPage setNameInput(String text){
 		nameInput.clear();
 		nameInput.sendKeys(text);
+		return this;
 	}
 	
 	public String getPasswordInput(){
 		return passwordInput.getAttribute("value");
 	}
 
-	public void setPasswordInput(String text){
+	public UserNewPage setPasswordInput(String text){
 		passwordInput.clear();
 		passwordInput.sendKeys(text);
+		return this;
 	}
 
 	public String getPasswordConfirmInput(){
 		return passwordConfirmInput.getAttribute("value");
 	}
 
-	public void setPasswordConfirmInput(String text){
+	public UserNewPage setPasswordConfirmInput(String text){
 		passwordConfirmInput.clear();
 		passwordConfirmInput.sendKeys(text);
+		return this;
 	}
 
 	public String getRoleSelect(){
 		return roleSelect.getFirstSelectedOption().getText();
 	}
 
-	public void setRoleSelect(String code){
+	public UserNewPage setRoleSelect(String code){
 		roleSelect.selectByVisibleText(code);
+		return this;
 	}
 
 	public UserDetailPage clickAddUserButton() {

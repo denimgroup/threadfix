@@ -65,6 +65,11 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("editLink").click();
 		return new ApplicationEditPage(driver);
 	}
+	
+	public OrganizationDetailPage clickTeamLink() {
+		driver.findElementById("organizationText").click();
+		return new OrganizationDetailPage(driver);
+	}
 
 	public OrganizationDetailPage clickDeleteLink() {
 		driver.findElementById("deleteLink").click();
@@ -98,6 +103,21 @@ public class ApplicationDetailPage extends BasePage {
 	public OrganizationIndexPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
 		return new OrganizationIndexPage(driver);
+	}
+
+	public ApplicationDetailPage waitForScans() {
+		
+		ApplicationDetailPage returnPage = this;
+		
+		String appName = getNameText();
+		
+		returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
+		
+		while (!isElementPresent("viewScansLink")) {
+			sleep(2);
+			returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
+		}
+		return returnPage;
 	}
 
 }

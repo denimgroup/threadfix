@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -36,6 +37,7 @@ import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProviderCredentialsPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
+@Ignore
 public class RemoteProvidersTests extends BaseTest {
 	private FirefoxDriver driver;
 

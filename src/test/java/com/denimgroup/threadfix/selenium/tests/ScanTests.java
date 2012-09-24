@@ -159,7 +159,7 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			applicationDetailPage = organizationIndexPage.clickAddOrganizationButton()
+			organizationIndexPage = organizationIndexPage.clickAddOrganizationButton()
 														 .setNameInput(mapEntry.getKey() + "normaltest")
 														 .clickSubmitButtonValid()
 														 .clickAddApplicationLink()
@@ -171,14 +171,9 @@ public class ScanTests extends BaseTest {
 														 .clickAddChannelButton()
 														 .setFileInput(mapEntry.getValue())
 														 .setChannelSelect(mapEntry.getKey())
-														 .clickUploadScanButton();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				System.out.println("Thread interrupted. Continuing.");
-			}
-			
-			organizationIndexPage = applicationDetailPage.clickRefreshLink()
+														 .clickUploadScanButton()
+														 .clickRefreshLink()
+														 .waitForScans()
 														 .clickViewScansLink()
 														 .clickDeleteScanButton(0)
 														 .clickBackToAppLink()
@@ -214,9 +209,11 @@ public class ScanTests extends BaseTest {
 												  .setFileInput(mapEntry.getValue())
 												  .setChannelSelect(mapEntry.getKey())
 												  .clickUploadScanButton()
+												  .clickRefreshLink()
+												  .waitForScans()
 												  .clickUploadScanLink()
 												  .setFileInput(mapEntry.getValue())
-												  .setChannelSelect(mapEntry.getKey())
+												  .setChannelSelect(mapEntry.getKey())												  
 												  .clickUploadScanButtonInvalid();
 
 			assertTrue("The correct error text was not present.", 
@@ -623,24 +620,26 @@ public class ScanTests extends BaseTest {
 	public void fortify360Scan() {
 		String key = "Fortify 360";
 		String[][] expectedResults = new String [][] {
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CcfUsed"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "PreviousBill"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentNaturalGas"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentElectricity"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CityServices"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Address"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Payments"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "BillingDate"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Name"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "StateLocalTaxes"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "KiloWattHourUsed"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "email"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
-			{XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
-			{XSS, "Critical", "/zigguratutilityweb/message.aspx", "Msg"},
-			{SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtUsername"},
-			{SQLI, "Critical", "/ZigguratUtilityWeb/ViewStatement.aspx", "StatementID"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CcfUsed"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "PreviousBill"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentNaturalGas"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentElectricity"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CityServices"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Address"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "BillingDate"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Payments"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "BillingDate"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Name"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "StateLocalTaxes"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "KiloWattHourUsed"},
+			{XSS, "High", "/ZigguratUtilityWeb/ContactUs.aspx", "email"},
+			{XSS, "High", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
+			{XSS, "High", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
+			{XSS, "High", "/zigguratutilityweb/message.aspx", "Msg"},
+			{SQLI, "High", "/ZigguratUtilityWeb/LoginPage.aspx", "txtUsername"},
+			{SQLI, "High", "/ZigguratUtilityWeb/ViewStatement.aspx", "StatementID"},
 			{ASP_NET_DEBUG, "Medium", "/ZigguratUtilityWeb/web.config", ""},
 			{ASP_NET_CUSTOM_ERROR, "Medium", "/ZigguratUtilityWeb/web.config", ""},
 			{ASP_NET_VALIDATION_MISSING, "Medium", "/zigguratutilityweb/message.aspx", ""},

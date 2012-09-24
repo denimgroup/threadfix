@@ -30,70 +30,57 @@ public class UserChangePasswordPage extends BasePage {
 	private WebElement currentPassword;
 	private WebElement newPassword;
 	private WebElement confirmPassword;
-	private WebElement updatePasswordBtn;
-	private WebElement backtoConfigurationLink;
+	private WebElement updatePasswordButton;
+	private WebElement backToConfigurationLink;
 
 	public UserChangePasswordPage(WebDriver webDriver) {
 		super(webDriver);
 		currentPassword = driver.findElementById("currentPasswordInput");
 		newPassword = driver.findElementById("passwordInput");
 		confirmPassword = driver.findElementById("passwordConfirmInput");
-		updatePasswordBtn = driver.findElementById("updateUserButton");
-		backtoConfigurationLink = driver.findElementById("cancelLink");
+		updatePasswordButton = driver.findElementById("updateUserButton");
+		backToConfigurationLink = driver.findElementById("cancelLink");
 	}
 
 	public static UserChangePasswordPage open(WebDriver webdriver) {
 		return new UserChangePasswordPage(webdriver);
 	}
 
-	// public UserChangePasswordPage change(String currentPwd, String newPwd,
-	// String confirmPwd) {
-	// setcurrentPwd(currentPwd);
-	// setnewPwd(newPwd);
-	// setconfirmPwd(confirmPwd);
-	// clickUpdate();
-	// sleep(1000);
-	// }
-
-	public void setcurrentPwd(String currentPwd) {
+	public UserChangePasswordPage setCurrentPassword(String currentPasswordString) {
 		currentPassword.clear();
-		currentPassword.sendKeys(currentPwd);
+		currentPassword.sendKeys(currentPasswordString);
+		return this;
 	}
 
-	public void setnewPwd(String newPwd) {
+	public UserChangePasswordPage setNewPassword(String newPasswordString) {
 		newPassword.clear();
-		newPassword.sendKeys(newPwd);
+		newPassword.sendKeys(newPasswordString);
+		return this;
 	}
 
-	public void setconfirmPwd(String confirmPwd) {
+	public UserChangePasswordPage setConfirmPassword(String confirmPasswordString) {
 		confirmPassword.clear();
-		confirmPassword.sendKeys(confirmPwd);
+		confirmPassword.sendKeys(confirmPasswordString);
+		return this;
 	}
 
-	public void clickUpdate() {
-		updatePasswordBtn.click();
-		sleep(1000);
+	public ConfigurationIndexPage clickUpdate() {
+		updatePasswordButton.click();
+		return new ConfigurationIndexPage(driver);
+	}
+	
+	public UserChangePasswordPage clickUpdateInvalid() {
+		updatePasswordButton.click();
+		return new UserChangePasswordPage(driver);
 	}
 
-	public void clickBackToListLink() {
-		backtoConfigurationLink.click();
-		sleep(1000);
+	public ConfigurationIndexPage clickBackToListLink() {
+		backToConfigurationLink.click();
+		return new ConfigurationIndexPage(driver);
 	}
-
-	public void fillAllClickSave(String CurrentPwd, String NewPwd,
-			String ConfirmPwd) {
-		fillRequired(CurrentPwd, NewPwd, ConfirmPwd);
-		setcurrentPwd(CurrentPwd);
-		setnewPwd(NewPwd);
-		setconfirmPwd(ConfirmPwd);
-		updatePasswordBtn.click();
-		sleep(1000);
+	
+	public String getErrorText(String path) {
+		return driver.findElementById(path + ".errors").getText();
 	}
-
-	public void fillRequired(String CurrentPwd, String NewPwd, String ConfirmPwd) {
-		setcurrentPwd(CurrentPwd);
-		setnewPwd(NewPwd);
-		setconfirmPwd(ConfirmPwd);
-	}
-
+	
 }

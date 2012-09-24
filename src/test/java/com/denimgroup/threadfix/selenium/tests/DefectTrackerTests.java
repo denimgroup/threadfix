@@ -42,7 +42,7 @@ public class DefectTrackerTests extends BaseTest {
 	private WebDriver driver;
 	private static LoginPage loginPage;
 	
-	private static final String TEST_BUGZILLA_URL = "http://dgvm-vulnmgr.denimgroup.com:8080/bugzilla/xmlrpc.cgi";
+	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
 	
 	String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" +
 			"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" +

@@ -28,7 +28,7 @@ import org.openqa.selenium.WebElement;
 
 public class LoginPage extends BasePage {
 
-	static String url = "http://localhost:8080/threadfix/login.jsp";
+	static String url = "http://localhost/threadfix/";
 	private WebElement usernameField;
 	private WebElement passwordField;
 	private WebElement loginButton;
@@ -42,6 +42,7 @@ public class LoginPage extends BasePage {
 		}
 		
 		webdriver.get(url);
+		webdriver.get(url);
 		usernameField = driver.findElementById("username");
 		passwordField = driver.findElementById("password");
 		loginButton = driver.findElementById("login");
@@ -51,7 +52,7 @@ public class LoginPage extends BasePage {
 		return new LoginPage(webdriver);
 	}
 	
-	public OrganizationIndexPage login(String user, String password) {	
+	public OrganizationIndexPage login(String user, String password) {
 		setUsername(user);
 		setPassword(password);
 		clickLogin();
