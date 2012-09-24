@@ -748,19 +748,12 @@ public class ScanTests extends BaseTest {
 													 .clickAddChannelButton()
 													 .setFileInput(fileMap.get(scannerName))
 													 .setChannelSelect(scannerName)
-													 .clickUploadScanButton();
-				
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		applicationDetailPage = applicationDetailPage.clickRefreshLink();
+													 .clickUploadScanButton()
+													 .clickRefreshLink()
+													 .waitForScans();
 		
 		for (int i=1; i <= expectedResults.length; i++) {
-			
-			System.out.println(i);
-		
+					
 			String elementText = applicationDetailPage.getElementText("vulnName" + i);
 			assertTrue(elementText.equals(expectedResults[i-1][0]));
 			
