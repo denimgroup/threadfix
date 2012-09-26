@@ -157,10 +157,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
-				<version>2.5</version> <inherited>true</inherited> <configuration> <forkMode>once</forkMode> 
-				<reportFormat>xml</reportFormat> <classesDirectory>${project.build.directory}/generated-classes/emma/classes</classesDirectory> 
-				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>emma-maven-plugin</artifactId>
@@ -438,6 +434,11 @@
 			<version>${apache.xbean.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>#{apache.poi.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${codehaus.jackson.version}</version>
@@ -665,6 +666,7 @@
 
 		<!-- Framework dependency versions -->
 		<apache.activemq.version>5.4.2</apache.activemq.version>
+		<apache.poi.version>3.8</apache.poi.version>
 		<apache.httpclient.version>4.1.2</apache.httpclient.version>
 		<apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
 		<apache.xbean.version>3.5</apache.xbean.version>
