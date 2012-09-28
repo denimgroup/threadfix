@@ -97,7 +97,9 @@ public class WafServiceImpl implements WafService {
 					wafRuleDao.delete(rule);
 				}
 			}
-			wafDao.deleteById(wafId);
+			
+			waf.setActive(false);
+			wafDao.saveOrUpdate(waf);
 		}
 	}
 
@@ -191,7 +193,7 @@ public class WafServiceImpl implements WafService {
 		
 		StringBuffer buffer = new StringBuffer();
 		
-		String prefix = null, suffix = null, ruleEnd = null;
+		String prefix = null, suffix = null;
 		String name = waf.getWafType().getName();
 		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
 			prefix = RealTimeProtectionGenerator.getStart(name, waf.getWafRules());
@@ -207,9 +209,6 @@ public class WafServiceImpl implements WafService {
 			for (WafRule rule : rules) {
 				if (rule != null && rule.getIsNormalRule()) {
 					buffer.append(rule.getRule()).append('\n');
-					if (ruleEnd != null) {
-						buffer.append(ruleEnd);
-					}
 				}
 			}
 		}

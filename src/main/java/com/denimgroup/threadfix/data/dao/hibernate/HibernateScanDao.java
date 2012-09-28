@@ -33,11 +33,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.DataFlowElement;
+import com.denimgroup.threadfix.data.entities.DeletedDataFlowElement;
+import com.denimgroup.threadfix.data.entities.DeletedFinding;
+import com.denimgroup.threadfix.data.entities.DeletedScan;
+import com.denimgroup.threadfix.data.entities.DeletedSurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
+import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 
 /**
  * Hibernate Scan DAO implementation. Most basic methods are implemented in the
@@ -189,40 +195,61 @@ public class HibernateScanDao implements ScanDao {
 		return numFindingsWithVulnerabilities - numUniqueVulnerabilities;
 	}
 	
-	/**
-	 * TODO make cascades behave such that this method is unnecessary
-	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void deleteFindingsAndScan(Scan scan) {
 		if (scan == null) 
 			return;
 		
-		@SuppressWarnings("unchecked")
 		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
 				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan)")
 					  .setInteger("scan", scan.getId())
 					  .list();
 		
-		sessionFactory.getCurrentSession()
-					  .createQuery("delete from DataFlowElement element " +
+		List<DataFlowElement> dataFlowElements = sessionFactory.getCurrentSession()
+					  .createQuery("from DataFlowElement element " +
 					  		"where element.finding in (select id from Finding where scan = :scan)")
 					  .setInteger("scan", scan.getId())
-					  .executeUpdate();
-		
-		sessionFactory.getCurrentSession()
-					  .createQuery("delete from Finding finding " +
-					  		"where scan = :scan")
-					  .setInteger("scan", scan.getId())
-					  .executeUpdate();
-		
-		if (surfaceLocationIds != null && surfaceLocationIds.size() > 0) {
-			sessionFactory.getCurrentSession()
-						  .createQuery("delete from SurfaceLocation " +
-						  		"where id in (:ids)")
-						  .setParameterList("ids", surfaceLocationIds)
-						  .executeUpdate();
+					  .list();
+				
+		for (DataFlowElement dataFlowElement : dataFlowElements) {
+			sessionFactory.getCurrentSession().save(new DeletedDataFlowElement(dataFlowElement));
+			sessionFactory.getCurrentSession().delete(dataFlowElement);
 		}
 		
+		List<SurfaceLocation> surfaceLocations = null;
+		
+		if (surfaceLocationIds != null && surfaceLocationIds.size() > 0) {
+			surfaceLocations = sessionFactory.getCurrentSession()
+						  .createQuery("from SurfaceLocation " +
+						  		"where id in (:ids)")
+						  .setParameterList("ids", surfaceLocationIds)
+						  .list();
+			
+			for (SurfaceLocation surfaceLocation : surfaceLocations) {
+				sessionFactory.getCurrentSession().save(new DeletedSurfaceLocation(surfaceLocation));
+			}
+		}
+		
+		List<Finding> findings = sessionFactory.getCurrentSession()
+			  	  .createQuery("from Finding where scan = :scan)")
+				  .setInteger("scan", scan.getId())
+				  .list();
+		
+		for (Finding finding : findings) {
+			sessionFactory.getCurrentSession().save(new DeletedFinding(finding));
+			sessionFactory.getCurrentSession().delete(finding);
+		}
+		
+		findings = null;
+
+		if (surfaceLocations != null) {
+			for (SurfaceLocation surfaceLocation : surfaceLocations) {
+				sessionFactory.getCurrentSession().delete(surfaceLocation);
+			}
+		}
+		
+		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
 		sessionFactory.getCurrentSession().delete(scan);
 	}
 	

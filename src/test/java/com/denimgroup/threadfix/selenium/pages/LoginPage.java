@@ -42,7 +42,6 @@ public class LoginPage extends BasePage {
 		}
 		
 		webdriver.get(url);
-		webdriver.get(url);
 		usernameField = driver.findElementById("username");
 		passwordField = driver.findElementById("password");
 		loginButton = driver.findElementById("login");
@@ -53,18 +52,17 @@ public class LoginPage extends BasePage {
 	}
 	
 	public OrganizationIndexPage login(String user, String password) {
-		setUsername(user);
-		setPassword(password);
-		clickLogin();
-		return new OrganizationIndexPage(driver);
+		return setUsername(user).setPassword(password).clickLogin();
 	}
 	
-	private void setUsername(String user) {
+	private LoginPage setUsername(String user) {
 		usernameField.sendKeys(user);
+		return this;
 	}
 	
-	private void setPassword(String password) {
+	private LoginPage setPassword(String password) {
 		passwordField.sendKeys(password);
+		return this;
 	}
 	
 	private OrganizationIndexPage clickLogin() {

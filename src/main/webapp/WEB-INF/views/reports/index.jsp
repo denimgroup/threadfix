@@ -100,6 +100,6 @@
 			</tbody>
 		</table>
 		<br />
-		<input type="submit" value="Run Report" />
+		<input id="runReportButton" type="submit" value="Run Report" />
 	</form:form>
 </body>

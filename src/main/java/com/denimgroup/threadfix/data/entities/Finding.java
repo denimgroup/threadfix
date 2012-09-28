@@ -153,6 +153,10 @@ public class Finding extends AuditableEntity {
 		return isStatic;
 	}
 	
+	public void setIsStatic(boolean isStatic) {
+		this.isStatic = isStatic;
+	}
+	
 	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
@@ -161,10 +165,6 @@ public class Finding extends AuditableEntity {
 
 	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
 		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
-	}
-
-	public void setIsStatic(boolean isStatic) {
-		this.isStatic = isStatic;
 	}
 
 	public String getSourceFileLocation() {

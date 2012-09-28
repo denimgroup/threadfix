@@ -34,13 +34,6 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 public interface ChannelTypeDao {
 
 	/**
-	 * Deletes a channel by its primary key.
-	 * 
-	 * @param id
-	 */
-	void deleteById(int id);
-
-	/**
 	 * Retrieves all Channels.
 	 * 
 	 * @param

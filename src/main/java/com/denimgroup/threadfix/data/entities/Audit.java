@@ -45,5 +45,4 @@ public class Audit extends BaseEntity {
 	public void setVulnerability(Vulnerability vulnerability) {
 		this.vulnerability = vulnerability;
 	}
-
 }

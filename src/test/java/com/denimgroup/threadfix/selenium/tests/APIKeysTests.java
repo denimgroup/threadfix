@@ -25,130 +25,90 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.concurrent.TimeUnit;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApiKeysIndexPage;
-import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
-import com.denimgroup.threadfix.selenium.pages.CreateApiKeyPage;
-import com.denimgroup.threadfix.selenium.pages.EditApiKeyPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
 public class APIKeysTests extends BaseTest {
 	private FirefoxDriver driver;
 
-	private ApiKeysIndexPage apiIndexPage;
+	private static LoginPage loginPage;
 
 	@Before
 	public void init() {
 		super.init();
 		driver = super.getDriver();
-		driver.manage().timeouts().implicitlyWait(45, TimeUnit.SECONDS);
-		loginAdmin();
-	}
-
-	@After
-	public void shutDown() {
-		driver.quit();
+		loginPage = LoginPage.open(driver);
 	}
 
 	@Test
 	public void navigationTest() {
-		driver.findElementById("configurationHeader").click();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickApiKeysLink();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+				  							  .clickConfigurationHeaderLink()
+				  							  .clickApiKeysLink();
+		
+		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 	}
 
 	@Test
 	public void createAPIKey() {
-		driver.findElementById("configurationHeader").click();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickApiKeysLink();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		apiIndexPage.clickNewLink();
-		CreateApiKeyPage createApiPage = new CreateApiKeyPage(driver);
-		createApiPage.clickCreate();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-		sleep(1000);
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+											  .clickConfigurationHeaderLink()
+								   			  .clickApiKeysLink()
+								   			  .clickNewLink()
+								   			  .clickCreate();
+		
+		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
+		indexPage.clickDelete(0);
 	}
 
 	@Test
 	public void editKey() {
-		driver.findElementById("configurationHeader").click();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickApiKeysLink();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		apiIndexPage.clickNewLink();
-		CreateApiKeyPage createApiPage = new CreateApiKeyPage(driver);
-		createApiPage.clickCreate();
-		apiIndexPage.clickEdit(0);
-		EditApiKeyPage editApiPage = new EditApiKeyPage(driver);
-		editApiPage.fillAllClickSave("Sample ThreadFix REST key", false);
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-		sleep(1000);
+		
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+								   .clickConfigurationHeaderLink()
+								   .clickApiKeysLink()
+								   .clickNewLink()
+								   .clickCreate()
+								   .clickEdit(0)
+								   .fillAllClickSave("Sample ThreadFix REST key", false);
+		
+		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
+
+		indexPage.clickDelete(0);
+		// TODO assert that the proper text is there
 	}
 
 	@Test
 	public void markRestricted() {
-		driver.findElementById("configurationHeader").click();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickApiKeysLink();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		apiIndexPage.clickNewLink();
-		CreateApiKeyPage createApiPage = new CreateApiKeyPage(driver);
-		createApiPage.clickCreate();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		EditApiKeyPage editApiPage = apiIndexPage.clickEdit(0);
-		editApiPage.fillAllClickSave("Sample ThreadFix REST key 2", true);
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-		sleep(1000);
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+											  .clickConfigurationHeaderLink()
+					 						  .clickApiKeysLink()
+											  .clickNewLink()
+											  .clickCreate()
+											  .clickEdit(0)
+											  .fillAllClickSave("Sample ThreadFix REST key", false);
+						
+		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
+		
+		indexPage.clickDelete(0);
 	}
 
 	@Test
 	public void deleteKey() {
-		driver.findElementById("configurationHeader").click();
-		ConfigurationIndexPage configPage = new ConfigurationIndexPage(driver);
-		configPage.clickApiKeysLink();
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		apiIndexPage.clickDelete(0);
-		apiIndexPage = new ApiKeysIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
+		String PageText = loginPage.login("user", "password")
+								   .clickConfigurationHeaderLink()
+								   .clickApiKeysLink()
+								   .clickNewLink()
+								   .clickCreate()
+								   .clickDelete(0)
+								   .getH2Tag();
+
 		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-		sleep(1000);
-
-	}
-
-	public void loginAdmin() {
-		LoginPage page = new LoginPage(driver);
-		page.login("user", "password");
-
-	}
-
-	private void sleep(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public FirefoxDriver getDriver() {
-		return driver;
 	}
 
 }

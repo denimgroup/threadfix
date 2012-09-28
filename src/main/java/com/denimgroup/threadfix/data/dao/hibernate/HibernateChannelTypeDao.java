@@ -42,11 +42,6 @@ public class HibernateChannelTypeDao implements ChannelTypeDao {
 		this.sessionFactory = sessionFactory;
 	}
 
-	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ChannelType> retrieveAll() {

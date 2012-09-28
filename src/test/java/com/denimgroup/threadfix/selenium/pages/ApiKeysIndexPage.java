@@ -63,9 +63,8 @@ public class ApiKeysIndexPage extends BasePage {
 
 	}
 
-	public String getKeys(int num) {
+	public String getKeyText(int num) {
 		return keys.get(num).getText();
-
 	}
 
 	public EditApiKeyPage clickEdit(int Row) {
@@ -79,9 +78,9 @@ public class ApiKeysIndexPage extends BasePage {
 	// Sleep(1000);
 	// }
 
-	public void clickNewLink() {
+	public CreateApiKeyPage clickNewLink() {
 		createNewKeyLink.click();
-		sleep(1000);
+		return new CreateApiKeyPage(driver);
 	}
 
 	public ApiKeysIndexPage clickDelete(int Row) {

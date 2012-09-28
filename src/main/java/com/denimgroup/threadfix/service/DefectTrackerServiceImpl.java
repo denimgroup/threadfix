@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -44,6 +47,8 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	private DefectTrackerTypeDao defectTrackerTypeDao = null;
 	private DefectDao defectDao = null;
 
+	private final Log log = LogFactory.getLog("DefectTrackerService");
+	
 	@Autowired
 	public DefectTrackerServiceImpl(DefectTrackerDao defectTrackerDao,
 			DefectTrackerTypeDao defectTrackerTypeDao, DefectDao defectDao) {
@@ -76,8 +81,26 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteById(int defectTrackerId) {
+		log.info("Deleting Defect tracker with ID " + defectTrackerId);
+		
 		defectDao.deleteByDefectTrackerId(defectTrackerId);
-		defectTrackerDao.deleteById(defectTrackerId);
+	
+		DefectTracker tracker = defectTrackerDao.retrieveById(defectTrackerId);
+		tracker.setActive(false);
+		
+		if (tracker.getApplications() != null && tracker.getApplications().size() > 0) {
+			for (Application app : tracker.getApplications()) {
+				app.setDefectTracker(null);
+				app.setUserName(null);
+				app.setPassword(null);
+				app.setProjectId(null);
+				app.setProjectName(null);
+			}
+		}
+		
+		tracker.setApplications(null);
+		
+		defectTrackerDao.saveOrUpdate(tracker);
 	}
 
 	@Override
@@ -109,5 +132,4 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 			return false;
 		}
 	}
-
 }

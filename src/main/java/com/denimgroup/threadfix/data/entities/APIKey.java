@@ -29,7 +29,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "APIKey")
-public class APIKey extends BaseEntity {
+public class APIKey extends AuditableEntity {
 	
 	private static final long serialVersionUID = 5185330378304148078L;
 

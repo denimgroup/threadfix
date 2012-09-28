@@ -55,11 +55,6 @@ public interface ChannelTypeService {
 	 * @param channelType
 	 */
 	void storeChannel(ChannelType channelType);
-
-	/**
-	 * @param channelId
-	 */
-	void deleteById(int channelId);
 	
 	/**
 	 * 

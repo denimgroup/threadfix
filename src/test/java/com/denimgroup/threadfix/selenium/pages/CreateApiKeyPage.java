@@ -41,31 +41,28 @@ public class CreateApiKeyPage extends BasePage {
 		backToListLink = driver.findElementByLinkText("Back to API Key Index");
 	}
 
-	public void setNotes(String Status) {
+	public CreateApiKeyPage setNotes(String Status) {
 		notes.clear();
 		notes.sendKeys(Status);
+		return this;
 	}
 
-	public void clickCreate() {
+	public ApiKeysIndexPage clickCreate() {
 		createButton.click();
 		sleep(1000);
+		return new ApiKeysIndexPage(driver);
 	}
 
-	public void clickBackToListLink() {
+	public ApiKeysIndexPage clickBackToListLink() {
 		backToListLink.click();
-		sleep(1000);
+		return new ApiKeysIndexPage(driver);
 	}
 
 	public void setRestrictCheckBoxValue(Boolean isRestChkBox) {
-
 		if (getRestrictCheckBox().isSelected() && !isRestChkBox)
-
 			getRestrictCheckBox().click();
-
 		else if (!getRestrictCheckBox().isSelected() && isRestChkBox)
-
 			getRestrictCheckBox().click();
-
 	}
 
 	public void setRestrictCheckBox(WebElement restrictedBox) {
@@ -77,14 +74,9 @@ public class CreateApiKeyPage extends BasePage {
 	}
 
 	public void fillAllClickSave(boolean restrictedBox) {
-		fillRequired();
 		setRestrictCheckBoxValue(restrictedBox);
 		createButton.click();
 		sleep(1000);
-	}
-
-	public void fillRequired() {
-
 	}
 
 }

@@ -78,8 +78,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		
 		if (scan.getApplication().getRemoteProviderApplications() != null) {
 			for (RemoteProviderApplication app : scan.getApplication().getRemoteProviderApplications()) {
-				if (app != null && app.getRemoteProviderType() != null 
-						&& app.getRemoteProviderType().getChannelType() != null &&
+				if (app != null && app.getRemoteProviderType() != null &&
+						app.getRemoteProviderType().getChannelType() != null &&
 						app.getRemoteProviderType().getChannelType().getId() != null &&
 						app.getRemoteProviderType().getChannelType().getId().equals(type.getId()) &&
 						app.getLastImportTime() != null && scan.getImportTime() != null && 

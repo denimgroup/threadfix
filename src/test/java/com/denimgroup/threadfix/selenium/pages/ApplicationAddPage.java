@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -175,23 +173,17 @@ public class ApplicationAddPage extends BasePage {
 		return driver.findElementById("projectList").isEnabled();
 	}
 	
+	public ApplicationAddPage waitForJsonResult() {
+		waitForElementPresence("jsonResult", 20);
+		return this;
+	}
+	
 	public String getJsonResultText() {
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		String result = driver.findElementById("jsonResult").getText();
-		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
-		return result;
+		return driver.findElementById("jsonResult").getText();
 	}
 	
 	public String getSecondJsonResultText() {
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		String result = driver.findElementById("jsonResult2").getText();
-		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
-		return result;
-	}
-	
-	public ApplicationAddPage waitForJsonResult() {
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
-		return this;
+		waitForElementPresence("jsonResult2", 20);
+		return driver.findElementById("jsonResult2").getText();
 	}
 }

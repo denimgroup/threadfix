@@ -60,6 +60,22 @@ server_package.run_action(:install)
 server_package = package "make"
 server_package.run_action(:install)
 
+template "/home/vagrant/encrypt1.sh" do
+  source "encrypt1.sh.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create
+end
+
+template "/home/vagrant/encrypt2.sh" do
+  source "encrypt2.sh.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create
+end
+
 template "/etc/libapache2-mod-jk/workers.properties" do
   source "workers.properties.erb"
   owner "root"

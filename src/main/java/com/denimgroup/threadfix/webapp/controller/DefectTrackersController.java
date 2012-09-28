@@ -71,7 +71,7 @@ public class DefectTrackersController {
 	}
 	
 	@RequestMapping("/{defectTrackerId}/delete")
-	public String deleteOrg(@PathVariable("defectTrackerId") int defectTrackerId,
+	public String deleteTracker(@PathVariable("defectTrackerId") int defectTrackerId,
 			SessionStatus status) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		if (defectTracker != null) {

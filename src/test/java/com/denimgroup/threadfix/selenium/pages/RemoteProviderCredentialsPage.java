@@ -61,18 +61,12 @@ public class RemoteProviderCredentialsPage extends BasePage {
 		apiKeyInput.sendKeys(apiKey);
 		return this;
 	}
-
-	// public void ClickSave(){
-	// SaveBtn.click();
-	// Sleep(1000);
-	// }
-
-	public void clickBackButton() {
+	
+	public RemoteProvidersIndexPage clickBackButton() {
 		backToIndexLink.click();
-		sleep(1000);
+		return new RemoteProvidersIndexPage(driver);
 	}
 
-	// Popupwindow
 	public RemoteProvidersIndexPage clickSave(boolean showsWarning) {
 		saveButton.click();
 
@@ -83,28 +77,15 @@ public class RemoteProviderCredentialsPage extends BasePage {
 
 		return new RemoteProvidersIndexPage(driver);
 	}
-
-	public RemoteProvidersIndexPage fillAllClickSaveAPI(String API, boolean showsWarning) {
-		fillRequired(API);
-		sleep(1000);
-		return clickSave(showsWarning);
-	}
-
-	public void fillRequired(String API) {
-		setAPI(API);
-		sleep(1000);
-	}
-
+	
 	public RemoteProvidersIndexPage fillAllClickSaveUsernamePassword(String userName, String password, boolean showsWarning) {
 		fillRequired(userName, password);
-		sleep(1000);
 		return clickSave(showsWarning);
 	}
 
-	public void fillRequired(String uName, String Pwd) {
+	public RemoteProviderCredentialsPage fillRequired(String uName, String Pwd) {
 		setUserName(uName);
 		setPassword(Pwd);
-		sleep(1000);
+		return this;
 	}
-
 }

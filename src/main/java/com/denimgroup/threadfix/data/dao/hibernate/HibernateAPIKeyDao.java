@@ -25,7 +25,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,32 +51,29 @@ public class HibernateAPIKeyDao implements APIKeyDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<APIKey> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from APIKey key order by key.id").list();
+		return getActiveAPIKeyCriteria().addOrder(Order.asc("id")).list();
 	}
 
 	@Override
 	public APIKey retrieveById(int id) {
-		return (APIKey) sessionFactory.getCurrentSession().get(APIKey.class, id);
+		return (APIKey) getActiveAPIKeyCriteria().add(Restrictions.eq("id", id)).uniqueResult();
 	}
 
 	@Override
 	public APIKey retrieveByKey(String key) {
-		return (APIKey) sessionFactory.getCurrentSession()
-			.createQuery("from APIKey apiKey where apiKey.apiKey = :key")
-			.setString("key", key).uniqueResult();
+		return (APIKey) getActiveAPIKeyCriteria().add(Restrictions.eq("apiKey", key)).uniqueResult();
+	}
+	
+	private Criteria getActiveAPIKeyCriteria() {
+		return sessionFactory.getCurrentSession()
+							 .createCriteria(APIKey.class)
+							 .add(Restrictions.eq("active",true));
 	}
 	
 	@Override
 	public void saveOrUpdate(APIKey apiKey) {
 		sessionFactory.getCurrentSession().saveOrUpdate(apiKey);
 	}
-
 }

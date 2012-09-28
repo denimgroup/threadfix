@@ -72,12 +72,6 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 	public void storeChannel(ChannelType channelType) {
 		channelTypeDao.saveOrUpdate(channelType);
 	}
-
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteById(int channelId) {
-		channelTypeDao.deleteById(channelId);
-	}
 	
 	@Override
 	public List<ChannelType> getChannelTypeOptions(Application application) {

@@ -41,19 +41,22 @@ public class EditApiKeyPage extends BasePage {
 		backToListLink = driver.findElementByLinkText("Back to API Key");
 	}
 
-	public void setNoteStatus(String status) {
+	public EditApiKeyPage setNoteStatus(String status) {
 		notes.clear();
 		notes.sendKeys(status);
+		return this;
 	}
 
-	public void clickUpdate() {
+	public EditApiKeyPage clickUpdate() {
 		updateButton.click();
 		sleep(1000);
+		return this;
 	}
 
-	public void clickBackToListLink() {
+	public EditApiKeyPage clickBackToListLink() {
 		backToListLink.click();
 		sleep(1000);
+		return this;
 	}
 
 	public void setRestrictCheckBoxValue(Boolean isRestChkBox) {
@@ -76,17 +79,18 @@ public class EditApiKeyPage extends BasePage {
 		return restrictedCheckBox;
 	}
 
-	public void fillAllClickSave(String notesField, boolean restrictedBox) {
+	public ApiKeysIndexPage fillAllClickSave(String notesField, boolean restrictedBox) {
 		fillRequired(notesField, restrictedBox);
 		setNoteStatus(notesField);
 		setRestrictCheckBoxValue(restrictedBox);
 		updateButton.click();
-		sleep(1000);
+		return new ApiKeysIndexPage(driver);
 	}
 
-	public void fillRequired(String notesField, boolean restrictedBox) {
+	public EditApiKeyPage fillRequired(String notesField, boolean restrictedBox) {
 		setNoteStatus(notesField);
 		setRestrictCheckBoxValue(restrictedBox);
+		return this;
 	}
 
 

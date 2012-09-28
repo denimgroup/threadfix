@@ -75,7 +75,11 @@ public class APIKeyServiceImpl implements APIKeyService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteById(int apiKeyId) {
-		apiKeyDao.deleteById(apiKeyId);
+		log.info("Deleting API key with id " + apiKeyId);
+		
+		APIKey apiKey = apiKeyDao.retrieveById(apiKeyId);
+		apiKey.setActive(false);
+		apiKeyDao.saveOrUpdate(apiKey);
 	}
 
 	@Override

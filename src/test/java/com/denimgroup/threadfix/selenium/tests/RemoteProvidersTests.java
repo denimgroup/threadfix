@@ -43,7 +43,6 @@ public class RemoteProvidersTests extends BaseTest {
 
 	private static LoginPage loginPage;
 
-	private RemoteProvidersIndexPage rpIndexPage;
 	private OrganizationIndexPage organizationIndexPage;
 	private EditMappingPage edtMapPage;
 	
@@ -62,13 +61,13 @@ public class RemoteProvidersTests extends BaseTest {
 
 	@Test
 	public void navigationTest() {
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		String PageHeader = driver.findElementByTagName("h2").getText();
+		String pageHeader = loginPage.login("user", "password")
+									 .clickConfigurationHeaderLink()
+									 .clickRemoteProvidersLink()
+									 .getH2Tag();
+		
 		assertTrue("Remote Provider Page not found",
-				PageHeader.contains("Remote Providers"));
-		sleep(1000);
+				pageHeader.contains("Remote Providers"));
 	}
 
 	@Test
@@ -77,23 +76,18 @@ public class RemoteProvidersTests extends BaseTest {
 			return;
 		}
 		
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
-		rpIndexPage.clickConfigure(2);
-		RemoteProviderCredentialsPage rpCredPage = new RemoteProviderCredentialsPage(
-				driver);
-		String HeaderText = driver.findElementByTagName("h2").getText();
+		RemoteProviderCredentialsPage rpCredPage = loginPage.login("user", "password")
+							  								.clickConfigurationHeaderLink()
+							  								.clickRemoteProvidersLink()
+							  								.clickConfigure(2);
+		
+		String headerText = rpCredPage.getH2Tag();
 		assertTrue("Configure Page Not Found",
-				HeaderText.contains("Remote Provider WhiteHat Sentinel"));
-		rpCredPage.fillAllClickSaveAPI(SENTINEL_API_KEY,false);
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageHeader = driver.findElementByTagName("h2").getText();
+				headerText.contains("Remote Provider WhiteHat Sentinel"));
+		
+		String pageHeader = rpCredPage.setAPI(SENTINEL_API_KEY).clickSave(false).getH2Tag();
 		assertTrue("Remote Provider Page not found",
-				PageHeader.contains("Remote Providers"));
-		sleep(1000);
+				pageHeader.contains("Remote Providers"));
 	}
 
 	@Test
@@ -101,17 +95,14 @@ public class RemoteProvidersTests extends BaseTest {
 		if (SENTINEL_API_KEY.equals("your-key")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
-		rpIndexPage.clickClearConfigButton(0);
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageHeader = driver.findElementByTagName("h2").getText();
+
+		String PageHeader = loginPage.login("user", "password")
+									 .clickConfigurationHeaderLink()
+									 .clickRemoteProvidersLink()
+									 .clickClearConfigButton(0)
+									 .getH2Tag();
 		assertTrue("Remote Provider Page not found",
 				PageHeader.contains("Remote Providers"));
-		sleep(1000);
 	}
 
 	@Test
@@ -119,23 +110,20 @@ public class RemoteProvidersTests extends BaseTest {
 		if (VERACODE_PASSWORD.equals("password") || VERACODE_USER.equals("username")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
-		rpIndexPage.clickConfigure(1);
-		RemoteProviderCredentialsPage rpCredPage = new RemoteProviderCredentialsPage(
-				driver);
-		String HeaderText = driver.findElementByTagName("h2").getText();
+		
+		RemoteProviderCredentialsPage rpCredPage = loginPage.login("user", "password")
+															.clickConfigurationHeaderLink()
+															.clickRemoteProvidersLink()
+															.clickConfigure(1);
+
+		String headerText = rpCredPage.getH2Tag();
 		assertTrue("Configure Page Not Found",
-				HeaderText.contains("Remote Provider Veracode"));
-		rpCredPage.fillAllClickSaveUsernamePassword(VERACODE_USER,
-				VERACODE_PASSWORD,false);
-		String PageHeader = driver.findElementByTagName("h2").getText();
+				headerText.contains("Remote Provider Veracode"));
+		
+		String pageHeader = rpCredPage.fillAllClickSaveUsernamePassword(VERACODE_USER,
+				VERACODE_PASSWORD, false).getH2Tag();
 		assertTrue("Remote Provider Page not found",
-				PageHeader.contains("Remote Providers"));
-		sleep(1000);
+				pageHeader.contains("Remote Providers"));
 	}
 
 	// Remove Configuration User Name Pwd
@@ -145,18 +133,15 @@ public class RemoteProvidersTests extends BaseTest {
 		if (VERACODE_PASSWORD.equals("password") || VERACODE_USER.equals("username")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
-		// driver.findElementById("clearConfig3").click();
-		rpIndexPage.clickClearConfigButton(0);
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageHeader = driver.findElementByTagName("h2").getText();
+
+		String pageHeader = loginPage.login("user", "password")
+									 .clickConfigurationHeaderLink()
+									 .clickRemoteProvidersLink()
+									 .clickClearConfigButton(0)
+									 .getH2Tag();
+		
 		assertTrue("Remote Provider Page not found",
-				PageHeader.contains("Remote Providers"));
-		sleep(1000);
+				pageHeader.contains("Remote Providers"));
 	}
 
 	@Test
@@ -164,11 +149,10 @@ public class RemoteProvidersTests extends BaseTest {
 		if (QUALYS_PASS.equals("password") || QUALYS_USER.equals("username")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
+		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
+														.clickConfigurationHeaderLink()
+														.clickRemoteProvidersLink();
+		
 		rpIndexPage.clickConfigure(0);
 		RemoteProviderCredentialsPage rpCredPage = new RemoteProviderCredentialsPage(
 				driver);
@@ -179,7 +163,6 @@ public class RemoteProvidersTests extends BaseTest {
 		String PageHeader = driver.findElementByTagName("h2").getText();
 		assertTrue("Remote Provider Page not found",
 				PageHeader.contains("Remote Providers"));
-		sleep(1000);
 		rpIndexPage.clickClearConfigButton(0);
 	}
 
@@ -206,18 +189,15 @@ public class RemoteProvidersTests extends BaseTest {
 							  .clickSave(false)
 		        			  .clickEdit(0);
 		
-		String PageHeader = driver.findElementByTagName("h2").getText();
+		String pageHeader = driver.findElementByTagName("h2").getText();
 		assertTrue("Mapping Page Not Found",
-				PageHeader.contains("Edit Mapping for Demo Site BE"));
+				pageHeader.contains("Edit Mapping for Demo Site BE"));
 		
-		edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
-				"WhiteHat Application");
+		String pageText = edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
+				"WhiteHat Application").getH2Tag();
 		
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("Remote Provider Page not found",
-				PageText.contains("Remote Providers"));
-		sleep(1000);
+				pageText.contains("Remote Providers"));
 	}
 
 	@Test
@@ -225,11 +205,10 @@ public class RemoteProvidersTests extends BaseTest {
 		if (SENTINEL_API_KEY.equals("your-key")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
+		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
+				.clickConfigurationHeaderLink()
 				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
+		
 		rpIndexPage.clickEdit(3);
 		edtMapPage = new EditMappingPage(driver);
 		String PageHeader = driver.findElementByTagName("h2").getText();
@@ -246,7 +225,6 @@ public class RemoteProvidersTests extends BaseTest {
 		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("Remote Provider Page not found",
 				PageText.contains("Remote Providers"));
-		sleep(1000);
 	}
 
 	@Test
@@ -268,12 +246,10 @@ public class RemoteProvidersTests extends BaseTest {
 		assertTrue("Mapping Page Not Found",
 				error.contains("Application is invalid."));
 		edtMapPage = new EditMappingPage(driver);
-		edtMapPage.clickBackLink();
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
+		
+		String pageText = edtMapPage.clickBackLink().getH2Tag();
 		assertTrue("Remote Provider Page not found",
-				PageText.contains("Remote Providers"));
-		sleep(1000);
+				pageText.contains("Remote Providers"));
 	}
 
 	// Need to have team - NewTeam White hat and application - WhiteHat
@@ -284,11 +260,9 @@ public class RemoteProvidersTests extends BaseTest {
 		if (SENTINEL_API_KEY.equals("your-key")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		rpIndexPage = organizationIndexPage.clickConfigurationHeaderLink()
-				.clickRemoteProvidersLink();
-		RemoteProvidersIndexPage rpIndexPage = new RemoteProvidersIndexPage(
-				driver);
+		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
+														.clickConfigurationHeaderLink()
+														.clickRemoteProvidersLink();
 		rpIndexPage.clickEdit(1);
 		edtMapPage = new EditMappingPage(driver);
 		String PageHeader = driver.findElementByTagName("h2").getText();
@@ -305,7 +279,8 @@ public class RemoteProvidersTests extends BaseTest {
 		String pageHeader = appDetPage.getNameText();
 		assertTrue("Application Page not Found",
 				pageHeader.contains("WhiteHat Application"));
-		sleep(1000);
+		
+		appDetPage.sleep(1000);
 		
 		appDetPage.clickViewScansLink()
         	.clickDeleteScanButton(0)
@@ -317,20 +292,4 @@ public class RemoteProvidersTests extends BaseTest {
         	.clickClearConfigButton(0);
 	}
 	
-	public void loginAdmin() {
-		LoginPage page = new LoginPage(driver);
-		page.login("user", "password");
-	}
-
-	private void sleep(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public FirefoxDriver getDriver() {
-		return driver;
-	}
 }

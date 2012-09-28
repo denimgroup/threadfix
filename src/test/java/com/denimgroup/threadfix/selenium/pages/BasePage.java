@@ -81,11 +81,26 @@ public abstract class BasePage {
 		}
 	}
 	
+	public void waitForElementPresence(String element, int number) {
+		int count = 0;
+		// wait til jsonResult2 is present
+		while (!isElementPresent(element)) {
+			sleep(1000);
+			if (count++ > number) {
+				return;
+			}
+		}
+	}
+	
 	public boolean isElementPresent(String elementId) {
 		try {
 			return driver.findElementById(elementId) != null;
 		} catch (NoSuchElementException e) {
 			return false;
 		}
+	}
+	
+	public String getH2Tag() {
+		return driver.findElementByTagName("h2").getText();
 	}
 }

@@ -35,11 +35,6 @@ import com.denimgroup.threadfix.data.entities.Role;
 public interface RoleDao {
 
 	/**
-	 * @param roleId
-	 */
-	void deleteById(int roleId);
-
-	/**
 	 * @return
 	 */
 	List<Role> retrieveAll();

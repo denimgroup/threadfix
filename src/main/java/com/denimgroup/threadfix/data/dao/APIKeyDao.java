@@ -35,11 +35,6 @@ import com.denimgroup.threadfix.data.entities.APIKey;
 public interface APIKeyDao {
 
 	/**
-	 * @param id
-	 */
-	void deleteById(int id);
-
-	/**
 	 * @return
 	 */
 	List<APIKey> retrieveAll();

@@ -101,6 +101,7 @@ public class ScanTests extends BaseTest {
 		String appUrl = "http://normalurl.com";
 				
 		applicationDetailPage = loginPage.login("user", "password")
+										 .clickOrganizationHeaderLink()
 										 .clickAddOrganizationButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
@@ -159,7 +160,8 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			organizationIndexPage = organizationIndexPage.clickAddOrganizationButton()
+			organizationIndexPage = organizationIndexPage.clickOrganizationHeaderLink()
+				 										 .clickAddOrganizationButton()
 														 .setNameInput(mapEntry.getKey() + "normaltest")
 														 .clickSubmitButtonValid()
 														 .clickAddApplicationLink()
@@ -196,7 +198,8 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			uploadScanPage = organizationIndexPage.clickAddOrganizationButton()
+			uploadScanPage = organizationIndexPage.clickOrganizationHeaderLink()
+				 								  .clickAddOrganizationButton()
 												  .setNameInput(mapEntry.getKey() + "duplicate")
 												  .clickSubmitButtonValid()
 												  .clickAddApplicationLink()
@@ -290,11 +293,11 @@ public class ScanTests extends BaseTest {
 		
 		String[][] expectedResults = {
 				{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "email"},
-				{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtMessage"},
+				{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
+				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
-				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/Message.aspx", ""},
 				{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtPassword"},
 				{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtUsername"},
@@ -353,21 +356,21 @@ public class ScanTests extends BaseTest {
 		String[][] expectedResults = new String[][] {
 					{ PATH_TRAVERSAL, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
 					{ XSS, "Critical", "/demo/EvalInjection2.php", "command"},
+					{ XSS, "Critical", "/demo/XPathInjection2.php", ""},
 					{ XSS, "Critical", "/demo/XPathInjection2.php", "password"},
 					{ XSS, "Critical", "/demo/XPathInjection2.php", "username"},
-					{ XSS, "Critical", "/demo/XPathInjection2.php", ""},
 					{ XSS, "Critical", "/demo/XSS-reflected2.php", "username"},
 					{ COMMAND_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
-					{ SQLI, "Critical", "/demo/XPathInjection2.php", "username"},
 					{ SQLI, "Critical", "/demo/XPathInjection2.php", "password"},
+					{ SQLI, "Critical", "/demo/XPathInjection2.php", "username"},
 					{ INFO_EXPOSURE_ERROR_MESSAGE, "Critical", "/demo/SQLI2.php", "username"},
-					{ GENERIC_INJECTION, "Medium", "/demo/XPathInjection2.php", "username"},
 					{ GENERIC_INJECTION, "Medium", "/demo/XPathInjection2.php", "password"},
+					{ GENERIC_INJECTION, "Medium", "/demo/XPathInjection2.php", "username"},
 					{ GENERIC_INJECTION, "Medium", "/demo/XSS-reflected2.php", "username"},
 					{ DIRECTORY_LISTING, "Medium", "/demo/DIRECT~1/", ""},
 					{ DIRECTORY_LISTING, "Medium", "/demo/DirectoryIndexing/", ""},
-					{ REFLECTION_ATTACK, "Medium", "/demo/XPathInjection2.php", "username"},
 					{ REFLECTION_ATTACK, "Medium", "/demo/XPathInjection2.php", "password"},
+					{ REFLECTION_ATTACK, "Medium", "/demo/XPathInjection2.php", "username"},
 					{ REFLECTION_ATTACK, "Medium", "/demo/XSS-reflected2.php", "username"},
 					{ FORCED_BROWSING, "Low", "/demo/DIRECT~1/", ""},
 					{ FORCED_BROWSING, "Low", "/demo/DirectoryIndexing/", ""},
@@ -397,7 +400,18 @@ public class ScanTests extends BaseTest {
 					{ INFO_LEAK_SERVER_ERROR, "Info", "/demo/XPathInjection2.php", "username"},
 			};
 		
+		if (mySQL) {
+			swap(expectedResults, 13, 14);
+			swap(expectedResults, 18, 19);
+		}
+		
 		runScanTest(key, expectedResults);
+	}
+	
+	private void swap(String[][] array, int index1, int index2) {
+		String[] temp = array[index1];
+		array[index1] = array[index2];
+		array[index2] = temp;
 	}
 	
 	@Test
@@ -476,8 +490,8 @@ public class ScanTests extends BaseTest {
 			{LDAP_INJECTION,"High", "/demo/LDAPInjection2.php","username"},
 			{OS_INJECTION, "High", "/demo/OSCommandInjection2.php", "fileName"},
 			{SQLI,"High", "/demo/SQLI2.php","username"},
-			{XPATH_INJECTION,"Medium", "/demo/XPathInjection2.php","username"},
 			{XPATH_INJECTION,"Medium", "/demo/XPathInjection2.php","password"},
+			{XPATH_INJECTION,"Medium", "/demo/XPathInjection2.php","username"},
 			{XSS,"Medium", "/demo/EvalInjection2.php","command"},
 			{XSS,"Medium", "/demo/XSS-reflected2.php","username"},
 			{FORMAT_STRING_INJECTION,"Medium", "/demo/FormatString2.php","name"},
@@ -528,8 +542,8 @@ public class ScanTests extends BaseTest {
 		String key = "Arachni";
 		String[][] expectedResults = new String [][] {
 			{XSS, "Critical", "/demo/EvalInjection2.php", "command"},
-			{XSS, "Critical", "/demo/XPathInjection2.php", "username"},
 			{XSS, "Critical", "/demo/XPathInjection2.php", "password"},
+			{XSS, "Critical", "/demo/XPathInjection2.php", "username"},
 			{XSS, "Critical", "/demo/XSS-reflected2.php", "username"},
 			{LDAP_INJECTION, "Critical", "/demo/LDAPInjection2.php", "username"},
 			{OS_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
@@ -564,8 +578,8 @@ public class ScanTests extends BaseTest {
 				{INFORMATION_EXPOSURE, "Low", "/demo/EvalInjection2.php", ""},
 				{INFORMATION_EXPOSURE, "Low", "/demo/FormatString2.php", ""},
 				{INFORMATION_EXPOSURE, "Low", "/demo/OSCommandInjection2.php", ""},
-				{INFORMATION_EXPOSURE, "Low", "/demo/PathTraversal.php", "action"},
 				{INFORMATION_EXPOSURE, "Low", "/demo/PathTraversal.php", ""},
+				{INFORMATION_EXPOSURE, "Low", "/demo/PathTraversal.php", "action"},
 				{INFORMATION_EXPOSURE, "Low", "/demo/SQLI2.php", ""},
 				{INFORMATION_EXPOSURE, "Low", "/demo/XPathInjection2.php", ""},
 				{INFORMATION_EXPOSURE, "Low", "/demo/XSS-cookie.php", "cookie"},
@@ -575,6 +589,11 @@ public class ScanTests extends BaseTest {
 				{DIRECTORY_LISTING, "Low", "/demo/", ""},
 				{INFORMATION_EXPOSURE, "Info", "/", ""},
 		};
+		
+		if (mySQL) {
+			swap(expectedResults, 4, 5);
+		}
+		
 		runScanTest(key,expectedResults);
 	}
 	
@@ -620,20 +639,20 @@ public class ScanTests extends BaseTest {
 	public void fortify360Scan() {
 		String key = "Fortify 360";
 		String[][] expectedResults = new String [][] {
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CcfUsed"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "PreviousBill"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentNaturalGas"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentElectricity"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CityServices"},
 			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Address"},
 			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "BillingDate"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Payments"},
 			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "BillingDate"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Name"},
-			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "StateLocalTaxes"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CcfUsed"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CityServices"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentElectricity"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CurrentNaturalGas"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
 			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "CustomerNumber"},
 			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "KiloWattHourUsed"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Name"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "Payments"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "PreviousBill"},
+			{XSS, "High", "/ZigguratUtilityWeb/App_Code/DBUtil.cs", "StateLocalTaxes"},
 			{XSS, "High", "/ZigguratUtilityWeb/ContactUs.aspx", "email"},
 			{XSS, "High", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
 			{XSS, "High", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
@@ -666,15 +685,15 @@ public class ScanTests extends BaseTest {
 		String[][] expectedResults = new String [][] {
 			{XSS, "Critical", "/comments.aspx", "tbComment"},
 			{XSS, "Critical", "/readnews.aspx", "NewsAd"},
-			{SQLI, "Critical", "/comments.aspx", "tbComment"},
 			{SQLI, "Critical", "/comments.aspx", "id"},
+			{SQLI, "Critical", "/comments.aspx", "tbComment"},
 			{SQLI, "Critical", "/login.aspx", "tbUsername"},
 			{SQLI, "Critical", "/readnews.aspx", "id"},
 			{CLEARTEXT_SENSITIVE_INFO, "Medium", "/login.aspx", ""},
 			{CLEARTEXT_SENSITIVE_INFO, "Medium", "/signup.aspx", ""},
 			{INFO_EXPOSURE_ERROR_MESSAGE, "Medium", "/default.aspx", "delete"},
-			{INFO_EXPOSURE_ERROR_MESSAGE, "Medium", "/readnews.aspx", "NewsAd"},
 			{INFO_EXPOSURE_ERROR_MESSAGE, "Medium", "/readnews.aspx", "id"},
+			{INFO_EXPOSURE_ERROR_MESSAGE, "Medium", "/readnews.aspx", "NewsAd"},
 			{INFO_EXPOSURE_ERROR_MESSAGE, "Medium", "Web Server", ""},
 			{IMPROPER_RESTRICTION_AUTH, "Low", "/login.aspx", ""},
 			{IMPROPER_RESTRICTION_AUTH, "Low", "/signup.aspx", ""},
@@ -690,6 +709,15 @@ public class ScanTests extends BaseTest {
 			{INFO_LEAK_BROWSER_CACHE, "Info", "/login.aspx", ""},
 			{INFO_LEAK_BROWSER_CACHE, "Info", "/signup.aspx", ""},
 		};
+		
+		if (mySQL) {
+			swap(expectedResults, 19, 22);
+			swap(expectedResults, 16, 22);
+			swap(expectedResults, 17, 20);
+			swap(expectedResults, 18, 21);
+			swap(expectedResults, 21, 22);
+			swap(expectedResults, 20, 21);
+		}
 		
 		runScanTest(key, expectedResults);
 	}
@@ -736,7 +764,10 @@ public class ScanTests extends BaseTest {
 		
 		String orgName = scannerName + getRandomString(10);
 		
-		applicationDetailPage = organizationIndexPage.clickAddOrganizationButton()
+		organizationIndexPage.sleep(200);
+		
+		applicationDetailPage = organizationIndexPage.clickOrganizationHeaderLink()
+													 .clickAddOrganizationButton()
 													 .setNameInput(orgName)
 													 .clickSubmitButtonValid()
 													 .clickAddApplicationLink()
@@ -753,17 +784,35 @@ public class ScanTests extends BaseTest {
 													 .waitForScans();
 		
 		for (int i=1; i <= expectedResults.length; i++) {
+			
+			System.out.println(i);
 					
 			String elementText = applicationDetailPage.getElementText("vulnName" + i);
-			assertTrue(elementText.equals(expectedResults[i-1][0]));
+			assertTrue("Vulnerability Name mismatch - " + 
+							applicationDetailPage.getElementText("vulnName" + i) +
+							" instead of " +
+							expectedResults[i-1][0],
+					elementText.equals(expectedResults[i-1][0]));
 			
-			assertTrue(applicationDetailPage.getElementText("severity" + i)
+			assertTrue("Severity mismatch - " + 
+							applicationDetailPage.getElementText("severity" + i) +
+							" instead of " +
+							expectedResults[i-1][1],
+					applicationDetailPage.getElementText("severity" + i)
 					.equals(expectedResults[i-1][1]));
 			
-			assertTrue(applicationDetailPage.getElementText("path" + i)
-					.equals(expectedResults[i-1][2]));
+			assertTrue("Path mismatch - " + 
+						applicationDetailPage.getElementText("path" + i) +
+						" instead of " +
+						expectedResults[i-1][2],
+					applicationDetailPage.getElementText("path" + i).toLowerCase()
+					.equals(expectedResults[i-1][2].toLowerCase()));
 			
-			assertTrue(applicationDetailPage.getElementText("parameter" + i)
+			assertTrue("Parameter mismatch - " + 
+						applicationDetailPage.getElementText("parameter" + i) +
+						" instead of " +
+						expectedResults[i-1][3],
+					applicationDetailPage.getElementText("parameter" + i)
 					.equals(expectedResults[i-1][3]));
 		}
 		
@@ -771,6 +820,7 @@ public class ScanTests extends BaseTest {
 							 .clickDeleteScanButton(0)
 							 .clickBackToAppLink()
 							 .clickDeleteLink()
-							 .clickDeleteButton();
+							 .clickDeleteButton()
+							 .logout();
 	}
 }

@@ -25,8 +25,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -51,29 +53,30 @@ public class HibernateDefectTrackerDao implements DefectTrackerDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<DefectTracker> retrieveAll() {
-		return sessionFactory.getCurrentSession().createCriteria(DefectTracker.class, "def")
-				.createAlias("defectTrackerType", "dtt")
-				.addOrder(Order.asc("dtt.name"))
-				.addOrder(Order.asc("def.name")).list();
+		return getActiveDTCriteria().createAlias("defectTrackerType", "dtt")
+									.addOrder(Order.asc("dtt.name"))
+									.addOrder(Order.asc("name"))
+									.list();
 	}
 
 	@Override
 	public DefectTracker retrieveById(int id) {
-		return (DefectTracker) sessionFactory.getCurrentSession().get(DefectTracker.class, id);
+		return (DefectTracker) getActiveDTCriteria().add(Restrictions.eq("id", id))
+													.uniqueResult();
 	}
 
 	@Override
 	public DefectTracker retrieveByName(String name) {
-		return (DefectTracker) sessionFactory.getCurrentSession()
-				.createQuery("from DefectTracker defectTracker where defectTracker.name = :name")
-				.setString("name", name).uniqueResult();
+		return (DefectTracker) getActiveDTCriteria().add(Restrictions.eq("name", name))
+													.uniqueResult();
+	}
+	
+	private Criteria getActiveDTCriteria() {
+		return sessionFactory.getCurrentSession()
+				   			 .createCriteria(DefectTracker.class)
+				   			 .add(Restrictions.eq("active", true));
 	}
 
 	@Override

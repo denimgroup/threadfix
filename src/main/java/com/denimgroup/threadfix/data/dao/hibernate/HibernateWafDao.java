@@ -25,7 +25,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,27 +53,25 @@ public class HibernateWafDao implements WafDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<Waf> retrieveAll() {
-		return sessionFactory.getCurrentSession().createQuery("from Waf waf order by waf.name")
-				.list();
+		return getActiveWafCriteria().addOrder(Order.asc("name")).list();
 	}
 
 	@Override
 	public Waf retrieveById(int id) {
-		return (Waf) sessionFactory.getCurrentSession().get(Waf.class, id);
+		return (Waf) getActiveWafCriteria().add(Restrictions.eq("id", id)).uniqueResult();
 	}
 
 	@Override
 	public Waf retrieveByName(String name) {
-		return (Waf) sessionFactory.getCurrentSession()
-				.createQuery("from Waf waf where waf.name = :name").setString("name", name)
-				.uniqueResult();
+		return (Waf) getActiveWafCriteria().add(Restrictions.eq("name", name)).uniqueResult();
+	}
+	
+	private Criteria getActiveWafCriteria() {
+		return sessionFactory.getCurrentSession()
+				   			 .createCriteria(Waf.class)
+				   			 .add(Restrictions.eq("active", true));
 	}
 
 	@Override

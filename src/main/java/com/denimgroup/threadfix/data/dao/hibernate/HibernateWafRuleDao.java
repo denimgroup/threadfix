@@ -31,6 +31,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.DeletedWafRule;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
@@ -62,6 +63,7 @@ public class HibernateWafRuleDao implements WafRuleDao {
 	
 	@Override
 	public void delete(WafRule rule) {
+		sessionFactory.getCurrentSession().save(new DeletedWafRule(rule));
 		sessionFactory.getCurrentSession().delete(rule);
 	}
 

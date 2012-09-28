@@ -89,11 +89,6 @@ public interface UserService {
 	void storeRole(Role role);
 
 	/**
-	 * @param roleId
-	 */
-	void deleteRole(int roleId);
-
-	/**
 	 * 
 	 * @return
 	 */

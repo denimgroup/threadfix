@@ -42,40 +42,36 @@ public class EditMappingPage extends BasePage {
 
 	}
 
-	public String selectTeamList(String text) {
+	public EditMappingPage selectTeamList(String text) {
 		team.selectByVisibleText(text);
-		return team.getFirstSelectedOption().getText();
+		return this;
 	}
 
-	public String selectAppList(String text) {
+	public EditMappingPage selectAppList(String text) {
 		application.selectByVisibleText(text);
-		return application.getFirstSelectedOption().getText();
+		return this;
 	}
 
-	public void clickUpdate() {
+	public RemoteProvidersIndexPage clickUpdate() {
 		updateButton.click();
-		sleep(1000);
+		return new RemoteProvidersIndexPage(driver);
 	}
 
-	public void clickBackLink() {
+	public RemoteProvidersIndexPage clickBackLink() {
 		backToRemoteLink.click();
-		sleep(1000);
+		return new RemoteProvidersIndexPage(driver);
 	}
 
-	public void fillAllClickSaveTeam(String team, String Application) {
+	public RemoteProvidersIndexPage fillAllClickSaveTeam(String team, String Application) {
 		fillRequired(team, Application);
 		// selectteamList(team);
 		// selectAppList(Application);
 		updateButton.click();
-		sleep(1000);
+		return new RemoteProvidersIndexPage(driver);
 	}
 
 	public void fillRequired(String team, String Application) {
 		selectTeamList(team);
 		selectAppList(Application);
-		sleep(1000);
 	}
-
-
-
 }

@@ -31,6 +31,7 @@ import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.DeletedDefect;
 
 /**
  * Hibernate Defect DAO implementation. Most basic methods are implemented in
@@ -49,18 +50,28 @@ public class HibernateDefectDao implements DefectDao {
 		this.sessionFactory = sessionFactory;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteByApplicationId(Integer applicationId) {
 		sessionFactory.getCurrentSession()
 			.createQuery("update Vulnerability set defect = null where application = :appId")
 			.setInteger("appId", applicationId)
 			.executeUpdate();
-		sessionFactory.getCurrentSession()
-			.createQuery("delete Defect where application = :appId")
+		
+		List<Defect> defects = ((List<Defect>) sessionFactory.getCurrentSession()
+			.createQuery("from Defect where application = :appId")
 			.setInteger("appId", applicationId)
-			.executeUpdate();
+			.list());
+		
+		if (defects != null && defects.size() > 0) {
+			for (Defect defect : defects) {
+				sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
+				sessionFactory.getCurrentSession().delete(defect);
+			}
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteByDefectTrackerId(Integer defectTrackerId) {
 		sessionFactory.getCurrentSession()
@@ -68,11 +79,19 @@ public class HibernateDefectDao implements DefectDao {
 					"(from Application where defectTracker = :defectTracker)")
 			.setInteger("defectTracker", defectTrackerId)
 			.executeUpdate();
-		sessionFactory.getCurrentSession()
-			.createQuery("delete Defect where application in " +
-					"(from Application where defectTracker = :defectTracker)")
-			.setInteger("defectTracker", defectTrackerId)
-			.executeUpdate();
+		
+		List<Defect> defects = ((List<Defect>) sessionFactory.getCurrentSession()
+				.createQuery("from Defect where application in " +
+						"(from Application where defectTracker = :defectTracker)")
+				.setInteger("defectTracker", defectTrackerId)
+				.list());
+			
+		if (defects != null && defects.size() > 0) {
+			for (Defect defect : defects) {
+				sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
+				sessionFactory.getCurrentSession().delete(defect);
+			}
+		}
 	}
 
 	@Override
@@ -101,7 +120,7 @@ public class HibernateDefectDao implements DefectDao {
 	
 	@Override
 	public void delete(Defect defect) {
+		sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		sessionFactory.getCurrentSession().delete(defect);
 	}
-
 }

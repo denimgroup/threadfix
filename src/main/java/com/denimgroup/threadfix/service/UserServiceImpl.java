@@ -117,12 +117,6 @@ public class UserServiceImpl implements UserService {
 	public void storeRole(Role role) {
 		roleDao.saveOrUpdate(role);
 	}
-
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteRole(int roleId) {
-		roleDao.deleteById(roleId);
-	}
 	
 	@Override
 	public Long countActiveAdmins() {

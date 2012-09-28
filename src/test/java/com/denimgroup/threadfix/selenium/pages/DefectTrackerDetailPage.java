@@ -44,7 +44,6 @@ public class DefectTrackerDetailPage extends BasePage {
 		editLink = driver.findElementById("editLink");
 		backToListLink = driver.findElementById("backToListLink");
 		deleteButton = driver.findElementById("deleteButton");
-
 	}
 
 	public String getNameText(){
