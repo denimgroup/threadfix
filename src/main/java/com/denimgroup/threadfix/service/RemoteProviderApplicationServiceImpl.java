@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +55,7 @@ import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
 public class RemoteProviderApplicationServiceImpl implements
 		RemoteProviderApplicationService {
 	
-	private final Log log = LogFactory.getLog("RemoteProviderApplicationService");
+	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
 	private ChannelSeverityDao channelSeverityDao = null;
@@ -69,7 +67,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	@Autowired
 	public RemoteProviderApplicationServiceImpl(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
+			ChannelVulnerabilityDao channelVulnerabilityDao,
 			ChannelSeverityDao channelSeverityDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ScanMergeService scanMergeService,
@@ -192,9 +190,13 @@ public class RemoteProviderApplicationServiceImpl implements
 	public void deleteApps(RemoteProviderType remoteProviderType) {
 		if (remoteProviderType != null && remoteProviderType
 				.getRemoteProviderApplications() != null) {
+			log.info("Deleting apps for Remote Provider type " + remoteProviderType.getName() +
+					" (id=" + remoteProviderType.getId() + ")");
 			for (RemoteProviderApplication app : remoteProviderType
 					.getRemoteProviderApplications()) {
-				remoteProviderApplicationDao.deleteRemoteProviderApplication(app);
+				log.info("Deleting Remote Application " + app.getNativeId() + 
+						" (id = " + app.getId() + ", type id=" + remoteProviderType.getId() + ")");
+				remoteProviderApplicationDao.delete(app);
 			}
 		}
 	}

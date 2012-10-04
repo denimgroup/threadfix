@@ -32,8 +32,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,6 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller
@@ -54,7 +53,7 @@ public class WafsController {
 
 	private WafService wafService = null;
 	
-	private final Log log = LogFactory.getLog(WafsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@Autowired
 	public WafsController(WafService wafService) {
@@ -116,13 +115,26 @@ public class WafsController {
 	@RequestMapping("/{wafId}/delete")
 	public String deleteWaf(@PathVariable("wafId") int wafId, SessionStatus status) {
 		Waf waf = wafService.loadWaf(wafId);
-		if (waf != null && (waf.getApplications() == null || waf.getApplications().isEmpty())) {
+		
+		boolean hasApps = false;
+		if (waf != null && waf.getApplications() != null) {
+			for (Application application : waf.getApplications()) {
+				if (application.isActive()) {
+					hasApps = true;
+					break;
+				}
+			}
+		}
+		
+		if (waf != null && !hasApps) {
 			wafService.deleteById(wafId);
 			status.setComplete();
 			return "redirect:/wafs";
 		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("WAF", wafId));
-			throw new ResourceNotFoundException();
+			
+			// For now we can't do this.
+			log.warn("The user has attempted to delete a WAF with application mappings.");
+			return "redirect:/wafs/" + wafId;
 		}
 	}
 

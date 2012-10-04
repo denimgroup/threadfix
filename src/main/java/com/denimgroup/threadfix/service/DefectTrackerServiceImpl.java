@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +45,7 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	private DefectTrackerTypeDao defectTrackerTypeDao = null;
 	private DefectDao defectDao = null;
 
-	private final Log log = LogFactory.getLog("DefectTrackerService");
+	private final SanitizedLogger log = new SanitizedLogger("DefectTrackerService");
 	
 	@Autowired
 	public DefectTrackerServiceImpl(DefectTrackerDao defectTrackerDao,
@@ -90,6 +88,8 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 		
 		if (tracker.getApplications() != null && tracker.getApplications().size() > 0) {
 			for (Application app : tracker.getApplications()) {
+				log.info("Removing defect tracker and project credentials from " +
+						"application with ID " + app.getId());
 				app.setDefectTracker(null);
 				app.setUserName(null);
 				app.setPassword(null);
@@ -127,7 +127,8 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	@Override
 	public boolean checkUrl(DefectTracker defectTracker) {
 		if (defectTracker != null && defectTracker.getDefectTrackerType() != null) {
-			return DefectTrackerFactory.checkTrackerUrl(defectTracker.getUrl(), defectTrackerTypeDao.retrieveById(defectTracker.getDefectTrackerType().getId()));
+			return DefectTrackerFactory.checkTrackerUrl(defectTracker.getUrl(), 
+					defectTrackerTypeDao.retrieveById(defectTracker.getDefectTrackerType().getId()));
 		} else {
 			return false;
 		}

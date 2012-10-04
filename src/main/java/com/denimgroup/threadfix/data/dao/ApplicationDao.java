@@ -36,11 +36,6 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 public interface ApplicationDao {
 
 	/**
-	 * @param id
-	 */
-	void deleteById(int id);
-
-	/**
 	 * @return
 	 */
 	List<Application> retrieveAll();

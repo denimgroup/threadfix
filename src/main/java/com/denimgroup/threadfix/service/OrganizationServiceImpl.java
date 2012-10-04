@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
@@ -38,21 +37,19 @@ import com.denimgroup.threadfix.data.entities.Organization;
 @Service
 @Transactional(readOnly = true)
 public class OrganizationServiceImpl implements OrganizationService {
+	
+	protected final SanitizedLogger log = new SanitizedLogger(OrganizationService.class);
 
 	private OrganizationDao organizationDao = null;
-	private ApplicationDao applicationDao = null;
+	private ApplicationService applicationService = null;
 
 	@Autowired
-	public OrganizationServiceImpl(OrganizationDao organizationDao, ApplicationDao applicationDao) {
+	public OrganizationServiceImpl(OrganizationDao organizationDao, 
+			ApplicationService applicationService) {
 		this.organizationDao = organizationDao;
-		this.applicationDao = applicationDao;
+		this.applicationService = applicationService;
 	}
-
-	@Override
-	public List<Organization> loadAll() {
-		return organizationDao.retrieveAll();
-	}
-
+	
 	@Override
 	public List<Organization> loadAllActive() {
 		return organizationDao.retrieveAllActive();
@@ -81,21 +78,21 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteById(int organizationId) {
-		organizationDao.deleteById(organizationId);
-	}
-
-	@Override
-	@Transactional(readOnly = false)
 	public void deactivateOrganization(Organization organization) {
+		log.warn("Deleting organization with ID " + organization.getId());
+		
 		organization.setActive(false);
+		
+		organization.setName("deleted-" + organization.getId() + "-" + organization.getName());
+		if (organization.getName().length() >= Organization.NAME_LENGTH) {
+			organization.setName(organization.getName().substring(0, Organization.NAME_LENGTH - 2));
+		}
+		
 		organization.setModifiedDate(new Date());
 		
 		if (organization.getActiveApplications() != null) {
 			for (Application app : organization.getActiveApplications()) {
-				app.setActive(false);
-				app.setModifiedDate(new Date());
-				applicationDao.saveOrUpdate(app);
+				applicationService.deactivateApplication(app);
 			}
 		}
 		
@@ -109,7 +106,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 				&& !organization.getName().trim().isEmpty() 
 				&& organization.getName().length() < Organization.NAME_LENGTH
 				&& loadOrganization(organization.getName()) == null;
-
 	}
 
 }

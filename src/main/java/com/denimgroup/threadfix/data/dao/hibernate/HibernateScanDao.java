@@ -34,8 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
+import com.denimgroup.threadfix.data.entities.DeletedCloseMap;
 import com.denimgroup.threadfix.data.entities.DeletedDataFlowElement;
 import com.denimgroup.threadfix.data.entities.DeletedFinding;
+import com.denimgroup.threadfix.data.entities.DeletedReopenMap;
+import com.denimgroup.threadfix.data.entities.DeletedRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.DeletedScan;
 import com.denimgroup.threadfix.data.entities.DeletedSurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -89,21 +92,25 @@ public class HibernateScanDao implements ScanDao {
 	
 	@Override
 	public void delete(Scan scan) {
+		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
 		sessionFactory.getCurrentSession().delete(scan);
 	}
 
 	@Override
 	public void deleteMap(ScanCloseVulnerabilityMap map) {
+		sessionFactory.getCurrentSession().save(new DeletedCloseMap(map));
 		sessionFactory.getCurrentSession().delete(map);
 	}
 
 	@Override
 	public void deleteMap(ScanReopenVulnerabilityMap map) {
+		sessionFactory.getCurrentSession().save(new DeletedReopenMap(map));
 		sessionFactory.getCurrentSession().delete(map);
 	}
 
 	@Override
 	public void deleteMap(ScanRepeatFindingMap map) {
+		sessionFactory.getCurrentSession().save(new DeletedRepeatFindingMap(map));
 		sessionFactory.getCurrentSession().delete(map);
 	}
 	

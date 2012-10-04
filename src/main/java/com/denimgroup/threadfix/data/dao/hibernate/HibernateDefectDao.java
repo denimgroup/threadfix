@@ -50,6 +50,7 @@ public class HibernateDefectDao implements DefectDao {
 		this.sessionFactory = sessionFactory;
 	}
 
+	// TODO keep track of the vulns that were associated with each Defect
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteByApplicationId(Integer applicationId) {
@@ -71,6 +72,7 @@ public class HibernateDefectDao implements DefectDao {
 		}
 	}
 
+	// TODO keep track of the vulns that were associated with each Defect
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteByDefectTrackerId(Integer defectTrackerId) {

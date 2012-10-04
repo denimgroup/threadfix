@@ -30,8 +30,6 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +56,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 @Transactional(readOnly = false)
 public class ScanServiceImpl implements ScanService {
 	
-	private final Log log = LogFactory.getLog("ScanService");
+	private final SanitizedLogger log = new SanitizedLogger("ScanService");
 	
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;

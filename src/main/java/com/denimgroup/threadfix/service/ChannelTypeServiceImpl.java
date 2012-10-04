@@ -28,8 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +43,7 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 
 	private ChannelTypeDao channelTypeDao = null;
 	
-	private final Log log = LogFactory.getLog(ChannelTypeService.class);
+	protected final SanitizedLogger log = new SanitizedLogger(ChannelTypeService.class);
 
 	@Autowired
 	public ChannelTypeServiceImpl(ChannelTypeDao channelTypeDao) {

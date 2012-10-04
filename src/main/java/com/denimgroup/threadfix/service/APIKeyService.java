@@ -59,7 +59,7 @@ public interface APIKeyService {
 	/**
 	 * @param organizationId
 	 */
-	void deleteById(int apiKeyId);
+	void deactivateApiKey(APIKey apiKey);
 
 	/**
 	 * Create a new securely random API Key and package it in the APIKey object with the note.

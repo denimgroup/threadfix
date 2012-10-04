@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,6 +39,7 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -50,7 +49,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 @RequestMapping("/organizations")
 public class OrganizationsController {
 	
-	private final Log log = LogFactory.getLog(OrganizationsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
 	private ApplicationService applicationService = null;
@@ -94,16 +93,10 @@ public class OrganizationsController {
 	@RequestMapping("/{orgId}/delete")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status) {
 		Organization org = organizationService.loadOrganization(orgId);
-		if (org != null) {
-			if (org.getApplications() == null || org.getApplications().isEmpty()) {
-				organizationService.deleteById(orgId);
-				status.setComplete();
-				log.info("Organization hard deletion was successful on Organization " + org.getName() + ".");
-			} else if (org.isActive()) {
-				organizationService.deactivateOrganization(org);
-				status.setComplete();
-				log.info("Organization soft deletion was successful on Organization " + org.getName() + ".");
-			}
+		if (org != null && org.isActive()) {
+			organizationService.deactivateOrganization(org);
+			status.setComplete();
+			log.info("Organization soft deletion was successful on Organization " + org.getName() + ".");
 			return "redirect:/organizations";
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));

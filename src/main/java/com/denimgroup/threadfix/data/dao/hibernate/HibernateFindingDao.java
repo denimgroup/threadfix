@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.entities.DeletedFinding;
 import com.denimgroup.threadfix.data.entities.Finding;
 
 /**
@@ -164,6 +165,7 @@ public class HibernateFindingDao implements FindingDao {
 
 	@Override
 	public void delete(Finding finding) {
+		sessionFactory.getCurrentSession().save(new DeletedFinding(finding));
 		sessionFactory.getCurrentSession().delete(finding);
 	}
 
@@ -171,33 +173,23 @@ public class HibernateFindingDao implements FindingDao {
 	@Override
 	public List<Finding> retrieveFindingsByScanIdAndPage(Integer scanId,
 			int page) {
-
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				Finding.class);
-
-		criteria.add(Restrictions.eq("active", true))
-				.add(Restrictions.eq("scan.id", scanId))
+		return getScanIdAndPageCriteria(scanId, page)
 				.add(Restrictions.isNotNull("vulnerability"))
-				.createAlias("channelSeverity", "severity")
-				.createAlias("channelVulnerability", "vuln")
-				.createAlias("surfaceLocation", "surface")
-				.setFirstResult((page - 1) * 100).setMaxResults(100)
-				.addOrder(Order.desc("severity.numericValue"))
-				.addOrder(Order.asc("vuln.name"))
-				.addOrder(Order.asc("surface.path"));
-
-		return criteria.list();
+				.list();
 	}
 
 	@Override
 	public Object retrieveUnmappedFindingsByScanIdAndPage(Integer scanId,
 			int page) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				Finding.class);
-
-		criteria.add(Restrictions.eq("active", true))
-				.add(Restrictions.eq("scan.id", scanId))
+		return getScanIdAndPageCriteria(scanId, page)
 				.add(Restrictions.isNull("vulnerability"))
+				.list();
+	}
+	
+	public Criteria getScanIdAndPageCriteria(Integer scanId, int page) {
+		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("scan.id", scanId))
 				.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
@@ -205,7 +197,5 @@ public class HibernateFindingDao implements FindingDao {
 				.addOrder(Order.desc("severity.numericValue"))
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));
-
-		return criteria.list();
 	}
 }

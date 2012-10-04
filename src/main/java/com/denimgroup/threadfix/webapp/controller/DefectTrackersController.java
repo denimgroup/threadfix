@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers")
@@ -43,7 +42,7 @@ public class DefectTrackersController {
 
 	private DefectTrackerService defectTrackerService;
 	
-	private final Log log = LogFactory.getLog(DefectTrackersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
 	@Autowired
 	public DefectTrackersController(DefectTrackerService defectTrackerService) {

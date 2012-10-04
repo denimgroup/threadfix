@@ -27,8 +27,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.User;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	
-	private final Log log = LogFactory.getLog("UserService");
+	protected final SanitizedLogger log = new SanitizedLogger("UserService");
 
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;

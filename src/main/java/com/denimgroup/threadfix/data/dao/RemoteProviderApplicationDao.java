@@ -28,13 +28,13 @@ import java.util.List;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 
 public interface RemoteProviderApplicationDao {
-
+	
 	/**
 	 * 
 	 * @param app
 	 */
-	void deleteRemoteProviderApplication(RemoteProviderApplication app);
-	
+	public void delete(RemoteProviderApplication app);
+
 	/**
 	 * 
 	 * @param id

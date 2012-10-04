@@ -30,8 +30,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +54,7 @@ public class FindingServiceImpl implements FindingService {
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 
-	protected final Log log = LogFactory.getLog(FindingServiceImpl.class);
+	private final SanitizedLogger log = new SanitizedLogger(FindingServiceImpl.class);
 	
 	@Autowired
 	public FindingServiceImpl(FindingDao findingDao,

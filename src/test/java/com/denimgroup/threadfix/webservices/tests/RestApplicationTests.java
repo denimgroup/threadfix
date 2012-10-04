@@ -17,7 +17,8 @@ import com.denimgroup.threadfix.webapp.controller.OrganizationRestController;
 import com.denimgroup.threadfix.webapp.controller.RestController;
 
 /**
- * Test the methods in ApplicationRestController Could use more work / tests
+ * Test the methods in ApplicationRestController 
+ * Could use more work / tests
  * 
  * @author mcollins
  * 
@@ -347,9 +348,11 @@ public class RestApplicationTests extends BaseRestTest {
 	public void testRestrictedMethods() {
 		ThreadFixRestClient goodClient = new ThreadFixRestClient();
 		goodClient.setKey(GOOD_API_KEY);
+		goodClient.setUrl(BASE_URL);
 		
 		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
 		restrictedClient.setKey(RESTRICTED_API_KEY);
+		restrictedClient.setUrl(BASE_URL);
 		
 		Integer teamId = getId(getJSONObject(goodClient.createTeam(getRandomString(23))));
 		
@@ -381,17 +384,11 @@ public class RestApplicationTests extends BaseRestTest {
 		assertTrue(RESTRICTED_URL_NOT_RETURNED,
 				result.equals(RestController.RESTRICTED_URL_ERROR));
 		
-		String appChannelId = getId(getJSONObject(goodClient.addApplicationChannel(appId, 
+		getId(getJSONObject(goodClient.addApplicationChannel(appId, 
 								ChannelType.W3AF))).toString();
 		
 		result = restrictedClient.searchForApplicationChannel(appId, ChannelType.W3AF);
 		assertFalse(RESTRICTED_URL_RETURNED,
-				result.equals(RestController.RESTRICTED_URL_ERROR));
-		
-		String filePath = this.getClass().getResource(
-							"/SupportingFiles/Dynamic/Arachni/php-demo.xml").getFile();
-		result = restrictedClient.uploadScan(appChannelId, filePath);
-		assertTrue(RESTRICTED_URL_NOT_RETURNED,
 				result.equals(RestController.RESTRICTED_URL_ERROR));
 		
 	}

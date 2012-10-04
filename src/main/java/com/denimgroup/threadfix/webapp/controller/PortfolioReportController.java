@@ -31,8 +31,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,13 +41,14 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 // TODO split into a service? This is all in the controller layer.
 @Controller
 @RequestMapping("/reports/portfolio")
 public class PortfolioReportController {
 	
-	private final Log log = LogFactory.getLog(PortfolioReportController.class);
+	private final SanitizedLogger log = new SanitizedLogger(PortfolioReportController.class);
 
 	private OrganizationService organizationService;	
 
@@ -88,7 +87,7 @@ public class PortfolioReportController {
 		List<Organization> teams;
 		
 		if (org == null) {
-			teams = organizationService.loadAll();
+			teams = organizationService.loadAllActive();
 		} else {
 			teams = new ArrayList<Organization>();
 			teams.add(org);
@@ -126,7 +125,7 @@ public class PortfolioReportController {
 				teamRow = Arrays.asList(new String[] { "Team: " + team.getName(), "0", "Never" });
 				oldArray.add(true);
 			} else {
-				Integer totalScans = 0, lowerBound = null, upperBound = null;
+				Integer totalScans = 0, lowerBound = null, upperBound = 0;
 				
 				int startCount = oldArray.size();
 				oldArray.add(false);

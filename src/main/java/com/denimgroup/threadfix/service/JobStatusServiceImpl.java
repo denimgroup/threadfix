@@ -37,7 +37,6 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 
 @Service
-@Transactional(readOnly = true)
 public class JobStatusServiceImpl implements JobStatusService {
 
 	private JobStatusDao jobStatusDao = null;
@@ -48,21 +47,25 @@ public class JobStatusServiceImpl implements JobStatusService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<JobStatus> loadAll() {
 		return jobStatusDao.retrieveAll();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<JobStatus> loadAllOpen() {
 		return jobStatusDao.retrieveAllOpen();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public JobStatus loadJobStatus(int id) {
 		return jobStatusDao.retrieveById(id);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void storeJobStatus(JobStatus jobStatus) {
 		jobStatusDao.saveOrUpdate(jobStatus);
 
@@ -86,7 +89,13 @@ public class JobStatusServiceImpl implements JobStatusService {
 
 	@Override
 	@Transactional(readOnly = false, propagation=Propagation.NOT_SUPPORTED)
-	public void updateJobStatus(JobStatus jobStatus, String status) {
+	public void updateJobStatus(Integer jobStatusId, String status) {
+		if (jobStatusId == null) {
+			return;
+		}
+		
+		JobStatus jobStatus = loadJobStatus(jobStatusId);
+		
 		if (jobStatus == null) {
 			return;
 		}
@@ -95,6 +104,8 @@ public class JobStatusServiceImpl implements JobStatusService {
 		jobStatus.setModifiedDate(new Date());
 
 		storeJobStatus(jobStatus);
+		
+		jobStatusDao.evict(jobStatus);
 	}
 
 	@Override

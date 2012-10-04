@@ -36,8 +36,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -55,14 +53,14 @@ import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.webapp.controller.PortfolioReportController;
 
 @Controller
 @RequestMapping("/reports")
 public class ReportsController {
 	
-	private final Log log = LogFactory.getLog(ReportsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
 
 	private OrganizationService organizationService;
 	private ApplicationService applicationService;
@@ -78,7 +76,7 @@ public class ReportsController {
 
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
-		List<Organization> organizationList = organizationService.loadAll();
+		List<Organization> organizationList = organizationService.loadAllActive();
 		return organizationList;
 	}
 
@@ -202,11 +200,9 @@ public class ReportsController {
 		
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = applicationService.loadAll();
+				List<Application> appList = applicationService.loadAllActive();
 				for (Application app : appList) {
-					if (app.isActive()) {
-						applicationIdList.add(app.getId());
-					}
+					applicationIdList.add(app.getId());
 				}
 			} else {
 				applicationIdList.add(reportParameters.getApplicationId());

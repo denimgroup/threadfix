@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SecurityEventService;
 
 @Controller
@@ -42,7 +41,7 @@ public class SecurityEventController {
 
 	private final SecurityEventService securityEventService;
 	
-	private final Log log = LogFactory.getLog(SecurityEventController.class);
+	private final SanitizedLogger log = new SanitizedLogger(SecurityEventController.class);
 
 	@Autowired
 	public SecurityEventController(SecurityEventService securityEventService) {

@@ -41,11 +41,6 @@ public interface ApplicationService {
 	/**
 	 * @return
 	 */
-	List<Application> loadAll();
-
-	/**
-	 * @return
-	 */
 	List<Application> loadAllActive();
 
 	/**
@@ -64,11 +59,6 @@ public interface ApplicationService {
 	 * @param application
 	 */
 	void storeApplication(Application application);
-
-	/**
-	 * @param applicationId
-	 */
-	void deleteById(int applicationId);
 
 	/**
 	 * Prepare the application for deletion.

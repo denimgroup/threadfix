@@ -50,11 +50,6 @@ public interface ApplicationChannelService {
 	void storeApplicationChannel(ApplicationChannel applicationChannel);
 
 	/**
-	 * @param organizationId
-	 */
-	void deleteById(int applicationChannelId);
-
-	/**
 	 * Used to tell whether an identical ApplicationChannel exists so we won't make duplicates
 	 * 
 	 * @param applicationChannel

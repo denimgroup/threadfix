@@ -35,8 +35,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +42,7 @@ import org.json.JSONObject;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * An abstract class providing a base implementation of a defect tracker. This
@@ -60,7 +59,7 @@ public abstract class AbstractDefectTracker {
 	protected final static String BAD_CONFIGURATION = "Your configuration is invalid: check your URL.";
 
 	// Common log for all Defect Tracker Exporters.
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 
 	/**
 	 * Take information from a list of vulnerabilities and the DefectMetadata bean and 

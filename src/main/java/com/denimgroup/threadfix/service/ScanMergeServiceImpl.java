@@ -38,8 +38,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +60,6 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
@@ -77,7 +74,7 @@ import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
 @Transactional(readOnly = false)
 public class ScanMergeServiceImpl implements ScanMergeService {
 
-	private final Log log = LogFactory.getLog("ScanMergeService");
+	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
@@ -400,14 +397,14 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	@Override
 	@Transactional
 	public boolean processScan(Integer channelId, String fileName,
-			JobStatus status, String userName) {
+			Integer statusId, String userName) {
 				
 		if (channelId == null || fileName == null) {
 			log.error("processScan() received null input and was unable to finish.");
 			return false;
 		}
 
-		Scan scan = processScanFile(channelId, fileName, status);
+		Scan scan = processScanFile(channelId, fileName, statusId);
 		if (scan == null) {
 			log.warn("processScanFile() failed to return a scan.");
 			return false;//"vulnerability"
@@ -428,7 +425,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	private Scan processScanFile(Integer channelId, String fileName,
-			JobStatus status) {
+			Integer statusId) {
 		if (channelId == null || fileName == null) {
 			log.error("processScanFile() received null input and was unable to finish.");
 			return null;
@@ -459,7 +456,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 
-		updateJobStatus(status, "Parsing findings from " + applicationChannel.getChannelType().getName() + " scan file.");
+		updateJobStatus(statusId, "Parsing findings from " + applicationChannel.getChannelType().getName() + " scan file.");
 		log.info("Processing file " + fileName + " on channel "
 				+ applicationChannel.getChannelType().getName() + ".");
 
@@ -478,12 +475,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 					+ " and found " + scan.getFindings().size() + " findings.");
 		}
 		
-		updateJobStatus(status, "Findings successfully parsed, starting channel merge.");
+		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 
 		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
 		channelMerge(scan, applicationChannel);
-		appMerge(scan, applicationChannel.getApplication().getId(), status);
+		appMerge(scan, applicationChannel.getApplication().getId(), statusId);
 
 		scan.setApplicationChannel(applicationChannel);
 		scan.setApplication(applicationChannel.getApplication());
@@ -964,9 +961,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 * @param scan
 	 * @param appId
 	 */
-	private void appMerge(Scan scan, int appId, JobStatus status) {
+	private void appMerge(Scan scan, int appId, Integer statusId) {
 		
-		updateJobStatus(status, "Channel merge completed. Starting application merge.");
+		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
 		
@@ -1013,7 +1010,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				String statusString = "Processed " + soFar + " out of "
 						+ scan.getFindings().size() + " findings.";
 				
-				updateJobStatus(status, statusString);
+				updateJobStatus(statusId, statusString);
 				
 				if (logging) {
 					log.info(statusString);
@@ -1757,9 +1754,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	/**
 	 * @param status
 	 */
-	private void updateJobStatus(JobStatus jobStatus, String statusString) {
-		if (jobStatus != null) {
-			jobStatusService.updateJobStatus(jobStatus, statusString);
+	private void updateJobStatus(Integer statusId, String statusString) {
+		if (statusId != null) {
+			jobStatusService.updateJobStatus(statusId, statusString);
 		}
 	}
 }

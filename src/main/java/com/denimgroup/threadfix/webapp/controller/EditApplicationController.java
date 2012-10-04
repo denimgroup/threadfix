@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -51,6 +49,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -59,7 +58,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @SessionAttributes("application")
 public class EditApplicationController {
 
-	private final Log log = LogFactory.getLog(DefectTrackersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 	
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;

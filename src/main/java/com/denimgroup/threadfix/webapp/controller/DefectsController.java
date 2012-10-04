@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -39,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
@@ -50,7 +49,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 @SessionAttributes("defectViewModel")
 public class DefectsController {
 	
-	private final Log log = LogFactory.getLog(DefectsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(DefectsController.class);
 
 	private ApplicationService applicationService;
 	private QueueSender queueSender;

@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -42,6 +40,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -51,7 +50,7 @@ public class AddOrganizationController {
 
 	private OrganizationService organizationService = null;
 	
-	private final Log log = LogFactory.getLog(AddApplicationChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
 	public AddOrganizationController(OrganizationService organizationService) {

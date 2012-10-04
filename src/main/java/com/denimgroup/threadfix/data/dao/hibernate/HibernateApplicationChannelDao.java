@@ -26,8 +26,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import java.util.Calendar;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,34 +55,39 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<ApplicationChannel> retrieveAll() {
-		return sessionFactory.getCurrentSession().createCriteria(ApplicationChannel.class)
-				.createAlias("channelType", "ct").createAlias("application", "app")
-				.createAlias("application.organization", "org").addOrder(Order.asc("org.name"))
-				.addOrder(Order.asc("app.name")).addOrder(Order.asc("ct.name")).list();
+		return getActiveChannelCriteria()
+				.createAlias("channelType", "ct")
+				.createAlias("application", "app")
+				.createAlias("application.organization", "org")
+				.addOrder(Order.asc("org.name"))
+				.addOrder(Order.asc("app.name"))
+				.addOrder(Order.asc("ct.name")).list();
 	}
 
 	@Override
 	public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
-		return (ApplicationChannel) sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from ApplicationChannel appChannel where appChannel.application = :appId "
-								+ "and appChannel.channelType = :channelId")
-				.setInteger("appId", appId).setInteger("channelId", channelId).uniqueResult();
+		return (ApplicationChannel) getActiveChannelCriteria()
+				.createAlias("channelType", "ct")
+				.createAlias("application", "app")
+				.add(Restrictions.eq("ct.id", channelId))
+				.add(Restrictions.eq("app.id", appId))
+				.uniqueResult();
 	}
 
 	@Override
 	@Transactional
 	public ApplicationChannel retrieveById(int id) {
-		return (ApplicationChannel) sessionFactory.getCurrentSession().get(
-				ApplicationChannel.class, id);
+		return (ApplicationChannel) getActiveChannelCriteria()
+				.add(Restrictions.eq("id",id))
+				.uniqueResult();
+	}
+	
+	private Criteria getActiveChannelCriteria() {
+		return sessionFactory.getCurrentSession()
+				   			 .createCriteria(ApplicationChannel.class)
+				   			 .add(Restrictions.eq("active", true));
 	}
 
 	@Override

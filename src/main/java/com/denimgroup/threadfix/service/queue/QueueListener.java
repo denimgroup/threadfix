@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -31,8 +32,6 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +48,7 @@ import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 
@@ -59,7 +59,7 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
 @Component
 public class QueueListener implements MessageListener {
 
-	private final Log log = LogFactory.getLog(QueueListener.class);
+	protected final SanitizedLogger log = new SanitizedLogger(QueueListener.class);
 
 	private ScanMergeService scanMergeService;
 	private DefectService defectService;
@@ -69,8 +69,6 @@ public class QueueListener implements MessageListener {
 	private ApplicationChannelService applicationChannelService = null;
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
 	private RemoteProviderTypeService remoteProviderTypeService = null;
-
-	private JobStatus currentJobStatus;
 
 	/**
 	 * @param scanMergeService
@@ -157,7 +155,7 @@ public class QueueListener implements MessageListener {
 	private void syncTrackers() {
 		log.info("Syncing status with all Defect Trackers.");
 		
-		List<Application> apps = applicationService.loadAll();
+		List<Application> apps = applicationService.loadAllActive();
 		if (apps == null) {
 			log.info("No applications found. Exiting.");
 			return;
@@ -203,15 +201,14 @@ public class QueueListener implements MessageListener {
 			String component, String version, String severity, String priority,
 			String status, Integer jobStatusId) {
 
-		getJobStatus(jobStatusId);
-		updateJobStatus("Submitting defect.");
+		updateJobStatus(jobStatusId, "Submitting defect.");
 		
 		@SuppressWarnings("unchecked")
 		List<Vulnerability> vulnerabilities = vulnerabilityService
 				.loadVulnerabilityList((List<Integer>) vulnerabilityIds);
 		
 		if (vulnerabilities == null) {
-			closeJobStatus("No vulnerabilities could be found");
+			closeJobStatus(jobStatusId, "No vulnerabilities could be found");
 			return;
 		}
 
@@ -221,15 +218,15 @@ public class QueueListener implements MessageListener {
 
 		if (defect == null) {
 			if (vuln == null || vuln.getApplication() == null) {
-				closeJobStatus("The defect could not be created.");
+				closeJobStatus(jobStatusId, "The defect could not be created.");
 				return;
 			} else {
-				closeJobStatus(defectService.getErrorMessage(vulnerabilities));
+				closeJobStatus(jobStatusId, defectService.getErrorMessage(vulnerabilities));
 				return;
 			}
 		}
 
-		closeJobStatus("Defect was created successfully.");
+		closeJobStatus(jobStatusId, "Defect was created successfully.");
 	}
 
 	/**
@@ -241,8 +238,7 @@ public class QueueListener implements MessageListener {
 		// TODO Move the jobStatus updating to the importer to improve messages
 		// once the messages persist
 		
-		getJobStatus(jobStatusId);
-		updateJobStatus("Job recieved");
+		updateJobStatus(jobStatusId, "Job recieved");
 		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
@@ -257,27 +253,27 @@ public class QueueListener implements MessageListener {
 		}
 			
 		
-		updateJobStatus("Processing Scan from file.");
+		updateJobStatus(jobStatusId, "Processing Scan from file.");
 		
 		boolean finished = false;
 		
 		try {
-			finished = scanMergeService.processScan(channelId, fileName, currentJobStatus, userName);
+			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
 		} catch (OutOfMemoryError e) {
-			closeJobStatus("Scan encountered an out of memory error and did not complete correctly.");
+			closeJobStatus(jobStatusId, "Scan encountered an out of memory error and did not complete correctly.");
 			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
 			throw e;
 		}
 
 		if (finished) {
-			closeJobStatus("Scan completed.");
+			closeJobStatus(jobStatusId, "Scan completed.");
 			if (fullLog) {
 				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
 					+ userName + " on Application " + appChannel.getApplication().getName()
 					+ " (filename " + fileName + ") completed successfully.");
 			}
 		} else {
-			closeJobStatus("Scan encountered an error.");
+			closeJobStatus(jobStatusId, "Scan encountered an error.");
 			if (fullLog) {
 				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
 					+ userName + " on Application " + appChannel.getApplication().getName()
@@ -291,49 +287,55 @@ public class QueueListener implements MessageListener {
 	 * @param jobStatusId
 	 */
 	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId) {
-		getJobStatus(jobStatusId);
 		if (appId == null) {
-			closeJobStatus("Defect Tracker update failed.");
+			closeJobStatus(jobStatusId, "Defect Tracker update failed.");
 			return;
 		}
 
 		Application app = applicationService.loadApplication(appId);
 		if (app == null) {
-			closeJobStatus("No application found, request failed.");
+			closeJobStatus(jobStatusId, "No application found, request failed.");
 			return;
 		}
 
-		updateJobStatus("Processing Defect Tracker Vulnerability update request.");
+		updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
 		defectService.updateVulnsFromDefectTracker(app);
-		closeJobStatus("Vulnerabilities successfully updated.");
-	}
-
-	/**
-	 * @param jobStatusId
-	 */
-	private void getJobStatus(Integer jobStatusId) {
-		currentJobStatus = jobStatusService.loadJobStatus(jobStatusId);
+		closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
 	}
 
 	/**
 	 * @param status
 	 */
-	private void updateJobStatus(String status) {
-		if (currentJobStatus != null) {
-			if (!currentJobStatus.getHasStartedProcessing()) {
-				currentJobStatus.setHasStartedProcessing(true);
-			}
-			jobStatusService.updateJobStatus(currentJobStatus, status);
+	@Transactional
+	private void updateJobStatus(Integer id, String status) {
+		
+		JobStatus jobStatus = jobStatusService.loadJobStatus(id);
+		
+		if (jobStatus == null) {
+			return;
 		}
+		
+		if (!jobStatus.getHasStartedProcessing()) {
+			jobStatus.setHasStartedProcessing(true);
+		}
+
+		jobStatus.setStatus(status);
+		jobStatus.setModifiedDate(new Date());
+
+		jobStatusService.storeJobStatus(jobStatus);
 	}
 
 	/**
 	 * @param status
 	 */
-	private void closeJobStatus(String status) {
-		if (currentJobStatus != null) {
-			jobStatusService.closeJobStatus(currentJobStatus, status);
-			currentJobStatus = null;
+	@Transactional
+	private void closeJobStatus(Integer id, String status) {
+		JobStatus jobStatus = jobStatusService.loadJobStatus(id);
+		
+		
+		if (jobStatus != null) {
+			jobStatusService.closeJobStatus(jobStatus, status);
+			jobStatus = null;
 		}
 	}
 }

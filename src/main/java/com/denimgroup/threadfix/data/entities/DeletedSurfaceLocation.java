@@ -13,14 +13,18 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class DeletedSurfaceLocation extends AuditableEntity {
 
 	public DeletedSurfaceLocation(SurfaceLocation surfaceLocation) {
-		setDeletedFindingId(surfaceLocation.getFinding().getId());
-		setHost(surfaceLocation.getHost());
-		setParameter(surfaceLocation.getParameter());
-		setPath(surfaceLocation.getPath());
-		setPort(surfaceLocation.getPort());
-		setProtocol(surfaceLocation.getProtocol());
-		setQuery(surfaceLocation.getQuery());
-		setId(surfaceLocation.getId());
+		if (surfaceLocation != null) {
+			if (surfaceLocation.getFinding() != null){
+				setDeletedFindingId(surfaceLocation.getFinding().getId());
+			}
+			setHost(surfaceLocation.getHost());
+			setParameter(surfaceLocation.getParameter());
+			setPath(surfaceLocation.getPath());
+			setPort(surfaceLocation.getPort());
+			setProtocol(surfaceLocation.getProtocol());
+			setQuery(surfaceLocation.getQuery());
+			setId(surfaceLocation.getId());
+		}
 	}
 	
 	private static final long serialVersionUID = -998923457381231213L;

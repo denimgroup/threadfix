@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 @Service
 @Transactional(readOnly = true)
 public class ApplicationChannelServiceImpl implements ApplicationChannelService {
-
+	
 	private ApplicationChannelDao applicationChannelDao = null;
 
 	@Autowired
@@ -60,17 +60,12 @@ public class ApplicationChannelServiceImpl implements ApplicationChannelService 
 	}
 
 	@Override
-	@Transactional(readOnly = false)
-	public void deleteById(int applicationChannelId) {
-		applicationChannelDao.deleteById(applicationChannelId);
-	}
-
-	@Override
 	public boolean isDuplicate(ApplicationChannel applicationChannel) {
 		if (applicationChannel.getApplication() == null
 				|| applicationChannel.getChannelType().getId() == null) {
-			return true;
+			return true; 
 		}
+		
 		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
 				applicationChannel.getApplication().getId(), applicationChannel.getChannelType()
 						.getId());

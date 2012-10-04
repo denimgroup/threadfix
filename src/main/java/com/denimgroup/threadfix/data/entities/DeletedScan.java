@@ -8,6 +8,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * 
+ * This is a class meant to hold deleted instances of Scan objects.
+ * 
+ * @see Scan
+ * @author mcollins
+ *
+ */
 @Entity
 @Table(name = "DeletedScan")
 public class DeletedScan extends BaseEntity {
@@ -16,26 +24,31 @@ public class DeletedScan extends BaseEntity {
 	
 	private Integer applicationChannelId;
 	private Calendar importTime;
-	private Integer applicationId;
-	private Integer numberClosedVulnerabilities;
-	private Integer numberNewVulnerabilities;
-	private Integer numberOldVulnerabilities;
-	private Integer numberResurfacedVulnerabilities;
-	private Integer numberTotalVulnerabilities;
-	private Integer numberRepeatResults;
-	private Integer numberRepeatFindings;
+	private Integer applicationId, numberNewVulnerabilities,
+		numberClosedVulnerabilities, numberOldVulnerabilities,
+		numberResurfacedVulnerabilities, numberTotalVulnerabilities,
+		numberRepeatResults, numberRepeatFindings,
+		numberOldVulnerabilitiesInitiallyFromThisChannel;
 	
 	public DeletedScan(Scan scan) {
-		this.setApplicationId(scan.getApplication().getId());
-		this.setApplicationChannelId(scan.getApplicationChannel().getId());
-		this.setId(scan.getId());
-		this.setImportTime(scan.getImportTime());
-		this.setNumberClosedVulnerabilities(scan.getNumberClosedVulnerabilities());
-		this.setNumberNewVulnerabilities(scan.getNumberNewVulnerabilities());
-		this.setNumberOldVulnerabilities(scan.getNumberOldVulnerabilities());
-		this.setNumberResurfacedVulnerabilities(scan.getNumberResurfacedVulnerabilities());
-		this.setNumberRepeatResults(scan.getNumberRepeatResults());
-		this.setNumberRepeatFindings(scan.getNumberRepeatFindings());
+		if (scan != null) {
+			if (scan.getApplication() != null) {
+				setApplicationId(scan.getApplication().getId());
+			}
+			
+			if (scan.getApplicationChannel() != null) {
+				setApplicationChannelId(scan.getApplicationChannel().getId());
+			}
+
+			setId(scan.getId());
+			setImportTime(scan.getImportTime());
+			setNumberClosedVulnerabilities(scan.getNumberClosedVulnerabilities());
+			setNumberNewVulnerabilities(scan.getNumberNewVulnerabilities());
+			setNumberOldVulnerabilities(scan.getNumberOldVulnerabilities());
+			setNumberResurfacedVulnerabilities(scan.getNumberResurfacedVulnerabilities());
+			setNumberRepeatResults(scan.getNumberRepeatResults());
+			setNumberRepeatFindings(scan.getNumberRepeatFindings());
+		}
 	}
 	
 	@Column
@@ -65,42 +78,6 @@ public class DeletedScan extends BaseEntity {
 		this.applicationId = applicationId;
 	}
 	
-//	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
-//	public List<Finding> getFindings() {
-//		return findings;
-//	}
-//
-//	public void setFindings(List<Finding> findings) {
-//		this.findings = findings;
-//	}
-//	
-//	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
-//	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
-//		return scanRepeatFindingMaps;
-//	}
-//
-//	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
-//		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
-//	}
-//	
-//	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
-//	public List<ScanReopenVulnerabilityMap> getScanReopenVulnerabilityMaps() {
-//		return scanReopenVulnerabilityMaps;
-//	}
-//
-//	public void setScanReopenVulnerabilityMaps(List<ScanReopenVulnerabilityMap> ScanReopenVulnerabilityMaps) {
-//		this.scanReopenVulnerabilityMaps = ScanReopenVulnerabilityMaps;
-//	}
-//	
-//	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
-//	public List<ScanCloseVulnerabilityMap> getScanCloseVulnerabilityMaps() {
-//		return scanCloseVulnerabilityMaps;
-//	}
-//
-//	public void setScanCloseVulnerabilityMaps(List<ScanCloseVulnerabilityMap> ScanCloseVulnerabilityMaps) {
-//		this.scanCloseVulnerabilityMaps = ScanCloseVulnerabilityMaps;
-//	}
-
 	@Column
 	public Integer getNumberClosedVulnerabilities() {
 		return numberClosedVulnerabilities;
@@ -128,23 +105,15 @@ public class DeletedScan extends BaseEntity {
 		this.numberOldVulnerabilities = numberOldVulnerabilities;
 	}
 	
-	/**
-	 * Keeping track of this information allows us to produce scans without extensive recalculation, 
-	 * because we don't have to track down which application channel we should count a vulnerability for.
-	 * 
-	 * This may lead to a small bug if a vuln is opened in one channel, then found in another and 
-	 * subsequently closed there. This needs to be looked into.
-	 * @return
-	 */
-//	@Column
-//	public Integer getNumberOldVulnerabilitiesInitiallyFromThisChannel() {
-//		return numberOldVulnerabilitiesInitiallyFromThisChannel;
-//	}
-//
-//	public void setNumberOldVulnerabilitiesInitiallyFromThisChannel(
-//			Integer numberOldVulnerabilitiesInitiallyFromThisChannel) {
-//		this.numberOldVulnerabilitiesInitiallyFromThisChannel = numberOldVulnerabilitiesInitiallyFromThisChannel;
-//	}
+	@Column
+	public Integer getNumberOldVulnerabilitiesInitiallyFromThisChannel() {
+		return numberOldVulnerabilitiesInitiallyFromThisChannel;
+	}
+
+	public void setNumberOldVulnerabilitiesInitiallyFromThisChannel(
+			Integer numberOldVulnerabilitiesInitiallyFromThisChannel) {
+		this.numberOldVulnerabilitiesInitiallyFromThisChannel = numberOldVulnerabilitiesInitiallyFromThisChannel;
+	}
 
 	@Column
 	public Integer getNumberResurfacedVulnerabilities() {
@@ -181,5 +150,4 @@ public class DeletedScan extends BaseEntity {
 	public void setNumberRepeatResults(Integer numberRepeatResults) {
 		this.numberRepeatResults = numberRepeatResults;
 	}
-
 }

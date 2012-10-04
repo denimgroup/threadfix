@@ -48,6 +48,5 @@ public class ExceptionLogServiceImpl implements ExceptionLogService {
 	public List<ExceptionLog> loadAll() {
 		return exceptionLogDao.retrieveAll();
 	}
-
-
+	
 }

@@ -5,11 +5,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * This class provides the checkKey method and log implementation to each REST Controller.
@@ -19,7 +17,7 @@ import com.denimgroup.threadfix.service.APIKeyService;
  */
 public abstract class RestController {
 
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 
 	public final static String API_KEY_SUCCESS = "Authentication was successful.";
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";

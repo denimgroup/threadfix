@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +42,7 @@ import com.denimgroup.threadfix.service.waflog.WafLogParserFactory;
 @Transactional(readOnly = true)
 public class LogParserServiceImpl implements LogParserService {
 	
-	private final Log log = LogFactory.getLog(LogParserService.class);
+	private final SanitizedLogger log = new SanitizedLogger(LogParserService.class);
 
 	private WafRuleDao wafRuleDao = null;
 	private SecurityEventDao securityEventDao = null;

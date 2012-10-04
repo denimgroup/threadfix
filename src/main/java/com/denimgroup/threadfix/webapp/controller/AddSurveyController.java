@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,6 +39,7 @@ import com.denimgroup.threadfix.data.entities.SurveyAnswer;
 import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
 @Controller
@@ -51,7 +50,7 @@ public class AddSurveyController {
 	private SurveyService surveyService = null;
 	private OrganizationService organizationService = null;
 	
-	private final Log log = LogFactory.getLog(AddChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddChannelController.class);
 
 	@Autowired
 	public AddSurveyController(SurveyService surveyService, OrganizationService organizationService) {

@@ -14,14 +14,22 @@ public class DeletedWafRule extends BaseEntity {
 	private static final long serialVersionUID = 968480666516980702L;
 
 	public DeletedWafRule(WafRule wafRule) {
-		setId(wafRule.getId());
-		setRule(wafRule.getRule());
-		setPath(wafRule.getPath());
-		setParameter(wafRule.getParameter());
-		setVulnerabilityDesc(wafRule.getVulnerabilityDesc());
-		setNativeId(wafRule.getNativeId());
-		setWafId(wafRule.getWaf().getId());
-		setVulnerabilityId(wafRule.getVulnerability().getId());
+		if (wafRule != null) {
+			setId(wafRule.getId());
+			setRule(wafRule.getRule());
+			setPath(wafRule.getPath());
+			setParameter(wafRule.getParameter());
+			setVulnerabilityDesc(wafRule.getVulnerabilityDesc());
+			setNativeId(wafRule.getNativeId());
+			
+			if (wafRule.getWaf() != null){
+				setWafId(wafRule.getWaf().getId());
+			}
+
+			if (wafRule.getVulnerability() != null) {
+				setVulnerabilityId(wafRule.getVulnerability().getId());
+			}
+		}
 	}
 
 	@NotEmpty(message = "{errors.required}")
@@ -104,25 +112,4 @@ public class DeletedWafRule extends BaseEntity {
 	public void setVulnerabilityId(Integer vulnerabilityId) {
 		this.vulnerabilityId = vulnerabilityId;
 	}
-
-//	@OneToMany(mappedBy = "wafRule")
-//	@JsonIgnore
-//	public List<SecurityEvent> getSecurityEvents() {
-//		return securityEvents;
-//	}
-//
-//	public void setSecurityEvents(List<SecurityEvent> securityEvents) {
-//		this.securityEvents = securityEvents;
-//	}
-	
-//	@ManyToOne
-//	@JoinColumn(name = "wafRuleDirectiveId")
-//	public WafRuleDirective getWafRuleDirective() {
-//		return wafRuleDirective;
-//	}
-//
-//	public void setWafRuleDirective(WafRuleDirective wafRuleDirective) {
-//		this.wafRuleDirective = wafRuleDirective;
-//	}
-	
 }

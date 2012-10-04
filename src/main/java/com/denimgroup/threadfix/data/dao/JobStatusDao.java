@@ -54,5 +54,11 @@ public interface JobStatusDao {
 	 * @param jobStatus
 	 */
 	void saveOrUpdate(JobStatus jobStatus);
+	
+	/**
+	 * 
+	 * @param status
+	 */
+	void evict(JobStatus status);
 
 }

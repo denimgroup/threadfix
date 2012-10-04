@@ -111,9 +111,11 @@ public class RestOrganizationTests extends BaseRestTest {
 	public void testRestrictedMethods() {
 		ThreadFixRestClient goodClient = new ThreadFixRestClient();
 		goodClient.setKey(GOOD_API_KEY);
+		goodClient.setUrl(BASE_URL);
 		
 		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
 		restrictedClient.setKey(RESTRICTED_API_KEY);
+		restrictedClient.setUrl(BASE_URL);
 		
 		String teamName = getRandomString(23);
 		Integer teamId = getId(getJSONObject(goodClient.createTeam(teamName)));

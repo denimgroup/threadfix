@@ -254,6 +254,10 @@ public class QualysRemoteProvider extends RemoteProvider {
 		// TODO include filters
 		InputStream stream = httpPost(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{});
 		
+		if (stream == null) {
+			return null;
+		}
+		
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		

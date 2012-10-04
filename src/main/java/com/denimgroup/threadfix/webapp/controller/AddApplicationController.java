@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -52,6 +50,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -66,7 +65,7 @@ public class AddApplicationController {
 	private WafService wafService = null;
 	private ApplicationCriticalityService applicationCriticalityService = null;
 
-	private final Log log = LogFactory.getLog(AddApplicationController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddApplicationController.class);
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {

@@ -35,16 +35,6 @@ import com.denimgroup.threadfix.data.entities.Organization;
 public interface OrganizationDao {
 
 	/**
-	 * @param id
-	 */
-	void deleteById(int id);
-
-	/**
-	 * @return
-	 */
-	List<Organization> retrieveAll();
-
-	/**
 	 * @return all active Organizations
 	 */
 	List<Organization> retrieveAllActive();

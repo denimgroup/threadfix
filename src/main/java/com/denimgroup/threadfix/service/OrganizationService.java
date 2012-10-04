@@ -36,11 +36,6 @@ public interface OrganizationService {
 	/**
 	 * @return
 	 */
-	List<Organization> loadAll();
-
-	/**
-	 * @return
-	 */
 	List<Organization> loadAllActive();
 
 	/**
@@ -64,11 +59,6 @@ public interface OrganizationService {
 	 * @param organization
 	 */
 	void storeOrganization(Organization organization);
-
-	/**
-	 * @param organizationId
-	 */
-	void deleteById(int organizationId);
 
 	/**
 	 * Prepare the Organization for deletion.

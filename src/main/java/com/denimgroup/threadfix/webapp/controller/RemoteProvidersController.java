@@ -28,8 +28,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,13 +47,14 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 @Controller
 @RequestMapping("configuration/remoteproviders")
 @SessionAttributes(value= {"remoteProviderType", "remoteProviderApplication"})
 public class RemoteProvidersController {
 	
-	private final Log log = LogFactory.getLog(RemoteProvidersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(RemoteProvidersController.class);
 	
 	private RemoteProviderTypeService remoteProviderTypeService;
 	private RemoteProviderApplicationService remoteProviderApplicationService;

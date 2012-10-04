@@ -30,8 +30,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,6 +57,7 @@ import com.denimgroup.threadfix.service.ChannelSeverityService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.UserService;
 
@@ -75,7 +74,7 @@ public class AddFindingController {
 	private FindingService findingService;
 	private UserService userService;
 
-	private final Log log = LogFactory.getLog(AddChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddChannelController.class);
 	
 	@Autowired
 	public AddFindingController(ApplicationService applicationService,

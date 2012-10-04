@@ -23,12 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waflog;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.denimgroup.threadfix.data.dao.SecurityEventDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author mcollins
@@ -36,7 +34,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
  */
 public class WafLogParserFactory {
 
-	private final Log log = LogFactory.getLog(WafLogParserFactory.class);
+	private final SanitizedLogger log = new SanitizedLogger(WafLogParserFactory.class);
 	private WafRuleDao wafRuleDao;
 	private SecurityEventDao securityEventDao;
 	

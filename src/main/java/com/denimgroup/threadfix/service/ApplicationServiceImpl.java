@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +57,7 @@ import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 @Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
 	
-	private final Log log = LogFactory.getLog(ApplicationServiceImpl.class);
+	protected final SanitizedLogger log = new SanitizedLogger(ApplicationServiceImpl.class);
 	
 	private String invalidProjectName = "The selected Project Name was invalid. " +
 			"Either a non-existent project or a project with no components was selected.";
@@ -100,11 +97,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public List<Application> loadAll() {
-		return applicationDao.retrieveAll();
-	}
-
-	@Override
 	public List<Application> loadAllActive() {
 		return applicationDao.retrieveAllActive();
 	}
@@ -128,13 +120,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteById(int applicationId) {
-		removeRemoteApplicationLinks(loadApplication(applicationId));
-		applicationDao.deleteById(applicationId);
-	}
-
-	@Override
-	@Transactional(readOnly = false)
 	public void deactivateApplication(Application application) {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
@@ -147,30 +132,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 	
 	private String getNewName(Application application) {
-		if (application != null) {			
-			int length = application.getName().length();
-			int possibleSize = Application.NAME_LENGTH - length;
+		if (application != null) {
 			
-			String addOnString = null;
-			if (possibleSize > 8) {
-				addOnString = " [del-" + getRandomString(possibleSize - 8) + "]";
-			} else if (possibleSize > 3) {
-				addOnString = getRandomString(possibleSize - 2);
+			String testString = "deleted-" + application.getId() + "-" + application.getName();
+			if (testString.length() > Application.NAME_LENGTH) {
+				testString = testString.substring(0, Application.NAME_LENGTH - 2);
 			}
-			return application.getName() + addOnString;
+			return testString;
 		}
 		return null;
-	}
-	
-	private String getRandomString(int length) {
-		return RandomStringUtils.random(length,
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
 	private void removeRemoteApplicationLinks(Application application) {
 		if (application.getRemoteProviderApplications() != null &&
 				application.getRemoteProviderApplications().size() > 0) {
+			log.info("Removing remote applications from the application " + application.getName() + 
+					 " (id=" + application.getId() + ")");
 			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
+				log.info("Removing remote application " + app.getNativeId() + 
+						 " from application " + app.getApplication().getName());
 				app.setApplication(null);
 				app.setLastImportTime(null);
 				app.setApplicationChannel(null);
@@ -213,7 +193,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 						result.rejectValue("password", "errors.required", 
 								new String [] { "Password" }, null);
 					
-					if (!result.hasErrors()) { 
+					if (!result.hasErrors()) {
 						if (!dt.hasValidCredentials()) {
 							if (dt.getLastError() == null) {
 								result.rejectValue("userName", "errors.invalid", 

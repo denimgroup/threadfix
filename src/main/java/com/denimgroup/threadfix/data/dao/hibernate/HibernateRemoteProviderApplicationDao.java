@@ -25,12 +25,15 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
+import com.denimgroup.threadfix.data.entities.DeletedRemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 
 @Repository
@@ -42,26 +45,25 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	public HibernateRemoteProviderApplicationDao(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
+	
 	@Override
-	public void deleteRemoteProviderApplication(RemoteProviderApplication app) {
+	public void delete(RemoteProviderApplication app) {
+		sessionFactory.getCurrentSession().save(new DeletedRemoteProviderApplication(app));
 		sessionFactory.getCurrentSession().delete(app);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderApplication> retrieveAllWithTypeId(int id) {
-		return sessionFactory.getCurrentSession()
-			.createQuery("from RemoteProviderApplication app " +
-					"where app.remoteProviderType = :type " +
-					"order by app.nativeId")
-			.setInteger("type", id).list();
+		return getActiveRPACriteria().createAlias("remoteProviderType", "typeAlias")
+				.add(Restrictions.eq("typeAlias", id))
+				.addOrder(Order.asc("nativeId"))
+				.list();
 	}
 	
 	@Override
 	public RemoteProviderApplication retrieveById(int id) {
-		return (RemoteProviderApplication) sessionFactory.getCurrentSession().get(
-				RemoteProviderApplication.class, id);
+		return (RemoteProviderApplication) getActiveRPACriteria().add(Restrictions.eq("id",id)).uniqueResult();
 	}
 
 	@Override
@@ -72,11 +74,14 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RemoteProviderApplication> retrieveAllWithMappings() {
-		return (List<RemoteProviderApplication>) sessionFactory.getCurrentSession()
-							 .createCriteria(RemoteProviderApplication.class)
+		return (List<RemoteProviderApplication>) getActiveRPACriteria()
 							 .add(Restrictions.isNotNull("application"))
 							 .list();
-		
 	}
-
+	
+	public Criteria getActiveRPACriteria() {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(RemoteProviderApplication.class)
+				.add(Restrictions.eq("active",true));
+	}
 }

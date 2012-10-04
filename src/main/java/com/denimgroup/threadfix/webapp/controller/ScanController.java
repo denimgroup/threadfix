@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +38,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -48,7 +47,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
 public class ScanController {
 	
-	private final Log log = LogFactory.getLog(UsersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	private ScanService scanService;
 	private ApplicationService applicationService;

@@ -25,7 +25,11 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -51,40 +55,28 @@ public class HibernateUserDao implements UserDao {
 	}
 
 	@Override
-	public void delete(User user) {
-		sessionFactory.getCurrentSession().delete(user);
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<User> retrieveAllActive() {
-		return sessionFactory.getCurrentSession().createQuery("from User user where active = true order by user.name")
-				.list();
+		return getActiveUserCriteria().addOrder(Order.asc("name")).list();
 	}
 	
 	@Override
 	public Long countActiveAdmins() {
-		return (Long) sessionFactory
-						.getCurrentSession()
-						.createQuery("select count(*) from User user where active = true" +
-								" and user.role.name = :admin")
-						.setString("admin", Role.ADMIN)
-						.uniqueResult();
+		return (Long) getActiveUserCriteria()
+				.createAlias("role", "roleAlias")
+				.add(Restrictions.eq("roleAlias.name", Role.ADMIN))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
 	}
 
 	@Override
 	public User retrieveById(int id) {
-		return (User) sessionFactory.getCurrentSession()
-				.createQuery("from User where id = :id and active = true")
-				.setInteger("id", id)
-				.uniqueResult();
+		return (User) getActiveUserCriteria().add(Restrictions.eq("id", id)).uniqueResult();
 	}
 
 	@Override
 	public User retrieveByName(String name) {
-		return (User) sessionFactory.getCurrentSession()
-				.createQuery("from User user where active = true and user.name = :name").setString("name", name)
-				.uniqueResult();
+		return (User) getActiveUserCriteria().add(Restrictions.eq("name", name)).uniqueResult();
 	}
 
 	@Override
@@ -96,4 +88,7 @@ public class HibernateUserDao implements UserDao {
 		}
 	}
 
+	private Criteria getActiveUserCriteria() {
+		return sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("active", true));
+	}
 }

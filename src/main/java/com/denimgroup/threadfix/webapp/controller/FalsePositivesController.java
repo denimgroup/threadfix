@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,6 +40,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 
@@ -53,7 +52,7 @@ public class FalsePositivesController {
 	private ApplicationService applicationService;
 	private VulnerabilityService vulnerabilityService;
 
-	private final Log log = LogFactory.getLog(FalsePositivesController.class);
+	private final SanitizedLogger log = new SanitizedLogger(FalsePositivesController.class);
 
 	@Autowired
 	public FalsePositivesController(ApplicationService applicationService,

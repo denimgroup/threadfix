@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 
 /**
@@ -50,7 +49,7 @@ public class UsersController {
 
 	private UserService userService = null;
 	
-	private final Log log = LogFactory.getLog(UsersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	@Autowired
 	public UsersController(UserService userService) {

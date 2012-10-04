@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,7 @@ import com.denimgroup.threadfix.data.entities.WafRule;
 @Transactional(readOnly = false)
 public class ScanDeleteServiceImpl implements ScanDeleteService {
 	
-	private final Log log = LogFactory.getLog("ScanDeleteService");
+	private final SanitizedLogger log = new SanitizedLogger("ScanDeleteService");
 
 	private ScanDao scanDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;

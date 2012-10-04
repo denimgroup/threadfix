@@ -24,8 +24,7 @@
 
 package com.denimgroup.threadfix.service.defects;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -33,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DefectMetadata {
 	
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 
 	private String description;
 	private String preamble;

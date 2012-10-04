@@ -187,7 +187,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			}
 		
 		} catch (JSONException e) {
-			log.warn(e);
+			log.warn("Encountered JSONException.", e);
 		}
 		
 		return scan;
@@ -247,7 +247,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					}
 				}
 			} catch (JSONException e) {
-				log.warn(e);
+				log.warn("Encountered JSONException.", e);
 			}
 		}
 		
@@ -280,7 +280,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					}
 				}
 			} catch (JSONException e) {
-				log.warn(e);
+				log.warn("Encountered JSONException.", e);
 			}
 		}
 

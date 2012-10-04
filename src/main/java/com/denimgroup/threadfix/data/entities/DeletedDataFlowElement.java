@@ -10,24 +10,26 @@ import javax.persistence.Table;
 public class DeletedDataFlowElement extends AuditableEntity{
 
 	public DeletedDataFlowElement(DataFlowElement originalElement) {
-		setSourceFileName(originalElement.getSourceFileName());
-		setColumnNumber(originalElement.getColumnNumber());
-		setLineNumber(originalElement.getLineNumber());
-		setLineText(originalElement.getLineText());
-		setDeletedFindingId(originalElement.getFinding().getId());
-		setSequence(originalElement.getSequence());
-		setId(originalElement.getId());
+		if (originalElement != null) {
+			setSourceFileName(originalElement.getSourceFileName());
+			setColumnNumber(originalElement.getColumnNumber());
+			setLineNumber(originalElement.getLineNumber());
+			setLineText(originalElement.getLineText());
+			setSequence(originalElement.getSequence());
+			setId(originalElement.getId());
+			
+			if (originalElement.getFinding() != null) {
+				setDeletedFindingId(originalElement.getFinding().getId());
+			}
+		}
 	}
 	
 	private static final long serialVersionUID = 17679467954663680L;
 
-	private String sourceFileName;
-	private int lineNumber;
-	private int columnNumber;
+	private String sourceFileName, lineText;
+	private int lineNumber, sequence, columnNumber;
 
-	private String lineText;
 	private Integer findingId;
-	private int sequence;
 	
 	@Column(length = DataFlowElement.SOURCE_FILE_NAME_LENGTH)
 	public String getSourceFileName() {

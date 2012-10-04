@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
@@ -42,6 +40,7 @@ import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * 
@@ -65,7 +64,7 @@ public abstract class RealTimeProtectionGenerator {
 	
 	protected WafRuleDao wafRuleDao;
 	protected WafRuleDirectiveDao wafRuleDirectiveDao;
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	
 	protected String defaultDirective = "deny";
 

@@ -785,8 +785,6 @@ public class ScanTests extends BaseTest {
 		
 		for (int i=1; i <= expectedResults.length; i++) {
 			
-			System.out.println(i);
-					
 			String elementText = applicationDetailPage.getElementText("vulnName" + i);
 			assertTrue("Vulnerability Name mismatch - " + 
 							applicationDetailPage.getElementText("vulnName" + i) +

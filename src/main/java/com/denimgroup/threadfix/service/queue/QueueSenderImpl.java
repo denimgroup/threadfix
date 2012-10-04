@@ -30,8 +30,6 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 
 import org.apache.activemq.command.ActiveMQMapMessage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.service.JobStatusService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -48,7 +47,7 @@ import com.denimgroup.threadfix.service.JobStatusService;
 @Service
 @Transactional
 public class QueueSenderImpl implements QueueSender {
-	private final Log log = LogFactory.getLog(QueueSenderImpl.class);
+	protected final SanitizedLogger log = new SanitizedLogger(QueueSenderImpl.class);
 
 	private JmsTemplate jmsTemplate = null;
 	private JobStatusService jobStatusService = null;

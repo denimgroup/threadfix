@@ -71,7 +71,7 @@ public interface JobStatusService {
 	 * @param jobStatus
 	 * @param status
 	 */
-	void updateJobStatus(JobStatus jobStatus, String status);
+	void updateJobStatus(Integer jobStatusId, String status);
 
 	/**
 	 * Create a new JobStatus object and return its ID so that it can be retrieved easily later.

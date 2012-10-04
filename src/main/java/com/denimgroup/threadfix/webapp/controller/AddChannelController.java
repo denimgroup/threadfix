@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -48,6 +46,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -59,7 +58,7 @@ public class AddChannelController {
 	private ChannelTypeService channelTypeService;
 	private ApplicationService applicationService;
 	
-	private final Log log = LogFactory.getLog(AddChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddChannelController.class);
 
 	@Autowired
 	public AddChannelController(ApplicationChannelService applicationChannelService,

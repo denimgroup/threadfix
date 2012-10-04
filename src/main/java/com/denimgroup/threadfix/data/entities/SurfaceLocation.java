@@ -34,9 +34,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 @Entity
 @Table(name = "SurfaceLocation")
@@ -48,7 +48,7 @@ public class SurfaceLocation extends BaseEntity {
 	public static final int QUERY_LENGTH = 255;	
 
 	private static final long serialVersionUID = -8999892961251231213L;
-	private final Log log = LogFactory.getLog(SurfaceLocation.class);
+	private final SanitizedLogger log = new SanitizedLogger(SurfaceLocation.class);
 
 	private Finding finding;
 	

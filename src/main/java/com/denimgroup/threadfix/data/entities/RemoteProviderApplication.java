@@ -16,7 +16,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "RemoteProviderApplication")
-public class RemoteProviderApplication extends BaseEntity  {
+public class RemoteProviderApplication extends AuditableEntity  {
 	
 	private static final long serialVersionUID = 5023873433359926246L;
 

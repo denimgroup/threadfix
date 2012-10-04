@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -44,6 +42,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.Node;
@@ -56,7 +55,7 @@ public class PathController {
 	private ApplicationService applicationService;
 	private ScanMergeService scanMergeService;
 	
-	private final Log log = LogFactory.getLog(PathController.class);
+	private final SanitizedLogger log = new SanitizedLogger(PathController.class);
 
 	@Autowired
 	public PathController(ApplicationService applicationService, ScanMergeService scanMergeService) {

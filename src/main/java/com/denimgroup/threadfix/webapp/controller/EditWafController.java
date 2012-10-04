@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -46,6 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller
@@ -55,7 +54,7 @@ public class EditWafController {
 
 	private WafService wafService = null;
 	
-	private final Log log = LogFactory.getLog(EditUserController.class);
+	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {

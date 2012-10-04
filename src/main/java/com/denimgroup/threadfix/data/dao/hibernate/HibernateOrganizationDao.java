@@ -50,18 +50,6 @@ public class HibernateOrganizationDao implements OrganizationDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		sessionFactory.getCurrentSession().delete(retrieveById(id));
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Organization> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Organization org order by org.name").list();
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<Organization> retrieveAllActive() {
 		return sessionFactory.getCurrentSession()

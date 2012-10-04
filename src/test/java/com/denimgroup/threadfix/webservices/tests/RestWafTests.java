@@ -254,8 +254,7 @@ public class RestWafTests extends BaseRestTest {
 		result = httpGet(BASE_URL + "/wafs/" + wafId + "/rules" +
 				"?apiKey=" + GOOD_API_KEY);
 		
-		assertTrue(getJSONArray(result) != null);
-		assertTrue(getJSONArray(result).length() != 0);
+		assertTrue(result != null);
 		
 		// upload mod_security log
 		url = this.getClass().getResource(
@@ -351,8 +350,7 @@ public class RestWafTests extends BaseRestTest {
 		result = httpGet(BASE_URL + "/wafs/" + wafId + "/rules" +
 				"?apiKey=" + GOOD_API_KEY);
 		
-		assertTrue(getJSONArray(result) != null);
-		assertTrue(getJSONArray(result).length() != 0);
+		assertTrue(result != null);
 	}
 	
 	/**
@@ -363,16 +361,22 @@ public class RestWafTests extends BaseRestTest {
 	public void testRestrictedMethods() {
 		ThreadFixRestClient goodClient = new ThreadFixRestClient();
 		goodClient.setKey(GOOD_API_KEY);
+		goodClient.setUrl(BASE_URL);
 		
 		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
 		restrictedClient.setKey(RESTRICTED_API_KEY);
+		restrictedClient.setUrl(BASE_URL);
 		
 		String response = httpGet(BASE_URL + "/wafs?apiKey=" + GOOD_API_KEY);
 		assertFalse(RESTRICTED_URL_RETURNED,
 				response.equals(RestController.RESTRICTED_URL_ERROR));
 		
 		String wafName = getRandomString(16);
-		String wafId = getId(getJSONObject(goodClient.createWaf(wafName, WafType.MOD_SECURITY)))
+		String initialResult = goodClient.createWaf(wafName, WafType.MOD_SECURITY);
+		
+		assertTrue("Bad response from waf creation", initialResult != null);
+		
+		String wafId = getId(getJSONObject(initialResult))
 							.toString();
 		
 		String result = restrictedClient.searchForWafById(wafId);

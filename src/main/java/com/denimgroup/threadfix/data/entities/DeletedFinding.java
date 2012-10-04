@@ -33,21 +33,22 @@ public class DeletedFinding extends AuditableEntity {
 	private User user;
 	
 	public DeletedFinding(Finding originalFinding) {
-		setSourceFileLocation(originalFinding.getSourceFileLocation());
-		setNativeId(originalFinding.getNativeId());
-		setIsStatic(originalFinding.getIsStatic());
-		setMarkedFalsePositive(originalFinding.isMarkedFalsePositive());
-		setUser(originalFinding.getUser());
-		setId(originalFinding.getId());
-		setChannelSeverity(originalFinding.getChannelSeverity());
-		setChannelVulnerability(originalFinding.getChannelVulnerability());
-		setDeletedScanId(originalFinding.getScan().getId());
-		setLongDescription(originalFinding.getLongDescription());
+		if (originalFinding != null) {
+			setSourceFileLocation(originalFinding.getSourceFileLocation());
+			setNativeId(originalFinding.getNativeId());
+			setIsStatic(originalFinding.getIsStatic());
+			setMarkedFalsePositive(originalFinding.isMarkedFalsePositive());
+			setUser(originalFinding.getUser());
+			setId(originalFinding.getId());
+			setChannelSeverity(originalFinding.getChannelSeverity());
+			setChannelVulnerability(originalFinding.getChannelVulnerability());
+			setLongDescription(originalFinding.getLongDescription());
 		
+			if (originalFinding.getScan() != null) {
+				setDeletedScanId(originalFinding.getScan().getId());
+			}
+		}
 	}
-
-//	private List<DataFlowElement> dataFlowElements;
-//	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
@@ -98,17 +99,6 @@ public class DeletedFinding extends AuditableEntity {
 		this.channelSeverity = channelSeverity;
 	}
 
-//	@OneToMany(mappedBy = "finding")
-//	@Cascade( { org.hibernate.annotations.CascadeType.ALL } )
-//	@OrderBy("sequence DESC")
-//	public List<DataFlowElement> getDataFlowElements() {
-//		return dataFlowElements;
-//	}
-//
-//	public void setDataFlowElements(List<DataFlowElement> dataFlowElements) {
-//		this.dataFlowElements = dataFlowElements;
-//	}
-
 	@Column(nullable = false)
 	public boolean getIsStatic() {
 		return isStatic;
@@ -117,16 +107,6 @@ public class DeletedFinding extends AuditableEntity {
 	public void setIsStatic(boolean isStatic) {
 		this.isStatic = isStatic;
 	}
-	
-//	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
-//	@JsonIgnore
-//	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
-//		return scanRepeatFindingMaps;
-//	}
-//
-//	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
-//		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
-//	}
 
 	public String getSourceFileLocation() {
 		return sourceFileLocation;

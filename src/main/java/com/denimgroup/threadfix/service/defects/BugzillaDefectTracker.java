@@ -118,7 +118,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			log.debug("Exception occured while creating Defect: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
-			log.error(e2);
+			log.error("Got IllegalArgumentException.", e2);
 		}
 
 		return bugzillaId;
@@ -358,8 +358,18 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		if (method == null || params == null)
 			return null;
 		
-		if (client == null)
+		if (client == null) {
 			client = initializeClient();
+			String loginResponse = login(client);
+			if (loginResponse == null) {
+				return null;
+			}
+			if (loginResponse.equals(LOGIN_FAILURE) 
+					|| loginResponse.equals(BAD_CONFIGURATION)) {
+				log.warn("Login Failed, check credentials");
+				return null;
+			}
+		}
 		
 		if (client == null) {
 			log.warn("There was an error initializing the Bugzilla client.");

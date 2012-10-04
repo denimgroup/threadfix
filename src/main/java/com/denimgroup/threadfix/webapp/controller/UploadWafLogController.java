@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.service.LogParserService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller
@@ -47,7 +46,7 @@ public class UploadWafLogController {
 	private final LogParserService logParserService;
 	private WafService wafService = null;
 	
-	private final Log log = LogFactory.getLog(WafsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@Autowired
 	public UploadWafLogController(WafService wafService, LogParserService logParserService) {

@@ -11,12 +11,16 @@ public class DeletedDefect extends BaseEntity {
 	
 	private static final long serialVersionUID = 5923185785519317995L;
 
-	public DeletedDefect(Defect d) {
-		setNativeId(d.getNativeId());
-		setId(d.getId());
-		setStatus(d.getStatus());
-		setDefectURL(d.getDefectURL());
-		setApplicationId(d.getApplication().getId());
+	public DeletedDefect(Defect defect) {
+		if (defect != null) {
+			setNativeId(defect.getNativeId());
+			setId(defect.getId());
+			setStatus(defect.getStatus());
+			setDefectURL(defect.getDefectURL());
+			if (defect.getApplication() != null) {
+				setApplicationId(defect.getApplication().getId());
+			}
+		}
 	}
 	
 	private String nativeId;
@@ -68,14 +72,5 @@ public class DeletedDefect extends BaseEntity {
 	public void setApplicationId(Integer applicationId) {
 		this.applicationId = applicationId;
 	}
-
-//	@OneToMany(mappedBy = "defect")
-//	public List<Vulnerability> getVulnerabilities() {
-//		return vulnerabilities;
-//	}
-//
-//	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
-//		this.vulnerabilities = vulnerabilities;
-//	}
 
 }

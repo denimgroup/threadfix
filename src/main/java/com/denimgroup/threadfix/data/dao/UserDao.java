@@ -35,11 +35,6 @@ import com.denimgroup.threadfix.data.entities.User;
 public interface UserDao {
 
 	/**
-	 * @param id
-	 */
-	void delete(User user);
-
-	/**
 	 * @return
 	 */
 	List<User> retrieveAllActive();

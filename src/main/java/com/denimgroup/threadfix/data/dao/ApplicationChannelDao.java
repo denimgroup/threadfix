@@ -37,11 +37,6 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 public interface ApplicationChannelDao {
 
 	/**
-	 * @param id
-	 */
-	void deleteById(int id);
-
-	/**
 	 * @return
 	 */
 	List<ApplicationChannel> retrieveAll();

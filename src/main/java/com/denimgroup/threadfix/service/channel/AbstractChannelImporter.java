@@ -54,8 +54,6 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -74,6 +72,7 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -96,7 +95,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public abstract class AbstractChannelImporter implements ChannelImporter {
 
 	// this.getClass() will turn into the individual importer name at runtime.
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	// These keys and the new constructFinding() method can be used to write new importers more quickly.

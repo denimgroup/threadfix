@@ -30,8 +30,6 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -41,12 +39,13 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.channel.AbstractChannelImporter;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
 	
-	protected final Log log = LogFactory.getLog(this.getClass());
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	
 	protected RemoteProviderType remoteProviderType;
 	

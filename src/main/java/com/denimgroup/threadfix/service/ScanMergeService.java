@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
@@ -69,7 +68,7 @@ public interface ScanMergeService {
 	 * @param fileName
 	 * @return
 	 */
-	boolean processScan(Integer channelId, String fileName, JobStatus status,
+	boolean processScan(Integer channelId, String fileName, Integer statusId,
 			String userName);
 	
 	/**

@@ -48,9 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes
@@ -66,7 +66,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         
     private Random randomSource = null;
     
-    private final Log log = LogFactory.getLog(CsrfPreventionFilter.class);
+    private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
 
     private final Set<String> entryPoints = new HashSet<String>();
     private final List<String> entryPointStartPatterns = new ArrayList<String>();
@@ -118,7 +118,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         this.nonceCacheSize = nonceCacheSize;
     }
     
-
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
@@ -173,24 +172,23 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             
             // if it matches one of the patterns for GET requests, don't check.
             String previousNonce = req.getParameter(CSRF_NONCE_REQUEST_PARAM);
-            if (!skipNonceCheck) {
-                if (nonceCache != null && !nonceCache.contains(previousNonce)) {
-                	
-                	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
-                	
-                	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-                	
-                	log.warn("CSRF Filter blocked a request:" +
-              			  " reason: " + nonceStatus + 
-              			 ", address: " + request.getRemoteAddr() + 
-              			 ", path: " + req.getServletPath() + 
-              			 ", time: " + dateFormatter.format(Calendar.getInstance().getTime()));
-
-                  res.sendError(HttpServletResponse.SC_NO_CONTENT);
-                  return;
-                }
-            }
             
+            if (!skipNonceCheck && nonceCache != null && !nonceCache.contains(previousNonce)) {
+            	
+            	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
+            	
+            	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+            	
+            	log.warn("CSRF Filter blocked a request:" +
+          			  " reason: " + nonceStatus + 
+          			 ", address: " + request.getRemoteAddr() + 
+          			 ", path: " + req.getServletPath() + 
+          			 ", time: " + dateFormatter.format(Calendar.getInstance().getTime()));
+
+            	res.sendError(HttpServletResponse.SC_NO_CONTENT);
+            	return;
+            }
+        
             // generate a new cache if one is not found.
             if (nonceCache == null) {
                 nonceCache = new LruCache<String>(nonceCacheSize);

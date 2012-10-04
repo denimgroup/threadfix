@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
 
@@ -45,7 +44,7 @@ import com.denimgroup.threadfix.service.WafService;
 @RequestMapping("/wafs/{wafId}/rules")
 public class WafRuleController {
 	
-	private final Log log = LogFactory.getLog(WafRuleController.class);
+	private final SanitizedLogger log = new SanitizedLogger(WafRuleController.class);
 
 	private WafService wafService = null;
 	private WafRuleService wafRuleService = null;

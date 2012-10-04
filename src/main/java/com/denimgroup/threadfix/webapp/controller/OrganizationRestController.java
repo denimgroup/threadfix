@@ -125,7 +125,7 @@ public class OrganizationRestController extends RestController {
 			return result;
 		}
 		
-		List<Organization> organizations = organizationService.loadAll();
+		List<Organization> organizations = organizationService.loadAllActive();
 
 		return organizations;
 	}

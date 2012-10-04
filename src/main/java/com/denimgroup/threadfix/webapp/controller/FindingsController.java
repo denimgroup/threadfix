@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,13 +38,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}")
 public class FindingsController {
 	
-	private final Log log = LogFactory.getLog(FindingsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
 
 	private FindingService findingService;
 	private VulnerabilityService vulnerabilityService;

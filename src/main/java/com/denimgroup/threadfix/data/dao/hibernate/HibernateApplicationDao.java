@@ -26,14 +26,15 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
@@ -54,24 +55,6 @@ public class HibernateApplicationDao implements ApplicationDao {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		Application app = retrieveById(id);
-		if (app.getChannelList() != null) {
-			for (ApplicationChannel channel : app.getChannelList()) {
-				if (channel != null && channel.getJobStatusList() != null) {
-					for (JobStatus status : channel.getJobStatusList()) {
-						if (status != null) {
-							status.setApplicationChannel(null);
-							sessionFactory.getCurrentSession().saveOrUpdate(status);
-						}
-					}
-				}
-			}
-		}
-		sessionFactory.getCurrentSession().delete(app);
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<Application> retrieveAll() {
 		return sessionFactory.getCurrentSession()
@@ -81,20 +64,23 @@ public class HibernateApplicationDao implements ApplicationDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Application> retrieveAllActive() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Application app where active = 1 order by app.name").list();
+		return getActiveAppCriteria().addOrder(Order.asc("name")).list();
 	}
 
 	@Override
 	public Application retrieveById(int id) {
-		return (Application) sessionFactory.getCurrentSession().get(Application.class, id);
+		return (Application) getActiveAppCriteria().add(Restrictions.eq("id",id)).uniqueResult();
 	}
 
 	@Override
 	public Application retrieveByName(String name) {
-		return (Application) sessionFactory.getCurrentSession()
-				.createQuery("from Application app where app.name = :name").setString("name", name)
-				.uniqueResult();
+		return (Application) getActiveAppCriteria().add(Restrictions.eq("name",name)).uniqueResult();
+	}
+	
+	private Criteria getActiveAppCriteria() {
+		return sessionFactory.getCurrentSession()
+				   			 .createCriteria(Application.class)
+				   			 .add(Restrictions.eq("active", true));
 	}
 
 	@Override

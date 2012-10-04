@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -49,7 +48,7 @@ public class APIKeyController {
 
 	private APIKeyService apiKeyService = null;
 	
-	private final Log log = LogFactory.getLog(APIKeyController.class);
+	private final SanitizedLogger log = new SanitizedLogger(APIKeyController.class);
 
 	@Autowired
 	public APIKeyController(APIKeyService apiKeyService) {
@@ -101,7 +100,7 @@ public class APIKeyController {
 		APIKey newAPIKey = apiKeyService.loadAPIKey(keyId);
 		
 		if (newAPIKey != null) {
-			apiKeyService.deleteById(keyId);
+			apiKeyService.deactivateApiKey(newAPIKey);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
 			throw new ResourceNotFoundException();

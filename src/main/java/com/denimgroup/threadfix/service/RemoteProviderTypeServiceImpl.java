@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 @Transactional(readOnly = false)
 public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService {
 	
-	private final Log log = LogFactory.getLog(RemoteProviderTypeServiceImpl.class);
+	private final SanitizedLogger log = new SanitizedLogger(RemoteProviderTypeServiceImpl.class);
 	
 	@Autowired
 	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,

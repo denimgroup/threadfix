@@ -28,8 +28,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +46,7 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -58,7 +57,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 @RequestMapping("/organizations/{orgId}/applications")
 public class ApplicationsController {
 	
-	private final Log log = LogFactory.getLog(ApplicationsController.class);
+	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
 
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
@@ -178,15 +177,9 @@ public class ApplicationsController {
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
 		Application application = applicationService.loadApplication(appId);
-		if (application != null) {
-			if (application.getScans() == null || application.getScans().isEmpty()) {
-				applicationService.deleteById(appId);
-				status.setComplete();
-			} else if (application.isActive()) {
-				applicationService.deactivateApplication(application);
-				status.setComplete();
-			}
-
+		if (application != null && application.isActive()) {
+			applicationService.deactivateApplication(application);
+			status.setComplete();
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();

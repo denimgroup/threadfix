@@ -28,8 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +49,7 @@ public class DefectServiceImpl implements DefectService {
 	private VulnerabilityDao vulnerabilityDao = null;
 	private ApplicationService applicationService = null;
 
-	private final Log log = LogFactory.getLog(DefectService.class);
+	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 	
 	@Autowired
 	public DefectServiceImpl(DefectDao defectDao, 
@@ -302,11 +300,13 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	public void deleteByDefectTrackerId(Integer defectTrackerId) {
+		log.info("Deleting Defects connected to the Defect Tracker with the ID " + defectTrackerId);
 		defectDao.deleteByDefectTrackerId(defectTrackerId);
 	}
 
 	@Override
 	public void deleteByApplicationId(Integer applicationId) {
+		log.info("Deleting Defects connected to the Application with the ID " + applicationId);
 		defectDao.deleteByApplicationId(applicationId);
 	}
 }

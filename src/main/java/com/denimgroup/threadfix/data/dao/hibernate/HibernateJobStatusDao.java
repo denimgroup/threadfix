@@ -77,5 +77,10 @@ public class HibernateJobStatusDao implements JobStatusDao {
 	public void saveOrUpdate(JobStatus jobStatus) {
 		sessionFactory.getCurrentSession().saveOrUpdate(jobStatus);
 	}
+	
+	@Override
+	public void evict(JobStatus status) {
+		 sessionFactory.getCurrentSession().evict(status);
+	}
 
 }

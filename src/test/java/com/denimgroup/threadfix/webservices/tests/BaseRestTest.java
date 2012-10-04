@@ -46,10 +46,10 @@ public abstract class BaseRestTest {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	public static final String GOOD_API_KEY = "iy3F2A9ChoI91kTNx4NMUPyaInIrOkioGYCXUubAY";
-	public static final String BAD_API_KEY  = "QRUusnkGqKE6zAlGwsFVHcxPWW3qlfPpwcaLmXBo6gCA";
-	public static final String RESTRICTED_API_KEY = "97o9JZGEowUmCojdOOecNQZo0j8RQBZclXdV31Rryjk";
-	public static final String BASE_URL = "https://localhost:8443/threadfix/rest";
+	public static final String GOOD_API_KEY = "U1otLaZxwQLbsHZ2HiifYtbPwbD1H4kcNgedWVIWn0";
+	public static final String BAD_API_KEY  = "U1otLaZxwQLbsHZ2ifYtbPwbD1H4kcNgedWVIWn0";
+	public static final String RESTRICTED_API_KEY = "PsjLL0KUXG8J9hkC2kpvFAGllJFPaZRskomeZiB9wSc";
+	public static final String BASE_URL = "http://localhost:8080/threadfix/rest";
 	public static final String RESTRICTED_URL_NOT_RETURNED = "The restricted URL error was not returned correctly.";
 	public static final String RESTRICTED_URL_RETURNED = "The restricted URL error was returned when it shouldn't have been.";
 

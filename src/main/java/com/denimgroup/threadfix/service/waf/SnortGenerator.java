@@ -40,21 +40,21 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 	// Intended use:
 	// STR_FIND_PARAM_START + param_name + STR_FIND_PARAM_MID + target_payload +
 	// STR_FIND_END
-	public static final String STR_FIND_PARAM_START = "/(\\n|^|\\?|\\&)(";
-	public static final String STR_FIND_PARAM_MID = "=[^\\&\\n]*";
-	public static final String STR_FIND_PARAM_END = ")/i\"";
+	public static final String STR_FIND_PARAM_START = "/[?&]";
+	public static final String STR_FIND_PARAM_MID = "=[?&]*?";
+	public static final String STR_FIND_PARAM_END = "/Ui\"";
 	
-	public static final String PAYLOAD_SQL_INJECTION = "(\\x%27|\\x%22|\\x%2D\\x%2D)";
-	public static final String PAYLOAD_XSS = "[\\x%3C\\x%3E]";
-	public static final String PAYLOAD_PATH_TRAVERSAL = "(\\x%2E\\x%2F|\\x%2E\\x%5C)";
-	public static final String PAYLOAD_HTTP_RESPONSE_SPLITTING = "[\\x%0D\\%0A]";
-	public static final String PAYLOAD_XPATH_INJECTION = "[\\x%27\\x%22]";
-	public static final String PAYLOAD_DIRECTORY_INDEXING = "[\\x%20\\x%0D\\x%24\\x%3F\\x%2F]";
-	public static final String PAYLOAD_LDAP_INJECTION = "[\\x%5c|\\x%2a|\\x%28|\\x%29]";
-	public static final String PAYLOAD_OS_COMMAND_INJECTION = "[&\\x%7C\\x%3B]";
-	public static final String PAYLOAD_FORMAT_STRING_INJECTION = "\\x%25";
-	public static final String PAYLOAD_EVAL_INJECTION = "\\x%3B";
-	
+	public static final String PAYLOAD_SQL_INJECTION = "(\\x27|\\x22|\\x2D\\x2D)";
+	public static final String PAYLOAD_XSS = "[\\x3C\\x3E\\x22\\x27\\x3B]";
+	public static final String PAYLOAD_PATH_TRAVERSAL = "(\\x2E\\x2F|\\x2E\\x5C)";
+	public static final String PAYLOAD_HTTP_RESPONSE_SPLITTING = "[\\x0D\\0A]";
+	public static final String PAYLOAD_XPATH_INJECTION = "[\\x27\\x22]";
+	public static final String PAYLOAD_DIRECTORY_INDEXING = "[\\x20\\x0D\\x24\\x3F\\x2F]";
+	public static final String PAYLOAD_LDAP_INJECTION = "[\\x5c\\x2a\\x28\\x29]";
+	public static final String PAYLOAD_OS_COMMAND_INJECTION = "[&\\x7C\\x3B]";
+	public static final String PAYLOAD_FORMAT_STRING_INJECTION = "\\x25";
+	public static final String PAYLOAD_EVAL_INJECTION = "[\\x3B\\x7C\\x26\\x3E\\x60]";
+
 	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<String, String>();
 	static {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
@@ -75,7 +75,7 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		this.defaultDirective = "drop";
 	}
-	
+
 	@Override
 	public String[] getSupportedVulnerabilityTypes() {
 		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
@@ -100,10 +100,11 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 		payload = payload.replace(";", "\\;");
 		
 		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (" +
-				"msg:\"" + message + "\"; " +
-				"content:\"" + uri + "\"; http_uri; " +
-				"content:\"" + parameter + "\"; http_uri; " +
-				"flow: to_server,established; pcre:\""
+						"msg:\"" + message + "\"; " +
+						"flow: to_server,established; " +
+						"content:\"" + uri + "?\"; http_uri; " +
+						"content:\"" + parameter + "=\"; http_uri; " +
+						"pcre:\""
 			+ STR_FIND_PARAM_START + parameter + STR_FIND_PARAM_MID + payload
 			+ STR_FIND_PARAM_END
 			+ "; metadata:service http; "
@@ -120,12 +121,11 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 		payload = payload.replace(";", "\\;");
 		
 		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (" +
-			"msg:\"" + message + "\"; " +
-			"content:\"" + uri + "\"; http_uri;" +
-			"pcre:\"/" + pcreRegexEscape(uri) + payload + "/Ui\";" +
-			"flow: to_server,established; " +
-			"metadata:service http; " +
-			"classtype:web-application-attack; sid:" + id + ";)";
+						"msg:\"" + message + "\"; " +
+						"flow: to_server,established; " +
+						"content:\"" + uri + "\"; http_uri;" +
+						"metadata:service http; " +
+						"classtype:web-application-attack; sid:" + id + ";)";
 	}
 
 	@Override
@@ -137,11 +137,11 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 		payload = payload.replace(";", "\\;");
 		
 		return action + " tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (" +
-				"msg:\"" + message + "\"; " +
-				"content:\"" + uri + "\"; http_uri;" +
-				"flow: to_server,established; " +
-				"pcre:\"/" + payload + "/Ui\"; " +
-				"metadata:service http; " +
-				"classtype:web-application-attack; sid:" + id + ";)";
+						"msg:\"" + message + "\"; " +
+						"flow: to_server,established; " +
+						"content:\"" + uri + "\"; http_uri;" +
+						"pcre:\"/" + payload + "/Ui\"; " +
+						"metadata:service http; " +
+						"classtype:web-application-attack; sid:" + id + ";)";
 	}
 }

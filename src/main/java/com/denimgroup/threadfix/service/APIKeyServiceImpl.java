@@ -28,8 +28,6 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.APIKey;
 @Transactional(readOnly = true)
 public class APIKeyServiceImpl implements APIKeyService {
 	
-	private final Log log = LogFactory.getLog(APIKeyService.class);
+	protected final SanitizedLogger log = new SanitizedLogger(APIKeyService.class);
 
 	private APIKeyDao apiKeyDao = null;
 
@@ -74,10 +72,9 @@ public class APIKeyServiceImpl implements APIKeyService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteById(int apiKeyId) {
-		log.info("Deleting API key with id " + apiKeyId);
+	public void deactivateApiKey(APIKey apiKey) {
+		log.info("Deleting API Key with id " + apiKey.getId());
 		
-		APIKey apiKey = apiKeyDao.retrieveById(apiKeyId);
 		apiKey.setActive(false);
 		apiKeyDao.saveOrUpdate(apiKey);
 	}

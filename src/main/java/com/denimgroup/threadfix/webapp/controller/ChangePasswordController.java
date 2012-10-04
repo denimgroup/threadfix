@@ -3,8 +3,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 
@@ -31,7 +30,7 @@ public class ChangePasswordController {
 
 	private UserService userService = null;
 	
-	private final Log log = LogFactory.getLog(EditUserController.class);
+	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
 	public ChangePasswordController(UserService userService) {

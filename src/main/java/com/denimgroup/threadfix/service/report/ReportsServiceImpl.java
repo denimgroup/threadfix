@@ -55,8 +55,6 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +68,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author drivera
@@ -77,7 +76,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 @Service
 public class ReportsServiceImpl implements ReportsService {
-	private final Log log = LogFactory.getLog(ReportsServiceImpl.class);
+	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
 	private SessionFactory sessionFactory = null;
 	private ChannelTypeDao channelTypeDao = null;

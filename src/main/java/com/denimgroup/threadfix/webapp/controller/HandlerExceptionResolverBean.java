@@ -26,14 +26,13 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * TODO decide if 404 is the right option for ResourceNotFoundException
@@ -46,7 +45,7 @@ public class HandlerExceptionResolverBean implements HandlerExceptionResolver {
 	@Autowired
 	private ExceptionLogService exceptionLogService;
 	
-	private final Log log = LogFactory.getLog(HandlerExceptionResolver.class);
+	private final SanitizedLogger log = new SanitizedLogger(HandlerExceptionResolver.class);
 	
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request,

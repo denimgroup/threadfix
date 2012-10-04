@@ -26,12 +26,10 @@ package com.denimgroup.threadfix.service.defects;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -39,8 +37,9 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
  */
 public class DefectTrackerFactory {
 
-	private final Log log = LogFactory.getLog(this.getClass());
-	private static final Log STATIC_LOG = LogFactory.getLog("DefectTrackerFactory");
+	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
+	
+	protected static final SanitizedLogger STATIC_LOG = new SanitizedLogger(DefectTrackerFactory.class);
 	
 	public static boolean checkTrackerUrl(String url, DefectTrackerType type) {
 		STATIC_LOG.info("Checking Defect Tracker URL.");

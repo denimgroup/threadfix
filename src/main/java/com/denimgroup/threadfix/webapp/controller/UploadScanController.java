@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +39,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 
@@ -52,7 +51,7 @@ public class UploadScanController {
 	private ApplicationService applicationService;
 	private ApplicationChannelService applicationChannelService;
 	
-	private final Log log = LogFactory.getLog(UploadScanController.class);
+	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
 	@Autowired
 	public UploadScanController(ScanService scanService,

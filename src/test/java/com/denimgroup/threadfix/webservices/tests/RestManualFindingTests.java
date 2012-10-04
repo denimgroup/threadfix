@@ -16,6 +16,7 @@ public class RestManualFindingTests extends BaseRestTest {
 	public void testManualFinding() {
 		ThreadFixRestClient goodClient = new ThreadFixRestClient();
 		goodClient.setKey(GOOD_API_KEY);
+		goodClient.setUrl(BASE_URL);
 		
 		String sqlInjection = "Improper Sanitization of Special Elements used in an SQL Command ('SQL Injection')";
 		
