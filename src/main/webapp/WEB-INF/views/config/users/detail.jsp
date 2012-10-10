@@ -13,6 +13,20 @@
 				<td class="label">Role:</td>
 				<td id="roleText" class="inputValue"><c:out value="${ user.role.displayName }"/></td>
 			</tr>
+			<c:if test="${ empty groupString}">
+				<tr class="bodyRow">
+					<td class="label">Groups: </td>
+					<td id="groupText" class="inputValue">No groups found.</td>
+				</tr>
+			</c:if>
+			<c:if test="${ not empty groupString}">
+			<tr>
+				<td class="label">Groups: </td>
+				<td id="groupText" class="inputValue">
+					<c:out value="${ groupString }"/>
+				</td>
+			</tr>
+			</c:if>
 		</tbody>
 	</table>
 	<br />
@@ -23,6 +37,13 @@
 	<spring:url value="{userId}/delete" var="deleteUrl">
 		<spring:param name="userId" value="${ user.id }"/>
 	</spring:url>
+	
+	<security:authorize ifAnyGranted="ROLE_ADMIN">
+		<spring:url value="{userId}/groups" htmlEscape="true" var="groupsUrl">
+			<spring:param name="userId" value="${ user.id }"/>
+		</spring:url>
+		<a id="manageUsersLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a> |
+	</security:authorize>
 	
 	<c:choose>
 		<c:when test="${ lastUser }">

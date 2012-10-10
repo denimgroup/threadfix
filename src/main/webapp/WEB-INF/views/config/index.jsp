@@ -23,14 +23,27 @@
 	    <li>
 	    	<a id="changePasswordLink" href="<spring:url value="configuration/users/password" htmlEscape="true"/>">Change My Password</a>
 	    </li>
-	    
-		<security:authorize ifAnyGranted="ROLE_ADMIN">
-			<li>
-				<a id="manageUsersLink" href="<spring:url value="configuration/users" htmlEscape="true"/>">Manage Users</a>
-			</li>
-			<li>
-				<a id="viewLogsLink" href="<spring:url value="configuration/logs" htmlEscape="true"/>">View Error Logs</a>
-			</li>
-		</security:authorize>
 	</ul>
+	
+	<br>
+		
+	<security:authorize ifAnyGranted="ROLE_ADMIN">
+	<h2>Administration</h2>
+		
+	<ul class="squareList" style="padding-left:15px">
+		<li>
+	    	<a id="groupsLink" href="<spring:url value="configuration/groups" htmlEscape="true"/>">Manage Groups</a>
+	    </li>
+		<li>
+			<a id="manageUsersLink" href="<spring:url value="configuration/users" htmlEscape="true"/>">Manage Users</a>
+		</li>
+<%-- 		<li>
+			<a id="manageRolesLink" href="<spring:url value="configuration/roles" htmlEscape="true"/>">Manage Users</a>
+		</li> --%>
+		<li>
+			<a id="viewLogsLink" href="<spring:url value="configuration/logs" htmlEscape="true"/>">View Error Logs</a>
+		</li>
+	</ul>
+	
+	</security:authorize>
 </body>

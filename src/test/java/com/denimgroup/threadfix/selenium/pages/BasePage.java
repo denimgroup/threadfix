@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -102,5 +103,10 @@ public abstract class BasePage {
 	
 	public String getH2Tag() {
 		return driver.findElementByTagName("h2").getText();
+	}
+	
+	protected void handleAlert() {
+		Alert alert = driver.switchTo().alert();
+		alert.accept();
 	}
 }

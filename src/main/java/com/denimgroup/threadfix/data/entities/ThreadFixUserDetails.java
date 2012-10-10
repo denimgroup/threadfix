@@ -36,6 +36,8 @@ public class ThreadFixUserDetails extends User {
 
 	private String salt;
 
+	private Integer userId;
+
 	public ThreadFixUserDetails(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<GrantedAuthority> authorities) {
@@ -45,11 +47,13 @@ public class ThreadFixUserDetails extends User {
 
 	public ThreadFixUserDetails(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-			Collection<GrantedAuthority> authorities, String salt, Boolean hasChangedInitialPassword) {
+			Collection<GrantedAuthority> authorities, String salt, Boolean hasChangedInitialPassword,
+			Integer userId) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired,
 				accountNonLocked, authorities);
-		this.salt = salt;
-		this.hasChangedInitialPassword = hasChangedInitialPassword;
+		setSalt(salt);
+		setHasChangedInitialPassword(hasChangedInitialPassword);
+		setUserId(userId);
 	}
 
 	public String getSalt() {
@@ -76,6 +80,14 @@ public class ThreadFixUserDetails extends User {
 
 	public void setHasChangedInitialPassword(Boolean hasChangedInitialPassword) {
 		this.hasChangedInitialPassword = hasChangedInitialPassword;
+	}
+	
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 }

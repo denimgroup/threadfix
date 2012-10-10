@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -52,7 +51,6 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public int getNumRows() {
-		
 		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
 		
 		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().equals("No keys found.")) {
@@ -60,34 +58,27 @@ public class ApiKeysIndexPage extends BasePage {
 		}		
 		
 		return driver.findElementsByClassName("bodyRow").size();
-
 	}
 
 	public String getKeyText(int num) {
 		return keys.get(num).getText();
 	}
 
-	public EditApiKeyPage clickEdit(int Row) {
-		editLinks.get(Row).click();
+	public EditApiKeyPage clickEdit(int row) {
+		editLinks.get(row).click();
 		sleep(1000);
 		return new EditApiKeyPage(driver);
 	}
-
-	// public void ClickDelete(int Row){
-	// DeleteBtn.get(Row).click();
-	// Sleep(1000);
-	// }
 
 	public CreateApiKeyPage clickNewLink() {
 		createNewKeyLink.click();
 		return new CreateApiKeyPage(driver);
 	}
 
-	public ApiKeysIndexPage clickDelete(int Row) {
-		deleteButton.get(Row).click();
+	public ApiKeysIndexPage clickDelete(int row) {
+		deleteButton.get(row).click();
 
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
+		handleAlert();
 
 		return new ApiKeysIndexPage(driver);
 	}

@@ -37,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.service.AccessGroupService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -53,12 +54,15 @@ public class OrganizationsController {
 
 	private OrganizationService organizationService = null;
 	private ApplicationService applicationService = null;
+	private AccessGroupService accessGroupService = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-								   ApplicationService applicationService) {
+								   ApplicationService applicationService,
+								   AccessGroupService accessGroupService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
+		this.accessGroupService = accessGroupService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -70,7 +74,8 @@ public class OrganizationsController {
 		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		if (test instanceof ThreadFixUserDetails) {
-			model.addAttribute("shouldChangePassword",!((ThreadFixUserDetails) test).hasChangedInitialPassword());
+			model.addAttribute("shouldChangePassword",
+					!((ThreadFixUserDetails) test).hasChangedInitialPassword());
 		}
 		
 		return "organizations/index";
@@ -78,8 +83,19 @@ public class OrganizationsController {
 
 	@RequestMapping("/{orgId}")
 	public ModelAndView detail(@PathVariable("orgId") int orgId) {
+		
+		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Integer userId = null;
+		if (test instanceof ThreadFixUserDetails) {
+			userId = ((ThreadFixUserDetails) test).getUserId();
+		}
+		
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null && organization.isActive()) {
+			
+			boolean authenticated = accessGroupService.hasAccess(userId, organization);
+			log.info("The user has requested a team page. Authenticated? " + authenticated);
+
 			ModelAndView mav = new ModelAndView("organizations/detail");
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject(organization);

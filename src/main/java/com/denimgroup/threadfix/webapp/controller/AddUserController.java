@@ -102,7 +102,7 @@ public class AddUserController {
 					", the ID " + user.getId() +
 					", and the role " + user.getRole().getDisplayName());
 			status.setComplete();
-			return "redirect:/configuration/users/" + user.getId();
+			return "redirect:/configuration/users/" + user.getId() + "/groups";
 		}
 	}
 	

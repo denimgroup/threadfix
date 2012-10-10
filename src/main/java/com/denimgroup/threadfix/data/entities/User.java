@@ -24,15 +24,19 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "User")
@@ -55,6 +59,8 @@ public class User extends AuditableEntity {
 	private Date failedPasswordAttemptWindowStart = new Date();
 
 	private Role role;
+	
+	private List<UserGroupMap> maps;
 
 	private String unencryptedPassword;
 	private String passwordConfirm;
@@ -189,6 +195,16 @@ public class User extends AuditableEntity {
 
 	public void setHasChangedInitialPassword(Boolean hasChangedInitialPassword) {
 		this.hasChangedInitialPassword = hasChangedInitialPassword;
+	}
+
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	public List<UserGroupMap> getUserGroupMaps() {
+		return maps;
+	}
+
+	public void setUserGroupMaps(List<UserGroupMap> userGroupMaps) {
+		this.maps = userGroupMaps;
 	}
 
 }

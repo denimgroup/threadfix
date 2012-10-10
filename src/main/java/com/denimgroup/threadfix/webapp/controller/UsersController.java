@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,9 +38,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.AccessGroup;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.AccessGroupService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
 
 /**
  * @author dshannon
@@ -48,12 +54,15 @@ import com.denimgroup.threadfix.service.UserService;
 public class UsersController {
 
 	private UserService userService = null;
+	private AccessGroupService groupService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	@Autowired
-	public UsersController(UserService userService) {
+	public UsersController(UserService userService,
+			AccessGroupService groupService) {
 		this.userService = userService;
+		this.groupService = groupService;
 	}
 
 	@InitBinder
@@ -63,7 +72,26 @@ public class UsersController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String manageUsers(ModelMap model) {
-		model.addAttribute(userService.loadAllUsers());
+		
+		List<UserModel> userModels = new ArrayList<UserModel>();
+		
+		List<User> users = userService.loadAllUsers();
+		
+		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		for (User user : users) {
+			boolean lastAdmin = userService.isAdmin(user) && 1 == userService.countActiveAdmins();
+			boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
+			
+			UserModel userModel = new UserModel();
+			userModel.setUser(user);
+			userModel.setLastAdmin(lastAdmin);
+			userModel.setThisUser(isThisUser);
+			userModels.add(userModel);
+		}
+		
+		model.addAttribute("userModels", userModels);
+		
 		return "config/users/index";
 	}
 
@@ -80,12 +108,28 @@ public class UsersController {
 			throw new ResourceNotFoundException();
 		}
 		
+		StringBuilder builder = new StringBuilder();
+		String groupString = null;
+		List<AccessGroup> groups = groupService.getGroupsForUser(userId);
+		
+		if (groups != null && groups.size() > 0) {
+			for (AccessGroup group : groups) {
+				builder.append(group.getName());
+				builder.append(", ");
+			}
+			
+			if (builder.length() > 2) {
+				groupString = builder.substring(0, builder.length() - 2);
+			}
+		}
+		
 		boolean lastAdmin = userService.isAdmin(user) && 1 == userService.countActiveAdmins();
 		
 		ModelAndView mav = new ModelAndView("config/users/detail");
 		mav.addObject(user);
 		mav.addObject("lastUser", lastAdmin);
 		mav.addObject("isThisUser", isThisUser);
+		mav.addObject("groupString", groupString);
 		return mav;
 	}
 

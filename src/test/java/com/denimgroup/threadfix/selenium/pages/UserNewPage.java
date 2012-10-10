@@ -86,9 +86,9 @@ public class UserNewPage extends BasePage {
 		return this;
 	}
 
-	public UserDetailPage clickAddUserButton() {
+	public UserGroupConfigPage clickAddUserButton() {
 		addUserButton.click();
-		return new UserDetailPage(driver);
+		return new UserGroupConfigPage(driver);
 	}
 
 	public UserNewPage clickAddUserButtonInvalid() {

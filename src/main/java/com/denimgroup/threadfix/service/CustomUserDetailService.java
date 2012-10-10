@@ -40,6 +40,7 @@ import com.denimgroup.threadfix.data.entities.User;
 
 /**
  * @author cleclair
+ * @author mcollins
  * 
  */
 @Service
@@ -60,7 +61,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		grantedAuthorities.add(new GrantedAuthorityImpl(user.getRole().getName()));
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
 				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
-				user.isHasChangedInitialPassword());
+				user.isHasChangedInitialPassword(), user.getId());
 
 		return userDetails;
 	}

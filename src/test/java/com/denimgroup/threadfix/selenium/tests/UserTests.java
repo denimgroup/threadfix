@@ -69,7 +69,9 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordConfirmInput(password);
 		newUserPage.setRoleSelect("Administrator");
 				
-		UserDetailPage userDetailPage = newUserPage.clickAddUserButton();
+		UserDetailPage userDetailPage = newUserPage.clickAddUserButton()
+				.clickSubmitButton()
+				.clickUserNameLink(userName);
 		assertTrue("User name was not preserved correctly.", userDetailPage.getNameText().equals(userName));
 		
 		userIndexPage = userDetailPage.clickBackToListLink();
@@ -141,7 +143,9 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordConfirmInput("dummy password");
 		newUserPage.setRoleSelect("Administrator");
 				
-		UserDetailPage userDetailPage = newUserPage.clickAddUserButton();
+		UserDetailPage userDetailPage = newUserPage.clickAddUserButton()
+				.clickSubmitButton()
+				.clickUserNameLink(longInput.substring(0,25));
 		assertTrue("User name limit was not correct", userDetailPage.getNameText().length() == 25);
 		
 		String userName = userDetailPage.getNameText();
@@ -223,7 +227,9 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordConfirmInput(userNameDuplicateTest);
 		newUserPage.setRoleSelect("Administrator");
 
-		newUserPage = newUserPage.clickAddUserButton().clickBackToListLink().clickAddUserLink();
+		newUserPage = newUserPage.clickAddUserButton()
+				.clickSubmitButton()
+				.clickAddUserLink();
 		
 		newUserPage.setNameInput(baseUserName);
 		newUserPage.setPasswordInput(baseUserName);
@@ -231,7 +237,12 @@ public class UserTests extends BaseTest {
 		newUserPage.setRoleSelect("Administrator");
 		
 		// Test submission with no changes
-		UserDetailPage userDetailPage = newUserPage.clickAddUserButton().clickEditLink().clickUpdateUserButton();
+		UserDetailPage userDetailPage = newUserPage
+				.clickAddUserButton()
+				.clickSubmitButton()
+				.clickUserNameLink(baseUserName)
+				.clickEditLink()
+				.clickUpdateUserButton();
 		assertTrue("User name was not preserved correctly.", userDetailPage.getNameText().equals(baseUserName));
 		UserEditPage editUserPage = userDetailPage.clickEditLink();
 		

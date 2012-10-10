@@ -131,6 +131,10 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	/**
+	 * May need to move to DB layer if this is too slow.
+	 * For now let's avoid premature optimization.
+	 */
 	@Override
 	public boolean isAdmin(User user) {
 		boolean test = user != null && user.getRole() != null && 
