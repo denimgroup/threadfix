@@ -78,7 +78,7 @@ public class AccessGroupTests extends BaseTest {
 		
 		// Test all combinations of users
 		// TODO maybe implement a less bit-twiddly way of doing powersets
-		
+		// the (i >> j) % 2 idiom extracts the value of the jth bit of i
 		for (int i = 0; i < count; i++) {
 			
 			for (int j = 0; j < userNames.length; j++) {

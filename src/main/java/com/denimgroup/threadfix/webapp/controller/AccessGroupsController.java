@@ -147,6 +147,4 @@ public class AccessGroupsController {
 		
 		return "redirect:/configuration/groups";
 	}
-
-	
 }

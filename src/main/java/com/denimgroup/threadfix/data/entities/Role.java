@@ -36,24 +36,27 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "Role")
-public class Role extends BaseEntity {
+public class Role extends AuditableEntity {
 	
 	public static final String ADMIN = "ROLE_ADMIN";
 	public static final String USER = "ROLE_USER";
+	
+	public static final int NAME_LENGTH = 25;
+	public static final int DISPLAY_NAME_LENGTH = 25;
 
 	private static final long serialVersionUID = -1609499610449048270L;
 
 	@NotEmpty(message = "{errors.required}")
-	@Size(max = 25, message = "{errors.maxlength}")
+	@Size(max = NAME_LENGTH, message = "{errors.maxlength}" + NAME_LENGTH)
 	private String name;
 	
 	@NotEmpty(message = "{errors.required}")
-	@Size(max = 25, message = "{errors.maxlength}")
+	@Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
 	private String displayName;
 
 	private List<User> users;
 
-	@Column(length = 25, nullable = false)
+	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -62,7 +65,7 @@ public class Role extends BaseEntity {
 		this.name = name;
 	}
 
-	@Column(length = 25, nullable = false)
+	@Column(length = DISPLAY_NAME_LENGTH, nullable = false)
 	public String getDisplayName() {
 		return displayName;
 	}

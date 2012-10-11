@@ -37,9 +37,9 @@
 		<li>
 			<a id="manageUsersLink" href="<spring:url value="configuration/users" htmlEscape="true"/>">Manage Users</a>
 		</li>
-<%-- 		<li>
-			<a id="manageRolesLink" href="<spring:url value="configuration/roles" htmlEscape="true"/>">Manage Users</a>
-		</li> --%>
+ 		<li>
+			<a id="manageRolesLink" href="<spring:url value="configuration/roles" htmlEscape="true"/>">Manage Roles</a>
+		</li>
 		<li>
 			<a id="viewLogsLink" href="<spring:url value="configuration/logs" htmlEscape="true"/>">View Error Logs</a>
 		</li>

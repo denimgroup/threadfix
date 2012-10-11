@@ -30,8 +30,8 @@
 					<c:if test="${ activeIds.contains(user.id) }">
 						checked="checked"
 					</c:if>
-					name="userIds">
-					<input type="hidden" value="on" name="_userIds">
+					name="objectIds">
+					<input type="hidden" value="on" name="_objectIds">
 				</td>
 			</tr>
 		</c:forEach>

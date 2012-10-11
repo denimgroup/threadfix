@@ -17,7 +17,7 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.AccessGroupService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.viewmodels.GroupUsersModel;
+import com.denimgroup.threadfix.webapp.viewmodels.UserMapsModel;
 
 @Controller
 @RequestMapping("/configuration/groups/{groupId}")
@@ -52,21 +52,21 @@ public class GroupConfigController {
 		model.addAttribute("group",group);
 		model.addAttribute("activeIds", activeIds);
 		model.addAttribute("allUsers", userService.loadAllUsers());
-		model.addAttribute("groupModel", new GroupUsersModel());
+		model.addAttribute("groupModel", new UserMapsModel());
 		return "config/groups/users";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/users")
 	public String processUsersForm(@PathVariable("groupId") int groupId, 
-			@ModelAttribute GroupUsersModel groupModel,
+			@ModelAttribute UserMapsModel groupModel,
 			Model model) {
 		
-		if (groupModel.getUserIds() == null
-				|| groupModel.getUserIds().size() == 0) {
+		if (groupModel.getObjectIds() == null
+				|| groupModel.getObjectIds().size() == 0) {
 			log.info("Removing all groups from group " + groupId);
 		}
 
-		groupService.addUsersToGroup(groupId, groupModel.getUserIds());
+		groupService.addUsersToGroup(groupId, groupModel.getObjectIds());
 		
 		return "redirect:/configuration/groups/";
 	}

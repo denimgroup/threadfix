@@ -25,7 +25,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,26 +55,28 @@ public class HibernateRoleDao implements RoleDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Role> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-							 .createQuery("from Role role order by role.name")
-							 .list();
+		return getActiveRoleCriteria().addOrder(Order.asc("name")).list();
 	}
 
 	@Override
 	public Role retrieveById(int id) {
-		return (Role) sessionFactory.getCurrentSession().get(Role.class, id);
+		return (Role) getActiveRoleCriteria().add(Restrictions.eq("id", id)).uniqueResult();
 	}
 
 	@Override
 	public Role retrieveByName(String name) {
-		return (Role) sessionFactory.getCurrentSession()
-									.createQuery("from Role role where role.name = :name").setString("name", name)
-									.uniqueResult();
+		return (Role) getActiveRoleCriteria().add(Restrictions.eq("name", name)).uniqueResult();
 	}
 
 	@Override
 	public void saveOrUpdate(Role role) {
 		sessionFactory.getCurrentSession().saveOrUpdate(role);
+	}
+	
+	private Criteria getActiveRoleCriteria() {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(Role.class)
+				.add(Restrictions.eq("active", true));
 	}
 
 	@Override

@@ -29,6 +29,8 @@
 		<security:intercept-url pattern="/rest/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/configuration/users**" access="ROLE_ADMIN"/>
 		<security:intercept-url pattern="/configuration/logs**" access="ROLE_ADMIN"/>
+		<security:intercept-url pattern="/configuration/groups**" access="ROLE_ADMIN"/>
+		<security:intercept-url pattern="/configuration/roles**" access="ROLE_ADMIN"/>
 		<security:intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
 		<security:form-login login-page="/login.jsp"/>
 		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
