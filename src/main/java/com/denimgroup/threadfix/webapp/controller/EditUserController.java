@@ -103,16 +103,18 @@ public class EditUserController {
 				return "config/users/form";
 			}
 			
-			boolean isDowngradingPermissions = userService.isAdmin(databaseUser) && 
-					!userService.isAdmin(user);
 			
-			if (isDowngradingPermissions &&
-					userService.countActiveAdmins() == 1) {
-				log.info("A request was made that would leave ThreadFix with 0 admin users. " +
-						"The change will not be saved.");
-				result.rejectValue("role.id", null, "This is the last Admin account so it cannot be switched to User.");
-				return "config/users/form";
-			}
+			// Deal with this later
+//			boolean isDowngradingPermissions = userService.isAdmin(databaseUser) && 
+//					!userService.isAdmin(user);
+//			
+//			if (isDowngradingPermissions &&
+//					userService.countActiveAdmins() == 1) {
+//				log.info("A request was made that would leave ThreadFix with 0 admin users. " +
+//						"The change will not be saved.");
+//				result.rejectValue("role.id", null, "This is the last Admin account so it cannot be switched to User.");
+//				return "config/users/form";
+//			}
 			
 			userService.storeUser(user);
 			
@@ -122,15 +124,15 @@ public class EditUserController {
 			
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
-			boolean currentUserEdited = currentUser.equals(user.getName());
+//			boolean currentUserEdited = currentUser.equals(user.getName());
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			if (currentUserEdited && databaseUser != null && isDowngradingPermissions) {
-				log.info("The current user's permissions have been downgraded. Logging out.");
-				return "redirect:/j_spring_security_logout";
-			} else {
+//			if (currentUserEdited && databaseUser != null && isDowngradingPermissions) {
+//				log.info("The current user's permissions have been downgraded. Logging out.");
+//				return "redirect:/j_spring_security_logout";
+//			} else {
 				return "redirect:/configuration/users/" + userId;
-			}
+//			}
 		}
 	}
 }

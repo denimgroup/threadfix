@@ -47,14 +47,14 @@ public interface AccessGroupService {
 	 * @param userId
 	 * @param groupIds
 	 */
-	void addGroupsToUser(Integer userId, List<Integer> groupIds);
+	void setGroupsForUser(Integer userId, List<Integer> groupIds);
 
 	/**
 	 * 
 	 * @param groupId
 	 * @param userIds
 	 */
-	void addUsersToGroup(Integer groupId, List<Integer> userIds);
+	void setUsersForGroup(Integer groupId, List<Integer> userIds);
 	
 	/**
 	 * 

@@ -33,8 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.RoleDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.dao.UserRoleMapDao;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.UserRoleMap;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,13 +46,15 @@ public class UserServiceImpl implements UserService {
 
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;
+	private UserRoleMapDao userRoleMapDao = null;
 
 	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
 
 	@Autowired
-	public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
+	public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserRoleMapDao userRoleMapDao) {
 		this.userDao = userDao;
 		this.roleDao = roleDao;
+		this.userRoleMapDao = userRoleMapDao;
 	}
 
 	@Override
@@ -116,9 +120,41 @@ public class UserServiceImpl implements UserService {
 		roleDao.saveOrUpdate(role);
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
-	public Long countActiveAdmins() {
-		return userDao.countActiveAdmins();
+	public boolean isLastAdmin(int userId) {
+		Role adminRole = roleDao.retrieveByName(Role.ADMIN);
+		if (adminRole == null) {
+			// this should never happen but if it does let's block actions on the user
+			return true;
+		}
+		
+		UserRoleMap map = userRoleMapDao.retrieveByUserAndRole(userId, adminRole.getId());
+		if (map == null) {
+			// user wasn't an admin, so it can't be the last admin
+			return false;
+		}
+		
+		List<UserRoleMap> userMaps = userRoleMapDao.retrieveByRoleName(Role.ADMIN);
+				
+		if (userMaps == null || userMaps.size() == 0) {
+			// There are no admins, so we logically cannot be here without broken code
+			// TODO throw an exception or something more drastic here
+			return true;
+		}
+		
+		for (UserRoleMap userMap : userMaps) {
+			if (userMap != null && userMap.isActive() && userMap.getUser() != null 
+					&& !userMap.getUser().getId().equals(userId)){
+				// there's another admin
+				
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	private void encryptPassword(User user) {
@@ -137,9 +173,10 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public boolean isAdmin(User user) {
-		boolean test = user != null && user.getRole() != null && 
-				user.getRole().getId() != null && 
-				roleDao.isAdmin(user.getRole().getId());
+		boolean test = true;
+//		user != null && user.getRole() != null && 
+//				user.getRole().getId() != null && 
+//				roleDao.isAdmin(user.getRole().getId());
 		
 		return test;
 	}

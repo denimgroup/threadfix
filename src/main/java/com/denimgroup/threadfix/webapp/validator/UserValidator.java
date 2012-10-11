@@ -46,10 +46,10 @@ public class UserValidator implements Validator {
 		}
 
 		// Validate role
-		if ((user.getRole() == null) || (user.getRole().getId() == null)
-				|| (user.getRole().getId() == 0)) {
-			errors.rejectValue("role.id", "errors.required", new String[] { "Role" }, null);
-		}
+//		if ((user.getRole() == null) || (user.getRole().getId() == null)
+//				|| (user.getRole().getId() == 0)) {
+//			errors.rejectValue("role.id", "errors.required", new String[] { "Role" }, null);
+//		}
 
 		// Validate password
 		if (user.isNew()) {

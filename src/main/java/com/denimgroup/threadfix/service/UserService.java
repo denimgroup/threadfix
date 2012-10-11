@@ -92,12 +92,6 @@ public interface UserService {
 	 * 
 	 * @return
 	 */
-	Long countActiveAdmins();
-	
-	/**
-	 * 
-	 * @return
-	 */
 	boolean isAdmin(User user);
 	
 	/**
@@ -107,4 +101,12 @@ public interface UserService {
 	 * @return
 	 */
 	boolean isCorrectPassword(User user, String password);
+	
+	/**
+	 * Unless the id given belongs to a non-admin user or another user is found with the admin role, 
+	 * this method returns true.
+	 * @param userId
+	 * @return
+	 */
+	boolean isLastAdmin(int userId);
 }

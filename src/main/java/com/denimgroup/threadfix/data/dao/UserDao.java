@@ -56,9 +56,4 @@ public interface UserDao {
 	 */
 	void saveOrUpdate(User user);
 
-	/**
-	 * 
-	 * @return
-	 */
-	Long countActiveAdmins();
 }

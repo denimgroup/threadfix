@@ -39,8 +39,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.AccessGroup;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.AccessGroupService;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
@@ -55,14 +57,17 @@ public class UsersController {
 
 	private UserService userService = null;
 	private AccessGroupService groupService = null;
+	private RoleService roleService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	@Autowired
 	public UsersController(UserService userService,
-			AccessGroupService groupService) {
+			AccessGroupService groupService,
+			RoleService roleService ) {
 		this.userService = userService;
 		this.groupService = groupService;
+		this.roleService = roleService;
 	}
 
 	@InitBinder
@@ -80,7 +85,7 @@ public class UsersController {
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		for (User user : users) {
-			boolean lastAdmin = userService.isAdmin(user) && 1 == userService.countActiveAdmins();
+			boolean lastAdmin = userService.isLastAdmin(user.getId());
 			boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
 			
 			UserModel userModel = new UserModel();
@@ -109,7 +114,8 @@ public class UsersController {
 		}
 		
 		StringBuilder builder = new StringBuilder();
-		String groupString = null;
+		String groupString = null, roleString = null;
+		
 		List<AccessGroup> groups = groupService.getGroupsForUser(userId);
 		
 		if (groups != null && groups.size() > 0) {
@@ -123,19 +129,30 @@ public class UsersController {
 			}
 		}
 		
-		boolean lastAdmin = userService.isAdmin(user) && 1 == userService.countActiveAdmins();
+		List<Role> roles = roleService.getRolesForUser(userId);
+		builder = new StringBuilder();
+		
+		if (roles != null && roles.size() > 0) {
+			for (Role role : roles) {
+				builder.append(role.getDisplayName());
+				builder.append(", ");
+			}
+			
+			if (builder.length() > 2) {
+				roleString = builder.substring(0, builder.length() - 2);
+			}
+		}
 		
 		ModelAndView mav = new ModelAndView("config/users/detail");
 		mav.addObject(user);
-		mav.addObject("lastUser", lastAdmin);
 		mav.addObject("isThisUser", isThisUser);
 		mav.addObject("groupString", groupString);
+		mav.addObject("roleString", roleString);
 		return mav;
 	}
 
 	@RequestMapping("/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId, SessionStatus status) {
-		// TODO - fix delete functionality - should just disable a user
 		User user = userService.loadUser(userId);
 		
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -143,8 +160,7 @@ public class UsersController {
 		boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
 		
 		if (user != null) {
-			if (userService.isAdmin(user) && 
-					1 == userService.countActiveAdmins()) {
+			if (userService.isLastAdmin(userId)) {
 				return "redirect:/configuration/users/" + userId;
 			} else {
 				userService.delete(user);

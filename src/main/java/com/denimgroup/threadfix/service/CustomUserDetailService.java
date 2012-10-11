@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +34,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.denimgroup.threadfix.data.dao.UserRoleMapDao;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
 
@@ -48,17 +49,29 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserRoleMapDao userRoleMapDao;
 
 	@Override
-	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,
-			DataAccessException {
+	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		User user = userService.loadUser(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("");
 		}
+		
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-		grantedAuthorities.add(new GrantedAuthorityImpl(user.getRole().getName()));
+		
+		Integer id = user.getId();
+		
+		if (id != null) {
+			List<Role> roles = userRoleMapDao.getRolesForUser(id);
+		
+			for (Role role : roles) {
+				grantedAuthorities.add(new GrantedAuthorityImpl(role.getName()));
+			}
+		}
+		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
 				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
 				user.isHasChangedInitialPassword(), user.getId());

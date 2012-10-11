@@ -89,18 +89,17 @@ public class AddUserController {
 				return "config/users/form";
 			}
 			
-			if (user.getRole() == null || user.getRole().getId() == null 
-					|| userService.loadRole(user.getRole().getId()) == null) {
-				result.rejectValue("role.id", "errors.invalid", new String [] { "Role Choice" }, null);
-				return "config/users/form";
-			}
+//			if (user.getRole() == null || user.getRole().getId() == null 
+//					|| userService.loadRole(user.getRole().getId()) == null) {
+//				result.rejectValue("role.id", "errors.invalid", new String [] { "Role Choice" }, null);
+//				return "config/users/form";
+//			}
 			
 			userService.createUser(user);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
-					", the ID " + user.getId() +
-					", and the role " + user.getRole().getDisplayName());
+					", the ID " + user.getId());// + user.getRole().getDisplayName());
 			status.setComplete();
 			return "redirect:/configuration/users/" + user.getId() + "/groups";
 		}

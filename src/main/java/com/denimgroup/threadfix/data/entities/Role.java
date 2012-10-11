@@ -45,6 +45,8 @@ public class Role extends AuditableEntity {
 	public static final int DISPLAY_NAME_LENGTH = 25;
 
 	private static final long serialVersionUID = -1609499610449048270L;
+	
+	private List<UserRoleMap> userRoleMaps;
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength}" + NAME_LENGTH)
@@ -53,8 +55,6 @@ public class Role extends AuditableEntity {
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
 	private String displayName;
-
-	private List<User> users;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -76,11 +76,11 @@ public class Role extends AuditableEntity {
 
 	@OneToMany(mappedBy = "role")
 	@JsonIgnore
-	public List<User> getUsers() {
-		return users;
+	public List<UserRoleMap> getUserRoleMaps() {
+		return userRoleMaps;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setUserRoleMaps(List<UserRoleMap> userRoleMaps) {
+		this.userRoleMaps = userRoleMaps;
 	}
 }

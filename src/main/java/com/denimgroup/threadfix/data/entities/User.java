@@ -28,8 +28,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -58,9 +56,8 @@ public class User extends AuditableEntity {
 	private int failedPasswordAttempts = 0;
 	private Date failedPasswordAttemptWindowStart = new Date();
 
-	private Role role;
-	
-	private List<UserGroupMap> maps;
+	private List<UserGroupMap> userGroupMaps;
+	private List<UserRoleMap> userRoleMaps;
 
 	private String unencryptedPassword;
 	private String passwordConfirm;
@@ -150,16 +147,6 @@ public class User extends AuditableEntity {
 		this.failedPasswordAttemptWindowStart = failedPasswordAttemptWindowStart;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "roleId", nullable = false)
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
 	@Transient
 	public String getUnencryptedPassword() {
 		return unencryptedPassword;
@@ -200,11 +187,21 @@ public class User extends AuditableEntity {
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	public List<UserGroupMap> getUserGroupMaps() {
-		return maps;
+		return userGroupMaps;
 	}
 
 	public void setUserGroupMaps(List<UserGroupMap> userGroupMaps) {
-		this.maps = userGroupMaps;
+		this.userGroupMaps = userGroupMaps;
+	}
+	
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	public List<UserRoleMap> getUserRoleMaps() {
+		return userRoleMaps;
+	}
+
+	public void setUserRoleMaps(List<UserRoleMap> userRoleMaps) {
+		this.userRoleMaps = userRoleMaps;
 	}
 
 }

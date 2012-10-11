@@ -78,7 +78,7 @@ public class AccessGroupServiceImpl implements AccessGroupService {
 	}
 
 	@Override
-	public void addGroupsToUser(Integer userId, List<Integer> groupIds) {
+	public void setGroupsForUser(Integer userId, List<Integer> groupIds) {
 		log.info("Adding groups (" + groupIds + ") to user with ID " + userId + ".");
 		
 		Set<Integer> idsToAdd = new HashSet<Integer>();
@@ -116,7 +116,7 @@ public class AccessGroupServiceImpl implements AccessGroupService {
 	}
 	
 	@Override
-	public void addUsersToGroup(Integer groupId, List<Integer> userIds) {
+	public void setUsersForGroup(Integer groupId, List<Integer> userIds) {
 		log.info("Adding users (" + userIds + ") to group with ID " + groupId + ".");
 		
 		Set<Integer> idsToAdd = new HashSet<Integer>();

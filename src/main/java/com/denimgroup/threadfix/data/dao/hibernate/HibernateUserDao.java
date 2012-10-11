@@ -28,13 +28,11 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
 /**
@@ -58,15 +56,6 @@ public class HibernateUserDao implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<User> retrieveAllActive() {
 		return getActiveUserCriteria().addOrder(Order.asc("name")).list();
-	}
-	
-	@Override
-	public Long countActiveAdmins() {
-		return (Long) getActiveUserCriteria()
-				.createAlias("role", "roleAlias")
-				.add(Restrictions.eq("roleAlias.name", Role.ADMIN))
-				.setProjection(Projections.rowCount())
-				.uniqueResult();
 	}
 
 	@Override
