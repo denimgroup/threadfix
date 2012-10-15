@@ -26,18 +26,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Role:</td>
-				<td class="inputValue">
-					<form:select id="roleSelect" path="role.id">
-						<form:option value="0" label="Select a role" />
-						<form:options items="${ roleList }" itemValue="id" itemLabel="displayName" />
-					</form:select>
-				</td>
-				<td style="padding-left: 5px">
-					<form:errors path="role.id" cssClass="errors" />
-				</td>
-			</tr>
-			<tr>
 				<td class="label">Password:</td>
 				<td class="inputValue">
 					<form:password id="passwordInput" path="unencryptedPassword" />
@@ -63,16 +51,11 @@
 				</span>
 			</c:when>
 			<c:otherwise>
-				<c:if test="${ isThisUser }">
-					<input onclick="return confirmRoles()" id="updateUserButton" type="submit" value="Update User" />
-				</c:if>
-				<c:if test="${ not isThisUser }">
-					<input id="updateUserButton" type="submit" value="Update User" />
-				</c:if>
+				<input id="updateUserButton" type="submit" value="Update User" />
 				<span style="padding-left: 10px">
-				<spring:url value="/configuration/users" var="userUrl">
-					<spring:param name="userId" value="${ user.id }"/>
-				</spring:url>
+					<spring:url value="/configuration/users" var="userUrl">
+						<spring:param name="userId" value="${ user.id }"/>
+					</spring:url>
 					<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Users Index</a>
 				</span>
 			</c:otherwise>

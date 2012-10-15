@@ -9,10 +9,20 @@
 	
 	<table class="dataTable">
 		<tbody>
+			<c:if test="${ empty roleString}">
+				<tr class="bodyRow">
+					<td class="label">Roles: </td>
+					<td id="roleText" class="inputValue">No roles found.</td>
+				</tr>
+			</c:if>
+			<c:if test="${ not empty roleString }">
 			<tr>
-				<td class="label">Role:</td>
-				<td id="roleText" class="inputValue"><c:out value="${ user.role.displayName }"/></td>
+				<td class="label">Roles: </td>
+				<td id="roleText" class="inputValue">
+					<c:out value="${ roleString}"/>
+				</td>
 			</tr>
+			</c:if>
 			<c:if test="${ empty groupString}">
 				<tr class="bodyRow">
 					<td class="label">Groups: </td>
@@ -43,6 +53,13 @@
 			<spring:param name="userId" value="${ user.id }"/>
 		</spring:url>
 		<a id="manageUsersLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a> |
+	</security:authorize>
+	
+	<security:authorize ifAnyGranted="ROLE_ADMIN">
+		<spring:url value="{userId}/roles" htmlEscape="true" var="rolesUrl">
+			<spring:param name="userId" value="${ user.id }"/>
+		</spring:url>
+		<a id="manageUsersLink" href="${ fn:escapeXml(rolesUrl) }">Configure Roles</a> |
 	</security:authorize>
 	
 	<c:choose>

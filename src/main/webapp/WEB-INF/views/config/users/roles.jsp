@@ -5,14 +5,14 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 </head>
 
-<h2>Role <c:out value="${ role.name }"/> Users Configuration</h2>
+<h2>User <c:out value="${ user.name }"/> Role Configuration</h2>
 
 <c:if test="${ not empty error }">
 	<span class="errors"><c:out value="${ error }"/></span>
 </c:if>
 
 <spring:url value="" var="emptyUrl"/>
-<form:form modelAttribute="roleUsersModel" method="post" action="${ fn:escapeXml(emptyUrl) }">
+<form:form modelAttribute="userModel" method="post" action="${ fn:escapeXml(emptyUrl) }">
 	<table class="formattedTable sortable filteredTable" id="anyid" style="margin-top:10px">
 		<thead>
 			<tr>
@@ -21,17 +21,17 @@
 			</tr>
 		</thead>
 		<tbody>
-		<c:if test="${ empty allUsers }">
+		<c:if test="${ empty allRoles }">
 			<tr class="bodyRow">
-				<td colspan="2" style="text-align:center;">No users found.</td>
+				<td colspan="2" style="text-align:center;">No roles found.</td>
 			</tr>
 		</c:if>
-		<c:forEach var="user" items="${ allUsers }" varStatus="status">
+		<c:forEach var="role" items="${ allRoles }" varStatus="status">
 			<tr class="bodyRow">
-				<td id="name${ status.count }"><c:out value="${ user.name }"/></td>
+				<td id="name${ status.count }"><c:out value="${ role.name }"/></td>
 				<td>
-					<input id="userIds${ status.count }" type="checkbox" value="${ user.id }" 
-					<c:if test="${ activeIds.contains(user.id) }">
+					<input id="roleIds${ status.count }" type="checkbox" value="${ role.id }" 
+					<c:if test="${ activeIds.contains(role.id) }">
 						checked="checked"
 					</c:if>
 					name="objectIds">
@@ -44,8 +44,6 @@
 	<br/>
 
 	<input id="submitButton" type="submit" value="Submit">
-	<spring:url value="/configuration/roles" var="backUrl"/>
-	<span style="padding-left:5px">
-		<a id="backToRolesPage" href="${fn:escapeXml(backUrl) }">Back To Roles Page</a>
-	</span>
+	<spring:url value="/configuration/users" var="backUrl"/>
+	<span style="padding-left:5px"><a id="backToUserPageLink" href="${fn:escapeXml(backUrl) }">Back To User Page</a></span>
 </form:form>

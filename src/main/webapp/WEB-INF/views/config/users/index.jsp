@@ -19,9 +19,9 @@
 		<thead>
 			<tr>
 				<th class="medium first">User</th>
-				<th class="medium">Role</th>
 				<th class="short">Edit</th>
 				<th class="medium">Configure Groups</th>
+				<th class="medium">Configure Roles</th>
 				<th class="short">Delete</th>
 			</tr>
 		</thead>
@@ -40,9 +40,6 @@
 					<a href="${ fn:escapeXml(userUrl) }"><c:out value="${ userModel.user.name }"/></a>
 				</td>
 				<td>
-					<c:out value="${ userModel.user.role.displayName }"/>
-				</td>
-				<td>
 					<spring:url value="users/{userId}/edit" var="editUrl">
 						<spring:param name="userId" value="${ userModel.user.id }"/>
 					</spring:url>
@@ -52,7 +49,13 @@
 					<spring:url value="users/{userId}/groups" htmlEscape="true" var="groupsUrl">
 						<spring:param name="userId" value="${ userModel.user.id }"/>
 					</spring:url>
-					<a id="manageUsersLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a>
+					<a id="manageGroupsLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a>
+				</td>
+				<td>
+					<spring:url value="users/{userId}/roles" htmlEscape="true" var="rolesUrl">
+						<spring:param name="userId" value="${ userModel.user.id }"/>
+					</spring:url>
+					<a id="manageRolesLink" href="${ fn:escapeXml(rolesUrl) }">Configure Roles</a>
 				</td>
 				<td>
 					<spring:url value="/configuration/users/{userId}/delete" var="deleteUrl">
