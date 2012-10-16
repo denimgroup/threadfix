@@ -12,11 +12,11 @@
 
 	<c:if test="${ not isStatic }">
 		<input id="dynamicRadioButton" type="radio" name="group" value="dynamic" checked>Dynamic
-		<input id="dynamicRadioButton" type="radio" name="group" value="static">Static
+		<input id="staticRadioButton" type="radio" name="group" value="static">Static
 	</c:if>
 	<c:if test="${ isStatic }">
-		<input type="radio" name="group" value="dynamic">Dynamic
-		<input type="radio" name="group" value="static" checked>Static
+		<input id="dynamicRadioButton" type="radio" name="group" value="dynamic">Dynamic
+		<input id="staticRadioButton" type="radio" name="group" value="static" checked>Static
 	</c:if>
 	
 <spring:url value="" var="emptyUrl"></spring:url>	
@@ -55,7 +55,7 @@
 					<form:input path="channelVulnerability.code" id="txtSearch" name="txtSearch" alt="Search Criteria" 
 							onkeyup="searchCweSuggest(event);" autocomplete="off"  
 							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="60"/>
+							size="50" maxlength="255"/>
 					<div id="search_cwe_suggest" class="search_suggest" style="visibility: hidden"></div>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
