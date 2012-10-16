@@ -44,7 +44,11 @@ public class RolesController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "displayName" } );
+		dataBinder.setAllowedFields(new String [] { "name", "displayName", "canManageUsers",
+				"canManageUsers", "canManageGroups", "canManageRoles", "canManageTeams", 
+				"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
+				"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
+				"canGenerateReports", "canViewJobStatuses", "canManageApplications"} );
 	}
 
 	

@@ -38,6 +38,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "Role")
 public class Role extends AuditableEntity {
 	
+	public enum Permissions {
+		CAN_MANAGE_USERS, CAN_MANAGE_GROUPS, CAN_MANAGE_ROLES, CAN_MANAGE_TEAMS, 
+		CAN_MODIFY_VULNERABILITIES, CAN_UPLOAD_SCANS, CAN_VIEW_ERROR_LOGS, 
+		CAN_SUBMIT_DEFECTS, CAN_MANAGE_APPLICATIONS, CAN_MANAGE_WAFS, 
+		CAN_GENERATE_WAF_RULES, CAN_MANAGE_API_KEYS, CAN_MANAGE_REMOTE_PROVIDERS, 
+		CAN_RUN_REPORTS, CAN_VIEW_JOB_STATUSES
+	}
+	
 	public static final String ADMIN = "ROLE_ADMIN";
 	public static final String USER = "ROLE_USER";
 	
@@ -45,6 +53,11 @@ public class Role extends AuditableEntity {
 	public static final int DISPLAY_NAME_LENGTH = 25;
 
 	private static final long serialVersionUID = -1609499610449048270L;
+	
+	private Boolean canManageUsers, canManageGroups, canManageRoles, canManageTeams, 
+		canModifyVulnerabilities, canUploadScans, canViewErrorLogs, canSubmitDefects,
+		canManageWafs, canGenerateWafRules, canManageApiKeys, canManageRemoteProviders,
+		canGenerateReports, canViewJobStatuses, canManageApplications;
 	
 	private List<UserRoleMap> userRoleMaps;
 
@@ -82,5 +95,140 @@ public class Role extends AuditableEntity {
 
 	public void setUserRoleMaps(List<UserRoleMap> userRoleMaps) {
 		this.userRoleMaps = userRoleMaps;
+	}
+	
+	@Column
+	public Boolean getCanManageUsers() {
+		return canManageUsers != null && canManageUsers;
+	}
+
+	public void setCanManageUsers(Boolean canManageUsers) {
+		this.canManageUsers = canManageUsers;
+	}
+
+	@Column
+	public Boolean getCanManageGroups() {
+		return canManageGroups != null && canManageGroups;
+	}
+
+	public void setCanManageGroups(Boolean canManageGroups) {
+		this.canManageGroups = canManageGroups;
+	}
+
+	@Column
+	public Boolean getCanManageRoles() {
+		return canManageRoles != null && canManageRoles;
+	}
+
+	public void setCanManageRoles(Boolean canManageRoles) {
+		this.canManageRoles = canManageRoles;
+	}
+
+	@Column
+	public Boolean getCanManageTeams() {
+		return canManageTeams != null && canManageTeams;
+	}
+
+	public void setCanManageTeams(Boolean canManageTeams) {
+		this.canManageTeams = canManageTeams;
+	}
+
+	@Column
+	public Boolean getCanModifyVulnerabilities() {
+		return canModifyVulnerabilities != null && canModifyVulnerabilities;
+	}
+
+	public void setCanModifyVulnerabilities(Boolean canModifyVulnerabilities) {
+		this.canModifyVulnerabilities = canModifyVulnerabilities;
+	}
+
+	@Column
+	public Boolean getCanUploadScans() {
+		return canUploadScans != null && canUploadScans;
+	}
+
+	public void setCanUploadScans(Boolean canUploadScans) {
+		this.canUploadScans = canUploadScans;
+	}
+
+	@Column
+	public Boolean getCanViewErrorLogs() {
+		return canViewErrorLogs != null && canViewErrorLogs;
+	}
+
+	public void setCanViewErrorLogs(Boolean canViewErrorLogs) {
+		this.canViewErrorLogs = canViewErrorLogs;
+	}
+
+	@Column
+	public Boolean getCanSubmitDefects() {
+		return canSubmitDefects != null && canSubmitDefects;
+	}
+
+	public void setCanSubmitDefects(Boolean canSubmitDefects) {
+		this.canSubmitDefects = canSubmitDefects;
+	}
+
+	@Column
+	public Boolean getCanManageApplications() {
+		return canManageApplications != null && canManageApplications;
+	}
+
+	public void setCanManageApplications(Boolean canManageApplications) {
+		this.canManageApplications = canManageApplications;
+	}
+
+	@Column
+	public Boolean getCanManageWafs() {
+		return canManageWafs != null && canManageWafs;
+	}
+
+	public void setCanManageWafs(Boolean canManageWafs) {
+		this.canManageWafs = canManageWafs;
+	}
+
+	@Column
+	public Boolean getCanGenerateWafRules() {
+		return canGenerateWafRules != null && canGenerateWafRules;
+	}
+
+	public void setCanGenerateWafRules(Boolean canGenerateWafRules) {
+		this.canGenerateWafRules = canGenerateWafRules;
+	}
+
+	@Column
+	public Boolean getCanManageApiKeys() {
+		return canManageApiKeys != null && canManageApiKeys;
+	}
+
+	public void setCanManageApiKeys(Boolean canManageApiKeys) {
+		this.canManageApiKeys = canManageApiKeys;
+	}
+
+	@Column
+	public Boolean getCanManageRemoteProviders() {
+		return canManageRemoteProviders != null && canManageRemoteProviders;
+	}
+
+	public void setCanManageRemoteProviders(Boolean canManageRemoteProviders) {
+		this.canManageRemoteProviders = canManageRemoteProviders;
+	}
+
+	@Column
+	public Boolean getCanGenerateReports() {
+		return canGenerateReports != null && canGenerateReports;
+	}
+
+	public void setCanGenerateReports(Boolean canGenerateReports) {
+		this.canGenerateReports = canGenerateReports;
+	}
+
+	@Column
+	public Boolean getCanViewJobStatuses() {
+		return canViewJobStatuses != null && canViewJobStatuses;
+	}
+
+	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
+		this.canViewJobStatuses = canViewJobStatuses;
 	}
 }

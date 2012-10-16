@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,8 +53,21 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional(readOnly = false)
 	public void deactivateRole(int id) {
 		Role role = loadRole(id);
-		role.setActive(false);
-		roleDao.saveOrUpdate(role);
+		if (role != null) {
+			role.setActive(false);
+			
+			if (role.getUserRoleMaps() != null && role.getUserRoleMaps().size() > 0) {
+				for (UserRoleMap map : role.getUserRoleMaps()) {
+					if (map != null) {
+						deactivateMap(map);
+					}
+				}
+			}
+			
+			// This deactivates all the maps
+			setUsersForRole(id, new ArrayList<Integer>());
+			roleDao.saveOrUpdate(role);
+		}
 	}
 
 	@Override
