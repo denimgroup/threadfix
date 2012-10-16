@@ -11,12 +11,12 @@
 	<h2>New Finding</h2>
 
 	<c:if test="${ not isStatic }">
-		<input type="radio" name="group" value="dynamic" checked>Dynamic
-		<input type="radio" name="group" value="static">Static
+		<input id="dynamicRadioButton" type="radio" name="group" value="dynamic" checked>Dynamic
+		<input id="staticRadioButton" type="radio" name="group" value="static">Static
 	</c:if>
 	<c:if test="${ isStatic }">
-		<input type="radio" name="group" value="dynamic">Dynamic
-		<input type="radio" name="group" value="static" checked>Static
+		<input id="dynamicRadioButton" type="radio" name="group" value="dynamic">Dynamic
+		<input id="staticRadioButton" type="radio" name="group" value="static" checked>Static
 	</c:if>
 	
 <spring:url value="" var="emptyUrl"></spring:url>	
@@ -29,7 +29,7 @@
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
 					</spring:url>
-					<a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ application.organization.name }"/></a>
+					<a id="orgLink" href="${ fn:escapeXml(orgUrl) }"><c:out value="${ application.organization.name }"/></a>
 				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -40,7 +40,7 @@
 						<spring:param name="orgId" value="${ application.organization.id }"/>
 						<spring:param name="appId" value="${ application.id }"/>
 					</spring:url>
-					<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ application.name }"/></a>
+					<a id="appLink" href="${ fn:escapeXml(appUrl) }"><c:out value="${ application.name }"/></a>
 				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -55,7 +55,7 @@
 					<form:input path="channelVulnerability.code" id="txtSearch" name="txtSearch" alt="Search Criteria" 
 							onkeyup="searchCweSuggest(event);" autocomplete="off"  
 							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="60"/>
+							size="50" maxlength="255"/>
 					<div id="search_cwe_suggest" class="search_suggest" style="visibility: hidden"></div>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
@@ -169,7 +169,7 @@
 			<tr>
 				<td class="label">Parameter:</td>
 				<td class="inputValue">
-					<form:input path="surfaceLocation.parameter" size="50" maxlength="127"/>
+					<form:input id="parameterInput" path="surfaceLocation.parameter" size="50" maxlength="127"/>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="surfaceLocation.parameter" cssClass="errors" />
@@ -178,7 +178,7 @@
 			<tr>
 				<td class="label">Severity:</td>
 				<td class="inputValue">
-					<form:select path="channelSeverity.id">
+					<form:select id="severityInput" path="channelSeverity.id">
 						<form:options items="${ channelSeverityList }" itemValue="id" itemLabel="code" />
 					</form:select>
 				</td>
@@ -186,7 +186,7 @@
 			<tr>
 				<td class="label">Description:</td>
 				<td class="inputValue">
-					<form:textarea path="longDescription" rows="5" cols="50"/>
+					<form:textarea id="descriptionInput" path="longDescription" rows="5" cols="50"/>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="longDescription" cssClass="errors" />
@@ -195,12 +195,12 @@
 		</tbody>
 	</table>
 	<br/>
-	<input type="submit" name="dynamicSubmit" class="dynamic" value="Submit"/>
-	<input type="submit" name="staticSubmit" class="static" value="Submit"/>
+	<input type="submit" id="dynamicSubmit" name="dynamicSubmit" class="dynamic" value="Submit"/>
+	<input type="submit" id="staticSubmit" name="staticSubmit" class="static" value="Submit"/>
 	<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
-	<span style="padding-left: 10px"><a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
+	<span style="padding-left: 10px"><a id="backToAppLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a></span>
 </form:form>
 </body>
