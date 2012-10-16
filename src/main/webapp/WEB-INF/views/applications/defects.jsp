@@ -1,8 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><fmt:message key="mainMenu.title" /></title>
-	<meta name="heading" content="<fmt:message key='mainMenu.heading'/>" />
+	<title>View Defect</title>
 </head>
 
 <body id="apps">
@@ -11,7 +10,10 @@
 	Bug Status: <c:out value="${ defect.status }"/>
 	<br/>
 	<br/>
-	Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
+	Bug Tracker URL: 
+	<a href="${ fn:escapeXml(defect.defectURL) }" target="_blank">
+		<c:out value="${fn:escapeXml(defect.defectURL)}"/>
+	</a>
 	<br/><br/>
 	<spring:url value="../../../{appId}" var="appUrl">
 		<spring:param name="appId" value="${ fn:escapeXml(defect.application.id) }" />
