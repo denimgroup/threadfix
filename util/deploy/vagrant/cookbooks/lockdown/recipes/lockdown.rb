@@ -38,14 +38,28 @@ ruby_block "require shadow library" do
   end
 end
 
-execute "apt-get update" do
-  command "apt-get update"
-  action :run
+script "run apt-get upgrade" do
+  interpreter "bash"
+  user "root"
+  cwd "/home/vagrant"
+  code <<-EOH
+    export DEBIAN_FRONTEND=noninteractive
+    sudo apt-get update
+    
+    sudo apt-get install -y debconf-utils
+    printf "%s\t%s\t%s\n" grub-pc grub-pc/install_devices multiselect |
+    sudo debconf-set-selections
+    printf "%s\t%s\t%s\t%s\n" grub-pc grub-pc/install_devices_empty boolean true |
+    sudo debconf-set-selections
+    sudo apt-get -o Dpkg::Options::="--force-confnew" --force-yes -fuy install grub-pc
+    
+    sudo apt-get -y upgrade
+  EOH
 end
 
 execute "apt-get upgrade" do
-	command "apt-get -y upgrade"
-	action :run
+  command "apt-get -y upgrade"
+  action :nothing
 end
 
 server_package = package "libapache2-mod-jk"
@@ -54,8 +68,9 @@ server_package.run_action(:install)
 server_package = package "libapache-mod-security"
 server_package.run_action(:install)
 
-server_package = package "libxml2-dev"
-server_package.run_action(:install)
+package "libxml2-dev" do
+  action :install
+end
 
 server_package = package "make"
 server_package.run_action(:install)
