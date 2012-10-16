@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Role <c:out value="${ role.name }"/></title>
+	<title>Role <c:out value="${ role.displayName }"/></title>
 </head>
 
 <body>
@@ -31,143 +31,121 @@
 				</tr>
 			</tbody>
 		</table>
-		<br>
 		<h3>Permissions</h3>
 		
 		<table class="formattedTable" style="margin-top:5px">
 			<thead>
 				<tr>
-					<td class="first"></td>
-					<td>Yes</td>
-					<td class="last">No</td>
+					<th class="long first">Permission</th>
+					<th class="short" style="text-align: center;">Yes</th>
+					<th class="short last">No</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="bodyRow">
-					<td>Manage Users</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageUsers" value="true"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageUsers" value="false"/>
-					</td>
+					<td>Generate Reports</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canGenerateReports" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canGenerateReports" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Groups</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageGroups" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageGroups" value="true"/>
-					</td>
+					<td>Generate Waf Rules</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canGenerateWafRules" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canGenerateWafRules" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Roles</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageRoles" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageRoles" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>Modify Vulnerabilities</td>
-					<td class="inputValue">
-						<form:radiobutton path="canModifyVulnerabilities" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canModifyVulnerabilities" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>Upload Scans</td>
-					<td class="inputValue">
-						<form:radiobutton path="canUploadScans" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canUploadScans" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>View Error Logs</td>
-					<td class="inputValue">
-						<form:radiobutton path="canViewErrorLogs" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canViewErrorLogs" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>Submit Defects</td>
-					<td class="inputValue">
-						<form:radiobutton path="canSubmitDefects" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canSubmitDefects" value="true"/>
-					</td>
+					<td>Manage Api Keys</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageApiKeys" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageApiKeys" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
 					<td>Manage Applications</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageApplications" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageApplications" value="true"/>
-					</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageApplications" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageApplications" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage WAFs</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageWafs" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageWafs" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>Generate WAF rules</td>
-					<td class="inputValue">
-						<form:radiobutton path="canGenerateWafRules" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canGenerateWafRules" value="true"/>
-					</td>
-				</tr>
-				<tr class="bodyRow">
-					<td>Manage API Keys</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageApiKeys" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageApiKeys" value="true"/>
-					</td>
+					<td>Manage Groups</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageGroups" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageGroups" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
 					<td>Manage Remote Providers</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageRemoteProviders" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canManageRemoteProviders" value="true"/>
-					</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageRemoteProviders" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageRemoteProviders" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Generate Reports</td>
-					<td class="inputValue">
-						<form:radiobutton path="canGenerateReports" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canGenerateReports" value="true"/>
-					</td>
+					<td>Manage Roles</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageRoles" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageRoles" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Manage Teams</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageTeams" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageTeams" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Manage Users</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageUsers" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageUsers" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Manage Wafs</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageWafs" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canManageWafs" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Modify Vulnerabilities</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canModifyVulnerabilities" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canModifyVulnerabilities" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Submit Defects</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canSubmitDefects" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canSubmitDefects" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>Upload Scans</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canUploadScans" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canUploadScans" value="true" /></td>
+				</tr>
+				<tr class="bodyRow">
+					<td>View Error Logs</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canViewErrorLogs" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canViewErrorLogs" value="true" /></td>
 				</tr>
 				<tr class="bodyRow">
 					<td>View Job Statuses</td>
-					<td class="inputValue">
-						<form:radiobutton path="canViewJobStatuses" value="false"/>
-					</td>
-					<td class="inputValue">
-						<form:radiobutton path="canViewJobStatuses" value="true"/>
-					</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canViewJobStatuses" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							path="canViewJobStatuses" value="true" /></td>
 				</tr>
 			</tbody>
 		</table>
