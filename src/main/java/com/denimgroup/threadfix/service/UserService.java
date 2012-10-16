@@ -87,12 +87,6 @@ public interface UserService {
 	 * @param role
 	 */
 	void storeRole(Role role);
-
-	/**
-	 * 
-	 * @return
-	 */
-	boolean isAdmin(User user);
 	
 	/**
 	 * 

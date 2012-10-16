@@ -42,7 +42,7 @@ import com.denimgroup.threadfix.data.entities.UserRoleMap;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	
-	protected final SanitizedLogger log = new SanitizedLogger("UserService");
+	protected final SanitizedLogger log = new SanitizedLogger(UserService.class);
 
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;
@@ -84,12 +84,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(User user) {
-		user.setName(user.getName() + new Date().toString());
-		if (user.getName().length() > User.NAME_LENGTH) {
-			user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
+		if (user != null) {
+			user.setName(user.getName() + new Date().toString());
+			if (user.getName().length() > User.NAME_LENGTH) {
+				user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
+			}
+			
+			if (user.getUserGroupMaps() != null && !user.getUserGroupMaps().isEmpty())
+			
+			user.setActive(false);
+			userDao.saveOrUpdate(user);
 		}
-		user.setActive(false);
-		userDao.saveOrUpdate(user);
 	}
 
 	@Override
@@ -165,20 +170,6 @@ public class UserServiceImpl implements UserService {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * May need to move to DB layer if this is too slow.
-	 * For now let's avoid premature optimization.
-	 */
-	@Override
-	public boolean isAdmin(User user) {
-		boolean test = true;
-//		user != null && user.getRole() != null && 
-//				user.getRole().getId() != null && 
-//				roleDao.isAdmin(user.getRole().getId());
-		
-		return test;
 	}
 
 	@Override
