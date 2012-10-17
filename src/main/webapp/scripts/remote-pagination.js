@@ -46,19 +46,19 @@ function refillElementSort(elementId, endPoint, page, field)
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "descriptionFilter" : ' + JSON.stringify($("#descriptionFilterInput").val().trim());
+		data += ', "descriptionFilter" : ' + JSON.stringify($.trim($("#descriptionFilterInput").val()));
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "severityFilter" : ' + JSON.stringify($("#severityFilterInput").val().trim());
+		data += ', "severityFilter" : ' + JSON.stringify($.trim($("#severityFilterInput").val()));
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "locationFilter" : ' + JSON.stringify($("#locationFilterInput").val().trim());
+		data += ', "locationFilter" : ' + JSON.stringify($.trim($("#locationFilterInput").val()));
 	}
 		
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "parameterFilter" : ' + JSON.stringify($("#parameterFilterInput").val().trim());
+		data += ', "parameterFilter" : ' + JSON.stringify($.trim($("#parameterFilterInput").val()));
 	}
 	
 	data += "}";
@@ -81,6 +81,10 @@ function refillElementSort(elementId, endPoint, page, field)
 			alert("Request for table data failed.");
 	    }
 	});
+}
+
+function myStringify(string) {
+	return 
 }
 
 function toggleFilters(show, elementId, endPoint){
