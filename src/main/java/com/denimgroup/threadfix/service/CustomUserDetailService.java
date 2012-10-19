@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,7 +35,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.dao.UserRoleMapDao;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
@@ -49,8 +50,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private UserRoleMapDao userRoleMapDao;
 
 	@Override
 	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -64,12 +63,16 @@ public class CustomUserDetailService implements UserDetailsService {
 		
 		Integer id = user.getId();
 		
+		// Transfer the set of permissions that the user has to GrantedAuthority objects
 		if (id != null) {
-			List<Role> roles = userRoleMapDao.getRolesForUser(id);
+			Set<Permission> permissions = userService.getPermissions(id);
 		
-			for (Role role : roles) {
-				grantedAuthorities.add(new GrantedAuthorityImpl(role.getName()));
+			for (Permission permission : permissions) {
+				grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
 			}
+			
+			// While we're testing
+			grantedAuthorities.add(new GrantedAuthorityImpl(Role.ADMIN));
 		}
 		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),

@@ -13,66 +13,74 @@ public interface RoleService {
 	 * 
 	 * @param role
 	 */
-	public void validateRole(Role role, BindingResult result);
+	void validateRole(Role role, BindingResult result);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public List<Role> loadAll();
+	List<Role> loadAll();
 	
 	/**
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public Role loadRole(int id);
+	Role loadRole(int id);
 	
 	/**
 	 * 
 	 * @param name
 	 * @return
 	 */
-	public Role loadRole(String name);
+	Role loadRole(String name);
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public void deactivateRole(int id);
+	void deactivateRole(int id);
 	
 	/**
 	 * 
 	 * @param role
 	 */
-	public void storeRole(Role role);
+	void storeRole(Role role);
 
 	/**
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Role> getRolesForUser(int userId);
+	List<Role> getRolesForUser(int userId);
 
 	/**
 	 * 
 	 * @param userId
 	 * @param objectIds
 	 */
-	public void setRolesForUser(Integer userId, List<Integer> roleIds);
+	void setRolesForUser(Integer userId, List<Integer> roleIds);
 
 	/**
 	 * 
 	 * @param roleId
 	 * @return
 	 */
-	public List<User> getUsersForRole(int roleId);
+	List<User> getUsersForRole(int roleId);
 
 	/**
 	 * 
 	 * @param roleId
 	 * @param objectIds
 	 */
-	public void setUsersForRole(Integer roleId, List<Integer> userIds);
+	void setUsersForRole(Integer roleId, List<Integer> userIds);
+
+	/**
+	 * We need to avoid a state where no users can perform administrative functions
+	 * and the system becomes unusable.
+	 * @param role
+	 * @return
+	 */
+	boolean canDelete(Role role);
 	
 }

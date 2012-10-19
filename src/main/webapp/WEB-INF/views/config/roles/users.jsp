@@ -5,7 +5,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 </head>
 
-<h2>Role <c:out value="${ role.name }"/> Users Configuration</h2>
+<h2>Role <c:out value="${ role.displayName }"/> Users Configuration</h2>
 
 <c:if test="${ not empty error }">
 	<span class="errors"><c:out value="${ error }"/></span>

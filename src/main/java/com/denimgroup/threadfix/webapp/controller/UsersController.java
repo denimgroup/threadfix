@@ -85,12 +85,12 @@ public class UsersController {
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		for (User user : users) {
-			boolean lastAdmin = userService.isLastAdmin(user.getId());
+			boolean deletable = userService.canDelete(user);
 			boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
 			
 			UserModel userModel = new UserModel();
 			userModel.setUser(user);
-			userModel.setLastAdmin(lastAdmin);
+			userModel.setDeletable(deletable);
 			userModel.setThisUser(isThisUser);
 			userModels.add(userModel);
 		}
@@ -155,23 +155,24 @@ public class UsersController {
 	public String deleteUser(@PathVariable("userId") int userId, SessionStatus status) {
 		User user = userService.loadUser(userId);
 		
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
-		
 		if (user != null) {
-			if (userService.isLastAdmin(userId)) {
-				return "redirect:/configuration/users/" + userId;
-			} else {
+			if (userService.canDelete(user)) {
+				
 				userService.delete(user);
 				
 				status.setComplete();
-								
+				
+				String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+				
+				boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
+				
 				if (isThisUser) {
 					return "redirect:/j_spring_security_logout";
 				} else {
 					return "redirect:/configuration/users";
 				}
+			} else {
+				return "redirect:/configuration/users/" + userId;
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));

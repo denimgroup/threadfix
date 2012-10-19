@@ -6,7 +6,7 @@ public class UserModel {
 
 	private User user;
 	
-	private boolean isLastAdmin, isThisUser;
+	private boolean isDeletable, isThisUser;
 	
 	public User getUser() {
 		return user;
@@ -16,12 +16,12 @@ public class UserModel {
 		this.user = user;
 	}
 
-	public boolean isLastAdmin() {
-		return isLastAdmin;
+	public boolean isDeletable() {
+		return isDeletable;
 	}
 
-	public void setLastAdmin(boolean isLastAdmin) {
-		this.isLastAdmin = isLastAdmin;
+	public void setDeletable(boolean isDeletable) {
+		this.isDeletable = isDeletable;
 	}
 
 	public boolean isThisUser() {

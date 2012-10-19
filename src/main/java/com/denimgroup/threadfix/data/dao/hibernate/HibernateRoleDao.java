@@ -55,7 +55,7 @@ public class HibernateRoleDao implements RoleDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Role> retrieveAll() {
-		return getActiveRoleCriteria().addOrder(Order.asc("name")).list();
+		return getActiveRoleCriteria().addOrder(Order.asc("displayName")).list();
 	}
 
 	@Override
@@ -65,12 +65,16 @@ public class HibernateRoleDao implements RoleDao {
 
 	@Override
 	public Role retrieveByName(String name) {
-		return (Role) getActiveRoleCriteria().add(Restrictions.eq("name", name)).uniqueResult();
+		return (Role) getActiveRoleCriteria().add(Restrictions.eq("displayName", name)).uniqueResult();
 	}
 
 	@Override
 	public void saveOrUpdate(Role role) {
-		sessionFactory.getCurrentSession().saveOrUpdate(role);
+		if (role != null && role.getId() != null) {
+			sessionFactory.getCurrentSession().merge(role);
+		} else {
+			sessionFactory.getCurrentSession().saveOrUpdate(role);
+		}
 	}
 	
 	private Criteria getActiveRoleCriteria() {

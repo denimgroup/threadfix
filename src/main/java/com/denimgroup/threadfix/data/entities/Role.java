@@ -23,12 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -37,13 +40,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "Role")
 public class Role extends AuditableEntity {
-	
-	public enum Permissions {
-		CAN_GENERATE_WAF_RULES, CAN_MANAGE_API_KEYS, CAN_MANAGE_APPLICATIONS, CAN_MANAGE_GROUPS, 
-		CAN_MANAGE_REMOTE_PROVIDERS, CAN_MANAGE_ROLES, CAN_MANAGE_TEAMS, CAN_MANAGE_USERS, 
-		CAN_MANAGE_WAFS, CAN_MODIFY_VULNERABILITIES, CAN_RUN_REPORTS, CAN_SUBMIT_DEFECTS, 
-		CAN_UPLOAD_SCANS, CAN_VIEW_ERROR_LOGS, CAN_VIEW_JOB_STATUSES
-	}
 	
 	public static final String ADMIN = "ROLE_ADMIN";
 	public static final String USER = "ROLE_USER";
@@ -60,23 +56,21 @@ public class Role extends AuditableEntity {
 		canViewErrorLogs, canViewJobStatuses;
 	
 	private List<UserRoleMap> userRoleMaps;
-
-	@NotEmpty(message = "{errors.required}")
-	@Size(max = NAME_LENGTH, message = "{errors.maxlength}" + NAME_LENGTH)
-	private String name;
+	
+	public static final String[] PROTECTED_PERMISSIONS = new String[]{
+			"canManageGroups", "canManageRoles", "canManageUsers"
+	};
+	
+	public static final String[] ALL_PERMISSIONS = new String[] {
+		"canManageUsers", "canManageGroups", "canManageRoles", "canManageTeams", 
+		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
+		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
+		"canGenerateReports", "canViewJobStatuses", "canManageApplications"
+	};
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
 	private String displayName;
-
-	@Column(length = NAME_LENGTH, nullable = false)
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@Column(length = DISPLAY_NAME_LENGTH, nullable = false)
 	public String getDisplayName() {
@@ -231,4 +225,57 @@ public class Role extends AuditableEntity {
 	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
 		this.canViewJobStatuses = canViewJobStatuses;
 	}
+
+	@Transient
+	public Set<Permission> getPermissions() {
+		Set<Permission> permissions = new HashSet<Permission>();
+	
+		if (getCanGenerateReports())
+			permissions.add(Permission.CAN_GENERATE_REPORTS);
+
+		if (getCanGenerateWafRules())
+			permissions.add(Permission.CAN_GENERATE_WAF_RULES);
+
+		if (getCanManageApiKeys())
+			permissions.add(Permission.CAN_MANAGE_API_KEYS);
+
+		if (getCanManageApplications())
+			permissions.add(Permission.CAN_MANAGE_APPLICATIONS);
+
+		if (getCanManageGroups())
+			permissions.add(Permission.CAN_MANAGE_GROUPS);
+
+		if (getCanManageRemoteProviders())
+			permissions.add(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+
+		if (getCanManageRoles())
+			permissions.add(Permission.CAN_MANAGE_ROLES);
+
+		if (getCanManageTeams())
+			permissions.add(Permission.CAN_MANAGE_TEAMS);
+
+		if (getCanManageUsers())
+			permissions.add(Permission.CAN_MANAGE_USERS);
+
+		if (getCanManageWafs())
+			permissions.add(Permission.CAN_MANAGE_WAFS);
+
+		if (getCanModifyVulnerabilities())
+			permissions.add(Permission.CAN_MODIFY_VULNERABILITIES);
+
+		if (getCanSubmitDefects())
+			permissions.add(Permission.CAN_SUBMIT_DEFECTS);
+
+		if (getCanUploadScans())
+			permissions.add(Permission.CAN_UPLOAD_SCANS);
+
+		if (getCanViewErrorLogs())
+			permissions.add(Permission.CAN_VIEW_ERROR_LOGS);
+
+		if (getCanViewJobStatuses())
+			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
+
+		return permissions;
+	}
 }
+

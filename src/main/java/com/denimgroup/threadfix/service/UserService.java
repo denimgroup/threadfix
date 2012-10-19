@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
+import java.util.Set;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
@@ -103,4 +105,27 @@ public interface UserService {
 	 * @return
 	 */
 	boolean isLastAdmin(int userId);
+
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	Set<Permission> getPermissions(Integer userId);
+
+	/**
+	 * We can't allow a user to be deleted if it would leave the system with no users that could
+	 * perform administrative functions. This method checks to see if that would happen.
+	 * @param user
+	 * @return
+	 */
+	boolean canDelete(User user);
+
+	/**
+	 * 
+	 * @param userId
+	 * @param objectIds
+	 * @return
+	 */
+	boolean canSetRoles(int userId, List<Integer> objectIds);
 }

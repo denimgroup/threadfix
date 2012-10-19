@@ -56,4 +56,22 @@ public interface UserDao {
 	 */
 	void saveOrUpdate(User user);
 
+	/**
+	 * Checks to see whether it's ok to delete the role with the given id based on whether
+	 * a user will still have the given permission.
+	 * @param id
+	 * @param string
+	 * @return
+	 */
+	boolean canRemovePermissionFromRole(Integer id, String string);
+
+	/**
+	 * Checks to see whether it's ok to delete the user with the given id based on whether
+	 * a user will still have the given permission.
+	 * @param id
+	 * @param string
+	 * @return
+	 */
+	boolean canRemovePermissionFromUser(Integer id, String string);
+
 }

@@ -57,20 +57,19 @@ public class RoleUsersConfigController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/users")
-	public String processUsersForm(@PathVariable("roleId") int roleId, 
+	public String processUsersForm(@PathVariable("roleId") int roleId,
 			@ModelAttribute UserMapsModel roleModel,
 			Model model) {
 		
 		Role role = roleService.loadRole(roleId);
 		
-		boolean hasEmptyRoles = roleModel.getObjectIds() == null || roleModel.getObjectIds().size() == 0;
-		boolean isAdmin = role != null && role.getName() != null && role.getName().equals(Role.ADMIN);
+		boolean hasNoUsers = roleModel.getObjectIds() == null || roleModel.getObjectIds().size() == 0;
 		
-		if (isAdmin && hasEmptyRoles) {
-			model.addAttribute("error", "You cannot remove all users from the Administrator role.");
+		if (hasNoUsers && !roleService.canDelete(role)) {
+			model.addAttribute("error", "You cannot remove all users from this role.");
 			return setupUsersForm(roleId, model);
-		} else if (hasEmptyRoles) {
-			log.info("Removing all roles from role " + roleId);
+		} else if (hasNoUsers) {
+			log.info("Removing all users from role " + roleId);
 		}
 
 		roleService.setUsersForRole(roleId, roleModel.getObjectIds());

@@ -53,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional(readOnly = false)
 	public void deactivateRole(int id) {
 		Role role = loadRole(id);
-		if (role != null) {
+		if (role != null && canDelete(role)) {
 			role.setActive(false);
 			
 			if (role.getUserRoleMaps() != null && role.getUserRoleMaps().size() > 0) {
@@ -69,9 +69,71 @@ public class RoleServiceImpl implements RoleService {
 			roleDao.saveOrUpdate(role);
 		}
 	}
+	
+	@Override
+	public boolean canDelete(Role role) {
+		boolean canDelete = true;
+		
+		if (canDelete && role.getCanManageUsers() && 
+			!userDao.canRemovePermissionFromRole(role.getId(), "canManageUsers")) {
+			canDelete = false;
+		}
+		
+		if (canDelete && role.getCanManageGroups() && 
+				!userDao.canRemovePermissionFromRole(role.getId(), "canManageGroups")) {
+			canDelete = false;
+		}
+
+		if (canDelete && role.getCanManageRoles() && 
+				!userDao.canRemovePermissionFromRole(role.getId(), "canManageRoles")) {
+			canDelete = false;
+		}
+		
+		return canDelete;
+	}
 
 	@Override
 	public void validateRole(Role role, BindingResult result) {
+		if (result.hasFieldErrors("displayName")) {
+			return;
+		}
+		
+		String error = null, name = role.getDisplayName();
+
+		if (name == null || name.trim().length() == 0) {
+			error = "This field cannot be blank";
+		}
+		
+		Role databaseRole = loadRole(name.trim());
+		
+		if (databaseRole != null && !databaseRole.getId().equals(role.getId())) {
+			error = "A role with this name already exists.";
+		}
+		
+		if (name.length() > Role.NAME_LENGTH) {
+			error = "The maximum length for name is " + Role.NAME_LENGTH + " characters.";
+		}
+
+		if (error != null) {
+			result.rejectValue("displayName", null, null, error);
+		}
+		
+		if (databaseRole != null) {
+			if (databaseRole.getCanManageUsers() && !role.getCanManageUsers() && 
+					!userDao.canRemovePermissionFromRole(role.getId(), "canManageUsers")) {
+				result.rejectValue("canManageUsers",null,null,"You cannot remove this privilege from this role.");
+			}
+			
+			if (databaseRole.getCanManageRoles() && !role.getCanManageRoles() && 
+					!userDao.canRemovePermissionFromRole(role.getId(), "canManageRoles")) {
+				result.rejectValue("canManageRoles",null,null,"You cannot remove this privilege from this role.");
+			}
+			
+			if (databaseRole.getCanManageGroups() && !role.getCanManageGroups() && 
+					!userDao.canRemovePermissionFromRole(role.getId(), "canManageGroups")) {
+				result.rejectValue("canManageGroups",null,null,"You cannot remove this privilege from this role.");
+			}
+		}
 	}
 
 	@Override

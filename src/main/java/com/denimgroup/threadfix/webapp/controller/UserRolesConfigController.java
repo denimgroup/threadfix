@@ -61,13 +61,8 @@ public class UserRolesConfigController {
 			@ModelAttribute UserMapsModel userModel,
 			Model model) {
 
-		Role adminRole = roleService.loadRole(Role.ADMIN);
-
-		if (userService.isLastAdmin(userId) &&
-				adminRole != null && userModel != null && 
-				(userModel.getObjectIds() == null ||
-				!userModel.getObjectIds().contains(adminRole.getId()))) {
-			model.addAttribute("error", "You cannot remove the last admin user.");
+		if (!userService.canSetRoles(userId, userModel.getObjectIds())) {
+			model.addAttribute("error", "You cannot remove those roles from this user.");
 			return setupForm(userId, model);
 		}
 

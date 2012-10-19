@@ -1,8 +1,12 @@
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.RoleModel;
 
 @Controller
 @RequestMapping("/configuration/roles")
@@ -44,17 +49,20 @@ public class RolesController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "displayName", "canManageUsers",
-				"canManageUsers", "canManageGroups", "canManageRoles", "canManageTeams", 
-				"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
-				"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-				"canGenerateReports", "canViewJobStatuses", "canManageApplications"} );
+		dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
 	}
 
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
-		model.addAttribute("roleList", roleService.loadAll());
+		List<Role> roles = roleService.loadAll();
+		List<RoleModel> roleModels = new ArrayList<RoleModel>();
+		
+		for (Role role : roles) {
+			roleModels.add(new RoleModel(role, roleService.canDelete(role)));
+		}
+		
+		model.addAttribute("roleList", roleModels);
 		return "config/roles/index";
 	}
 	
@@ -73,19 +81,17 @@ public class RolesController {
 
 		if (result.hasErrors()) {
 			model.addAttribute("role", role);
-			model.addAttribute("name", role.getName());
 			model.addAttribute("displayName", role.getDisplayName());
 			return "config/roles/form";
 		}
 		
-		role.setName(role.getName().trim());
 		role.setDisplayName(role.getDisplayName().trim());
 		
 		status.setComplete();
 		roleService.storeRole(role);
 		
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		log.debug(currentUser + " has created a Role with the name" + role.getName() +
+		log.debug(currentUser + " has created a Role with the name" + role.getDisplayName() +
 				", and the ID " + role.getId());
 		return "redirect:/configuration/roles/" + role.getId() + "/users";
 	}
@@ -94,8 +100,12 @@ public class RolesController {
 	public String delete(@PathVariable("roleId") int roleId) {
 		Role role = roleService.loadRole(roleId);
 		
-		if (role!= null) {
-			roleService.deactivateRole(roleId);
+		if (role != null) {
+			if (roleService.canDelete(role)) {
+				roleService.deactivateRole(roleId);
+			} else {
+				return "redirect:/configuration/roles";
+			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Role", roleId));
 			throw new ResourceNotFoundException();
@@ -130,7 +140,7 @@ public class RolesController {
 			return "config/roles/form";
 		}
 		
-		if (role.getName() != null) {
+		if (role.getDisplayName() != null) {
 			status.setComplete();
 			roleService.storeRole(role);
 		} else {
