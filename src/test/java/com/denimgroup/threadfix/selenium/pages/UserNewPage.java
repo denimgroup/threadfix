@@ -25,14 +25,12 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 public class UserNewPage extends BasePage {
 
 	private WebElement nameInput;
 	private WebElement passwordInput;
 	private WebElement passwordConfirmInput;
-	private Select roleSelect;
 	private WebElement addUserButton;
 	private WebElement cancelLink;
 	
@@ -42,7 +40,6 @@ public class UserNewPage extends BasePage {
 		nameInput = driver.findElementById("nameInput");
 		passwordInput = driver.findElementById("passwordInput");
 		passwordConfirmInput = driver.findElementById("passwordConfirmInput");
-		roleSelect = new Select(driver.findElementById("roleSelect"));
 		addUserButton = driver.findElementById("addUserButton");
 		cancelLink = driver.findElementById("cancelLink");
 	}
@@ -76,16 +73,7 @@ public class UserNewPage extends BasePage {
 		passwordConfirmInput.sendKeys(text);
 		return this;
 	}
-
-	public String getRoleSelect(){
-		return roleSelect.getFirstSelectedOption().getText();
-	}
-
-	public UserNewPage setRoleSelect(String code){
-		roleSelect.selectByVisibleText(code);
-		return this;
-	}
-
+	
 	public UserGroupConfigPage clickAddUserButton() {
 		addUserButton.click();
 		return new UserGroupConfigPage(driver);

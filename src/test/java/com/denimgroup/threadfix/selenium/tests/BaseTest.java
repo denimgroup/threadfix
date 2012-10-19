@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,5 +60,25 @@ public abstract class BaseTest {
 	 */
 	protected String getRandomString(int length) {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+	}
+	
+	protected <T> Set<Set<T>> powerSet(T[] items) {
+		int count = 1 << items.length;
+		
+		Set<Set<T>> setOfSets = new HashSet<Set<T>>();
+		
+		for (int i = 0; i < count; i++) {
+			
+			Set<T> set = new HashSet<T>();
+			int j = 0;
+			for (T item : items) {
+				if ((i >> j++) % 2 == 1)
+					set.add(item);
+			}
+			
+			setOfSets.add(set);
+		}
+		
+		return setOfSets;
 	}
 }

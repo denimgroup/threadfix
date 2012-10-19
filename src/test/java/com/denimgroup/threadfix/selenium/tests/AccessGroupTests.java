@@ -64,7 +64,6 @@ public class AccessGroupTests extends BaseTest {
 		for (String userName : userNames) {
 			userIndexPage = userIndexPage.clickAddUserLink()
 					.setNameInput(userName)
-					.setRoleSelect("User")
 					.setPasswordConfirmInput("testpassword")
 					.setPasswordInput("testpassword")
 					.clickAddUserButton()
