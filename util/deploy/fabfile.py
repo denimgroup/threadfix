@@ -58,11 +58,11 @@ def deploy_war():
     put('%s/threadfix/target/threadfix-0.0.1-SNAPSHOT.war' % local_working_folder_loc, server_target_loc)
     with cd(server_target_loc):        
         run('unzip -q threadfix-0.0.1-SNAPSHOT.war -d threadfix') #unzip the WAR file
-    run('sudo service tomcat6 stop')   #stop tomcat
-    run('mv -f %s/threadfix/WEB-INF/classes/threadfix-backup.script /var/lib/tomcat6/database/threadfix.script' % server_target_loc)
-    run('rm -f /var/lib/tomcat6/database/threadfix.log') 
-    run('sudo ln -fs %s/threadfix /var/lib/tomcat6/webapps' % server_target_loc) #update symlink in webapps
-    run('sudo service tomcat6 start')  #start tomcat
+    run('sudo service tomcat7 stop')   #stop tomcat
+    run('mv -f %s/threadfix/WEB-INF/classes/threadfix-backup.script /var/lib/tomcat7/database/threadfix.script' % server_target_loc)
+    run('rm -f /var/lib/tomcat7/database/threadfix.log') 
+    run('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
+    run('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
 @task
