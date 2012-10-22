@@ -28,7 +28,7 @@
 		</c:if>
 		<c:forEach var="role" items="${ allRoles }" varStatus="status">
 			<tr class="bodyRow">
-				<td id="name${ status.count }"><c:out value="${ role.name }"/></td>
+				<td id="name${ status.count }"><c:out value="${ role.displayName }"/></td>
 				<td>
 					<input id="roleIds${ status.count }" type="checkbox" value="${ role.id }" 
 					<c:if test="${ activeIds.contains(role.id) }">
