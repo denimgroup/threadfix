@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,9 +42,10 @@ import com.denimgroup.threadfix.service.WafService;
 
 @Controller
 @RequestMapping("/wafs/{wafId}/upload")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 public class UploadWafLogController {
 
-	private final LogParserService logParserService;
+	private LogParserService logParserService = null;
 	private WafService wafService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
@@ -53,6 +55,8 @@ public class UploadWafLogController {
 		this.logParserService = logParserService;
 		this.wafService = wafService;
 	}
+	
+	public UploadWafLogController(){}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String uploadIndex() {

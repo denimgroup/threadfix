@@ -20,17 +20,16 @@
 			<tr>
 				<th class="medium first">User</th>
 				<th class="short">Edit</th>
-				<th class="medium">Configure Groups</th>
-				<th class="medium">Configure Roles</th>
+				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
+					<th class="medium">Configure Groups</th>
+				</security:authorize>
+				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
+					<th class="medium">Configure Roles</th>
+				</security:authorize>
 				<th class="short">Delete</th>
 			</tr>
 		</thead>
 		<tbody id="userTableBody">
-		<c:if test="${ empty userModels }">
-			<tr class="bodyRow">
-				<td colspan="2" style="text-align:center;"> No users found.</td>
-			</tr>
-		</c:if>
 		<c:forEach var="userModel" items="${ userModels }">
 			<tr class="bodyRow">
 				<td>
@@ -45,18 +44,22 @@
 					</spring:url>
 					<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a>
 				</td>
-				<td>
-					<spring:url value="users/{userId}/groups" htmlEscape="true" var="groupsUrl">
-						<spring:param name="userId" value="${ userModel.user.id }"/>
-					</spring:url>
-					<a id="manageGroupsLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a>
-				</td>
-				<td>
-					<spring:url value="users/{userId}/roles" htmlEscape="true" var="rolesUrl">
-						<spring:param name="userId" value="${ userModel.user.id }"/>
-					</spring:url>
-					<a id="manageRolesLink" href="${ fn:escapeXml(rolesUrl) }">Configure Roles</a>
-				</td>
+				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
+					<td>
+						<spring:url value="users/{userId}/groups" htmlEscape="true" var="groupsUrl">
+							<spring:param name="userId" value="${ userModel.user.id }"/>
+						</spring:url>
+						<a id="manageGroupsLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a>
+					</td>
+				</security:authorize>
+				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
+					<td>
+						<spring:url value="users/{userId}/roles" htmlEscape="true" var="rolesUrl">
+							<spring:param name="userId" value="${ userModel.user.id }"/>
+						</spring:url>
+						<a id="manageRolesLink" href="${ fn:escapeXml(rolesUrl) }">Configure Roles</a>
+					</td>
+				</security:authorize>
 				<td>
 					<spring:url value="/configuration/users/{userId}/delete" var="deleteUrl">
 						<spring:param name="userId" value="${ userModel.user.id }"/>

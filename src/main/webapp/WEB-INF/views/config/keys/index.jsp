@@ -19,9 +19,7 @@
 				<th class="short">Edit</th>
 				<th class="short">Delete</th>
 				<c:if test="${ not empty apiKeyList }">
-					<security:authorize ifAnyGranted="ROLE_ADMIN">
-						<th class="short last">Restricted</th>
-					</security:authorize>
+					<th class="short last">Restricted</th>
 				</c:if>
 			</tr>
 		</thead>
@@ -53,11 +51,9 @@
 							<input id="delete${ status.count }" type="submit" onclick="return confirm('Are you sure you want to delete this API Key?')" value="Delete"/>
 						</form:form>
 					</td>
-					<security:authorize ifAnyGranted="ROLE_ADMIN">
-						<td id="restricted${ status.count }">
-							<c:out value="${ key.isRestrictedKey }"/>
-						</td>
-					</security:authorize>
+					<td id="restricted${ status.count }">
+						<c:out value="${ key.isRestrictedKey }"/>
+					</td>
 				</tr>
 			</c:forEach>
 			<tr class="footer">

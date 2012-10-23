@@ -28,6 +28,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +58,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/new")
 @SessionAttributes("application")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
 public class AddApplicationController {
 
 	private OrganizationService organizationService = null;
@@ -85,6 +87,8 @@ public class AddApplicationController {
 		this.wafService = wafService;
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
+	
+	public AddApplicationController(){}
 
 	@ModelAttribute
 	public List<DefectTracker> populateDefectTrackers() {

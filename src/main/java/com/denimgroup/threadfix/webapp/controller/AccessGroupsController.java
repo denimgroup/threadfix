@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/configuration/groups")
 @SessionAttributes("accessGroup")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_GROUPS')")
 public class AccessGroupsController {
 
 	private final SanitizedLogger log = new SanitizedLogger(AccessGroupsController.class);
@@ -40,6 +42,8 @@ public class AccessGroupsController {
 		this.groupService = groupService;
 		this.teamService = teamService;
 	}
+	
+	public AccessGroupsController(){}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {

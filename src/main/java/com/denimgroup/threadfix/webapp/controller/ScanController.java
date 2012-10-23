@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -64,6 +65,8 @@ public class ScanController {
 		this.scanDeleteService = scanDeleteService;
 		this.findingService = findingService;
 	}
+	
+	public ScanController(){}
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -112,6 +115,7 @@ public class ScanController {
 		return mav;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,

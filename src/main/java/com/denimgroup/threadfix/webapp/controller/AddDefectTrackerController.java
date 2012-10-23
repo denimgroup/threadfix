@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,9 +51,12 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/configuration/defecttrackers/new")
 @SessionAttributes("defectTracker")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 public class AddDefectTrackerController {
 
 	private DefectTrackerService defectTrackerService;
+	
+	public AddDefectTrackerController(){}
 	
 	private final Log log = LogFactory.getLog(AddDefectTrackerController.class);
 
@@ -77,7 +81,7 @@ public class AddDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String setup(Model model) {
 		DefectTracker defectTracker = new DefectTracker();
 		model.addAttribute(defectTracker);
 		return "config/defecttrackers/form";

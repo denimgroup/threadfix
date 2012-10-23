@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,8 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}")
 public class FindingsController {
+	
+	public FindingsController(){}
 	
 	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
 
@@ -74,6 +77,7 @@ public class FindingsController {
 		return mav;
 	}
 
+	@PreAuthorize("hasRole('ROLE_CAN_MODIFY_VULNERABILITIES')")
 	@RequestMapping(value = "merge", method = RequestMethod.GET)
 	public String merge(@PathVariable("findingId") int findingId,
 			@PathVariable("scanId") int scanId, Model model,
@@ -101,6 +105,7 @@ public class FindingsController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MODIFY_VULNERABILITIES')")
 	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
 	public String setVulnerability(@RequestParam String vulnerabilityId,
 			@PathVariable("findingId") int findingId,

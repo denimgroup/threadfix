@@ -52,6 +52,7 @@
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
+			<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
 			<tr class="footer">
 				<td class="first" colspan="2">
 					<spring:url value="{orgId}/applications/new" var="newAppUrl">
@@ -61,6 +62,7 @@
 				</td>
 				<td colspan="7" class="pagination last" style="text-align:right"></td>
 			</tr>
+			</security:authorize>
 		</tbody>
 	</table>
 	
@@ -125,13 +127,15 @@
 		</tbody>
 	</table>
 	<br />
-	<spring:url value="{orgId}/edit" var="editUrl">
-		<spring:param name="orgId" value="${ organization.id }"/>
-	</spring:url>
-	<a id="editOrganizationLink" href="${ fn:escapeXml(editUrl) }">Edit Team</a> | 
-	<spring:url value="{orgId}/delete" var="deleteUrl">
-		<spring:param name="orgId" value="${ organization.id }"/>
-	</spring:url>
-	<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a> | 
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+		<spring:url value="{orgId}/edit" var="editUrl">
+			<spring:param name="orgId" value="${ organization.id }"/>
+		</spring:url>
+		<a id="editOrganizationLink" href="${ fn:escapeXml(editUrl) }">Edit Team</a> | 
+		<spring:url value="{orgId}/delete" var="deleteUrl">
+			<spring:param name="orgId" value="${ organization.id }"/>
+		</spring:url>
+		<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a> | 
+	</security:authorize>
 	<a id="backToList" href="<spring:url value="/organizations" />">Home</a>
 </body>

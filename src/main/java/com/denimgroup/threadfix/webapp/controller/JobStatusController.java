@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,10 @@ import com.denimgroup.threadfix.service.JobStatusService;
 
 @Controller
 @RequestMapping("/jobs")
+@PreAuthorize("hasRole('ROLE_CAN_VIEW_JOB_STATUSES')")
 public class JobStatusController {
+	
+	public JobStatusController(){}
 
 	private JobStatusService jobStatusService = null;
 

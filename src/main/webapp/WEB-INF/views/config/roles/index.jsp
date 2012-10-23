@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Roles</title>
+	<title>Manage Roles</title>
 </head>
 
 <body>
-	<h2>Roles</h2>
+	<h2>Manage Roles</h2>
 
 	<c:if test="${ not empty error }">
 		<span class="errors"><c:out value="${ error }" /></span>
@@ -71,6 +71,6 @@
 	</table>
 	<br/>
 	<a id="createNewRoleLink" href="<spring:url value="/configuration/roles/new" />">Create New Role</a> |
-	<a id="backToMenuLink" href="<spring:url value="/configuration" />">Back to Menu</a>
+	<a id="backToMenuLink" href="<spring:url value="/configuration" />">Back to Configuration Index</a>
 	
 </body>

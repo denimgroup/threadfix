@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -52,7 +53,10 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/configuration/defecttrackers/{defectTrackerId}/edit")
 @SessionAttributes("defectTracker")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 public class EditDefectTrackerController {
+	
+	public EditDefectTrackerController(){}
 
 	private DefectTrackerService defectTrackerService;
 	private DefectService defectService;

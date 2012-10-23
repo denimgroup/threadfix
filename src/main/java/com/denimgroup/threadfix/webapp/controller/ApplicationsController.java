@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -56,6 +57,8 @@ import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
 public class ApplicationsController {
+	
+	public ApplicationsController(){}
 	
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
 
@@ -173,6 +176,7 @@ public class ApplicationsController {
 		return "applications/closedTable";
 	}
 
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
 	@RequestMapping("/{appId}/delete")
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {

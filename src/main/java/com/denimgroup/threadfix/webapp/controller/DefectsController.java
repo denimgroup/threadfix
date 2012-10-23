@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,6 +50,8 @@ import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 @SessionAttributes("defectViewModel")
 public class DefectsController {
 	
+	public DefectsController(){}
+	
 	private final SanitizedLogger log = new SanitizedLogger(DefectsController.class);
 
 	private ApplicationService applicationService;
@@ -61,6 +64,7 @@ public class DefectsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_CAN_SUBMIT_DEFECTS')")
 	public ModelAndView defectList(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model, HttpServletRequest request) {
 		return defectSubmissionPage(orgId, appId, null, request);
@@ -102,6 +106,7 @@ public class DefectsController {
 		return modelAndView;
 	}
 
+	@PreAuthorize("hasRole('ROLE_CAN_SUBMIT_DEFECTS')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView onSubmit(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,

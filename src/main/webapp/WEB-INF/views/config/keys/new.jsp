@@ -20,7 +20,6 @@
 						<form:errors path="note" cssClass="errors" />
 					</td>
 				</tr>
-				<security:authorize ifAnyGranted="ROLE_ADMIN">
 				<tr>
 					<td class="label">Restricted?</td>
 					<td class="inputValue">
@@ -30,7 +29,6 @@
 						<form:errors path="isRestrictedKey" cssClass="errors" />
 					</td>
 				</tr>
-				</security:authorize>
 			</tbody>
 		</table>
 		<br/>

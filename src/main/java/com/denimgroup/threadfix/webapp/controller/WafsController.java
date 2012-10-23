@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,8 @@ public class WafsController {
 	public WafsController(WafService wafService) {
 		this.wafService = wafService;
 	}
+	
+	public WafsController(){}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model) {
@@ -112,6 +115,7 @@ public class WafsController {
 		return mav;
 	}
 
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 	@RequestMapping("/{wafId}/delete")
 	public String deleteWaf(@PathVariable("wafId") int wafId, SessionStatus status) {
 		Waf waf = wafService.loadWaf(wafId);

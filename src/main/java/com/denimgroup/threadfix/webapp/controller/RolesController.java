@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.RoleModel;
 @Controller
 @RequestMapping("/configuration/roles")
 @SessionAttributes("role")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_ROLES')")
 public class RolesController {
 
 	private final SanitizedLogger log = new SanitizedLogger(RolesController.class);
@@ -41,6 +43,8 @@ public class RolesController {
 	public RolesController(RoleService roleService) {
 		this.roleService = roleService;
 	}
+	
+	public RolesController(){}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {

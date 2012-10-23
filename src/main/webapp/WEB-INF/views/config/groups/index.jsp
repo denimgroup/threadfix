@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Groups</title>
+	<title>Manage Groups</title>
 </head>
 
 <body>
-	<h2>Groups</h2>
+	<h2>Manage Groups</h2>
 	
 	<div id="helpText">
 		ThreadFix Groups determine access to teams and applications.<br/>
@@ -77,6 +77,6 @@
 	</table>
 	<br/>
 	<a id="createNewGroupLink" href="<spring:url value="/configuration/groups/new" />">Create New Group</a> |
-	<a id="backToMenuLink" href="<spring:url value="/configuration" />">Back to Menu</a>
+	<a id="backToMenuLink" href="<spring:url value="/configuration" />">Back to Configuration Index</a>
 	
 </body>

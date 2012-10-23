@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +23,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.UserMapsModel;
 @Controller
 @RequestMapping("/configuration/roles/{roleId}")
 @SessionAttributes("roleModel")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_ROLES')")
 public class RoleUsersConfigController {
 	
 	private UserService userService = null;
@@ -35,6 +37,8 @@ public class RoleUsersConfigController {
 		this.roleService = roleService;
 		this.userService = userService;
 	}
+	
+	public RoleUsersConfigController(){}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/users")
 	public String setupUsersForm(@PathVariable("roleId") int roleId, Model model) {

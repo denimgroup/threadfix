@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +50,8 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 @Controller
 @RequestMapping("/organizations")
 public class OrganizationsController {
+	
+	public OrganizationsController(){}
 	
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
@@ -107,6 +110,7 @@ public class OrganizationsController {
 	}
 
 	@RequestMapping("/{orgId}/delete")
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status) {
 		Organization org = organizationService.loadOrganization(orgId);
 		if (org != null && org.isActive()) {

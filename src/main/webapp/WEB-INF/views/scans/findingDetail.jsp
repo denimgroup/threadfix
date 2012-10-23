@@ -48,11 +48,13 @@
 			<a href="${ fn:escapeXml(vulnerabilityUrl) }">
 				<c:out value="View Vulnerability"/>
 			</a>
-			<br/>
-			<spring:url value="{findingId}/merge" var="mergeUrl">
-				<spring:param name="findingId" value="${ finding.id }"/>
-			</spring:url>
-			<a href="${ fn:escapeXml(mergeUrl) }">Merge with Other Findings</a>
+			<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				<br/>
+				<spring:url value="{findingId}/merge" var="mergeUrl">
+					<spring:param name="findingId" value="${ finding.id }"/>
+				</spring:url>
+				<a href="${ fn:escapeXml(mergeUrl) }">Merge with Other Findings</a>
+			</security:authorize>
 		</c:if>
 	</div>
 

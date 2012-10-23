@@ -74,7 +74,7 @@ public class AddFindingController {
 	private FindingService findingService;
 	private UserService userService;
 
-	private final SanitizedLogger log = new SanitizedLogger(AddChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddFindingController.class);
 	
 	@Autowired
 	public AddFindingController(ApplicationService applicationService,

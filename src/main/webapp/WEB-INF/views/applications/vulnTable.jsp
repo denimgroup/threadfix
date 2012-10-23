@@ -57,14 +57,24 @@
 				<th>Defect</th>
 				<th>Defect Status</th>
 				<th>WAF Rule</th>
-				<th class="unsortable">WAF Events</th>
-				<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
+				<security:authorize ifNotGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<th class="unsortable last">WAF Events</th>
+				</security:authorize>
+				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<th class="unsortable">WAF Events</th>
+					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
+				</security:authorize>
 			</tr>
 		</thead>
 		<tbody>
 		<c:if test="${ empty vulnerabilities }">
 			<tr class="bodyRow">
-				<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
+				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<td colspan="11" style="text-align:center;">No vulnerabilities found.</td>
+				</security:authorize>
+				<security:authorize ifNotGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
+				</security:authorize>
 			</tr>
 		</c:if>
 		<c:forEach var="vuln" items="${vulnerabilities}" varStatus="vulnStatus">
@@ -125,13 +135,16 @@
 				<td>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
 				</td>
-				<td>
-					<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vuln.id }" name="vulnerabilityIds">
-					<input type="hidden" value="on" name="_vulnerabilityIds">
-				</td>
+				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<td>
+						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vuln.id }" name="vulnerabilityIds">
+						<input type="hidden" value="on" name="_vulnerabilityIds">
+					</td>
+				</security:authorize>
 			</tr>
 		</c:forEach>
 		</tbody>
+		<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
 		<tfoot>
 			<tr class="footer">
 				<td colspan="10" style="text-align:right">
@@ -139,6 +152,7 @@
 				</td>
 			</tr>
 		</tfoot>
+		</security:authorize>
 	</table>
 	
 	<script>

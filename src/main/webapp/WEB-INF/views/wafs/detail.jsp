@@ -24,6 +24,8 @@
 	<spring:url value="{wafId}/edit" var="editUrl">
 		<spring:param name="wafId" value="${ waf.id }"/>
 	</spring:url>
+	
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 	<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit WAF</a> | 
 	<spring:url value="{wafId}/delete" var="deleteUrl">
 		<spring:param name="wafId" value="${ waf.id }"/>
@@ -35,11 +37,13 @@
 	<c:if test="${hasApps}">
 		<a id="deleteButton" onclick="return alert('Remove the Applications from this WAF and try again.')">Delete WAF</a> | 
 	</c:if>	
+	</security:authorize>
 	
 	<a id="backToListLink" href="<spring:url value="/wafs" />">Back to WAF Index</a>
 	
 	<br />
 	
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 	<c:if test="${not empty waf.wafRules }">
 		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
 			<spring:param name="wafId" value="${ waf.id }"/>
@@ -61,6 +65,7 @@
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
+	</security:authorize>
 	
 	<h3>Applications</h3>
 	<table class="formattedTable">
@@ -101,25 +106,27 @@
 	</table>
 	
 	<c:if test="${ hasApps }">
-		<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
-			<spring:param name="wafId" value="${ waf.id }"/>
-		</spring:url>
-		<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
-		<c:choose>
-			<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
-				No Directives Found.  
-			</c:when>
-			<c:otherwise>
-				<select id="wafDirectiveSelect" name="wafDirective" >
-					<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
-					<c:forEach var="directive" items="${ directives }">
-						<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
-					</c:forEach>
-				</select>
-			</c:otherwise>
-		</c:choose>
-		<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
-		</form:form>
+		<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_WAF_RULES">
+			<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
+				<spring:param name="wafId" value="${ waf.id }"/>
+			</spring:url>
+			<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
+			<c:choose>
+				<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
+					No Directives Found.  
+				</c:when>
+				<c:otherwise>
+					<select id="wafDirectiveSelect" name="wafDirective" >
+						<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
+						<c:forEach var="directive" items="${ directives }">
+							<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
+						</c:forEach>
+					</select>
+				</c:otherwise>
+			</c:choose>
+			<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
+			</form:form>
+		</security:authorize>
 		
 		<c:if test="${ not empty waf.wafRules }">
 		<h3>WAF Rule Statistics (click to see details):</h3>

@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -50,6 +51,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/addChannel")
 @SessionAttributes("applicationChannel")
+@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 public class AddApplicationChannelController {
 
 	private ApplicationChannelService applicationChannelService;
@@ -65,6 +67,8 @@ public class AddApplicationChannelController {
 		this.applicationService = applicationService;
 		this.channelTypeService = channelTypeService;
 	}
+	
+	public AddApplicationChannelController(){}
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {

@@ -55,10 +55,15 @@
 			</tr>
 		</c:forEach>
 			<tr class="footer">
-				<td colspan="4" class="first">
-					<a id="addOrganization" href="<spring:url value="/organizations/new" />">Add Team</a>
-				</td>
-				<td colspan="3" class="last pagination" style="text-align:right"></td>
+				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+					<td colspan="4" class="first">
+						<a id="addOrganization" href="<spring:url value="/organizations/new" />">Add Team</a>
+					</td>
+					<td colspan="3" class="last pagination" style="text-align:right"></td>
+				</security:authorize>
+				<security:authorize ifNotGranted="ROLE_CAN_MANAGE_TEAMS">
+					<td colspan="7" class="last pagination" style="text-align:right"></td>
+				</security:authorize>
 			</tr>
 		</tbody>
 	</table>

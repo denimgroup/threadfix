@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,8 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 @Controller
 @RequestMapping("/configuration/defecttrackers")
 public class DefectTrackersController {
+	
+	DefectTrackersController(){}
 
 	private DefectTrackerService defectTrackerService;
 	
@@ -69,6 +72,12 @@ public class DefectTrackersController {
 		return mav;
 	}
 	
+	/**
+	 * @param defectTrackerId
+	 * @param status
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 	@RequestMapping("/{defectTrackerId}/delete")
 	public String deleteTracker(@PathVariable("defectTrackerId") int defectTrackerId,
 			SessionStatus status) {

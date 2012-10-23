@@ -31,14 +31,16 @@
 		</tbody>
 	</table>
 	<br />
-	<spring:url value="{defectTrackerId}/edit" var="editUrl">
-		<spring:param name="defectTrackerId" value="${ defectTracker.id }"/>
-	</spring:url>
-	<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
-	<spring:url value="{defectTrackerId}/delete" var="deleteUrl">
-		<spring:param name="defectTrackerId" value="${ defectTracker.id }"/>
-	</spring:url>
-	<a id="deleteButton" onclick="return confirm('If you delete this Tracker, all the associated Defects will also be deleted. Are you sure?')" href="${ fn:escapeXml(deleteUrl) }">Delete</a> | 
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
+		<spring:url value="{defectTrackerId}/edit" var="editUrl">
+			<spring:param name="defectTrackerId" value="${ defectTracker.id }"/>
+		</spring:url>
+		<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
+		<spring:url value="{defectTrackerId}/delete" var="deleteUrl">
+			<spring:param name="defectTrackerId" value="${ defectTracker.id }"/>
+		</spring:url>
+		<a id="deleteButton" onclick="return confirm('If you delete this Tracker, all the associated Defects will also be deleted. Are you sure?')" href="${ fn:escapeXml(deleteUrl) }">Delete</a> | 
+	</security:authorize>
 	<a id="backToListLink" href="<spring:url value="/configuration/defecttrackers" />">Back to Defect Tracker Index</a>
 	<br />
 </body>

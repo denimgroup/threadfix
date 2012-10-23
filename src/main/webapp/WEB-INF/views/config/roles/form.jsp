@@ -92,6 +92,20 @@
 					</td>
 				</tr>
 				<tr class="bodyRow">
+					<td>Manage Defect Trackers</td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							id="canManageDefectTrackersTrue" path="canManageDefectTrackers"
+							value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><form:radiobutton
+							id="canManageDefectTrackersFalse" path="canManageDefectTrackers"
+							value="false" /></td>
+					<td
+						style="border: 0px solid black; background-color: white; padding-left: 5px">
+						<form:errors id="canManageDefectTrackersError"
+							path="canManageDefectTrackers" cssClass="errors" />
+					</td>
+				</tr>
+				<tr class="bodyRow">
 					<td>Manage Groups</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageGroupsTrue" path="canManageGroups" value="true" /></td>

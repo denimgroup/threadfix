@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,7 +54,11 @@ public class HandlerExceptionResolverBean implements HandlerExceptionResolver {
 		
 		if (ex instanceof ResourceNotFoundException) {
 			
-			return new ModelAndView("404");
+			return new ModelAndView("resourceNotFound");
+			
+		} else if (ex instanceof AccessDeniedException) {
+			
+			return new ModelAndView("403");
 			
 		} else {
 			

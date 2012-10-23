@@ -28,6 +28,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -56,7 +57,10 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
 @SessionAttributes("application")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
 public class EditApplicationController {
+	
+	public EditApplicationController(){}
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 	

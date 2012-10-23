@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -58,6 +59,7 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 
 @Controller
 @RequestMapping("/reports")
+@PreAuthorize("hasRole('ROLE_CAN_GENERATE_REPORTS')")
 public class ReportsController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
@@ -74,6 +76,8 @@ public class ReportsController {
 		this.reportsService = reportsService;
 	}
 
+	public ReportsController(){}
+	
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActive();

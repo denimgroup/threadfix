@@ -50,7 +50,7 @@ public class AddSurveyController {
 	private SurveyService surveyService = null;
 	private OrganizationService organizationService = null;
 	
-	private final SanitizedLogger log = new SanitizedLogger(AddChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddSurveyController.class);
 
 	@Autowired
 	public AddSurveyController(SurveyService surveyService, OrganizationService organizationService) {

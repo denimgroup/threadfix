@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +55,10 @@ public class WafRuleController {
 		this.wafService = wafService;
 		this.wafRuleService = wafRuleService;
 	}
+	
+	public WafRuleController(){}
 
+	@PreAuthorize("hasRole('ROLE_CAN_GENERATE_WAF_RULES')")
 	@RequestMapping(method = RequestMethod.POST)
 	public String generateWafRulesForApps(@PathVariable("wafId") int wafId, 
 			@RequestParam("wafDirective") String wafDirective, ModelMap model) {

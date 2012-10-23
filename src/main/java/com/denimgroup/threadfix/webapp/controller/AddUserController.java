@@ -28,6 +28,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +50,7 @@ import com.denimgroup.threadfix.webapp.validator.UserValidator;
 @Controller
 @RequestMapping("/configuration/users/new")
 @SessionAttributes("user")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class AddUserController {
 
 	private UserService userService = null;
@@ -59,6 +61,8 @@ public class AddUserController {
 	public AddUserController(UserService userService) {
 		this.userService = userService;
 	}
+	
+	public AddUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {

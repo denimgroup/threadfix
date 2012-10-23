@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
+@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 public class UploadScanController {
 
 	private ScanService scanService;
@@ -61,6 +63,8 @@ public class UploadScanController {
 		this.applicationService = applicationService;
 		this.applicationChannelService = applicationChannelService;
 	}
+	
+	public UploadScanController(){}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,

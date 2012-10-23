@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,6 +54,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
  */
 @Controller
 @RequestMapping("/configuration/users")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
 	private UserService userService = null;
@@ -69,7 +71,9 @@ public class UsersController {
 		this.groupService = groupService;
 		this.roleService = roleService;
 	}
-
+	
+	public UsersController(){}
+	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields(new String[] { "id" });

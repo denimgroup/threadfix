@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,6 +54,8 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 @RequestMapping("configuration/remoteproviders")
 @SessionAttributes(value= {"remoteProviderType", "remoteProviderApplication"})
 public class RemoteProvidersController {
+	
+	public RemoteProvidersController(){}
 	
 	private final SanitizedLogger log = new SanitizedLogger(RemoteProvidersController.class);
 	
@@ -158,6 +161,7 @@ public class RemoteProvidersController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.GET)
 	public ModelAndView configureAppForm(@PathVariable("typeId") int typeId,
 			@PathVariable("appId") int appId) {
@@ -170,6 +174,7 @@ public class RemoteProvidersController {
 		return modelAndView;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.POST)
 	public String configureAppSubmit(@PathVariable("typeId") int typeId,
 			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication, 
@@ -191,6 +196,7 @@ public class RemoteProvidersController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.GET)
 	public ModelAndView configureStart(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for Remote Provider config page.");
@@ -213,6 +219,7 @@ public class RemoteProvidersController {
 		return modelAndView;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public String configureFinish(@PathVariable("typeId") int typeId,
 			@Valid @ModelAttribute RemoteProviderType remoteProviderType, 
@@ -235,6 +242,7 @@ public class RemoteProvidersController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
 	public String clearConfiguration(@PathVariable("typeId") int typeId) {
 

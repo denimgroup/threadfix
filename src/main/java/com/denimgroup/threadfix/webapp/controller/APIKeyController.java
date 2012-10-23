@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +45,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
 @RequestMapping("/configuration/keys")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_API_KEYS')")
 public class APIKeyController {
 
 	private APIKeyService apiKeyService = null;
@@ -55,6 +57,8 @@ public class APIKeyController {
 		this.apiKeyService = apiKeyService;
 	}
 
+	public APIKeyController(){}
+	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
@@ -80,11 +84,7 @@ public class APIKeyController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String newSubmit(HttpServletRequest request, @RequestParam String note) {
 		
-		boolean restricted = true;
-		
-		if (request.isUserInRole("ROLE_ADMIN")) {
-			restricted = request.getParameter("isRestrictedKey") != null;
-		}
+		boolean restricted = request.getParameter("isRestrictedKey") != null;
 		
 		APIKey newAPIKey = apiKeyService.createAPIKey(note, restricted);
 		apiKeyService.storeAPIKey(newAPIKey);
@@ -132,9 +132,7 @@ public class APIKeyController {
 		if (note != null) {
 			apiKey.setNote(note);
 			
-			if (request.isUserInRole("ROLE_ADMIN")) {
-				apiKey.setIsRestrictedKey(restricted);
-			}
+			apiKey.setIsRestrictedKey(restricted);
 			apiKeyService.storeAPIKey(apiKey);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
