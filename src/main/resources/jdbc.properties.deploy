@@ -3,7 +3,7 @@
 
 #HSQLDB
 jdbc.driverClassName=org.hsqldb.jdbcDriver
-jdbc.url=jdbc:hsqldb:/var/lib/tomcat6/database/threadfix
+jdbc.url=jdbc:hsqldb:/var/lib/tomcat7/database/threadfix
 jdbc.username=sa
 jdbc.password=
 hibernate.dialect=org.hibernate.dialect.HSQLDialect
