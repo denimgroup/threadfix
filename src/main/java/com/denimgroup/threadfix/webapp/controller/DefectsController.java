@@ -128,7 +128,8 @@ public class DefectsController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String updateVulnsFromDefectTracker(@PathVariable("appId") int appId) {
+	public String updateVulnsFromDefectTracker(@PathVariable("appId") int appId,
+			HttpServletRequest request) {
 		Application app = applicationService.loadApplication(appId);
 		
 		if (app == null || app.getOrganization() == null || app.getOrganization().getId() == null) {
@@ -138,6 +139,10 @@ public class DefectsController {
 		
 		Integer orgId = app.getOrganization().getId();
 		queueSender.addDefectTrackerVulnUpdate(orgId, appId);
-		return "redirect:/jobs/open";
+		
+		request.getSession().setAttribute("queueSuccessMessage", 
+				"The Defect Tracker update was successfully added to the queue for processing.");
+		return "redirect:/organizations/" + app.getOrganization().getId() + 
+				"/applications/" + app.getId();
 	}
 }

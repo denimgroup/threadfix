@@ -89,20 +89,10 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 				
-		Object message = null;
-		if (request.getSession() != null) {
-			message = request.getSession().getAttribute("scanSuccessMessage");
-			if (message != null) {
-				request.getSession().removeAttribute("scanSuccessMessage");
-			}
-		}
-		
-		Object error = null;
-		if (request.getSession() != null) {
-			error = request.getSession().getAttribute("scanErrorMessage");
-			if (error != null) {
-				request.getSession().removeAttribute("scanErrorMessage");
-			}
+		Object message = getAttribute(request, "scanSuccessMessage");
+		Object error = getAttribute(request, "scanErrorMessage");
+		if (message == null) {
+			message = getAttribute(request, "queueSuccessMessage");
 		}
 
 		TableSortBean falsePositiveBean = new  TableSortBean();
@@ -120,6 +110,18 @@ public class ApplicationsController {
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		return "applications/detail";
+	}
+	
+	private Object getAttribute(HttpServletRequest request, String attribute) {
+		Object returnValue = null;
+		if (request.getSession() != null) {
+			returnValue = request.getSession().getAttribute(attribute);
+			if (returnValue != null) {
+				request.getSession().removeAttribute(attribute);
+			}
+		}
+		
+		return returnValue;
 	}
 	
 	@RequestMapping("/{appId}/closedVulnerabilities")
