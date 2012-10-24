@@ -55,8 +55,7 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderApplication> retrieveAllWithTypeId(int id) {
-		return getActiveRPACriteria().createAlias("remoteProviderType", "typeAlias")
-				.add(Restrictions.eq("typeAlias", id))
+		return getActiveRPACriteria().add(Restrictions.eq("remoteProviderType.id", id))
 				.addOrder(Order.asc("nativeId"))
 				.list();
 	}
