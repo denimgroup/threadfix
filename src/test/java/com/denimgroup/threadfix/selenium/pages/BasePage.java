@@ -61,13 +61,11 @@ public abstract class BasePage {
 		driver.findElementById("wafsHeader").click();
 		return new WafIndexPage(driver);
 	}
-	
-	/*
-	public ReportsPage clickReportsHeaderLink() {
+
+	public ReportsIndexPage clickReportsHeaderLink() {
 		driver.findElementById("reportsHeader").click();
-		return new ReportsPage(driver);
+		return new ReportsIndexPage(driver);
 	}
-	*/
 	
 	public ConfigurationIndexPage clickConfigurationHeaderLink() {
 		driver.findElementById("configurationHeader").click();

@@ -61,23 +61,23 @@ public class ScanTests extends BaseTest {
 	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	
-	private static Map<String, URL> fileMap = new HashMap<String, URL>();
+	public final static Map<String, URL> SCAN_FILE_MAP = new HashMap<String, URL>();
 	static {
-		fileMap.put("Microsoft CAT.NET", getScanFilePath("Static","CAT.NET","catnet_RiskE.xml") );
-		fileMap.put("FindBugs", getScanFilePath("Static","FindBugs","findbugs-normal.xml") );
-		fileMap.put("IBM Rational AppScan", getScanFilePath("Dynamic","AppScan","appscan-php-demo.xml") );
-		fileMap.put("Mavituna Security Netsparker", getScanFilePath("Dynamic","NetSparker","netsparker-demo-site.xml") );
-		fileMap.put("Skipfish", getScanFilePath("Dynamic","Skipfish","skipfish-demo-site.zip") );
-		fileMap.put("w3af", getScanFilePath("Dynamic","w3af","w3af-demo-site.xml") );
-		fileMap.put("OWASP Zed Attack Proxy", getScanFilePath("Dynamic","ZAP","zaproxy-normal.xml") );
-		fileMap.put("Nessus", getScanFilePath("Dynamic","Nessus","nessus_report_TFTarget.xml") );
-		fileMap.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
-		fileMap.put("WebInspect",getScanFilePath("Dynamic","WebInspect","webinspect-demo-site.xml"));
-		fileMap.put("Brakeman", getScanFilePath("Static","Brakeman","brakeman.json")); 
-		fileMap.put("Fortify 360", getScanFilePath("Static","Fortify","ZigguratUtility.fpr"));
-		fileMap.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
-		fileMap.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
-		fileMap.put("IBM Rational AppScan Source Edition", null);
+		SCAN_FILE_MAP.put("Microsoft CAT.NET", getScanFilePath("Static","CAT.NET","catnet_RiskE.xml") );
+		SCAN_FILE_MAP.put("FindBugs", getScanFilePath("Static","FindBugs","findbugs-normal.xml") );
+		SCAN_FILE_MAP.put("IBM Rational AppScan", getScanFilePath("Dynamic","AppScan","appscan-php-demo.xml") );
+		SCAN_FILE_MAP.put("Mavituna Security Netsparker", getScanFilePath("Dynamic","NetSparker","netsparker-demo-site.xml") );
+		SCAN_FILE_MAP.put("Skipfish", getScanFilePath("Dynamic","Skipfish","skipfish-demo-site.zip") );
+		SCAN_FILE_MAP.put("w3af", getScanFilePath("Dynamic","w3af","w3af-demo-site.xml") );
+		SCAN_FILE_MAP.put("OWASP Zed Attack Proxy", getScanFilePath("Dynamic","ZAP","zaproxy-normal.xml") );
+		SCAN_FILE_MAP.put("Nessus", getScanFilePath("Dynamic","Nessus","nessus_report_TFTarget.xml") );
+		SCAN_FILE_MAP.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
+		SCAN_FILE_MAP.put("WebInspect",getScanFilePath("Dynamic","WebInspect","webinspect-demo-site.xml"));
+		SCAN_FILE_MAP.put("Brakeman", getScanFilePath("Static","Brakeman","brakeman.json")); 
+		SCAN_FILE_MAP.put("Fortify 360", getScanFilePath("Static","Fortify","ZigguratUtility.fpr"));
+		SCAN_FILE_MAP.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
+		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
+		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
 	}
 		
 	@Before
@@ -112,7 +112,7 @@ public class ScanTests extends BaseTest {
 		
 		boolean first = true;
 		
-		for (String channel : fileMap.keySet()) {
+		for (String channel : SCAN_FILE_MAP.keySet()) {
 			if (first) {
 				first = false;
 				uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
@@ -129,7 +129,7 @@ public class ScanTests extends BaseTest {
 		// Make sure that all options made it through
 		List<String> channelOptionsList = uploadScanPage.getChannelSelectContents();
 		for (String string : channelOptionsList) {
-			assertTrue("One of the Channel Types was not present.", fileMap.keySet().contains(string));
+			assertTrue("One of the Channel Types was not present.", SCAN_FILE_MAP.keySet().contains(string));
 		}
 		
 		// Make sure that no options are left to add
@@ -152,7 +152,7 @@ public class ScanTests extends BaseTest {
 		organizationIndexPage = loginPage.login("user", "password");
 		
 		// create an org and an app and upload the scan, then delete everything
-		for (Entry<String, URL> mapEntry : fileMap.entrySet()) {
+		for (Entry<String, URL> mapEntry : SCAN_FILE_MAP.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = new File(mapEntry.getValue().getFile());
 				assertTrue("The test file did not exist.", appScanFile.exists());
@@ -190,7 +190,7 @@ public class ScanTests extends BaseTest {
 		organizationIndexPage = loginPage.login("user", "password");
 		
 		// create an org and an app and upload the scan, then delete everything
-		for (Entry<String, URL> mapEntry : fileMap.entrySet()) {
+		for (Entry<String, URL> mapEntry : SCAN_FILE_MAP.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = new File(mapEntry.getValue().getFile());
 				assertTrue("The test file did not exist.", appScanFile.exists());
@@ -777,7 +777,7 @@ public class ScanTests extends BaseTest {
 													 .clickUploadScanLinkFirstTime()
 													 .setChannelTypeSelect(scannerName)
 													 .clickAddChannelButton()
-													 .setFileInput(fileMap.get(scannerName))
+													 .setFileInput(SCAN_FILE_MAP.get(scannerName))
 													 .setChannelSelect(scannerName)
 													 .clickUploadScanButton()
 													 .clickRefreshLink()

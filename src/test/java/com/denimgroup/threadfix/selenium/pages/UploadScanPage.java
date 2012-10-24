@@ -28,11 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import com.thoughtworks.selenium.Selenium;
 
 public class UploadScanPage extends BasePage { 
 
@@ -74,14 +71,7 @@ public class UploadScanPage extends BasePage {
 	}
 
 	public UploadScanPage setFileInput(URL text){
-		//fileInput.clear();
-		//fileInput.sendKeys(text);
-		
-		Selenium selenium = new WebDriverBackedSelenium(driver, driver.getCurrentUrl());
-		
-		selenium.type("xpath=//input[contains(@id,\"fileInput\")]", text.toString());
-		//selenium.attachFile("xpath=//input[contains(@id,\"fileInput\")]", text.toString());
-
+		fileInput.sendKeys(text.toString());
 		return this;
 	}
 

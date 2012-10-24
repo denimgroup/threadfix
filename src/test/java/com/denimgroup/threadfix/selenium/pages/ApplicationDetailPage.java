@@ -96,14 +96,9 @@ public class ApplicationDetailPage extends BasePage {
 		return new AddChannelPage(driver);
 	}
 
-	public OrganizationIndexPage clickImportSentinelLink() {
-		driver.findElementById("importSentinelLink").click();
-		return new OrganizationIndexPage(driver);
-	}
-
-	public OrganizationIndexPage clickAddFindingManuallyLink() {
+	public ManualUploadPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
-		return new OrganizationIndexPage(driver);
+		return new ManualUploadPage(driver);
 	}
 
 	public ApplicationDetailPage waitForScans() {

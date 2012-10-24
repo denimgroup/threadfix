@@ -59,8 +59,8 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test 
 	public void testCreateBasicApplication() {
-		String orgName = "testCreateApplicationOrg";
-		String appName = "testCreateApplicationApp";
+		String orgName = "testCreateApplicationOrgw";
+		String appName = "testCreateApplicationAppw";
 		String urlText = "http://testurl.com";
 		
 		//set up an organization
@@ -97,7 +97,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test 
 	public void testCreateBasicApplicationValidation() {
-		String orgName = "testCreateApplicationOrg2";
+		String orgName = "testCreateApplicationOrg2a";
 		String appName = null;
 		String urlText = "htnotaurl.com";
 		
@@ -181,10 +181,10 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testEditBasicApplication() {
-		String orgName = "testCreateApplicationOrg";
-		String appName1 = "testCreateApplicationApp";
+		String orgName = "testCreateApplicationOrg21";
+		String appName1 = "testCreateApplicationApp21";
 		String urlText1 = "http://testurl.com";
-		String appName2 = "testCreateApplicationApp2";
+		String appName2 = "testCreateApplicationApp22";
 		String urlText2 = "http://testurl.com352";
 		
 		// set up an organization
@@ -223,9 +223,9 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test 
 	public void testEditBasicApplicationValidation() {
-		String orgName = "testCreateApplicationOrg3";
-		String appName2 = "testApp2";
-		String appName = "testApp1";
+		String orgName = "testCreateApplicationOrg312";
+		String appName2 = "testApp23";
+		String appName = "testApp17";
 		String validUrlText = "http://test.com";
 		String urlText = "htnotaurl.com";
 		
@@ -325,10 +325,10 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test
 	public void testAddWafAtApplicationCreationTimeAndDelete() {
-		String wafName = "appCreateTimeWaf";
+		String wafName = "appCreateTimeWaf1";
 		String type = "Snort";
-		String orgName = "appCreateTimeWafOrg";
-		String appName = "appCreateTimeWafName";
+		String orgName = "appCreateTimeWafOrg2";
+		String appName = "appCreateTimeWafName2";
 		String appUrl = "http://testurl.com";
 		
 		wafAddPage = loginPage.login("user", "password").clickWafsHeaderLink().clickAddWafLink();
@@ -654,10 +654,10 @@ public class ApplicationTests extends BaseTest {
 	@Test
 	public void testApplicationAddPageDefectTrackerValidation() {
 		String dtUrl = DefectTrackerIndexPage.DT_URL;
-		String orgName = "AppDTValidationOrg";
-		String appName = "AppDTValidationApp";
+		String orgName = "AppDTValidationOrg56";
+		String appName = "AppDTValidationApp56";
 		String appUrl = "http://testUrl3.com";
-		String dtName = "DG Bugzilla 2";
+		String dtName = "DG Bugzilla 21";
 		String dtType = "Bugzilla";
 		String dtUserName = "mcollins@denimgroup.com";
 		String dtPassword = "bugzilla";

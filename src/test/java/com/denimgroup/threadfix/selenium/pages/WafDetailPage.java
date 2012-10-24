@@ -68,9 +68,9 @@ public class WafDetailPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 
-	public OrganizationIndexPage clickGenerateWafRulesButton() {
+	public WafDetailPage clickGenerateWafRulesButton() {
 		driver.findElementById("generateWafRulesButton").click();
-		return new OrganizationIndexPage(driver);
+		return new WafDetailPage(driver);
 	}
 
 	public OrganizationIndexPage clickDownloadWafRulesButton() {
