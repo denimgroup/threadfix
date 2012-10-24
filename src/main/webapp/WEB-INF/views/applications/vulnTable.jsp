@@ -62,7 +62,7 @@
 				</security:authorize>
 				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
 					<th class="unsortable">WAF Events</th>
-					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',9)"></th>
+					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',10)"></th>
 				</security:authorize>
 			</tr>
 		</thead>
