@@ -27,9 +27,11 @@
 				<td id="tab-wafs" style="width: 90px;">
 					<a id="wafsHeader" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 				</td>
-				<td id="tab-reports" style="width: 110px;">
-					<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
-				</td>
+				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
+					<td id="tab-reports" style="width: 110px;">
+						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
+					</td>
+				</security:authorize>
 				<td id="tab-config" style="width: 150px;">
 					<a id="configurationHeader" href="<spring:url value="/configuration" htmlEscape="true"/>">Configuration</a>
 				</td>
