@@ -21,6 +21,9 @@
 	<table>
 		<tbody>
 			<tr>
+				<security:authorize ifNotGranted="ROLE_CAN_GENERATE_REPORTS">
+					<td id="tab-spaces" style="width:110px;background:none;"></td>
+				</security:authorize>
 				<td id="tab-apps" style="width: 90px;">
 					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Home</a>
 				</td>
