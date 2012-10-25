@@ -41,7 +41,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "Role")
 public class Role extends AuditableEntity {
 	
-	public static final String ADMIN = "ROLE_ADMIN";
 	public static final String USER = "ROLE_USER";
 	
 	public static final int NAME_LENGTH = 25;

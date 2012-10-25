@@ -145,43 +145,6 @@ public class UserServiceImpl implements UserService {
 		roleDao.saveOrUpdate(role);
 	}
 
-	/**
-	 * 
-	 */
-	@Override
-	public boolean isLastAdmin(int userId) {
-		Role adminRole = roleDao.retrieveByName(Role.ADMIN);
-		if (adminRole == null) {
-			// this should never happen but if it does let's block actions on the user
-			return true;
-		}
-
-		UserRoleMap map = userRoleMapDao.retrieveByUserAndRole(userId, adminRole.getId());
-		if (map == null) {
-			// user wasn't an admin, so it can't be the last admin
-			return false;
-		}
-
-		List<UserRoleMap> userMaps = userRoleMapDao.retrieveByRoleName(Role.ADMIN);
-
-		if (userMaps == null || userMaps.size() == 0) {
-			// There are no admins, so we logically cannot be here without broken code
-			// TODO throw an exception or something more drastic here
-			return true;
-		}
-
-		for (UserRoleMap userMap : userMaps) {
-			if (userMap != null && userMap.isActive() && userMap.getUser() != null 
-					&& !userMap.getUser().getId().equals(userId)){
-				// there's another admin
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	private void encryptPassword(User user) {
 		try {
 			user.setSalt(encoder.generateSalt());
