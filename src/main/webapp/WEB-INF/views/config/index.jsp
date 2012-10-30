@@ -51,6 +51,10 @@
 			<a id="viewLogsLink" href="<spring:url value="configuration/logs" htmlEscape="true"/>">View Error Logs</a>
 		</li>
 		</security:authorize>
+		
+		<li>
+			<a id="configureDefaultsLink" href="<spring:url value="configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
+		</li>
 	</ul>
 	
 	

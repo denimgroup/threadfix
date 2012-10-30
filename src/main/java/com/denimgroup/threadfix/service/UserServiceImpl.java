@@ -152,6 +152,13 @@ public class UserServiceImpl implements UserService {
 	public Set<Permission> getPermissions(Integer userId) {
 		Set<Permission> returnList = new HashSet<Permission>();
 
+		// for now
+		User user = loadUser(userId);
+		
+		if (user != null && user.getHasGlobalGroupAccess() && user.getGlobalRole() != null) {
+			returnList.addAll(user.getGlobalRole().getPermissions());
+		}
+		
 		return returnList;
 	}
 

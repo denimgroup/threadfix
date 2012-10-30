@@ -43,9 +43,12 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
 
 @Controller
 @RequestMapping("/configuration/users/new")
@@ -54,12 +57,18 @@ import com.denimgroup.threadfix.webapp.validator.UserValidator;
 public class AddUserController {
 
 	private UserService userService = null;
+	private DefaultConfigService defaultConfigService = null;
+	private RoleService roleService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
-	public AddUserController(UserService userService) {
+	public AddUserController(UserService userService,
+			RoleService roleService,
+			DefaultConfigService defaultConfigService) {
 		this.userService = userService;
+		this.defaultConfigService = defaultConfigService;
+		this.roleService = roleService;
 	}
 	
 	public AddUserController(){}
@@ -78,6 +87,15 @@ public class AddUserController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model) {
 		User user = new User();
+		
+		DefaultsConfigModel defaultsModel = defaultConfigService.loadCurrentConfiguration();
+		
+		if (defaultsModel != null) {
+			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
+			user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
+		}
+		
+		model.addAttribute("defaults", defaultConfigService.loadCurrentConfiguration());
 		model.addAttribute(user);
 		return "config/users/form";
 	}
@@ -93,20 +111,14 @@ public class AddUserController {
 				result.rejectValue("name", "errors.nameTaken");
 				return "config/users/form";
 			}
-			
-//			if (user.getRole() == null || user.getRole().getId() == null 
-//					|| userService.loadRole(user.getRole().getId()) == null) {
-//				result.rejectValue("role.id", "errors.invalid", new String [] { "Role Choice" }, null);
-//				return "config/users/form";
-//			}
-			
+
 			userService.createUser(user);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
 					", the ID " + user.getId());// + user.getRole().getDisplayName());
 			status.setComplete();
-			return "redirect:/configuration/users/" + user.getId() + "/groups";
+			return "redirect:/configuration/users";
 		}
 	}
 	

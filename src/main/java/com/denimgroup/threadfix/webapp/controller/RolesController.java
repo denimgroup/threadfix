@@ -97,7 +97,7 @@ public class RolesController {
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		log.debug(currentUser + " has created a Role with the name" + role.getDisplayName() +
 				", and the ID " + role.getId());
-		return "redirect:/configuration/roles/" + role.getId() + "/users";
+		return "redirect:/configuration/roles";
 	}
 	
 	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
