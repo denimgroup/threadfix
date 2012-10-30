@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,7 +68,8 @@ public class EditUserController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "role.id", "unencryptedPassword", "passwordConfirm" });
+		dataBinder.setAllowedFields(new String [] { "name", "globalRole.id", "unencryptedPassword", 
+				"passwordConfirm", "hasGlobalGroupAccess" });
 	}
 
 	@ModelAttribute
@@ -95,18 +98,22 @@ public class EditUserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status, HttpServletRequest request) {
 		new UserValidator().validate(user, result);
 		if (result.hasErrors()) {
 			return "config/users/form";
 		} else {
-			
+
 			User databaseUser = userService.loadUser(user.getName());
 			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
 				return "config/users/form";
 			}
 			
+			String globalGroupAccess = request.getParameter("hasGlobalGroupAccess");
+			
+			Boolean hasGlobalGroup = globalGroupAccess != null && globalGroupAccess.equals("true");
+			user.setHasGlobalGroupAccess(hasGlobalGroup);
 			userService.storeUser(user);
 			
 			status.setComplete();

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 
@@ -60,5 +61,11 @@ public interface OrganizationDao {
 	 * @param organization
 	 */
 	void saveOrUpdate(Organization organization);
+
+	/**
+	 * 
+	 * @param authenticatedTeamIds
+	 */
+	List<Organization> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds);
 
 }

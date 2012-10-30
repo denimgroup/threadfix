@@ -38,7 +38,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
-import com.denimgroup.threadfix.service.AccessGroupService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -57,20 +56,17 @@ public class OrganizationsController {
 
 	private OrganizationService organizationService = null;
 	private ApplicationService applicationService = null;
-	private AccessGroupService accessGroupService = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-								   ApplicationService applicationService,
-								   AccessGroupService accessGroupService) {
+								   ApplicationService applicationService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
-		this.accessGroupService = accessGroupService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
-		List<Organization> organizations = organizationService.loadAllActive();
+		List<Organization> organizations = organizationService.loadAllActiveFilter();
 		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
 		
@@ -86,26 +82,20 @@ public class OrganizationsController {
 
 	@RequestMapping("/{orgId}")
 	public ModelAndView detail(@PathVariable("orgId") int orgId) {
-		
-		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Integer userId = null;
-		if (test instanceof ThreadFixUserDetails) {
-			userId = ((ThreadFixUserDetails) test).getUserId();
-		}
-		
 		Organization organization = organizationService.loadOrganization(orgId);
-		if (organization != null && organization.isActive()) {
+		
+		if (organization == null || !organization.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
+			throw new ResourceNotFoundException();
 			
-			boolean authenticated = accessGroupService.hasAccess(userId, organization);
-			log.info("The user has requested a team page. Authenticated? " + authenticated);
-
+		} else if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+			
+		} else {
 			ModelAndView mav = new ModelAndView("organizations/detail");
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject(organization);
 			return mav;
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
-			throw new ResourceNotFoundException();
 		}
 	}
 
@@ -113,14 +103,18 @@ public class OrganizationsController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status) {
 		Organization org = organizationService.loadOrganization(orgId);
-		if (org != null && org.isActive()) {
+		if (org == null || !org.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
+			throw new ResourceNotFoundException();
+			
+		} else if (!organizationService.isAuthorized(orgId)){
+			return "403";
+			
+		} else {
 			organizationService.deactivateOrganization(org);
 			status.setComplete();
 			log.info("Organization soft deletion was successful on Organization " + org.getName() + ".");
 			return "redirect:/organizations";
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
-			throw new ResourceNotFoundException();
 		}
 	}
 }

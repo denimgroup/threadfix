@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 
@@ -51,12 +52,15 @@ public class FindingsController {
 	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
 
 	private FindingService findingService;
+	private OrganizationService organizationService;
 	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public FindingsController(FindingService findingService,
+			OrganizationService organizationService,
 			VulnerabilityService vulnerabilityService) {
 		this.findingService = findingService;
+		this.organizationService = organizationService;
 		this.vulnerabilityService = vulnerabilityService;
 	}
 
@@ -65,6 +69,10 @@ public class FindingsController {
 			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
 		
 		Finding finding = findingService.loadFinding(findingId);
 		if (finding == null){
@@ -83,6 +91,11 @@ public class FindingsController {
 			@PathVariable("scanId") int scanId, Model model,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Finding finding = findingService.loadFinding(findingId);
 
 		if (finding != null && finding.getVulnerability() != null) {
@@ -113,6 +126,10 @@ public class FindingsController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, 
 			Model model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		Finding finding = findingService.loadFinding(findingId);
 		Integer id = null;

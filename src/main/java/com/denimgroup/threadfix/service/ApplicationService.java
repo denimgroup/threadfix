@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.validation.BindingResult;
 
@@ -42,6 +43,12 @@ public interface ApplicationService {
 	 * @return
 	 */
 	List<Application> loadAllActive();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	List<Application> loadAllActiveFilter(Set<Integer> authenticatedTeamIds);
 
 	/**
 	 * @param applicationId

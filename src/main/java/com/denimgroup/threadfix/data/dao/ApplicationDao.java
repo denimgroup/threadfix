@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -44,6 +45,13 @@ public interface ApplicationDao {
 	 * @return
 	 */
 	List<Application> retrieveAllActive();
+	
+	/**
+	 * 
+	 * @param authenticatedTeamIds
+	 * @return
+	 */
+	List<Application> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds);
 
 	/**
 	 * @param id

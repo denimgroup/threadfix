@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -33,6 +34,8 @@ public class ThreadFixUserDetails extends User {
 	private static final long serialVersionUID = -3748634330559506014L;
 
 	private Boolean hasChangedInitialPassword = false;
+	
+	private Set<Integer> authenticatedTeamIds = null;
 
 	private String salt;
 
@@ -88,6 +91,14 @@ public class ThreadFixUserDetails extends User {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Set<Integer> getAuthenticatedTeamIds() {
+		return authenticatedTeamIds;
+	}
+
+	public void setAuthenticatedTeamIds(Set<Integer> authenticatedTeamIds) {
+		this.authenticatedTeamIds = authenticatedTeamIds;
 	}
 
 }

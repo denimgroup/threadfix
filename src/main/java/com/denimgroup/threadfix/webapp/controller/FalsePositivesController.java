@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
@@ -54,15 +55,18 @@ public class FalsePositivesController {
 	public FalsePositivesController(){}
 
 	private ApplicationService applicationService;
+	private OrganizationService organizationService;
 	private VulnerabilityService vulnerabilityService;
 
 	private final SanitizedLogger log = new SanitizedLogger(FalsePositivesController.class);
 
 	@Autowired
 	public FalsePositivesController(ApplicationService applicationService,
+			OrganizationService organizationService,
 			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.vulnerabilityService = vulnerabilityService;
+		this.organizationService = organizationService;
 	}
 
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
@@ -70,6 +74,10 @@ public class FalsePositivesController {
 			@ModelAttribute FalsePositiveModel falsePositiveModel,
 			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model, HttpServletRequest request) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 
 		if (falsePositiveModel == null
 				|| falsePositiveModel.getVulnerabilityIds() == null
@@ -89,6 +97,10 @@ public class FalsePositivesController {
 	@RequestMapping(value = "/unmark", method = RequestMethod.GET)
 	public String defectList(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
@@ -112,6 +124,10 @@ public class FalsePositivesController {
 			@ModelAttribute FalsePositiveModel falsePositiveModel,
 			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 
 		if (falsePositiveModel == null
 				|| falsePositiveModel.getVulnerabilityIds() == null
@@ -128,9 +144,14 @@ public class FalsePositivesController {
 	}
 	
 	@RequestMapping(value="/table", method = RequestMethod.POST)
-	public String getTableVulns(@PathVariable("appId") Integer appId,
+	public String getTableVulns(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {

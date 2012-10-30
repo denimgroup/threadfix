@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.SurveyResult;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
@@ -39,17 +40,24 @@ import com.denimgroup.threadfix.service.SurveyService;
 public class SurveysController {
 
 	private final SurveyService surveyService;
+	private final OrganizationService organizationService;
 
 	private final SanitizedLogger log = new SanitizedLogger(SurveysController.class);
 	
 	@Autowired
-	public SurveysController(SurveyService surveyService) {
+	public SurveysController(SurveyService surveyService,
+			OrganizationService organizationService) {
 		this.surveyService = surveyService;
+		this.organizationService = organizationService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String detail(@PathVariable("orgId") int orgId, @PathVariable("resultId") int resultId,
-			Model model) {
+	public String detail(@PathVariable("orgId") int orgId, 
+			@PathVariable("resultId") int resultId, Model model) {
+		if (!organizationService.isAuthorized(orgId)){
+			return "403";
+		}
+		
 		SurveyResult surveyResult = surveyService.loadSurveyResult(resultId);
 		
 		if (surveyResult == null) {

@@ -21,7 +21,6 @@
 				<th class="medium first">Name</th>
 				<th class="short">Edit</th>
 				<th class="short">Delete</th>
-				<th class="medium">Configure Users</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -58,12 +57,6 @@
 							
 							value="Delete"/>
 						</form:form>
-					</td>
-					<td>
-						<spring:url value="/configuration/roles/{roleId}/users" var="userConfigUrl">
-							<spring:param name="roleId" value="${ model.role.id }" />
-						</spring:url>
-						<a id="userConfig${ status.count }" href="${ fn:escapeXml(userConfigUrl) }">Configure Users</a> 
 					</td>
 				</tr>
 			</c:forEach>

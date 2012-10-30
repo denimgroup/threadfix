@@ -75,6 +75,10 @@ public class EditOrganizationController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("orgId") int orgId, Model model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
 
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
@@ -91,6 +95,11 @@ public class EditOrganizationController {
 	public String editSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (result.hasErrors()) {
 			return "organizations/form";
 		} else {

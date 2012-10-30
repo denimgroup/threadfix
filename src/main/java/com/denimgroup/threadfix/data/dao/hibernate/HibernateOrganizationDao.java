@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,14 @@ public class HibernateOrganizationDao implements OrganizationDao {
 		} else {
 			sessionFactory.getCurrentSession().saveOrUpdate(organization);
 		}
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Organization> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
+		return sessionFactory.getCurrentSession()
+				.createQuery("from Organization org where org.active = 1 and org.id in (:teams) order by org.name")
+				.setParameterList("teams", authenticatedTeamIds).list();
 	}
 
 }

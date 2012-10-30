@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
 
 public interface RoleService {
 
@@ -46,34 +45,6 @@ public interface RoleService {
 	 * @param role
 	 */
 	void storeRole(Role role);
-
-	/**
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	List<Role> getRolesForUser(int userId);
-
-	/**
-	 * 
-	 * @param userId
-	 * @param objectIds
-	 */
-	void setRolesForUser(Integer userId, List<Integer> roleIds);
-
-	/**
-	 * 
-	 * @param roleId
-	 * @return
-	 */
-	List<User> getUsersForRole(int roleId);
-
-	/**
-	 * 
-	 * @param roleId
-	 * @param objectIds
-	 */
-	void setUsersForRole(Integer roleId, List<Integer> userIds);
 
 	/**
 	 * We need to avoid a state where no users can perform administrative functions

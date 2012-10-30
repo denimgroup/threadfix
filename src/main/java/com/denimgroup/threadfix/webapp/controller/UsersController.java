@@ -39,11 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.AccessGroup;
-import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.service.AccessGroupService;
-import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
@@ -58,18 +54,12 @@ import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
 public class UsersController {
 
 	private UserService userService = null;
-	private AccessGroupService groupService = null;
-	private RoleService roleService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	@Autowired
-	public UsersController(UserService userService,
-			AccessGroupService groupService,
-			RoleService roleService ) {
+	public UsersController(UserService userService) {
 		this.userService = userService;
-		this.groupService = groupService;
-		this.roleService = roleService;
 	}
 	
 	public UsersController(){}
@@ -117,41 +107,9 @@ public class UsersController {
 			throw new ResourceNotFoundException();
 		}
 		
-		StringBuilder builder = new StringBuilder();
-		String groupString = null, roleString = null;
-		
-		List<AccessGroup> groups = groupService.getGroupsForUser(userId);
-		
-		if (groups != null && groups.size() > 0) {
-			for (AccessGroup group : groups) {
-				builder.append(group.getName());
-				builder.append(", ");
-			}
-			
-			if (builder.length() > 2) {
-				groupString = builder.substring(0, builder.length() - 2);
-			}
-		}
-		
-		List<Role> roles = roleService.getRolesForUser(userId);
-		builder = new StringBuilder();
-		
-		if (roles != null && roles.size() > 0) {
-			for (Role role : roles) {
-				builder.append(role.getDisplayName());
-				builder.append(", ");
-			}
-			
-			if (builder.length() > 2) {
-				roleString = builder.substring(0, builder.length() - 2);
-			}
-		}
-		
 		ModelAndView mav = new ModelAndView("config/users/detail");
 		mav.addObject(user);
 		mav.addObject("isThisUser", isThisUser);
-		mav.addObject("groupString", groupString);
-		mav.addObject("roleString", roleString);
 		return mav;
 	}
 

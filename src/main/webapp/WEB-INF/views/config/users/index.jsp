@@ -20,12 +20,6 @@
 			<tr>
 				<th class="medium first">User</th>
 				<th class="short">Edit</th>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
-					<th class="medium">Configure Groups</th>
-				</security:authorize>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
-					<th class="medium">Configure Roles</th>
-				</security:authorize>
 				<th class="short">Delete</th>
 			</tr>
 		</thead>
@@ -44,22 +38,6 @@
 					</spring:url>
 					<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a>
 				</td>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
-					<td>
-						<spring:url value="users/{userId}/groups" htmlEscape="true" var="groupsUrl">
-							<spring:param name="userId" value="${ userModel.user.id }"/>
-						</spring:url>
-						<a id="manageGroupsLink" href="${ fn:escapeXml(groupsUrl) }">Configure Groups</a>
-					</td>
-				</security:authorize>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
-					<td>
-						<spring:url value="users/{userId}/roles" htmlEscape="true" var="rolesUrl">
-							<spring:param name="userId" value="${ userModel.user.id }"/>
-						</spring:url>
-						<a id="manageRolesLink" href="${ fn:escapeXml(rolesUrl) }">Configure Roles</a>
-					</td>
-				</security:authorize>
 				<td>
 					<spring:url value="/configuration/users/{userId}/delete" var="deleteUrl">
 						<spring:param name="userId" value="${ userModel.user.id }"/>

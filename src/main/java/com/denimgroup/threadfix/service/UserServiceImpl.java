@@ -35,13 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.RoleDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.dao.UserGroupMapDao;
-import com.denimgroup.threadfix.data.dao.UserRoleMapDao;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.data.entities.UserGroupMap;
-import com.denimgroup.threadfix.data.entities.UserRoleMap;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,18 +47,13 @@ public class UserServiceImpl implements UserService {
 
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;
-	private UserRoleMapDao userRoleMapDao = null;
-	private UserGroupMapDao userGroupMapDao = null;
 
 	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
 
 	@Autowired
-	public UserServiceImpl(UserDao userDao, RoleDao roleDao, 
-			UserRoleMapDao userRoleMapDao, UserGroupMapDao userGroupMapDao) {
+	public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
 		this.userDao = userDao;
 		this.roleDao = roleDao;
-		this.userRoleMapDao = userRoleMapDao;
-		this.userGroupMapDao = userGroupMapDao;
 	}
 
 	@Override
@@ -96,20 +87,6 @@ public class UserServiceImpl implements UserService {
 			user.setName(user.getName() + new Date().toString());
 			if (user.getName().length() > User.NAME_LENGTH) {
 				user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
-			}
-
-			if (user.getUserGroupMaps() != null && !user.getUserGroupMaps().isEmpty()) {
-				for (UserGroupMap map : user.getUserGroupMaps()) {
-					map.setActive(false);
-					userGroupMapDao.saveOrUpdate(map);
-				}
-			}
-
-			if (user.getUserRoleMaps() != null && !user.getUserRoleMaps().isEmpty()) {
-				for (UserRoleMap map : user.getUserRoleMaps()) {
-					map.setActive(false);
-					userRoleMapDao.saveOrUpdate(map);
-				}
 			}
 
 			user.setActive(false);
@@ -174,15 +151,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Set<Permission> getPermissions(Integer userId) {
 		Set<Permission> returnList = new HashSet<Permission>();
-
-		if (userId != null) {
-			List<Role> roles = userRoleMapDao.getRolesForUser(userId);
-			if (roles != null) {
-				for (Role role: roles) {
-					returnList.addAll(role.getPermissions());
-				}
-			}
-		}
 
 		return returnList;
 	}

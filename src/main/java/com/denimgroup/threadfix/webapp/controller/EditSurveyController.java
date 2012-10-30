@@ -38,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.SurveyAnswer;
 import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
@@ -47,17 +48,25 @@ import com.denimgroup.threadfix.service.SurveyService;
 public class EditSurveyController {
 
 	private SurveyService surveyService = null;
+	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditSurveyController.class);
 
 	@Autowired
-	public EditSurveyController(SurveyService surveyService) {
+	public EditSurveyController(SurveyService surveyService,
+			OrganizationService organizationService) {
 		this.surveyService = surveyService;
+		this.organizationService = organizationService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView setupForm(@PathVariable("orgId") int orgId,
 			@PathVariable("resultId") int resultId) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
+		
 		SurveyResult surveyResult = surveyService.loadSurveyResult(resultId);
 		
 		if (surveyResult == null) {
@@ -73,6 +82,11 @@ public class EditSurveyController {
 	@RequestMapping(params = "surveys/save", method = RequestMethod.POST)
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (surveyResult.isSubmitted()) {
 			log.error("Cannot save already submitted survey");
 			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();
@@ -101,6 +115,11 @@ public class EditSurveyController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (surveyResult.isSubmitted()) {
 			log.error("Cannot save already submitted survey");
 			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();

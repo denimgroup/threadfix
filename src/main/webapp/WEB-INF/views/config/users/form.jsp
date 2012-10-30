@@ -40,11 +40,26 @@
 					<form:password id="passwordConfirmInput" path="passwordConfirm" />
 				</td>
 			</tr>
+			<tr>
+				<td class="label">Global Group:</td>
+				<td class="inputValue" style="text-align: left;">
+					<form:checkbox id="hasGlobalGroupAccessCheckbox" path="hasGlobalGroupAccess" />
+				</td>
+				<td class="inputValue">
+					<form:select id="roleSelect" path="globalRole.id">
+						<form:option value="0" label="Select a role" />
+						<form:options items="${ roleList }" itemValue="id" itemLabel="displayName" />
+					</form:select>
+				</td>
+				<td style="border: 0px solid black; background-color: white; padding-left: 5px">
+					<form:errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
+				</td>
+			</tr>
 		</table>
 		<br/>
 		
 		<c:choose>
-			<c:when test="${ user['new'] }">
+			<c:when test="${ user['new'] }">	
 				<input id="addUserButton" type="submit" value="Add User" />
 				<span style="padding-left: 10px">
 					<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>

@@ -38,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -55,11 +56,15 @@ public class DefectsController {
 	private final SanitizedLogger log = new SanitizedLogger(DefectsController.class);
 
 	private ApplicationService applicationService;
+	private OrganizationService organizationService;
 	private QueueSender queueSender;
 
 	@Autowired
-	public DefectsController(ApplicationService applicationService, QueueSender queueSender) {
+	public DefectsController(ApplicationService applicationService, 
+			OrganizationService organizationService,
+			QueueSender queueSender) {
 		this.queueSender = queueSender;
+		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 	}
 
@@ -67,11 +72,17 @@ public class DefectsController {
 	@PreAuthorize("hasRole('ROLE_CAN_SUBMIT_DEFECTS')")
 	public ModelAndView defectList(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model, HttpServletRequest request) {
+		
 		return defectSubmissionPage(orgId, appId, null, request);
 	}
 	
 	private ModelAndView defectSubmissionPage(int orgId, int appId, String message,
 			HttpServletRequest request) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
@@ -112,6 +123,10 @@ public class DefectsController {
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
 			HttpServletRequest request) {
 		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
+		
 		if (defectViewModel.getVulnerabilityIds() == null
 				|| defectViewModel.getVulnerabilityIds().size() == 0) {
 			log.info("No vulnerabilities selected for Defect submission.");
@@ -128,8 +143,14 @@ public class DefectsController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String updateVulnsFromDefectTracker(@PathVariable("appId") int appId,
+	public String updateVulnsFromDefectTracker(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId,
 			HttpServletRequest request) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Application app = applicationService.loadApplication(appId);
 		
 		if (app == null || app.getOrganization() == null || app.getOrganization().getId() == null) {
@@ -137,7 +158,6 @@ public class DefectsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		Integer orgId = app.getOrganization().getId();
 		queueSender.addDefectTrackerVulnUpdate(orgId, appId);
 		
 		request.getSession().setAttribute("queueSuccessMessage", 

@@ -255,7 +255,7 @@ public class QueueListener implements MessageListener {
 		
 		updateJobStatus(jobStatusId, "Processing Scan from file.");
 		
-		boolean finished = false;
+		boolean finished = false, closed = false;
 		
 		try {
 			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
@@ -263,21 +263,21 @@ public class QueueListener implements MessageListener {
 			closeJobStatus(jobStatusId, "Scan encountered an out of memory error and did not complete correctly.");
 			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
 			throw e;
-		}
-
-		if (finished) {
-			closeJobStatus(jobStatusId, "Scan completed.");
-			if (fullLog) {
-				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
-					+ userName + " on Application " + appChannel.getApplication().getName()
-					+ " (filename " + fileName + ") completed successfully.");
-			}
-		} else {
-			closeJobStatus(jobStatusId, "Scan encountered an error.");
-			if (fullLog) {
-				log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
-					+ userName + " on Application " + appChannel.getApplication().getName()
-					+ " (filename " + fileName + ") did not complete successfully.");
+		} finally {
+			if (finished) {
+				closeJobStatus(jobStatusId, "Scan completed.");
+				if (fullLog) {
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+						+ userName + " on Application " + appChannel.getApplication().getName()
+						+ " (filename " + fileName + ") completed successfully.");
+				}
+			} else if (!closed) {
+				closeJobStatus(jobStatusId, "Scan encountered an error.");
+				if (fullLog) {
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+						+ userName + " on Application " + appChannel.getApplication().getName()
+						+ " (filename " + fileName + ") did not complete successfully.");
+				}
 			}
 		}
 	}

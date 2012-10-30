@@ -47,6 +47,7 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -65,13 +66,16 @@ public class ApplicationsController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private VulnerabilityService vulnerabilityService;
+	private OrganizationService organizationService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService,
+			OrganizationService organizationService,
 			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
+		this.organizationService = organizationService;
 		this.vulnerabilityService = vulnerabilityService;
 	}
 
@@ -83,12 +87,16 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
 			ModelMap model, HttpServletRequest request) {
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
 		}
-				
+
 		Object message = getAttribute(request, "scanSuccessMessage");
 		Object error = getAttribute(request, "scanErrorMessage");
 		if (message == null) {
@@ -127,12 +135,17 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}/closedVulnerabilities")
 	public String viewClosedVulnerabilities(@PathVariable("orgId") int orgId, 
 			@PathVariable("appId") int appId, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
 		}
-		
+
 		TableSortBean basicBean = new TableSortBean();
 		basicBean.setOpen(false);
 		long numVulns = applicationService.getCount(appId, basicBean);
@@ -143,9 +156,14 @@ public class ApplicationsController {
 	}
 	
 	@RequestMapping(value="/{appId}/closedVulnerabilities/table", method = RequestMethod.POST)
-	public String getClosedTableVulns(@PathVariable("appId") Integer appId,
+	public String getClosedTableVulns(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
@@ -182,6 +200,11 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}/delete")
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		if (application != null && application.isActive()) {
 			applicationService.deactivateApplication(application);
@@ -239,9 +262,14 @@ public class ApplicationsController {
 	}
 	
 	@RequestMapping(value="/{appId}/table", method = RequestMethod.POST)
-	public String getTableVulns(@PathVariable("appId") Integer appId,
+	public String getTableVulns(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {
@@ -278,9 +306,14 @@ public class ApplicationsController {
 	}
 	
 	@RequestMapping(value="/{appId}/defectTable", method = RequestMethod.POST)
-	public String getDefectTableVulns(@PathVariable("appId") Integer appId,
+	public String getDefectTableVulns(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null || !application.isActive()) {

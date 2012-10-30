@@ -389,13 +389,13 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public boolean processScan(Integer channelId, String fileName) {
 		return processScan(channelId, fileName, null, null);
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public boolean processScan(Integer channelId, String fileName,
 			Integer statusId, String userName) {
 				
@@ -966,6 +966,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
+		
+		// We may want to take this back although I don't think it's really hurting anything here
+		scanDao.saveOrUpdate(scan);
 		
 		Application application = applicationDao.retrieveById(appId);
 		List<Vulnerability> vulns = null;

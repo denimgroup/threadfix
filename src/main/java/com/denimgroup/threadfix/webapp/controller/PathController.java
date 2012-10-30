@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -54,13 +55,16 @@ public class PathController {
 
 	private ApplicationService applicationService;
 	private ScanMergeService scanMergeService;
+	private OrganizationService organizationService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(PathController.class);
 
 	@Autowired
-	public PathController(ApplicationService applicationService, ScanMergeService scanMergeService) {
+	public PathController(OrganizationService organizationService,
+			ApplicationService applicationService, ScanMergeService scanMergeService) {
 		this.applicationService = applicationService;
 		this.scanMergeService = scanMergeService;
+		this.organizationService = organizationService;
 	}
 
 	@InitBinder
@@ -74,7 +78,13 @@ public class PathController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView viewScan(@PathVariable("appId") int appId) {
+	public ModelAndView viewScan(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		ModelAndView mav = new ModelAndView("path/path");
 		Application application = applicationService.loadApplication(appId);
 		
@@ -105,6 +115,11 @@ public class PathController {
 	public String getProjectRoot(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, @ModelAttribute Application application,
 			SessionStatus status) {
+
+		if (!organizationService.isAuthorized(orgId)){
+			return "403";
+		}
+		
 		Application app = applicationService.loadApplication(appId);
 		
 		if (app == null) {

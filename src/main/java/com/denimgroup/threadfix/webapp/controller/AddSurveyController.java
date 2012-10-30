@@ -62,6 +62,11 @@ public class AddSurveyController {
 	public String selectSurvey(@PathVariable("orgId") int orgId, ModelMap model) {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
+			
+			if (!organizationService.isAuthorized(orgId)) {
+				return "403";
+			}
+			
 			String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 
 			SurveyResult surveyResult = new SurveyResult();
@@ -83,6 +88,11 @@ public class AddSurveyController {
 	@RequestMapping(params = "surveys/save", method = RequestMethod.POST)
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (surveyResult.isSubmitted()) {
 			log.error("Cannot save already submitted survey");
 			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();
@@ -112,6 +122,11 @@ public class AddSurveyController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (surveyResult.isSubmitted()) {
 			log.error("Cannot save already submitted survey");
 			return "redirect:/organizations/" + orgId + "/surveys/" + surveyResult.getId();

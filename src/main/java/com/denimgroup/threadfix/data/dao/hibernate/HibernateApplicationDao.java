@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
@@ -32,6 +33,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
@@ -66,8 +68,18 @@ public class HibernateApplicationDao implements ApplicationDao {
 	public List<Application> retrieveAllActive() {
 		return getActiveAppCriteria().addOrder(Order.asc("name")).list();
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Application> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
+		return sessionFactory.getCurrentSession()
+				.createQuery("from Application app where app.organization.id in (:ids) order by app.name")
+				.setParameterList("ids", authenticatedTeamIds)
+				.list();
+	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Application retrieveById(int id) {
 		return (Application) getActiveAppCriteria().add(Restrictions.eq("id",id)).uniqueResult();
 	}

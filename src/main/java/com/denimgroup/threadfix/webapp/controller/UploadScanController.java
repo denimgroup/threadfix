@@ -40,6 +40,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
@@ -52,14 +53,17 @@ public class UploadScanController {
 	private ScanService scanService;
 	private ApplicationService applicationService;
 	private ApplicationChannelService applicationChannelService;
+	private OrganizationService organizationService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
 	@Autowired
 	public UploadScanController(ScanService scanService,
+			OrganizationService organizationService,
 			ApplicationService applicationService,
 			ApplicationChannelService applicationChannelService) {
 		this.scanService = scanService;
+		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.applicationChannelService = applicationChannelService;
 	}
@@ -69,10 +73,16 @@ public class UploadScanController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
+
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		return index(orgId, appId, null, null);
 	}
 	
 	private ModelAndView index(int orgId, int appId, String message, ChannelType type) {
+
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
@@ -97,6 +107,10 @@ public class UploadScanController {
 	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, 
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
 		
 		ScanCheckResultBean returnValue = null;
 		
@@ -171,6 +185,10 @@ public class UploadScanController {
 			@PathVariable("emptyScanId") Integer emptyScanId,
 			HttpServletRequest request) {
 		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		scanService.addEmptyScanToQueue(emptyScanId);
 		
 		Application app = applicationService.loadApplication(appId);
@@ -194,6 +212,10 @@ public class UploadScanController {
 	public String cancel(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId, 
 			@PathVariable("emptyScanId") Integer emptyScanId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return "403";
+		}
 		
 		scanService.deleteEmptyScan(emptyScanId);		
 		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/scans/upload";

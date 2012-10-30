@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 
@@ -74,4 +75,23 @@ public interface OrganizationService {
 	 * @return boolean
 	 */
 	boolean isValidOrganization(Organization organization);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	Set<Integer> getAuthenticatedTeamIds();
+
+	/**
+	 * this method filters loadAllActive with access groups in mind.
+	 * @return
+	 */
+	List<Organization> loadAllActiveFilter();
+
+	/**
+	 * 
+	 * @param orgId
+	 * @return
+	 */
+	boolean isAuthorized(Integer orgId);
 }

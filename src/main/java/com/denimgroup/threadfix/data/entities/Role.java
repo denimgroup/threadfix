@@ -24,17 +24,14 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -54,8 +51,6 @@ public class Role extends AuditableEntity {
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
 			canViewJobStatuses;
-	
-	private List<UserRoleMap> userRoleMaps;
 	
 	public static final String[] PROTECTED_PERMISSIONS = new String[]{
 			"canManageGroups", "canManageRoles", "canManageUsers"
@@ -81,16 +76,6 @@ public class Role extends AuditableEntity {
 		this.displayName = displayName;
 	}
 
-	@OneToMany(mappedBy = "role")
-	@JsonIgnore
-	public List<UserRoleMap> getUserRoleMaps() {
-		return userRoleMaps;
-	}
-
-	public void setUserRoleMaps(List<UserRoleMap> userRoleMaps) {
-		this.userRoleMaps = userRoleMaps;
-	}
-	
 	@Column
 	public Boolean getCanGenerateReports() {
 		return canGenerateReports != null && canGenerateReports;

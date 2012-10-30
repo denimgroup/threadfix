@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
@@ -54,13 +55,16 @@ public class ScanController {
 	private ApplicationService applicationService;
 	private ScanDeleteService scanDeleteService;
 	private FindingService findingService;
+	private OrganizationService organizationService;
 
 	@Autowired
 	public ScanController(ScanService scanService,
+			OrganizationService organizationService,
 			ApplicationService applicationService,
 			ScanDeleteService scanDeleteService,
 			FindingService findingService) {
 		this.scanService = scanService;
+		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.scanDeleteService = scanDeleteService;
 		this.findingService = findingService;
@@ -76,6 +80,11 @@ public class ScanController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView viewScans(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
@@ -92,6 +101,11 @@ public class ScanController {
 	public ModelAndView detailScan(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		Scan scan = null;
 		if (scanId != null) {
 			scan = scanService.loadScan(scanId);
@@ -120,6 +134,11 @@ public class ScanController {
 	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return new ModelAndView("403");
+		}
+		
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
@@ -132,7 +151,13 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
 	public String scanTable(Model model,
 			@RequestBody TableSortBean bean,
+			@PathVariable("orgId") Integer orgId,
 			@PathVariable("scanId") Integer scanId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return "403";
+		}
+		
 		Scan scan = scanService.loadScan(scanId);
 		if (scan == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
@@ -165,7 +190,13 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/unmappedTable", method = RequestMethod.POST)
 	public String unmappedScanTable(Model model,
 			@RequestBody TableSortBean bean,
-			@PathVariable("scanId") Integer scanId) {
+			@PathVariable("scanId") Integer scanId,
+			@PathVariable("orgId") Integer orgId) {
+		
+		if (!organizationService.isAuthorized(orgId)){
+			return "403";
+		}
+		
 		Scan scan = scanService.loadScan(scanId);
 		if (scan == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));

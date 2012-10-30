@@ -67,7 +67,7 @@
 		<c:when test="${ lastUser }">
 			<a id="deleteLink" href="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users, groups, or roles.')">Delete</a> | 
 		</c:when>
-		<c:when test="${ isThisUser }">r
+		<c:when test="${ isThisUser }">
 			<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')">Delete</a> | 
 		</c:when>
 		<c:otherwise>

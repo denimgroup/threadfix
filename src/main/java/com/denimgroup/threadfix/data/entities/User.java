@@ -24,17 +24,13 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "User")
@@ -50,18 +46,19 @@ public class User extends AuditableEntity {
 	private String salt;
 	private boolean approved = true;
 	private boolean locked = false;
+
+	private Boolean hasGlobalGroupAccess = true;
 	private Boolean hasChangedInitialPassword = false;
 	private Date lastLoginDate = new Date();
 	private Date lastPasswordChangedDate = new Date();
 	private int failedPasswordAttempts = 0;
 	private Date failedPasswordAttemptWindowStart = new Date();
 
-	private List<UserGroupMap> userGroupMaps;
-	private List<UserRoleMap> userRoleMaps;
-
 	private String unencryptedPassword;
 	private String passwordConfirm;
 	private String currentPassword;
+	
+	private Role globalRole;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -184,24 +181,22 @@ public class User extends AuditableEntity {
 		this.hasChangedInitialPassword = hasChangedInitialPassword;
 	}
 
-	@OneToMany(mappedBy = "user")
-	@JsonIgnore
-	public List<UserGroupMap> getUserGroupMaps() {
-		return userGroupMaps;
+	@Column
+	public Boolean getHasGlobalGroupAccess() {
+		return hasGlobalGroupAccess != null && hasGlobalGroupAccess;
 	}
 
-	public void setUserGroupMaps(List<UserGroupMap> userGroupMaps) {
-		this.userGroupMaps = userGroupMaps;
-	}
-	
-	@OneToMany(mappedBy = "user")
-	@JsonIgnore
-	public List<UserRoleMap> getUserRoleMaps() {
-		return userRoleMaps;
+	public void setHasGlobalGroupAccess(Boolean hasGlobalGroupAccess) {
+		this.hasGlobalGroupAccess = hasGlobalGroupAccess;
 	}
 
-	public void setUserRoleMaps(List<UserRoleMap> userRoleMaps) {
-		this.userRoleMaps = userRoleMaps;
+	@Column(name="role")
+	public Role getGlobalRole() {
+		return globalRole;
+	}
+
+	public void setGlobalRole(Role globalRole) {
+		this.globalRole = globalRole;
 	}
 
 }

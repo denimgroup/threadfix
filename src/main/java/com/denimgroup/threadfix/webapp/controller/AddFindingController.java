@@ -57,6 +57,7 @@ import com.denimgroup.threadfix.service.ChannelSeverityService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.UserService;
@@ -67,6 +68,7 @@ import com.denimgroup.threadfix.service.UserService;
 public class AddFindingController {
 
 	private ApplicationService applicationService;
+	private OrganizationService organizationService;
 	private ChannelTypeService channelTypeService;
 	private ChannelSeverityService channelSeverityService;
 	private ScanMergeService scanMergeService;
@@ -81,9 +83,11 @@ public class AddFindingController {
 			ScanMergeService scanMergeService, ChannelTypeService channelTypeService,
 			ChannelSeverityService channelSeverityService,
 			ChannelVulnerabilityService channelVulnerabilityService,
-			FindingService findingService, UserService userService) {
+			FindingService findingService, UserService userService,
+			OrganizationService organizationService) {
 		this.applicationService = applicationService;
 		this.scanMergeService = scanMergeService;
+		this.organizationService = organizationService;
 		this.channelTypeService = channelTypeService;
 		this.channelSeverityService = channelSeverityService;
 		this.channelVulnerabilityService = channelVulnerabilityService;
@@ -202,6 +206,11 @@ public class AddFindingController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		if (application == null)
 			return new ModelAndView("redirect:/organizations/" + orgId);
@@ -217,6 +226,11 @@ public class AddFindingController {
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (result.hasErrors()) {
 			model.addAttribute("static",true);
 			FieldError originalError = result.getFieldError("dataFlowElements[0].lineNumber");
@@ -263,6 +277,11 @@ public class AddFindingController {
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (result.hasErrors()) {
 			model.addAttribute("static",false);
 			return "scans/form";

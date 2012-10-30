@@ -23,16 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 
 @Service
 @Transactional(readOnly = true)
@@ -107,5 +112,43 @@ public class OrganizationServiceImpl implements OrganizationService {
 				&& organization.getName().length() < Organization.NAME_LENGTH
 				&& loadOrganization(organization.getName()) == null;
 	}
-
+	
+	@Override
+	public Set<Integer> getAuthenticatedTeamIds() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof ThreadFixUserDetails) {
+			return ((ThreadFixUserDetails) principal).getAuthenticatedTeamIds();
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public List<Organization> loadAllActiveFilter() {
+		
+		if (hasGlobalAuthority())
+			return loadAllActive();
+		
+		Set<Integer> teamIds = getAuthenticatedTeamIds();
+		
+		if (teamIds == null || teamIds.size() == 0) {
+			return new ArrayList<Organization>();
+		}
+		
+		return organizationDao.retrieveAllActiveFilter(teamIds);
+	}
+	
+	public boolean hasGlobalAuthority() {
+		return SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().contains(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
+	}
+	
+	@Override
+	public boolean isAuthorized(Integer orgId) {
+		if (hasGlobalAuthority())
+			return true;
+		
+		Set<Integer> teamIds = getAuthenticatedTeamIds();
+		return teamIds != null && teamIds.contains(orgId);
+	}
 }

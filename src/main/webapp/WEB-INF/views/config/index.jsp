@@ -36,11 +36,6 @@
 	</security:authorize>
 
 	<ul class="squareList" style="padding-left:15px">
-		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
-		<li>
-	    	<a id="groupsLink" href="<spring:url value="configuration/groups" htmlEscape="true"/>">Manage Groups</a>
-	    </li>
-	    </security:authorize>
 	    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
 		<li>
 			<a id="manageUsersLink" href="<spring:url value="configuration/users" htmlEscape="true"/>">Manage Users</a>

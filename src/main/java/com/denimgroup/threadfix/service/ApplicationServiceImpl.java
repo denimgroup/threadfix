@@ -26,10 +26,13 @@ package com.denimgroup.threadfix.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -99,6 +102,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public List<Application> loadAllActive() {
 		return applicationDao.retrieveAllActive();
+	}
+	
+	@Override
+	public List<Application> loadAllActiveFilter(Set<Integer> authenticatedTeamIds) {
+		
+		if (hasGlobalAuthority()) {
+			return loadAllActive();
+		}
+		
+		if (authenticatedTeamIds == null || authenticatedTeamIds.size() == 0) {
+			return new ArrayList<Application>();
+		}
+		
+		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);
+	}
+	
+	public boolean hasGlobalAuthority() {
+		return SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().contains(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
 	}
 
 	@Override
@@ -506,7 +528,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 			generateVulnerabilityReport(app);
 		}
 	}
-	
 	
 	public void generateVulnerabilityReport(Application application) {
 		application.setVulnerabilityReport(applicationDao.loadVulnerabilityReport(application));

@@ -114,6 +114,11 @@ public class AddApplicationController {
 	public String newForm(@PathVariable("orgId") int orgId, Model model) {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
+			
+			if (!organizationService.isAuthorized(orgId)) {
+				return "403";
+			}
+			
 			Application application = new Application();
 			application.setOrganization(organization);
 			model.addAttribute(application);
@@ -128,6 +133,10 @@ public class AddApplicationController {
 	public String newSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		applicationService.validateAfterCreate(application, result);
 		

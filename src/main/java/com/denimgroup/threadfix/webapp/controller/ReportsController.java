@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -80,14 +81,15 @@ public class ReportsController {
 	
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
-		List<Organization> organizationList = organizationService.loadAllActive();
+		List<Organization> organizationList = organizationService.loadAllActiveFilter();
 		return organizationList;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
 		
-		if (request != null && request.getSession() != null && request.getSession().getAttribute("reportsError") != null) {
+		if (request != null && request.getSession() != null && 
+				request.getSession().getAttribute("reportsError") != null) {
 			model.addAttribute("error", request.getSession().getAttribute("reportsError"));
 			request.getSession().removeAttribute("reportsError");
 		}
@@ -201,17 +203,18 @@ public class ReportsController {
 	
 	public List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<Integer>();
+		Set<Integer> teamIds = organizationService.getAuthenticatedTeamIds();
 		
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = applicationService.loadAllActive();
+				List<Application> appList = applicationService.loadAllActiveFilter(teamIds);
 				for (Application app : appList) {
 					applicationIdList.add(app.getId());
 				}
 			} else {
 				applicationIdList.add(reportParameters.getApplicationId());
 			}
-		} else {
+		} else if (teamIds.contains(reportParameters.getOrganizationId())) {
 			Organization org = organizationService.loadOrganization(reportParameters.getOrganizationId());
 			if (reportParameters.getApplicationId() < 0) {
 				List<Application> appList = org.getActiveApplications();

@@ -48,8 +48,8 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -67,16 +67,18 @@ public class EditApplicationController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
+	private OrganizationService organizationService;
 	private ApplicationCriticalityService applicationCriticalityService = null;
 	
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
-			DefectService defectService,
+			OrganizationService organizationService,
 			ApplicationCriticalityService applicationCriticalityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
+		this.organizationService = organizationService;
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
@@ -109,6 +111,11 @@ public class EditApplicationController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView setupForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return new ModelAndView("403");
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
@@ -131,6 +138,10 @@ public class EditApplicationController {
 	public String processSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
 		
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);

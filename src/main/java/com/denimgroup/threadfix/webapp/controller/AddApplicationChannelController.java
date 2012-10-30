@@ -45,6 +45,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -57,15 +58,18 @@ public class AddApplicationChannelController {
 	private ApplicationChannelService applicationChannelService;
 	private ChannelTypeService channelTypeService;
 	private ApplicationService applicationService;
+	private OrganizationService organizationService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
 	public AddApplicationChannelController(ApplicationChannelService applicationChannelService,
-			ChannelTypeService channelTypeService, ApplicationService applicationService) {
+			ChannelTypeService channelTypeService, ApplicationService applicationService,
+			OrganizationService organizationService) {
 		this.applicationChannelService = applicationChannelService;
 		this.applicationService = applicationService;
 		this.channelTypeService = channelTypeService;
+		this.organizationService = organizationService;
 	}
 	
 	public AddApplicationChannelController(){}
@@ -83,6 +87,11 @@ public class AddApplicationChannelController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String addForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, ModelMap model) {
+
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
@@ -102,6 +111,11 @@ public class AddApplicationChannelController {
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute ApplicationChannel applicationChannel, BindingResult result,
 			SessionStatus status) {
+		
+		if (!organizationService.isAuthorized(orgId)) {
+			return "403";
+		}
+		
 		if (result.hasErrors()) {
 			return "config/channels/form";
 		} else {
