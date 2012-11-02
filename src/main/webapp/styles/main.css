@@ -296,7 +296,17 @@ a.sortheader {
 	font-weight: bold;
 }
 
+.label-2 {
+	font-weight: bold;
+}
+
 .inputValue {
+	padding-left: 10px;
+	padding-right: 20px;
+	white-space: nowrap;
+}
+
+.inputValue-2 {
 	padding-left: 10px;
 	padding-right: 20px;
 	white-space: nowrap;

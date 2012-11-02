@@ -45,9 +45,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.AccessControlMapService;
+import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}/edit")
@@ -56,12 +60,20 @@ import com.denimgroup.threadfix.webapp.validator.UserValidator;
 public class EditUserController {
 
 	private UserService userService = null;
+	private RoleService roleService = null;
+	private OrganizationService organizationService = null;
+	private AccessControlMapService accessControlMapService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
-	public EditUserController(UserService userService) {
+	public EditUserController(OrganizationService organizationService ,
+			AccessControlMapService accessControlMapService,
+			RoleService roleService, UserService userService) {
 		this.userService = userService;
+		this.roleService = roleService;
+		this.accessControlMapService = accessControlMapService;
+		this.organizationService = organizationService;
 	}
 	
 	public EditUserController(){}
@@ -92,22 +104,42 @@ public class EditUserController {
 		
 		ModelAndView mav = new ModelAndView("config/users/form");
 		mav.addObject(user);
+		mav.addObject("teams",organizationService.loadAllActive());
+		mav.addObject("maps",accessControlMapService.loadAllMapsForUser(userId));
+		mav.addObject("accessControlMapModel", getMapModel(userId));
 		mav.addObject("isThisUser", isThisUser);
 		return mav;
+	}
+	
+	private AccessControlMapModel getMapModel(Integer userId) {
+		AccessControlMapModel map = new AccessControlMapModel();
+		map.setUserId(userId);
+		return map;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
-			BindingResult result, SessionStatus status, HttpServletRequest request) {
+			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
 		new UserValidator().validate(user, result);
 		if (result.hasErrors()) {
+			model.addAttribute("accessControlMapModel", getMapModel(userId));
+			model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
 			return "config/users/form";
 		} else {
 
 			User databaseUser = userService.loadUser(user.getName());
 			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
+				model.addAttribute("accessControlMapModel", getMapModel(userId));
+				model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
 				return "config/users/form";
+			}
+			
+			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
+				Role role = roleService.loadRole(user.getGlobalRole().getId());
+				if (role == null) {
+					user.setGlobalRole(null);
+				}
 			}
 			
 			String globalGroupAccess = request.getParameter("hasGlobalGroupAccess");
@@ -124,7 +156,8 @@ public class EditUserController {
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			return "redirect:/configuration/users/" + userId;
+			return "redirect:/configuration/users";
 		}
 	}
+
 }

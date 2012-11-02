@@ -38,18 +38,18 @@ public class UserValidator implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
+		
+		if (!user.getHasGlobalGroupAccess() || user.getGlobalRole() == null ||
+				user.getGlobalRole().getId() == null || user.getGlobalRole().getId() == null ||
+				user.getGlobalRole().getId() == 0) {
+			user.setGlobalRole(null);
+		}
 
 		if (isEmptyOrWhitespace(user.getName()))
 			errors.rejectValue("name", "errors.required", new String[] { "Name" }, null);
 		else if (user.getName() != null && user.getName().length() > 25) {
 			errors.rejectValue("name", null, "Name has a maximum length of 25.");
 		}
-
-		// Validate role
-//		if ((user.getRole() == null) || (user.getRole().getId() == null)
-//				|| (user.getRole().getId() == 0)) {
-//			errors.rejectValue("role.id", "errors.required", new String[] { "Role" }, null);
-//		}
 
 		// Validate password
 		if (user.isNew()) {

@@ -44,6 +44,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
@@ -59,14 +60,16 @@ public class AddUserController {
 	private UserService userService = null;
 	private DefaultConfigService defaultConfigService = null;
 	private RoleService roleService = null;
+	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
 	public AddUserController(UserService userService,
-			RoleService roleService,
+			OrganizationService organizationService, RoleService roleService,
 			DefaultConfigService defaultConfigService) {
 		this.userService = userService;
+		this.organizationService = organizationService;
 		this.defaultConfigService = defaultConfigService;
 		this.roleService = roleService;
 	}
@@ -92,10 +95,15 @@ public class AddUserController {
 		
 		if (defaultsModel != null) {
 			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
-			user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
+			if (user.getHasGlobalGroupAccess()) {
+				user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
+			}
 		}
 		
 		model.addAttribute("defaults", defaultConfigService.loadCurrentConfiguration());
+		
+		// Should probably switch to filter after we figure this out
+		model.addAttribute("teams",organizationService.loadAllActive());
 		model.addAttribute(user);
 		return "config/users/form";
 	}

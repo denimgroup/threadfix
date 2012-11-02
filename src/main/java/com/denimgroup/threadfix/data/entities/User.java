@@ -24,15 +24,19 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "User")
@@ -61,6 +65,8 @@ public class User extends AuditableEntity {
 	private String currentPassword;
 	
 	private Role globalRole;
+	
+	private List<AccessControlTeamMap> accessControlTeamMaps;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -200,6 +206,16 @@ public class User extends AuditableEntity {
 
 	public void setGlobalRole(Role globalRole) {
 		this.globalRole = globalRole;
+	}
+	
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	public List<AccessControlTeamMap> getAccessControlTeamMaps() {
+		return accessControlTeamMaps;
+	}
+
+	public void setAccessControlTeamMaps(List<AccessControlTeamMap> accessControlTeamMaps) {
+		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
 
 }

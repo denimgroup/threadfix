@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -46,7 +45,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
 
 /**
  * @author dshannon
- * 
+ * @author mcollins
  */
 @Controller
 @RequestMapping("/configuration/users")
@@ -92,25 +91,6 @@ public class UsersController {
 		model.addAttribute("userModels", userModels);
 		
 		return "config/users/index";
-	}
-
-	@RequestMapping("/{userId}")
-	public ModelAndView detail(@PathVariable("userId") int userId) {
-		User user = userService.loadUser(userId);
-		
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
-		
-		if (user == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
-			throw new ResourceNotFoundException();
-		}
-		
-		ModelAndView mav = new ModelAndView("config/users/detail");
-		mav.addObject(user);
-		mav.addObject("isThisUser", isThisUser);
-		return mav;
 	}
 
 	@RequestMapping("/{userId}/delete")

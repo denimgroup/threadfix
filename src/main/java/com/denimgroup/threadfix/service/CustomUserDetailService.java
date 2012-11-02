@@ -73,6 +73,8 @@ public class CustomUserDetailService implements UserDetailsService {
 			
 			// For now
 			grantedAuthorities.add(new GrantedAuthorityImpl(Role.USER));
+			
+			grantedAuthorities.add(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
 		}
 		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),

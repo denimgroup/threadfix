@@ -38,10 +38,8 @@
 			<c:otherwise>
 				<input id="updateUserButton" type="submit" value="Update User" />
 				<span style="padding-left: 10px">
-					<spring:url value="/configuration/users" var="userUrl">
-						<spring:param name="userId" value="${ user.id }"/>
-					</spring:url>
-					<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Users Index</a>
+					<spring:url value="/configuration" var="configLink"/>
+					<a id="cancelLink" href="${ fn:escapeXml(configLink) }">Back to Users Index</a>
 				</span>
 			</c:otherwise>
 		</c:choose>

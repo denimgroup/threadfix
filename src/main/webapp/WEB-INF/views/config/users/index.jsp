@@ -27,10 +27,7 @@
 		<c:forEach var="userModel" items="${ userModels }">
 			<tr class="bodyRow">
 				<td>
-					<spring:url value="users/{userId}" var="userUrl">
-						<spring:param name="userId" value="${ userModel.user.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(userUrl) }"><c:out value="${ userModel.user.name }"/></a>
+					<c:out value="${ userModel.user.name }"/>
 				</td>
 				<td>
 					<spring:url value="users/{userId}/edit" var="editUrl">
