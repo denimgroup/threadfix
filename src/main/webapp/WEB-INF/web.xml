@@ -72,9 +72,13 @@
         		regex ^/organizations/[0-9]+/applications/[0-9]+/table$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/defectTable$,
         		regex ^/organizations/[0-9]+/applications/jsontest$,
-        		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/table$
-        		regex ^/organizations/[0-9]+/applications/[0-9]+/falsepositives/table$
-        		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/unmappedTable$
+        		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/table$,
+        		regex ^/organizations/[0-9]+/applications/[0-9]+/falsepositives/table$,
+        		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/unmappedTable$,
+        		protected-regex ^/configuration/users/[0-9]+/access/new$,
+        		protected-regex ^/configuration/users/[0-9]+/access/edit$,
+        		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
+        		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$
         	</param-value>
 		</init-param>
 	</filter>

@@ -63,7 +63,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  * </ul>
  */
 public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements Filter {
-        
+	
     private Random randomSource = null;
     
     private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
@@ -71,6 +71,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     private final Set<String> entryPoints = new HashSet<String>();
     private final List<String> entryPointStartPatterns = new ArrayList<String>();
     private final List<String> entryPointRegexPatterns = new ArrayList<String>();
+    private final List<String> protectedRegexPatterns = new ArrayList<String>();
     
     private int nonceCacheSize = 5;
 
@@ -97,6 +98,8 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         		continue;
         	} else if (value.trim().startsWith("regex ")) {
         		this.entryPointRegexPatterns.add(value.trim().substring(6));
+        	} else if (value.trim().startsWith("protected-regex ")) {
+        		this.protectedRegexPatterns.add(value.trim().substring(16));
         	} else if (value.contains("*")) {
         		this.entryPointStartPatterns.add(value.substring(0,value.indexOf('*')).trim());
         	} else {
@@ -161,6 +164,15 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     					skipNonceCheck = true;
     					skipNonceGeneration = true;
     					break;
+    				}
+    			}
+    			
+    			if (!skipNonceGeneration) {
+    				for (String regex : protectedRegexPatterns) {
+    					if (isRegexMatch(path, regex)) {
+    						skipNonceGeneration = true;
+        					break;
+    					}
     				}
     			}
     		}
@@ -348,7 +360,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	if (temp != null && Integer.valueOf(temp) != null)
 	            	setNonceCacheSize(Integer.valueOf(temp));
             }
-        }    
+        }
     }
 
 	@Override
