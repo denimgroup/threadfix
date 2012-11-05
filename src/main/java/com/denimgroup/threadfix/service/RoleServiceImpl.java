@@ -61,11 +61,6 @@ public class RoleServiceImpl implements RoleService {
 			canDelete = false;
 		}
 		
-		if (canDelete && role.getCanManageGroups() && 
-				!userDao.canRemovePermissionFromRole(role.getId(), "canManageGroups")) {
-			canDelete = false;
-		}
-
 		if (canDelete && role.getCanManageRoles() && 
 				!userDao.canRemovePermissionFromRole(role.getId(), "canManageRoles")) {
 			canDelete = false;
@@ -109,11 +104,6 @@ public class RoleServiceImpl implements RoleService {
 			if (databaseRole.getCanManageRoles() && !role.getCanManageRoles() && 
 					!userDao.canRemovePermissionFromRole(role.getId(), "canManageRoles")) {
 				result.rejectValue("canManageRoles",null,null,"You cannot remove this privilege from this role.");
-			}
-			
-			if (databaseRole.getCanManageGroups() && !role.getCanManageGroups() && 
-					!userDao.canRemovePermissionFromRole(role.getId(), "canManageGroups")) {
-				result.rejectValue("canManageGroups",null,null,"You cannot remove this privilege from this role.");
 			}
 		}
 	}

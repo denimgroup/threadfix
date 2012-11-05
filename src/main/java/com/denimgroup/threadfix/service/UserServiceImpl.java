@@ -173,11 +173,6 @@ public class UserServiceImpl implements UserService {
 			canDelete = false;
 		}
 
-		if (canDelete && permissions.contains(Permission.CAN_MANAGE_GROUPS) && 
-				!userDao.canRemovePermissionFromUser(user.getId(), "canManageGroups")) {
-			canDelete = false;
-		}
-
 		if (canDelete && permissions.contains(Permission.CAN_MANAGE_ROLES) && 
 				!userDao.canRemovePermissionFromUser(user.getId(), "canManageRoles")) {
 			canDelete = false;
@@ -206,12 +201,6 @@ public class UserServiceImpl implements UserService {
 		if (canSetRoles && oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!newPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!userDao.canRemovePermissionFromUser(userId, "canManageUsers")) {
-			canSetRoles = false;
-		}
-		
-		if (canSetRoles && oldPermissions.contains(Permission.CAN_MANAGE_GROUPS) &&
-				!newPermissions.contains(Permission.CAN_MANAGE_GROUPS) &&
-				!userDao.canRemovePermissionFromUser(userId, "canManageGroups")) {
 			canSetRoles = false;
 		}
 		

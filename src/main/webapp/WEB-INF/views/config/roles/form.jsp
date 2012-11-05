@@ -106,19 +106,6 @@
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Groups</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageGroupsTrue" path="canManageGroups" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageGroupsFalse" path="canManageGroups" value="false" />
-					</td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageGroupsError" path="canManageGroups"
-							cssClass="errors" />
-					</td>
-				</tr>
-				<tr class="bodyRow">
 					<td>Manage Remote Providers</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageRemoteProvidersTrue" path="canManageRemoteProviders"

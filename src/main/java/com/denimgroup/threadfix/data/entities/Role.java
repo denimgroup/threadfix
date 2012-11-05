@@ -46,7 +46,7 @@ public class Role extends AuditableEntity {
 	private static final long serialVersionUID = -1609499610449048270L;
 	
 	private Boolean canGenerateReports, canGenerateWafRules, canManageApiKeys,
-			canManageApplications, canManageDefectTrackers, canManageGroups,
+			canManageApplications, canManageDefectTrackers,
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
@@ -119,15 +119,6 @@ public class Role extends AuditableEntity {
 
 	public void setCanManageDefectTrackers(Boolean canManageDefectTrackers) {
 		this.canManageDefectTrackers = canManageDefectTrackers;
-	}
-
-	@Column
-	public Boolean getCanManageGroups() {
-		return canManageGroups != null && canManageGroups;
-	}
-
-	public void setCanManageGroups(Boolean canManageGroups) {
-		this.canManageGroups = canManageGroups;
 	}
 
 	@Column
@@ -238,9 +229,6 @@ public class Role extends AuditableEntity {
 
 		if (getCanManageDefectTrackers())
 			permissions.add(Permission.CAN_MANAGE_DEFECT_TRACKERS);
-
-		if (getCanManageGroups())
-			permissions.add(Permission.CAN_MANAGE_GROUPS);
 
 		if (getCanManageRemoteProviders())
 			permissions.add(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
