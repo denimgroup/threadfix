@@ -14,7 +14,6 @@ public class RolesIndexPage extends BasePage {
 	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> editLinks = new ArrayList<WebElement>();
 	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
-	private List<WebElement> userConfigLinks = new ArrayList<WebElement>();
 
 	public RolesIndexPage(WebDriver webdriver) {
 		super(webdriver);
@@ -25,7 +24,6 @@ public class RolesIndexPage extends BasePage {
 			names.add(driver.findElementById("role" + i));
 			editLinks.add(driver.findElementById("edit" + i));
 			deleteButtons.add(driver.findElementById("delete" + i));
-			userConfigLinks.add(driver.findElementById("userConfig" + i));
 		}
 	}
 	
@@ -85,7 +83,7 @@ public class RolesIndexPage extends BasePage {
 			page.setDisplayNameInput(displayName);
 		}
 		
-		return page.clickCreateRoleButton().clickSubmitButton();
+		return page.clickCreateRoleButton();
 	}
 	
 	public RoleEditPage clickEditLink(int row) {
@@ -96,11 +94,6 @@ public class RolesIndexPage extends BasePage {
 	public RoleEditPage clickEditLink(String roleName) {
 		editLinks.get(getIndex(roleName)).click();
 		return new RoleEditPage(driver);
-	}
-	
-	public RoleUserConfigPage clickUserConfigLink(int row) {
-		userConfigLinks.get(row).click();
-		return new RoleUserConfigPage(driver);
 	}
 	
 }

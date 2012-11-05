@@ -34,7 +34,6 @@ import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
-import com.denimgroup.threadfix.selenium.pages.UserDetailPage;
 import com.denimgroup.threadfix.selenium.pages.UserEditPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserNewPage;
@@ -68,17 +67,10 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput(userName);
 		newUserPage.setPasswordConfirmInput(password);
 
-		UserDetailPage userDetailPage = newUserPage.clickAddUserButton()
-				.clickSubmitButton()
-				.clickUserNameLink(userName);
-		assertTrue("User name was not preserved correctly.", userDetailPage.getNameText().equals(userName));
+		userIndexPage = newUserPage.clickAddUserButton();
+		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 
-		userIndexPage = userDetailPage.clickBackToListLink();
-		assertTrue("User was not in table.", userIndexPage.isUserNamePresent(userName));
-
-		userDetailPage = userIndexPage.clickUserNameLink(userName);
-		userIndexPage = userDetailPage.clickDeleteLink();
-
+		userIndexPage = userIndexPage.clickDeleteButton(userName);
 		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(userName));
 
 		loginPage = userIndexPage.logout();
@@ -103,7 +95,6 @@ public class UserTests extends BaseTest {
 		newUserPage = newUserPage.clickAddUserButtonInvalid();
 
 		assertTrue("Name error not present", newUserPage.getNameError().equals("Name is a required field."));
-		assertTrue("Role error not present", newUserPage.getRoleError().equals("Role is a required field."));
 		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
 
 		// Test White Space
@@ -115,7 +106,6 @@ public class UserTests extends BaseTest {
 		newUserPage = newUserPage.clickAddUserButtonInvalid();
 
 		assertTrue("Name error not present", newUserPage.getNameError().equals("Name is a required field."));
-		assertTrue("Role error not present", newUserPage.getRoleError().equals("Role is a required field."));
 		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
 
 		// Test length
@@ -140,14 +130,11 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput("dummy password");
 		newUserPage.setPasswordConfirmInput("dummy password");
 
-		UserDetailPage userDetailPage = newUserPage.clickAddUserButton()
-				.clickSubmitButton()
-				.clickUserNameLink(longInput.substring(0,25));
-		assertTrue("User name limit was not correct", userDetailPage.getNameText().length() == 25);
+		userIndexPage = newUserPage.clickAddUserButton();
 
-		String userName = userDetailPage.getNameText();
+		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
 
-		newUserPage = userDetailPage.clickBackToListLink().clickAddUserLink();
+		newUserPage = userIndexPage.clickAddUserLink();
 
 		// Test name uniqueness check
 
@@ -158,7 +145,7 @@ public class UserTests extends BaseTest {
 		newUserPage = newUserPage.clickAddUserButtonInvalid();
 		assertTrue("Name uniqueness error is not correct.", newUserPage.getNameError().equals("That name is already taken."));
 
-		userIndexPage = newUserPage.clickCancelLink().clickUserNameLink(userName).clickDeleteLink();
+		userIndexPage = newUserPage.clickCancelLink().clickDeleteButton(userName);
 
 		userIndexPage.logout();
 	}
@@ -182,8 +169,7 @@ public class UserTests extends BaseTest {
 				.login(userName, password)
 				.clickConfigurationHeaderLink()
 				.clickManageUsersLink()
-				.clickUserNameLink(userName)
-				.clickEditLink();
+				.clickEditLink(userName);
 
 		editUserPage.setNameInput(editedUserName);
 		editUserPage.setPasswordConfirmInput(editedPassword);
@@ -191,18 +177,17 @@ public class UserTests extends BaseTest {
 
 		// Save and check that the name changed
 
-		UserDetailPage userDetailPage = editUserPage.clickUpdateUserButton();
+		UserIndexPage userIndexPage = editUserPage.clickUpdateUserButton();
 
-		assertTrue("Username changed when edited.", userDetailPage.getNameText().equals(editedUserName));
+		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
 		// Test that we are able to log in the second time.
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
-		userDetailPage.logout().login(editedUserName, editedPassword)
+		userIndexPage.logout().login(editedUserName, editedPassword)
 		.clickConfigurationHeaderLink()
 		.clickManageUsersLink()
-		.clickUserNameLink(userName)
-		.clickDeleteLinkSameUser();
+		.clickDeleteButtonSameUser(editedUserName);
 	}
 
 	@Test 
@@ -222,7 +207,6 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordConfirmInput(userNameDuplicateTest);
 
 		newUserPage = newUserPage.clickAddUserButton()
-				.clickSubmitButton()
 				.clickAddUserLink();
 
 		newUserPage.setNameInput(baseUserName);
@@ -230,14 +214,12 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordConfirmInput(baseUserName);
 
 		// Test submission with no changes
-		UserDetailPage userDetailPage = newUserPage
+		UserIndexPage userIndexPage = newUserPage
 				.clickAddUserButton()
-				.clickSubmitButton()
-				.clickUserNameLink(baseUserName)
-				.clickEditLink()
+				.clickEditLink(baseUserName)
 				.clickUpdateUserButton();
-		assertTrue("User name was not preserved correctly.", userDetailPage.getNameText().equals(baseUserName));
-		UserEditPage editUserPage = userDetailPage.clickEditLink();
+		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
+		UserEditPage editUserPage = userIndexPage.clickEditLink(baseUserName);
 
 		// Test Empty
 		editUserPage.setNameInput("");
@@ -288,13 +270,10 @@ public class UserTests extends BaseTest {
 		// Delete the users and logout
 
 		loginPage = editUserPage.clickCancelLink()
-				.clickUserNameLink(baseUserName)
-				.clickDeleteLink()
-				.clickUserNameLink(userNameDuplicateTest)
-				.clickDeleteLink()
+				.clickDeleteButton(baseUserName)
+				.clickDeleteButton(userNameDuplicateTest)
 				.logout();
 	}
-
 
 	@Test
 	public void navigationTest() {
@@ -379,8 +358,7 @@ public class UserTests extends BaseTest {
 
 		UserIndexPage userIndexPage = orgIndexPage.clickConfigurationHeaderLink()
 				.clickManageUsersLink()
-				.clickUserNameLink("testuser")
-				.clickDeleteLinkSameUser()
+				.clickDeleteButtonSameUser("testuser")
 				.login("user", "password")
 				.clickConfigurationHeaderLink()
 				.clickManageUsersLink();

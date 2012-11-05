@@ -23,47 +23,71 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class UserIndexPage extends BasePage {
 	
 	private WebElement addUserLink;
-	private WebElement userTable;
 	
-	private WebElement lastUserFoundInTableLink;
+	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<WebElement>();
+	private List<WebElement> editLinks = new ArrayList<WebElement>();
 
+	public int getNumRows() {
+		return driver.findElementsByClassName("bodyRow").size();
+	}
+	
 	public UserIndexPage(WebDriver webdriver) {
 		super(webdriver);
 
 		addUserLink = driver.findElementById("addUserLink");
-		userTable = driver.findElementById("userTableBody");
+		
+		for (int i = 1; i <= getNumRows(); i++) {
+			deleteButtons.add(driver.findElementById("delete" + i));
+			names.add(driver.findElementById("name" + i));
+			editLinks.add(driver.findElementById("edit" + i));
+		}
+	}
+	
+	private int getIndex(String roleName) {
+		int i = -1;
+		for (WebElement name : names) {
+			i++;
+			String text = name.getText().trim();
+			if (text.equals(roleName.trim())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public UserIndexPage clickDeleteButton(String roleName) {
+		deleteButtons.get(getIndex(roleName)).click();
+		handleAlert();
+		return new UserIndexPage(driver);
+	}
+	
+	public LoginPage clickDeleteButtonSameUser(String roleName) {
+		deleteButtons.get(getIndex(roleName)).click();
+		handleAlert();
+		return new LoginPage(driver);
 	}
 
 	public UserNewPage clickAddUserLink() {
 		addUserLink.click();
 		return new UserNewPage(driver);
 	}
-	
+
 	public boolean isUserNamePresent(String userName) {
-		
-		for (WebElement element : userTable.findElements(By.xpath(".//tr/td/a"))) {
-			if (element.getText().contains(userName)) {
-				lastUserFoundInTableLink = element;
-				return true;
-			}
-		}
-		
-		return false;
+		return getIndex(userName) != -1;
 	}
 	
-	public UserDetailPage clickUserNameLink(String userName) {
-		if (isUserNamePresent(userName)) {
-			lastUserFoundInTableLink.click();
-			return new UserDetailPage(driver);
-		} else {
-			return null;
-		}
+	public UserEditPage clickEditLink(String roleName) {
+		editLinks.get(getIndex(roleName)).click();
+		return new UserEditPage(driver);
 	}
 }

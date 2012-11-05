@@ -82,9 +82,9 @@ public class UserEditPage extends BasePage {
 		roleSelect.selectByVisibleText(text);
 	}
 
-	public UserDetailPage clickUpdateUserButton() {
+	public UserIndexPage clickUpdateUserButton() {
 		updateUserButton.click();
-		return new UserDetailPage(driver);
+		return new UserIndexPage(driver);
 	}
 	
 	public UserEditPage clickUpdateUserButtonInvalid() {

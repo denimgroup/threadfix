@@ -29,9 +29,9 @@ public class RoleCreatePage extends BasePage {
 		return new RoleCreatePage(driver);
 	}
 	
-	public RoleUserConfigPage clickCreateRoleButton() {
+	public RolesIndexPage clickCreateRoleButton() {
 		createRoleButton.click();
-		return new RoleUserConfigPage(driver);
+		return new RolesIndexPage(driver);
 	}
 	
 	public RoleCreatePage clickCreateRoleButtonInvalid() {

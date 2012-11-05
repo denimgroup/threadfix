@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
@@ -11,9 +12,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
 import com.denimgroup.threadfix.selenium.pages.RoleEditPage;
-import com.denimgroup.threadfix.selenium.pages.RoleUserConfigPage;
 import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class RoleTests extends BaseTest {
 
@@ -50,69 +49,6 @@ public class RoleTests extends BaseTest {
 		assertTrue("Item still present.", rolesIndexPage.getNumRows() == 2);
 	}
 	
-	@Test
-	public void testUserConfigPage() {
-		String name = "test group";
-		// Data setup
-		
-		String[] userNames = new String[] {"user1", "user2", "user3", "user4"};
-		
-		int count = 1;
-		for (int i = 0; i < userNames.length; i++) { count *= 2; }
-		
-		//Login && create users
-		
-		UserIndexPage userIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
-				.clickManageUsersLink();
-		
-		for (String userName : userNames) {
-			userIndexPage = userIndexPage.clickAddUserLink()
-					.setNameInput(userName)
-					.setPasswordConfirmInput("testpassword")
-					.setPasswordInput("testpassword")
-					.clickAddUserButton()
-					.clickBackToMenuLink();
-		}
-				
-		RoleUserConfigPage userConfigPage = userIndexPage.clickConfigurationHeaderLink()
-				.clickRolesLink()
-				.createRole(name)
-				.clickUserConfigLink(0);
-		
-		// Test all combinations of users
-		// TODO maybe implement a less bit-twiddly way of doing powersets
-		// the (i >> j) % 2 idiom extracts the value of the jth bit of i
-		for (int i = 0; i < count; i++) {
-			
-			for (int j = 0; j < userNames.length; j++) {
-				if (userConfigPage.isChecked(userNames[j]) != ((i >> j) % 2 == 1)) {
-					userConfigPage.toggleUserIdBox(userNames[j], (i >> j) % 2 == 1);
-				}
-			}
-			
-			userConfigPage = userConfigPage.clickSubmitButton().clickUserConfigLink(0);
-			
-			for (int j = 0; j < userNames.length; j++) {
-				assertTrue("Box was not checked correctly.",
-						userConfigPage.isChecked(userNames[j]) == ((i >> j) % 2 == 1));
-			}
-		}
-		
-		userIndexPage = userConfigPage.clickSubmitButton()
-				.clickDeleteButton(name)
-				.clickBackToMenuLink()
-				.clickManageUsersLink();
-		
-		for (String userName : userNames) {
-			userIndexPage = userIndexPage.clickUserNameLink(userName).clickDeleteLink();
-			assertFalse("The user was not deleted correctly.", userIndexPage.isUserNamePresent(userName));
-		}
-		
-		rolesIndexPage = userIndexPage.clickConfigurationHeaderLink().clickRolesLink();
-		
-		assertTrue("Item still present.", rolesIndexPage.getNumRows() == 2);
-	}
-
 	@Test
 	public void testEditRole() {
 		String name1 = "1" + getRandomString(15);
@@ -168,7 +104,6 @@ public class RoleTests extends BaseTest {
 
 		roleCreatePage = roleCreatePage.setDisplayNameInput(normalName)
 				.clickCreateRoleButton()
-				.clickSubmitButton()
 				.clickCreateRoleLink()
 				.setDisplayNameInput(normalName)
 				.clickCreateRoleButtonInvalid();
@@ -197,7 +132,6 @@ public class RoleTests extends BaseTest {
 		}
 		
 		RoleEditPage roleEditPage = roleCreatePage.clickCreateRoleButton()
-				.clickSubmitButton()
 				.clickEditLink(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
@@ -231,7 +165,6 @@ public class RoleTests extends BaseTest {
 		}
 		
 		roleEditPage = roleCreatePage.clickCreateRoleButton()
-				.clickSubmitButton()
 				.clickEditLink(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
@@ -245,6 +178,7 @@ public class RoleTests extends BaseTest {
 	// have permissions to manage users / roles / groups
 	
 	@Test
+	@Ignore
 	public void testRemovePermissionsInEditPage() {
 		String roleName = "test" + getRandomString(10);
 		String admin = "Administrator";
@@ -271,8 +205,6 @@ public class RoleTests extends BaseTest {
 				.clickCreateRoleLink()
 				.setDisplayNameInput(roleName)
 				.clickCreateRoleButton()
-				.toggleUserIdBox(1)
-				.clickSubmitButton()
 				.clickEditLink(roleName);
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {

@@ -32,10 +32,9 @@ public class ConfigurationIndexPage extends BasePage {
 	private WebElement jobStatusesLink;
 	private WebElement manageUsersLink;
 	private WebElement remoteProvidersLink;
-	private WebElement groupsLink;
 	private WebElement rolesLink;
 	private WebElement apiKeysLink;
-	private static WebElement changeMyPasswordLink;
+	private WebElement changeMyPasswordLink;
 	
 	public ConfigurationIndexPage(WebDriver webdriver) {
 		super(webdriver);
@@ -45,7 +44,6 @@ public class ConfigurationIndexPage extends BasePage {
 		manageUsersLink = driver.findElementById("manageUsersLink");
 		remoteProvidersLink = driver.findElementById("remoteProvidersLink");
 		apiKeysLink = driver.findElementById("apiKeysLink");
-		groupsLink = driver.findElementById("groupsLink");
 		rolesLink = driver.findElementById("manageRolesLink");
 		changeMyPasswordLink = driver.findElementById("changePasswordLink");
 	}
@@ -78,11 +76,6 @@ public class ConfigurationIndexPage extends BasePage {
 	public UserChangePasswordPage clickChangeMyPasswordLink() {
 		changeMyPasswordLink.click();
 		return new UserChangePasswordPage(driver);
-	}
-	
-	public GroupsIndexPage clickGroupsLink() {
-		groupsLink.click();
-		return new GroupsIndexPage(driver);
 	}
 
 	public RolesIndexPage clickRolesLink() {
