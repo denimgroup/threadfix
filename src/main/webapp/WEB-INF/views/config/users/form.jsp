@@ -211,7 +211,6 @@
 			</tbody>
 		</table>
 	</div>
-	</c:if>
 	
 	<spring:url value="/configuration/users/{userId}/access/new" var="newUrl">
 		<spring:param name="userId" value="${ user.id }"/>
@@ -303,4 +302,5 @@
 	</div>
 	</form:form>
 	
+	</c:if>
 </body>
