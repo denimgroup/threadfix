@@ -46,14 +46,14 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	@Override
 	public String validateMap(AccessControlTeamMap map) {
 		if (map == null) 
-			return "Validation error #1";
+			return "Something went wrong.";
 		
 		if (map.getOrganization() == null || map.getOrganization().getId() == null) {
-			return "NEEDS ORGANIZATION";
+			return "You must pick a Team.";
 		}
 		Organization org = organizationDao.retrieveById(map.getOrganization().getId());
 		if (org == null) {
-			return "NEEDS ORGANIZATION";
+			return "You must pick a Team.";
 		}
 		map.setOrganization(org);
 		
@@ -61,11 +61,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			map.setAccessControlApplicationMaps(null);
 			
 			if (map.getRole() == null || map.getRole().getId() == null) {
-				return "NEEDS ROLE";
+				return "You must pick a Role.";
 			}
 			Role role = roleDao.retrieveById(map.getRole().getId());
 			if (role == null) {
-				return "NEEDS ROLE";
+				return "You must pick a Role.";
 			}
 			map.setRole(role);
 		} else {
@@ -73,7 +73,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			
 			if (map.getAccessControlApplicationMaps() == null || 
 					map.getAccessControlApplicationMaps().size() == 0) {
-				return "NOT GLOBAL AND NO APPS";
+				return "You must select at least one application.";
 			}
 			List<AccessControlApplicationMap> maps = new ArrayList<AccessControlApplicationMap>();
 			for (AccessControlApplicationMap appMap : map.getAccessControlApplicationMaps()) {
@@ -90,13 +90,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				appMap.setApplication(application);
 				
 				if (appMap.getRole() == null || appMap.getRole().getId() == null) {
-					maps.add(appMap);
-					continue;
+					return "You must select a Role for each Application.";
 				}
 				Role role = roleDao.retrieveById(appMap.getRole().getId());
 				if (role == null) {
-					maps.add(appMap);
-					continue;
+					return "You must select a Role for each Application.";
 				}
 				appMap.setRole(role);
 			}
@@ -104,7 +102,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			map.getAccessControlApplicationMaps().removeAll(maps);
 			
 			if (map.getAccessControlApplicationMaps().size() == 0) {
-				return "NO VALID APPS";
+				return "You must select at least one application.";
 			}
 		}
 		

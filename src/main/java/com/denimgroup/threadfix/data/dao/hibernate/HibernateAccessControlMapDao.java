@@ -55,11 +55,19 @@ public class HibernateAccessControlMapDao implements AccessControlMapDao {
 
 	@Override
 	public void saveOrUpdate(AccessControlTeamMap map) {
-		sessionFactory.getCurrentSession().saveOrUpdate(map);
+		if (map != null && map.getId() != null) {
+			sessionFactory.getCurrentSession().merge(map);
+		} else {
+			sessionFactory.getCurrentSession().saveOrUpdate(map);
+		}
 	}
 
 	@Override
 	public void saveOrUpdate(AccessControlApplicationMap map) {
-		sessionFactory.getCurrentSession().saveOrUpdate(map);
+		if (map != null && map.getId() != null) {
+			sessionFactory.getCurrentSession().merge(map);
+		} else {
+			sessionFactory.getCurrentSession().saveOrUpdate(map);
+		}
 	}
 }

@@ -1,6 +1,47 @@
 <%@ include file="/common/taglibs.jsp"%>
+<head>
+	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user_page.js"></script> --%>
+</head>
 
 <body>
+	<spring:url value="/edit" var="editUrl"/>
+	<script>
+		function showEditModal(id) {
+			var options = '';
+			lastId = id;
+			$("#myModalLabel").html("Edit Permissions Mapping");
+			$("#submitModalAdd").css("display","none");
+			$("#submitModalEdit").css("display","");
+			$("#myModal").modal('show');
+			<c:forEach var="teamMap" items="${ maps }">
+				<c:if test="${ teamMap.active }">
+				if (id == <c:out value="${teamMap.id}"/>) {
+					$("#orgSelect").val("<c:out value='${ teamMap.organization.id }'/>");
+					$("#roleSelectTeam").val("<c:out value='${ teamMap.role.id }'/>");
+					$("#orgSelect").change();
+					
+					if (<c:out value='${teamMap.allApps}'/> ? !$("#allAppsCheckbox").is(":checked") : $("#allAppsCheckbox").is(":checked")) {
+						$("#allAppsCheckbox").click();
+						toggleAppSelect();
+					}
+					
+					<c:forEach var="appMap" items="${ teamMap.accessControlApplicationMaps }">
+						<c:if test="${ appMap.active }">
+							$('[name="applicationIds"][value="<c:out value='${ appMap.application.id }'/>"]').click();
+							$('[name="roleIdMapList"]>option[value="<c:out value='${ appMap.application.id }'/>-<c:out value='${ appMap.role.id }'/>"]').parent().val("<c:out value='${ appMap.application.id }'/>-<c:out value='${ appMap.role.id }'/>");
+						</c:if>
+					</c:forEach>
+				}
+				</c:if>
+			</c:forEach>
+		}
+		
+		function submitEditModal() {
+			editUrl = '<c:out value="${editUrl}"/>'.replace("/threadfix","");
+			completeEditUrl = '/threadfix/configuration/users/<c:out value="${user.id}"/>/access/' + lastId + editUrl;
+			submitModal(completeEditUrl);
+		}
+		</script>
 
 	<c:if test="${ not empty error }">
 		<div class="errors"><c:out value="${ error }"/></div>
@@ -12,14 +53,16 @@
 				<th class="medium first">Team</th>
 				<th class="medium">Application</th>
 				<th class="medium">Role</th>
-				<th class="medium last">Delete</th>
+				<th class="short">Edit</th>
+				<th class="short last">Delete</th>
+				<td style="background-color:#FFFFFF;padding-left:10px"><a style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
 			</tr>
 		</thead>
 		<tbody>
 			<c:if test="${ empty maps }">
 				<tr class="bodyRow">
-					<td colspan="4" style="text-align:center;">
-						<a href="#myModal" role="button" data-toggle="modal">Add Permissions</a>
+					<td colspan="5" style="text-align:center;">
+						<a href="javascript:showAddModal()">Add Permissions</a>
 					</td>
 				</tr>
 			</c:if>
@@ -30,7 +73,10 @@
 						<td><c:out value="${ map.organization.name }"/></td>
 						<td>All</td>
 						<td><c:out value="${ map.role.displayName }"/></td>
-						<td>
+						<td style="text-align:center">
+							<input id="editAppMap${ status.count }" type="submit" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
+						</td>
+						<td style="text-align:center">
 							<spring:url value="/configuration/users/{userId}/access/team/{mapId}/delete" var="deleteUrl">
 								<spring:param name="userId" value="${ user.id }"/>
 								<spring:param name="mapId" value="${ map.id }"/>
@@ -46,7 +92,10 @@
 								<td><c:out value="${ map.organization.name }"/></td>
 								<td><c:out value="${ appMap.application.name }"/></td>
 								<td><c:out value="${ appMap.role.displayName }"/></td>
-								<td>
+								<td style="text-align:center">
+									<input id="editAppMap${ status.count }" type="submit" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
+								</td>
+								<td style="text-align:center">
 									<spring:url value="/configuration/users/{userId}/access/app/{mapId}/delete" var="deleteUrl">
 										<spring:param name="userId" value="${ user.id }"/>
 										<spring:param name="mapId" value="${ appMap.id }"/>

@@ -3,22 +3,8 @@
 <head>
 	<title><c:if test="${ user['new'] }">New </c:if>User</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
-	<script>
-		function confirmRoles() {
-			return $("#roleSelect").children("option").filter(":selected").text() !== "User" || 
-				confirm("You are switching roles from Administrator to User and will be logged out after this change.");
-		}
-		
-		function toggleRoles() {
-			if (! $("#hasGlobalGroupAccessCheckbox").is(':checked')){
-				$("#roleSelect").attr("disabled","disabled");
-			} else {
-				$("#roleSelect").removeAttr("disabled","");
-			}
-		}
-
-	</script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user_page.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/modal.css"/>
 </head>
 
 <body id="config">
@@ -71,10 +57,162 @@
 				</td>
 			</tr>
 		</table>
-		<br/>
+	
+	<div style="padding-top:8px">
+	<c:choose>
+		<c:when test="${ user['new'] }">	
+			<input id="addUserButton" type="submit" value="Add User" />
+			<span style="padding-left: 10px">
+				<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
+			</span>
+		</c:when>
+		<c:otherwise>
+			<input id="updateUserButton" type="submit" value="Update User" />
+			<span style="padding-left: 10px">
+				<spring:url value="/configuration/users" var="userUrl">
+					<spring:param name="userId" value="${ user.id }"/>
+				</spring:url>
+				<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Users Index</a>
+			</span>
+		</c:otherwise>
+	</c:choose>
+	</div>
+	
 	</form:form>
+		
+	<br>
+	
+	<spring:url value="/configuration/users/{userId}/access/new" var="newUrl">
+		<spring:param name="userId" value="${ user.id }"/>
+	</spring:url>
+	
+	<spring:url value="/edit" var="editUrl"/>
 	
 	<c:if test="${ not user['new'] }">
+	
+	<h2>Permissions</h2>
+	
+	<div id="permsTableDiv">
+		
+		<script>
+		function showEditModal(id) {
+			var options = '';
+			lastId = id;
+			$("#myModalLabel").html("Edit Permissions Mapping");
+			$("#submitModalAdd").css("display","none");
+			$("#submitModalEdit").removeAttr("style")
+			$("#myModal").modal('show');
+			<c:forEach var="teamMap" items="${ maps }">
+				<c:if test="${ teamMap.active }">
+				if (id == <c:out value="${teamMap.id}"/>) {
+					$("#orgSelect").val("<c:out value='${ teamMap.organization.id }'/>");
+					$("#roleSelectTeam").val("<c:out value='${ teamMap.role.id }'/>");
+					$("#orgSelect").change();
+					
+					if (<c:out value='${teamMap.allApps}'/> ? !$("#allAppsCheckbox").is(":checked") : $("#allAppsCheckbox").is(":checked")) {
+						$("#allAppsCheckbox").click();
+						toggleAppSelect();
+					}
+					
+					<c:forEach var="appMap" items="${ teamMap.accessControlApplicationMaps }">
+						<c:if test="${ appMap.active }">
+							$('[name="applicationIds"][value="<c:out value='${ appMap.application.id }'/>"]').click();
+							$('[name="roleIdMapList"]>option[value="<c:out value='${ appMap.application.id }'/>-<c:out value='${ appMap.role.id }'/>"]').parent().val("<c:out value='${ appMap.application.id }'/>-<c:out value='${ appMap.role.id }'/>");
+						</c:if>
+					</c:forEach>
+				}
+				</c:if>
+			</c:forEach>
+		}
+		
+		function submitEditModal() {
+			editUrl = '<c:out value="${editUrl}"/>'.replace("/threadfix","");
+			completeEditUrl = '/threadfix/configuration/users/<c:out value="${user.id}"/>/access/' + lastId + editUrl;
+			submitModal(completeEditUrl);
+		}
+		
+		function showAddModal() {
+			$("#myModalLabel").html("Add Permissions Mapping");
+			$("#submitModalEdit").css("display","none");
+			$("#submitModalAdd").removeAttr("style");
+			$("#myModal").modal('show');
+			
+			$("#orgSelect").val("0");
+			$("#roleSelectTeam").val("0");
+			$("#orgSelect").change();
+			
+			if (!$("#allAppsCheckbox").is(":checked")) {
+				$("#allAppsCheckbox").click();
+				toggleAppSelect();
+			}
+		}
+		</script>
+	
+		<table class="filteredTable">
+			<thead>
+				<tr style="background-color:#43678B;color:#FFFFFF">
+					<th class="medium first">Team</th>
+					<th class="medium">Application</th>
+					<th class="medium">Role</th>
+					<th class="short">Edit</th>
+					<th class="short last">Delete</th>
+					<td style="background-color:#FFFFFF;padding-left:10px"><a style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
+				</tr>
+			</thead>
+			<tbody>
+				<c:if test="${ empty maps }">
+					<tr class="bodyRow">
+						<td colspan="5" style="text-align:center;">
+							<a href="javascript:showAddModal()">Add Permissions</a>
+						</td>
+					</tr>
+				</c:if>
+			
+				<c:forEach var="map" items="${ maps }">
+					<c:if test="${ map.allApps and map.active}">
+						<tr class="bodyRow">
+							<td><c:out value="${ map.organization.name }"/></td>
+							<td>All</td>
+							<td><c:out value="${ map.role.displayName }"/></td>
+							<td style="text-align:center">
+								<input id="editAppMap${ status.count }" type="submit" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
+							</td>
+							<td style="text-align:center">
+								<spring:url value="/configuration/users/{userId}/access/team/{mapId}/delete" var="deleteUrl">
+									<spring:param name="userId" value="${ user.id }"/>
+									<spring:param name="mapId" value="${ map.id }"/>
+								</spring:url>
+								<input id="deleteAppMap${ status.count }" type="submit" value="Delete" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;"/>
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="${ not map.allApps }">
+						<c:forEach varStatus="status" var="appMap" items="${ map.accessControlApplicationMaps }">
+							<c:if test="${ appMap.active }">
+								<tr class="bodyRow">
+									<td><c:out value="${ map.organization.name }"/></td>
+									<td><c:out value="${ appMap.application.name }"/></td>
+									<td><c:out value="${ appMap.role.displayName }"/></td>
+									<td style="text-align:center">
+										<input id="editAppMap${ status.count }" type="submit" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
+									</td>
+									<td style="text-align:center">
+										<spring:url value="/configuration/users/{userId}/access/app/{mapId}/delete" var="deleteUrl">
+											<spring:param name="userId" value="${ user.id }"/>
+											<spring:param name="mapId" value="${ appMap.id }"/>
+										</spring:url>
+										<input id="deleteAppMap${ status.count }" type="submit" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;" value="Delete" />
+									</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+	</c:if>
+	
 	<spring:url value="/configuration/users/{userId}/access/new" var="newUrl">
 		<spring:param name="userId" value="${ user.id }"/>
 	</spring:url>
@@ -115,76 +253,11 @@
 				toggleAppSelect();
 			} else {
 				$("#appSelect").css("display","none");
-			}
-			
-			
+			};
 		});
 	});
-	
-	function toggleAppSelect() {
-		if ($("#allAppsCheckbox").is(':checked')){
-			$("#appSelect :input").attr("disabled","disabled");
-			$("#roleSelectTeam").removeAttr("disabled","");
-		} else {
-			$("#appSelect :input").removeAttr("disabled","");
-			$("#roleSelectTeam").attr("disabled","disabled");
-		}
-	}
-	
-	function submitModal() {
-		$.ajax({
-			type : "POST",
-			url : '<c:out value="${newUrl}"/>',
-			data : $("#newAccessControlMapForm").serializeArray(),
-			contentType : "application/x-www-form-urlencoded",
-			dataType : "text",
-			success : function(text) {
-				try {
-					var json = JSON.parse(text);
-					alert(json.error);
-				} catch (e) {
-					$('#myModal').on('hidden', function () {
-						$("#permsTableDiv").html(text);
-				    });
-				    $("#myModal").modal('hide');
-				    setTimeout(function() {
-						$("#orgSelect").val('');
-						$("#roleSelectTeam").val('');
-						$("#orgSelect").change();
-						if (! $("#allAppsCheckbox").is(':checked')) {
-							$("#allAppsCheckbox").click();
-						}
-						toggleAppSelect();
-					}, 1000);
-				}
-			},
-			error : function (xhr, ajaxOptions, thrownError){
-				alert("AJAX failed.");
-		    }
-		});
-
-	}
-	
-	function submitFormAndReload(address) {
-		$.ajax({
-			type : "POST",
-			url : address,
-			data : "",
-			contentType : "application/x-www-form-urlencoded",
-			dataType : "text",
-			success : function(text) {
-				$("#permsTableDiv").html(text);
-			},
-			error : function (xhr, ajaxOptions, thrownError){
-				alert("AJAX failed.");
-		    }
-		});
-	}
 	</script>
 		
-	<!-- Button to trigger modal -->
-	<a href="#myModal" role="button" class="btn" data-toggle="modal">Add</a>
-
 	<!-- Modal -->
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
@@ -195,7 +268,7 @@
 		</div>
 		<div class="modal-body">
 		
-			<table>
+			<table class="bordered">
 				<tr>
 					<th>Team</th>
 					<th>All Apps</th>
@@ -204,7 +277,7 @@
 				<tr>
 			<td>
 			<form:select id="orgSelect" path="teamId">
-				<form:option value="0" label="Select a role" />
+				<form:option value="0" label="Select a team" />
 				<form:options items="${ teams }" itemValue="id" itemLabel="name" />
 			</form:select>
 			</td><td>
@@ -217,95 +290,17 @@
 				</tr>
 			</table>
 			
-			<table id="appSelect">
+			<table id="appSelect" class="bordered">
 				
 			</table>
 
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			<button class="btn btn-primary" onclick="javascript:submitModal();return false;">Add Mapping</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button id="submitModalAdd" class="btn btn-primary" onclick="javascript:submitModal('<c:out value="${newUrl}"/>');return false;">Add Mapping</button>
+			<button id="submitModalEdit" class="btn btn-primary" onclick="javascript:submitEditModal();return false;">Save Edit</button>
 		</div>
 	</div>
 	</form:form>
-	
-	<div id="permsTableDiv">
-		<table class="filteredTable">
-			<thead>
-				<tr style="background-color:#43678B;color:#FFFFFF">
-					<th class="medium first">Team</th>
-					<th class="medium">Application</th>
-					<th class="medium">Role</th>
-					<th class="medium last">Delete</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:if test="${ empty maps }">
-					<tr class="bodyRow">
-						<td colspan="4" style="text-align:center;">
-							<a href="#myModal" role="button" data-toggle="modal">Add Permissions</a>
-						</td>
-					</tr>
-				</c:if>
-			
-				<c:forEach var="map" items="${ maps }">
-					<c:if test="${ map.allApps and map.active}">
-						<tr class="bodyRow">
-							<td><c:out value="${ map.organization.name }"/></td>
-							<td>All</td>
-							<td><c:out value="${ map.role.displayName }"/></td>
-							<td>
-								<spring:url value="/configuration/users/{userId}/access/team/{mapId}/delete" var="deleteUrl">
-									<spring:param name="userId" value="${ user.id }"/>
-									<spring:param name="mapId" value="${ map.id }"/>
-								</spring:url>
-								<input id="deleteAppMap${ status.count }" type="submit" value="Delete" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;"/>
-							</td>
-						</tr>
-					</c:if>
-					<c:if test="${ not map.allApps }">
-						<c:forEach varStatus="status" var="appMap" items="${ map.accessControlApplicationMaps }">
-							<c:if test="${ appMap.active }">
-								<tr class="bodyRow">
-									<td><c:out value="${ map.organization.name }"/></td>
-									<td><c:out value="${ appMap.application.name }"/></td>
-									<td><c:out value="${ appMap.role.displayName }"/></td>
-									<td>
-										<spring:url value="/configuration/users/{userId}/access/app/{mapId}/delete" var="deleteUrl">
-											<spring:param name="userId" value="${ user.id }"/>
-											<spring:param name="mapId" value="${ appMap.id }"/>
-										</spring:url>
-										<input id="deleteAppMap${ status.count }" type="submit" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;" value="Delete" />
-									</td>
-								</tr>
-							</c:if>
-						</c:forEach>
-					</c:if>
-				</c:forEach>
-			</tbody>
-		</table>
-	</div>
-	</c:if>
-		
-	<div style="padding-top:8px">
-	<c:choose>
-		<c:when test="${ user['new'] }">	
-			<input id="addUserButton" type="submit" onclick="javascript:$('#nameAndPasswordForm').submit()" value="Add User" />
-			<span style="padding-left: 10px">
-				<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
-			</span>
-		</c:when>
-		<c:otherwise>
-			<input id="updateUserButton" type="submit" onclick="javascript:$('#nameAndPasswordForm').submit()" value="Update User" />
-			<span style="padding-left: 10px">
-				<spring:url value="/configuration/users" var="userUrl">
-					<spring:param name="userId" value="${ user.id }"/>
-				</spring:url>
-				<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Users Index</a>
-			</span>
-		</c:otherwise>
-	</c:choose>
-	</div>
-		
 	
 </body>

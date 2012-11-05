@@ -18,12 +18,15 @@ import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.AccessControlMapService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}/access")
 public class AccessControlMapController {
+	
+	protected final SanitizedLogger log = new SanitizedLogger(AccessControlMapController.class);
 	
 	private AccessControlMapService accessControlMapService;
 	private UserService userService;
@@ -83,10 +86,35 @@ public class AccessControlMapController {
 		}
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.POST)
-	public String editMapping(@PathVariable("userId") int userId, 
-			HttpServletRequest request, Model model) {
-		return returnTable(model, userId);
+	@RequestMapping(value="/{mapId}/edit", method = RequestMethod.POST)
+	public String editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
+			@PathVariable("userId") int userId, 
+			@PathVariable("mapId") int mapId, 
+			HttpServletRequest request, HttpServletResponse response,
+			Model model) {
+		
+		User user = userService.loadUser(userId);
+		if (user == null) {
+			throw new ResourceNotFoundException();
+		}
+		
+		accessControlModel.setUserId(userId);
+		AccessControlTeamMap map =
+				accessControlMapService.parseAccessControlTeamMap(accessControlModel);
+		map.setUser(user);
+		
+		String error = accessControlMapService.validateMap(map);
+		if (error != null) {
+			writeResponse(response,error);
+		} else {
+			// TODO Need to authenticate some things about this 
+			
+			accessControlMapService.deactivate(accessControlMapService.loadAccessControlTeamMap(mapId));
+			accessControlMapService.store(map);
+			return returnTable(model, userId);
+		}
+		
+		return null;
 	}
 	
 	@RequestMapping(value="/team/{mapId}/delete", method = RequestMethod.POST)
