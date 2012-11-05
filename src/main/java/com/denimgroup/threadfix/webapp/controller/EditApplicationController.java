@@ -28,7 +28,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -45,6 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -57,7 +57,6 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
 @SessionAttributes("application")
-@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
 public class EditApplicationController {
 	
 	public EditApplicationController(){}
@@ -112,7 +111,7 @@ public class EditApplicationController {
 	public ModelAndView setupForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -135,11 +134,12 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@PathVariable("orgId") int orgId,
+	public String processSubmit(@PathVariable("appId") int appId,
+			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		

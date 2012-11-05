@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +62,14 @@ public class CustomUserDetailService implements UserDetailsService {
 		
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		
+		Map<Integer, Set<Permission>> orgMap = null;
+		Map<Integer, Set<Permission>> appMap = null;
+		
 		Integer id = user.getId();
 		
 		// Transfer the set of permissions that the user has to GrantedAuthority objects
 		if (id != null) {
-			Set<Permission> permissions = userService.getPermissions(id);
+			Set<Permission> permissions = userService.getGlobalPermissions(id);
 		
 			for (Permission permission : permissions) {
 				grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
@@ -74,14 +78,18 @@ public class CustomUserDetailService implements UserDetailsService {
 			// For now
 			grantedAuthorities.add(new GrantedAuthorityImpl(Role.USER));
 			
-			grantedAuthorities.add(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
+			if (user.getHasGlobalGroupAccess()) {
+				grantedAuthorities.add(new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+			}
+			
+			orgMap = userService.getOrganizationPermissions(id);
+			appMap = userService.getApplicationPermissions(id);
 		}
 		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
 				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
-				user.isHasChangedInitialPassword(), user.getId());
+				user.isHasChangedInitialPassword(), user.getId(), orgMap, appMap);
 
 		return userDetails;
 	}
-
 }

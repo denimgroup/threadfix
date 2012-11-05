@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
@@ -81,7 +82,7 @@ public class ScanController {
 	public ModelAndView viewScans(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -102,7 +103,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -135,7 +136,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -152,9 +153,10 @@ public class ScanController {
 	public String scanTable(Model model,
 			@RequestBody TableSortBean bean,
 			@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		
@@ -191,9 +193,10 @@ public class ScanController {
 	public String unmappedScanTable(Model model,
 			@RequestBody TableSortBean bean,
 			@PathVariable("scanId") Integer scanId,
+			@PathVariable("appId") Integer appId,
 			@PathVariable("orgId") Integer orgId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		

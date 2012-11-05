@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -81,7 +82,7 @@ public class PathController {
 	public ModelAndView viewScan(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -116,7 +117,7 @@ public class PathController {
 			@PathVariable("orgId") int orgId, @ModelAttribute Application application,
 			SessionStatus status) {
 
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
 		

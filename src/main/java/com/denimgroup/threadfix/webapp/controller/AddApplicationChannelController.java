@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,6 +41,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
@@ -52,7 +52,6 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/addChannel")
 @SessionAttributes("applicationChannel")
-@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 public class AddApplicationChannelController {
 
 	private ApplicationChannelService applicationChannelService;
@@ -88,7 +87,7 @@ public class AddApplicationChannelController {
 	public String addForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, ModelMap model) {
 
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -112,7 +111,7 @@ public class AddApplicationChannelController {
 			@Valid @ModelAttribute ApplicationChannel applicationChannel, BindingResult result,
 			SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		

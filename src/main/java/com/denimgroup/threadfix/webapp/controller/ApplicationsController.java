@@ -44,6 +44,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
@@ -87,7 +88,7 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
 			ModelMap model, HttpServletRequest request) {
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -136,7 +137,7 @@ public class ApplicationsController {
 	public String viewClosedVulnerabilities(@PathVariable("orgId") int orgId, 
 			@PathVariable("appId") int appId, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -161,7 +162,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -201,7 +202,7 @@ public class ApplicationsController {
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -267,7 +268,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -311,7 +312,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

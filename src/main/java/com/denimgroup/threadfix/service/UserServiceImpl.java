@@ -25,16 +25,21 @@ package com.denimgroup.threadfix.service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
 import com.denimgroup.threadfix.data.dao.RoleDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
+import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
@@ -47,13 +52,16 @@ public class UserServiceImpl implements UserService {
 
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;
+	private AccessControlMapDao accessControlMapDao = null;
 
 	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
 
 	@Autowired
-	public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
+	public UserServiceImpl(AccessControlMapDao accessControlMapDao,
+			UserDao userDao, RoleDao roleDao) {
 		this.userDao = userDao;
 		this.roleDao = roleDao;
+		this.accessControlMapDao = accessControlMapDao;
 	}
 
 	@Override
@@ -149,7 +157,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Set<Permission> getPermissions(Integer userId) {
+	public Set<Permission> getGlobalPermissions(Integer userId) {
 		Set<Permission> returnList = new HashSet<Permission>();
 
 		// for now
@@ -166,7 +174,7 @@ public class UserServiceImpl implements UserService {
 	public boolean canDelete(User user) {
 		boolean canDelete = true;
 		
-		Set<Permission> permissions = getPermissions(user.getId());
+		Set<Permission> permissions = getGlobalPermissions(user.getId());
 
 		if (canDelete && permissions.contains(Permission.CAN_MANAGE_USERS) && 
 				!userDao.canRemovePermissionFromUser(user.getId(), "canManageUsers")) {
@@ -185,7 +193,7 @@ public class UserServiceImpl implements UserService {
 	public boolean canSetRoles(int userId, List<Integer> objectIds) {
 		boolean canSetRoles = true;
 		
-		Set<Permission> oldPermissions = getPermissions(userId);
+		Set<Permission> oldPermissions = getGlobalPermissions(userId);
 		Set<Permission> newPermissions = new HashSet<Permission>();
 		
 		if (objectIds != null) {
@@ -211,5 +219,54 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return canSetRoles;
+	}
+
+	@Override
+	public Map<Integer, Set<Permission>> getApplicationPermissions(
+			Integer userId) {
+		
+		Map<Integer, Set<Permission>> applicationPermissions = new HashMap<Integer,Set<Permission>>();
+		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
+		
+		if (maps != null) {
+			for (AccessControlTeamMap teamMap : maps) {
+				if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
+					for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
+						if (appMap != null && appMap.getApplication() != null && 
+								appMap.getApplication().getId() != null && 
+								appMap.getRole() != null && 
+								appMap.getRole().getPermissions() != null) {
+							applicationPermissions.put(appMap.getApplication().getId(), 
+									appMap.getRole().getPermissions());
+							applicationPermissions.get(appMap.getApplication().getId()).add(Permission.READ_ACCESS);
+						}
+					}
+				}
+			}
+		}
+		
+		return applicationPermissions;
+	}
+
+	@Override
+	public Map<Integer, Set<Permission>> getOrganizationPermissions(
+			Integer userId) {
+		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<Integer,Set<Permission>>();
+		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
+		
+		if (maps != null) {
+			for (AccessControlTeamMap map : maps) {
+				if (map != null && map.getOrganization() != null && 
+						map.getOrganization().getId() != null && 
+						map.getRole() != null && 
+						map.getRole().getPermissions() != null) {
+					organizationPermissions.put(map.getOrganization().getId(), 
+							map.getRole().getPermissions());
+					organizationPermissions.get(map.getOrganization().getId()).add(Permission.READ_ACCESS);
+				}
+			}
+		}
+		
+		return organizationPermissions;
 	}
 }

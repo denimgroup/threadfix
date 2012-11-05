@@ -24,16 +24,16 @@
 			</tr>
 		</thead>
 		<tbody id="userTableBody">
-		<c:forEach var="userModel" items="${ userModels }">
+		<c:forEach var="userModel" items="${ userModels }" varStatus="status">
 			<tr class="bodyRow">
-				<td>
+				<td id="name${ status.count }">
 					<c:out value="${ userModel.user.name }"/>
 				</td>
 				<td>
 					<spring:url value="users/{userId}/edit" var="editUrl">
 						<spring:param name="userId" value="${ userModel.user.id }"/>
 					</spring:url>
-					<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a>
+					<a id="edit${ status.count }" href="${ fn:escapeXml(editUrl) }">Edit</a>
 				</td>
 				<td>
 					<spring:url value="/configuration/users/{userId}/delete" var="deleteUrl">
@@ -42,13 +42,13 @@
 					<form id="command" method="POST" action="${ fn:escapeXml(deleteUrl) }">
 					<c:choose>
 						<c:when test="${ not userModel.deletable }">
-							<input id="delete1" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users, groups, or roles.'); return false;"/>
+							<input id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users, groups, or roles.'); return false;"/>
 						</c:when>
 						<c:when test="${ userModel.thisUser }">
-							<input id="delete1" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>
+							<input id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>
 						</c:when>
 						<c:otherwise>
-							<input id="delete1" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this User?')"/>
+							<input id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this User?')"/>
 						</c:otherwise>
 					</c:choose>
 					</form>

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SurveyAnswer;
 import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
@@ -63,7 +64,7 @@ public class AddSurveyController {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
 			
-			if (!organizationService.isAuthorized(orgId)) {
+			if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 				return "403";
 			}
 			
@@ -89,7 +90,7 @@ public class AddSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -123,7 +124,7 @@ public class AddSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

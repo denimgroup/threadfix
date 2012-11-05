@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelSeverityService;
@@ -207,7 +208,7 @@ public class AddFindingController {
 	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -227,7 +228,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -278,7 +279,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		

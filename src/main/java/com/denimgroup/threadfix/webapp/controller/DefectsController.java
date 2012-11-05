@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -79,7 +80,7 @@ public class DefectsController {
 	private ModelAndView defectSubmissionPage(int orgId, int appId, String message,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -117,13 +118,12 @@ public class DefectsController {
 		return modelAndView;
 	}
 
-	@PreAuthorize("hasRole('ROLE_CAN_SUBMIT_DEFECTS')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView onSubmit(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -147,7 +147,7 @@ public class DefectsController {
 			@PathVariable("appId") int appId,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

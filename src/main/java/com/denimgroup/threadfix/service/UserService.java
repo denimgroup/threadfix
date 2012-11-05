@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -103,7 +104,7 @@ public interface UserService {
 	 * @param userId
 	 * @return
 	 */
-	Set<Permission> getPermissions(Integer userId);
+	Set<Permission> getGlobalPermissions(Integer userId);
 
 	/**
 	 * We can't allow a user to be deleted if it would leave the system with no users that could
@@ -120,4 +121,18 @@ public interface UserService {
 	 * @return
 	 */
 	boolean canSetRoles(int userId, List<Integer> objectIds);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	Map<Integer, Set<Permission>> getApplicationPermissions(Integer userId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	Map<Integer, Set<Permission>> getOrganizationPermissions(Integer userId);
 }

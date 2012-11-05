@@ -203,7 +203,7 @@ public class ReportsController {
 	
 	public List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<Integer>();
-		Set<Integer> teamIds = organizationService.getAuthenticatedTeamIds();
+		Set<Integer> teamIds = organizationService.getTeamIdsWithReadAccess();
 		
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {

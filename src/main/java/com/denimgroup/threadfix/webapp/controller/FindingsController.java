@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -70,7 +70,7 @@ public class FindingsController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -85,14 +85,13 @@ public class FindingsController {
 		return mav;
 	}
 
-	@PreAuthorize("hasRole('ROLE_CAN_MODIFY_VULNERABILITIES')")
 	@RequestMapping(value = "merge", method = RequestMethod.GET)
 	public String merge(@PathVariable("findingId") int findingId,
 			@PathVariable("scanId") int scanId, Model model,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		
@@ -118,7 +117,6 @@ public class FindingsController {
 		}
 	}
 	
-	@PreAuthorize("hasRole('ROLE_CAN_MODIFY_VULNERABILITIES')")
 	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
 	public String setVulnerability(@RequestParam String vulnerabilityId,
 			@PathVariable("findingId") int findingId,
@@ -127,7 +125,7 @@ public class FindingsController {
 			@PathVariable("appId") int appId, 
 			Model model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		

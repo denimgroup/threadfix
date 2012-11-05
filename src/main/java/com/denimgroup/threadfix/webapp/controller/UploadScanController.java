@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -47,7 +47,6 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
-@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 public class UploadScanController {
 
 	private ScanService scanService;
@@ -74,7 +73,7 @@ public class UploadScanController {
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -108,7 +107,7 @@ public class UploadScanController {
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -185,7 +184,7 @@ public class UploadScanController {
 			@PathVariable("emptyScanId") Integer emptyScanId,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -213,7 +212,7 @@ public class UploadScanController {
 			@PathVariable("appId") Integer appId, 
 			@PathVariable("emptyScanId") Integer emptyScanId) {
 		
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return "403";
 		}
 		

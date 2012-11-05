@@ -37,6 +37,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -88,7 +89,7 @@ public class OrganizationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!organizationService.isAuthorized(orgId)){
+		} else if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
 			return new ModelAndView("403");
 			
 		} else {
@@ -107,7 +108,7 @@ public class OrganizationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!organizationService.isAuthorized(orgId)){
+		} else if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
 			return "403";
 			
 		} else {

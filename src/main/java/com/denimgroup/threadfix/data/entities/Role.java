@@ -53,11 +53,11 @@ public class Role extends AuditableEntity {
 			canViewJobStatuses;
 	
 	public static final String[] PROTECTED_PERMISSIONS = new String[]{
-			"canManageGroups", "canManageRoles", "canManageUsers"
+			"canManageRoles", "canManageUsers"
 	};
 	
 	public static final String[] ALL_PERMISSIONS = new String[] {
-		"canManageUsers", "canManageGroups", "canManageRoles", "canManageTeams", 
+		"canManageUsers", "canManageRoles", "canManageTeams", 
 		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
 		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
 		"canGenerateReports", "canViewJobStatuses", "canManageApplications"

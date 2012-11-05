@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 
 /**
  * @author bbeverly
@@ -80,7 +81,7 @@ public interface OrganizationService {
 	 * 
 	 * @return
 	 */
-	Set<Integer> getAuthenticatedTeamIds();
+	Set<Integer> getTeamIdsWithReadAccess();
 
 	/**
 	 * this method filters loadAllActive with access groups in mind.
@@ -93,5 +94,5 @@ public interface OrganizationService {
 	 * @param orgId
 	 * @return
 	 */
-	boolean isAuthorized(Integer orgId);
+	boolean isAuthorized(Permission permission, Integer orgId, Integer teamId);
 }

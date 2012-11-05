@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 
 @Service
@@ -114,7 +115,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 	
 	@Override
-	public Set<Integer> getAuthenticatedTeamIds() {
+	public Set<Integer> getTeamIdsWithReadAccess() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof ThreadFixUserDetails) {
 			return ((ThreadFixUserDetails) principal).getAuthenticatedTeamIds();
@@ -125,11 +126,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	@Override
 	public List<Organization> loadAllActiveFilter() {
-		
-		if (hasGlobalAuthority())
+		if (hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
 		
-		Set<Integer> teamIds = getAuthenticatedTeamIds();
+		Set<Integer> teamIds = getTeamIdsWithReadAccess();
 		
 		if (teamIds == null || teamIds.size() == 0) {
 			return new ArrayList<Organization>();
@@ -138,17 +138,41 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return organizationDao.retrieveAllActiveFilter(teamIds);
 	}
 	
-	public boolean hasGlobalAuthority() {
+	public boolean hasGlobalPermission(Permission permission) {
 		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
+				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
 	}
 	
 	@Override
-	public boolean isAuthorized(Integer orgId) {
-		if (hasGlobalAuthority())
+	public boolean isAuthorized(Permission permission, Integer orgId, Integer appId) {
+		if (hasGlobalPermission(permission))
 			return true;
 		
-		Set<Integer> teamIds = getAuthenticatedTeamIds();
-		return teamIds != null && teamIds.contains(orgId);
+		if (orgId == null && appId == null) {
+			return false;
+		}
+		
+		ThreadFixUserDetails customAuth = null;
+		
+		Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (auth != null && auth instanceof ThreadFixUserDetails) {
+			customAuth = (ThreadFixUserDetails) auth;
+			
+			if (customAuth != null && customAuth.getTeamMap() != null &&
+					orgId != null && customAuth.getTeamMap().containsKey(orgId) &&
+					customAuth.getTeamMap().get(orgId) != null &&
+					customAuth.getTeamMap().get(orgId).contains(permission)) {
+				return true;
+			}
+			
+			if (customAuth != null && customAuth.getApplicationMap() != null &&
+					appId != null && customAuth.getApplicationMap().containsKey(appId) &&
+					customAuth.getApplicationMap().get(appId) != null &&
+					customAuth.getApplicationMap().get(appId).contains(permission)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

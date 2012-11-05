@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +41,8 @@ public class ThreadFixUserDetails extends User {
 	private String salt;
 
 	private Integer userId;
+	
+	private Map<Integer, Set<Permission>> teamMap, applicationMap;
 
 	public ThreadFixUserDetails(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
@@ -51,9 +54,12 @@ public class ThreadFixUserDetails extends User {
 	public ThreadFixUserDetails(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<GrantedAuthority> authorities, String salt, Boolean hasChangedInitialPassword,
-			Integer userId) {
+			Integer userId, Map<Integer, Set<Permission>> teamMap, 
+			Map<Integer, Set<Permission>> applicationMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired,
 				accountNonLocked, authorities);
+		setTeamMap(teamMap);
+		setApplicationMap(applicationMap);
 		setSalt(salt);
 		setHasChangedInitialPassword(hasChangedInitialPassword);
 		setUserId(userId);
@@ -101,4 +107,19 @@ public class ThreadFixUserDetails extends User {
 		this.authenticatedTeamIds = authenticatedTeamIds;
 	}
 
+	public Map<Integer, Set<Permission>> getApplicationMap() {
+		return applicationMap;
+	}
+
+	public void setApplicationMap(Map<Integer, Set<Permission>> applicationMap) {
+		this.applicationMap = applicationMap;
+	}
+
+	public Map<Integer, Set<Permission>> getTeamMap() {
+		return teamMap;
+	}
+
+	public void setTeamMap(Map<Integer, Set<Permission>> teamMap) {
+		this.teamMap = teamMap;
+	}
 }

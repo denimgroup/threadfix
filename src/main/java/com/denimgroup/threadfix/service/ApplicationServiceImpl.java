@@ -83,8 +83,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			DefectTrackerDao defectTrackerDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			WafRuleDao wafRuleDao,
-			VulnerabilityDao vulnerabilityDao,
-			WafDao wafDao,
+			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
 			ApplicationCriticalityDao applicationCriticalityDao,
 			DefectDao defectDao,
 			ScanMergeService scanMergeService) {

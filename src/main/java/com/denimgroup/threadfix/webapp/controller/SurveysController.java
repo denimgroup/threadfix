@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -54,7 +55,7 @@ public class SurveysController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String detail(@PathVariable("orgId") int orgId, 
 			@PathVariable("resultId") int resultId, Model model) {
-		if (!organizationService.isAuthorized(orgId)){
+		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)){
 			return "403";
 		}
 		

@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +41,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -49,7 +49,6 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @Controller
 @RequestMapping("/organizations/{orgId}/edit")
 @SessionAttributes("organization")
-@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 public class EditOrganizationController {
 	
 	public EditOrganizationController(){}
@@ -76,7 +75,7 @@ public class EditOrganizationController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("orgId") int orgId, Model model) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return new ModelAndView("403");
 		}
 
@@ -96,7 +95,7 @@ public class EditOrganizationController {
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(orgId)) {
+		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return "403";
 		}
 		
