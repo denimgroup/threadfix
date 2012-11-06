@@ -224,9 +224,9 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	if ("ReportItem".equals(qName)) {
 	    		currentChannelVulnCode = atts.getValue("pluginID");
 	    		
-	    		if ("26928".equals(currentChannelVulnCode)) {
-	    			System.out.println("Look at dis shit");;
-	    		}
+	    		// if ("26928".equals(currentChannelVulnCode)) {
+	    		// 	System.out.println("Look at this");
+	    		// }
 	    		
 	    		currentSeverityCode = atts.getValue("severity");
 	    	} else if ("plugin_output".equals(qName)) {
