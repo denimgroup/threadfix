@@ -27,22 +27,12 @@
 			</tr>
 		</table>
 		<br/>
-		
-		<c:choose>
-			<c:when test="${ user['new'] }">	
-				<input id="addUserButton" type="submit" value="Add User" />
-				<span style="padding-left: 10px">
-					<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
-				</span>
-			</c:when>
-			<c:otherwise>
-				<input id="updateUserButton" type="submit" value="Update User" />
-				<span style="padding-left: 10px">
-					<spring:url value="/configuration" var="configLink"/>
-					<a id="cancelLink" href="${ fn:escapeXml(configLink) }">Back to Users Index</a>
-				</span>
-			</c:otherwise>
-		</c:choose>
+
+		<input id="updateDefaultsButton" type="submit" value="Update Defaults" />
+		<span style="padding-left: 10px">
+			<spring:url value="/configuration" var="configLink"/>
+			<a id="cancelLink" href="${ fn:escapeXml(configLink) }">Back to Configuration Index</a>
+		</span>
 		
 	</form:form>
 </body>
