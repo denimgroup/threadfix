@@ -82,6 +82,7 @@ public class FindingsController {
 		
 		ModelAndView mav = new ModelAndView("scans/findingDetail");
 		mav.addObject(finding);
+		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
 		return mav;
 	}
 

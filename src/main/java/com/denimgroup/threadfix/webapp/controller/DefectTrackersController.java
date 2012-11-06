@@ -34,7 +34,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
 @Controller
@@ -44,17 +46,21 @@ public class DefectTrackersController {
 	DefectTrackersController(){}
 
 	private DefectTrackerService defectTrackerService;
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
 	@Autowired
-	public DefectTrackersController(DefectTrackerService defectTrackerService) {
+	public DefectTrackersController(PermissionService permissionService,
+			DefectTrackerService defectTrackerService) {
 		this.defectTrackerService = defectTrackerService;
+		this.permissionService = permissionService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
 		model.addAttribute(defectTrackerService.loadAllDefectTrackers());
+		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		return "config/defecttrackers/index";
 	}
 
@@ -69,6 +75,7 @@ public class DefectTrackersController {
 		
 		ModelAndView mav = new ModelAndView("config/defecttrackers/detail");
 		mav.addObject(defectTracker);
+		permissionService.addPermissions(mav, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		return mav;
 	}
 	

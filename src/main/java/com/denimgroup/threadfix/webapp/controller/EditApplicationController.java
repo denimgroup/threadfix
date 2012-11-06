@@ -129,7 +129,10 @@ public class EditApplicationController {
 		}
 
 		ModelAndView mav = new ModelAndView("applications/form");
-
+		
+		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+				Permission.CAN_MANAGE_WAFS);
+		
 		mav.addObject(application);
 		return mav;
 	}

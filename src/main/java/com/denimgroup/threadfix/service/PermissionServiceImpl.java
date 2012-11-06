@@ -2,10 +2,14 @@ package com.denimgroup.threadfix.service;
 
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 
+@Service
 public class PermissionServiceImpl implements PermissionService {
 
 	public boolean hasGlobalPermission(Permission permission) {
@@ -44,6 +48,22 @@ public class PermissionServiceImpl implements PermissionService {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public void addPermissions(ModelAndView modelAndView, Integer orgId, 
+			Integer appId, Permission... permissions) {
+		for (Permission permission : permissions) { 
+			modelAndView.addObject(permission.getCamelCase(), isAuthorized(permission, orgId, appId));
+		}
+	}
+	
+	@Override
+	public void addPermissions(Model model, Integer orgId, Integer appId, 
+			Permission... permissions) {
+		for (Permission permission : permissions) {
+			model.addAttribute(permission.getCamelCase(), isAuthorized(permission, orgId, appId));
+		}
 	}
 	
 }

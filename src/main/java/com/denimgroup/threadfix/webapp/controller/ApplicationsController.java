@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -87,7 +88,7 @@ public class ApplicationsController {
 
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
-			ModelMap model, HttpServletRequest request) {
+			Model model, HttpServletRequest request) {
 		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
@@ -110,7 +111,12 @@ public class ApplicationsController {
 		long numVulns = applicationService.getVulnCount(appId, true);
 		long numClosedVulns = applicationService.getVulnCount(appId, false);
 		long falsePositiveCount = applicationService.getCount(appId, falsePositiveBean);
-        
+		
+		
+		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS, 
+				Permission.CAN_UPLOAD_SCANS, Permission.CAN_MODIFY_VULNERABILITIES, 
+				Permission.CAN_SUBMIT_DEFECTS, Permission.CAN_VIEW_JOB_STATUSES );
+		
 		model.addAttribute("numVulns", numVulns);
 		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new FalsePositiveModel());
@@ -266,7 +272,7 @@ public class ApplicationsController {
 	public String getTableVulns(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@RequestBody TableSortBean bean,
-			ModelMap model) {
+			Model model) {
 		
 		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
@@ -303,6 +309,7 @@ public class ApplicationsController {
 		model.addAttribute("page", bean.getPage());
 		model.addAttribute("vulnerabilities", vulnList);
 		model.addAttribute(application);
+		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
 		return "applications/vulnTable";
 	}
 	

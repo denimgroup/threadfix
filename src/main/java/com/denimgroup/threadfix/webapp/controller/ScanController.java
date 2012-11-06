@@ -95,6 +95,7 @@ public class ScanController {
 		
 		ModelAndView mav = new ModelAndView("scans/index");
 		mav.addObject(application);
+		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
 		return mav;
 	}
 

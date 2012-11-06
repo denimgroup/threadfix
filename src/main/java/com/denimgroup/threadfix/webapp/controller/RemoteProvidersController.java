@@ -43,9 +43,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -60,16 +62,18 @@ public class RemoteProvidersController {
 	private final SanitizedLogger log = new SanitizedLogger(RemoteProvidersController.class);
 	
 	private RemoteProviderTypeService remoteProviderTypeService;
+	private PermissionService permissionService;
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private OrganizationService organizationService;
 	
 	@Autowired
 	public RemoteProvidersController(RemoteProviderTypeService remoteProviderTypeService,
 			RemoteProviderApplicationService remoteProviderApplicationService,
-			OrganizationService organizationService) {
+			PermissionService permissionService, OrganizationService organizationService) {
 		this.remoteProviderTypeService = remoteProviderTypeService;
 		this.remoteProviderApplicationService = remoteProviderApplicationService;
 		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 	}
 
 	@InitBinder
@@ -99,6 +103,7 @@ public class RemoteProvidersController {
 
 		model.addAttribute("message", message);
 		model.addAttribute("remoteProviders", typeList);
+		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
 		return "config/remoteproviders/index";
 	}
 	

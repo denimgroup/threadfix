@@ -57,24 +57,24 @@
 				<th>Defect</th>
 				<th>Defect Status</th>
 				<th>WAF Rule</th>
-				<security:authorize ifNotGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				<c:if test="${ not canModifyVulnerabilities }">
 					<th class="unsortable last">WAF Events</th>
-				</security:authorize>
-				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				</c:if>
+				<c:if test="${ canModifyVulnerabilities }">
 					<th class="unsortable">WAF Events</th>
 					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',10)"></th>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</thead>
 		<tbody>
 		<c:if test="${ empty vulnerabilities }">
 			<tr class="bodyRow">
-				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				<c:if test="${ canModifyVulnerability }">
 					<td colspan="11" style="text-align:center;">No vulnerabilities found.</td>
-				</security:authorize>
-				<security:authorize ifNotGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				</c:if>
+				<c:if test="${ not canModifyVulnerability }">
 					<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</c:if>
 		<c:forEach var="vuln" items="${vulnerabilities}" varStatus="vulnStatus">
@@ -135,16 +135,16 @@
 				<td>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
 				</td>
-				<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+				<c:if test="${ canModifyVulnerability }">
 					<td>
 						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vuln.id }" name="vulnerabilityIds">
 						<input type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</c:forEach>
 		</tbody>
-		<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+		<c:if test="${ canModifyVulnerability }">
 		<tfoot>
 			<tr class="footer">
 				<td colspan="10" style="text-align:right">
@@ -152,7 +152,7 @@
 				</td>
 			</tr>
 		</tfoot>
-		</security:authorize>
+		</c:if>
 	</table>
 	
 	<script>

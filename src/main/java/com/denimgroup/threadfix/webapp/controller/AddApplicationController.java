@@ -120,6 +120,9 @@ public class AddApplicationController {
 				return "403";
 			}
 			
+			permissionService.addPermissions(model, orgId, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					Permission.CAN_MANAGE_WAFS);
+			
 			Application application = new Application();
 			application.setOrganization(organization);
 			model.addAttribute(application);

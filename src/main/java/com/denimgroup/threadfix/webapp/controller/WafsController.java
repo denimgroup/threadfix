@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,8 +43,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
@@ -53,19 +55,23 @@ import com.denimgroup.threadfix.service.WafService;
 public class WafsController {
 
 	private WafService wafService = null;
+	private PermissionService permissionService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@Autowired
-	public WafsController(WafService wafService) {
+	public WafsController(PermissionService permissionService,
+			WafService wafService) {
 		this.wafService = wafService;
+		this.permissionService = permissionService;
 	}
 	
 	public WafsController(){}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Model model) {
 		model.addAttribute(wafService.loadAll());
+		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		return "wafs/index";
 	}
 
@@ -111,6 +117,9 @@ public class WafsController {
 		mav.addObject("hasApps", hasApps);
 		mav.addObject("lastDirective", lastDirective);
 		mav.addObject("directives", directives);
+		
+		permissionService.addPermissions(mav, null, null, 
+				Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
 		
 		return mav;
 	}

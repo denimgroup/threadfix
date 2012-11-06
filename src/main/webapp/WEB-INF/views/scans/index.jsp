@@ -17,13 +17,13 @@
 			<tr>
 				<th class="first">Channel</th>
 				<th class="long">Scan Date</th>
-				<security:authorize ifNotGranted="ROLE_CAN_UPLOAD_SCANS">
+				<c:if test="${ not canUploadScans }">
 					<th class="short last">Total Vulns</th>
-				</security:authorize>
-				<security:authorize ifAnyGranted="ROLE_CAN_UPLOAD_SCANS">
+				</c:if>
+				<c:if test="${ canUploadScans }">
 					<th class="short">Total Vulns</th>
 					<th class="medium last">Delete Scan</th>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</thead>
 		<tbody id="wafTableBody">
@@ -44,7 +44,7 @@
 				    </a>
 				</td>
 				<td><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
-				<security:authorize ifAnyGranted="ROLE_CAN_UPLOAD_SCANS">
+				<c:if test="${ canUploadScans }">
 				<td>
 					<spring:url value="scans/{scanId}/delete" var="deleteUrl">
 	                    <spring:param name="scanId" value="${ scan.id }"/>
@@ -53,7 +53,7 @@
 	                    <input onclick="return confirm('Are you sure you want to delete this scan and all of its results? This will also delete any WAF rules and defects associated with orphaned vulnerabilities.')" id="deleteScanButton" type="submit" value="Delete Scan" />
                     </form:form>
 				</td>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</c:forEach>
 			<tr class="footer">

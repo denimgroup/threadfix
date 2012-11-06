@@ -39,7 +39,9 @@
 		</c:forEach>
 		</tbody>
 	</table>
-	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
-	<div style="padding-top:10px" id="link"><a id="addWafLink" href="<spring:url value="/wafs/new" />">Add WAF</a></div>
-	</security:authorize>
+	<c:if test="${ canManageWafs }">
+		<div style="padding-top:10px" id="link">
+			<a id="addWafLink" href="<spring:url value="/wafs/new" />">Add WAF</a>
+		</div>
+	</c:if>
 </body>

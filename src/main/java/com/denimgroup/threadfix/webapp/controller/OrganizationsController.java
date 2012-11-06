@@ -97,6 +97,8 @@ public class OrganizationsController {
 			
 		} else {
 			ModelAndView mav = new ModelAndView("organizations/detail");
+			permissionService.addPermissions(mav, orgId, null, 
+					Permission.CAN_MANAGE_APPLICATIONS, Permission.CAN_MANAGE_TEAMS);
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject(organization);
 			return mav;

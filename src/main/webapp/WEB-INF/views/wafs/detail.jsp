@@ -25,7 +25,7 @@
 		<spring:param name="wafId" value="${ waf.id }"/>
 	</spring:url>
 	
-	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
+	<c:if test="${ canManageWafs }">
 	<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit WAF</a> | 
 	<spring:url value="{wafId}/delete" var="deleteUrl">
 		<spring:param name="wafId" value="${ waf.id }"/>
@@ -37,14 +37,13 @@
 	<c:if test="${hasApps}">
 		<a id="deleteButton" onclick="return alert('Remove the Applications from this WAF and try again.')">Delete WAF</a> | 
 	</c:if>	
-	</security:authorize>
+	</c:if>
 	
 	<a id="backToListLink" href="<spring:url value="/wafs" />">Back to WAF Index</a>
 	
 	<br />
 	
-	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
-	<c:if test="${not empty waf.wafRules }">
+	<c:if test="${ canManageWafs and not empty waf.wafRules }">
 		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
 			<spring:param name="wafId" value="${ waf.id }"/>
 		</spring:url>
@@ -65,7 +64,6 @@
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
-	</security:authorize>
 	
 	<h3>Applications</h3>
 	<table class="formattedTable">
@@ -106,7 +104,7 @@
 	</table>
 	
 	<c:if test="${ hasApps }">
-		<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_WAF_RULES">
+		<c:if test="${ canGenerateWafRules }">
 			<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
 				<spring:param name="wafId" value="${ waf.id }"/>
 			</spring:url>
@@ -126,7 +124,7 @@
 			</c:choose>
 			<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
 			</form:form>
-		</security:authorize>
+		</c:if>
 		
 		<c:if test="${ not empty waf.wafRules }">
 		<h3>WAF Rule Statistics (click to see details):</h3>

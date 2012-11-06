@@ -25,24 +25,24 @@
 			<tr>
 				<th class="medium first">Name</th>
 				<th class="medium">User name</th>
-				<security:authorize ifNotGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+				<c:if test="${ not canManageRemoteProviders }">
 					<th class="medium last">API Key</th>
-				</security:authorize>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+				</c:if>
+				<c:if test="${ canManageRemoteProviders }">
 					<th class="medium">API Key</th>
 					<th class="medium last">Configure</th>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</thead>
 		<tbody id="remoteProvidersTableBody">
 		<c:if test="${ empty remoteProviders }">
 			<tr class="bodyRow">
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+				<c:if test="${ canManageRemoteProviders }">
 					<td colspan="4" style="text-align:center;"> No providers found.</td>
-				</security:authorize>
-				<security:authorize ifNotGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+				</c:if>
+				<c:if test="${ not canManageRemoteProviders }">
 					<td colspan="3" style="text-align:center;"> No providers found.</td>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</c:if>
 		<c:forEach var="provider" items="${ remoteProviders }" varStatus="status">
@@ -60,14 +60,14 @@
 						<c:out value="${ provider.apiKey }" />
 					</c:if>
 				</td>
-				<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+				<c:if test="${ canManageRemoteProviders }">
 				<td>
 					<spring:url value="/configuration/remoteproviders/{id}/configure" htmlEscape="true" var="configUrl">
 						<spring:param name="id" value="${ provider.id }"/>
 					</spring:url>
 					<a id="configure${status.count }" href="${ fn:escapeXml(configUrl) }">Configure</a>
 				</td>
-				</security:authorize>
+				</c:if>
 			</tr>
 		</c:forEach>
 		</tbody>
@@ -85,9 +85,9 @@
 						<spring:param name="id" value="${ provider.id }"/>
 					</spring:url>
 					<a id="updateApps${ outerStatus.count }" style="font-size:60%;padding-left:10px;padding-right:8px;" href="${ fn:escapeXml(updateUrl) }">Update Apps</a>
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+					<c:if test="${ canManageRemoteProviders }">
 						<input id="clearConfig${ outerStatus.count }" style="font-size:60%;" onclick="return confirm('Are you sure? This will clear your credentials and delete the apps in the table below.')" id="submitButton" type="submit" value="Clear <c:out value="${ provider.name }"/> Configuration" />
-					</security:authorize>
+					</c:if>
 				</h2>
 			</form:form>
 			<spring:url value="" var="emptyUrl"></spring:url>	
@@ -97,9 +97,9 @@
 						<th class="long first">Name / ID</th>
 						<th class="medium">Team</th>
 						<th>Application</th>
-						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+						<c:if test="${ canManageRemoteProviders }">
 							<th class="medium">Edit</th>
-						</security:authorize>
+						</c:if>
 						<th class="medium last">Import Scan</th>
 					</tr>
 				</thead>
@@ -117,7 +117,7 @@
 									<c:out value="${ application.application.name }"/>
 								</c:if>
 							</td>
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+							<c:if test="${ canManageRemoteProviders }">
 								<td>
 									<spring:url value="/configuration/remoteproviders/{providerId}/apps/{appId}/edit" htmlEscape="true" var="editAppUrl">
 										<spring:param name="providerId" value="${ provider.id }"/>
@@ -125,7 +125,7 @@
 									</spring:url>
 									<a id="provider${ outerStatus.count }updateMapping${ innerStatus.count }" href="${ fn:escapeXml(editAppUrl) }">Edit Mapping</a>
 								</td>
-							</security:authorize>
+							</c:if>
 							<td>
 								<c:if test="${ not empty application.application }">
 									<spring:url value="/configuration/remoteproviders/{providerId}/apps/{appId}/import" htmlEscape="true" var="editAppUrl">

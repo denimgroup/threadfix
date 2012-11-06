@@ -27,12 +27,12 @@
 	<div style="font-size:150%">Team: <a id="organizationText" href="${fn:escapeXml(orgUrl)}"><c:out value="${ application.organization.name }"/></a></div>
 	<br>
 	<h2 style="padding-bottom:5px;">Application: <span id="nameText"><c:out value="${ application.name }"/></span>
-	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+	<c:if test="${ canManageApplications }">
 		<span style="font-size:60%;padding-left:10px;">
 			<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
 			<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a>
 		</span>
-	</security:authorize>
+	</c:if>
 	</h2>
 	
 	<c:if test="${ not empty message }">
@@ -106,12 +106,12 @@
 	</table>
 
 	<div id="links" style="padding-bottom:10px;padding-top:10px">
-		<security:authorize ifAnyGranted="ROLE_CAN_UPLOAD_SCANS">
+		<c:if test="${ canUploadScans }">
 			<spring:url value="{appId}/scans/upload" var="uploadUrl">
 				<spring:param name="appId" value="${ application.id }"/>
 			</spring:url>
 			<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
-		</security:authorize>
+		</c:if>
 		<spring:url value="{appId}/scans/new" var="addFindingUrl">
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
@@ -235,27 +235,27 @@
 					<th>Defect</th>
 					<th>Defect Status</th>
 					<th>WAF Rule</th>
-					<security:authorize ifNotGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					<c:if test="${ not canModifyVulnerabilities }">
 						<th class="unsortable last">WAF Events</th>
-					</security:authorize>
-					<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					</c:if>
+					<c:if test="${ canModifyVulnerabilities }">
 						<th class="unsortable">WAF Events</th>
 						<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',10)"></th>
-					</security:authorize>
+					</c:if>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="bodyRow">
-					<security:authorize ifAnyGranted="CAN_MODIFY_VULNERABILITIES">
+					<c:if test="${ canModifyVulnerabilities }">
 						<td colspan="12" style="text-align:center;">Loading Vulnerabilities.</td>
-					</security:authorize>
+					</c:if>
 					
-					<security:authorize ifNotGranted="CAN_MODIFY_VULNERABILITIES">
+					<c:if test="${ not canModifyVulnerabilities }">
 						<td colspan="11" style="text-align:center;">Loading Vulnerabilities.</td>
-					</security:authorize>
+					</c:if>
 				</tr>
 			</tbody>
-			<security:authorize ifAnyGranted="CAN_MODIFY_VULNERABILITIES">
+			<c:if test="${ canModifyVulnerabilities }">
 				<tfoot>
 					<tr class="footer">
 						<td colspan="12" style="text-align:right">
@@ -263,7 +263,7 @@
 						</td>
 					</tr>
 				</tfoot>
-			</security:authorize>
+			</c:if>
 		</table>
 	
 	</div>
@@ -276,12 +276,12 @@
 			<c:if test="${ not empty application.defectTracker }">
 				<td class="label">Defect Tracker:</td>
 				<td class="inputValue">
-					<security:authorize ifAnyGranted="ROLE_CAN_SUBMIT_DEFECTS">
+					<c:if test="${ canSubmitDefects }">
 						<spring:url value="{appId}/defects" var="defectsUrl">
 					        <spring:param name="appId" value="${ application.id }" />
 					    </spring:url>
 					    <a href="${ fn:escapeXml(defectsUrl) }">Submit Defects</a> |
-				    </security:authorize>
+				    </c:if>
 				    <spring:url value="{appId}/defects/update" var="updateUrl">
 				    	<spring:param name="appId" value="${ application.id }"/>
 				    </spring:url>
@@ -289,7 +289,7 @@
 				</td>
 			</c:if>
 			</tr>
-			<security:authorize ifAnyGranted="ROLE_CAN_VIEW_JOB_STATUSES">
+			<c:if test="${ canViewJobStatuses }">
 			<tr>
 				<td class="label">Jobs:</td>
 				<td class="inputValue">
@@ -297,7 +297,7 @@
 					<a href="<spring:url value="/jobs/all" />">View All</a>
 				</td>
 			</tr>
-			</security:authorize>
+			</c:if>
 		</tbody>
 	</table>
 	

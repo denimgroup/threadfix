@@ -70,9 +70,9 @@
 				<td class="label">Defect Tracker:</td>
 				<td class="inputValue">
 					No Defect Trackers were found. 
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
+					<c:if test="${ canManageDefectTrackers }">
 						<a id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
-					</security:authorize>
+					</c:if>
 				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -85,9 +85,9 @@
 						<form:option value="0" label="<none>"/>
 						<form:options items="${defectTrackerList}" itemValue="id" itemLabel="displayName"/>
 					</form:select>
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
+					<c:if test="${ canManageDefectTrackers }">
 						<a style="padding-left:10px;" id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
-					</security:authorize>
+					</c:if>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="defectTracker.id" cssClass="errors" />
@@ -151,10 +151,10 @@
 			<tr>
 				<td class="label">WAF:</td>
 				<td class="inputValue">
-					No WAFs were found. 
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
+					No WAFs were found.
+					<c:if test="${ canManageWafs }">
 						<a id="configureWafsButton" href="${ newWAFUrl }">Create a WAF</a>
-					</security:authorize>
+					</c:if>
 				</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -167,9 +167,9 @@
 						<form:option value="0" label="<none>" />
 						<form:options items="${ wafList }" itemValue="id" itemLabel="name"/>
 					</form:select>
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
+					<c:if test="${ canManageWafs }">
 						<a style="padding-left:10px;" id="configureWafsButton" href="${ newWAFUrl }">Create a new WAF</a>
-					</security:authorize>
+					</c:if>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="waf.id" cssClass="errors" />

@@ -43,14 +43,14 @@
 				</td>
 			</tr>
 		</c:forEach>
-		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
+		<c:if test="${ canManageDefectTrackers }">
 			<tr class="footer">
 				<td class="first">
 					<a id="addDefectTrackerLink" href="<spring:url value="/configuration/defecttrackers/new" />">Add Defect Tracker</a>
 				</td>
 				<td class="pagination" style="text-align:right"></td>
 			</tr>
-		</security:authorize>
+		</c:if>
 		</tbody>
 	</table>
 </body>
