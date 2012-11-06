@@ -118,7 +118,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public Set<Integer> getTeamIdsWithReadAccess() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof ThreadFixUserDetails) {
-			return ((ThreadFixUserDetails) principal).getAuthenticatedTeamIds();
+			ThreadFixUserDetails customDetails = ((ThreadFixUserDetails) principal);
+			
+			if (customDetails.getAuthorities().contains(
+					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
+				return null;
+			}
+
+			return customDetails.getTeamMap().keySet();
 		}
 		
 		return null;
@@ -142,5 +149,4 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return SecurityContextHolder.getContext().getAuthentication()
 				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
 	}
-	
 }

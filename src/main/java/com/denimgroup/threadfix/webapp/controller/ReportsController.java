@@ -39,6 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -51,6 +53,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -204,7 +207,7 @@ public class ReportsController {
 	public List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<Integer>();
 		Set<Integer> teamIds = organizationService.getTeamIdsWithReadAccess();
-		
+
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {
 				List<Application> appList = applicationService.loadAllActiveFilter(teamIds);
@@ -214,7 +217,8 @@ public class ReportsController {
 			} else {
 				applicationIdList.add(reportParameters.getApplicationId());
 			}
-		} else if (teamIds.contains(reportParameters.getOrganizationId())) {
+		} else if (hasGlobalPermission(Permission.READ_ACCESS) ||
+				teamIds.contains(reportParameters.getOrganizationId())) {
 			Organization org = organizationService.loadOrganization(reportParameters.getOrganizationId());
 			if (reportParameters.getApplicationId() < 0) {
 				List<Application> appList = org.getActiveApplications();
@@ -229,6 +233,11 @@ public class ReportsController {
 		}
 		
 		return applicationIdList;
+	}
+	
+	public boolean hasGlobalPermission(Permission permission) {
+		return SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
 	}
 	
 	

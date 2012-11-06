@@ -48,6 +48,7 @@ import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
@@ -119,7 +120,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	public boolean hasGlobalAuthority() {
 		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl("ROLE_GLOBAL_ACCESS"));
+				.getAuthorities().contains(
+						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
 	}
 
 	@Override

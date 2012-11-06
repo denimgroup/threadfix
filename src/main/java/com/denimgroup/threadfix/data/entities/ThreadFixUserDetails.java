@@ -36,8 +36,6 @@ public class ThreadFixUserDetails extends User {
 
 	private Boolean hasChangedInitialPassword = false;
 	
-	private Set<Integer> authenticatedTeamIds = null;
-
 	private String salt;
 
 	private Integer userId;
@@ -97,14 +95,6 @@ public class ThreadFixUserDetails extends User {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
-	}
-
-	public Set<Integer> getAuthenticatedTeamIds() {
-		return authenticatedTeamIds;
-	}
-
-	public void setAuthenticatedTeamIds(Set<Integer> authenticatedTeamIds) {
-		this.authenticatedTeamIds = authenticatedTeamIds;
 	}
 
 	public Map<Integer, Set<Permission>> getApplicationMap() {
