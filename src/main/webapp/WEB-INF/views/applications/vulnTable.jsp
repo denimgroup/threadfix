@@ -69,10 +69,10 @@
 		<tbody>
 		<c:if test="${ empty vulnerabilities }">
 			<tr class="bodyRow">
-				<c:if test="${ canModifyVulnerability }">
+				<c:if test="${ canModifyVulnerabilities }">
 					<td colspan="11" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
-				<c:if test="${ not canModifyVulnerability }">
+				<c:if test="${ not canModifyVulnerabilities }">
 					<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
 			</tr>
@@ -135,7 +135,7 @@
 				<td>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
 				</td>
-				<c:if test="${ canModifyVulnerability }">
+				<c:if test="${ canModifyVulnerabilities }">
 					<td>
 						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vuln.id }" name="vulnerabilityIds">
 						<input type="hidden" value="on" name="_vulnerabilityIds">
@@ -144,10 +144,10 @@
 			</tr>
 		</c:forEach>
 		</tbody>
-		<c:if test="${ canModifyVulnerability }">
+		<c:if test="${ canModifyVulnerabilities }">
 		<tfoot>
 			<tr class="footer">
-				<td colspan="10" style="text-align:right">
+				<td colspan="11" style="text-align:right">
 					<input type="submit" value="Mark Selected as False Positives">
 				</td>
 			</tr>

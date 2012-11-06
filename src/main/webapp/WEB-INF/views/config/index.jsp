@@ -51,10 +51,11 @@
 			<a id="viewLogsLink" href="<spring:url value="configuration/logs" htmlEscape="true"/>">View Error Logs</a>
 		</li>
 		</security:authorize>
-		
+		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
 		<li>
 			<a id="configureDefaultsLink" href="<spring:url value="configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
 		</li>
+		</security:authorize>
 	</ul>
 	
 	
