@@ -43,7 +43,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -56,16 +56,16 @@ public class PathController {
 
 	private ApplicationService applicationService;
 	private ScanMergeService scanMergeService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(PathController.class);
 
 	@Autowired
-	public PathController(OrganizationService organizationService,
+	public PathController(PermissionService organizationService,
 			ApplicationService applicationService, ScanMergeService scanMergeService) {
 		this.applicationService = applicationService;
 		this.scanMergeService = scanMergeService;
-		this.organizationService = organizationService;
+		this.permissionService = organizationService;
 	}
 
 	@InitBinder
@@ -82,7 +82,7 @@ public class PathController {
 	public ModelAndView viewScan(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -117,7 +117,7 @@ public class PathController {
 			@PathVariable("orgId") int orgId, @ModelAttribute Application application,
 			SessionStatus status) {
 
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
 		

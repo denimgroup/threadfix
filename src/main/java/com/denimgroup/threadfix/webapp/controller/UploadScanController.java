@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
@@ -52,17 +52,17 @@ public class UploadScanController {
 	private ScanService scanService;
 	private ApplicationService applicationService;
 	private ApplicationChannelService applicationChannelService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
 	@Autowired
 	public UploadScanController(ScanService scanService,
-			OrganizationService organizationService,
+			PermissionService permissionService,
 			ApplicationService applicationService,
 			ApplicationChannelService applicationChannelService) {
 		this.scanService = scanService;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 		this.applicationService = applicationService;
 		this.applicationChannelService = applicationChannelService;
 	}
@@ -73,7 +73,7 @@ public class UploadScanController {
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -107,7 +107,7 @@ public class UploadScanController {
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -184,7 +184,7 @@ public class UploadScanController {
 			@PathVariable("emptyScanId") Integer emptyScanId,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -212,7 +212,7 @@ public class UploadScanController {
 			@PathVariable("appId") Integer appId, 
 			@PathVariable("emptyScanId") Integer emptyScanId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return "403";
 		}
 		

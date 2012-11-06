@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 
@@ -52,15 +52,15 @@ public class FindingsController {
 	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
 
 	private FindingService findingService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public FindingsController(FindingService findingService,
-			OrganizationService organizationService,
+			PermissionService PermissionService,
 			VulnerabilityService vulnerabilityService) {
 		this.findingService = findingService;
-		this.organizationService = organizationService;
+		this.permissionService = PermissionService;
 		this.vulnerabilityService = vulnerabilityService;
 	}
 
@@ -70,7 +70,7 @@ public class FindingsController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -91,7 +91,7 @@ public class FindingsController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		
@@ -125,7 +125,7 @@ public class FindingsController {
 			@PathVariable("appId") int appId, 
 			Model model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		

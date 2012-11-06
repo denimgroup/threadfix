@@ -48,7 +48,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -67,16 +67,16 @@ public class ApplicationsController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private VulnerabilityService vulnerabilityService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService,
-			OrganizationService organizationService,
+			PermissionService permissionService,
 			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 		this.vulnerabilityService = vulnerabilityService;
 	}
 
@@ -88,7 +88,7 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
 			ModelMap model, HttpServletRequest request) {
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -137,7 +137,7 @@ public class ApplicationsController {
 	public String viewClosedVulnerabilities(@PathVariable("orgId") int orgId, 
 			@PathVariable("appId") int appId, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -162,7 +162,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -202,7 +202,7 @@ public class ApplicationsController {
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -268,7 +268,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -312,7 +312,7 @@ public class ApplicationsController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

@@ -45,7 +45,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -57,18 +57,18 @@ public class AddApplicationChannelController {
 	private ApplicationChannelService applicationChannelService;
 	private ChannelTypeService channelTypeService;
 	private ApplicationService applicationService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
 	public AddApplicationChannelController(ApplicationChannelService applicationChannelService,
-			ChannelTypeService channelTypeService, ApplicationService applicationService,
-			OrganizationService organizationService) {
+			PermissionService permissionService, ChannelTypeService channelTypeService, 
+			ApplicationService applicationService) {
 		this.applicationChannelService = applicationChannelService;
 		this.applicationService = applicationService;
 		this.channelTypeService = channelTypeService;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 	}
 	
 	public AddApplicationChannelController(){}
@@ -87,7 +87,7 @@ public class AddApplicationChannelController {
 	public String addForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, ModelMap model) {
 
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -111,7 +111,7 @@ public class AddApplicationChannelController {
 			@Valid @ModelAttribute ApplicationChannel applicationChannel, BindingResult result,
 			SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		

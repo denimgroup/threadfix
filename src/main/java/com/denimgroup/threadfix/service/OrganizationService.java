@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
 
 /**
  * @author bbeverly
@@ -89,10 +88,4 @@ public interface OrganizationService {
 	 */
 	List<Organization> loadAllActiveFilter();
 
-	/**
-	 * 
-	 * @param orgId
-	 * @return
-	 */
-	boolean isAuthorized(Permission permission, Integer orgId, Integer teamId);
 }

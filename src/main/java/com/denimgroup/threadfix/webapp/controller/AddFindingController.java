@@ -58,7 +58,7 @@ import com.denimgroup.threadfix.service.ChannelSeverityService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.UserService;
@@ -69,7 +69,7 @@ import com.denimgroup.threadfix.service.UserService;
 public class AddFindingController {
 
 	private ApplicationService applicationService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private ChannelTypeService channelTypeService;
 	private ChannelSeverityService channelSeverityService;
 	private ScanMergeService scanMergeService;
@@ -85,10 +85,10 @@ public class AddFindingController {
 			ChannelSeverityService channelSeverityService,
 			ChannelVulnerabilityService channelVulnerabilityService,
 			FindingService findingService, UserService userService,
-			OrganizationService organizationService) {
+			PermissionService organizationService) {
 		this.applicationService = applicationService;
 		this.scanMergeService = scanMergeService;
-		this.organizationService = organizationService;
+		this.permissionService = organizationService;
 		this.channelTypeService = channelTypeService;
 		this.channelSeverityService = channelSeverityService;
 		this.channelVulnerabilityService = channelVulnerabilityService;
@@ -208,7 +208,7 @@ public class AddFindingController {
 	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -228,7 +228,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -279,7 +279,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		

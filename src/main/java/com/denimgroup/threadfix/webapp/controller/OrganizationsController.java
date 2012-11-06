@@ -41,6 +41,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
@@ -56,13 +57,15 @@ public class OrganizationsController {
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
+	private PermissionService permissionService = null;
 	private ApplicationService applicationService = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-								   ApplicationService applicationService) {
+			PermissionService permissionService, ApplicationService applicationService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
+		this.permissionService = permissionService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -89,7 +92,7 @@ public class OrganizationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
+		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
 			return new ModelAndView("403");
 			
 		} else {
@@ -108,7 +111,7 @@ public class OrganizationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
+		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
 			return "403";
 			
 		} else {

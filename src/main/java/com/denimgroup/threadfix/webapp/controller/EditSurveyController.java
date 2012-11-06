@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SurveyAnswer;
 import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
@@ -49,22 +49,22 @@ import com.denimgroup.threadfix.service.SurveyService;
 public class EditSurveyController {
 
 	private SurveyService surveyService = null;
-	private OrganizationService organizationService = null;
+	private PermissionService permissionService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditSurveyController.class);
 
 	@Autowired
 	public EditSurveyController(SurveyService surveyService,
-			OrganizationService organizationService) {
+			PermissionService PermissionService) {
 		this.surveyService = surveyService;
-		this.organizationService = organizationService;
+		this.permissionService = PermissionService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView setupForm(@PathVariable("orgId") int orgId,
 			@PathVariable("resultId") int resultId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return new ModelAndView("403");
 		}
 		
@@ -84,7 +84,7 @@ public class EditSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -117,7 +117,7 @@ public class EditSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

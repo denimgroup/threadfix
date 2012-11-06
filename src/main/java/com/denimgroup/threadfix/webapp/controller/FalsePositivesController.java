@@ -41,7 +41,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
@@ -54,18 +54,18 @@ public class FalsePositivesController {
 	public FalsePositivesController(){}
 
 	private ApplicationService applicationService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private VulnerabilityService vulnerabilityService;
 
 	private final SanitizedLogger log = new SanitizedLogger(FalsePositivesController.class);
 
 	@Autowired
 	public FalsePositivesController(ApplicationService applicationService,
-			OrganizationService organizationService,
+			PermissionService PermissionService,
 			VulnerabilityService vulnerabilityService) {
 		this.applicationService = applicationService;
 		this.vulnerabilityService = vulnerabilityService;
-		this.organizationService = organizationService;
+		this.permissionService = PermissionService;
 	}
 
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
@@ -74,7 +74,7 @@ public class FalsePositivesController {
 			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model, HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 
@@ -97,7 +97,7 @@ public class FalsePositivesController {
 	public String defectList(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 
@@ -124,7 +124,7 @@ public class FalsePositivesController {
 			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 
@@ -148,7 +148,7 @@ public class FalsePositivesController {
 			@RequestBody TableSortBean bean,
 			ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		

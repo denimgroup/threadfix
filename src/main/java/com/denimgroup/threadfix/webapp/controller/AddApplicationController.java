@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -61,6 +62,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 public class AddApplicationController {
 
 	private OrganizationService organizationService = null;
+	private PermissionService permissionService= null;
 	private ApplicationService applicationService = null;
 	private DefectTrackerService defectTrackerService = null;
 	private WafService wafService = null;
@@ -114,7 +116,7 @@ public class AddApplicationController {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
 			
-			if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+			if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 				return "403";
 			}
 			
@@ -133,7 +135,7 @@ public class AddApplicationController {
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
 		

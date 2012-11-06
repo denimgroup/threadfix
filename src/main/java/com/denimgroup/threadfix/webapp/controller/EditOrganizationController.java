@@ -43,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -54,12 +55,15 @@ public class EditOrganizationController {
 	public EditOrganizationController(){}
 
 	private OrganizationService organizationService = null;
+	private PermissionService permissionService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditOrganizationController.class);
 
 	@Autowired
-	public EditOrganizationController(OrganizationService organizationService) {
+	public EditOrganizationController(PermissionService permissionService,
+			OrganizationService organizationService) {
 		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 	}
 	
 	@InitBinder
@@ -75,7 +79,7 @@ public class EditOrganizationController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView editForm(@PathVariable("orgId") int orgId, Model model) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return new ModelAndView("403");
 		}
 
@@ -95,7 +99,7 @@ public class EditOrganizationController {
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return "403";
 		}
 		

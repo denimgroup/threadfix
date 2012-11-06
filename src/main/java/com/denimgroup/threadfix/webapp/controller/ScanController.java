@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
@@ -56,16 +56,16 @@ public class ScanController {
 	private ApplicationService applicationService;
 	private ScanDeleteService scanDeleteService;
 	private FindingService findingService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 
 	@Autowired
 	public ScanController(ScanService scanService,
-			OrganizationService organizationService,
+			PermissionService organizationService,
 			ApplicationService applicationService,
 			ScanDeleteService scanDeleteService,
 			FindingService findingService) {
 		this.scanService = scanService;
-		this.organizationService = organizationService;
+		this.permissionService = organizationService;
 		this.applicationService = applicationService;
 		this.scanDeleteService = scanDeleteService;
 		this.findingService = findingService;
@@ -82,7 +82,7 @@ public class ScanController {
 	public ModelAndView viewScans(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -103,7 +103,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -136,7 +136,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_UPLOAD_SCANS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -156,7 +156,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		
@@ -196,7 +196,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("orgId") Integer orgId) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		

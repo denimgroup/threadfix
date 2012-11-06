@@ -39,7 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -57,15 +57,15 @@ public class DefectsController {
 	private final SanitizedLogger log = new SanitizedLogger(DefectsController.class);
 
 	private ApplicationService applicationService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private QueueSender queueSender;
 
 	@Autowired
 	public DefectsController(ApplicationService applicationService, 
-			OrganizationService organizationService,
+			PermissionService permissionService,
 			QueueSender queueSender) {
 		this.queueSender = queueSender;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 		this.applicationService = applicationService;
 	}
 
@@ -80,7 +80,7 @@ public class DefectsController {
 	private ModelAndView defectSubmissionPage(int orgId, int appId, String message,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -123,7 +123,7 @@ public class DefectsController {
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -147,7 +147,7 @@ public class DefectsController {
 			@PathVariable("appId") int appId,
 			HttpServletRequest request) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

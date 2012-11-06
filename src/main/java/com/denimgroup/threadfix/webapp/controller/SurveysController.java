@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
@@ -41,21 +41,21 @@ import com.denimgroup.threadfix.service.SurveyService;
 public class SurveysController {
 
 	private final SurveyService surveyService;
-	private final OrganizationService organizationService;
+	private final PermissionService permissionService;
 
 	private final SanitizedLogger log = new SanitizedLogger(SurveysController.class);
 	
 	@Autowired
 	public SurveysController(SurveyService surveyService,
-			OrganizationService organizationService) {
+			PermissionService permissionService) {
 		this.surveyService = surveyService;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String detail(@PathVariable("orgId") int orgId, 
 			@PathVariable("resultId") int resultId, Model model) {
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)){
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)){
 			return "403";
 		}
 		

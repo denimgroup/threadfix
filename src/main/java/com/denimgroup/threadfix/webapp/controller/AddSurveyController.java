@@ -40,6 +40,7 @@ import com.denimgroup.threadfix.data.entities.SurveyAnswer;
 import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
@@ -49,13 +50,16 @@ import com.denimgroup.threadfix.service.SurveyService;
 public class AddSurveyController {
 
 	private SurveyService surveyService = null;
+	private PermissionService permissionService = null;
 	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddSurveyController.class);
 
 	@Autowired
-	public AddSurveyController(SurveyService surveyService, OrganizationService organizationService) {
+	public AddSurveyController(OrganizationService organizationService,
+			SurveyService surveyService, PermissionService permissionService) {
 		this.surveyService = surveyService;
+		this.permissionService = permissionService;
 		this.organizationService = organizationService;
 	}
 
@@ -64,7 +68,7 @@ public class AddSurveyController {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
 			
-			if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+			if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 				return "403";
 			}
 			
@@ -90,7 +94,7 @@ public class AddSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -124,7 +128,7 @@ public class AddSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (!organizationService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

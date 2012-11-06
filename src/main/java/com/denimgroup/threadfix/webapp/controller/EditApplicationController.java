@@ -49,7 +49,7 @@ import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -66,18 +66,18 @@ public class EditApplicationController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
-	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private ApplicationCriticalityService applicationCriticalityService = null;
 	
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
-			OrganizationService organizationService,
+			PermissionService permissionService,
 			ApplicationCriticalityService applicationCriticalityService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
-		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
@@ -111,7 +111,7 @@ public class EditApplicationController {
 	public ModelAndView setupForm(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -129,6 +129,7 @@ public class EditApplicationController {
 		}
 
 		ModelAndView mav = new ModelAndView("applications/form");
+
 		mav.addObject(application);
 		return mav;
 	}
@@ -139,7 +140,7 @@ public class EditApplicationController {
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status) {
 		
-		if (!organizationService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
