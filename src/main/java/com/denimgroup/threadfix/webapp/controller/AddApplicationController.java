@@ -81,12 +81,14 @@ public class AddApplicationController {
 			ApplicationService applicationService,
 			DefectTrackerService defectTrackerService,
 			WafService wafService,
-			ApplicationCriticalityService applicationCriticalityService) {
+			ApplicationCriticalityService applicationCriticalityService,
+			PermissionService permissionService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
 		this.applicationCriticalityService = applicationCriticalityService;
+		this.permissionService = permissionService;
 	}
 	
 	public AddApplicationController(){}
