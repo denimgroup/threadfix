@@ -68,6 +68,12 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				return "You must pick a Role.";
 			}
 			map.setRole(role);
+			
+			if (map.getUser().getId() != null &&
+					accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
+							map.getUser().getId(), org.getId(), role.getId()) != null) {
+				return "That team / role combo already exists for this user.";
+			}
 		} else {
 			map.setRole(null);
 			
@@ -97,6 +103,12 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					return "You must select a Role for each Application.";
 				}
 				appMap.setRole(role);
+				
+				if (map.getUser().getId() != null &&
+						accessControlMapDao.retrieveAppMapByUserAppAndRole(
+								map.getUser().getId(), appMap.getApplication().getId(), role.getId()) != null) {
+					return "You have a duplicate application / role entry for this user.";
+				}
 			}
 			
 			map.getAccessControlApplicationMaps().removeAll(maps);
@@ -245,6 +257,13 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		if (map != null) {
 			map.setActive(false);
 			map.setModifiedDate(new Date());
+			
+			if (map.getAccessControlApplicationMaps() != null) {
+				for (AccessControlApplicationMap appMap : map.getAccessControlApplicationMaps()) {
+					deactivate(appMap);
+				}
+			}
+			
 			store(map);
 		}
 	}

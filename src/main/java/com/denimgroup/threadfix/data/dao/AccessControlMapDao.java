@@ -20,6 +20,22 @@ public interface AccessControlMapDao {
 	AccessControlApplicationMap retrieveAppMapById(int id);
 	
 	/**
+	 * 
+	 * @param organizationId
+	 * @param roleId
+	 * @return
+	 */
+	AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId, int organizationId, int roleId);
+	
+	/**
+	 * 
+	 * @param applicationId
+	 * @param roleId
+	 * @return
+	 */
+	AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId, int applicationId, int roleId);
+	
+	/**
 	 * @param id
 	 * @return
 	 */

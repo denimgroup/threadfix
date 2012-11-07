@@ -70,4 +70,35 @@ public class HibernateAccessControlMapDao implements AccessControlMapDao {
 			sessionFactory.getCurrentSession().saveOrUpdate(map);
 		}
 	}
+
+	@Override
+	public AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId,
+			int organizationId, int roleId) {
+		return (AccessControlTeamMap) sessionFactory.getCurrentSession()
+				 .createCriteria(AccessControlTeamMap.class)
+				 .createAlias("organization", "orgAlias")
+				 .createAlias("role", "roleAlias")
+				 .createAlias("user", "userAlias")
+				 .add(Restrictions.eq("userAlias.id",userId))
+				 .add(Restrictions.eq("roleAlias.id",roleId))
+				 .add(Restrictions.eq("orgAlias.id",organizationId))
+				 .add(Restrictions.eq("active",true))
+				 .uniqueResult();
+	}
+
+	@Override
+	public AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId,
+			int applicationId, int roleId) {
+		return (AccessControlApplicationMap) sessionFactory.getCurrentSession()
+				 .createCriteria(AccessControlApplicationMap.class)
+				 .createAlias("application", "appAlias")
+				 .createAlias("role", "roleAlias")
+				 .createAlias("accessControlTeamMap", "parentMap")
+				 .createAlias("parentMap.user", "userAlias")
+				 .add(Restrictions.eq("userAlias.id",userId))
+				 .add(Restrictions.eq("roleAlias.id",roleId))
+				 .add(Restrictions.eq("appAlias.id",applicationId))
+				 .add(Restrictions.eq("active",true))
+				 .uniqueResult();
+	}
 }
