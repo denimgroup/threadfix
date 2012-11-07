@@ -124,9 +124,9 @@ public class AddUserController {
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
-					", the ID " + user.getId());// + user.getRole().getDisplayName());
+					", the ID " + user.getId());
 			status.setComplete();
-			return "redirect:/configuration/users";
+			return "redirect:/configuration/users/" + user.getId() + "/edit";
 		}
 	}
 	

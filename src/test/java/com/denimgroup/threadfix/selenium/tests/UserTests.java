@@ -67,7 +67,7 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput(userName);
 		newUserPage.setPasswordConfirmInput(password);
 
-		userIndexPage = newUserPage.clickAddUserButton();
+		userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
 		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 
 		userIndexPage = userIndexPage.clickDeleteButton(userName);
@@ -130,7 +130,7 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput("dummy password");
 		newUserPage.setPasswordConfirmInput("dummy password");
 
-		userIndexPage = newUserPage.clickAddUserButton();
+		userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
 
 		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
 
@@ -206,7 +206,7 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput(userNameDuplicateTest);
 		newUserPage.setPasswordConfirmInput(userNameDuplicateTest);
 
-		newUserPage = newUserPage.clickAddUserButton()
+		newUserPage = newUserPage.clickAddUserButton().clickCancelLink()
 				.clickAddUserLink();
 
 		newUserPage.setNameInput(baseUserName);
@@ -216,7 +216,6 @@ public class UserTests extends BaseTest {
 		// Test submission with no changes
 		UserIndexPage userIndexPage = newUserPage
 				.clickAddUserButton()
-				.clickEditLink(baseUserName)
 				.clickUpdateUserButton();
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 		UserEditPage editUserPage = userIndexPage.clickEditLink(baseUserName);

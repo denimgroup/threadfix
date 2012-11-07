@@ -100,13 +100,13 @@ public class UsersController {
 		if (user != null) {
 			if (userService.canDelete(user)) {
 				
-				userService.delete(user);
-				
 				status.setComplete();
 				
 				String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 				
 				boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
+				
+				userService.delete(user);
 				
 				if (isThisUser) {
 					return "redirect:/j_spring_security_logout";
