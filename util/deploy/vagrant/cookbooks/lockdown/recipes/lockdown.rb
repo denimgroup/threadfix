@@ -42,6 +42,7 @@ script "run apt-get upgrade" do
   interpreter "bash"
   user "root"
   cwd "/home/vagrant"
+  action :run
   code <<-EOH
     export DEBIAN_FRONTEND=noninteractive
     sudo apt-get update

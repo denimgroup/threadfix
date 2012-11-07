@@ -28,13 +28,18 @@
 
 # I'm not trying for a generic solution, I'm trying for a working 12.04 Ubuntu.
 
-client_package = package "mysql-client" 
-
-client_package.run_action(:install)
-
-server_package = package "mysql-server"
-
-server_package.run_action(:install)
+script "install mysql" do
+  interpreter "bash"
+  user "root"
+  cwd "/home/vagrant"
+  code <<-EOH
+    export DEBIAN_FRONTEND=noninteractive
+    sudo debconf-set-selections <<< 'mysql-server-5.1 mysql-server/root_password password test'
+    sudo debconf-set-selections <<< 'mysql-server-5.1 mysql-server/root_password_again password test'
+    sudo apt-get install mysql-server -y
+    sudo apt-get install mysql-client -y
+  EOH
+end
 
 execute "assign-root-password" do
   command "/usr/bin/mysqladmin -u root password test"
