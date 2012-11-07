@@ -49,12 +49,12 @@ function submitModal(url) {
 					var json = JSON.parse(text);
 					alert(json.error);
 				} catch (e) {
-					alert("The JSON was not parsed correctly.");
+					history.go(0);
 				}
 			}
 		},
 		error : function (xhr, ajaxOptions, thrownError){
-			alert("AJAX failed.");
+			history.go(0);
 	    }
 	});
 }
@@ -70,7 +70,7 @@ function submitFormAndReload(address) {
 			$("#permsTableDiv").html(text);
 		},
 		error : function (xhr, ajaxOptions, thrownError){
-			alert("AJAX failed.");
+			history.go(0);
 	    }
 	});
 }
