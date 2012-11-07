@@ -45,6 +45,7 @@ import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Organization;
@@ -75,6 +76,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private WafRuleDao wafRuleDao = null;
 	private WafDao wafDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private AccessControlMapService accessControlMapService;
 	private ApplicationCriticalityDao applicationCriticalityDao = null;
 	private DefectDao defectDao = null;
 	private ScanMergeService scanMergeService = null;
@@ -84,12 +86,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 			DefectTrackerDao defectTrackerDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			WafRuleDao wafRuleDao,
+			AccessControlMapService accessControlMapService,
 			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
 			ApplicationCriticalityDao applicationCriticalityDao,
 			DefectDao defectDao,
 			ScanMergeService scanMergeService) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
+		this.accessControlMapService = accessControlMapService;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.wafRuleDao = wafRuleDao;
 		this.vulnerabilityDao = vulnerabilityDao;
@@ -148,6 +152,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setModifiedDate(new Date());
 		removeRemoteApplicationLinks(application);
 		String possibleName = getNewName(application);
+		
+		if (application.getAccessControlApplicationMaps() != null) {
+			for (AccessControlApplicationMap map : application.getAccessControlApplicationMaps()) {
+				accessControlMapService.deactivate(map);
+			}
+		}
+		
 		if (applicationDao.retrieveByName(possibleName) == null) {
 			application.setName(possibleName);
 		}
@@ -499,7 +510,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public Application decryptCredentials(Application application) {
 		try {
-			if (application != null && application.getEncryptedPassword() != null && application.getEncryptedUserName() != null) {
+			if (application != null && application.getEncryptedPassword() != null && 
+					application.getEncryptedUserName() != null) {
 				application.setPassword(ESAPI.encryptor().decrypt(application.getEncryptedPassword()));
 				application.setUserName(ESAPI.encryptor().decrypt(application.getEncryptedUserName()));
 			}

@@ -50,6 +50,7 @@ public class Application extends AuditableEntity {
 	private static final long serialVersionUID = 1175222046579045669L;
 	
 	public static final String TEMP_PASSWORD = "this is not the password";
+	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 
 	public static final int NAME_LENGTH = 60;
 	public static final int URL_LENGTH = 255;
@@ -245,6 +246,16 @@ public class Application extends AuditableEntity {
 
 	public void setScans(List<Scan> scans) {
 		this.scans = scans;
+	}
+	
+	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+	@JsonIgnore
+	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {
+		return accessControlApplicationMaps;
+	}
+
+	public void setAccessControlApplicationMaps(List<AccessControlApplicationMap> accessControlApplicationMaps) {
+		this.accessControlApplicationMaps = accessControlApplicationMaps;
 	}
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)

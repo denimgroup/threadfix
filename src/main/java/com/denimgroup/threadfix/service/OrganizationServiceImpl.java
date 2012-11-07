@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
+import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -48,11 +49,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	private OrganizationDao organizationDao = null;
 	private ApplicationService applicationService = null;
+	private AccessControlMapService accessControlMapService = null;
 
 	@Autowired
 	public OrganizationServiceImpl(OrganizationDao organizationDao, 
+			AccessControlMapService accessControlMapService, 
 			ApplicationService applicationService) {
 		this.organizationDao = organizationDao;
+		this.accessControlMapService = accessControlMapService;
 		this.applicationService = applicationService;
 	}
 	
@@ -99,6 +103,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 		if (organization.getActiveApplications() != null) {
 			for (Application app : organization.getActiveApplications()) {
 				applicationService.deactivateApplication(app);
+			}
+		}
+		
+		if (organization.getAccessControlTeamMaps() != null) {
+			for (AccessControlTeamMap map : organization.getAccessControlTeamMaps()) {
+				accessControlMapService.deactivate(map);
 			}
 		}
 		

@@ -45,6 +45,7 @@ public class Organization extends AuditableEntity {
 	private static final long serialVersionUID = 6734388139007659988L;
 	
 	private List<Application> activeApps;
+	private List<AccessControlTeamMap> accessControlTeamMaps;
 	
 	public static final int NAME_LENGTH = 60;
 
@@ -96,6 +97,16 @@ public class Organization extends AuditableEntity {
 			}
 		}
 		return activeApps;
+	}
+	
+	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+	@JsonIgnore
+	public List<AccessControlTeamMap> getAccessControlTeamMaps() {
+		return accessControlTeamMaps;
+	}
+
+	public void setAccessControlTeamMaps(List<AccessControlTeamMap> accessControlTeamMaps) {
+		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
 
 	// TODO this might belong somewhere else
