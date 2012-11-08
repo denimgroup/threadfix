@@ -10,15 +10,17 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
 
 @Controller
 @RequestMapping("/configuration/defaults")
+@SessionAttributes("defaultConfiguration")
 public class DefaultConfigController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(DefaultConfigController.class);
@@ -45,12 +47,12 @@ public class DefaultConfigController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model) {
-		model.addAttribute("model", defaultConfigService.loadCurrentConfiguration());
+		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
 		return "config/defaults";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String processForm(@ModelAttribute DefaultsConfigModel configModel) {
+	public String processForm(@ModelAttribute DefaultConfiguration configModel) {
 		
 		defaultConfigService.saveConfiguration(configModel);
 		

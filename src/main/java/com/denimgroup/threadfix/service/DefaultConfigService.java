@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 
 public interface DefaultConfigService {
 
@@ -8,11 +8,11 @@ public interface DefaultConfigService {
 	 * Load the current system settings
 	 * @return
 	 */
-	DefaultsConfigModel loadCurrentConfiguration();
+	DefaultConfiguration loadCurrentConfiguration();
 	
 	/**
 	 * Save new system settings
 	 * @param model
 	 */
-	void saveConfiguration(DefaultsConfigModel model);
+	void saveConfiguration(DefaultConfiguration config);
 }

@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.DefaultConfigService;
@@ -49,7 +50,6 @@ import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
 
 @Controller
 @RequestMapping("/configuration/users/new")
@@ -91,7 +91,7 @@ public class AddUserController {
 	public String setupForm(Model model) {
 		User user = new User();
 		
-		DefaultsConfigModel defaultsModel = defaultConfigService.loadCurrentConfiguration();
+		DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
 		
 		if (defaultsModel != null) {
 			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
@@ -129,5 +129,4 @@ public class AddUserController {
 			return "redirect:/configuration/users/" + user.getId() + "/edit";
 		}
 	}
-	
 }
