@@ -38,19 +38,22 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label-2">Global Group:</td>
+				<td class="label-2">Global Access:</td>
 				<td class="inputValue-2" style="text-align: left;">
 					<form:checkbox onclick="toggleRoles()" id="hasGlobalGroupAccessCheckbox" path="hasGlobalGroupAccess" />
-					
+				</td>
+			</tr>
+			<tr>
+				<td class="label-2">Role for Global Access:</td>
+				<td class="inputValue-2" style="text-align: left;">
 					<form:select id="roleSelect" path="globalRole.id">
-						<form:option value="0" label="Select a role" />
+						<form:option value="0" label="Read Access" />
 						<form:options items="${ roleList }" itemValue="id" itemLabel="displayName" />
 					</form:select>
 					
 					<c:if test="${ not user.hasGlobalGroupAccess }">
 						<script>$("#roleSelect").attr("disabled","disabled");</script>
 					</c:if>
-					
 				</td>
 				<td style="border: 0px solid black; background-color: white; padding-left: 5px">
 					<form:errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
