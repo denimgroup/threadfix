@@ -86,7 +86,7 @@ public class EditUserController {
 
 	@ModelAttribute
 	public List<Role> populateRoles() {
-		return userService.loadAllRoles();
+		return roleService.loadAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

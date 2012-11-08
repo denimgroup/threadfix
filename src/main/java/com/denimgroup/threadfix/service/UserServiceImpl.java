@@ -109,27 +109,6 @@ public class UserServiceImpl implements UserService {
 		userDao.saveOrUpdate(user);
 	}
 
-	@Override
-	public List<Role> loadAllRoles() {
-		return roleDao.retrieveAll();
-	}
-
-	@Override
-	public Role loadRole(int roleId) {
-		return roleDao.retrieveById(roleId);
-	}
-
-	@Override
-	public Role loadRole(String name) {
-		return roleDao.retrieveByName(name);
-	}
-
-	@Override
-	@Transactional(readOnly = false)
-	public void storeRole(Role role) {
-		roleDao.saveOrUpdate(role);
-	}
-
 	private void encryptPassword(User user) {
 		try {
 			user.setSalt(encoder.generateSalt());

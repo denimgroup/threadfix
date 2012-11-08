@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
@@ -29,12 +30,15 @@ import com.denimgroup.threadfix.webapp.validator.UserValidator;
 public class ChangePasswordController {
 
 	private UserService userService = null;
+	private RoleService roleService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
-	public ChangePasswordController(UserService userService) {
+	public ChangePasswordController(RoleService roleService,
+			UserService userService) {
 		this.userService = userService;
+		this.roleService = roleService;
 	}
 
 	@InitBinder
@@ -44,7 +48,7 @@ public class ChangePasswordController {
 
 	@ModelAttribute
 	public List<Role> populateRoles() {
-		return userService.loadAllRoles();
+		return roleService.loadAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

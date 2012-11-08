@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
 /**
@@ -69,28 +68,6 @@ public interface UserService {
 	 */
 	void createUser(User user);
 
-	/**
-	 * @return
-	 */
-	List<Role> loadAllRoles();
-
-	/**
-	 * @param roleId
-	 * @return
-	 */
-	Role loadRole(int roleId);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	Role loadRole(String name);
-
-	/**
-	 * @param role
-	 */
-	void storeRole(Role role);
-	
 	/**
 	 * 
 	 * @param user

@@ -57,21 +57,21 @@ import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class AddUserController {
 
-	private UserService userService = null;
 	private DefaultConfigService defaultConfigService = null;
+	private UserService userService = null;
 	private RoleService roleService = null;
 	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
 
 	@Autowired
-	public AddUserController(UserService userService,
-			OrganizationService organizationService, RoleService roleService,
+	public AddUserController(OrganizationService organizationService, 
+			UserService userService, RoleService roleService, 
 			DefaultConfigService defaultConfigService) {
-		this.userService = userService;
 		this.organizationService = organizationService;
 		this.defaultConfigService = defaultConfigService;
 		this.roleService = roleService;
+		this.userService = userService;
 	}
 	
 	public AddUserController(){}
@@ -84,7 +84,7 @@ public class AddUserController {
 
 	@ModelAttribute
 	public List<Role> populateRoles() {
-		return userService.loadAllRoles();
+		return roleService.loadAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

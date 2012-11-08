@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.viewmodels.DefaultsConfigModel;
 
 @Controller
@@ -23,13 +23,13 @@ public class DefaultConfigController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(DefaultConfigController.class);
 
-	private UserService userService = null;
+	private RoleService roleService = null;
 	private DefaultConfigService defaultConfigService = null;
 	
 	@Autowired
 	public DefaultConfigController(DefaultConfigService defaultConfigService,
-			UserService userService) {
-		this.userService = userService;
+			RoleService roleService) {
+		this.roleService = roleService;
 		this.defaultConfigService = defaultConfigService;
 	}
 	
@@ -40,7 +40,7 @@ public class DefaultConfigController {
 	
 	@ModelAttribute
 	public List<Role> populateRoles() {
-		return userService.loadAllRoles();
+		return roleService.loadAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
