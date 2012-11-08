@@ -42,7 +42,7 @@
 					<form id="command" method="POST" action="${ fn:escapeXml(deleteUrl) }">
 					<c:choose>
 						<c:when test="${ not userModel.deletable }">
-							<input id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users, groups, or roles.'); return false;"/>
+							<input id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users or roles.'); return false;"/>
 						</c:when>
 						<c:when test="${ userModel.thisUser }">
 							<input id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>

@@ -28,6 +28,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -82,33 +83,28 @@ public class HibernateUserDao implements UserDao {
 	}
 	
 	public boolean canRemovePermissionFromRole(Integer id, String string) {
-//		Long result = (Long) sessionFactory.getCurrentSession()
-//				.createCriteria(UserRoleMap.class)
-//				.createAlias("role", "roleAlias")
-//				.add(Restrictions.eq("active", true))
-//				.add(Restrictions.eq("roleAlias." + string, true))
-//				.add(Restrictions.ne("roleAlias.id", id))
-//				.setProjection(Projections.rowCount())
-//				.uniqueResult();
-//		
-//		return result != null && result > 0;
-//		
-		return true;
+		Long result = (Long) sessionFactory.getCurrentSession()
+				.createCriteria(User.class)
+				.createAlias("globalRole", "roleAlias")
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("roleAlias." + string, true))
+				.add(Restrictions.ne("roleAlias.id", id))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+		
+		return result != null && result > 0;
 	}
 	
 	public boolean canRemovePermissionFromUser(Integer id, String string) {
-//		Long result = (Long) sessionFactory.getCurrentSession()
-//				.createCriteria(UserRoleMap.class)
-//				.createAlias("user", "userAlias")
-//				.createAlias("role", "roleAlias")
-//				.add(Restrictions.eq("active", true))
-//				.add(Restrictions.eq("roleAlias." + string, true))
-//				.add(Restrictions.ne("userAlias.id", id))
-//				.setProjection(Projections.rowCount())
-//				.uniqueResult();
-//		
-//		return result != null && result > 0;
+		Long result = (Long) sessionFactory.getCurrentSession()
+				.createCriteria(User.class)
+				.createAlias("globalRole", "roleAlias")
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("roleAlias." + string, true))
+				.add(Restrictions.ne("id", id))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
 		
-		return true;
+		return result != null && result > 0;
 	}
 }
