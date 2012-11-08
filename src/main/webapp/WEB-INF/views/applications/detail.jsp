@@ -104,20 +104,20 @@
 			</tr>
 		</tbody>
 	</table>
-
-	<div id="links" style="padding-bottom:10px;padding-top:10px">
-		<c:if test="${ canUploadScans }">
+	<c:if test="${ canUploadScans }">
+		<div id="links" style="padding-bottom:10px;padding-top:10px">
+		
 			<spring:url value="{appId}/scans/upload" var="uploadUrl">
 				<spring:param name="appId" value="${ application.id }"/>
 			</spring:url>
 			<a id="uploadScanLink" href="${ fn:escapeXml(uploadUrl) }">Upload Scan</a> |
-		</c:if>
-		<spring:url value="{appId}/scans/new" var="addFindingUrl">
-			<spring:param name="appId" value="${ application.id }"/>
-		</spring:url>
-		<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Manually Add Vulnerabilities</a>
-	</div>
-	
+		
+			<spring:url value="{appId}/scans/new" var="addFindingUrl">
+				<spring:param name="appId" value="${ application.id }"/>
+			</spring:url>
+			<a id="addFindingManuallyLink" href="${ fn:escapeXml(addFindingUrl) }">Manually Add Vulnerabilities</a>
+		</div>
+	</c:if>
 	<c:if test="${ not empty application.scans }"> 
 	<h3 style="padding-top:10px;">All Open Vulnerabilities</h3>
 	
