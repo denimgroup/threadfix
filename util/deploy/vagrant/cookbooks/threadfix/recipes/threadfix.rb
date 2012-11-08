@@ -67,6 +67,13 @@ template "/reset-database.sh" do
   mode "0744"
 end
 
+template "/var/lib/tomcat7/defaults.properties" do
+  source "defaults.properties.erb"
+  owner "root"
+  group "root"
+  mode "0744"
+end
+
 script "run fabric" do
   interpreter "bash"
   user "root"
