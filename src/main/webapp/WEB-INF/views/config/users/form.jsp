@@ -48,7 +48,7 @@
 					</form:select>
 					
 					<c:if test="${ not user.hasGlobalGroupAccess }">
-						<script>$("#roleSelect").css("display","none");</script>
+						<script>$("#roleSelect").attr("disabled","disabled");</script>
 					</c:if>
 					
 				</td>
