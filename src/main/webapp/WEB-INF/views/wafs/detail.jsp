@@ -75,7 +75,7 @@
 		</thead>
 		<tbody id="applicationsTableBody">
 	<c:choose>
-		<c:when test="${ hasApps }">
+		<c:when test="${ not empty apps }">
 			<c:forEach var="app" items="${ apps }">
 				<c:if test="${ app.active }">
 				<tr class="bodyRow">

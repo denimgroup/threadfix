@@ -39,7 +39,6 @@ import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,15 +48,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	private OrganizationDao organizationDao = null;
 	private ApplicationService applicationService = null;
+	private PermissionService permissionService = null;
 	private AccessControlMapService accessControlMapService = null;
 
 	@Autowired
 	public OrganizationServiceImpl(OrganizationDao organizationDao, 
 			AccessControlMapService accessControlMapService, 
+			PermissionService permissionService,
 			ApplicationService applicationService) {
 		this.organizationDao = organizationDao;
 		this.accessControlMapService = accessControlMapService;
 		this.applicationService = applicationService;
+		this.permissionService = permissionService;
 	}
 	
 	@Override
@@ -125,28 +127,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 	
 	@Override
-	public Set<Integer> getTeamIdsWithReadAccess() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof ThreadFixUserDetails) {
-			ThreadFixUserDetails customDetails = ((ThreadFixUserDetails) principal);
-			
-			if (customDetails.getAuthorities().contains(
-					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
-				return null;
-			}
-
-			return customDetails.getTeamMap().keySet();
-		}
-		
-		return null;
-	}
-	
-	@Override
 	public List<Organization> loadAllActiveFilter() {
 		if (hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
 		
-		Set<Integer> teamIds = getTeamIdsWithReadAccess();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
 		
 		if (teamIds == null || teamIds.size() == 0) {
 			return new ArrayList<Organization>();

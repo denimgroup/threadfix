@@ -58,6 +58,7 @@ import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.report.ReportsService;
 
@@ -69,14 +70,18 @@ public class ReportsController {
 	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
 
 	private OrganizationService organizationService;
+	private PermissionService permissionService;
 	private ApplicationService applicationService;
 	private ReportsService reportsService;
 
 	@Autowired
 	public ReportsController(OrganizationService organizationService,
-			ApplicationService applicationService, ReportsService reportsService) {
+			PermissionService permissionService,
+			ApplicationService applicationService, 
+			ReportsService reportsService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
+		this.permissionService = permissionService;
 		this.reportsService = reportsService;
 	}
 
@@ -206,7 +211,7 @@ public class ReportsController {
 	
 	public List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<Integer>();
-		Set<Integer> teamIds = organizationService.getTeamIdsWithReadAccess();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
 
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {

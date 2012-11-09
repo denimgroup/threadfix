@@ -48,4 +48,11 @@ public interface PermissionService {
 	 */
 	Set<Integer> getAuthenticatedAppIds();
 	
+	/**
+	 * This method returns null if the user has access to all teams.
+	 * TODO revisit this section
+	 * @return
+	 */
+	Set<Integer> getAuthenticatedTeamIds();
+	
 }

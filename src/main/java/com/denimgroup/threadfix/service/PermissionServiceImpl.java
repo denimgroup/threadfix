@@ -94,7 +94,28 @@ public class PermissionServiceImpl implements PermissionService {
 	public Set<Integer> getAuthenticatedAppIds() {
 		Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (auth != null && auth instanceof ThreadFixUserDetails) {
+			if (((ThreadFixUserDetails) auth).getAuthorities().contains(
+					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
+				return null;
+			}
 			return ((ThreadFixUserDetails) auth).getApplicationMap().keySet();
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public Set<Integer> getAuthenticatedTeamIds() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof ThreadFixUserDetails) {
+			ThreadFixUserDetails customDetails = ((ThreadFixUserDetails) principal);
+			
+			if (customDetails.getAuthorities().contains(
+					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
+				return null;
+			}
+
+			return customDetails.getTeamMap().keySet();
 		}
 		
 		return null;
