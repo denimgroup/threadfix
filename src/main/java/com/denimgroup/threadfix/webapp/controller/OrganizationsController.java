@@ -46,6 +46,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
+ * @author mcollins
  * 
  */
 @Controller
@@ -100,6 +101,7 @@ public class OrganizationsController {
 			permissionService.addPermissions(mav, orgId, null, 
 					Permission.CAN_MANAGE_APPLICATIONS, Permission.CAN_MANAGE_TEAMS);
 			applicationService.generateVulnerabilityReports(organization);
+			mav.addObject("apps", permissionService.filterApps(organization));
 			mav.addObject(organization);
 			return mav;
 		}

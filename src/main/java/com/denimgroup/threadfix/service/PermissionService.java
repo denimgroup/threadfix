@@ -1,10 +1,13 @@
 package com.denimgroup.threadfix.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 
@@ -54,5 +57,12 @@ public interface PermissionService {
 	 * @return
 	 */
 	Set<Integer> getAuthenticatedTeamIds();
+
+	/**
+	 * 
+	 * @param organization
+	 * @return
+	 */
+	List<Application> filterApps(Organization organization);
 	
 }

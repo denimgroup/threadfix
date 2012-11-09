@@ -137,6 +137,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 			return new ArrayList<Organization>();
 		}
 		
+		// Also add in the teams that only have app permissions
+		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+		if (appIds != null && !appIds.isEmpty()) {
+			for (Integer id : appIds) {
+				Application app = applicationService.loadApplication(id);
+				if (app != null && app.getOrganization() != null && 
+						app.getOrganization().getId() != null && 
+						!teamIds.contains(app.getOrganization().getId())) {
+					teamIds.add(app.getOrganization().getId());
+				}
+			}
+		}
+		
 		return organizationDao.retrieveAllActiveFilter(teamIds);
 	}
 	
