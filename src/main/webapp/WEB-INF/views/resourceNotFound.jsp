@@ -7,5 +7,8 @@
 <h2>Resource Not Found</h2>
 <br/>
 <p>
-    We were unable to find the resource that you requested. <a href="main.html" onclick="history.back();return false">Go Back</a>
+    We were unable to find the resource that you requested. 
+    This could be because the requested item never existed or because it was deleted.<br><br>
+    You may want to <a href="#" onclick="history.back();return false">go back a page</a> or 
+    <a href="/threadfix/organizations">go to the Home page.</a>
 </p>
