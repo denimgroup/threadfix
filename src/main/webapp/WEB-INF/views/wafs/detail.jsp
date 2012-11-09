@@ -64,7 +64,7 @@
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
-	
+
 	<h3>Applications</h3>
 	<table class="formattedTable">
 		<thead>
@@ -76,7 +76,7 @@
 		<tbody id="applicationsTableBody">
 	<c:choose>
 		<c:when test="${ hasApps }">
-			<c:forEach var="app" items="${ waf.applications }">
+			<c:forEach var="app" items="${ apps }">
 				<c:if test="${ app.active }">
 				<tr class="bodyRow">
 					<td>
@@ -103,7 +103,11 @@
 		</tbody>
 	</table>
 	
-	<c:if test="${ hasApps }">
+	<c:if test="${ not canSeeRules }">
+		Your permissions do not allow you to view rules for all of the apps attached to this WAF.
+	</c:if>
+	
+	<c:if test="${ canSeeRules and hasApps }">
 		<c:if test="${ canGenerateWafRules }">
 			<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
 				<spring:param name="wafId" value="${ waf.id }"/>

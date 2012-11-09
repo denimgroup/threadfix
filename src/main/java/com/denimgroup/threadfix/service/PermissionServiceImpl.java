@@ -1,13 +1,17 @@
 package com.denimgroup.threadfix.service;
 
+import java.util.Set;
+
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.data.entities.Waf;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
@@ -65,5 +69,34 @@ public class PermissionServiceImpl implements PermissionService {
 			model.addAttribute(permission.getCamelCase(), isAuthorized(permission, orgId, appId));
 		}
 	}
-	
+
+	@Override
+	public boolean canSeeRules(Waf waf) {
+		if (waf == null || waf.getApplications() == null || 
+				waf.getApplications().size() == 0) {
+			return false;
+		}
+		
+		for (Application app : waf.getApplications()) {
+			if (app == null || app.getId() == null || 
+					app.getOrganization() == null ||
+					app.getOrganization().getId() == null ||
+					!isAuthorized(Permission.CAN_GENERATE_WAF_RULES, 
+							app.getOrganization().getId(), app.getId())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public Set<Integer> getAuthenticatedAppIds() {
+		Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (auth != null && auth instanceof ThreadFixUserDetails) {
+			return ((ThreadFixUserDetails) auth).getApplicationMap().keySet();
+		}
+		
+		return null;
+	}
 }

@@ -26,7 +26,9 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -85,20 +87,8 @@ public class WafsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		WafRuleDirective lastDirective = null;
-		List<WafRuleDirective> directives = null;
-		
-		if ((waf.getLastWafRuleDirective() != null) && (waf.getWafType().getId().equals(
-				waf.getLastWafRuleDirective().getWafType().getId()))) {
-			lastDirective = waf.getLastWafRuleDirective();
-			directives = waf.getWafType().getWafRuleDirectives();
-			directives.remove(lastDirective);
-		} else if (waf.getWafType() != null && waf.getWafType().getWafRuleDirectives() != null 
-						&& waf.getWafType().getWafRuleDirectives().size() >= 1) {
-			lastDirective = waf.getWafType().getWafRuleDirectives().get(0);
-			directives = waf.getWafType().getWafRuleDirectives();
-			directives.remove(0);
-		}
+		boolean canSeeRules = permissionService.canSeeRules(waf);
+		mav.addObject("canSeeRules", canSeeRules);
 		
 		boolean hasApps = false;
 		if (waf.getApplications() != null) {
@@ -109,14 +99,44 @@ public class WafsController {
 				}
 			}
 		}
-		
-		String rulesText = wafService.getAllRuleText(waf);
-		
-		mav.addObject(waf);
-		mav.addObject("rulesText", rulesText);
 		mav.addObject("hasApps", hasApps);
-		mav.addObject("lastDirective", lastDirective);
-		mav.addObject("directives", directives);
+		
+		
+		if (waf.getApplications() != null && waf.getApplications().size() != 0) {
+			Set<Integer> authenticatedAppIds = permissionService.getAuthenticatedAppIds();
+			List<Application> apps = new ArrayList<Application>();
+			for (Application app : waf.getApplications()) {
+				if (app != null && app.getId() != null &&
+						authenticatedAppIds.contains(app.getId())) {
+					apps.add(app);
+				}
+			}
+			mav.addObject("apps", apps);
+		}
+		
+		if (canSeeRules) {
+			String rulesText = wafService.getAllRuleText(waf);
+			mav.addObject("rulesText", rulesText);
+			
+			WafRuleDirective lastDirective = null;
+			List<WafRuleDirective> directives = null;
+			
+			if ((waf.getLastWafRuleDirective() != null) && (waf.getWafType().getId().equals(
+					waf.getLastWafRuleDirective().getWafType().getId()))) {
+				lastDirective = waf.getLastWafRuleDirective();
+				directives = waf.getWafType().getWafRuleDirectives();
+				directives.remove(lastDirective);
+			} else if (waf.getWafType() != null && waf.getWafType().getWafRuleDirectives() != null 
+							&& waf.getWafType().getWafRuleDirectives().size() >= 1) {
+				lastDirective = waf.getWafType().getWafRuleDirectives().get(0);
+				directives = waf.getWafType().getWafRuleDirectives();
+				directives.remove(0);
+			}
+			mav.addObject("lastDirective", lastDirective);
+			mav.addObject("directives", directives);
+		}
+
+		mav.addObject(waf);
 		
 		permissionService.addPermissions(mav, null, null, 
 				Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
