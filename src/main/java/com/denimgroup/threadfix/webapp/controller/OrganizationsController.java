@@ -95,7 +95,7 @@ public class OrganizationsController {
 			throw new ResourceNotFoundException();
 			
 		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null) && 
-				apps == null || apps.size() == 0){
+				(apps == null || apps.size() == 0)) {
 			
 			return new ModelAndView("403");
 			
