@@ -84,6 +84,10 @@ public class CustomUserDetailService implements UserDetailsService {
 			
 			orgMap = userService.getOrganizationPermissions(id);
 			appMap = userService.getApplicationPermissions(id);
+			
+			if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
+				grantedAuthorities.add(new GrantedAuthorityImpl(Permission.CAN_GENERATE_REPORTS.getText()));
+			}
 		}
 		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
@@ -92,4 +96,18 @@ public class CustomUserDetailService implements UserDetailsService {
 
 		return userDetails;
 	}
+	
+	private boolean hasReportsOnAnyObject(Map<Integer, Set<Permission>> map) {
+		if (map == null || map.isEmpty()) {
+			return false;
+		}
+		
+		for (Set<Permission> perms : map.values()) {
+			if (perms.contains(Permission.CAN_GENERATE_REPORTS)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

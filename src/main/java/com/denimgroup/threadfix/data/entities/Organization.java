@@ -99,6 +99,11 @@ public class Organization extends AuditableEntity {
 		return activeApps;
 	}
 	
+	// This can be used to set temporary filtered lists of apps for a team
+	public void setActiveApplications(List<Application> apps) {
+		activeApps = apps;
+	}
+	
 	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<AccessControlTeamMap> getAccessControlTeamMaps() {

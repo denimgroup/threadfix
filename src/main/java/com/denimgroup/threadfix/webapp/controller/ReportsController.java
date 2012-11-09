@@ -90,6 +90,9 @@ public class ReportsController {
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
+		for (Organization org : organizationList) {
+			org.setActiveApplications(permissionService.filterApps(org));
+		}
 		return organizationList;
 	}
 
@@ -218,6 +221,11 @@ public class ReportsController {
 				List<Application> appList = applicationService.loadAllActiveFilter(teamIds);
 				for (Application app : appList) {
 					applicationIdList.add(app.getId());
+				}
+				
+				Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+				if (appIds != null && !appIds.isEmpty()) {
+					applicationIdList.addAll(appIds);
 				}
 			} else {
 				applicationIdList.add(reportParameters.getApplicationId());
