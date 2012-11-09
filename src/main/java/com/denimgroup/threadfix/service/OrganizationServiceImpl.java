@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -131,11 +132,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 		if (hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
 		
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		if (teamIds == null || teamIds.size() == 0) {
-			return new ArrayList<Organization>();
-		}
+		Set<Integer> teamIds = new HashSet<Integer>(permissionService.getAuthenticatedTeamIds());
 		
 		// Also add in the teams that only have app permissions
 		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
@@ -148,6 +145,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 					teamIds.add(app.getOrganization().getId());
 				}
 			}
+		}
+		
+		if (teamIds == null || teamIds.size() == 0) {
+			return new ArrayList<Organization>();
 		}
 		
 		return organizationDao.retrieveAllActiveFilter(teamIds);

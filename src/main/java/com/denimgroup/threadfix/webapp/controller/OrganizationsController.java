@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
@@ -88,12 +89,14 @@ public class OrganizationsController {
 	@RequestMapping("/{orgId}")
 	public ModelAndView detail(@PathVariable("orgId") int orgId) {
 		Organization organization = organizationService.loadOrganization(orgId);
-		
+		List<Application> apps = permissionService.filterApps(organization);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
+		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null) && 
+				apps == null || apps.size() == 0){
+			
 			return new ModelAndView("403");
 			
 		} else {
@@ -101,7 +104,7 @@ public class OrganizationsController {
 			permissionService.addPermissions(mav, orgId, null, 
 					Permission.CAN_MANAGE_APPLICATIONS, Permission.CAN_MANAGE_TEAMS);
 			applicationService.generateVulnerabilityReports(organization);
-			mav.addObject("apps", permissionService.filterApps(organization));
+			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			return mav;
 		}

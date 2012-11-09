@@ -26,13 +26,13 @@
 		</thead>
 		<tbody id="applicationsTableBody">
 	<c:choose>
-		<c:when test="${empty organization.activeApplications}">
+		<c:when test="${empty apps}">
 			<tr class="bodyRow">
 				<td colspan="8" style="text-align:center;">No applications found.</td>
 			</tr>
 		</c:when>
 		<c:otherwise>
-			<c:forEach var="app" items="${ organization.activeApplications }">
+			<c:forEach var="app" items="${ apps }">
 			<tr class="bodyRow">
 				<td>
 					<spring:url value="{orgId}/applications/{appId}" var="appUrl">
