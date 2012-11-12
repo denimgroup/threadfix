@@ -13,7 +13,7 @@
 	
 	<spring:url value="/configuration" var="configUrl"/>
 	<div style="padding-bottom:8px" >
-		<a href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
+		<a id="topBackLink" href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
 	</div>
 	<c:if test="${ not empty message }">
 		<center class="errors" ><c:out value="${ message }"/></center>
@@ -77,8 +77,11 @@
 		</tbody>
 	</table>
 	
+	<c:set var="appsPresent" value="false"/>
+	
 	<c:forEach var="provider" items="${ remoteProviders }" varStatus="outerStatus">
 		<c:if test="${ not empty provider.remoteProviderApplications }">
+			<c:set var="appsPresent" value="true"/>
 			<spring:url value="/configuration/remoteproviders/{id}/clearConfiguration" htmlEscape="true" var="clearConfigUrl">
 				<spring:param name="id" value="${ provider.id }"/>
 			</spring:url>
@@ -145,9 +148,9 @@
 			</table>
 		</c:if>
 	</c:forEach>
-	<c:if test="${ not empty remoteProviders }">
+	<c:if test="${ appsPresent }">
 		<div style="padding-top:8px" >
-			<a href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
+			<a id="bottomBackLink" href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
 		</div>
 	</c:if>
 </body>
