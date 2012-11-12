@@ -130,6 +130,9 @@ public class PermissionServiceImpl implements PermissionService {
 
 	@Override
 	public List<Application> filterApps(Organization organization) {
+		if (organization == null || organization.getActiveApplications() == null) {
+			return new ArrayList<Application>();
+		}
 		if (hasGlobalPermission(Permission.READ_ACCESS)) {
 			return organization.getActiveApplications();
 		}
