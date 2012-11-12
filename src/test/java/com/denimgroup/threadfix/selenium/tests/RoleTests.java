@@ -109,7 +109,7 @@ public class RoleTests extends BaseTest {
 				.clickCreateRoleButtonInvalid();
 
 		assertTrue("Duplicate name error did not show correctly.", 
-				"A group with this name already exists.".equals(roleCreatePage.getDisplayNameError()));
+				"A role with this name already exists.".equals(roleCreatePage.getDisplayNameError()));
 
 		rolesIndexPage = roleCreatePage.clickBackToIndexLink().clickDeleteButton(normalName);
 
