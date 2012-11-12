@@ -11,6 +11,10 @@
 
 	<h2>Remote Providers</h2>
 	
+	<spring:url value="/configuration" var="configUrl"/>
+	<div style="padding-bottom:8px" >
+		<a href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
+	</div>
 	<c:if test="${ not empty message }">
 		<center class="errors" ><c:out value="${ message }"/></center>
 	</c:if>
@@ -141,4 +145,9 @@
 			</table>
 		</c:if>
 	</c:forEach>
+	<c:if test="${ not empty remoteProviders }">
+		<div style="padding-top:8px" >
+			<a href="${ fn:escapeXml(configUrl) }">Back to Configuration Index</a>
+		</div>
+	</c:if>
 </body>
