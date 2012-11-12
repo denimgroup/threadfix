@@ -125,6 +125,13 @@ public class AddApplicationController {
 			permissionService.addPermissions(model, orgId, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
 					Permission.CAN_MANAGE_WAFS);
 			
+			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
+			
+			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_WAFS, orgId, null));
+			
+			
 			Application application = new Application();
 			application.setOrganization(organization);
 			model.addAttribute(application);

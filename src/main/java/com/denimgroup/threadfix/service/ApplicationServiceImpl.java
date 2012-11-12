@@ -79,13 +79,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private AccessControlMapService accessControlMapService;
 	private ApplicationCriticalityDao applicationCriticalityDao = null;
 	private DefectDao defectDao = null;
+	private PermissionService permissionService = null;
 	private ScanMergeService scanMergeService = null;
 
 	@Autowired
 	public ApplicationServiceImpl(ApplicationDao applicationDao, 
 			DefectTrackerDao defectTrackerDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
-			WafRuleDao wafRuleDao,
+			PermissionService permissionService, WafRuleDao wafRuleDao,
 			AccessControlMapService accessControlMapService,
 			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
 			ApplicationCriticalityDao applicationCriticalityDao,
@@ -95,6 +96,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		this.defectTrackerDao = defectTrackerDao;
 		this.accessControlMapService = accessControlMapService;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
+		this.permissionService = permissionService;
 		this.wafRuleDao = wafRuleDao;
 		this.vulnerabilityDao = vulnerabilityDao;
 		this.wafDao = wafDao;
@@ -340,6 +342,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 					new String [] { "Criticality" }, null);
 		}
 		
+		boolean canManageWafs = false, canManageDefectTrackers = false;
+		
+		if (application.getOrganization() != null) {
+			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS, 
+					application.getOrganization().getId(), application.getId());
+			
+			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					application.getOrganization().getId(), application.getId());
+		}
+		
+		Application oldApp = loadApplication(application.getId());
+		
+		if (oldApp != null && !canManageWafs) {
+			application.setWaf(oldApp.getWaf());
+		}
+		
+		if (oldApp != null && !canManageDefectTrackers) {
+			application.setDefectTracker(oldApp.getDefectTracker());
+		}
+		
 		if (application.getWaf() != null && application.getWaf().getId() == 0) {
 			application.setWaf(null);
 		}
@@ -426,9 +448,27 @@ public class ApplicationServiceImpl implements ApplicationService {
 					new String [] { "Criticality" }, null);
 		}
 		
+		boolean canManageWafs = false, canManageDefectTrackers = false;
+		
+		if (application.getOrganization() != null) {
+			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS, 
+					application.getOrganization().getId(), application.getId());
+			
+			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					application.getOrganization().getId(), application.getId());
+		}
+		
 		Application databaseApplication = loadApplication(application.getName().trim());
 		if (databaseApplication != null)
 			result.rejectValue("name", "errors.nameTaken");
+		
+		if (!canManageWafs && application.getWaf() != null) {
+			application.setWaf(null);
+		}
+		
+		if (!canManageDefectTrackers && application.getDefectTracker() != null) {
+			application.setDefectTracker(null);
+		}
 
 		if (application.getWaf() != null && application.getWaf().getId() == 0)
 			application.setWaf(null);
