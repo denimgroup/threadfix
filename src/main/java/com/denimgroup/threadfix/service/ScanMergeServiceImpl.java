@@ -1333,9 +1333,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				String staticPath = staticFinding.getSurfaceLocation()
 						.getPath();
 
-				if (!dynamicPath.startsWith("/"))
+				if (dynamicPath != null && !dynamicPath.startsWith("/"))
 					dynamicPath = "/".concat(dynamicPath);
-				if (!staticPath.startsWith("/"))
+				if (staticPath != null && !staticPath.startsWith("/"))
 					staticPath = "/".concat(staticPath);
 
 				if (dynamicPath != null && !dynamicPath.trim().equals("")
