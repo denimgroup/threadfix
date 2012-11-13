@@ -79,9 +79,8 @@ public class ManualUploadTests extends BaseTest {
 		applicationDetailPage.clickAddFindingManuallyLink();
 		manualUploadPage = new ManualUploadPage(driver);
 		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.logout();
+		assertTrue("ManualFindingsPage Not Found", PageText.contains("New Finding"));
+		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
@@ -119,9 +118,8 @@ public class ManualUploadTests extends BaseTest {
 						"Critical",
 						"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
 
 	@Test
 	public void testManualAddHigh() {
@@ -157,8 +155,7 @@ public class ManualUploadTests extends BaseTest {
 						"High",
 						"File and Directory Information Exposure");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
@@ -195,8 +192,7 @@ public class ManualUploadTests extends BaseTest {
 						"Medium",
 						"Cross-Site Request Forgery (CSRF)");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
@@ -233,8 +229,7 @@ public class ManualUploadTests extends BaseTest {
 						"Low",
 						"Information Exposure");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
@@ -269,11 +264,8 @@ public class ManualUploadTests extends BaseTest {
 						"Info",
 						"Information Exposure Through Directory Listing");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
-	
 	
 	@Test
 	public void testStaticUploadCritical(){
@@ -302,9 +294,7 @@ public class ManualUploadTests extends BaseTest {
 		manualUploadPage.fillAllClickSaveStatic(true, "XML Injection (aka Blind XPath Injection)",
 									"/demo/XPathInjection2.php", "123", "username", "Critical","XML Injection (aka Blind XPath Injection)");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
 	
 	@Test
@@ -334,11 +324,8 @@ public class ManualUploadTests extends BaseTest {
 		manualUploadPage.fillAllClickSaveStatic(true, "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
 									"/demo/EvalInjection2.php", "123", "command", "High","Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
 	
 	@Test
 	public void testStaticUploadMedium(){
@@ -367,11 +354,8 @@ public class ManualUploadTests extends BaseTest {
 		manualUploadPage.fillAllClickSaveStatic(true, "Improper Neutralization of Data within XPath Expressions ('XPath Injection')",
 									"/demo/XPathInjection2.php", "123", "password", "Medium","Improper Neutralization of Data within XPath Expressions ('XPath Injection')");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
 	
 	@Test
 	public void testStaticUploadLow(){
@@ -400,12 +384,8 @@ public class ManualUploadTests extends BaseTest {
 		manualUploadPage.fillAllClickSaveStatic(true, "Cross-Site Request Forgery (CSRF)",
 									"/wavsep/active/SInjection-Detection-Evaluation-POST-200Valid/Case06-InjectionInView-Numeric-PermissionBypass-WithDifferent200Responses.jsp", "123", " ", "Low","Cross-Site Request Forgery (CSRF)");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
-	
 	
 	@Test
 	public void testStaticUploadInfo(){
@@ -434,9 +414,7 @@ public class ManualUploadTests extends BaseTest {
 		manualUploadPage.fillAllClickSaveStatic(true, "Improper Cross-boundary Removal of Sensitive Data",
 									"/demo/PredictableResource.php", "123", " ", "Info","Improper Cross-boundary Removal of Sensitive Data");
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
 	
 	@Test
@@ -474,11 +452,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		manualUploadPage.clickBack();
 		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
-	
 	
 	@Test
 	public void StaticValidationtest(){
@@ -505,7 +480,7 @@ public class ManualUploadTests extends BaseTest {
 		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("ManualFindingsPage Not Found",
 				PageText.contains("New Finding"));
-		manualUploadPage.getStaticRadiobtn().click();
+		manualUploadPage.getStaticRadioButton().click();
 		manualUploadPage = new ManualUploadPage(driver);
 		manualUploadPage.clickStaticSubmit();		
 		manualUploadPage = new ManualUploadPage(driver);
@@ -515,10 +490,7 @@ public class ManualUploadTests extends BaseTest {
 		String DescError = driver.findElementById("longDescription.errors").getText();
 		assertTrue("Description Error not Found", DescError.equals("Description is a required field."));
 		
-		manualUploadPage.clickBack();
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
@@ -554,9 +526,6 @@ public class ManualUploadTests extends BaseTest {
 		String ErrorText = driver.findElementById("channelVulnerability.code.errors").getText();
 		assertTrue("Error message not displayed", ErrorText.equals("Vulnerability is invalid."));
 		
-		manualUploadPage.clickBack();
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.logout();
-		
+		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
 }

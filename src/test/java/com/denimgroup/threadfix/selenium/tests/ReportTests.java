@@ -193,16 +193,16 @@ public class ReportTests extends BaseTest {
 		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
 		
 		
-		for (String channelc : fileMap.keySet()) {
+		for (String channel : fileMap.keySet()) {
 			if (first) {
 				first = false;
 				uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
-												 	  .setChannelTypeSelect(channelc)
+												 	  .setChannelTypeSelect(channel)
 													  .clickAddChannelButton();
 													  
 			} else {
 				uploadScanPage = uploadScanPage.clickAddAnotherChannelLink()
-											   .setChannelTypeSelect(channelc)
+											   .setChannelTypeSelect(channel)
 											   .clickAddChannelButton();
 			}
 		}

@@ -30,8 +30,6 @@ import org.openqa.selenium.support.ui.Select;
 public class ManualUploadPage extends BasePage {
 	private WebElement dynamicBtn;
 	private WebElement staticBtn;
-	private WebElement teamLink;
-	private WebElement appLink;
 	private WebElement cweText;
 	private WebElement urlText;
 	private WebElement lineNumber;
@@ -48,8 +46,6 @@ public class ManualUploadPage extends BasePage {
 		super(webdriver);
 		dynamicBtn = driver.findElementById("dynamicRadioButton");
 		staticBtn = driver.findElementById("staticRadioButton");
-		teamLink = driver.findElementById("orgLink");
-		appLink = driver.findElementById("appLink");
 		cweText = driver.findElementById("txtSearch");
 		urlText = driver.findElementById("urlDynamicSearch");
 		
@@ -61,65 +57,55 @@ public class ManualUploadPage extends BasePage {
 		backLink = driver.findElementById("backToAppLink");
 	}
 	
-	public void setCWE(String Status) {
+	public ManualUploadPage setCWE(String Status) {
 		cweText.clear();
 		cweText.sendKeys(Status);
+		return this;
 	}
 	
-	public void setURL(String Status) {
+	public ManualUploadPage setURL(String Status) {
 		urlText.clear();
 		urlText.sendKeys(Status);
+		return this;
 	}
-
 	
-	public void setParameter(String Status) {
+	public ManualUploadPage setParameter(String Status) {
 		paramText.clear();
 		paramText.sendKeys(Status);
+		return this;
 	}
-
 	
-	public void setDescription(String Status) {
+	public ManualUploadPage setDescription(String Status) {
 		descText.clear();
 		descText.sendKeys(Status);
+		return this;
 	}
-
 	
 	public String selectSeverityList(String text) {
 		severity.selectByVisibleText(text);
 		return severity.getFirstSelectedOption().getText();
 	}
 
-	public void clickSubmit() {
+	public ApplicationDetailPage clickSubmit() {
 		submitBtn.click();
 		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 	
-	
-	public void clickStaticSubmit() {
+	public ApplicationDetailPage clickStaticSubmit() {
 		StatSubmitBtn.click();
 		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 	
-	
-	public void clickBack() {
+	public ApplicationDetailPage clickBack() {
 		backLink.click();
 		sleep(1000);
-	}
-
-	public void clickTeam() {
-		teamLink.click();
-		sleep(1000);
-	}
-	
-	public void clickApp() {
-		appLink.click();
-		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 	
 	// Dynamic Button
-	
 	public void setDynamicRadiobtn(Boolean isDynamicRadioBtn) {
-
 		if (getDynamicRadiobtn().isSelected() && !isDynamicRadioBtn)
 			getDynamicRadiobtn().click();
 		else if (!getDynamicRadiobtn().isSelected() && isDynamicRadioBtn)
@@ -134,57 +120,60 @@ public class ManualUploadPage extends BasePage {
 		return dynamicBtn;
 	}
 
-	public void fillAllClickSaveManual(Boolean DynamicRadioBtn, String CWE, String URL, String PARAM, String SEVERITY, String DESCRIP) {
-		fillRequiredManual(CWE, URL, PARAM, SEVERITY,DESCRIP);
+	public ApplicationDetailPage fillAllClickSaveManual(Boolean dynamicRadioButton, String cwe, String url, 
+			String param, String severity, String description) {
+		fillRequiredManual(cwe, url, param, severity,description);
 		clickSubmit();
 		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 	
-	public void fillRequiredManual(String CWE, String URL, String PARAM, String SEVERITY, String DESCRIP) {
-		setCWE(CWE);
-		setURL(URL);
-		setParameter(PARAM);
-		selectSeverityList(SEVERITY);
-		setDescription(DESCRIP);
+	public ApplicationDetailPage fillRequiredManual(String cwe, String url, String param, String severity, String description) {
+		setCWE(cwe);
+		setURL(url);
+		setParameter(param);
+		selectSeverityList(severity);
+		setDescription(description);
 		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 	
-	public void setStaticRadiobtn(Boolean isStaticRadioBtn) {
+	public ManualUploadPage setStaticRadiobtn(Boolean isStaticRadioBtn) {
 
-		if (getStaticRadiobtn().isSelected() && !isStaticRadioBtn)
-
-			getStaticRadiobtn().click();
-
-		else if (!getStaticRadiobtn().isSelected() && isStaticRadioBtn)
-
-			getStaticRadiobtn().click();
-
+		if (getStaticRadioButton().isSelected() && !isStaticRadioBtn)
+			getStaticRadioButton().click();
+		else if (!getStaticRadioButton().isSelected() && isStaticRadioBtn)
+			getStaticRadioButton().click();
+	
+		return this;
 	}
 
 
-	public void setStaticRadioBtn(WebElement StaticRadioBtn) {
-		staticBtn = StaticRadioBtn;
+	public ManualUploadPage setStaticRadioBtn(WebElement staticRadioBtn) {
+		staticBtn = staticRadioBtn;
+		return this;
 	}
 
-	public WebElement getStaticRadiobtn() {
+	public WebElement getStaticRadioButton() {
 		return staticBtn;
 	}
 	
-	public void setLineNumber(String LineNo) {
-		if (getStaticRadiobtn().isSelected()) {
+	public ManualUploadPage setLineNumber(String LineNo) {
+		if (getStaticRadioButton().isSelected()) {
 			lineNumber = driver.findElementById("urlSearch");
-
 			lineNumber.clear();
 			lineNumber.sendKeys(LineNo);
 		}
+		return this;
 	}
 	
-	public void setSourceFile(String sourcefile) {
-		if (getStaticRadiobtn().isSelected()) {
+	public ManualUploadPage setSourceFile(String sourcefile) {
+		if (getStaticRadioButton().isSelected()) {
 			sourceFile = driver.findElementById("urlStaticSearch");
 			sourceFile.clear();
 			sourceFile.sendKeys(sourcefile);
 		}
+		return this;
 	}
 	
 	public void fillAllClickSaveStatic(Boolean staticRadioBtn, String cwe,
@@ -196,7 +185,7 @@ public class ManualUploadPage extends BasePage {
 		sleep(1000);
 	}
 	
-	public void fillRequiredStatic(Boolean staticRadioBtn, String cwe,
+	public ApplicationDetailPage fillRequiredStatic(Boolean staticRadioBtn, String cwe,
 			String sourceFile, String lineNumber, String param,
 			String severity, String description) {
 		setStaticRadiobtn(staticRadioBtn);
@@ -207,5 +196,6 @@ public class ManualUploadPage extends BasePage {
 		selectSeverityList(severity);
 		setDescription(description);
 		sleep(1000);
+		return new ApplicationDetailPage(driver);
 	}
 }
