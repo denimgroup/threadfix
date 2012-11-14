@@ -39,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -568,10 +569,49 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	}
 
+	/**
+	 * Handle the Manual Finding edit submission. 
+	 * It's a wrapper around the normal process manual finding method.
+	 */
 	@Override
 	@Transactional(readOnly = false)
-	public boolean processManualFinding(Finding finding, Integer applicationId,
-			String userName) {
+	public boolean processManualFindingEdit(Finding finding, Integer applicationId) {
+		boolean result = processManualFinding(finding, applicationId);
+		int id = finding.getId();
+		if (finding != null && finding.getScan() != null && 
+				finding.getScan().getFindings() != null) {
+			
+			finding.getScan().setNumberTotalVulnerabilities(
+					finding.getScan().getNumberTotalVulnerabilities() - 1);
+			
+			Finding oldFinding = null;
+			for (Finding scanFinding : finding.getScan().getFindings()) {
+				if (scanFinding != finding && scanFinding.getId().equals(id)) {
+					oldFinding = scanFinding;
+				}
+			}
+			
+			if (oldFinding != null) {
+				finding.getScan().getFindings().remove(oldFinding);
+				if (oldFinding.getVulnerability() != null && 
+						oldFinding.getVulnerability().getFindings() != null) {
+					Vulnerability vuln = oldFinding.getVulnerability();
+					vuln.getFindings().remove(oldFinding);
+					if (vuln.getFindings().size() == 0) {
+						vuln.getApplication().getVulnerabilities().remove(vuln);
+						vuln.setApplication(null);
+						vulnerabilityDao.delete(vuln);
+					}
+				}
+				vulnerabilityDao.evict(oldFinding);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public boolean processManualFinding(Finding finding, Integer applicationId) {
 		if (finding == null || applicationId == null) {
 			log.debug("Null input to processManualFinding");
 			return false;
@@ -584,6 +624,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return false;
 		}
 
+		String userName = SecurityContextHolder.getContext()
+				.getAuthentication().getName();
+		
 		User user = userDao.retrieveByName(userName);
 		finding.setUser(user);
 
@@ -627,6 +670,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");
+		log.debug(userName + " has added a new finding to the Application " + 
+				finding.getScan().getApplication().getName());
 		return true;
 	}
 
@@ -966,9 +1011,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
-		
-		// We may want to take this back although I don't think it's really hurting anything here
-		scanDao.saveOrUpdate(scan);
 		
 		Application application = applicationDao.retrieveById(appId);
 		List<Vulnerability> vulns = null;

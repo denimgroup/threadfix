@@ -42,6 +42,11 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public VulnerabilityPage clickVulnLink(int indexFromOne) {
+		driver.findElementById("vulnName" + indexFromOne).click();
+		return new VulnerabilityPage(driver);
+	}
+	
 	public String getWafText(){
 		return driver.findElementById("wafText").getText();
 	}

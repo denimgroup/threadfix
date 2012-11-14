@@ -31,18 +31,25 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
@@ -52,17 +59,44 @@ public class FindingServiceImpl implements FindingService {
 
 	private FindingDao findingDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
+	private UserDao userDao = null;
 	private ChannelTypeDao channelTypeDao = null;
+	private ChannelSeverityDao channelSeverityDao = null;
 
 	private final SanitizedLogger log = new SanitizedLogger(FindingServiceImpl.class);
 	
 	@Autowired
 	public FindingServiceImpl(FindingDao findingDao,
+			ChannelSeverityDao channelSeverityDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelTypeDao channelTypeDao) {
+			ChannelTypeDao channelTypeDao, UserDao userDao) {
 		this.findingDao = findingDao;
 		this.channelTypeDao = channelTypeDao;
+		this.channelSeverityDao = channelSeverityDao;
+		this.userDao = userDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
+	}
+	
+	@Override
+	public void validateManualFinding(Finding finding, BindingResult result) {
+		if (finding == null || ((finding.getChannelVulnerability() == null) || 
+				(finding.getChannelVulnerability().getCode() == null) ||
+				(finding.getChannelVulnerability().getCode().isEmpty()))) {
+			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
+		} else if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
+			result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
+		}
+
+		if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
+			result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
+		}
+
+		FieldError originalError = result.getFieldError("dataFlowElements[0].lineNumber");
+		if (originalError != null && originalError.getDefaultMessage()
+				.startsWith("Failed to convert property value of type " +
+						"'java.lang.String' to required type 'int'")) {
+			result.rejectValue("dataFlowElements[0]", "errors.invalid", new String [] { "Line number" }, null);
+		}
 	}
 
 	@Override
@@ -233,4 +267,110 @@ public class FindingServiceImpl implements FindingService {
 		return findingDao.retrieveUnmappedFindingsByScanIdAndPage(scanId, bean.getPage());
 	}
 
+	@Override
+	public List<String> getRecentStaticVulnTypes(@PathVariable("appId") int appId){
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		Integer userId = null;
+		User user = userDao.retrieveByName(userName);
+		if (user != null)
+			userId = user.getId();
+		if (userName == null || userId == null)
+			return null;
+		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
+		if(findings == null) return null;
+		List<String> cvList = new ArrayList<String>();
+		for(Finding finding : findings) {
+			if (finding == null || finding.getChannelVulnerability() == null || 
+					finding.getChannelVulnerability().getCode() == null)
+				continue;
+			cvList.add(finding.getChannelVulnerability().getCode());
+		}
+		return removeDuplicates(cvList);
+	}
+	
+	@Override
+	public List<String> getRecentDynamicVulnTypes(@PathVariable("appId") int appId){
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		Integer userId = null;
+		User user = userDao.retrieveByName(userName);
+		if (user != null)
+			userId = user.getId();
+		if (userName == null || userId == null)
+			return null;
+		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
+		if(findings == null) return null;
+		List<String> cvList = new ArrayList<String>();
+		for(Finding finding : findings) {
+			if (finding == null || finding.getChannelVulnerability() == null || 
+					finding.getChannelVulnerability().getCode() == null)
+				continue;
+			cvList.add(finding.getChannelVulnerability().getCode());
+		}
+		return removeDuplicates(cvList);
+	}
+	
+	@Override
+	public List<String> getRecentStaticPaths(@PathVariable("appId") int appId) {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		Integer userId = null;
+		User user = userDao.retrieveByName(userName);
+		if (user != null)
+			userId = user.getId();
+		if (userName == null || userId == null)
+			return null;
+		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
+		if(findings == null) return null;
+		List<String> pathList = new ArrayList<String>();
+		for(Finding finding : findings) {
+			if (finding == null || finding.getSurfaceLocation() == null || 
+					finding.getSurfaceLocation().getPath() == null)
+				continue;
+			pathList.add(finding.getSurfaceLocation().getPath());
+		}
+		return removeDuplicates(pathList);
+	}
+	
+	@Override
+	public List<String> getRecentDynamicPaths(@PathVariable("appId") int appId) {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		Integer userId = null;
+		User user = userDao.retrieveByName(userName);
+		if (user != null)
+			userId = user.getId();
+		if (userName == null || userId == null)
+			return null;
+		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
+		if(findings == null) return null;
+		List<String> pathList = new ArrayList<String>();
+		for(Finding finding : findings) {
+			if (finding == null || finding.getSurfaceLocation() == null || 
+					finding.getSurfaceLocation().getPath() == null)
+				continue;
+			pathList.add(finding.getSurfaceLocation().getPath());
+		}
+		return removeDuplicates(pathList);
+	}
+	
+	private List<String> removeDuplicates(List<String> stringList) {
+		if (stringList == null)
+			return new ArrayList<String>();
+		List<String> distinctStringList = new ArrayList<String>();
+		for (int i = 0; i < stringList.size(); i++) {
+			int j = 0;
+			for (; j < i; j++) {
+				if (stringList.get(i).equals(stringList.get(j))) {
+					break;
+				}
+			}
+			if (j == i)
+				distinctStringList.add(stringList.get(i));
+		}
+		return distinctStringList;
+	}
+	
+	@Override
+	public List<ChannelSeverity> getManualSeverities() {
+		ChannelType channelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+		return channelSeverityDao.retrieveByChannel(channelType);
+	}
 }

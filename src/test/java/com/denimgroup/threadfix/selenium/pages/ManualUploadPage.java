@@ -38,8 +38,8 @@ public class ManualUploadPage extends BasePage {
 	private WebElement paramText;
 	private Select severity;
 	private WebElement descText;
-	private WebElement submitBtn;
-	private WebElement StatSubmitBtn;
+	private WebElement dynamicSubmitButton;
+	private WebElement staticSubmitButton;
 	private WebElement backLink;
 
 	public ManualUploadPage(WebDriver webdriver) {
@@ -52,8 +52,8 @@ public class ManualUploadPage extends BasePage {
 		paramText = driver.findElementById("parameterInput");
 		severity = new Select(driver.findElementById("severityInput"));
 		descText = driver.findElementById("descriptionInput");
-		submitBtn = driver.findElementById("dynamicSubmit");
-		StatSubmitBtn = driver.findElementById("staticSubmit");
+		dynamicSubmitButton = driver.findElementById("dynamicSubmit");
+		staticSubmitButton = driver.findElementById("staticSubmit");
 		backLink = driver.findElementById("backToAppLink");
 	}
 	
@@ -86,16 +86,28 @@ public class ManualUploadPage extends BasePage {
 		return severity.getFirstSelectedOption().getText();
 	}
 
-	public ApplicationDetailPage clickSubmit() {
-		submitBtn.click();
+	public ApplicationDetailPage clickDynamicSubmit() {
+		dynamicSubmitButton.click();
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 	
 	public ApplicationDetailPage clickStaticSubmit() {
-		StatSubmitBtn.click();
+		staticSubmitButton.click();
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
+	}
+	
+	public ManualUploadPage clickDynamicSubmitInvalid() {
+		dynamicSubmitButton.click();
+		sleep(1000);
+		return new ManualUploadPage(driver);
+	}
+	
+	public ManualUploadPage clickStaticSubmitInvalid() {
+		staticSubmitButton.click();
+		sleep(1000);
+		return new ManualUploadPage(driver);
 	}
 	
 	public ApplicationDetailPage clickBack() {
@@ -104,30 +116,24 @@ public class ManualUploadPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
-	// Dynamic Button
-	public void setDynamicRadiobtn(Boolean isDynamicRadioBtn) {
-		if (getDynamicRadiobtn().isSelected() && !isDynamicRadioBtn)
-			getDynamicRadiobtn().click();
-		else if (!getDynamicRadiobtn().isSelected() && isDynamicRadioBtn)
-			getDynamicRadiobtn().click();
-	}
-
-	public void setDynamicRadioBtn(WebElement DynamicRadioBtn) {
-		dynamicBtn = DynamicRadioBtn;
-	}
-
-	public WebElement getDynamicRadiobtn() {
-		return dynamicBtn;
-	}
-
-	public ApplicationDetailPage fillAllClickSaveManual(Boolean dynamicRadioButton, String cwe, String url, 
+	public ApplicationDetailPage fillAllClickSaveDynamic(Boolean dynamicRadioButton, String cwe, String url, 
 			String param, String severity, String description) {
 		fillRequiredManual(cwe, url, param, severity,description);
-		clickSubmit();
+		clickDynamicSubmit();
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage fillAllClickSaveStatic(Boolean staticRadioBtn, String cwe,
+			String sourceFile, String lineNumber, String param,
+			String severity, String description) {
+		fillRequiredStatic(staticRadioBtn,cwe, sourceFile,lineNumber, param, severity,description);
+		
+		clickStaticSubmit();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+
 	public ApplicationDetailPage fillRequiredManual(String cwe, String url, String param, String severity, String description) {
 		setCWE(cwe);
 		setURL(url);
@@ -138,57 +144,10 @@ public class ManualUploadPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
-	public ManualUploadPage setStaticRadiobtn(Boolean isStaticRadioBtn) {
-
-		if (getStaticRadioButton().isSelected() && !isStaticRadioBtn)
-			getStaticRadioButton().click();
-		else if (!getStaticRadioButton().isSelected() && isStaticRadioBtn)
-			getStaticRadioButton().click();
-	
-		return this;
-	}
-
-
-	public ManualUploadPage setStaticRadioBtn(WebElement staticRadioBtn) {
-		staticBtn = staticRadioBtn;
-		return this;
-	}
-
-	public WebElement getStaticRadioButton() {
-		return staticBtn;
-	}
-	
-	public ManualUploadPage setLineNumber(String LineNo) {
-		if (getStaticRadioButton().isSelected()) {
-			lineNumber = driver.findElementById("urlSearch");
-			lineNumber.clear();
-			lineNumber.sendKeys(LineNo);
-		}
-		return this;
-	}
-	
-	public ManualUploadPage setSourceFile(String sourcefile) {
-		if (getStaticRadioButton().isSelected()) {
-			sourceFile = driver.findElementById("urlStaticSearch");
-			sourceFile.clear();
-			sourceFile.sendKeys(sourcefile);
-		}
-		return this;
-	}
-	
-	public void fillAllClickSaveStatic(Boolean staticRadioBtn, String cwe,
-			String sourceFile, String lineNumber, String param,
-			String severity, String description) {
-		fillRequiredStatic(staticRadioBtn,cwe, sourceFile,lineNumber, param, severity,description);
-		
-		clickStaticSubmit();
-		sleep(1000);
-	}
-	
 	public ApplicationDetailPage fillRequiredStatic(Boolean staticRadioBtn, String cwe,
 			String sourceFile, String lineNumber, String param,
 			String severity, String description) {
-		setStaticRadiobtn(staticRadioBtn);
+		setStaticRadioButton(staticRadioBtn);
 		setCWE(cwe);
 		setSourceFile(sourceFile);
 		setLineNumber(lineNumber);
@@ -197,5 +156,36 @@ public class ManualUploadPage extends BasePage {
 		setDescription(description);
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
+	}
+
+	public ManualUploadPage setStaticRadioButton(Boolean isStaticRadioBtn) {
+		if (!staticBtn.isSelected())
+			staticBtn.click();
+	
+		return this;
+	}
+
+	// Dynamic Button
+	public void setDynamicRadioButton(Boolean isDynamicRadioBtn) {
+		if (!dynamicBtn.isSelected())
+			dynamicBtn.click();
+	}
+
+	public ManualUploadPage setLineNumber(String LineNo) {
+		if (staticBtn.isSelected()) {
+			lineNumber = driver.findElementById("urlSearch");
+			lineNumber.clear();
+			lineNumber.sendKeys(LineNo);
+		}
+		return this;
+	}
+	
+	public ManualUploadPage setSourceFile(String sourcefile) {
+		if (staticBtn.isSelected()) {
+			sourceFile = driver.findElementById("urlStaticSearch");
+			sourceFile.clear();
+			sourceFile.sendKeys(sourcefile);
+		}
+		return this;
 	}
 }

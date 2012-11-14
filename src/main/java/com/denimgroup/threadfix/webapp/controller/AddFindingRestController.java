@@ -67,7 +67,7 @@ public class AddFindingRestController extends RestController {
 		}
 		
 		Finding finding = findingService.parseFindingFromRequest(request);
-		scanMergeService.processManualFinding(finding, appId, "user");
+		scanMergeService.processManualFinding(finding, appId);
 		
 		return finding;
 	}

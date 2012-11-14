@@ -1,14 +1,14 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Finding</title>
+	<title><c:if test="${ finding['new'] }">New</c:if> Finding</title>
 	
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_search.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/radio_select.js"></script>
 </head>
 
 <body id="apps">
-	<h2>New Finding</h2>
+	<h2><c:if test="${ finding['new'] }">New</c:if> Finding</h2>
 
 	<c:if test="${ not isStatic }">
 		<input id="dynamicRadioButton" type="radio" name="group" value="dynamic" checked>Dynamic
@@ -62,12 +62,12 @@
 					<form:errors path="channelVulnerability.code" cssClass="errors" />
 				</td>
 			</tr>
-			<c:if test="${ not empty staticChannelVulnerablilityList }">
+			<c:if test="${ not empty staticChannelVulnerabilityList }">
 				<tr class="static">
 					<td class="label" valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select size="5" onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" id="cv_static_select">
-							<c:forEach var="cv" items="${ staticChannelVulnerablilityList }">
+							<c:forEach var="cv" items="${ staticChannelVulnerabilityList }">
 								<option value="${ cv }">
 									<c:out value="${ cv }"></c:out>
 								</option>
@@ -76,12 +76,12 @@
 					</td>
 				</tr>
 			</c:if>
-			<c:if test="${ not empty dynamicChannelVulnerablilityList }">
+			<c:if test="${ not empty dynamicChannelVulnerabilityList }">
 				<tr class="dynamic">
 					<td class="label" valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" size="5" id="cv_dynamic_select">
-							<c:forEach var="cv" items="${ dynamicChannelVulnerablilityList }">
+							<c:forEach var="cv" items="${ dynamicChannelVulnerabilityList }">
 								<option value="${ cv }">
 									<c:out value="${ cv }"></c:out>
 								</option>

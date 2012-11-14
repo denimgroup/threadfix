@@ -27,6 +27,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.validation.BindingResult;
+
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
@@ -109,5 +112,46 @@ public interface FindingService {
 	 * @return
 	 */
 	Object getUnmappedFindingTable(Integer scanId, TableSortBean bean);
+
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<String> getRecentStaticVulnTypes(int appId);
+
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<String> getRecentDynamicVulnTypes(int appId);
+
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<String> getRecentStaticPaths(int appId);
+
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<String> getRecentDynamicPaths(int appId);
+
+	/**
+	 * 
+	 * @return
+	 */
+	List<ChannelSeverity> getManualSeverities();
+
+	/**
+	 * 
+	 * @param finding
+	 * @param result
+	 */
+	void validateManualFinding(Finding finding, BindingResult result);
 
 }

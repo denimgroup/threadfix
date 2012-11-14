@@ -80,7 +80,7 @@ public interface ScanMergeService {
 	 * @param userName
 	 * @return
 	 */
-	boolean processManualFinding(Finding finding, Integer applicationId, String userName);
+	boolean processManualFinding(Finding finding, Integer applicationId);
 	
 	/**
 	 * This method allows skipping the queue by wrapping all the required functionality into
@@ -100,5 +100,13 @@ public interface ScanMergeService {
 	 * @return
 	 */
 	Scan processRemoteScan(Scan scan);
+
+	/**
+	 * 
+	 * @param finding
+	 * @param applicationId
+	 * @return
+	 */
+	boolean processManualFindingEdit(Finding finding, Integer applicationId);
 
 }

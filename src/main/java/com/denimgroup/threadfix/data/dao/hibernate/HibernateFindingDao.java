@@ -160,7 +160,11 @@ public class HibernateFindingDao implements FindingDao {
 
 	@Override
 	public void saveOrUpdate(Finding finding) {
-		sessionFactory.getCurrentSession().saveOrUpdate(finding);
+		if (finding != null && finding.getId() != null) {
+			sessionFactory.getCurrentSession().merge(finding);
+		} else {
+			sessionFactory.getCurrentSession().saveOrUpdate(finding);
+		}
 	}
 
 	@Override

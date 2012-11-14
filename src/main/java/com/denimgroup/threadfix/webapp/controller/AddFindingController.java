@@ -23,19 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,20 +43,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelSeverityService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.UserService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
@@ -70,138 +59,46 @@ public class AddFindingController {
 
 	private ApplicationService applicationService;
 	private PermissionService permissionService;
-	private ChannelTypeService channelTypeService;
-	private ChannelSeverityService channelSeverityService;
 	private ScanMergeService scanMergeService;
 	private ChannelVulnerabilityService channelVulnerabilityService;
 	private FindingService findingService;
-	private UserService userService;
 
-	private final SanitizedLogger log = new SanitizedLogger(AddFindingController.class);
-	
 	@Autowired
 	public AddFindingController(ApplicationService applicationService,
-			ScanMergeService scanMergeService, ChannelTypeService channelTypeService,
-			ChannelSeverityService channelSeverityService,
+			ScanMergeService scanMergeService,
 			ChannelVulnerabilityService channelVulnerabilityService,
-			FindingService findingService, UserService userService,
+			FindingService findingService,
 			PermissionService organizationService) {
 		this.applicationService = applicationService;
 		this.scanMergeService = scanMergeService;
 		this.permissionService = organizationService;
-		this.channelTypeService = channelTypeService;
-		this.channelSeverityService = channelSeverityService;
 		this.channelVulnerabilityService = channelVulnerabilityService;
 		this.findingService = findingService;
-		this.userService = userService;
 	}
 
 	@ModelAttribute
 	public List<ChannelSeverity> populateChannelSeverity() {
-		ChannelType channelType = channelTypeService
-				.loadChannel(ChannelType.MANUAL);
-		return channelSeverityService.loadByChannel(channelType);
+		return findingService.getManualSeverities();
 	}
 	
-	@ModelAttribute("staticChannelVulnerablilityList")
+	@ModelAttribute("staticChannelVulnerabilityList")
 	public List<String> populateStaticChannelVulnerablility(@PathVariable("appId") int appId){
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		Integer userId = null;
-		User user = userService.loadUser(userName);
-		if (user != null)
-			userId = user.getId();
-		if (userName == null || userId == null)
-			return null;
-		List<Finding> findings = findingService.loadLatestStaticByAppAndUser(appId, userId);
-		if(findings == null) return null;
-		List<String> cvList = new ArrayList<String>();
-		for(Finding finding : findings) {
-			if (finding == null || finding.getChannelVulnerability() == null || 
-					finding.getChannelVulnerability().getCode() == null)
-				continue;
-			cvList.add(finding.getChannelVulnerability().getCode());
-		}
-		return removeDuplicates(cvList);
+		return findingService.getRecentStaticVulnTypes(appId);
 	}
 	
-	@ModelAttribute("dynamicChannelVulnerablilityList")
+	@ModelAttribute("dynamicChannelVulnerabilityList")
 	public List<String> populateDynamicChannelVulnerablility(@PathVariable("appId") int appId){
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		Integer userId = null;
-		User user = userService.loadUser(userName);
-		if (user != null)
-			userId = user.getId();
-		if (userName == null || userId == null)
-			return null;
-		List<Finding> findings = findingService.loadLatestDynamicByAppAndUser(appId, userId);
-		if(findings == null) return null;
-		List<String> cvList = new ArrayList<String>();
-		for(Finding finding : findings) {
-			if (finding == null || finding.getChannelVulnerability() == null || 
-					finding.getChannelVulnerability().getCode() == null)
-				continue;
-			cvList.add(finding.getChannelVulnerability().getCode());
-		}
-		return removeDuplicates(cvList);
+		return findingService.getRecentDynamicVulnTypes(appId);
 	}
 	
 	@ModelAttribute("staticPathList")
 	public List<String> populateStaticPath(@PathVariable("appId") int appId) {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		Integer userId = null;
-		User user = userService.loadUser(userName);
-		if (user != null)
-			userId = user.getId();
-		if (userName == null || userId == null)
-			return null;
-		List<Finding> findings = findingService.loadLatestStaticByAppAndUser(appId, userId);
-		if(findings == null) return null;
-		List<String> pathList = new ArrayList<String>();
-		for(Finding finding : findings) {
-			if (finding == null || finding.getSurfaceLocation() == null || 
-					finding.getSurfaceLocation().getPath() == null)
-				continue;
-			pathList.add(finding.getSurfaceLocation().getPath());
-		}
-		return removeDuplicates(pathList);
+		return findingService.getRecentStaticPaths(appId);
 	}
 	
 	@ModelAttribute("dynamicPathList")
 	public List<String> populateDynamicPath(@PathVariable("appId") int appId) {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		Integer userId = null;
-		User user = userService.loadUser(userName);
-		if (user != null)
-			userId = user.getId();
-		if (userName == null || userId == null)
-			return null;
-		List<Finding> findings = findingService.loadLatestDynamicByAppAndUser(appId, userId);
-		if(findings == null) return null;
-		List<String> pathList = new ArrayList<String>();
-		for(Finding finding : findings) {
-			if (finding == null || finding.getSurfaceLocation() == null || 
-					finding.getSurfaceLocation().getPath() == null)
-				continue;
-			pathList.add(finding.getSurfaceLocation().getPath());
-		}
-		return removeDuplicates(pathList);
-	}
-	
-	private List<String> removeDuplicates(List<String> stringList) {
-		if (stringList == null)
-			return new ArrayList<String>();
-		List<String> distinctStringList = new ArrayList<String>();
-		for (int i = 0; i < stringList.size(); i++) {
-			int j = 0;
-			for (; j < i; j++) {
-				if (stringList.get(i).equals(stringList.get(j))) {
-					break;
-				}
-			}
-			if (j == i)
-				distinctStringList.add(stringList.get(i));
-		}
-		return distinctStringList;
+		return findingService.getRecentDynamicPaths(appId);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -232,44 +129,18 @@ public class AddFindingController {
 			return "403";
 		}
 		
+		findingService.validateManualFinding(finding, result);
+		
 		if (result.hasErrors()) {
 			model.addAttribute("static",true);
-			FieldError originalError = result.getFieldError("dataFlowElements[0].lineNumber");
-			if (originalError != null && originalError.getDefaultMessage()
-					.startsWith("Failed to convert property value of type " +
-							"'java.lang.String' to required type 'int'")) {
-				result.rejectValue("dataFlowElements[0]", "errors.invalid", new String [] { "Line number" }, null);
-			}
 			return "scans/form";
+			
 		} else {
-			if (finding != null && ((finding.getChannelVulnerability() == null) || 
-									(finding.getChannelVulnerability().getCode() == null) ||
-									(finding.getChannelVulnerability().getCode().isEmpty()))) {
-				result.rejectValue("channelVulnerability.code", "errors.required", new String[]{ "Vulnerability" }, null);
-			} else if (!channelVulnerabilityService.isValidManualName(finding.getChannelVulnerability().getCode())) {
-				result.rejectValue("channelVulnerability.code", "errors.invalid", new String[]{ "Vulnerability" }, null);
-			}
-			
-			if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
-				result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
-			}
-			
-			if (result.hasErrors()) {
-				model.addAttribute("isStatic",true);
-				return "scans/form";
-			}
-			
-			String userName = SecurityContextHolder.getContext()
-					.getAuthentication().getName();
 			finding.setIsStatic(true);
-			scanMergeService.processManualFinding(finding, appId, userName);
-
-			log.debug(userName + " has added a new static finding to the Application " + 
-					finding.getScan().getApplication().getName());
+			scanMergeService.processManualFinding(finding, appId);
 			status.setComplete();
 
-			return "redirect:/organizations/" + orgId + "/applications/"
-					+ appId;
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
 	}
 	
@@ -283,48 +154,18 @@ public class AddFindingController {
 			return "403";
 		}
 		
+		findingService.validateManualFinding(finding, result);
+		
 		if (result.hasErrors()) {
 			model.addAttribute("static",false);
 			return "scans/form";
 		} else {
-			if (finding == null || ((finding.getChannelVulnerability() == null) || 
-									(finding.getChannelVulnerability().getCode() == null) ||
-									(finding.getChannelVulnerability().getCode().isEmpty()))) {
-				result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
-			} else if (!channelVulnerabilityService.isValidManualName(finding.getChannelVulnerability().getCode())) {
-				result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
-			}
-			
-			if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
-				result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
-			}
-			
-			if (result.hasErrors()) {
-				model.addAttribute("isStatic",false);
-				return "scans/form";
-			}
-			
-			String userName = SecurityContextHolder.getContext()
-					.getAuthentication().getName();
 			finding.setIsStatic(false);
 			
-			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null) {
-				try {
-					URL resultURL = new URL(finding.getSurfaceLocation().getPath());
-					finding.getSurfaceLocation().setUrl(resultURL);
-				} catch (MalformedURLException e) {
-					log.info("Path was not given in URL format, leaving it as it was.");
-				}
-			}
-			
-			scanMergeService.processManualFinding(finding, appId, userName);
-
-			log.debug(userName + " has added a new dynamic finding to the Application " + 
-					finding.getScan().getApplication().getName());
+			scanMergeService.processManualFinding(finding, appId);
 			status.setComplete();
 
-			return "redirect:/organizations/" + orgId + "/applications/"
-					+ appId;
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
 	}
 
@@ -333,8 +174,7 @@ public class AddFindingController {
 	public String readAjaxCWE(@RequestParam String prefix) {
 		if (prefix == null || prefix.equals(""))
 			return "";
-		List<ChannelVulnerability> cVulnList = channelVulnerabilityService
-				.loadSuggested(prefix);
+		List<ChannelVulnerability> cVulnList = channelVulnerabilityService.loadSuggested(prefix);
 		if (cVulnList == null)
 			return "";
 

@@ -30,9 +30,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
-import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.FindingEditPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.ManualUploadPage;
 
@@ -40,9 +40,8 @@ public class ManualUploadTests extends BaseTest {
 	private FirefoxDriver driver;
 	private ManualUploadPage manualUploadPage;
 	private ApplicationDetailPage applicationDetailPage;
-	private AddOrganizationPage organizationAddPage;
 	private LoginPage loginPage;
-	private ApplicationAddPage applicationAddPage;
+	private FindingEditPage editPage;
 
 	@Before
 	public void init() {
@@ -58,392 +57,76 @@ public class ManualUploadTests extends BaseTest {
 
 	@Test
 	public void testNavigation() {
-		String orgName = "testCreateApplicationOrgA";
-		String appName = "testCreateApplicationAppA";
-		String urlText = "http://testurl.com";
-
-		// set up an organization
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found", PageText.contains("New Finding"));
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
-	public void testManualAddCritical() {
-		String orgName = "testCreateApplicationOrgB1234";
-		String appName = "testCreateApplicationAppB1234";
-		String urlText = "http://testurl.com";
-
-		// set up an organization
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-	
-		manualUploadPage
-				.fillAllClickSaveManual(
+	public void testAllSeveritiesDynamic() {
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		applicationDetailPage = manualUploadPage
+				.fillAllClickSaveDynamic(
 						true,
 						"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
 						"/demo/EvalInjection2.php",
 						"command",
 						"Critical",
 						"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-
-	@Test
-	public void testManualAddHigh() {
-		String orgName = "testCreateApplicationOrgC";
-		String appName = "testCreateApplicationAppC";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
 		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage
-				.fillAllClickSaveManual(
-						true,
-						"File and Directory Information Exposure",
-						"/demo/",
-						" ",
-						"High",
-						"File and Directory Information Exposure");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-
-	@Test
-	public void testManualAddMedium() {
-		String orgName = "testCreateApplicationOrgD";
-		String appName = "testCreateApplicationAppD";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
+		for (String severity : new String[] {"Critical", "High", "Medium", "Low", "Info" }) {
+			editPage = applicationDetailPage.clickVulnLink(1)
+					.clickEditLink()
+					.selectSeverityList(severity)
+					.clickDynamicSubmit()
+					.clickVulnLink(1)
+					.clickEditLink();
+			assertTrue("The severity didn't persist correctly.", severity.equals(editPage.getSeverity()));
+			applicationDetailPage = editPage.clickDynamicSubmit();
+		}
 		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage
-				.fillAllClickSaveManual(
-						true,
-						"Cross-Site Request Forgery (CSRF)",
-						"/demo/EvalInjection.php/EvalInjection2.php",
-						" ",
-						"Medium",
-						"Cross-Site Request Forgery (CSRF)");
-		applicationDetailPage = new ApplicationDetailPage(driver);
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-
+	
 	@Test
-	public void testManualAddLow() {
-		String orgName = "testCreateApplicationOrgE";
-		String appName = "testCreateApplicationAppE";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
+	public void testAllSeveritiesStatic() {
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
 		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage
-				.fillAllClickSaveManual(
+		applicationDetailPage = manualUploadPage
+				.fillAllClickSaveStatic(
 						true,
-						"Information Exposure",
-						"/demo/PredictableResource.php",
-						" ",
-						"Low",
-						"Information Exposure");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-
-	@Test
-	public void testManualAddInfo() {
-		String orgName = "testCreateApplicationOrgF";
-		String appName = "testCreateApplicationAppF";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage
-				.fillAllClickSaveManual(
-						true,
-						"Information Exposure Through Directory Listing",
-						"/demo/DirectoryIndexing/",
-						" ",
-						"Info",
-						"Information Exposure Through Directory Listing");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void testStaticUploadCritical(){
-		String orgName = "testCreateApplicationOrg1";
-		String appName = "testCreateApplicationApp1";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.fillAllClickSaveStatic(true, "XML Injection (aka Blind XPath Injection)",
-									"/demo/XPathInjection2.php", "123", "username", "Critical","XML Injection (aka Blind XPath Injection)");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void testStaticUploadHigh(){
-		String orgName = "testCreateApplicationOrg2";
-		String appName = "testCreateApplicationApp2";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.fillAllClickSaveStatic(true, "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-									"/demo/EvalInjection2.php", "123", "command", "High","Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void testStaticUploadMedium(){
-		String orgName = "testCreateApplicationOrg3";
-		String appName = "testCreateApplicationApp3";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.fillAllClickSaveStatic(true, "Improper Neutralization of Data within XPath Expressions ('XPath Injection')",
-									"/demo/XPathInjection2.php", "123", "password", "Medium","Improper Neutralization of Data within XPath Expressions ('XPath Injection')");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void testStaticUploadLow(){
-		String orgName = "testCreateApplicationOrg4";
-		String appName = "testCreateApplicationApp4";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.fillAllClickSaveStatic(true, "Cross-Site Request Forgery (CSRF)",
-									"/wavsep/active/SInjection-Detection-Evaluation-POST-200Valid/Case06-InjectionInView-Numeric-PermissionBypass-WithDifferent200Responses.jsp", "123", " ", "Low","Cross-Site Request Forgery (CSRF)");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void testStaticUploadInfo(){
-		String orgName = "testCreateApplicationOrg5";
-		String appName = "testCreateApplicationApp5";
-		String urlText = "http://testurl.com";
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage = new ManualUploadPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.fillAllClickSaveStatic(true, "Improper Cross-boundary Removal of Sensitive Data",
-									"/demo/PredictableResource.php", "123", " ", "Info","Improper Cross-boundary Removal of Sensitive Data");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
-	}
-	
-	@Test
-	public void ManualValidationtest(){
-		String orgName = "testCreateApplicationOrgVa16";
-		String appName = "testCreateApplicationAppVa16";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
+						"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+						"/demo/EvalInjection2.php",
+						"1",
+						"command",
+						"Critical",
+						"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')");
 		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.clickSubmit();		
-		manualUploadPage = new ManualUploadPage(driver);
+		for (String severity : new String[] {"Critical", "High", "Medium", "Low", "Info" }) {
+			editPage = applicationDetailPage.clickVulnLink(1)
+					.clickEditLink()
+					.selectSeverityList(severity)
+					.clickStaticSubmit()
+					.clickVulnLink(1)
+					.clickEditLink();
+			assertTrue("The severity didn't persist correctly.", severity.equals(editPage.getSeverity()));
+			applicationDetailPage = editPage.clickStaticSubmit();
+		}
+		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
+	}
+
+	@Test
+	public void dynamicValidationTest(){
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		manualUploadPage = manualUploadPage.clickDynamicSubmitInvalid();
+
 		String ErrorText = driver.findElementById("channelVulnerability.code.errors").getText();
 		assertTrue("Error message not displayed", ErrorText.equals("Vulnerability is a required field."));
 		
@@ -456,68 +139,25 @@ public class ManualUploadTests extends BaseTest {
 	}
 	
 	@Test
-	public void StaticValidationtest(){
-		String orgName = "testCreateApplicationOrgVa18";
-		String appName = "testCreateApplicationAppVa18";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-	    applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
+	public void staticValidationTest(){
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+				
+		manualUploadPage = manualUploadPage.setStaticRadioButton(true).clickStaticSubmitInvalid();
 		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
-		manualUploadPage.getStaticRadioButton().click();
-		manualUploadPage = new ManualUploadPage(driver);
-		manualUploadPage.clickStaticSubmit();		
-		manualUploadPage = new ManualUploadPage(driver);
-		String ErrorText = driver.findElementById("channelVulnerability.code.errors").getText();
-		assertTrue("Error message not displayed", ErrorText.equals("Vulnerability is a required field."));
+		String errorText = driver.findElementById("channelVulnerability.code.errors").getText();
+		assertTrue("Error message not displayed", errorText.equals("Vulnerability is a required field."));
 	
-		String DescError = driver.findElementById("longDescription.errors").getText();
-		assertTrue("Description Error not Found", DescError.equals("Description is a required field."));
+		String descError = driver.findElementById("longDescription.errors").getText();
+		assertTrue("Description Error not Found", descError.equals("Description is a required field."));
 		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
 
 	@Test
-	public void ManualInvalidVulnstest(){
-		String orgName = "testCreateApplicationOrgVa17";
-		String appName = "testCreateApplicationAppVa17";
-		String urlText = "http://testurl.com";
-
-		organizationAddPage = loginPage.login("user", "password")
-				.clickAddOrganizationButton();
-
-		organizationAddPage.setNameInput(orgName);
-
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		applicationDetailPage.clickAddFindingManuallyLink();
-		manualUploadPage = new ManualUploadPage(driver);
-		
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("ManualFindingsPage Not Found",
-				PageText.contains("New Finding"));
+	public void dynamicInvalidVulnsTest(){
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
 		
 		manualUploadPage.fillAllClickSaveStatic(true, "ABCDEFGHIJKL",
 				"/demo/PredictableResource.php", "123", " ", "Info","Improper Cross-boundary Removal of Sensitive Data");	
@@ -527,5 +167,211 @@ public class ManualUploadTests extends BaseTest {
 		assertTrue("Error message not displayed", ErrorText.equals("Vulnerability is invalid."));
 		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
+	}
+	
+	///////////////////////////////////////////
+	// EDIT ///////////////////////////////////
+	///////////////////////////////////////////
+	
+	@Test
+	public void testEditDynamic() {
+		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
+				cwe2 = GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+				path1 = "/normal/first/path.jsp",
+				path2 = "/normal/second/path.jsp",
+				param1 = "parameter 1",
+				param2 = "parameter 2",
+				severity1 = "Critical",
+				severity2 = "High",
+				description1 = "description 1",
+				description2 = "description 2";
+		
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		applicationDetailPage = manualUploadPage.fillAllClickSaveDynamic(true, cwe1, path1, param1, severity1, description1);	
+		
+		FindingEditPage editPage = applicationDetailPage.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it.", param1.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it.", path1.equals(editPage.getURL()));
+		assertTrue("Severity didn't make it.", severity1.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it.", cwe1.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it.", description1.equals(editPage.getDescription()));
+		
+		editPage = editPage.fillAllClickSaveDynamic(true, cwe2, path2, param2, severity2, description2)
+				.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it the second time.", param2.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it the second time.", path2.equals(editPage.getURL()));
+		assertTrue("Severity didn't make it the second time.", severity2.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it the second time.", cwe2.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it the second time.", description2.equals(editPage.getDescription()));
+		
+		applicationDetailPage = editPage.clickDynamicSubmit();
+		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
+	}
+	
+	@Test
+	public void testEditStatic() {
+		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
+				cwe2 = GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+				path1 = "/normal/first/path.jsp",
+				path2 = "/normal/second/path.jsp",
+				param1 = "parameter 1",
+				param2 = "parameter 2",
+				severity1 = "Critical",
+				severity2 = "High",
+				description1 = "description 1",
+				description2 = "description 2",
+				line1 = "1",
+				line2 = "2";
+		
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		applicationDetailPage = manualUploadPage.fillAllClickSaveStatic(true, cwe1, path1, line1, param1, severity1, description1);	
+		
+		FindingEditPage editPage = applicationDetailPage.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it.", param1.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it.", path1.equals(editPage.getSourceFile()));
+		assertTrue("Line # didn't make it.", line1.equals(editPage.getLineNumber()));
+		assertTrue("Severity didn't make it.", severity1.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it.", cwe1.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it.", description1.equals(editPage.getDescription()));
+		
+		editPage = editPage.fillAllClickSaveStatic(true, cwe2, path2, line2, param2, severity2, description2)
+				.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it the second time.", param2.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it the second time.", path2.equals(editPage.getSourceFile()));
+		assertTrue("Line # didn't make it.", line2.equals(editPage.getLineNumber()));
+		assertTrue("Severity didn't make it the second time.", severity2.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it the second time.", cwe2.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it the second time.", description2.equals(editPage.getDescription()));
+		
+		applicationDetailPage = editPage.clickStaticSubmit();
+		
+		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
+	}
+	
+	@Test
+	public void testEditSwitchStaticDynamic() {
+		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
+				cwe2 = GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+				path1 = "/normal/first/path.jsp",
+				path2 = "/normal/second/path.jsp",
+				param1 = "parameter 1",
+				param2 = "parameter 2",
+				severity1 = "Critical",
+				severity2 = "High",
+				description1 = "description 1",
+				description2 = "description 2",
+				line1 = "1";
+		
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		applicationDetailPage = manualUploadPage.fillAllClickSaveStatic(true, cwe1, path1, line1, param1, severity1, description1);	
+		
+		editPage = applicationDetailPage.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it.", param1.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it.", path1.equals(editPage.getSourceFile()));
+		assertTrue("Line # didn't make it.", line1.equals(editPage.getLineNumber()));
+		assertTrue("Severity didn't make it.", severity1.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it.", cwe1.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it.", description1.equals(editPage.getDescription()));
+		
+		editPage = editPage.fillAllClickSaveDynamic(true, cwe2, path2, param2, severity2, description2)
+				.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it the second time.", param2.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it the second time.", path2.equals(editPage.getURL()));
+		assertTrue("Severity didn't make it the second time.", severity2.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it the second time.", cwe2.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it the second time.", description2.equals(editPage.getDescription()));
+		
+		
+		editPage = editPage.fillAllClickSaveStatic(true, cwe1, path1, line1, param1, severity1, description1)
+				.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it the third time.", param1.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it the third time.", path1.equals(editPage.getSourceFile()));
+		assertTrue("Line # didn't make it the third time.", line1.equals(editPage.getLineNumber()));
+		assertTrue("Severity didn't make it the third time.", severity1.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it the third time.", cwe1.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it the third time.", description1.equals(editPage.getDescription()));
+		
+		editPage.clickStaticSubmit().clickDeleteLink().clickDeleteButton().logout();
+	}
+	
+	@Test
+	public void testEditValidation() {
+		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
+				path1 = "/normal/first/path.jsp",
+				param1 = "parameter 1",
+				severity1 = "Critical",
+				description1 = "description 1";
+		
+		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
+		assertTrue("Manual Finding Submission Page Not Found", 
+				manualUploadPage.getH2Tag().contains("New Finding"));
+		
+		applicationDetailPage = manualUploadPage.fillAllClickSaveDynamic(
+				true, cwe1, path1, param1, severity1, description1);	
+		
+		editPage = applicationDetailPage.clickVulnLink(1).clickEditLink();
+		
+		assertTrue("Parameter didn't make it.", param1.equals(editPage.getParameter()));
+		assertTrue("URL didn't make it.", path1.equals(editPage.getURL()));
+		assertTrue("Severity didn't make it.", severity1.equals(editPage.getSeverity()));
+		assertTrue("CWE didn't make it.", cwe1.equals(editPage.getCWE()));
+		assertTrue("Description didn't make it.", description1.equals(editPage.getDescription()));
+		
+		editPage = editPage.setCWE("").setDescription("").clickDynamicSubmitInvalid();
+		
+		assertTrue("Error message not displayed.", 
+				editPage.getChannelVulnError().equals("Vulnerability is a required field."));
+	
+		assertTrue("Description Error not found.", 
+				editPage.getDescriptionError().equals("Description is a required field."));
+		
+		editPage = editPage
+				.clickBack()
+				.clickVulnLink(1)
+				.clickEditLink()
+				.clickStaticRadioButton()
+				.setLineNumber("NOT A NUMBER")
+				.clickStaticSubmitInvalid();
+		
+		assertTrue("Line Number format message not found.", 
+				editPage.getLineNumberError().equals("Line number is invalid."));
+		
+		editPage = editPage
+				.clickBack()
+				.clickVulnLink(1)
+				.clickEditLink()
+				.setCWE("NOT A CWE")
+				.clickDynamicSubmitInvalid();
+		
+		assertTrue("Error message not displayed.", 
+				editPage.getChannelVulnError().equals("Vulnerability is invalid."));
+	
+		editPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
+	}
+	
+	private ManualUploadPage getToManualSubmissionPage(String orgName, String appName) {
+		return loginPage.login("user", "password")
+				.clickAddOrganizationButton()
+				.setNameInput(orgName)
+				.clickSubmitButtonValid()
+				.clickAddApplicationLink()
+				.setNameInput(appName)
+				.setUrlInput("http://")
+				.clickAddApplicationButton()
+				.clickAddFindingManuallyLink();
 	}
 }
