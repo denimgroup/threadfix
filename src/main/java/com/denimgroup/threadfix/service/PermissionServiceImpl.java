@@ -41,15 +41,15 @@ public class PermissionServiceImpl implements PermissionService {
 		if (auth != null && auth instanceof ThreadFixUserDetails) {
 			customAuth = (ThreadFixUserDetails) auth;
 			
-			if (customAuth != null && customAuth.getTeamMap() != null &&
-					orgId != null && customAuth.getTeamMap().containsKey(orgId) &&
+			if (customAuth.getTeamMap() != null && orgId != null && 
+					customAuth.getTeamMap().containsKey(orgId) &&
 					customAuth.getTeamMap().get(orgId) != null &&
 					customAuth.getTeamMap().get(orgId).contains(permission)) {
 				return true;
 			}
 			
-			if (customAuth != null && customAuth.getApplicationMap() != null &&
-					appId != null && customAuth.getApplicationMap().containsKey(appId) &&
+			if (customAuth.getApplicationMap() != null && appId != null && 
+					customAuth.getApplicationMap().containsKey(appId) &&
 					customAuth.getApplicationMap().get(appId) != null &&
 					customAuth.getApplicationMap().get(appId).contains(permission)) {
 				return true;
@@ -79,24 +79,32 @@ public class PermissionServiceImpl implements PermissionService {
 	public boolean canSeeRules(Waf waf) {
 		if (waf == null || waf.getApplications() == null || 
 				waf.getApplications().size() == 0) {
-			return true;
+			return false;
 		}
 		
 		if (hasGlobalPermission(Permission.READ_ACCESS)) {
 			return true;
 		}
 		
+		boolean denied = false;
 		for (Application app : waf.getApplications()) {
 			if (app == null || app.getId() == null || 
 					app.getOrganization() == null ||
-					app.getOrganization().getId() == null ||
-					!isAuthorized(Permission.CAN_GENERATE_WAF_RULES, 
-							app.getOrganization().getId(), app.getId())) {
+					app.getOrganization().getId() == null)
+			{
 				return false;
+			}
+			else if (!isAuthorized(Permission.CAN_GENERATE_WAF_RULES, 
+							app.getOrganization().getId(), app.getId())) {
+				denied = true;
 			}
 		}
 		
-		return true;
+		if (!denied) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
@@ -132,8 +140,11 @@ public class PermissionServiceImpl implements PermissionService {
 
 	@Override
 	public List<Application> filterApps(Organization organization) {
+
+		List<Application> newApps = new ArrayList<Application>();
+
 		if (organization == null || organization.getActiveApplications() == null) {
-			return new ArrayList<Application>();
+			return newApps;
 		}
 		if (hasGlobalPermission(Permission.READ_ACCESS)) {
 			return organization.getActiveApplications();
@@ -148,10 +159,9 @@ public class PermissionServiceImpl implements PermissionService {
 		if (appIds == null) {
 			// it should be impossible to get here. 
 			// if it somehow does happen then the user definitely shouldn't see any apps.
-			return new ArrayList<Application>();
+			return newApps;
 		}
 		
-		List<Application> newApps = new ArrayList<Application>();
 		for (Application app : organization.getActiveApplications()) {
 			if (appIds.contains(app.getId())) {
 				newApps.add(app);

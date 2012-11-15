@@ -65,43 +65,47 @@
 		</form:form>
 	</c:if>
 
-	<h3>Applications</h3>
-	<table class="formattedTable">
-		<thead>
-			<tr>
-				<th class="medium first">Name</th>
-				<th class="long last">URL</th>
-			</tr>
-		</thead>
-		<tbody id="applicationsTableBody">
-	<c:choose>
-		<c:when test="${ not empty apps }">
-			<c:forEach var="app" items="${ apps }">
-				<c:if test="${ app.active }">
-				<tr class="bodyRow">
-					<td>
-						<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
-							<spring:param name="orgId" value="${ app.organization.id }"/>
-							<spring:param name="appId" value="${ app.id }"/>
-						</spring:url>
-						<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
-					</td>
-					<td><c:out value="${ app.url }"/></td>
+
+	<c:if test="${hasApps}">
+
+		<h3>Applications</h3>
+		<table class="formattedTable">
+			<thead>
+				<tr>
+					<th class="medium first">Name</th>
+					<th class="long last">URL</th>
 				</tr>
-				</c:if>
-			</c:forEach>
-		</c:when>
-		<c:otherwise>
-			<tr class="bodyRow">
-				<td colspan="2" style="text-align:center;">No applications found.</td>
-			</tr>
-		</c:otherwise>
-	</c:choose>
-			<tr class="footer">
-				<td colspan="2" class="pagination last" style="text-align:right"></td>
-			</tr>
-		</tbody>
-	</table>
+			</thead>
+			<tbody id="applicationsTableBody">
+		<c:choose>
+			<c:when test="${ not empty apps }">
+				<c:forEach var="app" items="${ apps }">
+					<c:if test="${ app.active }">
+					<tr class="bodyRow">
+						<td>
+							<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+								<spring:param name="orgId" value="${ app.organization.id }"/>
+								<spring:param name="appId" value="${ app.id }"/>
+							</spring:url>
+							<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
+						</td>
+						<td><c:out value="${ app.url }"/></td>
+					</tr>
+					</c:if>
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+				<tr class="bodyRow">
+					<td colspan="2" style="text-align:center;">No applications found.</td>
+				</tr>
+			</c:otherwise>
+		</c:choose>
+				<tr class="footer">
+					<td colspan="2" class="pagination last" style="text-align:right"></td>
+				</tr>
+			</tbody>
+		</table>
+	</c:if>
 	
 	<c:if test="${ not canSeeRules }">
 		Your permissions do not allow you to view rules for all of the apps attached to this WAF.

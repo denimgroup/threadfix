@@ -87,7 +87,14 @@ public class WafsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		boolean canSeeRules = permissionService.canSeeRules(waf);
+		boolean canSeeRules = false;
+		
+		if (waf.getApplications() != null && !waf.getApplications().isEmpty()) {
+			canSeeRules = permissionService.canSeeRules(waf);
+		} else {
+			canSeeRules = true;
+		}
+		
 		mav.addObject("canSeeRules", canSeeRules);
 		
 		boolean hasApps = false;
