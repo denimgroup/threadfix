@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Waf;
 
 public interface PermissionService {
@@ -64,5 +65,11 @@ public interface PermissionService {
 	 * @return
 	 */
 	List<Application> filterApps(Organization organization);
+	
+	/**
+	 * 
+	 * @param providers
+	 */
+	void filterApps(List<RemoteProviderType> providers);
 	
 }

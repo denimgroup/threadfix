@@ -59,6 +59,7 @@ public class RemoteProviderType extends BaseEntity  {
 	private String apiKey;
 	
 	private List<RemoteProviderApplication> remoteProviderApplications;
+	private List<RemoteProviderApplication> filteredApplications;
 	private ChannelType channelType;
 
 	@Transient
@@ -182,5 +183,14 @@ public class RemoteProviderType extends BaseEntity  {
 
 	public void setIsEuropean(boolean isEuropean) {
 		this.isEuropean = isEuropean;
+	}
+
+	@Transient
+	public List<RemoteProviderApplication> getFilteredApplications() {
+		return filteredApplications;
+	}
+
+	public void setFilteredApplications(List<RemoteProviderApplication> filteredApplications) {
+		this.filteredApplications = filteredApplications;
 	}
 }

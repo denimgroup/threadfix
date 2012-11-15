@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.Waf;
 
@@ -157,5 +159,28 @@ public class PermissionServiceImpl implements PermissionService {
 		}
 		
 		return newApps;
+	}
+	
+	@Override
+	public void filterApps(List<RemoteProviderType> providers) {
+		boolean global = hasGlobalPermission(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+
+		for (RemoteProviderType type : providers) {
+			if (global) {
+				type.setFilteredApplications(type.getRemoteProviderApplications());
+			} else {
+				type.setFilteredApplications(new ArrayList<RemoteProviderApplication>());
+				for (RemoteProviderApplication app : type.getRemoteProviderApplications()) {
+					if (app.getApplication() != null && app.getApplication().getId() != null &&
+							app.getApplication().getOrganization() != null && 
+							app.getApplication().getOrganization().getId() != null &&
+							isAuthorized(Permission.CAN_UPLOAD_SCANS, 
+									app.getApplication().getOrganization().getId(),
+									app.getApplication().getId())) {
+						type.getFilteredApplications().add(app);
+					}
+				}
+			}
+		}
 	}
 }

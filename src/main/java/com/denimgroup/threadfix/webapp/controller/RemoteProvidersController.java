@@ -102,7 +102,10 @@ public class RemoteProvidersController {
 		}
 
 		model.addAttribute("message", message);
+		permissionService.filterApps(typeList);
+		
 		model.addAttribute("remoteProviders", typeList);
+		
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
 		return "config/remoteproviders/index";
 	}
@@ -135,6 +138,8 @@ public class RemoteProvidersController {
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
 	public String importScan(@PathVariable("typeId") int typeId, 
 			HttpServletRequest request, @PathVariable("appId") int appId) {
+		
+		
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
 		if (remoteProviderApplication == null || remoteProviderApplication.getApplication() == null) {
@@ -144,10 +149,17 @@ public class RemoteProvidersController {
 			return "redirect:/configuration/remoteproviders/";
 		}
 		
-		if (remoteProviderApplication != null) {
-			remoteProviderTypeService.decryptCredentials(
-					remoteProviderApplication.getRemoteProviderType());
+		if (remoteProviderApplication.getApplication().getId() == null ||
+				remoteProviderApplication.getApplication().getOrganization() == null ||
+				remoteProviderApplication.getApplication().getOrganization().getId() == null ||
+				!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, 
+						remoteProviderApplication.getApplication().getOrganization().getId(), 
+						remoteProviderApplication.getApplication().getId())) {
+			return "403";
 		}
+		
+		remoteProviderTypeService.decryptCredentials(
+				remoteProviderApplication.getRemoteProviderType());
 		
 		try {
 			Thread.sleep(1000);
@@ -175,7 +187,7 @@ public class RemoteProvidersController {
 		
 		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/edit");
 		modelAndView.addObject("remoteProviderApplication", remoteProviderApplication);
-		modelAndView.addObject("organizationList", organizationService.loadAllActive());
+		modelAndView.addObject("organizationList", organizationService.loadAllActiveFilter());
 		return modelAndView;
 	}
 	
@@ -188,11 +200,13 @@ public class RemoteProvidersController {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
+//			permissionService.isAuthorized(Permission.CAN_MANAGE_REMOTE_PROVIDERS, null, null);
+			
 			remoteProviderApplicationService.processApp(result, remoteProviderApplication);
 			
 			if (result.hasErrors()) {
 				model.addAttribute("remoteProviderApplication",remoteProviderApplication);
-				model.addAttribute("organizationList", organizationService.loadAllActive());
+				model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
 				return "config/remoteproviders/edit";
 			}
 
