@@ -90,9 +90,8 @@ public class ScanTests extends BaseTest {
 	public static URL getScanFilePath(String category, String scannerName, String fileName) {
 		String string = "SupportingFiles/" + category  + "/" + scannerName + "/" + fileName;
 		
-		return ClassLoader.getSystemResource(string);//.getFile();
+		return ScanTests.class.getClassLoader().getResource(string);//.getFile();
 	}
-
 	
 	@Test
 	public void testAddApplicationChannels() {

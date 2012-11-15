@@ -87,6 +87,7 @@ public class UploadScanPage extends BasePage {
 	
 	public ApplicationDetailPage clickUploadScanButton() {
 		uploadScanButton.click();
+		sleep(4000);
 		return new ApplicationDetailPage(driver);
 	}
 	
