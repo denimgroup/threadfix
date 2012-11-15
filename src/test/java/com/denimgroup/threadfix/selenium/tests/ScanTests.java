@@ -399,20 +399,9 @@ public class ScanTests extends BaseTest {
 					{ INFO_LEAK_SERVER_ERROR, "Info", "/demo/XPathInjection2.php", "username"},
 			};
 		
-		if (mySQL) {
-			swap(expectedResults, 13, 14);
-			swap(expectedResults, 18, 19);
-		}
-		
 		runScanTest(key, expectedResults);
 	}
-	
-	private void swap(String[][] array, int index1, int index2) {
-		String[] temp = array[index1];
-		array[index1] = array[index2];
-		array[index2] = temp;
-	}
-	
+
 	@Test
 	public void netsparkerScan(){
 		String key = "Mavituna Security Netsparker";
@@ -588,11 +577,6 @@ public class ScanTests extends BaseTest {
 				{DIRECTORY_LISTING, "Low", "/demo/", ""},
 				{INFORMATION_EXPOSURE, "Info", "/", ""},
 		};
-		
-		if (mySQL) {
-			swap(expectedResults, 4, 5);
-		}
-		
 		runScanTest(key,expectedResults);
 	}
 	
@@ -709,15 +693,6 @@ public class ScanTests extends BaseTest {
 			{INFO_LEAK_BROWSER_CACHE, "Info", "/signup.aspx", ""},
 		};
 		
-		if (mySQL) {
-			swap(expectedResults, 19, 22);
-			swap(expectedResults, 16, 22);
-			swap(expectedResults, 17, 20);
-			swap(expectedResults, 18, 21);
-			swap(expectedResults, 21, 22);
-			swap(expectedResults, 20, 21);
-		}
-		
 		runScanTest(key, expectedResults);
 	}
 	
@@ -782,35 +757,29 @@ public class ScanTests extends BaseTest {
 													 .clickRefreshLink()
 													 .waitForScans();
 		
+		assertTrue("The vuln counts don't match.", expectedResults.length == applicationDetailPage.getNumRows());
+		
+		String[][] tableResults = new String[expectedResults.length][4];
 		for (int i=1; i <= expectedResults.length; i++) {
-			
-			String elementText = applicationDetailPage.getElementText("vulnName" + i);
-			assertTrue("Vulnerability Name mismatch - " + 
-							applicationDetailPage.getElementText("vulnName" + i) +
-							" instead of " +
-							expectedResults[i-1][0],
-					elementText.equals(expectedResults[i-1][0]));
-			
-			assertTrue("Severity mismatch - " + 
-							applicationDetailPage.getElementText("severity" + i) +
-							" instead of " +
-							expectedResults[i-1][1],
-					applicationDetailPage.getElementText("severity" + i)
-					.equals(expectedResults[i-1][1]));
-			
-			assertTrue("Path mismatch - " + 
-						applicationDetailPage.getElementText("path" + i) +
-						" instead of " +
-						expectedResults[i-1][2],
-					applicationDetailPage.getElementText("path" + i).toLowerCase()
-					.equals(expectedResults[i-1][2].toLowerCase()));
-			
-			assertTrue("Parameter mismatch - " + 
-						applicationDetailPage.getElementText("parameter" + i) +
-						" instead of " +
-						expectedResults[i-1][3],
+			String[] thisVuln = new String[] {
+					applicationDetailPage.getElementText("vulnName" + i),
+					applicationDetailPage.getElementText("severity" + i),
+					applicationDetailPage.getElementText("path" + i),
 					applicationDetailPage.getElementText("parameter" + i)
-					.equals(expectedResults[i-1][3]));
+				};
+			tableResults[i-1] = thisVuln;
+		}
+		
+		outer: for (int i=0; i <= expectedResults.length - 1; i++) {
+			for (int j=0; j <= expectedResults.length-1; j++) {
+				if (expectedResults[i][0].equals(tableResults[j][0]) &&
+						expectedResults[i][1].equals(tableResults[j][1]) &&
+						expectedResults[i][2].equals(tableResults[j][2]) &&
+						expectedResults[i][3].equals(tableResults[j][3])) {
+					continue outer;
+				}
+			}
+			assertTrue("Didn't find a vuln: " + expectedResults[i], false);
 		}
 		
 		applicationDetailPage.clickViewScansLink()

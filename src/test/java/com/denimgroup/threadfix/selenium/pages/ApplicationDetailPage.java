@@ -105,6 +105,10 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("addFindingManuallyLink").click();
 		return new ManualUploadPage(driver);
 	}
+	
+	public int getNumRows() {
+		return driver.findElementsByClassName("bodyRow").size();
+	}
 
 	public ApplicationDetailPage waitForScans() {
 		
