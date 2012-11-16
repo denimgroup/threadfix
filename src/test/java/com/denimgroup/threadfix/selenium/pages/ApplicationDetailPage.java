@@ -119,8 +119,8 @@ public class ApplicationDetailPage extends BasePage {
 		returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
 		
 		while (!isElementPresent("viewScansLink")) {
-			sleep(2);
 			returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
+			sleep(2000);
 		}
 		return returnPage;
 	}

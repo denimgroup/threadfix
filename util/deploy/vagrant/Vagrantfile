@@ -37,6 +37,9 @@ Vagrant::Config.run do |config|
   # computers to access the VM, whereas host only networking does not.
   config.vm.forward_port 443, 443
   config.vm.forward_port 80, 80
+  
+  # Up the memory to 1GB so that TF will have enough
+  config.vm.customize ["modifyvm", :id, "--memory", 1024]
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the

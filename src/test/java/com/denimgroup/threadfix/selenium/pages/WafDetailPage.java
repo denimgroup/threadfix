@@ -35,7 +35,6 @@ public class WafDetailPage extends BasePage {
 	private WebElement wafTypeText;
 	private WebElement editLink;
 	private WebElement backToListLink;
-	private WebElement applicationsTableBody;
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement deleteButton;
 	
@@ -46,7 +45,6 @@ public class WafDetailPage extends BasePage {
 		wafTypeText = driver.findElementById("wafTypeText");
 		editLink = driver.findElementById("editLink");
 		backToListLink = driver.findElementById("backToListLink");
-		applicationsTableBody = driver.findElementById("applicationsTableBody");
 		deleteButton = driver.findElementById("deleteButton");
 	}
 
@@ -79,7 +77,7 @@ public class WafDetailPage extends BasePage {
 	}
 
 	public boolean isTextPresentInApplicationsTableBody(String text) {
-		for (WebElement element : applicationsTableBody.findElements(By.xpath(".//tr/td/a"))) {
+		for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
 			if (element.getText().contains(text)) {
 				lastItemFoundInApplicationsTableBodyLink = element;
 				return true;
