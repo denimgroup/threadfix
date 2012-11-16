@@ -53,7 +53,7 @@ public class AccessControlMapController {
 				accessControlMapService.parseAccessControlTeamMap(accessControlModel);
 		map.setUser(user);
 		
-		String error = accessControlMapService.validateMap(map);
+		String error = accessControlMapService.validateMap(map, null);
 		if (error != null) {
 			writeResponse(response,error);
 		} else {
@@ -102,12 +102,11 @@ public class AccessControlMapController {
 		AccessControlTeamMap map =
 				accessControlMapService.parseAccessControlTeamMap(accessControlModel);
 		map.setUser(user);
-		
-		String error = accessControlMapService.validateMap(map);
+
+		String error = accessControlMapService.validateMap(map, mapId);
 		if (error != null) {
 			writeResponse(response,error);
 		} else {
-			// TODO Need to authenticate some things about this 
 			
 			accessControlMapService.deactivate(accessControlMapService.loadAccessControlTeamMap(mapId));
 			accessControlMapService.store(map);

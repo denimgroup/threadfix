@@ -44,7 +44,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	}
 	
 	@Override
-	public String validateMap(AccessControlTeamMap map) {
+	public String validateMap(AccessControlTeamMap map, Integer mapId) {
 		if (map == null) 
 			return "Something went wrong.";
 		
@@ -104,10 +104,13 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				}
 				appMap.setRole(role);
 				
-				if (map.getUser().getId() != null &&
-						accessControlMapDao.retrieveAppMapByUserAppAndRole(
-								map.getUser().getId(), appMap.getApplication().getId(), role.getId()) != null) {
-					return "You have a duplicate application / role entry for this user.";
+				if (map.getUser().getId() != null) {
+					AccessControlApplicationMap duplicateMap = accessControlMapDao.retrieveAppMapByUserAppAndRole(
+							map.getUser().getId(), appMap.getApplication().getId(), role.getId());
+					if (duplicateMap != null && (mapId == null ||
+							!duplicateMap.getAccessControlTeamMap().getId().equals(mapId))) {
+						return "You have a duplicate application / role entry for this user.";
+					}
 				}
 			}
 			
@@ -171,6 +174,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		return returnMap;
 	}
 
+	@Override
+	public AccessControlTeamMap loadAccessControlTeamMap(Integer id) {
+		return accessControlMapDao.retrieveTeamMapById(id);
+	}
+
 	private Map<Integer,Integer> getMap(List<String> stringMaps) {
 		if (stringMaps == null || stringMaps.size() <= 0) {
 			return null;
@@ -195,11 +203,6 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		return intMap;
 	}
 	
-	@Override
-	public AccessControlTeamMap loadAccessControlTeamMap(Integer id) {
-		return accessControlMapDao.retrieveTeamMapById(id);
-	}
-
 	@Override
 	public AccessControlApplicationMap loadAccessControlApplicationMap(int mapId) {
 		return accessControlMapDao.retrieveAppMapById(mapId);

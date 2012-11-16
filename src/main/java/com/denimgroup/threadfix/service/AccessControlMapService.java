@@ -59,7 +59,7 @@ public interface AccessControlMapService {
 	 * @param map
 	 * @return
 	 */
-	String validateMap(AccessControlTeamMap map);
+	String validateMap(AccessControlTeamMap map, Integer mapId);
 
 	/**
 	 * 
