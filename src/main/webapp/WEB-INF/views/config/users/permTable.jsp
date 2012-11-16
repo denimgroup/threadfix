@@ -1,7 +1,4 @@
 <%@ include file="/common/taglibs.jsp"%>
-<head>
-	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user_page.js"></script> --%>
-</head>
 
 <body>
 	<spring:url value="/edit" var="editUrl"/>

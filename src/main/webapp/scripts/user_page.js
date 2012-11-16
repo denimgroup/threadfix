@@ -30,7 +30,7 @@ function submitModal(url) {
 		dataType : "text",
 		success : function(text) {
 			
-			if (text.trim().slice(0,6) === "<head>") {
+			if (text.trim().slice(0,6) === "<body>") {
 				$('#myModal').on('hidden', function () {
 					$("#permsTableDiv").html(text);
 			    });
