@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,8 +69,8 @@ public class UploadScanPage extends BasePage {
 		return fileInput.getText();
 	}
 
-	public UploadScanPage setFileInput(URL text){
-		fileInput.sendKeys(text.toString());
+	public UploadScanPage setFileInput(String text){
+		fileInput.sendKeys(text);
 		return this;
 	}
 

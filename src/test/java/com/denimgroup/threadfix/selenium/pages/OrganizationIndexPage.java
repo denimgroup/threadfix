@@ -29,7 +29,6 @@ import org.openqa.selenium.WebElement;
 
 public class OrganizationIndexPage extends BasePage {
 
-	private WebElement addOrganizationButton;
 	private WebElement organizationTable;
 	
 	private WebElement lastOrganizationFoundInTableLink;
@@ -37,11 +36,10 @@ public class OrganizationIndexPage extends BasePage {
 	public OrganizationIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		organizationTable = driver.findElementById("orgTableBody");
-		addOrganizationButton = driver.findElementById("addOrganization");
 	}
 	
 	public AddOrganizationPage clickAddOrganizationButton() {
-		addOrganizationButton.click();
+		driver.findElementById("addOrganization").click();
 		return new AddOrganizationPage(driver);
 	}
 	

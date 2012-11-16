@@ -3,8 +3,8 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -53,45 +53,7 @@ public class ReportTests extends BaseTest {
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
-	private static Map<String, URL> fileMap = new HashMap<String, URL>();
-	static {
-		fileMap.put("Microsoft CAT.NET",
-				getScanFilePath("Static", "CAT.NET", "catnet_RiskE.xml"));
-		fileMap.put("FindBugs",
-				getScanFilePath("Static", "FindBugs", "findbugs-normal.xml"));
-		fileMap.put("IBM Rational AppScan",
-				getScanFilePath("Dynamic", "AppScan", "appscan-php-demo.xml"));
-		fileMap.put(
-				"Mavituna Security Netsparker",
-				getScanFilePath("Dynamic", "NetSparker",
-						"netsparker-demo-site.xml"));
-		fileMap.put(
-				"Skipfish",
-				getScanFilePath("Dynamic", "Skipfish", "skipfish-demo-site.zip"));
-		fileMap.put("w3af",
-				getScanFilePath("Dynamic", "w3af", "w3af-demo-site.xml"));
-		fileMap.put("OWASP Zed Attack Proxy",
-				getScanFilePath("Dynamic", "ZAP", "zaproxy-normal.xml"));
-		fileMap.put(
-				"Nessus",
-				getScanFilePath("Dynamic", "Nessus",
-						"nessus_report_TFTarget.xml"));
-		fileMap.put("Arachni",
-				getScanFilePath("Dynamic", "Arachni", "php-demo.xml"));
-		fileMap.put(
-				"WebInspect",
-				getScanFilePath("Dynamic", "WebInspect",
-						"webinspect-demo-site.xml"));
-		fileMap.put("Brakeman",
-				getScanFilePath("Static", "Brakeman", "brakeman.json"));
-		fileMap.put("Fortify 360",
-				getScanFilePath("Static", "Fortify", "ZigguratUtility.fpr"));
-		fileMap.put("Acunetix WVS",
-				getScanFilePath("Dynamic", "Acunetix", "testaspnet.xml"));
-		fileMap.put("Burp Suite",
-				getScanFilePath("Dynamic", "Burp", "burp-demo-site.xml"));
-		fileMap.put("IBM Rational AppScan Source Edition", null);
-	}
+	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
 
 	@Before
 	public void init() {
@@ -163,7 +125,7 @@ public class ReportTests extends BaseTest {
 
 	@Ignore // this test consistenly generates OutOfMemoryErrors on my box. We don't want to screw up all the tests.
 	@Test
-	public void generateAllRpt() {
+	public void generateAllReports() throws MalformedURLException {
 		String orgName = "testCreateOrg";
 		String appName = "testCreataApp";
 		String urlText = "http://testurl.com";
@@ -197,9 +159,16 @@ public class ReportTests extends BaseTest {
 			}
 		}
 
-		for (Entry<String, URL> mapEntry : fileMap.entrySet()) {
+		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
-				File appScanFile = new File(mapEntry.getValue().getFile());
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
+				
 				assertTrue("The test file did not exist.", appScanFile.exists());
 			} else {
 				continue;

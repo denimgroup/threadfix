@@ -27,6 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,7 +77,7 @@ public class WafTests extends BaseTest {
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
-	private static Map<String, URL> fileMap = ScanTests.SCAN_FILE_MAP;
+	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
 
 	@Before
 	public void init() {
@@ -336,94 +337,101 @@ public class WafTests extends BaseTest {
 	
 	
 	//Create mod-Security Waf and generate rules
-	
+
 	@Test
-	public void attachModSecWafToaNewApp() {
-	String orgName = "testCreateOrg2";
-	String appName = "testCreateApp2";
-	String urlText = "http://testur2.com";
-	
-	//set up an organization
-	organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
-	
-	organizationAddPage.setNameInput(orgName);
-	
-	boolean first = true;
-	
-	//add an application
-	applicationAddPage = organizationAddPage.clickSubmitButtonValid().clickAddApplicationLink();
-	
-	applicationAddPage.setNameInput(appName);
-	applicationAddPage.setUrlInput(urlText);
-	applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-	
-	
-	for (String channelc : fileMap.keySet()) {
-		if (first) {
-			first = false;
-			uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
-											 	  .setChannelTypeSelect(channelc)
-												  .clickAddChannelButton();
-												  
-		} else {
-			uploadScanPage = uploadScanPage.clickAddAnotherChannelLink()
-										   .setChannelTypeSelect(channelc)
-										   .clickAddChannelButton();
-		}
-	}
+	public void attachModSecWafToaNewApp() throws MalformedURLException {
+		String orgName = "testCreateOrg2";
+		String appName = "testCreateApp2";
+		String urlText = "http://testur2.com";
 
-	for (Entry<String, URL> mapEntry : fileMap.entrySet()) {
-		if (mapEntry.getValue() != null){
-			File appScanFile = new File(mapEntry.getValue().getFile());
-			assertTrue("The test file did not exist.", appScanFile.exists());
-		} else {
-			continue;
+		//set up an organization
+		organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
+
+		organizationAddPage.setNameInput(orgName);
+
+		boolean first = true;
+
+		//add an application
+		applicationAddPage = organizationAddPage.clickSubmitButtonValid().clickAddApplicationLink();
+
+		applicationAddPage.setNameInput(appName);
+		applicationAddPage.setUrlInput(urlText);
+		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
+
+
+		for (String channelc : fileMap.keySet()) {
+			if (first) {
+				first = false;
+				uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
+						.setChannelTypeSelect(channelc)
+						.clickAddChannelButton();
+
+			} else {
+				uploadScanPage = uploadScanPage.clickAddAnotherChannelLink()
+						.setChannelTypeSelect(channelc)
+						.clickAddChannelButton();
+			}
 		}
 
-		uploadScanPage = uploadScanPage
-				// clickAddChannelButton()
-				.setFileInput(mapEntry.getValue())
-				.setChannelSelect(mapEntry.getKey())
-				.clickUploadScanButton()
-				.clickUploadScanLink();
-		
-	}
-	
-	//Creating a new Waf
-	
-	String newWafName = "testCreateModSecWaf1";
-	String type = "mod_security";
-	driver.findElementById("wafsHeader").click();
-	wafIndexPage = new WafIndexPage(driver);
-	wafIndexPage.clickAddWafLink();
-	
-	wafAddPage = new WafAddPage(driver);
-	wafAddPage.setNameInput(newWafName);
-	wafAddPage.setTypeSelect(type);
-	WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
-	assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-	
-	//Add waf to application
-	wafDetailPage.clickOrganizationHeaderLink();
-	organizationIndexPage = new OrganizationIndexPage(driver);
-	organizationIndexPage.clickOrganizationLink("testCreateOrg2");
-	organizationDetailPage = new OrganizationDetailPage(driver);
-	organizationDetailPage.clickTextLinkInApplicationsTableBody("testCreateApp2");
-	applicationDetailPage = new ApplicationDetailPage(driver);
-	applicationEditPage = applicationDetailPage.clickEditLink();
-	applicationEditPage.setWafSelect("testCreateModSecWaf1");
-	applicationEditPage.clickUpdateApplicationButton();
-	applicationDetailPage = new ApplicationDetailPage(driver);
-	driver.findElementById("wafText").click();
-	
-	//Generating  Deny waf Rules
-	wafDetailPage = new WafDetailPage(driver);	
-	wafDetailPage.setWafDirectiveSelect("deny");
-	wafDetailPage.clickGenerateWafRulesButton();
+		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
+			if (mapEntry.getValue() != null){
+				File appScanFile = null;
+
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
+
+				assertTrue("The test file did not exist.", appScanFile.exists());
+			} else {
+				continue;
+			}
+
+			uploadScanPage = uploadScanPage
+					// clickAddChannelButton()
+					.setFileInput(mapEntry.getValue())
+					.setChannelSelect(mapEntry.getKey())
+					.clickUploadScanButton()
+					.clickUploadScanLink();
+
+		}
+
+		//Creating a new Waf
+
+		String newWafName = "testCreateModSecWaf1";
+		String type = "mod_security";
+		driver.findElementById("wafsHeader").click();
+		wafIndexPage = new WafIndexPage(driver);
+		wafIndexPage.clickAddWafLink();
+
+		wafAddPage = new WafAddPage(driver);
+		wafAddPage.setNameInput(newWafName);
+		wafAddPage.setTypeSelect(type);
+		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
+		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
+
+		//Add waf to application
+		wafDetailPage.clickOrganizationHeaderLink();
+		organizationIndexPage = new OrganizationIndexPage(driver);
+		organizationIndexPage.clickOrganizationLink("testCreateOrg2");
+		organizationDetailPage = new OrganizationDetailPage(driver);
+		organizationDetailPage.clickTextLinkInApplicationsTableBody("testCreateApp2");
+		applicationDetailPage = new ApplicationDetailPage(driver);
+		applicationEditPage = applicationDetailPage.clickEditLink();
+		applicationEditPage.setWafSelect("testCreateModSecWaf1");
+		applicationEditPage.clickUpdateApplicationButton();
+		applicationDetailPage = new ApplicationDetailPage(driver);
+		driver.findElementById("wafText").click();
+
+		//Generating  Deny waf Rules
+		wafDetailPage = new WafDetailPage(driver);	
+		wafDetailPage.setWafDirectiveSelect("deny");
+		wafDetailPage.clickGenerateWafRulesButton();
 		wafDetailPage = new WafDetailPage(driver);
 		String PageText = driver.findElementById("wafrule").getText();
 		assertTrue("Waf rule not generated", PageText.contains("SecRule"));
-		
+
 		// Generate pass Waf Rules
 		wafDetailPage = new WafDetailPage(driver);
 		wafDetailPage.setWafDirectiveSelect("pass");
@@ -447,50 +455,54 @@ public class WafTests extends BaseTest {
 		wafDetailPage = new WafDetailPage(driver);
 		String PageText6 = driver.findElementById("wafrule").getText();
 		assertTrue("Waf rule not generated", PageText6.contains("SecRule"));
-
-			
 	}
 	
 	// Generate Snort Waf Rules
-	
-		@Test
-		public void attachWafToaNewApp() {
+
+	@Test
+	public void attachWafToaNewApp() throws MalformedURLException {
 		String orgName = "testCreateOrg1";
 		String appName = "testCreateApp1";
 		String urlText = "http://testurl.com";
-		
+
 		//set up an organization
 		organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
-		
+
 		organizationAddPage.setNameInput(orgName);
-		
+
 		boolean first = true;
-		
+
 		//add an application
 		applicationAddPage = organizationAddPage.clickSubmitButtonValid().clickAddApplicationLink();
-		
+
 		applicationAddPage.setNameInput(appName);
 		applicationAddPage.setUrlInput(urlText);
 		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-		
-		
+
+
 		for (String channelc : fileMap.keySet()) {
 			if (first) {
 				first = false;
 				uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
-												 	  .setChannelTypeSelect(channelc)
-													  .clickAddChannelButton();
-													  
+						.setChannelTypeSelect(channelc)
+						.clickAddChannelButton();
+
 			} else {
 				uploadScanPage = uploadScanPage.clickAddAnotherChannelLink()
-											   .setChannelTypeSelect(channelc)
-											   .clickAddChannelButton();
+						.setChannelTypeSelect(channelc)
+						.clickAddChannelButton();
 			}
 		}
 
-		for (Entry<String, URL> mapEntry : fileMap.entrySet()) {
+		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
-				File appScanFile = new File(mapEntry.getValue().getFile());
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
 				assertTrue("The test file did not exist.", appScanFile.exists());
 			} else {
 				continue;
@@ -502,23 +514,23 @@ public class WafTests extends BaseTest {
 					.setChannelSelect(mapEntry.getKey())
 					.clickUploadScanButton()
 					.clickUploadScanLink();
-			
+
 		}
-		
+
 		//Creating a new Waf
-		
+
 		String newWafName = "testCreateSnortWaf1";
 		String type = "Snort";
 		driver.findElementById("wafsHeader").click();
 		wafIndexPage = new WafIndexPage(driver);
 		wafIndexPage.clickAddWafLink();
-		
+
 		wafAddPage = new WafAddPage(driver);
 		wafAddPage.setNameInput(newWafName);
 		wafAddPage.setTypeSelect(type);
 		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-		
+
 		//Add waf to application
 		wafDetailPage.clickOrganizationHeaderLink();
 		organizationIndexPage = new OrganizationIndexPage(driver);
@@ -531,80 +543,72 @@ public class WafTests extends BaseTest {
 		applicationEditPage.clickUpdateApplicationButton();
 		applicationDetailPage = new ApplicationDetailPage(driver);
 		driver.findElementById("wafText").click();
-		
+
 		//Generating  Alert waf Rules
 		wafDetailPage = new WafDetailPage(driver);	
 		wafDetailPage.setWafDirectiveSelect("alert");
 		wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText.contains("alert"));
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText.contains("alert"));
 
-			// Generate log waf rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("log");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText1 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText1.contains("log"));
+		// Generate log waf rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("log");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText1 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText1.contains("log"));
 
-			// Generate pass Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("pass");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText2 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText2.contains("pass"));
+		// Generate pass Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("pass");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText2 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText2.contains("pass"));
 
-			// Generate activate Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("activate");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText3 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText3.contains("activate"));
+		// Generate activate Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("activate");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText3 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText3.contains("activate"));
 
-			// Generate Dynamic Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("dynamic");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText4 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText4.contains("dynamic"));
+		// Generate Dynamic Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("dynamic");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText4 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText4.contains("dynamic"));
 
-			// Generate drop Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("drop");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText5 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText5.contains("drop"));
+		// Generate drop Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("drop");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText5 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText5.contains("drop"));
 
-			// Generate reject Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("reject");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText6 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText6.contains("reject"));
+		// Generate reject Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("reject");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText6 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText6.contains("reject"));
 
-			// Generate sdrop Waf Rules
-			wafDetailPage = new WafDetailPage(driver);
-			wafDetailPage.setWafDirectiveSelect("sdrop");
-			wafDetailPage.clickGenerateWafRulesButton();
-			wafDetailPage = new WafDetailPage(driver);
-			String PageText7 = driver.findElementById("wafrule").getText();
-			assertTrue("Waf rule not generated", PageText7.contains("sdrop"));
-			
-			
-		}
-		
-		
-		
-		
-		
-	
-	
+		// Generate sdrop Waf Rules
+		wafDetailPage = new WafDetailPage(driver);
+		wafDetailPage.setWafDirectiveSelect("sdrop");
+		wafDetailPage.clickGenerateWafRulesButton();
+		wafDetailPage = new WafDetailPage(driver);
+		String PageText7 = driver.findElementById("wafrule").getText();
+		assertTrue("Waf rule not generated", PageText7.contains("sdrop"));
+	}
+
 	@Test
 	public void testEditWafBoundaries(){
 		String wafName = "testEditWafBoundaries";

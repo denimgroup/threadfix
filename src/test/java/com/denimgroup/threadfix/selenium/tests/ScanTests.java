@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -54,14 +55,9 @@ public class ScanTests extends BaseTest {
 	public OrganizationIndexPage organizationIndexPage;
 	public OrganizationDetailPage organizationDetailPage;
 	
-	// Set to false for HSQL ordering
-	// TODO force sorting so this isn't an issue
-	// TODO or make this a parameter that is passed in
-	boolean mySQL = true;
-	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	
-	public final static Map<String, URL> SCAN_FILE_MAP = new HashMap<String, URL>();
+	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<String, String>();
 	static {
 		SCAN_FILE_MAP.put("Microsoft CAT.NET", getScanFilePath("Static","CAT.NET","catnet_RiskE.xml") );
 		SCAN_FILE_MAP.put("FindBugs", getScanFilePath("Static","FindBugs","findbugs-normal.xml") );
@@ -79,7 +75,7 @@ public class ScanTests extends BaseTest {
 		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
 		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
 	}
-		
+	
 	@Before
 	public void init() {
 		super.init();
@@ -87,10 +83,15 @@ public class ScanTests extends BaseTest {
 		loginPage = LoginPage.open(driver);
 	}
 	
-	public static URL getScanFilePath(String category, String scannerName, String fileName) {
+	public static String getScanFilePath(String category, String scannerName, String fileName) {
 		String string = "SupportingFiles/" + category  + "/" + scannerName + "/" + fileName;
 		
-		return ScanTests.class.getClassLoader().getResource(string);//.getFile();
+		String urlFromCommandLine = System.getProperty("scanFileBaseLocation");
+		if (urlFromCommandLine != null) {
+			return urlFromCommandLine + string;
+		}
+		
+		return ScanTests.class.getClassLoader().getResource(string).toString();
 	}
 	
 	@Test
@@ -145,15 +146,21 @@ public class ScanTests extends BaseTest {
 	
 	// Mostly smoke test
 	@Test
-	public void testUploadScans() {
+	public void testUploadScans() throws MalformedURLException {
 		
 		// log in
 		organizationIndexPage = loginPage.login("user", "password");
 		
 		// create an org and an app and upload the scan, then delete everything
-		for (Entry<String, URL> mapEntry : SCAN_FILE_MAP.entrySet()) {
+		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
 			if (mapEntry.getValue() != null){
-				File appScanFile = new File(mapEntry.getValue().getFile());
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
 				assertTrue("The test file did not exist.", appScanFile.exists());
 			} else {
 				continue;
@@ -184,14 +191,20 @@ public class ScanTests extends BaseTest {
 	}
 	
 	@Test
-	public void testUploadDuplicateScans() {
+	public void testUploadDuplicateScans() throws MalformedURLException {
 		// log in
 		organizationIndexPage = loginPage.login("user", "password");
 		
 		// create an org and an app and upload the scan, then delete everything
-		for (Entry<String, URL> mapEntry : SCAN_FILE_MAP.entrySet()) {
+		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
 			if (mapEntry.getValue() != null){
-				File appScanFile = new File(mapEntry.getValue().getFile());
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
 				assertTrue("The test file did not exist.", appScanFile.exists());
 			} else {
 				continue;

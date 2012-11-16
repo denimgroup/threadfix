@@ -119,7 +119,7 @@ public class ApplicationDetailPage extends BasePage {
 		
 		returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
 		
-		while (!isElementPresent("viewScansLink")) {
+		while (!isElementPresent("ajaxVulnTable")) {
 			returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
 			sleep(2000);
 		}

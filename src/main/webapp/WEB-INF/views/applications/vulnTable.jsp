@@ -1,6 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <body>
+	<span id="ajaxVulnTable"></span>
 	<spring:url value="{appId}/table" var="tableUrl">
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
