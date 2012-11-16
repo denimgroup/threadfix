@@ -74,6 +74,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public OrganizationDetailPage clickTeamLink() {
 		driver.findElementById("organizationText").click();
+		sleep(300);
 		return new OrganizationDetailPage(driver);
 	}
 

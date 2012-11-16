@@ -85,7 +85,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 
 	public int getNumRows() {
 		return driver.findElementsByLinkText("Edit Mapping").size();
-
 	}
 
 	public String getNames(int num) {

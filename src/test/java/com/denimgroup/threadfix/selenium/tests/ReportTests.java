@@ -113,16 +113,6 @@ public class ReportTests extends BaseTest {
 		driver.quit();
 	}
 
-	/**
-	 * This is a smoke test, to be run on a blank database. It adds a bunch of
-	 * apps with random criticalities and scan uploads and then tells you what
-	 * the basic statistics should be.
-	 * 
-	 * Requires human checking.
-	 * 
-	 * TODO write tests that aren't smoke tests
-	 */
-
 	@Test
 	public void navigationTest() {
 		String pageText = loginPage.login("user", "password").clickReportsHeaderLink().getH2Tag();
@@ -311,7 +301,14 @@ public class ReportTests extends BaseTest {
 		sleep(1000);
 	}
 
-	@Ignore // this test doesn't do anything by itself.
+	/**
+	 * This is a smoke test, to be run on a blank database. It adds a bunch of
+	 * apps with random criticalities and scan uploads and then tells you what
+	 * the basic statistics should be.
+	 * 
+	 * Requires human checking.
+	 */
+	@Ignore
 	@Test
 	public void portfolioTest() {
 		organizationIndexPage = loginPage.login("user", "password");

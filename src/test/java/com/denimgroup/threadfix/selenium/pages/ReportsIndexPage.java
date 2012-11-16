@@ -36,34 +36,34 @@ public class ReportsIndexPage extends BasePage {
 	
 	public ReportsIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		teamSelect = new Select(driver.findElementById("orgSelect"));
-		applicationSelect = new Select(driver.findElementById("appSelect"));
-		reportSelect = new Select(driver.findElementById("reportId"));
-		formatSelect = new Select(driver.findElementById("formatId"));
-		runReportButton = driver.findElementById("runReportButton");
 	}
 	
 	public String selectTeamList(String text) {
+		teamSelect = new Select(driver.findElementById("orgSelect"));
 		teamSelect.selectByVisibleText(text);
 		return teamSelect.getFirstSelectedOption().getText();
 	}
 
 	public String selectApplicationList(String text) {
+		applicationSelect = new Select(driver.findElementById("appSelect"));
 		applicationSelect.selectByVisibleText(text);
 		return applicationSelect.getFirstSelectedOption().getText();
 	}
 	
 	public String selectReportList(String text) {
+		reportSelect = new Select(driver.findElementById("reportId"));
 		reportSelect.selectByVisibleText(text);
 		return reportSelect.getFirstSelectedOption().getText();
 	}
 	
 	public String selectFormatList(String text) {
+		formatSelect = new Select(driver.findElementById("formatId"));
 		formatSelect.selectByVisibleText(text);
 		return formatSelect.getFirstSelectedOption().getText();
 	}
 	
 	public void clickRunRpt() {
+		runReportButton = driver.findElementById("runReportButton");
 		runReportButton.click();
 		sleep(1000);
 	}
