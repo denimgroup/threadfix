@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -101,7 +100,7 @@ public class EditManualFindingController {
 	public String staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model) {
+			SessionStatus status, Model model) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
@@ -116,20 +115,22 @@ public class EditManualFindingController {
 		findingService.validateManualFinding(finding, result);
 			
 		if (result.hasErrors()) {
-			if (finding != null && finding.getScan() != null && 
-					finding.getScan().getApplication() != null) {
-				model.addAttribute("application", finding.getScan().getApplication());
-			}
-			
 			model.addAttribute("isStatic",true);
-			return "scans/form";
+			return returnForm(model,finding);
 		} else {
 
 			finding.setIsStatic(true);
-			scanMergeService.processManualFindingEdit(finding, appId);
-			status.setComplete();
-
-			return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			boolean mergeResult = scanMergeService.processManualFindingEdit(finding, appId);
+			
+			if (!mergeResult) {
+				log.warn("Merging failed for the dynamic manual finding submission.");
+				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
+				model.addAttribute("isStatic",true);
+				return returnForm(model,finding);
+			} else {
+				status.setComplete();
+				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			}
 		}
 	}
 	
@@ -137,7 +138,7 @@ public class EditManualFindingController {
 	public String dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model) {
+			SessionStatus status, Model model) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
@@ -152,13 +153,8 @@ public class EditManualFindingController {
 		findingService.validateManualFinding(finding, result);
 		
 		if (result.hasErrors()) {
-			if (finding != null && finding.getScan() != null && 
-					finding.getScan().getApplication() != null) {
-				model.addAttribute("application", finding.getScan().getApplication());
-			}
-			
 			model.addAttribute("isStatic",false);
-			return "scans/form";
+			return returnForm(model, finding);
 		} else {
 			
 			finding.setIsStatic(false);
@@ -171,12 +167,28 @@ public class EditManualFindingController {
 				}
 			}
 			
-			scanMergeService.processManualFindingEdit(finding, appId);
-			status.setComplete();
-
-			return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			boolean mergeResult = scanMergeService.processManualFindingEdit(finding, appId);
+			
+			if (!mergeResult) {
+				log.warn("Merging failed for the dynamic manual finding submission.");
+				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
+				model.addAttribute("isStatic",false);
+				return returnForm(model,finding);
+			} else {
+				status.setComplete();
+				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			}
 		}
 	}
+	
+	public String returnForm(Model model, Finding finding) {
+		if (finding != null && finding.getScan() != null && 
+				finding.getScan().getApplication() != null) {
+			model.addAttribute("application", finding.getScan().getApplication());
+		}
+		return "scans/form";
+	}
+	
 	
 	@ModelAttribute("channelSeverityList")
 	public List<ChannelSeverity> populateChannelSeverity() {

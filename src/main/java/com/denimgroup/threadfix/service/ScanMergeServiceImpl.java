@@ -390,13 +390,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-//	@Transactional
 	public boolean processScan(Integer channelId, String fileName) {
 		return processScan(channelId, fileName, null, null);
 	}
 
 	@Override
-//	@Transactional
 	public boolean processScan(Integer channelId, String fileName,
 			Integer statusId, String userName) {
 				
@@ -577,14 +575,15 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	@Transactional(readOnly = false)
 	public boolean processManualFindingEdit(Finding finding, Integer applicationId) {
 		boolean result = processManualFinding(finding, applicationId);
-		int id = finding.getId();
-		if (finding != null && finding.getScan() != null && 
+		if (result && finding != null && finding.getScan() != null && 
 				finding.getScan().getFindings() != null) {
 			
 			finding.getScan().setNumberTotalVulnerabilities(
 					finding.getScan().getNumberTotalVulnerabilities() - 1);
 			
 			Finding oldFinding = null;
+
+			int id = finding.getId();
 			for (Finding scanFinding : finding.getScan().getFindings()) {
 				if (scanFinding != finding && scanFinding.getId().equals(id)) {
 					oldFinding = scanFinding;

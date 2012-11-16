@@ -50,12 +50,15 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
 @SessionAttributes("application")
 public class AddFindingController {
+	
+	protected final SanitizedLogger log = new SanitizedLogger(AddFindingController.class);
 
 	private ApplicationService applicationService;
 	private PermissionService permissionService;
@@ -137,10 +140,17 @@ public class AddFindingController {
 			
 		} else {
 			finding.setIsStatic(true);
-			scanMergeService.processManualFinding(finding, appId);
-			status.setComplete();
-
-			return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
+			
+			if (!mergeResult) {
+				log.warn("The merge failed. Returning the form again.");
+				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
+				model.addAttribute("static",true);
+				return "scans/form";
+			} else {
+				status.setComplete();
+				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			}
 		}
 	}
 	
@@ -161,11 +171,17 @@ public class AddFindingController {
 			return "scans/form";
 		} else {
 			finding.setIsStatic(false);
+			boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
 			
-			scanMergeService.processManualFinding(finding, appId);
-			status.setComplete();
-
-			return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			if (!mergeResult) {
+				log.warn("The merge failed. Returning the form again.");
+				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
+				model.addAttribute("static",false);
+				return "scans/form";
+			} else {
+				status.setComplete();
+				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+			}
 		}
 	}
 
