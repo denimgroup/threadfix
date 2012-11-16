@@ -77,12 +77,15 @@ public class WafDetailPage extends BasePage {
 	}
 
 	public boolean isTextPresentInApplicationsTableBody(String text) {
-		for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
-			if (element.getText().contains(text)) {
-				lastItemFoundInApplicationsTableBodyLink = element;
-				return true;
+		if (isElementPresent("applicationsTableBody")) {
+			for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
+				if (element.getText().contains(text)) {
+					lastItemFoundInApplicationsTableBodyLink = element;
+					return true;
+				}
 			}
 		}
+		
 		return false;
 	}
 

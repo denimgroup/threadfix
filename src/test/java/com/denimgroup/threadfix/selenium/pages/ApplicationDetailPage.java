@@ -30,7 +30,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage(WebDriver webdriver) {
 		super(webdriver);
-		sleep(300);
+		sleep(2000);
 	}
 	
 	public String getElementText(String id) {

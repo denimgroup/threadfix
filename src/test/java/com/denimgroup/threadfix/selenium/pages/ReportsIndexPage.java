@@ -74,7 +74,7 @@ public class ReportsIndexPage extends BasePage {
 		selectTeamList(teamSelect);
 		selectApplicationList(ApplicationSelect);
 		selectFormatList(formatSelect);
-		runReportButton.click();
+		driver.findElementById("runReportButton").click();
 		sleep(1000);
 		return new GeneratedReportPage(driver);
 	}
