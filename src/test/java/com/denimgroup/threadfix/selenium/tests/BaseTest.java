@@ -33,6 +33,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+
 public abstract class BaseTest {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
@@ -81,4 +83,55 @@ public abstract class BaseTest {
 		
 		return setOfSets;
 	}
+	
+	
+	// TODO move to a less fragile method of checking names
+	final static String ACCESS_CONTROL = "Improper Access Control";
+	final static String ARGUMENT_INJECTION = "Argument Injection or Modification";
+	final static String ASP_NET_CUSTOM_ERROR = "ASP.NET Misconfiguration: Missing Custom Error Page";
+	final static String ASP_NET_DEBUG = "ASP.NET Misconfiguration: Creating Debug Binary";
+	final static String ASP_NET_VALIDATION_MISSING = "ASP.NET Misconfiguration: Not Using Input Validation Framework";
+	final static String CLEARTEXT_SENSITIVE_INFO = "Cleartext Transmission of Sensitive Information";
+	final static String CODE_INJECTION = "Improper Control of Generation of Code ('Code Injection')";
+	final static String COMMAND_INJECTION = "Improper Neutralization of Special Elements used in a Command ('Command Injection')";
+	final static String CONFIGURATION = "Configuration";
+	final static String CSRF = "Cross-Site Request Forgery (CSRF)";
+	final static String DIRECTORY_LISTING = "Information Exposure Through Directory Listing";
+	final static String EVAL_INJECTION = GenericVulnerability.CWE_EVAL_INJECTION;
+	final static String EXTERNAL_CONTROL_OF_PARAM = "External Control of Assumed-Immutable Web Parameter";
+	final static String EXTERNAL_FILEPATH_CONTROL = "External Control of File Name or Path";
+	final static String FAILURE_TO_HANDLE_ENCODING = "Improper Handling of Alternate Encoding";
+	final static String FILES_ACCESSIBLE = "Files or Directories Accessible to External Parties";
+	final static String FORCED_BROWSING = "Direct Request ('Forced Browsing')";
+	final static String FORMAT_STRING_INJECTION = GenericVulnerability.CWE_FORMAT_STRING_INJECTION;
+	final static String GENERIC_INJECTION = "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')";
+	final static String IMPROPER_CROSS_BOUNDARY_REMOVAL_OF_DATA = "Improper Cross-boundary Removal of Sensitive Data";
+	final static String IMPROPER_HANDLING_OF_MISSING_VALUES = "Improper Handling of Missing Values";
+	final static String IMPROPER_INPUT_VALIDATION = "Improper Input Validation";
+	final static String IMPROPER_RESOURCE_SHUTDOWN = "Improper Resource Shutdown or Release";
+	final static String IMPROPER_RESTRICTION_AUTH = "Improper Restriction of Excessive Authentication Attempts";
+	final static String INFORMATION_EXPOSURE = "Information Exposure";
+	final static String INFO_EXPOSURE_ERROR_MESSAGE = "Information Exposure Through an Error Message";
+	final static String INFO_LEAK_BROWSER_CACHE = "Information Exposure Through Browser Caching";
+	final static String INFO_LEAK_COMMENTS = "Information Exposure Through Comments";
+	final static String INFO_LEAK_DIRECTORIES = "File and Directory Information Exposure";
+	final static String INFO_LEAK_SERVER_ERROR = "Information Exposure Through Server Error Message";
+	final static String INFO_LEAK_TEST_CODE = "Information Exposure Through Test Code";
+	final static String LDAP_INJECTION = GenericVulnerability.CWE_LDAP_INJECTION; 
+	final static String NON_SECURE_COOKIE = "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute";
+	final static String NON_SERIALIZABLE_OBJECT = "J2EE Bad Practices: Non-serializable Object Stored in Session";
+	final static String NULL_POINTER = "Unchecked Return Value to NULL Pointer Dereference";
+	final static String OPEN_REDIRECT = "URL Redirection to Untrusted Site ('Open Redirect')";
+	final static String OS_INJECTION = GenericVulnerability.CWE_OS_COMMAND_INJECTION;
+	final static String PATH_TRAVERSAL = GenericVulnerability.CWE_PATH_TRAVERSAL;
+	final static String REFLECTION_ATTACK = "Reflection Attack in an Authentication Protocol";
+	final static String RESOURCE_INJECTION = "Improper Control of Resource Identifiers ('Resource Injection')";
+	final static String SESSION_FIXATION = "Session Fixation";
+	final static String SOURCE_CODE_INCLUDE = "Information Exposure Through Include Source Code";
+	final static String SQLI = GenericVulnerability.CWE_SQL_INJECTION;
+	final static String TRUST_BOUNDARY_VIOLATION = "Trust Boundary Violation";
+	final static String UNCHECKED_ERROR = "Unchecked Error Condition";
+	final static String XML_INJECTION = "XML Injection (aka Blind XPath Injection)";
+	final static String XPATH_INJECTION = GenericVulnerability.CWE_XPATH_INJECTION;
+	final static String XSS = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING;
 }

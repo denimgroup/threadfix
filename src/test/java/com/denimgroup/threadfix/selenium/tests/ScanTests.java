@@ -37,7 +37,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.selenium.pages.AddChannelPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
@@ -69,6 +68,7 @@ public class ScanTests extends BaseTest {
 		SCAN_FILE_MAP.put("Nessus", getScanFilePath("Dynamic","Nessus","nessus_report_TFTarget.xml") );
 		SCAN_FILE_MAP.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
 		SCAN_FILE_MAP.put("WebInspect",getScanFilePath("Dynamic","WebInspect","webinspect-demo-site.xml"));
+		SCAN_FILE_MAP.put("NTO Spider",getScanFilePath("Dynamic","NTOSpider","VulnerabilitiesSummary.xml"));
 		SCAN_FILE_MAP.put("Brakeman", getScanFilePath("Static","Brakeman","brakeman.json")); 
 		SCAN_FILE_MAP.put("Fortify 360", getScanFilePath("Static","Fortify","ZigguratUtility.fpr"));
 		SCAN_FILE_MAP.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
@@ -248,57 +248,7 @@ public class ScanTests extends BaseTest {
 												  .clickDeleteButton();
 		}
 	}
-	
-	// TODO move to a less fragile method of checking names
-	final static String ACCESS_CONTROL = "Improper Access Control";
-	final static String ARGUMENT_INJECTION = "Argument Injection or Modification";
-	final static String ASP_NET_CUSTOM_ERROR = "ASP.NET Misconfiguration: Missing Custom Error Page";
-	final static String ASP_NET_DEBUG = "ASP.NET Misconfiguration: Creating Debug Binary";
-	final static String ASP_NET_VALIDATION_MISSING = "ASP.NET Misconfiguration: Not Using Input Validation Framework";
-	final static String CLEARTEXT_SENSITIVE_INFO = "Cleartext Transmission of Sensitive Information";
-	final static String CODE_INJECTION = "Improper Control of Generation of Code ('Code Injection')";
-	final static String COMMAND_INJECTION = "Improper Neutralization of Special Elements used in a Command ('Command Injection')";
-	final static String CONFIGURATION = "Configuration";
-	final static String CSRF = "Cross-Site Request Forgery (CSRF)";
-	final static String DIRECTORY_LISTING = "Information Exposure Through Directory Listing";
-	final static String EVAL_INJECTION = GenericVulnerability.CWE_EVAL_INJECTION;
-	final static String EXTERNAL_CONTROL_OF_PARAM = "External Control of Assumed-Immutable Web Parameter";
-	final static String EXTERNAL_FILEPATH_CONTROL = "External Control of File Name or Path";
-	final static String FAILURE_TO_HANDLE_ENCODING = "Improper Handling of Alternate Encoding";
-	final static String FILES_ACCESSIBLE = "Files or Directories Accessible to External Parties";
-	final static String FORCED_BROWSING = "Direct Request ('Forced Browsing')";
-	final static String FORMAT_STRING_INJECTION = GenericVulnerability.CWE_FORMAT_STRING_INJECTION;
-	final static String GENERIC_INJECTION = "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')";
-	final static String IMPROPER_CROSS_BOUNDARY_REMOVAL_OF_DATA = "Improper Cross-boundary Removal of Sensitive Data";
-	final static String IMPROPER_HANDLING_OF_MISSING_VALUES = "Improper Handling of Missing Values";
-	final static String IMPROPER_INPUT_VALIDATION = "Improper Input Validation";
-	final static String IMPROPER_RESOURCE_SHUTDOWN = "Improper Resource Shutdown or Release";
-	final static String IMPROPER_RESTRICTION_AUTH = "Improper Restriction of Excessive Authentication Attempts";
-	final static String INFORMATION_EXPOSURE = "Information Exposure";
-	final static String INFO_EXPOSURE_ERROR_MESSAGE = "Information Exposure Through an Error Message";
-	final static String INFO_LEAK_BROWSER_CACHE = "Information Exposure Through Browser Caching";
-	final static String INFO_LEAK_COMMENTS = "Information Exposure Through Comments";
-	final static String INFO_LEAK_DIRECTORIES = "File and Directory Information Exposure";
-	final static String INFO_LEAK_SERVER_ERROR = "Information Exposure Through Server Error Message";
-	final static String INFO_LEAK_TEST_CODE = "Information Exposure Through Test Code";
-	final static String LDAP_INJECTION = GenericVulnerability.CWE_LDAP_INJECTION; 
-	final static String NON_SECURE_COOKIE = "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute";
-	final static String NON_SERIALIZABLE_OBJECT = "J2EE Bad Practices: Non-serializable Object Stored in Session";
-	final static String NULL_POINTER = "Unchecked Return Value to NULL Pointer Dereference";
-	final static String OPEN_REDIRECT = "URL Redirection to Untrusted Site ('Open Redirect')";
-	final static String OS_INJECTION = GenericVulnerability.CWE_OS_COMMAND_INJECTION;
-	final static String PATH_TRAVERSAL = GenericVulnerability.CWE_PATH_TRAVERSAL;
-	final static String REFLECTION_ATTACK = "Reflection Attack in an Authentication Protocol";
-	final static String RESOURCE_INJECTION = "Improper Control of Resource Identifiers ('Resource Injection')";
-	final static String SESSION_FIXATION = "Session Fixation";
-	final static String SOURCE_CODE_INCLUDE = "Information Exposure Through Include Source Code";
-	final static String SQLI = GenericVulnerability.CWE_SQL_INJECTION;
-	final static String TRUST_BOUNDARY_VIOLATION = "Trust Boundary Violation";
-	final static String UNCHECKED_ERROR = "Unchecked Error Condition";
-	final static String XML_INJECTION = "XML Injection (aka Blind XPath Injection)";
-	final static String XPATH_INJECTION = GenericVulnerability.CWE_XPATH_INJECTION;
-	final static String XSS = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING;
-	
+
 	@Test
 	public void microsoftCatNetScan() {
 		String key = "Microsoft CAT.NET";
@@ -476,6 +426,36 @@ public class ScanTests extends BaseTest {
 					{CSRF, "Medium", "/demo/XSS-reflected2.php",""},
 				
 			};
+		
+		runScanTest(key, expectedResults);
+	}
+	
+	@Test
+	public void ntoSpiderScan(){
+		String key = "NTO Spider";
+		String[][] expectedResults = new String [][] {
+			{"Improper Authentication", "High", "/bank/login.aspx", ""},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/bank/login.aspx", "passw"},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/bank/login.aspx", "uid"},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/subscribe.aspx", "txtEmail"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/bank/login.aspx", "uid"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/comment.aspx", "name"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/notfound.aspx", "aspxerrorpath"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/search.aspx", "txtSearch"},
+			{"Information Exposure Through Directory Listing", "Low", "/bank/", ""},
+			{"Privacy Violation", "Low", "/", ""},
+			{"Privacy Violation", "Low", "/bank/login.aspx", ""},
+			{"Privacy Violation", "Low", "/comment.aspx", ""},
+			{"Privacy Violation", "Low", "/default.aspx", ""},
+			{"Privacy Violation", "Low", "/disclaimer.htm", ""},
+			{"Privacy Violation", "Low", "/feedback.aspx", ""},
+			{"Privacy Violation", "Low", "/notfound.aspx", ""},
+			{"Privacy Violation", "Low", "/search.aspx", ""},
+			{"Privacy Violation", "Low", "/subscribe.aspx", ""},
+			{"Privacy Violation", "Low", "/survey_questions.aspx", ""},
+			{"Information Exposure Through Environmental Variables", "Info", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
+			{"Use of Insufficiently Random Values", "Info", "", ""}
+		};
 		
 		runScanTest(key, expectedResults);
 	}
@@ -792,7 +772,11 @@ public class ScanTests extends BaseTest {
 					continue outer;
 				}
 			}
-			assertTrue("Didn't find a vuln: " + expectedResults[i], false);
+			assertTrue("Didn't find a vuln: " + expectedResults[i][0] 
+					+ ", " + expectedResults[i][1]
+					+ ", " + expectedResults[i][2]
+					+ ", " + expectedResults[i][3], 
+					false);
 		}
 		
 		applicationDetailPage.clickViewScansLink()
