@@ -108,6 +108,9 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.NESSUS)){
 			channelImporter = new NessusChannelImporter(channelTypeDao, 
 					channelVulnerabilityDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.NTO_SPIDER)){
+			channelImporter = new NTOSpiderChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.NETSPARKER)) {
 			channelImporter = new NetsparkerChannelImporter(channelTypeDao, 
 					channelVulnerabilityDao, channelSeverityDao);

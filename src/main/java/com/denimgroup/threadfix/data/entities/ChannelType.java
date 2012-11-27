@@ -49,6 +49,7 @@ public class ChannelType extends BaseEntity {
 	public static final String FORTIFY = "Fortify 360";
 	public static final String MANUAL = "Manual";
 	public static final String NESSUS = "Nessus";
+	public static final String NTO_SPIDER = "NTO Spider";
 	public static final String NETSPARKER = "Mavituna Security Netsparker";
 	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
 	public static final String SENTINEL = "WhiteHat Sentinel";
