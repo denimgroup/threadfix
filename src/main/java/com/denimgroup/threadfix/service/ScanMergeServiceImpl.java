@@ -479,7 +479,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
 		channelMerge(scan, applicationChannel);
-		appMerge(scan, applicationChannel.getApplication().getId(), statusId);
+		appMerge(scan, applicationChannel.getApplication(), statusId);
 
 		scan.setApplicationChannel(applicationChannel);
 		scan.setApplication(applicationChannel.getApplication());
@@ -998,20 +998,30 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		scan.setFindings(newFindings);
 	}
+	
+	/**
+	 * This method is in here to allow passing an application id when the application isn't already in the session.
+	 * @param scan
+	 * @param applicationId
+	 * @param statusId
+	 */
+	private void appMerge(Scan scan, int applicationId, Integer statusId) {
+		appMerge(scan, applicationDao.retrieveById(applicationId), statusId);
+	}
 
 	/**
 	 * This method does the actual vulnerability merging across the app.
 	 * 
 	 * @param scan
-	 * @param appId
+	 * @param application
+	 * @param statusId
 	 */
-	private void appMerge(Scan scan, int appId, Integer statusId) {
+	private void appMerge(Scan scan, Application application, Integer statusId) {
 		
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
 		
-		Application application = applicationDao.retrieveById(appId);
 		List<Vulnerability> vulns = null;
 		if (application != null)
 			vulns = application.getVulnerabilities();
