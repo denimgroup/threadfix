@@ -163,6 +163,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    	setTestStatus();
 	    }
 
+	    @Override
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if ("VULNLIST".equals(qName)) {
 	    		correctFormat = true;
@@ -171,7 +172,10 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    	if (testDate == null && "SCANDATE".equals(qName)) {
 	    		getDate = true;
 	    	}
-	    	
+	    }
+	    
+	    @Override
+	    public void endElement (String uri, String name, String qName) throws SAXException {	    	
 	    	if ("VULN".equals(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
