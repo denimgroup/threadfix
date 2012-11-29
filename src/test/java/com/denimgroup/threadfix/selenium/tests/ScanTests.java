@@ -434,27 +434,27 @@ public class ScanTests extends BaseTest {
 	public void ntoSpiderScan(){
 		String key = "NTO Spider";
 		String[][] expectedResults = new String [][] {
-			{"Improper Authentication", "High", "/bank/login.aspx", ""},
-			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/bank/login.aspx", "passw"},
-			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/bank/login.aspx", "uid"},
-			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "High", "/subscribe.aspx", "txtEmail"},
-			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/bank/login.aspx", "uid"},
-			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/comment.aspx", "name"},
-			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/notfound.aspx", "aspxerrorpath"},
-			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "Medium", "/search.aspx", "txtSearch"},
-			{"Information Exposure Through Directory Listing", "Low", "/bank/", ""},
-			{"Privacy Violation", "Low", "/", ""},
-			{"Privacy Violation", "Low", "/bank/login.aspx", ""},
-			{"Privacy Violation", "Low", "/comment.aspx", ""},
-			{"Privacy Violation", "Low", "/default.aspx", ""},
-			{"Privacy Violation", "Low", "/disclaimer.htm", ""},
-			{"Privacy Violation", "Low", "/feedback.aspx", ""},
-			{"Privacy Violation", "Low", "/notfound.aspx", ""},
-			{"Privacy Violation", "Low", "/search.aspx", ""},
-			{"Privacy Violation", "Low", "/subscribe.aspx", ""},
-			{"Privacy Violation", "Low", "/survey_questions.aspx", ""},
-			{"Information Exposure Through Environmental Variables", "Info", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
-			{"Use of Insufficiently Random Values", "Info", "", ""}
+			{"Improper Authentication", "Critical", "/bank/login.aspx", ""},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/bank/login.aspx", "passw"},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/bank/login.aspx", "uid"},
+			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/subscribe.aspx", "txtEmail"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/bank/login.aspx", "uid"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/comment.aspx", "name"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/notfound.aspx", "aspxerrorpath"},
+			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/search.aspx", "txtSearch"},
+			{"Information Exposure Through Directory Listing", "Medium", "/bank/", ""},
+			{"Privacy Violation", "Medium", "/", ""},
+			{"Privacy Violation", "Medium", "/bank/login.aspx", ""},
+			{"Privacy Violation", "Medium", "/comment.aspx", ""},
+			{"Privacy Violation", "Medium", "/default.aspx", ""},
+			{"Privacy Violation", "Medium", "/disclaimer.htm", ""},
+			{"Privacy Violation", "Medium", "/feedback.aspx", ""},
+			{"Privacy Violation", "Medium", "/notfound.aspx", ""},
+			{"Privacy Violation", "Medium", "/search.aspx", ""},
+			{"Privacy Violation", "Medium", "/subscribe.aspx", ""},
+			{"Privacy Violation", "Medium", "/survey_questions.aspx", ""},
+			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
+			{"Use of Insufficiently Random Values", "Low", "", ""}
 		};
 		
 		runScanTest(key, expectedResults);
