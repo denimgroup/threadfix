@@ -296,6 +296,10 @@
 							<name>url</name>
 							<value>${fileName}</value>
 						</property>
+						<property>
+							<name>scanFileBaseLocation</name>
+							<value>${fileName}</value>
+						</property>
 					</systemProperties>
 				</configuration>
 				<executions>
@@ -341,6 +345,11 @@
 			<groupId>org.owasp.esapi</groupId>
 			<artifactId>esapi</artifactId>
 			<version>2.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.tfs.sdk</groupId>
+			<artifactId>com.microsoft.tfs.sdk</artifactId>
+			<version>11.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

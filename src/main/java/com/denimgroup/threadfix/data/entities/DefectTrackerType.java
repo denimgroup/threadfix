@@ -40,6 +40,7 @@ public class DefectTrackerType extends BaseEntity {
 
 	public static final String BUGZILLA = "Bugzilla";
 	public static final String JIRA = "Jira";
+	public static final String MICROSOFT_TFS = "Microsoft TFS";
 
 	private String name;
 	private String version;

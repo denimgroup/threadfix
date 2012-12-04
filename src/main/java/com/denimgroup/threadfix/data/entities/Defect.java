@@ -79,10 +79,12 @@ public class Defect extends AuditableEntity {
 	}
 
 	public void setStatus(String status) {
-		if (status.length() > STATUS_LENGTH) {
-			this.status = status.substring(0,STATUS_LENGTH-2);
-		} else {
-			this.status = status;
+		if (status != null) {
+			if (status.length() > STATUS_LENGTH) {
+				this.status = status.substring(0,STATUS_LENGTH-2);
+			} else {
+				this.status = status;
+			}
 		}
 	}
 	
@@ -92,7 +94,7 @@ public class Defect extends AuditableEntity {
 	}
 
 	public void setDefectURL(String defectURL) {
-		if (defectURL.length() > STATUS_LENGTH) {
+		if (defectURL != null && defectURL.length() > STATUS_LENGTH) {
 			this.defectURL = defectURL.substring(0, STATUS_LENGTH-2);
 		} else {
 			this.defectURL = defectURL;

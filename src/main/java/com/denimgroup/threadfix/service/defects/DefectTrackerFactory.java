@@ -113,6 +113,8 @@ public class DefectTrackerFactory {
 			return new BugzillaDefectTracker();
 		} else if (type.getName().equals(DefectTrackerType.JIRA)) {
 			return new JiraDefectTracker();
+		} else if (type.getName().equals(DefectTrackerType.MICROSOFT_TFS)) {
+			return new TFSDefectTracker();
 		} else {
 			
 			// Must be a legitimate Java identifier

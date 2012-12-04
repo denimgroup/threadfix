@@ -11,8 +11,10 @@
 	Bug Status: <c:out value="${ defect.status }"/>
 	<br/>
 	<br/>
-	Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
-	<br/><br/>
+	<c:if test="${ not empty defect.defectURL }">
+		Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
+		<br/><br/>
+	</c:if>
 	<spring:url value="../../../{appId}" var="appUrl">
 		<spring:param name="appId" value="${ fn:escapeXml(defect.application.id) }" />
 	</spring:url>
