@@ -37,29 +37,9 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  */
 public class DefectTrackerFactory {
 
-	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
-	
 	protected static final SanitizedLogger STATIC_LOG = new SanitizedLogger(DefectTrackerFactory.class);
 	
-	public static boolean checkTrackerUrl(String url, DefectTrackerType type) {
-		STATIC_LOG.info("Checking Defect Tracker URL.");
-		
-		if (url != null) {
-			
-			AbstractDefectTracker tracker = new DefectTrackerFactory().getTracker(type);
-
-			if (tracker == null) {
-				return false;
-			}
-
-			STATIC_LOG.info("Passing check to Defect Tracker.");
-			tracker.setUrl(url);
-			return tracker.hasValidUrl();
-		}
-		
-		STATIC_LOG.warn("Incorrectly configured Defect Tracker in checkTrackerURL. Returning false.");
-		return false;
-	}
+	private DefectTrackerFactory(){}
 	
 	/**
 	 * Returns an AbstractDefectTracker implementation based on the
@@ -70,11 +50,11 @@ public class DefectTrackerFactory {
 	 * @param application
 	 * @return
 	 */
-	public AbstractDefectTracker getTracker(Application application) {
+	public static AbstractDefectTracker getTracker(Application application) {
 		if (application == null || application.getDefectTracker() == null
 				|| application.getDefectTracker().getDefectTrackerType() == null
 				|| application.getDefectTracker().getDefectTrackerType().getName() == null) {
-			log.warn("Application was not configured with a Defect Tracker correctly.");
+			STATIC_LOG.warn("Application was not configured with a Defect Tracker correctly.");
 			return null;
 		}
 			
@@ -88,10 +68,10 @@ public class DefectTrackerFactory {
 		return configureTracker(tracker, application);
 	}
 
-	public AbstractDefectTracker getTrackerByType(DefectTracker defectTracker, String userName,
+	public static AbstractDefectTracker getTrackerByType(DefectTracker defectTracker, String userName,
 			String password) {
 		if (defectTracker == null) {
-			log.warn("getDefectTrackerByType was given an incorrect type.");
+			STATIC_LOG.warn("getDefectTrackerByType was given an incorrect type.");
 			return null;
 		}
 		
@@ -104,7 +84,7 @@ public class DefectTrackerFactory {
 		return configureTracker(tracker, defectTracker.getUrl(), userName, password);
 	}
 	
-	private AbstractDefectTracker getTracker(DefectTrackerType type) {
+	public static AbstractDefectTracker getTracker(DefectTrackerType type) {
 		if (type == null || type.getName() == null ) {
 			return null;
 		}
@@ -121,7 +101,7 @@ public class DefectTrackerFactory {
 			if (type.getFullClassName() != null && type.getName().matches("^[A-Za-z_][a-zA-Z0-9_]*$")) {
 				Exception exception = null;
 	
-				log.info("A non-standard Defect Tracker type was requested. Attempting to load using Class.forName()");
+				STATIC_LOG.info("A non-standard Defect Tracker type was requested. Attempting to load using Class.forName()");
 				
 				try {
 					Class<?> customTrackerClass = Class.forName(type.getFullClassName());
@@ -146,17 +126,17 @@ public class DefectTrackerFactory {
 				}
 	
 				if (exception != null) {
-					log.error("The custom importer has not been correctly added. " +
+					STATIC_LOG.error("The custom importer has not been correctly added. " +
 							"Put the JAR in the lib directory of threadfix under the webapps folder in tomcat.", exception);
 				}
 			}
 				
-			log.warn("Failed to load a Defect Tracker implementation.");
+			STATIC_LOG.warn("Failed to load a Defect Tracker implementation.");
 			return null;
 		}
 	}
 
-	private AbstractDefectTracker configureTracker(AbstractDefectTracker tracker, String url, 
+	private static AbstractDefectTracker configureTracker(AbstractDefectTracker tracker, String url, 
 			String username, String password) {
 		
 		tracker.setUrl(url);
@@ -166,7 +146,7 @@ public class DefectTrackerFactory {
 		return tracker;
 	}
 	
-	private AbstractDefectTracker configureTracker(
+	private static AbstractDefectTracker configureTracker(
 			AbstractDefectTracker tracker, Application application) {
 
 		tracker.setProjectName(application.getProjectName());

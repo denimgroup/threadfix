@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -48,6 +49,7 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -102,7 +104,7 @@ public class EditDefectTrackerController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@PathVariable("defectTrackerId") int defectTrackerId,
 			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
-			SessionStatus status) {
+			SessionStatus status, Model model) {
 		
 		DefectTracker databaseDefectTracker = null;
 		
@@ -113,8 +115,14 @@ public class EditDefectTrackerController {
 			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
 			if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
-			} else if (!defectTrackerService.checkUrl(defectTracker)) {
-				result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
+			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
+				if (!result.hasFieldErrors("url")) {
+					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
+				} else if (result.getFieldError("url").getDefaultMessage() != null &&
+						result.getFieldError("url").getDefaultMessage().equals(
+								AbstractDefectTracker.INVALID_CERTIFICATE)){
+					model.addAttribute("showKeytoolLink", true);
+				}
 			}
 		}
 

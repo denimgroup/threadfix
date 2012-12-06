@@ -28,6 +28,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
@@ -35,6 +36,7 @@ import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
 @Service
@@ -125,12 +127,25 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	}
 
 	@Override
-	public boolean checkUrl(DefectTracker defectTracker) {
-		if (defectTracker != null && defectTracker.getDefectTrackerType() != null) {
-			return DefectTrackerFactory.checkTrackerUrl(defectTracker.getUrl(), 
+	public boolean checkUrl(DefectTracker defectTracker, BindingResult result) {
+		if (defectTracker != null && defectTracker.getDefectTrackerType() != null &&
+				defectTracker.getUrl() != null) {
+			
+			AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(
 					defectTrackerTypeDao.retrieveById(defectTracker.getDefectTrackerType().getId()));
-		} else {
-			return false;
+			
+			if (tracker != null) {
+				tracker.setUrl(defectTracker.getUrl());
+				
+				if (tracker.hasValidUrl()) {
+					return true;
+				} else if (tracker.getLastError() != null) {
+					result.rejectValue("url", null, null, tracker.getLastError());
+					return false;
+				}
+			}
 		}
+		
+		return false;
 	}
 }

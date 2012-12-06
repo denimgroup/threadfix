@@ -218,7 +218,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			} else {
 				
 				application.setDefectTracker(defectTracker);
-				AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+				AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 				if (dt != null) {
 					if (application.getUserName() == null 
 							|| application.getUserName().isEmpty())

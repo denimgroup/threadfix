@@ -57,6 +57,7 @@ public abstract class AbstractDefectTracker {
 
 	protected final static String LOGIN_FAILURE = "Invalid username / password combination";
 	protected final static String BAD_CONFIGURATION = "Your configuration is invalid: check your URL.";
+	public final static String INVALID_CERTIFICATE = "The indicated server has an invalid or self-signed certificate.";
 
 	// Common log for all Defect Tracker Exporters.
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());

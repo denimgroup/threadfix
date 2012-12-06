@@ -46,6 +46,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -89,7 +90,7 @@ public class AddDefectTrackerController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status, Model model) {
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
@@ -109,8 +110,13 @@ public class AddDefectTrackerController {
 			} else if (defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()) == null) {
 				result.rejectValue("defectTrackerType.id", "errors.invalid", 
 						new String [] { defectTracker.getDefectTrackerType().getId().toString() }, null );
-			} else if (!defectTrackerService.checkUrl(defectTracker)) {
-				result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);
+			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
+				if (!result.hasFieldErrors("url")) {
+					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
+				} else if (result.getFieldError("url").getDefaultMessage() != null &&
+						result.getFieldError("url").getDefaultMessage().equals(AbstractDefectTracker.INVALID_CERTIFICATE)){
+					model.addAttribute("showKeytoolLink", true);
+				}
 			}
 			
 			if (result.hasErrors())

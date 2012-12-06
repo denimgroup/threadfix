@@ -56,6 +56,9 @@
 					</td>
 					<td style="padding-left: 5px">
 						<form:errors path="url" cssClass="errors" />
+						<c:if test="${ showKeytoolLink }">
+							<span class="errors">Instructions for importing a self-signed certificate can be found</span> <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.
+						</c:if>
 					</td>
 				</tr>
 				<tr>	

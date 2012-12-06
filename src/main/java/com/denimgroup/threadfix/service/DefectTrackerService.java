@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
+import org.springframework.validation.BindingResult;
+
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 
@@ -39,7 +41,7 @@ public interface DefectTrackerService {
 	 * @param defectTracker
 	 * @return
 	 */
-	boolean checkUrl(DefectTracker defectTracker);
+	boolean checkUrl(DefectTracker defectTracker, BindingResult result);
 
 	/**
 	 * @return

@@ -228,7 +228,7 @@ public class ApplicationsController {
 	public @ResponseBody String readJson(@RequestBody DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTrackerByType(defectTracker,
+		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
 				bean.getUserName(), bean.getPassword());
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");

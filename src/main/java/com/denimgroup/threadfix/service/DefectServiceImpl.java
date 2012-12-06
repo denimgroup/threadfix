@@ -100,7 +100,7 @@ public class DefectServiceImpl implements DefectService {
 			applicationService.decryptCredentials(application);
 		}
 		
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker.");
 			return null;
@@ -213,7 +213,7 @@ public class DefectServiceImpl implements DefectService {
 			applicationService.decryptCredentials(application);
 		}
 		
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null)
 			return noDefectTrackerError;
 
@@ -249,7 +249,7 @@ public class DefectServiceImpl implements DefectService {
 			applicationService.decryptCredentials(application);
 		}
 
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker, exiting.");
 			return;

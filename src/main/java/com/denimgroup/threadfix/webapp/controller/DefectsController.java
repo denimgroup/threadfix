@@ -96,7 +96,7 @@ public class DefectsController {
 			applicationService.decryptCredentials(application);
 		}
 
-		AbstractDefectTracker dt = new DefectTrackerFactory().getTracker(application);
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
 		if (dt != null) {

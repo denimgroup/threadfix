@@ -106,6 +106,7 @@ public class ReportsServiceImpl implements ReportsService {
 	 * .lang.String, java.lang.String, net.sf.jasperreports.engine.JRDataSource,
 	 * java.util.Map)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public StringBuffer getReport(String path, String fileName, String format,
 			Map<String, Object> parameters, List<Integer> applicationIdList, 
