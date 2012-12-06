@@ -65,7 +65,15 @@ public class SanitizedLogger {
 	 * @return
 	 */
 	private String sanitize(String startString) {
-		return startString.replace("\n", "\\n").replace("\t","\\t").trim();
+		String retVal;
+		
+		if(startString == null) {
+			retVal = "<NULL>";
+		} else {
+			retVal = startString.replace("\n", "\\n").replace("\t","\\t").trim();
+		}
+		
+		return(retVal);
 	}
 	
 }
