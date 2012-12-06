@@ -6,8 +6,9 @@
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>threadfix</name>
-	<description>Denim Group's Vulnerability Manager allows security teams to import and consolidate application-level vulnerabilities, automatically generate virtual patches, monitor attack attempts, communicate with defect tracking systems, and evaluate team maturity. Because this is done in a centralized system, application security managers have greatly increased visibility into and control of these processes, and they are collecting data that can be used to support sophisticated conversations with their managers and executives.</description>
-	<url>http://vulnerabilitymanager.denimgroup.com</url>
+	<description>ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with vulnerability trending reports that show progress over time, giving them justification for their efforts.
+
+ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup.com) For information about commercial support and other services, contact Denim Group about ThreadFix http://www.denimgroup.com/threadfix/</description>
 	<inceptionYear>2009</inceptionYear>
 
 	<prerequisites>
@@ -61,87 +62,20 @@
 			<email>bryan@denimgroup.com</email>
 		</developer>
 		<developer>
-			<id>cbrown</id>
-			<name>Chris Brown</name>
-			<email>chris@denimgroup.com</email>
-		</developer>
-		<developer>
 			<id>mcollins</id>
 			<name>Mac Collins</name>
+			<email>mcollins@denimgroup.com</email>
 		</developer>
 		<developer>
 			<id>dcornell</id>
 			<name>Dan Cornell</name>
 			<email>dan@denimgroup.com</email>
 		</developer>
-		<developer>
-			<id>jgonzalez</id>
-			<name>Jesus Gonzalez</name>
-			<email>jesus@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>cleclair</id>
-			<name>Chris Leclair</name>
-			<email>chris.leclair@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>mmcbryde</id>
-			<name>Michael McBryde</name>
-			<email>mmcbryde@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>bpeckham</id>
-			<name>Brent Peckham</name>
-			<email>brent@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>jraim</id>
-			<name>Jarret Raim</name>
-			<email>jarret@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>drivera</id>
-			<name>David Rivera</name>
-			<email>david@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>pschwarz</id>
-			<name>Paul Schwarz</name>
-			<email>paul@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>jsemtner</id>
-			<name>Jennifer Semtner</name>
-			<email>jennifer@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>dshannon</id>
-			<name>Daryl Shannon</name>
-			<email>dshannon@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>psheeran</id>
-			<name>Peter Sheeran</name>
-			<email>peter@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>wthornton</id>
-			<name>William Thornton</name>
-			<email>william@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>dwolf</id>
-			<name>Douglas Wolf</name>
-		</developer>
-		<developer>
-			<id>xzhang</id>
-			<name>Xiheng Zhang</name>
-		</developer>
 	</developers>
 
 	<organization>
 		<name>Denim Group, Ltd.</name>
-		<url>http://www.denimgroup.com</url>
+		<url>http://www.denimgroup.com/</url>
 	</organization>
 
 	<build>
@@ -740,4 +674,11 @@
 		<selenium.version>1.0.1</selenium.version>
 	</properties>
 
+	<url>http://www.denimgroup.com/threadfix/</url>
+	<scm>
+		<url>https://code.google.com/p/threadfix/</url>
+	</scm>
+	<issueManagement>
+		<system>https://code.google.com/p/threadfix/issues/list</system>
+	</issueManagement>
 </project>
