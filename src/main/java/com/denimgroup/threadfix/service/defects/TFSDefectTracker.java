@@ -163,7 +163,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			builder.append(defect.getNativeId() + ",");
 		}
 
-		String ids = builder.substring(0, builder.length() - 2);
+		String ids = builder.substring(0, builder.length() - 1);
 		String wiqlQuery = "Select ID, State from WorkItems where (id in ("
 				+ ids + "))";
 
