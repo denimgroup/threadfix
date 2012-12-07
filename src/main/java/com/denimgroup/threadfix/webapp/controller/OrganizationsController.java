@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,14 +36,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -61,18 +69,29 @@ public class OrganizationsController {
 	private OrganizationService organizationService = null;
 	private PermissionService permissionService = null;
 	private ApplicationService applicationService = null;
+	private ChannelTypeService channelTypeService = null;
+	private UploadScanController uploadScanController = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-			PermissionService permissionService, ApplicationService applicationService) {
+			ChannelTypeService channelTypeService, PermissionService permissionService, 
+			ApplicationService applicationService, UploadScanController uploadScanController) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.permissionService = permissionService;
+		this.channelTypeService = channelTypeService;
+		this.uploadScanController = uploadScanController;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
 		List<Organization> organizations = organizationService.loadAllActiveFilter();
+
+		// kwik start
+		if (organizations.size() == 0) {
+			model.addAttribute("channels", channelTypeService.loadAll());
+		}
+		
 		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
 		
@@ -127,5 +146,36 @@ public class OrganizationsController {
 			log.info("Organization soft deletion was successful on Organization " + org.getName() + ".");
 			return "redirect:/organizations";
 		}
+	}
+	
+	@RequestMapping("/quickstart")
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
+	public String quickStart(@RequestParam("teamName") String teamName,
+			@RequestParam("appName") String appName, 
+			@RequestParam("channelId") Integer channelId, 
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request) {
+		
+		Organization org = new Organization();
+		org.setName(teamName);
+		Application app = new Application();
+		app.setName(appName);
+		app.setUrl("http://quick-started-app.com");
+		ApplicationChannel channel = new ApplicationChannel();
+		channel.setChannelType(channelTypeService.loadChannel(channelId));
+		app.setChannelList(new ArrayList<ApplicationChannel>());
+		app.getChannelList().add(channel);
+		channel.setApplication(app);
+		app.setOrganization(org);
+		channel.setScanList(new ArrayList<Scan>());
+		
+		organizationService.storeOrganization(org);
+		applicationService.storeApplication(app);
+		
+		uploadScanController.uploadSubmit(app.getId(), org.getId(), request, channel.getId(), file);
+		
+		log.info("made it here.");
+		
+		return "redirect:/organizations/" + org.getId() + "/applications/" + app.getId();
 	}
 }

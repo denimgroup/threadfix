@@ -745,13 +745,15 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		
 		List<Scan> scanList = applicationChannel.getScanList();
 		
-		for (Scan scan : scanList) {
-			if (scan != null && scan.getImportTime() != null) {
-				int result = scan.getImportTime().compareTo(testDate);
-				if (result == 0)
-					return DUPLICATE_ERROR;
-				else if (result > 0)
-					return OLD_SCAN_ERROR;
+		if (scanList != null) {
+			for (Scan scan : scanList) {
+				if (scan != null && scan.getImportTime() != null) {
+					int result = scan.getImportTime().compareTo(testDate);
+					if (result == 0)
+						return DUPLICATE_ERROR;
+					else if (result > 0)
+						return OLD_SCAN_ERROR;
+				}
 			}
 		}
 		
