@@ -24,16 +24,28 @@
 package com.denimgroup.threadfix.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -43,6 +55,7 @@ import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
@@ -131,6 +144,19 @@ public class ScanServiceImpl implements ScanService {
 			return null;
 		}
 		
+		if (applicationChannel.getScanCounter() == null)
+			applicationChannel.setScanCounter(1);
+		
+		String inputFileName = "scan-file-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
+
+		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
+		
+		applicationChannelDao.saveOrUpdate(applicationChannel);
+		
+		return saveFile(inputFileName,file);
+	}
+	
+	private String saveFile(String inputFileName, MultipartFile file) {
 		InputStream stream = null;
 		try {
 			stream = file.getInputStream();
@@ -142,18 +168,9 @@ public class ScanServiceImpl implements ScanService {
 			log.warn("Failed to retrieve an InputStream from the file upload.");
 			return null;
 		}
-
-		if (applicationChannel.getScanCounter() == null)
-			applicationChannel.setScanCounter(1);
-		
-		String inputFileName = "scan-file-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
-
-		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
-		
-		applicationChannelDao.saveOrUpdate(applicationChannel);
 		
 		File diskFile = new File(inputFileName);
-
+		
 		try {
 			FileOutputStream out = new FileOutputStream(diskFile);
 
@@ -304,7 +321,7 @@ public class ScanServiceImpl implements ScanService {
 		return scanDao.getFindingCountUnmapped(scanId);
 	}
 
-	// TODO bounds checking I suppose (or turn everything into longs) (do the second one)
+	// TODO bounds checking
 	@Override
 	public void loadStatistics(Scan scan) {
 		if (scan == null || scan.getId() == null) {
@@ -315,4 +332,167 @@ public class ScanServiceImpl implements ScanService {
 		scan.setNumWithoutChannelVulns((int) scanDao.getNumberWithoutChannelVulns(scan.getId()));
 		scan.setTotalNumberFindingsMergedInScan((int) scanDao.getTotalNumberFindingsMergedInScan(scan.getId()));
 	}
+	
+	@Override
+	public String getScannerType(MultipartFile file) {
+		String returnString = null;
+		saveFile("tempFile",file);
+		
+		if (isZip("tempFile")) {
+			returnString = figureOutZip("tempFile");
+		} else if (file.getOriginalFilename().endsWith("json")){
+			//probably brakeman
+			returnString = ChannelType.BRAKEMAN;
+		} else {
+			returnString = figureOutXml("tempFile");
+		}
+		
+		deleteFile("tempFile");
+		
+		return returnString;
+	}
+	
+	private boolean isZip(String fileName) {
+		RandomAccessFile file = null;
+		try {
+			file = new RandomAccessFile(new File(fileName), "r");  
+			// these are the magic bytes for a zip file
+	        return file.readInt() == 0x504B0304;
+		} catch (FileNotFoundException e) {
+			log.warn("The file was not found. Check the usage of this method.", e);
+		} catch (IOException e) {
+			log.warn("IOException. Weird.", e);
+		} finally {
+			if (file != null) {
+				try {
+					file.close();
+				} catch (IOException e) {
+					log.error("Encountered IOException when attempting to close a file.");
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	// We currently only have zip files for skipfish and fortify
+	// if we support a few more it would be worth a more modular style
+	private String figureOutZip(String fileName) {
+		
+		String result = null;
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile(fileName);
+			ZipEntry firstFile = ((ZipEntry)zipFile.entries().nextElement());
+			
+			if (zipFile.getEntry("audit.fvdl") != null) {
+				result = ChannelType.FORTIFY;
+			} else if ((zipFile.getEntry("samples.js") != null && zipFile.getEntry("summary.js") != null)
+					|| (firstFile.isDirectory() && firstFile.getName() != null &&
+						(zipFile.getEntry(firstFile.getName() + "samples.js") != null && 
+						zipFile.getEntry(firstFile.getName() + "summary.js") != null))) {
+				result = ChannelType.SKIPFISH;
+			}
+		} catch (FileNotFoundException e) {
+			log.warn("Unable to find zip file.", e);
+		} catch (IOException e) {
+			log.warn("Exception encountered while trying to identify zip file.", e);
+		} finally {
+			if (zipFile != null) {
+				try {
+					zipFile.close();
+				} catch (IOException e) {
+					log.warn("IOException encountered while trying to close the zip file.", e);
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	private String figureOutXml(String fileName) {
+		
+		try {
+			TagCollector collector = new TagCollector();
+			
+			InputStream stream = new FileInputStream(fileName);
+			
+			ScanUtils.readSAXInput(collector, "Done.", stream);
+			
+			return getType(collector.tags);
+		} catch (IOException e) {
+			log.error("Encountered IOException. Returning null.");
+		}
+		
+		return null;
+	}
+	
+	private static final Map<String, String[]> map = new HashMap<String, String[]>();
+	static {
+		addToMap(ChannelType.APPSCAN_DYNAMIC, "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
+		addToMap(ChannelType.ARACHNI, "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
+		addToMap(ChannelType.BURPSUITE, "issues", "issue", "serialNumber", "type", "name", "host", "path");
+		addToMap(ChannelType.NETSPARKER, "netsparker", "target", "url", "scantime", "vulnerability", "url", "type", "severity");
+		addToMap(ChannelType.CAT_NET, "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
+		addToMap(ChannelType.W3AF, "w3afrun");
+		addToMap(ChannelType.NESSUS, "NessusClientData_v2", "Policy", "policyName", "Preferences", "ServerPreferences");
+		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
+		addToMap(ChannelType.ZAPROXY, "site", "alerts", "alertitem", "pluginid", "alert");
+		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
+		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
+		addToMap(ChannelType.APPSCAN_SOURCE,  "AssessmentRun", "AssessmentStats" );
+		addToMap(ChannelType.NTO_SPIDER, "VULNS","VULNLIST","VULN","SCAN", "SCANNAME","WEBSITE","VULNTYPE");
+	}
+	
+	private static void addToMap(String name, String... tags) { map.put(name, tags); }
+	
+	private String getType(List<String> scanTags) {
+		
+		for (Entry<String, String[]> entry : map.entrySet())
+		if (matches(scanTags, entry.getValue())) {
+			return entry.getKey();
+		}
+		
+		return null;
+	}
+	
+	private boolean matches(List<String> scanTags, String[] channelTags) {
+		
+		if (scanTags.size() >= channelTags.length) {
+			for (int i = 0; i < channelTags.length; i++) {
+				if (!scanTags.get(i).equals(channelTags[i])) {
+					return false;
+				}
+				
+				if (i == channelTags.length - 1) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private void deleteFile(String fileName) {
+		File file = new File(fileName);
+		if (file.exists() && !file.delete()) {
+			log.warn("Something went wrong trying to delete the file.");
+			
+			file.deleteOnExit();
+		}
+	}
+	
+	public class TagCollector extends DefaultHandler {
+		public List<String> tags = new ArrayList<String>();
+		private int index = 0;
+		
+	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+    		if (index++ > 10) {
+	    		throw new SAXException("Done.");
+	    	}
+    		
+    		tags.add(qName);
+	    }
+	}
+	
 }

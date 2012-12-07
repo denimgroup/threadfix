@@ -23,15 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,11 +52,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -73,6 +66,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -606,7 +600,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		
 		saxFindingList = new ArrayList<Finding>();
 				
-		readSAXInput(handler, "Done Parsing.");
+		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		
 		Scan scan = new Scan();
 		scan.setFindings(saxFindingList);
@@ -649,7 +643,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		}
 		
 		if (doSAXExceptionCheck) {
-			if (isBadXml(inputStream)) {
+			if (ScanUtils.isBadXml(inputStream)) {
 				log.warn("Bad XML format - ensure correct, uniform encoding.");
 				return new ScanCheckResultBean(BADLY_FORMED_XML);
 			}
@@ -661,76 +655,13 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			}
 		}
 		
-		readSAXInput(handler, FILE_CHECK_COMPLETED);
+		ScanUtils.readSAXInput(handler, FILE_CHECK_COMPLETED, inputStream);
 		closeInputStream(inputStream);
 		
 		log.info(testStatus);
 		return new ScanCheckResultBean(testStatus, testDate);
 	}
 
-	/**
-	 * This method checks through the XML with a blank parser to determine
-	 * whether SAX parsing will fail due to an exception.
-	 */
-	protected boolean isBadXml(InputStream inputStream) {
-		try {
-			readSAXInput(new DefaultHandler());
-		} catch (SAXException e) {
-			log.warn("Trying to read XML returned the error " + e.getMessage());
-			return true;
-		} catch (IOException e) {
-			log.warn("Trying to read XML returned the error " + e.getMessage());
-			return true;
-		} finally {
-			closeInputStream(inputStream);
-		}
-
-		return false;
-	}
-	
-	/**
-	 *  This method with one argument sets up the SAXParser and inputStream correctly
-	 * and executes the parsing. With two it adds a completion code and exception handling.
-	 * @param handler
-	 * @param completionCode
-	 */
-	protected void readSAXInput(DefaultHandler handler, String completionCode) {
-		try {
-			readSAXInput(handler);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			if (!e.getMessage().equals(completionCode))
-				e.printStackTrace();
-		} finally {
-			closeInputStream(inputStream);
-		}
-	}
-	
-	protected void readSAXInput(DefaultHandler handler) throws SAXException, IOException {
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-		xmlReader.setContentHandler(handler);
-		xmlReader.setErrorHandler(handler);
-				
-		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
-		inputStream = new BufferedInputStream(inputStream);
-		
-		// UTF-8 contains 3 characters at the start of a file, which is a problem. = null;
-		// The SAX parser sees them as characters in the prolog and throws an exception.
-		// This code removes them if they are present.
-		inputStream.mark(4);
-		
-		if (inputStream.read() == 239) {
-			inputStream.read(); inputStream.read();
-		} else
-			inputStream.reset();
-		
-		Reader fileReader = new InputStreamReader(inputStream,"UTF-8");
-		InputSource source = new InputSource(fileReader);
-		source.setEncoding("UTF-8");
-		xmlReader.parse(source);
-	}
-	
 	/**
 	 * This method requires that the AbstractChannelImporter fields
 	 * applicationChannel and testDate have valid values.

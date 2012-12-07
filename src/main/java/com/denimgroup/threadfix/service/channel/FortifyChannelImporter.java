@@ -44,6 +44,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -817,7 +818,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		
 		inputStream = stream;
 		FortifyTimeParser timeParser = new FortifyTimeParser();
-		readSAXInput(timeParser, FILE_CHECK_COMPLETED);
+		ScanUtils.readSAXInput(timeParser, FILE_CHECK_COMPLETED, stream);
 		
 		return timeParser.resultTime;
 	}
