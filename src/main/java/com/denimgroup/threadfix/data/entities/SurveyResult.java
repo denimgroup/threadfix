@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2011 Denim Group, Ltd.
+//     Copyright (c) 2009-2012 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 1.1 (the "License"); you may not use this file except in
