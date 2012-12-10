@@ -437,7 +437,7 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.W3AF, "w3afrun");
 		addToMap(ChannelType.NESSUS, "NessusClientData_v2", "Policy", "policyName", "Preferences", "ServerPreferences");
 		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
-		addToMap(ChannelType.ZAPROXY, "site", "alerts", "alertitem", "pluginid", "alert");
+		addToMap(ChannelType.ZAPROXY, "site", "alerts");
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE,  "AssessmentRun", "AssessmentStats" );
