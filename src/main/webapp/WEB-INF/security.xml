@@ -36,19 +36,12 @@
 		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
 	</security:http>
 	
-	<security:ldap-server id="ldapServer" url="ldap://SATDC1.denimgroup.com:389/"/>
-	
     <security:authentication-manager>
 	    <security:authentication-provider user-service-ref="CustomUserDetailService">
 	    	<security:password-encoder ref="ThreadFixPasswordEncoder">
 	    		<security:salt-source ref="saltSource" />
 	    	</security:password-encoder>
 	    </security:authentication-provider>
-	    
-	    <security:ldap-authentication-provider 
-	   		user-dn-pattern="uid={0}" 
-	   		role-prefix="ROLE_"
-	    	user-context-mapper-ref="ldapToCustomConfigBean"/>
 	</security:authentication-manager>
 
 </beans>
