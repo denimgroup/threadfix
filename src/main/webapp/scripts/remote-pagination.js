@@ -61,6 +61,10 @@ function refillElementSort(elementId, endPoint, page, field)
 		data += ', "parameterFilter" : ' + JSON.stringify($("#parameterFilterInput").val().trim());
 	}
 	
+	if (typeof($("#cweFilterInput").val()) != 'undefined') {
+		data += ', "cweFilter" : ' + JSON.stringify($("#cweFilterInput").val().trim());
+	}
+	
 	data += "}";
 	
 	$.ajax({
