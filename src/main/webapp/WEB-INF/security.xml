@@ -20,8 +20,6 @@
 		<property name="key" value="threadfix"/>
 	</bean>
 	
-	<bean class="com.denimgroup.threadfix.data.entities.CustomUserMapper" id="ldapToCustomConfigBean"/>
-	
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
 	<!-- Configure Spring Security -->
