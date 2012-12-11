@@ -4,6 +4,7 @@ public class TableSortBean {
 	
 	int page, sort, field;
 	String descriptionFilter, severityFilter, locationFilter, parameterFilter;
+	private String cweFilter;
 	boolean open, falsePositive;
 
 	public boolean isOpen() {
@@ -59,5 +60,11 @@ public class TableSortBean {
 	}
 	public void setParameterFilter(String parameterFilter) {
 		this.parameterFilter = parameterFilter;
+	}
+	public String getCweFilter() {
+		return cweFilter;
+	}
+	public void setCweFilter(String cweFilter) {
+		this.cweFilter = cweFilter;
 	}
 }
