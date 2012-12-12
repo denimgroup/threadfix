@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -58,7 +57,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new ZaproxySAXParser());
 	}
 	
-	public class ZaproxySAXParser extends DefaultHandler {
+	public class ZaproxySAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
 		private Boolean getUri                = false;
 		private Boolean getParameter          = false;
@@ -69,7 +68,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
-					    
+		
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -77,7 +76,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		saxFindingList.add(finding);
     		}
 	    }
-
+	    
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
@@ -113,18 +112,28 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("report".equals(qName)) {
 	    		getDate = false;
-	    	} else if ("alert".equals(qName)) {
-	    		getChannelVulnName = false;
 	    	} else if ("alertitem".equals(qName)) {
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
-	    	}
-	    }
-	    
-	    public void characters (char ch[], int start, int length) {
-	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		
+	    	} else if (getUri) {
+	    		currentPath = getBuilderText();
+	    		getUri = false;
+	    	} else if (getChannelVulnName) {
+	    		currentChannelVulnCode = getBuilderText();
+	    		getChannelVulnName = false;
+	    	} else if (getParameter) {
+	    		currentParameter = getBuilderText();
+	    		
+	    		if (currentParameter != null && currentParameter.contains("="))
+	    			currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
+	    		getParameter = false;
+	    	} else if ("riskcode".equals(qName)) {
+	    		currentSeverityCode = getBuilderText();
+	    		getSeverityName = false;
+	    	} else if (getDate) {
+	    		String tempDateString = getBuilderText();
 
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
@@ -132,20 +141,12 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    			date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 	    		}
 	    		getDate = false;
-	    	} else if (getUri) {
-	    		currentPath = getText(ch,start,length);
-	    		getUri = false;
-	    	} else if (getChannelVulnName) {
-	    		currentChannelVulnCode = getText(ch,start,length);
-	    		getChannelVulnName = false;
-	    	} else if (getParameter) {
-	    		currentParameter = getText(ch,start,length);
-	    		if (currentParameter != null && currentParameter.contains("="))
-	    			currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
-	    		getParameter = false;
-	    	} else if (getSeverityName) {
-	    		currentSeverityCode = getText(ch,start,length);
-	    		getSeverityName = false;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName) {
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}
@@ -155,7 +156,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new ZaproxySAXValidator());
 	}
 	
-	public class ZaproxySAXValidator extends DefaultHandler {
+	public class ZaproxySAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -201,9 +202,10 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		String tempDateString = getBuilderText();
 	    		
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
@@ -216,6 +218,12 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		
 	    		getDate = false;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}

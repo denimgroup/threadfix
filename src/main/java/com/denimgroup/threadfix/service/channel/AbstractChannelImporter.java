@@ -757,23 +757,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		
 		return SUCCESSFUL_SCAN;
 	}
-	
-	/**
-	 * Parses the text from the SAX DefaultHandler getCharacters() method into a String.
-	 * 
-	 * @param ch
-	 * @param start
-	 * @param length
-	 * @return
-	 */
-	protected String getText(char ch[], int start, int length) {
-		char [] mychars = new char[length];
-		
-		System.arraycopy(ch, start, mychars, 0, length);
 
-		return new String(mychars);
- 	}
-	
 	/**
 	 * 
 	 * HTTP traffic all follows a pattern, so if you can see an HTTP response then you 
@@ -791,5 +775,19 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
 		else
 			return null;
+	}
+	
+	protected abstract class HandlerWithBuilder extends DefaultHandler {
+		private StringBuilder builder = new StringBuilder();
+
+		protected void addTextToBuilder(char ch[], int start, int length) {
+			builder.append(ch, start, length);
+		}
+		
+		protected String getBuilderText() {
+	    	String toReturn = builder.toString();
+	    	builder.setLength(0);
+	    	return toReturn;
+	    }
 	}
 }

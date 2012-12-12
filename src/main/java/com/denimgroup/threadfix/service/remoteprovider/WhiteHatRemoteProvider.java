@@ -168,7 +168,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		return responseStream;
 	}
 	
-	public class WhiteHatSitesParser extends DefaultHandler {
+	public class WhiteHatSitesParser extends HandlerWithBuilder {
 		
 		public Map<String, String> map = new HashMap<String,String>();
 		
@@ -194,11 +194,20 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    public void endElement(String uri, String name, String qName) {
 	    	if (grabLabel) {
-	    		map.put(getText(ch,start,length), currentId);
+	    		String text = getBuilderText();
+	    		if (text != null) {
+	    			map.put(text, currentId);
+	    		}
 	    		currentId = null;
 	    		grabLabel = false;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (grabLabel) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -61,7 +60,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new AcunetixSAXParser());
 	}
 	
-	public class AcunetixSAXParser extends DefaultHandler {
+	public class AcunetixSAXParser extends HandlerWithBuilder {
 		private boolean getChannelVulnText    = false;
 		private boolean getUrlText            = false;
 		private boolean getParamText          = false;
@@ -72,7 +71,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
-				
+		
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -103,6 +102,33 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	
+	    	if (getChannelVulnText) {
+	    		currentChannelVulnCode = getBuilderText();
+	    		getChannelVulnText = false;
+	    	} else if (getUrlText) {
+	    		currentUrlText = getBuilderText();
+	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
+	    			String possibleString = getRegexResult(currentUrlText, pathPattern);
+	    			if (possibleString != null) {
+	    				currentUrlText = possibleString;
+	    			}
+	    		}
+	    		getUrlText = false;
+	    	} else if (getParamText) {
+	    		String text = getBuilderText();
+	    		currentParameter = getRegexResult(text, detailsPattern);
+	    		getParamText = false;
+	    	} else if (getSeverityText) {
+	    		currentSeverityCode = getBuilderText();
+	    		getSeverityText = false;
+	    	} else if (getDateText) {
+	    		String temp = getBuilderText();
+	    		date = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", temp);
+	    		getDateText = false;
+	    	}
+	    	
+	    	
 	    	if ("ReportItem".equals(qName)) {
 	    		
 	    		if (currentChannelVulnCode.startsWith("GHDB")) {
@@ -127,28 +153,8 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText) {
-	    		currentChannelVulnCode = getText(ch, start, length);
-	    		getChannelVulnText = false;
-	    	} else if (getUrlText) {
-	    		currentUrlText = getText(ch, start, length);
-	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
-	    			String possibleString = getRegexResult(currentUrlText, pathPattern);
-	    			if (possibleString != null) {
-	    				currentUrlText = possibleString;
-	    			}
-	    		}
-	    		getUrlText = false;
-	    	} else if (getParamText) {
-	    		String text = getText(ch, start, length);
-	    		currentParameter = getRegexResult(text,detailsPattern);
-	    		getParamText = false;
-	    	} else if (getSeverityText) {
-	    		currentSeverityCode = getText(ch, start, length);
-	    		getSeverityText = false;
-	    	} else if (getDateText) {
-	    		date = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getText(ch, start, length));
-	    		getDateText = false;
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getDateText) {
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}
@@ -158,7 +164,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new AcunetixSAXValidator());
 	}
 	
-	public class AcunetixSAXValidator extends DefaultHandler {
+	public class AcunetixSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -197,12 +203,18 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
+	    public void endElement(String uri, String name, String qName) {
+	    	if (getDateText) {
+	    		testDate = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getBuilderText());
+	    		hasDate = testDate != null;
+	    		getDateText = false;
+	    	}
+	    }
+	    
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (getDateText) {
-	    		testDate = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getText(ch, start, length));
-	    		hasDate = testDate != null;
-	    		getDateText = false;
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}
