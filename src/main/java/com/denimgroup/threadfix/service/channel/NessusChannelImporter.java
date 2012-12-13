@@ -225,7 +225,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		currentSeverityCode = atts.getValue("severity");
 	    	} else if ("plugin_output".equals(qName)) {
 	    		getFindings = true;
-	    	} else if ("tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
+	    	} else if (date == null && "tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
 	    		getDate = true;
 	    	} else if (host == null && "name".equals(qName)) {
 	    		getNameText = true;
@@ -236,9 +236,10 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
-	    		date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+	    		if (tempDateString != null) {
+	    			date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
+	    		}
 	    		getDate = false;
-	    		
 	    	} else if (getFindings) {
 	    		pluginOutputString = getBuilderText();
 	    		parseFindingString();

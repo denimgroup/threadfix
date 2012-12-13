@@ -78,8 +78,8 @@ public class AddUserController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "globalRole.id", "unencryptedPassword", 
-				"passwordConfirm", "hasGlobalGroupAccess" });
+		dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+				"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
 	}
 
 	@ModelAttribute

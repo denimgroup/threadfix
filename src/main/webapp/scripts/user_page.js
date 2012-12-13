@@ -11,6 +11,16 @@ function toggleRoles() {
 	}
 }
 
+function togglePassword() {
+	if ($("#isLdapUserCheckbox").is(':checked')){
+		$("#passwordConfirmInput").attr("disabled","disabled");
+		$("#passwordInput").attr("disabled","disabled");
+	} else {
+		$("#passwordConfirmInput").removeAttr("disabled","");
+		$("#passwordInput").removeAttr("disabled","");
+	}
+}
+
 function toggleAppSelect() {
 	if ($("#allAppsCheckbox").is(':checked')){
 		$("#appSelect :input").attr("disabled","disabled");

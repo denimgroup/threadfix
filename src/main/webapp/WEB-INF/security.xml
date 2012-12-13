@@ -22,6 +22,14 @@
 	
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
+	<bean class="com.denimgroup.threadfix.data.entities.CustomUserMapper" id="ldapToCustomConfigBean"/>
+	
+	<!-- <security:ldap-server id="ldapServer" 
+		manager-dn="{manager dn}" 
+		manager-password="{manager password}" 
+		url="{ your URL }"
+		  /> -->
+	
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -40,6 +48,15 @@
 	    		<security:salt-source ref="saltSource" />
 	    	</security:password-encoder>
 	    </security:authentication-provider>
-	</security:authentication-manager>
+	    
+	    <!-- <security:ldap-authentication-provider 
+	    	server-ref="ldapServer" 
+	    	user-search-base="OU=Company Name"
+	    	user-search-filter="(sAMAccountName={0})"
+	    	group-role-attribute="cn"
+	    	user-context-mapper-ref="ldapToCustomConfigBean"
+	    	/> -->
+
+    </security:authentication-manager>
 
 </beans>

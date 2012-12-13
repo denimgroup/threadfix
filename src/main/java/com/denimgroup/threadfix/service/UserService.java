@@ -52,6 +52,12 @@ public interface UserService {
 	 * @return
 	 */
 	User loadUser(String name);
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	User loadLdapUser(String name);
 
 	/**
 	 * @param user

@@ -31,6 +31,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public Role loadRole(int id) {
 		return roleDao.retrieveById(id);
 	}

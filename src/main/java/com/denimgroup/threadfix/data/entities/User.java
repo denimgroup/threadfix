@@ -52,6 +52,7 @@ public class User extends AuditableEntity {
 	private String salt;
 	private boolean approved = true;
 	private boolean locked = false;
+	private Boolean isLdapUser = false;
 
 	private Boolean hasGlobalGroupAccess = true;
 	private Boolean hasChangedInitialPassword = false;
@@ -217,5 +218,13 @@ public class User extends AuditableEntity {
 	public void setAccessControlTeamMaps(List<AccessControlTeamMap> accessControlTeamMaps) {
 		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
+	
+	@Column(nullable = true)
+	public Boolean getIsLdapUser() {
+		return isLdapUser != null && isLdapUser;
+	}
 
+	public void setIsLdapUser(Boolean isLdapUser) {
+		this.isLdapUser = isLdapUser;
+	}
 }
