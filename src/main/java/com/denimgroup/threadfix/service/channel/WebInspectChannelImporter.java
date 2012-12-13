@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -81,7 +80,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new WebInspectSAXParser());
 	}
 	
-	public class WebInspectSAXParser extends DefaultHandler {
+	public class WebInspectSAXParser extends HandlerWithBuilder {
 		
 		private String currentChannelVulnName;
 		private String currentUrl;
@@ -157,6 +156,36 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	if (grabUrlText) {
+	    		currentUrl = getBuilderText();
+	    		grabUrlText = false;
+	    	
+	    	} else if (grabVulnNameText) {
+	    		currentChannelVulnName = getBuilderText();
+	    		grabVulnNameText = false;
+	    	
+	    	} else if (grabSeverityText) {
+	    		currentChannelSeverityName = getBuilderText();
+	    		grabSeverityText = false;
+	    		
+	    	} else if (grabParameterText) {
+	    		currentParam = getBuilderText();
+	    		
+	    		// TODO decide whether or not to clean out the various [] and %5d characters
+	    		// that are sometimes tacked on. Right now we do.
+	    		currentParam = cleanParam(currentParam);
+	    		grabParameterText = false;
+	    	} else if (grabDate) {
+	    		if (currentResponseText == null)
+	    			currentResponseText = getBuilderText();
+	    		else
+	    			currentResponseText = currentResponseText.concat(getBuilderText());
+	    	} else if (grabTypeId) {
+	    		String temp = getBuilderText().trim();
+	    		ignoreFinding = temp.equals(bestPractices);
+	    		grabTypeId = false;
+	    	}
+	    	
 	    	if ("Issues".equals(qName))
 	    		issues = false;
 	    	
@@ -190,34 +219,9 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (grabUrlText) {
-	    		currentUrl = getText(ch, start, length);
-	    		grabUrlText = false;
-	    	
-	    	} else if (grabVulnNameText) {
-	    		currentChannelVulnName = getText(ch, start, length);
-	    		grabVulnNameText = false;
-	    	
-	    	} else if (grabSeverityText) {
-	    		currentChannelSeverityName = getText(ch, start, length);
-	    		grabSeverityText = false;
-	    		
-	    	} else if (grabParameterText) {
-	    		currentParam = getText(ch, start, length);
-	    		
-	    		// TODO decide whether or not to clean out the various [] and %5d characters
-	    		// that are sometimes tacked on. Right now we do.
-	    		currentParam = cleanParam(currentParam);
-	    		grabParameterText = false;
-	    	} else if (grabDate) {
-	    		if (currentResponseText == null)
-	    			currentResponseText = getText(ch, start, length);
-	    		else
-	    			currentResponseText = currentResponseText.concat(getText(ch, start, length));
-	    	} else if (grabTypeId) {
-	    		String temp = getText(ch, start, length).trim();
-	    		ignoreFinding = temp.equals(bestPractices);
-	    		grabTypeId = false;
+	    	if (grabUrlText || grabVulnNameText || grabSeverityText || grabParameterText
+	    			|| grabDate || grabTypeId) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}
@@ -227,7 +231,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new WebInspectSAXValidator());
 	}
 	
-	public class WebInspectSAXValidator extends DefaultHandler {
+	public class WebInspectSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false, hasDate = false, correctFormat = false;
 		private boolean grabDate = false;
 		private String currentResponseText = null;
@@ -276,6 +280,10 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	    
 	    public void endElement (String uri, String name, String qName) throws SAXException
 	    {
+	    	if (grabDate) {
+	    		currentResponseText = getBuilderText();
+	    	}
+	    	
 	    	if (!hasDate && grabDate && "RawResponse".equals(qName)) {
 	    		grabDate = false;
 	    		testDate = attemptToParseDateFromHTTPResponse(currentResponseText);
@@ -291,10 +299,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (grabDate) {
-	    		if (currentResponseText == null)
-	    			currentResponseText = getText(ch, start, length);
-	    		else
-	    			currentResponseText = currentResponseText.concat(getText(ch, start, length));
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

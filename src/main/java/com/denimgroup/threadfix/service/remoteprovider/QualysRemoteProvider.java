@@ -40,7 +40,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -389,7 +388,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 	// PARSER CLASSES
 
-	private class QualysAppsParser extends DefaultHandler {
+	private class QualysAppsParser extends HandlerWithBuilder {
 		
 		public List<RemoteProviderApplication> list = new ArrayList<RemoteProviderApplication>();
 		
@@ -400,10 +399,10 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		getName = true;
 	    	}
 	    }
-
-		public void characters (char ch[], int start, int length) {
+	    
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getName) {
-	    		String tempNameString = getText(ch,start,length);
+	    		String tempNameString = getBuilderText();
 	    		
 	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(tempNameString);
@@ -413,9 +412,15 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		getName = false;
 	    	}
 	    }
+
+		public void characters (char ch[], int start, int length) {
+	    	if (getName) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
+	    }
 	}
 	
-	private class QualysScansForAppParser extends DefaultHandler {
+	private class QualysScansForAppParser extends HandlerWithBuilder {
 		
 		public List<Map<String,String>> list = new ArrayList<Map<String,String>>();
 		
@@ -450,6 +455,23 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    
 	    @Override
 	    public void endElement (String uri, String localName, String qName) throws SAXException {	    	
+	    	if (getId) {
+	    		currentId = getBuilderText();
+	    		getId = false;
+	    	} else if (getStatus) {
+	    		currentStatus = getBuilderText();
+	    		getStatus = false;
+	    	} else if (getDate) {
+	    		currentDate = getBuilderText();
+	    		getDate = false;
+	    	} else if (getName) {
+	    		String toAdd = getBuilderText();
+	    			    		
+	    		webAppName = toAdd;
+	    		
+	    		getName = false;
+		    }
+	    	
 	    	if (qName.equals("WasScan")) {
 	    		Map<String, String> map = new HashMap<String, String>();
 	    		map.put("id", currentId);
@@ -467,26 +489,13 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    }
 
 		public void characters (char ch[], int start, int length) {
-	    	if (getId) {
-	    		currentId = getText(ch,start,length);
-	    		getId = false;
-	    	} else if (getStatus) {
-	    		currentStatus = getText(ch,start,length);
-	    		getStatus = false;
-	    	} else if (getDate) {
-	    		currentDate = getText(ch,start,length);
-	    		getDate = false;
-	    	} else if (getName) {
-	    		String toAdd = getText(ch,start,length);
-	    			    		
-	    		webAppName = toAdd;
-	    		
-	    		getName = false;
+	    	if (getId || getStatus || getDate || getName) {
+	    		addTextToBuilder(ch,start,length);
 		    }
 	    }
 	}
 	
-	private class QualysWASSAXParser extends DefaultHandler {
+	private class QualysWASSAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
 		private Boolean getUri                = false;
 		private Boolean getParameter          = false;
@@ -532,24 +541,30 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		getParameter           = false;
 	    	}
 	    }
-
-	    public void characters (char ch[], int start, int length) {
+	    
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
 	    			date = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", tempDateString);
 	    		}
 	    		getDate = false;
 	    	} else if (getUri) {
-	    		currentPath = getText(ch,start,length);
+	    		currentPath = getBuilderText();
 	    		getUri = false;
 	    	} else if (getChannelVulnName) {
-	    		currentChannelVulnCode = getText(ch,start,length);
+	    		currentChannelVulnCode = getBuilderText();
 	    		getChannelVulnName = false;
 	    	} else if (getParameter) {
-	    		currentParameter = getText(ch,start,length);
+	    		currentParameter = getBuilderText();
 	    		getParameter = false;
+	    	}
+	    }
+
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate || getUri || getChannelVulnName || getParameter) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

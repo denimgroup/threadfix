@@ -29,7 +29,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -116,7 +115,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new ArachniSAXParser());
 	}
 	
-	public class ArachniSAXParser extends DefaultHandler {
+	public class ArachniSAXParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
@@ -168,20 +167,28 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;
-	    	}
-	    }
-
-	    public void characters (char ch[], int start, int length) {
+	    	} else if (inFinding && itemKey != null) {
+	    		String currentItem = getBuilderText();
+	    		
+	    		if (currentItem != null && findingMap.get(itemKey) == null) {
+	    			findingMap.put(itemKey, currentItem);
+	    		}
+	    		itemKey = null;
+	    	} 
+	    	
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
 	    			date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
 	    		}
 	    		getDate = false;
-	    	} else if (itemKey != null) {
-	    		findingMap.put(itemKey, getText(ch,start,length));
-	    		itemKey = null;
+	    	} 
+	    }
+
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate || itemKey != null) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}
@@ -191,7 +198,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new ArachniSAXValidator());
 	}
 	
-	public class ArachniSAXValidator extends DefaultHandler {
+	public class ArachniSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -232,9 +239,9 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
 	    			testDate = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
@@ -242,6 +249,12 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    		
 	    		hasDate = testDate != null;
 	    		getDate = false;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

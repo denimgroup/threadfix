@@ -29,7 +29,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -68,7 +67,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new NTOSaxParser());
 	}
 	
-	public class NTOSaxParser extends DefaultHandler {
+	public class NTOSaxParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
@@ -106,7 +105,8 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("VULN".equals(qName)) {
 	    		
-	    		if (findingMap.get(PARAMETER_KEY) != null && findingMap.get(PARAMETER_KEY).equals("N/A")) {
+	    		if (findingMap.get(PARAMETER_KEY) != null && 
+	    				findingMap.get(PARAMETER_KEY).equals("N/A")) {
 	    			findingMap.remove(PARAMETER_KEY);
 	    		}
 	    		
@@ -115,20 +115,25 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;
-	    	}
-	    }
-
-	    public void characters (char ch[], int start, int length) {
-	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    	} else if (inFinding && itemKey != null) {
+	    		String currentItem = getBuilderText();
+	    		if (currentItem != null && findingMap.get(itemKey) == null) {
+	    			findingMap.put(itemKey, currentItem);
+	    		}
+	    		itemKey = null;
+	    	} else if (getDate) {
+	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
 	    			date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
 	    		}
 	    		getDate = false;
-	    	} else if (itemKey != null) {
-	    		findingMap.put(itemKey, getText(ch,start,length));
-	    		itemKey = null;
+	    	}
+	    }
+
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate || itemKey != null) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}
@@ -138,7 +143,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new NTOSaxValidator());
 	}
 	
-	public class NTOSaxValidator extends DefaultHandler {
+	public class NTOSaxValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -176,6 +181,17 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    
 	    @Override
 	    public void endElement (String uri, String name, String qName) throws SAXException {	    	
+	    	if (getDate) {
+	    		String tempDateString = getBuilderText();
+
+	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+	    			testDate = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
+	    		}
+	    		
+	    		hasDate = testDate != null;
+	    		getDate = false;
+	    	}
+	    	
 	    	if ("VULN".equals(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
@@ -185,14 +201,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    
 	    public void characters (char ch[], int start, int length) {
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
-
-	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
-	    		}
-	    		
-	    		hasDate = testDate != null;
-	    		getDate = false;
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

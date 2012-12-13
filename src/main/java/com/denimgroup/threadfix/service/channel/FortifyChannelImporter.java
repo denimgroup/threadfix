@@ -189,7 +189,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	 * 
 	 * @author mcollins
 	 */
-	public class FortifySAXParser extends DefaultHandler {
+	public class FortifySAXParser extends HandlerWithBuilder {
 				
 		/**
 		 * This variable is used to keep track of whether a finding has had a parameter parsed.
@@ -659,6 +659,55 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName) throws SAXException
 	    {
+	    	if (getChannelType) {
+	    		currentChannelType = getBuilderText();
+	    		getChannelType = false;
+	    	} else if (getSeverity) {
+	    		currentSeverity = getBuilderText();
+	    		getSeverity = false;
+	    	} else if (getNativeId) {
+	    		currentNativeId = getBuilderText();
+	    		getNativeId = false;
+	    	} else if (getClassID) {
+	    		currentClassID = getBuilderText();
+	    		getClassID = false;
+	    	} else if (getFact) {
+	    		currentMap.fact = getBuilderText();
+	    		getFact = false;
+	    	} else if (getSnippetText){
+	    		String fullText = getBuilderText();
+	    		
+	    		if (fullText != null && fullText.contains("\n")) {
+		    		String[] split = fullText.split("\n");
+		    		if (split != null && split.length > 3) {
+		    			snippetMap.put(snippetId,split[3]);
+		    		}
+	    		}
+	    		getSnippetText = false;
+	    		snippetId = null;
+	    	} else if (getChannelSubtype) {
+	    		currentChannelSubtype = getBuilderText();
+	    		getChannelSubtype = false;
+	    	} else if (getAction) {
+	    		getAction = false;
+	    		if (nodeId != null && nodeSnippetMap.get(nodeId) != null) {
+	    			nodeSnippetMap.get(nodeId).action = getBuilderText();
+	    		}
+	    	} else if (getImpact) {
+	    		ruleMap.get(currentRuleID).put("Impact", getFloatOrNull(getBuilderText()));
+	    		getImpact = false;
+	    	} else if (getProbability) {
+	    		ruleMap.get(currentRuleID).put("Probability", getFloatOrNull(getBuilderText()));
+	    		getProbability = false;
+	    	} else if (getAccuracy) {
+	    		ruleMap.get(currentRuleID).put("Accuracy", getFloatOrNull(getBuilderText()));
+	    		getAccuracy = false;
+	    	} else if (getConfidence) {
+	    		currentConfidence = getBuilderText();
+	    		getConfidence = false;
+	    	}
+	    	
+	    	
 	    	if (!doneWithVulnerabilities) {
 		    	if ("Vulnerability".equals(qName)) {
 		    		addToList();
@@ -684,52 +733,10 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    
 	    public void characters (char ch[], int start, int length) 
 	    {
-	    	if (getChannelType) {
-	    		currentChannelType = getText(ch,start,length);
-	    		getChannelType = false;
-	    	} else if (getSeverity) {
-	    		currentSeverity = getText(ch,start,length);
-	    		getSeverity = false;
-	    	} else if (getNativeId) {
-	    		currentNativeId = getText(ch,start,length);
-	    		getNativeId = false;
-	    	} else if (getClassID) {
-	    		currentClassID = getText(ch,start,length);
-	    		getClassID = false;
-	    	} else if (getFact) {
-	    		currentMap.fact = getText(ch,start,length);
-	    		getFact = false;
-	    	} else if (getSnippetText){
-	    		String fullText = getText(ch,start,length);
-	    		
-	    		if (fullText != null && fullText.contains("\n")) {
-		    		String[] split = fullText.split("\n");
-		    		if (split != null && split.length > 3) {
-		    			snippetMap.put(snippetId,split[3]);
-		    		}
-	    		}
-	    		getSnippetText = false;
-	    		snippetId = null;
-	    	} else if (getChannelSubtype) {
-	    		currentChannelSubtype = getText(ch,start,length);
-	    		getChannelSubtype = false;
-	    	} else if (getAction) {
-	    		getAction = false;
-	    		if (nodeId != null && nodeSnippetMap.get(nodeId) != null) {
-	    			nodeSnippetMap.get(nodeId).action = getText(ch,start,length);
-	    		}
-	    	} else if (getImpact) {
-	    		ruleMap.get(currentRuleID).put("Impact", getFloatOrNull(getText(ch,start,length)));
-	    		getImpact = false;
-	    	} else if (getProbability) {
-	    		ruleMap.get(currentRuleID).put("Probability", getFloatOrNull(getText(ch,start,length)));
-	    		getProbability = false;
-	    	} else if (getAccuracy) {
-	    		ruleMap.get(currentRuleID).put("Accuracy", getFloatOrNull(getText(ch,start,length)));
-	    		getAccuracy = false;
-	    	} else if (getConfidence) {
-	    		currentConfidence = getText(ch,start,length);
-	    		getConfidence = false;
+	    	if (getChannelType || getSeverity || getNativeId || getClassID || getFact 
+	    			|| getSnippetText || getChannelSubtype || getAction || getImpact ||
+	    			getProbability || getAccuracy || getConfidence) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}
@@ -822,7 +829,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		return timeParser.resultTime;
 	}
 
-	public class FortifyTimeParser extends DefaultHandler {
+	public class FortifyTimeParser extends HandlerWithBuilder {
 		Calendar resultTime = null;
 		boolean getDate = false;
 
@@ -833,10 +840,10 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		getDate = true; 
 	    	}
 	    }
-
-	    public void characters (char ch[], int start, int length) {
+	    
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
-	    		String stringTime = getText(ch,start,length);
+	    		String stringTime = getBuilderText();
 	    		if (stringTime != null) {
 	    			int index = stringTime.indexOf('.');
 	    			if (index != -1) {
@@ -845,6 +852,12 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    			}
 	    		}
 	    		getDate = false;
+	    	}
+	    }
+
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 		}
 	}

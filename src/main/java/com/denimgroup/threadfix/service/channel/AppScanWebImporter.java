@@ -31,7 +31,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -86,7 +85,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 		return parseSAXInput(new AppScanSAXParser());
 	}
 	
-	public class AppScanSAXParser extends DefaultHandler {
+	public class AppScanSAXParser extends HandlerWithBuilder {
 		
 		private ChannelVulnerability currentChannelVuln = null;
 		private ChannelSeverity currentChannelSeverity  = null;
@@ -200,7 +199,37 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    	}
 	    }
 
-	    public void endElement (String uri, String name, String qName) throws SAXException {	    	
+	    public void endElement (String uri, String name, String qName) throws SAXException {
+	    	if (grabUrlText) {
+	    		currentUrl = getBuilderText();
+	    		grabUrlText = false;
+	    		
+	    	} else if (grabSeverity) {
+	    		String severityString = getBuilderText();
+	    		ChannelSeverity severity = getChannelSeverity(severityString);
+	    		
+	    		if (currentIssueTypeId != null && severity != null)
+	    			severityMap.put(currentIssueTypeId, severity);
+	    		
+	    		grabSeverity = false;
+	    	} else if (grabCWE) {
+	    		String maybeId = getBuilderText();
+	    		
+	    		if (maybeId.startsWith("CWE-") && maybeId.contains(":")) {
+	    			maybeId = maybeId.substring(4, maybeId.indexOf(':'));
+		    		genericVulnMap.put(currentIssueTypeId, maybeId);
+	    		}
+	    		
+	    		grabCWE = false;
+	    	} else if (grabIssueTypeName) {
+	    		String charString = getBuilderText();
+	    		channelVulnNameMap.put(currentIssueTypeId, charString);
+	    		
+	    		grabIssueTypeName = false;
+	    	} else if (grabDate) {
+	    		requestText = requestText.concat(getBuilderText());
+		  	}
+	    	
 	    	if ("Issues".equals(qName)) {
 				throw new SAXException("Done Parsing.");
 	    	} else if ("IssueTypes".equals(qName)) {
@@ -240,35 +269,9 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (grabUrlText) {
-	    		currentUrl = getText(ch, start, length);
-	    		grabUrlText = false;
-	    		
-	    	} else if (grabSeverity) {
-	    		String severityString = getText(ch, start, length);
-	    		ChannelSeverity severity = getChannelSeverity(severityString);
-	    		
-	    		if (currentIssueTypeId != null && severity != null)
-	    			severityMap.put(currentIssueTypeId, severity);
-	    		
-	    		grabSeverity = false;
-	    	} else if (grabCWE) {
-	    		String maybeId = getText(ch, start, length);
-	    		
-	    		if (maybeId.startsWith("CWE-") && maybeId.contains(":")) {
-	    			maybeId = maybeId.substring(4, maybeId.indexOf(':'));
-		    		genericVulnMap.put(currentIssueTypeId, maybeId);
-	    		}
-	    		
-	    		grabCWE = false;
-	    	} else if (grabIssueTypeName) {
-	    		String charString = getText(ch,start,length);
-	    		channelVulnNameMap.put(currentIssueTypeId, charString);
-	    		
-	    		grabIssueTypeName = false;
-	    	} else if (grabDate) {
-	    		requestText = requestText.concat(getText(ch, start, length));
-		  	}
+	    	if (grabUrlText || grabSeverity || grabCWE || grabIssueTypeName || grabDate) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
 	    }
 	}
 
@@ -277,7 +280,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 		return testSAXInput(new AppScanSAXValidator());
 	}
 	
-	public class AppScanSAXValidator extends DefaultHandler {
+	public class AppScanSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false, hasDate = false;
 		private boolean xmlReport = false, appscanInfo = false,
 			summary = false, results = false;
@@ -331,6 +334,11 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    }
 
 	    public void endElement (String uri, String name, String qName){
+	    	if (grabDate) {
+	    		requestText = getBuilderText();
+	    		grabDate = false;
+	    	}
+	    	
 	    	if (!hasDate && "OriginalHttpTraffic".equals(qName)) {
 	    		testDate = attemptToParseDateFromHTTPResponse(requestText);
 	    		grabDate = false;
@@ -340,8 +348,9 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (grabDate)
-	    		requestText = requestText.concat(getText(ch, start, length));
+	    	if (grabDate) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
 	    }
 	}
 
