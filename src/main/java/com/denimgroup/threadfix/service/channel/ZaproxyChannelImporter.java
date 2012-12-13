@@ -182,28 +182,6 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    }
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if ("report".equals(qName)) {
-	    		getDate = true;
-	    		correctFormat = true;
-	    	}
-	    	
-	    	if ("OWASPZAPReport".equals(qName)) {
-	    		correctFormat = true;
-	    		testDate = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
-	    		if (testDate != null) {
-    				hasDate = true;
-    			}
-	    	}
-	    	
-	    	if ("alertitem".equals(qName)) {
-	    		hasFindings = true;
-	    		setTestStatus();
-	    		throw new SAXException(FILE_CHECK_COMPLETED);
-	    	}
-	    }
-	    
-	    @Override
-	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 	    		
@@ -218,6 +196,16 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		
 	    		getDate = false;
+	    	}
+	    	
+	    	if ("report".equals(qName)) {
+	    		getDate = true;
+	    		correctFormat = true;
+	    	}
+	    	if ("alertitem".equals(qName)) {
+	    		hasFindings = true;
+	    		setTestStatus();
+	    		throw new SAXException(FILE_CHECK_COMPLETED);
 	    	}
 	    }
 	    
