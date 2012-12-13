@@ -76,7 +76,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User loadUser(String name) {
-		return userDao.retrieveByName(name);
+		User user = userDao.retrieveByName(name);
+		if (user != null && user.getIsLdapUser()) {
+			return null;
+		} else {
+			return user;
+		}
 	}
 
 	@Override
