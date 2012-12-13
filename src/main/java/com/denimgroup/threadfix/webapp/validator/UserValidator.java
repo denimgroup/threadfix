@@ -52,28 +52,30 @@ public class UserValidator implements Validator {
 		}
 
 		// Validate password
-		if (user.isNew()) {
-			if (isEmptyOrWhitespace(user.getUnencryptedPassword())) {
-				errors.rejectValue("password", "errors.required", new String[] { "Password" }, "");
-			}
-		}
-
-		if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null && 
-				user.getUnencryptedPassword().length() < 12 &&
-				user.getUnencryptedPassword().length() != 0) {
-			errors.rejectValue("password", null, "Password has a minimum length of 12.");
-		}
-
-		// Confirm password
-		if (errors.getFieldError("password") == null) {
-			if (!isEmptyOrWhitespace(user.getUnencryptedPassword())
-					|| !isEmptyOrWhitespace(user.getPasswordConfirm())) {
+		if (!user.getIsLdapUser()) {
+			if (user.isNew()) {
 				if (isEmptyOrWhitespace(user.getUnencryptedPassword())) {
-					errors.rejectValue("password", null, "Passwords do not match.");
-				} else if (isEmptyOrWhitespace(user.getPasswordConfirm())) {
-					errors.rejectValue("password", null, "Passwords do not match.");
-				} else if (!user.getUnencryptedPassword().equals(user.getPasswordConfirm())) {
-					errors.rejectValue("password", null, "Passwords do not match.");
+					errors.rejectValue("password", "errors.required", new String[] { "Password" }, "");
+				}
+			}
+	
+			if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null && 
+					user.getUnencryptedPassword().length() < 12 &&
+					user.getUnencryptedPassword().length() != 0) {
+				errors.rejectValue("password", null, "Password has a minimum length of 12.");
+			}
+	
+			// Confirm password
+			if (errors.getFieldError("password") == null) {
+				if (!isEmptyOrWhitespace(user.getUnencryptedPassword())
+						|| !isEmptyOrWhitespace(user.getPasswordConfirm())) {
+					if (isEmptyOrWhitespace(user.getUnencryptedPassword())) {
+						errors.rejectValue("password", null, "Passwords do not match.");
+					} else if (isEmptyOrWhitespace(user.getPasswordConfirm())) {
+						errors.rejectValue("password", null, "Passwords do not match.");
+					} else if (!user.getUnencryptedPassword().equals(user.getPasswordConfirm())) {
+						errors.rejectValue("password", null, "Passwords do not match.");
+					}
 				}
 			}
 		}

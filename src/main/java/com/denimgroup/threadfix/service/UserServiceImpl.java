@@ -248,4 +248,9 @@ public class UserServiceImpl implements UserService {
 		
 		return organizationPermissions;
 	}
+
+	@Override
+	public User loadLdapUser(String name) {
+		return userDao.retrieveLdapUser(name);
+	}
 }
