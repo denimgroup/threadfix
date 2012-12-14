@@ -441,7 +441,7 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE,  "AssessmentRun", "AssessmentStats" );
-		addToMap(ChannelType.NTO_SPIDER, "VULNS","VULNLIST","VULN","SCAN", "SCANNAME","WEBSITE","VULNTYPE");
+		addToMap(ChannelType.NTO_SPIDER, "VULNS","VULNLIST");
 	}
 	
 	private static void addToMap(String name, String... tags) { map.put(name, tags); }
@@ -479,7 +479,7 @@ public class ScanServiceImpl implements ScanService {
 			log.warn("Something went wrong trying to delete the file.");
 			
 			file.deleteOnExit();
-		}
+		} 
 	}
 	
 	public class TagCollector extends DefaultHandler {

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,10 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
@@ -50,6 +54,7 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 public class UploadScanController {
 
 	private ScanService scanService;
+	private ChannelTypeService channelTypeService;
 	private ApplicationService applicationService;
 	private ApplicationChannelService applicationChannelService;
 	private PermissionService permissionService;
@@ -58,12 +63,14 @@ public class UploadScanController {
 
 	@Autowired
 	public UploadScanController(ScanService scanService,
+			ChannelTypeService channelTypeService,
 			PermissionService permissionService,
 			ApplicationService applicationService,
 			ApplicationChannelService applicationChannelService) {
 		this.scanService = scanService;
 		this.permissionService = permissionService;
 		this.applicationService = applicationService;
+		this.channelTypeService = channelTypeService;
 		this.applicationChannelService = applicationChannelService;
 	}
 	
@@ -102,6 +109,7 @@ public class UploadScanController {
 		return mav;
 	}
 	
+	// TODO move some of this to the service layer
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, 
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
@@ -111,9 +119,42 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
+		Integer myChannelId = channelId;
+		
+		if (myChannelId == -1) {
+			String typeString = scanService.getScannerType(file);
+			if (typeString != null && !typeString.trim().isEmpty()) {
+				ChannelType type = channelTypeService.loadChannel(typeString);
+				if (type != null) {
+					ApplicationChannel channel = applicationChannelService.retrieveByAppIdAndChannelId(
+							appId, type.getId());
+					if (channel != null) {
+						myChannelId = channel.getId();
+					} else {
+						Application application = applicationService.loadApplication(appId);
+						channel = new ApplicationChannel();
+						channel.setChannelType(type);
+						application.getChannelList().add(channel);
+						channel.setApplication(application);
+						channel.setScanList(new ArrayList<Scan>());
+						
+						channel.setApplication(application);
+						if (!applicationChannelService.isDuplicate(channel)) {
+							applicationChannelService.storeApplicationChannel(channel);
+							myChannelId = channel.getId();
+						}
+					}
+				}
+			} else {
+				String error = "ThreadFix was unable to find a suitable scanner type for the file. " +
+						"Please choose one from the above list.";
+				return index(appId, orgId, error, null);
+			}
+		}
+		
 		ScanCheckResultBean returnValue = null;
 		
-		String fileName = scanService.saveFile(channelId, file);
+		String fileName = scanService.saveFile(myChannelId, file);
 		
 		if (fileName == null || fileName.equals("")) {
 			log.warn("Saving the file to disk did not return a file name. Returning to scan upload page.");
@@ -121,7 +162,7 @@ public class UploadScanController {
 		}
 		
 		try {
-			returnValue = scanService.checkFile(channelId, fileName);
+			returnValue = scanService.checkFile(myChannelId, fileName);
 		} catch (OutOfMemoryError e) {
 			log.error("OutOfMemoryError thrown while checking file. Logging and re-throwing.", e);
 			request.getSession().setAttribute("scanErrorMessage", 
@@ -138,10 +179,10 @@ public class UploadScanController {
 
 		if (returnValue != null && returnValue.getScanCheckResult() != null &&
 				ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
-			scanService.addFileToQueue(channelId, fileName, returnValue.getTestDate());
+			scanService.addFileToQueue(myChannelId, fileName, returnValue.getTestDate());
 		} else if (returnValue != null && returnValue.getScanCheckResult() != null &&
 				ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
-			Integer emptyScanId = scanService.saveEmptyScanAndGetId(channelId, fileName);
+			Integer emptyScanId = scanService.saveEmptyScanAndGetId(myChannelId, fileName);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");
 			confirmPage.addObject("scanId", emptyScanId);
 			return confirmPage;
@@ -154,7 +195,7 @@ public class UploadScanController {
 						(returnValue.getScanCheckResult().equals(ChannelImporter.BADLY_FORMED_XML) ||
 						returnValue.getScanCheckResult().equals(ChannelImporter.WRONG_FORMAT_ERROR) ||
 						returnValue.getScanCheckResult().equals(ChannelImporter.OTHER_ERROR))) {
-					ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
+					ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(myChannelId);
 					channelType = appChannel.getChannelType();
 				}
  				

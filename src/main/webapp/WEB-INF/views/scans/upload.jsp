@@ -56,6 +56,7 @@
 					<td class="label">Channel:</td>
 					<td class="inputValue">
 						<select id="channelSelect" name="channelId">
+						<option value="-1">Auto-detect</option>
 							<c:forEach var="channel" items="${ application.uploadableChannels }">
 								<option onclick="display(<c:out value="${ channel.id }"/>)" value="${ channel.id }"><c:out value="${ channel.channelType.name }"/></option>
 							</c:forEach>
