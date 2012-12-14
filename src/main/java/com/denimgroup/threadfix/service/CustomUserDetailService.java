@@ -90,6 +90,8 @@ public class CustomUserDetailService implements UserDetailsService {
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
 				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
 				user.isHasChangedInitialPassword(), user.getId(), orgMap, appMap);
+		
+		userService.storeUser(user);
 
 		return userDetails;
 	}
