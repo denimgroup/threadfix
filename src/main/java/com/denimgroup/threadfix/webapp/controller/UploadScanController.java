@@ -52,6 +52,9 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
 public class UploadScanController {
+	
+	private static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
+			"scanner type for the file. Please choose one from the list.";
 
 	private ScanService scanService;
 	private ChannelTypeService channelTypeService;
@@ -95,16 +98,11 @@ public class UploadScanController {
 			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
 			throw new ResourceNotFoundException();
 		}
-		
-		if (application.getUploadableChannels() == null || application.getUploadableChannels().size() == 0) {
-			log.info("The Application didn't have any channels, redirecting to the Add Channel page.");
-			return new ModelAndView("redirect:/organizations/" + orgId + 
-									"/applications/" + appId + "/addChannel");
-		}
-		
+
 		ModelAndView mav = new ModelAndView("scans/upload");
 		mav.addObject(application);
 		mav.addObject("message",message);
+		mav.addObject("channelTypes",channelTypeService.getChannelTypeOptions(null));
 		mav.addObject("type",type);
 		return mav;
 	}
@@ -119,37 +117,45 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
-		Integer myChannelId = channelId;
+		Integer myChannelId = null;
 		
-		if (myChannelId == -1) {
+		ChannelType type = null;
+		
+		if (channelId == -1) {
 			String typeString = scanService.getScannerType(file);
 			if (typeString != null && !typeString.trim().isEmpty()) {
-				ChannelType type = channelTypeService.loadChannel(typeString);
-				if (type != null) {
-					ApplicationChannel channel = applicationChannelService.retrieveByAppIdAndChannelId(
-							appId, type.getId());
-					if (channel != null) {
-						myChannelId = channel.getId();
-					} else {
-						Application application = applicationService.loadApplication(appId);
-						channel = new ApplicationChannel();
-						channel.setChannelType(type);
-						application.getChannelList().add(channel);
-						channel.setApplication(application);
-						channel.setScanList(new ArrayList<Scan>());
-						
-						channel.setApplication(application);
-						if (!applicationChannelService.isDuplicate(channel)) {
-							applicationChannelService.storeApplicationChannel(channel);
-							myChannelId = channel.getId();
-						}
-					}
-				}
+				type = channelTypeService.loadChannel(typeString);
 			} else {
-				String error = "ThreadFix was unable to find a suitable scanner type for the file. " +
-						"Please choose one from the above list.";
-				return index(appId, orgId, error, null);
+				return index(appId, orgId, SCANNER_TYPE_ERROR, null);
 			}
+		} else {
+			type = channelTypeService.loadChannel(channelId);
+		}
+		
+		if (type != null) {
+			ApplicationChannel channel = applicationChannelService.retrieveByAppIdAndChannelId(
+					appId, type.getId());
+			if (channel != null) {
+				myChannelId = channel.getId();
+			} else {
+				Application application = applicationService.loadApplication(appId);
+				channel = new ApplicationChannel();
+				channel.setChannelType(type);
+				application.getChannelList().add(channel);
+				channel.setApplication(application);
+				channel.setScanList(new ArrayList<Scan>());
+				
+				channel.setApplication(application);
+				if (!applicationChannelService.isDuplicate(channel)) {
+					applicationChannelService.storeApplicationChannel(channel);
+					myChannelId = channel.getId();
+				}
+			}
+		}
+		
+		if (myChannelId == null) {
+			log.warn("Unable to load a suitable Application Channel.");
+			return index(appId, orgId, SCANNER_TYPE_ERROR, null);
 		}
 		
 		ScanCheckResultBean returnValue = null;

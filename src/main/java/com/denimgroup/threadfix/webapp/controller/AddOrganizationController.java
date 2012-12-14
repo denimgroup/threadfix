@@ -52,7 +52,7 @@ public class AddOrganizationController {
 
 	private OrganizationService organizationService = null;
 	
-	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddOrganizationController.class);
 
 	@Autowired
 	public AddOrganizationController(OrganizationService organizationService) {
