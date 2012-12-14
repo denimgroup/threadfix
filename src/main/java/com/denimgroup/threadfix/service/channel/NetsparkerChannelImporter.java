@@ -64,7 +64,7 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new NetsparkerSAXParser());
 	}
 
-	public class NetsparkerSAXParser extends DefaultHandler {
+	public class NetsparkerSAXParser extends HandlerWithBuilder {
 		private Boolean getChannelVulnText    = false;
 		private Boolean getUrlText            = false;
 		private Boolean getParamText          = false;
@@ -107,6 +107,23 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	if (getChannelVulnText) {
+	    		currentChannelVulnCode = getBuilderText();
+	    		getChannelVulnText = false;
+	    	} else if (getUrlText) {
+	    		if (host == null)
+	    			host = getBuilderText();
+	    		else
+		    		currentUrlText = getBuilderText();
+	    		getUrlText = false;
+	    	} else if (getParamText) {
+	    		currentParameter = getBuilderText();
+	    		getParamText = false;
+	    	} else if (getSeverityText) {
+	    		currentSeverityCode = getBuilderText();
+	    		getSeverityText = false;
+	    	}
+	    	
 	    	if ("vulnerability".equals(qName)) {
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
@@ -122,21 +139,8 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText) {
-	    		currentChannelVulnCode = getText(ch, start, length);
-	    		getChannelVulnText = false;
-	    	} else if (getUrlText) {
-	    		if (host == null)
-	    			host = getText(ch,start,length);
-	    		else
-		    		currentUrlText = getText(ch, start, length);
-	    		getUrlText = false;
-	    	} else if (getParamText) {
-	    		currentParameter = getText(ch, start, length);
-	    		getParamText = false;
-	    	} else if (getSeverityText) {
-	    		currentSeverityCode = getText(ch, start, length);
-	    		getSeverityText = false;
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

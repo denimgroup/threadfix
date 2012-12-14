@@ -50,6 +50,12 @@ public interface UserDao {
 	 * @return
 	 */
 	User retrieveByName(String name);
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	User retrieveLdapUser(String name);
 
 	/**
 	 * @param user

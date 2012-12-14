@@ -99,7 +99,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		inputStream = new ByteArrayInputStream(fullString.getBytes());
 	}
 
-	public class BurpSuiteSAXParser extends DefaultHandler {
+	public class BurpSuiteSAXParser extends HandlerWithBuilder {
 		
 		private boolean getChannelVulnText    = false;
 		private boolean getUrlText            = false;
@@ -116,7 +116,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private String currentHostText        = null;
 		private String currentBackupParameter = null;
 		private String currentSerialNumber    = null;
-	    
+		
 		private void add(Finding finding) {
 			if (finding != null) {
 				if (currentSerialNumber != null) {
@@ -157,6 +157,44 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	if (getChannelVulnText) {
+	    		currentChannelVulnCode = getBuilderText();
+	    		getChannelVulnText = false;
+	    	} else if (getHostText) {
+	    		currentHostText = getBuilderText();
+	    		getHostText = false;
+	    	} else if (getUrlText) {
+	    		currentUrlText = getBuilderText();
+	    		if (currentUrlText != null) {
+		    		currentParameter = getRegexResult(currentUrlText, "\\[(.*) parameter\\]");
+		    		currentUrlText = getRegexResult(currentUrlText, "^([^\\[]+)");
+		    		if (currentUrlText != null)
+		    			currentUrlText = currentUrlText.trim();
+		    	}
+	    		getUrlText = false;
+	    	} else if (getParamText) {
+	    		currentParameter = getBuilderText();
+	    		getParamText = false;
+	    	} else if (getSerialNumber) {
+	    		currentSerialNumber = getBuilderText();
+	    		getSerialNumber = false;
+	    	} else if (getSeverityText) {
+	    		currentSeverityCode = getBuilderText();
+	    		getSeverityText = false;
+	    	} else if (getBackupParameter) {
+	    		String tempURL = getBuilderText();
+	    		if (tempURL != null && tempURL.contains("HTTP")) {
+	    			tempURL = tempURL.substring(0, tempURL.indexOf("HTTP"));
+	    		}
+	    		
+	    		if (tempURL != null && tempURL.contains("=") 
+	    				&& tempURL.indexOf('=') == tempURL.lastIndexOf('=')) {
+	    			currentBackupParameter = getRegexResult(tempURL, "\\?(.*?)=");
+	    		}
+	    		
+	    		getBackupParameter = false;
+	    	}
+	    	
 	    	if ("issue".equals(qName)) {
 	    		
 	    		// This is a temporary fix, we should take another look at why burp did this
@@ -187,43 +225,10 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText) {
-	    		currentChannelVulnCode = getText(ch, start, length);
-	    		getChannelVulnText = false;
-	    	} else if (getHostText) {
-	    		currentHostText = getText(ch, start, length);
-	    		getHostText = false;
-	    	} else if (getUrlText) {
-	    		currentUrlText = getText(ch, start, length);
-	    		if (currentUrlText != null) {
-		    		currentParameter = getRegexResult(currentUrlText, "\\[(.*) parameter\\]");
-		    		currentUrlText = getRegexResult(currentUrlText, "^([^\\[]+)");
-		    		if (currentUrlText != null)
-		    			currentUrlText = currentUrlText.trim();
-		    	}
-	    		getUrlText = false;
-	    	} else if (getParamText) {
-	    		currentParameter = getText(ch, start, length);
-	    		getParamText = false;
-	    	} else if (getSerialNumber) {
-	    		currentSerialNumber = getText(ch, start, length);
-	    		getSerialNumber = false;
-	    	} else if (getSeverityText) {
-	    		currentSeverityCode = getText(ch, start, length);
-	    		getSeverityText = false;
-	    	} else if (getBackupParameter) {
-	    		String tempURL = getText(ch,start,length);
-	    		if (tempURL != null && tempURL.contains("HTTP")) {
-	    			tempURL = tempURL.substring(0, tempURL.indexOf("HTTP"));
-	    		}
-	    		
-	    		if (tempURL != null && tempURL.contains("=") 
-	    				&& tempURL.indexOf('=') == tempURL.lastIndexOf('=')) {
-	    			currentBackupParameter = getRegexResult(tempURL, "\\?(.*?)=");
-	    		}
-	    		
-	    		getBackupParameter = false;
-	    	} 
+	    	if (getChannelVulnText || getHostText || getUrlText || getParamText || 
+	    			getSeverityText || getBackupParameter || getSerialNumber) {
+	    		addTextToBuilder(ch,start,length);
+	    	}
 	    }
 	}
 

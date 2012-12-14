@@ -501,13 +501,29 @@ public class ApplicationServiceImpl implements ApplicationService {
 			
 			if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
 				param = bean.getParameterFilter().trim();
-						
-			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, page, sort, field,
+					
+			Integer cweInteger = getCweId(bean);
+			
+			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, page, sort, field, cweInteger,
 										description, severity, path, param, bean.isOpen(), bean.isFalsePositive());
 		} else {
 			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null, 
-					true, false);
+					null, true, false);
 		}
+	}
+	
+	private Integer getCweId(TableSortBean bean) {
+		if (bean.getCweFilter() != null && !bean.getCweFilter().trim().equals("")) {
+			String cwe = bean.getCweFilter().trim();
+			
+			try {
+				return Integer.valueOf(cwe);
+			} catch (NumberFormatException e) {
+				log.warn("Invalid string submitted for CWE ID.", e);
+			}
+		}
+		
+		return null;
 	}
 	
 	@Override
@@ -526,7 +542,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
 			param = bean.getParameterFilter().trim();
 		
-		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param, 
+		Integer cweInteger = getCweId(bean);
+		
+		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param, cweInteger,
 														bean.isOpen(), bean.isFalsePositive());
 	}
 	

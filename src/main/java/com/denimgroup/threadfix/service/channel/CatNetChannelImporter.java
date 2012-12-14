@@ -31,7 +31,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -108,7 +107,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new CatNetSAXParser());
 	}
 
-	public class CatNetSAXParser extends DefaultHandler {
+	public class CatNetSAXParser extends HandlerWithBuilder {
 		private Boolean getChannelVulnText    = false;
 		private Boolean getCodeLineText       = false;
 		private Boolean getEntryPointText     = false;
@@ -259,8 +258,27 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	if (getChannelVulnText) {
+	    		currentChannelVulnCode = getBuilderText();
+	    		getChannelVulnText = false;
+	    	} else if (getCodeLineText) {
+	    		currentCodeLine = getBuilderText();
+	    		getCodeLineText = false;
+	    	} else if (getEntryPointText) {
+	    		currentEntryPoint = getBuilderText();
+	    		getEntryPointText = false;
+	    	} else if (getIdentifierText) {
+	    		currentNativeId = getBuilderText();
+	    		getIdentifierText = false;
+	    	} else if (getDate) {
+	    		date = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
+	    		getDate = false;
+	    	} else if (getDataFlowLine) {
+	    		currentDataFlowLineText = getBuilderText();
+	    		getDataFlowLine = false;
+	    	}
+	    	
 	    	if ("CallResult".equals(qName) || "MethodBoundary".equals(qName)) {
-	    		
 	    		Integer lineNum = null;
 	    		
 	    		try {
@@ -286,7 +304,8 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    	} else if ("Rule".equals(qName)) {
 	    		currentChannelVulnCode = null;
 	    	} else if ("Result".equals(qName)) {
-	    		Finding finding = constructFinding(currentUrlText, getNextParam(currentCodeLine, currentEntryPoint), 
+	    		Finding finding = constructFinding(currentUrlText, 
+	    				getNextParam(currentCodeLine, currentEntryPoint), 
 	    				currentChannelVulnCode, SEVERITIES_MAP.get(currentChannelVulnCode));
 	    		
 	    		finding.setNativeId(currentNativeId);
@@ -309,26 +328,9 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getDataFlowLine) {
-	    		currentDataFlowLineText = getText(ch, start, length);
-	    		getDataFlowLine = false;
-	    	}
-	    	
-	    	if (getChannelVulnText) {
-	    		currentChannelVulnCode = getText(ch, start, length);
-	    		getChannelVulnText = false;
-	    	} else if (getCodeLineText) {
-	    		currentCodeLine = getText(ch, start, length);
-	    		getCodeLineText = false;
-	    	} else if (getEntryPointText) {
-	    		currentEntryPoint = getText(ch, start, length);
-	    		getEntryPointText = false;
-	    	} else if (getIdentifierText) {
-	    		currentNativeId = getText(ch, start, length);
-	    		getIdentifierText = false;
-	    	} else if (getDate) {
-	    		date = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getText(ch, start, length));
-	    		getDate = false;
+	    	if (getDataFlowLine || getChannelVulnText || getCodeLineText || 
+	    			getEntryPointText || getIdentifierText || getDate) {
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}
@@ -338,7 +340,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new CatNetSAXValidator());
 	}
 	
-	public class CatNetSAXValidator extends DefaultHandler {
+	public class CatNetSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -388,11 +390,18 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
-	    	if (getDate) {
-	    		testDate = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getText(ch, start, length));
+	    @Override
+	    public void endElement(String uri, String name, String qName) {
+ 			if (getDate) {
+	    		testDate = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
 	    		getDate = false;
 	    		hasDate = true;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
 	}

@@ -194,6 +194,10 @@
 								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="descriptionFilterInput" /></td>
 							</tr>
 							<tr>
+								<td colspan="2"><b>CWE ID:</b></td>
+								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="cweFilterInput" /></td>
+							</tr>
+							<tr>
 								<td colspan="2"><b>Severity:</b></td>
 								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="severityFilterInput" /></td>
 							</tr>

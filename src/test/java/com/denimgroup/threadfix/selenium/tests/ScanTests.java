@@ -260,7 +260,7 @@ public class ScanTests extends BaseTest {
 				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
 				{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
-				{ XSS, "Critical", "/ZigguratUtilityWeb/Message.aspx", ""},
+				{ XSS, "Critical", "/ZigguratUtilityWeb/Message.aspx", "Msg"},
 				{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtPassword"},
 				{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtUsername"},
 				{ SQLI, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
@@ -431,7 +431,7 @@ public class ScanTests extends BaseTest {
 	}
 	
 	@Test
-	public void ntoSpiderScan(){
+	public void ntoSpiderScan() {
 		String key = "NTO Spider";
 		String[][] expectedResults = new String [][] {
 			{"Improper Authentication", "Critical", "/bank/login.aspx", ""},
@@ -454,7 +454,6 @@ public class ScanTests extends BaseTest {
 			{"Privacy Violation", "Medium", "/subscribe.aspx", ""},
 			{"Privacy Violation", "Medium", "/survey_questions.aspx", ""},
 			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
-			{"Use of Insufficiently Random Values", "Low", "", ""}
 		};
 		
 		runScanTest(key, expectedResults);
@@ -718,6 +717,7 @@ public class ScanTests extends BaseTest {
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/XSS-reflected.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/XSS-reflected2.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/XSS-stored.php", ""},
+			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/XSS.php", ""},
 			{INFORMATION_EXPOSURE, "Info", "/",""},
 			{DIRECTORY_LISTING,"Info","/demo/DirectoryIndexing/",""},
 		};

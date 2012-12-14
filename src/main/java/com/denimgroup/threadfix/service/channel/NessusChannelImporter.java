@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -93,7 +92,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new NessusSAXParser());
 	}
 	
-	public class NessusSAXParser extends DefaultHandler {
+	public class NessusSAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
 		private Boolean getFindings           = false;
 		private Boolean getNameText           = false;
@@ -103,7 +102,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 		private String currentSeverityCode    = null;
 		private String host                   = null;
 		
-		private StringBuilder pluginOutputString = null;
+		private String pluginOutputString = null;
 		
 		private String infoLineParamRegex = "\\+ The '([^&]+)' parameter of the [^ ]+ CGI :";
 		private String infoLinePathRegex = "\\+ The '[^&]+' parameter of the ([^ ]+) CGI :";
@@ -225,9 +224,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		currentChannelVulnCode = atts.getValue("pluginID");
 	    		currentSeverityCode = atts.getValue("severity");
 	    	} else if ("plugin_output".equals(qName)) {
-	    		pluginOutputString = new StringBuilder();
 	    		getFindings = true;
-	    	} else if ("tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
+	    	} else if (date == null && "tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
 	    		getDate = true;
 	    	} else if (host == null && "name".equals(qName)) {
 	    		getNameText = true;
@@ -236,25 +234,19 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if ("plugin_output".equals(qName)) {
+	    	if (getDate) {
+	    		String tempDateString = getBuilderText();
+	    		if (tempDateString != null) {
+	    			date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
+	    		}
+	    		getDate = false;
+	    	} else if (getFindings) {
+	    		pluginOutputString = getBuilderText();
 	    		parseFindingString();
 	    		pluginOutputString = null;
 	    		getFindings = false;
-	    	}
-	    }
-	    
-	    public void characters (char ch[], int start, int length) {
-	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
-	    		date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
-	    		getDate = false;
-	    		
-	    	} else if (getFindings) {
-	    		char [] mychars = new char[length];
-	    		System.arraycopy(ch, start, mychars, 0, length);
-	    		pluginOutputString.append(mychars);
 	    	} else if (getNameText) {
-	    		String text = getText(ch,start,length);
+	    		String text = getBuilderText();
 	    		
 	    		if ("TARGET".equals(text)) {
 	    			getHost = true;
@@ -262,7 +254,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		
 	    		getNameText = false;
 	    	} else if (getHost) {
-	    		String text = getText(ch,start,length);
+	    		String text = getBuilderText();
 	    		
 	    		if (text != null && text.startsWith("http")) {
 	    			host = text;
@@ -279,6 +271,12 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		}
 	    	}
 	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate || getFindings || getNameText || getHost) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
+	    }
 	}
 
 	@Override
@@ -286,7 +284,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 		return testSAXInput(new NessusSAXValidator());
 	}
 	
-	public class NessusSAXValidator extends DefaultHandler {
+	public class NessusSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
@@ -333,14 +331,20 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
-	    		String tempDateString = getText(ch,start,length);
+	    		String tempDateString = getBuilderText();
 	    		testDate = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
 	    		
 	    		hasDate = testDate != null;
 	    		
 	    		getDate = false;
+	    	}
+	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}

@@ -64,7 +64,12 @@ public class UserServiceImpl implements UserService {
 		this.accessControlMapDao = accessControlMapDao;
 	}
 
+	/**
+	 * Transactional(readOnly = false) here means that false will be put in to 
+	 * the LDAP user field and update correctly.
+	 */
 	@Override
+	@Transactional(readOnly = false)
 	public List<User> loadAllUsers() {
 		return userDao.retrieveAllActive();
 	}
@@ -76,7 +81,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User loadUser(String name) {
-		return userDao.retrieveByName(name);
+		User user = userDao.retrieveByName(name);
+		if (user != null && user.getIsLdapUser()) {
+			return null;
+		} else {
+			return user;
+		}
 	}
 
 	@Override
@@ -247,5 +257,10 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return organizationPermissions;
+	}
+
+	@Override
+	public User loadLdapUser(String name) {
+		return userDao.retrieveLdapUser(name);
 	}
 }

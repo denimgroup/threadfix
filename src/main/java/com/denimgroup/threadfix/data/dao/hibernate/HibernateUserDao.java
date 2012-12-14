@@ -66,7 +66,17 @@ public class HibernateUserDao implements UserDao {
 
 	@Override
 	public User retrieveByName(String name) {
-		return (User) getActiveUserCriteria().add(Restrictions.eq("name", name)).uniqueResult();
+		return (User) getActiveUserCriteria()
+				.add(Restrictions.eq("name", name))
+				.uniqueResult();
+	}
+	
+	@Override
+	public User retrieveLdapUser(String name) {
+		return (User) getActiveUserCriteria()
+				.add(Restrictions.eq("name", name))
+				.add(Restrictions.eq("isLdapUser", true))
+				.uniqueResult();
 	}
 
 	@Override

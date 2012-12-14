@@ -51,13 +51,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
 	@Autowired
 	private UserService userService;
-
-	@Override
-	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-		User user = userService.loadUser(username);
+	
+	public UserDetails loadUser(User user) {
 		if (user == null) {
-			throw new UsernameNotFoundException("");
+			return null;
 		}
 		
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
@@ -95,6 +92,16 @@ public class CustomUserDetailService implements UserDetailsService {
 				user.isHasChangedInitialPassword(), user.getId(), orgMap, appMap);
 
 		return userDetails;
+	}
+
+	@Override
+	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userService.loadUser(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("");
+		}
+		
+		return loadUser(user);
 	}
 	
 	private boolean hasReportsOnAnyObject(Map<Integer, Set<Permission>> map) {

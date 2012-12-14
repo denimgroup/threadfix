@@ -38,6 +38,12 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="label-2">LDAP user:</td>
+				<td class="inputValue-2" style="text-align: left;">
+					<form:checkbox onclick="togglePassword()" id="isLdapUserCheckbox" path="isLdapUser" />
+				</td>
+			</tr>
+			<tr>
 				<td class="label-2">Global Access:</td>
 				<td class="inputValue-2" style="text-align: left;">
 					<form:checkbox onclick="toggleRoles()" id="hasGlobalGroupAccessCheckbox" path="hasGlobalGroupAccess" />
@@ -149,6 +155,8 @@
 				toggleAppSelect();
 			}
 		}
+		
+		togglePassword();
 		</script>
 	
 		<table class="filteredTable">
