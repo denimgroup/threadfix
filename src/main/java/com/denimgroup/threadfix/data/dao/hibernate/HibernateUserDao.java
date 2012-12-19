@@ -68,7 +68,6 @@ public class HibernateUserDao implements UserDao {
 	public User retrieveByName(String name) {
 		return (User) getActiveUserCriteria()
 				.add(Restrictions.eq("name", name))
-				.add(Restrictions.eq("isLdapUser", false))
 				.uniqueResult();
 	}
 	
