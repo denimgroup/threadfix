@@ -262,18 +262,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean hasRemovedAdminPermissions(User user) {
 		
-		if (user == null || user.getId() == null ||
-				user.getGlobalRole().getId() == null) {
-			return true;
+		if (user == null || user.getId() == null) {
+			return true; // should never get here
+		}
+		
+		Set<Permission> dbPerms = getGlobalPermissions(user.getId());
+		
+		if (user.getGlobalRole() == null || user.getGlobalRole().getId() == null) {
+		 return dbPerms.contains(Permission.CAN_MANAGE_USERS) || 
+				dbPerms.contains(Permission.CAN_MANAGE_ROLES);
 		}
 		
 		Role newRole = roleDao.retrieveById(user.getGlobalRole().getId());
-				
+		
 		if (newRole == null) {
 			return false;
 		}
 		
-		Set<Permission> dbPerms = getGlobalPermissions(user.getId());
 		Set<Permission> newPerms = newRole.getPermissions();
 		
 		if (newPerms == null) {
