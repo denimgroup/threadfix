@@ -268,10 +268,9 @@ public class UserServiceImpl implements UserService {
 		
 		Set<Permission> dbPerms = getGlobalPermissions(user.getId());
 		
-		if ((user.getGlobalRole() == null || user.getGlobalRole().getId() == null) &&
-				(dbPerms.contains(Permission.CAN_MANAGE_USERS) || 
-				dbPerms.contains(Permission.CAN_MANAGE_ROLES))) {
-			return true;
+		if (user.getGlobalRole() == null || user.getGlobalRole().getId() == null) {
+		 return dbPerms.contains(Permission.CAN_MANAGE_USERS) || 
+				dbPerms.contains(Permission.CAN_MANAGE_ROLES);
 		}
 		
 		Role newRole = roleDao.retrieveById(user.getGlobalRole().getId());
