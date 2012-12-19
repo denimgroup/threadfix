@@ -258,6 +258,32 @@ public class UserServiceImpl implements UserService {
 		
 		return organizationPermissions;
 	}
+	
+	@Override
+	public boolean hasRemovedAdminPermissions(User user) {
+		
+		if (user == null || user.getId() == null ||
+				user.getGlobalRole().getId() == null) {
+			return true;
+		}
+		
+		Role newRole = roleDao.retrieveById(user.getGlobalRole().getId());
+				
+		if (newRole == null) {
+			return false;
+		}
+		
+		Set<Permission> dbPerms = getGlobalPermissions(user.getId());
+		Set<Permission> newPerms = newRole.getPermissions();
+		
+		if (newPerms == null) {
+			return false;
+		}
+		
+		return user.getGlobalRole() != null && 
+				(!newPerms.contains(Permission.CAN_MANAGE_USERS) && dbPerms.contains(Permission.CAN_MANAGE_USERS)) ||
+				(!newPerms.contains(Permission.CAN_MANAGE_ROLES) && dbPerms.contains(Permission.CAN_MANAGE_ROLES));
+	}
 
 	@Override
 	public User loadLdapUser(String name) {

@@ -121,6 +121,12 @@ public class EditUserController {
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
 			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
 		new UserValidator().validate(user, result);
+		
+		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
+			result.rejectValue("hasGlobalGroupAccess", null, null, 
+					"This would leave users unable to access the user management portion of ThreadFix.");
+		}
+		
 		if (result.hasErrors()) {
 			model.addAttribute("accessControlMapModel", getMapModel(userId));
 			model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
