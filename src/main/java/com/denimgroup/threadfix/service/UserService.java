@@ -118,4 +118,11 @@ public interface UserService {
 	 * @return
 	 */
 	Map<Integer, Set<Permission>> getOrganizationPermissions(Integer userId);
+
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	boolean hasRemovedAdminPermissions(User user);
 }
