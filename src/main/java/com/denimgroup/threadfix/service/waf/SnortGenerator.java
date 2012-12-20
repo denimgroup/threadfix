@@ -41,7 +41,7 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 	// STR_FIND_PARAM_START + param_name + STR_FIND_PARAM_MID + target_payload +
 	// STR_FIND_END
 	public static final String STR_FIND_PARAM_START = "/[?&]";
-	public static final String STR_FIND_PARAM_MID = "=[?&]*?";
+	public static final String STR_FIND_PARAM_MID = "=[^?&]*";
 	public static final String STR_FIND_PARAM_END = "/Ui\"";
 	
 	public static final String PAYLOAD_SQL_INJECTION = "(\\x27|\\x22|\\x2D\\x2D)";
