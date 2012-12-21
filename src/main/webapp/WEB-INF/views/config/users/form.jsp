@@ -69,7 +69,7 @@
 	
 	<div style="padding-top:8px">
 	<c:choose>
-		<c:when test="${ user['new'] }">	
+		<c:when test="${ user['new'] }">
 			<input id="addUserButton" type="submit" value="Add User" />
 			<span style="padding-left: 10px">
 				<a id="cancelLink" href="<spring:url value="/configuration/users" />">Back to Users Index</a>
@@ -167,7 +167,7 @@
 					<th class="medium">Role</th>
 					<th class="short">Edit</th>
 					<th class="short last">Delete</th>
-					<td style="background-color:#FFFFFF;padding-left:10px"><a style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
+					<td id="addPermissionButton" style="background-color:#FFFFFF;padding-left:10px"><a style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -239,7 +239,7 @@
 						'<tr><td>'+
 						'<input id="applicationIds${ status.count }" type="checkbox" value="${ application.id }" name="applicationIds">' +
 						'<input type="hidden" value="on" name="_applicationIds"></td>' +
-						'<td><c:out value="${ application.name }"/></td>' +
+						'<td id="applicationName${ status.count }"><c:out value="${ application.name }"/></td>' +
 						'<td>' + 
 						'<select id="roleSelect${ status.count }" name="roleIdMapList">' +
 						'	<option value="0">Select a Role</option>';
