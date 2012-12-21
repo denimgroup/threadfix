@@ -167,7 +167,7 @@
 					<th class="medium">Role</th>
 					<th class="short">Edit</th>
 					<th class="short last">Delete</th>
-					<td id="addPermissionButton" style="background-color:#FFFFFF;padding-left:10px"><a style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
+					<td style="background-color:#FFFFFF;padding-left:10px"><a id="addPermissionButton" style="text-decoration:none;" role="button" class="btn" href="javascript:showAddModal()">Add</a></td>
 				</tr>
 			</thead>
 			<tbody>
