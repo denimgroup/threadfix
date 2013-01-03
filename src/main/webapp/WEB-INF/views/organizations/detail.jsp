@@ -32,22 +32,22 @@
 			</tr>
 		</c:when>
 		<c:otherwise>
-			<c:forEach var="app" items="${ apps }">
+			<c:forEach var="app" items="${ apps }" varStatus="status">
 			<tr class="bodyRow">
-				<td>
+				<td id="appName${ status.count }">
 					<spring:url value="{orgId}/applications/{appId}" var="appUrl">
 						<spring:param name="orgId" value="${ organization.id }"/>
 						<spring:param name="appId" value="${ app.id }"/>
 					</spring:url>
 					<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
 				</td>
-				<td><c:out value="${ app.url }"/></td>
-				<td><c:out value="${ app.applicationCriticality.name }"/></td>
-				<td id="vulnCountCell"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[4] }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[3] }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[2] }"/></td>
-				<td><c:out value="${ app.vulnerabilityReport[1] }"/></td>
+				<td id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
+				<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
+				<td id="appTotalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
+				<td id="appCriticalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[4] }"/></td>
+				<td id="appHighVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[3] }"/></td>
+				<td id="appMediumVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[2] }"/></td>
+				<td id="appLowVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[1] }"/></td>
 			</tr>
 			</c:forEach>
 		</c:otherwise>
