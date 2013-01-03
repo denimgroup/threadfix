@@ -84,7 +84,7 @@ public class EditOrganizationController {
 		}
 
 		Organization organization = organizationService.loadOrganization(orgId);
-		if (organization != null) {
+		if (organization != null && organization.isActive()) {
 			ModelAndView mav = new ModelAndView("organizations/form");
 			mav.addObject(organization);
 			return mav;
@@ -99,7 +99,8 @@ public class EditOrganizationController {
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
+				!organization.isActive()) {
 			return "403";
 		}
 		
