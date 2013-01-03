@@ -57,7 +57,7 @@ public class Role extends AuditableEntity {
 	};
 	
 	public static final String[] ALL_PERMISSIONS = new String[] {
-		"canManageUsers", "canManageRoles", "canManageTeams", 
+		"canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
 		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
 		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
 		"canGenerateReports", "canViewJobStatuses", "canManageApplications"

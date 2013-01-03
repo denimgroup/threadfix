@@ -121,7 +121,7 @@
 	<c:if test="${ not empty application.scans }"> 
 	<h3 style="padding-top:10px;">All Open Vulnerabilities</h3>
 	
-	<p>Listing <c:out value="${ numVulns }"/>
+	<p>Listing <span id="totalVulnCount"><c:out value="${ numVulns }"/></span>
 		<c:choose>
 			<c:when test="${ numVulns == 1 }">
 				vulnerability
@@ -210,14 +210,14 @@
 								<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="parameterFilterInput" /></td>
 							</tr>
 							<tr>
-								<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
-								<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
-								<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
+								<td><a id="filterLink" href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
+								<td><a id="clearFilterLink" href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
+								<td><a id="hideFilterLink" href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
 							</tr>
 						</table>
 					</div>
 					<div id="showFilters" style="display:none;">
-						<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
+						<a id="showFiltersLink" href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
 					</div>
 					<script>toggleFilters(false, '#toReplace', '${ tableUrl }');</script>
 				</td>

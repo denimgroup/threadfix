@@ -32,7 +32,7 @@
 				<td colspan="4" style="text-align:center;">No scans found.</td>
 			</tr>
 		</c:if>
-		<c:forEach var="scan" items="${ application.scans }">
+		<c:forEach var="scan" items="${ application.scans }" varStatus="status">
 			<tr class="bodyRow">
 				<td><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
 				<td>
@@ -43,7 +43,7 @@
 				        <fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 				    </a>
 				</td>
-				<td><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
+				<td id="numTotalVulnerabilities${ status.count }"><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
 				<c:if test="${ canUploadScans }">
 				<td>
 					<spring:url value="scans/{scanId}/delete" var="deleteUrl">

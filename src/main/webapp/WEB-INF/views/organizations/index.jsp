@@ -34,9 +34,9 @@
 				<td colspan="8" style="text-align:center;">No teams found.</td>
 			</tr>
 		</c:if>
-		<c:forEach var="org" items="${ organizationList }">
+		<c:forEach var="org" items="${ organizationList }" varStatus="status">
 			<tr class="bodyRow">
-				<td class="details">
+				<td class="details" id="orgName${ status.count }">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ org.id }" />
 					</spring:url>
@@ -47,11 +47,11 @@
 				<td>
 					<c:out value="${ fn:length(org.activeApplications) }" />
 				</td>
-				<td><c:out value="${ org.vulnerabilityReport[5] }"/></td>
-				<td><c:out value="${ org.vulnerabilityReport[4] }"/></td>
-				<td><c:out value="${ org.vulnerabilityReport[3] }"/></td>
-				<td><c:out value="${ org.vulnerabilityReport[2] }"/></td>
-				<td><c:out value="${ org.vulnerabilityReport[1] }"/></td>
+				<td id="numTotalVulns${ status.count }"><c:out value="${ org.vulnerabilityReport[5] }"/></td>
+				<td id="numCriticalVulns${ status.count }"><c:out value="${ org.vulnerabilityReport[4] }"/></td>
+				<td id="numHighVulns${ status.count }"><c:out value="${ org.vulnerabilityReport[3] }"/></td>
+				<td id="numMediumVulns${ status.count }"><c:out value="${ org.vulnerabilityReport[2] }"/></td>
+				<td id="numLowVulns${ status.count }"><c:out value="${ org.vulnerabilityReport[1] }"/></td>
 			</tr>
 		</c:forEach>
 			<tr class="footer">
