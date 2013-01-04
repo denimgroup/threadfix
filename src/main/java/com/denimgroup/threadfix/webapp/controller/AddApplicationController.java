@@ -122,7 +122,7 @@ public class AddApplicationController {
 				return "403";
 			}
 			
-			permissionService.addPermissions(model, orgId, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
 					Permission.CAN_MANAGE_WAFS);
 			
 			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
@@ -130,7 +130,6 @@ public class AddApplicationController {
 			
 			model.addAttribute("canSetWaf", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, null));
-			
 			
 			Application application = new Application();
 			application.setOrganization(organization);
@@ -145,7 +144,7 @@ public class AddApplicationController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String newSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
-			SessionStatus status) {
+			SessionStatus status, Model model) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
@@ -154,6 +153,15 @@ public class AddApplicationController {
 		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {
+			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					Permission.CAN_MANAGE_WAFS);
+			
+			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
+			
+			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_WAFS, orgId, null));
+			
 			return "applications/form";
 		} else {
 

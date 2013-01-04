@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -130,7 +131,7 @@ public class EditApplicationController {
 
 		ModelAndView mav = new ModelAndView("applications/form");
 		
-		permissionService.addPermissions(mav, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
 				Permission.CAN_MANAGE_WAFS);
 		
 		mav.addObject("canSetDefectTracker", permissionService.isAuthorized(
@@ -147,7 +148,7 @@ public class EditApplicationController {
 	public String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status, Model model) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
@@ -163,6 +164,15 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
+			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					Permission.CAN_MANAGE_WAFS);
+			
+			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
+			
+			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_WAFS, orgId, appId));
+			
 			return "applications/form";
 		} else {
 			applicationService.storeApplication(application);
