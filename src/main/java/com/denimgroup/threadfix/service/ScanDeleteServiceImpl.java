@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.Application;
@@ -23,6 +24,7 @@ import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
 import com.denimgroup.threadfix.data.entities.WafRule;
 
 @Service
@@ -33,6 +35,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 	private ScanDao scanDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private VulnerabilityCommentDao vulnerabilityCommentDao = null;
 	private FindingDao findingDao = null;
 	private WafRuleDao wafRuleDao = null;
 	private DefectDao defectDao = null;
@@ -40,14 +43,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	@Autowired
 	public ScanDeleteServiceImpl(ScanDao scanDao,
 			VulnerabilityDao vulnerabilityDao,
-			FindingDao findingDao,
-			WafRuleDao wafRuleDao,
+			VulnerabilityCommentDao vulnerabilityCommentDao,
+			FindingDao findingDao, WafRuleDao wafRuleDao,
 			DefectDao defectDao) {
 		this.scanDao = scanDao;
 		this.vulnerabilityDao = vulnerabilityDao;
 		this.findingDao = findingDao;
 		this.wafRuleDao = wafRuleDao;
 		this.defectDao = defectDao;
+		this.vulnerabilityCommentDao = vulnerabilityCommentDao;
 	}
 	
 	/**
@@ -551,8 +555,6 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			return;
 		}
 		
-		//if (app.getScans().size() == 1 && app.getScans().get(0).getId().equals(scan.getId()))
-		
 		for (Vulnerability vuln : app.getVulnerabilities()) {
 			if (vuln == null) continue;
 			// if there are no findings then delete - this shouldn't happen
@@ -633,6 +635,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					log.debug("Deleting WAF Rule with ID " + wafRule.getId() 
 							+ " because it was attached to the Vulnerability with ID " + vuln.getId());
 					wafRuleDao.delete(wafRule);
+				}
+			}
+			
+			if (vuln.getVulnerabilityComments() != null && !vuln.getVulnerabilityComments().isEmpty()) {
+				for (VulnerabilityComment comment : vuln.getVulnerabilityComments()) {
+					vulnerabilityCommentDao.delete(comment);
 				}
 			}
 			
