@@ -84,29 +84,47 @@ showErrorResponse = function showErrorResponse(text, element) {
 };
 
 showResponse = function(type, text, element) {
+	var message = '', html = '';
 	
-	var json = JSON.parse(text);
-	var message = json.message;
-		var html;
-	
-	if (message === 'Authentication failed') {
-		html = json.error;
+	if (text === 'Authentication failed') {
+		html = text;
 		$('#projectList').html('');
 		$('#projectList').attr("disabled","disabled");
-	} else if (message === "Default Password") {
-		html = json.error;
 	} else {
-		html = 'Connection successful';
-		$('#projectList').html('');
-		$('#projectList').removeAttr("disabled");
-		
-		var product_array = json.names.split(",");
-		for ( var i = 0; i < product_array.length; i++) {
-			$('#projectList').append(
-					'<option value="' + product_array[i] + '">'
-							+ product_array[i] + '</option>');
+		try
+		{
+		   var json = JSON.parse(text);
+		   message = json.message;
+		   
+		   if (message === "Default Password") {
+				html = json.error;
+			} else {
+				
+				if (/^\s+$/.test(json.names)) {
+					html = 'No Products available';
+				} else {
+					html = 'Connection successful';
+					$('#projectList').html('');
+					$('#projectList').removeAttr("disabled");
+					
+					var product_array = json.names.split(",");
+					for ( var i = 0; i < product_array.length; i++) {
+						$('#projectList').append(
+								'<option value="' + product_array[i] + '">'
+										+ product_array[i] + '</option>');
+					}
+				}
+			}
+		}
+		catch(e)
+		{
+		   message = "Something went wrong";
+		   $('#projectList').html('');
+		   $('#projectList').attr("disabled","disabled");
+		   html = "Something went wrong. This error is sometimes caused by an incomplete TFS configuration (<a target=\"_blank\" href=\"http://code.google.com/p/threadfix/wiki/DefectTrackers#Microsoft_TFS\">wiki page</a>). Check the error logs or contact your administrator for more information.";
 		}
 	}
+	
 	var responseElement = $("#jsonResult");
 	var responseText = '';
 	if (responseElement.length == 0) {
