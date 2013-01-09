@@ -67,6 +67,16 @@ template "/reset-database.sh" do
   mode "0744"
 end
 
+script "add .microsoft directory" do
+  interpreter "bash"
+  user "root"
+  cwd "/usr/share/tomcat7"
+  code <<-EOH
+    sudo mkdir .microsoft
+    sudo chown tomcat7:tomcat7 .microsoft
+  EOH
+end
+
 script "run fabric" do
   interpreter "bash"
   user "root"

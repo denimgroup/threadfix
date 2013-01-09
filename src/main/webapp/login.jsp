@@ -36,11 +36,11 @@
 		<div style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-191px;">
 			<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg" alt="Denim Group" width="177px" height="81px"/>
 		</div>
-		<div style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
-			<c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message =='Bad credentials'}">
+		<c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message =='Bad credentials'}">
+			<div id="loginError" style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
 				Error: Username or Password incorrect
-			</c:if>
-		</div>
+			</div>
+		</c:if>
 		<div style="position:absolute;left:50%;top:50%;margin-left:-143px;margin-top:-32px;color:black;width:70px;text-align:right;">
 			Username
 		</div>
