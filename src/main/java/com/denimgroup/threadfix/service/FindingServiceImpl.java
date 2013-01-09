@@ -87,7 +87,8 @@ public class FindingServiceImpl implements FindingService {
 			result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
 		}
 
-		if (finding != null && (finding.getLongDescription() == null || finding.getLongDescription().isEmpty())) {
+		if (finding != null && (finding.getLongDescription() == null || 
+				finding.getLongDescription().trim().isEmpty())) {
 			result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
 		}
 
