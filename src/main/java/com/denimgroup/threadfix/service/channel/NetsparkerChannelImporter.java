@@ -31,6 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -128,6 +129,14 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		
+	    		// The old XML format didn't include severities. As severities are required
+	    		// for vulnerabilities to show on the application page, let's assign medium 
+	    		// severity. This is only known to affect beta versions of Netsparker.
+	    		if (finding != null && finding.getChannelSeverity() == null) {
+	    			ChannelSeverity mediumChannelSeverity = channelSeverityDao.retrieveByCode(channelType, "Medium");
+	    			finding.setChannelSeverity(mediumChannelSeverity);
+	    		}
+
 	    		add(finding);
 	    		
 	    		currentChannelVulnCode = null;

@@ -98,6 +98,8 @@ showResponse = function(type, text, element) {
 		   
 		   if (message === "Default Password") {
 				html = json.error;
+		   } else if (message === "Authentication failed") {
+				html = json.error;
 			} else {
 				
 				if (/^\s+$/.test(json.names)) {
