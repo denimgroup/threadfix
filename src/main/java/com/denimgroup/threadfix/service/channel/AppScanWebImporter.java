@@ -292,9 +292,10 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    private void setTestStatus() {
 	    	boolean fileFormat = (xmlReport && appscanInfo && summary && results);
 	    	
-	    	if (!fileFormat)
+	    	if (!fileFormat) {
 	    		testStatus = WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
+	    		return;
+	    	} else if (hasDate)
 	    		testStatus = checkTestDate();
 	    	if ((!hasDate || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
 	    		testStatus = EMPTY_SCAN_ERROR;
