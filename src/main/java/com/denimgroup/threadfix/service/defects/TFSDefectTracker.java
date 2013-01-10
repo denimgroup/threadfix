@@ -196,10 +196,20 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public String getProductNames() {
 		log.info("Getting list of product names.");
+		WorkItemClient workItemClient = null;
+		
+		try {
+			workItemClient = getClient();
+		} catch (TFSUnauthorizedException e) {
+			log.warn("UnauthorizedException encountered, returning an unauthorized message.");
+			setLastError("Invalid username / password combination");
+			return null;
+		}
 
-		WorkItemClient workItemClient = getClient();
-
-		ProjectCollection collection = workItemClient.getProjects();
+		ProjectCollection collection = null;
+		if (workItemClient != null) {
+			collection = workItemClient.getProjects();
+		}
 
 		if (collection == null || collection.size() == 0) {
 			log.warn("Collection of projects was null or empty.");

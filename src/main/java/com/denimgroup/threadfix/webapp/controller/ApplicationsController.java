@@ -243,7 +243,7 @@ public class ApplicationsController {
 		}
 
 		return "{ \"message\" : \"Authentication success\", " +
-				"\"names\" : " + JSONObject.quote(productSort(dt.getProductNames()))  + "}";
+				"\"names\" : " + JSONObject.quote(productSort(result))  + "}";
 	}
 	
 	private String productSort(String products) {
