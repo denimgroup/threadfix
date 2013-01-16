@@ -65,12 +65,12 @@
 			</tr>
 		</c:when>
 		<c:otherwise>
-		<c:forEach var="finding" items="${ findingList }">
+		<c:forEach var="finding" items="${ findingList }" varStatus="status">
 			<tr class="bodyRow">
-				<td>
+				<td id="unmappedSeverity${ status.count }">
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>
-				<td>
+				<td id="unmappedVulnerability${ status.count }">
 					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
 					<spring:param name="scanId" value="${ scan.id }" />
 						<spring:param name="findingId" value="${ finding.id }" />
@@ -79,10 +79,10 @@
 					    <c:out value="${ finding.channelVulnerability.name }"/>
 					</a>
 				</td>
-				<td>
+				<td id="unmappedPath${ status.count }">
 					<c:out value="${ finding.surfaceLocation.path }"/>
 				</td>
-				<td>
+				<td id="unmappedParameter${ status.count }">
 					<c:out value="${ finding.surfaceLocation.parameter }"/>
 				</td>
 				<td>
@@ -93,7 +93,7 @@
 						<c:out value="${ finding.vulnerability.id }"/>
 					</a>
 				</td>
-				<td>
+				<td id="unmappedMergedResults${ status.count }">
 					<c:out value="${ finding.numberMergedResults }"/>
 				</td>
 			</tr>

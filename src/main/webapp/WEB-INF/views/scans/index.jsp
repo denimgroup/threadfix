@@ -34,8 +34,8 @@
 		</c:if>
 		<c:forEach var="scan" items="${ application.scans }" varStatus="status">
 			<tr class="bodyRow">
-				<td><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
-				<td>
+				<td id="channelType${ status.count }"><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
+				<td id="importTime${ status.count }">
 			        <spring:url value="scans/{scanId}" var="detailUrl">
                         <spring:param name="scanId" value="${ scan.id }"/>
                        </spring:url>
