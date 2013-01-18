@@ -35,11 +35,11 @@
 		<c:forEach var="scan" items="${ application.scans }" varStatus="status">
 			<tr class="bodyRow">
 				<td id="channelType${ status.count }"><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
-				<td id="importTime${ status.count }">
+				<td>
 			        <spring:url value="scans/{scanId}" var="detailUrl">
                         <spring:param name="scanId" value="${ scan.id }"/>
                        </spring:url>
-                       <a href="${ fn:escapeXml(detailUrl) }">
+                       <a id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
 				        <fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 				    </a>
 				</td>
