@@ -50,7 +50,7 @@
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Generate Waf Rules</td>
+					<td>Generate WAF Rules</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canGenerateWafRulesTrue" path="canGenerateWafRules"
 							value="true" /></td>
@@ -64,7 +64,7 @@
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Api Keys</td>
+					<td>Manage API Keys</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageApiKeysTrue" path="canManageApiKeys" value="true" />
 					</td>
@@ -156,7 +156,7 @@
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Wafs</td>
+					<td>Manage WAFs</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageWafsTrue" path="canManageWafs" value="true" /></td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
