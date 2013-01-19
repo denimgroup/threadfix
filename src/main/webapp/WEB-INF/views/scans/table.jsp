@@ -70,12 +70,12 @@
 				<td id="mappedSeverity${ status.count }">
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>
-				<td id="mappedVulnType${ status.count }">
+				<td>
 					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
 					<spring:param name="scanId" value="${ scan.id }" />
 						<spring:param name="findingId" value="${ finding.id }" />
 					</spring:url>
-					<a href="${ fn:escapeXml(findingUrl) }">
+					<a id="mappedVulnType${ status.count }" href="${ fn:escapeXml(findingUrl) }">
 					    <c:out value="${ finding.channelVulnerability.name }"/>
 					</a>
 				</td>
