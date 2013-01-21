@@ -162,7 +162,7 @@
 			<spring:url value="{appId}/closedVulnerabilities" var="closedVulnUrl">	
 				<spring:param name="appId" value="${ application.id }"/>
 			</spring:url>	
-			<a href="${ fn:escapeXml(closedVulnUrl) }">View <c:out value="${ numClosedVulns }"/> closed 
+			<a id="viewClosedVulnsLink" href="${ fn:escapeXml(closedVulnUrl) }">View <c:out value="${ numClosedVulns }"/> closed 
 			<c:choose>
 			<c:when test="${ numClosedVulns == 1 }">
 				Vulnerability.
