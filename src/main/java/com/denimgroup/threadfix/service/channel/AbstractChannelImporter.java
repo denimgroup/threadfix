@@ -246,7 +246,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
 			return new BigInteger(1, messageDigest.digest()).toString(16);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			log.error("Can't find MD5 hash function to hash finding info", e);
 			return null;
 		}
 	}
