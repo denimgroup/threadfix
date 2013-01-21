@@ -156,7 +156,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			this.inputStream = new FileInputStream(fileName);
 			this.inputFileName = new File(fileName).getAbsolutePath();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.warn("It appears that the scan file did not save correctly and is therefore not available to the scan file parser",e);
 		}
 	}
 	
