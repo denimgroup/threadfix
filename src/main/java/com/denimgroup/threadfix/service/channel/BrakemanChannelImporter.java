@@ -217,7 +217,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			closeInputStream(inputStream);
 			inputStream = new ByteArrayInputStream(byteArray);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Problems manipulating input stream and byte array.", e);
 		} 
 		
 		if (byteArray == null) {

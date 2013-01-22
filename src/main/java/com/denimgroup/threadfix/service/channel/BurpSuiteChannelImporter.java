@@ -87,13 +87,13 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 			}
 			fullString = buffer.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warn("IOException while trying to clean input stream", e);
 		}
 		
 		try {
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warn("IOException while trying to close file input stream.", e);
 		}
 		
 		inputStream = new ByteArrayInputStream(fullString.getBytes());

@@ -491,11 +491,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		try {
 			date = new SimpleDateFormat(formatString, Locale.US).parse(dateString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.warn("Parsing of date from '" + dateString + "' failed.", e);
 		}
 
 		if (date != null) {
-			log.debug("Successfully parsed date: " + date.toString() + ".");
+			log.debug("Successfully parsed date: " + date + ".");
 			Calendar scanTime = new GregorianCalendar();
 			scanTime.setTime(date);
 			return scanTime;
@@ -521,8 +521,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				inputStream = zipFile.getInputStream(auditFile);
 			} catch (IOException e) {
-				log.warn("There was a failure trying to read a file from a zip.");
-				e.printStackTrace();
+				log.warn("There was a failure trying to read a file from a zip.", e);
 			}
 		}
 
@@ -657,7 +656,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				inputStream = new FileInputStream(inputFileName);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				log.error("Cannot find file '" + inputFileName + "'.", e);
 			}
 		}
 		
@@ -698,10 +697,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		try {
 			readSAXInput(handler);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Problems reading file.", e);
 		} catch (SAXException e) {
-			if (!e.getMessage().equals(completionCode))
-				e.printStackTrace();
+			if (!e.getMessage().equals(completionCode)) {
+				log.warn("SAX parsing problems.", e);
+			}
 		} finally {
 			closeInputStream(inputStream);
 		}
