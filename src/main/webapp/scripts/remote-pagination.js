@@ -46,23 +46,23 @@ function refillElementSort(elementId, endPoint, page, field)
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "descriptionFilter" : ' + JSON.stringify($("#descriptionFilterInput").val().trim());
+		data += ', "descriptionFilter" : ' + JSON.stringify($.trim($("#descriptionFilterInput").val()));
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "severityFilter" : ' + JSON.stringify($("#severityFilterInput").val().trim());
+		data += ', "severityFilter" : ' + JSON.stringify($.trim($("#severityFilterInput").val()));
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "locationFilter" : ' + JSON.stringify($("#locationFilterInput").val().trim());
+		data += ', "locationFilter" : ' + JSON.stringify($.trim($("#locationFilterInput").val()));
 	}
 		
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
-		data += ', "parameterFilter" : ' + JSON.stringify($("#parameterFilterInput").val().trim());
+		data += ', "parameterFilter" : ' + JSON.stringify($.trim($("#parameterFilterInput").val()));
 	}
 	
 	if (typeof($("#cweFilterInput").val()) != 'undefined') {
-		data += ', "cweFilter" : ' + JSON.stringify($("#cweFilterInput").val().trim());
+		data += ', "cweFilter" : ' + JSON.stringify($.trim($("#cweFilterInput").val()));
 	}
 	
 	data += "}";
