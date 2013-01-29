@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2011 Denim Group, Ltd.
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
-//     Version 1.1 (the "License"); you may not use this file except in
+//     Version 2.0 (the "License"); you may not use this file except in
 //     compliance with the License. You may obtain a copy of the License at
 //     http://www.mozilla.org/MPL/
 //
@@ -12,7 +12,7 @@
 //     License for the specific language governing rights and limitations
 //     under the License.
 //
-//     The Original Code is Vulnerability Manager.
+//     The Original Code is ThreadFix.
 //
 //     The Initial Developer of the Original Code is Denim Group, Ltd.
 //     Portions created by Denim Group, Ltd. are Copyright (C)
@@ -156,7 +156,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			this.inputStream = new FileInputStream(fileName);
 			this.inputFileName = new File(fileName).getAbsolutePath();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.warn("It appears that the scan file did not save correctly and is therefore not available to the scan file parser",e);
 		}
 	}
 	
@@ -246,7 +246,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
 			return new BigInteger(1, messageDigest.digest()).toString(16);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			log.error("Can't find MD5 hash function to hash finding info", e);
 			return null;
 		}
 	}
@@ -491,11 +491,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		try {
 			date = new SimpleDateFormat(formatString, Locale.US).parse(dateString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.warn("Parsing of date from '" + dateString + "' failed.", e);
 		}
 
 		if (date != null) {
-			log.debug("Successfully parsed date: " + date.toString() + ".");
+			log.debug("Successfully parsed date: " + date + ".");
 			Calendar scanTime = new GregorianCalendar();
 			scanTime.setTime(date);
 			return scanTime;
@@ -521,8 +521,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				inputStream = zipFile.getInputStream(auditFile);
 			} catch (IOException e) {
-				log.warn("There was a failure trying to read a file from a zip.");
-				e.printStackTrace();
+				log.warn("There was a failure trying to read a file from a zip.", e);
 			}
 		}
 
@@ -657,7 +656,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				inputStream = new FileInputStream(inputFileName);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				log.error("Cannot find file '" + inputFileName + "'.", e);
 			}
 		}
 		
@@ -698,10 +697,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		try {
 			readSAXInput(handler);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Problems reading file.", e);
 		} catch (SAXException e) {
-			if (!e.getMessage().equals(completionCode))
-				e.printStackTrace();
+			if (!e.getMessage().equals(completionCode)) {
+				log.warn("SAX parsing problems.", e);
+			}
 		} finally {
 			closeInputStream(inputStream);
 		}
