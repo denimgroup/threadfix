@@ -29,6 +29,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
@@ -49,6 +52,17 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  * @author mcollins
  */
 public class AppScanSourceChannelImporter extends AbstractChannelImporter {
+	
+	private static final Map<String, String> regexMap = new HashMap<String,String>();
+	static {
+		regexMap.put("System.Data.Common.DbDataReader.get_Item", 
+				"System\\.Data\\.Common\\.DbDataReader\\.get_Item " +
+				"\\( \\(System\\.String\\)\"([^\"]+)\"");
+		regexMap.put("System.Web.HttpRequest.get_Item", 
+				"System\\.Web\\.HttpRequest\\.get_Item \\( \\(System.String\\)\"([^\"]+)\" \\)");
+		regexMap.put("System.Web.UI.WebControls.TextBox.get_Text", 
+				"([^ >\\.]+) . System.Web.UI.WebControls.TextBox.get_Text \\(\\)");
+	}
 
 	@Autowired
 	public AppScanSourceChannelImporter(ChannelTypeDao channelTypeDao,
@@ -166,17 +180,13 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		String currentPath = fileMap.get(siteMap.get(findingMap.get("siteId")).get("fileId"));
 	    		String currentSeverityCode = findingMap.get("severity");
 	    		String lineNumberString = fileMap.get(siteMap.get(findingMap.get("siteId")).get("line"));
-	    		String lineString = siteMap.get(findingMap.get("siteId")).get("cxt");
-	    		String ordString = siteMap.get(findingMap.get("siteId")).get("ord");
 	    		
 	    		Integer lineNumber = parseInt(lineNumberString, "line");
 	    		if (lineNumber == null) {
 	    			lineNumber = -1;
 	    		}
 	    		
-	    		String currentParameter = parseParam(lineString, parseInt(ordString, "ord"));
-	    		
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
+	    		Finding finding = constructFinding(currentPath, null, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		finding.setSourceFileLocation(currentPath);
 	    		
@@ -187,19 +197,40 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    			finding.setDataFlowElements(getDataFlowElements(atts.getValue("trace")));
 	    		}
 	    		
+	    		String param = parseParameter(finding);
+	    		finding.getSurfaceLocation().setParameter(param);
+	    		
 	    		add(finding);
 	    	}
 	    }
 	    
-	    private String parseParam(String line, Integer ord) {
-	    	if (line == null || line.trim().isEmpty() || ord == null || ord < 1) {
+	    private String parseParameter(Finding finding) {
+	    	if (finding == null || finding.getDataFlowElements() == null || 
+	    			finding.getDataFlowElements().size() < 1 ||
+	    			finding.getDataFlowElements().get(0) == null ||
+	    			finding.getDataFlowElements().get(0).getLineText() == null) {
 	    		return null;
 	    	}
 	    	
-	    	return null;
+    		String line = finding.getDataFlowElements().get(0).getLineText();
+    		
+    		for (Entry<String, String> entry : regexMap.entrySet()) {
+    			if (entry != null && entry.getKey() != null && 
+    					line.contains(entry.getKey())) {
+    				String possibleParameter = getRegexResult(line, entry.getValue());
+    				if (possibleParameter != null) {
+    					return possibleParameter;
+    				}
+    			}
+    		}
+    		
+    		return null;
 	    }
 	    
 	    private Integer parseInt(String maybeInt, String name) {
+	    	if (maybeInt == null) {
+	    		return null;
+	    	}
 	    	try {
     			return Integer.parseInt(maybeInt);
     		} catch (NumberFormatException e) {
@@ -241,15 +272,33 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	}
 
 	public static void main(String[] args) {
-		String testString = "2,4.,66,35.,27..";
+//		String testString = "2,4.,66,35.,27..";
+//		
+//		String[] strings = testString.split("(,|\\.+,|\\.+)");
+//		
+//		for (String string:strings) {
+//			if (!string.trim().isEmpty())
+//				System.out.println(string);
+//		}
+//		
+		String string = "this-&gt;lblCcf . System.Web.UI.WebControls.Label.set_Text ( reader -&gt; System.Data.Common.DbDataReader.get_Item((System.String)&quot;CcfUsed&quot;) -&gt; System.Object.ToString() )";
+		String regex = "System\\.Data\\.Common\\.DbDataReader\\.get_Item\\(\\(System\\.String\\)&quot;([^&]+)&quot;";
+		System.out.println(getRegexResult2(string, regex));
 		
-		String[] strings = testString.split("(,|\\.+,|\\.+)");
-		
-		for (String string:strings) {
-			if (!string.trim().isEmpty())
-				System.out.println(string);
+	}
+	
+	public static String getRegexResult2(String targetString, String regex) {
+		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
+			return null;
 		}
-		
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(targetString);
+
+		if (matcher.find())
+			return matcher.group(1);
+		else
+			return null;
 	}
 	
 	@Override
