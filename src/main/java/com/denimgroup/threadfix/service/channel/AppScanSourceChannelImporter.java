@@ -62,6 +62,14 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 				"System\\.Web\\.HttpRequest\\.get_Item \\( \\(System.String\\)\"([^\"]+)\" \\)");
 		regexMap.put("System.Web.UI.WebControls.TextBox.get_Text", 
 				"([^ >\\.]+) . System.Web.UI.WebControls.TextBox.get_Text \\(\\)");
+		regexMap.put("System.Web.UI.WebControls.HiddenField.get_Text", 
+				"([^ >\\.]+) . System.Web.UI.WebControls.HiddenField.get_Value \\(\\)");
+		regexMap.put("javax.servlet.http.HttpSession.getAttribute",
+				"javax\\.servlet\\.http\\.HttpSession\\.getAttribute \\( \"([^\"]+)\" \\)");
+		regexMap.put("java.sql.ResultSet.getString",
+				"java\\.sql\\.ResultSet\\.getString \\( \"([^\"]+)\" \\)");
+		regexMap.put("javax.servlet.ServletRequest.getParameter",
+				"javax\\.servlet\\.ServletRequest\\.getParameter \\( \"([^\"]+)\" \\)");
 	}
 
 	@Autowired
