@@ -264,6 +264,11 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		List<String> blankList = Arrays.asList(new String[] {"-"});
 		List<String> statusList = Arrays.asList(new String[] {"Open"});
 		List<String> priorities = getNamesFromList("priority");
+		
+		if (components == null || components.isEmpty()) {
+			components = Arrays.asList("-");
+		}
+		
 		ProjectMetadata data = new ProjectMetadata(components, blankList, 
 				blankList, statusList, priorities);
 		
@@ -303,9 +308,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				" \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," +
 				" \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," +
 				" \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," +
-				" \"description\": " + JSONObject.quote(description) + "," +
-				" \"components\": [ { \"id\": " + JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]" +
-				" } }";
+				" \"description\": " + JSONObject.quote(description);
+
+		if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
+			payload += "," + " \"components\": [ { \"id\": " + 
+					JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]";
+		}
+				
+		payload += " } }";
 				
 		String result = postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;
