@@ -33,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +67,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (tempUrl.endsWith("/")) {
 			tempUrl = tempUrl.concat("rest/api/2/");
 		} else {
-			tempUrl = tempUrl.concat("rest/api/2/");
+			tempUrl = tempUrl.concat("/rest/api/2/");
 		}
 
 		return tempUrl;
@@ -105,14 +103,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 
 		try {
-			HttpsURLConnection m_connect = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 
-			setupAuthorization(m_connect, username, password);
+			setupAuthorization(httpConnection, username, password);
 			
-			m_connect.addRequestProperty("Content-Type", "application/json");
-			m_connect.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", "application/json");
+			httpConnection.addRequestProperty("Accept", "application/json");
 			
-			String headerResult = m_connect.getHeaderField("X-Seraph-LoginReason");
+			String headerResult = httpConnection.getHeaderField("X-Seraph-LoginReason");
 
 			return headerResult != null && headerResult.equals("AUTHENTICATION_DENIED");
 		} catch (IOException e) {

@@ -26,12 +26,11 @@ package com.denimgroup.threadfix.service.defects;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -200,16 +199,16 @@ public abstract class AbstractDefectTracker {
 			return null;
 		}
 		InputStream is = null;
-		HttpsURLConnection m_connect;
+		HttpURLConnection httpConnection;
 		try {
-			m_connect = (HttpsURLConnection) url.openConnection();
+			httpConnection = (HttpURLConnection) url.openConnection();
 
-			setupAuthorization(m_connect, username, password);
+			setupAuthorization(httpConnection, username, password);
 			
-			m_connect.addRequestProperty("Content-Type", "application/json");
-			m_connect.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", "application/json");
+			httpConnection.addRequestProperty("Accept", "application/json");
 
-			is = m_connect.getInputStream();
+			is = httpConnection.getInputStream();
 			
 			return is;
 		} catch (IOException e) {
@@ -256,21 +255,21 @@ public abstract class AbstractDefectTracker {
 			return null;
 		}
 		
-		HttpsURLConnection m_connect;
+		HttpURLConnection httpConnection = null;
 		try {
-			m_connect = (HttpsURLConnection) url.openConnection();
+			httpConnection = (HttpURLConnection) url.openConnection();
 
-			setupAuthorization(m_connect, username, password);
+			setupAuthorization(httpConnection, username, password);
 			
-			m_connect.addRequestProperty("Content-Type", "application/json");
-			m_connect.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", "application/json");
+			httpConnection.addRequestProperty("Accept", "application/json");
 			
-			m_connect.setDoOutput(true);
-		    OutputStreamWriter wr = new OutputStreamWriter(m_connect.getOutputStream());
+			httpConnection.setDoOutput(true);
+		    OutputStreamWriter wr = new OutputStreamWriter(httpConnection.getOutputStream());
 		    wr.write(data);
 		    wr.flush();
 
-			InputStream is = m_connect.getInputStream();
+			InputStream is = httpConnection.getInputStream();
 			
 			return is;
 		} catch (IOException e) {
@@ -298,7 +297,7 @@ public abstract class AbstractDefectTracker {
 		return test;
 	}
 	
-	protected void setupAuthorization(HttpsURLConnection connection,
+	protected void setupAuthorization(HttpURLConnection connection,
 			String username, String password) {
 		String login = username + ":" + password;
 		String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
