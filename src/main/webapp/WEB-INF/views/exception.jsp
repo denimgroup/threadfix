@@ -16,4 +16,5 @@
 
 <br/><br/>
 
-<a href="/threadfix/organizations">Back to Home Page</a>
+<spring:url value="/" var="homeUrl"/>
+<a href="<c:out value="${homeUrl}"/>">Back to Home Page</a>
