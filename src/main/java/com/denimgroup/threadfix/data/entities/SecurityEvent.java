@@ -43,6 +43,7 @@ public class SecurityEvent extends BaseEntity {
 	private static final long serialVersionUID = -5489815525873130309L;
 
 	private WafRule wafRule;
+	private Integer backupWafRuleId = null;
 	
 	@Size(max = 1024, message = "{errors.maxlength}")
 	private String logText;
@@ -111,5 +112,21 @@ public class SecurityEvent extends BaseEntity {
 
 	public void setAttackerIP(String attackerIP) {
 		this.attackerIP = attackerIP;
+	}
+
+	public void backUpWafRule() {
+		if (getWafRule() != null) {
+			setBackupWafRuleId(getWafRule().getId());
+			setWafRule(null);
+		}
+	}
+
+	@Column(nullable=true)
+	public Integer getBackupWafRuleId() {
+		return backupWafRuleId;
+	}
+
+	public void setBackupWafRuleId(Integer backupWafRuleId) {
+		this.backupWafRuleId = backupWafRuleId;
 	}
 }
