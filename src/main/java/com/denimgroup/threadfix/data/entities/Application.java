@@ -60,7 +60,6 @@ public class Application extends AuditableEntity {
 	private String name;
 
 	@URL(message = "{errors.url}")
-	@NotEmpty(message = "{errors.required}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
 	private String url;
 	

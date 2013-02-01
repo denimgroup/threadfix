@@ -53,12 +53,14 @@
 
 	<table class="dataTable">
 		<tbody>
-			<tr>
-				<td class="label">URL:</td>
-				<td class="inputValue">
-					<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
-				</td>
-			</tr>
+			<c:if test="${ not empty application.url }">
+				<tr>
+					<td class="label">URL:</td>
+					<td class="inputValue">
+						<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
+					</td>
+				</tr>
+			</c:if>
 			<tr>
 				<td class="label">Defect Tracker:</td>
 		<c:choose>
