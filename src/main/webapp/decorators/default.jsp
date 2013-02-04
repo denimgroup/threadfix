@@ -21,9 +21,9 @@
   		
   		function toggleHelp() {
   			if ($("#helpText").css('display') === 'none') {
-  				$("#[id=helpText]").css('display','inline-block');
+  				$("#helpText").css('display','inline-block');
   			} else {
-  				$("#[id=helpText]").css('display','none');
+  				$("#helpText").css('display','none');
   			}
   		}
 	</script>
