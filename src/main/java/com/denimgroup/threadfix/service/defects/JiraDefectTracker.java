@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLHandshakeException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +89,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			connection.setDoOutput(true);
 
 			return connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED;
+		} catch (SSLHandshakeException e) {
+			log.warn("Certificate Error encountered while trying to find the response code.");
+			setLastError(INVALID_CERTIFICATE);
 		} catch (IOException e) {
 			log.warn("IOException encountered while trying to find the response code.", e);
 		}
