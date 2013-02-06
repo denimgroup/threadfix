@@ -66,6 +66,7 @@ script "update time" do
   code <<-EOH
     sudo ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime
     sudo hwclock -w
+    export TZ=America/Chicago 
   EOH
 end
 
