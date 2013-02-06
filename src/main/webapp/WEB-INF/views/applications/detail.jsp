@@ -233,10 +233,10 @@
 			<thead>
 				<tr>
 					<th class="first">If Merged</th>
-				    <th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 1)">Vulnerability Name</th>
-					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 2)">Severity</th>
-					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 3)">Path</th>
-					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 4)">Parameter</th>
+				    <th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
 					<th>Age</th>
 					<th>Defect</th>
 					<th>Defect Status</th>

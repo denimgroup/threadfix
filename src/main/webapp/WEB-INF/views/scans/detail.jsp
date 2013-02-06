@@ -13,8 +13,8 @@
 	<script type="text/javascript">
 	window.onload = function()
     {
-		refillElement('#toReplace', '<c:out value="${ tableUrl }"/>', 1);
-		refillElement('#toReplace2', '<c:out value="${ unmappedTableUrl }"/>', 1);
+		refillElement('#toReplace', '<c:out value="${ tableUrl }"/>', 1, '<c:out value="${ loginUrl }"/>');
+		refillElement('#toReplace2', '<c:out value="${ unmappedTableUrl }"/>', 1, '<c:out value="${ loginUrl }"/>');
     };
     </script>
 </head>

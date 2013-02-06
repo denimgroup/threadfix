@@ -8,6 +8,7 @@
 <h2>Error</h2>
 <br/>
 <p>
-    <spring:message code="404.message" arguments="/threadfix/organizations" />
+	<spring:url value="/" var="homeUrl"/>
+    <spring:message code="404.message" arguments="${ homeUrl }" />
 </p>
 </page:applyDecorator>

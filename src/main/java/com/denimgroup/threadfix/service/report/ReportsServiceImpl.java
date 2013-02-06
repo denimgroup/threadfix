@@ -213,8 +213,8 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
-			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"/threadfix/jasper/images/");
+			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, path
+					+ "jasper/images/");
 
 			exporter.exportReport();
 

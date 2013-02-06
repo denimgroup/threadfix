@@ -3,16 +3,16 @@ page = 1;
 var lastSort = 0;
 var lastField = 0;
 
-function refillElement(elementId, endPoint, page)
+function refillElement(elementId, endPoint, page, login)
 {
-	refillElementSort(elementId,endPoint,page,null);
+	refillElementSort(elementId, endPoint, page, null, login);
 }
 
-function refillElementDropDownPage(elementId, endPoint) {
-	refillElementSort(elementId, endPoint, $("#pageInput").val());
+function refillElementDropDownPage(elementId, endPoint, login) {
+	refillElementSort(elementId, endPoint, $("#pageInput").val(), login);
 }
 
-function refillElementSort(elementId, endPoint, page, field)
+function refillElementSort(elementId, endPoint, page, field, login)
 {
 	sort = 1;
 	
@@ -78,7 +78,8 @@ function refillElementSort(elementId, endPoint, page, field)
 				$(elementId).html(text);
 			} else {
 				// Kind of a hack
-				window.location = window.location.pathname.replace("threadfix/*","threadfix/login.jsp");
+				alert('Logging out.');
+				window.location = login;
 			}
 		},
 		error : function (xhr, ajaxOptions, thrownError){

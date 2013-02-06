@@ -135,8 +135,7 @@
 		}
 		
 		function submitEditModal() {
-			editUrl = '<c:out value="${editUrl}"/>'.replace("/threadfix","");
-			completeEditUrl = '/threadfix/configuration/users/<c:out value="${user.id}"/>/access/' + lastId + editUrl;
+			completeEditUrl = '<c:out value="${editUrl}"/>'.replace("/edit",'/configuration/users/<c:out value="${user.id}"/>/access/' + lastId + "/edit");
 			submitModal(completeEditUrl);
 		}
 		
