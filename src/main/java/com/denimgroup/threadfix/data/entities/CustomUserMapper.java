@@ -70,7 +70,7 @@ public class CustomUserMapper implements UserDetailsContextMapper {
 		}
 		
 		return new ThreadFixUserDetails(userName, "ldap", true, true, true, true, 
-				newAuthorities, "", true, 1, null, null);
+				newAuthorities, "", true, true, 1, null, null);
 	}
 
 	@Override

@@ -51,7 +51,8 @@ public class ThreadFixUserDetails extends User {
 
 	public ThreadFixUserDetails(String username, String password, boolean enabled,
 			boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-			Collection<GrantedAuthority> authorities, String salt, Boolean hasChangedInitialPassword,
+			Collection<GrantedAuthority> authorities, String salt, Boolean hasChangedInitialPassword, 
+			Boolean isLdapUser,
 			Integer userId, Map<Integer, Set<Permission>> teamMap, 
 			Map<Integer, Set<Permission>> applicationMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired,
@@ -59,7 +60,9 @@ public class ThreadFixUserDetails extends User {
 		setTeamMap(teamMap);
 		setApplicationMap(applicationMap);
 		setSalt(salt);
-		setHasChangedInitialPassword(hasChangedInitialPassword);
+		boolean shouldPromptForPassword = (hasChangedInitialPassword != null && hasChangedInitialPassword) ||
+				(isLdapUser != null && isLdapUser);
+		setHasChangedInitialPassword(shouldPromptForPassword);
 		setUserId(userId);
 	}
 
