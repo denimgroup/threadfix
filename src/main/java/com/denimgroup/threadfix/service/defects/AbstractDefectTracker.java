@@ -256,6 +256,7 @@ public abstract class AbstractDefectTracker {
 		}
 		
 		HttpURLConnection httpConnection = null;
+		OutputStreamWriter outputWriter = null;
 		try {
 			httpConnection = (HttpURLConnection) url.openConnection();
 
@@ -265,16 +266,25 @@ public abstract class AbstractDefectTracker {
 			httpConnection.addRequestProperty("Accept", "application/json");
 			
 			httpConnection.setDoOutput(true);
-		    OutputStreamWriter wr = new OutputStreamWriter(httpConnection.getOutputStream());
-		    wr.write(data);
-		    wr.flush();
+			outputWriter = new OutputStreamWriter(httpConnection.getOutputStream());
+		    outputWriter.write(data);
+		    outputWriter.flush();
 
 			InputStream is = httpConnection.getInputStream();
 			
 			return is;
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (outputWriter != null) {
+				try {
+					outputWriter.close();
+				} catch (IOException e) {
+					log.warn("Failed to close output stream in postUrl.", e);
+				}
+			}
 		}
+		
 		return null;
 	}
 	
