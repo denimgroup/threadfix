@@ -226,14 +226,6 @@ public class QualysRemoteProvider extends RemoteProvider {
 		QualysAppsParser parser = new QualysAppsParser();
 		
 		parse(stream, parser);
-
-		try {
-			if (stream != null) {
-				stream.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		if (parser.list != null && parser.list.size() > 0) {
 			log.info("Number of Qualys applications: " + parser.list.size());

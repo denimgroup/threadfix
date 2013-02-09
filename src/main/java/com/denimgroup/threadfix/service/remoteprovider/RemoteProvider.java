@@ -71,6 +71,10 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	}
 	
 	protected void parse(InputStream inputStream, DefaultHandler handler) {
+		if (inputStream == null || handler == null) {
+			return;
+		}
+		
 		try {
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		
@@ -88,6 +92,14 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

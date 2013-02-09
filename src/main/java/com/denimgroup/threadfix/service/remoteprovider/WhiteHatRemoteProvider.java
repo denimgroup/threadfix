@@ -136,14 +136,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 		parse(stream, parser);
 		
-		try {
-			if (stream != null) {
-				stream.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		return parser.getApplications();
 	}
 	
