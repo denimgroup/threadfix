@@ -80,7 +80,7 @@ public class EditManualFindingController {
 		Finding finding = findingService.loadFinding(findingId);
 		
 		if (isManual(finding)) {
-			return "redirect:/threadfix/organizations/" + orgId + "/applications/" + appId;
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		} else if (!isAuthorizedForFinding(finding)) {
 			return "403";
 		}
@@ -107,7 +107,7 @@ public class EditManualFindingController {
 		}
 		
 		if (isManual(finding)) {
-			return "redirect:/threadfix/organizations/" + orgId + "/applications/" + appId;
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		} else if (!isAuthorizedForFinding(finding)) {
 			return "403";
 		}
@@ -145,7 +145,7 @@ public class EditManualFindingController {
 		}
 		
 		if (isManual(finding)) {
-			return "redirect:/threadfix/organizations/" + orgId + "/applications/" + appId;
+			return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		} else if (!isAuthorizedForFinding(finding)) {
 			return "403";
 		}

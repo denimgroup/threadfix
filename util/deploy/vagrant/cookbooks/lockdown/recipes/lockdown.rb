@@ -58,6 +58,18 @@ script "run apt-get upgrade" do
   EOH
 end
 
+script "update time" do
+  interpreter "bash"
+  user "root"
+  cwd "/home/vagrant"
+  action :run
+  code <<-EOH
+    sudo ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime
+    sudo hwclock -w
+    export TZ=America/Chicago 
+  EOH
+end
+
 execute "apt-get upgrade" do
   command "apt-get -y upgrade"
   action :nothing

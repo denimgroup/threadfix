@@ -283,14 +283,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public boolean checkApplication(Application application) {
 		if (application == null || application.getName() == null 
-				|| application.getUrl() == null
 				|| application.getName().trim().isEmpty()  
-				|| application.getUrl().trim().isEmpty()
-				|| application.getName().length() > Application.NAME_LENGTH
-				|| application.getUrl().length() > Application.URL_LENGTH) {
+				|| application.getName().length() > Application.NAME_LENGTH) {
 			return false;
 		}
-				
+		
+		if (application.getUrl() != null && 
+				application.getUrl().length() > Application.URL_LENGTH) {
+			return false;
+		}
+		
 		Application databaseApplication = loadApplication(application.getName().trim());
 		return databaseApplication == null;
 	}

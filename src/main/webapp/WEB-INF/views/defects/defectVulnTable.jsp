@@ -1,56 +1,57 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <body>
+	<spring:url value="/login.jsp" var="loginUrl"/>
 	<spring:url value="defectTable" var="tableUrl">
 	</spring:url>
 	<c:if test="${ numVulns > 100 }">
 	<div style="padding-bottom:8px">	
 		<c:if test="${ page > 4 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', 1)">First</a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
 		</c:if>
 	
 		<c:if test="${ page >= 4 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 3 })"><c:out value="${ page - 3 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
 		</c:if>
 	
 		<c:if test="${ page >= 3 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 2 })"><c:out value="${ page - 2 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page >= 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 1 })"><c:out value="${ page - 1 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
 		</c:if>
 				
 		<c:out value="${ page }"/>
 	
 		<c:if test="${ page <= numPages }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 1 })"><c:out value="${ page + 1 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 1 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 2 })"><c:out value="${ page + 2 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 3 })"><c:out value="${ page + 3 }"/></a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page < numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ numPages + 1 })">Last (<c:out value="${ numPages + 1}"/>)</a>
+			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
 		</c:if>
 		
 		<input class="refillElementOnEnter" type="text" id="pageInput" />
-		<a href="javascript:refillElementDropDownPage('#toReplace', '${ tableUrl }')">Go to page</a>
+		<a href="javascript:refillElementDropDownPage('#toReplace', '${ tableUrl }', '<c:out value="${ loginUrl }"/>')">Go to page</a>
 	</div>
 	</c:if>
 	
 	<table class="formattedTable sortable filteredTable" id="anyid">
 		<thead>
 			<tr>
-			    <th class="first"onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1)">Vulnerability Name</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2)">Severity</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3)">Path</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4)">Parameter</th>
+			    <th class="first"onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
 				<th>Defect</th>
 				<th>Defect Status</th>
 				<th>WAF Rule</th>
@@ -121,7 +122,7 @@
 	});
 	$('.refillElementOnEnter').keypress(function(e) {
 		if (e.which == 13) {
-			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>');
+			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
 			return false;
 		}
 	});

@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLHandshakeException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +69,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (tempUrl.endsWith("/")) {
 			tempUrl = tempUrl.concat("rest/api/2/");
 		} else {
-			tempUrl = tempUrl.concat("rest/api/2/");
+			tempUrl = tempUrl.concat("/rest/api/2/");
 		}
 
 		return tempUrl;
@@ -89,6 +89,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			connection.setDoOutput(true);
 
 			return connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED;
+		} catch (SSLHandshakeException e) {
+			log.warn("Certificate Error encountered while trying to find the response code.");
+			setLastError(INVALID_CERTIFICATE);
 		} catch (IOException e) {
 			log.warn("IOException encountered while trying to find the response code.", e);
 		}
@@ -105,14 +108,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 
 		try {
-			HttpsURLConnection m_connect = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 
-			setupAuthorization(m_connect, username, password);
+			setupAuthorization(httpConnection, username, password);
 			
-			m_connect.addRequestProperty("Content-Type", "application/json");
-			m_connect.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", "application/json");
+			httpConnection.addRequestProperty("Accept", "application/json");
 			
-			String headerResult = m_connect.getHeaderField("X-Seraph-LoginReason");
+			String headerResult = httpConnection.getHeaderField("X-Seraph-LoginReason");
 
 			return headerResult != null && headerResult.equals("AUTHENTICATION_DENIED");
 		} catch (IOException e) {
@@ -264,6 +267,11 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		List<String> blankList = Arrays.asList(new String[] {"-"});
 		List<String> statusList = Arrays.asList(new String[] {"Open"});
 		List<String> priorities = getNamesFromList("priority");
+		
+		if (components == null || components.isEmpty()) {
+			components = Arrays.asList("-");
+		}
+		
 		ProjectMetadata data = new ProjectMetadata(components, blankList, 
 				blankList, statusList, priorities);
 		
@@ -303,9 +311,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				" \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," +
 				" \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," +
 				" \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," +
-				" \"description\": " + JSONObject.quote(description) + "," +
-				" \"components\": [ { \"id\": " + JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]" +
-				" } }";
+				" \"description\": " + JSONObject.quote(description);
+
+		if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
+			payload += "," + " \"components\": [ { \"id\": " + 
+					JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]";
+		}
+				
+		payload += " } }";
 				
 		String result = postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;

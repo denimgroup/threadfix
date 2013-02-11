@@ -153,9 +153,9 @@ public class ScanServiceImpl implements ScanService {
 		applicationChannelDao.saveOrUpdate(applicationChannel);
 		
 		File diskFile = new File(inputFileName);
-
+		FileOutputStream out = null;
 		try {
-			FileOutputStream out = new FileOutputStream(diskFile);
+			out = new FileOutputStream(diskFile);
 
 			byte[] buf = new byte[1024];
 			int len = 0;
@@ -172,6 +172,13 @@ public class ScanServiceImpl implements ScanService {
 				stream.close();
 			} catch (IOException e) {
 				log.warn("IOException encountered while attempting to close a stream.", e);
+			}
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					log.warn("IOException encountered while attempting to close a stream.", e);
+				}
 			}
 		}
 		

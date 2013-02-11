@@ -130,6 +130,12 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		List<?> map = null;
 		map = getArrayFromSamplesFile(samplesFileStream);
 		
+		try {
+			samplesFileStream.close();
+		} catch (IOException e) {
+			log.warn("The Skipfish samples.js fileStream wouldn't close.", e);
+		}
+		
 		if (map == null)
 			return null;
 		
@@ -140,12 +146,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
 		scan.setApplicationChannel(applicationChannel);
 		scan.setImportTime(date);
-		
-		try {
-			samplesFileStream.close();
-		} catch (IOException e) {
-			log.warn("The Skipfish samples.js fileStream wouldn't close.", e);
-		}
+
 		
 		deleteZipFile();
 		deleteScanFile();

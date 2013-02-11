@@ -87,8 +87,8 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler.version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -257,6 +257,18 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			</plugin>
 			<!-- End Selenium Depndencies -->
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>ESAPI.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
 
 	<reporting>
@@ -652,7 +664,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.1.4.RELEASE</spring.version>
 		<springsecurity.version>3.0.5.RELEASE</springsecurity.version>
 		<standard.version>1.1.2</standard.version>
 		<tuckey.version>3.1.0</tuckey.version>

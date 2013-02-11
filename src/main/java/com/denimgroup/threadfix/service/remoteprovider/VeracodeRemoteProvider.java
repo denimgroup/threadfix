@@ -164,14 +164,6 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		VeracodeApplicationBuildsParser parser = new VeracodeApplicationBuildsParser();
 		
 		parse(stream, parser);
-
-		try {
-			if (stream != null) {
-				stream.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		if (parser.list != null && parser.list.size() > 0) {
 			log.info("Number of Veracode applications found: " + parser.list.size());

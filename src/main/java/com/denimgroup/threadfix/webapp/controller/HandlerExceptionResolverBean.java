@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,15 +37,18 @@ import com.denimgroup.threadfix.service.ExceptionLogService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
- * TODO decide if 404 is the right option for ResourceNotFoundException
  * TODO decide whether or not to include more information for ResourceNotFoundException
  * @author mcollins
  *
  */
-public class HandlerExceptionResolverBean implements HandlerExceptionResolver {
+public class HandlerExceptionResolverBean implements HandlerExceptionResolver, Ordered {
 
 	@Autowired
 	private ExceptionLogService exceptionLogService;
+	
+	public int getOrder() {
+        return Integer.MIN_VALUE;
+    }
 	
 	private final SanitizedLogger log = new SanitizedLogger(HandlerExceptionResolver.class);
 	

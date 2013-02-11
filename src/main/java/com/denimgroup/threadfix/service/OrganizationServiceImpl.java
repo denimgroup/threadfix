@@ -132,7 +132,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 		if (hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
 		
-		Set<Integer> teamIds = new HashSet<Integer>(permissionService.getAuthenticatedTeamIds());
+		Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
+		
+		Set<Integer> teamIds = null;
+		
+		if (ids == null || ids.isEmpty()) {
+			teamIds = new HashSet<Integer>();
+		} else {
+			teamIds = new HashSet<Integer>(ids);
+		}
 		
 		// Also add in the teams that only have app permissions
 		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();

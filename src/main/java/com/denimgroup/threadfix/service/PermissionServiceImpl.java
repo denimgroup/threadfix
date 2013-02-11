@@ -115,7 +115,10 @@ public class PermissionServiceImpl implements PermissionService {
 					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
 				return null;
 			}
-			return ((ThreadFixUserDetails) auth).getApplicationMap().keySet();
+			
+			if (((ThreadFixUserDetails) auth).getApplicationMap() != null) {
+				return ((ThreadFixUserDetails) auth).getApplicationMap().keySet();
+			}
 		}
 		
 		return null;
@@ -132,7 +135,9 @@ public class PermissionServiceImpl implements PermissionService {
 				return null;
 			}
 
-			return customDetails.getTeamMap().keySet();
+			if (customDetails.getTeamMap() != null) {
+				return customDetails.getTeamMap().keySet();
+			}
 		}
 		
 		return null;

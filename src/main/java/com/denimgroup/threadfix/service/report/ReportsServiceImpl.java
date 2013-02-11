@@ -145,8 +145,7 @@ public class ReportsServiceImpl implements ReportsService {
 			}
 			
 		} catch (FileNotFoundException e) {
-			log.error("Report generation failed because the file was not found.");
-			e.printStackTrace();
+			log.error("Report generation failed because the file was not found.", e);
 			return null;
 		}
 
@@ -214,22 +213,22 @@ public class ReportsServiceImpl implements ReportsService {
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"/threadfix/jasper/images/");
+					"jasper/images/");
 
 			exporter.exportReport();
 
 		} catch (JRException ex) {
 			log.error("Encountered a Jasper exception, the report was probably not exported correctly.",ex);
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException e) {
+				log.warn("Failed to close an InputStream", e);
+			}
 		}
 
 		log.debug("Returning report.");
-		
-		try {
-			if (inputStream != null)
-				inputStream.close();
-		} catch (IOException e) {
-			log.warn("Failed to close an InputStream", e);
-		}
 		
 		return report;
 	}
@@ -243,9 +242,14 @@ public class ReportsServiceImpl implements ReportsService {
 			while ((line = bufferedReader.readLine()) != null)
 				buffer.append(line);
 			
-			bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				bufferedReader.close();
+			} catch (IOException e) {
+				log.warn("Failed to close an InputStream", e);
+			}
 		}
 		
 		return buffer.toString();

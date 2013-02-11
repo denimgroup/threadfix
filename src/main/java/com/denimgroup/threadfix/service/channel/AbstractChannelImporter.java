@@ -542,17 +542,16 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		}
 		
 		ZipFile zipFile = null;
-			
+		FileOutputStream out = null;
 		try {
 
-			FileOutputStream out = new FileOutputStream(diskZipFile);
+			out = new FileOutputStream(diskZipFile);
 			byte buf[] = new byte[1024];
 			int len = 0;
 
 			while ((len = inputStream.read(buf)) > 0)
 				out.write(buf, 0, len);
 			
-			out.close();
 			zipFile = new ZipFile(diskZipFile);
 			
 			log.debug("Saved zip file to disk. Returning zip file.");
@@ -562,6 +561,13 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			log.warn("There was an IOException error in the unpackZipStream method: " + e + ".");
 		} finally {
 			closeInputStream(inputStream);
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException ex) {
+					log.warn("Closing an input stream failed.");
+				}
+			}
 		}
 		
 		return zipFile;

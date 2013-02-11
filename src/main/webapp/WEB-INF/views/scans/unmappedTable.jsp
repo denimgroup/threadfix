@@ -2,47 +2,48 @@
 
 	<h3 style="padding-top:8px">Unmapped Findings:</h3>
 
+	<spring:url value="/login.jsp" var="loginUrl"/>
 	<spring:url value="{scanId}/table" var="tableUrl">
 		<spring:param name="scanId" value="${ scan.id }"/>
 	</spring:url>
 	<c:if test="${ numFindings > 100 }">
 	<div style="padding-bottom:8px">	
 		<c:if test="${ page > 4 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', 1)">First</a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
 		</c:if>
 	
 		<c:if test="${ page >= 4 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 3 })"><c:out value="${ page - 3 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
 		</c:if>
 	
 		<c:if test="${ page >= 3 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 2 })"><c:out value="${ page - 2 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page >= 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 1 })"><c:out value="${ page - 1 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
 		</c:if>
 		
 		<c:out value="${ page }"/>
 	
 		<c:if test="${ page <= numPages }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 1 })"><c:out value="${ page + 1 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 1 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 2 })"><c:out value="${ page + 2 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 3 })"><c:out value="${ page + 3 }"/></a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
 		</c:if>
 		
 		<c:if test="${ page < numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ numPages + 1 })">Last (<c:out value="${ numPages + 1}"/>)</a>
+			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
 		</c:if>
 		
 		<input type="text" class="refillElementOnEnter2" id="pageInput" />
-		<a href="javascript:refillElementDropDownPage('#toReplace2', '${ tableUrl }')">Go to page</a>
+		<a href="javascript:refillElementDropDownPage('#toReplace2', '${ tableUrl }', '<c:out value="${ loginUrl }"/>')">Go to page</a>
 	</div>
 	</c:if>
 
@@ -106,7 +107,7 @@
 	<script>
 	$('.refillElementOnEnter2').keypress(function(e) {
 		if (e.which == 13) {
-			refillElementDropDownPage('#toReplace2', '<c:out value="${ tableUrl }"/>');
+			refillElementDropDownPage('#toReplace2', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
 			return false;
 		}
 	});

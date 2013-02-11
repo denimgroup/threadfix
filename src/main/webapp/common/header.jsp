@@ -9,7 +9,7 @@
 		<tr>
 			<td id="logout" style="padding-right:15px">
 				<spring:message code="user.status"/>
-				<security:authentication property="principal.username"/> | <a href="javascript:toggleHelp()" >Toggle Help</a> |
+				<security:authentication property="principal.username"/> | <a id="toggleHelpLink" href="javascript:toggleHelp()" >Toggle Help</a> |
 				<strong><a id="logoutLink" href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
 					<spring:message code="user.logout"/>
 				</a></strong>

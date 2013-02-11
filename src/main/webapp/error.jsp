@@ -12,5 +12,6 @@ A system error occurred.
 
 <br/><br/><!-- error.jsp -->
 
-<a href="/threadfix/organizations">Home</a>
+<spring:url value="/" var="homeUrl"/>
+<a href="<c:out value="${homeUrl}"/>">Home</a>
 
