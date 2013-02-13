@@ -64,7 +64,7 @@ find_openjdks()
                 fi
         done
         for jvmdir in /usr/lib/jvm/java-6-openjdk-*
-        do
+                do
                 if [ -d "${jvmdir}" -a "${jvmdir}" != "/usr/lib/jvm/java-6-openjdk-common" ]
                 then
                         OPENJDKS="${OPENJDKS} ${jvmdir}"
@@ -77,7 +77,7 @@ find_openjdks()
 
 OPENJDKS=""
 find_openjdks
-JDK_DIRS="/usr/lib/jvm/default-java ${OPENJDKS} /usr/lib/jvm/java-6-sun /usr/lib/jvm/java-1.5.0-sun /usr/lib/j2sdk1.5-sun /usr/lib/j2sdk1.5-ibm"
+JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-i386 ${OPENJDKS}"
 
 # Look for the right JVM to use
 for jdir in $JDK_DIRS; do
