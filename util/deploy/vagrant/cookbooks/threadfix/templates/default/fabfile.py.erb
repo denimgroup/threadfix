@@ -20,7 +20,7 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone -b 1.1 %s' % source_code_loc)
+        result = local('git clone %s' % source_code_loc)
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
