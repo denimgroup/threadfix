@@ -148,8 +148,12 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		item.getFields().getField("Priority").setValue(metadata.getPriority());
 
 		item.save();
+		
+		String itemId = String.valueOf(item.getID());
 
-		return String.valueOf(item.getID());
+		workItemClient.close();
+		
+		return itemId;
 	}
 
 	@Override
@@ -196,6 +200,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 				defect.setStatus(stringStatusMap.get(defect.getNativeId()));
 			}
 		}
+		
+		workItemClient.close();
 
 		return returnMap;
 	}
@@ -228,6 +234,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		for (Project project : collection) {
 			builder.append(project.getName() + ",");
 		}
+		
+		workItemClient.close();
 
 		return builder.subSequence(0, builder.length() - 2).toString();
 	}
@@ -262,6 +270,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 		Collections.addAll(priorities, collection.get("Priority")
 				.getAllowedValues().getValues());
+		
+		workItemClient.close();
 
 		return new ProjectMetadata(emptyList, emptyList, emptyList, statuses,
 				priorities);
@@ -282,6 +292,10 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			return true;
 		} catch (UnauthorizedException e) {
 			return false;
+		} finally {
+			if (workItemClient != null) {
+				workItemClient.close();
+			}
 		}
 	}
 
@@ -291,6 +305,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 		Project project = workItemClient.getProjects().get(getProjectName());
 
+		workItemClient.close();
+		
 		log.info("Checking Project Name.");
 		return project != null;
 	}
@@ -326,6 +342,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 				log.warn("An invalid or self-signed certificate was found.");
 			}
 			return false;
+		} finally {
+			projects.getWorkItemClient().close();
 		}
 	}
 }
