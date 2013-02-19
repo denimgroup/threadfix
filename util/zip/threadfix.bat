@@ -13,7 +13,7 @@ SET lib=
 @REM \. on their path
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
-set CATALINA_OPTS=-Xms512m -Xmx1536m
+set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:PermSize=256m -XX:MaxPermSize=256m
 set JAVA_HOME=%PWD%\java
 
 if not exist tomcat\keystore echo Generating keystore
