@@ -27,8 +27,15 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.RoleService;
 
 public class UserValidator implements Validator {
+	
+	private RoleService roleService = null;
+	
+	public UserValidator(RoleService roleService) {
+		this.roleService = roleService;
+	}
 
 	@Override
 	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
@@ -41,7 +48,9 @@ public class UserValidator implements Validator {
 		
 		if (!user.getHasGlobalGroupAccess() || user.getGlobalRole() == null ||
 				user.getGlobalRole().getId() == null || user.getGlobalRole().getId() == null ||
-				user.getGlobalRole().getId() == 0) {
+				user.getGlobalRole().getId() == 0 || 
+				roleService == null ||
+				roleService.loadRole(user.getGlobalRole().getId()) == null) {
 			user.setGlobalRole(null);
 		}
 

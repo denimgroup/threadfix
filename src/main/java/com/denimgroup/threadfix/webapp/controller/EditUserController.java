@@ -120,7 +120,7 @@ public class EditUserController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
 			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
-		new UserValidator().validate(user, result);
+		new UserValidator(roleService).validate(user, result);
 		
 		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
 			result.rejectValue("hasGlobalGroupAccess", null, null, 

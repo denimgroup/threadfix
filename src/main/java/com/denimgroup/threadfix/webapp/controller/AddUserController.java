@@ -110,7 +110,7 @@ public class AddUserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processNew(@Valid @ModelAttribute User user, BindingResult result, SessionStatus status) {
-		new UserValidator().validate(user, result);
+		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
 			return "config/users/form";
 		} else {

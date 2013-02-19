@@ -75,7 +75,7 @@ public class ChangePasswordController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@ModelAttribute User user,
 			BindingResult result, SessionStatus status) {
-		new UserValidator().validate(user, result);
+		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
 			return "config/users/password";
 		} else {
