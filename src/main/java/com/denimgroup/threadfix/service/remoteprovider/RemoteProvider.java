@@ -71,7 +71,11 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	}
 	
 	protected void parse(InputStream inputStream, DefaultHandler handler) {
-		if (inputStream == null || handler == null) {
+		if (inputStream == null) {
+			log.error("Null inputStream argument. Can't continue.");
+			return;
+		} else if (handler == null) {
+			log.error("Null handler argument. Can't continue.");
 			return;
 		}
 		
