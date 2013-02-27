@@ -7,8 +7,8 @@
 	<script type="text/javascript">
 	window.onload = function()
     {
-		toggleFilters(false, '#toReplace', '${ tableUrl }');
-		//toggleFilters(true, '#toReplace', '${ tableUrl }');
+		//toggleFilters(false, '#toReplace', '${ tableUrl }');
+		clearFilters('#toReplace', '${ tableUrl }');
     };
     </script>
 </head>
@@ -75,6 +75,7 @@
 	<br />
 	
 	<div class="section">
+	<h3>Defect Details</h3>
 	<spring:url value="" var="emptyUrl"/>
 	<form:form modelAttribute="defectViewModel" method="post" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
@@ -82,44 +83,20 @@
 				<tr>
 					<td class="label">Component:</td>
 					<td class="inputValue">
-						<form:select path="selectedComponent">
+						<form:select style="width:120px;" path="selectedComponent">
 							<form:options items="${projectMetadata.components}"/>
 						</form:select>
 					</td>
-					<td rowspan="4" style="padding-left:20px; vertical-align:top">
-						<table>
-								<tr>
-									<td class="label">Summary:</td>
-								</tr>
-								<tr>
-									<td class="inputValue">
-										<form:input path="summary"/>
-									</td>
-								</tr>
-								<tr>
-									<td class="label">Preamble:</td>
-								</tr>
-								<tr>
-									<td class="inputValue">
-										<form:textarea path="preamble" />
-									</td>
-								</tr>
-							</tbody>
-						</table>	
-					</td>
-				</tr>
-				<tr>
+					
 					<td class="label">Version:</td>
 					<td class="inputValue">
-						<form:select path="version">
+						<form:select style="width:120px;" path="version">
 							<form:options items="${projectMetadata.versions}"/>
 						</form:select>
 					</td>
-				</tr>
-				<tr>
 					<td class="label">Severity:</td>
 					<td class="inputValue">
-						<form:select path="severity">
+						<form:select style="width:120px;" path="severity">
 							<form:options items="${projectMetadata.severities}"/>
 						</form:select>
 					</td>
@@ -127,62 +104,67 @@
 				<tr>
 					<td class="label">Priority:</td>
 					<td class="inputValue">
-						<form:select path="priority">
+						<form:select style="width:120px;" path="priority">
 							<form:options items="${projectMetadata.priorities}"/>
+						</form:select>
+					</td>
+					<td class="label">Status:</td>
+					<td class="inputValue">
+						<form:select style="width:120px;" path="status">
+							<form:options items="${projectMetadata.statuses}"/>
 						</form:select>
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Status:</td>
-					<td class="inputValue">
-						<form:select path="status">
-							<form:options items="${projectMetadata.statuses}"/>
-						</form:select>
+					<td class="label">Title:</td>
+					<td colspan="5" class="inputValue">
+						<form:input style="width:549px;" path="summary"/>
+					</td>
+				</tr>
+				<tr style="margin-top:5px;">
+					<td style="vertical-align:top" class="label">Description:</td>
+					<td colspan="5" class="inputValue">
+						<form:textarea path="preamble" style="width:549px; height:100px;"/>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
-		<table class="dataTable">
-			<tbody>
+		<div class="buttonGroup" id="vulnerabilityFilters">
+			<h3>Filters</h3>
+			<table style="margin-bottom:20px;">
 				<tr>
-					<td rowspan="4" style="padding-bottom:10px; vertical-align:top">
-						<div class="buttonGroup" id="vulnerabilityFilters">
-							<table style="margin:0px;padding:0px;margin-left:auto;">
-								<tr>
-									<td colspan="2"><b>Vulnerability Name:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="descriptionFilterInput" /></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>CWE ID:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="cweFilterInput" /></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Severity:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="severityFilterInput" /></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Location:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="locationFilterInput"/></td>
-								</tr>
-								<tr>
-									<td colspan="2"><b>Parameter:</b></td>
-									<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="parameterFilterInput" /></td>
-								</tr>
-								<tr>
-									<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
-									<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
-									<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
-								</tr>
-							</table>
-						</div>
-						<div id="showFilters" style="display:none;">
-							<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
-						</div>
-					</td>
+					<td colspan="2"><b>Vulnerability Name:</b></td>
+					<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="descriptionFilterInput" /></td>
 				</tr>
-			</tbody>
-		</table>
+				<tr>
+					<td colspan="2"><b>CWE ID:</b></td>
+					<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="cweFilterInput" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>Severity:</b></td>
+					<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="severityFilterInput" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>Location:</b></td>
+					<td style="padding-left:5px; padding-top:3px"><input class="disableSubmitOnEnter" type="text" id="locationFilterInput"/></td>
+				</tr>
+				<tr>
+					<td style="padding-bottom: 1em;" colspan="2"><b>Parameter:</b></td>
+					<td style="padding-left:5px; padding-top:3px;padding-bottom: 1em;"><input class="disableSubmitOnEnter" type="text" id="parameterFilterInput" /></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;</td>
+					<td><a href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;</td>
+					<td><a href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a></td>
+				</tr>
+			</table>
+		</div>
+		<div id="showFilters" style="display:none;">
+			<a href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
+		</div>
+		
+		<input style="margin-top:5px; margin-bottom:5px;" type="submit" value="Add Defect">
 		
 		<div id="toReplace">
 			<table id="vulnerabilities" class="formattedTable sortable">
@@ -207,7 +189,7 @@
 			</table>
 		</div>
 			
-		<input type="submit" value="Add Defect">
+		<input style="margin-top:5px;" type="submit" value="Add Defect">
 	</form:form>
 	</div>
 </body>
