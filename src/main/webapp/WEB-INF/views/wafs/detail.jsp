@@ -31,7 +31,7 @@
 		<spring:param name="wafId" value="${ waf.id }"/>
 	</spring:url>
 	
-	<c:if test="${not hasApps}">
+	<c:if test="${ not hasApps }">
 		<a id="deleteButton" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this WAF?')">Delete WAF</a> | 
 	</c:if>
 	<c:if test="${hasApps}">
@@ -43,7 +43,7 @@
 	
 	<br />
 	
-	<c:if test="${ canManageWafs and not empty waf.wafRules }">
+	<c:if test="${ canManageWafs and not empty waf.wafRules and hasApps }">
 		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
 			<spring:param name="wafId" value="${ waf.id }"/>
 		</spring:url>
