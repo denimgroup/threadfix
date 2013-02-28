@@ -1782,7 +1782,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
 		channelMerge(scan, applicationChannel);
-		appMerge(scan, applicationChannel.getApplication().getId(), null);
+		appMerge(scan, applicationChannel.getApplication(), null);
 
 		scan.setApplicationChannel(applicationChannel);
 		scan.setApplication(applicationChannel.getApplication());
