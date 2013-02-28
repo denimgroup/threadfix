@@ -178,7 +178,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				}
 				
 				result.rejectValue(field, "errors.other", 
-						"We were unable to connect to the provider with these credentials.");
+						"We were unable to retrieve a list of applications using these credentials." +
+						" Please ensure that the credentials are valid and that there are applications available in the " + 
+								remoteProviderType.getName() + " account.");
 			} else {
 				log.warn("Provider username has changed, deleting old apps.");
 				
