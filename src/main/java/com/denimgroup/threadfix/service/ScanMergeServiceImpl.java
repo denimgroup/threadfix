@@ -1590,7 +1590,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 
 		if (finding.getChannelVulnerability() == null) {
-			log.debug("The finding did not have a ChannelVulnerability so no vulnerability could be parsed.");
+			log.warn("The finding did not have a ChannelVulnerability so no vulnerability could be parsed.");
 			return null;
 		}
 

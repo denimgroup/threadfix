@@ -54,6 +54,9 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		SEVERITIES_MAP.put("Dangerous Eval", 2);
 		SEVERITIES_MAP.put("Default Routes", 1);
 		SEVERITIES_MAP.put("Cross-Site Request Forgery", 2);
+		SEVERITIES_MAP.put("Remote Code Execution", 3);
+		SEVERITIES_MAP.put("Denial of Service", 2);
+		SEVERITIES_MAP.put("Authentication", 1);
 	}
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
@@ -141,13 +144,37 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			}
 									
 			for (int index = 0; index < jsonArray.length(); index++) {
+				
+				log.debug("Checking item[" + index + "] in the jsonArray");
+				
 				Object item = jsonArray.get(index);
 				
 				if (item instanceof JSONObject) {
 					JSONObject jsonItem = (JSONObject) item;
 					
-					String severityCode = String.valueOf(CONFIDENCE_MAP.get(jsonItem.getString("confidence")) +
-											SEVERITIES_MAP.get(jsonItem.getString("warning_type")));
+					String jsConfidence = jsonItem.getString("confidence");
+					log.debug("JSON confidence value is " + jsConfidence);
+					String jsWarningType = jsonItem.getString("warning_type");
+					log.debug("JSON warning_type is " + jsWarningType);
+					
+					Integer confidence = CONFIDENCE_MAP.get(jsConfidence);
+					log.debug("Mapped confidence is " + confidence);
+					Integer severity = SEVERITIES_MAP.get(jsWarningType);
+					log.debug("Mapped severity for warning_type " + jsWarningType + " is " + severity);
+					
+					//	Make sure we got valid values back. As the Brakeman JSON file format advances over
+					//	time they might add vulnerability types or confidence values that we have not
+					//	anticipated and we want to be able to at least partially fight through.
+					
+					if(confidence == null) {
+						log.warn("Got a null ThreadFix confidence for JSON confidence of " + jsConfidence);
+						break;
+					} else if(severity == null) {
+						log.warn("Got a null ThreadFix severity for JSON warning_type of " + jsWarningType);
+						break;
+					}
+					
+					String severityCode = String.valueOf(confidence + severity);
 					
 					String parameter = null;
 					
@@ -183,6 +210,8 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 						
 						scan.getFindings().add(finding);
 					}
+				} else {
+					log.debug("Got a non-JSONObject object: " + item);
 				}
 			}
 		
