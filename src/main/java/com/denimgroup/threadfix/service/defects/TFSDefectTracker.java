@@ -136,7 +136,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	public String createDefect(List<Vulnerability> vulnerabilities,
 			DefectMetadata metadata) {
 		WorkItemClient workItemClient = getClient();
-
+		
 		Project project = workItemClient.getProjects().get(getProjectName());
 
 		WorkItem item = workItemClient.newWorkItem(project
@@ -342,8 +342,6 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 				log.warn("An invalid or self-signed certificate was found.");
 			}
 			return false;
-		} finally {
-			projects.getWorkItemClient().close();
 		}
 	}
 }
