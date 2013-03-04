@@ -128,14 +128,25 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		}
 
 		TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials);
-
-		return projects.getWorkItemClient();
+		try {
+			return projects.getWorkItemClient();
+		} catch (TFSUnauthorizedException e) {
+			log.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
+					"Check credentials and endpoint.");
+		}
+		
+		return null;
 	}
 
 	@Override
 	public String createDefect(List<Vulnerability> vulnerabilities,
 			DefectMetadata metadata) {
 		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			log.warn("Unable to create defect.");
+			return null;
+		}
 		
 		Project project = workItemClient.getProjects().get(getProjectName());
 
@@ -168,6 +179,11 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		Map<String, Boolean> openStatusMap = new HashMap<String, Boolean>();
 
 		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			log.warn("Updating bug status failed.");
+			return null;
+		}
 
 		StringBuilder builder = new StringBuilder();
 		for (Defect defect : defectList) {
@@ -209,12 +225,10 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public String getProductNames() {
 		log.info("Getting list of product names.");
-		WorkItemClient workItemClient = null;
+		WorkItemClient workItemClient = getClient();
 		
-		try {
-			workItemClient = getClient();
-		} catch (TFSUnauthorizedException e) {
-			log.warn("UnauthorizedException encountered, returning an unauthorized message.");
+		if (workItemClient == null) {
+			log.warn("Unable to retrieve WorkItemClient, returning an unauthorized message.");
 			setLastError("Invalid username / password combination");
 			return null;
 		}
@@ -243,6 +257,11 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public String getProjectIdByName() {
 		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			log.warn("Unable to connect to TFS to retrieve project name.");
+			return null;
+		}
 
 		Project project = workItemClient.getProjects().get(getProjectName());
 
@@ -265,6 +284,11 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		statuses.add("New");
 
 		WorkItemClient workItemClient = getClient();
+		if (workItemClient == null) {
+			log.warn("Unable to connect to TFS, no project metadata could be collected.");
+			return null;
+		}
+		
 		FieldDefinitionCollection collection = workItemClient
 				.getFieldDefinitions();
 
@@ -286,6 +310,10 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidCredentials() {
 		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			return false;
+		}
 
 		try {
 			workItemClient.getProjects();
@@ -302,6 +330,11 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidProjectName() {
 		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			log.warn("Unable to connect to TFS, unable to determine whether the project name was valid.");
+			return false;
+		}
 
 		Project project = workItemClient.getProjects().get(getProjectName());
 
