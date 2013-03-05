@@ -360,6 +360,11 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public boolean hasValidProjectName() {
+		
+		if (getProjectName() == null) {
+			return false;
+		}
+		
 		WorkItemClient workItemClient = getClient();
 		
 		if (workItemClient == null) {

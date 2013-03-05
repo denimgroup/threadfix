@@ -579,6 +579,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public boolean hasValidProjectName() {
+		if (projectName == null) {
+			return false;
+		}
+		
 		XmlRpcClient client = initializeClient();
 		return projectExists(projectName, client);
 	}
