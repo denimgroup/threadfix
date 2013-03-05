@@ -130,7 +130,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials);
 		try {
 			return projects.getWorkItemClient();
-		} catch (TFSUnauthorizedException e) {
+		} catch (UnauthorizedException | TFSUnauthorizedException e) {
 			log.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
 					"Check credentials and endpoint.");
 		}
@@ -147,12 +147,29 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			log.warn("Unable to create defect.");
 			return null;
 		}
+		Project project = null;
 		
-		Project project = workItemClient.getProjects().get(getProjectName());
-
+		try {
+			project = workItemClient.getProjects().get(getProjectName());
+		} catch (UnauthorizedException | TFSUnauthorizedException e) {
+			log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+			workItemClient.close();
+			return null;
+		}
+		
+		if (project == null) {
+			log.warn("Product was not found. Unable to create defect.");
+			return null;
+		}
+		
 		WorkItem item = workItemClient.newWorkItem(project
 				.getVisibleWorkItemTypes()[0]);
 
+		if (item == null) {
+			log.warn("Unable to create item in TFS.");
+			return null;
+		}
+		
 		item.setTitle(metadata.getDescription());
 		item.getFields().getField("Description")
 				.setValue(makeDescription(vulnerabilities, metadata));
@@ -235,7 +252,15 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 		ProjectCollection collection = null;
 		if (workItemClient != null) {
-			collection = workItemClient.getProjects();
+			try {
+				collection = workItemClient.getProjects();
+			} catch (UnauthorizedException | TFSUnauthorizedException e) {
+				log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+				setLastError("Invalid username / password combination");
+				return null;
+			} finally {
+				workItemClient.close();
+			}
 		}
 
 		if (collection == null || collection.size() == 0) {
@@ -248,8 +273,6 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		for (Project project : collection) {
 			builder.append(project.getName() + ",");
 		}
-		
-		workItemClient.close();
 
 		return builder.subSequence(0, builder.length() - 2).toString();
 	}
@@ -263,8 +286,16 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			return null;
 		}
 
-		Project project = workItemClient.getProjects().get(getProjectName());
-
+		Project project = null;
+		try {
+			project = workItemClient.getProjects().get(getProjectName());
+		} catch (UnauthorizedException | TFSUnauthorizedException e) {
+			log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+			return null;
+		} finally {
+			workItemClient.close();
+		}
+		
 		if (project == null) {
 			return null;
 		} else {
@@ -335,10 +366,17 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			log.warn("Unable to connect to TFS, unable to determine whether the project name was valid.");
 			return false;
 		}
+		
+		Project project = null;
 
-		Project project = workItemClient.getProjects().get(getProjectName());
-
-		workItemClient.close();
+		try {
+			project = workItemClient.getProjects().get(getProjectName());
+		} catch (UnauthorizedException | TFSUnauthorizedException e) {
+			log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+			return false;
+		} finally {
+			workItemClient.close();
+		}
 		
 		log.info("Checking Project Name.");
 		return project != null;
@@ -363,10 +401,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			projects.getWorkItemClient().getProjects();
 			log.info("No UnauthorizedException was thrown when attempting to connect with blank credentials.");
 			return true;
-		} catch (UnauthorizedException e) {
-			log.info("Got an UnauthorizedException, which means that the TFS url was good.");
-			return true;
-		} catch (TFSUnauthorizedException e) {
+		} catch (UnauthorizedException | TFSUnauthorizedException e) {
 			log.info("Got an UnauthorizedException, which means that the TFS url was good.");
 			return true;
 		} catch (TECoreException e) {
