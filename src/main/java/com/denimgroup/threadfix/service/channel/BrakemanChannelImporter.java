@@ -168,10 +168,10 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					
 					if(confidence == null) {
 						log.warn("Got a null ThreadFix confidence for JSON confidence of " + jsConfidence);
-						break;
+						continue;
 					} else if(severity == null) {
 						log.warn("Got a null ThreadFix severity for JSON warning_type of " + jsWarningType);
-						break;
+						continue;
 					}
 					
 					String severityCode = String.valueOf(confidence + severity);
