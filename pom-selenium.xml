@@ -8,7 +8,7 @@
 	<name>threadfix</name>
 	<description>ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with vulnerability trending reports that show progress over time, giving them justification for their efforts.
 
-ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup.com) For information about commercial support and other services, contact Denim Group about ThreadFix http://www.denimgroup.com/threadfix/</description>
+ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup.com) For information about commercial support and other services, contact Denim Group about ThreadFix http://www.denimgroup.com/threadfix/																																					</description>
 	<inceptionYear>2009</inceptionYear>
 
 	<prerequisites>
@@ -115,6 +115,147 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>${findbugs.version}</version>
+				<configuration>
+					<failOnError>false</failOnError>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- plugin for Tomcat deployment -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>${cargo.version}</version>
+				<configuration>
+					<skip>${cargo.deployer.skip}</skip>
+					<wait>true</wait>
+					<container>
+						<containerId>tomcat7x</containerId>
+						<type>remote</type>
+					</container>
+					<configuration>
+						<type>runtime</type>
+						<properties>
+							<!-- Change this depending on the server hosting -->
+							<cargo.tomcat.manager.url>http://sattest1.denimgroup.com:8080/manager</cargo.tomcat.manager.url>
+							<cargo.remote.username>admin</cargo.remote.username>
+							<cargo.remote.password>admin</cargo.remote.password>
+						</properties>
+					</configuration>
+					<deployer>
+						<type>remote</type>
+						<deployables>
+							<deployable>
+								<groupId>com.denimgroup</groupId>
+								<artifactId>threadfix</artifactId>
+								<type>war</type>
+							</deployable>
+						</deployables>
+					</deployer>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>deployer-deploy</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop-container</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>deployer-undeploy</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify-deploy</id>
+						<phase>install</phase>
+						<goals>
+							<goal>deployer-deploy</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clean-undeploy</id>
+						<phase>pre-clean</phase>
+						<goals>
+							<goal>deployer-undeploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- End Tomcat deployer -->
+			<!-- Plugin for Selenium -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>selenium-maven-plugin</artifactId>
+				<version>${selenium.version}</version>
+				<executions>
+					<execution>
+						<id>start-selenium</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start-server</goal>
+						</goals>
+						<configuration>
+							<background>true</background>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-selenium</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop-server</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire.version}</version>
+				<configuration>
+					<skip>false</skip>
+					<systemProperties>
+						<property>
+							<name>url</name>
+							<value>${fileName}</value>
+						</property>
+						<property>
+							<name>scanFileBaseLocation</name>
+							<value>${fileName}</value>
+						</property>
+					</systemProperties>
+				</configuration>
+				<executions>
+					<execution>
+						<id>selenium-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+							<includes>
+								<include>**/*Tests.java</include>
+							</includes>
+							<excludes>
+								<exclude>**/*Rest*.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- End Selenium Depndencies -->
 		</plugins>
 
 		<resources>
@@ -136,6 +277,11 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>emma-maven-plugin</artifactId>
 				<version>${emma.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>${findbugs.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -534,8 +680,10 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<!-- Plugin versions -->
 		<cargo.version>1.0.3</cargo.version>
 		<emma.version>1.0-alpha-2</emma.version>
+		<findbugs.version>2.3.1</findbugs.version>
 		<maven-compiler.version>2.3.2</maven-compiler.version>
 		<maven-surefire.version>2.6</maven-surefire.version>
+		<selenium.version>1.0.1</selenium.version>
 	</properties>
 
 	<url>http://www.denimgroup.com/threadfix/</url>
