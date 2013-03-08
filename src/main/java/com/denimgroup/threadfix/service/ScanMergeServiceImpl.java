@@ -735,6 +735,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 
 		Application application = applicationDao.retrieveById(applicationId);
+		if (application == null) {
+			return null;
+		}
 
 		ApplicationChannel applicationChannel = new ApplicationChannel();
 		applicationChannel.setApplication(application);

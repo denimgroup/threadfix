@@ -90,20 +90,28 @@ public class FindingServiceImpl implements FindingService {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
 		} else if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
 			
+			boolean wasNumeric = false;
+			
 			// Try to parse an ID from the string and use that
 			ChannelVulnerability newChannelVuln = null;
 			try {
-				Integer test = Integer.valueOf(finding.getChannelVulnerability().getCode());
+				Integer requestedId = Integer.valueOf(finding.getChannelVulnerability().getCode());
 				
-				if (test != null) {
-					String targetName = null;
-					GenericVulnerability testGeneric = genericVulnerabilityDao.retrieveById(test);
-					if (testGeneric != null) {
-						targetName = testGeneric.getName();
+				if (requestedId != null) {
+					wasNumeric = true;
+					String cweName = null;
+					ChannelType manualType = null;
+					GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
+					if (genericVulnerability != null) {
+						cweName = genericVulnerability.getName();
+						if (cweName != null) {
+							manualType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+							if (manualType != null) {
+								newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
+							}
+						}
 					}
 					
-					newChannelVuln = channelVulnerabilityDao.retrieveByName(
-							channelTypeDao.retrieveByName(ChannelType.MANUAL), targetName);
 					if (newChannelVuln != null) {
 						// id lookup success, set the name to the actual name instead of the id.
 						finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
@@ -116,7 +124,13 @@ public class FindingServiceImpl implements FindingService {
 			
 			if (newChannelVuln == null) {
 				// ID lookup failed
-				result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
+				if (wasNumeric) {
+					result.rejectValue("channelVulnerability.code", null, null, "The supplied ID was invalid." +
+							" Please enter a valid CWE name or ID from http://cwe.mitre.org/");
+				} else {
+					result.rejectValue("channelVulnerability.code", null, null, "The supplied name was invalid. " +
+							"Please enter a valid CWE name or ID (example: 79) from http://cwe.mitre.org/");
+				}
 			}
 		}
 
