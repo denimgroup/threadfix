@@ -42,12 +42,14 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
@@ -59,6 +61,7 @@ public class FindingServiceImpl implements FindingService {
 
 	private FindingDao findingDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
+	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	private UserDao userDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelSeverityDao channelSeverityDao = null;
@@ -69,11 +72,13 @@ public class FindingServiceImpl implements FindingService {
 	public FindingServiceImpl(FindingDao findingDao,
 			ChannelSeverityDao channelSeverityDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
+			GenericVulnerabilityDao genericVulnerabilityDao,
 			ChannelTypeDao channelTypeDao, UserDao userDao) {
 		this.findingDao = findingDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelSeverityDao = channelSeverityDao;
 		this.userDao = userDao;
+		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 	}
 	
@@ -84,7 +89,35 @@ public class FindingServiceImpl implements FindingService {
 				(finding.getChannelVulnerability().getCode().isEmpty()))) {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
 		} else if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
-			result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
+			
+			// Try to parse an ID from the string and use that
+			ChannelVulnerability newChannelVuln = null;
+			try {
+				Integer test = Integer.valueOf(finding.getChannelVulnerability().getCode());
+				
+				if (test != null) {
+					String targetName = null;
+					GenericVulnerability testGeneric = genericVulnerabilityDao.retrieveById(test);
+					if (testGeneric != null) {
+						targetName = testGeneric.getName();
+					}
+					
+					newChannelVuln = channelVulnerabilityDao.retrieveByName(
+							channelTypeDao.retrieveByName(ChannelType.MANUAL), targetName);
+					if (newChannelVuln != null) {
+						// id lookup success, set the name to the actual name instead of the id.
+						finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
+					}
+				}
+				
+			} catch (NumberFormatException e) {
+				log.info("The code passed in was not a valid manual name and was not a number.");
+			}
+			
+			if (newChannelVuln == null) {
+				// ID lookup failed
+				result.rejectValue("channelVulnerability.code", "errors.invalid", new String [] { "Vulnerability" }, null);
+			}
 		}
 
 		if (finding != null && (finding.getLongDescription() == null || 
