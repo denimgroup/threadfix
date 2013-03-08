@@ -1,11 +1,11 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 echo "ThreadFix VM config script v1"
 
 if [ "$(whoami)" != "tfuser" ];
 then
     echo "This script must be run as user 'tfuser'"
     echo "Please log back in as tfuser and run this script again."
-    kill -SIGINT $$
+    exit 1;
 fi
 
 # DELETE vagrant user
@@ -13,6 +13,7 @@ if [ "`ls -a | grep .del_vagrant`" = "" ];
 then
     echo "Deleting vagrant user"
     sudo deluser vagrant
+    sudo chown -R tfuser /home/vagrant/
     sudo touch .del_vagrant
 fi
 
@@ -20,7 +21,6 @@ fi
 if [ "`ls -a | grep .mysql_anon`" = "" ];
 then
     echo "Deleting anonymous MySQL user"
-    sudo chown -R root:root /home/vagrant/
     sudo echo "delete from mysql.user where user = ''; FLUSH PRIVILEGES;" | /usr/bin/mysql -u threadfix -ptfpassword
     sudo touch .mysql_anon
 fi

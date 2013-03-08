@@ -253,7 +253,6 @@ end
 
 template "/home/vagrant/configure.sh" do
   source "configure.sh.erb"
-  owner "root"
-  group "root"
-  mode "0644"
+  owner "tfuser"
+  mode "0755"
 end
