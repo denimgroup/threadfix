@@ -25,11 +25,14 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,9 +48,11 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.viewmodels.QuickStartModel;
 
 /**
  * @author bbeverly
@@ -69,24 +74,36 @@ public class OrganizationsController {
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
-	private PermissionService permissionService = null;
 	private ApplicationService applicationService = null;
 	private ApplicationCriticalityService applicationCriticalityService = null;
-	
+	private PermissionService permissionService = null;
+	private ChannelTypeService channelTypeService = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-			ApplicationCriticalityService applicationCriticalityService,
-			PermissionService permissionService, ApplicationService applicationService) {
+			ChannelTypeService channelTypeService, PermissionService permissionService, 
+			ApplicationService applicationService, 
+			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
-		this.applicationCriticalityService = applicationCriticalityService;
 		this.applicationService = applicationService;
+		this.applicationCriticalityService = applicationCriticalityService;
 		this.permissionService = permissionService;
+		this.channelTypeService = channelTypeService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
+		addModelObjects(model);
+		model.addAttribute("quickStartModel", new QuickStartModel());
+		return "organizations/index";
+	}
+	
+	private void addModelObjects(Model model) {
 		List<Organization> organizations = organizationService.loadAllActiveFilter();
+
+		// for quick start
+		model.addAttribute("channels", channelTypeService.getChannelTypeOptions(null));
+		
 		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
 		model.addAttribute("application", new Application());
@@ -98,8 +115,6 @@ public class OrganizationsController {
 			model.addAttribute("shouldChangePassword",
 					!((ThreadFixUserDetails) test).hasChangedInitialPassword());
 		}
-		
-		return "organizations/index";
 	}
 
 	@RequestMapping("/{orgId}")
@@ -123,6 +138,40 @@ public class OrganizationsController {
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			return mav;
+		}
+	}
+	
+	@RequestMapping("/teamTable")
+	public String teamTable(Model model) {
+		addModelObjects(model);
+		return "organizations/indexTeamTable";
+	}
+	
+	@RequestMapping(value="/modalAdd", method = RequestMethod.POST)
+	public String newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
+			SessionStatus status) {
+		if (result.hasErrors()) {
+			return "organizations/modalTeamForm";
+		} else {
+			
+			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
+				result.rejectValue("name", null, null, "This field cannot be blank");
+				return "organizations/modalTeamForm";
+			}
+			
+			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
+			if (databaseOrganization != null) {
+				result.rejectValue("name", "errors.nameTaken");
+				return "organizations/modalTeamForm";
+			}
+			
+			organizationService.storeOrganization(organization);
+			
+			String user = SecurityContextHolder.getContext().getAuthentication().getName();
+			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
+					" and ID " + organization.getId());
+			status.setComplete();
+			return "redirect:/organizations/teamTable";
 		}
 	}
 

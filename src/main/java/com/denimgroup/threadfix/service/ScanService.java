@@ -121,4 +121,11 @@ public interface ScanService {
 	 */
 	void loadStatistics(Scan scan);
 
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	String getScannerType(MultipartFile file);
+
 }

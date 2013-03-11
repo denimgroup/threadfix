@@ -2,6 +2,8 @@
     <excludes>
     	<pattern>/login*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>
+    	<pattern>/organizations/teamTable*</pattern>
+    	<pattern>/organizations/modalAdd*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>

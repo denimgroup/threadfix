@@ -135,7 +135,7 @@ showResponse = function(type, text, element) {
 		responseText = '<em id="jsonResult2">' + html + '</em>';
 	}
 	
-	var toReplaceDiv = $("#toReplace");
+	var toReplaceDiv = $("#toReplaceDT");
 	
 	toReplaceDiv.css("display","none");
 	

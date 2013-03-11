@@ -62,7 +62,7 @@ public class AddUserController {
 	private RoleService roleService = null;
 	private OrganizationService organizationService = null;
 	
-	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddUserController.class);
 
 	@Autowired
 	public AddUserController(OrganizationService organizationService, 

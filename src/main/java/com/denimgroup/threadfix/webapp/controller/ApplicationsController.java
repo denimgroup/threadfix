@@ -41,17 +41,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -59,6 +62,7 @@ import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
+@SessionAttributes({"defectTracker", "application", "waf"})
 public class ApplicationsController {
 	
 	public ApplicationsController(){}
@@ -67,14 +71,17 @@ public class ApplicationsController {
 
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
+	private WafService wafService;
 	private VulnerabilityService vulnerabilityService;
 	private PermissionService permissionService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
+			WafService wafService,
 			DefectTrackerService defectTrackerService,
 			PermissionService permissionService,
 			VulnerabilityService vulnerabilityService) {
+		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.permissionService = permissionService;
@@ -112,12 +119,23 @@ public class ApplicationsController {
 		long numClosedVulns = applicationService.getVulnCount(appId, false);
 		long falsePositiveCount = applicationService.getCount(appId, falsePositiveBean);
 		
-		
 		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS, 
 				Permission.CAN_UPLOAD_SCANS, Permission.CAN_MODIFY_VULNERABILITIES, 
 				Permission.CAN_SUBMIT_DEFECTS, Permission.CAN_VIEW_JOB_STATUSES );
 		
+		applicationService.decryptCredentials(application);
+		
+		if (application.getPassword() != null && !"".equals(application.getPassword())) {
+			application.setPassword(Application.TEMP_PASSWORD);
+		}
+		
 		model.addAttribute("numVulns", numVulns);
+		model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
+		model.addAttribute("defectTracker", new DefectTracker());
+		model.addAttribute("waf", new Waf());
+		model.addAttribute("wafList", wafService.loadAll());
+		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
 		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);

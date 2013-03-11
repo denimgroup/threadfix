@@ -56,7 +56,7 @@ public class AddWafController {
 
 	private WafService wafService = null;
 	
-	private final SanitizedLogger log = new SanitizedLogger(AddApplicationChannelController.class);
+	private final SanitizedLogger log = new SanitizedLogger(AddWafController.class);
 
 	@Autowired
 	public AddWafController(WafService wafService) {

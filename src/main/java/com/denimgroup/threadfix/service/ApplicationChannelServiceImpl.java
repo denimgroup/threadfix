@@ -69,7 +69,7 @@ public class ApplicationChannelServiceImpl implements ApplicationChannelService 
 		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
 				applicationChannel.getApplication().getId(), applicationChannel.getChannelType()
 						.getId());
-		return dbAppChannel != null;
+		return dbAppChannel != null && !applicationChannel.getId().equals(dbAppChannel.getId());
 	}
 	
 	@Override

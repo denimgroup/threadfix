@@ -6,6 +6,7 @@
 	<title><decorator:title/> | <spring:message code="webapp.name"/></title>
 
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/reset-fonts-grids.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
