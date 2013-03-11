@@ -135,7 +135,7 @@ public class AddFindingController {
 		findingService.validateManualFinding(finding, result);
 		
 		if (result.hasErrors()) {
-			model.addAttribute("static",true);
+			model.addAttribute("isStatic",true);
 			return "scans/form";
 			
 		} else {
@@ -167,7 +167,7 @@ public class AddFindingController {
 		findingService.validateManualFinding(finding, result);
 		
 		if (result.hasErrors()) {
-			model.addAttribute("static",false);
+			model.addAttribute("isStatic",false);
 			return "scans/form";
 		} else {
 			finding.setIsStatic(false);
