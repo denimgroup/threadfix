@@ -150,6 +150,13 @@ public class AddApplicationController {
 			return "403";
 		}
 		
+		if (application.getOrganization() == null) {
+			Organization org = organizationService.loadOrganization(orgId);
+			if (org != null) {
+				application.setOrganization(org);
+			}
+		}
+		
 		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {

@@ -30,16 +30,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
@@ -51,8 +55,14 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  * 
  */
 @Controller
+@SessionAttributes(value = {"organization", "application"})
 @RequestMapping("/organizations")
 public class OrganizationsController {
+	
+	@ModelAttribute
+	public List<ApplicationCriticality> populateApplicationCriticalities() {
+		return applicationCriticalityService.loadAll();
+	}
 	
 	public OrganizationsController(){}
 	
@@ -61,11 +71,15 @@ public class OrganizationsController {
 	private OrganizationService organizationService = null;
 	private PermissionService permissionService = null;
 	private ApplicationService applicationService = null;
+	private ApplicationCriticalityService applicationCriticalityService = null;
+	
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
+			ApplicationCriticalityService applicationCriticalityService,
 			PermissionService permissionService, ApplicationService applicationService) {
 		this.organizationService = organizationService;
+		this.applicationCriticalityService = applicationCriticalityService;
 		this.applicationService = applicationService;
 		this.permissionService = permissionService;
 	}
@@ -75,6 +89,8 @@ public class OrganizationsController {
 		List<Organization> organizations = organizationService.loadAllActiveFilter();
 		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
+		model.addAttribute("application", new Application());
+		model.addAttribute("organization", new Organization());
 		
 		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
