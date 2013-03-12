@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
@@ -55,12 +58,15 @@ public class AddWafController {
 	public AddWafController(){}
 
 	private WafService wafService = null;
+	private ApplicationService applicationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddWafController.class);
 
 	@Autowired
-	public AddWafController(WafService wafService) {
+	public AddWafController(ApplicationService applicationService, 
+			WafService wafService) {
 		this.wafService = wafService;
+		this.applicationService = applicationService;
 	}
 
 	@ModelAttribute
@@ -77,7 +83,7 @@ public class AddWafController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "wafType.id" });
+		dataBinder.setAllowedFields(new String [] { "name", "wafType.id", "applicationId" });
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -111,6 +117,61 @@ public class AddWafController {
 			
 			status.setComplete();
 			return "redirect:/wafs/" + waf.getId();
+		}
+	}
+	
+	@RequestMapping(value="/ajax", method = RequestMethod.POST)
+	public String newSubmitAjax(@Valid @ModelAttribute Waf waf, 
+			BindingResult result,
+			SessionStatus status, Model model,
+			HttpServletRequest request) {
+		if (result.hasErrors()) {
+			return "wafs/errorForm";
+		} else {
+			if (waf.getName().trim().equals("")) {
+				result.rejectValue("name", null, null, "This field cannot be blank");
+			} else {
+				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
+				if (databaseWaf != null)
+					result.rejectValue("name", "errors.nameTaken");
+			}
+			
+			if (waf.getWafType() == null)
+				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
+			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
+				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
+			
+			Application application = null;
+			if (request.getParameter("applicationId") != null) {
+				Integer testId = null;
+				try {
+					testId = Integer.valueOf((String)request.getParameter("applicationId"));
+					application = applicationService.loadApplication(testId);
+				} catch (NumberFormatException e) {
+					log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
+				}
+			}
+			
+			if (application == null) {
+				result.rejectValue("wafType.id", null, null, "Please stop trying to play with hidden field.");
+			}
+			
+			if (result.hasErrors()) {
+				return "wafs/errorForm";
+			}
+			
+			wafService.storeWaf(waf);
+			
+			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
+					", the type " + waf.getWafType().getName() + 
+					" and ID " + waf.getId() + ".");
+			
+			status.setComplete();
+			
+			model.addAttribute(wafService.loadAll());
+			model.addAttribute(application);
+			return "wafs/selectForm";
 		}
 	}
 

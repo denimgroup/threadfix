@@ -193,4 +193,51 @@ public class OrganizationsController {
 			return "redirect:/organizations";
 		}
 	}
+	
+	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
+	public String submitApp(@PathVariable("orgId") int orgId,
+			@Valid @ModelAttribute Application application, BindingResult result,
+			SessionStatus status, Model model) {
+		
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+			return "403";
+		}
+		Organization org = null;
+		if (application.getOrganization() == null) {
+			org = organizationService.loadOrganization(orgId);
+			if (org != null) {
+				application.setOrganization(org);
+			}
+		} else {
+			org = application.getOrganization();
+		}
+		
+		applicationService.validateAfterCreate(application, result);
+		
+		if (result.hasErrors()) {
+			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					Permission.CAN_MANAGE_WAFS);
+			
+			model.addAttribute("org",org);
+			
+			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
+			
+			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_WAFS, orgId, null));
+			
+			return "organizations/modalAppForm";
+		} else {
+
+			applicationService.storeApplication(application);
+			
+			String user = SecurityContextHolder.getContext().getAuthentication().getName();
+			log.debug("User " + user + " has created an Application with the name " + application.getName() +
+					", the ID " + application.getId() +
+					", and the Organization " + application.getOrganization().getName());
+			
+			status.setComplete();
+			return "redirect:/organizations/teamTable";
+		}
+	}
 }

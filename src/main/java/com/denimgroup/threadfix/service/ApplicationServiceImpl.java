@@ -201,8 +201,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (application == null || result == null)
 			return false;
 		
-		if (application.getDefectTracker() != null 
-				&& application.getDefectTracker().getId() == 0) {
+		if (application.getDefectTracker() != null && 
+				(application.getDefectTracker().getId() == null
+				|| application.getDefectTracker().getId() == 0)) {
 			application.setDefectTracker(null);
 			application.setUserName(null);
 			application.setPassword(null);
@@ -364,7 +365,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			application.setDefectTracker(oldApp.getDefectTracker());
 		}
 		
-		if (application.getWaf() != null && application.getWaf().getId() == 0) {
+		if (application.getWaf() != null && (application.getWaf().getId() == null ||
+				application.getWaf().getId() == 0)) {
 			application.setWaf(null);
 		}
 		
@@ -436,9 +438,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void validateAfterCreate(Application application, BindingResult result) {
 		
-		if (application.getName() != null && application.getName().trim().equals("")
-				&& !result.hasFieldErrors("name")) {
-			result.rejectValue("name", null, null, "This field cannot be blank");
+		if (application.getName() == null || application.getName().trim().equals("")) {
+			
+			if (!result.hasFieldErrors("name")) {
+				result.rejectValue("name", null, null, "This field cannot be blank");
+			}
 			return;
 		}
 		

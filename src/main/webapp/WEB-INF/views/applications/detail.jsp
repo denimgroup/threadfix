@@ -13,6 +13,37 @@
     </script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
 	<script>
+	function submitAjaxModal(url, formId, formDiv, successDiv, modalName, collapsible) {
+		$.ajax({
+			type : "POST",
+			url : url,
+			data : $(formId).serializeArray(),
+			contentType : "application/x-www-form-urlencoded",
+			dataType : "text",
+			success : function(text) {
+				
+				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+					$(formDiv).html(text);
+				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+					$(modalName).on('hidden', function () {
+						$(successDiv).html(text);
+						$(collapsible).collapse('show');
+				    });
+				    $(modalName).modal('hide');
+				} else {
+					try {
+						var json = JSON.parse(text);
+						alert(json.error);
+					} catch (e) {
+						history.go(0);
+					}
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
+		    }
+		});
+	}
 	function switchDTModals() {
 	    $("#addDefectTracker").modal('hide');
 	    $("#createDefectTracker").modal('show');
@@ -23,6 +54,67 @@
 	    $("#createWaf").modal('show');
 	    return false;
 	};
+	function addWafAndRefresh(url) {
+		$.ajax({
+			type : "POST",
+			url : url,
+			data : $('#addWafForm').serializeArray(),
+			contentType : "application/x-www-form-urlencoded",
+			dataType : "text",
+			success : function(text) {
+				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+					$('#addWaf').html(text);
+				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+					$('#addWaf').on('hidden', function () {
+						$('#appWafDiv').html(text);
+				    });
+				    $('#addWaf').modal('hide');
+				} else {
+					try {
+						var json = JSON.parse(text);
+						alert(json.error);
+					} catch (e) {
+						history.go(0);
+					}
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
+		    }
+		});
+	    return false;
+	}
+	function createWafAndRefresh(url) {
+		$.ajax({
+			type : "POST",
+			url : url,
+			data : $('#wafForm').serializeArray(),
+			contentType : "application/x-www-form-urlencoded",
+			dataType : "text",
+			success : function(text) {
+				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+					$('#createWaf').html(text);
+				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+					$('#createWaf').on('hidden', function () {
+						$('#addWaf').html(text);
+				    });
+				    $('#createWaf').modal('hide');
+				    $("#addWaf").modal('show');
+				} else {
+					try {
+						var json = JSON.parse(text);
+						alert(json.error);
+					} catch (e) {
+						history.go(0);
+					}
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
+		    }
+		});
+	    return false;
+	}
 	</script>
 </head>
 
@@ -95,23 +187,23 @@
 			</tr>
 			<tr>
 				<td>WAF:</td>
-				<c:choose>
-					<c:when test="${ empty application.waf }">
-						<td class="inputValue">
+				<td class="inputValue">
+					<div id="appWafDiv">
+					<c:choose>
+						<c:when test="${ empty application.waf }">
 							<a href="#addWaf" role="button" class="btn" data-toggle="modal">Add WAF</a>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<td class="inputValue">
+						</c:when>
+						<c:otherwise>
 							<spring:url value="/wafs/{wafId}" var="wafUrl">
 								<spring:param name="wafId" value="${ application.waf.id }"/>
 							</spring:url>
 							<a id="wafText" href="${ fn:escapeXml(wafUrl) }"><c:out value="${ application.waf.name }"/></a>
 							<em>(<c:out value="${ application.waf.wafType.name }"/>)</em>
 							<a href="#addWaf" role="button" class="btn" data-toggle="modal">Edit WAF</a>
-						</td>
-					</c:otherwise>
-				</c:choose>
+						</c:otherwise>
+					</c:choose>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td>Criticality:</td>
@@ -333,19 +425,19 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">X</button>
-			<h3 id="myModalLabel">Add WAF</h3>
+			<h4 id="myModalLabel">Add WAF</h4>
 		</div>
-		<spring:url value="/organizations/{orgId}/applications/{appId}/edit" var="saveUrl">
+		<spring:url value="/organizations/{orgId}/applications/{appId}/edit/wafAjax" var="saveUrl">
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
-			<form:form modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
+			<form:form id="addWafForm" style="margin-bottom:0px;" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 			<div class="modal-body">
 				<table>
 					<tr>
-						<td class="label">WAF:</td>
+						<td>WAF</td>
 						<td class="inputValue">
-							<form:select id="wafSelect" path="waf.id">
+							<form:select style="margin:5px;" id="wafSelect" path="waf.id">
 								<form:option value="0" label="<none>" />
 								<form:options items="${ wafList }" itemValue="id" itemLabel="name"/>
 							</form:select>
@@ -359,7 +451,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button type="submit" class="btn btn-primary">Update Application</button>
+				<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:addWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Update Application</a>
 			</div>
 		</form:form>
 	</div>
@@ -369,26 +461,26 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">X</button>
-			<h3 id="myModalLabel">Create New WAF</h3>
+			<h4 id="myModalLabel">Create New WAF</h4>
 		</div>
-		<spring:url value="/wafs/new" var="saveUrl"/>
-		<form:form modelAttribute="waf" method="post" action="${ fn:escapeXml(saveUrl) }">
+		<spring:url value="/wafs/new/ajax" var="saveUrl"/>
+		<form:form id="wafForm" style="margin-bottom:0px;" modelAttribute="waf" method="post" action="${ fn:escapeXml(saveUrl) }">
 			<div class="modal-body">
 				<table class="dataTable">
 					<tbody>
 					    <tr>
-							<td class="label">Name:</td>
+							<td>Name</td>
 							<td class="inputValue">
-								<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
+								<form:input style="margin:5px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
 							</td>
 							<td style="padding-left: 5px">
 								<form:errors path="name" cssClass="errors" />
 							</td>
 						</tr>
 						<tr>
-							<td class="label">Type:</td>
+							<td>Type</td>
 							<td class="inputValue">
-								<form:select id="typeSelect" path="wafType.id">
+								<form:select style="margin:5px;" id="typeSelect" path="wafType.id">
 									<form:options items="${ wafTypeList }" itemValue="id" itemLabel="name" />
 								</form:select>
 							</td>
@@ -400,31 +492,32 @@
 				</table>
 			</div>
 			<div class="modal-footer">
+				<input type="hidden" name="applicationId" value="<c:out value="${ application.id }"/>">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button type="submit" class="btn btn-primary">Create WAF</button>
+				<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:createWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create WAF</a>
 			</div>
 		</form:form>
 	</div>
 	
 	<div id="addDefectTracker" class="modal hide fade" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:600px;">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">X</button>
-			<h3 id="myModalLabel">Add Defect Tracker</h3>
+			<h4 id="myModalLabel">Add Defect Tracker</h4>
 		</div>
 		<spring:url value="/organizations/{orgId}/applications/{appId}/edit" var="saveUrl">
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
-			<form:form modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
+			<form:form style="margin-bottom:0px;" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 			<div class="modal-body">
 				<table>
 					<tr>
-						<td>Defect Tracker:</td>
+						<td>Defect Tracker</td>
 						<td class="inputValue">
 							<c:if test="${ not empty defectTrackerList }">
-								<form:select id="defectTrackerId" path="defectTracker.id">
+								<form:select style="margin:5px;" id="defectTrackerId" path="defectTracker.id">
 									<form:option value="0" label="<none>"/>
 									<form:options items="${defectTrackerList}" itemValue="id" itemLabel="displayName"/>
 								</form:select>
@@ -439,18 +532,18 @@
 						</td>
 					</tr>
 					<tr class="defecttracker_row">
-						<td>Username:</td>
+						<td>Username</td>
 						<td class="inputValue">
-							<form:input id="username" path="userName" size="50" maxlength="50"/>
+							<form:input style="margin:5px;" id="username" path="userName" size="50" maxlength="50"/>
 						</td>
 						<td style="padding-left:5px" colspan="2" >
 							<form:errors path="userName" cssClass="errors" />
 						</td>
 					</tr>
 					<tr class="defecttracker_row">
-						<td>Password:</td>
+						<td>Password</td>
 						<td class="inputValue">						
-							<form:password id="password" showPassword="true" path="password" size="50" maxlength="50" />
+							<form:password style="margin:5px;" id="password" showPassword="true" path="password" size="50" maxlength="50" />
 						</td>
 						<td style="padding-left:5px" colspan="2" >
 							<form:errors path="password" cssClass="errors" />
@@ -469,9 +562,9 @@
 						</td>
 					</tr>
 					<tr class="defecttracker_row">
-						<td id="projectname">Product Name:</td>
+						<td id="projectname">Product Name</td>
 						<td class="inputValue">
-							<form:select id="projectList" path="projectName">
+							<form:select style="margin:5px;" id="projectList" path="projectName">
 								<c:if test="${ not empty application.projectName }">
 									<option value="${ application.projectName }"><c:out value="${ application.projectName }"/></option>
 								</c:if>
@@ -496,17 +589,17 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">X</button>
-			<h3 id="myModalLabel">New Defect Tracker</h3>
+			<h4 id="myModalLabel">New Defect Tracker</h4>
 		</div>
 		<spring:url value="/configuration/defecttrackers/new" var="saveUrl"/>
-		<form:form modelAttribute="defectTracker" method="post" action="${ fn:escapeXml(saveUrl) }">
+		<form:form style="margin-bottom:0px;" modelAttribute="defectTracker" method="post" action="${ fn:escapeXml(saveUrl) }">
 			<div class="modal-body">
 				<table class="dataTable">
 					<tbody>
 					    <tr>
 							<td>Name:</td>
 							<td class="inputValue">
-								<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
+								<form:input style="margin:5px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
 							</td>
 							<td style="padding-left: 5px">
 								<form:errors path="name" cssClass="errors" />
@@ -520,7 +613,7 @@
 										var initialUrl = '<c:out value="${ defectTracker.url }"/>';
 									</script>
 								</c:if>
-								<form:input id="urlInput" path="url" cssClass="focus" size="50" maxlength="255"/>
+								<form:input style="margin:5px;" id="urlInput" path="url" cssClass="focus" size="50" maxlength="255"/>
 							</td>
 							<td style="padding-left: 5px">
 								<form:errors path="url" cssClass="errors" />
@@ -537,7 +630,7 @@
 										var initialTrackerTypeId = '<c:out value="${ defectTracker.defectTrackerType.id }"/>';
 									</script>
 								</c:if>
-								<form:select id="defectTrackerTypeSelect" path="defectTrackerType.id">
+								<form:select style="margin:5px;" id="defectTrackerTypeSelect" path="defectTrackerType.id">
 									<form:options items="${ defectTrackerTypeList }" itemValue="id" itemLabel="name" />
 								</form:select>
 							</td>

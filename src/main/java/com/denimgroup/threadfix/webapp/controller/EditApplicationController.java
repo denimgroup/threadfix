@@ -186,4 +186,54 @@ public class EditApplicationController {
 			return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/" + application.getId();
 		}
 	}
+	
+	@RequestMapping(value="/wafAjax", method = RequestMethod.POST)
+	public String processSubmitAjaxWaf(@PathVariable("appId") int appId,
+			@PathVariable("orgId") int orgId,
+			@ModelAttribute Application application,
+			BindingResult result, SessionStatus status, Model model) {
+		
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
+		if(application != null && application.getId() != null) {
+			Application databaseApplication = applicationService.loadApplication(application.getId());
+			if (databaseApplication == null) {
+				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
+			} else {
+				if (application.getWaf() != null && (application.getWaf().getId() == null ||
+						application.getWaf().getId() == 0)) {
+					databaseApplication.setWaf(null);
+				}
+				
+				if (application.getWaf() != null && application.getWaf().getId() != null) {
+					Waf waf = wafService.loadWaf(application.getWaf().getId());
+					
+					if (waf == null) {
+						result.rejectValue("waf.id", "errors.invalid", 
+								new String [] { "WAF Choice" }, null);
+					} else {
+						databaseApplication.setWaf(waf);
+					}
+				}
+				
+				applicationService.storeApplication(databaseApplication);
+				
+				String user = SecurityContextHolder.getContext().getAuthentication().getName();
+				
+				log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
+				
+				model.addAttribute("application", databaseApplication);
+			}
+		} else {
+			result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
+		}
+		
+		if (result.hasErrors()) {
+			return "applications/addWafErrorForm";
+		} else {
+			return "applications/addWafSuccess";
+		}
+	}
 }
