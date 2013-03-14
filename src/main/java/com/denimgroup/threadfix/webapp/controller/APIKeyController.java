@@ -30,7 +30,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,17 +71,13 @@ public class APIKeyController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
 		model.addAttribute("apiKeyList", apiKeyService.loadAll());
-		return "config/keys/index";
-	}
-	
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newForm(Model model) {
 		model.addAttribute("apiKey", new APIKey());
-		return "config/keys/new";
+		return "config/keys/index";
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String newSubmit(HttpServletRequest request, @RequestParam String note) {
+	public String newSubmit(HttpServletRequest request, @RequestParam String note,
+			Model model) {
 		
 		boolean restricted = request.getParameter("isRestrictedKey") != null;
 		
@@ -92,7 +87,10 @@ public class APIKeyController {
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		log.debug(currentUser + " has created an API key with the note " + note +
 				", and the ID " + newAPIKey.getId());
-		return "redirect:/configuration/keys";
+		
+		model.addAttribute("apiKeyList", apiKeyService.loadAll());
+		model.addAttribute("apiKey", new APIKey());
+		return "config/keys/keyTable";
 	}
 	
 	@RequestMapping(value = "/{keyId}/delete", method = RequestMethod.POST)
@@ -109,21 +107,8 @@ public class APIKeyController {
 		return "redirect:/configuration/keys";
 	}
 	
-	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.GET)
-	public String edit(@PathVariable("keyId") int keyId, ModelMap model) {
-		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
-		
-		if (apiKey != null) {
-			model.addAttribute("apiKey", apiKey);
-			return "config/keys/edit";
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
-			throw new ResourceNotFoundException();
-		}
-	}
-	
 	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.POST)
-	public String saveEdit(HttpServletRequest request, 
+	public String saveEdit(HttpServletRequest request, Model model,
 			@PathVariable("keyId") int keyId, @RequestParam String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
 		
@@ -131,15 +116,15 @@ public class APIKeyController {
 		
 		if (note != null) {
 			apiKey.setNote(note);
-			
 			apiKey.setIsRestrictedKey(restricted);
 			apiKeyService.storeAPIKey(apiKey);
+			model.addAttribute("apiKeyList", apiKeyService.loadAll());
+			model.addAttribute("apiKey", new APIKey());
+			return "config/keys/keyTable";
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
 			throw new ResourceNotFoundException();
 		}
-		
-		return "redirect:/configuration/keys";
 	}
 	
 }

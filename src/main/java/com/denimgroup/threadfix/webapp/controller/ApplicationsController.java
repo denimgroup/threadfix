@@ -331,6 +331,76 @@ public class ApplicationsController {
 		return "applications/vulnTable";
 	}
 	
+	@RequestMapping(value="/{appId}/vulnTab", method = RequestMethod.GET)
+	public String vulnTab(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
+			ModelMap model) {
+		
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+			return "403";
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+
+		long numVulns = applicationService.getVulnCount(appId, true);
+		long numClosedVulns = applicationService.getVulnCount(appId, false);
+		
+		
+		model.addAttribute("numVulns", numVulns);
+		model.addAttribute("numClosedVulns", numClosedVulns);
+		model.addAttribute(application);
+		
+		return "applications/tabs/vulnTab";
+	}
+	
+	@RequestMapping(value="/{appId}/scanTab", method = RequestMethod.GET)
+	public String scanTab(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
+			ModelMap model) {
+		
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+			return "403";
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+
+		model.addAttribute(application);
+		
+		return "applications/tabs/scanTab";
+	}
+
+	@RequestMapping(value="/{appId}/closedTab", method = RequestMethod.GET)
+	public String closedTab(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
+			ModelMap model) {
+		
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+			return "403";
+		}
+		
+		return "applications/tabs/closedTab";
+	}
+	
+	@RequestMapping(value="/{appId}/falsePositiveTab", method = RequestMethod.GET)
+	public String falsePositiveTab(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
+			ModelMap model) {
+		
+		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+			return "403";
+		}
+		
+		return "applications/tabs/falsePositiveTab";
+	}
+	
 	@RequestMapping(value="/{appId}/defectTable", method = RequestMethod.POST)
 	public String getDefectTableVulns(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,

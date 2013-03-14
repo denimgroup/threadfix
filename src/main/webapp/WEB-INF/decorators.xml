@@ -1,16 +1,23 @@
 <decorators defaultdir="/decorators">
     <excludes>
     	<pattern>/login*</pattern>
+    	<pattern>/reports/ajax*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/teamTable*</pattern>
     	<pattern>/organizations/modalAdd*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
     	<pattern>/organizations/*/applications/*/edit/wafAjax*</pattern>
+    	<pattern>/organizations/*/applications/*/vulnTab*</pattern>
+    	<pattern>/organizations/*/applications/*/scanTab*</pattern>
+    	<pattern>/organizations/*/applications/*/closedTab*</pattern>
+    	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/configuration/users/*/access*</pattern>
+    	<pattern>/configuration/keys/new*</pattern>
+    	<pattern>/configuration/keys/*/edit*</pattern>
     	<pattern>/wafs/new/ajax*</pattern>
     </excludes>
     <decorator name="default" page="default.jsp">

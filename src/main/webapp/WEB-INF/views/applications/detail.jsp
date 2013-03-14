@@ -8,42 +8,11 @@
 	<script type="text/javascript">
 	window.onload = function()
     {
+		$('#vulnTab').button('toggle');
 		toggleFilters(false, null, null);//refillElement('#toReplace', '${ application.id }/table', 1);
     };
     </script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
 	<script>
-	function submitAjaxModal(url, formId, formDiv, successDiv, modalName, collapsible) {
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : $(formId).serializeArray(),
-			contentType : "application/x-www-form-urlencoded",
-			dataType : "text",
-			success : function(text) {
-				
-				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
-					$(formDiv).html(text);
-				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
-					$(modalName).on('hidden', function () {
-						$(successDiv).html(text);
-						$(collapsible).collapse('show');
-				    });
-				    $(modalName).modal('hide');
-				} else {
-					try {
-						var json = JSON.parse(text);
-						alert(json.error);
-					} catch (e) {
-						history.go(0);
-					}
-				}
-			},
-			error : function (xhr, ajaxOptions, thrownError){
-				history.go(0);
-		    }
-		});
-	}
 	function switchDTModals() {
 	    $("#addDefectTracker").modal('hide');
 	    $("#createDefectTracker").modal('show');
@@ -96,10 +65,9 @@
 					$('#createWaf').html(text);
 				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 					$('#createWaf').on('hidden', function () {
-						$('#addWaf').html(text);
+						$('#appWafDiv').html(text);
 				    });
 				    $('#createWaf').modal('hide');
-				    $("#addWaf").modal('show');
 				} else {
 					try {
 						var json = JSON.parse(text);
@@ -115,6 +83,30 @@
 		});
 	    return false;
 	}
+	function switchTabs(url) {
+		$.ajax({
+			type : "GET",
+			url : url,
+			dataType : "text",
+			success : function(text) {
+				if ($.trim(text).slice(0,15) === "<body id=\"tab\">") {
+					$('#tabsDiv').html(text);
+				} else {
+					try {
+						var json = JSON.parse(text);
+						alert(json.error);
+					} catch (e) {
+						history.go(0);
+					}
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
+		    }
+		});
+	    return false;
+	}
+	
 	</script>
 </head>
 
@@ -230,10 +222,33 @@
 		</span>
 	</c:if>
 	
+	<spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
+		<spring:param name="orgId" value="${ application.organization.id }"/>
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	<spring:url value="/organizations/{orgId}/applications/{appId}/scanTab" var="scanTabUrl">
+		<spring:param name="orgId" value="${ application.organization.id }"/>
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	<spring:url value="/organizations/{orgId}/applications/{appId}/closedTab" var="closedTabUrl">
+		<spring:param name="orgId" value="${ application.organization.id }"/>
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	<spring:url value="/organizations/{orgId}/applications/{appId}/falsePositiveTab" var="falsePositiveTabUrl">
+		<spring:param name="orgId" value="${ application.organization.id }"/>
+		<spring:param name="appId" value="${ application.id }"/>
+	</spring:url>
+	<br>
+	<div style="text-align:center;width:100%;margin-top:10px;margin-bottom:10px;" align="center" class="btn-group" data-toggle="buttons-radio">
+		<a id="submitTeamModal" class="btn active" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
+		<a id="submitTeamModal" class="btn" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
+		<a id="submitTeamModal" class="btn" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
+		<a id="submitTeamModal" class="btn" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
+    </div>
+    
+    <div id="tabsDiv">
 	
 	<c:if test="${ not empty application.scans }"> 
-	<h3 style="padding-top:10px;">All Open Vulnerabilities</h3>
-	
 	<p>Listing <span id="totalVulnCount"><c:out value="${ numVulns }"/></span>
 		<c:choose>
 			<c:when test="${ numVulns == 1 }">
@@ -337,7 +352,7 @@
 			</tr>
 		</tbody>
 	</table>
-    
+	
     <div id="toReplace">
    
 		<table class="formattedTable sortable filteredTable" id="anyid">
@@ -419,6 +434,9 @@
 	</table>
 	
 	</c:if>
+	
+		
+	</div>
 	
 	<div id="addWaf" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

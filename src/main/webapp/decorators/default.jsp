@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/delete.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".focus").focus();

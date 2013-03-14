@@ -3,6 +3,7 @@
 <head>
 	<title>Reports</title>
 	
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){ 
 		$("#orgSelect").change(function() {
@@ -26,6 +27,8 @@
 </head>
 
 <body id="reports">
+	<div style="float:left" id="formDiv">
+	
 	<h2>Reports</h2>
 	
 	<c:if test="${ not empty error }">
@@ -40,15 +43,15 @@
 	</c:if>
 	
 	<c:if test="${ not empty organizationList }">
-		<spring:url value="" var="emptyUrl"></spring:url>	
-		<form:form modelAttribute="reportParameters" action="${ fn:escapeXml(emptyUrl) }">
+		<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
+		<form:form id="reportForm" modelAttribute="reportParameters" action="${ fn:escapeXml(emptyUrl) }">
 			<table class="dataTable">
 				<tbody>
 					<tr>
-						<td class="label">Report:</td>
-						<td class="inputValue">
+						<td>Report</td>
+						<td style="padding-none;" class="inputValue">
 							<div id="rptDrowDown">
-								<form:select path="reportId">
+								<form:select style="margin-bottom:0px;" path="reportId">
 									<option value="1">Trending Report</option>
 									<option value="2">Point in Time Report</option>
 									<option value="3">Vulnerability Progress By Type</option>
@@ -62,10 +65,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="label">Team:</td>
-						<td class="inputValue">
+						<td>Team</td>
+						<td style="padding-none;" class="inputValue">
 							<div id="orgDropDown">
-								<form:select path="organizationId" id="orgSelect">
+								<form:select style="margin-bottom:0px;" path="organizationId" id="orgSelect">
 									<option value="-1">All</option>
 									<c:forEach var="organization" items="${ organizationList }">
 										<c:if test="${ organization.active }">
@@ -79,10 +82,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="label">Application:</td>
-						<td class="inputValue">
+						<td>Application</td>
+						<td style="padding-none;" class="inputValue">
 							<div id="appDropDown">
-								<form:select path="applicationId" id="appSelect">
+								<form:select style="margin-bottom:0px;" path="applicationId" id="appSelect">
 									<option value="-1">All</option>
 								</form:select>
 								<form:errors path="applicationId"/>
@@ -90,10 +93,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="label">Format:</td>
-						<td class="inputValue">
+						<td>Format</td>
+						<td style="padding-none;" class="inputValue">
 							<div id="formatDropDown">
-								<form:select path="formatId">
+								<form:select style="margin-bottom:0px;" path="formatId">
 									<option value="1">HTML</option>
 									<option value="2">CSV</option>
 									<option value="3">PDF</option>
@@ -105,7 +108,11 @@
 				</tbody>
 			</table>
 			<br />
-			<input id="runReportButton" type="submit" value="Run Report" />
+			<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjax('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv');return false;">Run Report</a>
 		</form:form>
 	</c:if>
+	
+	</div>
+	
+	<div style="float:left" id="successDiv"></div>
 </body>

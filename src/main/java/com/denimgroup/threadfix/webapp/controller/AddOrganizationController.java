@@ -70,7 +70,7 @@ public class AddOrganizationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name" });
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String newForm(Model model) {
 		Organization organization = new Organization();

@@ -75,6 +75,14 @@ body {
 	width: 460px;
 }
 
+#menu li.normalLinks a {
+	color: #43678b;
+}
+
+#menu li.normalLinks a:hover {
+	color: #FFF;
+}
+
 #menu table tr td {
 	height: 32px;
 	padding:0 0 0 5px; 
@@ -111,7 +119,6 @@ body#apps #tab-apps a:hover,
 body#wafs #tab-wafs a:hover,
 body#reports #tab-reports a:hover,
 body#config #tab-config a:hover {
-	
 	z-index:2;
 }
 
@@ -343,6 +350,11 @@ ul.wafRuleList {
 ul.wafRuleList li {
 	list-style-type: disc;
 	padding: 0 0 15px 5px;
+}
+
+table#noBorders tr td{
+	border:none;
+	text-align:left;
 }
 
 /**

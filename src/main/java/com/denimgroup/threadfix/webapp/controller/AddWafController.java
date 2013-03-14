@@ -132,14 +132,17 @@ public class AddWafController {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 			} else {
 				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
-				if (databaseWaf != null)
+				if (databaseWaf != null) {
 					result.rejectValue("name", "errors.nameTaken");
+				}
 			}
 			
 			if (waf.getWafType() == null)
 				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
 			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
 				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
+			else 
+				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
 			
 			Application application = null;
 			if (request.getParameter("applicationId") != null) {
@@ -161,6 +164,8 @@ public class AddWafController {
 			}
 			
 			wafService.storeWaf(waf);
+			application.setWaf(waf);
+			applicationService.storeApplication(application);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
@@ -169,9 +174,8 @@ public class AddWafController {
 			
 			status.setComplete();
 			
-			model.addAttribute(wafService.loadAll());
 			model.addAttribute(application);
-			return "wafs/selectForm";
+			return "applications/addWafSuccess";
 		}
 	}
 

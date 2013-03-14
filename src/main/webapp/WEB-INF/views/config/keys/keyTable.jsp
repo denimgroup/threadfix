@@ -1,19 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<head>
-	<title>API Keys</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
-</head>
-
-<body>
-	<h2>API Keys</h2>
-	
-	<div id="helpText">
-		ThreadFix API Keys are used to access the REST interface.<br/>
-	</div>
-	
-	<div id="tableDiv">
-	
+<body id="table">
 	<table class="formattedTable">
 		<thead>
 			<tr>
@@ -110,48 +97,4 @@
 			</tr>
 		</tbody>
 	</table>
-	</div>
-	
-	<br/>
-	
-	<div id="newKeyModalDiv" class="modal hide fade" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal"
-				aria-hidden="true">X</button>
-			<h4 id="myModalLabel">New API Key</h4>
-		</div>
-		<div id="formDiv">
-		<spring:url value="/configuration/keys/new" var="newKeyUrl"/>
-		<form:form id="newKeyForm" style="margin-bottom:0px;" modelAttribute="apiKey" method="post" action="${ fn:escapeXml(newKeyUrl) }">
-			<table class="dataTable">
-				<tbody>
-					<tr>
-						<td style="padding-left:8px;">Note (optional)</td>
-						<td class="inputValue">
-							<form:input style="margin-bottom:0px;" path="note" cssClass="focus" size="70" maxlength="255" value="${ note }" />
-						</td>
-						<td style="padding-left:5px">
-							<form:errors path="note" cssClass="errors" />
-						</td>
-					</tr>
-					<tr>
-						<td style="padding-left:8px;">Restricted?</td>
-						<td class="inputValue">
-							<form:checkbox style="margin-bottom:0px;" path="isRestrictedKey"/>
-						</td>
-						<td style="padding-left:5px">
-							<form:errors path="isRestrictedKey" cssClass="errors" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<br/>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>
-			</div>
-		</form:form>
-		</div>
-	</div>
 </body>

@@ -1,38 +1,42 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<head>
-	<title>API Key</title>
-</head>
-
-<body>
-	<h2>API Key</h2>
-	
-	<spring:url value="" var="emptyUrl"></spring:url>	
-	<form:form modelAttribute="apiKey" method="post" action="${fn:escapeXml(emptyUrl) }">
-		<table class="dataTable">
-			<tbody>
-				<tr>
-					<td class="label">Note:</td>
-					<td class="inputValue">
-						<form:input path="note" cssClass="focus" size="70" maxlength="255" value="${ note }" />
-					</td>
-					<td style="padding-left:5px">
-						<form:errors path="note" cssClass="errors" />
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Restricted?</td>
-					<td class="inputValue">
-						<form:checkbox path="isRestrictedKey"/>
-					</td>
-					<td style="padding-left:5px">
-						<form:errors path="isRestrictedKey" cssClass="errors" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br/>
-		<input id="updateApiKeyButton" type="submit" value="Update API Key" />
-		<span style="padding-left: 10px"><a href="<spring:url value="/configuration/keys"/>">Back to API Key</a></span>
+<body id="formErrors">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">X</button>
+		<h4 id="myModalLabel">Edit Key</h4>
+	</div>
+	<spring:url value="/configuration/keys/{keyId}/edit" var="saveUrl">
+		<spring:param name="keyId" value="${ key.id }"/>
+	</spring:url>
+	<form:form style="margin-bottom:0px;" id="editKeyForm${ key.id }" modelAttribute="apiKey" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
+		<div class="modal-body">
+			<table id="noBorders" class="dataTable">
+				<tbody>
+					<tr>
+						<td style="padding-left:8px;">Note (optional)</td>
+						<td class="inputValue">
+							<form:input style="margin-bottom:0px;" path="note" cssClass="focus" size="70" maxlength="255" value="${ key.note }" />
+						</td>
+						<td style="padding-left:5px">
+							<form:errors path="note" cssClass="errors" />
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-left:8px;">Restricted?</td>
+						<td class="inputValue">
+							<form:checkbox style="margin-bottom:0px;" path="isRestrictedKey"/>
+						</td>
+						<td style="padding-left:5px">
+							<form:errors path="isRestrictedKey" cssClass="errors" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('${fn:escapeXml(saveUrl)}', '#editKeyForm${ key.id }', '#formDiv${ key.id }', '#tableDiv', '#editKeyModal${ key.id }');return false;">Create Key</a>
+		</div>
 	</form:form>
 </body>

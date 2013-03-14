@@ -109,7 +109,7 @@ public class ReportsController {
 		return "reports/index";
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value="/ajax", method = RequestMethod.POST)
 	public String processSubmit(ModelMap model, @ModelAttribute ReportParameters reportParameters,
 			BindingResult result, SessionStatus status, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException{

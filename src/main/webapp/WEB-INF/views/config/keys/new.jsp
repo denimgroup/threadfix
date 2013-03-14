@@ -1,14 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<head>
-	<title>New API Key</title>
-</head>
-
-<body>
-	<h2>New API Key</h2>
-	
-	<spring:url value="" var="emptyUrl"></spring:url>	
-	<form:form modelAttribute="apiKey" method="post" action="${fn:escapeXml(emptyUrl)}">
+<body id="formErrors">
+	<spring:url value="/configuration/keys/new" var="newKeyUrl"/>
+	<form:form id="newKeyForm" style="margin-bottom:0px;" modelAttribute="apiKey" method="post" action="${ fn:escapeXml(newKeyUrl) }">
 		<table class="dataTable">
 			<tbody>
 				<tr>
@@ -32,7 +26,9 @@
 			</tbody>
 		</table>
 		<br/>
-		<input id="createApiKeyButton" type="submit" value="Create API Key" />
-		<span style="padding-left: 10px"><a href="<spring:url value="/configuration/keys"/>">Back to API Key Index</a></span>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>
+		</div>
 	</form:form>
 </body>

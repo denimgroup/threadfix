@@ -132,7 +132,7 @@
 				}
 				</c:if>
 			</c:forEach>
-		}
+		}//permTable
 		
 		function submitEditModal() {
 			completeEditUrl = '<c:out value="${editUrl}"/>'.replace("/edit",'/configuration/users/<c:out value="${user.id}"/>/access/' + lastId + "/edit");

@@ -50,7 +50,7 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
 								aria-hidden="true">X</button>
-							<h4 id="myModalLabel">New Application</h3>
+							<h4 id="myModalLabel">New Application</h4>
 						</div>
 						<spring:url value="/organizations/{orgId}/modalAddApp" var="saveUrl">
 							<spring:param name="orgId" value="${ org.id }"/>
