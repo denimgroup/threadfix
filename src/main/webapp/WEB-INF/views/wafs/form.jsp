@@ -12,7 +12,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Name:</td>
+				<td>Name:</td>
 				<td class="inputValue">
 					<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
 				</td>
@@ -21,7 +21,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Type:</td>
+				<td>Type:</td>
 				<td class="inputValue">
 					<form:select id="typeSelect" path="wafType.id">
 						<form:options items="${ wafTypeList }" itemValue="id" itemLabel="name" />

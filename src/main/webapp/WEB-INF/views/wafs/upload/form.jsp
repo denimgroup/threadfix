@@ -13,7 +13,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Log File:</td>
+				<td>Log File:</td>
 				<td class="inputValue">
 					<input type="file" name="file" size="50" />
 				</td>

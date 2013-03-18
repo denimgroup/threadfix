@@ -45,7 +45,7 @@
 	</div>
 	</c:if>
 	
-	<table class="formattedTable sortable filteredTable" id="anyid">
+	<table class="table auto table-striped sortable" id="anyid">
 		<thead>
 			<tr>
 				<th class="first">If Merged</th>
@@ -128,7 +128,7 @@
 		<tfoot>
 			<tr class="footer">
 				<td colspan="10" style="text-align:right">
-					<input type="submit" value="Mark Selected as False Positives">
+					<input class="btn" type="submit" value="Mark Selected as False Positives">
 				</td>
 			</tr>
 		</tfoot>

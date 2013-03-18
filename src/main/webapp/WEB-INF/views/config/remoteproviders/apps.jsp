@@ -28,7 +28,7 @@
 
 	<spring:url value="" var="emptyUrl"></spring:url>	
 	<form:form modelAttribute="remoteProviderType" action="${ fn:escapeXml(emptyUrl) }">
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<td>Name / ID</td>
@@ -81,7 +81,7 @@
 			</c:forEach>
 		</tbody>
 	</table>
-	<input id="submitButton" type="submit" value="Update Applications" />
+	<button id="submitButton" class="btn btn-primary" type="submit">Update Applications</button>
 	</form:form>
 	
 </body>

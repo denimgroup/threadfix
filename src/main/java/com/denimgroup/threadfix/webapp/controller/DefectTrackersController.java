@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,6 +42,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers")
+@SessionAttributes({"defectTracker","editDefectTracker"})
 public class DefectTrackersController {
 	
 	DefectTrackersController(){}
@@ -60,6 +62,9 @@ public class DefectTrackersController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
 		model.addAttribute(defectTrackerService.loadAllDefectTrackers());
+		model.addAttribute("editDefectTracker", new DefectTracker());
+		model.addAttribute("defectTracker", new DefectTracker());
+		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		return "config/defecttrackers/index";
 	}

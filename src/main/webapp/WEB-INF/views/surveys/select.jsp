@@ -11,13 +11,13 @@
 	<form:form modelAttribute="surveyResult" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue">
 					<c:out value="${ surveyResult.organization.name }" />
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Survey:</td>
+				<td>Survey:</td>
 				<td class="inputValue">
 					<form:select path="survey.id">
 						<form:options items="${ surveyList }" itemValue="id" itemLabel="name" />

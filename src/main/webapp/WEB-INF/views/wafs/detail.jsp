@@ -15,7 +15,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Type:</td>
+				<td>Type:</td>
 				<td id="wafTypeText" class="inputValue"><c:out value="${ waf.wafType.name }"/></td>
 			</tr>
 		</tbody>
@@ -52,7 +52,7 @@
 			<table class="dataTable">
 				<tbody>
 					<tr>
-						<td class="label">Log File:</td>
+						<td>Log File:</td>
 						<td class="inputValue">
 							<input type="file" name="file" size="50" />
 						</td>
@@ -69,7 +69,7 @@
 	<c:if test="${hasApps}">
 
 		<h3>Applications</h3>
-		<table class="formattedTable">
+		<table class="table auto table-striped">
 			<thead>
 				<tr>
 					<th class="medium first">Name</th>

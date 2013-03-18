@@ -83,6 +83,14 @@ body {
 	color: #FFF;
 }
 
+body#config #tab-config li.normalLinks a:hover {
+	color: #FFF;
+}
+
+.nav-tabs > li > a {
+	text-decoration:none;
+}
+
 #menu table tr td {
 	height: 32px;
 	padding:0 0 0 5px; 
@@ -276,12 +284,10 @@ div#passwordNag {
 	position:relative; 
 	color:#FFFFFF; 
 	padding-bottom:10px; 
+	padding-top:10px;
 	font-size:8px; 
-	padding-right:5px; 
-	bottom:0%; 
-	right:0%; 
-	width:845px; 
-	text-align:right;
+	width: 890px;
+	text-align:middle;
 }
 	                                                                                                                                            
 a {
@@ -318,6 +324,16 @@ a.sortheader {
 	padding-right: 20px;
 	white-space: nowrap;
 }
+
+input[type="radio"], input[type="checkbox"] {
+	margin:0px;
+}
+
+.btn:focus {
+	outline:0px;
+}
+
+.btn
 
 .subHeader {
 	padding-top: 5px;
@@ -357,6 +373,36 @@ table#noBorders tr td{
 	text-align:left;
 }
 
+.table.auto {
+	width:auto;
+}
+
+.table.auto tr.expandable > td {
+	border-top:0px;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+
+.table.auto tr.expandable td table tr td {
+	border-top:1px;
+}
+
+.table.auto th.centered{
+	text-align:center;
+}
+
+.table.auto td.centered{
+	text-align:center;
+}
+
+.table td {
+	padding-left:8px;
+}
+
+form {
+	margin-bottom:0px;
+}
+
 /**
 	Data Table
  **/
@@ -366,228 +412,6 @@ table.dataTable {
 
 table.dataTable td {
 	padding-top: 10px;
-}
-
-/**
-	Formatted Table
- **/
-table.formattedTable thead tr {
-	background-color: #43678b;
-	color: #fff;
-}
-
-table.formattedTable thead tr th {
-	border: 1px solid black;
-	border-left-style: none;
-	border-right-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.formattedTable thead tr th.first {
-	border: 1px solid black;
-	border-right-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.formattedTable thead tr th.last {
-	border: 1px solid black;
-	border-left-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.formattedTable tr.bodyRow {
-	background-color: #efefef;
-}
-
-table.formattedTable tr.bodySubRow {
-	background-color: #fff;
-}
-
-table.formattedTable tr.bodyRow td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.formattedTable tr.bodySubRow td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.formattedTable td.mainEntry {
-	font-weight: bold;
-	color: #38616d;
-}
-
-table.formattedTable td.subEntry {
-	font-weight: bold;
-}
-
-table.formattedTable tr.bodyRow td.details {
-	border: 1px solid black; 
-	border-right-style: none;
-}
-
-table.formattedTable tr.bodySubRow td.details {
-	border: 1px solid black; 
-	border-right-style: none;
-}
-
-table.formattedTable tr.footer {
-
-}
-
-table.formattedTable tr.footer td {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.formattedTable tr.footer td.first {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.formattedTable tr.footer td.last {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.formattedTable tr.footer a {
-
-}
-
-table.formattedTable tr.footer td.pagination div.pager span {
-	color: #A3CBD9;
-}
-
-table.formattedTable tr.footer td.pagination div.pager span.active {
-	color: #000;
-	font-weight: bold;
-}
-
-/**
-	Filtered Table
- **/
-table.filteredTable thead tr.darkBackground {
-	background-color: #43678b;
-	color: #fff;
-}
-
-table.filteredTable thead tr th {
-	border: 1px solid black;
-	border-left-style: none;
-	border-right-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.filteredTable thead tr th.first {
-	border: 1px solid black;
-	border-right-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.filteredTable thead tr th.last {
-	border: 1px solid black;
-	border-left-style: none;
-	padding: 2px 7px;
-	text-align: center;
-	font-weight: bold;
-}
-
-table.filteredTable tr.bodyRow {
-	background-color: #efefef;
-}
-
-table.filteredTable tr.bodySubRow {
-	background-color: #fff;
-}
-
-table.filteredTable tr.bodyRow td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.bodySubRow td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.bodyRowNoPage {
-	background-color: #efefef;
-}
-
-table.filteredTable tr.bodySubRowNoPage {
-	background-color: #fff;
-}
-
-table.filteredTable tr.bodyRowNoPage td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.bodySubRowNoPage td {
-	border: 1px solid black;
-	padding: 5px 7px;
-}
-
-table.filteredTable td.mainEntry {
-	font-weight: bold;
-	color: #38616d;
-}
-
-table.filteredTable td.subEntry {
-	font-weight: bold;
-}
-
-table.filteredTable tr.bodyRow td.details {
-	border: 1px solid black; 
-	border-right-style: none;
-}
-
-table.filteredTable tr.bodySubRow td.details {
-	border: 1px solid black; 
-	border-right-style: none;
-}
-
-table.filteredTable tr.footer {
-
-}
-
-table.filteredTable tr.footer td {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.footer td.first {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.footer td.last {
-	border-style: none;
-	padding: 5px 7px;
-}
-
-table.filteredTable tr.footer a {
-
-}
-
-table.filteredTable tr.footer td.pagination div.pager span {
-	color: #A3CBD9;
-}
-
-table.filteredTable tr.footer td.pagination div.pager span.active {
-	color: #000;
-	font-weight: bold;
 }
 
 th.header { 
@@ -602,4 +426,67 @@ th.headerSortUp {
 
 th.headerSortDown { 
     background-image: url(../images/sort_desc.gif); 
+}
+
+.white-inner-table tbody > tr > td table.clear tbody > tr:nth-child(2n+1) > td {
+	background-color:#FFF;
+}
+
+.table th table th, .table td table td {
+	border-top:0px;
+	vertical-align:middle;
+}
+
+.pagination ul {
+	vertical-align:middle;
+}
+
+.pagination input {
+	margin-bottom:0px;
+}
+
+.table-hover tbody tr.error:hover td, .table-hover tbody tr.error:hover th {
+	background-color: #EBCCCC;
+}
+
+.table tbody tr.error td, .table tbody tr.error th {
+	background-color:#F2DEDE;
+}
+
+.table-hover tbody tr.warning:hover td, .table-hover tbody tr.warning:hover th {
+	background-color: #faf2cc;
+}
+
+.table tbody tr.warning td, .table tbody tr.warning th {
+	background-color:#fcf8e3;
+}
+
+.table-hover tbody tr.success:hover td, .table-hover tbody tr.success:hover th {
+	background-color: #d0e9c6;
+}
+
+.table tbody tr.success td, .table tbody tr.success th {
+	background-color:#dff0d8;
+}
+
+.table-hover tbody tr.info:hover td, .table-hover tbody tr.info:hover th {
+	background-color: #c4e3f3;
+}
+
+.table tbody tr.info td, .table tbody tr.info th {
+	background-color:#d9edf7;
+}
+
+.left-tile {
+	width:45%;
+	float:left;
+}
+
+.right-tile {
+	width:50%;
+	float:right;
+}
+
+.form-bottom {
+	 margin-bottom:15px;
 }

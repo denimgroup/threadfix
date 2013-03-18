@@ -158,7 +158,7 @@
 		togglePassword();
 		</script>
 	
-		<table class="filteredTable">
+		<table class="table auto table-striped">
 			<thead>
 				<tr style="background-color:#43678B;color:#FFFFFF">
 					<th class="medium first">Team</th>
@@ -211,7 +211,7 @@
 											<spring:param name="userId" value="${ user.id }"/>
 											<spring:param name="mapId" value="${ appMap.id }"/>
 										</spring:url>
-										<input id="deleteAppMap${ status.count }" type="submit" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;" value="Delete" />
+										<input class="btn" id="deleteAppMap${ status.count }" type="submit" onclick="javascript:submitFormAndReload('${ fn:escapeXml(deleteUrl) }');return false;" value="Delete" />
 									</td>
 								</tr>
 							</c:if>

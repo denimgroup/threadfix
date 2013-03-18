@@ -23,7 +23,7 @@
 		<tbody>
 			<c:if test="${remoteProviderType.hasUserNamePassword }">
 				<tr>
-					<td class="label">Username:</td>
+					<td>Username:</td>
 					<td class="inputValue">
 						<c:if test="${ not empty remoteProviderType.username }">
 							<script>
@@ -37,7 +37,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Password:</td>
+					<td>Password:</td>
 					<td class="inputValue">
 						<form:input id="passwordInput" type="password" path="password" size="50" maxlength="60" />
 					</td>
@@ -48,7 +48,7 @@
 			</c:if>
 			<c:if test="${remoteProviderType.hasApiKey}">
 				<tr>
-					<td class="label">API Key:</td>
+					<td>API Key:</td>
 					<td class="inputValue">
 						<c:if test="${ not empty remoteProviderType.apiKey }">
 							<script>
@@ -64,7 +64,7 @@
 			</c:if>
 			<c:if test="${ isQualys }">
 				<tr>
-					<td class="label">Region:</td>
+					<td>Region:</td>
 					<td class="inputValue">
 						<form:radiobutton path="isEuropean" value="false"/> US 
 						<form:radiobutton path="isEuropean" value="true"/> EU
@@ -74,11 +74,11 @@
 		</tbody>
 	</table>
 	<c:if test="${remoteProviderType.hasUserNamePassword }">
-		<input style="margin-top:10px;" id="submitButton" type="submit" value="Save" onclick="if (initialUsername && initialUsername !== $('#usernameInput').val()) { return confirm('Warning: You have changed your username, all existing ${ remoteProviderType.name } apps will be deleted.') }" />
+		<button style="margin-top:10px;" id="submitButton" class="btn btn-primary" type="submit" onclick="if (initialUsername && initialUsername !== $('#usernameInput').val()) { return confirm('Warning: You have changed your username, all existing ${ remoteProviderType.name } apps will be deleted.') }">Save</button>
 	</c:if>
 	
 	<c:if test="${not remoteProviderType.hasUserNamePassword }">
-		<input style="margin-top:10px;" id="submitButton" type="submit" value="Save" onclick="if (initialApiKey && initialApiKey !== $('#apiKeyInput').val()) { return confirm('Warning: You have changed your API key, all existing ${ remoteProviderType.name } apps will be deleted.') }" />
+		<button style="margin-top:10px;" id="submitButton" class="btn btn-primary" type="submit" onclick="if (initialApiKey && initialApiKey !== $('#apiKeyInput').val()) { return confirm('Warning: You have changed your API key, all existing ${ remoteProviderType.name } apps will be deleted.') }">Save</button>
 	</c:if>
 	
 	<span style="padding-left:10px"><a id="backToIndexLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Back to Index</a></span>

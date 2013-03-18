@@ -12,7 +12,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Name:</td>
+				<td>Name:</td>
 				<td class="inputValue">
 					<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="60" />
 				</td>

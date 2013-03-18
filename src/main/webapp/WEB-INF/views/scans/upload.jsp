@@ -34,7 +34,7 @@
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td class="label">Scanner Type:</td>
+					<td>Scanner Type:</td>
 					<td class="inputValue">
 						<select id="channelSelect" name="channelId">
 						<option onclick="display(-1)" value="-1">Auto-detect</option>
@@ -52,7 +52,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="label">File:</td>
+					<td>File:</td>
 					<td class="inputValue">
 						<input id="fileInput" type="file" name="file" size="50" />
 					</td>

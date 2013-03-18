@@ -45,7 +45,7 @@
 	</div>
 	</c:if>
 	
-	<table class="formattedTable sortable filteredTable" id="anyid">
+	<table class="table auto table-striped sortable" id="anyid">
 		<thead>
 			<tr>
 				<th class="first">If Merged</th>

@@ -46,6 +46,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
@@ -134,6 +135,7 @@ public class ApplicationsController {
 		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
+		model.addAttribute("newWaf", new Waf());
 		model.addAttribute("wafList", wafService.loadAll());
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
 		model.addAttribute("numClosedVulns", numClosedVulns);
@@ -142,6 +144,7 @@ public class ApplicationsController {
 		model.addAttribute("error", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
+		model.addAttribute("finding", new Finding());
 		return "applications/detail";
 	}
 	
@@ -353,8 +356,8 @@ public class ApplicationsController {
 		model.addAttribute("numVulns", numVulns);
 		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(application);
-		
-		return "applications/tabs/vulnTab";
+		model.addAttribute("contentPage", "applications/tabs/vulnTab.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value="/{appId}/scanTab", method = RequestMethod.GET)
@@ -374,7 +377,8 @@ public class ApplicationsController {
 
 		model.addAttribute(application);
 		
-		return "applications/tabs/scanTab";
+		model.addAttribute("contentPage", "applications/tabs/scanTab.jsp");
+		return "ajaxSuccessHarness";
 	}
 
 	@RequestMapping(value="/{appId}/closedTab", method = RequestMethod.GET)
@@ -386,7 +390,8 @@ public class ApplicationsController {
 			return "403";
 		}
 		
-		return "applications/tabs/closedTab";
+		model.addAttribute("contentPage", "applications/tabs/closedTab.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value="/{appId}/falsePositiveTab", method = RequestMethod.GET)
@@ -398,7 +403,8 @@ public class ApplicationsController {
 			return "403";
 		}
 		
-		return "applications/tabs/falsePositiveTab";
+		model.addAttribute("contentPage", "applications/tabs/falsePositiveTab.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value="/{appId}/defectTable", method = RequestMethod.POST)

@@ -34,10 +34,10 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue"><c:out
 						value="${ application.organization.name }" /></td>
-				<td class="label">Defect Tracker:</td>
+				<td>Defect Tracker:</td>
 				<c:choose>
 					<c:when test="${ empty application.defectTracker }">
 						<td class="inputValue">No Defect Tracker found. </td>
@@ -49,19 +49,19 @@
 								href="<spring:url value="${ application.defectTracker.url }" />"><c:out
 										value="${ application.defectTracker.url }" /></a>)
 						</em></td>
-						<td class="label">Product:</td>
+						<td>Product:</td>
 						<td class="inputValue"><c:out
 								value="${ application.projectName}" /></td>
 					</c:otherwise>
 				</c:choose>
 			</tr>
 			<tr>
-				<td class="label">URL:</td>
+				<td>URL:</td>
 				<td class="inputValue"><a
 					href="<spring:url value="${ application.url }" />"> <c:out
 							value="${ application.url }" />
 				</a></td>
-				<td class="label">WAF:</td>
+				<td>WAF:</td>
 				<c:choose>
 					<c:when test="${ empty application.waf }">
 						<td class="inputValue">No WAF found. </td>
@@ -137,7 +137,7 @@
 
 			<div id="toReplace">
 
-				<table class="formattedTable sortable filteredTable" id="anyid">
+				<table class="table auto table-striped sortable" id="anyid">
 					<thead>
 						<tr>
 							<th class="first">If Merged</th>

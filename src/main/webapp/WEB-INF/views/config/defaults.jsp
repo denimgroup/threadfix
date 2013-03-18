@@ -11,7 +11,7 @@
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
 			<tr>
-				<td class="label">Global Group enabled for new users?</td>
+				<td>Global Group enabled for new users?</td>
 				<td class="inputValue" style="text-align: left;">
 					<form:checkbox id="globalGroupEnabledCheckbox" path="globalGroupEnabled" />
 				</td>
@@ -28,7 +28,7 @@
 		</table>
 		<br/>
 
-		<input id="updateDefaultsButton" type="submit" value="Update Defaults" />
+		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Update Defaults</button>
 		<span style="padding-left: 10px">
 			<spring:url value="/configuration" var="configLink"/>
 			<a id="cancelLink" href="${ fn:escapeXml(configLink) }">Back to Configuration Index</a>

@@ -25,7 +25,7 @@
 	</div>
 	
 	<c:if test="${ canManageRemoteProviders }">
-		<table class="formattedTable">
+		<table class="table auto table-striped">
 			<thead>
 				<tr>
 					<th class="medium first">Name</th>
@@ -90,12 +90,12 @@
 					</spring:url>
 					<a id="updateApps${ outerStatus.count }" style="font-size:60%;padding-left:10px;padding-right:8px;" href="${ fn:escapeXml(updateUrl) }">Update Apps</a>
 					<c:if test="${ canManageRemoteProviders }">
-						<input id="clearConfig${ outerStatus.count }" style="font-size:60%;" onclick="return confirm('Are you sure? This will clear your credentials and delete the apps in the table below.')" id="submitButton" type="submit" value="Clear <c:out value="${ provider.name }"/> Configuration" />
+						<button id="clearConfig${ outerStatus.count }" onclick="return confirm('Are you sure? This will clear your credentials and delete the apps in the table below.')" class="btn btn-primary" type="submit">Clear <c:out value="${ provider.name }"/> Configuration</button>
 					</c:if>
 				</h2>
 			</form:form>
 			<spring:url value="" var="emptyUrl"></spring:url>	
-			<table class="formattedTable">
+			<table class="table auto table-striped">
 				<thead>
 					<tr>
 						<th class="long first">Name / ID</th>

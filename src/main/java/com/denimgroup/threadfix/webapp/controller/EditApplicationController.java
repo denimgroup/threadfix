@@ -231,9 +231,58 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-			return "applications/addWafErrorForm";
+			model.addAttribute("contentPage", "applications/forms/addWafForm.jsp");
+			return "ajaxFailureHarness";
 		} else {
-			return "applications/addWafSuccess";
+			model.addAttribute("contentPage", "applications/wafRow.jsp");
+			return "ajaxSuccessHarness";
+		}
+	}
+	
+	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
+	public String processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
+			@PathVariable("orgId") int orgId,
+			@ModelAttribute Application application,
+			BindingResult result, SessionStatus status, Model model) {
+		
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
+		if(!result.hasErrors()) {
+			applicationService.validateAfterEdit(application, result);
+		}
+		
+		if (application.getName() != null && application.getName().trim().equals("")
+				&& !result.hasFieldErrors("name")) {
+			result.rejectValue("name", null, null, "This field cannot be blank");
+		}
+		
+		if (result.hasErrors()) {
+			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+					Permission.CAN_MANAGE_WAFS);
+			
+			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
+			
+			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+					Permission.CAN_MANAGE_WAFS, orgId, appId));
+			
+			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
+			return "ajaxFailureHarness";
+			
+		} else {
+			applicationService.storeApplication(application);
+			applicationService.updateProjectRoot(application);
+			
+			String user = SecurityContextHolder.getContext().getAuthentication().getName();
+			
+			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
+			
+			status.setComplete();
+			
+			model.addAttribute("contentPage", "applications/defectTrackerRow.jsp");
+			return "ajaxSuccessHarness";
 		}
 	}
 }

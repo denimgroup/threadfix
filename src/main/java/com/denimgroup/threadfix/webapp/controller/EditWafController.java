@@ -43,8 +43,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
@@ -57,6 +59,7 @@ public class EditWafController {
 	public EditWafController(){}
 
 	private WafService wafService = null;
+	private PermissionService permissionService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
@@ -66,8 +69,10 @@ public class EditWafController {
 	}
 	
 	@Autowired
-	public EditWafController(WafService wafService) {
+	public EditWafController(WafService wafService,
+			PermissionService permissionService) {
 		this.wafService = wafService;
+		this.permissionService = permissionService;
 	}
 
 	@ModelAttribute
@@ -118,8 +123,55 @@ public class EditWafController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Waf " + waf.getName() + " (id=" + waf.getId() + ") has been edited by user " + currentUser);
 			
-			status.setComplete();
 			return "redirect:/wafs/" + String.valueOf(wafId);
 		}
+	}
+	
+	@RequestMapping(value="ajax", method = RequestMethod.POST)
+	public String editSubmitAjax(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+			BindingResult result, SessionStatus status, Model model) {
+		waf.setId(wafId);
+		
+		if (result.hasErrors()) {
+			model.addAttribute("contentPage", "wafs/forms/editWafForm.jsp");
+			return "ajaxFailureHarness";
+		} else {
+			
+			if (waf.getName().trim().equals("")) {
+				result.rejectValue("name", null, null, "This field cannot be blank");
+			} else {
+				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
+				if (databaseWaf != null && !databaseWaf.getId().equals(waf.getId())) {
+					result.rejectValue("name", "errors.nameTaken");
+				}
+			}
+			
+			if (waf.getWafType() == null)
+				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
+			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
+				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
+			
+			if (result.hasErrors()) {
+				model.addAttribute("contentPage", "wafs/forms/editWafForm.jsp");
+				return "wafs/form";
+			}
+			
+			wafService.storeWaf(waf);
+			
+			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+			log.debug("The Waf " + waf.getName() + " (id=" + waf.getId() + ") has been edited by user " + currentUser);
+			
+			return index(model);
+		}
+	}
+	
+	private String index(Model model) {
+		model.addAttribute(wafService.loadAll());
+		model.addAttribute("newWaf", new Waf());
+		model.addAttribute("waf", new Waf());
+		model.addAttribute("wafPage", true);
+		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
+		model.addAttribute("contentPage", "wafs/wafsTable.jsp");
+		return "ajaxSuccessHarness";
 	}
 }

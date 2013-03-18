@@ -16,15 +16,15 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue"><c:out value="${ teamName }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Number of Applications:</td>
+				<td>Number of Applications:</td>
 				<td class="inputValue"><c:out value="${ totalApps }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Number of Scans:</td>
+				<td>Number of Scans:</td>
 				<td class="inputValue"><c:out value="${ totalScans }"/></td>
 			</tr>
 		</tbody>
@@ -32,7 +32,7 @@
 	
 	<h3>Application Breakdown by Latest Scan</h3>
 	
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="short first"></th>
@@ -78,7 +78,7 @@
 	
 	<h3>Portfolio Scan Statistics</h3>
 	
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="first"></th>

@@ -144,25 +144,27 @@ public class OrganizationsController {
 	@RequestMapping("/teamTable")
 	public String teamTable(Model model) {
 		addModelObjects(model);
-		return "organizations/indexTeamTable";
+		model.addAttribute("contentPage", "organizations/indexTeamTable.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value="/modalAdd", method = RequestMethod.POST)
 	public String newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status) {
+			SessionStatus status, Model model) {
+		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
 		if (result.hasErrors()) {
-			return "organizations/modalTeamForm";
+			return "ajaxFailureHarness";
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
-				return "organizations/modalTeamForm";
+				return "ajaxFailureHarness";
 			}
 			
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null) {
 				result.rejectValue("name", "errors.nameTaken");
-				return "organizations/modalTeamForm";
+				return "ajaxFailureHarness";
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -226,7 +228,9 @@ public class OrganizationsController {
 			model.addAttribute("canSetWaf", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, null));
 			
-			return "organizations/modalAppForm";
+			model.addAttribute("contentPage", "applications/forms/newApplicationForm.jsp");
+			
+			return "ajaxFailureHarness";
 		} else {
 
 			applicationService.storeApplication(application);

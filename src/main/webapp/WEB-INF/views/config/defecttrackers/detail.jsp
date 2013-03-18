@@ -17,15 +17,15 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Name:</td>
+				<td>Name:</td>
 				<td id="nameText" class="inputValue"><c:out value="${ defectTracker.name }"/></td>
 			</tr>
 			<tr>
-				<td class="label">URL:</td>
+				<td>URL:</td>
 				<td id="urlText" class="inputValue"><c:out value="${ defectTracker.url }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Type:</td>
+				<td>Type:</td>
 				<td id="typeText" class="inputValue"><c:out value="${ defectTracker.defectTrackerType.name }"/></td>
 			</tr>
 		</tbody>

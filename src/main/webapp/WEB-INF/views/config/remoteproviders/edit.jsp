@@ -33,7 +33,7 @@
 	<table style="border-spacing:10" class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td>
 					<form:select path="application.organization.id" id="orgSelect">
 						<option value="-1">Pick a Team</option>
@@ -51,7 +51,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label" style="padding-right:10px">Application:</td>
+				<td style="padding-right:10px">Application:</td>
 				<td>
 					<form:select path="application.id" id="appSelect">
 						<option value="-1"></option>
@@ -64,7 +64,7 @@
 		</tbody>
 	</table>
 	
-	<input style="margin-top:13px" id="submitButton" type="submit" value="Update Application" />
+	<button style="margin-top:13px" id="submitButton" class="btn btn-primary" type="submit">Update Application</button>
 	<span style="padding-left: 10px"><a id="backToIndexLink" href="<spring:url value="/configuration/remoteproviders/"/>">Back to Remote Provider Index</a></span>
 	</form:form>
 	

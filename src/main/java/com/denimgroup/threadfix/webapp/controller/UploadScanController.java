@@ -136,7 +136,7 @@ public class UploadScanController {
 			if (typeString != null && !typeString.trim().isEmpty()) {
 				type = channelTypeService.loadChannel(typeString);
 			} else {
-				return index(appId, orgId, SCANNER_TYPE_ERROR, null);
+				return index(orgId, appId, SCANNER_TYPE_ERROR, null);
 			}
 		} else {
 			type = channelTypeService.loadChannel(channelId);

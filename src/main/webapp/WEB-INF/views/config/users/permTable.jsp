@@ -43,7 +43,7 @@
 		<div class="errors"><c:out value="${ error }"/></div>
 	</c:if>
 
-	<table class="filteredTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr style="background-color:#43678B;color:#FFFFFF">
 				<th class="medium first">Team</th>

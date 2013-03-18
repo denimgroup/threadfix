@@ -12,7 +12,7 @@
 	</div>
 	
 	<h3>Application Scans</h3>
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="first">Channel</th>

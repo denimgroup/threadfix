@@ -37,23 +37,23 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Total Vulnerabilities</td>
+				<td>Total Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">New Vulnerabilities</td>
+				<td>New Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Old Vulnerabilities</td>
+				<td>Old Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[3] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Resurfaced Vulnerabilities</td>
+				<td>Resurfaced Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[4] }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Closed Vulnerabilities</td>
+				<td>Closed Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ vulnData[5] }"/></td>
 			</tr>
 		</tbody>
@@ -63,44 +63,44 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Total Scan Results</td>
+				<td>Total Scan Results</td>
 				<td class="inputValue">
 					<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
 										totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Total Repeat Findings (not included below)</td>
+				<td>Total Repeat Findings (not included below)</td>
 				<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings 
 									(<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
 			</tr>
 			<tr>
-				<td class="label">Total Findings</td>
+				<td>Total Findings</td>
 				<td class="inputValue"><c:out value="${ totalFindings + 
 											scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Duplicate Results Skipped</td>
+				<td>Duplicate Results Skipped</td>
 				<td class="inputValue"><c:out value="${ scan.totalNumberSkippedResults }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Total Findings matched to Vulnerabilities</td>
+				<td>Total Findings matched to Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ totalFindings }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Total Findings not matched to Vulnerabilities</td>
+				<td>Total Findings not matched to Vulnerabilities</td>
 				<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Findings merged to Vulnerabilities from other Findings in this Scan</td>
+				<td>Findings merged to Vulnerabilities from other Findings in this Scan</td>
 				<td class="inputValue"><c:out value="${ scan.totalNumberFindingsMergedInScan }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Number of Findings missing Channel Vulnerability mappings</td>
+				<td>Number of Findings missing Channel Vulnerability mappings</td>
 				<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Number of Findings missing Generic Mappings</td>
+				<td>Number of Findings missing Generic Mappings</td>
 				<td class="inputValue"><c:out value="${ scan.numWithoutGenericMappings }"/></td>
 			</tr>
 		</tbody>
@@ -109,7 +109,7 @@
 	
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings == 0 }">
 		<h3>Findings</h3>
-		<table class="formattedTable" id="1">
+		<table class="table auto table-striped" id="1">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>
@@ -136,7 +136,7 @@
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
 		<div id="toReplace">
 		<h3>Successfully Mapped Findings</h3>
-		<table class="formattedTable" id="1">
+		<table class="table auto table-striped" id="1">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>
@@ -157,7 +157,7 @@
 		
 		<div id="toReplace2">
 		<h3>Unmapped Findings</h3>
-		<table class="formattedTable" id="2">
+		<table class="table auto table-striped" id="2">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>

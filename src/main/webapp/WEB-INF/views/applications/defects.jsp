@@ -22,7 +22,7 @@
 	<br/>
 	<br/>
 	
-	<table class="formattedTable sortable" id="anyid">
+	<table class="table auto table-striped sortable" id="anyid">
 		<thead>
 			<tr>
 				<th class="first">If Merged</th>

@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.DefectTrackerService;
@@ -96,7 +97,8 @@ public class AddDefectTrackerController {
 		}
 		
 		if (result.hasErrors()) {
-			return "config/defecttrackers/form";
+			model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
+			return "ajaxFailureHarness";
 		} else {
 			
 			DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
@@ -119,8 +121,10 @@ public class AddDefectTrackerController {
 				}
 			}
 			
-			if (result.hasErrors())
-				return "config/defecttrackers/form";
+			if (result.hasErrors()) {
+				model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
+				return "ajaxFailureHarness";
+			}
 			
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
@@ -129,8 +133,10 @@ public class AddDefectTrackerController {
 					", the URL " + defectTracker.getUrl() + 
 					", the type " + defectTracker.getDefectTrackerType().getName() + 
 					", and the ID " + defectTracker.getId());
-			status.setComplete();
-			return "redirect:/configuration/defecttrackers/" + defectTracker.getId();
+			
+			model.addAttribute("application", new Application());
+			
+			return "applications/addDTForm";
 		}
 	}
 }

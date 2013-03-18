@@ -24,7 +24,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -34,7 +34,7 @@
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
-				<td class="label">Application:</td>
+				<td>Application:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -45,7 +45,7 @@
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
-				<td class="label">CWE:</td>
+				<td>CWE:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_cwe" var="ajaxCweUrl">
 						<spring:param name="orgId" value="${ application.organization.id }" />
@@ -64,7 +64,7 @@
 			</tr>
 			<c:if test="${ not empty staticChannelVulnerabilityList }">
 				<tr class="static">
-					<td class="label" valign="top">Recently Found:</td>
+					<td valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select size="5" onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" id="cv_static_select">
 							<c:forEach var="cv" items="${ staticChannelVulnerabilityList }">
@@ -78,7 +78,7 @@
 			</c:if>
 			<c:if test="${ not empty dynamicChannelVulnerabilityList }">
 				<tr class="dynamic">
-					<td class="label" valign="top">Recently Found:</td>
+					<td valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" size="5" id="cv_dynamic_select">
 							<c:forEach var="cv" items="${ dynamicChannelVulnerabilityList }">
@@ -91,7 +91,7 @@
 				</tr>
 			</c:if>
 			<tr class="dynamic">
-				<td class="label">URL:</td>
+				<td>URL:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_url" var="ajaxUrl">
 						<spring:param name="orgId" value="${ application.organization.id }" />
@@ -109,7 +109,7 @@
 				</td>
 			</tr>
 			<tr class="static">
-				<td class="label">Source File:</td>
+				<td>Source File:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_url" var="ajaxUrl">
 						<spring:param name="orgId" value="${ application.organization.id }" />
@@ -128,7 +128,7 @@
 			</tr>
 			<c:if test="${ not empty dynamicPathList }">
 				<tr class="dynamic">
-					<td class="label" valign="top">Recently Found:</td>
+					<td valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select size="5" onclick="$('#urlDynamicSearch').val(this.options[this.selectedIndex].value);" id="url_dynamic_select">
 							<c:forEach var="path" items="${ dynamicPathList}">
@@ -142,7 +142,7 @@
 			</c:if>
 			<c:if test="${ not empty staticPathList }">
 				<tr class="static">
-					<td class="label" valign="top">Recently Found:</td>
+					<td valign="top">Recently Found:</td>
 					<td class="inputValue">
 						<select size="5" onclick="$('#urlStaticSearch').val(this.options[this.selectedIndex].value);" id="url_static_select">
 							<c:forEach var="path" items="${ staticPathList}">
@@ -155,7 +155,7 @@
 				</tr>
 			</c:if>
 			<tr class="static">
-				<td class="label">Line Number:</td>
+				<td>Line Number:</td>
 				<td class="inputValue">
 					<form:input path="dataFlowElements[0].lineNumber" id="urlSearch" name="urlSearch" alt="Search Criteria" 
 							onkeyup="searchUrlSuggest(event);" autocomplete="off"  
@@ -167,7 +167,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Parameter:</td>
+				<td>Parameter:</td>
 				<td class="inputValue">
 					<form:input id="parameterInput" path="surfaceLocation.parameter" size="50" maxlength="127"/>
 				</td>
@@ -176,7 +176,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Severity:</td>
+				<td>Severity:</td>
 				<td class="inputValue">
 					<form:select id="severityInput" path="channelSeverity.id">
 						<form:options items="${ channelSeverityList }" itemValue="id" itemLabel="code" />
@@ -184,7 +184,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Description:</td>
+				<td>Description:</td>
 				<td class="inputValue">
 					<form:textarea id="descriptionInput" path="longDescription" rows="5" cols="50"/>
 				</td>

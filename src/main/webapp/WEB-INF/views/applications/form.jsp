@@ -20,7 +20,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Name:</td>
+				<td>Name:</td>
 				<td class="inputValue">
 					<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="60" />
 				</td>
@@ -29,7 +29,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">URL:</td>
+				<td>URL:</td>
 				<td class="inputValue">
 					<form:input id="urlInput" path="url" size="50" maxlength="255" />
 				</td>
@@ -38,7 +38,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -48,7 +48,7 @@
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
-				<td class="label">Criticality:</td>
+				<td>Criticality:</td>
 				<td class="inputValue">
 					<form:select id="criticalityId" path="applicationCriticality.id">
 						<form:options items="${applicationCriticalityList}" itemValue="id" itemLabel="name"/>
@@ -68,7 +68,7 @@
 		<c:choose>
 			<c:when test="${ empty defectTrackerList }">
 				<tr>
-					<td class="label">Defect Tracker:</td>
+					<td>Defect Tracker:</td>
 					<td class="inputValue">
 						No Defect Trackers were found. 
 						<c:if test="${ canManageDefectTrackers }">
@@ -80,7 +80,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr>
-					<td class="label">Defect Tracker:</td>
+					<td>Defect Tracker:</td>
 					<td class="inputValue">
 						<form:select id="defectTrackerId" path="defectTracker.id">
 							<form:option value="0" label="<none>"/>
@@ -95,7 +95,7 @@
 					</td>
 				</tr>
 				<tr class="defecttracker_row">
-					<td class="label">Username:</td>
+					<td>Username:</td>
 					<td class="inputValue">
 						<form:input id="username" path="userName" size="50" maxlength="50"/>
 					</td>
@@ -104,7 +104,7 @@
 					</td>
 				</tr>
 				<tr class="defecttracker_row">
-					<td class="label">Password:</td>
+					<td>Password:</td>
 					<td class="inputValue">						
 						<form:password id="password" showPassword="true" path="password" size="50" maxlength="50" />
 					</td>
@@ -125,7 +125,7 @@
 					</td>
 				</tr>
 				<tr class="defecttracker_row">
-					<td id="projectname" class="label">Product Name:</td>
+					<td id="projectname">Product Name:</td>
 					<td class="inputValue">
 						<form:select id="projectList" path="projectName">
 							<c:if test="${ not empty application.projectName }">
@@ -152,7 +152,7 @@
 		<c:choose>
 			<c:when test="${ empty wafList }">
 				<tr>
-					<td class="label">WAF:</td>
+					<td>WAF:</td>
 					<td class="inputValue">
 						No WAFs were found.
 						<c:if test="${ canManageWafs }">
@@ -164,7 +164,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr>
-					<td class="label">WAF:</td>
+					<td>WAF:</td>
 					<td class="inputValue">
 						<form:select id="wafSelect" path="waf.id">
 							<form:option value="0" label="<none>" />

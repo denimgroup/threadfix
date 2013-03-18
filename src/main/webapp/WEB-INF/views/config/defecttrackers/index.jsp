@@ -2,55 +2,18 @@
 
 <head>
 	<title>Defect Trackers</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 </head>
 
 <body id="config">
 	<h2>Defect Trackers</h2>
 	
 	<div id="helpText">
-		A Defect Tracker is the ThreadFix link that allows the user to bundle and export vulnerabilities from an Application to a Defect Tracker.
+		A Defect Tracker is the ThreadFix link that allows the user to bundle and export 
+		vulnerabilities from an Application to a Defect Tracker.
 	</div>
 	
-	<table class="formattedTable">
-		<thead>
-			<tr>
-			    <th class="medium first">Name</th>
-				<th class="long">URL</th>
-				<th class="medium last">Type</th>
-			</tr>
-		</thead>
-		<tbody id="defectTrackerTableBody">
-		<c:if test="${ empty defectTrackerList }">
-			<tr class="bodyRow">
-				<td colspan="3" style="text-align:center;">No Defect Trackers found.</td>
-			</tr>
-		</c:if>
-		<c:forEach var="defectTracker" items="${ defectTrackerList }">
-			<tr class="bodyRow">
-			    <td>
-			    	<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="dtUrl">
-						<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(dtUrl) }">
-			            <c:out value="${ defectTracker.name }"/>
-			        </a> 
-			    </td>
-				<td>
-					<c:out value="${ defectTracker.url }"/>
-				</td>
-				<td>
-					<c:out value="${ defectTracker.defectTrackerType.name }"/>
-				</td>
-			</tr>
-		</c:forEach>
-		<c:if test="${ canManageDefectTrackers }">
-			<tr class="footer">
-				<td class="first">
-					<a id="addDefectTrackerLink" href="<spring:url value="/configuration/defecttrackers/new" />">Add Defect Tracker</a>
-				</td>
-				<td class="pagination" style="text-align:right"></td>
-			</tr>
-		</c:if>
-		</tbody>
-	</table>
+	<div id="defectTableDiv">
+		<%@ include file="/WEB-INF/views/config/defecttrackers/trackersTable.jsp" %>
+	</div>
 </body>

@@ -12,7 +12,7 @@
 		These jobs include scan uploads and defect tracker requests.
 	</div>
 	
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="medium first">Type</th>

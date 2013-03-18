@@ -10,7 +10,7 @@
 	
 	<table class="dataTable">
 		<tr>
-			<td class="label">Team:</td>
+			<td>Team:</td>
 			<td class="inputValue">
 				<spring:url value="/organizations/{orgId}" var="orgUrl">
 					<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
@@ -19,11 +19,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="label">User:</td>
+			<td>User:</td>
 			<td class="inputValue"><c:out value="${ surveyResult.user }" /></td>
 		</tr>
 		<tr>
-			<td class="label">Date:</td>
+			<td>Date:</td>
 			<td class="inputValue"><c:out value="${ surveyResult.createdDate }" /></td>
 		</tr>
 	</table>

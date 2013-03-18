@@ -11,27 +11,27 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Channel Vulnerability:</td>
+				<td>Channel Vulnerability:</td>
 				<td class="inputValue"><c:out value="${ finding.channelVulnerability.name }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Channel Severity:</td>
+				<td>Channel Severity:</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Generic Vulnerability:</td>
+				<td>Generic Vulnerability:</td>
 				<td class="inputValue"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Generic Severity:</td>
+				<td>Generic Severity:</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Path:</td>
+				<td>Path:</td>
 				<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Parameter:</td>
+				<td>Parameter:</td>
 				<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 			</tr>
 		</tbody>
@@ -68,23 +68,23 @@
 		<tbody>
 		<c:forEach var="flowElement" items="${ finding.dataFlowElements }">
 			<tr>
-				<td class="label">File Name:</td>
+				<td>File Name:</td>
 				<td class="inputValue"><c:out value="${ flowElement.sourceFileName }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Line Nbr:</td>
+				<td>Line Nbr:</td>
 				<td class="inputValue"><c:out value="${ flowElement.lineNumber }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Line Text:</td>
+				<td>Line Text:</td>
 				<td class="inputValue"><code><c:out value="${ flowElement.lineText }"/></code></td>
 			</tr>
 			<tr>
-				<td class="label">Column Nbr:</td>
+				<td>Column Nbr:</td>
 				<td class="inputValue"><c:out value="${ flowElement.columnNumber }"/></td>
 			</tr>
 			<tr>
-				<td class="label">Sequence:</td>
+				<td>Sequence:</td>
 				<td class="inputValue"><c:out value="${ flowElement.sequence }"/></td>
 			</tr>
 			<tr>

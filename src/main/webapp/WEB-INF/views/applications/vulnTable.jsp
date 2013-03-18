@@ -7,65 +7,80 @@
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
 	<c:if test="${ numVulns > 100 }">
-	<div style="padding-bottom:8px">	
+	<div class="pagination">
+		<ul style="vertical-align:middle">
 		<c:if test="${ page > 4 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
+			</li>
 		</c:if>
 	
 		<c:if test="${ page >= 4 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
+			</li>
 		</c:if>
 	
 		<c:if test="${ page >= 3 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
+			</li>
 		</c:if>
 		
 		<c:if test="${ page >= 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
+			</li>
 		</c:if>
-				
-		<c:out value="${ page }"/>
+		
+		<li class="active"><a href="#"><c:out value="${ page }"/></a></li>
 	
 		<c:if test="${ page <= numPages }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
+			</li>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 1 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
+			</li>
 		</c:if>
 		
 		<c:if test="${ page <= numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
+			</li>
 		</c:if>
 		
 		<c:if test="${ page < numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
+			<li>
+				<a href="javascript:refillElement('#toReplace', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
+			</li>
 		</c:if>
-		
+		</ul>
+	
+	
 		<input class="refillElementOnEnter" type="text" id="pageInput" />
 		<a href="javascript:refillElementDropDownPage('#toReplace', '${ tableUrl }', '<c:out value="${ loginUrl }"/>')">Go to page</a>
 	</div>
+	
 	</c:if>
 	
-	<table class="formattedTable sortable filteredTable" id="anyid">
+	<table class="table auto table-striped sortable table-hover" id="anyid">
 		<thead>
 			<tr>
-				<th class="first">If Merged</th>
-			    <th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				<c:if test="${ canModifyVulnerabilities }">
+					<th class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				</c:if>			    
+				<c:if test="${ not canModifyVulnerabilities }">
+					<th class="first" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				</c:if>			    
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
-				<th>Age (days)</th>
-				<th>Defect</th>
-				<th>Defect Status</th>
-				<th>WAF Rule</th>
-				<c:if test="${ not canModifyVulnerabilities }">
-					<th class="unsortable last">WAF Events</th>
-				</c:if>
-				<c:if test="${ canModifyVulnerabilities }">
-					<th class="unsortable">WAF Events</th>
-					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',10)"></th>
-				</c:if>
+				
 			</tr>
 		</thead>
 		<tbody>
@@ -79,78 +94,97 @@
 				</c:if>
 			</tr>
 		</c:if>
-		<c:forEach var="vuln" items="${vulnerabilities}" varStatus="vulnStatus">
-			<tr class="bodyRow">
-				<td>
-					<c:if test="${ fn:length(vuln.findings) > 1 }">
-						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				        	<spring:param name="appId" value="${ application.id }" />
-					    	<spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    	</spring:url>
-				    	<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-				        	<c:out value="${ fn:length(vuln.findings) }"/>
-				    	</a>
-					</c:if>
-				</td>
-				<td>
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				        <spring:param name="appId" value="${ application.id }" />
-					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    </spring:url>
-				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }"><c:out value="${ vuln.genericVulnerability.name }"/></a>
-				</td>
-				<td id="severity${ vulnStatus.count }"><c:out value="${ vuln.genericSeverity.name }"/></td>
-				<td id="path${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.path }"/></td>
-				<td id="parameter${ vulnStatus.count }"><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
-				<td><c:out value="${ ages[vulnStatus.count - 1] }"/></td>
-				<td>
-				<c:if test="${ not empty vuln.defect }">
-					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}/defect" var="defectUrl">
-				        <spring:param name="appId" value="${ application.id }" />
-					    <spring:param name="vulnerabilityId" value="${ vuln.id }" />
-				    </spring:url>
-					<a href="${ fn:escapeXml(defectUrl) }">
-				        <c:out value="${ vuln.defect.nativeId }" />
-				    </a>
-				</c:if>
-				</td>
-				<td>
-				<c:choose>
-					<c:when test="${ not empty vuln.defect }">
-						<c:out value="${ vuln.defect.status }"/>
-					</c:when>
-					<c:otherwise>
-						No Defect
-					</c:otherwise>
-				</c:choose>
-				</td>
-				<td>
-			<c:choose>
-				<c:when test="${ not empty vuln.wafRules }">
-					Yes
-				</c:when>
-				<c:otherwise>
-					No
-				</c:otherwise>
-			</c:choose>
-				</td>
-				<td>
-					<c:out value="${ vuln.noOfSecurityEvents }" />
-				</td>
+		<c:forEach var="vulnerability" items="${vulnerabilities}" varStatus="vulnStatus">
+			<c:if test="${ vulnerability.genericSeverity.name == 'Critical' }">
+			      <c:set var="color" value="error" />
+			</c:if>
+			<c:if test="${ vulnerability.genericSeverity.name == 'High' }">
+			      <c:set var="color" value="warning" />
+			</c:if>
+			<c:if test="${ vulnerability.genericSeverity.name == 'Medium' }">
+			      <c:set var="color" value="success" />
+			</c:if>
+			<c:if test="${ vulnerability.genericSeverity.name == 'Low' }">
+			      <c:set var="color" value="info" />
+			</c:if>
+			<c:if test="${ vulnerability.genericSeverity.name == 'Info' }">
+			      <c:set var="color" value="info" />
+			</c:if>
+			<tr class="bodyRow <c:out value="${ color }"/>" data-toggle="collapse" data-target="#vulnInfoDiv${vulnerability.id}">
 				<c:if test="${ canModifyVulnerabilities }">
 					<td>
-						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vuln.id }" name="vulnerabilityIds">
+						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 						<input type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
 				</c:if>
+				<td>
+					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
+				        <spring:param name="appId" value="${ application.id }" />
+					    <spring:param name="vulnerabilityId" value="${ vulnerability.id }" />
+				    </spring:url>
+				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }"><c:out value="${ vulnerability.genericVulnerability.name }"/></a>
+				</td>
+				<td id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
+				<td id="path${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+				<td id="parameter${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
+			</tr>
+			<tr class="bodyRow <c:out value="${ color }"/> expandable">
+				<td colspan="7">
+					<div id="vulnInfoDiv${vulnerability.id}" class="collapse">
+						<div class="left-tile">
+							<c:if test="${not empty vulnerability.findings}">
+								<h4>Scan History</h4>
+								<table class="table">
+									<thead class="table">
+										<tr class="<c:out value="${ color }"/>">
+											<th class="first">Channel</th>
+											<th>Scan Date</th>
+											<th class="last">User</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="finding" items="${ vulnerability.findings }" varStatus="status">
+											<tr class="bodyRow <c:out value="${ color }"/>">
+												<td id="scan${ status.count }ChannelType"><c:out
+														value="${ finding.scan.applicationChannel.channelType.name }" /></td>
+												<td id="scan${ status.count }ImportTime"><fmt:formatDate value="${ finding.scan.importTime.time }"
+														type="both" dateStyle="short" timeStyle="medium" /></td>
+												<td id="scan${ status.count }ChannelType${ status.count }"><c:if test="${ not empty finding.scan.user }">
+														<!-- Got info from scan, the normal case -->
+														<c:out value="${ finding.scan.user.name}" />
+													</c:if> <c:if
+														test="${ empty finding.scan.user and not empty finding.user }">
+														<!-- Got info from finding, probably a manual scan -->
+														<c:out value="${ finding.user.name}" />
+													</c:if> <c:if test="${ empty finding.scan.user and empty finding.user }">
+												No user found. Probably a remote scan.
+											</c:if></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</c:if>
+						</div>
+						<div class="right-tile" id="commentDiv${ vulnerability.id }">
+							<%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>							
+						</div>
+					</div>
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
 		<c:if test="${ canModifyVulnerabilities }">
 		<tfoot>
 			<tr class="footer">
-				<td colspan="11" style="text-align:right">
-					<input type="submit" value="Mark Selected as False Positives">
+				<td style="text-align:left">
+			    	<div class="btn-group">
+						<button class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li>Submit Defect</li>
+							<li>Mark Closed</li>
+							<li>Mark False Positive</li>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		</tfoot>

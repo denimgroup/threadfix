@@ -36,7 +36,7 @@
 	<table class="dataTable">
 		<tbody>
 			    <tr>
-					<td class="label">Name:</td>
+					<td>Name:</td>
 					<td class="inputValue">
 						<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
 					</td>
@@ -45,7 +45,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="label">URL:</td>
+					<td>URL:</td>
 					<td class="inputValue">
 						<c:if test="${ not empty defectTracker.url }">
 							<script>
@@ -62,7 +62,7 @@
 					</td>
 				</tr>
 				<tr>	
-					<td class="label">Type:</td>
+					<td>Type:</td>
 					<td class="inputValue">
 						<c:if test="${ not empty defectTracker.defectTrackerType.id }">
 							<script>

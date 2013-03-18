@@ -10,19 +10,19 @@
 	
 	<table class="dataTable">
 		<tr>
-			<td class="label">Severity / Generic Severity:</td>
+			<td>Severity / Generic Severity:</td>
 			<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/> / <c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 		</tr>
 		<tr>
-			<td class="label">Vulnerability Type:</td>
+			<td>Vulnerability Type:</td>
 			<td class="inputValue"><c:out value="${ finding.channelVulnerability.name }"/></td>
 		</tr>
 		<tr>
-			<td class="label">Generic Vulnerability Type:</td>
+			<td>Generic Vulnerability Type:</td>
 			<td class="inputValue"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
 		</tr>
 		<tr>
-			<td class="label">Vulnerability ID:</td>
+			<td>Vulnerability ID:</td>
 			<spring:url value="/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnId}" var="vulnUrl">
 				<spring:param name="orgId" value="${ finding.vulnerability.application.organization.id }"/>
 				<spring:param name="appId" value="${ finding.vulnerability.application.id }"/>
@@ -31,18 +31,18 @@
 			<td class="inputValue"><a href="${ fn:escapeXml(vulnUrl) }"><c:out value="${ finding.vulnerability.id }"/></a></td>
 		</tr>
 		<tr>
-			<td class="label">Parameter:</td>
+			<td>Parameter:</td>
 			<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 		</tr>
 		<tr>
-			<td class="label">Path:</td>
+			<td>Path:</td>
 			<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
 		</tr>
 	</table>
 	<spring:url value="setVulnerability" var="formUrl"/>
 	<form:form modelAttribute="similarFindings" action="${ fn:escapeXml(formUrl) }">
 		<h3>Same Variable or Location</h3>
-		<table class="formattedTable">
+		<table class="table auto table-striped">
 			<thead>
 				<tr>
 					<th class="first">Select</th>
@@ -93,7 +93,7 @@
 		</table>
 		
 		<h3>Same Generic Type</h3>
-		<table class="formattedTable">
+		<table class="table auto table-striped">
 			<thead>
 				<tr>
 					<th class="first">Select</th>

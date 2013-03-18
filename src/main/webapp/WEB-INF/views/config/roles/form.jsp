@@ -16,7 +16,7 @@
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td class="label">Name:</td>
+					<td>Name:</td>
 					<td class="inputValue"><form:input path="displayName"
 							size="70" maxlength="255" value="${ displayName }" /></td>
 					<td style="padding-left: 5px"><form:errors path="displayName"
@@ -26,7 +26,7 @@
 		</table>
 		<h3>Permissions</h3>
 
-		<table class="formattedTable" style="margin-top: 5px">
+		<table class="table auto table-striped" style="margin-top: 5px">
 			<thead>
 				<tr>
 					<th class="long first">Permission</th>
@@ -239,10 +239,10 @@
 		</table>
 		<br />
 		<c:if test="${ role['new'] }">
-			<input id="createRoleButton" type="submit" value="Create Role" />
+			<button id="createRoleButton" class="btn btn-primary" type="submit">Create Role</button>
 		</c:if>
 		<c:if test="${ not role['new'] }">
-			<input id="updateRoleButton" type="submit" value="Update Role" />
+			<button id="updateRoleButton" class="btn btn-primary" type="submit">Update Role</button>
 		</c:if>
 		<span style="padding-left: 10px"> <a id="backToRolesButton"
 			href="<spring:url value="/configuration/roles"/>">Back to Roles</a>

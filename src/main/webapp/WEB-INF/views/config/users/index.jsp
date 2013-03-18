@@ -15,7 +15,7 @@
 		Here you can create, edit, and delete users.
 	</div>
 
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="medium first">User</th>

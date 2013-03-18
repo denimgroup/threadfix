@@ -17,7 +17,7 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue">
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ surveyResult.organization.id }"/>

@@ -20,7 +20,7 @@
 <table class="dataTable">
 	<tbody>
 		<tr>
-			<td class="label">Channel Type:</td>
+			<td>Channel Type:</td>
 			<td class="inputValue">
 				<form:select id="channelTypeSelect" path="channelType.id">
 					<form:options items="${ channelTypeList }" itemValue="id" itemLabel="name" />

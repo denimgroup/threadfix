@@ -15,7 +15,7 @@
 		ThreadFix Roles determine functional capabilities for associated users.<br/>
 	</div>
 	
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="medium first">Name</th>
@@ -45,7 +45,7 @@
 							<spring:param name="roleId" value="${ model.role.id }" />
 						</spring:url>
 						<form:form method="POST" action="${ fn:escapeXml(roleDeleteUrl) }">
-							<input id="delete${ status.count }" type="submit"
+						<button class="btn btn-primary" type="submit" id="delete${ status.count }"
 							
 							<c:if test="${ model.canDelete }">
 							onclick="return confirm('Are you sure you want to delete this Role? All users will have their privileges revoked.')" 
@@ -55,7 +55,7 @@
 							onclick="alert('This role cannot be deleted because it is the last role with permissions to manage either groups, users, or roles.'); return false;" 
 							</c:if>
 							
-							value="Delete"/>
+							>Delete</button>
 						</form:form>
 					</td>
 				</tr>

@@ -11,13 +11,13 @@
 	<form:form modelAttribute="user" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
 			<tr>
-				<td class="label">User:</td>
+				<td>User</td>
 				<td class="inputValue">
 					<c:out value="${ user.name }"/>
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Current Password:</td>
+				<td>Current Password</td>
 				<td class="inputValue">
 					<form:password id="currentPasswordInput" path="currentPassword" cssClass="focus" size="30"/>
 				</td>
@@ -26,7 +26,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">New Password:</td>
+				<td>New Password</td>
 				<td class="inputValue">
 					<form:password id="passwordInput" path="unencryptedPassword" size="30"/>
 				</td>
@@ -35,7 +35,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Confirm New Password:</td>
+				<td>Confirm New Password</td>
 				<td class="inputValue">
 					<form:password id="passwordConfirmInput" path="passwordConfirm" size="30"/>
 				</td>

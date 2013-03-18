@@ -46,13 +46,13 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">URL:</td>
+				<td >URL:</td>
 				<td class="inputValue"><a id="urlText"
 					href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out
 							value="${ application.url }" /></a></td>
 			</tr>
 			<tr>
-				<td class="label">Defect Tracker:</td>
+				<td >Defect Tracker:</td>
 				<c:choose>
 					<c:when test="${ empty application.defectTracker }">
 						<td class="inputValue">
@@ -76,7 +76,7 @@
 				</c:choose>
 			</tr>
 			<tr>
-				<td class="label">WAF:</td>
+				<td >WAF:</td>
 				<c:choose>
 					<c:when test="${ empty application.waf }">
 						<td class="inputValue">No WAF found.</td>
@@ -186,7 +186,7 @@
     
     <div id="toReplace">
    
-		<table class="formattedTable sortable filteredTable" id="anyid">
+		<table class="table auto table-striped sortable" id="anyid">
 			<thead>
 				<tr>
 					<th class="first">If Merged</th>
@@ -208,7 +208,7 @@
 			<tfoot>
 				<tr class="footer">
 					<td colspan="10" style="text-align:right">
-						<input type="submit" value="Mark Selected as False Positives">
+						<input class="btn" type="submit" value="Mark Selected as False Positives">
 					</td>
 				</tr>
 			</tfoot>
@@ -219,7 +219,7 @@
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td class="label">Jobs:</td>
+					<td >Jobs:</td>
 					<td class="inputValue"><a
 						href="<spring:url value="/jobs/open" />">View Open</a> | <a
 						href="<spring:url value="/jobs/all" />">View All</a></td>

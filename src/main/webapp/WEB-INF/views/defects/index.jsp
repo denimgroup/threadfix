@@ -28,9 +28,9 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="label">Team:</td>
+				<td>Team:</td>
 				<td class="inputValue"><c:out value="${ application.organization.name }"/></td>
-				<td class="label">Defect Tracker:</td>
+				<td>Defect Tracker:</td>
 				<c:choose>
 					<c:when test="${ empty application.defectTracker }">
 						<td class="inputValue">
@@ -42,7 +42,7 @@
 							<c:out value="${application.defectTracker.defectTrackerType.name }"/> 
 							<em>(<a href="<spring:url value="${ application.defectTracker.url }" />"><c:out value="${ application.defectTracker.url }"/></a>)</em>
 						</td>
-						<td class="label">Product:</td>
+						<td>Product:</td>
 						<td class="inputValue">
 							<c:out value="${ application.projectName}"/>
 						</td>
@@ -50,13 +50,13 @@
 				</c:choose>
 			</tr>
 			<tr>
-				<td class="label">URL:</td>
+				<td>URL:</td>
 				<td class="inputValue">
 					<a href="<spring:url value="${ application.url }" />">
 						<c:out value="${ application.url }" />
 					</a>
 				</td>
-				<td class="label">WAF:</td>
+				<td>WAF:</td>
 		<c:choose>
 			<c:when test="${ empty application.waf }">
 				<td class="inputValue">
@@ -81,20 +81,20 @@
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td class="label">Component:</td>
+					<td>Component:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="selectedComponent">
 							<form:options items="${projectMetadata.components}"/>
 						</form:select>
 					</td>
 					
-					<td class="label">Version:</td>
+					<td>Version:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="version">
 							<form:options items="${projectMetadata.versions}"/>
 						</form:select>
 					</td>
-					<td class="label">Severity:</td>
+					<td>Severity:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="severity">
 							<form:options items="${projectMetadata.severities}"/>
@@ -102,13 +102,13 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Priority:</td>
+					<td>Priority:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="priority">
 							<form:options items="${projectMetadata.priorities}"/>
 						</form:select>
 					</td>
-					<td class="label">Status:</td>
+					<td>Status:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="status">
 							<form:options items="${projectMetadata.statuses}"/>
@@ -116,13 +116,13 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Title:</td>
+					<td>Title:</td>
 					<td colspan="5" class="inputValue">
 						<form:input style="width:549px;" path="summary"/>
 					</td>
 				</tr>
 				<tr style="margin-top:5px;">
-					<td style="vertical-align:top" class="label">Description:</td>
+					<td style="vertical-align:top">Description:</td>
 					<td colspan="5" class="inputValue">
 						<form:textarea path="preamble" style="width:549px; height:100px;"/>
 					</td>
@@ -167,7 +167,7 @@
 		<input style="margin-top:5px; margin-bottom:5px;" type="submit" value="Add Defect">
 		
 		<div id="toReplace">
-			<table id="vulnerabilities" class="formattedTable sortable">
+			<table id="vulnerabilities" class="table auto table-striped sortable">
 				<thead>
 					<tr>
 						<th class="first">Defect Id</th>

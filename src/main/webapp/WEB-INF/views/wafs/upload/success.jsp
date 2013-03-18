@@ -7,7 +7,7 @@
 <body id="wafs">
 	<h2>WAF Events</h2>
 	
-	<table class="formattedTable">
+	<table class="table auto table-striped">
 		<thead>
 			<tr>
 				<th class="long first">Native ID</th>

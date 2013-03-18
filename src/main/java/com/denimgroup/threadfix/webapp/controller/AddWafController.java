@@ -126,6 +126,7 @@ public class AddWafController {
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
 		if (result.hasErrors()) {
+			model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
 			return "wafs/errorForm";
 		} else {
 			if (waf.getName().trim().equals("")) {
@@ -145,27 +146,38 @@ public class AddWafController {
 				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
 			
 			Application application = null;
-			if (request.getParameter("applicationId") != null) {
-				Integer testId = null;
-				try {
-					testId = Integer.valueOf((String)request.getParameter("applicationId"));
-					application = applicationService.loadApplication(testId);
-				} catch (NumberFormatException e) {
-					log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
+			if (request.getParameter("wafsPage") == null) {
+				application = null;
+				if (request.getParameter("applicationId") != null) {
+					Integer testId = null;
+					try {
+						testId = Integer.valueOf((String)request.getParameter("applicationId"));
+						application = applicationService.loadApplication(testId);
+					} catch (NumberFormatException e) {
+						log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
+					}
+				}
+				
+				if (application == null) {
+					result.rejectValue("wafType.id", null, null, "Please stop trying to play with the hidden field.");
 				}
 			}
 			
-			if (application == null) {
-				result.rejectValue("wafType.id", null, null, "Please stop trying to play with hidden field.");
-			}
-			
 			if (result.hasErrors()) {
-				return "wafs/errorForm";
+				model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
+				return "ajaxFailureHarness";
 			}
 			
 			wafService.storeWaf(waf);
-			application.setWaf(waf);
-			applicationService.storeApplication(application);
+			
+			if (application != null) {
+				application.setWaf(waf);
+				applicationService.storeApplication(application);
+				model.addAttribute(application);
+				model.addAttribute("contentPage", "applications/wafRow.jsp");
+			} else {
+				model.addAttribute("contentPage", "wafs/wafsTable.jsp");
+			}
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
@@ -174,8 +186,7 @@ public class AddWafController {
 			
 			status.setComplete();
 			
-			model.addAttribute(application);
-			return "applications/addWafSuccess";
+			return "ajaxSuccessPage";
 		}
 	}
 

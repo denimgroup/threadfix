@@ -47,7 +47,7 @@
 	</div>
 	</c:if>
 
-	<table class="formattedTable sortable" id="1">
+	<table class="table auto table-striped sortable" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
