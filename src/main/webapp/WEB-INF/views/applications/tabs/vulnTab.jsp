@@ -124,35 +124,4 @@
 
 </form:form>
 
-<table class="dataTable">
-	<tbody>
-		<tr>
-		<c:if test="${ not empty application.defectTracker }">
-			<td>Defect Tracker:</td>
-			<td class="inputValue">
-				<c:if test="${ canSubmitDefects }">
-					<spring:url value="{appId}/defects" var="defectsUrl">
-				        <spring:param name="appId" value="${ application.id }" />
-				    </spring:url>
-				    <a href="${ fn:escapeXml(defectsUrl) }">Submit Defects</a> |
-			    </c:if>
-			    <spring:url value="{appId}/defects/update" var="updateUrl">
-			    	<spring:param name="appId" value="${ application.id }"/>
-			    </spring:url>
-				<a href="${ fn:escapeXml(updateUrl) }">Update Status from <c:out value="${application.defectTracker.defectTrackerType.name }"/></a>
-			</td>
-		</c:if>
-		</tr>
-		<c:if test="${ canViewJobStatuses }">
-		<tr>
-			<td>Jobs:</td>
-			<td class="inputValue">
-				<a href="<spring:url value="/jobs/open" />">View Open</a> |
-				<a href="<spring:url value="/jobs/all" />">View All</a>
-			</td>
-		</tr>
-		</c:if>
-	</tbody>
-</table>
-
 </c:if>
