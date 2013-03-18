@@ -55,72 +55,77 @@
 			<br/><br/>To get started, click Upload Scan to start uploading security scans.
 		</c:if>
 	</div>
-
-	<table class="dataTable">
-		<tbody>
-			<c:if test="${ not empty application.url }">
-				<tr>
-					<td>URL</td>
-					<td class="inputValue">
-						<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
-					</td>
-				</tr>
-			</c:if>
-			<tr id="appDTDiv">
-				<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
-			</tr>
-			<tr id="appWafDiv">
-				<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
-			</tr>
-			<tr>
-				<td>Criticality</td>
-				<td class="inputValue"><c:out value="${ application.applicationCriticality.name }"/></td>
-			</tr>
-			<tr>
-			<c:if test="${ canUploadScans }">
-				<td><%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %></td>
-				<td><%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %></td>
-			</c:if>
-			</tr>
-		</tbody>
-	</table>
 	
-	<spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<spring:url value="/organizations/{orgId}/applications/{appId}/scanTab" var="scanTabUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<spring:url value="/organizations/{orgId}/applications/{appId}/closedTab" var="closedTabUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<spring:url value="/organizations/{orgId}/applications/{appId}/falsePositiveTab" var="falsePositiveTabUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<br>
-
-	<ul class="nav nav-tabs">
-		<li class="active">
-			<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
-		</li>
-		<li>
-			<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
-		</li>
-		<li>
-			<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
-		</li>
-		<li>
-			<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
-		</li>
-	</ul>
-    
-    <div id="tabsDiv">
-		<%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
+	<a class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
+	<c:if test="${ canUploadScans }">
+		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
+	</c:if>
+	<div id="appInfoDiv" class="collapse">
+		<table class="dataTable">
+			<tbody>
+				<c:if test="${ not empty application.url }">
+					<tr>
+						<td>URL</td>
+						<td class="inputValue">
+							<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
+						</td>
+					</tr>
+				</c:if>
+				<tr id="appDTDiv">
+					<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
+				</tr>
+				<tr id="appWafDiv">
+					<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
+				</tr>
+				<tr>
+					<td>Criticality</td>
+					<td class="inputValue"><c:out value="${ application.applicationCriticality.name }"/></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
+	
+	<c:if test="${ not empty application.scans }"> 
+	
+		<spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/scanTab" var="scanTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/closedTab" var="closedTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/falsePositiveTab" var="falsePositiveTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
+		<br>
+	
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
+			</li>
+		</ul>
+		
+	    <div id="tabsDiv">
+			<%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
+		</div>
+	
+	</c:if>
 	
 	<div id="addWaf" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
