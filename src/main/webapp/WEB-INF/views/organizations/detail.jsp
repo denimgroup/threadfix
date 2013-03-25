@@ -6,7 +6,10 @@
 </head>
 
 <body id="apps">
-	<h2>Team Overview</h2>
+	<ul class="breadcrumb">
+	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
+	    <li class="active"><c:out value="${ organization.name }"/></li>
+    </ul>
 	<h3 id="name" style="padding-top:5px;"><c:out value="${ organization.name }"/></h3>
 	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
 	

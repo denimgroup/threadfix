@@ -128,4 +128,8 @@ public interface ScanService {
 	 */
 	String getScannerType(MultipartFile file);
 
+	/**
+	 */
+	List<Scan> loadMostRecent();
+
 }

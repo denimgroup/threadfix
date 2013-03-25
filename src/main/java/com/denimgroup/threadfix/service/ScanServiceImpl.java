@@ -341,6 +341,11 @@ public class ScanServiceImpl implements ScanService {
 	}
 	
 	@Override
+	public List<Scan> loadMostRecent() {
+		return scanDao.retrieveMostRecent();
+	}
+	
+	@Override
 	public String getScannerType(MultipartFile file) {
 		String returnString = null;
 		saveFile("tempFile",file);

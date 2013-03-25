@@ -51,11 +51,7 @@
 				</td>
 			</tr>
 		</c:forEach>
-		<tr class="footer">
-			<td colspan="4" class="first">
-				<a href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>
-			</td>
-			<td colspan="3" class="last pagination"></td>
-		</tr>
 	</tbody>
 </table>
+
+<a href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>

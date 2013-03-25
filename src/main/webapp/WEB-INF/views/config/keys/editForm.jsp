@@ -10,7 +10,7 @@
 </spring:url>
 <form:form style="margin-bottom:0px;" id="editKeyForm${ key.id }" modelAttribute="apiKey" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 	<div class="modal-body">
-		<table id="noBorders" class="dataTable">
+		<table class="dataTable noBorders">
 			<tbody>
 				<tr>
 					<td style="padding-left:8px;">Note (optional)</td>

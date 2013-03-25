@@ -30,8 +30,12 @@
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
 	
-	<div style="font-size:150%">Team: <a id="organizationText" href="${fn:escapeXml(orgUrl)}"><c:out value="${ application.organization.name }"/></a></div>
-	<br>
+	<ul class="breadcrumb">
+	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
+	    <li><a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
+	    <li class="active"><c:out value="${ application.name }"/></li>
+    </ul>
+	
 	<h2 style="padding-bottom:5px;">Application: <span id="nameText"><c:out value="${ application.name }"/></span>
 	<c:if test="${ canManageApplications }">
 		<span style="font-size:60%;padding-left:10px;">
@@ -56,13 +60,8 @@
 		</c:if>
 	</div>
 	
-	<a class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
-	<c:if test="${ canUploadScans }">
-		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
-		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
-	</c:if>
 	<div id="appInfoDiv" class="collapse">
-		<table class="dataTable">
+		<table class="dataTable" style="margin-bottom:18px">
 			<tbody>
 				<c:if test="${ not empty application.url }">
 					<tr>
@@ -86,6 +85,12 @@
 		</table>
 	</div>
 	
+	<a class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
+	<c:if test="${ canUploadScans }">
+		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
+	</c:if>
+	
 	<c:if test="${ not empty application.scans }"> 
 	
 		<spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
@@ -106,7 +111,7 @@
 		</spring:url>
 		<br>
 	
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs margin-top">
 			<li class="active">
 				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
 			</li>
@@ -150,5 +155,7 @@
 	</div>
 	
 	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
+	
+	<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
 	
 </body>

@@ -45,5 +45,4 @@ public interface ReportsService {
 	 */
 	StringBuffer getReport(String path, String fileName, String format,
 			Map<String, Object> parameters, List<Integer> applicationIdList, HttpServletResponse response) throws IOException;
-
 }

@@ -17,6 +17,13 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".focus").focus();
+			$(".modal");
+			setTimeout(function() {
+				$(".modal").on("shown", function() {
+			    	$(".modal-body").attr('tab-index','-1');
+			    	$(".modal.in .modal-body input").first().focus();
+			    });
+			}, 1500);
 		});
 		
   		if(top != self) top.location.replace(location);
@@ -33,6 +40,7 @@
 	<!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/iepngfix_tilebg.js"></script>
+		
 	<![endif]-->	
     
 	<decorator:head/>

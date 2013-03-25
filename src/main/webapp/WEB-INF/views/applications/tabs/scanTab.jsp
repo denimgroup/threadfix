@@ -24,9 +24,11 @@
 		<tr class="bodyRow">
 			<td id="channelType${ status.count }"><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
 			<td>
-		        <spring:url value="scans/{scanId}" var="detailUrl">
+		        <spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}" var="detailUrl">
+                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
+                       <spring:param name="appId" value="${ scan.application.id }"/>
                        <spring:param name="scanId" value="${ scan.id }"/>
-                      </spring:url>
+                </spring:url>
                       <a id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
 			        <fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 			    </a>
@@ -34,18 +36,17 @@
 			<td id="numTotalVulnerabilities${ status.count }"><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
 			<c:if test="${ canUploadScans }">
 			<td>
-				<spring:url value="scans/{scanId}/delete" var="deleteUrl">
-                    <spring:param name="scanId" value="${ scan.id }"/>
+                <spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}/delete" var="deleteUrl">
+                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
+                       <spring:param name="appId" value="${ scan.application.id }"/>
+                       <spring:param name="scanId" value="${ scan.id }"/>
                 </spring:url>
                 <form:form method="post" action="${ fn:escapeXml(deleteUrl) }" >
                     <input onclick="return confirm('Are you sure you want to delete this scan and all of its results? This will also delete any WAF rules and defects associated with orphaned vulnerabilities.')" id="deleteScanButton" type="submit" value="Delete Scan" />
-                   </form:form>
+                </form:form>
 			</td>
 			</c:if>
 		</tr>
 	</c:forEach>
-		<tr class="footer">
-			<td colspan="4" class="last pagination" style="text-align:right"></td>
-		</tr>
 	</tbody>
 </table>

@@ -32,7 +32,7 @@
 
 	<form method="post" action="${ fn:escapeXml(loginUrl) }" autocomplete="off">
 		<!-- Attempts to change this will only result in the CSRF filter blocking the user -->
-		<input type='hidden' name='spring-security-redirect' value='/organizations'/>
+		<input type='hidden' name='spring-security-redirect' value='/dashboard'/>
 		<div style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-191px;">
 			<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg" alt="Denim Group" width="177px" height="81px"/>
 		</div>

@@ -20,94 +20,108 @@
 </head>
 
 <body id="apps">
+
+	<spring:url value="/organizations/{orgId}" var="orgUrl">
+		<spring:param name="orgId" value="${ scan.application.organization.id }" />
+	</spring:url>
+	<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+		<spring:param name="orgId" value="${ scan.application.organization.id }" />
+		<spring:param name="appId" value="${ scan.application.id }" />
+	</spring:url>
+
+	<ul class="breadcrumb">
+	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
+	    <li><a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
+	    <li><a href="${ fn:escapeXml(appUrl) }"><c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
+	    <li class="active"><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan</li>
+    </ul>
+
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
 	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings</h2>
 
 	<div id="helpText">
 		This page lists various statistics about a set of scan results from one scan file.<br/>
 	</div>
-	
-	<spring:url value="/organizations/{orgId}/applications/{appId}/scans" var="scanUrl">
-		<spring:param name="orgId" value="${ scan.application.organization.id }" />
-		<spring:param name="appId" value="${ scan.application.id }" />
-	</spring:url>
-	<div><a href="${ fn:escapeXml(scanUrl) }">Back to Scan Index</a></div>
 
-	<h3>Vulnerability Counts:</h3>
-	<table class="dataTable">
-		<tbody>
-			<tr>
-				<td>Total Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
-			</tr>
-			<tr>
-				<td>New Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
-			</tr>
-			<tr>
-				<td>Old Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ vulnData[3] }"/></td>
-			</tr>
-			<tr>
-				<td>Resurfaced Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ vulnData[4] }"/></td>
-			</tr>
-			<tr>
-				<td>Closed Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ vulnData[5] }"/></td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="left-tile">
+		<h4>Information</h4>
+		<table class="dataTable">
+			<tbody>
+				<tr>
+					<td>Total Scan Results</td>
+					<td class="inputValue">
+						<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
+											totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
+					</td>
+				</tr>
+				<tr>
+					<td>Total Repeat Findings (not included below)</td>
+					<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings 
+										(<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
+				</tr>
+				<tr>
+					<td>Total Findings</td>
+					<td class="inputValue"><c:out value="${ totalFindings + 
+												scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
+				</tr>
+				<tr>
+					<td>Duplicate Results Skipped</td>
+					<td class="inputValue"><c:out value="${ scan.totalNumberSkippedResults }"/></td>
+				</tr>
+				<tr>
+					<td>Total Findings matched to Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ totalFindings }"/></td>
+				</tr>
+				<tr>
+					<td>Total Findings not matched to Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
+				</tr>
+				<tr>
+					<td>Findings merged to Vulnerabilities from other Findings in this Scan</td>
+					<td class="inputValue"><c:out value="${ scan.totalNumberFindingsMergedInScan }"/></td>
+				</tr>
+				<tr>
+					<td>Number of Findings missing Channel Vulnerability mappings</td>
+					<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns }"/></td>
+				</tr>
+				<tr>
+					<td>Number of Findings missing Generic Mappings</td>
+					<td class="inputValue"><c:out value="${ scan.numWithoutGenericMappings }"/></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	
-	<h3>Information</h3>
-	<table class="dataTable">
-		<tbody>
-			<tr>
-				<td>Total Scan Results</td>
-				<td class="inputValue">
-					<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
-										totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
-				</td>
-			</tr>
-			<tr>
-				<td>Total Repeat Findings (not included below)</td>
-				<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings 
-									(<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
-			</tr>
-			<tr>
-				<td>Total Findings</td>
-				<td class="inputValue"><c:out value="${ totalFindings + 
-											scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
-			</tr>
-			<tr>
-				<td>Duplicate Results Skipped</td>
-				<td class="inputValue"><c:out value="${ scan.totalNumberSkippedResults }"/></td>
-			</tr>
-			<tr>
-				<td>Total Findings matched to Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ totalFindings }"/></td>
-			</tr>
-			<tr>
-				<td>Total Findings not matched to Vulnerabilities</td>
-				<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
-			</tr>
-			<tr>
-				<td>Findings merged to Vulnerabilities from other Findings in this Scan</td>
-				<td class="inputValue"><c:out value="${ scan.totalNumberFindingsMergedInScan }"/></td>
-			</tr>
-			<tr>
-				<td>Number of Findings missing Channel Vulnerability mappings</td>
-				<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns }"/></td>
-			</tr>
-			<tr>
-				<td>Number of Findings missing Generic Mappings</td>
-				<td class="inputValue"><c:out value="${ scan.numWithoutGenericMappings }"/></td>
-			</tr>
-		</tbody>
-	</table>
-	<br />
+	<div class="right-tile">
+		<h4>Vulnerability Counts</h4>
+		<table class="dataTable">
+			<tbody>
+				<tr>
+					<td>Total Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
+				</tr>
+				<tr>
+					<td>New Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
+				</tr>
+				<tr>
+					<td>Old Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ vulnData[3] }"/></td>
+				</tr>
+				<tr>
+					<td>Resurfaced Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ vulnData[4] }"/></td>
+				</tr>
+				<tr>
+					<td>Closed Vulnerabilities</td>
+					<td class="inputValue"><c:out value="${ vulnData[5] }"/></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings == 0 }">
+		<div id="toReplace" style="margin-top:340px">
 		<h3>Findings</h3>
 		<table class="table auto table-striped" id="1">
 			<thead>
@@ -131,10 +145,11 @@
 				</tr>
 			</tbody>
 		</table>
+		</div>
 	</c:if>
 	
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
-		<div id="toReplace">
+		<div id="toReplace" style="margin-top:340px">
 		<h3>Successfully Mapped Findings</h3>
 		<table class="table auto table-striped" id="1">
 			<thead>
@@ -176,10 +191,4 @@
 		</table>
 		</div>
 	</c:if>
-	
-	<spring:url value="/organizations/{orgId}/applications/{appId}/scans" var="scanUrl">
-		<spring:param name="orgId" value="${ scan.application.organization.id }" />
-		<spring:param name="appId" value="${ scan.application.id }" />
-	</spring:url>
-	<a href="${ fn:escapeXml(scanUrl) }">Back to Scan Index</a>
 </body>

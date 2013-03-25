@@ -2,7 +2,9 @@
 
 <div id="logoBar"></div>
 <div id="logo">
-	<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo.png" class="transparent_png" alt="Threadfix" />
+	<a  href="<spring:url value="/dashboard" htmlEscape="true"/>">
+		<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo.png" class="transparent_png" alt="Threadfix" />
+	</a>
 </div>
 <div style="position:absolute; top:0%; left:0%; padding-top:10px; width:845px; color:#000; text-align:right">
 	<table style="width:100%">
@@ -83,10 +85,19 @@
 								</security:authorize>
 							</security:authorize>
 						</ul>
-						
 				   </div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<script>
+		$("#tab-config").bind({
+			mouseenter : function(e) {
+				$("#configurationHeader").dropdown('toggle');
+			},
+			mouseleave : function(e) {
+				$("#configurationHeader").dropdown('toggle');
+			}
+		});
+	</script>
 </div>

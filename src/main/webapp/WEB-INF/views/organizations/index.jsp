@@ -53,10 +53,6 @@
 
 <body id="apps">
 	<h2>Teams</h2>
-	<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg">
-	<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg">
-
-	<br>
 	<a href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
 	<div id="myTeamModal" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

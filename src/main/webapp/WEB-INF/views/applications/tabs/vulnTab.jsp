@@ -80,44 +80,30 @@
 	<table class="table auto sortable" id="anyid">
 		<thead>
 			<tr>
-				<th class="first">If Merged</th>
-			    <th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${ tableUrl }', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
-				<th>Age</th>
-				<th>Defect</th>
-				<th>Defect Status</th>
-				<th>WAF Rule</th>
-				<c:if test="${ not canModifyVulnerabilities }">
-					<th class="unsortable last">WAF Events</th>
-				</c:if>
 				<c:if test="${ canModifyVulnerabilities }">
-					<th class="unsortable">WAF Events</th>
-					<th class="last unsortable">Select All <input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',10)"></th>
-				</c:if>
+					<th class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				</c:if>			    
+				<c:if test="${ not canModifyVulnerabilities }">
+					<th class="first" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+				</c:if>			    
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
+				
 			</tr>
 		</thead>
 		<tbody>
 			<tr class="bodyRow">
 				<c:if test="${ canModifyVulnerabilities }">
-					<td colspan="12" style="text-align:center;">Loading Vulnerabilities.</td>
+					<td colspan="5" style="text-align:center;">Loading Vulnerabilities.</td>
 				</c:if>
 				
 				<c:if test="${ not canModifyVulnerabilities }">
-					<td colspan="11" style="text-align:center;">Loading Vulnerabilities.</td>
+					<td colspan="4" style="text-align:center;">Loading Vulnerabilities.</td>
 				</c:if>
 			</tr>
 		</tbody>
-		<c:if test="${ canModifyVulnerabilities }">
-			<tfoot>
-				<tr class="footer">
-					<td colspan="12" style="text-align:right">
-						<input type="submit" value="Mark Selected as False Positives">
-					</td>
-				</tr>
-			</tfoot>
-		</c:if>
 	</table>
 
 </div>

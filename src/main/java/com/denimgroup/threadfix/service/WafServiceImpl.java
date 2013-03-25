@@ -46,6 +46,8 @@ import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
 @Service
 @Transactional(readOnly = true)
 public class WafServiceImpl implements WafService {
+	
+	private final SanitizedLogger log = new SanitizedLogger("WafService");
 
 	private WafDao wafDao = null;
 	private WafTypeDao wafTypeDao = null;
@@ -92,6 +94,8 @@ public class WafServiceImpl implements WafService {
 		Waf waf = loadWaf(wafId);
 		
 		if (waf != null) {
+			log.info("Deleting WAF with ID " + wafId);
+			
 			if (waf.getWafRules() != null) {
 				for (WafRule rule : waf.getWafRules()) {
 					wafRuleDao.delete(rule);

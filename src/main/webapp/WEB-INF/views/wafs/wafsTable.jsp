@@ -19,12 +19,7 @@
 	<c:forEach var="waf" items="${ wafList }">
 		<tr class="bodyRow">
 			<td class="details">
-				<%-- <spring:url value="/wafs/{wafId}" var="wafUrl">
-					<spring:param name="wafId" value="${ waf.id }" />
-				</spring:url>
-				<a href="${ fn:escapeXml(wafUrl) }"> --%>
-					<c:out value="${ waf.name }"/>
-				<!-- </a> -->
+				<c:out value="${ waf.name }"/>
 			</td>
 			<td><c:out value="${ waf.wafType.name }"/></td>
 			<td class="centered">	
@@ -35,10 +30,18 @@
 				</div>
 			</td>
 			<td class="centered">	
-				<a href="#deleteWaf${ waf.id }" role="button" class="btn btn-primary" data-toggle="modal">Delete</a>
+				<spring:url value="/wafs/{wafId}/delete" var="wafDeleteUrl">
+					<spring:param name="wafId" value="${ waf.id }" />
+				</spring:url>
+				<form:form id="deleteForm" method="POST" action="${ fn:escapeXml(wafDeleteUrl) }">
+					<a id="deleteWaf${ waf.id }" class="btn btn-primary" type="submit" onclick="return deleteWaf('<c:out value='${ wafDeleteUrl }'/>');">Delete</a>
+				</form:form>
 			</td>
-			<td class="centered">	
-				<a href="#wafRules${ waf.id }" role="button" class="btn" data-toggle="modal">Rules</a>
+			<td class="centered">
+				<spring:url value="/wafs/{wafId}" var="wafUrl">
+					<spring:param name="wafId" value="${ waf.id }" />
+				</spring:url>
+				<a href="${ fn:escapeXml(wafUrl) }" role="button" class="btn">Rules</a>
 			</td>
 		</tr>
 	</c:forEach>

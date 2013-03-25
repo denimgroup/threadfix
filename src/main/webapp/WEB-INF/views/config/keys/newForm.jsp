@@ -2,7 +2,8 @@
 
 <spring:url value="/configuration/keys/new" var="newKeyUrl"/>
 <form:form id="newKeyForm" style="margin-bottom:0px;" modelAttribute="apiKey" method="post" action="${ fn:escapeXml(newKeyUrl) }">
-	<table class="dataTable">
+	<div class="modal-body">
+	<table class="table noBorders">
 		<tbody>
 			<tr>
 				<td>Note (optional) </td>
@@ -24,7 +25,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<br/>
+	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>

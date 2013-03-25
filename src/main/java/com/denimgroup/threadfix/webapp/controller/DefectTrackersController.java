@@ -61,12 +61,16 @@ public class DefectTrackersController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
+		addModelAttributes(model);
+		return "config/defecttrackers/index";
+	}
+	
+	private void addModelAttributes(Model model) {
 		model.addAttribute(defectTrackerService.loadAllDefectTrackers());
 		model.addAttribute("editDefectTracker", new DefectTracker());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
-		return "config/defecttrackers/index";
 	}
 
 	@RequestMapping("/{defectTrackerId}")
@@ -92,12 +96,14 @@ public class DefectTrackersController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 	@RequestMapping("/{defectTrackerId}/delete")
 	public String deleteTracker(@PathVariable("defectTrackerId") int defectTrackerId,
-			SessionStatus status) {
+			SessionStatus status, Model model) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		if (defectTracker != null) {
 			defectTrackerService.deleteById(defectTrackerId);
 			status.setComplete();
-			return "redirect:/configuration/defecttrackers";
+			addModelAttributes(model);
+			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");
+			return "ajaxSuccessHarness";
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("DefectTracker", defectTrackerId));
 			throw new ResourceNotFoundException();

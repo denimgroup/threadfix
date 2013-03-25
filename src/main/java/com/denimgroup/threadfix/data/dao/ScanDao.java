@@ -131,4 +131,8 @@ public interface ScanDao {
 	 * @param scan
 	 */
 	void deleteFindingsAndScan(Scan scan);
+
+	/**
+	 */
+	List<Scan> retrieveMostRecent();
 }

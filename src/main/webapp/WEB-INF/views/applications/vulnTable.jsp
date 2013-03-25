@@ -87,10 +87,10 @@
 		<c:if test="${ empty vulnerabilities }">
 			<tr class="bodyRow">
 				<c:if test="${ canModifyVulnerabilities }">
-					<td colspan="11" style="text-align:center;">No vulnerabilities found.</td>
+					<td colspan="5" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
 				<c:if test="${ not canModifyVulnerabilities }">
-					<td colspan="10" style="text-align:center;">No vulnerabilities found.</td>
+					<td colspan="4" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
 			</tr>
 		</c:if>
@@ -113,8 +113,8 @@
 			<tr class="bodyRow <c:out value="${ color }"/>" data-toggle="collapse" data-target="#vulnInfoDiv${vulnerability.id}">
 				<c:if test="${ canModifyVulnerabilities }">
 					<td>
-						<input id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
-						<input type="hidden" value="on" name="_vulnerabilityIds">
+						<input class="vulnIdCheckbox" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
+						<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
 				</c:if>
 				<td>
@@ -176,13 +176,13 @@
 		<c:if test="${ canModifyVulnerabilities }">
 		<tfoot>
 			<tr class="footer">
-				<td style="text-align:left">
+				<td id="btnDiv" style="text-align:left">
 			    	<div class="btn-group">
-						<button class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
+						<button id="actionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 						<ul class="dropdown-menu">
-							<li>Submit Defect</li>
-							<li>Mark Closed</li>
-							<li>Mark False Positive</li>
+							<li><a class="btn" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+							<li><a class="btn" href="#markClosedConfirm">Mark Closed</a></li>
+							<li><a class="btn" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
 						</ul>
 					</div>
 				</td>
@@ -199,6 +199,14 @@
 		if (e.which == 13) {
 			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
 			return false;
+		}
+	});
+	$("#btnDiv").bind({
+		mouseenter : function(e) {
+			$("#actionButton").dropdown('toggle');
+		},
+		mouseleave : function(e) {
+			$("#actionButton").dropdown('toggle');
 		}
 	});
 	</script>

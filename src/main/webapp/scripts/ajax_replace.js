@@ -27,6 +27,12 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 			history.go(0);
 	    }
 	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
 	return false;
 }
 
@@ -56,6 +62,56 @@ function submitAjax(url, formId, formDiv, successDiv) {
 			history.go(0);
 	    }
 	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
+	return false;
+}
+
+function submitDefect(formId, formDiv, successDiv) {
+	
+	var checkboxes = $(".vulnIdCheckbox").serializeArray();
+	var combo = $(formId).serializeArray();
+
+	for(var i=0;i<checkboxes.length;i++)
+	{
+		combo.push(checkboxes[i]);
+	}
+	
+	$.ajax({
+		type : "POST",
+		url : $(formId).attr('action'),
+		data : combo,
+		contentType : "application/x-www-form-urlencoded",
+		dataType : "text",
+		success : function(text) {
+			
+			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+				$(formDiv).html(text);
+			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+				$(successDiv).html(text);
+			} else {
+				try {
+					var json = JSON.parse(text);
+					alert(json.error);
+				} catch (e) {
+					history.go(0);
+				}
+			}
+		},
+		error : function (xhr, ajaxOptions, thrownError){
+			history.go(0);
+		}
+	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
 	return false;
 }
 
@@ -80,6 +136,12 @@ function basicGet(url, target) {
 			history.go(0);
 	    }
 	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 100);
     return false;
 }
 
@@ -106,6 +168,12 @@ function basicPost(url, formId, target) {
 			history.go(0);
 		}
 	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
 	return false;
 }
 
@@ -158,7 +226,7 @@ function createDTAndRefresh(url) {
 			    $('#createDefectTracker').modal('hide');
 			    $('#addDefectTracker').modal('show');
 			    
-			} else {
+			} else {$("#nameInput").focus();
 				try {
 					var json = JSON.parse(text);
 					alert(json.error);
@@ -171,6 +239,12 @@ function createDTAndRefresh(url) {
 			history.go(0);
 	    }
 	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
     return false;
 }
 
@@ -184,3 +258,14 @@ function deleteKey(url) {
 	return false;
 }
 
+function deleteWaf(url) {
+	if (confirm('Are you sure you want to delete this WAF? This won\'t work if the WAF has applications attached.'))
+		return basicPost(url, '#deleteForm', '#defectTableDiv');
+	return false;
+}
+
+function deleteDefectTracker(url) {
+	if (confirm('Are you sure you want to delete this Defect Tracker? You will lose all associated Defects.'))
+		return basicPost(url, '#deleteForm', '#defectTableDiv');
+	return false;
+}

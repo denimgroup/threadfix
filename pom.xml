@@ -221,7 +221,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<artifactId>${jdbc.artifactId}</artifactId>
 			<version>${jdbc.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>

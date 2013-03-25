@@ -368,9 +368,14 @@ ul.wafRuleList li {
 	padding: 0 0 15px 5px;
 }
 
-table#noBorders tr td{
+table.noBorders tr td{
 	border:none;
 	text-align:left;
+	vertical-align:middle;
+}
+
+table.noBorders tbody > tr:nth-child(2n+1) > td {
+	background-color:#FFF
 }
 
 .table.auto {
@@ -400,6 +405,10 @@ table#noBorders tr td{
 }
 
 form {
+	margin-bottom:0px;
+}
+
+form select, form input {
 	margin-bottom:0px;
 }
 
@@ -487,6 +496,18 @@ th.headerSortDown {
 	float:right;
 }
 
-.form-bottom {
-	 margin-bottom:15px;
+.margin-bottom {
+	 margin-bottom:18px;
+}
+
+.margin-top {
+	margin-top:18px;
+}
+
+.modal input {
+	margin-bottom:0px;
+}
+
+td.bold {
+	font-weight:bold;
 }

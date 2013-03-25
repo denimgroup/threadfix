@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<a href="#commentModal${ vulnerability.id }" role="button" class="btn form-bottom" data-toggle="modal">Add Comment</a>
+<a href="#commentModal${ vulnerability.id }" role="button" class="btn margin-bottom" data-toggle="modal">Add Comment</a>
 <div id="commentModal${ vulnerability.id }" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">

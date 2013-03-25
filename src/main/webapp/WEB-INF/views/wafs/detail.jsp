@@ -60,7 +60,7 @@
 				</tbody>
 			</table>
 			<br />
-			<input type="submit" value="Upload File"/>
+			<input class="btn btn-primary" type="submit" value="Upload File"/>
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
@@ -130,7 +130,7 @@
 					</select>
 				</c:otherwise>
 			</c:choose>
-			<input id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
+			<input class="btn btn-primary" id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
 			</form:form>
 		</c:if>
 		
@@ -149,7 +149,7 @@
 		<c:if test="${ not empty rulesText }">
 			<h3>WAF Rules:</h3>
 			<form id="form1" name="form1" method="post">
-				<input id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
+				<input class="btn btn-primary" id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
 			</form><br/>
 			<div id="wafrule">
 				<pre><c:out value="${ rulesText }"/></pre>	

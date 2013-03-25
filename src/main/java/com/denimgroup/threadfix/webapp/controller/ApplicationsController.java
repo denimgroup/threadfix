@@ -58,12 +58,14 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
-@SessionAttributes({"defectTracker", "application", "waf"})
+@SessionAttributes({"defectTracker", "application", "waf", "defectViewModel"})
 public class ApplicationsController {
 	
 	public ApplicationsController(){}
@@ -145,7 +147,35 @@ public class ApplicationsController {
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
+		addDefectStuff(model,appId,orgId,request);
 		return "applications/detail";
+	}
+	
+	// TODO move this to a different spot so as to be less annoying
+	private void addDefectStuff(Model model, int appId, int orgId, HttpServletRequest request) {
+		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+			return;
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		if (application != null) {
+			applicationService.decryptCredentials(application);
+		}
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+		ProjectMetadata data = null;
+
+		if (dt != null) {
+			data = dt.getProjectMetadata();
+		}
+		
+		model.addAttribute("projectMetadata", data);
+		model.addAttribute(new DefectViewModel());
 	}
 	
 	private Object getAttribute(HttpServletRequest request, String attribute) {

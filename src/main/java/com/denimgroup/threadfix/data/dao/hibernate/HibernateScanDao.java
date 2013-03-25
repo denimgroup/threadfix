@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,4 +261,13 @@ public class HibernateScanDao implements ScanDao {
 		sessionFactory.getCurrentSession().delete(scan);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Scan> retrieveMostRecent() {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(Scan.class)
+				.addOrder(Order.desc("id"))
+				.setMaxResults(15)
+				.list();
+	}
 }

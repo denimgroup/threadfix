@@ -36,8 +36,13 @@
 				<a href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
 				<%@ include file="/WEB-INF/views/config/defecttrackers/modals/editDTModal.jsp" %>
 			</td>
-			<td class="centered">	
-				<a href="#deleteDefect${ defectTracker.id }" role="button" class="btn btn-primary" data-toggle="modal">Delete</a>
+			<td class="centered">
+				<spring:url value="/configuration/defecttrackers/{defectTrackerId}/delete" var="deleteUrl">
+					<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
+				</spring:url>
+				<form:form id="deleteForm${ defectTracker.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }">
+					<a id="deleteButton${ defectTracker.id }" class="btn btn-primary" type="submit" onclick="return deleteDefectTracker('<c:out value='${ deleteUrl }'/>');">Delete</a>
+				</form:form>
 			</td>
 		</tr>
 	</c:forEach>
