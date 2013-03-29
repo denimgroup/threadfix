@@ -58,7 +58,7 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitDTModal" class="btn btn-primary" 
 				onclick="javascript:updateDTAndRefresh('<c:out value="${ editUrl }"/>', '#editDefectTrackerForm${ defectTracker.id }', '#editDefectTracker${ waf.id }');return false;">
 			Update Defect Tracker

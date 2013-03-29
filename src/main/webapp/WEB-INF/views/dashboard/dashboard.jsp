@@ -51,7 +51,7 @@
 		                       <spring:param name="appId" value="${ scan.application.id }"/>
 			                </spring:url>
 							<td id="application${ status.count }">
-								<a href="${ fn:escapeXml(appUrl) }">
+								<a id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
 									<c:out value="${ scan.applicationChannel.application.name }"/>
 								</a>
 							</td>
@@ -64,7 +64,7 @@
 				                       <spring:param name="appId" value="${ scan.application.id }"/>
 				                       <spring:param name="scanId" value="${ scan.id }"/>
 				                </spring:url>
-								<a id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
+								<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
 									<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 								</a>
 							</td>

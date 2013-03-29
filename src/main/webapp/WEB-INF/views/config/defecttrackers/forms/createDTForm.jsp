@@ -51,7 +51,7 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeNewDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:createDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create Defect Tracker</a>
 	</div>
 </form:form>

@@ -33,7 +33,7 @@
 				<c:out value="${ defectTracker.defectTrackerType.name }"/>
 			</td>
 			<td class="centered">	
-				<a href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
+				<a id="editDefectTracker${ defectTracker.id }" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
 				<%@ include file="/WEB-INF/views/config/defecttrackers/modals/editDTModal.jsp" %>
 			</td>
 			<td class="centered">
@@ -50,6 +50,6 @@
 </table>
 
 <c:if test="${ canManageDefectTrackers }">
-	<a href="#createDefectTracker" role="button" class="btn" data-toggle="modal">Add New Defect Tracker</a>
+	<a id="addNewDTButton" href="#createDefectTracker" role="button" class="btn" data-toggle="modal">Add New Defect Tracker</a>
 	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
 </c:if>

@@ -54,4 +54,4 @@
 	</tbody>
 </table>
 
-<a href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>
+<a id="createNewKeyModalButton" href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>

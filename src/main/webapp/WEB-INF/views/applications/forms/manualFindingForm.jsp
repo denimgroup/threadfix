@@ -188,7 +188,7 @@
 	<input class="btn" type="submit" id="dynamicSubmit" name="dynamicSubmit" class="dynamic" value="Submit"/>
 	<input class="btn" type="submit" id="staticSubmit" name="staticSubmit" class="static" value="Submit"/>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeManualFindingModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:submitManualFinding('<c:out value="${saveUrl }"/>');return false;">Submit Finding</a>
 	</div>
 </form:form>

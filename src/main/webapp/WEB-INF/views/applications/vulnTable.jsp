@@ -180,9 +180,9 @@
 			    	<div class="btn-group">
 						<button id="actionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 						<ul class="dropdown-menu">
-							<li><a class="btn" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
-							<li><a class="btn" href="#markClosedConfirm">Mark Closed</a></li>
-							<li><a class="btn" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
+							<li><a id="submitDefectButton" class="btn" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+							<li><a id="markClosedButton" class="btn" href="#markClosedConfirm">Mark Closed</a></li>
+							<li><a id="markFalsePositiveButton" class="btn" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
 						</ul>
 					</div>
 				</td>

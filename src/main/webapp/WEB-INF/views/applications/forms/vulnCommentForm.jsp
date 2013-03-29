@@ -12,7 +12,7 @@
 		<textarea style="margin:10px;width: 497px; height: 215px;" class="textbox focus" id="commentInputBox" name="comments"></textarea>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button class="btn btn-primary" onclick="javascript:submitAjaxModal('${ fn:escapeXml(commentUrl) }', '#addCommentForm${ vulnerability.id }', '#commentFormDiv${ vulnerability.id }', '#commentDiv${ vulnerability.id }', '#commentModal${ vulnerability.id }');return false;" id="addCommentButton" type="button">Add Comment</button>
 	</div>
 </form>

@@ -10,7 +10,7 @@
 	</div>
 	<div class="modal-footer">
 		<span style="float:left;font-size:8;" class="errors">Average file uploads take a few seconds but <br>larger files (2GB+) can take several minutes.</span>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeScanModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button id="submitScanModal" class="btn btn-primary">Upload Scan</button>
 	</div>
 </form:form>

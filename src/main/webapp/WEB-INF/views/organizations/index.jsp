@@ -53,7 +53,7 @@
 
 <body id="apps">
 	<h2>Teams</h2>
-	<a href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+	<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
 	<div id="myTeamModal" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div id="formDiv">

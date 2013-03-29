@@ -59,7 +59,7 @@
 	</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeSubmitDefectModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button onclick="javascript:submitDefect('#submitDefectForm', '#submitDefectFormDiv', '#teamTable', '#submitDefectFormModal');return false;" id="submitScanModal" class="btn btn-primary">Add Defect</button>
 	</div>
 </form:form>

@@ -23,7 +23,7 @@
 			</td>
 			<td><c:out value="${ waf.wafType.name }"/></td>
 			<td class="centered">	
-				<a href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit WAF</a>
+				<a id="editWafModalButton${ waf.id }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit WAF</a>
 				<div id="editWaf${ waf.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
@@ -41,14 +41,14 @@
 				<spring:url value="/wafs/{wafId}" var="wafUrl">
 					<spring:param name="wafId" value="${ waf.id }" />
 				</spring:url>
-				<a href="${ fn:escapeXml(wafUrl) }" role="button" class="btn">Rules</a>
+				<a id="rulesButton${ waf.id }" href="${ fn:escapeXml(wafUrl) }" role="button" class="btn">Rules</a>
 			</td>
 		</tr>
 	</c:forEach>
 	</tbody>
 </table>
 <c:if test="${ canManageWafs }">
-	<a href="#createWaf" role="button" class="btn" data-toggle="modal">Add WAF</a>
+	<a id="addWafModalButton" href="#createWaf" role="button" class="btn" data-toggle="modal">Add WAF</a>
 	<div id="createWaf" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>

@@ -85,7 +85,7 @@
 		</table>
 	</div>
 	
-	<a class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
+	<a id="showDetailsLink" ${ status.count }"  class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
 	<c:if test="${ canUploadScans }">
 		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
@@ -113,16 +113,16 @@
 	
 		<ul class="nav nav-tabs margin-top">
 			<li class="active">
-				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
+				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
+				<a data-toggle="tab" id="scanTabLink" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
+				<a data-toggle="tab" id="closedVulnTabLink" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="submitTeamModal" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
+				<a data-toggle="tab" id="falsePositiveTabLink" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
 			</li>
 		</ul>
 		

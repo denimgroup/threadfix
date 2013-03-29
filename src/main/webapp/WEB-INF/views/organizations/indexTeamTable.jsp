@@ -54,7 +54,7 @@
 						<spring:param name="orgId" value="${ organization.id }"/>
 					</spring:url>
 					<div style="margin-top:10px;margin-bottom:7px;">
-						<a href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
+						<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
 						<span style="padding-left:8px;"><a href="<c:out value="${ organizationUrl }"/>">View Team</a></span>
 					</div>
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"

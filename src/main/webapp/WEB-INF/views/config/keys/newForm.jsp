@@ -27,7 +27,7 @@
 	</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeNewKeyFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>
 	</div>
 </form:form>

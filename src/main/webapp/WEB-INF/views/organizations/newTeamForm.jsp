@@ -12,7 +12,7 @@
 		<form:errors path="name" cssClass="errors" />
 </div>
 <div class="modal-footer">
-	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	<button id="closeTeamModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<c:out value="${saveUrl }"/>','#organizationForm', '#formDiv', '#teamTable', '#myTeamModal','');return false;">Add Team</a>
 </div>
 </form:form>

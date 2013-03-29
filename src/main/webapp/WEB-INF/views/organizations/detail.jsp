@@ -42,7 +42,7 @@
 						<spring:param name="orgId" value="${ organization.id }"/>
 						<spring:param name="appId" value="${ app.id }"/>
 					</spring:url>
-					<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
+					<a id="appLink${ status.count }" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
 				</td>
 				<td id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
 				<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
