@@ -16,15 +16,10 @@
 			<td colspan="3" style="text-align:center;">No Defect Trackers found.</td>
 		</tr>
 	</c:if>
-	<c:forEach var="defectTracker" items="${ defectTrackerList }">
+	<c:forEach var="defectTracker" items="${ defectTrackerList }" varStatus="status">
 		<tr class="bodyRow">
-		    <td>
-		    	<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="dtUrl">
-					<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
-				</spring:url>
-				<a href="${ fn:escapeXml(dtUrl) }">
-		            <c:out value="${ defectTracker.name }"/>
-		        </a> 
+		    <td id="defectTrackerName${ status.count }">
+		    	<c:out value="${ defectTracker.name }"/>
 		    </td>
 			<td>
 				<c:out value="${ defectTracker.url }"/>
@@ -33,7 +28,7 @@
 				<c:out value="${ defectTracker.defectTrackerType.name }"/>
 			</td>
 			<td class="centered">	
-				<a id="editDefectTracker${ defectTracker.id }" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
+				<a id="editDefectTracker${ defectTracker.id }Button" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
 				<%@ include file="/WEB-INF/views/config/defecttrackers/modals/editDTModal.jsp" %>
 			</td>
 			<td class="centered">
