@@ -32,6 +32,7 @@ public class LoginPage extends BasePage {
 	private WebElement usernameField;
 	private WebElement passwordField;
 	private WebElement loginButton;
+	private WebElement rememberCheckbox;
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);
@@ -45,6 +46,7 @@ public class LoginPage extends BasePage {
 		usernameField = driver.findElementById("username");
 		passwordField = driver.findElementById("password");
 		loginButton = driver.findElementById("login");
+		rememberCheckbox = driver.findElementById("checkbox");
 	}
 	
 	public static LoginPage open(WebDriver webdriver) {
@@ -53,6 +55,11 @@ public class LoginPage extends BasePage {
 	
 	public DashboardPage login(String user, String password) {
 		return setUsername(user).setPassword(password).clickLogin();
+	}
+
+	public LoginPage checkRememberCheckbox() {
+		rememberCheckbox.click();
+		return this;
 	}
 	
 	private LoginPage setUsername(String user) {

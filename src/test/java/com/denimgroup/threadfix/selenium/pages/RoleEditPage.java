@@ -5,15 +5,15 @@ import org.openqa.selenium.WebElement;
 
 public class RoleEditPage extends BasePage {
 	
-	private WebElement createRoleButton;
-	private WebElement backToRolesLink;
+	private WebElement updateRoleButton;
+	private WebElement backToRolesButton;
 	private WebElement nameInput;
 
 	public RoleEditPage(WebDriver webdriver) {
 		super(webdriver);
 		nameInput = driver.findElementById("displayName");
-		createRoleButton = driver.findElementById("updateRoleButton");
-		backToRolesLink = driver.findElementById("backToRolesButton");
+		updateRoleButton = driver.findElementById("updateRoleButton");
+		backToRolesButton = driver.findElementById("backToRolesButton");
 	}
 
 	public String getNameError() {
@@ -27,17 +27,17 @@ public class RoleEditPage extends BasePage {
 	}
 	
 	public RolesIndexPage clickUpdateRoleButton() {
-		createRoleButton.click();
+		updateRoleButton.click();
 		return new RolesIndexPage(driver);
 	}
 	
 	public RoleEditPage clickUpdateRoleButtonInvalid() {
-		createRoleButton.click();
+		updateRoleButton.click();
 		return new RoleEditPage(driver);
 	}
 	
 	public RolesIndexPage clickBackToIndexLink() {
-		backToRolesLink.click();
+		backToRolesButton.click();
 		return new RolesIndexPage(driver);	
 	}
 	
@@ -50,7 +50,6 @@ public class RoleEditPage extends BasePage {
 	}
 	
 	public RoleEditPage setPermissionValue(String permissionName, boolean value) {
-		
 		String target = value ? "True" : "False";
 		driver.findElementById(permissionName + target).click();
 		
