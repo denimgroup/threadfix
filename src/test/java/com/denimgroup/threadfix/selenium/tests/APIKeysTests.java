@@ -57,7 +57,7 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   			  .clickApiKeysLink()
 								   			  .clickNewLink()
-								   			  .clickCreate();
+								   			  .enterNewApiKeyInfo("createAPIKey", true);
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
@@ -70,9 +70,10 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   .clickApiKeysLink()
 								   .clickNewLink()
-								   .clickCreate()
+								   .enterNewApiKeyInfo("editKey", false)
 								   .clickEdit(0)
-								   .fillAllClickSave("Sample ThreadFix REST key", false);
+								   .enterNewApiKeyInfo("Sample ThreadFix REST key", false);
+								   
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
@@ -85,9 +86,9 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 					 						  .clickApiKeysLink()
 											  .clickNewLink()
-											  .clickCreate()
+											  .enterNewApiKeyInfo("markRestricted", false)
 											  .clickEdit(0)
-											  .fillAllClickSave("Sample ThreadFix REST key", false);
+											  .enterNewApiKeyInfo("markRestricted", true);
 						
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 		
@@ -99,7 +100,7 @@ public class APIKeysTests extends BaseTest {
 		String PageText = loginPage.login("user", "password")
 								   .clickApiKeysLink()
 								   .clickNewLink()
-								   .clickCreate()
+								   .enterNewApiKeyInfo("deleteKey", false)
 								   .clickDelete(0)
 								   .getH2Tag();
 

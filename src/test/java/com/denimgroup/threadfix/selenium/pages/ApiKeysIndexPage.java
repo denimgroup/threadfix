@@ -26,8 +26,11 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ApiKeysIndexPage extends BasePage {
 
@@ -36,6 +39,7 @@ public class ApiKeysIndexPage extends BasePage {
 	private List<WebElement> editLinks = new ArrayList<WebElement>();
 	private List<WebElement> deleteButton = new ArrayList<WebElement>();
 	private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
+	private WebDriverWait wait = new WebDriverWait(driver,10);
 	private WebElement createNewKeyLink;
 
 	public ApiKeysIndexPage(WebDriver webdriver) {
@@ -44,9 +48,13 @@ public class ApiKeysIndexPage extends BasePage {
 		for (int i = 1; i <= getNumRows(); i++) {
 			keys.add(driver.findElementById("key" + i));
 			notes.add(driver.findElementById("note" + i));
-			editLinks.add(driver.findElementById("edit" + i));
-			deleteButton.add(driver.findElementById("delete" + i));
+			//editLinks.add(driver.findElementById("editKey" + i));
+			//deleteButton.add(driver.findElementById("delete" + i));
 			restrictedBoxes.add(driver.findElementById("restricted" + i));
+		}
+		if(getNumRows()!=0){
+			editLinks = driver.findElementsByLinkText("Edit");
+			deleteButton = driver.findElementsByLinkText("Delete");
 		}
 	}
 
@@ -64,15 +72,26 @@ public class ApiKeysIndexPage extends BasePage {
 		return keys.get(num).getText();
 	}
 
-	public EditApiKeyPage clickEdit(int row) {
+	public ApiKeysIndexPage clickEdit(int row) {
 		editLinks.get(row).click();
-		sleep(1000);
-		return new EditApiKeyPage(driver);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal-body")));
+		return new ApiKeysIndexPage(driver);
 	}
 
-	public CreateApiKeyPage clickNewLink() {
+	public ApiKeysIndexPage clickNewLink() {
 		createNewKeyLink.click();
-		return new CreateApiKeyPage(driver);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("newKeyForm")));
+		return new ApiKeysIndexPage(driver);
+	}
+	
+	public ApiKeysIndexPage enterNewApiKeyInfo(String note, boolean restricted){
+		driver.findElementById("note").sendKeys(note);
+		if(restricted){
+			driver.findElementById("isRestrictedKey1").click();
+		}
+		driver.findElementById("submitTeamModal").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("newKeyForm")));
+		return new ApiKeysIndexPage(driver);
 	}
 
 	public ApiKeysIndexPage clickDelete(int row) {
