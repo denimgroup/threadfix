@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -33,17 +36,45 @@ public class DefectTrackerAddPage extends BasePage {
 	private WebElement urlInput;
 	private Select defectTrackerTypeSelect;
 	private WebElement addDefectTrackerButton;
-	private WebElement cancelLink;
+	private List<WebElement> editButtons = new ArrayList<WebElement>();
+	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<WebElement>();
 
 	public DefectTrackerAddPage(WebDriver webdriver) {
 		super(webdriver);
 		nameInput = driver.findElementById("nameInput");
 		urlInput = driver.findElementById("urlInput");
 		defectTrackerTypeSelect = new Select(driver.findElementById("defectTrackerTypeSelect"));
-		addDefectTrackerButton = driver.findElementById("addDefectTrackerButton");
-		cancelLink = driver.findElementById("cancelLink");
+		addDefectTrackerButton = driver.findElementById("addNewDTButton");
+		
+		for (int i = 1; i <= getNumRows(); i++) {
+			editButtons.add(driver.findElementById("editDefectTracker" + i + "Button"));
+			deleteButtons.add(driver.findElementById("deleteButton" + i));
+			names.add(driver.findElementById("name" + i));
+		}
 	}
 
+	public int getNumRows() {
+		return driver.findElementsByClassName("bodyRow").size();
+	}
+	
+	private int getIndex(String roleName) {
+		int i = -1;
+		for (WebElement name : names) {
+			i++;
+			String text = name.getText().trim();
+			if (text.equals(roleName.trim())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public DefectTrackerAddPage clickEditLink(String roleName) {
+		editButtons.get(getIndex(roleName)).click();
+		return this;
+	}
+	
 	public String getNameInput(){
 		return nameInput.getText();
 	}
@@ -73,9 +104,9 @@ public class DefectTrackerAddPage extends BasePage {
 		return this;
 	}
 
-	public DefectTrackerDetailPage clickAddDefectTrackerButton() {
+	public DefectTrackerAddPage clickAddDefectTrackerButton() {
 		addDefectTrackerButton.click();
-		return new DefectTrackerDetailPage(driver);
+		return this;
 	}
 	
 	public DefectTrackerAddPage clickAddDefectTrackerButtonInvalid() {
@@ -83,11 +114,6 @@ public class DefectTrackerAddPage extends BasePage {
 		return new DefectTrackerAddPage(driver);
 	}
 	
-	public DefectTrackerIndexPage clickCancelLink() {
-		cancelLink.click();
-		return new DefectTrackerIndexPage(driver);
-	}
-
 	public String getNameErrorsText() {
 		return driver.findElementById("name.errors").getText();
 	}
@@ -95,5 +121,4 @@ public class DefectTrackerAddPage extends BasePage {
 	public String getUrlErrorsText() {
 		return driver.findElementById("url.errors").getText();
 	}
-
 }

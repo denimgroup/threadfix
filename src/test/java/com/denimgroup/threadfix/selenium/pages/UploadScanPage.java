@@ -73,7 +73,6 @@ public class UploadScanPage extends BasePage {
 		fileInput.sendKeys(text);
 		return this;
 	}
-
 	
 	public ApplicationDetailPage clickCancelLink() {
 		cancelLink.click();

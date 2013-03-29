@@ -96,7 +96,6 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("uploadScanLink").click();
 		return new UploadScanPage(driver);
 	}
-	
 
 	public ManualUploadPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
