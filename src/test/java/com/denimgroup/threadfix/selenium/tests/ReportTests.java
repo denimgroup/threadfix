@@ -35,7 +35,6 @@ public class ReportTests extends BaseTest {
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
-	public AddChannelPage addChannelPage;
 	public OrganizationIndexPage organizationIndexPage;
 	public OrganizationDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;

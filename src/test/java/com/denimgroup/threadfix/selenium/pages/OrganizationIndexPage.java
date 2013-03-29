@@ -35,7 +35,7 @@ public class OrganizationIndexPage extends BasePage {
 		
 	public OrganizationIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		organizationTable = driver.findElementById("orgTableBody");
+		organizationTable = driver.findElementById("teamTable");
 	}
 	
 	public AddOrganizationPage clickAddOrganizationButton() {

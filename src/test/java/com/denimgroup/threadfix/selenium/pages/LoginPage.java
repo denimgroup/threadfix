@@ -51,7 +51,7 @@ public class LoginPage extends BasePage {
 		return new LoginPage(webdriver);
 	}
 	
-	public OrganizationIndexPage login(String user, String password) {
+	public DashboardPage login(String user, String password) {
 		return setUsername(user).setPassword(password).clickLogin();
 	}
 	
@@ -65,8 +65,8 @@ public class LoginPage extends BasePage {
 		return this;
 	}
 	
-	private OrganizationIndexPage clickLogin() {
+	private DashboardPage clickLogin() {
 		loginButton.click();
-		return new OrganizationIndexPage(driver);
+		return new DashboardPage(driver);
 	}
 }

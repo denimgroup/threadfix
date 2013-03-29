@@ -31,6 +31,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 
 public abstract class BasePage {
 	
@@ -67,10 +68,68 @@ public abstract class BasePage {
 		return new ReportsIndexPage(driver);
 	}
 	
-	public ConfigurationIndexPage clickConfigurationHeaderLink() {
+	/*public ConfigurationIndexPage clickConfigurationHeaderLink() {
 		driver.findElementById("configurationHeader").click();
 		return new ConfigurationIndexPage(driver);
+	}*/
+	
+	public void hoverOverAdministration(){
+		
+		Actions builder = new Actions(driver); 
+		Actions hoverOverRegistrar = builder.moveToElement(driver.findElementById("configurationHeader"));
+		hoverOverRegistrar.perform();
 	}
+	
+	public ApiKeysIndexPage clickApiKeysLink(){
+		hoverOverAdministration();
+		driver.findElementById("apiKeysLink").click();
+		return new ApiKeysIndexPage(driver);
+	}
+	
+	public DefectTrackerIndexPage clickDefectTrackersLink(){
+		hoverOverAdministration();
+		driver.findElementById("defectTrackersLink").click();
+		return new DefectTrackerIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickRemoteProvidersLink(){
+		hoverOverAdministration();
+		driver.findElementById("remoteProvidersLink").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public UserChangePasswordPage clickChangePasswordLink(){
+		hoverOverAdministration();
+		driver.findElementById("changePasswordLink").click();
+		return new UserChangePasswordPage(driver);
+	}
+	
+	public UserIndexPage clickManageUsersLink(){
+		hoverOverAdministration();
+		driver.findElementById("manageUsersLink").click();
+		return new UserIndexPage(driver);
+	}
+	
+	public RolesIndexPage clickManageRolesLink(){
+		hoverOverAdministration();
+		driver.findElementById("manageRolesLink").click();
+		return new RolesIndexPage(driver);
+	}
+	
+	public ErrorLogPage clickViewLogsLink(){
+		hoverOverAdministration();
+		driver.findElementById("viewLogsLink").click();
+		return new ErrorLogPage(driver);
+	}
+	
+	public ConfigureDefaultsPage clickConfigureDefaultsLink(){
+		hoverOverAdministration();
+		driver.findElementById("viewLogsLink").click();
+		return new ConfigureDefaultsPage(driver);
+		
+	}
+	
+	
 	
 	public void sleep(int num) {
 		try {

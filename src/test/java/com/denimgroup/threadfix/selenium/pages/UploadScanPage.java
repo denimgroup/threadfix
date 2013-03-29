@@ -74,10 +74,6 @@ public class UploadScanPage extends BasePage {
 		return this;
 	}
 
-	public AddChannelPage clickAddAnotherChannelLink() {
-		addAnotherChannelLink.click();
-		return new AddChannelPage(driver);
-	}
 	
 	public ApplicationDetailPage clickCancelLink() {
 		cancelLink.click();

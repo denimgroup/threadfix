@@ -47,7 +47,6 @@ public class APIKeysTests extends BaseTest {
 	@Test
 	public void navigationTest() {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
-				  							  .clickConfigurationHeaderLink()
 				  							  .clickApiKeysLink();
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
@@ -56,7 +55,6 @@ public class APIKeysTests extends BaseTest {
 	@Test
 	public void createAPIKey() {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
-											  .clickConfigurationHeaderLink()
 								   			  .clickApiKeysLink()
 								   			  .clickNewLink()
 								   			  .clickCreate();
@@ -70,7 +68,6 @@ public class APIKeysTests extends BaseTest {
 	public void editKey() {
 		
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
-								   .clickConfigurationHeaderLink()
 								   .clickApiKeysLink()
 								   .clickNewLink()
 								   .clickCreate()
@@ -86,7 +83,6 @@ public class APIKeysTests extends BaseTest {
 	@Test
 	public void markRestricted() {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
-											  .clickConfigurationHeaderLink()
 					 						  .clickApiKeysLink()
 											  .clickNewLink()
 											  .clickCreate()
@@ -101,7 +97,6 @@ public class APIKeysTests extends BaseTest {
 	@Test
 	public void deleteKey() {
 		String PageText = loginPage.login("user", "password")
-								   .clickConfigurationHeaderLink()
 								   .clickApiKeysLink()
 								   .clickNewLink()
 								   .clickCreate()

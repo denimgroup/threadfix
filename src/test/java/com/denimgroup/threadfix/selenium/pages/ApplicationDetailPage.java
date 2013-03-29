@@ -97,10 +97,6 @@ public class ApplicationDetailPage extends BasePage {
 		return new UploadScanPage(driver);
 	}
 	
-	public AddChannelPage clickUploadScanLinkFirstTime() {
-		driver.findElementById("uploadScanLink").click();
-		return new AddChannelPage(driver);
-	}
 
 	public ManualUploadPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
