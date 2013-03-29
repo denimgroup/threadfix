@@ -34,7 +34,6 @@ public class UploadScanPage extends BasePage {
 
 	private Select channelSelect;
 	private WebElement fileInput;
-	private WebElement addAnotherChannelLink;
 	private WebElement cancelLink;
 	private WebElement uploadScanButton;
 
@@ -42,7 +41,6 @@ public class UploadScanPage extends BasePage {
 		super(webdriver);
 		channelSelect = new Select(driver.findElementById("channelSelect"));
 		fileInput = driver.findElementById("fileInput");
-		addAnotherChannelLink = driver.findElementById("addAnotherChannelLink");
 		cancelLink = driver.findElementById("cancelLink");
 		uploadScanButton = driver.findElementById("uploadScanButton");
 	}

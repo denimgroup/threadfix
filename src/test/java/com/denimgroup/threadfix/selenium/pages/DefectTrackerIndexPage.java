@@ -30,7 +30,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-public class DefectTrackerAddPage extends BasePage { 
+public class DefectTrackerIndexPage extends BasePage { 
 
 	private WebElement nameInput;
 	private WebElement urlInput;
@@ -40,7 +40,7 @@ public class DefectTrackerAddPage extends BasePage {
 	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
 
-	public DefectTrackerAddPage(WebDriver webdriver) {
+	public DefectTrackerIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		nameInput = driver.findElementById("nameInput");
 		urlInput = driver.findElementById("urlInput");
@@ -70,7 +70,7 @@ public class DefectTrackerAddPage extends BasePage {
 		return -1;
 	}
 
-	public DefectTrackerAddPage clickEditLink(String roleName) {
+	public DefectTrackerIndexPage clickEditLink(String roleName) {
 		editButtons.get(getIndex(roleName)).click();
 		return this;
 	}
@@ -79,7 +79,7 @@ public class DefectTrackerAddPage extends BasePage {
 		return nameInput.getText();
 	}
 
-	public DefectTrackerAddPage setNameInput(String text){
+	public DefectTrackerIndexPage setNameInput(String text){
 		nameInput.clear();
 		nameInput.sendKeys(text);
 		return this;
@@ -89,7 +89,7 @@ public class DefectTrackerAddPage extends BasePage {
 		return urlInput.getText();
 	}
 
-	public DefectTrackerAddPage setUrlInput(String text){
+	public DefectTrackerIndexPage setUrlInput(String text){
 		urlInput.clear();
 		urlInput.sendKeys(text);
 		return this;
@@ -99,19 +99,19 @@ public class DefectTrackerAddPage extends BasePage {
 		return defectTrackerTypeSelect.getFirstSelectedOption().getText();
 	}
 
-	public DefectTrackerAddPage setDefectTrackerTypeSelect(String code){
+	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code){
 		defectTrackerTypeSelect.selectByVisibleText(code);
 		return this;
 	}
 
-	public DefectTrackerAddPage clickAddDefectTrackerButton() {
+	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		addDefectTrackerButton.click();
 		return this;
 	}
 	
-	public DefectTrackerAddPage clickAddDefectTrackerButtonInvalid() {
+	public DefectTrackerIndexPage clickAddDefectTrackerButtonInvalid() {
 		addDefectTrackerButton.click();
-		return new DefectTrackerAddPage(driver);
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public String getNameErrorsText() {

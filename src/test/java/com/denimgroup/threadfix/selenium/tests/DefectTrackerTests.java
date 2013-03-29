@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.selenium.pages.DefectTrackerAddPage;
+import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerEditPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
@@ -70,7 +70,7 @@ public class DefectTrackerTests extends BaseTest {
 																						.clickDefectTrackersLink();
 		assertFalse("The defectTracker was already present.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 		
-		DefectTrackerAddPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
 		
 		defectTrackerAddPage.setNameInput(newDefectTrackerName);
 		defectTrackerAddPage.setDefectTrackerTypeSelect(type);
@@ -99,7 +99,7 @@ public class DefectTrackerTests extends BaseTest {
 		String urlError = "Not a valid URL";
 		
 		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();		
-		DefectTrackerAddPage addDefectTrackerPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage addDefectTrackerPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
 		
 		// Test empty and whitespace input
 		addDefectTrackerPage.setNameInput(emptyString);
@@ -158,7 +158,7 @@ public class DefectTrackerTests extends BaseTest {
 		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();
 		assertFalse("The defectTracker was already present.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 		
-		DefectTrackerAddPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
 		
 		defectTrackerAddPage.setNameInput(newDefectTrackerName);
 		defectTrackerAddPage.setDefectTrackerTypeSelect(type1);
@@ -200,7 +200,7 @@ public class DefectTrackerTests extends BaseTest {
 		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();	
 
 		// create Dummy WAF
-		DefectTrackerAddPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
 		defectTrackerAddPage.setNameInput(defectTrackerNameDuplicateTest);
 		defectTrackerAddPage.setDefectTrackerTypeSelect(type2);
 		defectTrackerAddPage.setUrlInput(TEST_BUGZILLA_URL);
