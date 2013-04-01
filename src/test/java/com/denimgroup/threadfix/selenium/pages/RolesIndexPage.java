@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 public class RolesIndexPage extends BasePage {
 
 	private WebElement backToMenuLink;
-	private WebElement createRoleLink;
+	private WebElement createNewRoleLink;
 	
 	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> editLinks = new ArrayList<WebElement>();
@@ -18,7 +18,7 @@ public class RolesIndexPage extends BasePage {
 	public RolesIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		backToMenuLink = driver.findElementById("backToMenuLink");
-		createRoleLink = driver.findElementById("createNewRoleLink");
+		createNewRoleLink = driver.findElementById("createNewRoleLink");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
 			names.add(driver.findElementById("role" + i));
@@ -33,7 +33,7 @@ public class RolesIndexPage extends BasePage {
 	}
 	
 	public RoleCreatePage clickCreateRoleLink() {
-		createRoleLink.click();
+		createNewRoleLink.click();
 		return new RoleCreatePage(driver);
 	}
 
@@ -95,5 +95,4 @@ public class RolesIndexPage extends BasePage {
 		editLinks.get(getIndex(roleName)).click();
 		return new RoleEditPage(driver);
 	}
-	
 }

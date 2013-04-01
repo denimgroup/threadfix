@@ -34,6 +34,7 @@ public class UserEditPage extends BasePage {
 	private WebElement passwordConfirmInput;
 	private Select roleSelect;
 	private WebElement updateUserButton;
+	private WebElement addPermissionsButton;
 	private WebElement cancelLink;
 
 	public UserEditPage(WebDriver webdriver) {
@@ -44,6 +45,7 @@ public class UserEditPage extends BasePage {
 		passwordConfirmInput = driver.findElementById("passwordConfirmInput");
 		roleSelect = new Select(driver.findElementById("roleSelect"));
 		updateUserButton = driver.findElementById("updateUserButton");
+		addPermissionsButton = driver.findElementById("addPermissionButton");
 		cancelLink = driver.findElementById("cancelLink");
 	}
 	
@@ -85,6 +87,11 @@ public class UserEditPage extends BasePage {
 	public UserIndexPage clickUpdateUserButton() {
 		updateUserButton.click();
 		return new UserIndexPage(driver);
+	}
+	
+	public UserEditPage clickAddPermissionsButton() {
+		addPermissionsButton.click();
+		return this;
 	}
 	
 	public UserEditPage clickUpdateUserButtonInvalid() {

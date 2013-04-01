@@ -25,23 +25,30 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class UserNewPage extends BasePage {
 
 	private WebElement nameInput;
 	private WebElement passwordInput;
 	private WebElement passwordConfirmInput;
+	private WebElement ldapUserCheckbox;
+	private WebElement globalAccessCheckbox;
 	private WebElement addUserButton;
 	private WebElement cancelLink;
-	
+	private Select roleSelect;
+
 	public UserNewPage(WebDriver webdriver) {
 		super(webdriver);
 		
 		nameInput = driver.findElementById("nameInput");
 		passwordInput = driver.findElementById("passwordInput");
 		passwordConfirmInput = driver.findElementById("passwordConfirmInput");
+		ldapUserCheckbox = driver.findElementById("isLdapUserCheckbox");
+		globalAccessCheckbox = driver.findElementById("hasGlobalGroupAccessCheckbox");
 		addUserButton = driver.findElementById("addUserButton");
 		cancelLink = driver.findElementById("cancelLink");
+		roleSelect = new Select(driver.findElementById("roleSelect"));
 	}
 	
 	public String getNameInput(){
@@ -87,6 +94,21 @@ public class UserNewPage extends BasePage {
 	public UserIndexPage clickCancelLink() {
 		cancelLink.click();
 		return new UserIndexPage(driver);
+	}
+	
+	public UserNewPage setRoleSelect(String code){
+		roleSelect.selectByVisibleText(code);
+		return this;
+	}
+	
+	public UserNewPage checkLDAPbox() {
+		ldapUserCheckbox.click();
+		return this;
+	}
+	
+	public UserNewPage checkGlobalAccessCheckbox() {
+		globalAccessCheckbox.click();
+		return this;
 	}
 	
 	public String getNameError() {
