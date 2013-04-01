@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.selenium.pages.AddChannelPage;
 import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
@@ -50,9 +49,6 @@ import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
-import com.denimgroup.threadfix.selenium.pages.WafAddPage;
-import com.denimgroup.threadfix.selenium.pages.WafDetailPage;
-import com.denimgroup.threadfix.selenium.pages.WafEditPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 
@@ -62,10 +58,8 @@ public class WafTests extends BaseTest {
 	private static LoginPage loginPage;
 	private WafIndexPage wafIndexPage;
 	private ApplicationEditPage applicationEditPage;
-	private WafAddPage wafAddPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
-	public AddChannelPage addChannelPage;
 	public OrganizationIndexPage organizationIndexPage;
 	public OrganizationDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;
@@ -107,10 +101,7 @@ public class WafTests extends BaseTest {
 		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
-		WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
-		
-		wafAddPage.setNameInput(newWafName);
-		wafAddPage.setTypeSelect(type);
+		wafIndexPage.createNewWaf(newWafName, type);
 		
 		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
