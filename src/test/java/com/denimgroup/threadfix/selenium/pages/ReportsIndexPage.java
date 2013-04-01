@@ -63,28 +63,28 @@ public class ReportsIndexPage extends BasePage {
 	}
 	
 	public void clickRunRpt() {
-		runReportButton = driver.findElementById("runReportButton");
+		runReportButton = driver.findElementById("submitTeamModal");
 		runReportButton.click();
 		sleep(1000);
 	}
 
-	public GeneratedReportPage fillAllClickSaveReport(String reportSelect,String teamSelect, String ApplicationSelect,String formatSelect) {
+	public ReportsIndexPage fillAllClickSaveReport(String reportSelect,String teamSelect, String ApplicationSelect,String formatSelect) {
 		fillRequiredReport(reportSelect,teamSelect, ApplicationSelect,formatSelect);
 		selectReportList(reportSelect);
 		selectTeamList(teamSelect);
 		selectApplicationList(ApplicationSelect);
 		selectFormatList(formatSelect);
-		driver.findElementById("runReportButton").click();
+		driver.findElementById("submitTeamModal").click();
 		sleep(1000);
-		return new GeneratedReportPage(driver);
+		return new ReportsIndexPage(driver);
 	}
 
-	public GeneratedReportPage fillRequiredReport(String reportSelect,String teamSelect, String ApplicationSelect,String formatSelect) {
+	public ReportsIndexPage fillRequiredReport(String reportSelect,String teamSelect, String ApplicationSelect,String formatSelect) {
 		selectReportList(reportSelect);
 		selectTeamList(teamSelect);
 		selectApplicationList(ApplicationSelect);
 		selectFormatList(formatSelect);
 		sleep(1000);
-		return new GeneratedReportPage(driver);
+		return new ReportsIndexPage(driver);
 	}
 }

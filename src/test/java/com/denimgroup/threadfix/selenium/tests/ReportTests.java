@@ -17,10 +17,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.selenium.pages.AddChannelPage;
 import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.GeneratedReportPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
@@ -36,6 +36,7 @@ public class ReportTests extends BaseTest {
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
 	public OrganizationIndexPage organizationIndexPage;
+	public DashboardPage dashboardPage;
 	public OrganizationDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;
 	public GeneratedReportPage generatedReportPage;
@@ -61,13 +62,13 @@ public class ReportTests extends BaseTest {
 		loginPage = LoginPage.open(driver);
 	}
 
-	public static URL getScanFilePath(String category, String scannerName,
+	/*public static URL getScanFilePath(String category, String scannerName,
 			String fileName) {
 		String string = "SupportingFiles/" + category + "/" + scannerName + "/"
 				+ fileName;
 
 		return ClassLoader.getSystemResource(string);// .getFile();
-	}
+	}*/
 
 	@After
 	public void shutDown() {
@@ -88,6 +89,7 @@ public class ReportTests extends BaseTest {
 
 		// set up an organization
 		organizationAddPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
 				.clickAddOrganizationButton();
 
 		organizationAddPage.setNameInput(orgName);
@@ -130,7 +132,7 @@ public class ReportTests extends BaseTest {
 		String urlText = "http://testurl.com";
 		
 		//set up an organization
-		organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
+		organizationAddPage = loginPage.login("user", "password").clickOrganizationHeaderLink().clickAddOrganizationButton();
 		
 		organizationAddPage.setNameInput(orgName);
 		
@@ -279,7 +281,7 @@ public class ReportTests extends BaseTest {
 	@Ignore
 	@Test
 	public void portfolioTest() {
-		organizationIndexPage = loginPage.login("user", "password");
+		dashboardPage = loginPage.login("user", "password");
 
 		int numOrgs = 5;
 		int numAppsPerOrg = 5;

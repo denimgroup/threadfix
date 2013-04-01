@@ -23,45 +23,105 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WafIndexPage extends BasePage {
 
 	private WebElement addWafLink;
-	private WebElement wafTableBody;
-	private WebElement lastItemFoundInWafTableBodyLink;
+	private WebDriverWait wait = new WebDriverWait(driver,10);
+	private List<WebElement> names = new ArrayList<WebElement>();
+	private List<WebElement> types = new ArrayList<WebElement>();
+	private List<WebElement> editButtons = new ArrayList<WebElement>();
+	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
+	private List<WebElement> rulesButtons = new ArrayList<WebElement>();
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
+		for (int i = 1; i <= getNumRows(); i++){
+			types.add(driver.findElementById("wafType"+i));
+		}
+		if(getNumRows()!=0){
+			editButtons = driver.findElementsByLinkText("Edit WAF");
+			deleteButtons = driver.findElementsByLinkText("Delete");
+			rulesButtons = driver.findElementsByLinkText("Rules");
+			names = driver.findElementsByClassName("details");
+			
+		}
 		
-		addWafLink = driver.findElementById("addWafLink");
-		wafTableBody = driver.findElementById("wafTableBody");
+		addWafLink = driver.findElementById("addWafModalButton");
+	}
+	
+	public int getNumRows() {
+		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
+		
+		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().equals("No wafs found.")) {
+			return 0;
+		}		
+		
+		return driver.findElementsByClassName("bodyRow").size();
 	}
 
-	public WafAddPage clickAddWafLink() {
+	public WafIndexPage clickAddWafLink() {
 		addWafLink.click();
-		return new WafAddPage(driver);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createWaf")));
+		return new WafIndexPage(driver);
 	}
+	
+	public WafIndexPage createNewWaf(String name,String Type){
+		clickAddWafLink();
+		driver.findElementById("nameInput").sendKeys(name);
+		new Select(driver.findElementById("typeSelect")).selectByVisibleText(Type);
+		driver.findElementById("submitTeamModal");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("createWaf")));
+		return new WafIndexPage(driver);
+	}
+	
 
 	public boolean isTextPresentInWafTableBody(String text) {
-		for (WebElement element : wafTableBody.findElements(By.xpath(".//tr/td/a"))) {
-			if (element.getText().contains(text)) {
-				lastItemFoundInWafTableBodyLink = element;
+		for (int i = 1; i <= getNumRows(); i++){
+			if(names.get(i).getText().equals(text)||types.get(i).getText().equals(text)){
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public WafDetailPage clickTextLinkInWafTableBody(String text) {
-		if (isTextPresentInWafTableBody(text)) {
-			lastItemFoundInWafTableBodyLink.click();
-			return new WafDetailPage(driver);
-		} else {
-			return null;
+	
+	public int wafRowNumber(String wafName){
+		int i;
+		for (i = 1; i <= getNumRows(); i++){
+			if(names.get(i).getText().equals(wafName)){
+				break;
+			}
 		}
+		return i;
 	}
 	
+	public WafIndexPage editWaf(String wafName, String name, String type){
+		editButtons.get(wafRowNumber(wafName)).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal")));
+		driver.findElementById("nameInput").sendKeys(name);
+		new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+		driver.findElementByLinkText("Update WAF");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal")));
+		return new WafIndexPage(driver);
+	}
+	
+	public WafIndexPage deleteWaf(String wafName){
+		deleteButtons.get(wafRowNumber(wafName)).click();
+		 wait.until(ExpectedConditions.alertIsPresent());
+	     Alert alert = driver.switchTo().alert();
+	     alert.accept();
+		return new WafIndexPage(driver);
+	}
+	
+	//TODO add Rules actions
 }

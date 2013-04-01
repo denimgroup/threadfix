@@ -24,15 +24,103 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ApplicationDetailPage extends BasePage {
+	
+	WebDriverWait wait = new WebDriverWait(driver,10);
 	
 	public ApplicationDetailPage(WebDriver webdriver) {
 		super(webdriver);
 		sleep(2000);
 	}
 	
+	public ApplicationDetailPage clickShowDetails(){
+		driver.findElementById("showDetailsLink").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addNewDefectTracker(String defectTrackerName, String defectTrackerURL, String defectTrackerType){
+		clickShowDetails();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
+		//TODO missing id
+		driver.findElementByLinkText("Add Defect Tracker").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
+		//TODO missing id
+		driver.findElementByLinkText("Add Defect Tracker").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createDefectTracker")));
+		driver.findElementById("nameInput").sendKeys(defectTrackerName);
+		driver.findElementById("urlInput").sendKeys(defectTrackerURL);
+		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(defectTrackerType);
+		driver.findElementById("submitDTModal").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("createDefectTracker")));
+		//TODO currently does not allow you to add a defect tracker from application detail page
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addDefectTracker(String defectTracker, String username, String password, String productname){
+		clickShowDetails();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
+		//TODO missing id
+		driver.findElementByLinkText("Add Defect Tracker").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
+		new Select(driver.findElementById("defectTrackerId")).selectByVisibleText(defectTracker);
+		driver.findElementById("username").sendKeys(username);
+		driver.findElementById("password").sendKeys(password);
+		driver.findElementByLinkText("Test Connection").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("jsonResult")));
+		new Select(driver.findElementById("projectList")).selectByVisibleText(productname);
+		driver.findElementById("submitDTModal").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addDTForm")));
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addNewWaf(String Name,String Type){
+		clickShowDetails();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
+		//TODO should be switched to id
+		driver.findElementByLinkText("Add WAF").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		driver.findElementByLinkText("Create New WAF").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createWaf")));
+		driver.findElementById("nameInput").sendKeys(Name);
+		new Select(driver.findElementById("typeSelect")).selectByVisibleText(Type);
+		driver.findElementById("submitTeamModal").click();
+		//TODO currently does not allow you to add a waf from application detail page
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addWaf(String wafName){
+		clickShowDetails();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
+		//TODO should be switched to id
+		driver.findElementByLinkText("Add WAF").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
+		driver.findElementById("submitTeamModal").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addWafForm")));
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addManualFinding(Boolean stat,String cwe,String url,String sourceFile,String lineNum,String Parameter,String Severity,String description){
+		driver.findElementById("addManualFindinModalLink").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addManualFinding")));
+		if(stat){driver.findElementById("staticRadioButton").click();}
+		driver.findElementById("txtSearch").sendKeys(cwe);
+		driver.findElementById("urlDynamicSearch").sendKeys(url);
+		driver.findElementById("urlStaticSearch").sendKeys(sourceFile);
+		driver.findElementById("urlSearch").sendKeys(lineNum);
+		driver.findElementById("parameterInput").sendKeys(Parameter);
+		new Select(driver.findElementById("severityInput")).selectByVisibleText(Severity);
+		driver.findElementById("descriptionInput").sendKeys(description);
+		driver.findElementById("submitDTModal").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addManualFinding")));
+		return new ApplicationDetailPage(driver);
+	}
 	public String getElementText(String id) {
 		return driver.findElementById(id).getText();
 	}
