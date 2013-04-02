@@ -27,8 +27,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
@@ -37,6 +40,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafAddPage;
 import com.denimgroup.threadfix.selenium.pages.WafDetailPage;
 
@@ -46,6 +50,7 @@ public class ApplicationTests extends BaseTest {
 	private ApplicationAddPage applicationAddPage;
 	private ApplicationDetailPage applicationDetailPage;
 	private OrganizationDetailPage organizationDetailPage;
+	private OrganizationIndexPage organizationIndexPage;
 	private ApplicationEditPage applicationEditPage;
 	private WafAddPage wafAddPage;
 	private WafDetailPage wafDetailPage;
@@ -63,17 +68,16 @@ public class ApplicationTests extends BaseTest {
 		String appName = "testCreateApplicationAppw";
 		String urlText = "http://testurl.com";
 		
-		//set up an organization
-		applicationDetailPage = loginPage.login("user", "password")
-										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
-										 .setNameInput(orgName)
-										 .clickSubmitButtonValid()
-										 .clickAddApplicationLink()
-										 .setNameInput(appName)
-										 .setUrlInput(urlText)
-										 .clickAddApplicationButton();
+		organizationIndexPage = loginPage.login("user", "password")
+										.clickOrganizationHeaderLink()
+										.clickAddOrganizationButton()
+										.addNewOrganization(orgName)
+										.expandOrganizationRowByName(orgName)
+										.addNewApplication(orgName, appName, urlText, "Low")
+										.expandOrganizationRowByName(orgName);
 		
+		applicationDetailPage = organizationIndexPage.clickApplicationDetailLink(appName);
+
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
@@ -82,8 +86,8 @@ public class ApplicationTests extends BaseTest {
 				orgName.equals(applicationDetailPage.getOrganizationText()));
 		
 		// ensure that the application is present in the organization's app table.
-		organizationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-																	.clickOrganizationLink(orgName);
+		//organizationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+			//														.clickOrganizationLink(orgName);
 		
 		assertTrue("The application does not appear in the organization page.", 
 				organizationDetailPage.isTextPresentInApplicationsTableBody(appName));

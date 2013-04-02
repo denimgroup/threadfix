@@ -46,7 +46,7 @@ public class LoginPage extends BasePage {
 		usernameField = driver.findElementById("username");
 		passwordField = driver.findElementById("password");
 		loginButton = driver.findElementById("login");
-		rememberCheckbox = driver.findElementById("checkbox");
+		//rememberCheckbox = driver.findElementById("checkbox");
 	}
 	
 	public static LoginPage open(WebDriver webdriver) {

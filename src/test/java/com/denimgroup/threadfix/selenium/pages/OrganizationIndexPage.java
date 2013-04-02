@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,44 +36,71 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class OrganizationIndexPage extends BasePage {
 
-	private WebElement addTeamButton;
 	private WebDriverWait wait = new WebDriverWait(driver,10);
+	private WebElement organizationTable;
 		
 	public OrganizationIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		//organizationTable = driver.findElementById("teamTable");
-		addTeamButton = driver.findElementById("addTeamModalButton");
+	 organizationTable = driver.findElementById("teamTable");
+	}
+	
+	public int getNumRows() {
+		List<WebElement> bodyRows = driver.findElementsByClassName("collapsed");
+		
+		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().equals("No keys found.")) {
+			return 0;
+		}		
+		
+		return driver.findElementsByClassName("collapsed").size();
 	}
 	
 	public OrganizationIndexPage clickAddOrganizationButton() {
-		addTeamButton.click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myTeamModal")));
+		driver.findElementById("addTeamModalButton").click();
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myTeamModal")));
 		return new OrganizationIndexPage(driver);
 	}
 	
 	public OrganizationIndexPage addNewOrganization(String name){
+		clickAddOrganizationButton();
 		driver.findElementById("nameInput").sendKeys(name);
-		driver.findElementById("subitTeamModal").click();
+		driver.findElementById("submitTeamModal").click();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myTeamModal")));
 		return new OrganizationIndexPage(driver);
 	}
 	
 	public OrganizationIndexPage expandOrganizationRowByName(String name){
-		WebElement table = driver.findElementById("teamTable");
-		//need missing ids for name field in table
+		for(int i=1;i<getNumRows();i++){
+			if(driver.findElementById("teamName"+i).getText().contains(name)){
+				driver.findElementById("teamName"+i).click();
+			}
+		}
+		
 		return new OrganizationIndexPage(driver);
 	}
-	
 	public OrganizationIndexPage addNewApplication(String teamName, String appName, String url, String critic){
-		expandOrganizationRowByName(teamName);
+		driver.findElementById("teamName1").click();
+		//int num = getAppValue();
 		driver.findElementByLinkText("Add Application").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal")));
-		driver.findElementById("Name").sendKeys(appName);
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myAppModal"+num)));
+		driver.findElementsById("nameInput").get(1).sendKeys(appName);
 		driver.findElementById("urlInput").sendKeys(url);
 		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
 		driver.findElementById("submitAppModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal")));
+		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal")));
 		return new OrganizationIndexPage(driver);
+		
+	}
+	
+	public int getAppValue(){
+		Pattern p = Pattern.compile("id=\"addApplicationModalButton(\\d+)\"");
+		String s = driver.findElementByLinkText("Add Application").getText();
+		Matcher m = p.matcher(s);
+		String find="0";
+		if(m.find()){
+			find = m.group(1);
+		}
+		return Integer.parseInt(find);
+		
 	}
 	
 	public OrganizationDetailPage clickViewTeamLink(String teamName){
@@ -80,8 +111,7 @@ public class OrganizationIndexPage extends BasePage {
 		
 	}
 	
-	public ApplicationDetailPage clickApplicationDetailLink(String teamName,String appName){
-		expandOrganizationRowByName(teamName);
+	public ApplicationDetailPage clickApplicationDetailLink(String appName){
 		driver.findElementByLinkText(appName).click();
 		return new ApplicationDetailPage(driver);
 	}

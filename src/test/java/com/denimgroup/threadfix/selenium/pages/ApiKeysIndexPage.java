@@ -48,8 +48,6 @@ public class ApiKeysIndexPage extends BasePage {
 		for (int i = 1; i <= getNumRows(); i++) {
 			keys.add(driver.findElementById("key" + i));
 			notes.add(driver.findElementById("note" + i));
-			//editLinks.add(driver.findElementById("editKey" + i));
-			//deleteButton.add(driver.findElementById("delete" + i));
 			restrictedBoxes.add(driver.findElementById("restricted" + i));
 		}
 		if(getNumRows()!=0){

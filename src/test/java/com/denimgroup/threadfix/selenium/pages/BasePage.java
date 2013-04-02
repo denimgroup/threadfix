@@ -55,6 +55,7 @@ public abstract class BasePage {
 	
 	public OrganizationIndexPage clickOrganizationHeaderLink() {
 		driver.findElementById("orgHeader").click();
+		sleep(1000);
 		return new OrganizationIndexPage(driver);
 	}
 	
@@ -67,11 +68,6 @@ public abstract class BasePage {
 		driver.findElementById("reportsHeader").click();
 		return new ReportsIndexPage(driver);
 	}
-	
-	/*public ConfigurationIndexPage clickConfigurationHeaderLink() {
-		driver.findElementById("configurationHeader").click();
-		return new ConfigurationIndexPage(driver);
-	}*/
 	
 	public void hoverOverAdministration(){
 		
