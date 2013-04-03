@@ -67,7 +67,7 @@
 	
 	</c:if>
 	
-	<table class="table auto table-striped sortable table-hover" id="anyid">
+	<table class="table table-striped sortable table-hover" id="anyid">
 		<thead>
 			<tr>
 				<c:if test="${ canModifyVulnerabilities }">
@@ -178,7 +178,7 @@
 			<tr class="footer">
 				<td id="btnDiv" style="text-align:left">
 			    	<div class="btn-group">
-						<button id="actionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
+						<button id="actionButton" class="btn" type="button">Action <span class="caret"></span></button>
 						<ul class="dropdown-menu">
 							<li><a id="submitDefectButton" class="btn" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
 							<li><a id="markClosedButton" class="btn" href="#markClosedConfirm">Mark Closed</a></li>

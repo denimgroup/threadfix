@@ -42,7 +42,7 @@
 	<spring:url value="setVulnerability" var="formUrl"/>
 	<form:form modelAttribute="similarFindings" action="${ fn:escapeXml(formUrl) }">
 		<h3>Same Variable or Location</h3>
-		<table class="table auto table-striped">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th class="first">Select</th>
@@ -93,7 +93,7 @@
 		</table>
 		
 		<h3>Same Generic Type</h3>
-		<table class="table auto table-striped">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th class="first">Select</th>

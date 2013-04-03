@@ -29,7 +29,7 @@
 	    <div style="margin-top:10px">
 		     <div class="left-tile">
 		    	<h4 style="margin-top:0px;">Recent Scans</h4>
-		    	<table class="table auto table-striped">
+		    	<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>Application</th>

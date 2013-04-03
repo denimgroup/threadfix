@@ -1,6 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<table class="table auto table-hover white-inner-table">
+<c:if test="${ not empty organizationList }">
+<table class="table table-hover white-inner-table">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -14,10 +15,10 @@
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
 		<tr data-toggle="collapse" data-target="#teamInfoDiv${organization.id}">
-			<td>
+			<td id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
-			<td><c:out value="${ fn:length(organization.activeApplications) }" /></td>
+			<td id="numApplications${ status.count }"><c:out value="${ fn:length(organization.activeApplications) }" /></td>
 			<td id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
 			<td id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>
 			<td id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
@@ -33,20 +34,26 @@
 					<c:if test="${ not empty organization.applications }">
 						<table>
 						<c:forEach var="application" items="${ organization.applications }">
-							<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
-								<spring:param name="orgId" value="${ organization.id }"/>
-								<spring:param name="appId" value="${ application.id }"/>
-							</spring:url>
-							<spring:url value="/organizations/{orgId}/applications/{appId}/scans/upload" var="uploadUrl">
-								<spring:param name="orgId" value="${ organization.id }"/>
-								<spring:param name="appId" value="${ application.id }"/>
-							</spring:url>
-							<tr>
-								<td style="padding:5px;"><a href="${ fn:escapeXml(appUrl) }"><c:out value="${ application.name }"/></a></td>
-								<td style="padding:5px;">
-									<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
-								</td>
-							</tr>
+							<c:if test="${ application.active }">
+								<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+									<spring:param name="orgId" value="${ organization.id }"/>
+									<spring:param name="appId" value="${ application.id }"/>
+								</spring:url>
+								<spring:url value="/organizations/{orgId}/applications/{appId}/scans/upload" var="uploadUrl">
+									<spring:param name="orgId" value="${ organization.id }"/>
+									<spring:param name="appId" value="${ application.id }"/>
+								</spring:url>
+								<tr>
+									<td style="padding:5px;">
+										<a id="applicationLink${ application.id }" href="${ fn:escapeXml(appUrl) }">
+											<c:out value="${ application.name }"/>
+										</a>
+									</td>
+									<td style="padding:5px;">
+										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+									</td>
+								</tr>
+							</c:if>
 						</c:forEach>
 						</table>
 					</c:if>
@@ -55,7 +62,9 @@
 					</spring:url>
 					<div style="margin-top:10px;margin-bottom:7px;">
 						<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
-						<span style="padding-left:8px;"><a href="<c:out value="${ organizationUrl }"/>">View Team</a></span>
+						<span style="padding-left:8px;">
+							<a id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
+						</span>
 					</div>
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -68,3 +77,4 @@
 		</tr>
 	</c:forEach>
 </table>
+</c:if>

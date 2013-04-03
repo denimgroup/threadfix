@@ -25,7 +25,7 @@
 	</div>
 	
 	<c:if test="${ canManageRemoteProviders }">
-		<table class="table auto table-striped">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th class="medium first">Name</th>
@@ -95,7 +95,7 @@
 				</h2>
 			</form:form>
 			<spring:url value="" var="emptyUrl"></spring:url>	
-			<table class="table auto table-striped">
+			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th class="long first">Name / ID</th>

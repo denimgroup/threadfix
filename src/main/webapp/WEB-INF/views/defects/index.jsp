@@ -167,7 +167,7 @@
 		<input style="margin-top:5px; margin-bottom:5px;" type="submit" value="Add Defect">
 		
 		<div id="toReplace">
-			<table id="vulnerabilities" class="table auto table-striped sortable">
+			<table id="vulnerabilities" class="table table-striped sortable">
 				<thead>
 					<tr>
 						<th class="first">Defect Id</th>

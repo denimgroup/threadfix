@@ -26,7 +26,7 @@
 		</table>
 		<h3>Permissions</h3>
 
-		<table class="table auto table-striped" style="margin-top: 5px">
+		<table class="table table-striped" style="margin-top: 5px">
 			<thead>
 				<tr>
 					<th class="long first">Permission</th>

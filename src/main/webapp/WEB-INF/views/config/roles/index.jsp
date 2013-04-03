@@ -15,7 +15,7 @@
 		ThreadFix Roles determine functional capabilities for associated users.<br/>
 	</div>
 	
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="medium first">Name</th>

@@ -28,7 +28,7 @@
 
 	<spring:url value="" var="emptyUrl"></spring:url>	
 	<form:form modelAttribute="remoteProviderType" action="${ fn:escapeXml(emptyUrl) }">
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<td>Name / ID</td>

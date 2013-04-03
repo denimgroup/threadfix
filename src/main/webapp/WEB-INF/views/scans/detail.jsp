@@ -123,7 +123,7 @@
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings == 0 }">
 		<div id="toReplace" style="margin-top:340px">
 		<h3>Findings</h3>
-		<table class="table auto table-striped" id="1">
+		<table class="table table-striped" id="1">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>
@@ -151,7 +151,7 @@
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
 		<div id="toReplace" style="margin-top:340px">
 		<h3>Successfully Mapped Findings</h3>
-		<table class="table auto table-striped" id="1">
+		<table class="table table-striped" id="1">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>
@@ -172,7 +172,7 @@
 		
 		<div id="toReplace2">
 		<h3>Unmapped Findings</h3>
-		<table class="table auto table-striped" id="2">
+		<table class="table table-striped" id="2">
 			<thead>
 				<tr>
 					<th class="first">Severity</th>

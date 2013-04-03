@@ -186,7 +186,7 @@
     
     <div id="toReplace">
    
-		<table class="table auto table-striped sortable" id="anyid">
+		<table class="table table-striped sortable" id="anyid">
 			<thead>
 				<tr>
 					<th class="first">If Merged</th>

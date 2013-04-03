@@ -69,7 +69,7 @@
 	<c:if test="${hasApps}">
 
 		<h3>Applications</h3>
-		<table class="table auto table-striped">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th class="medium first">Name</th>

@@ -45,7 +45,7 @@
 	</div>
 	</c:if>
 	
-	<table class="table auto table-striped sortable" id="anyid">
+	<table class="table table-striped sortable" id="anyid">
 		<thead>
 			<tr>
 			    <th class="first"onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>

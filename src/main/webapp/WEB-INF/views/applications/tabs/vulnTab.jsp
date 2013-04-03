@@ -77,7 +77,7 @@
 
    <div id="toReplace">
   
-	<table class="table auto sortable" id="anyid">
+	<table class="table sortable" id="anyid">
 		<thead>
 			<tr>
 				<c:if test="${ canModifyVulnerabilities }">

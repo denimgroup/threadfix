@@ -32,7 +32,7 @@
 	
 	<h3>Application Breakdown by Latest Scan</h3>
 	
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="short first"></th>
@@ -78,7 +78,7 @@
 	
 	<h3>Portfolio Scan Statistics</h3>
 	
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="first"></th>

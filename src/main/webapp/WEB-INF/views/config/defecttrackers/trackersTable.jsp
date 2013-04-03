@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<table class="table auto table-striped">
+<table class="table table-striped">
 	<thead>
 		<tr>
 		    <th class="medium first">Name</th>
@@ -13,7 +13,7 @@
 	<tbody id="defectTrackerTableBody">
 	<c:if test="${ empty defectTrackerList }">
 		<tr class="bodyRow">
-			<td colspan="3" style="text-align:center;">No Defect Trackers found.</td>
+			<td colspan="5" style="text-align:center;">No Defect Trackers found.</td>
 		</tr>
 	</c:if>
 	<c:forEach var="defectTracker" items="${ defectTrackerList }" varStatus="status">

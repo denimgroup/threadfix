@@ -158,7 +158,7 @@
 		togglePassword();
 		</script>
 	
-		<table class="table auto table-striped">
+		<table class="table table-striped">
 			<thead>
 				<tr style="background-color:#43678B;color:#FFFFFF">
 					<th class="medium first">Team</th>

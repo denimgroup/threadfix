@@ -14,7 +14,7 @@
 	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
 	
 	<h3 style="padding-top:5px;">Applications</h3>
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="medium first">Name</th>
@@ -71,7 +71,7 @@
 	
 	<h3>Maturity Assessments</h3>
 	<div id="helpText">Maturity Assessments are designed to help evaluate a team's existing software security practices.</div>
-	<table class="table auto table-striped">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="long first">Maturity Assessment</th>

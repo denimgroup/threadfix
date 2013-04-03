@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<table class="table auto table-striped">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th class="long first">Name</th>
@@ -13,15 +13,15 @@
 	<tbody id="wafTableBody">
 	<c:if test="${ empty wafList }">
 		<tr class="bodyRow">
-			<td colspan="2" style="text-align:center;">No WAFs found.</td>
+			<td colspan="5" style="text-align:center;">No WAFs found.</td>
 		</tr>
 	</c:if>
 	<c:forEach var="waf" items="${ wafList }">
 		<tr class="bodyRow">
-			<td class="details">
+			<td class="details" id="wafName${waf.id }">
 				<c:out value="${ waf.name }"/>
 			</td>
-			<td><c:out value="${ waf.wafType.name }"/></td>
+			<td id="wafType${waf.id }"><c:out value="${ waf.wafType.name }"/></td>
 			<td class="centered">	
 				<a id="editWafModalButton${ waf.id }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit WAF</a>
 				<div id="editWaf${ waf.id }" class="modal hide fade" tabindex="-1"

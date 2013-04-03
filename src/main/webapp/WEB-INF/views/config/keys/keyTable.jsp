@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<table class="table auto table-striped">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th class="medium first">Key</th>
