@@ -73,28 +73,24 @@ public class ApplicationTests extends BaseTest {
 										.clickAddOrganizationButton()
 										.addNewOrganization(orgName)
 										.expandOrganizationRowByName(orgName)
-										.addNewApplication(orgName, appName, urlText, "Low")
-										.expandOrganizationRowByName(orgName);
-		
-		applicationDetailPage = organizationIndexPage.clickApplicationDetailLink(appName);
+										.addNewApplication(orgName, appName, urlText, "Low");
+										
+		applicationDetailPage = organizationIndexPage.expandOrganizationRowByName(orgName)
+													.clickApplicationDetailLink(appName);
 
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
 				urlText.equals(applicationDetailPage.getUrlText()));
+		
+		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+		
 		assertTrue("The organization was not preserved correctly.", 
-				orgName.equals(applicationDetailPage.getOrganizationText()));
-		
-		// ensure that the application is present in the organization's app table.
-		//organizationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-			//														.clickOrganizationLink(orgName);
-		
-		assertTrue("The application does not appear in the organization page.", 
-				organizationDetailPage.isTextPresentInApplicationsTableBody(appName));
+				organizationIndexPage.organizationAddedToTable(orgName));
 		
 		//cleanup
-		loginPage = organizationDetailPage.clickTextLinkInApplicationsTableBody(appName)
-										.clickDeleteLink()
+		loginPage = organizationIndexPage.expandOrganizationRowByName(orgName)
+										.clickViewTeamLink()
 										.clickDeleteButton()
 										.logout();
 	}
@@ -119,43 +115,46 @@ public class ApplicationTests extends BaseTest {
 		String whiteSpace = "     ";
 		
 		//set up an organization
-		applicationAddPage = loginPage.login("user", "password")
-									  .clickOrganizationHeaderLink()
-									  .clickAddOrganizationButton()
-									  .setNameInput(orgName)
-									  .clickSubmitButtonValid()
-									  .clickAddApplicationLink()
-									  .setNameInput(emptyString)
-									  .setUrlInput(emptyString)
-									  .clickAddApplicationButtonInvalid();
+		
+		organizationIndexPage = loginPage.login("user", "password")
+										.clickOrganizationHeaderLink()
+										.clickAddOrganizationButton()
+										.addNewOrganization(orgName)
+										.expandOrganizationRowByName(orgName)
+										.addNewApplication(orgName, emptyString, emptyString, "Low");
 		
 		assertTrue("The correct error did not appear for the name field.", 
-				applicationAddPage.getNameError().equals(emptyError));
-		assertTrue("The correct error did not appear for the url field.", 
-				applicationAddPage.getUrlError().equals(emptyError));
+				organizationIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		// Test whitespace input
-		applicationAddPage = applicationAddPage.setNameInput(whiteSpace)
-											   .setUrlInput(whiteSpace)
-											   .clickAddApplicationButtonInvalid();
+		organizationIndexPage = organizationIndexPage.closeModal()
+													.clickOrganizationHeaderLink()
+													.expandOrganizationRowByName(orgName)
+													.addNewApplication(orgName, whiteSpace, whiteSpace, "Low");
+		
 		
 		assertTrue("The correct error did not appear for the name field.", 
-				applicationAddPage.getNameError().equals(emptyError));
+				organizationIndexPage.getNameErrorMessage().contains(emptyError));
 		assertTrue("The correct error did not appear for the url field.", 
-				applicationAddPage.getUrlError().equals("Not a valid URL"));
+				organizationIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 		
 		// Test URL format
-		applicationAddPage = applicationAddPage.setNameInput("dummyName")
-				   							   .setUrlInput(urlText)
-				   							   .clickAddApplicationButtonInvalid();
+		organizationIndexPage = organizationIndexPage.closeModal()
+													.clickOrganizationHeaderLink()
+													.expandOrganizationRowByName(orgName)
+													.addNewApplication(orgName, "dummyApp", urlText, "Low");
 		
 		assertTrue("The correct error did not appear for the url field.", 
-				applicationAddPage.getUrlError().equals("Not a valid URL"));
+				organizationIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 
 		// Test browser field length limits
-		applicationDetailPage = applicationAddPage.setNameInput(longInputName)
-												  .setUrlInput(longInputUrl)
-												  .clickAddApplicationButton();
+		applicationDetailPage = organizationIndexPage.closeModal()
+				.clickOrganizationHeaderLink()
+				.expandOrganizationRowByName(orgName)
+				.addNewApplication(orgName, longInputName, longInputUrl, "Low")
+				.clickOrganizationHeaderLink()
+				.expandOrganizationRowByName(orgName)
+				.clickApplicationDetailLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+
 		
 		assertTrue("The length limit was incorrect for name.", 
 				applicationDetailPage.getNameText().length() == Application.NAME_LENGTH);
@@ -163,24 +162,23 @@ public class ApplicationTests extends BaseTest {
 				applicationDetailPage.getUrlText().length() == Application.URL_LENGTH);
 		
 		appName = applicationDetailPage.getNameText();
+		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
 		// Test name duplication check
-		applicationAddPage = applicationDetailPage.clickOrganizationHeaderLink()
-												.clickOrganizationLink(orgName)
-												.clickAddApplicationLink()
-												.setNameInput(appName)
-												.setUrlInput("http://dummyurl")
-												.clickAddApplicationButtonInvalid();
+		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+												.expandOrganizationRowByName(orgName)
+												.addNewApplication(orgName, appName, "http://dummyurl", "Low");
 		
 		assertTrue("The duplicate message didn't appear correctly.", 
-				applicationAddPage.getNameError().equals("That name is already taken."));
+				organizationIndexPage.getNameErrorMessage().contains("That name is already taken."));
 
 		//cleanup
-		loginPage = applicationAddPage.clickCancelLink()
-									  .clickTextLinkInApplicationsTableBody(appName)
-									  .clickDeleteLink()
-									  .clickDeleteButton()
-									  .logout();
+		loginPage = organizationIndexPage.closeModal()
+										.clickOrganizationHeaderLink()
+										.expandOrganizationRowByName(orgName)
+										.clickViewTeamLink()
+										.clickDeleteButton()
+										.logout();
 	}
 	
 	@Test
@@ -192,37 +190,43 @@ public class ApplicationTests extends BaseTest {
 		String urlText2 = "http://testurl.com352";
 		
 		// set up an organization
-		applicationDetailPage = loginPage.login("user", "password")
-										 .clickOrganizationHeaderLink()
-				 						 .clickAddOrganizationButton()
-				 						 .setNameInput(orgName)
-				 						 .clickSubmitButtonValid()
-				 						 .clickAddApplicationLink()
-				 						 .setNameInput(appName1)
-				 						 .setUrlInput(urlText1)
-				 						 .clickAddApplicationButton()
-										 .clickEditLink()
-										 .setNameInput(appName2)
-										 .setUrlInput(urlText2)
-										 .clickUpdateApplicationButton();
+		organizationIndexPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddOrganizationButton()
+				.addNewOrganization(orgName)
+				.expandOrganizationRowByName(orgName)
+				.addNewApplication(orgName, appName1, urlText1, "Low");
+	
+		
+		applicationDetailPage = organizationIndexPage.expandOrganizationRowByName(orgName)
+				.clickApplicationDetailLink(appName1);
+
+		assertTrue("The name was not preserved correctly.", 
+					appName1.equals(applicationDetailPage.getNameText()));
+		assertTrue("The URL was not preserved correctly.", 
+					urlText1.equals(applicationDetailPage.getUrlText()));
+		
+		applicationDetailPage = applicationDetailPage.clickEditLink()
+													.setNameInput(appName2)
+													.setUrlInput(urlText2)
+													.clickUpdateApplicationButton();
 		
 		assertTrue("The name was not preserved correctly.", 
 				appName2.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
-				urlText2.equals(applicationDetailPage.getUrlText()));
+				urlText2.equals(applicationDetailPage.getUrlText()));	
 		
 		// ensure that the application is present in the organization's app table.
-		organizationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-													  .clickOrganizationLink(orgName);
+		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+													.expandOrganizationRowByName(orgName);
 		
 		assertTrue("The application does not appear in the organization page.", 
-				organizationDetailPage.isTextPresentInApplicationsTableBody(appName2));
+				organizationIndexPage.isAppPresent(appName2));
 		
 		//cleanup
-		loginPage = organizationDetailPage.clickTextLinkInApplicationsTableBody(appName2)
-										  .clickDeleteLink()
-										  .clickDeleteButton()
-										  .logout();
+		loginPage = organizationIndexPage.clickViewTeamLink()
+										.clickDeleteButton()
+										.logout();
 	}
 	
 	@Test 
@@ -250,6 +254,13 @@ public class ApplicationTests extends BaseTest {
 		//add an application for duplicate checking,
 		//add an application for normal testing,
 		// and Test a submission with no changes
+		organizationIndexPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddOrganizationButton()
+				.addNewOrganization(orgName)
+				.expandOrganizationRowByName(orgName)
+				.addNewApplication(orgName, appName2, validUrlText, "Low");
+		
 		applicationDetailPage = loginPage.login("user", "password")
 										 .clickAddOrganizationButton()
 										 .setNameInput(orgName)

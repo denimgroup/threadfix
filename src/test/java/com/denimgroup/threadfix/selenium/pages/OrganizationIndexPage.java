@@ -56,44 +56,56 @@ public class OrganizationIndexPage extends BasePage {
 	
 	public OrganizationIndexPage clickAddOrganizationButton() {
 		driver.findElementById("addTeamModalButton").click();
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myTeamModal")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myTeamModal")));
 		return new OrganizationIndexPage(driver);
 	}
 	
 	public OrganizationIndexPage addNewOrganization(String name){
-		clickAddOrganizationButton();
-		driver.findElementById("nameInput").sendKeys(name);
+		driver.findElementById("teamNameInput").sendKeys(name);
 		driver.findElementById("submitTeamModal").click();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myTeamModal")));
 		return new OrganizationIndexPage(driver);
 	}
 	
 	public OrganizationIndexPage expandOrganizationRowByName(String name){
-		for(int i=1;i<getNumRows();i++){
+		//getNumRows() does not work after adding application, should change 10 to a more accurate function
+		for(int i=1;i<10;i++){
 			if(driver.findElementById("teamName"+i).getText().contains(name)){
 				driver.findElementById("teamName"+i).click();
+				break;
 			}
 		}
 		
 		return new OrganizationIndexPage(driver);
 	}
+	
+	public boolean organizationAddedToTable(String name){
+	
+		return driver.findElementById("teamTable").getText().contains(name);
+	}
+	
+	public OrganizationDetailPage clickViewTeamLink(){
+		driver.findElementByClassName("in").findElement(By.linkText("View Team")).click();
+		return new OrganizationDetailPage(driver);
+	}
 	public OrganizationIndexPage addNewApplication(String teamName, String appName, String url, String critic){
 		driver.findElementById("teamName1").click();
-		//int num = getAppValue();
+		int num = getAppValue();
 		driver.findElementByLinkText("Add Application").click();
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myAppModal"+num)));
-		driver.findElementsById("nameInput").get(1).sendKeys(appName);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myAppModal"+num)));
+		sleep(1000);
+		driver.findElementById("nameInput").sendKeys(appName);
 		driver.findElementById("urlInput").sendKeys(url);
 		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
 		driver.findElementById("submitAppModal").click();
-		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal")));
+		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myAppModal"+num)));
 		return new OrganizationIndexPage(driver);
 		
 	}
 	
 	public int getAppValue(){
-		Pattern p = Pattern.compile("id=\"addApplicationModalButton(\\d+)\"");
-		String s = driver.findElementByLinkText("Add Application").getText();
+		Pattern p = Pattern.compile("addApplicationModalButton(\\d+)");
+		String s = driver.findElementByLinkText("Add Application").getAttribute("id");
 		Matcher m = p.matcher(s);
 		String find="0";
 		if(m.find()){
@@ -103,6 +115,7 @@ public class OrganizationIndexPage extends BasePage {
 		
 	}
 	
+	
 	public OrganizationDetailPage clickViewTeamLink(String teamName){
 		expandOrganizationRowByName(teamName);
 		//should be changed to look for id
@@ -111,23 +124,29 @@ public class OrganizationIndexPage extends BasePage {
 		
 	}
 	
+	public String getNameErrorMessage(){
+		return driver.findElementById("name.errors").getText();
+	}
+	
+	public String getUrlErrorMessage(){
+		return driver.findElementById("url.errors").getText();
+	}
+	
+	
 	public ApplicationDetailPage clickApplicationDetailLink(String appName){
 		driver.findElementByLinkText(appName).click();
 		return new ApplicationDetailPage(driver);
 	}
 	
-	/*needs to be redone when ids are added for organization name
-	public boolean isOrganizationNamePresent(String organizationName) {
 	
-		for (WebElement element : organizationTable.findElements(By.xpath(".//tr/td/a"))) {
-			if (element.getText().contains(organizationName)) {
-				lastOrganizationFoundInTableLink = element;
-				return true;
-			}
-		}
-		
-		return false;
-	}*/
+	public OrganizationIndexPage closeModal(){
+		driver.findElementById("teamTable").click();
+		return new OrganizationIndexPage(driver);
+	}
+	
+	public boolean isAppPresent(String appName){
+		return driver.findElementByLinkText(appName).isDisplayed();
+	}
 		
 	public UserChangePasswordPage clickChangePasswordLinkIfPresent() {
 		if (driver.findElementById("changePasswordLink") != null) {

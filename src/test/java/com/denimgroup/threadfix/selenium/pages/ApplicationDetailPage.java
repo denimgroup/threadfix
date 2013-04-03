@@ -144,6 +144,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getUrlText(){
+		driver.findElementById("showDetailsLink").click();
 		return driver.findElementById("urlText").getText();
 	}
 	
@@ -151,9 +152,9 @@ public class ApplicationDetailPage extends BasePage {
 		return driver.findElementById("defectTrackerText").getText();
 	}
 	
-	public String getOrganizationText(){
+	/*public String getOrganizationText(){
 		return driver.findElementById("organizationText").getText();
-	}
+	}*/
 	
 	public ApplicationEditPage clickEditLink() {
 		driver.findElementById("editLink").click();
