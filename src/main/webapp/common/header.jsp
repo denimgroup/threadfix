@@ -6,7 +6,7 @@
 		<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo.png" class="transparent_png" alt="Threadfix" />
 	</a>
 </div>
-<div style="position:absolute; top:0%; left:0%; padding-top:10px; width:845px; color:#000; text-align:right">
+<div id="loginInfo">
 	<table style="width:100%">
 		<tr>
 			<td id="logout" style="padding-right:15px">
@@ -39,8 +39,8 @@
 				</security:authorize>
 				<td id="tab-config" style="width: 150px;">
 					<div class="dropdown normalLinks">
-						<a id="configurationHeader" class="dropdown-toggle" data-toggle="dropdown" href="#">Administration</a>
-						<ul class="dropdown-menu" aria-labelledby="configurationHeader" role="menu">
+						<a id="configurationHeader" href="#">Administration</a>
+						<ul style="text-align:left" class="dropdown-menu" aria-labelledby="configurationHeader" role="menu">
 							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 							    <li class="normalLinks">
 							    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>

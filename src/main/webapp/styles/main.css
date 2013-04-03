@@ -41,27 +41,38 @@ body {
 	min-height: 91%;
 	height: auto !important;
 	height: 91%;
-	background-color: #effbff;
+	background-image: url(../images/hdr-bg-repeat.png), url(../images/main-top-gradient.png);
+	background-position: top left, 0 73px;
+	background-repeat: repeat-x;
 }
 
 #main {
-	background: url(../images/hdr-bg-repeat.png) top left repeat-x;
 	text-align: left;
+	width:850px;
+	margin-left: auto;
+	margin-right:auto;
 }
 
 #logoBar {
 }
 
+#loginInfo {
+	 padding-top:10px;
+	 color:#000;
+	 text-align:right;
+	 margin-top: -75px;
+}
+
 #logo {
-	position: absolute;
 	top: 0%;
 	left: 0%;
 }
 
 #menu {
-	padding-top: 41px;
+    margin-top: -28px;
+    margin-top: 13px;
 	padding-bottom: 43px;
-	background: url(../images/main-top-gradient.png) left bottom repeat-x;
+	;
 }
 
 #menu a {
@@ -238,6 +249,8 @@ ul#breadcrumbs li.first {
 
 #wrapper,#footer div {
 	width: 100%;
+	margin-left: auto;
+    margin-right: auto;
 }
 
 div#helpText {
@@ -263,9 +276,7 @@ div#passwordNag {
 }
 
 #footer div#poweredBy {
-	width:890px;
 	text-align: center;
-	position:relative; 
 	color:#FFFFFF;
 	padding-bottom:5px; 
 	font-size:12px;
@@ -273,20 +284,16 @@ div#passwordNag {
 }
 
 #footer div#bottomLogo{
-	width:890px;
 	background: #43678b;
 	padding-top:5px;
-	position: relative;
 	text-align: center;
 }
 
 #footer div#copyright {
-	position:relative; 
 	color:#FFFFFF; 
 	padding-bottom:10px; 
 	padding-top:10px;
 	font-size:8px; 
-	width: 890px;
 	text-align:middle;
 }
 	                                                                                                                                            
@@ -382,26 +389,27 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	width:auto;
 }
 
-.table.auto tr.expandable > td {
+.table tr.expandable > td {
 	border-top:0px;
 	padding-top:0px;
 	padding-bottom:0px;
 }
 
-.table.auto tr.expandable td table tr td {
+.table tr.expandable td table tr td {
 	border-top:1px;
 }
 
-.table.auto th.centered{
+.table th.centered{
 	text-align:center;
 }
 
-.table.auto td.centered{
+.table td.centered{
 	text-align:center;
 }
 
 .table td {
 	padding-left:8px;
+	vertical-align: middle;
 }
 
 form {
