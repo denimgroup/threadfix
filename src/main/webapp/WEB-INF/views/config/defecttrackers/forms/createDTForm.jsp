@@ -55,3 +55,10 @@
 		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:createDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create Defect Tracker</a>
 	</div>
 </form:form>
+<script>
+$("#createDefectTrackerForm").keypress(function(e){
+    if (e.which == 13){
+        $("#submitDTModal").click();
+    }
+});
+</script>

@@ -36,7 +36,14 @@
 	<div class="modal-footer">
 		<input type="hidden" name="applicationId" value="<c:out value="${ application.id }"/>">
 		<input type="hidden" name="wafsPage" value="<c:out value="${ wafList }"/>">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:createWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create WAF</a>
+		<button id="closeCreateWafModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<a id="submitWafModal" class="btn btn-primary" onclick="javascript:createWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create WAF</a>
 	</div>
 </form:form>
+<script>
+$("#wafForm").keypress(function(e){
+    if (e.which == 13){
+        $("#submitWafModal").click();
+    }
+});
+</script>

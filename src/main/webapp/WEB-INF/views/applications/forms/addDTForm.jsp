@@ -19,7 +19,7 @@
 							<a style="padding-left:10px;" id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
 						</c:if>
 					</c:if>
-					<a href="#" class="btn" onclick="switchDTModals()">Create New Defect Tracker</a>
+					<a id="createDefectTrackerButtonInModal" href="#" class="btn" onclick="switchDTModals()">Create New Defect Tracker</a>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="defectTracker.id" cssClass="errors" />
@@ -48,7 +48,7 @@
 				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
 					<spring:param name="orgId" value="${ application.organization.id }" />
 					</spring:url>
-				<a href="javascript:jsonTest('${ fn:escapeXml(testUrl) }');" id="jsonLink">Test Connection</a>
+				<a id="testConnectionLink" href="javascript:jsonTest('${ fn:escapeXml(testUrl) }');" id="jsonLink">Test Connection</a>
 				</td>
 				<td>
 				<div id="toReplaceDT">
@@ -75,3 +75,10 @@
 		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:addDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Add Defect Tracker</a>
 	</div>
 </form:form>
+<script>
+$("#addDTForm").keypress(function(e){
+    if (e.which == 13){
+        $("#submitDTModal").click();
+    }
+});
+</script>

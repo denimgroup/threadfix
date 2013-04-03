@@ -4,7 +4,7 @@
 <c:choose>
 	<c:when test="${ empty application.defectTracker }">
 		<td class="inputValue">
-			<a href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Add Defect Tracker</a>
+			<a id="addDefectTrackerButton" href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Add Defect Tracker</a>
 		</td>
 	</c:when>
 	<c:otherwise>
@@ -16,7 +16,7 @@
 			<em>(<a href="<spring:url value="${ fn:escapeXml(application.defectTracker.url) }" />"><c:out value="${ fn:escapeXml(application.defectTracker.url) }"/></a>)</em>
 		</td>
 		<td>
-			<a href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Edit Defect Tracker</a>
+			<a id="editDefectTrackerButton" href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Edit Defect Tracker</a>
 		</td>
 	</c:otherwise>
 </c:choose>

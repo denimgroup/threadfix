@@ -42,6 +42,13 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitAppModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<c:out value="${saveUrl }"/>','#myAppForm${ organization.id }', '#formDiv${ organization.id }', '#teamTable', '#myAppModal${ organization.id }', '#collapse${ organization.id }');return false;">Add Application</a>
+		<a id="submitAppModal${ organization.id }" class="btn btn-primary" onclick="javascript:submitAjaxModal('<c:out value="${saveUrl }"/>','#myAppForm${ organization.id }', '#formDiv${ organization.id }', '#teamTable', '#myAppModal${ organization.id }', '#teamInfoDiv${ organization.id }');return false;">Add Application</a>
 	</div>
 </form:form>
+<script>
+$("#myAppForm<c:out value='organization.id'/>").keypress(function(e){
+    if (e.which == 13){
+        $("#submitAppModal<c:out value='organization.id'/>").click();
+    }
+});
+</script>

@@ -65,3 +65,10 @@
 		</a>
 	</div>
 </form:form>
+<script>
+$("#editDefectTrackerForm<c:out value='defectTracker.id'/>").keypress(function(e){
+    if (e.which == 13){
+        $("#submitDTModal").click();
+    }
+});
+</script>

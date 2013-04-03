@@ -19,7 +19,7 @@
 						<form:option value="0" label="<none>" />
 						<form:options items="${ wafList }" itemValue="id" itemLabel="name"/>
 					</form:select>
-					<a href="#" class="btn" onclick="switchWafModals()">Create New WAF</a>
+					<a id="addWafButtonInModal" href="#" class="btn" onclick="switchWafModals()">Create New WAF</a>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="waf.id" cssClass="errors" />
@@ -32,3 +32,10 @@
 		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:addWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Update Application</a>
 	</div>
 </form:form>
+<script>
+$("#addWafForm").keypress(function(e){
+    if (e.which == 13){
+        $("#submitTeamModal").click();
+    }
+});
+</script>

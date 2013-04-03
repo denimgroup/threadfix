@@ -42,7 +42,14 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:updateWafAndRefresh('<c:out value="${updateUrl }"/>', '#wafForm${waf.id }', '#editWaf${ waf.id }');return false;">Update WAF</a>
+		<button id="closeEditWafModalButton${ waf.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<a id="submitWafEditModal${ waf.id }" class="btn btn-primary" onclick="javascript:updateWafAndRefresh('<c:out value="${updateUrl }"/>', '#wafForm${waf.id }', '#editWaf${ waf.id }');return false;">Update WAF</a>
 	</div>
 </form:form>
+<script>
+$("#wafForm<c:out value='waf.id'/>").keypress(function(e){
+    if (e.which == 13){
+        $("#submitWafEditModal<c:out value='waf.id'/>").click();
+    }
+});
+</script>

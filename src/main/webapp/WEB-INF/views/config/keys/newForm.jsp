@@ -28,6 +28,13 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeNewKeyFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>
+		<a id="submitKeyModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('<spring:url value="/configuration/keys/new"/>', '#newKeyForm', '#formDiv', '#tableDiv', '#newKeyModalDiv');return false;">Create Key</a>
 	</div>
 </form:form>
+<script>
+$("#newKeyForm").keypress(function(e){
+    if (e.which == 13){
+        $("#submitKeyModal").click();
+    }
+});
+</script>
