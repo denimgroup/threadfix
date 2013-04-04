@@ -43,6 +43,7 @@ import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafAddPage;
 import com.denimgroup.threadfix.selenium.pages.WafDetailPage;
+import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class ApplicationTests extends BaseTest {
 	private WebDriver driver;
@@ -53,6 +54,7 @@ public class ApplicationTests extends BaseTest {
 	private OrganizationIndexPage organizationIndexPage;
 	private ApplicationEditPage applicationEditPage;
 	private WafAddPage wafAddPage;
+	private WafIndexPage wafIndexPage;
 	private WafDetailPage wafDetailPage;
 	
 	@Before
@@ -198,8 +200,9 @@ public class ApplicationTests extends BaseTest {
 				.addNewApplication(orgName, appName1, urlText1, "Low");
 	
 		
-		applicationDetailPage = organizationIndexPage.expandOrganizationRowByName(orgName)
-				.clickApplicationDetailLink(appName1);
+		applicationDetailPage = organizationIndexPage.clickOrganizationHeaderLink()
+													.expandOrganizationRowByName(orgName)
+													.clickApplicationDetailLink(appName1);
 
 		assertTrue("The name was not preserved correctly.", 
 					appName1.equals(applicationDetailPage.getNameText()));
@@ -254,29 +257,21 @@ public class ApplicationTests extends BaseTest {
 		//add an application for duplicate checking,
 		//add an application for normal testing,
 		// and Test a submission with no changes
-		organizationIndexPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddOrganizationButton()
-				.addNewOrganization(orgName)
-				.expandOrganizationRowByName(orgName)
-				.addNewApplication(orgName, appName2, validUrlText, "Low");
-		
 		applicationDetailPage = loginPage.login("user", "password")
-										 .clickAddOrganizationButton()
-										 .setNameInput(orgName)
-										 .clickSubmitButtonValid()
-										 .clickAddApplicationLink()
-										 .setNameInput(appName2)
-										 .setUrlInput(validUrlText)
-										 .clickAddApplicationButton()
-										 .clickOrganizationHeaderLink()
-										 .clickOrganizationLink(orgName)
-										 .clickAddApplicationLink()
-										 .setNameInput(appName)
-										 .setUrlInput(validUrlText)
-										 .clickAddApplicationButton()
-										 .clickEditLink()
-										 .clickUpdateApplicationButton();
+										.clickOrganizationHeaderLink()
+										.clickAddOrganizationButton()
+										.addNewOrganization(orgName)
+										.expandOrganizationRowByName(orgName)
+										.addNewApplication(orgName, appName2, validUrlText, "Low")
+										.clickOrganizationHeaderLink()
+										.expandOrganizationRowByName(orgName)
+										.addNewApplication(orgName, appName, validUrlText, "Low")
+										.expandOrganizationRowByName(orgName)
+										.clickApplicationDetailLink(appName)
+										.clickEditLink()
+										.clickUpdateApplicationButton();
+		
+		
 		
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
@@ -291,8 +286,6 @@ public class ApplicationTests extends BaseTest {
 		
 		assertTrue("The correct error did not appear for the name field.", 
 				applicationEditPage.getNameError().equals(emptyError));
-		assertTrue("The correct error did not appear for the url field.", 
-				applicationEditPage.getUrlError().equals(emptyError));
 		
 		// Test whitespace input
 		applicationEditPage = applicationEditPage.setNameInput(whiteSpace)
@@ -346,51 +339,55 @@ public class ApplicationTests extends BaseTest {
 		String appName = "appCreateTimeWafName2";
 		String appUrl = "http://testurl.com";
 		
-		wafAddPage = loginPage.login("user", "password").clickWafsHeaderLink().clickAddWafLink();
-		wafAddPage.setNameInput(wafName);
-		wafAddPage.setTypeSelect(type);
-		
+		wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink()
+														.clickAddWafLink()
+														.createNewWaf(wafName, type);
+
 		// Add Application with WAF
-		applicationDetailPage = wafAddPage.clickAddWafButton()
-										.clickOrganizationHeaderLink()
+		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
 										.clickAddOrganizationButton()
-										.setNameInput(orgName)
-										.clickSubmitButtonValid()
-										.clickAddApplicationLink()
-										.setNameInput(appName)
-										.setUrlInput(appUrl)
-										.setWafSelect(wafName)
-										.clickAddApplicationButton();
+										.addNewOrganization(orgName)
+										.expandOrganizationRowByName(orgName)
+										.addNewApplication(orgName, appName, appUrl, "Low")
+										.clickOrganizationHeaderLink()
+										.expandOrganizationRowByName(orgName)
+										.clickApplicationDetailLink(appName)
+										.clickShowDetails()
+										.clickAddWaf()
+										.addWaf(wafName);
 		
 		assertTrue("The WAF was not added correctly.", 
-				applicationDetailPage.getWafText().equals(wafName));
-		
+				applicationDetailPage.getWafText().equals(wafName));	
 		// Check that it also appears on the WAF page.
 		wafDetailPage = applicationDetailPage.clickWafsHeaderLink()
-											.clickTextLinkInWafTableBody(wafName);
+											.clickRules(wafName);
 		
 		assertTrue("The WAF was not added correctly.", 
 				wafDetailPage.isTextPresentInApplicationsTableBody(appName));
 		
 		// Attempt to delete the WAF and ensure that it is a failure because the Application is still there
 		// If the page goes elsewhere, this call will fail.
-		wafDetailPage = wafDetailPage.clickDeleteButtonInvalid();
+		wafIndexPage = wafDetailPage.clickWafsHeaderLink()
+								.clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafDetailPage.clickTextLinkInApplicationsTableBody(appName)
-									.clickDeleteLink()
-									.clickDeleteButton()
-									.clickWafsHeaderLink()
-									.clickTextLinkInWafTableBody(wafName);
+		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+								.expandOrganizationRowByName(orgName)
+								.clickViewTeamLink()
+								.clickDeleteButton()
+								.clickWafsHeaderLink()
+								.clickRules(wafName);
+		
 		assertFalse("The Application was not removed from the WAF correctly.", 
 				wafDetailPage.isTextPresentInApplicationsTableBody(appName));
 		
-		loginPage = wafDetailPage.clickDeleteButton().logout();
+		loginPage = wafDetailPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
 		
 	}
 	
 	@Test
 	public void testSwitchWafs() {
+		//TODO
 		String wafName1 = "firstWaf";
 		String wafName2 = "wafToSwitch";
 		String type1 = "Snort";
@@ -404,39 +401,34 @@ public class ApplicationTests extends BaseTest {
 		applicationDetailPage = loginPage.login("user", "password")
 										 .clickWafsHeaderLink()
 										 .clickAddWafLink()
-										 .setNameInput(wafName1)
-										 .setTypeSelect(type1)
-										 .clickAddWafButton()
-										 .clickBackToListLink()
+										 .createNewWaf(wafName1, type1)
 										 .clickAddWafLink()
-										 .setNameInput(wafName2)
-										 .setTypeSelect(type2)
-										 .clickAddWafButton()
+										 .createNewWaf(wafName2, type2)	
 										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
-										 .setNameInput(orgName)
-										 .clickSubmitButtonValid()
-										 .clickAddApplicationLink()
-										 .setNameInput(appName)
-										 .setUrlInput(appUrl)
-										 .setWafSelect(wafName1)
-										 .clickAddApplicationButton()
-										 .clickEditLink()
-										 .setWafSelect(wafName2)
-										 .clickUpdateApplicationButton();
+										 .addNewOrganization(orgName)
+										 .expandOrganizationRowByName(orgName)
+										 .addNewApplication(orgName, appName, appUrl, "Low")
+										 .clickOrganizationHeaderLink()
+										 .expandOrganizationRowByName(orgName)
+										 .clickApplicationDetailLink(appName)
+										 .clickShowDetails()
+										 .clickAddWaf()
+										 .addWaf(wafName1)
+										 .clickEditWaf()
+										 .addWaf(wafName2);
 								
 		assertTrue("The edit didn't change the application's WAF.", 
 				applicationDetailPage.getWafText().equals(wafName2));
 		
 		//cleanup
-		loginPage = applicationDetailPage.clickDeleteLink()
-										 .clickDeleteButton()
-										 .clickWafsHeaderLink()
-										 .clickTextLinkInWafTableBody(wafName1)
-										 .clickDeleteButton()
-										 .clickTextLinkInWafTableBody(wafName2)
-										 .clickDeleteButton()
-										 .logout();
+		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
+										.expandOrganizationRowByName(orgName)
+										.clickViewTeamLink()
+										.clickDeleteButton()
+										.clickWafsHeaderLink()
+										.clickDeleteWaf(wafName1)
+										.clickDeleteWaf(wafName2)
+										.logout();
 	}
 	
 	@Test

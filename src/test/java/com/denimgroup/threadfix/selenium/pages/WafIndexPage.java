@@ -46,15 +46,15 @@ public class WafIndexPage extends BasePage {
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		for (int i = 1; i <= getNumRows(); i++){
-			types.add(driver.findElementById("wafType"+i));
-		}
-		if(getNumRows()!=0){
-			editButtons = driver.findElementsByLinkText("Edit WAF");
-			deleteButtons = driver.findElementsByLinkText("Delete");
-			rulesButtons = driver.findElementsByLinkText("Rules");
-			names = driver.findElementsByClassName("details");
+		if(!driver.findElementById("wafTableBody").getText().contains("No WAFs found.")){
+			if(getNumRows()!=0){
+				types = driver.findElementsByClassName("details");
+				editButtons = driver.findElementsByLinkText("Edit WAF");
+				deleteButtons = driver.findElementsByLinkText("Delete");
+				rulesButtons = driver.findElementsByLinkText("Rules");
+				names = driver.findElementsByClassName("details");
 			
+			}
 		}
 		
 		addWafLink = driver.findElementById("addWafModalButton");
@@ -69,6 +69,28 @@ public class WafIndexPage extends BasePage {
 		
 		return driver.findElementsByClassName("bodyRow").size();
 	}
+	
+	public WafDetailPage clickRules(String wafName){
+		for(int i=0;i<names.size();i++){
+			if(names.get(i).getText().contains(wafName)){
+				rulesButtons.get(i).click();
+				break;
+			}
+		}
+		return new WafDetailPage(driver);
+	}
+	
+	public WafIndexPage clickDeleteWaf(String wafName){
+		for(int i=0;i<names.size();i++){
+			if(names.get(i).getText().contains(wafName)){
+				deleteButtons.get(i).click();
+				break;
+			}
+		}
+		Alert alert = driver.switchTo().alert();
+		alert.accept();
+		return new WafIndexPage(driver);
+	}
 
 	public WafIndexPage clickAddWafLink() {
 		addWafLink.click();
@@ -77,10 +99,9 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage createNewWaf(String name,String Type){
-		clickAddWafLink();
-		driver.findElementById("nameInput").sendKeys(name);
-		new Select(driver.findElementById("typeSelect")).selectByVisibleText(Type);
-		driver.findElementById("submitTeamModal");
+		driver.findElementById("createWaf").findElement(By.id("nameInput")).sendKeys(name);
+		new Select(driver.findElementById("createWaf").findElement(By.id("typeSelect"))).selectByVisibleText(Type);
+		driver.findElementById("createWaf").findElement(By.id("submitWafModal")).click();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("createWaf")));
 		return new WafIndexPage(driver);
 	}

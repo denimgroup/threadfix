@@ -36,7 +36,6 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage(WebDriver webdriver) {
 		super(webdriver);
-		sleep(2000);
 	}
 	
 	public ApplicationDetailPage clickShowDetails(){
@@ -93,16 +92,11 @@ public class ApplicationDetailPage extends BasePage {
 		//TODO currently does not allow you to add a waf from application detail page
 		return new ApplicationDetailPage(driver);
 	}
-	
+
 	public ApplicationDetailPage addWaf(String wafName){
-		clickShowDetails();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
-		//TODO should be switched to id
-		driver.findElementByLinkText("Add WAF").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
-		new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
+		Select s = new Select(driver.findElementById("wafSelect"));
+		s.selectByVisibleText(wafName);
 		driver.findElementById("submitTeamModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addWafForm")));
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -208,6 +202,18 @@ public class ApplicationDetailPage extends BasePage {
 			sleep(2000);
 		}
 		return returnPage;
+	}
+	
+	public ApplicationDetailPage clickEditWaf(){
+		driver.findElementById("editWafButton").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage clickAddWaf() {
+		driver.findElementById("addWafButton").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		return new ApplicationDetailPage(driver);
 	}
 
 }
