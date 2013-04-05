@@ -7,6 +7,8 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/authentication.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_search.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/radio_select.js"></script>
 	<script type="text/javascript">
 	window.onload = function()
     {
@@ -14,9 +16,6 @@
 		toggleFilters(false, null, null);//refillElement('#toReplace', '${ application.id }/table', 1);
     };
     </script>
-	<script>
-	
-	</script>
 </head>
 
 <body id="apps">
@@ -36,13 +35,35 @@
 	    <li class="active"><c:out value="${ application.name }"/></li>
     </ul>
 	
-	<h2 style="padding-bottom:5px;">Application: <span id="nameText"><c:out value="${ application.name }"/></span>
+	<h2 style="padding-bottom:5px;"><span id="nameText"><c:out value="${ application.name }"/></span>
 	<c:if test="${ canManageApplications }">
-		<span style="font-size:60%;padding-left:10px;">
-			<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a> | 
-			<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">Delete</a>
-		</span>
-	</c:if>
+			<div id="appActionDiv" class="btn-group">
+				<button id="appActionButton" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit</a></li>
+					<li>
+						<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">
+							Delete
+						</a>
+					</li>
+					<li>
+						<a id="showDetailsLink${ status.count }" href="#" data-toggle="collapse" data-target="#appInfoDiv">
+							Show Details
+						</a>
+					</li>
+				</ul>
+			</div>
+			<script>
+			$("#appActionButton").bind({
+				mouseenter : function(e) {
+					$("#appActionButton").dropdown('toggle');
+				},
+				mouseleave : function(e) {
+					$("#appActionButton").dropdown('toggle');
+				}
+			});
+			</script>
+		</c:if>
 	</h2>
 	
 	<c:if test="${ not empty message }">
@@ -85,7 +106,6 @@
 		</table>
 	</div>
 	
-	<a id="showDetailsLink" ${ status.count }"  class="btn" href="#" data-toggle="collapse" data-target="#appInfoDiv">Show Details</a>
 	<c:if test="${ canUploadScans }">
 		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
@@ -113,17 +133,37 @@
 	
 		<ul class="nav nav-tabs margin-top">
 			<li class="active">
-				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">Vulnerabilities</a>
+				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">
+					${ fn:escapeXml(numVulns) } 
+					<c:if test="${ numVulns == 1 }">Vulnerability</c:if>
+					<c:if test="${ numVulns != 1 }">Vulnerabilities</c:if>
+				</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="scanTabLink" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">Scans</a>
+				<a data-toggle="tab" id="scanTabLink" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">
+					${ fn:length(application.scans) }
+					<c:if test="${ fn:length(application.scans) == 1 }">Scan</c:if>
+					<c:if test="${ fn:length(application.scans) != 1 }">Scans</c:if>
+				</a>
 			</li>
-			<li>
-				<a data-toggle="tab" id="closedVulnTabLink" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">Closed Vulnerabilities</a>
-			</li>
-			<li>
-				<a data-toggle="tab" id="falsePositiveTabLink" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">False Positives</a>
-			</li>
+			<c:if test="${ numClosedVulns != 0 }">
+				<li>
+					<a data-toggle="tab" id="closedVulnTabLink" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">
+						${fn:escapeXml(numClosedVulns) } Closed 
+						<c:if test="${fn:escapeXml(numClosedVulns) == 1}"> Vulnerability</c:if>
+						<c:if test="${fn:escapeXml(numClosedVulns) != 1}"> Vulnerabilities</c:if>
+					</a>
+				</li>
+			</c:if>
+			<c:if test="${ falsePositiveCount != 0 }">
+				<li>
+					<a data-toggle="tab" id="falsePositiveTabLink" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">
+						${fn:escapeXml(falsePositiveCount) } False 
+						<c:if test="${fn:escapeXml(falsePositiveCount) == 1}">Positive</c:if>
+						<c:if test="${fn:escapeXml(falsePositiveCount) != 1}">Positives</c:if>
+					</a>
+				</li>
+			</c:if>
 		</ul>
 		
 	    <div id="tabsDiv">
@@ -154,8 +194,10 @@
 		</div>
 	</div>
 	
-	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
+	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %> 
 	
-	<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
+	<c:if test="${ not empty application.defectTracker }">
+		<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
+	</c:if>
 	
 </body>

@@ -173,22 +173,6 @@
 			</tr>
 		</c:forEach>
 		</tbody>
-		<c:if test="${ canModifyVulnerabilities }">
-		<tfoot>
-			<tr class="footer">
-				<td id="btnDiv" style="text-align:left">
-			    	<div class="btn-group">
-						<button id="actionButton" class="btn" type="button">Action <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<li><a id="submitDefectButton" class="btn" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
-							<li><a id="markClosedButton" class="btn" href="#markClosedConfirm">Mark Closed</a></li>
-							<li><a id="markFalsePositiveButton" class="btn" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
-						</ul>
-					</div>
-				</td>
-			</tr>
-		</tfoot>
-		</c:if>
 	</table>
 	
 	<script>
@@ -199,14 +183,6 @@
 		if (e.which == 13) {
 			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
 			return false;
-		}
-	});
-	$("#btnDiv").bind({
-		mouseenter : function(e) {
-			$("#actionButton").dropdown('toggle');
-		},
-		mouseleave : function(e) {
-			$("#actionButton").dropdown('toggle');
 		}
 	});
 	</script>
