@@ -23,8 +23,8 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.GeneratedReportPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 
@@ -35,9 +35,9 @@ public class ReportTests extends BaseTest {
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
-	public OrganizationIndexPage organizationIndexPage;
+	public TeamIndexPage organizationIndexPage;
 	public DashboardPage dashboardPage;
-	public OrganizationDetailPage organizationDetailPage;
+	public TeamDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;
 	public GeneratedReportPage generatedReportPage;
 	public AddOrganizationPage organizationAddPage;
@@ -90,7 +90,7 @@ public class ReportTests extends BaseTest {
 		// set up an organization
 		organizationAddPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.clickAddOrganizationButton();
+				.clickAddTeamButton();
 
 		organizationAddPage.setNameInput(orgName);
 
@@ -116,11 +116,11 @@ public class ReportTests extends BaseTest {
 
 		// Navigate to Organization IndexPage
 		driver.findElementById("orgHeader").click();
-		organizationIndexPage = new OrganizationIndexPage(driver);
+		organizationIndexPage = new TeamIndexPage(driver);
 		organizationIndexPage.clickOrganizationLink(orgName);
 
 		// Delete and Logout
-		organizationDetailPage = new OrganizationDetailPage(driver);
+		organizationDetailPage = new TeamDetailPage(driver);
 		organizationDetailPage.clickDeleteButton().logout();
 	}
 
@@ -132,7 +132,7 @@ public class ReportTests extends BaseTest {
 		String urlText = "http://testurl.com";
 		
 		//set up an organization
-		organizationAddPage = loginPage.login("user", "password").clickOrganizationHeaderLink().clickAddOrganizationButton();
+		organizationAddPage = loginPage.login("user", "password").clickOrganizationHeaderLink().clickAddTeamButton();
 		
 		organizationAddPage.setNameInput(orgName);
 		
@@ -293,7 +293,7 @@ public class ReportTests extends BaseTest {
 		for (int i = 0; i < numOrgs; i++) {
 			orgs[i] = getRandomString(20);
 			organizationDetailPage = organizationIndexPage
-					.clickAddOrganizationButton().setNameInput(orgs[i])
+					.clickAddTeamButton().setNameInput(orgs[i])
 					.clickSubmitButtonValid();
 
 			for (int j = 0; j < numAppsPerOrg; j++) {

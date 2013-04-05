@@ -53,9 +53,9 @@ public class ConfigurationIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 
-	public OrganizationIndexPage clickJobStatusesLink() {
+	public TeamIndexPage clickJobStatusesLink() {
 		jobStatusesLink.click();
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 
 	public UserIndexPage clickManageUsersLink() {

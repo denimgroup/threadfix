@@ -51,9 +51,9 @@ public class AddOrganizationPage extends BasePage {
 		return this;
 	}
 
-	public OrganizationDetailPage clickSubmitButtonValid() {
+	public TeamDetailPage clickSubmitButtonValid() {
 		submitButton.click();
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
 	
 	public AddOrganizationPage clickSubmitButtonInvalid() {

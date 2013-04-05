@@ -71,9 +71,9 @@ public class WafDetailPage extends BasePage {
 		return new WafDetailPage(driver);
 	}
 
-	public OrganizationIndexPage clickDownloadWafRulesButton() {
+	public TeamIndexPage clickDownloadWafRulesButton() {
 		driver.findElementById("downloadWafRulesButton").click();
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 
 	public boolean isTextPresentInApplicationsTableBody(String text) {

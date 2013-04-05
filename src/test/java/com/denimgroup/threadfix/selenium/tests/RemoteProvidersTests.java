@@ -33,7 +33,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.EditMappingPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProviderCredentialsPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
@@ -43,7 +43,7 @@ public class RemoteProvidersTests extends BaseTest {
 
 	private static LoginPage loginPage;
 
-	private OrganizationIndexPage organizationIndexPage;
+	private TeamIndexPage organizationIndexPage;
 	private EditMappingPage edtMapPage;
 	
 	private static final String SENTINEL_API_KEY = "your-key";
@@ -175,7 +175,7 @@ public class RemoteProvidersTests extends BaseTest {
 			return;
 		}
 		edtMapPage = loginPage.login("user", "password")
-				              .clickAddOrganizationButton()
+				              .clickAddTeamButton()
 				              .setNameInput("Sample WhiteHat Remote Provider Team")
 				              .clickSubmitButtonValid()
 				              .clickAddApplicationLink()

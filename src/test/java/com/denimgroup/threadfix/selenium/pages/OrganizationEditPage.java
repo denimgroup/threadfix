@@ -51,9 +51,9 @@ public class OrganizationEditPage extends BasePage {
 		return this;
 	}
 
-	public OrganizationDetailPage clickUpdateButtonValid() {
+	public TeamDetailPage clickUpdateButtonValid() {
 		updateButton.click();
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
 	
 	public OrganizationEditPage clickUpdateButtonInvalid() {

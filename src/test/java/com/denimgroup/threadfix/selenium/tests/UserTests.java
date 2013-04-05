@@ -32,7 +32,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserEditPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -55,7 +55,7 @@ public class UserTests extends BaseTest {
 	public void testCreateUser() {
 		String userName = "testCreateUser", password = "testCreateUser";
 
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user", "password");
+		TeamIndexPage organizationIndexPage = loginPage.login("user", "password");
 		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
 
 		UserIndexPage userIndexPage = configurationIndexPage.clickManageUsersLink();
@@ -84,7 +84,7 @@ public class UserTests extends BaseTest {
 
 		String longInput = stringBuilder.toString();
 
-		OrganizationIndexPage organizationIndexPage = loginPage.login("user", "password");
+		TeamIndexPage organizationIndexPage = loginPage.login("user", "password");
 		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
 
 		UserIndexPage userIndexPage = configurationIndexPage.clickManageUsersLink();
@@ -333,7 +333,7 @@ public class UserTests extends BaseTest {
 
 	@Test
 	public void testChangePassword() {
-		OrganizationIndexPage orgIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
+		TeamIndexPage orgIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
 				.clickManageUsersLink()
 				.clickAddUserLink()
 				.setNameInput("testuser")

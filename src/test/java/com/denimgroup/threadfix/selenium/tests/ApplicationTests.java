@@ -39,8 +39,8 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafAddPage;
 import com.denimgroup.threadfix.selenium.pages.WafDetailPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
@@ -50,8 +50,8 @@ public class ApplicationTests extends BaseTest {
 	private static LoginPage loginPage;
 	private ApplicationAddPage applicationAddPage;
 	private ApplicationDetailPage applicationDetailPage;
-	private OrganizationDetailPage organizationDetailPage;
-	private OrganizationIndexPage organizationIndexPage;
+	private TeamDetailPage teamDetailPage;
+	private TeamIndexPage teamIndexPage;
 	private ApplicationEditPage applicationEditPage;
 	private WafAddPage wafAddPage;
 	private WafIndexPage wafIndexPage;
@@ -70,14 +70,14 @@ public class ApplicationTests extends BaseTest {
 		String appName = "testCreateApplicationAppw";
 		String urlText = "http://testurl.com";
 		
-		organizationIndexPage = loginPage.login("user", "password")
+		teamIndexPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
-										.clickAddOrganizationButton()
-										.addNewOrganization(orgName)
-										.expandOrganizationRowByName(orgName)
+										.clickAddTeamButton()
+										.addNewTeam(orgName)
+										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, urlText, "Low");
 										
-		applicationDetailPage = organizationIndexPage.expandOrganizationRowByName(orgName)
+		applicationDetailPage = teamIndexPage.expandTeamRowByName(orgName)
 													.clickApplicationDetailLink(appName);
 
 		assertTrue("The name was not preserved correctly.", 
@@ -85,13 +85,13 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The URL was not preserved correctly.", 
 				urlText.equals(applicationDetailPage.getUrlText()));
 		
-		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
 		assertTrue("The organization was not preserved correctly.", 
-				organizationIndexPage.organizationAddedToTable(orgName));
+				teamIndexPage.teamAddedToTable(orgName));
 		
 		//cleanup
-		loginPage = organizationIndexPage.expandOrganizationRowByName(orgName)
+		loginPage = teamIndexPage.expandTeamRowByName(orgName)
 										.clickViewTeamLink()
 										.clickDeleteButton()
 										.logout();
@@ -118,43 +118,43 @@ public class ApplicationTests extends BaseTest {
 		
 		//set up an organization
 		
-		organizationIndexPage = loginPage.login("user", "password")
+		teamIndexPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
-										.clickAddOrganizationButton()
-										.addNewOrganization(orgName)
-										.expandOrganizationRowByName(orgName)
+										.clickAddTeamButton()
+										.addNewTeam(orgName)
+										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, emptyString, emptyString, "Low");
 		
 		assertTrue("The correct error did not appear for the name field.", 
-				organizationIndexPage.getNameErrorMessage().contains(emptyError));
+				teamIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		organizationIndexPage = organizationIndexPage.closeModal()
+		teamIndexPage = teamIndexPage.closeModal()
 													.clickOrganizationHeaderLink()
-													.expandOrganizationRowByName(orgName)
+													.expandTeamRowByName(orgName)
 													.addNewApplication(orgName, whiteSpace, whiteSpace, "Low");
 		
 		
 		assertTrue("The correct error did not appear for the name field.", 
-				organizationIndexPage.getNameErrorMessage().contains(emptyError));
+				teamIndexPage.getNameErrorMessage().contains(emptyError));
 		assertTrue("The correct error did not appear for the url field.", 
-				organizationIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
+				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 		
 		// Test URL format
-		organizationIndexPage = organizationIndexPage.closeModal()
+		teamIndexPage = teamIndexPage.closeModal()
 													.clickOrganizationHeaderLink()
-													.expandOrganizationRowByName(orgName)
+													.expandTeamRowByName(orgName)
 													.addNewApplication(orgName, "dummyApp", urlText, "Low");
 		
 		assertTrue("The correct error did not appear for the url field.", 
-				organizationIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
+				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 
 		// Test browser field length limits
-		applicationDetailPage = organizationIndexPage.closeModal()
+		applicationDetailPage = teamIndexPage.closeModal()
 				.clickOrganizationHeaderLink()
-				.expandOrganizationRowByName(orgName)
+				.expandTeamRowByName(orgName)
 				.addNewApplication(orgName, longInputName, longInputUrl, "Low")
 				.clickOrganizationHeaderLink()
-				.expandOrganizationRowByName(orgName)
+				.expandTeamRowByName(orgName)
 				.clickApplicationDetailLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
 		
@@ -164,20 +164,20 @@ public class ApplicationTests extends BaseTest {
 				applicationDetailPage.getUrlText().length() == Application.URL_LENGTH);
 		
 		appName = applicationDetailPage.getNameText();
-		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
 		// Test name duplication check
-		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-												.expandOrganizationRowByName(orgName)
+		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+												.expandTeamRowByName(orgName)
 												.addNewApplication(orgName, appName, "http://dummyurl", "Low");
 		
 		assertTrue("The duplicate message didn't appear correctly.", 
-				organizationIndexPage.getNameErrorMessage().contains("That name is already taken."));
+				teamIndexPage.getNameErrorMessage().contains("That name is already taken."));
 
 		//cleanup
-		loginPage = organizationIndexPage.closeModal()
+		loginPage = teamIndexPage.closeModal()
 										.clickOrganizationHeaderLink()
-										.expandOrganizationRowByName(orgName)
+										.expandTeamRowByName(orgName)
 										.clickViewTeamLink()
 										.clickDeleteButton()
 										.logout();
@@ -192,16 +192,16 @@ public class ApplicationTests extends BaseTest {
 		String urlText2 = "http://testurl.com352";
 		
 		// set up an organization
-		organizationIndexPage = loginPage.login("user", "password")
+		teamIndexPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.clickAddOrganizationButton()
-				.addNewOrganization(orgName)
-				.expandOrganizationRowByName(orgName)
+				.clickAddTeamButton()
+				.addNewTeam(orgName)
+				.expandTeamRowByName(orgName)
 				.addNewApplication(orgName, appName1, urlText1, "Low");
 	
 		
-		applicationDetailPage = organizationIndexPage.clickOrganizationHeaderLink()
-													.expandOrganizationRowByName(orgName)
+		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+													.expandTeamRowByName(orgName)
 													.clickApplicationDetailLink(appName1);
 
 		assertTrue("The name was not preserved correctly.", 
@@ -220,14 +220,14 @@ public class ApplicationTests extends BaseTest {
 				urlText2.equals(applicationDetailPage.getUrlText()));	
 		
 		// ensure that the application is present in the organization's app table.
-		organizationIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-													.expandOrganizationRowByName(orgName);
+		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+													.expandTeamRowByName(orgName);
 		
 		assertTrue("The application does not appear in the organization page.", 
-				organizationIndexPage.isAppPresent(appName2));
+				teamIndexPage.isAppPresent(appName2));
 		
 		//cleanup
-		loginPage = organizationIndexPage.clickViewTeamLink()
+		loginPage = teamIndexPage.clickViewTeamLink()
 										.clickDeleteButton()
 										.logout();
 	}
@@ -259,14 +259,14 @@ public class ApplicationTests extends BaseTest {
 		// and Test a submission with no changes
 		applicationDetailPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
-										.clickAddOrganizationButton()
-										.addNewOrganization(orgName)
-										.expandOrganizationRowByName(orgName)
+										.clickAddTeamButton()
+										.addNewTeam(orgName)
+										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName2, validUrlText, "Low")
 										.clickOrganizationHeaderLink()
-										.expandOrganizationRowByName(orgName)
+										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, validUrlText, "Low")
-										.expandOrganizationRowByName(orgName)
+										.expandTeamRowByName(orgName)
 										.clickApplicationDetailLink(appName)
 										.clickEditLink()
 										.clickUpdateApplicationButton();
@@ -345,12 +345,12 @@ public class ApplicationTests extends BaseTest {
 
 		// Add Application with WAF
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-										.clickAddOrganizationButton()
-										.addNewOrganization(orgName)
-										.expandOrganizationRowByName(orgName)
+										.clickAddTeamButton()
+										.addNewTeam(orgName)
+										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, appUrl, "Low")
 										.clickOrganizationHeaderLink()
-										.expandOrganizationRowByName(orgName)
+										.expandTeamRowByName(orgName)
 										.clickApplicationDetailLink(appName)
 										.clickShowDetails()
 										.clickAddWaf()
@@ -372,7 +372,7 @@ public class ApplicationTests extends BaseTest {
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
 		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-								.expandOrganizationRowByName(orgName)
+								.expandTeamRowByName(orgName)
 								.clickViewTeamLink()
 								.clickDeleteButton()
 								.clickWafsHeaderLink()
@@ -405,11 +405,11 @@ public class ApplicationTests extends BaseTest {
 										 .clickAddWafLink()
 										 .createNewWaf(wafName2, type2)	
 										 .clickOrganizationHeaderLink()
-										 .addNewOrganization(orgName)
-										 .expandOrganizationRowByName(orgName)
+										 .addNewTeam(orgName)
+										 .expandTeamRowByName(orgName)
 										 .addNewApplication(orgName, appName, appUrl, "Low")
 										 .clickOrganizationHeaderLink()
-										 .expandOrganizationRowByName(orgName)
+										 .expandTeamRowByName(orgName)
 										 .clickApplicationDetailLink(appName)
 										 .clickShowDetails()
 										 .clickAddWaf()
@@ -422,7 +422,7 @@ public class ApplicationTests extends BaseTest {
 		
 		//cleanup
 		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
-										.expandOrganizationRowByName(orgName)
+										.expandTeamRowByName(orgName)
 										.clickViewTeamLink()
 										.clickDeleteButton()
 										.clickWafsHeaderLink()
@@ -447,7 +447,7 @@ public class ApplicationTests extends BaseTest {
 										 .setTypeSelect(type)
 										 .clickAddWafButton()
 										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
+										 .clickAddTeamButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
 										 .clickAddApplicationLink()
@@ -502,7 +502,7 @@ public class ApplicationTests extends BaseTest {
 										 .setUrlInput(dtUrl)
 										 .clickAddDefectTrackerButton()
 										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
+										 .clickAddTeamButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
 										 .clickAddApplicationLink()
@@ -559,7 +559,7 @@ public class ApplicationTests extends BaseTest {
 										 .setUrlInput(dtUrl)
 										 .clickAddDefectTrackerButton()
 										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
+										 .clickAddTeamButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
 										 .clickAddApplicationLink()
@@ -625,7 +625,7 @@ public class ApplicationTests extends BaseTest {
 										 .setUrlInput(dtUrl)
 										 .clickAddDefectTrackerButton()
 										 .clickOrganizationHeaderLink()
-										 .clickAddOrganizationButton()
+										 .clickAddTeamButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
 										 .clickAddApplicationLink()
@@ -681,7 +681,7 @@ public class ApplicationTests extends BaseTest {
 									 .setUrlInput(dtUrl)
 									 .clickAddDefectTrackerButton()
 									 .clickOrganizationHeaderLink()
-									 .clickAddOrganizationButton()
+									 .clickAddTeamButton()
 									 .setNameInput(orgName)
 									 .clickSubmitButtonValid()
 									 .clickAddApplicationLink()
@@ -770,7 +770,7 @@ public class ApplicationTests extends BaseTest {
 									 .setUrlInput(dtUrl)
 									 .clickAddDefectTrackerButton()
 									 .clickOrganizationHeaderLink()
-									 .clickAddOrganizationButton()
+									 .clickAddTeamButton()
 									 .setNameInput(orgName)
 									 .clickSubmitButtonValid()
 									 .clickAddApplicationLink()

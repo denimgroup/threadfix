@@ -45,8 +45,8 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
 import com.denimgroup.threadfix.selenium.pages.GeneratedReportPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
@@ -60,8 +60,8 @@ public class WafTests extends BaseTest {
 	private ApplicationEditPage applicationEditPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
-	public OrganizationIndexPage organizationIndexPage;
-	public OrganizationDetailPage organizationDetailPage;
+	public TeamIndexPage organizationIndexPage;
+	public TeamDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;
 	public GeneratedReportPage generatedReportPage;
 	public AddOrganizationPage organizationAddPage;
@@ -336,7 +336,7 @@ public class WafTests extends BaseTest {
 		String urlText = "http://testur2.com";
 
 		//set up an organization
-		organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
+		organizationAddPage = loginPage.login("user", "password").clickAddTeamButton();
 
 		organizationAddPage.setNameInput(orgName);
 
@@ -404,9 +404,9 @@ public class WafTests extends BaseTest {
 
 		//Add waf to application
 		wafDetailPage.clickTeamHeaderLink();
-		organizationIndexPage = new OrganizationIndexPage(driver);
+		organizationIndexPage = new TeamIndexPage(driver);
 		organizationIndexPage.clickOrganizationLink("testCreateOrg2");
-		organizationDetailPage = new OrganizationDetailPage(driver);
+		organizationDetailPage = new TeamDetailPage(driver);
 		organizationDetailPage.clickTextLinkInApplicationsTableBody("testCreateApp2");
 		applicationDetailPage = new ApplicationDetailPage(driver);
 		applicationEditPage = applicationDetailPage.clickEditLink();
@@ -457,7 +457,7 @@ public class WafTests extends BaseTest {
 		String urlText = "http://testurl.com";
 
 		//set up an organization
-		organizationAddPage = loginPage.login("user", "password").clickAddOrganizationButton();
+		organizationAddPage = loginPage.login("user", "password").clickAddTeamButton();
 
 		organizationAddPage.setNameInput(orgName);
 
@@ -524,9 +524,9 @@ public class WafTests extends BaseTest {
 
 		//Add waf to application
 		wafDetailPage.clickTeamHeaderLink();
-		organizationIndexPage = new OrganizationIndexPage(driver);
+		organizationIndexPage = new TeamIndexPage(driver);
 		organizationIndexPage.clickOrganizationLink("testCreateOrg1");
-		organizationDetailPage = new OrganizationDetailPage(driver);
+		organizationDetailPage = new TeamDetailPage(driver);
 		organizationDetailPage.clickTextLinkInApplicationsTableBody("testCreateApp1");
 		applicationDetailPage = new ApplicationDetailPage(driver);
 		applicationEditPage = applicationDetailPage.clickEditLink();

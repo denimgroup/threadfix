@@ -40,8 +40,8 @@ import org.openqa.selenium.WebDriver;
 import com.denimgroup.threadfix.selenium.pages.AddChannelPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 
 public class ScanTests extends BaseTest {
@@ -51,8 +51,8 @@ public class ScanTests extends BaseTest {
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
 	public AddChannelPage addChannelPage;
-	public OrganizationIndexPage organizationIndexPage;
-	public OrganizationDetailPage organizationDetailPage;
+	public TeamIndexPage organizationIndexPage;
+	public TeamDetailPage organizationDetailPage;
 	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	
@@ -102,7 +102,7 @@ public class ScanTests extends BaseTest {
 				
 		applicationDetailPage = loginPage.login("user", "password")
 										 .clickTeamHeaderLink()
-										 .clickAddOrganizationButton()
+										 .clickAddTeamButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
 										 .clickAddApplicationLink()
@@ -167,7 +167,7 @@ public class ScanTests extends BaseTest {
 			}
 			
 			organizationIndexPage = organizationIndexPage.clickTeamHeaderLink()
-				 										 .clickAddOrganizationButton()
+				 										 .clickAddTeamButton()
 														 .setNameInput(mapEntry.getKey() + "normaltest")
 														 .clickSubmitButtonValid()
 														 .clickAddApplicationLink()
@@ -211,7 +211,7 @@ public class ScanTests extends BaseTest {
 			}
 			
 			uploadScanPage = organizationIndexPage.clickTeamHeaderLink()
-				 								  .clickAddOrganizationButton()
+				 								  .clickAddTeamButton()
 												  .setNameInput(mapEntry.getKey() + "duplicate")
 												  .clickSubmitButtonValid()
 												  .clickAddApplicationLink()
@@ -734,7 +734,7 @@ public class ScanTests extends BaseTest {
 		organizationIndexPage.sleep(200);
 		
 		applicationDetailPage = organizationIndexPage.clickTeamHeaderLink()
-													 .clickAddOrganizationButton()
+													 .clickAddTeamButton()
 													 .setNameInput(orgName)
 													 .clickSubmitButtonValid()
 													 .clickAddApplicationLink()

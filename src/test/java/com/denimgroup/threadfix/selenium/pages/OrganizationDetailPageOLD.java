@@ -32,7 +32,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class OrganizationDetailPage extends BasePage {
+public class OrganizationDetailPageOLD extends BasePage {
 	
 	private WebElement orgName;
 	private WebElement backToList;
@@ -42,7 +42,7 @@ public class OrganizationDetailPage extends BasePage {
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement addApplicationLink;
 	
-	public OrganizationDetailPage(WebDriver webdriver) {
+	public OrganizationDetailPageOLD(WebDriver webdriver) {
 		super(webdriver);
 		
 		orgName = driver.findElementById("name");
@@ -57,22 +57,22 @@ public class OrganizationDetailPage extends BasePage {
 		return orgName.getText();
 	}
 	
-	public OrganizationIndexPage clickBackToList() {
+	public TeamIndexPage clickBackToList() {
 		backToList.click();
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	public OrganizationEditPage clickEditOrganizationLink() {
 		editOrganizationLink.click();
 		return new OrganizationEditPage(driver);
 	}
 	
-	public OrganizationIndexPage clickDeleteButton() {
+	public TeamIndexPage clickDeleteButton() {
 		deleteButton.click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
 	public boolean isTextPresentInApplicationsTableBody(String text) {

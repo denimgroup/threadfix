@@ -155,19 +155,19 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationEditPage(driver);
 	}
 	
-	public OrganizationDetailPage clickTeamLink() {
+	public TeamDetailPage clickTeamLink() {
 		driver.findElementById("organizationText").click();
 		sleep(300);
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
 
-	public OrganizationDetailPage clickDeleteLink() {
+	public TeamDetailPage clickDeleteLink() {
 		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
 
 	public ScanIndexPage clickViewScansLink() {

@@ -7,14 +7,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class TeamsIndexPage extends BasePage{
+public class TeamsIndexPageOLD extends BasePage{
 	private WebElement addTeamModalButton;
 	private WebElement teamTable;
 	private WebElement addAppModalButton;
 	private List<WebElement> appLink = new ArrayList<WebElement>();
 	private List<WebElement> appUploadLink = new ArrayList<WebElement>();
 	
-	public TeamsIndexPage(WebDriver webdriver) {
+	public TeamsIndexPageOLD(WebDriver webdriver) {
 		super(webdriver);
 		teamTable = driver.findElementById("teamTable");
 		addTeamModalButton = driver.findElementById("addTeamModalButton");
@@ -26,12 +26,12 @@ public class TeamsIndexPage extends BasePage{
 		}
 	}
 	
-	public TeamsIndexPage clickAddTeamButton() {
+	public TeamsIndexPageOLD clickAddTeamButton() {
 		addTeamModalButton.click();
 		return this;
 	}
 	
-	public TeamsIndexPage clickAddAppButton() {
+	public TeamsIndexPageOLD clickAddAppButton() {
 		addAppModalButton.click();
 		return this;	
 	}
@@ -46,7 +46,7 @@ public class TeamsIndexPage extends BasePage{
 		return false;
 	}
 
-	public TeamsIndexPage clickUpload(int Row) {
+	public TeamsIndexPageOLD clickUpload(int Row) {
 		appUploadLink.get(Row).click();
 		sleep(1000);
 		return this;

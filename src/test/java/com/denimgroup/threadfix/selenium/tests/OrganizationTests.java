@@ -33,17 +33,17 @@ import org.openqa.selenium.WebDriver;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationEditPage;
-import com.denimgroup.threadfix.selenium.pages.OrganizationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class OrganizationTests extends BaseTest {
 	
 	private WebDriver driver;
 	private static LoginPage loginPage;
 	
-	private OrganizationIndexPage organizationIndexPage;
-	private OrganizationDetailPage organizationDetailPage;
+	private TeamIndexPage organizationIndexPage;
+	private TeamDetailPage organizationDetailPage;
 	private OrganizationEditPage editOrganizationPage;
 	private AddOrganizationPage addOrganizationPage;
 	
@@ -54,7 +54,7 @@ public class OrganizationTests extends BaseTest {
 		loginPage = LoginPage.open(driver);
 	}
 	
-	public OrganizationIndexPage deleteOrganization(OrganizationIndexPage organizationIndexPage, String newOrgName) {
+	public TeamIndexPage deleteOrganization(TeamIndexPage organizationIndexPage, String newOrgName) {
 		organizationDetailPage = organizationIndexPage.clickOrganizationLink(newOrgName);
 		return organizationDetailPage.clickDeleteButton();
 	}
@@ -66,7 +66,7 @@ public class OrganizationTests extends BaseTest {
 		organizationIndexPage = loginPage.login("user", "password");
 		assertFalse("The organization was already present.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 		
-		organizationDetailPage = organizationIndexPage.clickAddOrganizationButton().setNameInput(newOrgName).clickSubmitButtonValid();
+		organizationDetailPage = organizationIndexPage.clickAddTeamButton().setNameInput(newOrgName).clickSubmitButtonValid();
 		assertTrue("Organization Page did not save the name correctly.", newOrgName.equals(organizationDetailPage.getOrgName()));
 		
 		organizationIndexPage = organizationDetailPage.clickBackToList();		
@@ -89,7 +89,7 @@ public class OrganizationTests extends BaseTest {
 
 		// Test empty input
 		addOrganizationPage = loginPage.login("user", "password")
-									   .clickAddOrganizationButton()
+									   .clickAddTeamButton()
 									   .setNameInput(emptyString)
 									   .clickSubmitButtonInvalid();
 		
@@ -111,7 +111,7 @@ public class OrganizationTests extends BaseTest {
 		String orgName = organizationDetailPage.getOrgName();
 		
 		addOrganizationPage = organizationDetailPage.clickBackToList()
-													.clickAddOrganizationButton()
+													.clickAddTeamButton()
 													.setNameInput(orgName)
 													.clickSubmitButtonInvalid();
 		
@@ -133,7 +133,7 @@ public class OrganizationTests extends BaseTest {
 		assertFalse("The organization was already present.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 		
 		// Save an organization
-		organizationDetailPage = organizationIndexPage.clickAddOrganizationButton()
+		organizationDetailPage = organizationIndexPage.clickAddTeamButton()
 													  .setNameInput(newOrgName)
 													  .clickSubmitButtonValid();
 		assertTrue("Organization Page did not save the name correctly.", newOrgName.equals(organizationDetailPage.getOrgName()));
@@ -166,11 +166,11 @@ public class OrganizationTests extends BaseTest {
 		
 		organizationIndexPage = loginPage.login("user", "password");
 		
-		organizationDetailPage = organizationIndexPage.clickAddOrganizationButton()
+		organizationDetailPage = organizationIndexPage.clickAddTeamButton()
 													  .setNameInput(orgNameDuplicateTest)
 													  .clickSubmitButtonValid()
 													  .clickBackToList()
-													  .clickAddOrganizationButton()
+													  .clickAddTeamButton()
 													  .setNameInput(orgName)
 													  .clickSubmitButtonValid();
 		

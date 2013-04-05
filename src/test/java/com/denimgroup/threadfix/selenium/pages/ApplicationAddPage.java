@@ -85,9 +85,9 @@ public class ApplicationAddPage extends BasePage {
 		return organizationText.getText();
 	}
 
-	public OrganizationDetailPage clickCancelLink() {
+	public TeamDetailPage clickCancelLink() {
 		cancelLink.click();
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
 	public String getWafSelect(){
 		return new Select(driver.findElementById("wafSelect")).getFirstSelectedOption().getText();

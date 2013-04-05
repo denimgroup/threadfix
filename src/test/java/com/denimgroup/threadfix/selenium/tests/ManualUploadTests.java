@@ -365,7 +365,7 @@ public class ManualUploadTests extends BaseTest {
 	
 	private ManualUploadPage getToManualSubmissionPage(String orgName, String appName) {
 		return loginPage.login("user", "password")
-				.clickAddOrganizationButton()
+				.clickAddTeamButton()
 				.setNameInput(orgName)
 				.clickSubmitButtonValid()
 				.clickAddApplicationLink()

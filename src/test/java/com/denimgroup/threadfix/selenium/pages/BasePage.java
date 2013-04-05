@@ -56,10 +56,10 @@ public abstract class BasePage {
 		return new LoginPage(driver);
 	}
 	
-	public OrganizationIndexPage clickOrganizationHeaderLink() {
+	public TeamIndexPage clickOrganizationHeaderLink() {
 		driver.findElementById("orgHeader").click();
 		sleep(1000);
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
 	public WafIndexPage clickWafsHeaderLink() {

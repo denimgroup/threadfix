@@ -34,14 +34,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class OrganizationIndexPage extends BasePage {
+public class TeamIndexPage extends BasePage {
 
 	private WebDriverWait wait = new WebDriverWait(driver,10);
-	private WebElement organizationTable;
+	private WebElement teamTable;
 		
-	public OrganizationIndexPage(WebDriver webdriver) {
+	public TeamIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		organizationTable = driver.findElementById("teamTable");
+		teamTable = driver.findElementById("teamTable");
 	}
 	
 	public int getNumRows() {
@@ -54,20 +54,20 @@ public class OrganizationIndexPage extends BasePage {
 		return driver.findElementsByClassName("collapsed").size();
 	}
 	
-	public OrganizationIndexPage clickAddOrganizationButton() {
+	public TeamIndexPage clickAddTeamButton() {
 		driver.findElementById("addTeamModalButton").click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myTeamModal")));
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
-	public OrganizationIndexPage addNewOrganization(String name){
+	public TeamIndexPage addNewTeam(String name){
 		driver.findElementById("teamNameInput").sendKeys(name);
 		driver.findElementById("submitTeamModal").click();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myTeamModal")));
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
-	public OrganizationIndexPage expandOrganizationRowByName(String name){
+	public TeamIndexPage expandTeamRowByName(String name){
 		//getNumRows() does not work after adding application, should change 10 to a more accurate function
 		for(int i=1;i<10;i++){
 			if(driver.findElementById("teamName"+i).getText().contains(name)){
@@ -76,19 +76,19 @@ public class OrganizationIndexPage extends BasePage {
 			}
 		}
 		
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
-	public boolean organizationAddedToTable(String name){
+	public boolean teamAddedToTable(String name){
 	
 		return driver.findElementById("teamTable").getText().contains(name);
 	}
 	
-	public OrganizationDetailPage clickViewTeamLink(){
+	public TeamDetailPage clickViewTeamLink(){
 		driver.findElementByClassName("in").findElement(By.linkText("View Team")).click();
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 	}
-	public OrganizationIndexPage addNewApplication(String teamName, String appName, String url, String critic){
+	public TeamIndexPage addNewApplication(String teamName, String appName, String url, String critic){
 		driver.findElementById("teamName1").click();
 		int num = getAppValue();
 		driver.findElementByLinkText("Add Application").click();
@@ -99,7 +99,7 @@ public class OrganizationIndexPage extends BasePage {
 		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
 		driver.findElementById("submitAppModal").click();
 		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myAppModal"+num)));
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 		
 	}
 	
@@ -116,11 +116,11 @@ public class OrganizationIndexPage extends BasePage {
 	}
 	
 	
-	public OrganizationDetailPage clickViewTeamLink(String teamName){
-		expandOrganizationRowByName(teamName);
+	public TeamDetailPage clickViewTeamLink(String teamName){
+		expandTeamRowByName(teamName);
 		//should be changed to look for id
 		driver.findElementByLinkText("View Team").click();
-		return new OrganizationDetailPage(driver);
+		return new TeamDetailPage(driver);
 		
 	}
 	
@@ -139,9 +139,9 @@ public class OrganizationIndexPage extends BasePage {
 	}
 	
 	
-	public OrganizationIndexPage closeModal(){
+	public TeamIndexPage closeModal(){
 		driver.findElementById("teamTable").click();
-		return new OrganizationIndexPage(driver);
+		return new TeamIndexPage(driver);
 	}
 	
 	public boolean isAppPresent(String appName){
