@@ -60,6 +60,13 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getUrl() == null || getUrl().trim().equals("")) {
 			return null;
 		}
+		
+		try {
+			new URL(getUrl());
+		} catch (MalformedURLException e) {
+			setLastError("The URL format was bad.");
+			return null;
+		}
 
 		if (getUrl().endsWith("rest/api/2/")) {
 			return getUrl();
@@ -208,6 +215,11 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidUrl() {
 		log.info("Checking JIRA RPC Endpoint URL.");
+		
+		if (getUrlWithRest() == null) {
+			log.info("URL was invalid.");
+			return false;
+		}
 
 		boolean valid = requestHas401Error(getUrlWithRest() + "user");
 		

@@ -42,7 +42,7 @@ body {
 	height: auto !important;
 	height: 91%;
 	background-image: url(../images/hdr-bg-repeat.png), url(../images/main-top-gradient.png);
-	background-position: top left, 0 73px;
+	background-position: top left, 0 60px;
 	background-repeat: repeat-x;
 }
 
@@ -71,7 +71,7 @@ body {
 #menu {
     margin-top: -28px;
     margin-top: 13px;
-	padding-bottom: 43px;
+	padding-bottom: 30px;
 	;
 }
 
@@ -120,6 +120,7 @@ body#config #tab-config li.normalLinks a:hover {
 }
 
 body#apps #tab-apps,
+body.dashboard #tab-dashboard,
 body#wafs #tab-wafs,
 body#reports #tab-reports,
 body#config #tab-config {
@@ -127,6 +128,7 @@ body#config #tab-config {
 }
 
 body#apps #tab-apps a,
+body.dashboard #tab-dashboard a,
 body#wafs #tab-wafs a,
 body#reports #tab-reports a,
 body#config #tab-config a {
@@ -136,6 +138,7 @@ body#config #tab-config a {
 
 body#apps #tab-apps a:hover,
 body#wafs #tab-wafs a:hover,
+body.dashboard #tab-dashboard a:hover,
 body#reports #tab-reports a:hover,
 body#config #tab-config a:hover {
 	z-index:2;
@@ -397,6 +400,7 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 
 .table tr.expandable td table tr td {
 	border-top:1px;
+	text-align: center;
 }
 
 .table th.centered{
@@ -410,6 +414,22 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 .table td {
 	padding-left:8px;
 	vertical-align: middle;
+}
+
+.table tr.expandable td table tr.totalsRow td {
+	border-top: 1px solid #DDDDDD;
+	text-align: center;
+}
+
+.table tr.expandable td table tr.totalsRow td.totals {
+	padding:5px;
+	font-weight:bold;
+	text-align:right;
+}
+
+.table-hover tbody tr.expandable:hover td,
+.table-hover tbody tr.expandable:hover th {
+	background-color:#FFFFFF;
 }
 
 form {
@@ -492,6 +512,23 @@ th.headerSortDown {
 
 .table tbody tr.info td, .table tbody tr.info th {
 	background-color:#d9edf7;
+}
+
+
+.table-hover tbody tr.error.expandable:hover td, .table-hover tbody tr.error.expandable:hover th {
+	background-color: #F2DEDE;
+}
+
+.table-hover tbody tr.warning.expandable:hover td, .table-hover tbody tr.warning.expandable:hover th {
+	background-color: #fcf8e3;
+}
+
+.table-hover tbody tr.success.expandable:hover td, .table-hover tbody tr.success.expandable:hover th {
+	background-color: #dff0d8;
+}
+
+.table-hover tbody tr.info.expandable:hover td, .table-hover tbody tr.info.expandable:hover th {
+	background-color: #d9edf7;
 }
 
 .left-tile {

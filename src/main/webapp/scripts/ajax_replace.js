@@ -6,7 +6,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 		contentType : "application/x-www-form-urlencoded",
 		dataType : "text",
 		success : function(text) {
-			
+
 			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
 				$(formDiv).html(text);
 			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
@@ -200,10 +200,6 @@ function createWafAndRefresh(url) {
 
 function updateWafAndRefresh(url, wafForm, editWafDiv) {
 	return submitAjaxModal(url, wafForm, editWafDiv, '#appWafDiv', editWafDiv);
-}
-
-function updateDTAndRefresh(url, dtForm, dtWafDiv) {
-	return submitAjaxModal(url, dtForm, dtWafDiv, '#defectTableDiv', dtWafDiv);
 }
 
 function switchTabs(url) {

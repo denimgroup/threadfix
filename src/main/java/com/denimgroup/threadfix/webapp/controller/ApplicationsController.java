@@ -156,6 +156,7 @@ public class ApplicationsController {
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
+		model.addAttribute(new DefectViewModel());
 		if (application.getDefectTracker() != null) {
 			addDefectModelAttributes(model,appId,orgId,request);
 		}

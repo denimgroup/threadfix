@@ -3,20 +3,6 @@ var current;
 var previous;
 var len;
 
-$(document).ready(function() {
-	current = -1;
-	
-	$("#cv_select").change(function(){
-		var selectedItem = $("#cv_select option:selected").val();
-		$("#txtSearch").val(selectedItem);
-	});
-	
-	$("#url_select").change(function(){
-		var selectedItem = $("#url_select option:selected").val();
-		$("#urlSearch").val(selectedItem);
-	});
-});
-
 function disableEnterKey(e)
 {
      var key;     

@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<body>
+<body class="dashboard">
 	<h2>Dashboard</h2>
 	
 	<div style="width:1000px;height:1200px;">
@@ -17,16 +17,16 @@
 	    <div class="left-tile">
 	    	<h4>Vulnerability Breakdown</h4>
 	    	
-	    	<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg">
+	    	<img src="<%=request.getContextPath()%>/images/graph1.PNG">
 	    </div>
 	    
 	     <div style="margin-left:500px;">
 	    	<h4>Top 10 Vulnerable Applications</h4>
 	    		
-	    	<img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg">
+	    	<img src="<%=request.getContextPath()%>/images/graph2.PNG">
 	    </div>
 	    
-	    <div style="margin-top:10px">
+	    <div style="margin-top:100px">
 		     <div class="left-tile">
 		    	<h4 style="margin-top:0px;">Recent Scans</h4>
 		    	<table class="table table-striped">
@@ -65,7 +65,7 @@
 				                       <spring:param name="scanId" value="${ scan.id }"/>
 				                </spring:url>
 								<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
-									<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
+									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="yy/MM/dd_hh:mm"/>
 								</a>
 							</td>
 							<td id="numTotalVulnerabilities${ status.count }">

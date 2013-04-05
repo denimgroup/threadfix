@@ -5,12 +5,6 @@
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>No. of Apps</th>
-			<th>Open Vulns</th>
-			<th>Critical</th>
-			<th>High</th>
-			<th>Medium</th>
-			<th>Low</th>
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
@@ -18,12 +12,6 @@
 			<td id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
-			<td id="numApplications${ status.count }"><c:out value="${ fn:length(organization.activeApplications) }" /></td>
-			<td id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
-			<td id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>
-			<td id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
-			<td id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
-			<td id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
 		</tr>
 		<tr class="expandable">
 			<td colspan="7">
@@ -43,18 +31,44 @@
 									<spring:param name="orgId" value="${ organization.id }"/>
 									<spring:param name="appId" value="${ application.id }"/>
 								</spring:url>
+								<thead>
+									<tr>
+										<th></th>
+										<th>Open Vulns</th>
+										<th>Critical</th>
+										<th>High</th>
+										<th>Medium</th>
+										<th>Low</th>
+									</tr>
+								</thead>
 								<tr>
 									<td style="padding:5px;">
 										<a id="applicationLink${ application.id }" href="${ fn:escapeXml(appUrl) }">
 											<c:out value="${ application.name }"/>
 										</a>
 									</td>
+									<td id="numTotalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[5] }"/></td>
+									<td id="numCriticalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[4] }"/></td>
+									<td id="numHighVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[3] }"/></td>
+									<td id="numMediumVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[2] }"/></td>
+									<td id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
 									<td style="padding:5px;">
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 									</td>
 								</tr>
 							</c:if>
 						</c:forEach>
+								<tr class="totalsRow">
+									<td class="totals">
+										Totals
+									</td>
+									<td id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
+									<td id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>
+									<td id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
+									<td id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
+									<td id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
+									<td></td>
+								</tr>
 						</table>
 					</c:if>
 					<spring:url value="/organizations/{orgId}" var="organizationUrl">

@@ -85,6 +85,9 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositiveTab$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedVulnerabilities/table$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/table$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/table$,
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$
         	</param-value>

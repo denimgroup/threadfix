@@ -90,10 +90,12 @@ function refillElementSort(elementId, endPoint, page, field, login)
 
 function toggleFilters(show, elementId, endPoint){
 	if (show == true){
+		$("#linksSpan").css('display','');
 		$("#showFilters").css('display','none');
 		$("#vulnerabilityFilters").css('display','');
 		//clearFilters(elementId, endPoint);
 	} else {
+		$("#linksSpan").css('display','none');
 		$("#showFilters").css('display','');
 		$("#vulnerabilityFilters").css('display','none');
 		clearFilters(elementId, endPoint);

@@ -150,7 +150,7 @@
 	
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
 		<div id="toReplace" style="margin-top:340px">
-		<h3>Successfully Mapped Findings</h3>
+		<h3 style="padding-top:140px">Successfully Mapped Findings</h3>
 		<table class="table table-striped" id="1">
 			<thead>
 				<tr>

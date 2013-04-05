@@ -26,6 +26,9 @@
 				<security:authorize ifNotGranted="ROLE_CAN_GENERATE_REPORTS">
 					<td id="tab-spaces" style="width:110px;background:none;"></td>
 				</security:authorize>
+				<td id="tab-dashboard" style="width: 130px;">
+					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
+				</td>
 				<td id="tab-apps" style="width: 90px;">
 					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Teams</a>
 				</td>
@@ -37,10 +40,10 @@
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
 					</td>
 				</security:authorize>
-				<td id="tab-config" style="width: 150px;">
+				<td id="tab-config" style="width: 20px;">
 					<div class="dropdown normalLinks">
-						<a id="configurationHeader" href="#">Administration</a>
-						<ul style="text-align:left" class="dropdown-menu" aria-labelledby="configurationHeader" role="menu">
+						<a id="configurationHeader" href="#">*</a>
+						<ul class="dropdown-menu pull-right" aria-labelledby="configurationHeader" role="menu">
 							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 							    <li class="normalLinks">
 							    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
