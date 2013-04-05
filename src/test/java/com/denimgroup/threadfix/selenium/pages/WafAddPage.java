@@ -83,4 +83,5 @@ public class WafAddPage extends BasePage {
 		cancelLink.click();
 		return new WafDetailPage(driver);
 	}
+
 }

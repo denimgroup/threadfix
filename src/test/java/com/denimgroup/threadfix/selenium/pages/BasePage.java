@@ -130,8 +130,6 @@ public abstract class BasePage {
 		
 	}
 	
-	
-	
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);
@@ -177,5 +175,4 @@ public abstract class BasePage {
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
 	}
-	
 }
