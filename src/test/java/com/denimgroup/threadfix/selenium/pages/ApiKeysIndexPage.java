@@ -78,7 +78,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage clickNewLink() {
 		createNewKeyLink.click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("newKeyForm")));
+		waitForModal(driver.findElementById("newKeyModalDiv"));
 		return new ApiKeysIndexPage(driver);
 	}
 	
@@ -87,12 +87,12 @@ public class ApiKeysIndexPage extends BasePage {
 		if(restricted){
 			driver.findElementById("isRestrictedKey1").click();
 		}
-		driver.findElementById("submitTeamModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("newKeyForm")));
+		driver.findElementById("submitKeyModal").click();
 		return new ApiKeysIndexPage(driver);
 	}
 
 	public ApiKeysIndexPage clickDelete(int row) {
+		waitForModal(deleteButton.get(row));
 		deleteButton.get(row).click();
 
 		handleAlert();
@@ -100,4 +100,15 @@ public class ApiKeysIndexPage extends BasePage {
 		return new ApiKeysIndexPage(driver);
 	}
 
+	public ApiKeysIndexPage clickSubmitButton(){
+		sleep(4000);
+		driver.findElementById("submitKeyModal").click();
+		return this;
+	}
+	
+	public ApiKeysIndexPage setNote(String message){
+		sleep(4000);
+		driver.findElementById("note").sendKeys(message);
+		return this;
+	}
 }

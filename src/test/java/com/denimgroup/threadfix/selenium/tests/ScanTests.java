@@ -101,7 +101,7 @@ public class ScanTests extends BaseTest {
 		String appUrl = "http://normalurl.com";
 				
 		applicationDetailPage = loginPage.login("user", "password")
-										 .clickOrganizationHeaderLink()
+										 .clickTeamHeaderLink()
 										 .clickAddOrganizationButton()
 										 .setNameInput(orgName)
 										 .clickSubmitButtonValid()
@@ -166,7 +166,7 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			organizationIndexPage = organizationIndexPage.clickOrganizationHeaderLink()
+			organizationIndexPage = organizationIndexPage.clickTeamHeaderLink()
 				 										 .clickAddOrganizationButton()
 														 .setNameInput(mapEntry.getKey() + "normaltest")
 														 .clickSubmitButtonValid()
@@ -210,7 +210,7 @@ public class ScanTests extends BaseTest {
 				continue;
 			}
 			
-			uploadScanPage = organizationIndexPage.clickOrganizationHeaderLink()
+			uploadScanPage = organizationIndexPage.clickTeamHeaderLink()
 				 								  .clickAddOrganizationButton()
 												  .setNameInput(mapEntry.getKey() + "duplicate")
 												  .clickSubmitButtonValid()
@@ -733,7 +733,7 @@ public class ScanTests extends BaseTest {
 		
 		organizationIndexPage.sleep(200);
 		
-		applicationDetailPage = organizationIndexPage.clickOrganizationHeaderLink()
+		applicationDetailPage = organizationIndexPage.clickTeamHeaderLink()
 													 .clickAddOrganizationButton()
 													 .setNameInput(orgName)
 													 .clickSubmitButtonValid()

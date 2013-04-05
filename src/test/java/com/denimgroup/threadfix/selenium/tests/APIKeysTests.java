@@ -78,7 +78,6 @@ public class APIKeysTests extends BaseTest {
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
 		indexPage.clickDelete(0);
-		// TODO assert that the proper text is there
 	}
 
 	@Test
@@ -107,4 +106,15 @@ public class APIKeysTests extends BaseTest {
 		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
 	}
 
+	@Test
+	public void clickSubmit() {
+		String PageText = loginPage.login("user", "password")
+								   .clickApiKeysLink()
+								   .clickNewLink()
+								   .setNote("fasdfasdf")
+								   .clickSubmitButton()
+								   .getH2Tag();
+
+		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
+	}
 }

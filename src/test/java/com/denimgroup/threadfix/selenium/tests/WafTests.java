@@ -98,7 +98,7 @@ public class WafTests extends BaseTest {
 		String newWafName = "testCreateWaf";
 		String type = "mod_security";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
 		wafIndexPage.createNewWaf(newWafName, type);
@@ -106,7 +106,7 @@ public class WafTests extends BaseTest {
 		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
 		
-		wafIndexPage = wafDetailPage.clickWafsHeaderLink();	
+		wafIndexPage = wafDetailPage.clickWafsLink();	
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
 		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(newWafName).clickDeleteButton();
@@ -120,7 +120,7 @@ public class WafTests extends BaseTest {
 		String newWafName = "testCreateSnortWaf";
 		String type = "Snort";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
 		WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
@@ -130,11 +130,11 @@ public class WafTests extends BaseTest {
 		
 		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-		wafDetailPage.clickOrganizationHeaderLink();
+		wafDetailPage.clickTeamHeaderLink();
 		
 
 		
-		wafIndexPage = wafDetailPage.clickWafsHeaderLink();	
+		wafIndexPage = wafDetailPage.clickWafsLink();	
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
 		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(newWafName).clickDeleteButton();
@@ -151,7 +151,7 @@ public class WafTests extends BaseTest {
 		String newWafName = "testCreateImpervaWaf";
 		String type = "Imperva SecureSphere";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
 		WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
@@ -161,10 +161,10 @@ public class WafTests extends BaseTest {
 		
 		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-		wafDetailPage.clickOrganizationHeaderLink();
+		wafDetailPage.clickTeamHeaderLink();
 
 		
-		wafIndexPage = wafDetailPage.clickWafsHeaderLink();	
+		wafIndexPage = wafDetailPage.clickWafsLink();	
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
 		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(newWafName).clickDeleteButton();
@@ -183,7 +183,7 @@ public class WafTests extends BaseTest {
 			String newWafName = "testCreateBigIpWaf";
 			String type = "BIG-IP ASM";
 			
-			WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+			WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 			assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 			
 			WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
@@ -193,10 +193,10 @@ public class WafTests extends BaseTest {
 			
 			WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 			assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-			wafDetailPage.clickOrganizationHeaderLink();
+			wafDetailPage.clickTeamHeaderLink();
 
 			
-			wafIndexPage = wafDetailPage.clickWafsHeaderLink();	
+			wafIndexPage = wafDetailPage.clickWafsLink();	
 			assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
 			wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(newWafName).clickDeleteButton();
@@ -215,7 +215,7 @@ public class WafTests extends BaseTest {
 				String newWafName = "testCreateDenyAllrWebWaf";
 				String type = "DenyAll rWeb";
 				
-				WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+				WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 				assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 				
 				WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
@@ -225,10 +225,10 @@ public class WafTests extends BaseTest {
 				
 				WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
 				assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
-				wafDetailPage.clickOrganizationHeaderLink();
+				wafDetailPage.clickTeamHeaderLink();
 
 				
-				wafIndexPage = wafDetailPage.clickWafsHeaderLink();	
+				wafIndexPage = wafDetailPage.clickWafsLink();	
 				assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
 				wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(newWafName).clickDeleteButton();
@@ -248,7 +248,7 @@ public class WafTests extends BaseTest {
 		
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();		
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();		
 		WafAddPage addWafPage = wafIndexPage.clickAddWafLink();
 		
 		// Test empty and whitespace input
@@ -277,7 +277,7 @@ public class WafTests extends BaseTest {
 		assertTrue(addWafPage.getNameErrorsText().equals("That name is already taken."));
 		
 		// Delete and logout
-		wafIndexPage = addWafPage.clickWafsHeaderLink().clickTextLinkInWafTableBody(orgName).clickDeleteButton();
+		wafIndexPage = addWafPage.clickWafsLink().clickTextLinkInWafTableBody(orgName).clickDeleteButton();
 		
 		loginPage = wafIndexPage.logout();
 	}
@@ -293,7 +293,7 @@ public class WafTests extends BaseTest {
 		String type1 = "mod_security";
 		String type2 = "Snort";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newOrgName));
 		
 		WafAddPage wafAddPage = wafIndexPage.clickAddWafLink();
@@ -315,7 +315,7 @@ public class WafTests extends BaseTest {
 		assertTrue("Editing did not change the name.", editedOrgName.equals(wafDetailPage.getNameText()));
 		assertTrue("Editing did not change the type.", type2.equals(wafDetailPage.getWafTypeText()));
 		
-		wafIndexPage = wafDetailPage.clickWafsHeaderLink();
+		wafIndexPage = wafDetailPage.clickWafsLink();
 		
 		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(editedOrgName).clickDeleteButton();
 		assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newOrgName));
@@ -403,7 +403,7 @@ public class WafTests extends BaseTest {
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
 
 		//Add waf to application
-		wafDetailPage.clickOrganizationHeaderLink();
+		wafDetailPage.clickTeamHeaderLink();
 		organizationIndexPage = new OrganizationIndexPage(driver);
 		organizationIndexPage.clickOrganizationLink("testCreateOrg2");
 		organizationDetailPage = new OrganizationDetailPage(driver);
@@ -523,7 +523,7 @@ public class WafTests extends BaseTest {
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
 
 		//Add waf to application
-		wafDetailPage.clickOrganizationHeaderLink();
+		wafDetailPage.clickTeamHeaderLink();
 		organizationIndexPage = new OrganizationIndexPage(driver);
 		organizationIndexPage.clickOrganizationLink("testCreateOrg1");
 		organizationDetailPage = new OrganizationDetailPage(driver);
@@ -615,7 +615,7 @@ public class WafTests extends BaseTest {
 		
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();	
+		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsLink();	
 		
 		// Create dummy WAFs
 		
@@ -660,7 +660,7 @@ public class WafTests extends BaseTest {
 		assertTrue(editWafPage.getNameErrorsText().equals("That name is already taken."));
 					
 		// Delete and logout
-		wafIndexPage = editWafPage.clickWafsHeaderLink().clickTextLinkInWafTableBody(wafName).clickDeleteButton();
+		wafIndexPage = editWafPage.clickWafsLink().clickTextLinkInWafTableBody(wafName).clickDeleteButton();
 		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(wafNameDuplicateTest).clickDeleteButton();
 		
 		loginPage = wafIndexPage.logout();

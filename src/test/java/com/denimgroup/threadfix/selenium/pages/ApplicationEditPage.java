@@ -41,7 +41,7 @@ public class ApplicationEditPage extends BasePage {
 	//safe
 	private WebElement nameInput;
 	private WebElement urlInput;
-	private WebElement organizationText;
+	private WebElement teamText;
 	private WebElement cancelLink;
 	private WebElement updateApplicationButton;
 	
@@ -51,7 +51,7 @@ public class ApplicationEditPage extends BasePage {
 		//safe
 		nameInput = driver.findElementById("nameInput");
 		urlInput = driver.findElementById("urlInput");
-		organizationText = driver.findElementById("organizationText");
+		teamText = driver.findElementById("organizationText");
 		cancelLink = driver.findElementById("cancelLink");
 		updateApplicationButton = driver.findElementById("updateApplicationButton");
 	}
@@ -90,7 +90,7 @@ public class ApplicationEditPage extends BasePage {
 	}
 
 	public String getOrganizationText(){
-		return organizationText.getText();
+		return teamText.getText();
 	}
 
 	public ApplicationDetailPage clickCancelLink() {

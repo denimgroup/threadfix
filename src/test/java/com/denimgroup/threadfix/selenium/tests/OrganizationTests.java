@@ -118,7 +118,7 @@ public class OrganizationTests extends BaseTest {
 		assertTrue(addOrganizationPage.getErrorText().equals("That name is already taken."));
 		
 		// Delete and logout
-		loginPage = addOrganizationPage.clickOrganizationHeaderLink()
+		loginPage = addOrganizationPage.clickTeamHeaderLink()
 												 .clickOrganizationLink(orgName)
 												 .clickDeleteButton()
 												 .logout();
@@ -144,7 +144,7 @@ public class OrganizationTests extends BaseTest {
 													   .clickUpdateButtonValid();
 		assertTrue("Editing did not change the name.", editedOrgName.equals(organizationDetailPage.getOrgName()));
 		
-		organizationIndexPage = organizationDetailPage.clickOrganizationHeaderLink();
+		organizationIndexPage = organizationDetailPage.clickTeamHeaderLink();
 		
 		organizationIndexPage = deleteOrganization(organizationIndexPage, newOrgName);
 		assertFalse("The organization was still present after attempted deletion.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
@@ -204,7 +204,7 @@ public class OrganizationTests extends BaseTest {
 		assertTrue(editOrganizationPage.getErrorText().equals("That name is already taken."));
 					
 		// Delete and logout
-		loginPage = editOrganizationPage.clickOrganizationHeaderLink()
+		loginPage = editOrganizationPage.clickTeamHeaderLink()
 										.clickOrganizationLink(orgName)
 										.clickDeleteButton()
 										.clickOrganizationLink(orgNameDuplicateTest)

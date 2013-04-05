@@ -322,13 +322,13 @@ public class ReportTests extends BaseTest {
 				}
 
 				organizationDetailPage = applicationDetailPage
-						.clickOrganizationHeaderLink().clickOrganizationLink(
+						.clickTeamHeaderLink().clickOrganizationLink(
 								orgs[i]);
 
 			}
 
 			organizationIndexPage = organizationDetailPage
-					.clickOrganizationHeaderLink();
+					.clickTeamHeaderLink();
 		}
 
 		log.debug("Critical: "
