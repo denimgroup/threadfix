@@ -78,7 +78,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage clickNewLink() {
 		createNewKeyLink.click();
-		waitForModal(driver.findElementById("newKeyModalDiv"));
+		waitForElement(driver.findElementById("newKeyModalDiv"));
 		return new ApiKeysIndexPage(driver);
 	}
 	
@@ -92,9 +92,9 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public ApiKeysIndexPage clickDelete(int row) {
-		waitForModal(deleteButton.get(row));
-		deleteButton.get(row).click();
-
+		//waitForElement(deleteButton.get(row));
+	//	deleteButton.get(row).click();
+		driver.findElementById("deleteButton").click();
 		handleAlert();
 
 		return new ApiKeysIndexPage(driver);

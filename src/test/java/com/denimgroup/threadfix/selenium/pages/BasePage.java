@@ -30,8 +30,11 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class BasePage {
 	
@@ -162,4 +165,10 @@ public abstract class BasePage {
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 	}
+	
+	public void waitForElement(WebElement e){
+		WebDriverWait wait = new WebDriverWait(driver,10);
+		wait.until(ExpectedConditions.visibilityOf(e));
+	}
+	
 }
