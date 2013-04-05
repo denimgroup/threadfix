@@ -59,16 +59,16 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal" class="btn btn-primary" 
-				onclick="javascript:updateDTAndRefresh('<c:out value="${ editUrl }"/>', '#editDefectTrackerForm${ defectTracker.id }', '#editDefectTracker${ waf.id }');return false;">
+		<a id="submitDTModal${ defectTracker.id }" class="btn btn-primary" 
+				onclick="javascript:submitAjaxModal('<c:out value="${ editUrl }"/>', '#editDefectTrackerForm${ defectTracker.id }', '#dtFormDiv${ defectTracker.id }', '#defectTableDiv', '#editDefectTracker${ defectTracker.id }');return false;">
 			Update Defect Tracker
 		</a>
 	</div>
 </form:form>
 <script>
-$("#editDefectTrackerForm<c:out value='defectTracker.id'/>").keypress(function(e){
+$("#editDefectTrackerForm<c:out value='${defectTracker.id}'/>").keypress(function(e){
     if (e.which == 13){
-        $("#submitDTModal").click();
+        $("#submitDTModal<c:out value='${defectTracker.id}'/>").click();
     }
 });
 </script>

@@ -52,13 +52,13 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeNewDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:createDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create Defect Tracker</a>
+		<a id="submitDTCreateModal" class="btn btn-primary" onclick="javascript:createDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create Defect Tracker</a>
 	</div>
 </form:form>
 <script>
 $("#createDefectTrackerForm").keypress(function(e){
     if (e.which == 13){
-        $("#submitDTModal").click();
+        $("#submitDTCreateModal").click();
     }
 });
 </script>

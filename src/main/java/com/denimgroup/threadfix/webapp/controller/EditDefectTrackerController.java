@@ -56,7 +56,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers/{defectTrackerId}/edit")
-@SessionAttributes("defectTracker")
+@SessionAttributes({"defectTracker", "editDefectTracker"})
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 public class EditDefectTrackerController {
 	
@@ -202,7 +202,6 @@ public class EditDefectTrackerController {
 				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
 			}
 			
-			status.setComplete();
 			model.addAttribute(defectTrackerService.loadAllDefectTrackers());
 			model.addAttribute("defectTracker", new DefectTracker());
 			model.addAttribute("editDefectTracker", new DefectTracker());
