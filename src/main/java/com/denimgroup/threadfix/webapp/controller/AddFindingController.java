@@ -122,7 +122,7 @@ public class AddFindingController {
 		return mav;
 	}
 
-	@RequestMapping(params = "staticSubmit", method = RequestMethod.POST)
+	@RequestMapping(params = "group=static", method = RequestMethod.POST)
 	public String staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
@@ -154,7 +154,7 @@ public class AddFindingController {
 		}
 	}
 	
-	@RequestMapping(params = "dynamicSubmit", method = RequestMethod.POST)
+	@RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
 	public String dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,

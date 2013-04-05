@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<a id="addManualFindingModalLink" href="#addManualFinding" role="button" class="btn" data-toggle="modal">Add Manual Finding</a>
-<div id="addManualFinding" class="modal hide fade" tabindex="-1"
+<a id="addManualFindingModalLink" href="#addManualFindingModal" role="button" class="btn" data-toggle="modal">Add Manual Finding</a>
+<div id="addManualFindingModal" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"
