@@ -35,25 +35,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class ApiKeysIndexPage extends BasePage {
 
 	private List<WebElement> keys = new ArrayList<WebElement>();
-	private List<WebElement> notes = new ArrayList<WebElement>();
+	//private List<WebElement> notes = new ArrayList<WebElement>();
 	private List<WebElement> editLinks = new ArrayList<WebElement>();
 	private List<WebElement> deleteButton = new ArrayList<WebElement>();
-	private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
+	//private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
 	private WebDriverWait wait = new WebDriverWait(driver,10);
 	private WebElement createNewKeyLink;
 
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		createNewKeyLink = driver.findElementByLinkText("Create New Key");
-		for (int i = 1; i <= getNumRows(); i++) {
-			keys.add(driver.findElementById("key" + i));
+		/*for (int i = 1; i <= getNumRows(); i++) {
 			notes.add(driver.findElementById("note" + i));
 			restrictedBoxes.add(driver.findElementById("restricted" + i));
-		}
-		if(getNumRows()!=0){
-			editLinks = driver.findElementsByLinkText("Edit");
-			deleteButton = driver.findElementsById("deleteButton");
-		}
+		}*/
 	}
 
 	public int getNumRows() {
@@ -67,10 +62,16 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public String getKeyText(int num) {
+		for (int i = 1; i <= getNumRows(); i++) {
+			keys.add(driver.findElementById("key" + i));
+		}
 		return keys.get(num).getText();
 	}
 
 	public ApiKeysIndexPage clickEdit(int row) {
+		if(getNumRows()!=0){
+			editLinks = driver.findElementsByLinkText("Edit");
+		}
 		editLinks.get(row).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal-body")));
 		return new ApiKeysIndexPage(driver);
@@ -84,9 +85,10 @@ public class ApiKeysIndexPage extends BasePage {
 	
 
 	public ApiKeysIndexPage clickDelete(int row) {
-		//waitForElement(deleteButton.get(row));
-	//	deleteButton.get(row).click();
-		driver.findElementById("deleteButton").click();
+		if(getNumRows()!=0){
+			deleteButton = driver.findElementsById("deleteButton");
+		}
+		deleteButton.get(row).click();
 		handleAlert();
 
 		return new ApiKeysIndexPage(driver);

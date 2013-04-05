@@ -59,7 +59,8 @@ public class APIKeysTests extends BaseTest {
 								   			  .clickNewLink()
 								   			  .setNote("createAPIKey")
 								   			  .setRestricted()
-								   			  .clickSubmitButton();
+								   			  .clickSubmitButton()
+								   			  .waitModalDisappear();
 								   			
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
@@ -75,9 +76,11 @@ public class APIKeysTests extends BaseTest {
 								   .clickNewLink()
 								   .setNote("createAPIKey")
 								   .clickSubmitButton()
+								   .waitModalDisappear()
 								   .clickEdit(0)
 								   .setNote("Sample ThreadFix REST key")
-								   .clickSubmitButton();
+								   .clickSubmitButton()
+								   .waitModalDisappear();
 								   
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
@@ -92,10 +95,12 @@ public class APIKeysTests extends BaseTest {
 											  .clickNewLink()
 											  .setNote("markRestricted")
 											  .clickSubmitButton()
+											  .waitModalDisappear()
 											  .clickEdit(0)
 											  .setNote("markRestricted")
-											  .clickSubmitButton()								   			 
-											  .setRestricted();
+											  .setRestricted()
+											  .clickSubmitButton()
+											  .waitModalDisappear();
 						
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 		
@@ -109,6 +114,7 @@ public class APIKeysTests extends BaseTest {
 								   .clickNewLink()			
 								   .setNote("markRestricted")
 								   .clickSubmitButton()
+								   .waitModalDisappear()
 								   .clickDelete(0)
 								   .getH2Tag();
 
