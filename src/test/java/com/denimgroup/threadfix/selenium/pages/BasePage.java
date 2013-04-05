@@ -63,7 +63,8 @@ public abstract class BasePage {
 	}
 	
 	public WafIndexPage clickWafsHeaderLink() {
-		driver.findElementById("wafsHeader").click();
+		hoverOverAdministration();
+		driver.findElementById("wafsLink").click();
 		return new WafIndexPage(driver);
 	}
 

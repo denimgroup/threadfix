@@ -144,5 +144,19 @@ public class WafIndexPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 	
+	public String getWafName(int row){
+		waitForElement(names.get(row));
+	    String tmp = names.get(row).getText();
+		//driver.findElementById("deleteButton").click();
+		handleAlert();
+
+		return tmp;
+	}
 	//TODO add Rules actions
+
+	public WafIndexPage clickDeleteButton(int row) {
+		waitForElement(deleteButtons.get(row));
+		deleteButtons.get(row).click();
+		return this;
+	}
 }
