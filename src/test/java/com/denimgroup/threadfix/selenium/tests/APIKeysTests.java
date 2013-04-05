@@ -57,7 +57,10 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   			  .clickApiKeysLink()
 								   			  .clickNewLink()
-								   			  .enterNewApiKeyInfo("createAPIKey", true);
+								   			  .setNote("createAPIKey")
+								   			  .setRestricted()
+								   			  .clickSubmitButton();
+								   			
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
@@ -70,9 +73,11 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   .clickApiKeysLink()
 								   .clickNewLink()
-								   .enterNewApiKeyInfo("editKey", false)
+								   .setNote("createAPIKey")
+								   .clickSubmitButton()
 								   .clickEdit(0)
-								   .enterNewApiKeyInfo("Sample ThreadFix REST key", false);
+								   .setNote("Sample ThreadFix REST key")
+								   .clickSubmitButton();
 								   
 		
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
@@ -85,9 +90,12 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 					 						  .clickApiKeysLink()
 											  .clickNewLink()
-											  .enterNewApiKeyInfo("markRestricted", false)
+											  .setNote("markRestricted")
+											  .clickSubmitButton()
 											  .clickEdit(0)
-											  .enterNewApiKeyInfo("markRestricted", true);
+											  .setNote("markRestricted")
+											  .clickSubmitButton()								   			 
+											  .setRestricted();
 						
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 		
@@ -98,21 +106,10 @@ public class APIKeysTests extends BaseTest {
 	public void deleteKey() {
 		String PageText = loginPage.login("user", "password")
 								   .clickApiKeysLink()
-								   .clickNewLink()
-								   .enterNewApiKeyInfo("deleteKey", false)
-								   .clickDelete(0)
-								   .getH2Tag();
-
-		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
-	}
-
-	@Test
-	public void clickSubmit() {
-		String PageText = loginPage.login("user", "password")
-								   .clickApiKeysLink()
-								   .clickNewLink()
-								   .setNote("fasdfasdf")
+								   .clickNewLink()			
+								   .setNote("markRestricted")
 								   .clickSubmitButton()
+								   .clickDelete(0)
 								   .getH2Tag();
 
 		assertTrue("API Keys Page not found", PageText.contains("API Keys"));

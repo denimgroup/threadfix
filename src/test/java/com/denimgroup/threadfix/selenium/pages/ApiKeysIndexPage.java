@@ -52,7 +52,7 @@ public class ApiKeysIndexPage extends BasePage {
 		}
 		if(getNumRows()!=0){
 			editLinks = driver.findElementsByLinkText("Edit");
-			deleteButton = driver.findElementsByLinkText("Delete");
+			deleteButton = driver.findElementsById("deleteButton");
 		}
 	}
 
@@ -82,14 +82,6 @@ public class ApiKeysIndexPage extends BasePage {
 		return new ApiKeysIndexPage(driver);
 	}
 	
-	public ApiKeysIndexPage enterNewApiKeyInfo(String note, boolean restricted){
-		driver.findElementById("note").sendKeys(note);
-		if(restricted){
-			driver.findElementById("isRestrictedKey1").click();
-		}
-		driver.findElementById("submitKeyModal").click();
-		return new ApiKeysIndexPage(driver);
-	}
 
 	public ApiKeysIndexPage clickDelete(int row) {
 		//waitForElement(deleteButton.get(row));
@@ -101,14 +93,23 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public ApiKeysIndexPage clickSubmitButton(){
-		sleep(4000);
 		driver.findElementById("submitKeyModal").click();
-		return this;
+		return new ApiKeysIndexPage(driver);
 	}
 	
 	public ApiKeysIndexPage setNote(String message){
-		sleep(4000);
+		driver.findElementById("note").clear();
 		driver.findElementById("note").sendKeys(message);
-		return this;
+		return new ApiKeysIndexPage(driver);
+	}
+	
+	public ApiKeysIndexPage setRestricted(){
+		driver.findElementById("isRestrictedKey1").click();
+		return new ApiKeysIndexPage(driver);
+	}
+	
+	public ApiKeysIndexPage waitModalDisappear(){
+		waitForInvisibleElement(driver.findElementById("newKeyModalDiv"));
+		return new ApiKeysIndexPage(driver);
 	}
 }

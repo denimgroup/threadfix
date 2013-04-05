@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -170,6 +171,11 @@ public abstract class BasePage {
 	public void waitForElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.visibilityOf(e));
+	}
+	
+	public void waitForInvisibleElement(WebElement e){
+		WebDriverWait wait = new WebDriverWait(driver,10);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
 	}
 	
 }
