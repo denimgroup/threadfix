@@ -39,6 +39,8 @@ public class DefectTrackerIndexPage extends BasePage {
 	private List<WebElement> editButtons = new ArrayList<WebElement>();
 	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
+	
+	public static String DT_URL = "http://10.2.10.145/bugzilla";
 
 	public DefectTrackerIndexPage(WebDriver webdriver) {
 		super(webdriver);

@@ -77,13 +77,14 @@ public class ApplicationTests extends BaseTest {
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, urlText, "Low");
 										
-		applicationDetailPage = teamIndexPage.expandTeamRowByName(orgName)
-													.clickApplicationDetailLink(appName);
+		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+											.expandTeamRowByName(orgName)
+											.clickApplicationDetailLink(appName);
 
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
-				urlText.equals(applicationDetailPage.getUrlText()));
+				urlText.equals(applicationDetailPage.clickDetailsLink().getUrlText()));
 		
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
@@ -161,7 +162,7 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The length limit was incorrect for name.", 
 				applicationDetailPage.getNameText().length() == Application.NAME_LENGTH);
 		assertTrue("The length limit was incorrect for url.", 
-				applicationDetailPage.getUrlText().length() == Application.URL_LENGTH);
+				applicationDetailPage.clickDetailsLink().getUrlText().length() == Application.URL_LENGTH);
 		
 		appName = applicationDetailPage.getNameText();
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
@@ -207,7 +208,7 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The name was not preserved correctly.", 
 					appName1.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
-					urlText1.equals(applicationDetailPage.getUrlText()));
+					urlText1.equals(applicationDetailPage.clickDetailsLink().getUrlText()));
 		
 		applicationDetailPage = applicationDetailPage.clickEditLink()
 													.setNameInput(appName2)
@@ -217,7 +218,7 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The name was not preserved correctly.", 
 				appName2.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
-				urlText2.equals(applicationDetailPage.getUrlText()));	
+				urlText2.equals(applicationDetailPage.clickDetailsLink().getUrlText()));	
 		
 		// ensure that the application is present in the organization's app table.
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
@@ -266,6 +267,7 @@ public class ApplicationTests extends BaseTest {
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, validUrlText, "Low")
+										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.clickApplicationDetailLink(appName)
 										.clickEditLink()
@@ -276,7 +278,7 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
 		assertTrue("The URL was not preserved correctly.", 
-				validUrlText.equals(applicationDetailPage.getUrlText()));
+				validUrlText.equals(applicationDetailPage.clickDetailsLink().getUrlText()));
 
 		// Test blank input		
 		applicationEditPage = applicationDetailPage.clickEditLink()
@@ -321,7 +323,7 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The length limit was incorrect for name.", 
 				applicationDetailPage.getNameText().length() == Application.NAME_LENGTH);
 		assertTrue("The length limit was incorrect for url.", 
-				applicationDetailPage.getUrlText().length() == Application.URL_LENGTH);
+				applicationDetailPage.clickDetailsLink().getUrlText().length() == Application.URL_LENGTH);
 				
 		//cleanup
 		loginPage = applicationDetailPage.clickDeleteLink()
@@ -352,6 +354,7 @@ public class ApplicationTests extends BaseTest {
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.clickApplicationDetailLink(appName)
+										.clickActionButton()
 										.clickShowDetails()
 										.clickAddWaf()
 										.addWaf(wafName);
@@ -368,7 +371,7 @@ public class ApplicationTests extends BaseTest {
 		// Attempt to delete the WAF and ensure that it is a failure because the Application is still there
 		// If the page goes elsewhere, this call will fail.
 		wafIndexPage = wafDetailPage.clickWafsHeaderLink()
-								.clickDeleteWaf(wafName);
+								.clickDeleteWaf(1);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
 		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
@@ -405,20 +408,32 @@ public class ApplicationTests extends BaseTest {
 										 .clickAddWafLink()
 										 .createNewWaf(wafName2, type2)	
 										 .clickOrganizationHeaderLink()
+										 .clickAddTeamButton()
 										 .addNewTeam(orgName)
 										 .expandTeamRowByName(orgName)
 										 .addNewApplication(orgName, appName, appUrl, "Low")
 										 .clickOrganizationHeaderLink()
 										 .expandTeamRowByName(orgName)
 										 .clickApplicationDetailLink(appName)
+										 .clickActionButton()
 										 .clickShowDetails()
 										 .clickAddWaf()
 										 .addWaf(wafName1)
+										 .clickOrganizationHeaderLink()
+										 .expandTeamRowByName(orgName)
+										 .clickApplicationDetailLink(appName)
+										 .clickActionButton()
+										 .clickShowDetails()
 										 .clickEditWaf()
-										 .addWaf(wafName2);
+										 .addWaf(wafName2)
+										 .clickOrganizationHeaderLink()
+										 .expandTeamRowByName(orgName)
+										 .clickApplicationDetailLink(appName)
+										 .clickActionButton()
+										 .clickShowDetails();
 								
 		assertTrue("The edit didn't change the application's WAF.", 
-				applicationDetailPage.getWafText().equals(wafName2));
+				applicationDetailPage.getWafText().contains(wafName2));
 		
 		//cleanup
 		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
@@ -426,11 +441,11 @@ public class ApplicationTests extends BaseTest {
 										.clickViewTeamLink()
 										.clickDeleteButton()
 										.clickWafsHeaderLink()
-										.clickDeleteWaf(wafName1)
-										.clickDeleteWaf(wafName2)
+										.clickDeleteWaf(1)
+										.clickDeleteWaf(1)
 										.logout();
 	}
-	
+	@Ignore //redundant with testAddWafAtApplicationCreationTimeAndDelete()
 	@Test
 	public void testAddWafAtApplicationEditTime() {
 		String wafName = "appCreateTimeWaf";
@@ -443,46 +458,46 @@ public class ApplicationTests extends BaseTest {
 		applicationDetailPage = loginPage.login("user", "password")
 										 .clickWafsHeaderLink()
 										 .clickAddWafLink()
-										 .setNameInput(wafName)
-										 .setTypeSelect(type)
-										 .clickAddWafButton()
+										 .createNewWaf(wafName, type)
 										 .clickOrganizationHeaderLink()
 										 .clickAddTeamButton()
-										 .setNameInput(orgName)
-										 .clickSubmitButtonValid()
-										 .clickAddApplicationLink()
-										 .setNameInput(appName)
-										 .setUrlInput(appUrl)
-										 .clickAddApplicationButton()
-										 .clickEditLink()
-										 .setWafSelect(wafName)
-										 .clickUpdateApplicationButton();
+										 .addNewTeam(orgName)
+										 .expandTeamRowByName(orgName)
+										 .addNewApplication(orgName, appName, appUrl, "Low")
+										 .clickOrganizationHeaderLink()
+										 .expandTeamRowByName(orgName)
+										 .clickApplicationDetailLink(appName)
+										 .clickActionButton()
+										 .clickShowDetails()
+										 .clickAddWaf()
+										 .addWaf(wafName);
+
 		
 		assertTrue("The WAF was not added correctly.", 
 				applicationDetailPage.getWafText().equals(wafName));
 		
 		// Check that it also appears on the WAF page.
 		wafDetailPage = applicationDetailPage.clickWafsHeaderLink()
-											.clickTextLinkInWafTableBody(wafName);
+											.clickRules(wafName);
 		
 		assertTrue("The WAF was not added correctly.", 
 				wafDetailPage.isTextPresentInApplicationsTableBody(appName));
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
+
 		loginPage = wafDetailPage.clickOrganizationHeaderLink()
-								.clickOrganizationLink(orgName)
-								.clickTextLinkInApplicationsTableBody(appName)
-								.clickDeleteLink()
+				 				.expandTeamRowByName(orgName)
+								.clickViewTeamLink()
 								.clickDeleteButton()
 								.clickWafsHeaderLink()
-								.clickTextLinkInWafTableBody(wafName)
-								.clickDeleteButton()
+								.clickWafsHeaderLink()
+								.clickDeleteWaf(wafName)
 								.logout();
 	}
-	
+	@Ignore //defect tracker can not be added at application creation time anymore
 	@Test
 	public void testAddDefectTrackerAtApplicationCreationTimeAndDelete() {
-		String dtUrl = DefectTrackerIndexPage.DT_URL;
+		/*String dtUrl = DefectTrackerIndexPage.DT_URL;
 		String orgName = "AppDTCreationTimeOrg";
 		String appName = "AppDTCreationTimeApp";
 		String appUrl = "http://testUrl.com";
@@ -526,7 +541,7 @@ public class ApplicationTests extends BaseTest {
 										 .clickDefectTrackersLink()
 										 .clickTextLinkInDefectTrackerTableBody(dtName)
 										 .clickDeleteButton()
-										 .logout();
+										 .logout();*/
 	}
 	
 	@Test
@@ -545,9 +560,8 @@ public class ApplicationTests extends BaseTest {
 		
 		// create stuff
 		applicationDetailPage = loginPage.login("user", "password")
-										 .clickConfigurationHeaderLink()
 										 .clickDefectTrackersLink()
-										 .clickAddDefectTrackerLink()
+										 .clickAddDefectTrackerButton()
 										 .setDefectTrackerTypeSelect(dtType1)
 										 .setNameInput(dtName1)
 										 .setUrlInput(dtUrl)

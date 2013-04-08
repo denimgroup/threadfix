@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -40,6 +41,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickShowDetails(){
 		driver.findElementById("showDetailsLink").click();
+		waitForElement(driver.findElementById("appInfoDiv"));
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -100,6 +102,11 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage clickActionButton(){
+		driver.findElementById("appActionButton").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
 	public ApplicationDetailPage addManualFinding(Boolean stat,String cwe,String url,String sourceFile,String lineNum,String Parameter,String Severity,String description){
 		driver.findElementById("addManualFindinModalLink").click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addManualFinding")));
@@ -130,6 +137,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getWafText(){
+		waitForElement(driver.findElementById("wafText"));
 		return driver.findElementById("wafText").getText();
 	}
 	
@@ -138,7 +146,6 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getUrlText(){
-		driver.findElementById("showDetailsLink").click();
 		return driver.findElementById("urlText").getText();
 	}
 	
@@ -151,6 +158,7 @@ public class ApplicationDetailPage extends BasePage {
 	}*/
 	
 	public ApplicationEditPage clickEditLink() {
+		clickActionButton();
 		driver.findElementById("editLink").click();
 		return new ApplicationEditPage(driver);
 	}
@@ -162,12 +170,20 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public TeamDetailPage clickDeleteLink() {
+		clickActionButton();
 		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		
 		return new TeamDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickDetailsLink(){
+		clickActionButton();
+		driver.findElementById("showDetailsLink").click();
+		waitForElement(driver.findElementById("appInfoDiv"));
+		return new ApplicationDetailPage(driver);
 	}
 
 	public ScanIndexPage clickViewScansLink() {
@@ -206,7 +222,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickEditWaf(){
 		driver.findElementById("editWafButton").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWaf")));
 		return new ApplicationDetailPage(driver);
 	}
 

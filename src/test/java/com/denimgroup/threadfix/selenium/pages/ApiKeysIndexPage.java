@@ -62,7 +62,7 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public String getKeyText(int num) {
-		for (int i = 1; i <= getNumRows(); i++) {
+		for (int i = 0; i < getNumRows(); i++) {
 			keys.add(driver.findElementById("key" + i));
 		}
 		return keys.get(num).getText();

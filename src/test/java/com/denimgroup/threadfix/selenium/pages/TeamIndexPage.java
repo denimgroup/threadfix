@@ -97,7 +97,7 @@ public class TeamIndexPage extends BasePage {
 		driver.findElementById("nameInput").sendKeys(appName);
 		driver.findElementById("urlInput").sendKeys(url);
 		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
-		driver.findElementById("submitAppModal").click();
+		driver.findElementById("submitAppModal"+num).click();
 		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("myAppModal"+num)));
 		return new TeamIndexPage(driver);
 		
