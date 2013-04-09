@@ -3,6 +3,8 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -52,11 +54,13 @@ public class ChangePasswordController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView editForm() {
+	public ModelAndView editForm(HttpServletRequest request) {
 		
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		User user = null;
+		
+		Object successMessage = getAttribute(request, "successMessage");
 		
 		if (userName != null){
 			user = userService.loadUser(userName);
@@ -69,12 +73,25 @@ public class ChangePasswordController {
 				
 		ModelAndView mav = new ModelAndView("config/users/password");
 		mav.addObject(user);
+		mav.addObject("successMessage", successMessage);
 		return mav;
+	}
+	
+	private Object getAttribute(HttpServletRequest request, String attribute) {
+		Object returnValue = null;
+		if (request.getSession() != null) {
+			returnValue = request.getSession().getAttribute(attribute);
+			if (returnValue != null) {
+				request.getSession().removeAttribute(attribute);
+			}
+		}
+		
+		return returnValue;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@ModelAttribute User user,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status, HttpServletRequest request) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
 			return "config/users/password";
@@ -106,7 +123,9 @@ public class ChangePasswordController {
 				userService.storeUser(user);
 				status.setComplete();
 				log.info("The User " + currentUserName + " has completed the password change.");
-				return "redirect:/configuration";
+				request.getSession().setAttribute("successMessage", 
+						"The password change was successful.");
+				return "redirect:/configuration/users/password";
 			} else {
 				log.info("An incorrect password was submitted during a password change attempt.");
 				result.rejectValue("currentPassword", null,"That was not the correct password.");

@@ -7,6 +7,13 @@
 <body id="config">
 	<h2>User Password Change</h2>
 	
+	<c:if test="${ not empty successMessage }">
+		<div class="alert alert-success">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+			<c:out value="${ successMessage }"/>
+		</div>
+	</c:if>
+	
 	<spring:url value="" var="emptyUrl"></spring:url>
 	<form:form modelAttribute="user" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
@@ -19,7 +26,7 @@
 			<tr>
 				<td>Current Password</td>
 				<td class="inputValue">
-					<form:password id="currentPasswordInput" path="currentPassword" cssClass="focus" size="30"/>
+					<form:password style="margin-bottom:0px" id="currentPasswordInput" path="currentPassword" cssClass="focus" size="30"/>
 				</td>
 				<td style="padding-left: 5px">
 					<form:errors path="currentPassword" cssClass="errors" />
@@ -28,7 +35,7 @@
 			<tr>
 				<td>New Password</td>
 				<td class="inputValue">
-					<form:password id="passwordInput" path="unencryptedPassword" size="30"/>
+					<form:password style="margin-bottom:0px" id="passwordInput" path="unencryptedPassword" size="30"/>
 				</td>
 				<td style="padding-left: 5px">
 					<form:errors path="password" cssClass="errors" />
@@ -37,17 +44,12 @@
 			<tr>
 				<td>Confirm New Password</td>
 				<td class="inputValue">
-					<form:password id="passwordConfirmInput" path="passwordConfirm" size="30"/>
+					<form:password style="margin-bottom:0px" id="passwordConfirmInput" path="passwordConfirm" size="30"/>
 				</td>
 			</tr>
 		</table>
-		<br/>
 
-		<input id="updateUserButton" type="submit" value="Update Password" />
-		<span style="padding-left: 10px">
-			<spring:url value="/configuration" var="userUrl"/>
-			<a id="cancelLink" href="${ fn:escapeXml(userUrl) }">Back to Configuration Index</a>
-		</span>
+		<input style="margin-top:15px" class="btn btn-primary" id="updateUserButton" type="submit" value="Update Password" />
 		
 	</form:form>
 </body>
