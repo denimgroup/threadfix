@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
@@ -108,42 +107,6 @@ public class EditApplicationController {
 				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id" });
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView setupForm(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return new ModelAndView("403");
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		
-		if (application == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		applicationService.decryptCredentials(application);
-		
-		if (application.getPassword() != null && !"".equals(application.getPassword())) {
-			application.setPassword(Application.TEMP_PASSWORD);
-		}
-
-		ModelAndView mav = new ModelAndView("applications/form");
-		
-		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
-				Permission.CAN_MANAGE_WAFS);
-		
-		mav.addObject("canSetDefectTracker", permissionService.isAuthorized(
-				Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
-		
-		mav.addObject("canSetWaf", permissionService.isAuthorized(
-				Permission.CAN_MANAGE_WAFS, orgId, appId));
-
-		mav.addObject(application);
-		return mav;
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
@@ -173,7 +136,8 @@ public class EditApplicationController {
 			model.addAttribute("canSetWaf", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, appId));
 			
-			return "applications/form";
+			model.addAttribute("contentPage", "applications/form");
+			return "ajaxFailureHarness";
 		} else {
 			applicationService.storeApplication(application);
 			applicationService.updateProjectRoot(application);
@@ -182,8 +146,13 @@ public class EditApplicationController {
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 			
-			status.setComplete();
-			return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/" + application.getId();
+			permissionService.addPermissions(model, orgId, appId, 
+					Permission.CAN_MANAGE_APPLICATIONS );
+			
+			model.addAttribute("application", application);
+			model.addAttribute("contentPage", "applications/detailHeader.jsp");
+			
+			return "ajaxSuccessHarness";
 		}
 	}
 	
@@ -278,8 +247,6 @@ public class EditApplicationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
-			
-			status.setComplete();
 			
 			model.addAttribute("contentPage", "applications/defectTrackerRow.jsp");
 			return "ajaxSuccessHarness";
