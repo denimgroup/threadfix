@@ -41,6 +41,10 @@ public interface ScanService {
 	 * @return
 	 */
 	List<Scan> loadAll();
+	
+	/**
+	 */
+	Integer calculateScanType(int appId, int orgId, MultipartFile file, String channelIdString);
 
 	/**
 	 * @param scanId

@@ -50,6 +50,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.FindingService;
@@ -74,6 +75,7 @@ public class ApplicationsController {
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
 
 	private FindingService findingService;
+	private ApplicationCriticalityService applicationCriticalityService;
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
@@ -83,6 +85,7 @@ public class ApplicationsController {
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
 			FindingService findingService,
+			ApplicationCriticalityService applicationCriticalityService,
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
 			PermissionService permissionService,
@@ -93,6 +96,7 @@ public class ApplicationsController {
 		this.permissionService = permissionService;
 		this.vulnerabilityService = vulnerabilityService;
 		this.findingService = findingService;
+		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
 	@InitBinder
@@ -136,6 +140,7 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 		
+		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
 		model.addAttribute("dynamicPathList", findingService.getRecentDynamicPaths(appId));
 		model.addAttribute("staticPathList", findingService.getRecentStaticPaths(appId));
 		model.addAttribute("dynamicChannelVulnerabilityList", findingService.getRecentDynamicVulnTypes(appId));

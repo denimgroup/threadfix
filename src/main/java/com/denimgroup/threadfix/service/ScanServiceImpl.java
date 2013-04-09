@@ -48,12 +48,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
@@ -71,6 +73,7 @@ public class ScanServiceImpl implements ScanService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanService");
 	
+	private ApplicationDao applicationDao = null;
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
@@ -85,6 +88,7 @@ public class ScanServiceImpl implements ScanService {
 			ChannelVulnerabilityDao channelVulnerabilityDao,
 			ChannelSeverityDao channelSeverityDao,
 			GenericVulnerabilityDao genericVulnerabilityDao,
+			ApplicationDao applicationDao,
 			ApplicationChannelDao applicationChannelDao,
 			EmptyScanDao emptyScanDao,
 			QueueSender queueSender) {
@@ -94,6 +98,7 @@ public class ScanServiceImpl implements ScanService {
 		this.channelSeverityDao = channelSeverityDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.emptyScanDao = emptyScanDao;
+		this.applicationDao = applicationDao;
 		this.queueSender = queueSender;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
 	}
@@ -101,6 +106,65 @@ public class ScanServiceImpl implements ScanService {
 	@Override
 	public List<Scan> loadAll() {
 		return scanDao.retrieveAll();
+	}
+	
+	@Override
+	public Integer calculateScanType(int appId, int orgId, MultipartFile file, String channelIdString) {
+		ChannelType type = null;
+		
+		Integer channelId = -1;
+		if (channelIdString != null && !channelIdString.trim().isEmpty()) {
+			try {
+				channelId = Integer.valueOf(channelIdString);
+			} catch (NumberFormatException e) {
+				log.error("channelId was not null and was not a number.");
+			}
+		}
+		
+		if (channelId == null || channelId == -1) {
+			String typeString = getScannerType(file);
+			if (typeString != null && !typeString.trim().isEmpty()) {
+				type = channelTypeDao.retrieveByName(typeString);
+			} else {
+				return null;
+			}
+		} else {
+			type = channelTypeDao.retrieveById(channelId);
+		}
+		
+		if (type != null) {
+			ApplicationChannel channel = applicationChannelDao.retrieveByAppIdAndChannelId(
+					appId, type.getId());
+			if (channel != null) {
+				return channel.getId();
+			} else {
+				Application application = applicationDao.retrieveById(appId);
+				channel = new ApplicationChannel();
+				channel.setChannelType(type);
+				application.getChannelList().add(channel);
+				channel.setApplication(application);
+				channel.setScanList(new ArrayList<Scan>());
+				
+				channel.setApplication(application);
+				if (!isDuplicate(channel)) {
+					applicationChannelDao.saveOrUpdate(channel);
+					return channel.getId();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean isDuplicate(ApplicationChannel applicationChannel) {
+		if (applicationChannel.getApplication() == null
+				|| applicationChannel.getChannelType().getId() == null) {
+			return true; 
+		}
+		
+		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
+				applicationChannel.getApplication().getId(), applicationChannel.getChannelType()
+						.getId());
+		return dbAppChannel != null && !applicationChannel.getId().equals(dbAppChannel.getId());
 	}
 
 	@Override

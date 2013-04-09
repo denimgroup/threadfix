@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,6 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
@@ -53,7 +50,7 @@ import com.denimgroup.threadfix.service.channel.ChannelImporter;
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
 public class UploadScanController {
 	
-	private static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
+	public static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
 			"scanner type for the file. Please choose one from the list.";
 
 	private ScanService scanService;
@@ -99,11 +96,15 @@ public class UploadScanController {
 			throw new ResourceNotFoundException();
 		}
 
-		ModelAndView mav = new ModelAndView("scans/upload");
+		ModelAndView mav = new ModelAndView("ajaxFailureHarness");
 		mav.addObject(application);
 		mav.addObject("message",message);
+		if (message != null && message.equals(SCANNER_TYPE_ERROR)) {
+			mav.addObject("showTypeSelect", true);
+		}
 		mav.addObject("channelTypes",channelTypeService.getChannelTypeOptions(null));
 		mav.addObject("type",type);
+		mav.addObject("contentPage","applications/forms/uploadScanForm.jsp");
 		return mav;
 	}
 	
@@ -117,51 +118,7 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
-		Integer myChannelId = null;
-		
-		ChannelType type = null;
-		
-		String channelIdString = request.getParameter("channelId");
-		Integer channelId = -1;
-		if (channelIdString != null) {
-			try {
-				channelId = Integer.valueOf(channelIdString);
-			} catch (NumberFormatException e) {
-				log.error("channelId was not null and was not a number.");
-			}
-		}
-		
-		if (channelId == null || channelId == -1) {
-			String typeString = scanService.getScannerType(file);
-			if (typeString != null && !typeString.trim().isEmpty()) {
-				type = channelTypeService.loadChannel(typeString);
-			} else {
-				return index(orgId, appId, SCANNER_TYPE_ERROR, null);
-			}
-		} else {
-			type = channelTypeService.loadChannel(channelId);
-		}
-		
-		if (type != null) {
-			ApplicationChannel channel = applicationChannelService.retrieveByAppIdAndChannelId(
-					appId, type.getId());
-			if (channel != null) {
-				myChannelId = channel.getId();
-			} else {
-				Application application = applicationService.loadApplication(appId);
-				channel = new ApplicationChannel();
-				channel.setChannelType(type);
-				application.getChannelList().add(channel);
-				channel.setApplication(application);
-				channel.setScanList(new ArrayList<Scan>());
-				
-				channel.setApplication(application);
-				if (!applicationChannelService.isDuplicate(channel)) {
-					applicationChannelService.storeApplicationChannel(channel);
-					myChannelId = channel.getId();
-				}
-			}
-		}
+		Integer myChannelId = scanService.calculateScanType(appId, orgId, file, request.getParameter("channelId"));
 		
 		if (myChannelId == null) {
 			log.warn("Unable to load a suitable Application Channel.");
@@ -227,8 +184,9 @@ public class UploadScanController {
 		if (app.getOrganization() != null) {
 			request.getSession().setAttribute("scanSuccessMessage", 
 					"The scan was successfully added to the queue for processing.");
-			return new ModelAndView("redirect:/organizations/" + app.getOrganization().getId() + 
-					"/applications/" + app.getId());
+			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
+			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
+			return mav;
 		} else {
 			log.warn("Redirecting to the jobs page because it was impossible to redirect to the Application.");
 			return new ModelAndView("redirect:/jobs/open");

@@ -50,14 +50,6 @@ public interface ApplicationChannelService {
 	void storeApplicationChannel(ApplicationChannel applicationChannel);
 
 	/**
-	 * Used to tell whether an identical ApplicationChannel exists so we won't make duplicates
-	 * 
-	 * @param applicationChannel
-	 * @return
-	 */
-	boolean isDuplicate(ApplicationChannel applicationChannel);
-
-	/**
 	 * 
 	 * @param appId
 	 * @param id

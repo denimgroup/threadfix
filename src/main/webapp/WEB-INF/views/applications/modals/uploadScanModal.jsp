@@ -8,7 +8,7 @@
 			aria-hidden="true">X</button>
 		<h4 id="myModalLabel"><c:out value="${ application.name }"/> Scan Upload</h4>
 	</div>
-	<div id="dtFormDiv">
+	<div id="scanFormDiv${ application.id }">
 		<%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
 	</div>
 </div>

@@ -16,11 +16,14 @@
 	<h2><c:out value="${ application.name }"/> Scan Upload</h2>
 	
 <c:if test="${ not empty message }">
-	<center class="errors" ><c:out value="${ message }"/></center>
+	<div class="alert">
+		<button class="close" data-dismiss="alert" type="button">×</button>
+		<c:out value="${ message }"/>
+	</div>
 	<c:if test="${ not empty type }">
-		<center class="errors">This error could be caused by trying to upload a scan in an incorrect format.</center>
-		<center class="errors">The last scan was uploaded to the channel <c:out value="${ type.name }"/></center>
-		<center class="errors"><c:out value="${ type.exportInfo }"/></center>
+		<br>This error could be caused by trying to upload a scan in an incorrect format.
+		<br>The last scan was uploaded to the channel <c:out value="${ type.name }"/>
+		<br><c:out value="${ type.exportInfo }"/>
 	</c:if>
 </c:if>
 

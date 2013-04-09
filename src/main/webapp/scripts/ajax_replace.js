@@ -16,8 +16,10 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 			    $(modalName).modal('hide');
 			} else {
 				try {
-					var json = JSON.parse(text);
-					alert(json.error);
+					var json = JSON.parse($.trim(text));
+					if (json.isJSONRedirect) {
+						window.location.href = json.redirectURL;
+					}
 				} catch (e) {
 					history.go(0);
 				}
@@ -32,6 +34,49 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 	    	$(".modal-body").attr('tab-index','-1');
 	    	$(".modal.in .modal-body input").first().focus();
 	    });
+	}, 1500);
+	return false;
+}
+
+function submitAjaxScan(url, formId, formDiv, channelId) {
+	var fileInput = document.getElementById(formId);
+	var file = fileInput.files[0];
+	var formData = new FormData();
+	formData.append('file', file);
+	formData.append('channelId', $('#' + channelId).val());
+	
+	$.ajax({
+		type : "POST",
+		url : url,
+		data : formData,
+		contentType : "multipart/form-data",
+		cache: false,
+        contentType: false,
+        processData: false,
+		success : function(text) {
+			
+			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+				$(formDiv).html(text);
+			} else {
+				try {
+					var json = JSON.parse($.trim(text));
+					if (json.isJSONRedirect) {
+						window.location.href = json.redirectURL;
+					}
+				} catch (e) {
+					history.go(0);
+				}
+			}
+		},
+		error : function (xhr, ajaxOptions, thrownError){
+			history.go(0);
+		}
+	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+			$(".modal-body").attr('tab-index','-1');
+			$(".modal.in .modal-body input").first().focus();
+		});
 	}, 1500);
 	return false;
 }

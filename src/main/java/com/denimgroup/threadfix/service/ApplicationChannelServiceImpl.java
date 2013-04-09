@@ -60,19 +60,6 @@ public class ApplicationChannelServiceImpl implements ApplicationChannelService 
 	}
 
 	@Override
-	public boolean isDuplicate(ApplicationChannel applicationChannel) {
-		if (applicationChannel.getApplication() == null
-				|| applicationChannel.getChannelType().getId() == null) {
-			return true; 
-		}
-		
-		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
-				applicationChannel.getApplication().getId(), applicationChannel.getChannelType()
-						.getId());
-		return dbAppChannel != null && !applicationChannel.getId().equals(dbAppChannel.getId());
-	}
-	
-	@Override
 	public ApplicationChannel retrieveByAppIdAndChannelId(int appId, int id) {
 		return applicationChannelDao.retrieveByAppIdAndChannelId(appId, id);
 	}
