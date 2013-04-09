@@ -7,7 +7,7 @@
 <form:form id="addDTForm" style="margin-bottom:0px;" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 	<div class="modal-body">
 		<table>
-			<tr>
+			<tr class="left-align">
 				<td>Defect Tracker</td>
 				<td class="inputValue">
 					<c:if test="${ not empty defectTrackerList }">
@@ -25,7 +25,7 @@
 					<form:errors path="defectTracker.id" cssClass="errors" />
 				</td>
 			</tr>
-			<tr class="defecttracker_row">
+			<tr class="left-align">
 				<td>Username</td>
 				<td class="inputValue">
 					<form:input style="margin:5px;" id="username" path="userName" size="50" maxlength="50"/>
@@ -34,7 +34,7 @@
 					<form:errors path="userName" cssClass="errors" />
 				</td>
 			</tr>
-			<tr class="defecttracker_row">
+			<tr class="left-align">
 				<td>Password</td>
 				<td class="inputValue">						
 					<form:password style="margin:5px;" id="password" showPassword="true" path="password" size="50" maxlength="50" />
@@ -43,7 +43,7 @@
 					<form:errors path="password" cssClass="errors" />
 				</td>
 			</tr>
-			<tr>
+			<tr class="left-align">
 				<td>
 				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
 					<spring:param name="orgId" value="${ application.organization.id }" />
@@ -55,7 +55,7 @@
 				</div>
 				</td>
 			</tr>
-			<tr class="defecttracker_row">
+			<tr class="left-align">
 				<td id="projectname">Product Name</td>
 				<td class="inputValue">
 					<form:select style="margin:5px;" id="projectList" path="projectName">

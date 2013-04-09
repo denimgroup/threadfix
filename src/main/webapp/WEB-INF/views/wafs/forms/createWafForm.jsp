@@ -11,9 +11,9 @@
 		<table class="dataTable">
 			<tbody>
 			    <tr>
-					<td>Name</td>
-					<td class="inputValue">
-						<form:input style="margin:5px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
+					<td class="">Name</td>
+					<td class="inputValue no-color">
+						<form:input style="margin:5px;" id="wafCreateNameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
 					</td>
 					<td style="padding-left: 5px">
 						<form:errors path="name" cssClass="errors" />
@@ -21,12 +21,12 @@
 				</tr>
 				<tr>
 					<td>Type</td>
-					<td class="inputValue">
+					<td class="inputValue no-color">
 						<form:select style="margin:5px;" id="typeSelect" path="wafType.id">
 							<form:options items="${ wafTypeList }" itemValue="id" itemLabel="name" />
 						</form:select>
 					</td>
-					<td style="padding-left: 5px">
+					<td class="no-color" style="padding-left: 5px">
 						<form:errors path="wafType.id" cssClass="errors" />
 					</td>
 				</tr>

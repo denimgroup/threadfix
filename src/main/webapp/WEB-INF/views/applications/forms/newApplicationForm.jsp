@@ -11,25 +11,25 @@
 	<form:form style="margin-bottom:0px;" id="myAppForm${ organization.id }" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 	<div class="modal-body">
 		<table>
-			<tr>
+			<tr class="left-align">
 				<td style="padding:5px;">Name</td> 
 				<td style="padding:5px;">
 					<form:input style="margin-bottom:0px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="60" />
 				  	<form:errors path="name" cssClass="errors" />
 				</td>
 			</tr>
-			<tr>
+			<tr class="left-align">
 				<td style="padding:5px;">URL</td>
 				<td style="padding:5px;">
 					<form:input style="margin-bottom:0px;" id="urlInput" path="url" size="50" maxlength="255" />
 				  	<form:errors path="url" cssClass="errors" />
 			  	</td>
 			</tr>
-			<tr>
+			<tr class="left-align">
 				<td style="padding:5px;">Team</td>
 				<td style="padding:5px;"><c:out value="${ organization.name }"/></td>
 			</tr>
-			<tr>
+			<tr class="left-align">
 				<td style="padding:5px;">Criticality</td>
 				<td style="padding:5px;">
 					<form:select style="margin-bottom:0px;" id="criticalityId" path="applicationCriticality.id">

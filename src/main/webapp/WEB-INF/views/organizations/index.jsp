@@ -3,6 +3,7 @@
 <head>
 	<title>Home</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 	<script>
 	function submitAjaxModal(url, formId, formDiv, successDiv, modalName, collapsible) {
 		$.ajax({

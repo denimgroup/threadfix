@@ -9,22 +9,22 @@
 		<table class="dataTable">
 			<tbody>
 			    <tr>
-					<td>Name</td>
-					<td class="inputValue">
+					<td class="no-color">Name</td>
+					<td class="no-color inputValue">
 						<form:input id="nameInput" path="name" cssClass="focus" 
 							size="50" maxlength="50" value="${ defectTracker.name }"/>
 					</td>
-					<td>
+					<td class="no-color">
 						<form:errors path="name" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
-					<td>URL</td>
-					<td class="inputValue">
+					<td class="no-color">URL</td>
+					<td class="no-color inputValue">
 						<form:input id="urlInput" path="url" cssClass="focus" size="50" 
 							maxlength="255" value="${ defectTracker.url }"/>
 					</td>
-					<td>
+					<td class="no-color">
 						<form:errors path="url" cssClass="errors" />
 						<c:if test="${ showKeytoolLink }">
 							<span class="errors">
@@ -38,8 +38,8 @@
 					</td>
 				</tr>
 				<tr>	
-					<td>Type</td>
-					<td class="inputValue">
+					<td class="no-color">Type</td>
+					<td class="no-color inputValue">
 						<form:select id="defectTrackerTypeSelect" path="defectTrackerType.id">
 							<c:forEach var="type" items="${ defectTrackerTypeList }">
 								<option value="${ type.id }"
@@ -50,7 +50,7 @@
 							</c:forEach>
 						</form:select>
 					</td>
-					<td>
+					<td class="no-color">
 						<form:errors path="defectTrackerType.id" cssClass="errors" />
 					</td>
 				</tr>

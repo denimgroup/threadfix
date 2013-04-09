@@ -42,26 +42,23 @@
 					<form id="command" method="POST" action="${ fn:escapeXml(deleteUrl) }">
 					<c:choose>
 						<c:when test="${ not userModel.deletable }">
-							<input id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users or roles.'); return false;"/>
+							<input class="btn" id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users or roles.'); return false;"/>
 						</c:when>
 						<c:when test="${ userModel.thisUser }">
-							<input id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>
+							<input class="btn" id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>
 						</c:when>
 						<c:otherwise>
-							<input id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this User?')"/>
+							<input class="btn" id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this User?')"/>
 						</c:otherwise>
 					</c:choose>
 					</form>
 				</td>
 			</tr>
 		</c:forEach>
-			<tr class="footer">
-				<td colspan="3" class="first">
-					<a id="addUserLink" href="<spring:url value="users/new" />">Add User</a> |
-					<a id="backToConfigLink" href="<spring:url value='/configuration'/>">Back To Configuration Index</a>
-				</td>
-				<td colspan="1" class="last pagination" style="text-align:right"></td>
-			</tr>
 		</tbody>
 	</table>
+
+	<a id="addUserLink" href="<spring:url value="users/new" />">Add User</a> |
+	<a id="backToConfigLink" href="<spring:url value='/configuration'/>">Back To Configuration Index</a>
+
 </body>

@@ -403,12 +403,24 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	text-align: center;
 }
 
-.table th.centered{
-	text-align:center;
+.table tr.expandable td table tr.right-align th,
+.table tr.expandable td table tr.right-align td {
+	text-align:right;
 }
 
-.table td.centered{
-	text-align:center;
+.table tr.expandable td table tr th.right-align,
+.table tr.expandable td table tr td.right-align {
+	text-align:right;
+}
+
+.table tr.expandable td table tr.left-align th,
+.table tr.expandable td table tr.left-align td {
+	text-align:left;
+}
+
+.table tr.expandable td table tr th.left-align,
+.table tr.expandable td table tr td.left-align {
+	text-align:left;
 }
 
 .table td {
@@ -430,6 +442,16 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 .table-hover tbody tr.expandable:hover td,
 .table-hover tbody tr.expandable:hover th {
 	background-color:#FFFFFF;
+}
+
+
+.table-striped tbody > tr:nth-child(2n+1) > td.no-color, 
+.table-striped tbody > tr:nth-child(2n+1) > th.no-color {
+	background-color:#FFFFFF;
+}
+
+.dropdown-menu.pull-right {
+	
 }
 
 form {
@@ -471,6 +493,9 @@ th.headerSortDown {
 
 .table th table th, .table td table td {
 	border-top:0px;
+}
+
+.table th table th.centered, .table td table td.centered {
 	vertical-align:middle;
 }
 
@@ -555,4 +580,8 @@ th.headerSortDown {
 
 td.bold {
 	font-weight:bold;
+}
+
+select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="checkbox"]:focus {
+	outline:none;
 }

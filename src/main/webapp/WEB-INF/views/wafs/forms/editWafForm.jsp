@@ -13,17 +13,17 @@
 		<table>
 			<tbody>
 			    <tr>
-					<td>Name</td>
-					<td class="inputValue">
+					<td class="no-color">Name</td>
+					<td class="inputValue no-color">
 						<form:input style="margin:5px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="50" value="${ waf.name }"/>
 					</td>
-					<td style="padding-left: 5px">
+					<td class="no-color" style="padding-left: 5px">
 						<form:errors path="name" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
-					<td>Type</td>
-					<td class="inputValue">
+					<td class="no-color">Type</td>
+					<td class="inputValue no-color">
 						<form:select style="margin:5px;" id="typeSelect" path="wafType.id">
 							<c:forEach var="type" items="${ wafTypeList }">
 								<option value="${ type.id }"
@@ -34,7 +34,7 @@
 							</c:forEach>
 						</form:select>
 					</td>
-					<td style="padding-left: 5px">
+					<td class="no-color" style="padding-left: 5px">
 						<form:errors path="wafType.id" cssClass="errors" />
 					</td>
 				</tr>
