@@ -30,7 +30,6 @@ import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
@@ -125,80 +124,69 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	}
 	
 	@Override
-	public void checkConfiguration(RemoteProviderType remoteProviderType, 
-			BindingResult result, int typeId) {
-		RemoteProviderType databaseRemoteProviderType = decryptCredentials(load(typeId));
-				
-		if (remoteProviderType != null &&
-				remoteProviderType.getPassword() != null &&
-				remoteProviderType.getPassword().equals(USE_OLD_PASSWORD) &&
-				databaseRemoteProviderType != null &&
-				databaseRemoteProviderType.getPassword() != null) {
-			remoteProviderType.setPassword(databaseRemoteProviderType.getPassword());
+	public ResponseCode checkConfiguration(String username, String password, String apiKey, 
+			int typeId) {
+		
+		RemoteProviderType databaseRemoteProviderType = load(typeId);
+		
+		if (databaseRemoteProviderType == null) {
+			return ResponseCode.BAD_ID;
 		}
 		
-		if (remoteProviderType != null &&
-				remoteProviderType.getApiKey() != null &&
-				remoteProviderType.getApiKey().startsWith(USE_OLD_PASSWORD) &&
-				databaseRemoteProviderType != null &&
-				databaseRemoteProviderType.getApiKey() != null) {
-			remoteProviderType.setApiKey(databaseRemoteProviderType.getApiKey());
-		}
+		databaseRemoteProviderType = decryptCredentials(databaseRemoteProviderType);
 		
+		// TODO test this
 		// If the username hasn't changed but the password has, update the apps instead of deleting them.
 		
-		if (databaseRemoteProviderType != null &&
-				remoteProviderType != null && remoteProviderType.getUsername() != null &&
-				remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername()) &&
-				remoteProviderType != null && remoteProviderType.getPassword() != null &&
-				!remoteProviderType.getPassword().equals(databaseRemoteProviderType.getPassword())) {
+		if (databaseRemoteProviderType.getHasUserNamePassword() && 
+				username != null && password != null && 
+				username.equals(databaseRemoteProviderType.getUsername()) &&
+				!password.equals(USE_OLD_PASSWORD) &&
+				!password.equals(databaseRemoteProviderType.getPassword())) {
 			
 			log.warn("Provider password has changed, updating applications.");
 			
-			remoteProviderApplicationService.updateApplications(remoteProviderType);
+			databaseRemoteProviderType.setPassword(password);
+			remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
+			store(databaseRemoteProviderType);
+			return ResponseCode.SUCCESS;
 			
-		} else if (databaseRemoteProviderType == null || 
-				(remoteProviderType != null && remoteProviderType.getUsername() != null &&
-				!remoteProviderType.getUsername().equals(databaseRemoteProviderType.getUsername())) ||
-				(remoteProviderType != null && remoteProviderType.getApiKey() != null &&
-				!remoteProviderType.getApiKey().equals(
-						databaseRemoteProviderType.getApiKey()))) {
+		} else if ((databaseRemoteProviderType.getHasApiKey() && 
+				apiKey != null && !apiKey.startsWith(USE_OLD_PASSWORD) &&
+				!apiKey.equals(databaseRemoteProviderType.getApiKey()))
+				||
+				((databaseRemoteProviderType.getHasUserNamePassword() && 
+				username != null &&
+				!username.equals(databaseRemoteProviderType.getUsername())))) {
+			
+			databaseRemoteProviderType.setApiKey(apiKey);
+			databaseRemoteProviderType.setUsername(username);
 		
 			List<RemoteProviderApplication> apps = remoteProviderApplicationService
-													.getApplications(remoteProviderType);
+													.getApplications(databaseRemoteProviderType);
 			
 			if (apps == null) {
-				// Here the apps coming back were null. For now let's put an error page.
-				// TODO finalize this process.
-				String field = null;
-				if (remoteProviderType.getHasApiKey()) {
-					field = "apiKey";
-				} else {
-					field = "username";
-				}
 				
-				result.rejectValue(field, "errors.other", 
-						"We were unable to retrieve a list of applications using these credentials." +
-						" Please ensure that the credentials are valid and that there are applications available in the " + 
-								remoteProviderType.getName() + " account.");
+				return ResponseCode.NO_APPS;
+
 			} else {
 				log.warn("Provider username has changed, deleting old apps.");
 				
 				remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
 
-				remoteProviderType.setRemoteProviderApplications(apps);
+				databaseRemoteProviderType.setRemoteProviderApplications(apps);
 				
-				if (remoteProviderType.getRemoteProviderApplications() != null) {
-					for (RemoteProviderApplication remoteProviderApplication : 
-							remoteProviderType.getRemoteProviderApplications()) {
-						remoteProviderApplicationService.store(remoteProviderApplication);
-					}
+				for (RemoteProviderApplication remoteProviderApplication : 
+						databaseRemoteProviderType.getRemoteProviderApplications()) {
+					remoteProviderApplicationService.store(remoteProviderApplication);
 				}
 								
-				store(encryptCredentials(remoteProviderType));
+				store(encryptCredentials(databaseRemoteProviderType));
+				return ResponseCode.SUCCESS;
 			}
 		} else {
 			log.info("No change was made to the credentials.");
+			return ResponseCode.SUCCESS;
 		}
 	}
 

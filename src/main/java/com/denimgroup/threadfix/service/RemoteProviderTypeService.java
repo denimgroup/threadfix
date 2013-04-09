@@ -25,14 +25,16 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import org.springframework.validation.BindingResult;
-
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
 public interface RemoteProviderTypeService {
 	
 	String USE_OLD_PASSWORD = "no password here.";
 	String API_KEY_PREFIX = "************************";
+	
+	public static enum ResponseCode {
+		SUCCESS, BAD_ID, NO_APPS;
+	}
 
 	/**
 	 * 
@@ -64,10 +66,9 @@ public interface RemoteProviderTypeService {
 	 * Checks over the remote configuration and puts any errors into the result.
 	 * This is to tidy up the controller layer.
 	 * @param remoteProviderType
-	 * @param result
 	 */
-	void checkConfiguration(RemoteProviderType remoteProviderType, 
-			BindingResult result, int typeId);
+	ResponseCode checkConfiguration(String username, String password, String apiKey, 
+			int typeId);
 	
 	/**
 	 * Deletes all apps and username / password / API key

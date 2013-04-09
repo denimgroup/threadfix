@@ -193,4 +193,9 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setFilteredApplications(List<RemoteProviderApplication> filteredApplications) {
 		this.filteredApplications = filteredApplications;
 	}
+	
+	@Transient
+	public boolean getIsQualys() {
+		return name != null && name.equals(QUALYSGUARD_WAS);
+	}
 }
