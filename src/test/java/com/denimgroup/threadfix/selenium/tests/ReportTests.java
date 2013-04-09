@@ -88,42 +88,33 @@ public class ReportTests extends BaseTest {
 		String urlText = "http://testurl.com";
 
 		// set up an organization
-		organizationAddPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton();
+		ReportsIndexPage reportsIndexPage = loginPage.login("user", "password")
+											.clickOrganizationHeaderLink()
+											.clickAddTeamButton()
+											.addNewTeam(orgName)
+											.expandTeamRowByName(orgName)
+											.addNewApplication(orgName, appName, urlText, "Low")
+											.clickReportsHeaderLink();
 
-		organizationAddPage.setNameInput(orgName);
 
-		// add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid()
-				.clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
 
 		// Run Trending Report
-		driver.findElementById("reportsHeader").click();
-		ReportsIndexPage reportsIndexPage = new ReportsIndexPage(driver);
 		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("Reports Page not found", PageText.contains("Reports"));
-		reportsIndexPage.fillAllClickSaveReport("Trending Report",
+		reportsIndexPage = reportsIndexPage.fillAllClickSaveReport("Trending Report",
 				"testCreateApplicationOrg", "testCreateApplicationApp", "HTML");
+		
+		assertTrue("Reports Page not found", reportsIndexPage.isReportPresent());
 
-		// Generated Report
-		generatedReportPage = new GeneratedReportPage(driver);
-		generatedReportPage.isTextPresentPageHeader();
+		// Delete organization and Logout
+		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
+								.expandTeamRowByName(orgName)
+								.clickViewTeamLink()
+								.clickDeleteButton()
+								.logout();
 
-		// Navigate to Organization IndexPage
-		driver.findElementById("orgHeader").click();
-		organizationIndexPage = new TeamIndexPage(driver);
-		organizationIndexPage.clickOrganizationLink(orgName);
-
-		// Delete and Logout
-		organizationDetailPage = new TeamDetailPage(driver);
-		organizationDetailPage.clickDeleteButton().logout();
 	}
-
+/*
 	@Ignore // this test consistenly generates OutOfMemoryErrors on my box. We don't want to screw up all the tests.
 	@Test
 	public void generateAllReports() throws MalformedURLException {
@@ -270,14 +261,16 @@ public class ReportTests extends BaseTest {
 
 		sleep(1000);
 	}
-
-	/**
+*/
+	/*
 	 * This is a smoke test, to be run on a blank database. It adds a bunch of
 	 * apps with random criticalities and scan uploads and then tells you what
 	 * the basic statistics should be.
 	 * 
 	 * Requires human checking.
-	 */
+	*/
+	
+/*
 	@Ignore
 	@Test
 	public void portfolioTest() {
@@ -348,4 +341,5 @@ public class ReportTests extends BaseTest {
 			e.printStackTrace();
 		}
 	}
+	*/
 }

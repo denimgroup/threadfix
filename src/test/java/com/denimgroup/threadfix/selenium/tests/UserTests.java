@@ -30,9 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserEditPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -55,17 +53,16 @@ public class UserTests extends BaseTest {
 	public void testCreateUser() {
 		String userName = "testCreateUser", password = "testCreateUser";
 
-		TeamIndexPage organizationIndexPage = loginPage.login("user", "password");
-		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+													.clickManageUsersLink();
 
-		UserIndexPage userIndexPage = configurationIndexPage.clickManageUsersLink();
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
-		UserNewPage newUserPage = userIndexPage.clickAddUserLink();
+		UserNewPage newUserPage = userIndexPage.clickAddUserLink()
+										.setNameInput(userName)
+										.setPasswordInput(userName)
+										.setPasswordConfirmInput(password);
 
-		newUserPage.setNameInput(userName);
-		newUserPage.setPasswordInput(userName);
-		newUserPage.setPasswordConfirmInput(password);
 
 		userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
 		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
@@ -84,15 +81,12 @@ public class UserTests extends BaseTest {
 
 		String longInput = stringBuilder.toString();
 
-		TeamIndexPage organizationIndexPage = loginPage.login("user", "password");
-		ConfigurationIndexPage configurationIndexPage = organizationIndexPage.clickConfigurationHeaderLink();
-
-		UserIndexPage userIndexPage = configurationIndexPage.clickManageUsersLink();
-
-		UserNewPage newUserPage = userIndexPage.clickAddUserLink();
+		UserNewPage newUserPage = loginPage.login("user", "password")
+											.clickManageUsersLink()
+											.clickAddUserLink()
+											.clickAddUserButtonInvalid();
 
 		// Test Empty
-		newUserPage = newUserPage.clickAddUserButtonInvalid();
 
 		assertTrue("Name error not present", newUserPage.getNameError().equals("Name is a required field."));
 		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
@@ -130,7 +124,7 @@ public class UserTests extends BaseTest {
 		newUserPage.setPasswordInput("dummy password");
 		newUserPage.setPasswordConfirmInput("dummy password");
 
-		userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
+		UserIndexPage userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
 
 		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
 
@@ -155,21 +149,22 @@ public class UserTests extends BaseTest {
 		String userName = "testCreateUser", password = "testCreateUser";
 		String editedUserName = "testCreateUser3", editedPassword = "testCreateUser3";
 
-		UserNewPage newUserPage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
-				.clickManageUsersLink()
-				.clickAddUserLink();
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+											.clickManageUsersLink();
 
-		newUserPage.setNameInput(userName);
-		newUserPage.setPasswordInput(userName);
-		newUserPage.setPasswordConfirmInput(password);
+		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
-		UserEditPage editUserPage = newUserPage.clickAddUserButton()
-				.logout()
-				.login(userName, password)
-				.clickConfigurationHeaderLink()
-				.clickManageUsersLink()
-				.clickEditLink(userName);
+		UserEditPage editUserPage = userIndexPage.clickAddUserLink()
+											.setNameInput(userName)
+											.setPasswordInput(userName)
+											.setPasswordConfirmInput(password)
+											.clickAddUserButton()
+											.logout()
+											.login(userName, password)
+											.clickManageUsersLink()
+											.clickEditLink(userName);
+		
+
 
 		editUserPage.setNameInput(editedUserName);
 		editUserPage.setPasswordConfirmInput(editedPassword);
@@ -177,7 +172,7 @@ public class UserTests extends BaseTest {
 
 		// Save and check that the name changed
 
-		UserIndexPage userIndexPage = editUserPage.clickUpdateUserButton();
+		userIndexPage = editUserPage.clickUpdateUserButton();
 
 		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
@@ -185,7 +180,6 @@ public class UserTests extends BaseTest {
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
 		userIndexPage.logout().login(editedUserName, editedPassword)
-		.clickConfigurationHeaderLink()
 		.clickManageUsersLink()
 		.clickDeleteButtonSameUser(editedUserName);
 	}
@@ -198,7 +192,6 @@ public class UserTests extends BaseTest {
 		// Set up the two User objects for the test
 
 		UserNewPage newUserPage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
 				.clickManageUsersLink()
 				.clickAddUserLink();
 
@@ -277,8 +270,7 @@ public class UserTests extends BaseTest {
 	@Test
 	public void navigationTest() {
 		loginPage.login("user", "password")
-		.clickConfigurationHeaderLink()
-		.clickChangeMyPasswordLink();
+		.clickChangePasswordLink();
 
 		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("User Password Change Page not found", PageText.contains("User Password Change"));
@@ -287,8 +279,7 @@ public class UserTests extends BaseTest {
 	@Test
 	public void testValidation() {
 		changePasswordPage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
-				.clickChangeMyPasswordLink()
+				.clickChangePasswordLink()
 				.setCurrentPassword(" ")
 				.setNewPassword("password1234")
 				.setConfirmPassword("password1234")
@@ -333,7 +324,7 @@ public class UserTests extends BaseTest {
 
 	@Test
 	public void testChangePassword() {
-		TeamIndexPage orgIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
 				.setNameInput("testuser")
@@ -341,26 +332,24 @@ public class UserTests extends BaseTest {
 				.setPasswordInput("testpassword")
 				.clickAddUserButton()
 				.logout()
-				.login("testuser", "testpassword");
-
-		assertTrue("Change password link not present.", orgIndexPage.isElementPresent("changePasswordLink"));		
-
-		orgIndexPage = orgIndexPage.clickChangePasswordLinkIfPresent()
+				.login("testuser", "testpassword")
+				.clickChangePasswordLink()
 				.setConfirmPassword("newtestpassword")
 				.setNewPassword("newtestpassword")
 				.setCurrentPassword("testpassword")
 				.clickUpdate()
 				.logout()
-				.login("testuser", "newtestpassword");
-
-		assertFalse("Change password link present.", orgIndexPage.isElementPresent("changePasswordLink"));
-
-		UserIndexPage userIndexPage = orgIndexPage.clickConfigurationHeaderLink()
+				.login("testuser", "newtestpassword")
 				.clickManageUsersLink()
 				.clickDeleteButtonSameUser("testuser")
 				.login("user", "password")
-				.clickConfigurationHeaderLink()
 				.clickManageUsersLink();
+	
+
+
+		//assertFalse("Change password link present.", orgIndexPage.isElementPresent("changePasswordLink"));
+
+
 
 		assertFalse("User was not deleted", userIndexPage.isUserNamePresent("testuser"));
 

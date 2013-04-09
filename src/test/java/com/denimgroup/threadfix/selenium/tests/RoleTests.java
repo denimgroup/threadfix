@@ -37,8 +37,8 @@ public class RoleTests extends BaseTest {
 		// needs to be alphabetically before "Admin" preset role
 		String name = "Aa" + getRandomString(15);
 
-		rolesIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
-				.clickRolesLink()
+		rolesIndexPage = loginPage.login("user", "password")
+				.clickManageRolesLink()
 				.createRole(name);
 
 		assertTrue("The name does not match.", 
@@ -54,8 +54,8 @@ public class RoleTests extends BaseTest {
 		String name1 = "1" + getRandomString(15);
 		String name2 = "2" + getRandomString(15);
 
-		rolesIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
-				.clickRolesLink()
+		rolesIndexPage = loginPage.login("user", "password")
+				.clickManageRolesLink()
 				.createRole(name1)
 				.clickEditLink(0)
 				.clickUpdateRoleButton();
@@ -84,8 +84,8 @@ public class RoleTests extends BaseTest {
 
 		// Test empty string
 		
-		roleCreatePage = loginPage.login("user", "password").clickConfigurationHeaderLink()
-				.clickRolesLink()
+		roleCreatePage = loginPage.login("user", "password")
+				.clickManageRolesLink()
 				.clickCreateRoleLink()
 				.setDisplayNameInput(emptyName)
 				.clickCreateRoleButtonInvalid();
@@ -121,8 +121,7 @@ public class RoleTests extends BaseTest {
 		String name = "testName" + getRandomString(10);
 		
 		RoleCreatePage roleCreatePage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
-				.clickRolesLink()
+				.clickManageRolesLink()
 				.clickCreateRoleLink()
 				.setDisplayNameInput(name);
 		
@@ -184,8 +183,7 @@ public class RoleTests extends BaseTest {
 		String admin = "Administrator";
 		
 		RoleEditPage roleEditPage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
-				.clickRolesLink()
+				.clickManageRolesLink()
 				.clickEditLink(admin);
 		
 		for (String role : Role.ALL_PERMISSIONS) {

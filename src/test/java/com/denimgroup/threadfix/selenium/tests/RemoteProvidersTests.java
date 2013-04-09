@@ -26,24 +26,21 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.EditMappingPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProviderCredentialsPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
-@Ignore
+
 public class RemoteProvidersTests extends BaseTest {
 	private FirefoxDriver driver;
 
 	private static LoginPage loginPage;
 
-	private TeamIndexPage organizationIndexPage;
 	private EditMappingPage edtMapPage;
 	
 	private static final String SENTINEL_API_KEY = "your-key";
@@ -62,9 +59,8 @@ public class RemoteProvidersTests extends BaseTest {
 	@Test
 	public void navigationTest() {
 		String pageHeader = loginPage.login("user", "password")
-									 .clickConfigurationHeaderLink()
-									 .clickRemoteProvidersLink()
-									 .getH2Tag();
+									.clickRemoteProvidersLink()
+									.getH2Tag();
 		
 		assertTrue("Remote Provider Page not found",
 				pageHeader.contains("Remote Providers"));
@@ -77,7 +73,6 @@ public class RemoteProvidersTests extends BaseTest {
 		}
 		
 		RemoteProviderCredentialsPage rpCredPage = loginPage.login("user", "password")
-							  								.clickConfigurationHeaderLink()
 							  								.clickRemoteProvidersLink()
 							  								.clickConfigure(2);
 		
@@ -97,7 +92,6 @@ public class RemoteProvidersTests extends BaseTest {
 		}
 
 		String PageHeader = loginPage.login("user", "password")
-									 .clickConfigurationHeaderLink()
 									 .clickRemoteProvidersLink()
 									 .clickClearConfigButton(0)
 									 .getH2Tag();
@@ -112,7 +106,6 @@ public class RemoteProvidersTests extends BaseTest {
 		}
 		
 		RemoteProviderCredentialsPage rpCredPage = loginPage.login("user", "password")
-															.clickConfigurationHeaderLink()
 															.clickRemoteProvidersLink()
 															.clickConfigure(1);
 
@@ -135,7 +128,6 @@ public class RemoteProvidersTests extends BaseTest {
 		}
 
 		String pageHeader = loginPage.login("user", "password")
-									 .clickConfigurationHeaderLink()
 									 .clickRemoteProvidersLink()
 									 .clickClearConfigButton(0)
 									 .getH2Tag();
@@ -150,7 +142,6 @@ public class RemoteProvidersTests extends BaseTest {
 			return;
 		}
 		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-														.clickConfigurationHeaderLink()
 														.clickRemoteProvidersLink();
 		
 		rpIndexPage.clickConfigure(0);
@@ -174,20 +165,20 @@ public class RemoteProvidersTests extends BaseTest {
 		if (SENTINEL_API_KEY.equals("your-key")) {
 			return;
 		}
+		String orgName = "Sample WhiteHat Remote Provider Team";
+		String appName = "WhiteHat Application";
+		String urlText = "http://test.com";
 		edtMapPage = loginPage.login("user", "password")
-				              .clickAddTeamButton()
-				              .setNameInput("Sample WhiteHat Remote Provider Team")
-				              .clickSubmitButtonValid()
-				              .clickAddApplicationLink()
-				              .setNameInput("WhiteHat Application")
-				              .setUrlInput("http://test.com")
-				              .clickAddApplicationButton()
-							  .clickConfigurationHeaderLink()
-							  .clickRemoteProvidersLink()
-							  .clickConfigure(2)
-							  .setAPI(SENTINEL_API_KEY)
-							  .clickSave(false)
-		        			  .clickEdit(0);
+							.clickOrganizationHeaderLink()
+							.clickAddTeamButton()
+							.addNewTeam(orgName)
+							.expandTeamRowByName(orgName)
+							.addNewApplication(orgName, appName, urlText, "Low")
+							.clickRemoteProvidersLink()
+							.clickConfigure(2)
+							.setAPI(SENTINEL_API_KEY)
+							.clickSave(false)
+		        			.clickEdit(0);
 		
 		String pageHeader = driver.findElementByTagName("h2").getText();
 		assertTrue("Mapping Page Not Found",
@@ -206,7 +197,6 @@ public class RemoteProvidersTests extends BaseTest {
 			return;
 		}
 		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-				.clickConfigurationHeaderLink()
 				.clickRemoteProvidersLink();
 		
 		rpIndexPage.clickEdit(3);
@@ -232,10 +222,9 @@ public class RemoteProvidersTests extends BaseTest {
 		if (SENTINEL_API_KEY.equals("your-key")) {
 			return;
 		}
-		organizationIndexPage = loginPage.login("user", "password");
-		edtMapPage = organizationIndexPage.clickConfigurationHeaderLink()
-										  .clickRemoteProvidersLink()
-										  .clickEdit(3);
+		edtMapPage = loginPage.login("user", "password")
+							.clickRemoteProvidersLink()
+							.clickEdit(3);
 		
 		String PageHeader = driver.findElementByTagName("h2").getText();
 		assertTrue("Mapping Page Not Found",
@@ -261,7 +250,6 @@ public class RemoteProvidersTests extends BaseTest {
 			return;
 		}
 		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-														.clickConfigurationHeaderLink()
 														.clickRemoteProvidersLink();
 		rpIndexPage.clickEdit(1);
 		edtMapPage = new EditMappingPage(driver);
@@ -287,7 +275,6 @@ public class RemoteProvidersTests extends BaseTest {
         	.clickBackToAppLink()
         	.clickDeleteLink()
         	.clickDeleteButton()
-        	.clickConfigurationHeaderLink()
         	.clickRemoteProvidersLink()
         	.clickClearConfigButton(0);
 	}

@@ -79,6 +79,11 @@ public class TeamIndexPage extends BasePage {
 		return new TeamIndexPage(driver);
 	}
 	
+	public TeamIndexPage expandTeamRow(int row){
+		driver.findElementById("teamName"+row).click();
+		return new TeamIndexPage(driver);
+	}
+	
 	public boolean teamAddedToTable(String name){
 	
 		return driver.findElementById("teamTable").getText().contains(name);
@@ -156,4 +161,30 @@ public class TeamIndexPage extends BasePage {
 			return null;
 		}
 	}
+
+	public boolean isOrganizationNamePresent(String OrgName) {
+		
+		return driver.findElementById("main-content").getText().contains(OrgName);
+	}
+
+	public TeamIndexPage clickSubmitButtonInvalid() {
+		driver.findElementById("submitTeamModal").click();
+		return new TeamIndexPage(driver);
+	}
+
+	public TeamIndexPage setNameInput(String name) {
+		driver.findElementById("teamNameInput").clear();
+		driver.findElementById("teamNameInput").sendKeys(name);
+		return new TeamIndexPage(driver);
+	}
+
+	public TeamIndexPage clickSubmitButtonValid() {
+		driver.findElementById("submitTeamModal").click();
+		return new TeamIndexPage(driver);
+	}
+
+	public String getTeamName(int i) {
+		return driver.findElementById("teamName"+i).getText().trim();
+	}
+	
 }

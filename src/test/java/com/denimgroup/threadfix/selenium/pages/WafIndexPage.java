@@ -23,11 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -40,31 +38,16 @@ public class WafIndexPage extends BasePage {
 	private WebElement addWafLink;
 	private WebDriverWait wait = new WebDriverWait(driver,10);
 	private List<WebElement> names = new ArrayList<WebElement>();
-	private List<WebElement> types = new ArrayList<WebElement>();
-	private List<WebElement> editButtons = new ArrayList<WebElement>();
-	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
-	private List<WebElement> rulesButtons = new ArrayList<WebElement>();
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		if(!driver.findElementById("wafTableBody").getText().contains("No WAFs found.")){
-			if(getNumRows()!=0){
-				types = driver.findElementsByClassName("details");
-				editButtons = driver.findElementsByLinkText("Edit WAF");
-				deleteButtons = driver.findElementsByLinkText("Delete");
-				rulesButtons = driver.findElementsByLinkText("Rules");
-				names = driver.findElementsByClassName("details");
-			
-			}
-		}
-		
 		addWafLink = driver.findElementById("addWafModalButton");
 	}
 	
 	public int getNumRows() {
 		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
 		
-		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().equals("No WAFs found.")) {
+		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().contains("No WAFs found.")) {
 			return 0;
 		}		
 		
@@ -72,31 +55,22 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafDetailPage clickRules(String wafName){
+		if(getNumRows()!=0){
+			names = driver.findElementsByClassName("details");
+		}
 		for(int i=0;i<names.size();i++){
 			if(names.get(i).getText().contains(wafName)){
-				rulesButtons.get(i).click();
+				driver.findElementsByLinkText("Rules").get(i).click();
 				break;
 			}
 		}
 		return new WafDetailPage(driver);
 	}
 	
-	public WafIndexPage clickDeleteWaf(String wafName){
-		for(int i=0;i<names.size();i++){
-			if(names.get(i).getText().contains(wafName)){
-				deleteButtons.get(i).click();
-				break;
-			}
-		}
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
-		return new WafIndexPage(driver);
-	}
-	
 	public WafIndexPage clickDeleteWaf(int i){
 		driver.findElementById("deleteWaf"+i).click();
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
+		handleAlert();
+		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 

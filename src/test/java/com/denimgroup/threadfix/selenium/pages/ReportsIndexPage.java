@@ -87,4 +87,8 @@ public class ReportsIndexPage extends BasePage {
 		sleep(1000);
 		return new ReportsIndexPage(driver);
 	}
+
+	public boolean isReportPresent() {
+		return driver.findElementById("successDiv").isDisplayed();
+	}
 }

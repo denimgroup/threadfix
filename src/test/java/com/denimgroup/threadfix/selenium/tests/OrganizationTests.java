@@ -54,25 +54,23 @@ public class OrganizationTests extends BaseTest {
 		loginPage = LoginPage.open(driver);
 	}
 	
-	public TeamIndexPage deleteOrganization(TeamIndexPage organizationIndexPage, String newOrgName) {
-		organizationDetailPage = organizationIndexPage.clickOrganizationLink(newOrgName);
-		return organizationDetailPage.clickDeleteButton();
-	}
+
 	
 	@Test
 	public void testCreateOrganization(){
 		String newOrgName = "testCreateOrganization";
 		
-		organizationIndexPage = loginPage.login("user", "password");
+		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 		
-		organizationDetailPage = organizationIndexPage.clickAddTeamButton().setNameInput(newOrgName).clickSubmitButtonValid();
-		assertTrue("Organization Page did not save the name correctly.", newOrgName.equals(organizationDetailPage.getOrgName()));
+		organizationIndexPage = organizationIndexPage.clickAddTeamButton()
+													.addNewTeam(newOrgName);
 		
-		organizationIndexPage = organizationDetailPage.clickBackToList();		
 		assertTrue("The organization was not present in the table.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 
-		organizationIndexPage = deleteOrganization(organizationIndexPage, newOrgName);
+		organizationIndexPage = organizationIndexPage.expandTeamRowByName(newOrgName)
+													.clickViewTeamLink()
+													.clickDeleteButton();
 		assertFalse("The organization was still present after attempted deletion.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 	
 		loginPage = organizationIndexPage.logout();
@@ -88,40 +86,42 @@ public class OrganizationTests extends BaseTest {
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 		// Test empty input
-		addOrganizationPage = loginPage.login("user", "password")
-									   .clickAddTeamButton()
-									   .setNameInput(emptyString)
-									   .clickSubmitButtonInvalid();
+		organizationIndexPage = loginPage.login("user", "password")
+									.clickOrganizationHeaderLink()
+									.clickAddTeamButton()
+									.setNameInput(emptyString)
+									.clickSubmitButtonInvalid();
 		
-		assertTrue("The correct error text was not present", emptyInputError.equals(addOrganizationPage.getErrorText()));
+		assertTrue("The correct error text was not present", emptyInputError.equals(organizationIndexPage.getNameErrorMessage()));
 		
 		// Test whitespace input
-		addOrganizationPage = addOrganizationPage.setNameInput(whiteSpaceString)
+		organizationIndexPage = organizationIndexPage.setNameInput(whiteSpaceString)
 												 .clickSubmitButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(addOrganizationPage.getErrorText()));
+		assertTrue("The correct error text was not present", emptyInputError.equals(organizationIndexPage.getNameErrorMessage()));
 		
 		// Test browser length limit
-		organizationDetailPage = addOrganizationPage.setNameInput(longInput)
+		organizationIndexPage = organizationIndexPage.setNameInput(longInput)
 													.clickSubmitButtonValid();
 		
-		assertTrue("The organization name was not cropped correctly.", organizationDetailPage.getOrgName().length() == Organization.NAME_LENGTH);
+		assertTrue("The organization name was not cropped correctly.", organizationIndexPage.getTeamName(1).length() == Organization.NAME_LENGTH);
 		
 		// Test name duplication checking
 		
-		String orgName = organizationDetailPage.getOrgName();
+		String orgName = organizationIndexPage.getTeamName(1);
 		
-		addOrganizationPage = organizationDetailPage.clickBackToList()
+		organizationIndexPage = organizationIndexPage.clickOrganizationHeaderLink()
 													.clickAddTeamButton()
 													.setNameInput(orgName)
 													.clickSubmitButtonInvalid();
 		
-		assertTrue(addOrganizationPage.getErrorText().equals("That name is already taken."));
+		assertTrue(organizationIndexPage.getNameErrorMessage().equals("That name is already taken."));
 		
 		// Delete and logout
-		loginPage = addOrganizationPage.clickTeamHeaderLink()
-												 .clickOrganizationLink(orgName)
-												 .clickDeleteButton()
-												 .logout();
+		loginPage = organizationIndexPage.clickOrganizationHeaderLink()
+									.expandTeamRowByName(orgName)
+									.clickViewTeamLink()
+									.clickDeleteButton()
+									.logout();
 	}
 	
 	@Test
@@ -129,24 +129,27 @@ public class OrganizationTests extends BaseTest {
 		String newOrgName = "testEditOrganization";
 		String editedOrgName = "testEditOrganization - edited";
 		
-		organizationIndexPage = loginPage.login("user", "password");
+		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 		
 		// Save an organization
-		organizationDetailPage = organizationIndexPage.clickAddTeamButton()
-													  .setNameInput(newOrgName)
-													  .clickSubmitButtonValid();
-		assertTrue("Organization Page did not save the name correctly.", newOrgName.equals(organizationDetailPage.getOrgName()));
+		organizationIndexPage = organizationIndexPage.clickAddTeamButton()
+													 .addNewTeam(newOrgName);
+		assertTrue("Organization Page did not save the name correctly.",  organizationIndexPage.isOrganizationNamePresent(newOrgName));
 		
 		// Edit that organization
-		organizationDetailPage = organizationDetailPage.clickEditOrganizationLink()
-													   .setNameInput(editedOrgName)
-													   .clickUpdateButtonValid();
+		organizationDetailPage = organizationIndexPage.clickOrganizationHeaderLink()
+													.expandTeamRowByName(newOrgName)
+													.clickViewTeamLink().clickEditOrganizationLink()
+													.setNameInput(editedOrgName)
+													.clickUpdateButtonValid();
 		assertTrue("Editing did not change the name.", editedOrgName.equals(organizationDetailPage.getOrgName()));
 		
-		organizationIndexPage = organizationDetailPage.clickTeamHeaderLink();
+		organizationIndexPage = organizationDetailPage.clickOrganizationHeaderLink()
+													.expandTeamRowByName(newOrgName)
+													.clickViewTeamLink()
+													.clickDeleteButton();
 		
-		organizationIndexPage = deleteOrganization(organizationIndexPage, newOrgName);
 		assertFalse("The organization was still present after attempted deletion.", organizationIndexPage.isOrganizationNamePresent(newOrgName));
 	
 		loginPage = organizationIndexPage.logout();
@@ -164,15 +167,13 @@ public class OrganizationTests extends BaseTest {
 		
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 		
-		organizationIndexPage = loginPage.login("user", "password");
-		
-		organizationDetailPage = organizationIndexPage.clickAddTeamButton()
-													  .setNameInput(orgNameDuplicateTest)
-													  .clickSubmitButtonValid()
-													  .clickBackToList()
-													  .clickAddTeamButton()
-													  .setNameInput(orgName)
-													  .clickSubmitButtonValid();
+		organizationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+																.clickAddTeamButton()
+																.addNewTeam(orgName)
+																.clickAddTeamButton()
+																.addNewTeam(orgNameDuplicateTest)
+																.expandTeamRowByName(orgName)
+																.clickViewTeamLink();
 		
 		// Test edit with no changes
 		organizationDetailPage = organizationDetailPage.clickEditOrganizationLink().clickUpdateButtonValid();
@@ -202,13 +203,16 @@ public class OrganizationTests extends BaseTest {
 													 .clickUpdateButtonInvalid();
 		
 		assertTrue(editOrganizationPage.getErrorText().equals("That name is already taken."));
-					
+				
 		// Delete and logout
-		loginPage = editOrganizationPage.clickTeamHeaderLink()
-										.clickOrganizationLink(orgName)
-										.clickDeleteButton()
-										.clickOrganizationLink(orgNameDuplicateTest)
-										.clickDeleteButton()
-										.logout();
+		loginPage = editOrganizationPage.clickOrganizationHeaderLink()
+									.expandTeamRow(1)
+									.clickViewTeamLink()
+									.clickDeleteButton()
+									.clickOrganizationHeaderLink()
+									.expandTeamRow(1)
+									.clickViewTeamLink()
+									.clickDeleteButton()
+									.logout();
 	}
 }

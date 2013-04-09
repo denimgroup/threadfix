@@ -65,7 +65,7 @@ public class WafTests extends BaseTest {
 	public TeamDetailPage teamDetailPage;
 	public ReportsIndexPage reportsIndexPage;
 	public GeneratedReportPage generatedReportPage;
-	public AddOrganizationPage organizationAddPage;
+	public TeamIndexPage organizationIndexPage;
 	public ApplicationAddPage applicationAddPage;
 	
 	Random generator = new Random();
@@ -109,11 +109,10 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		wafIndexPage = wafIndexPage.clickDeleteWaf(1);
+		loginPage = wafIndexPage.clickDeleteWaf(1).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
-		loginPage = wafIndexPage.logout();
 	}
 	
 	@Test
@@ -131,11 +130,10 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(1);
+		loginPage = wafIndexPage.clickDeleteWaf(1).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
-		loginPage = wafIndexPage.logout();
 		
 	}
 	
@@ -156,11 +154,11 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(1);
+		loginPage = wafIndexPage.clickDeleteWaf(1).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
-		loginPage = wafIndexPage.logout();
+
 		
 	}
 	
@@ -183,11 +181,11 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(1);
+		wafIndexPage = wafIndexPage.clickDeleteWaf(1);
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
-		loginPage = wafIndexPage.logout();
+		loginPage = wafIndexPage.clickWafsHeaderLink().logout();
 		
 	}
 	
@@ -210,7 +208,7 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(1);
+		wafIndexPage = wafIndexPage.clickDeleteWaf(1);
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
@@ -297,7 +295,7 @@ public class WafTests extends BaseTest {
 		assertTrue("Editing did not change the name.", wafIndexPage.isTextPresentInWafTableBody(editedOrgName));
 		assertTrue("Editing did not change the type.", wafIndexPage.isTextPresentInWafTableBody(type2));
 		
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(1);
+		wafIndexPage = wafIndexPage.clickDeleteWaf(1);
 		assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newOrgName));
 	
 		loginPage = wafIndexPage.clickWafsHeaderLink().logout();
@@ -316,19 +314,13 @@ public class WafTests extends BaseTest {
 		String urlText = "http://testur2.com";
 
 		//set up an organization
-		organizationAddPage = loginPage.login("user", "password").clickAddTeamButton();
-
-		organizationAddPage.setNameInput(orgName);
+		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+									.clickAddTeamButton()
+									.addNewTeam(orgName)
+									.expandTeamRowByName(orgName)
+									.addNewApplication(orgName, appName, urlText, "Low");
 
 		boolean first = true;
-
-		//add an application
-		applicationAddPage = organizationAddPage.clickSubmitButtonValid().clickAddApplicationLink();
-
-		applicationAddPage.setNameInput(appName);
-		applicationAddPage.setUrlInput(urlText);
-		applicationDetailPage = applicationAddPage.clickAddApplicationButton();
-
 
 		for (String channelc : fileMap.keySet()) {
 			if (first) {
@@ -359,12 +351,13 @@ public class WafTests extends BaseTest {
 				continue;
 			}
 
-			uploadScanPage = uploadScanPage
+			wafIndexPage = uploadScanPage
 					// clickAddChannelButton()
 					.setFileInput(mapEntry.getValue())
 					.setChannelSelect(mapEntry.getKey())
 					.clickUploadScanButton()
-					.clickUploadScanLink();
+					.clickUploadScanLink()
+					.clickWafsHeaderLink();
 
 		}
 
@@ -372,30 +365,27 @@ public class WafTests extends BaseTest {
 
 		String newWafName = "testCreateModSecWaf1";
 		String type = "mod_security";
-		driver.findElementById("wafsHeader").click();
-		wafIndexPage = new WafIndexPage(driver);
-		wafIndexPage.clickAddWafLink();
 
-		wafAddPage = new WafAddPage(driver);
-		wafAddPage.setNameInput(newWafName);
-		wafAddPage.setTypeSelect(type);
-		WafDetailPage wafDetailPage = wafAddPage.clickAddWafButton();
+		wafIndexPage.clickAddWafLink()
+				.createNewWaf(newWafName, type);
+
 		assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafDetailPage.getNameText()));
 
 		//Add waf to application
-		wafDetailPage.clickTeamHeaderLink();
-		organizationIndexPage = new TeamIndexPage(driver);
-		organizationIndexPage.clickOrganizationLink("testCreateOrg2");
-		organizationDetailPage = new TeamDetailPage(driver);
-		organizationDetailPage.clickTextLinkInApplicationsTableBody("testCreateApp2");
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		applicationEditPage = applicationDetailPage.clickEditLink();
-		applicationEditPage.setWafSelect("testCreateModSecWaf1");
-		applicationEditPage.clickUpdateApplicationButton();
-		applicationDetailPage = new ApplicationDetailPage(driver);
-		driver.findElementById("wafText").click();
+		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+				 .expandTeamRowByName(orgName)
+				 .clickApplicationDetailLink(appName)
+				 .clickActionButton()
+				 .clickShowDetails()
+				 .clickAddWaf()
+				 .addWaf(newWafName);
+
 
 		//Generating  Deny waf Rules
+		applicationDetailPage.clickWafsHeaderLink()
+							.clickRules(newWafName)
+							.setWafDirectiveSelect("deny");
+							
 		wafDetailPage = new WafDetailPage(driver);	
 		wafDetailPage.setWafDirectiveSelect("deny");
 		wafDetailPage.clickGenerateWafRulesButton();
@@ -429,7 +419,6 @@ public class WafTests extends BaseTest {
 	}
 	
 	// Generate Snort Waf Rules
-
 	@Test
 	public void attachWafToaNewApp() throws MalformedURLException {
 		String orgName = "testCreateOrg1";
