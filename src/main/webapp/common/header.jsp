@@ -43,7 +43,7 @@
 				<td id="tab-config" style="width: 20px;">
 					<div class="dropdown normalLinks">
 						<a id="configurationHeader" href="#">*</a>
-						<ul class="dropdown-menu pull-right" aria-labelledby="configurationHeader" role="menu">
+						<ul class="dropdown-menu pull-right" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
 							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 							    <li class="normalLinks">
 							    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>

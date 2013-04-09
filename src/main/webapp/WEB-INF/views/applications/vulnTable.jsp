@@ -72,15 +72,14 @@
 			<tr>
 				<c:if test="${ canModifyVulnerabilities }">
 					<th class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
-					<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+					<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Type</th>
 				</c:if>			    
 				<c:if test="${ not canModifyVulnerabilities }">
-					<th class="first" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>
+					<th class="first" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Type</th>
 				</c:if>			    
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
 				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
-				
 			</tr>
 		</thead>
 		<tbody>
@@ -136,7 +135,7 @@
 								<h4>Scan History</h4>
 								<table class="table">
 									<thead class="table">
-										<tr class="<c:out value="${ color }"/>">
+										<tr class="left-align <c:out value="${ color }"/>">
 											<th class="first">Channel</th>
 											<th>Scan Date</th>
 											<th class="last">User</th>
@@ -144,7 +143,7 @@
 									</thead>
 									<tbody>
 										<c:forEach var="finding" items="${ vulnerability.findings }" varStatus="status">
-											<tr class="bodyRow <c:out value="${ color }"/>">
+											<tr class="left-align bodyRow <c:out value="${ color }"/>">
 												<td id="scan${ status.count }ChannelType"><c:out
 														value="${ finding.scan.applicationChannel.channelType.name }" /></td>
 												<td id="scan${ status.count }ImportTime"><fmt:formatDate value="${ finding.scan.importTime.time }"

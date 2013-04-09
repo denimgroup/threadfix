@@ -18,9 +18,23 @@
 				<div id="teamInfoDiv${organization.id}" class="collapse"> 
 					<c:if test="${ empty organization.applications }">
 						No applications found.<br>
+					<div>
 					</c:if>
 					<c:if test="${ not empty organization.applications }">
+						<img src="<%=request.getContextPath()%>/images/DummyPieChart.PNG" style="width:280px">
+						
+					<div style="float:right">
 						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th class="centered">Open Vulns</th>
+									<th class="centered">Critical</th>
+									<th class="centered">High</th>
+									<th class="centered">Medium</th>
+									<th class="centered">Low</th>
+								</tr>
+							</thead>
 						<c:forEach var="application" items="${ organization.applications }">
 							<c:if test="${ application.active }">
 								<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
@@ -31,28 +45,18 @@
 									<spring:param name="orgId" value="${ organization.id }"/>
 									<spring:param name="appId" value="${ application.id }"/>
 								</spring:url>
-								<thead>
-									<tr>
-										<th></th>
-										<th>Open Vulns</th>
-										<th>Critical</th>
-										<th>High</th>
-										<th>Medium</th>
-										<th>Low</th>
-									</tr>
-								</thead>
 								<tr>
-									<td style="padding:5px;">
+									<td class="right-align" style="padding:5px;">
 										<a id="applicationLink${ application.id }" href="${ fn:escapeXml(appUrl) }">
 											<c:out value="${ application.name }"/>
 										</a>
 									</td>
-									<td id="numTotalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[5] }"/></td>
-									<td id="numCriticalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[4] }"/></td>
-									<td id="numHighVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[3] }"/></td>
-									<td id="numMediumVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[2] }"/></td>
-									<td id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
-									<td style="padding:5px;">
+									<td class="centered" id="numTotalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[5] }"/></td>
+									<td class="centered" id="numCriticalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[4] }"/></td>
+									<td class="centered" id="numHighVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[3] }"/></td>
+									<td class="centered" id="numMediumVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[2] }"/></td>
+									<td class="centered" id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
+									<td class="centered" style="padding:5px;">
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 									</td>
 								</tr>
@@ -70,6 +74,7 @@
 									<td></td>
 								</tr>
 						</table>
+					
 					</c:if>
 					<spring:url value="/organizations/{orgId}" var="organizationUrl">
 						<spring:param name="orgId" value="${ organization.id }"/>
@@ -79,6 +84,7 @@
 						<span style="padding-left:8px;">
 							<a id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
 						</span>
+					</div>
 					</div>
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
