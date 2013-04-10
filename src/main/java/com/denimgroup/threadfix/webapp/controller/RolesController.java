@@ -74,11 +74,10 @@ public class RolesController {
 			@Valid @ModelAttribute Role role, BindingResult result,
 			SessionStatus status) {
 		
-		roleService.validateRole(role, result);
-
-		if (result.hasErrors()) {
-			model.addAttribute("role", role);
-			model.addAttribute("displayName", role.getDisplayName());
+		String resultString = roleService.validateRole(role, result);
+		if (!resultString.equals(RoleService.SUCCESS)) {
+			model.addAttribute("errorMessage", resultString);
+			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/newForm.jsp");
 			return "ajaxFailureHarness";
 		}

@@ -6,7 +6,7 @@
 	<h4 id="myModalLabel">New Role</h4>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="newRoleModalBody">
 	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
 	<spring:url value="/configuration/roles/new" var="saveUrl"></spring:url>
@@ -25,7 +25,7 @@
 		</table>
 		<h3>Permissions</h3>
 	
-		<table class="table table-striped" style="margin-top: 5px">
+		<table class="table" style="margin-top: 5px">
 			<thead>
 				<tr>
 					<th class="long first">Permission</th>
@@ -34,7 +34,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="bodyRow">
+				<tr>
 					<td>Generate Reports</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canGenerateReportsTrue" path="canGenerateReports"
@@ -48,7 +48,7 @@
 							path="canGenerateReports" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Generate WAF Rules</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canGenerateWafRulesTrue" path="canGenerateWafRules"
@@ -62,7 +62,7 @@
 							path="canGenerateWafRules" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage API Keys</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageApiKeysTrue" path="canManageApiKeys" value="true" />
@@ -76,7 +76,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Applications</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageApplicationsTrue" path="canManageApplications"
@@ -90,7 +90,7 @@
 							path="canManageApplications" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Defect Trackers</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageDefectTrackersTrue" path="canManageDefectTrackers"
@@ -104,7 +104,7 @@
 							path="canManageDefectTrackers" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Remote Providers</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageRemoteProvidersTrue" path="canManageRemoteProviders"
@@ -118,7 +118,7 @@
 							path="canManageRemoteProviders" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Roles</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageRolesTrue" path="canManageRoles" value="true" /></td>
@@ -130,7 +130,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Teams</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageTeamsTrue" path="canManageTeams" value="true" /></td>
@@ -142,7 +142,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage Users</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageUsersTrue" path="canManageUsers" value="true" /></td>
@@ -154,7 +154,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Manage WAFs</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canManageWafsTrue" path="canManageWafs" value="true" /></td>
@@ -166,7 +166,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Modify Vulnerabilities</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canModifyVulnerabilitiesTrue" path="canModifyVulnerabilities"
@@ -180,7 +180,7 @@
 							path="canModifyVulnerabilities" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Submit Defects</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canSubmitDefectsTrue" path="canSubmitDefects" value="true" />
@@ -194,7 +194,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>Upload Scans</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canUploadScansTrue" path="canUploadScans" value="true" /></td>
@@ -206,7 +206,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>View Error Logs</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canViewErrorLogsTrue" path="canViewErrorLogs" value="true" />
@@ -220,7 +220,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td>View Job Statuses</td>
 					<td class="inputValue" style="text-align: center;"><form:radiobutton
 							id="canViewJobStatusesTrue" path="canViewJobStatuses"
@@ -237,19 +237,18 @@
 			</tbody>
 		</table>
 		<br />
-<%-- 		<c:if test="${ role['new'] }">
-			<button id="createRoleButton" class="btn btn-primary" type="submit">Create Role</button>
-		</c:if>
-		<c:if test="${ not role['new'] }">
-			<button id="updateRoleButton" class="btn btn-primary" type="submit">Update Role</button>
-		</c:if>
-		<span style="padding-left: 10px"> <a id="backToRolesButton"
-			href="<spring:url value="/configuration/roles"/>">Back to Roles</a>
-		</span> --%>
 	</form:form>
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="btn btn-primary"
+	<a id="newRoleFormSubmitButton" class="btn btn-primary"
 		onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#newRoleForm', '#createRoleModal', '#tableDiv', '#createRoleModal');return false;">Save Role</a>
 </div>
+<script>
+	$("#newRoleModalBody").keypress(function(e){
+	    if (e.which == 13){
+	        $("#newRoleFormSubmitButton").click();
+	    }
+	});
+</script>
+		
