@@ -53,9 +53,4 @@
 	</div>
 </c:if>
 
-<c:if test="${ not empty error }">
-	<div class="alert alert-error">
-		<button class="close" data-dismiss="alert" type="button">×</button>
-		<c:out value="${ error }"/>
-	</div>
-</c:if>
+<%@ include file="/WEB-INF/views/errorMessage.jspf"%>

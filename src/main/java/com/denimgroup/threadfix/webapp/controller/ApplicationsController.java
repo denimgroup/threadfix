@@ -157,7 +157,7 @@ public class ApplicationsController {
 		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new FalsePositiveModel());
 		model.addAttribute("message", message);
-		model.addAttribute("error", error);
+		model.addAttribute("errorMessage", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
