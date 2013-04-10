@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.Role;
@@ -39,7 +40,10 @@ public class RoleTests extends BaseTest {
 
 		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
-				.createRole(name);
+				.clickCreateRole()
+				.createRole(name)
+				.clickSaveRole()
+				.clickManageRolesLink();
 
 		assertTrue("The name does not match.", 
 				name.equals(rolesIndexPage.getNameContents(0)));
@@ -56,16 +60,19 @@ public class RoleTests extends BaseTest {
 
 		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
+				.clickCreateRole()
 				.createRole(name1)
+				.clickSaveRole()
+				.clickManageRolesLink()
 				.clickEditLink(0)
-				.clickUpdateRoleButton();
+				.clickUpdateRoleButton(0);
 
 		assertTrue("The name does not match.", 
 				name1.equals(rolesIndexPage.getNameContents(0)));
 		
 		rolesIndexPage = rolesIndexPage.clickEditLink(0)
-				.setNameInput(name2)
-				.clickUpdateRoleButton();
+				.setRoleName(name2,0)
+				.clickUpdateRoleButton(0);
 		
 		assertTrue("The name was not updated correctly.", 
 				name2.equals(rolesIndexPage.getNameContents(0)));
@@ -75,43 +82,44 @@ public class RoleTests extends BaseTest {
 		assertTrue("Item still present.", rolesIndexPage.getNumRows() == 2);
 
 	}
-
+//had to take \n out of whitespace because the modals do not like enter yet
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
-		String whiteSpaceName = " \t\n";
+		String whiteSpaceName = "     ";
 		String normalName = getRandomString(15);
 
 		// Test empty string
 		
-		roleCreatePage = loginPage.login("user", "password")
+		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
-				.clickCreateRoleLink()
-				.setDisplayNameInput(emptyName)
+				.clickCreateRole()
+				.setRoleName(emptyName)
 				.clickCreateRoleButtonInvalid();
 
 		assertTrue("Blank field error didn't show correctly.", 
-				"This field cannot be blank".equals(roleCreatePage.getDisplayNameError()));
+				"This field cannot be blank".equals(rolesIndexPage.getDisplayNameError()));
 
 		// Test whitespace
 
-		roleCreatePage = roleCreatePage.setDisplayNameInput(whiteSpaceName).clickCreateRoleButtonInvalid();
+		rolesIndexPage = rolesIndexPage.setRoleName(whiteSpaceName).clickCreateRoleButtonInvalid();
 
 		assertTrue("Blank field error didn't show correctly.", 
-				"This field cannot be blank".equals(roleCreatePage.getDisplayNameError()));
+				"This field cannot be blank".equals(rolesIndexPage.getDisplayNameError()));
 
 		// Test duplicates
 
-		roleCreatePage = roleCreatePage.setDisplayNameInput(normalName)
-				.clickCreateRoleButton()
-				.clickCreateRoleLink()
-				.setDisplayNameInput(normalName)
+		rolesIndexPage = rolesIndexPage.setRoleName(normalName)
+				.clickSaveRole()
+				.clickManageRolesLink()
+				.clickCreateRole()
+				.createRole(normalName)
 				.clickCreateRoleButtonInvalid();
 
 		assertTrue("Duplicate name error did not show correctly.", 
-				"A role with this name already exists.".equals(roleCreatePage.getDisplayNameError()));
+				"A role with this name already exists.".equals(rolesIndexPage.getDisplayNameError()));
 
-		rolesIndexPage = roleCreatePage.clickBackToIndexLink().clickDeleteButton(normalName);
+		rolesIndexPage = rolesIndexPage.clickDeleteButton(normalName);
 
 		assertTrue("Item still present.", rolesIndexPage.getNumRows() == 2);
 	}
@@ -120,57 +128,51 @@ public class RoleTests extends BaseTest {
 	public void testSetPermissions() {
 		String name = "testName" + getRandomString(10);
 		
-		RoleCreatePage roleCreatePage = loginPage.login("user", "password")
+		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
-				.clickCreateRoleLink()
-				.setDisplayNameInput(name);
+				.clickCreateRole()
+				.createRole(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
 			assertFalse("Checkbox was set to true when it shouldn't have been.", 
-					roleCreatePage.getPermissionValue(role));
+					rolesIndexPage.getPermissionValue(role));
 		}
-		
-		RoleEditPage roleEditPage = roleCreatePage.clickCreateRoleButton()
-				.clickEditLink(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
 			assertFalse("Checkbox was set to true when it shouldn't have been.", 
-					roleEditPage.getPermissionValue(role));
-			roleEditPage.setPermissionValue(role, true);
+					rolesIndexPage.getPermissionValue(role));
+			rolesIndexPage.setPermissionValue(role, true);
 		}
 		
-		roleEditPage = roleEditPage.clickUpdateRoleButton()
-				.clickEditLink(name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole().clickManageRolesLink().clickEditLink(2);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Role was not turned on correctly.", roleEditPage.getPermissionValue(role));
-			roleEditPage.setPermissionValue(role, false);
+			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role,2));
+			rolesIndexPage.setPermissionValue(role, false,2);
 		}
 		
-		roleEditPage = roleEditPage.clickUpdateRoleButton()
-				.clickEditLink(name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole(2).clickManageRolesLink().clickEditLink(2);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertFalse("Role was not turned off correctly.", roleEditPage.getPermissionValue(role));
+			assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(role));
 		}
-		
-		roleCreatePage = roleEditPage.clickBackToIndexLink()
-				.clickDeleteButton(name)
-				.clickCreateRoleLink()
-				.setDisplayNameInput(name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole(2)
+									.clickDeleteButton(name)
+									.clickCreateRole()
+									.createRole(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			roleCreatePage.setPermissionValue(role, true);
+			rolesIndexPage.setPermissionValue(role, true);
 		}
 		
-		roleEditPage = roleCreatePage.clickCreateRoleButton()
-				.clickEditLink(name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole().clickEditLink(2);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Role was not turned on correctly.", roleEditPage.getPermissionValue(role));
+			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role));
 		}
 		
-		roleEditPage.clickBackToIndexLink().clickDeleteButton(name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole(2)
+				.clickDeleteButton(name);
 	}
 	
 	// these tests are to ensure that threadfix cannot enter a state with no users that

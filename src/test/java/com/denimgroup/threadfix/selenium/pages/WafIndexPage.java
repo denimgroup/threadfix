@@ -81,7 +81,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage createNewWaf(String name,String Type){
-		driver.findElementById("wafCreateNameInput").sendKeys(name);
+		driver.findElementById("nameInput").sendKeys(name);
 		new Select(driver.findElementById("createWaf").findElement(By.id("typeSelect"))).selectByVisibleText(Type);
 		driver.findElementById("createWaf").findElement(By.id("submitWafModal")).click();
 		//wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("createWaf")));
