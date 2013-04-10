@@ -27,12 +27,6 @@
 			</tr>
 		</table>
 		<br/>
-
 		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Update Defaults</button>
-		<span style="padding-left: 10px">
-			<spring:url value="/configuration" var="configLink"/>
-			<a id="cancelLink" href="${ fn:escapeXml(configLink) }">Back to Configuration Index</a>
-		</span>
-		
 	</form:form>
 </body>

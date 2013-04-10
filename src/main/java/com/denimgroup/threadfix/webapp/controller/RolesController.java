@@ -1,6 +1,5 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +26,10 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.RoleModel;
 
 @Controller
 @RequestMapping("/configuration/roles")
-@SessionAttributes("role")
+@SessionAttributes({"editRole", "role"})
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_ROLES')")
 public class RolesController {
 
@@ -55,27 +53,22 @@ public class RolesController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
 	}
-
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
-		List<Role> roles = roleService.loadAll();
-		List<RoleModel> roleModels = new ArrayList<RoleModel>();
 		
-		for (Role role : roles) {
-			roleModels.add(new RoleModel(role, roleService.canDelete(role)));
+		List<Role> roles = roleService.loadAll();
+
+		for (Role listRole : roles) {
+			listRole.setCanDelete(roleService.canDelete(listRole));
 		}
 		
-		model.addAttribute("roleList", roleModels);
+		model.addAttribute("roleList", roles);
+		model.addAttribute("role", new Role());
+		model.addAttribute("editRole", new Role());
 		return "config/roles/index";
 	}
 	
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String newForm(Model model) {
-		model.addAttribute("role", new Role());
-		return "config/roles/form";
-	}
-
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String newSubmit(HttpServletRequest request, Model model,
 			@Valid @ModelAttribute Role role, BindingResult result,
@@ -86,18 +79,28 @@ public class RolesController {
 		if (result.hasErrors()) {
 			model.addAttribute("role", role);
 			model.addAttribute("displayName", role.getDisplayName());
-			return "config/roles/form";
+			model.addAttribute("contentPage", "config/roles/newForm.jsp");
+			return "ajaxFailureHarness";
 		}
 		
 		role.setDisplayName(role.getDisplayName().trim());
 		
-		status.setComplete();
 		roleService.storeRole(role);
 		
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		log.debug(currentUser + " has created a Role with the name" + role.getDisplayName() +
 				", and the ID " + role.getId());
-		return "redirect:/configuration/roles";
+
+		List<Role> roles = roleService.loadAll();
+
+		for (Role listRole : roles) {
+			listRole.setCanDelete(roleService.canDelete(listRole));
+		}
+		
+		model.addAttribute("roleList", roles);
+		
+		model.addAttribute("contentPage", "config/roles/rolesTable.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
@@ -118,34 +121,24 @@ public class RolesController {
 		return "redirect:/configuration/roles";
 	}
 	
-	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.GET)
-	public String edit(@PathVariable("roleId") int roleId, ModelMap model) {
-		Role role = roleService.loadRole(roleId);
-		
-		if (role != null) {
-			model.addAttribute("role", role);
-			return "config/roles/form";
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("Group", roleId));
-			throw new ResourceNotFoundException();
-		}
-	}
-	
 	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
-	public String saveEdit(HttpServletRequest request, 
-			@PathVariable("roleId") int roleId, 
-			@Valid @ModelAttribute Role role, 
+	public String saveEdit(HttpServletRequest request,
+			@PathVariable("roleId") int roleId,
+			@Valid @ModelAttribute Role role,
 			BindingResult result, SessionStatus status,
 			ModelMap model) {
 		
-		roleService.validateRole(role, result);
-		if (result.hasErrors()){
-			model.addAttribute("accessGroup", role);
-			return "config/roles/form";
+		role.setId(roleId);
+		
+		String resultString = roleService.validateRole(role, result);
+		if (!resultString.equals(RoleService.SUCCESS)) {
+			model.addAttribute("errorMessage", resultString);
+			model.addAttribute("editRole", role);
+			model.addAttribute("contentPage", "config/roles/form.jsp");
+			return "ajaxFailureHarness";
 		}
 		
 		if (role.getDisplayName() != null) {
-			status.setComplete();
 			roleService.storeRole(role);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Group", roleId));

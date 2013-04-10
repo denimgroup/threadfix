@@ -7,12 +7,14 @@ import org.springframework.validation.BindingResult;
 import com.denimgroup.threadfix.data.entities.Role;
 
 public interface RoleService {
+	
+	public static String SUCCESS = "Success";
 
 	/**
 	 * 
 	 * @param role
 	 */
-	void validateRole(Role role, BindingResult result);
+	String validateRole(Role role, BindingResult result);
 	
 	/**
 	 * 

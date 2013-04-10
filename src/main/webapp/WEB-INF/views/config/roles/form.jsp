@@ -1,31 +1,37 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<head>
-<title>Role <c:out value="${ role.displayName }" /></title>
-</head>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal"
+		aria-hidden="true">X</button>
+	<h4 id="myModalLabel">Edit Role</h4>
+</div>
 
-<body>
-	<h2>
-		<c:if test="${ role['new'] }">New </c:if>
-		Role
-	</h2>
+<div class="modal-body">
+	<c:if test="${ not empty errorMessage }">
+		<div class="alert alert-error">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+			<c:out value="${ errorMessage }"/>
+		</div>
+	</c:if>
 
-	<spring:url value="" var="emptyUrl"></spring:url>
-	<form:form modelAttribute="role" method="post"
-		action="${fn:escapeXml(emptyUrl) }">
+	<spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
+		<spring:param name="roleId" value="${ editRole.id }"/>
+	</spring:url>
+	<form:form id="roleEditForm${ status.count }" modelAttribute="editRole" method="post"
+			action="${fn:escapeXml(saveEditUrl) }">
 		<table class="dataTable">
 			<tbody>
 				<tr>
-					<td>Name:</td>
-					<td class="inputValue"><form:input path="displayName"
-							size="70" maxlength="255" value="${ displayName }" /></td>
-					<td style="padding-left: 5px"><form:errors path="displayName"
+					<td class="no-color">Name:</td>
+					<td class="no-color inputValue"><form:input path="displayName"
+							size="70" maxlength="255" value="${ editRole.displayName }" /></td>
+					<td class="no-color" style="padding-left: 5px"><form:errors path="displayName"
 							cssClass="errors" /></td>
 				</tr>
 			</tbody>
 		</table>
 		<h3>Permissions</h3>
-
+	
 		<table class="table table-striped" style="margin-top: 5px">
 			<thead>
 				<tr>
@@ -36,216 +42,241 @@
 			</thead>
 			<tbody>
 				<tr class="bodyRow">
-					<td>Generate Reports</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateReportsTrue" path="canGenerateReports"
+					<td class="no-color">Generate Reports</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canGenerateReports }">checked="checked"</c:if>
+							id="canGenerateReportsTrue" name="canGenerateReports"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateReportsFalse" path="canGenerateReports"
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canGenerateReports }">checked="checked"</c:if>
+							id="canGenerateReportsFalse" name="canGenerateReports"
 							value="false" /></td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canGenerateReportsError"
-							path="canGenerateReports" cssClass="errors" />
+							name="canGenerateReports" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Generate WAF Rules</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateWafRulesTrue" path="canGenerateWafRules"
+					<td class="no-color">Generate WAF Rules</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canGenerateWafRules }">checked="checked"</c:if>
+							id="canGenerateWafRulesTrue" name="canGenerateWafRules"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateWafRulesFalse" path="canGenerateWafRules"
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canGenerateWafRules }">checked="checked"</c:if>
+							id="canGenerateWafRulesFalse" name="canGenerateWafRules"
 							value="false" /></td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canGenerateWafRulesError"
-							path="canGenerateWafRules" cssClass="errors" />
+							name="canGenerateWafRules" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage API Keys</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApiKeysTrue" path="canManageApiKeys" value="true" />
+					<td class="no-color">Manage API Keys</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageApiKeys }">checked="checked"</c:if>
+							id="canManageApiKeysTrue" name="canManageApiKeys" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApiKeysFalse" path="canManageApiKeys" value="false" />
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageApiKeys }">checked="checked"</c:if>
+							id="canManageApiKeysFalse" name="canManageApiKeys" value="false" />
 					</td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageApiKeysError" path="canManageApiKeys"
+						<form:errors id="canManageApiKeysError" name="canManageApiKeys"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Applications</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApplicationsTrue" path="canManageApplications"
+					<td class="no-color">Manage Applications</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageApplications }">checked="checked"</c:if>
+							id="canManageApplicationsTrue" name="canManageApplications"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApplicationsFalse" path="canManageApplications"
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageApplications }">checked="checked"</c:if>
+							id="canManageApplicationsFalse" name="canManageApplications"
 							value="false" /></td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageApplicationsError"
-							path="canManageApplications" cssClass="errors" />
+							name="canManageApplications" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Defect Trackers</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageDefectTrackersTrue" path="canManageDefectTrackers"
+					<td class="no-color">Manage Defect Trackers</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageDefectTrackers }">checked="checked"</c:if>
+							id="canManageDefectTrackersTrue" name="canManageDefectTrackers"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageDefectTrackersFalse" path="canManageDefectTrackers"
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageDefectTrackers }">checked="checked"</c:if>
+							id="canManageDefectTrackersFalse" name="canManageDefectTrackers"
 							value="false" /></td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageDefectTrackersError"
-							path="canManageDefectTrackers" cssClass="errors" />
+							name="canManageDefectTrackers" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Remote Providers</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRemoteProvidersTrue" path="canManageRemoteProviders"
+					<td class="no-color">Manage Remote Providers</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageRemoteProviders }">checked="checked"</c:if>
+							id="canManageRemoteProvidersTrue" name="canManageRemoteProviders"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageRemoteProviders }">checked="checked"</c:if>
 							id="canManageRemoteProvidersFalse"
-							path="canManageRemoteProviders" value="false" /></td>
-					<td
+							name="canManageRemoteProviders" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageRemoteProvidersError"
-							path="canManageRemoteProviders" cssClass="errors" />
+							name="canManageRemoteProviders" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Roles</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRolesTrue" path="canManageRoles" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRolesFalse" path="canManageRoles" value="false" /></td>
-					<td
+					<td class="no-color">Manage Roles</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageRoles }">checked="checked"</c:if>
+							id="canManageRolesTrue" name="canManageRoles" value="true" /></td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageRoles }">checked="checked"</c:if>
+							id="canManageRolesFalse" name="canManageRoles" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageRolesError" path="canManageRoles"
+						<form:errors id="canManageRolesError" name="canManageRoles"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Teams</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageTeamsTrue" path="canManageTeams" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageTeamsFalse" path="canManageTeams" value="false" /></td>
-					<td
+					<td class="no-color">Manage Teams</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageTeams }">checked="checked"</c:if>
+							id="canManageTeamsTrue" name="canManageTeams" value="true" /></td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageTeams }">checked="checked"</c:if>
+							id="canManageTeamsFalse" name="canManageTeams" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageTeamsError" path="canManageTeams"
+						<form:errors id="canManageTeamsError" name="canManageTeams"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage Users</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageUsersTrue" path="canManageUsers" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageUsersFalse" path="canManageUsers" value="false" /></td>
-					<td
+					<td class="no-color">Manage Users</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageUsers }">checked="checked"</c:if>
+							id="canManageUsersTrue" name="canManageUsers" value="true" /></td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageUsers }">checked="checked"</c:if>
+							id="canManageUsersFalse" name="canManageUsers" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageUsersError" path="canManageUsers"
+						<form:errors id="canManageUsersError" name="canManageUsers"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Manage WAFs</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageWafsTrue" path="canManageWafs" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageWafsFalse" path="canManageWafs" value="false" /></td>
-					<td
+					<td class="no-color">Manage WAFs</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canManageWafs }">checked="checked"</c:if>
+							id="canManageWafsTrue" name="canManageWafs" value="true" /></td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canManageWafs }">checked="checked"</c:if>
+							id="canManageWafsFalse" name="canManageWafs" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageWafsError" path="canManageWafs"
+						<form:errors id="canManageWafsError" name="canManageWafs"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Modify Vulnerabilities</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canModifyVulnerabilitiesTrue" path="canModifyVulnerabilities"
+					<td class="no-color">Modify Vulnerabilities</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canModifyVulnerabilities }">checked="checked"</c:if>
+							id="canModifyVulnerabilitiesTrue" name="canModifyVulnerabilities"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canModifyVulnerabilities }">checked="checked"</c:if>
 							id="canModifyVulnerabilitiesFalse"
-							path="canModifyVulnerabilities" value="false" /></td>
-					<td
+							name="canModifyVulnerabilities" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canModifyVulnerabilitiesError"
-							path="canModifyVulnerabilities" cssClass="errors" />
+							name="canModifyVulnerabilities" cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Submit Defects</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canSubmitDefectsTrue" path="canSubmitDefects" value="true" />
+					<td class="no-color">Submit Defects</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canSubmitDefects }">checked="checked"</c:if>
+							id="canSubmitDefectsTrue" name="canSubmitDefects" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canSubmitDefectsFalse" path="canSubmitDefects" value="false" />
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canSubmitDefects }">checked="checked"</c:if>
+							id="canSubmitDefectsFalse" name="canSubmitDefects" value="false" />
 					</td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canSubmitDefectsError" path="canSubmitDefects"
+						<form:errors id="canSubmitDefectsError" name="canSubmitDefects"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>Upload Scans</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canUploadScansTrue" path="canUploadScans" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canUploadScansFalse" path="canUploadScans" value="false" /></td>
-					<td
+					<td class="no-color">Upload Scans</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canUploadScans }">checked="checked"</c:if>
+							id="canUploadScansTrue" name="canUploadScans" value="true" /></td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canUploadScans }">checked="checked"</c:if>
+							id="canUploadScansFalse" name="canUploadScans" value="false" /></td>
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canUploadScansError" path="canUploadScans"
+						<form:errors id="canUploadScansError" name="canUploadScans"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>View Error Logs</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewErrorLogsTrue" path="canViewErrorLogs" value="true" />
+					<td class="no-color">View Error Logs</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canViewErrorLogs }">checked="checked"</c:if>
+							id="canViewErrorLogsTrue" name="canViewErrorLogs" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewErrorLogsFalse" path="canViewErrorLogs" value="false" />
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canViewErrorLogs }">checked="checked"</c:if>
+							id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
 					</td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canViewErrorLogsError" path="canViewErrorLogs"
+						<form:errors id="canViewErrorLogsError" name="canViewErrorLogs"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr class="bodyRow">
-					<td>View Job Statuses</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewJobStatusesTrue" path="canViewJobStatuses"
+					<td class="no-color">View Job Statuses</td>
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ editRole.canViewJobStatuses }">checked="checked"</c:if>
+							id="canViewJobStatusesTrue" name="canViewJobStatuses"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewJobStatusesFalse" path="canViewJobStatuses"
+					<td class="no-color inputValue" style="text-align: center;">
+						<input type="radio" <c:if test="${ not editRole.canViewJobStatuses }">checked="checked"</c:if>
+							id="canViewJobStatusesFalse" name="canViewJobStatuses"
 							value="false" /></td>
-					<td
+					<td class="no-color"
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canViewJobStatusesError"
-							path="canViewJobStatuses" cssClass="errors" />
+							name="canViewJobStatuses" cssClass="errors" />
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<br />
-		<c:if test="${ role['new'] }">
-			<button id="createRoleButton" class="btn btn-primary" type="submit">Create Role</button>
-		</c:if>
-		<c:if test="${ not role['new'] }">
-			<button id="updateRoleButton" class="btn btn-primary" type="submit">Update Role</button>
-		</c:if>
-		<span style="padding-left: 10px"> <a id="backToRolesButton"
-			href="<spring:url value="/configuration/roles"/>">Back to Roles</a>
-		</span>
 	</form:form>
-</body>
+</div>
+<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="btn btn-primary" 
+		onclick="javascript:submitAjaxModal('<c:out value="${ saveEditUrl }"/>','#roleEditForm${ status.count }', '#editRoleModal${ status.count }', '#tableDiv', '#editRoleModal${ status.count }');return false;">Save Role</a>
+</div>

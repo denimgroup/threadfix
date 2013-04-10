@@ -262,5 +262,16 @@ public class Role extends AuditableEntity {
 
 		return permissions;
 	}
+	
+	boolean canDelete = false;
+	
+	@Transient
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
 }
 
