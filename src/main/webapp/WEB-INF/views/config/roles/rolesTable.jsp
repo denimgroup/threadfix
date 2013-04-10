@@ -15,7 +15,7 @@
 			</tr>
 		</c:if>
 		<c:forEach var="editRole" items="${ roleList }" varStatus="status">
-			<tr class="bodyRow">
+			<tr class="bodyRow roleRow">
 				<td id="role${ status.count }">
 					<c:out value="${ editRole.displayName }"/>
 				</td>
