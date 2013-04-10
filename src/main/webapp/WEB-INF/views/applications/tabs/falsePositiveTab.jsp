@@ -11,27 +11,20 @@
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 
+<spring:url value="{appId}/falsePositives/unmark" var="fpUrl">
+	<spring:param name="appId" value="${ application.id }"/>
+</spring:url>
+
+<c:if test="${ canModifyVulnerabilities }">
+	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
+</c:if>
+
 <%@ include file="/WEB-INF/views/applications/tabs/filter.jspf" %>
 
 <%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>
 
 <c:if test="${ canModifyVulnerabilities }">
-   	<div id="btnDiv" class="btn-group">
-		<button id="actionButton" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
-		<ul class="dropdown-menu">
-			<li><a id="markFalsePositiveButton" href="#markFalsePositiveConfirm">Unark False Positive</a></li>
-		</ul>
-	</div>
-	<script>
-	$("#btnDiv").bind({
-		mouseenter : function(e) {
-			$("#actionButton").dropdown('toggle');
-		},
-		mouseleave : function(e) {
-			$("#actionButton").dropdown('toggle');
-		}
-	});
-	</script>
+	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
 </c:if>
 
 </form:form>

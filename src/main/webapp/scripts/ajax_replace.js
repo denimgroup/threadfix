@@ -116,6 +116,44 @@ function submitAjax(url, formId, formDiv, successDiv) {
 	return false;
 }
 
+function submitVulnTableOperation(url, formDiv, successDiv) {
+	
+	var checkboxes = $(".vulnIdCheckbox").serializeArray();
+
+	$.ajax({
+		type : "POST",
+		url : url,
+		data : checkboxes,
+		contentType : "application/x-www-form-urlencoded",
+		dataType : "text",
+		success : function(text) {
+			
+			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+				$(formDiv).html(text);
+			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+				$(successDiv).html(text);
+			} else {
+				try {
+					var json = JSON.parse(text);
+					alert(json.error);
+				} catch (e) {
+					history.go(0);
+				}
+			}
+		},
+		error : function (xhr, ajaxOptions, thrownError){
+			history.go(0);
+		}
+	});
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input").first().focus();
+	    });
+	}, 1500);
+	return false;
+}
+
 function submitDefect(formId, formDiv, successDiv) {
 	
 	var checkboxes = $(".vulnIdCheckbox").serializeArray();

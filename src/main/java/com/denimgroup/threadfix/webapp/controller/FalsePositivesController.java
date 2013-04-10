@@ -44,142 +44,142 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
-import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
+import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/falsepositives")
 @SessionAttributes("defectViewModel")
 public class FalsePositivesController {
 	
-	public FalsePositivesController(){}
-
-	private ApplicationService applicationService;
-	private PermissionService permissionService;
-	private VulnerabilityService vulnerabilityService;
-
-	private final SanitizedLogger log = new SanitizedLogger(FalsePositivesController.class);
-
-	@Autowired
-	public FalsePositivesController(ApplicationService applicationService,
-			PermissionService PermissionService,
-			VulnerabilityService vulnerabilityService) {
-		this.applicationService = applicationService;
-		this.vulnerabilityService = vulnerabilityService;
-		this.permissionService = PermissionService;
-	}
-
-	@RequestMapping(value = "/mark", method = RequestMethod.POST)
-	public String onSubmit(
-			@ModelAttribute FalsePositiveModel falsePositiveModel,
-			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			ModelMap model, HttpServletRequest request) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-
-		if (falsePositiveModel == null
-				|| falsePositiveModel.getVulnerabilityIds() == null
-				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
-			String error = "You must select at least one vulnerability.";
-			request.getSession().setAttribute("scanErrorMessage", error);
-			return "redirect:/organizations/" + orgId + "/applications/"
-					+ appId;
-		}
-
-		vulnerabilityService.markListAsFalsePositive(falsePositiveModel
-				.getVulnerabilityIds());
-
-		return "redirect:/organizations/" + orgId + "/applications/" + appId;
-	}
-
-	@RequestMapping(value = "/unmark", method = RequestMethod.GET)
-	public String defectList(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId, ModelMap model) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application",
-					appId));
-			throw new ResourceNotFoundException();
-		}
-
-		List<Vulnerability> markedVulns = vulnerabilityService
-				.getFalsePositiveVulns(application);
-
-		model.addAttribute(new FalsePositiveModel());
-		model.addAttribute(application);
-		model.addAttribute("vulns", markedVulns);
-		model.addAttribute("buttonText", "Mark as not False Positives");
-		return "falsepositives/index";
-	}
-
-	@RequestMapping(value = "/unmark", method = RequestMethod.POST)
-	public String onSubmit2(
-			@ModelAttribute FalsePositiveModel falsePositiveModel,
-			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			ModelMap model) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-
-		if (falsePositiveModel == null
-				|| falsePositiveModel.getVulnerabilityIds() == null
-				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
-			String error = "You must select at least one vulnerability.";
-			model.addAttribute("scanErrorMessage", error);
-			return defectList(orgId, appId, model);
-		}
-
-		vulnerabilityService.markListAsNotFalsePositive(falsePositiveModel
-				.getVulnerabilityIds());
-
-		return "redirect:/organizations/" + orgId + "/applications/" + appId;
-	}
-	
-	@RequestMapping(value="/table", method = RequestMethod.POST)
-	public String getTableVulns(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@RequestBody TableSortBean bean,
-			ModelMap model) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}		
-		
-		bean.setOpen(false);
-		bean.setFalsePositive(true);
-		
-		long numVulns = applicationService.getCount(appId, bean);
-		long numPages = (numVulns / 100);
-		if (numVulns % 100 == 0) {
-			numPages -= 1;
-		}
-		model.addAttribute("numPages", numPages);
-		model.addAttribute("numVulns", numVulns);
-		
-		if (bean.getPage() > numPages) {
-			bean.setPage((int) (numPages + 1));
-		}
-		
-		if (bean.getPage() < 1) {
-			bean.setPage(1);
-		}
-		
-		model.addAttribute("page", bean.getPage());
-		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
-		model.addAttribute(application);
-		return "falsepositives/table";
-	}
+//	public FalsePositivesController(){}
+//
+//	private ApplicationService applicationService;
+//	private PermissionService permissionService;
+//	private VulnerabilityService vulnerabilityService;
+//
+//	private final SanitizedLogger log = new SanitizedLogger(FalsePositivesController.class);
+//
+//	@Autowired
+//	public FalsePositivesController(ApplicationService applicationService,
+//			PermissionService PermissionService,
+//			VulnerabilityService vulnerabilityService) {
+//		this.applicationService = applicationService;
+//		this.vulnerabilityService = vulnerabilityService;
+//		this.permissionService = PermissionService;
+//	}
+//
+//	@RequestMapping(value = "/mark", method = RequestMethod.POST)
+//	public String onSubmit(
+//			@ModelAttribute VulnerabilityCollectionModel falsePositiveModel,
+//			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+//			ModelMap model, HttpServletRequest request) {
+//		
+//		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+//			return "403";
+//		}
+//
+//		if (falsePositiveModel == null
+//				|| falsePositiveModel.getVulnerabilityIds() == null
+//				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
+//			String error = "You must select at least one vulnerability.";
+//			request.getSession().setAttribute("scanErrorMessage", error);
+//			return "redirect:/organizations/" + orgId + "/applications/"
+//					+ appId;
+//		}
+//
+//		vulnerabilityService.markListAsFalsePositive(falsePositiveModel
+//				.getVulnerabilityIds());
+//
+//		return "redirect:/organizations/" + orgId + "/applications/" + appId;
+//	}
+//
+//	@RequestMapping(value = "/unmark", method = RequestMethod.GET)
+//	public String defectList(@PathVariable("orgId") int orgId,
+//			@PathVariable("appId") int appId, ModelMap model) {
+//		
+//		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+//			return "403";
+//		}
+//
+//		Application application = applicationService.loadApplication(appId);
+//		if (application == null || !application.isActive()) {
+//			log.warn(ResourceNotFoundException.getLogMessage("Application",
+//					appId));
+//			throw new ResourceNotFoundException();
+//		}
+//
+//		List<Vulnerability> markedVulns = vulnerabilityService
+//				.getFalsePositiveVulns(application);
+//
+//		model.addAttribute(new VulnerabilityCollectionModel());
+//		model.addAttribute(application);
+//		model.addAttribute("vulns", markedVulns);
+//		model.addAttribute("buttonText", "Mark as not False Positives");
+//		return "falsepositives/index";
+//	}
+//
+//	@RequestMapping(value = "/unmark", method = RequestMethod.POST)
+//	public String onSubmit2(
+//			@ModelAttribute VulnerabilityCollectionModel falsePositiveModel,
+//			@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+//			ModelMap model) {
+//		
+//		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+//			return "403";
+//		}
+//
+//		if (falsePositiveModel == null
+//				|| falsePositiveModel.getVulnerabilityIds() == null
+//				|| falsePositiveModel.getVulnerabilityIds().size() == 0) {
+//			String error = "You must select at least one vulnerability.";
+//			model.addAttribute("scanErrorMessage", error);
+//			return defectList(orgId, appId, model);
+//		}
+//
+//		vulnerabilityService.markListAsNotFalsePositive(falsePositiveModel
+//				.getVulnerabilityIds());
+//
+//		return "redirect:/organizations/" + orgId + "/applications/" + appId;
+//	}
+//	
+//	@RequestMapping(value="/table", method = RequestMethod.POST)
+//	public String getTableVulns(@PathVariable("orgId") Integer orgId,
+//			@PathVariable("appId") Integer appId,
+//			@RequestBody TableSortBean bean,
+//			ModelMap model) {
+//		
+//		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+//			return "403";
+//		}
+//		
+//		Application application = applicationService.loadApplication(appId);
+//		if (application == null || !application.isActive()) {
+//			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+//			throw new ResourceNotFoundException();
+//		}		z
+//		
+//		bean.setOpen(false);
+//		bean.setFalsePositive(true);
+//		
+//		long numVulns = applicationService.getCount(appId, bean);
+//		long numPages = (numVulns / 100);
+//		if (numVulns % 100 == 0) {
+//			numPages -= 1;
+//		}
+//		model.addAttribute("numPages", numPages);
+//		model.addAttribute("numVulns", numVulns);
+//		
+//		if (bean.getPage() > numPages) {
+//			bean.setPage((int) (numPages + 1));
+//		}
+//		
+//		if (bean.getPage() < 1) {
+//			bean.setPage(1);
+//		}
+//		
+//		model.addAttribute("page", bean.getPage());
+//		model.addAttribute("vulnerabilities", applicationService.getVulnTable(appId, bean));
+//		model.addAttribute(application);
+//		return "falsepositives/table";
+//	}
 }
