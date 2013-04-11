@@ -28,6 +28,7 @@
     	<pattern>/configuration/keys/*/delete*</pattern>
     	<pattern>/configuration/defecttrackers/new*</pattern>
     	<pattern>/configuration/defecttrackers/*/edit*</pattern>
+    	<pattern>/configuration/defecttrackers/*/delete*</pattern>
     	<pattern>/configuration/remoteproviders/*/configure*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
     	<pattern>/wafs/new/ajax*</pattern>

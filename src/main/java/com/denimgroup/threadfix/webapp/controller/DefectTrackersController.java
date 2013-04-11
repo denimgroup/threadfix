@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -60,8 +62,9 @@ public class DefectTrackersController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 		addModelAttributes(model);
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		return "config/defecttrackers/index";
 	}
 	
@@ -102,6 +105,8 @@ public class DefectTrackersController {
 			defectTrackerService.deleteById(defectTrackerId);
 			status.setComplete();
 			addModelAttributes(model);
+			model.addAttribute("successMessage", 
+					"Defect Tracker " + defectTracker.getName() + " has been deleted successfully.");
 			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");
 			return "ajaxSuccessHarness";
 		} else {

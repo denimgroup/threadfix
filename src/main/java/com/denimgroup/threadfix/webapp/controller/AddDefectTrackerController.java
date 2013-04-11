@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -91,7 +92,8 @@ public class AddDefectTrackerController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
-			BindingResult result, SessionStatus status, Model model) {
+			BindingResult result, SessionStatus status, Model model,
+			HttpServletRequest request) {
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
@@ -116,7 +118,8 @@ public class AddDefectTrackerController {
 				if (!result.hasFieldErrors("url")) {
 					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
 				} else if (result.getFieldError("url").getDefaultMessage() != null &&
-						result.getFieldError("url").getDefaultMessage().equals(AbstractDefectTracker.INVALID_CERTIFICATE)){
+						result.getFieldError("url").getDefaultMessage().equals(
+								AbstractDefectTracker.INVALID_CERTIFICATE)){
 					model.addAttribute("showKeytoolLink", true);
 				}
 			}
@@ -133,6 +136,9 @@ public class AddDefectTrackerController {
 					", the URL " + defectTracker.getUrl() + 
 					", the type " + defectTracker.getDefectTrackerType().getName() + 
 					", and the ID " + defectTracker.getId());
+			
+			ControllerUtils.addSuccessMessage(request, 
+					"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
 			
 			model.addAttribute("application", new Application());
 			

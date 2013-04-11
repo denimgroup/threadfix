@@ -206,6 +206,9 @@ public class EditDefectTrackerController {
 			model.addAttribute("defectTracker", new DefectTracker());
 			model.addAttribute("editDefectTracker", new DefectTracker());
 			model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
+			model.addAttribute("successMessage", 
+					"Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
+
 			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");
 			return "ajaxSuccessHarness";
