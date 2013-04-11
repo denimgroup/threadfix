@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +46,6 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -56,14 +53,13 @@ import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
-import com.denimgroup.threadfix.webapp.viewmodels.FalsePositiveModel;
+import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -79,7 +75,6 @@ public class ApplicationsController {
 	private ApplicationService applicationService;
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
-	private VulnerabilityService vulnerabilityService;
 	private PermissionService permissionService;
 
 	@Autowired
@@ -88,13 +83,11 @@ public class ApplicationsController {
 			ApplicationCriticalityService applicationCriticalityService,
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
-			PermissionService permissionService,
-			VulnerabilityService vulnerabilityService) {
+			PermissionService permissionService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.permissionService = permissionService;
-		this.vulnerabilityService = vulnerabilityService;
 		this.findingService = findingService;
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
@@ -155,9 +148,9 @@ public class ApplicationsController {
 		model.addAttribute("wafList", wafService.loadAll());
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
 		model.addAttribute("numClosedVulns", numClosedVulns);
-		model.addAttribute(new FalsePositiveModel());
+		model.addAttribute(new VulnerabilityCollectionModel());
 		model.addAttribute("message", message);
-		model.addAttribute("error", error);
+		model.addAttribute("errorMessage", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
@@ -226,6 +219,7 @@ public class ApplicationsController {
 		return "redirect:/organizations/" + String.valueOf(orgId);
 	}
 
+	// TODO move this elsewhere?
 	@RequestMapping(value = "/jsontest", method = RequestMethod.POST)
 	public @ResponseBody String readJson(@RequestBody DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
@@ -268,175 +262,5 @@ public class ApplicationsController {
 		}
 		
 		return result.substring(1);
-	}
-	
-	////////////////////////////////////////////////////
-	//                  Tab Methods
-	////////////////////////////////////////////////////
-	
-	@RequestMapping(value="/{appId}/vulnTab", method = RequestMethod.GET)
-	public String vulnTab(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			Model model) {
-		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-
-		long numVulns = applicationService.getVulnCount(appId, true);
-		long numClosedVulns = applicationService.getVulnCount(appId, false);
-		
-		
-		model.addAttribute("numVulns", numVulns);
-		model.addAttribute("numClosedVulns", numClosedVulns);
-		model.addAttribute(application);
-		model.addAttribute("contentPage", "applications/tabs/vulnTab.jsp");
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return "ajaxSuccessHarness";
-	}
-	
-	@RequestMapping(value="/{appId}/scanTab", method = RequestMethod.GET)
-	public String scanTab(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			Model model) {
-		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-
-		model.addAttribute(application);
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-
-		model.addAttribute("contentPage", "applications/tabs/scanTab.jsp");
-		return "ajaxSuccessHarness";
-	}
-
-	@RequestMapping(value="/{appId}/closedTab", method = RequestMethod.GET)
-	public String closedTab(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			Model model) {
-		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-
-		TableSortBean basicBean = new TableSortBean();
-		basicBean.setOpen(false);
-		long numVulns = applicationService.getCount(appId, basicBean);
-		
-		model.addAttribute("numVulns", numVulns);
-		model.addAttribute(application);
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		
-		model.addAttribute("contentPage", "applications/tabs/closedTab.jsp");
-		return "ajaxSuccessHarness";
-	}
-
-	@RequestMapping(value="/{appId}/falsePositiveTab", method = RequestMethod.GET)
-	public String falsePositiveTab(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			ModelMap model) {
-		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
-		
-		model.addAttribute("contentPage", "applications/tabs/falsePositiveTab.jsp");
-		return "ajaxSuccessHarness";
-	}
-	
-	////////////////////////////////////////////////////
-	//                Table Methods
-	////////////////////////////////////////////////////
-	
-	@RequestMapping(value="/{appId}/table", method = RequestMethod.POST)
-	public String getOpenTableVulns(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@RequestBody TableSortBean bean,
-			Model model) {
-		
-		bean.setOpen(true);
-		bean.setFalsePositive(false);
-		
-		return table(orgId, appId, bean, model);
-	}
-
-	@RequestMapping(value="/{appId}/closedVulnerabilities/table", method = RequestMethod.POST)
-	public String getClosedTableVulns(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@RequestBody TableSortBean bean,
-			Model model) {
-		
-		bean.setOpen(false);
-		bean.setFalsePositive(false);
-		
-		return table(orgId, appId, bean, model);
-	}
-	
-	@RequestMapping(value="/{appId}/falsePositives/table", method = RequestMethod.POST)
-	public String getFalsePositiveTableVulns(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@RequestBody TableSortBean bean,
-			Model model) {
-		
-		bean.setOpen(false);
-		bean.setFalsePositive(true);
-		
-		return table(orgId, appId, bean, model);
-	}
-	
-	public String table(int orgId, int appId, TableSortBean bean, Model model) {
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		long numVulns = applicationService.getCount(appId, bean);
-		long numPages = (numVulns / 100);
-		if (numVulns % 100 == 0) {
-			numPages -= 1;
-		}
-		model.addAttribute("numPages", numPages);
-		model.addAttribute("numVulns", numVulns);
-		
-		if (bean.getPage() > numPages) {
-			bean.setPage((int) (numPages + 1));
-		}
-		
-		if (bean.getPage() < 1) {
-			bean.setPage(1);
-		}
-		
-		List<Vulnerability> vulnList = applicationService.getVulnTable(appId, bean);
-		
-		model.addAttribute("ages", vulnerabilityService.getAges(vulnList));
-		model.addAttribute("page", bean.getPage());
-		model.addAttribute("vulnerabilities", vulnList);
-		model.addAttribute(application);
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return "applications/vulnTable";
 	}
 }

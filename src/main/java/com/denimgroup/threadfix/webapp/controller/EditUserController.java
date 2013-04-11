@@ -41,12 +41,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.AccessControlMapService;
-import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
@@ -61,19 +59,16 @@ public class EditUserController {
 
 	private UserService userService = null;
 	private RoleService roleService = null;
-	private OrganizationService organizationService = null;
 	private AccessControlMapService accessControlMapService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
-	public EditUserController(OrganizationService organizationService ,
-			AccessControlMapService accessControlMapService,
+	public EditUserController(AccessControlMapService accessControlMapService,
 			RoleService roleService, UserService userService) {
 		this.userService = userService;
 		this.roleService = roleService;
 		this.accessControlMapService = accessControlMapService;
-		this.organizationService = organizationService;
 	}
 	
 	public EditUserController(){}
@@ -89,40 +84,15 @@ public class EditUserController {
 		return roleService.loadAll();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("userId") int userId, Model model) {
-		User user = userService.loadUser(userId);
-		
-		if (user == null){
-			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
-			throw new ResourceNotFoundException();
-		}
-		
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		boolean isThisUser = currentUser != null && user.getName().equals(currentUser);
-		
-		ModelAndView mav = new ModelAndView("config/users/form");
-		mav.addObject(user);
-		mav.addObject("teams",organizationService.loadAllActive());
-		mav.addObject("maps",accessControlMapService.loadAllMapsForUser(userId));
-		mav.addObject("accessControlMapModel", getMapModel(userId));
-		mav.addObject("isThisUser", isThisUser);
-		return mav;
-	}
-	
-	private AccessControlMapModel getMapModel(Integer userId) {
-		AccessControlMapModel map = new AccessControlMapModel();
-		map.setUserId(userId);
-		return map;
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
 			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
-		new UserValidator(roleService).validate(user, result);
 		
-		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
+		User editedUser = userService.applyChanges(user, userId);
+		
+		new UserValidator(roleService).validate(editedUser, result);
+		
+		if (userService.hasRemovedAdminPermissions(editedUser) && !userService.canDelete(editedUser)) {
 			result.rejectValue("hasGlobalGroupAccess", null, null, 
 					"This would leave users unable to access the user management portion of ThreadFix.");
 		}
@@ -130,40 +100,47 @@ public class EditUserController {
 		if (result.hasErrors()) {
 			model.addAttribute("accessControlMapModel", getMapModel(userId));
 			model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
-			return "config/users/form";
+			model.addAttribute("contentPage", "config/users/editUserForm.jsp");
+			return "ajaxFailureHarness";
 		} else {
 
-			User databaseUser = userService.loadUser(user.getName());
-			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
+			User databaseUser = userService.loadUser(editedUser.getName());
+			if (databaseUser != null && !databaseUser.getId().equals(editedUser.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
 				model.addAttribute("accessControlMapModel", getMapModel(userId));
 				model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
-				return "config/users/form";
+				model.addAttribute("contentPage", "config/users/form.jsp");
+				return "ajaxFailureHarness";
 			}
 			
-			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
-				Role role = roleService.loadRole(user.getGlobalRole().getId());
+			if (editedUser.getGlobalRole() != null && editedUser.getGlobalRole().getId() != null) {
+				Role role = roleService.loadRole(editedUser.getGlobalRole().getId());
 				if (role == null) {
-					user.setGlobalRole(null);
+					editedUser.setGlobalRole(null);
 				}
 			}
 			
 			String globalGroupAccess = request.getParameter("hasGlobalGroupAccess");
 			
 			Boolean hasGlobalGroup = globalGroupAccess != null && globalGroupAccess.equals("true");
-			user.setHasGlobalGroupAccess(hasGlobalGroup);
-			userService.storeUser(user);
-			
-			status.setComplete();
+			editedUser.setHasGlobalGroupAccess(hasGlobalGroup);
+			userService.storeUser(editedUser);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
-			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
+			log.info("The User " + editedUser.getName() + " (id=" + editedUser.getId() + ") has been edited by user " + currentUser);
 
-			return "redirect:/configuration/users";
+			model.addAttribute("contentPage", "/configuration/users");
+			return "ajaxRedirectHarness";
 		}
+	}
+	
+	private AccessControlMapModel getMapModel(Integer userId) {
+		AccessControlMapModel map = new AccessControlMapModel();
+		map.setUserId(userId);
+		return map;
 	}
 
 }

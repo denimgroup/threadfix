@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,32 +32,44 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.viewmodels.UserModel;
+import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
 
 /**
  * @author dshannon
  * @author mcollins
  */
 @Controller
+@SessionAttributes("user")
 @RequestMapping("/configuration/users")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
 	private UserService userService = null;
-	
+	private RoleService roleService = null;
+	private DefaultConfigService defaultConfigService = null;
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	@Autowired
-	public UsersController(UserService userService) {
+	public UsersController(RoleService roleService, 
+			DefaultConfigService defaultConfigurationService,
+			UserService userService) {
 		this.userService = userService;
+		this.roleService = roleService;
+		this.defaultConfigService = defaultConfigurationService;
 	}
 	
 	public UsersController(){}
@@ -67,28 +78,39 @@ public class UsersController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields(new String[] { "id" });
 	}
+	
+	@ModelAttribute
+	public List<Role> populateRoles() {
+		return roleService.loadAll();
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String manageUsers(ModelMap model) {
-		
-		List<UserModel> userModels = new ArrayList<UserModel>();
+	public String index(ModelMap model) {
 		
 		List<User> users = userService.loadAllUsers();
 		
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		for (User user : users) {
-			boolean deletable = userService.canDelete(user);
-			boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
-			
-			UserModel userModel = new UserModel();
-			userModel.setUser(user);
-			userModel.setDeletable(deletable);
-			userModel.setThisUser(isThisUser);
-			userModels.add(userModel);
+			user.setIsDeletable(userService.canDelete(user));
+			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
 		}
 		
-		model.addAttribute("userModels", userModels);
+		model.addAttribute("users", users);
+		
+		User user = new User();
+		
+		DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
+		
+		if (defaultsModel != null) {
+			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
+			if (user.getHasGlobalGroupAccess()) {
+				user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
+			}
+		}
+		
+		model.addAttribute("user", user);
+		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
 		
 		return "config/users/index";
 	}

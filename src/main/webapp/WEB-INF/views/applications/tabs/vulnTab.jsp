@@ -11,13 +11,21 @@
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 
+<spring:url value="{appId}/table/close" var="closeUrl">
+	<spring:param name="appId" value="${ application.id }"/>
+</spring:url>
+
+<spring:url value="{appId}/falsePositives/mark" var="fpUrl">
+	<spring:param name="appId" value="${ application.id }"/>
+</spring:url>
+
 <c:if test="${ canModifyVulnerabilities }">
    	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
-			<li><a id="markClosedButton" href="#markClosedConfirm">Mark Closed</a></li>
-			<li><a id="markFalsePositiveButton" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
+			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
+			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
 	<script>
@@ -41,8 +49,8 @@
 		<button id="actionButton2" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
-			<li><a id="markClosedButton" href="#markClosedConfirm">Mark Closed</a></li>
-			<li><a id="markFalsePositiveButton" href="#markFalsePositiveConfirm">Mark False Positive</a></li>
+			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
+			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
 	<script>

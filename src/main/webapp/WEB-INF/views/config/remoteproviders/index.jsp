@@ -19,12 +19,7 @@
 		</div>
 	</c:if>
 	
-	<c:if test="${ not empty errorMessage }">
-		<div class="alert alert-error">
-			<button class="close" data-dismiss="alert" type="button">×</button>
-			<c:out value="${ errorMessage }"/>
-		</div>
-	</c:if>
+	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 	
 	<div id="helpText">
 		Remote Providers are links to services which

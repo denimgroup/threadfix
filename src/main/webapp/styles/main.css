@@ -499,6 +499,14 @@ th.headerSortDown {
 	vertical-align:middle;
 }
 
+table.padded tr td, table.padded tr th {
+	padding:5px;
+}
+
+table.bold-headers tr th {
+	font-weight:bold;
+}
+
 .pagination ul {
 	vertical-align:middle;
 }

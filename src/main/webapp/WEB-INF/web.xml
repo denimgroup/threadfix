@@ -87,6 +87,10 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositiveTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedVulnerabilities/table$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/table$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/mark$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/unmark$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/table/open$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/table/close$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/table$,
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$

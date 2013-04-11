@@ -125,4 +125,8 @@ public interface UserService {
 	 * @return
 	 */
 	boolean hasRemovedAdminPermissions(User user);
+
+	/**
+	 */
+	User applyChanges(User user, Integer userId);
 }

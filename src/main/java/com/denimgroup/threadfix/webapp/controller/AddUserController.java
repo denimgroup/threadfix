@@ -41,11 +41,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
@@ -57,19 +54,14 @@ import com.denimgroup.threadfix.webapp.validator.UserValidator;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class AddUserController {
 
-	private DefaultConfigService defaultConfigService = null;
 	private UserService userService = null;
 	private RoleService roleService = null;
-	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddUserController.class);
 
 	@Autowired
-	public AddUserController(OrganizationService organizationService, 
-			UserService userService, RoleService roleService, 
-			DefaultConfigService defaultConfigService) {
-		this.organizationService = organizationService;
-		this.defaultConfigService = defaultConfigService;
+	public AddUserController(
+			UserService userService, RoleService roleService) {
 		this.roleService = roleService;
 		this.userService = userService;
 	}
@@ -87,37 +79,19 @@ public class AddUserController {
 		return roleService.loadAll();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String setupForm(Model model) {
-		User user = new User();
-		
-		DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
-		
-		if (defaultsModel != null) {
-			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
-			if (user.getHasGlobalGroupAccess()) {
-				user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
-			}
-		}
-		
-		model.addAttribute("defaults", defaultConfigService.loadCurrentConfiguration());
-		
-		// Should probably switch to filter after we figure this out
-		model.addAttribute("teams",organizationService.loadAllActive());
-		model.addAttribute(user);
-		return "config/users/form";
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
-	public String processNew(@Valid @ModelAttribute User user, BindingResult result, SessionStatus status) {
+	public String processNew(@Valid @ModelAttribute User user, BindingResult result, 
+			SessionStatus status, Model model) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			return "config/users/form";
+			model.addAttribute("contentPage", "config/users/form.jsp");
+			return "ajaxFailureHarness";
 		} else {
 			User databaseUser = userService.loadUser(user.getName().trim());
 			if (databaseUser != null) {
 				result.rejectValue("name", "errors.nameTaken");
-				return "config/users/form";
+				model.addAttribute("contentPage", "config/users/newUserForm.jsp");
+				return "ajaxFailureHarness";
 			}
 
 			userService.createUser(user);
@@ -126,7 +100,8 @@ public class AddUserController {
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
 					", the ID " + user.getId());
 			status.setComplete();
-			return "redirect:/configuration/users/" + user.getId() + "/edit";
+			model.addAttribute("contentPage", "/configuration/users");
+			return "ajaxRedirectHarness";
 		}
 	}
 }

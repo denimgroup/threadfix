@@ -71,9 +71,9 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public void validateRole(Role role, BindingResult result) {
+	public String validateRole(Role role, BindingResult result) {
 		if (result.hasFieldErrors("displayName")) {
-			return;
+			return result.getFieldError("displayName").getDefaultMessage();
 		}
 		
 		String error = null, name = role.getDisplayName();
@@ -85,11 +85,11 @@ public class RoleServiceImpl implements RoleService {
 		Role databaseRole = loadRole(name.trim());
 		
 		if (databaseRole != null && !databaseRole.getId().equals(role.getId())) {
-			error = "A role with this name already exists.";
+			return "A role with this name already exists.";
 		}
 		
 		if (name.length() > Role.NAME_LENGTH) {
-			error = "The maximum length for name is " + Role.NAME_LENGTH + " characters.";
+			return "The maximum length for name is " + Role.NAME_LENGTH + " characters.";
 		}
 
 		if (error != null) {
@@ -99,14 +99,16 @@ public class RoleServiceImpl implements RoleService {
 		if (databaseRole != null) {
 			if (databaseRole.getCanManageUsers() && !role.getCanManageUsers() && 
 					!userDao.canRemovePermissionFromRole(role.getId(), "canManageUsers")) {
-				result.rejectValue("canManageUsers",null,null,"You cannot remove this privilege from this role.");
+				return "You cannot remove the Manage Users privilege from this role.";
 			}
 			
 			if (databaseRole.getCanManageRoles() && !role.getCanManageRoles() && 
 					!userDao.canRemovePermissionFromRole(role.getId(), "canManageRoles")) {
-				result.rejectValue("canManageRoles",null,null,"You cannot remove this privilege from this role.");
+				return "You cannot remove the Manage Roles privilege from this role.";
 			}
 		}
+		
+		return SUCCESS;
 	}
 
 	@Override
