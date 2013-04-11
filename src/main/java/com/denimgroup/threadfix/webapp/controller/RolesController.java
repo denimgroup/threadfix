@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -70,9 +69,8 @@ public class RolesController {
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String newSubmit(HttpServletRequest request, Model model,
-			@Valid @ModelAttribute Role role, BindingResult result,
-			SessionStatus status) {
+	public String newSubmit(Model model, @Valid @ModelAttribute Role role, 
+			BindingResult result, SessionStatus status) {
 		role.setId(null);
 		
 		String resultString = roleService.validateRole(role, result);
@@ -122,8 +120,7 @@ public class RolesController {
 	}
 	
 	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
-	public String saveEdit(HttpServletRequest request,
-			@PathVariable("roleId") int roleId,
+	public String saveEdit(@PathVariable("roleId") int roleId,
 			@Valid @ModelAttribute Role role,
 			BindingResult result, SessionStatus status,
 			ModelMap model) {

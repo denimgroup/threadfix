@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +136,7 @@ public class AccessControlMapController {
 	public String editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
 			@PathVariable("userId") int userId, 
 			@PathVariable("mapId") int mapId, 
-			HttpServletRequest request, HttpServletResponse response,
+			HttpServletResponse response,
 			Model model) {
 		
 		User user = userService.loadUser(userId);
@@ -165,8 +164,7 @@ public class AccessControlMapController {
 	
 	@RequestMapping(value="/access/team/{mapId}/delete", method = RequestMethod.POST)
 	public String deleteTeamMapping(@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId, 
-			HttpServletRequest request, Model model) {
+			@PathVariable("mapId") int mapId, Model model) {
 		AccessControlTeamMap map = accessControlMapService.loadAccessControlTeamMap(mapId);
 		accessControlMapService.deactivate(map);
 		return returnTable(model, userId);
@@ -174,8 +172,7 @@ public class AccessControlMapController {
 	
 	@RequestMapping(value="/access/app/{mapId}/delete", method = RequestMethod.POST)
 	public String deleteAppMapping(@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId, 
-			HttpServletRequest request, Model model) {
+			@PathVariable("mapId") int mapId, Model model) {
 		AccessControlApplicationMap map = accessControlMapService.loadAccessControlApplicationMap(mapId);
 		accessControlMapService.deactivate(map);
 		return returnTable(model, userId);

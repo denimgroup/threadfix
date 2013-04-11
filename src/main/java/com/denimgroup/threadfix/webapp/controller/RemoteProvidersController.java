@@ -94,8 +94,8 @@ public class RemoteProvidersController {
 			}
 		}
 
-		model.addAttribute("successMessage", getAttribute(request,"successMessage"));
-		model.addAttribute("errorMessage", getAttribute(request,"errorMessage"));
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
 		permissionService.filterApps(typeList);
 		
 		model.addAttribute("remoteProviders", typeList);
@@ -105,18 +105,6 @@ public class RemoteProvidersController {
 		
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
 		return "config/remoteproviders/index";
-	}
-	
-	private Object getAttribute(HttpServletRequest request, String attribute) {
-		Object returnValue = null;
-		if (request.getSession() != null) {
-			returnValue = request.getSession().getAttribute(attribute);
-			if (returnValue != null) {
-				request.getSession().removeAttribute(attribute);
-			}
-		}
-		
-		return returnValue;
 	}
 	
 	private String mask(String input) {
@@ -227,7 +215,7 @@ public class RemoteProvidersController {
 				return "ajaxFailureHarness";
 			}
 
-			request.getSession().setAttribute("successMessage", "Application successfully updated.");
+			ControllerUtils.addSuccessMessage(request, "Application successfully updated.");
 			model.addAttribute("contentPage", "/configuration/remoteproviders");
 			return "ajaxRedirectHarness";
 		}
@@ -280,11 +268,11 @@ public class RemoteProvidersController {
 			model.addAttribute("contentPage", "config/remoteproviders/configure.jsp");
 			return "ajaxFailureHarness";
 		} else if (test.equals(ResponseCode.SUCCESS)) {
-			request.getSession().setAttribute("successMessage", "Applications successfully updated.");
+			ControllerUtils.addSuccessMessage(request, "Applications successfully updated.");
 			model.addAttribute("contentPage", "/configuration/remoteproviders");
 			return "ajaxRedirectHarness";
 		} else {
-			request.getSession().setAttribute("errorMessage", "An unidentified error occurred.");
+			ControllerUtils.addErrorMessage(request, "An unidentified error occurred.");
 			model.addAttribute("contentPage", "/configuration/remoteproviders");
 			return "ajaxRedirectHarness";
 		}

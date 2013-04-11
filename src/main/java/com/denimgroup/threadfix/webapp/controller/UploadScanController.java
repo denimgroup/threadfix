@@ -138,8 +138,7 @@ public class UploadScanController {
 			returnValue = scanService.checkFile(myChannelId, fileName);
 		} catch (OutOfMemoryError e) {
 			log.error("OutOfMemoryError thrown while checking file. Logging and re-throwing.", e);
-			request.getSession().setAttribute("scanErrorMessage", 
-					"OutOfMemoryError encountered while checking file.");
+			ControllerUtils.addErrorMessage(request, "OutOfMemoryError encountered while checking file.");
 			throw e;
 		}
 		
@@ -182,7 +181,7 @@ public class UploadScanController {
 		}
 
 		if (app.getOrganization() != null) {
-			request.getSession().setAttribute("scanSuccessMessage", 
+			ControllerUtils.addSuccessMessage(request, 
 					"The scan was successfully added to the queue for processing.");
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
@@ -213,7 +212,7 @@ public class UploadScanController {
 		}
 
 		if (app.getOrganization() != null && app.getOrganization().getId() != null) {
-			request.getSession().setAttribute("scanSuccessMessage", 
+			ControllerUtils.addSuccessMessage(request, 
 					"The empty scan was successfully added to the queue for processing.");
 			return new ModelAndView("redirect:/organizations/" + app.getOrganization().getId() + 
 					"/applications/" + app.getId());

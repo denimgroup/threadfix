@@ -60,7 +60,7 @@ public class ChangePasswordController {
 		
 		User user = null;
 		
-		Object successMessage = getAttribute(request, "successMessage");
+		Object successMessage = ControllerUtils.getSuccessMessage(request);
 		
 		if (userName != null){
 			user = userService.loadUser(userName);
@@ -75,18 +75,6 @@ public class ChangePasswordController {
 		mav.addObject(user);
 		mav.addObject("successMessage", successMessage);
 		return mav;
-	}
-	
-	private Object getAttribute(HttpServletRequest request, String attribute) {
-		Object returnValue = null;
-		if (request.getSession() != null) {
-			returnValue = request.getSession().getAttribute(attribute);
-			if (returnValue != null) {
-				request.getSession().removeAttribute(attribute);
-			}
-		}
-		
-		return returnValue;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -123,9 +111,9 @@ public class ChangePasswordController {
 				userService.storeUser(user);
 				status.setComplete();
 				log.info("The User " + currentUserName + " has completed the password change.");
-				request.getSession().setAttribute("successMessage", 
-						"The password change was successful.");
+				ControllerUtils.addSuccessMessage(request, "The password change was successful.");
 				return "redirect:/configuration/users/password";
+				
 			} else {
 				log.info("An incorrect password was submitted during a password change attempt.");
 				result.rejectValue("currentPassword", null,"That was not the correct password.");

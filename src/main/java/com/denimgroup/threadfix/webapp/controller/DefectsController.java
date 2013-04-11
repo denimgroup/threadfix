@@ -105,7 +105,7 @@ public class DefectsController {
 		
 		if (data == null || data.getComponents() == null || 
 				data.getComponents().size() == 0) {
-			request.getSession().setAttribute("scanErrorMessage", 
+			ControllerUtils.addErrorMessage(request, 
 					"No components were found for the configured Defect Tracker project. " +
 					"Please configure your project so that is has a component.");
 			return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
@@ -160,8 +160,9 @@ public class DefectsController {
 		
 		queueSender.addDefectTrackerVulnUpdate(orgId, appId);
 		
-		request.getSession().setAttribute("queueSuccessMessage", 
+		ControllerUtils.addSuccessMessage(request, 
 				"The Defect Tracker update was successfully added to the queue for processing.");
+
 		return "redirect:/organizations/" + app.getOrganization().getId() + 
 				"/applications/" + app.getId();
 	}

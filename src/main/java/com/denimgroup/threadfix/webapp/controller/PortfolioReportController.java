@@ -190,7 +190,7 @@ public class PortfolioReportController {
 		
 		if (tableContents.size() == 0) {
 			log.warn("No Active Teams. Redirecting to main page.");
-			request.setAttribute("reportsError", "No active Teams found.");
+			ControllerUtils.addErrorMessage(request, "No active Teams found.");
 			return "redirect:/reports";
 		}
 		

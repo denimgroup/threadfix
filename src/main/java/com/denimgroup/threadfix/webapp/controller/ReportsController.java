@@ -99,13 +99,7 @@ public class ReportsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
 		
-		if (request != null && request.getSession() != null && 
-				request.getSession().getAttribute("reportsError") != null) {
-			model.addAttribute("error", request.getSession().getAttribute("reportsError"));
-			request.getSession().removeAttribute("reportsError");
-		}
-		
-		model.addAttribute(new ReportParameters());
+		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
 		return "reports/index";
 	}
 
@@ -117,20 +111,20 @@ public class ReportsController {
 
 		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 8) {
 			log.warn("An incorrect report ID was passed through, returning an error page.");
-			request.getSession().setAttribute("reportsError", "An invalid report type was chosen.");
+			ControllerUtils.addErrorMessage(request, "An invalid report type was chosen.");
 			return "redirect:/reports";
 		}
 		
 		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
 
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			request.getSession().setAttribute("reportsError", "You must select at least one application.");
+			ControllerUtils.addErrorMessage(request, "You must select at least one application.");
 			return "redirect:/reports";
 		}
 		
 		if ((reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7)
 				&& reportParameters.getFormatId() == 2) {
-			request.getSession().setAttribute("reportsError", "The CSV format is not available for this report.");
+			ControllerUtils.addErrorMessage(request, "The CSV format is not available for this report.");
 			return "redirect:/reports";
 		}
 		
@@ -207,7 +201,7 @@ public class ReportsController {
 			return "reports/report";
 		} else {
 			log.warn("Failed to generate report.");
-			request.getSession().setAttribute("reportsError", "There was an error generating the report.");
+			ControllerUtils.addErrorMessage(request, "There was an error generating the report.");
 			return "redirect:/reports";
 		}
 	}

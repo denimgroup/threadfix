@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,7 +194,7 @@ public class WafsController {
 	}
 
 	@RequestMapping(value = "/{wafId}", method = RequestMethod.POST)
-	public ModelAndView download(@PathVariable("wafId") int wafId, HttpServletRequest request,
+	public ModelAndView download(@PathVariable("wafId") int wafId,
 			HttpServletResponse response) throws IOException {
 		Waf waf = wafService.loadWaf(wafId);
 		if (waf == null)

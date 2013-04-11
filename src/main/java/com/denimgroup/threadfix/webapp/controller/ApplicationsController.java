@@ -110,11 +110,8 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 
-		Object message = getAttribute(request, "scanSuccessMessage");
-		Object error = getAttribute(request, "scanErrorMessage");
-		if (message == null) {
-			message = getAttribute(request, "queueSuccessMessage");
-		}
+		Object message = ControllerUtils.getSuccessMessage(request);
+		Object error = ControllerUtils.getErrorMessage(request);
 
 		TableSortBean falsePositiveBean = new  TableSortBean();
 		falsePositiveBean.setFalsePositive(true);
@@ -156,13 +153,13 @@ public class ApplicationsController {
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
 		if (application.getDefectTracker() != null) {
-			addDefectModelAttributes(model,appId,orgId,request);
+			addDefectModelAttributes(model,appId,orgId);
 		}
 		return "applications/detail";
 	}
 	
 	// TODO move this to a different spot so as to be less annoying
-	private void addDefectModelAttributes(Model model, int appId, int orgId, HttpServletRequest request) {
+	private void addDefectModelAttributes(Model model, int appId, int orgId) {
 		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return;
 		}
@@ -184,18 +181,6 @@ public class ApplicationsController {
 		
 		model.addAttribute("projectMetadata", data);
 		model.addAttribute(new DefectViewModel());
-	}
-	
-	private Object getAttribute(HttpServletRequest request, String attribute) {
-		Object returnValue = null;
-		if (request.getSession() != null) {
-			returnValue = request.getSession().getAttribute(attribute);
-			if (returnValue != null) {
-				request.getSession().removeAttribute(attribute);
-			}
-		}
-		
-		return returnValue;
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
