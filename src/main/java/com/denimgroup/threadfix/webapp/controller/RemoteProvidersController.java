@@ -280,9 +280,16 @@ public class RemoteProvidersController {
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
-	public String clearConfiguration(@PathVariable("typeId") int typeId) {
+	public String clearConfiguration(@PathVariable("typeId") int typeId,
+			HttpServletRequest request) {
+		
+		RemoteProviderType type = remoteProviderTypeService.load(typeId);
+		
+		if (type != null) {
+			remoteProviderTypeService.clearConfiguration(typeId);
+			ControllerUtils.addSuccessMessage(request, type.getName() + " configuration was cleared successfully.");
+		}
 
-		remoteProviderTypeService.clearConfiguration(typeId);
 		return "redirect:/configuration/remoteproviders";
 	}
 }

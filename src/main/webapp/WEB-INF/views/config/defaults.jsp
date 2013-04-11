@@ -7,6 +7,8 @@
 <body id="config">
 	<h2>Configure Defaults</h2>
 	
+	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
+	
 	<spring:url value="" var="emptyUrl"></spring:url>
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">

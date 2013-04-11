@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,17 +48,20 @@ public class DefaultConfigController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String setupForm(Model model) {
+	public String setupForm(Model model, HttpServletRequest request) {
 		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		return "config/defaults";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String processForm(@ModelAttribute DefaultConfiguration configModel) {
+	public String processForm(@ModelAttribute DefaultConfiguration configModel,
+			HttpServletRequest request) {
 		
 		defaultConfigService.saveConfiguration(configModel);
+		ControllerUtils.addSuccessMessage(request, "Configuration was saved successfully.");
 		
-		return "redirect:/configuration";
+		return "redirect:/configuration/defaults";
 	}
 	
 }
