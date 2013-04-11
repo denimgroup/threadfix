@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,46 +143,19 @@ public class OrganizationsController {
 	}
 	
 	@RequestMapping("/teamTable")
-	public String teamTable(Model model) {
+	public String teamTable(Model model, HttpServletRequest request) {
 		addModelObjects(model);
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("contentPage", "organizations/indexTeamTable.jsp");
 		return "ajaxSuccessHarness";
-	}
-	
-	@RequestMapping(value="/modalAdd", method = RequestMethod.POST)
-	public String newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status, Model model) {
-		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
-		if (result.hasErrors()) {
-			return "ajaxFailureHarness";
-		} else {
-			
-			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
-				result.rejectValue("name", null, null, "This field cannot be blank");
-				return "ajaxFailureHarness";
-			}
-			
-			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
-			if (databaseOrganization != null) {
-				result.rejectValue("name", "errors.nameTaken");
-				return "ajaxFailureHarness";
-			}
-			
-			organizationService.storeOrganization(organization);
-			
-			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
-					" and ID " + organization.getId());
-			status.setComplete();
-			return "redirect:/organizations/teamTable";
-		}
 	}
 
 	@RequestMapping("/{orgId}/delete")
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
-	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status) {
-		Organization org = organizationService.loadOrganization(orgId);
-		if (org == null || !org.isActive()) {
+	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status,
+			HttpServletRequest request) {
+		Organization organization = organizationService.loadOrganization(orgId);
+		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
@@ -189,9 +163,11 @@ public class OrganizationsController {
 			return "403";
 			
 		} else {
-			organizationService.deactivateOrganization(org);
+			organizationService.deactivateOrganization(organization);
 			status.setComplete();
-			log.info("Organization soft deletion was successful on Organization " + org.getName() + ".");
+			log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
+			ControllerUtils.addSuccessMessage(request, 
+					"Team " + organization.getName() + " has been edited successfully.");
 			return "redirect:/organizations";
 		}
 	}
@@ -199,7 +175,7 @@ public class OrganizationsController {
 	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
 	public String submitApp(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
-			SessionStatus status, Model model) {
+			SessionStatus status, Model model, HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
@@ -239,6 +215,10 @@ public class OrganizationsController {
 			log.debug("User " + user + " has created an Application with the name " + application.getName() +
 					", the ID " + application.getId() +
 					", and the Organization " + application.getOrganization().getName());
+			
+			ControllerUtils.addSuccessMessage(request, 
+					"Application " + application.getName() + " was successfully created in team " + 
+					application.getOrganization().getName() + ".");
 			
 			status.setComplete();
 			return "redirect:/organizations/teamTable";

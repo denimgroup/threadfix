@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
-@RequestMapping("/organizations/new")
+@RequestMapping("/organizations/modalAdd")
 @SessionAttributes("organization")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 public class AddOrganizationController {
@@ -71,29 +72,23 @@ public class AddOrganizationController {
 		dataBinder.setAllowedFields(new String[] { "name" });
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public String newForm(Model model) {
-		Organization organization = new Organization();
-		model.addAttribute(organization);
-		return "organizations/form";
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
-	public String newSubmit(@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status) {
+	public String newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
+			SessionStatus status, Model model, HttpServletRequest request) {
+		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
 		if (result.hasErrors()) {
-			return "organizations/form";
+			return "ajaxFailureHarness";
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
-				return "organizations/form";
+				return "ajaxFailureHarness";
 			}
 			
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null) {
 				result.rejectValue("name", "errors.nameTaken");
-				return "organizations/form";
+				return "ajaxFailureHarness";
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -101,8 +96,12 @@ public class AddOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
 					" and ID " + organization.getId());
+			
+			ControllerUtils.addSuccessMessage(request, 
+					"Team " + organization.getName() + " has been created successfully.");
+			
 			status.setComplete();
-			return "redirect:/organizations/" + organization.getId();
+			return "redirect:/organizations/teamTable";
 		}
 	}
 }

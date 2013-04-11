@@ -46,11 +46,6 @@
 	</div>
 </div>
 
-<c:if test="${ not empty message }">
-	<div class="alert alert-success">
-		<button class="close" data-dismiss="alert" type="button">×</button>
-		<c:out value="${ message }"/> <a id="refreshLink" href="<spring:url value=""/>">Refresh the page.</a>
-	</div>
-</c:if>
+<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
 <%@ include file="/WEB-INF/views/errorMessage.jspf"%>

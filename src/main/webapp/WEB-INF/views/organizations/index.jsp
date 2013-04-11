@@ -54,16 +54,18 @@
 
 <body id="apps">
 	<h2>Teams Index</h2>
-	<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+
+	<div id="teamTable">
+		<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+	</div>
+	
+	<spring:url value="/organizations/teamTable" var="tableUrl"/>
+	<script>reloadTable("<c:out value="${tableUrl}"/>");</script>
+	
 	<div id="myTeamModal" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div id="formDiv">
 			<%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
 		</div>
 	</div>
-	
-	<div id="teamTable"></div>
-	
-	<spring:url value="/organizations/teamTable" var="tableUrl"/>
-	<script>reloadTable("<c:out value="${tableUrl}"/>");</script>
 </body>

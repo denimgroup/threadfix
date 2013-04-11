@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,8 @@ public class EditApplicationController {
 	public String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model) {
+			BindingResult result, SessionStatus status, Model model,
+			HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
@@ -151,6 +153,9 @@ public class EditApplicationController {
 			
 			model.addAttribute("application", application);
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
+			
+			ControllerUtils.addSuccessMessage(request, 
+					"The application was edited successfully.");
 			
 			return "ajaxSuccessHarness";
 		}

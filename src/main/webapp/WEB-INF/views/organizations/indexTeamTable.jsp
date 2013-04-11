@@ -1,5 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<%@ include file="/WEB-INF/views/successMessage.jspf" %>
+
+<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+
 <c:if test="${ not empty organizationList }">
 <table class="table table-hover white-inner-table">
 	<thead>

@@ -110,7 +110,7 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 
-		Object message = ControllerUtils.getSuccessMessage(request);
+		Object successMessage = ControllerUtils.getSuccessMessage(request);
 		Object error = ControllerUtils.getErrorMessage(request);
 
 		TableSortBean falsePositiveBean = new  TableSortBean();
@@ -146,7 +146,7 @@ public class ApplicationsController {
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
 		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new VulnerabilityCollectionModel());
-		model.addAttribute("message", message);
+		model.addAttribute("successMessage", successMessage);
 		model.addAttribute("errorMessage", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);

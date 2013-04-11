@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class EditOrganizationController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String editSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status) {
+			SessionStatus status, HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
 				!organization.isActive()) {
@@ -123,6 +124,9 @@ public class EditOrganizationController {
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
+			
+			ControllerUtils.addSuccessMessage(request, 
+					"Team " + organization.getName() + " has been edited successfully.");
 			
 			status.setComplete();
 			return "redirect:/organizations/" + String.valueOf(orgId);
