@@ -1,8 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"
-		aria-hidden="true">X</button>
 	<h4 id="myModalLabel">Edit User <c:out value="${ user.name }"/></h4>
 </div>
 

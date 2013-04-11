@@ -1,8 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 	
 <div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"
-		aria-hidden="true">X</button>
 	<h4 id="myModalLabel">Edit WAF <c:out value="${ waf.name }"/></h4>
 </div>
 <spring:url value="/wafs/{wafId}/edit/ajax" var="updateUrl">

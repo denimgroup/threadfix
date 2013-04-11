@@ -1,8 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"
-		aria-hidden="true">X</button>
 	<h4 id="myModalLabel">Configure <c:out value="${ remoteProviderType.name }"/></h4>
 </div>
 <spring:url value="/configuration/remoteproviders/{typeId}/configure" var="saveUrl">

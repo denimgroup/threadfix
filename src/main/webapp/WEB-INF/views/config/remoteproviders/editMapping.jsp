@@ -2,8 +2,6 @@
 
 
 <div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"
-		aria-hidden="true">X</button>
 	<h4 id="myModalLabel">Edit Mapping for <c:out value="${ remoteProviderApplication.nativeId }"/></h4>
 </div>
 

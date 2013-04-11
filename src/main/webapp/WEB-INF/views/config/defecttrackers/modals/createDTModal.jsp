@@ -4,8 +4,6 @@
 <div id="createDefectTracker" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal"
-			aria-hidden="true">X</button>
 		<h4 id="myModalLabel">New Defect Tracker</h4>
 	</div>
 	<div id="dtFormDiv">
