@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,10 @@ public class WafsController {
 	public WafsController(){}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 		model.addAttribute(wafService.loadAll());
 		model.addAttribute("newWaf", new Waf());
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
@@ -168,7 +170,8 @@ public class WafsController {
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 	@RequestMapping("/{wafId}/delete")
-	public String deleteWaf(@PathVariable("wafId") int wafId, SessionStatus status) {
+	public String deleteWaf(@PathVariable("wafId") int wafId, 
+			SessionStatus status, HttpServletRequest request) {
 		Waf waf = wafService.loadWaf(wafId);
 		
 		boolean hasApps = false;
@@ -184,6 +187,8 @@ public class WafsController {
 		if (waf != null && !hasApps) {
 			wafService.deleteById(wafId);
 			status.setComplete();
+			ControllerUtils.addSuccessMessage(request, 
+					"The WAF deletion was successful for WAF" + waf.getName() + ".");
 			return "redirect:/wafs";
 		} else {
 			

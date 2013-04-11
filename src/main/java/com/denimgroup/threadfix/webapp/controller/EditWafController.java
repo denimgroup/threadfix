@@ -161,15 +161,16 @@ public class EditWafController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Waf " + waf.getName() + " (id=" + waf.getId() + ") has been edited by user " + currentUser);
 			
-			return index(model);
+			return index(model, "The WAF " + waf.getName() + " has been successfully edited.");
 		}
 	}
 	
-	private String index(Model model) {
+	private String index(Model model, String successMessage) {
 		model.addAttribute(wafService.loadAll());
 		model.addAttribute("newWaf", new Waf());
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
+		model.addAttribute("successMessage", successMessage);
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		model.addAttribute("contentPage", "wafs/wafsTable.jsp");
 		return "ajaxSuccessHarness";

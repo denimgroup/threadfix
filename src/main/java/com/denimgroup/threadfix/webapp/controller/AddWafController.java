@@ -43,9 +43,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
@@ -59,14 +61,16 @@ public class AddWafController {
 
 	private WafService wafService = null;
 	private ApplicationService applicationService = null;
+	private PermissionService permissionService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddWafController.class);
 
 	@Autowired
 	public AddWafController(ApplicationService applicationService, 
-			WafService wafService) {
+			WafService wafService, PermissionService permissionService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
+		this.permissionService = permissionService;
 	}
 
 	@ModelAttribute
@@ -176,6 +180,7 @@ public class AddWafController {
 				model.addAttribute(application);
 				model.addAttribute("contentPage", "applications/wafRow.jsp");
 			} else {
+				model.addAttribute("successMessage", "WAF " + waf.getName() + " was successfully created.");
 				model.addAttribute("contentPage", "wafs/wafsTable.jsp");
 			}
 			
@@ -186,7 +191,13 @@ public class AddWafController {
 			
 			status.setComplete();
 			
-			return "ajaxSuccessPage";
+			model.addAttribute(wafService.loadAll());
+			model.addAttribute("newWaf", new Waf());
+			model.addAttribute("waf", new Waf());
+			model.addAttribute("wafPage", true);
+			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
+			
+			return "ajaxSuccessHarness";
 		}
 	}
 
