@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<h4 id="myModalLabel">New Role</h4>
+	<h4 id="myModalLabel">New User</h4>
 </div>
 
 <div class="modal-body">
