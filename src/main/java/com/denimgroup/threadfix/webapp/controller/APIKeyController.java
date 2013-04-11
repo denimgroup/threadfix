@@ -69,9 +69,10 @@ public class APIKeyController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(HttpServletRequest request, Model model) {
 		model.addAttribute("apiKeyList", apiKeyService.loadAll());
 		model.addAttribute("apiKey", new APIKey());
+
 		return "config/keys/index";
 	}
 
@@ -88,11 +89,12 @@ public class APIKeyController {
 		log.debug(currentUser + " has created an API key with the note " + note +
 				", and the ID " + newAPIKey.getId());
 		
-		return keyTable(model);
+		return keyTable(model, "API key was successfully created.");
 	}
 	
 	@RequestMapping(value = "/{keyId}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("keyId") int keyId, Model model) {
+	public String delete(@PathVariable("keyId") int keyId, Model model,
+			HttpServletRequest request) {
 		APIKey newAPIKey = apiKeyService.loadAPIKey(keyId);
 		
 		if (newAPIKey != null) {
@@ -102,7 +104,7 @@ public class APIKeyController {
 			throw new ResourceNotFoundException();
 		}
 		
-		return keyTable(model);
+		return keyTable(model, "API key was successfully deleted.");
 	}
 	
 	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.POST)
@@ -116,18 +118,19 @@ public class APIKeyController {
 			apiKey.setNote(note);
 			apiKey.setIsRestrictedKey(restricted);
 			apiKeyService.storeAPIKey(apiKey);
-			return keyTable(model);
+			
+			return keyTable(model, "API key was successfully edited.");
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
 			throw new ResourceNotFoundException();
 		}
 	}
 	
-	private String keyTable(Model model) {
+	private String keyTable(Model model, String message) {
 		model.addAttribute("contentPage", "config/keys/keyTable.jsp");
 		model.addAttribute("apiKeyList", apiKeyService.loadAll());
 		model.addAttribute("apiKey", new APIKey());
+		model.addAttribute("successMessage", message);
 		return "ajaxSuccessHarness";
 	}
-	
 }
