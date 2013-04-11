@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -54,7 +55,7 @@ public class RolesController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 		
 		List<Role> roles = roleService.loadAll();
 
@@ -62,6 +63,8 @@ public class RolesController {
 			listRole.setCanDelete(roleService.canDelete(listRole));
 		}
 		
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
 		model.addAttribute("roleList", roles);
 		model.addAttribute("role", new Role());
 		model.addAttribute("editRole", new Role());
@@ -96,20 +99,25 @@ public class RolesController {
 		}
 		
 		model.addAttribute("roleList", roles);
-		
+		model.addAttribute("successMessage", "Role " + role.getDisplayName() + " was created successfully.");
 		model.addAttribute("contentPage", "config/roles/rolesTable.jsp");
 		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("roleId") int roleId) {
+	public String delete(@PathVariable("roleId") int roleId,
+			HttpServletRequest request) {
 		Role role = roleService.loadRole(roleId);
 		
 		if (role != null) {
+			String roleName = role.getDisplayName();
 			if (roleService.canDelete(role)) {
 				roleService.deactivateRole(roleId);
+				ControllerUtils.addSuccessMessage(request, 
+						"Role " + roleName + " was deleted successfully.");
 			} else {
-				return "redirect:/configuration/roles";
+				ControllerUtils.addErrorMessage(request, 
+						"Role " + roleName + " was not deleted successfully.");
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Role", roleId));
@@ -123,7 +131,7 @@ public class RolesController {
 	public String saveEdit(@PathVariable("roleId") int roleId,
 			@Valid @ModelAttribute Role role,
 			BindingResult result, SessionStatus status,
-			ModelMap model) {
+			ModelMap model, HttpServletRequest request) {
 		
 		role.setId(roleId);
 		
@@ -142,6 +150,10 @@ public class RolesController {
 			throw new ResourceNotFoundException();
 		}
 		
-		return "redirect:/configuration/roles";
+		ControllerUtils.addSuccessMessage(request, 
+				"Role " + role.getDisplayName() + " was edited successfully.");
+		
+		model.addAttribute("contentPage","/configuration/roles");
+		return "ajaxRedirectHarness";
 	}
 }
