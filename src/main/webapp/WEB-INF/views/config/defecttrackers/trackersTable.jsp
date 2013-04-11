@@ -21,14 +21,14 @@
 		    <td id="defectTrackerName${ status.count }">
 		    	<c:out value="${ defectTracker.name }"/>
 		    </td>
-			<td>
+			<td id="defectTrackerUrl${ status.count }">
 				<c:out value="${ defectTracker.url }"/>
 			</td>
-			<td>
+			<td id="defectTrackerType${ status.count }">
 				<c:out value="${ defectTracker.defectTrackerType.name }"/>
 			</td>
 			<td class="centered">	
-				<a id="editDefectTracker${ defectTracker.id }Button" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
+				<a id="editDefectTracker${ status.count }Button" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
 				<%@ include file="/WEB-INF/views/config/defecttrackers/modals/editDTModal.jsp" %>
 			</td>
 			<td class="centered">
@@ -36,7 +36,7 @@
 					<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
 				</spring:url>
 				<form:form id="deleteForm${ defectTracker.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }">
-					<a id="deleteButton${ defectTracker.id }" class="btn btn-primary" type="submit" onclick="return deleteDefectTracker('<c:out value='${ deleteUrl }'/>');">Delete</a>
+					<a id="deleteButton${ status.count }" class="btn btn-primary" type="submit" onclick="return deleteDefectTracker('<c:out value='${ deleteUrl }'/>');">Delete</a>
 				</form:form>
 			</td>
 		</tr>
