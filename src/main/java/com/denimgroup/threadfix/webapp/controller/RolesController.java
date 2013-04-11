@@ -73,6 +73,7 @@ public class RolesController {
 	public String newSubmit(HttpServletRequest request, Model model,
 			@Valid @ModelAttribute Role role, BindingResult result,
 			SessionStatus status) {
+		role.setId(null);
 		
 		String resultString = roleService.validateRole(role, result);
 		if (!resultString.equals(RoleService.SUCCESS)) {

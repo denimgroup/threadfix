@@ -19,6 +19,8 @@
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/configuration/users/*/access*</pattern>
+    	<pattern>/configuration/users/*/edit*</pattern>
+    	<pattern>/configuration/users/new*</pattern>
     	<pattern>/configuration/roles/new*</pattern>
     	<pattern>/configuration/roles/*/edit*</pattern>
     	<pattern>/configuration/keys/*/edit*</pattern>

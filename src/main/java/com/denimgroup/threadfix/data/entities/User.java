@@ -227,4 +227,25 @@ public class User extends AuditableEntity {
 	public void setIsLdapUser(Boolean isLdapUser) {
 		this.isLdapUser = isLdapUser;
 	}
+
+	@Transient
+	public boolean getIsDeletable() {
+		return deletable;
+	}
+
+	public void setIsDeletable(boolean deletable) {
+		this.deletable = deletable;
+	}
+
+	@Transient
+	public boolean getIsThisUser() {
+		return isThisUser;
+	}
+	
+	public void setIsThisUser(boolean isThisUser) {
+		this.isThisUser = isThisUser;
+	}
+
+	private boolean deletable, isThisUser;
+
 }

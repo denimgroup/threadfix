@@ -1,33 +1,33 @@
-function confirmRoles() {
-	return $("#roleSelect").children("option").filter(":selected").text() !== "User" || 
+function confirmRoles(id) {
+	return $("#roleSelect" + id).children("option").filter(":selected").text() !== "User" || 
 		confirm("You are switching roles from Administrator to User and will be logged out after this change.");
 }
 
-function toggleRoles() {
-	if (! $("#hasGlobalGroupAccessCheckbox").is(':checked')){
-		$("#roleSelect").attr("disabled","disabled");
+function toggleRoles(id) {
+	if (! $("#hasGlobalGroupAccessCheckbox" + id).is(':checked')){
+		$("#roleSelect" + id).attr("disabled","disabled");
 	} else {
-		$("#roleSelect").removeAttr("disabled","");
+		$("#roleSelect" + id).removeAttr("disabled","");
 	}
 }
 
-function togglePassword() {
-	if ($("#isLdapUserCheckbox").is(':checked')){
-		$("#passwordConfirmInput").attr("disabled","disabled");
-		$("#passwordInput").attr("disabled","disabled");
+function togglePassword(id) {
+	if ($("#isLdapUserCheckbox" + id).is(':checked')){
+		$("#passwordConfirmInput" + id).attr("disabled","disabled");
+		$("#passwordInput" + id).attr("disabled","disabled");
 	} else {
-		$("#passwordConfirmInput").removeAttr("disabled","");
-		$("#passwordInput").removeAttr("disabled","");
+		$("#passwordConfirmInput" + id).removeAttr("disabled","");
+		$("#passwordInput" + id).removeAttr("disabled","");
 	}
 }
 
-function toggleAppSelect() {
-	if ($("#allAppsCheckbox").is(':checked')){
-		$("#appSelect :input").attr("disabled","disabled");
-		$("#roleSelectTeam").removeAttr("disabled","");
+function toggleAppSelect(id) {
+	if ($("#allAppsCheckbox" + id).is(':checked')){
+		$("#appSelect" + id + " :input").attr("disabled","disabled");
+		$("#roleSelectTeam" + id).removeAttr("disabled","");
 	} else {
-		$("#appSelect :input").removeAttr("disabled","");
-		$("#roleSelectTeam").attr("disabled","disabled");
+		$("#appSelect" + id + " :input").removeAttr("disabled","");
+		$("#roleSelectTeam" + id).attr("disabled","disabled");
 	}
 }
 
@@ -40,7 +40,7 @@ function submitModal(url) {
 		dataType : "text",
 		success : function(text) {
 			
-			if ($.trim(text).slice(0,6) === "<body>") {
+			if ($.trim(text).slice(0,5) === "<body") {
 				$('#myModal').on('hidden', function () {
 					$("#permsTableDiv").html(text);
 			    });

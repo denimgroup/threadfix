@@ -45,7 +45,6 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
 @Service
-@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
 	protected final SanitizedLogger log = new SanitizedLogger(UserService.class);
@@ -75,11 +74,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User loadUser(int userId) {
 		return userDao.retrieveById(userId);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User loadUser(String name) {
 		User user = userDao.retrieveByName(name);
 		if (user != null && user.getIsLdapUser()) {
@@ -130,6 +131,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public boolean isCorrectPassword(User user, String password) {
 		if (user.getPassword() != null && user.getSalt() != null 
 				&& password != null) {
@@ -146,6 +148,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Set<Permission> getGlobalPermissions(Integer userId) {
 		Set<Permission> returnList = new HashSet<Permission>();
 
@@ -160,6 +163,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public boolean canDelete(User user) {
 		boolean canDelete = true;
 		
@@ -179,6 +183,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public boolean canSetRoles(int userId, List<Integer> objectIds) {
 		boolean canSetRoles = true;
 		
@@ -211,6 +216,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Map<Integer, Set<Permission>> getApplicationPermissions(
 			Integer userId) {
 		
@@ -238,6 +244,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Map<Integer, Set<Permission>> getOrganizationPermissions(
 			Integer userId) {
 		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<Integer,Set<Permission>>();
@@ -260,6 +267,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public boolean hasRemovedAdminPermissions(User user) {
 		
 		if (user == null || user.getId() == null) {
@@ -291,7 +299,47 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User loadLdapUser(String name) {
 		return userDao.retrieveLdapUser(name);
+	}
+	
+	
+	// This is a terrible idea, we should switch to a strategy that 
+	// actually lets us use normal model validation
+	@Override
+	public User applyChanges(User user, Integer userId) {
+		if (user == null || userId == null) {
+			return null;
+		}
+		
+		User returnUser = loadUser(userId);
+		if (returnUser == null) {
+			return null;
+		}
+		
+//		returnUser.setName(user.getName());
+//		returnUser.setGlobalRole(user.getGlobalRole());
+//		returnUser.setUnencryptedPassword(user.getUnencryptedPassword());
+//		returnUser.setPasswordConfirm(user.getPasswordConfirm());
+//		returnUser.setHasGlobalGroupAccess(user.getHasGlobalGroupAccess());
+//		returnUser.setIsLdapUser(user.getIsLdapUser());
+		
+		user.setAccessControlTeamMaps(returnUser.getAccessControlTeamMaps());
+		user.setActive(returnUser.isActive());
+		user.setApproved(returnUser.isApproved());
+		user.setCreatedDate(returnUser.getCreatedDate());
+		user.setCurrentPassword(returnUser.getCurrentPassword());
+		user.setFailedPasswordAttempts(returnUser.getFailedPasswordAttempts());
+		user.setFailedPasswordAttemptWindowStart(returnUser.getFailedPasswordAttemptWindowStart());
+		user.setHasChangedInitialPassword(returnUser.isHasChangedInitialPassword());
+		user.setId(userId);
+		user.setLastLoginDate(returnUser.getLastLoginDate());
+		user.setLastPasswordChangedDate(returnUser.getLastPasswordChangedDate());
+		user.setModifiedDate(returnUser.getModifiedDate());
+		user.setSalt(returnUser.getSalt());
+		user.setPassword(returnUser.getPassword());
+		
+		return user;
 	}
 }

@@ -26,9 +26,10 @@
 	</h2>
 
 	<c:if test="${ not empty error }">
-		<center class="errors">
-			<c:out value="${ error }" />
-		</center>
+		<div class="alert">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+			<c:out value="${ error }"/>
+		</div>
 	</c:if>
 
 	<table class="dataTable">

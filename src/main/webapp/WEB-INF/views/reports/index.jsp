@@ -32,7 +32,10 @@
 	<h2>Reports</h2>
 	
 	<c:if test="${ not empty error }">
-		<center class="errors" ><c:out value="${ error }"/></center>
+		<div class="alert">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+			<c:out value="${ error }"/>
+		</div>
 	</c:if>
 	
 	<div id="helpText">This page is used to generate various reports.
@@ -41,10 +44,22 @@
 	<c:if test="${ empty organizationList }"> 
 		<br>No reports can be generated because no teams are available. 
 	</c:if>
+
+	<ul id="myTab" class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#home">Trending</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Point in Time</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Vulnerability Progress By Type</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Channel Comparison By Vulnerability Types</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Channel Comparison Summary</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Channel Comparison Detail</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Monthly Progress Report</a></li>
+		<li class=""><a data-toggle="tab" href="#profile">Portfolio Report</a></li>
+	</ul>
 	
 	<c:if test="${ not empty organizationList }">
-		<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
-		<form:form id="reportForm" modelAttribute="reportParameters" action="${ fn:escapeXml(emptyUrl) }">
+					<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
+		<form:form id="reportForm" modelAttribute="reportParameters"
+						action="${ fn:escapeXml(emptyUrl) }">
 			<table class="dataTable">
 				<tbody>
 					<tr>
@@ -68,12 +83,13 @@
 						<td>Team</td>
 						<td style="padding-none;" class="inputValue">
 							<div id="orgDropDown">
-								<form:select style="margin-bottom:0px;" path="organizationId" id="orgSelect">
+								<form:select style="margin-bottom:0px;" path="organizationId"
+												id="orgSelect">
 									<option value="-1">All</option>
 									<c:forEach var="organization" items="${ organizationList }">
 										<c:if test="${ organization.active }">
 										<option value="${ organization.id }">
-											<c:out value="${ organization.name }"/>
+											<c:out value="${ organization.name }" />
 										</option>
 										</c:if>
 									</c:forEach>
@@ -85,10 +101,11 @@
 						<td>Application</td>
 						<td style="padding-none;" class="inputValue">
 							<div id="appDropDown">
-								<form:select style="margin-bottom:0px;" path="applicationId" id="appSelect">
+								<form:select style="margin-bottom:0px;" path="applicationId"
+												id="appSelect">
 									<option value="-1">All</option>
 								</form:select>
-								<form:errors path="applicationId"/>
+								<form:errors path="applicationId" />
 							</div>
 						</td>
 					</tr>
@@ -101,18 +118,20 @@
 									<option value="2">CSV</option>
 									<option value="3">PDF</option>
 								</form:select>
-								<form:errors path="formatId"/>
+								<form:errors path="formatId" />
 							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 			<br />
-			<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:submitAjax('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv');return false;">Run Report</a>
+			<a id="submitTeamModal" class="btn btn-primary"
+							onclick="javascript:submitAjax('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv');return false;">Run Report</a>
 		</form:form>
 	</c:if>
 	
-	</div>
+	
+			</div>
 	
 	<div style="float:left" id="successDiv"></div>
 </body>
