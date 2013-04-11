@@ -71,6 +71,7 @@ public abstract class BasePage {
 
 	public ReportsIndexPage clickReportsHeaderLink() {
 		driver.findElementById("reportsHeader").click();
+		waitForElement(driver.findElementByTagName("h2"));
 		return new ReportsIndexPage(driver);
 	}
 	

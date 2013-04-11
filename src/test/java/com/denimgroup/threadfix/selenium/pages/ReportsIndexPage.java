@@ -75,7 +75,6 @@ public class ReportsIndexPage extends BasePage {
 		selectApplicationList(ApplicationSelect);
 		selectFormatList(formatSelect);
 		driver.findElementById("submitTeamModal").click();
-		sleep(1000);
 		return new ReportsIndexPage(driver);
 	}
 

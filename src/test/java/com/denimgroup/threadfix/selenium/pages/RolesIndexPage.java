@@ -108,7 +108,7 @@ public class RolesIndexPage extends BasePage {
 	public RolesIndexPage clickSaveRole(int row){ 
 		List<WebElement> sBtn = driver.findElementsById("submitRemoteProviderFormButton");
 		sBtn.get(row).click();
-		waitForInvisibleElement(driver.findElementById("createRoleModal"));
+		//waitForInvisibleElement(driver.findElementById("createRoleModal"));
 		return new RolesIndexPage(driver);
 	}
 	
@@ -160,6 +160,20 @@ public class RolesIndexPage extends BasePage {
 
 	public RolesIndexPage clickSaveRole(String name) {
 		driver.findElementsById("submitRemoteProviderFormButton").get(names.indexOf(name)).click();
+		return new RolesIndexPage(driver);
+	}
+
+	public String getAlert() {
+		return driver.findElementByClassName("alert-error").getText();
+	}
+	
+	public RolesIndexPage clickCloseModal(int row){
+		driver.findElementsByClassName("close").get(row).click();
+		return new RolesIndexPage(driver);
+	}
+
+	public RolesIndexPage clickUpdateRoleButtonInvalid(int row) {
+		driver.findElementsById("submitRemoteProviderFormButton").get(row).click();
 		return new RolesIndexPage(driver);
 	}
 }

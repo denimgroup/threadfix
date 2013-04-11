@@ -32,8 +32,6 @@ import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
-import com.denimgroup.threadfix.selenium.pages.DefectTrackerDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DefectTrackerEditPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
@@ -59,31 +57,29 @@ public class DefectTrackerTests extends BaseTest {
 		driver = super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
-	
+	//old numbering scheme is being used for edit and delete buttons waiting for that change
 	@Test
 	public void testCreateDefectTracker(){
 		String newDefectTrackerName = "testCreateDefectTracker";
 		String type = "Bugzilla";
 		
 		
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink()
-																						.clickDefectTrackersLink();
+		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+															.clickDefectTrackersLink();
 		assertFalse("The defectTracker was already present.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 		
-		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton();
 		
-		defectTrackerAddPage.setNameInput(newDefectTrackerName);
-		defectTrackerAddPage.setDefectTrackerTypeSelect(type);
-		defectTrackerAddPage.setUrlInput(TEST_BUGZILLA_URL);
+		defectTrackerIndexPage.setNameInput(newDefectTrackerName);
+		defectTrackerIndexPage.setDefectTrackerTypeSelect(type);
+		defectTrackerIndexPage.setUrlInput(TEST_BUGZILLA_URL);
 		
-		DefectTrackerDetailPage defectTrackerDetailPage = defectTrackerAddPage.clickAddDefectTrackerButton();
-		assertTrue("DefectTracker Page did not save the name correctly.", newDefectTrackerName.equals(defectTrackerDetailPage.getNameText()));
+		defectTrackerIndexPage = defectTrackerIndexPage.clickSaveNewDefectTracker();
+		assertTrue("The defectTracker was not present in the table.", newDefectTrackerName.equals(defectTrackerIndexPage.getDefectTrackerName(1)));
 		
-		defectTrackerIndexPage = defectTrackerDetailPage.clickConfigurationHeaderLink()
-														.clickDefectTrackersLink();	
-		assertTrue("The defectTracker was not present in the table.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickTextLinkInDefectTrackerTableBody(newDefectTrackerName).clickDeleteButton();
+
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(1);
 		assertFalse("The defectTracker was still present after attempted deletion.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 	
 		loginPage = defectTrackerIndexPage.logout();
@@ -98,51 +94,52 @@ public class DefectTrackerTests extends BaseTest {
 		String emptyInputError = "This field cannot be blank";
 		String urlError = "Not a valid URL";
 		
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();		
-		DefectTrackerIndexPage addDefectTrackerPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickDefectTrackersLink();		
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton();
 		
 		// Test empty and whitespace input
-		addDefectTrackerPage.setNameInput(emptyString);
-		addDefectTrackerPage.setUrlInput(emptyString);
-		addDefectTrackerPage = addDefectTrackerPage.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(addDefectTrackerPage.getNameErrorsText()));
-		assertTrue("The correct error text was not present", emptyInputError.equals(addDefectTrackerPage.getUrlErrorsText()));
+		defectTrackerIndexPage.setNameInput(emptyString);
+		defectTrackerIndexPage.setUrlInput(emptyString);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButtonInvalid();
+		assertTrue("The correct error text was not present", emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
+		assertTrue("The correct error text was not present", emptyInputError.equals(defectTrackerIndexPage.getUrlErrorsText()));
 		
-		addDefectTrackerPage.setNameInput(whiteSpaceString);
-		addDefectTrackerPage.setUrlInput(whiteSpaceString);
-		addDefectTrackerPage = addDefectTrackerPage.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(addDefectTrackerPage.getNameErrorsText()));
-		assertTrue("The correct error text was not present", urlError.equals(addDefectTrackerPage.getUrlErrorsText()));
+		defectTrackerIndexPage.setNameInput(whiteSpaceString);
+		defectTrackerIndexPage.setUrlInput(whiteSpaceString);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButtonInvalid();
+		assertTrue("The correct error text was not present", emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
+		assertTrue("The correct error text was not present", urlError.equals(defectTrackerIndexPage.getUrlErrorsText()));
 		
 		// Test URL format checking
-		addDefectTrackerPage.setNameInput("normal name");
-		addDefectTrackerPage.setUrlInput(urlFormatString);
-		addDefectTrackerPage = addDefectTrackerPage.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The URL format check error text was not present.", addDefectTrackerPage.getUrlErrorsText().equals(urlError));
+		defectTrackerIndexPage.setNameInput("normal name");
+		defectTrackerIndexPage.setUrlInput(urlFormatString);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButtonInvalid();
+		assertTrue("The URL format check error text was not present.", defectTrackerIndexPage.getUrlErrorsText().equals(urlError));
 		
 		// Test url validation
-		addDefectTrackerPage.setNameInput(longInput);
-		addDefectTrackerPage.setUrlInput("http://" + longInput);
-		addDefectTrackerPage = addDefectTrackerPage.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The Defect Tracker URL was not validated correctly.", addDefectTrackerPage.getUrlErrorsText().equals("URL is invalid."));
+		defectTrackerIndexPage.setNameInput(longInput);
+		defectTrackerIndexPage.setUrlInput("http://" + longInput);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButtonInvalid();
+		assertTrue("The Defect Tracker URL was not validated correctly.", defectTrackerIndexPage.getUrlErrorsText().equals("URL is invalid."));
 		
 		// Test browser length limit
-		addDefectTrackerPage.setNameInput(longInput);
-		addDefectTrackerPage.setUrlInput(TEST_BUGZILLA_URL);
-		DefectTrackerDetailPage defectTrackerDetailPage = addDefectTrackerPage.clickAddDefectTrackerButton();
-		assertTrue("The Defect Tracker name was not cropped correctly.", defectTrackerDetailPage.getNameText().length() == DefectTracker.NAME_LENGTH);
+		defectTrackerIndexPage.setNameInput(longInput);
+		defectTrackerIndexPage.setUrlInput(TEST_BUGZILLA_URL);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickSaveNewDefectTracker();
+		//might need to change the row number that this is checking
+		assertTrue("The Defect Tracker name was not cropped correctly.",defectTrackerIndexPage.getDefectTrackerName(1).length() == DefectTracker.NAME_LENGTH);
 		
 		// Test name duplication checking
-		String orgName = defectTrackerDetailPage.getNameText();
+		String orgName = defectTrackerIndexPage.getDefectTrackerName(1);
 		
-		addDefectTrackerPage = defectTrackerDetailPage.clickBackToListLink().clickAddDefectTrackerLink();
-		addDefectTrackerPage.setNameInput(orgName);
-		addDefectTrackerPage.setUrlInput(TEST_BUGZILLA_URL);
-		addDefectTrackerPage.clickAddDefectTrackerButtonInvalid();
-		assertTrue(addDefectTrackerPage.getNameErrorsText().equals("That name is already taken."));
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink().clickAddDefectTrackerButton();
+		defectTrackerIndexPage.setNameInput(orgName,1);
+		defectTrackerIndexPage.setUrlInput(TEST_BUGZILLA_URL,1);
+		defectTrackerIndexPage.clickAddDefectTrackerButtonInvalid();
+		assertTrue(defectTrackerIndexPage.getNameErrorsText().equals("That name is already taken."));
 		
 		// Delete and logout
-		defectTrackerIndexPage = addDefectTrackerPage.clickConfigurationHeaderLink().clickDefectTrackersLink().clickTextLinkInDefectTrackerTableBody(orgName).clickDeleteButton();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink().clickDeleteButton(1);
 		
 		loginPage = defectTrackerIndexPage.logout();
 	}
@@ -155,31 +152,30 @@ public class DefectTrackerTests extends BaseTest {
 		
 		String type1 = "Bugzilla";
 		
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();
+		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickDefectTrackersLink();
 		assertFalse("The defectTracker was already present.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 		
-		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton();
 		
-		defectTrackerAddPage.setNameInput(newDefectTrackerName);
-		defectTrackerAddPage.setDefectTrackerTypeSelect(type1);
-		defectTrackerAddPage.setUrlInput(TEST_BUGZILLA_URL);
+		defectTrackerIndexPage.setNameInput(newDefectTrackerName);
+		defectTrackerIndexPage.setDefectTrackerTypeSelect(type1);
+		defectTrackerIndexPage.setUrlInput(TEST_BUGZILLA_URL);
 		
-		DefectTrackerDetailPage defectTrackerDetailPage = defectTrackerAddPage.clickAddDefectTrackerButton();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickSaveNewDefectTracker();
 		
-		assertTrue("DefectTracker Page did not save the name correctly.", newDefectTrackerName.equals(defectTrackerDetailPage.getNameText()));
-		assertTrue("DefectTracker Page did not save the type correctly.", type1.equals(defectTrackerDetailPage.getTypeText()));
-		assertTrue("DefectTracker Page did not save the URL correctly.", TEST_BUGZILLA_URL.equals(defectTrackerDetailPage.getUrlText()));
+		assertTrue("DefectTracker Page did not save the name correctly.", newDefectTrackerName.equals(defectTrackerIndexPage.getDefectTrackerName(1)));
+		assertTrue("DefectTracker Page did not save the type correctly.", type1.equals(defectTrackerIndexPage.getTypeText(1)));
+		assertTrue("DefectTracker Page did not save the URL correctly.", TEST_BUGZILLA_URL.equals(defectTrackerIndexPage.getUrlText(1)));
 		
-		DefectTrackerEditPage defectTrackerEditPage = defectTrackerDetailPage.clickEditLink();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
 		
-		defectTrackerEditPage.setNameInput(editedDefectTrackerName);
+		defectTrackerIndexPage.setNameInput(editedDefectTrackerName);
 		
-		defectTrackerDetailPage = defectTrackerEditPage.clickUpdateDefectTrackerButton(false);
-		assertTrue("Editing did not change the name.", editedDefectTrackerName.equals(defectTrackerDetailPage.getNameText()));
+		defectTrackerIndexPage = defectTrackerIndexPage.clickUpdateDefectTrackerButton();
+		assertTrue("Editing did not change the name.", editedDefectTrackerName.equals(defectTrackerIndexPage.getDefectTrackerName(1)));
 		
-		defectTrackerIndexPage = defectTrackerDetailPage.clickConfigurationHeaderLink().clickDefectTrackersLink();
 		
-		defectTrackerIndexPage = defectTrackerIndexPage.clickTextLinkInDefectTrackerTableBody(editedDefectTrackerName).clickDeleteButton();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink().clickDeleteButton(1);
 		assertFalse("The defectTracker was still present after attempted deletion.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 	
 		loginPage = defectTrackerIndexPage.logout();
@@ -200,7 +196,7 @@ public class DefectTrackerTests extends BaseTest {
 		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password").clickConfigurationHeaderLink().clickDefectTrackersLink();	
 
 		// create Dummy WAF
-		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerLink();
+		DefectTrackerIndexPage defectTrackerAddPage = defectTrackerIndexPage.clickAddDefectTrackerButton();
 		defectTrackerAddPage.setNameInput(defectTrackerNameDuplicateTest);
 		defectTrackerAddPage.setDefectTrackerTypeSelect(type2);
 		defectTrackerAddPage.setUrlInput(TEST_BUGZILLA_URL);

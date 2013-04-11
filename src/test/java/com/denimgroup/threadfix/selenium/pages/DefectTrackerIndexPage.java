@@ -44,20 +44,24 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		nameInput = driver.findElementById("nameInput");
-		urlInput = driver.findElementById("urlInput");
-		defectTrackerTypeSelect = new Select(driver.findElementById("defectTrackerTypeSelect"));
+		//nameInput = driver.findElementById("nameInput");
+		//urlInput = driver.findElementById("urlInput");
+		//defectTrackerTypeSelect = new Select(driver.findElementById("defectTrackerTypeSelect"));
 		addDefectTrackerButton = driver.findElementById("addNewDTButton");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
 			editButtons.add(driver.findElementById("editDefectTracker" + i + "Button"));
 			deleteButtons.add(driver.findElementById("deleteButton" + i));
-			names.add(driver.findElementById("name" + i));
+			names.add(driver.findElementById("defectTrackerName" + i));
 		}
 	}
 
 	public int getNumRows() {
-		return driver.findElementsByClassName("bodyRow").size();
+		int size = driver.findElementsByClassName("bodyRow").size();
+		if(isTextPresentInDefectTrackerTableBody("No Defect Trackers found")){
+			return 0;
+		}
+		return size;
 	}
 	
 	private int getIndex(String roleName) {
@@ -77,13 +81,23 @@ public class DefectTrackerIndexPage extends BasePage {
 		return this;
 	}
 	
+	public String getDefectTrackerName(int row){
+		return driver.findElementById("defectTrackerName"+row).getText();
+	}
+	
 	public String getNameInput(){
 		return nameInput.getText();
 	}
 
 	public DefectTrackerIndexPage setNameInput(String text){
-		nameInput.clear();
-		nameInput.sendKeys(text);
+		driver.findElementById("nameInput").clear();
+		driver.findElementById("nameInput").sendKeys(text);
+		return this;
+	}
+	
+	public DefectTrackerIndexPage setNameInput(String text,int row){
+		driver.findElementsById("nameInput").get(row).clear();
+		driver.findElementsById("nameInput").get(row).sendKeys(text);
 		return this;
 	}
 
@@ -92,8 +106,14 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage setUrlInput(String text){
-		urlInput.clear();
-		urlInput.sendKeys(text);
+		driver.findElementById("urlInput").clear();
+		driver.findElementById("urlInput").sendKeys(text);
+		return this;
+	}
+	
+	public DefectTrackerIndexPage setUrlInput(String text,int row){
+		driver.findElementsById("urlInput").get(row).clear();
+		driver.findElementsById("urlInput").get(row).sendKeys(text);
 		return this;
 	}
 
@@ -102,17 +122,23 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code){
-		defectTrackerTypeSelect.selectByVisibleText(code);
+		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(code);
+		return this;
+	}
+	
+	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code, int row){
+		new Select(driver.findElementsById("defectTrackerTypeSelect").get(row)).selectByVisibleText(code);
 		return this;
 	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		addDefectTrackerButton.click();
+		waitForElement(driver.findElementById("createDefectTracker"));
 		return this;
 	}
 	
 	public DefectTrackerIndexPage clickAddDefectTrackerButtonInvalid() {
-		addDefectTrackerButton.click();
+		driver.findElementById("submitDTCreateModal").click();
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -122,5 +148,35 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public String getUrlErrorsText() {
 		return driver.findElementById("url.errors").getText();
+	}
+
+	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
+		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
+	}
+
+	public DefectTrackerIndexPage clickDeleteButton(int row) {
+		driver.findElementById("deleteButton"+row).click();
+		handleAlert();
+		return new DefectTrackerIndexPage(driver);
+	}
+
+	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
+		driver.findElementById("submitDTCreateModal").click();
+		waitForInvisibleElement(driver.findElementById("createDefectTracker"));
+		return new DefectTrackerIndexPage(driver);
+	}
+
+	public String getTypeText(int i) {
+		return driver.findElementById("defectTrackerType"+i).getText();
+	}
+
+	public String getUrlText(int i) {
+		return driver.findElementById("defectTrackerUrl"+i).getText();
+	}
+	
+	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
+		driver.findElementByLinkText("Update Defect Tracker").click();
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		return new DefectTrackerIndexPage(driver);
 	}
 }

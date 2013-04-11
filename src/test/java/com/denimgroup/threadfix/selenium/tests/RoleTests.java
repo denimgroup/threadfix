@@ -4,15 +4,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
-import com.denimgroup.threadfix.selenium.pages.RoleEditPage;
 import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
 
 public class RoleTests extends BaseTest {
@@ -82,7 +79,7 @@ public class RoleTests extends BaseTest {
 		assertTrue("Item still present.", rolesIndexPage.getNumRows() == 2);
 
 	}
-//had to take \n out of whitespace because the modals do not like enter yet
+//had to take \n out of whitespace because the modals do not like enter yet fails due to no whitespace validation yet
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
@@ -154,7 +151,7 @@ public class RoleTests extends BaseTest {
 		rolesIndexPage = rolesIndexPage.clickSaveRole(2).clickManageRolesLink().clickEditLink(2);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(role));
+			assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(role,2));
 		}
 		rolesIndexPage = rolesIndexPage.clickSaveRole(2)
 									.clickDeleteButton(name)
@@ -165,13 +162,14 @@ public class RoleTests extends BaseTest {
 			rolesIndexPage.setPermissionValue(role, true);
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole().clickEditLink(2);
+		rolesIndexPage = rolesIndexPage.clickSaveRole().clickManageRolesLink().clickEditLink(2);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role));
+			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role,2));
 		}
 		
 		rolesIndexPage = rolesIndexPage.clickSaveRole(2)
+				.clickManageRolesLink()
 				.clickDeleteButton(name);
 	}
 	
@@ -179,69 +177,69 @@ public class RoleTests extends BaseTest {
 	// have permissions to manage users / roles / groups
 	
 	@Test
-	@Ignore
-	public void testRemovePermissionsInEditPage() {
+	//@Ignore
+	public void testRemoveRolesFromUser() {
 		String roleName = "test" + getRandomString(10);
 		String admin = "Administrator";
 		
-		RoleEditPage roleEditPage = loginPage.login("user", "password")
+		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
-				.clickEditLink(admin);
+				.clickEditLink(0);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Admin role did not have all permissions.", roleEditPage.getPermissionValue(role));
+			assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(role,0));
 		}
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			roleEditPage = roleEditPage.setPermissionValue(protectedPermission, false)
-						.clickUpdateRoleButtonInvalid();
-			
-			assertTrue("Protected permission was not protected correctly.", 
-					"You cannot remove this privilege from this role.".equals(
-							roleEditPage.getPermissionError(protectedPermission)));
-		}
+			rolesIndexPage.setPermissionValue(protectedPermission, false,0);
+		}	
+		rolesIndexPage.clickSaveRole(0);
+		assertTrue("Protected permission was not protected correctly.", 
+				rolesIndexPage.getAlert().contains("You cannot remove the Manage Users privilege from this role."));
 		
-		roleEditPage = roleEditPage.clickBackToIndexLink()
-				.clickCreateRoleLink()
-				.setDisplayNameInput(roleName)
-				.clickCreateRoleButton()
-				.clickEditLink(roleName);
+		rolesIndexPage = rolesIndexPage.clickCloseModal(0)
+									.clickCreateRole()
+									.createRole(roleName)
+									.clickSaveRole()
+									.clickEditLink(1);
+		
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			roleEditPage = roleEditPage.setPermissionValue(protectedPermission, true)
-					.clickUpdateRoleButton()
-					.clickEditLink(roleName)
+			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,1)
+					.clickSaveRole(1)
+					.clickEditLink(1)
 					.setPermissionValue(protectedPermission, false)
-					.clickUpdateRoleButton()
-					.clickEditLink(roleName)
+					.clickSaveRole(1)
+					.clickEditLink(1)
 					.setPermissionValue(protectedPermission, true)
-					.clickUpdateRoleButton()
+					.clickSaveRole(1)
 					.clickEditLink(admin)
 					.setPermissionValue(protectedPermission, false)
-					.clickUpdateRoleButton()
-					.clickEditLink(roleName)
+					.clickSaveRole(1)
+					.clickEditLink(1)
 					.setPermissionValue(protectedPermission, false)
-					.clickUpdateRoleButtonInvalid();
+					.clickUpdateRoleButtonInvalid(1);
 
 			assertTrue("Protected permission was not protected correctly.", 
-					"You cannot remove this privilege from this role.".equals(
-							roleEditPage.getPermissionError(protectedPermission)));
+					"You cannot remove this privilege from this role.".contains(
+							rolesIndexPage.getAlert()));
 			
-			roleEditPage.setPermissionValue(protectedPermission, true);
+			rolesIndexPage.setPermissionValue(protectedPermission, true);
 		}
 		
-		roleEditPage = roleEditPage.clickBackToIndexLink().clickEditLink(admin);
+		rolesIndexPage = rolesIndexPage.clickCloseModal(1).clickEditLink(0);
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			roleEditPage.setPermissionValue(protectedPermission, true);
+			rolesIndexPage.setPermissionValue(protectedPermission, true);
 		}
 		
-		roleEditPage.clickUpdateRoleButton().clickDeleteButton(roleName);
+		rolesIndexPage.clickSaveRole(0).clickDeleteButton(roleName);
 	}
 	
 	/**
 	 * Try to set users for the role such that no one will have admin permissions
 	 */
+	//user page is not complete yet
 	@Test
 	public void testRemoveUsersFromRole() {
 		// Test on admin role
@@ -262,27 +260,15 @@ public class RoleTests extends BaseTest {
 		
 	}
 	
-	/**
-	 * Try to set roles for the users such that no one will have admin permissions
-	 */
-	@Test
-	public void testRemoveRolesFromUser() {
-		
-	}
 	
 	/**
 	 * Try to delete the last users with admin permissions
 	 */
+	//user page is not complete yet
 	@Test
 	public void testDeleteUsers() {
 		
 	}
 	
-	/**
-	 * Try to delete the last roles with admin permissions
-	 */
-	@Test
-	public void testDeleteRoles() {
-		
-	}
+
 }
