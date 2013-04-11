@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class AddUserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processNew(@Valid @ModelAttribute User user, BindingResult result, 
-			SessionStatus status, Model model) {
+			SessionStatus status, Model model, HttpServletRequest request) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
 			model.addAttribute("contentPage", "config/users/form.jsp");
@@ -100,6 +101,8 @@ public class AddUserController {
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
 					", the ID " + user.getId());
 			status.setComplete();
+			ControllerUtils.addSuccessMessage(request, 
+					"User " + user.getName() + " has been created successfully.");
 			model.addAttribute("contentPage", "/configuration/users");
 			return "ajaxRedirectHarness";
 		}

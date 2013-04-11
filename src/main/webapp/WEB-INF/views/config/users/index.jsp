@@ -16,6 +16,9 @@
 	<div id="helpText">
 		Here you can create, edit, and delete users.
 	</div>
+	
+	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
+	<%@ include file="/WEB-INF/views/errorMessage.jspf" %>
 
 	<table class="table table-striped">
 		<thead>

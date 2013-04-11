@@ -132,6 +132,9 @@ public class EditUserController {
 			// This may not hold for AD scenarios.
 			log.info("The User " + editedUser.getName() + " (id=" + editedUser.getId() + ") has been edited by user " + currentUser);
 
+			ControllerUtils.addSuccessMessage(request, 
+					"User " + user.getName() + " has been edited successfully.");
+			
 			model.addAttribute("contentPage", "/configuration/users");
 			return "ajaxRedirectHarness";
 		}

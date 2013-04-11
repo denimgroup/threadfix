@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,7 +87,7 @@ public class UsersController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(ModelMap model, HttpServletRequest request) {
 		
 		List<User> users = userService.loadAllUsers();
 		
@@ -111,15 +113,20 @@ public class UsersController {
 		
 		model.addAttribute("user", user);
 		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
 		
 		return "config/users/index";
 	}
 
 	@RequestMapping("/{userId}/delete")
-	public String deleteUser(@PathVariable("userId") int userId, SessionStatus status) {
+	public String deleteUser(@PathVariable("userId") int userId, 
+			HttpServletRequest request, SessionStatus status) {
 		User user = userService.loadUser(userId);
 		
 		if (user != null) {
+			String userName = user.getName();
+			
 			if (userService.canDelete(user)) {
 				
 				status.setComplete();
@@ -133,10 +140,12 @@ public class UsersController {
 				if (isThisUser) {
 					return "redirect:/j_spring_security_logout";
 				} else {
+					ControllerUtils.addSuccessMessage(request, "User " + userName + " was deleted successfully.");
 					return "redirect:/configuration/users";
 				}
 			} else {
-				return "redirect:/configuration/users/" + userId;
+				ControllerUtils.addErrorMessage(request, "User " + userName + " cannot be deleted.");
+				return "redirect:/configuration/users";
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
