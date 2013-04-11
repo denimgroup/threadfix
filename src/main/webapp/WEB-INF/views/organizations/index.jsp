@@ -22,6 +22,7 @@
 						$(collapsible).collapse('show');
 				    });
 				    $(modalName).modal('hide');
+				    $(".clear-after-submit").val('');
 				} else {
 					try {
 						var json = JSON.parse(text);

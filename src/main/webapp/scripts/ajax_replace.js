@@ -14,6 +14,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 					$(successDiv).html(text);
 			    });
 			    $(modalName).modal('hide');
+			    $(".clear-after-submit").val('');
 			} else {
 				try {
 					var json = JSON.parse($.trim(text));
