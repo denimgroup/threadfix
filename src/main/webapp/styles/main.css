@@ -594,6 +594,10 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	outline:none;
 }
 
+.dropdown-menu > li > a {
+	text-decoration:none;
+}
+
 .caret-right {
 	border-bottom: 4px solid transparent;
     border-top: 4px solid transparent;

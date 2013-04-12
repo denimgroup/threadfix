@@ -179,8 +179,10 @@ function submitDefect(formId, formDiv, successDiv) {
 				$(successDiv).html(text);
 			} else {
 				try {
-					var json = JSON.parse(text);
-					alert(json.error);
+					var json = JSON.parse($.trim(text));
+					if (json.isJSONRedirect) {
+						window.location.href = json.redirectURL;
+					}
 				} catch (e) {
 					history.go(0);
 				}

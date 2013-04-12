@@ -23,7 +23,9 @@
    	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+			<c:if test="${ not empty application.defectTracker }">
+				<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+			</c:if>
 			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
 			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
@@ -48,7 +50,9 @@
    	<div id="btnDiv2" class="btn-group">
 		<button id="actionButton2" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+			<c:if test="${ not empty application.defectTracker }">
+				<li><a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">Submit Defect</a></li>
+			</c:if>
 			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
 			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
