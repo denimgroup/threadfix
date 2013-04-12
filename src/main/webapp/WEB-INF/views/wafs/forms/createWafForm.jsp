@@ -4,7 +4,7 @@
 	<h4 id="myModalLabel">Create New WAF</h4>
 </div>
 <spring:url value="/wafs/new/ajax" var="saveUrl"/>
-<form:form id="wafForm" style="margin-bottom:0px;" modelAttribute="newWaf" method="post" action="${ fn:escapeXml(saveUrl) }">
+<form:form id="wafForm" style="margin-bottom:0px;" modelAttribute="waf" method="post" action="${ fn:escapeXml(saveUrl) }">
 	<div class="modal-body">
 		<table class="dataTable">
 			<tbody>

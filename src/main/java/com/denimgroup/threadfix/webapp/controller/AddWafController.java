@@ -131,7 +131,7 @@ public class AddWafController {
 			HttpServletRequest request) {
 		if (result.hasErrors()) {
 			model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
-			return "wafs/errorForm";
+			return "ajaxFailureHarness";
 		} else {
 			if (waf.getName().trim().equals("")) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
