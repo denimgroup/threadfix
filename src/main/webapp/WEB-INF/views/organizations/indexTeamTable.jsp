@@ -8,11 +8,15 @@
 <table class="table table-hover white-inner-table">
 	<thead>
 		<tr>
+			<th style="width:8px"></th>
 			<th>Name</th>
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
-		<tr data-toggle="collapse" data-target="#teamInfoDiv${organization.id}">
+		<tr onclick="javascript:toggleExpandable('#teamInfoDiv${ organization.id}', '#caret${ organization.id }')">
+			<td>
+				<span id="caret${ organization.id }" class="caret-right"></span>
+			</td>
 			<td id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
