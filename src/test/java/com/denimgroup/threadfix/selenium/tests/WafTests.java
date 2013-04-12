@@ -103,13 +103,13 @@ public class WafTests extends BaseTest {
 		
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
-		wafIndexPage = wafIndexPage.clickAddWafLink().createNewWaf(newWafName, type);
+		wafIndexPage = wafIndexPage.clickAddWafLink().createNewWaf(newWafName, type).clickCreateWaf();
 		
 		//assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafIndexPage.getWafName(1)));
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		loginPage = wafIndexPage.clickDeleteWaf(1).clickWafsHeaderLink().logout();
+		loginPage = wafIndexPage.clickDeleteWaf(newWafName).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
@@ -216,7 +216,7 @@ public class WafTests extends BaseTest {
 	}
 	
 	/* In progress */
-	/* waf modal does not yet contain validaition with the modal
+	/* waf modal does not yet contain validaition with the modal */
 	@Test
 	public void testCreateWafBoundaries(){
 		String emptyString = "";
@@ -231,14 +231,14 @@ public class WafTests extends BaseTest {
 		wafIndexPage = wafIndexPage.clickAddWafLink();
 		//does not currently prompt an error should be uncommented when that is fixed
 		// Test empty and whitespace input
-		//wafIndexPage = wafIndexPage.setNameInput(emptyString);
-		//wafIndexPage = wafIndexPage.clickCreateWafInvalid();
-		//log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
-		//assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+		wafIndexPage = wafIndexPage.setNameInput(emptyString);
+		wafIndexPage = wafIndexPage.clickCreateWafInvalid();
+		log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
+		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
-		//wafIndexPage.setNameInput(whiteSpaceString);
-		//wafIndexPage = wafIndexPage.clickCreateWafInvalid();
-		//assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+		wafIndexPage.setNameInput(whiteSpaceString);
+		wafIndexPage = wafIndexPage.clickCreateWafInvalid();
+		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
 		wafIndexPage.setNameInput(longInput);
@@ -261,7 +261,7 @@ public class WafTests extends BaseTest {
 		
 		
 	}
-	*/
+
 	
 	//Create Snort Waf, attach it to an application and generate rules
 
