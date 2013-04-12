@@ -611,13 +611,33 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 }
 
 .caret-down {
-	border-right: 4px solid transparent;
-	border-bottom: 4px solid #000000;
-	border-left: 4px solid transparent;
-	content: "";
-	height: 0;
-	vertical-align:top;
-	width:0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #000000;
+    display:inline-block;
+    margin-left:7px;
+    height: 0;
+    vertical-align: middle;
+    width: 0;
+}
+
+.caret-up {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #000000;
+    display:inline-block;
+    margin-left:7px;
+    content: "";
+    height: 0;
+    vertical-align: middle;
+    width: 0;
+}
+
+.caret-down.expanded {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #0000000;
+    border-top: 0px;
 }
 
 .caret-right.expanded {
@@ -628,4 +648,8 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	height: 0;
 	vertical-align:top;
 	width:0;
+}
+
+.caret-right.caret-title {
+	vertical-align:middle;
 }

@@ -26,6 +26,11 @@ function refillElementSort(elementId, endPoint, page, field, login)
 		}
 	}
 	
+	var caretState = false;
+	if (field != null) {
+		caretState = $('#headerCaret' + field).attr('class').indexOf('caret-up') == -1;
+	}
+	
 	lastField = field;
 	lastSort = sort;
 
@@ -76,6 +81,15 @@ function refillElementSort(elementId, endPoint, page, field, login)
 		success : function(text) {
 			if (text.search('<head>') == -1) {
 				$(elementId).html(text);
+				
+				var caret= '#headerCaret' + field;
+				if (caretState) {
+					$(caret).addClass('caret-up');
+					$(caret).removeClass('caret-down');
+				} else {
+					$(caret).addClass('caret-down');
+					$(caret).removeClass('caret-up');
+				}
 			} else {
 				// Kind of a hack
 				alert('Logging out.');

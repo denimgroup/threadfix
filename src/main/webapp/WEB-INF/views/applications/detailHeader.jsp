@@ -6,7 +6,12 @@
     <li class="active"><c:out value="${ application.name }"/></li>
    </ul>
 
-<h2 style="padding-bottom:5px;"><span id="nameText"><c:out value="${ application.name }"/></span>
+<h2 style="padding-bottom:5px;">
+	
+	<span onclick="javascript:toggleExpandable('#appInfoDiv', '#headerCaret')" id="nameText">
+		<span style="width:8px"><span id="headerCaret" class="caret-right caret-title"></span></span> 
+		<c:out value="${ application.name }"/>
+	</span>
 <c:if test="${ canManageApplications }">
 		<div id="appActionDiv" class="btn-group">
 			<button id="appActionButton" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
