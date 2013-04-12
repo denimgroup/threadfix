@@ -39,8 +39,9 @@ public class DefectTrackerIndexPage extends BasePage {
 	private List<WebElement> editButtons = new ArrayList<WebElement>();
 	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
-	
+
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
+	public static String JIRA_URL = "https://threadfix.atlassian.net/";
 
 	public DefectTrackerIndexPage(WebDriver webdriver) {
 		super(webdriver);
@@ -56,6 +57,7 @@ public class DefectTrackerIndexPage extends BasePage {
 		}
 	}
 
+	
 	public int getNumRows() {
 		int size = driver.findElementsByClassName("bodyRow").size();
 		if(isTextPresentInDefectTrackerTableBody("No Defect Trackers found")){
@@ -80,6 +82,17 @@ public class DefectTrackerIndexPage extends BasePage {
 		editButtons.get(getIndex(roleName)).click();
 		return this;
 	}
+	
+	public DefectTrackerIndexPage clickDeleteByName(String roleName) {
+		deleteButtons.get(getIndex(roleName)).click();
+		return this;
+	}
+	
+	public DefectTrackerIndexPage clickCloseButton() {
+		driver.findElementById("closeNewDTModalButton").click();
+		return this;
+	}
+	
 	
 	public String getDefectTrackerName(int row){
 		return driver.findElementById("defectTrackerName"+row).getText();
@@ -166,6 +179,10 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 
+	public String getNameText(int i) {
+		return driver.findElementById("defectTrackerName"+i).getText();
+	}
+	
 	public String getTypeText(int i) {
 		return driver.findElementById("defectTrackerType"+i).getText();
 	}
@@ -178,5 +195,19 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementByLinkText("Update Defect Tracker").click();
 		waitForInvisibleElement(driver.findElementByClassName("modal"));
 		return new DefectTrackerIndexPage(driver);
+	}
+	
+	public DefectTrackerIndexPage clickUpdateDefectTrackerButtonInvalid(){
+		driver.findElementByLinkText("Update Defect Tracker").click();
+		return new DefectTrackerIndexPage(driver);
+	}
+	
+	public boolean doesNameExist(String name){
+		for(int i = 1; i < getNumRows(); i ++){
+			if(name.equals(getNameText(i))){
+				return true;
+			}
+		}
+		return false;
 	}
 }
