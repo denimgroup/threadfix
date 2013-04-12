@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -58,12 +60,48 @@ import com.denimgroup.threadfix.data.entities.SurfaceLocation;
  */
 @Repository
 public class HibernateScanDao implements ScanDao {
+	
+	private String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.genericSeverity.intValue = ";
+	private String idStart = "scan.id as id, ";
+	private String vulnIds = " and vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan = scan))";
+	private String mapVulnIds = " and vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan = scan))";
+	private String fromClause = "from Scan scan where scan.id = :scanId";
 
 	private SessionFactory sessionFactory;
 
 	@Autowired
 	public HibernateScanDao(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String,Object> getFindingSeverityMap(Scan scan) {
+		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
+				"select new map( " +
+						idStart +
+						selectStart + "1" + vulnIds + " as info, " +
+						selectStart + "2" + vulnIds + " as low, " +
+						selectStart + "3" + vulnIds + " as medium, " +
+						selectStart + "4" + vulnIds + " as high, " +
+						selectStart + "5" + vulnIds + " as critical) " +
+						fromClause
+				).setInteger("scanId", scan.getId()).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String,Object> getMapSeverityMap(Scan scan) {
+		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
+				"select new map( " +
+						idStart +
+						selectStart + "1" + mapVulnIds + " as info, " +
+						selectStart + "2" + mapVulnIds + " as low, " +
+						selectStart + "3" + mapVulnIds + " as medium, " +
+						selectStart + "4" + mapVulnIds + " as high, " +
+						selectStart + "5" + mapVulnIds + " as critical) " +
+						fromClause
+				).setInteger("scanId", scan.getId()).uniqueResult();
 	}
 
 	@Override
@@ -269,5 +307,32 @@ public class HibernateScanDao implements ScanDao {
 				.addOrder(Order.desc("id"))
 				.setMaxResults(15)
 				.list();
+	}
+	
+	public int getScanCount() {
+		Long result = (Long) sessionFactory.getCurrentSession().createQuery(
+				"select count(*) from Scan scan"
+				).uniqueResult();
+		return safeLongToInt(result);
+	}
+	public static int safeLongToInt(long l) {
+		if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		}
+		return (int) l;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Scan> getTableScans(Integer page) {
+
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Scan.class);
+
+		criteria.createAlias("application", "app")
+			.add(Restrictions.eq("app.active", true))
+			.setFirstResult((page - 1) * 100)
+			.setMaxResults(100)
+			.addOrder(Order.desc("importTime"));
+
+		return criteria.list();
 	}
 }

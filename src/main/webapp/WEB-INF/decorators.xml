@@ -2,6 +2,7 @@
     <excludes>
     	<pattern>/login*</pattern>
     	<pattern>/reports/ajax*</pattern>
+    	<pattern>/scans/table*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/teamTable*</pattern>

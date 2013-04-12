@@ -135,5 +135,14 @@ public interface ScanService {
 	/**
 	 */
 	List<Scan> loadMostRecent();
+	
+	
+	/**
+	 */
+	int getScanCount();
+	
+	/**
+	 */
+	List<Scan> getTableScans(Integer page);
 
 }

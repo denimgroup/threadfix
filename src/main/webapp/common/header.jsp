@@ -32,8 +32,8 @@
 				<td id="tab-apps" style="width: 90px;">
 					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Teams</a>
 				</td>
-				<td id="tab-wafs" style="width: 90px;">
-					<a id="wafsHeader" href="<spring:url value="/wafs" htmlEscape="true"/>">Scans</a>
+				<td id="tab-scans" style="width: 90px;">
+					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
 					<td id="tab-reports" style="width: 110px;">

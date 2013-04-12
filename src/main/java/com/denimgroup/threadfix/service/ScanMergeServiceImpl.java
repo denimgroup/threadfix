@@ -147,6 +147,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
+		
+		updateScanCounts(scan);
 
 		return scan;
 	}
@@ -419,6 +421,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 		
 		scanDao.saveOrUpdate(scan);
+		
+		updateScanCounts(scan);
 		
 		return true;
 	}
@@ -1816,4 +1820,21 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			jobStatusService.updateJobStatus(statusId, statusString);
 		}
 	}
+	
+	private void updateScanCounts(Scan scan) {
+		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
+		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
+		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
+			scan.setNumberInfoVulnerabilities((Long)mapMap.get("info") + (Long)findingMap.get("info"));
+			scan.setNumberLowVulnerabilities((Long)mapMap.get("low") + (Long)findingMap.get("low"));
+			scan.setNumberMediumVulnerabilities((Long)mapMap.get("medium") + (Long)findingMap.get("medium"));
+			scan.setNumberHighVulnerabilities((Long)mapMap.get("high") + (Long)findingMap.get("high"));
+			scan.setNumberCriticalVulnerabilities((Long)mapMap.get("critical") + (Long)findingMap.get("critical"));
+			scanDao.saveOrUpdate(scan);
+		} else {
+			log.warn("ID from the database didn't match the scan ID, counts will not be added to the scan.");
+		}
+	}
+
+
 }

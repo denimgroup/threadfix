@@ -64,7 +64,7 @@
 		<init-param>
 			<param-name>entryPoints</param-name>
 			<param-value>
-        		,/,/index.jsp,/login.jsp,/organizations,/wafs,/configuration,/reports,/dashboard,
+        		,/,/index.jsp,/login.jsp,/organizations,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
         		/configuration/defaults,
@@ -78,6 +78,7 @@
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/table$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/falsepositives/table$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/unmappedTable$,
+        		protected-regex ^/scans/table$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/addComment$,
         		protected-regex ^/configuration/users/[0-9]+/access/[0-9]+/edit$,

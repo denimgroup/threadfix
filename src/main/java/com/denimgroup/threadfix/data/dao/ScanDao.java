@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
@@ -36,6 +37,24 @@ import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
  * @author mcollins
  */
 public interface ScanDao {
+	
+	/**
+	 * This method returns a map of severities -> counts for vulnerabilities for
+	 * mapped repeat findings in the scan.
+	 *
+	 * @param scan
+	 * @return
+	 */
+	Map<String, Object> getMapSeverityMap(Scan scan);
+	
+	/**
+	 * This method returns a map of severities -> counts for vulnerabilities
+	 * for findings in the scan.
+	 *
+	 * @param scan
+	 * @return
+	 */
+	Map<String,Object> getFindingSeverityMap(Scan scan);
 
 	/**
 	 * @return
@@ -135,4 +154,16 @@ public interface ScanDao {
 	/**
 	 */
 	List<Scan> retrieveMostRecent();
+	
+	/**
+	 *
+	 *
+	 */
+	int getScanCount();
+
+	/**
+	 *
+	 *
+	 */
+	List<Scan> getTableScans(Integer page);
 }

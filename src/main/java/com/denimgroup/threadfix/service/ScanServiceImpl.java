@@ -571,4 +571,13 @@ public class ScanServiceImpl implements ScanService {
 	    }
 	}
 	
+	@Override
+	public int getScanCount() {
+		return scanDao.getScanCount();
+	}
+	
+	public List<Scan> getTableScans(Integer page) {
+		return scanDao.getTableScans(page);
+	}
+	
 }

@@ -58,6 +58,10 @@ public class Scan extends BaseEntity {
 	private Integer numberRepeatResults;
 	private Integer numberRepeatFindings;
 	
+	private Long numberInfoVulnerabilities = 0L, numberLowVulnerabilities = 0L,
+			numberMediumVulnerabilities = 0L, numberHighVulnerabilities = 0L,
+			numberCriticalVulnerabilities = 0L;
+	
 	private User user;
 	
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
@@ -302,6 +306,52 @@ public class Scan extends BaseEntity {
 			
 			return scan1Time.compareTo(scan2Time);
 		}
+	}
+
+	@Column
+	public Long getNumberInfoVulnerabilities() {
+		return numberInfoVulnerabilities;
+	}
+
+	public void setNumberInfoVulnerabilities(Long numberInfoVulnerabilities) {
+		this.numberInfoVulnerabilities = numberInfoVulnerabilities;
+	}
+	
+	@Column
+	public Long getNumberLowVulnerabilities() {
+		return numberLowVulnerabilities;
+	}
+
+	public void setNumberLowVulnerabilities(Long numberLowVulnerabilities) {
+		this.numberLowVulnerabilities = numberLowVulnerabilities;
+	}
+	
+	@Column
+	public Long getNumberMediumVulnerabilities() {
+		return numberMediumVulnerabilities;
+	}
+
+	public void setNumberMediumVulnerabilities(Long numberMediumVulnerabilities) {
+		this.numberMediumVulnerabilities = numberMediumVulnerabilities;
+	}
+	
+	@Column
+	public Long getNumberHighVulnerabilities() {
+		return numberHighVulnerabilities;
+	}
+
+	public void setNumberHighVulnerabilities(Long numberHighVulnerabilities) {
+		this.numberHighVulnerabilities = numberHighVulnerabilities;
+	}
+	
+	@Column
+	public Long getNumberCriticalVulnerabilities() {
+		return numberCriticalVulnerabilities;
+	}
+
+	public void setNumberCriticalVulnerabilities(
+			Long numberCriticalVulnerabilities) {
+		this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
 	}
 
 }
