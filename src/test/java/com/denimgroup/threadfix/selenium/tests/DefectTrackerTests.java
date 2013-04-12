@@ -373,26 +373,29 @@ public class DefectTrackerTests extends BaseTest {
 		defectTrackerIndexPage = defectTrackerIndexPage
 				.clickAddDefectTrackerButton();
 
-		defectTrackerIndexPage.setNameInput(newDefectTrackerName);
-		defectTrackerIndexPage.setDefectTrackerTypeSelect(type2);
-		defectTrackerIndexPage.setUrlInput(url);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null, newDefectTrackerName);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null,type2);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterURL(null, url);
 		defectTrackerIndexPage = defectTrackerIndexPage
 				.clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickEditLink(newDefectTrackerName);
-
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickUpdateDefectTrackerButton();
-
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterName(newDefectTrackerName, newDefectTrackerName + " - edited");
+		defectTrackerIndexPage = defectTrackerIndexPage.enterType(newDefectTrackerName,type2);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterURL(newDefectTrackerName, url);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickUpdateDefectTrackerButton();
+		
 		assertTrue("DefectTracker Page did not create correctly.",
-				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
+				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 
 
 		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteByName(newDefectTrackerName);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(newDefectTrackerName).clickDefectTrackersLink();
+		
+		assertFalse("DefectTracker Page did delete.",
+				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 
-		loginPage = defectTrackerIndexPage.logout();
+		loginPage = defectTrackerIndexPage.clickDefectTrackersLink().logout();
 	}
 
 	@Test
@@ -436,7 +439,7 @@ public class DefectTrackerTests extends BaseTest {
 				defectTrackerIndexPage.doesNameExist(replacementName));
 
 		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteByName(replacementName);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(replacementName);
 
 		loginPage = defectTrackerIndexPage.logout();
 	}

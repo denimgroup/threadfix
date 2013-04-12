@@ -80,12 +80,53 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickEditLink(String roleName) {
 		editButtons.get(getIndex(roleName)).click();
+		return new DefectTrackerIndexPage(driver);
+	}
+	/*
+	public DefectTrackerIndexPage clickDeleteButton(String roleName) {
+		//deleteButtons.get((getIndex(roleName)+1)).click();
+		System.out.println("Deleting " + (getIndex(roleName)+1));
+		driver.findElementById("deleteButton" + (getIndex(roleName)+1)).click();
+		return new DefectTrackerIndexPage(driver);
+	}
+	*/
+	
+	public DefectTrackerIndexPage enterName(String oldName,String newName){
+		if(oldName==null){
+			driver.findElementsById("nameInput").get(names.size()).sendKeys(newName);
+		}else{
+			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
+		}
 		return this;
 	}
 	
-	public DefectTrackerIndexPage clickDeleteByName(String roleName) {
-		deleteButtons.get(getIndex(roleName)).click();
+	public DefectTrackerIndexPage enterType(String oldName, String newType){
+		if(oldName==null){
+			new Select(driver.findElementsById("defectTrackerTypeSelect").get(names.size())).selectByVisibleText(newType);
+		}else{
+			new Select(driver.findElementsById("defectTrackerTypeSelect").get(getIndex(oldName))).selectByVisibleText(newType);
+		}
 		return this;
+	}
+	
+	
+	public DefectTrackerIndexPage enterURL(String oldName, String newURL){
+		if(oldName==null){
+			driver.findElementsById("urlInput").get(names.size()).sendKeys(newURL);
+		}else{
+			driver.findElementsById("urlInput").get(getIndex(oldName)).sendKeys(newURL);
+		}
+		return this;
+	}
+	
+	public DefectTrackerIndexPage clickDeleteButton(String name){
+		for(int i = 0; i < getNumRows(); i ++){
+			if(name.equals(names.get(i).getText())){
+				driver.findElementById("deleteButton" + (i + 1)).click();
+				handleAlert();
+			}
+		}
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage clickCloseButton() {
