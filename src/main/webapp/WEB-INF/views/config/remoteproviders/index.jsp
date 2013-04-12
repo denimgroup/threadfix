@@ -19,7 +19,7 @@
 		</div>
 	</c:if>
 	
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 	
 	<div id="helpText">
 		Remote Providers are links to services which

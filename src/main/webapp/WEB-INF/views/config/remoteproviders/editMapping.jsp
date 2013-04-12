@@ -11,7 +11,7 @@
 </spring:url>
 <form:form id="remoteProviderApplicationForm${ remoteProviderApplication.id }" modelAttribute="remoteProviderApplication" action="${ fn:escapeXml(saveUrl) }">
 	<div class="modal-body">
-		<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 		<table style="border-spacing:10" class="dataTable">
 			<tbody>
 				<tr>

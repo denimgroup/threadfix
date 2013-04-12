@@ -5,7 +5,7 @@
 </div>
 
 <div class="modal-body">
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 
 	<spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
 		<spring:param name="roleId" value="${ editRole.id }"/>

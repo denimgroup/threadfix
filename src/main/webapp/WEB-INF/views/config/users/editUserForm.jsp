@@ -9,7 +9,7 @@
 		<spring:param name="userId" value="${ user.id }"/>
 	</spring:url>
 
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 	
 	<%@ include file="/WEB-INF/views/config/users/form.jsp"%>
 </div>

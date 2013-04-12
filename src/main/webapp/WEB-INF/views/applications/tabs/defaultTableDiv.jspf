@@ -1,6 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div id="toReplace">
+
+	<div id="errorDiv"></div>
  
 	<table class="table sortable" id="anyid">
 		<thead>

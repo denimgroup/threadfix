@@ -7,7 +7,7 @@
 <div class="modal-body">
 	<spring:url value="/configuration/users/new" var="saveUrl"/>
 
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 	
 	<%@ include file="/WEB-INF/views/config/users/form.jsp"%>
 </div>

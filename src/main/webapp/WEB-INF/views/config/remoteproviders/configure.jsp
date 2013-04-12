@@ -8,7 +8,7 @@
 </spring:url>
 <form:form id="remoteProviderEditForm${ remoteProviderType.id }" modelAttribute="remoteProviderType" method="post" autocomplete="off" action="${ fn:escapeXml( saveUrl ) }">
 <div class="modal-body">
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 	<table class="dataTable">
 		<tbody>
 			<c:if test="${remoteProviderType.hasUserNamePassword }">

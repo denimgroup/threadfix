@@ -349,3 +349,12 @@ function deleteDefectTracker(url) {
 		return basicPost(url, '#deleteForm', '#defectTableDiv');
 	return false;
 }
+
+function toggleExpandable(expandable, caret) {
+	$(expandable).collapse('toggle');
+	if ($(caret).attr('class').indexOf('expanded') == -1) {
+		$(caret).addClass('expanded');
+	} else {
+		$(caret).removeClass('expanded');
+	}
+}

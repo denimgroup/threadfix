@@ -16,7 +16,7 @@
 </spring:url>
 
 <c:if test="${ canModifyVulnerabilities }">
-	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
+	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
 </c:if>
 
 <%@ include file="/WEB-INF/views/applications/tabs/filter.jspf" %>
@@ -24,7 +24,7 @@
 <%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>
 
 <c:if test="${ canModifyVulnerabilities }">
-	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
+	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
 </c:if>
 
 </form:form>

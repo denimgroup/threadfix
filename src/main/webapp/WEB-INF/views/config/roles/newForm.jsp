@@ -5,7 +5,7 @@
 </div>
 
 <div class="modal-body" id="newRoleModalBody">
-	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 
 	<spring:url value="/configuration/roles/new" var="saveUrl"></spring:url>
 	<form:form id="newRoleForm" modelAttribute="role" method="post"

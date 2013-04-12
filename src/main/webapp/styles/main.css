@@ -593,3 +593,35 @@ td.bold {
 select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="checkbox"]:focus {
 	outline:none;
 }
+
+.caret-right {
+	border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid #000000;
+    border-right: 4px;
+    display: inline-block;
+    height: 0;
+    cursor: pointer;
+    vertical-align: top;
+    width: 0;
+}
+
+.caret-down {
+	border-right: 4px solid transparent;
+	border-bottom: 4px solid #000000;
+	border-left: 4px solid transparent;
+	content: "";
+	height: 0;
+	vertical-align:top;
+	width:0;
+}
+
+.caret-right.expanded {
+	border-right: 4px solid transparent;
+	border-top: 4px solid #000000;
+	border-left: 4px solid transparent;
+	content: "";
+	height: 0;
+	vertical-align:top;
+	width:0;
+}

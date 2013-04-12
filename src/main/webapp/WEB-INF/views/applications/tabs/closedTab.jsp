@@ -23,8 +23,8 @@
    	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
-			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
+			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
+			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
 	<script>
@@ -47,8 +47,8 @@
    	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
-			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#submitDefectFormDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
+			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
+			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
 	<script>

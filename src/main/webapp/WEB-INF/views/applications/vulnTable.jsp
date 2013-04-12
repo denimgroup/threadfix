@@ -1,6 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <body>
+
+	<div id="errorDiv"></div>
+
 	<spring:url value="/login.jsp" var="loginUrl"/>
 	<span id="ajaxVulnTable"></span>
 	<spring:url value="{appId}/table" var="tableUrl">
@@ -72,24 +75,28 @@
 			<tr>
 				<c:if test="${ canModifyVulnerabilities }">
 					<th class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
-					<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Type</th>
 				</c:if>			    
-				<c:if test="${ not canModifyVulnerabilities }">
-					<th class="first" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Type</th>
-				</c:if>			    
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">Severity</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">Path</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">Parameter</th>
+				<th style="width:8px;"></th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Type</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">
+					Severity<span class="caret-up"></span>
+				</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">
+					Path<span class="caret-up"></span>
+				</th>
+				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">
+					Parameter<span class="caret-up"></span>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:if test="${ empty vulnerabilities }">
 			<tr class="bodyRow">
 				<c:if test="${ canModifyVulnerabilities }">
-					<td colspan="5" style="text-align:center;">No vulnerabilities found.</td>
+					<td colspan="6" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
 				<c:if test="${ not canModifyVulnerabilities }">
-					<td colspan="4" style="text-align:center;">No vulnerabilities found.</td>
+					<td colspan="5" style="text-align:center;">No vulnerabilities found.</td>
 				</c:if>
 			</tr>
 		</c:if>
@@ -109,13 +116,16 @@
 			<c:if test="${ vulnerability.genericSeverity.name == 'Info' }">
 			      <c:set var="color" value="info" />
 			</c:if>
-			<tr class="bodyRow <c:out value="${ color }"/>" data-toggle="collapse" data-target="#vulnInfoDiv${vulnerability.id}">
+			<tr class="bodyRow <c:out value="${ color }"/>">
 				<c:if test="${ canModifyVulnerabilities }">
 					<td>
 						<input class="vulnIdCheckbox" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 						<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
 				</c:if>
+				<td onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
+					<span id="caret${vulnerability.id }" class="caret-right"></span>
+				</td>
 				<td>
 					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 				        <spring:param name="appId" value="${ application.id }" />
