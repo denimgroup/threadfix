@@ -124,13 +124,13 @@ public class WafTests extends BaseTest {
 		
 		assertFalse("The waf was already present.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 		
-		wafIndexPage = wafIndexPage.clickAddWafLink().createNewWaf(newWafName, type);
+		wafIndexPage = wafIndexPage.clickAddWafLink().createNewWaf(newWafName, type).clickCreateWaf();
 		
 		//assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafIndexPage.getWafName(1)));
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 
-		loginPage = wafIndexPage.clickDeleteWaf(1).clickWafsHeaderLink().logout();
+		loginPage = wafIndexPage.clickDeleteWaf(newWafName).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	

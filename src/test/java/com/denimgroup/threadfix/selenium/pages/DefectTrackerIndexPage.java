@@ -93,8 +93,10 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage enterName(String oldName,String newName){
 		if(oldName==null){
+			driver.findElementsById("nameInput").get(names.size()).clear();
 			driver.findElementsById("nameInput").get(names.size()).sendKeys(newName);
 		}else{
+			driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
 			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
 		}
 		return this;
@@ -112,8 +114,10 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage enterURL(String oldName, String newURL){
 		if(oldName==null){
+			driver.findElementsById("urlInput").get(names.size()).clear();
 			driver.findElementsById("urlInput").get(names.size()).sendKeys(newURL);
 		}else{
+			driver.findElementsById("urlInput").get(getIndex(oldName)).clear();
 			driver.findElementsById("urlInput").get(getIndex(oldName)).sendKeys(newURL);
 		}
 		return this;
@@ -244,9 +248,31 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public boolean doesNameExist(String name){
-		for(int i = 1; i < getNumRows(); i ++){
+		for(int i = 1; i <= getNumRows(); i ++){
 			if(name.equals(getNameText(i))){
 				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean doesTypeExistForName(String name, String type){
+		for(int i = 1; i <= getNumRows(); i ++){
+			if(name.equals(getNameText(i))){
+				if(driver.findElementById("defectTrackerType" + i).getText().equals(type)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean doesURLExistForName(String name, String url){
+		for(int i = 1; i <= getNumRows(); i ++){
+			if(name.equals(getNameText(i))){
+				if(driver.findElementById("defectTrackerUrl" + i).getText().equals(url)){
+					return true;
+				}
 			}
 		}
 		return false;
