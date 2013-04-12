@@ -77,16 +77,16 @@
 					<th class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
 				</c:if>			    
 				<th style="width:8px;"></th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">
+				<th class="pointer" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">
 					Type<span id="headerCaret1" class="caret-down"></span>
 				</th>
-				<th style="min-width:70px" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">
+				<th class="pointer" style="min-width:70px" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">
 					Severity<span id="headerCaret2" class="caret-down"></span>
 				</th>
-				<th onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">
+				<th class="pointer" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">
 					Path<span id="headerCaret3" class="caret-down"></span>
 				</th>
-				<th style="min-width:90px;" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">
+				<th class="pointer" style="min-width:90px;" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">
 					Parameter<span id="headerCaret4" class="caret-down"></span>
 				</th>
 			</tr>
@@ -125,7 +125,7 @@
 						<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
 				</c:if>
-				<td onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
+				<td class="pointer" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
 					<span id="caret${vulnerability.id }" class="caret-right"></span>
 				</td>
 				<td>

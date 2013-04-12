@@ -653,3 +653,7 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 .caret-right.caret-title {
 	vertical-align:middle;
 }
+
+.pointer {
+	cursor:pointer;
+}

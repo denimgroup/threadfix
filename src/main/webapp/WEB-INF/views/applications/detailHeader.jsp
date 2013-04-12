@@ -8,7 +8,7 @@
 
 <h2 style="padding-bottom:5px;">
 	
-	<span onclick="javascript:toggleExpandable('#appInfoDiv', '#headerCaret')" id="nameText">
+	<span class="pointer" onclick="javascript:toggleExpandable('#appInfoDiv', '#headerCaret')" id="nameText">
 		<span style="width:8px"><span id="headerCaret" class="caret-right caret-title"></span></span> 
 		<c:out value="${ application.name }"/>
 	</span>

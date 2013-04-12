@@ -91,14 +91,14 @@
 		<br>
 	
 		<ul class="nav nav-tabs margin-top">
-			<li class="active">
+			<li class="active pointer">
 				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">
 					${ fn:escapeXml(numVulns) } 
 					<c:if test="${ numVulns == 1 }">Vulnerability</c:if>
 					<c:if test="${ numVulns != 1 }">Vulnerabilities</c:if>
 				</a>
 			</li>
-			<li>
+			<li class="pointer">
 				<a data-toggle="tab" id="scanTabLink" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">
 					${ fn:length(application.scans) }
 					<c:if test="${ fn:length(application.scans) == 1 }">Scan</c:if>
@@ -106,7 +106,7 @@
 				</a>
 			</li>
 			<c:if test="${ numClosedVulns != 0 }">
-				<li>
+				<li class="pointer">
 					<a data-toggle="tab" id="closedVulnTabLink" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">
 						${fn:escapeXml(numClosedVulns) } Closed 
 						<c:if test="${fn:escapeXml(numClosedVulns) == 1}"> Vulnerability</c:if>
@@ -115,7 +115,7 @@
 				</li>
 			</c:if>
 			<c:if test="${ falsePositiveCount != 0 }">
-				<li>
+				<li class="pointer">
 					<a data-toggle="tab" id="falsePositiveTabLink" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">
 						${fn:escapeXml(falsePositiveCount) } False 
 						<c:if test="${fn:escapeXml(falsePositiveCount) == 1}">Positive</c:if>
