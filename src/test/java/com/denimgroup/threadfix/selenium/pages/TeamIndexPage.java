@@ -186,5 +186,36 @@ public class TeamIndexPage extends BasePage {
 	public String getTeamName(int i) {
 		return driver.findElementById("teamName"+i).getText().trim();
 	}
+
+	public TeamIndexPage clickUploadScan(String appName) {
+		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
+			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
+				driver.findElementsById("uploadScanModalLink").get(i-1).click();
+				waitForElement(driver.findElementById("uploadScan"+i));
+				break;
+			}
+		return new TeamIndexPage(driver);
+		
+	}
+	
+	public TeamIndexPage setFileInput(String file,String appName){
+		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
+			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
+				driver.findElementById("fileInput"+i).clear();
+				driver.findElementById("fileInput"+i).sendKeys(file);
+				break;
+			}
+		return new TeamIndexPage(driver);
+	}
+
+	public TeamIndexPage clickUploadScanButton(String appName) {
+		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
+			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
+				driver.findElementById("submitScanModal"+i).click();
+				waitForInvisibleElement(driver.findElementById("uploadScan"+i));
+				break;
+			}
+		return new TeamIndexPage(driver);
+	}
 	
 }

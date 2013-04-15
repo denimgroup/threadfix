@@ -58,15 +58,14 @@ public class UserTests extends BaseTest {
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
-		UserNewPage newUserPage = userIndexPage.clickAddUserLink()
-										.setNameInput(userName)
-										.setPasswordInput(userName)
-										.setPasswordConfirmInput(password);
+		userIndexPage = userIndexPage.clickAddUserLink()
+										.enterName(userName,null)
+										.enterPassword(password,null)
+										.enterConfirmPassword(password,null)
+										.clickAddNewUserBtn();
 
-
-		userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
 		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-
+		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 		userIndexPage = userIndexPage.clickDeleteButton(userName);
 		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(userName));
 

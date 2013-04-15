@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class UserIndexPage extends BasePage {
 	
@@ -44,12 +45,13 @@ public class UserIndexPage extends BasePage {
 	public UserIndexPage(WebDriver webdriver) {
 		super(webdriver);
 
-		addUserLink = driver.findElementById("addUserLink");
+		addUserLink = driver.findElementById("newUserModalLink");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
 			deleteButtons.add(driver.findElementById("delete" + i));
 			names.add(driver.findElementById("name" + i));
-			editLinks.add(driver.findElementById("edit" + i));
+			editLinks.add(driver.findElementById("editUserModal" + i +"Link"));
+			//edit permissions buttons
 		}
 	}
 	
@@ -77,17 +79,106 @@ public class UserIndexPage extends BasePage {
 		return new LoginPage(driver);
 	}
 
-	public UserNewPage clickAddUserLink() {
+	public UserIndexPage clickAddUserLink() {
 		addUserLink.click();
-		return new UserNewPage(driver);
+		waitForElement(driver.findElementById("nameAndPasswordForm"));
+		return new UserIndexPage(driver);
 	}
-
+	
+	public UserIndexPage enterName(String name,String oldName){
+		if(oldName == null){
+			driver.findElementsById("nameInput").get(getNumRows()).clear();
+			driver.findElementsById("nameInput").get(getNumRows()).sendKeys(name);
+		}else{
+			driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
+			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(name);
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage enterPassword(String password,String oldName){
+		if(oldName == null){
+			driver.findElementsById("passwordInput").get(getNumRows()-1).clear();
+			driver.findElementsById("passwordInput").get(getNumRows()-1).sendKeys(password);
+		}else{
+			driver.findElementsById("passwordInput").get(getIndex(oldName)).clear();
+			driver.findElementsById("passwordInput").get(getIndex(oldName)).sendKeys(password);
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage enterConfirmPassword(String password,String oldName){
+		if(oldName == null){
+			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).clear();
+			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).sendKeys(password);
+		}else{
+			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)).clear();
+			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)).sendKeys(password);
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickLDAP(String oldName){
+		if(oldName == null){
+			driver.findElementsById("isLdapUserCheckbox").get(getNumRows()).click();
+		}else{
+			driver.findElementsById("isLdapUserCheckbox").get(getIndex(oldName)).click();
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickGlobalAccess(String oldName){
+		if(oldName == null){
+			driver.findElementsById("hasGlobalGroupAccessCheckbox").get(getNumRows()).click();
+		}else{
+			driver.findElementsById("hasGlobalGroupAccessCheckbox").get(getIndex(oldName)).click();
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
+		if(oldName == null){
+			new Select(driver.findElementsById("roleSelect").get(getNumRows())).deselectByVisibleText(role);
+		}else{
+			new Select(driver.findElementsById("roleSelect").get(getIndex(oldName))).deselectByVisibleText(role);
+		}
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickAddNewUserBtn(){
+		driver.findElementsById("addUserButton").get(getNumRows()).click();
+		waitForInvisibleElement(driver.findElementById("newUserModal"));
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickAddNewUserBtnInvalid(){
+		driver.findElementsById("addUserButton").get(getNumRows()).click();
+		return new UserIndexPage(driver);
+	}
+	
+	
+	public UserIndexPage clickUpdateUserBtn(String name){
+		driver.findElementsById("addUserButton").get(getIndex(name)).click();
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickUpdateUserBtnInvalid(String name){
+		driver.findElementsById("addUserButton").get(getIndex(name)).click();
+		return new UserIndexPage(driver);
+	}
+	
+	
 	public boolean isUserNamePresent(String userName) {
 		return getIndex(userName) != -1;
 	}
 	
-	public UserEditPage clickEditLink(String roleName) {
+	public UserIndexPage clickEditLink(String roleName) {
 		editLinks.get(getIndex(roleName)).click();
-		return new UserEditPage(driver);
+		return new UserIndexPage(driver);
+	}
+	
+	public boolean isSuccessDisplayed(String name){
+		return driver.findElementByClassName("alert-success").getText().contains(name);
 	}
 }

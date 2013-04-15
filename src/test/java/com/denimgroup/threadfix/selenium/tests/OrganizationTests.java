@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.OrganizationEditPage;
@@ -45,7 +44,6 @@ public class OrganizationTests extends BaseTest {
 	private TeamIndexPage organizationIndexPage;
 	private TeamDetailPage organizationDetailPage;
 	private OrganizationEditPage editOrganizationPage;
-	private AddOrganizationPage addOrganizationPage;
 	
 	@Before
 	public void init() {

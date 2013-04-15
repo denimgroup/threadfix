@@ -165,6 +165,7 @@ public abstract class BasePage {
 	protected void handleAlert() {
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
+		sleep(1000);
 	}
 	
 	public void waitForElement(WebElement e){

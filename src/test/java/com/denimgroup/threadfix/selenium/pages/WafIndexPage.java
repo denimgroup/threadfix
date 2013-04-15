@@ -42,9 +42,9 @@ public class WafIndexPage extends BasePage {
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		addWafLink = driver.findElementById("addWafModalButton");
-		for (int i = 1; i <= getNumRows(); i++) {
-			names.add(driver.findElementById("wafName" + i));
-		}
+		//for (int i = 1; i <= getNumRows(); i++) {
+		//	names.add(driver.findElementById("wafName" + i));
+		//}
 	}
 	
 	public int getNumRows() {
@@ -59,6 +59,9 @@ public class WafIndexPage extends BasePage {
 	
 	public int getIndex(String roleName) {
 		int i = -1;
+		for (int j = 1; j <= getNumRows(); j++) {
+			names.add(driver.findElementById("wafName" + j));
+		}
 		for (WebElement name : names) {
 			i++;
 			String text = name.getText().trim();
@@ -81,10 +84,11 @@ public class WafIndexPage extends BasePage {
 	}
 	*/
 	public WafIndexPage clickDeleteWaf(String wafName){
-		System.out.println("Wafname = " + wafName);
-		System.out.println("Index is " + getIndex(wafName));
+		//System.out.println("Wafname = " + wafName);
+		//System.out.println("Index is " + getIndex(wafName));
 		driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)).click();
 		handleAlert();
+		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 
@@ -107,7 +111,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage clickCreateWafInvalid(){
-		driver.findElementsById("submitWafModal").get(names.size()).click();
+		driver.findElementById("submitWafModal").click();
 		return new WafIndexPage(driver);
 	}
 	
@@ -118,12 +122,17 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public boolean isNamePresent(String wafName){
-		for(int i=0;i<getNumRows();i++){
-			if(names.get(i).equals(wafName)){
+		for (int j = 1; j <= getNumRows(); j++) {
+			if(driver.findElementById("wafName" + j).getText().trim().equals(wafName.trim())){
 				return true;
 			}
 		}
+
 		return false;
+	}
+	
+	public boolean isSuccessPresent(String wafName){
+		return driver.findElementByClassName("alert-success").getText().contains(wafName);
 	}
 	
 	
@@ -134,7 +143,7 @@ public class WafIndexPage extends BasePage {
 	}*/
 	
 	public WafIndexPage clickEditWaf(String wafName){
-		driver.findElementById("editWafModalButton"+getIndex(wafName)).click();
+		driver.findElementById("editWafModalButton"+(getIndex(wafName)+1)).click();
 		waitForElement(driver.findElementByClassName("modal"));
 		return new WafIndexPage(driver);
 	}
@@ -175,13 +184,10 @@ public class WafIndexPage extends BasePage {
 		return this;
 	}
 	
-	public String getSuccessAlert(){
-		return driver.findElementByClassName("alert-success").getText();
-	}
 	
 	public WafIndexPage setType(String oldName,String type){
 		if(oldName==null){
-			new Select(driver.findElementsById("typeSelect").get(names.size())).selectByVisibleText(type);
+			new Select(driver.findElementsById("typeSelect").get(getNumRows())).selectByVisibleText(type);
 		}else{
 			new Select(driver.findElementsById("typeSelect").get(getIndex(oldName))).selectByVisibleText(type);
 		}

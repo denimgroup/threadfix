@@ -16,8 +16,6 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
@@ -40,7 +38,6 @@ public class ReportTests extends BaseTest {
 	public TeamDetailPage organizationDetailPage;
 	public ReportsIndexPage reportsIndexPage;
 	public GeneratedReportPage generatedReportPage;
-	public AddOrganizationPage organizationAddPage;
 	public ApplicationAddPage applicationAddPage;
 
 	Random generator = new Random();
