@@ -12,7 +12,7 @@ function toggleRoles(id) {
 }
 
 function togglePassword(id) {
-	if ($("#isLdapUserCheckbox" + id).is(':checked')){
+	if ($("#isLdapUserCheckbox").is(':checked')){
 		$("#passwordConfirmInput" + id).attr("disabled","disabled");
 		$("#passwordInput" + id).attr("disabled","disabled");
 	} else {

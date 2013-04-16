@@ -85,7 +85,7 @@ public class AddUserController {
 			SessionStatus status, Model model, HttpServletRequest request) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "config/users/form.jsp");
+			model.addAttribute("contentPage", "config/users/newUserForm.jsp");
 			return "ajaxFailureHarness";
 		} else {
 			User databaseUser = userService.loadUser(user.getName().trim());
