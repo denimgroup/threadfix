@@ -14,7 +14,7 @@
 	</span>
 <c:if test="${ canManageApplications }">
 		<div id="appActionDiv" class="btn-group">
-			<button id="appActionButton" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
+			<button id="appActionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li>
 					<a id="editApplicationModalButton" href="#editApplicationModal" role="button" data-toggle="modal">Edit</a>
@@ -31,16 +31,6 @@
 				</li>
 			</ul>
 		</div>
-		<script>
-		$("#appActionButton").bind({
-			mouseenter : function(e) {
-				$("#appActionButton").dropdown('toggle');
-			},
-			mouseleave : function(e) {
-				$("#appActionButton").dropdown('toggle');
-			}
-		});
-		</script>
 	</c:if>
 </h2>
 
