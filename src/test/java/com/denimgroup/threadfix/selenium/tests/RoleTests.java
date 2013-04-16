@@ -38,7 +38,7 @@ public class RoleTests extends BaseTest {
 		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.createRole(name)
+				.setNewRoleName(name)
 				.clickSaveRole()
 				.clickManageRolesLink();
 
@@ -58,7 +58,7 @@ public class RoleTests extends BaseTest {
 		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.createRole(name1)
+				.setNewRoleName(name1)
 				.clickSaveRole()
 				.clickManageRolesLink()
 				.clickEditLink(0)
@@ -95,14 +95,14 @@ public class RoleTests extends BaseTest {
 				.clickCreateRoleButtonInvalid();
 
 		assertTrue("Blank field error didn't show correctly.", 
-				"This field cannot be blank".equals(rolesIndexPage.getDisplayNameError()));
+				rolesIndexPage.getDisplayNameError().contains("This field cannot be blank"));
 
 		// Test whitespace
 
 		rolesIndexPage = rolesIndexPage.setRoleName(whiteSpaceName).clickCreateRoleButtonInvalid();
 
 		assertTrue("Blank field error didn't show correctly.", 
-				"This field cannot be blank".equals(rolesIndexPage.getDisplayNameError()));
+				rolesIndexPage.getDisplayNameError().contains("This field cannot be blank"));
 
 		// Test duplicates
 
@@ -110,11 +110,11 @@ public class RoleTests extends BaseTest {
 				.clickSaveRole()
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.createRole(normalName)
+				.setNewRoleName(normalName)
 				.clickCreateRoleButtonInvalid();
 
-		assertTrue("Duplicate name error did not show correctly.", 
-				"A role with this name already exists.".equals(rolesIndexPage.getDisplayNameError()));
+		assertTrue("Duplicate name error did not show correctly.",
+				rolesIndexPage.getDisplayNameError().contains("A role with this name already exists."));
 
 		rolesIndexPage = rolesIndexPage.clickDeleteButton(normalName);
 
@@ -128,7 +128,7 @@ public class RoleTests extends BaseTest {
 		rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.createRole(name);
+				.setNewRoleName(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
 			assertFalse("Checkbox was set to true when it shouldn't have been.", 
@@ -156,7 +156,7 @@ public class RoleTests extends BaseTest {
 		rolesIndexPage = rolesIndexPage.clickSaveRole(2)
 									.clickDeleteButton(name)
 									.clickCreateRole()
-									.createRole(name);
+									.setNewRoleName(name);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
 			rolesIndexPage.setPermissionValue(role, true);
@@ -197,11 +197,11 @@ public class RoleTests extends BaseTest {
 		assertTrue("Protected permission was not protected correctly.", 
 				rolesIndexPage.getAlert().contains("You cannot remove the Manage Users privilege from this role."));
 		
-		rolesIndexPage = rolesIndexPage.clickCloseModal(0)
+		rolesIndexPage = rolesIndexPage.clickCloseModal()
 									.clickCreateRole()
-									.createRole(roleName)
+									.setNewRoleName(roleName)
 									.clickSaveRole()
-									.clickEditLink(1);
+									.clickEditLink(roleName);
 		
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
@@ -227,7 +227,7 @@ public class RoleTests extends BaseTest {
 			rolesIndexPage.setPermissionValue(protectedPermission, true);
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickCloseModal(1).clickEditLink(0);
+		rolesIndexPage = rolesIndexPage.clickCloseModal().clickEditLink(0);
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
 			rolesIndexPage.setPermissionValue(protectedPermission, true);

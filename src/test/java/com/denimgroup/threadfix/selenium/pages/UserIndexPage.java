@@ -101,8 +101,8 @@ public class UserIndexPage extends BasePage {
 			driver.findElementsById("passwordInput").get(getNumRows()-1).clear();
 			driver.findElementsById("passwordInput").get(getNumRows()-1).sendKeys(password);
 		}else{
-			driver.findElementsById("passwordInput").get(getIndex(oldName)).clear();
-			driver.findElementsById("passwordInput").get(getIndex(oldName)).sendKeys(password);
+			driver.findElementsById("passwordInput").get(getIndex(oldName)-1).clear();
+			driver.findElementsById("passwordInput").get(getIndex(oldName)-1).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -112,8 +112,8 @@ public class UserIndexPage extends BasePage {
 			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).clear();
 			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).sendKeys(password);
 		}else{
-			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)).clear();
-			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)).sendKeys(password);
+			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)-1).clear();
+			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)-1).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -180,5 +180,13 @@ public class UserIndexPage extends BasePage {
 	
 	public boolean isSuccessDisplayed(String name){
 		return driver.findElementByClassName("alert-success").getText().contains(name);
+	}
+	
+	public String getNameError(){
+		return driver.findElementById("name.errors").getText().trim();
+	}
+	
+	public String getPasswordError(){
+		return driver.findElementById("password.errors").getText().trim();
 	}
 }

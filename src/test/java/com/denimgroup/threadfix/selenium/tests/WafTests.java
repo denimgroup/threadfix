@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.selenium.pages.AddOrganizationPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;

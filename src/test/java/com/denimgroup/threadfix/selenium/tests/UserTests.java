@@ -80,65 +80,71 @@ public class UserTests extends BaseTest {
 
 		String longInput = stringBuilder.toString();
 
-		UserNewPage newUserPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
 											.clickManageUsersLink()
 											.clickAddUserLink()
-											.clickAddUserButtonInvalid();
+											.enterName("",null)
+											.enterPassword("",null)
+											.enterConfirmPassword("",null)
+											.clickAddNewUserBtnInvalid();
 
 		// Test Empty
 
-		assertTrue("Name error not present", newUserPage.getNameError().equals("Name is a required field."));
-		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
+		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
+		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
 
 		// Test White Space
 
-		newUserPage.setNameInput("        ");
-		newUserPage.setPasswordInput("  ");
-		newUserPage.setPasswordConfirmInput("  ");
+		userIndexPage.enterName("        ",null);
+		userIndexPage.enterPassword("  ",null);
+		userIndexPage.enterConfirmPassword("  ",null);
 
-		newUserPage = newUserPage.clickAddUserButtonInvalid();
+		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
-		assertTrue("Name error not present", newUserPage.getNameError().equals("Name is a required field."));
-		assertTrue("Password error not present", newUserPage.getPasswordError().equals("Password is a required field."));
+		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
+		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
 
 		// Test length
-		newUserPage.setNameInput("Test User");
-		newUserPage.setPasswordInput("test");
-		newUserPage.setPasswordConfirmInput("test");
+		userIndexPage.enterName("Test User",null);
+		userIndexPage.enterPassword("test",null);
+		userIndexPage.enterConfirmPassword("test",null);
 
-		newUserPage = newUserPage.clickAddUserButtonInvalid();
 
-		assertTrue("Password length error not present", newUserPage.getPasswordError().equals("Password has a minimum length of 12."));
+		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+
+		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
 		// Test non-matching passwords
-		newUserPage.setNameInput("new name");
-		newUserPage.setPasswordInput("lengthy password 1");
-		newUserPage.setPasswordConfirmInput("lengthy password 2");
+		userIndexPage.enterName("new name",null);
+		userIndexPage.enterPassword("lengthy password 1",null);
+		userIndexPage.enterConfirmPassword("lengthy password 2",null);
 
-		newUserPage = newUserPage.clickAddUserButtonInvalid();
-		assertTrue("Password matching error is not correct.", newUserPage.getPasswordError().equals("Passwords do not match."));
+		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
 
 		// Create a user
-		newUserPage.setNameInput(longInput);
-		newUserPage.setPasswordInput("dummy password");
-		newUserPage.setPasswordConfirmInput("dummy password");
+		userIndexPage.enterName(longInput,null);
+		userIndexPage.enterPassword("dummy password",null);
+		userIndexPage.enterConfirmPassword("dummy password",null);
 
-		UserIndexPage userIndexPage = newUserPage.clickAddUserButton().clickCancelLink();
-
+		userIndexPage = userIndexPage.clickAddNewUserBtn();
 		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
+		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
-		newUserPage = userIndexPage.clickAddUserLink();
+
+		userIndexPage = userIndexPage.clickAddUserLink();
 
 		// Test name uniqueness check
 
-		newUserPage.setNameInput(userName);
-		newUserPage.setPasswordConfirmInput("dummy password");
-		newUserPage.setPasswordInput("dummy password");
+		userIndexPage.enterName(userName,null);
+		userIndexPage.enterPassword("dummy password",null);
+		userIndexPage.enterConfirmPassword("dummy password",null);
 
-		newUserPage = newUserPage.clickAddUserButtonInvalid();
-		assertTrue("Name uniqueness error is not correct.", newUserPage.getNameError().equals("That name is already taken."));
+		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 
-		userIndexPage = newUserPage.clickCancelLink().clickDeleteButton(userName);
+		userIndexPage = userIndexPage.clickDeleteButton(userName);
 
 		userIndexPage.logout();
 	}
@@ -152,26 +158,24 @@ public class UserTests extends BaseTest {
 											.clickManageUsersLink();
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
-
-		UserEditPage editUserPage = userIndexPage.clickAddUserLink()
-											.setNameInput(userName)
-											.setPasswordInput(userName)
-											.setPasswordConfirmInput(password)
-											.clickAddUserButton()
-											.logout()
-											.login(userName, password)
-											.clickManageUsersLink()
-											.clickEditLink(userName);
+		userIndexPage = userIndexPage.clickAddUserLink()
+				.enterName(userName,null)
+				.enterPassword(password,null)
+				.enterConfirmPassword(password,null)
+				.clickAddNewUserBtn()
+				.logout()
+				.login(userName, password)
+				.clickManageUsersLink()
+				.clickEditLink(userName);
 		
-
-
-		editUserPage.setNameInput(editedUserName);
-		editUserPage.setPasswordConfirmInput(editedPassword);
-		editUserPage.setPasswordInput(editedPassword);
+		userIndexPage.enterName(editedUserName,userName);
+		userIndexPage.enterPassword(editedPassword,userName);
+		userIndexPage.enterConfirmPassword(editedPassword,userName);
+		
 
 		// Save and check that the name changed
 
-		userIndexPage = editUserPage.clickUpdateUserButton();
+		userIndexPage = userIndexPage.clickUpdateUserBtn(userName);
 
 		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
@@ -179,8 +183,8 @@ public class UserTests extends BaseTest {
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
 		userIndexPage.logout().login(editedUserName, editedPassword)
-		.clickManageUsersLink()
-		.clickDeleteButtonSameUser(editedUserName);
+							.clickManageUsersLink()
+							.clickDeleteButtonSameUser(editedUserName);
 	}
 
 	@Test 

@@ -40,32 +40,28 @@ public class RolesIndexPage extends BasePage {
 		return bodyRows.size();
 	}
 	
+	public int getIndex(String roleName) {
+		int i = -1;
+		for (WebElement name : names) {
+			i++;
+			String text = name.getText().trim();
+			if (text.equals(roleName.trim())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public String getNameContents(int row) {
 		return names.get(row).getText();
 	}
-	
-	public RolesIndexPage clickDeleteButton(int row) {
-		deleteButtons.get(row).click();
-		handleAlert();
-		return new RolesIndexPage(driver);
-	}
-	
+		
 	public RolesIndexPage clickDeleteButton(String roleName) {
 		deleteButtons.get(getIndex(roleName)).click();
 		handleAlert();
 		return new RolesIndexPage(driver);
 	}
 	
-	private int getIndex(String roleName) {
-		int i = 0;
-		for (WebElement name : names) {
-			if (name.getText().equals(roleName)) {
-				return i;
-			}
-			i++;
-		}
-		return 0;
-	}
 	
 	public RolesIndexPage clickCreateRole(){
 		driver.findElementById("createRoleModalLink").click();
@@ -73,107 +69,86 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 	
-	public RolesIndexPage createRole(String displayName) {
-		
-		
-		
-		if (displayName != null) {
-			setRoleName(displayName);
-			
+
+	public RolesIndexPage setRoleName(String name,String oldName){
+		if(oldName == null){
+			driver.findElementsById("displayName").get(getNumRows()).clear();
+			driver.findElementsById("displayName").get(getNumRows()).sendKeys(name);
+		}else{
+			driver.findElementsById("displayName").get(getIndex(oldName)).clear();
+			driver.findElementsById("displayName").get(getIndex(oldName)).sendKeys(name);
 		}
+		return new RolesIndexPage(driver);
+	}
+	
+	public RolesIndexPage clickSaveRole(String oldName){ 
+		if(oldName == null){
+			driver.findElementById("newRoleFormSubmitButton").click();
+			waitForInvisibleElement(driver.findElementById("createRoleModal"));
+		}else{
+			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
+			waitForInvisibleElement(driver.findElementByClassName("modal"));
+		}
+		return new RolesIndexPage(driver);
+	}
 		
-		return new RolesIndexPage(driver);
-	}
-	
-	public RolesIndexPage setRoleName(String name){
-		List<WebElement> dName = driver.findElementsById("displayName");
-		dName.get(dName.size()-1).clear();
-		dName.get(dName.size()-1).sendKeys(name);
-		return new RolesIndexPage(driver);
-	}
-	public RolesIndexPage setRoleName(String name,int row){
-		List<WebElement> dName = driver.findElementsById("displayName");
-		dName.get(row).clear();
-		dName.get(row).sendKeys(name);
-		return new RolesIndexPage(driver);
-	}
-	
-	public RolesIndexPage clickSaveRole(){ 
-		List<WebElement> sBtn = driver.findElementsById("newRoleFormSubmitButton");
-		sBtn.get(sBtn.size()-1).click();
-		waitForInvisibleElement(driver.findElementById("createRoleModal"));
-		return new RolesIndexPage(driver);
-	}
-	
-	public RolesIndexPage clickSaveRole(int row){ 
-		List<WebElement> sBtn = driver.findElementsById("submitRemoteProviderFormButton");
-		sBtn.get(row).click();
-		//waitForInvisibleElement(driver.findElementById("createRoleModal"));
-		return new RolesIndexPage(driver);
-	}
-	
-	public RolesIndexPage clickEditLink(int row) {
-		editLinks.get(row).click();
-		return new RolesIndexPage(driver);
-	}
 
-	public RolesIndexPage clickEditLink(String roleName) {
-		editLinks.get(names.indexOf(roleName)).click();
-		return new RolesIndexPage(driver);
-	}
-
-	public RolesIndexPage clickUpdateRoleButton(int row) {
-		driver.findElementsById("submitRemoteProviderFormButton").get(row).click();
+	public RolesIndexPage clickEditLink(String oldName) {
+		editLinks.get(names.indexOf(oldName)).click();
 		return new RolesIndexPage(driver);
 	}
 
 	public RolesIndexPage clickCreateRoleButtonInvalid() {
-		driver.findElementById("newRoleFormSubmitButton").click();
+		clickSaveRole(null);
 		return new RolesIndexPage(driver);
 	}
 
 	public String getDisplayNameError() {
-		return driver.findElementById("displayName.errors").getText();
+		return driver.findElementByClassName("alert-error").getText();
 	}
 	
-	public boolean getPermissionValue(String permissionName) {
+	public boolean getNewPermissionValue(String permissionName) {
 		return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
 	}
 	
-	public boolean getPermissionValue(String permissionName, int row) {
-		return driver.findElementById("editRoleModal"+(row+1)).findElement(By.id(permissionName + "True")).isSelected();
+	public boolean getPermissionValue(String permissionName, String oldName) {
+		return driver.findElementById("editRoleModal"+(getIndex(oldName))).findElement(By.id(permissionName + "True")).isSelected();
 	}
 	
-	public RolesIndexPage setPermissionValue(String permissionName, boolean value) {
+	public RolesIndexPage setNewPermissionValue(String permissionName, boolean value) {
 		String target = value ? "True" : "False";
 		driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + target)).click();
 		
 		return new RolesIndexPage(driver);
 	}
 	
-	public RolesIndexPage setPermissionValue(String permissionName, boolean value,int row) {
+	public RolesIndexPage setPermissionValue(String permissionName, boolean value,String oldName) {
 		String target = value ? "True" : "False";
-		driver.findElementById("editRoleModal"+(row+1)).findElement(By.id(permissionName + target)).click();
+		driver.findElementById("editRoleModal"+(getIndex(oldName))).findElement(By.id(permissionName + target)).click();
 		
 		return new RolesIndexPage(driver);
 	}
 
-	public RolesIndexPage clickSaveRole(String name) {
-		driver.findElementsById("submitRemoteProviderFormButton").get(names.indexOf(name)).click();
-		return new RolesIndexPage(driver);
-	}
-
-	public String getAlert() {
-		return driver.findElementByClassName("alert-error").getText();
-	}
 	
-	public RolesIndexPage clickCloseModal(int row){
-		driver.findElementsByClassName("close").get(row).click();
+	public RolesIndexPage clickCloseModal(){
+		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
 		return new RolesIndexPage(driver);
 	}
 
 	public RolesIndexPage clickUpdateRoleButtonInvalid(int row) {
 		driver.findElementsById("submitRemoteProviderFormButton").get(row).click();
 		return new RolesIndexPage(driver);
+	}
+	
+	public boolean isCreateValidationPresent(String role){
+		return driver.findElementByClassName("alert-success").getText().contains("Role "+role+" was created successfully.");
+	}
+	
+	public boolean isEditValidationPresent(String role){
+		return driver.findElementByClassName("alert-success").getText().contains("Role "+role+" was edited successfully.");
+	}
+	
+	public boolean isDeleteValidationPresent(String role){
+		return driver.findElementByClassName("alert-success").getText().contains("Role "+role+" was deleted successfully.");
 	}
 }

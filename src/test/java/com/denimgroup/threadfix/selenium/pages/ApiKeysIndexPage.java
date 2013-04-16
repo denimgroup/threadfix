@@ -26,29 +26,21 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ApiKeysIndexPage extends BasePage {
 
-	private List<WebElement> keys = new ArrayList<WebElement>();
-	//private List<WebElement> notes = new ArrayList<WebElement>();
-	private List<WebElement> editLinks = new ArrayList<WebElement>();
-	private List<WebElement> deleteButton = new ArrayList<WebElement>();
+	private List<WebElement> notes = new ArrayList<WebElement>();
 	//private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
-	private WebDriverWait wait = new WebDriverWait(driver,10);
 	private WebElement createNewKeyLink;
 
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		createNewKeyLink = driver.findElementByLinkText("Create New Key");
-		/*for (int i = 1; i <= getNumRows(); i++) {
+		for (int i = 1; i <= getNumRows(); i++) {
 			notes.add(driver.findElementById("note" + i));
-			restrictedBoxes.add(driver.findElementById("restricted" + i));
-		}*/
+		}
 	}
 
 	public int getNumRows() {
@@ -60,20 +52,26 @@ public class ApiKeysIndexPage extends BasePage {
 		
 		return driver.findElementsByClassName("bodyRow").size();
 	}
-
-	public String getKeyText(int num) {
-		for (int i = 0; i < getNumRows(); i++) {
-			keys.add(driver.findElementById("key" + i));
+	
+	public int getIndex(String roleName) {
+		int i = -1;
+		for (WebElement note : notes) {
+			i++;
+			String text = note.getText().trim();
+			if (text.equals(roleName.trim())) {
+				return i;
+			}
 		}
-		return keys.get(num).getText();
+		return -1;
 	}
 
-	public ApiKeysIndexPage clickEdit(int row) {
-		if(getNumRows()!=0){
-			editLinks = driver.findElementsByLinkText("Edit");
-		}
-		editLinks.get(row).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal-body")));
+	public String getKeyText(String note) {
+		return driver.findElementById("key"+getIndex(note)).getText();
+	}
+
+	public ApiKeysIndexPage clickEdit(String note) {
+		driver.findElementById("editKey"+(getIndex(note)+1)).click();
+		waitForElement(driver.findElementsByClassName("modal").get(getIndex(note)));
 		return new ApiKeysIndexPage(driver);
 	}
 
@@ -84,29 +82,39 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 	
 
-	public ApiKeysIndexPage clickDelete(int row) {
-		if(getNumRows()!=0){
-			deleteButton = driver.findElementsById("deleteButton");
-		}
-		deleteButton.get(row).click();
+	public ApiKeysIndexPage clickDelete(String note) {
+		driver.findElementsById("deleteButton").get(getIndex(note)).click();
 		handleAlert();
 
 		return new ApiKeysIndexPage(driver);
 	}
 
-	public ApiKeysIndexPage clickSubmitButton(){
-		driver.findElementById("submitKeyModal").click();
+	public ApiKeysIndexPage clickSubmitButton(String oldNote){
+		if(oldNote == null){
+			driver.findElementsById("submitKeyModal").get(getNumRows()).click();
+		}else{
+			driver.findElementsById("submitKeyModal").get(getIndex(oldNote)).click();
+		}
 		return new ApiKeysIndexPage(driver);
 	}
 	
-	public ApiKeysIndexPage setNote(String message){
-		driver.findElementById("note").clear();
-		driver.findElementById("note").sendKeys(message);
+	public ApiKeysIndexPage setNote(String newNote,String oldNote){
+		if(oldNote==null){
+			driver.findElementsById("note").get(getNumRows()).clear();
+			driver.findElementsById("note").get(getNumRows()).sendKeys(newNote);	
+		}else{
+			driver.findElementsById("note").get(getIndex(oldNote)).clear();
+			driver.findElementsById("note").get(getIndex(oldNote)).sendKeys(newNote);	
+		}
 		return new ApiKeysIndexPage(driver);
 	}
 	
-	public ApiKeysIndexPage setRestricted(){
-		driver.findElementById("isRestrictedKey1").click();
+	public ApiKeysIndexPage setRestricted(String oldNote){
+		if(oldNote==null){
+			driver.findElementById("isRestrictedKey"+(getNumRows()+1)).click();
+		}else{
+			driver.findElementById("isRestrictedKey"+(getIndex(oldNote)+1)).click();
+		}
 		return new ApiKeysIndexPage(driver);
 	}
 	
@@ -114,4 +122,31 @@ public class ApiKeysIndexPage extends BasePage {
 		waitForInvisibleElement(driver.findElementById("newKeyModalDiv"));
 		return new ApiKeysIndexPage(driver);
 	}
+	
+	public boolean isCreateValidationPresent(){
+		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully created.");
+	}
+	
+	public boolean isEditValidationPresent(){
+		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully edited.");
+	}
+	
+	public boolean isDeleteValidationPresent(){
+		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully deleted.");
+	}
+	
+	public boolean isNotePresent(String note){
+		return getIndex(note) != -1;
+	}
+	
+	public boolean isRestricted(String note){
+		return driver.findElementById("restricted"+(getIndex(note)+1)).getText().trim().equals("true".trim());
+	}
+	
+	public boolean isCorrectLength(String note){
+		return notes.get(getIndex(note)).getText().trim().length()<=255;
+	}
+	
+
+	
 }

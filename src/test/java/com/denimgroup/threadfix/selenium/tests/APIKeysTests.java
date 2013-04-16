@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,15 +57,17 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   			  .clickApiKeysLink()
 								   			  .clickNewLink()
-								   			  .setNote("createAPIKey")
-								   			  .setRestricted()
-								   			  .clickSubmitButton()
+								   			  .setNote("createAPIKey",null)
+								   			  .setRestricted(null)
+								   			  .clickSubmitButton(null)
 								   			  .waitModalDisappear();
-								   			
-		
+		assertTrue("Api note is note present.",indexPage.isNotePresent("createAPIKey"));
+		assertTrue("Api was not marked restricted.",indexPage.isRestricted("createAPIKey"));
+		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
-		indexPage.clickDelete(0);
+		indexPage.clickDelete("createAPIKey");
+		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 	}
 
 	@Test
@@ -74,18 +76,22 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   .clickApiKeysLink()
 								   .clickNewLink()
-								   .setNote("createAPIKey")
-								   .clickSubmitButton()
-								   .waitModalDisappear()
-								   .clickEdit(0)
-								   .setNote("Sample ThreadFix REST key")
-								   .clickSubmitButton()
+								   .setNote("createAPIKey",null)
+								   .clickSubmitButton(null)
 								   .waitModalDisappear();
-								   
-		
+		assertTrue("Api note is note present.",indexPage.isNotePresent("createAPIKey"));
+		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
+		indexPage =	indexPage.clickEdit("createAPIKey")
+							.setNote("Sample ThreadFix REST key","createAPIKey")
+							.clickSubmitButton("createAPIKey")
+							.waitModalDisappear();
+		assertTrue("Api note is note present.",indexPage.isNotePresent("Sample ThreadFix REST key"));
+		assertFalse("Api note is note present.",indexPage.isNotePresent("createAPIKey"));
+		assertTrue("Validation Message not present.",indexPage.isEditValidationPresent());
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 
-		indexPage.clickDelete(0);
+		indexPage.clickDelete("Sample ThreadFix REST key");
+		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 	}
 
 	@Test
@@ -93,31 +99,73 @@ public class APIKeysTests extends BaseTest {
 		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 					 						  .clickApiKeysLink()
 											  .clickNewLink()
-											  .setNote("markRestricted")
-											  .clickSubmitButton()
-											  .waitModalDisappear()
-											  .clickEdit(0)
-											  .setNote("markRestricted")
-											  .setRestricted()
-											  .clickSubmitButton()
+											  .setNote("markRestricted",null)
+											  .clickSubmitButton(null)
 											  .waitModalDisappear();
+		assertTrue("Api note is note present.",indexPage.isNotePresent("markRestricted"));
+		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
+		assertFalse("Api was marked restricted.",indexPage.isRestricted("markRestricted"));
+		indexPage =	indexPage.clickEdit("markRestricted")
+						.setNote("markRestricted","markRestricted")
+						.setRestricted("markRestricted")
+						.clickSubmitButton("markRestricted")
+						.waitModalDisappear();
+		assertTrue("Api was not marked restricted.",indexPage.isRestricted("markRestricted"));
+		assertTrue("Api note is note present.",indexPage.isNotePresent("markRestricted"));
+		assertTrue("Validation Message not present.",indexPage.isEditValidationPresent());
 						
 		assertTrue("API Keys Page not found", indexPage.getH2Tag().contains("API Keys"));
 		
-		indexPage.clickDelete(0);
+		indexPage.clickDelete("markRestricted");
+		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 	}
 
 	@Test
 	public void deleteKey() {
-		String PageText = loginPage.login("user", "password")
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
 								   .clickApiKeysLink()
 								   .clickNewLink()			
-								   .setNote("markRestricted")
-								   .clickSubmitButton()
-								   .waitModalDisappear()
-								   .clickDelete(0)
+								   .setNote("markRestricted",null)
+								   .clickSubmitButton(null)
+								   .waitModalDisappear();
+		assertTrue("Api note is note present.",indexPage.isNotePresent("markRestricted"));
+		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
+		String PageText = indexPage.clickDelete("markRestricted")
 								   .getH2Tag();
+		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 
 		assertTrue("API Keys Page not found", PageText.contains("API Keys"));
+	}
+	
+	@Test
+	public void nameLength(){
+		String blankNote = "";
+		String whiteSpace = "     ";
+		String longNote = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+		longNote = longNote + longNote + longNote;
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+				   .clickApiKeysLink()
+				   .clickNewLink()			
+				   .setNote(blankNote,null)
+				   .clickSubmitButton(null)
+				   .waitModalDisappear();
+		assertTrue("Api note is note present.",indexPage.isNotePresent(blankNote));
+		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
+		indexPage =	indexPage.clickEdit(blankNote)
+				.setNote(whiteSpace,blankNote)
+				.clickSubmitButton(blankNote)
+				.waitModalDisappear();
+		assertTrue("Api note is note present.",indexPage.isNotePresent(whiteSpace));
+		assertTrue("Validation Message not present.",indexPage.isEditValidationPresent());
+		indexPage =	indexPage.clickEdit(whiteSpace)
+				.setNote(longNote,whiteSpace)
+				.clickSubmitButton(whiteSpace)
+				.waitModalDisappear();
+		longNote = longNote.substring(0, 255);
+		assertTrue("Api note is note present.",indexPage.isNotePresent(longNote));
+		assertTrue("Api note is too long.",indexPage.isCorrectLength(longNote));
+		assertTrue("Validation Message not present.",indexPage.isEditValidationPresent());
+		indexPage = indexPage.clickDelete(longNote);
+		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 	}
 }
