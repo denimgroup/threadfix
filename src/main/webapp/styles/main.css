@@ -657,3 +657,34 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 .pointer {
 	cursor:pointer;
 }
+
+.sidebar-arrow {
+	display:none;
+}
+
+.sidebar-arrow.sidebar-active {
+	display:inline;
+}
+
+.sidebar-active td {
+	background-color: #EEEEEE;
+	font-weight: bold;
+}
+
+.sidebar td a {
+	text-decoration:none;
+}
+
+.sidebar td {
+	cursor:pointer;
+}
+
+.table.no-decoration td {
+	padding-left:8px;
+	border-top:none;
+}
+
+.reportFilterHeader th {
+	background-color: #DDDDDD;
+	text-align:center;
+}

@@ -27,11 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Random;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -39,10 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,17 +45,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
 @Controller
 @RequestMapping("/reports")
@@ -71,16 +62,13 @@ public class ReportsController {
 
 	private OrganizationService organizationService;
 	private PermissionService permissionService;
-	private ApplicationService applicationService;
 	private ReportsService reportsService;
-
+	
 	@Autowired
 	public ReportsController(OrganizationService organizationService,
 			PermissionService permissionService,
-			ApplicationService applicationService, 
 			ReportsService reportsService) {
 		this.organizationService = organizationService;
-		this.applicationService = applicationService;
 		this.permissionService = permissionService;
 		this.reportsService = reportsService;
 	}
@@ -90,84 +78,42 @@ public class ReportsController {
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
+		List<Organization> returnList = new ArrayList<Organization>();
+
 		for (Organization org : organizationList) {
-			org.setActiveApplications(permissionService.filterApps(org));
+			List<Application> validApps = permissionService.filterApps(org);
+			if (validApps != null && !validApps.isEmpty()) {
+				org.setActiveApplications(validApps);
+				returnList.add(org);
+			}
 		}
-		return organizationList;
+		return returnList;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model, HttpServletRequest request) {
-		
+	public String index(Model model, HttpServletRequest request) {
+		model.addAttribute("reportParameters", new ReportParameters());
 		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
 		return "reports/index";
 	}
-
-	@RequestMapping(value="/ajax", method = RequestMethod.POST)
-	public String processSubmit(ModelMap model, @ModelAttribute ReportParameters reportParameters,
+	
+	@RequestMapping(value="/ajax/export", method = RequestMethod.POST)
+	public String processExportRequest(Model model, @ModelAttribute ReportParameters reportParameters,
 			BindingResult result, SessionStatus status, HttpServletRequest request, 
-			HttpServletResponse response) throws IOException{
-		String reportFile = null;
-
-		if (reportParameters.getReportId() < 0 || reportParameters.getReportId() > 8) {
-			log.warn("An incorrect report ID was passed through, returning an error page.");
-			ControllerUtils.addErrorMessage(request, "An invalid report type was chosen.");
-			return "redirect:/reports";
-		}
+			HttpServletResponse response) throws IOException {
 		
-		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
-
-		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			ControllerUtils.addErrorMessage(request, "You must select at least one application.");
-			return "redirect:/reports";
-		}
+		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
+				request, response);
 		
-		if ((reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7)
-				&& reportParameters.getFormatId() == 2) {
-			ControllerUtils.addErrorMessage(request, "The CSV format is not available for this report.");
-			return "redirect:/reports";
-		}
+		ReportCheckResult reportCheckResult = reportCheckResultBean.getReportCheckResult();
 		
-		switch (reportParameters.getReportId()) {
-		case 1:
-			reportFile = "trending.jrxml";
-			break;
-		case 2:
-			reportFile = "pointInTime.jrxml";
-			break;
-		case 3:
-			reportFile = "cwe.jrxml";
-			break;
-		case 4:
-			reportFile = "cweChannel.jrxml";
-			break;
-		case 5:
-			reportFile = "scannerComparison.jrxml";
-			break;
-		case 6:
-			return scannerComparisonByVulnerability(model, applicationIdList);
-		case 7:
-			reportFile = "monthlyBarChart.jrxml";
-			break;
-		case 8:
-			// TODO probably do this in a more idiomatic way
-			return new PortfolioReportController(organizationService).index(
-					model, request, reportParameters.getOrganizationId());
-		}
-
-		log.info("About to generate report for " + applicationIdList.size() + " applications.");
-
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("appId", applicationIdList);
-		String path = request.getSession().getServletContext().getRealPath("/");
-		StringBuffer report = null;
-		
-		if(reportParameters.getFormatId() == 2) {
-			report = reportsService.getReport(path, reportFile, "CSV", params, applicationIdList, response);
+		if (reportCheckResult == ReportCheckResult.VALID) {
+			StringBuffer report = reportCheckResultBean.getReport();
 			String pageString = report.toString();
 			response.setContentType("application/octet-stream");
-			response.setHeader("Content-Disposition", "attachment; filename=\"report_csv_" + applicationIdList
-					+ ".csv\"");
+			
+			String fileName = reportParameters.getFormatId() == 2 ? "report_csv.csv" : "report_pdf.pdf";
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
 			ServletOutputStream out = response.getOutputStream();
 
@@ -186,157 +132,88 @@ public class ReportsController {
 			out.flush();
 			out.close();
 			return null;
-		
-		} else if(reportParameters.getFormatId() == 3) {
-			report = reportsService.getReport(path, reportFile, "PDF", params, applicationIdList, response);
-			return null;
-			
-		} else //Output is HTML
-			report = reportsService.getReport(path, reportFile, "HTML", params, applicationIdList, response);
-		
-		model.addAttribute("jasperReport", report);
-		
-		if (report != null) {
-			log.info("Finished generating report.");
-			return "reports/report";
 		} else {
-			log.warn("Failed to generate report.");
-			ControllerUtils.addErrorMessage(request, "There was an error generating the report.");
-			return "redirect:/reports";
+			return returnError(request, model, reportCheckResult);
 		}
 	}
-	
-	public List<Integer> getApplicationIdList(ReportParameters reportParameters) {
-		List<Integer> applicationIdList = new ArrayList<Integer>();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
 
-		if (reportParameters.getOrganizationId() < 0) {
-			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = applicationService.loadAllActiveFilter(teamIds);
-				for (Application app : appList) {
-					applicationIdList.add(app.getId());
-				}
-				
-				Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-				if (appIds != null && !appIds.isEmpty()) {
-					applicationIdList.addAll(appIds);
-				}
-			} else {
-				applicationIdList.add(reportParameters.getApplicationId());
-			}
-		} else if (hasGlobalPermission(Permission.READ_ACCESS) ||
-				teamIds.contains(reportParameters.getOrganizationId())) {
-			Organization org = organizationService.loadOrganization(reportParameters.getOrganizationId());
-			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = org.getActiveApplications();
-				for (Application app : appList) {
-					if (app.isActive()) {
-						applicationIdList.add(app.getId());
-					}
-				}
-			} else {
-				applicationIdList.add(reportParameters.getApplicationId());
-			}
+	@RequestMapping(value="/ajax", method = RequestMethod.POST)
+	public String processSubmit(Model model, @ModelAttribute ReportParameters reportParameters,
+			BindingResult result, SessionStatus status, HttpServletRequest request, 
+			HttpServletResponse response) throws IOException {
+		
+		// reroute if it's scanner comparison or portfolio report
+		if (reportParameters.getReportId() == 6) {
+			return reportsService.scannerComparisonByVulnerability(model, reportParameters);
+		} else if (reportParameters.getReportId() == 8) {
+			return new PortfolioReportController(organizationService).index(
+					model, request, reportParameters.getOrganizationId());
 		}
 		
-		return applicationIdList;
-	}
-	
-	public boolean hasGlobalPermission(Permission permission) {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
-	}
-	
-	
-	// TODO rethink some of this - it's a little slow at a few hundred vulns. 
-	// The emphasis on genericism through the design makes it harder to pull channel-specific info from vulns.
-	public String scannerComparisonByVulnerability(ModelMap model, List<Integer> applicationIdList) {		
+		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
+				request, response);
 		
-		if (model == null || applicationIdList == null || applicationIdList.isEmpty()) {
-			// This should have been caught earlier
-			return "redirect:/reports";
-		}
+		ReportCheckResult reportCheckResult = reportCheckResultBean.getReportCheckResult();
 		
-		List<List<String>> tableListOfLists = new ArrayList<List<String>>();
-		List<String> headerList = new ArrayList<String>(); // this facilitates headers
-		List<Application> applicationList = new ArrayList<Application>();
-		
-		// this map is used to insert the value into the correct space.
-		Map<Integer, Integer> channelIdToTablePositionMap = new HashMap<Integer, Integer>();
-		
-		// positions 0, 1, and 2 are the generic name, path, and parameter of the vulnerability.
-		// 3 is open status
-		// This also represents the number of headers.
-		int columnCount = 4;
-				
-		for (int id : applicationIdList) {
-			Application application = applicationService.loadApplication(id);
+		if (reportCheckResult == ReportCheckResult.VALID) {
+			boolean csvEnabled = !(reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7);
+			StringBuffer report = reportCheckResultBean.getReport();
 			
-			if (application == null || application.getChannelList() == null 
-					|| application.getVulnerabilities() == null)
-				continue;
-			applicationList.add(application);
-						
-			for (ApplicationChannel channel : application.getChannelList()) {
-				if (channel == null || channel.getScanCounter() == null
-						|| channel.getChannelType() == null 
-						|| channel.getChannelType().getId() == null
-						|| channel.getChannelType().getName() == null)
-					continue;
+			if (report != null) {
+				log.info("Finished generating report.");
+				model.addAttribute("jasperReport", addParameterToReport(report));
+				model.addAttribute("csvEnabled", csvEnabled);
+				model.addAttribute("reportId",reportParameters.getReportId());
+				return "reports/report";
 				
-				int channelTypeId = channel.getChannelType().getId();
-				
-				if (!channelIdToTablePositionMap.containsKey(channelTypeId)) {
-					headerList.add(channel.getChannelType().getName());
-					channelIdToTablePositionMap.put(channelTypeId, columnCount++);
-				}
+			} else {
+				log.warn("Failed to generate report.");
+				ControllerUtils.addErrorMessage(request, "There was an error generating the report.");
+				model.addAttribute("contentPage", "/reports");
+				return "ajaxRedirectHarness";
 			}
+		} else {
+			return returnError(request, model, reportCheckResult);
 		}
-		
-		for (Application application : applicationList) {
-			for (Vulnerability vuln : application.getVulnerabilities()) {
-				if (vuln == null || vuln.getFindings() == null
-						|| (!vuln.isActive() && !vuln.getIsFalsePositive())) {
-					continue;
-				}
-				
-				List<String> tempList = new ArrayList<String>(columnCount);
-				
-				String falsePositive = vuln.getIsFalsePositive() ? "FP" : "OPEN";
-
-				tempList.addAll(Arrays.asList(vuln.getGenericVulnerability().getName(),
-											  vuln.getSurfaceLocation().getPath(), 
-											  vuln.getSurfaceLocation().getParameter(),
-											  falsePositive));
-				
-				for (int i = 4; i < columnCount; i++) {
-					tempList.add(" ");
-				}
-				
-				// For each finding, if the path to the channel type ID is not null, put an X in the table
-				for (Finding finding : vuln.getFindings()) {
-					if (finding != null && finding.getScan() != null 
-							&& finding.getScan().getApplicationChannel() != null 
-							&& finding.getScan().getApplicationChannel().getChannelType() != null
-							&& finding.getScan().getApplicationChannel().getChannelType().getId() != null) 
-					{
-						Integer tablePosition = channelIdToTablePositionMap.get(
-								finding.getScan().getApplicationChannel().getChannelType().getId());
-						if (tablePosition != null) {
-							tempList.set(tablePosition, "X");
-						}
-					}
-				}
-				
-				tableListOfLists.add(tempList);
-			}
+	}
+	
+	private String addParameterToReport(StringBuffer buffer) {
+		String resultString = buffer.toString();
+		String regex = "(.*<img [^>]*img_[^\"]*)(.*)";
+		return resultString.replaceAll(regex, "$1?do_it" + new Random().nextInt() + "$2");
+	}
+	
+	private String returnError(HttpServletRequest request, Model model,
+			ReportCheckResult reportCheckResult) {
+		if (reportCheckResult == ReportCheckResult.BAD_REPORT_TYPE) {
+			return incorrectReportIdError(request, model);
+		} else if (reportCheckResult == ReportCheckResult.NO_APPLICATIONS) {
+			return missingApplicationsError(request, model);
+		} else {
+			return exceptionError(request, model);
 		}
-		
-		model.addAttribute("headerList", headerList);
-		model.addAttribute("listOfLists", tableListOfLists);
-		model.addAttribute("columnCount", columnCount);
-				
-		return "reports/scannerComparisonByVulnerability";
+	}
+	
+	private String incorrectReportIdError(HttpServletRequest request, Model model) {
+		log.warn("An incorrect report ID was passed through, returning an error page.");
+		ControllerUtils.addErrorMessage(request, "An invalid report type was chosen.");
+		return redirect(model);
+	}
+	
+	private String missingApplicationsError(HttpServletRequest request, Model model) {
+		ControllerUtils.addErrorMessage(request, "You must select at least one application.");
+		return redirect(model);
+	}
+	
+	private String exceptionError(HttpServletRequest request, Model model) {
+		ControllerUtils.addErrorMessage(request, "An error occurred while generating the report. " +
+				"Check the logs for more details.");
+		return redirect(model);
+	}
+	
+	private String redirect(Model model) {
+		model.addAttribute("contentPage", "/reports");
+		return "ajaxRedirectHarness";
 	}
 	
 }

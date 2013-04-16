@@ -23,26 +23,29 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.report;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
+
+import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
+
 
 /**
  * @author drivera
  * 
  */
 public interface ReportsService {
+	
+	enum ReportCheckResult {
+		VALID, NO_APPLICATIONS, BAD_REPORT_TYPE, IO_ERROR
+	}
 
-	/**
-	 * @param path
-	 * @param fileName
-	 * @param dataSource
-	 * @param parameters
-	 * @return
-	 * @throws IOException 
-	 */
-	StringBuffer getReport(String path, String fileName, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList, HttpServletResponse response) throws IOException;
+	ReportCheckResultBean generateReport(ReportParameters parameters, 
+			HttpServletRequest request, HttpServletResponse response);
+
+	String scannerComparisonByVulnerability(Model model,
+			ReportParameters reportParameters);
+
 }

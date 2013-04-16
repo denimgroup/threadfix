@@ -32,12 +32,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JRException;
@@ -57,18 +60,27 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 
 /**
  * @author drivera
@@ -76,13 +88,20 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  */
 @Service
 public class ReportsServiceImpl implements ReportsService {
+	
+	private static final String[] reports = { "", "trending.jrxml", "pointInTime.jrxml", 
+		"cwe.jrxml", "cweChannel.jrxml", "scannerComparison.jrxml", "scannerComparisonByVulnerability",
+		"monthlyBarChart.jrxml", "portfolioReport" };
+	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
 	private SessionFactory sessionFactory = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ScanDao scanDao = null;
 	private VulnerabilityDao vulnerabilityDao = null;
+	private OrganizationDao organizationDao = null;
 	private ApplicationDao applicationDao = null;
+	private PermissionService permissionService = null;
 	
 	/**
 	 * @param sessionFactory
@@ -90,25 +109,58 @@ public class ReportsServiceImpl implements ReportsService {
 	 */
 	@Autowired
 	public ReportsServiceImpl(SessionFactory sessionFactory, ChannelTypeDao channelTypeDao,
+			PermissionService permissionService, OrganizationDao organizationDao,
 			ScanDao scanDao, VulnerabilityDao vulnerabilityDao, ApplicationDao applicationDao) {
 		this.sessionFactory = sessionFactory;
 		this.channelTypeDao = channelTypeDao;
 		this.scanDao = scanDao;
+		this.organizationDao = organizationDao;
+		this.permissionService = permissionService;
 		this.vulnerabilityDao = vulnerabilityDao;
 		this.applicationDao = applicationDao;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.denimgroup.threadfix.service.report.ReportsService#getReport(java
-	 * .lang.String, java.lang.String, net.sf.jasperreports.engine.JRDataSource,
-	 * java.util.Map)
-	 */
-	@SuppressWarnings("resource")
 	@Override
-	public StringBuffer getReport(String path, String fileName, String format,
+	public ReportCheckResultBean generateReport(ReportParameters parameters, 
+			HttpServletRequest request, HttpServletResponse response) {
+		if (parameters.getReportId() < 1 || parameters.getReportId() > reports.length - 1 ||
+				reports[parameters.getReportId()] == null) {
+			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE, null);
+		}
+		
+		List<Integer> applicationIdList = getApplicationIdList(parameters);
+	
+		if (applicationIdList == null || applicationIdList.isEmpty()) {
+			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS, null);
+		}
+		
+		log.info("About to generate report for " + applicationIdList.size() + " applications.");
+	
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("appId", applicationIdList);
+		String path = request.getSession().getServletContext().getRealPath("/");
+		
+		String format = null;
+		if(parameters.getFormatId() == 2) {
+			format = "CSV";
+		} else if(parameters.getFormatId() == 3) {
+			format = "PDF";
+		} else {
+			format = "HTML";
+		}
+		
+		String reportFile = reports[parameters.getReportId()];
+		try {
+			StringBuffer report = getReport(path, reportFile, format, params, applicationIdList, response);
+			return new ReportCheckResultBean(ReportCheckResult.VALID, report);
+		} catch (IOException e) {
+			log.error("IOException encountered while trying to generate report.", e);
+			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR, null);
+		}
+	}
+
+	@SuppressWarnings("resource")
+	private StringBuffer getReport(String path, String fileName, String format,
 			Map<String, Object> parameters, List<Integer> applicationIdList, 
 			HttpServletResponse response) throws IOException {
 
@@ -233,7 +285,7 @@ public class ReportsServiceImpl implements ReportsService {
 		return report;
 	}
 
-	public String getString(InputStream inputStream) {
+	private String getString(InputStream inputStream) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		
 		String line = null;
@@ -255,14 +307,14 @@ public class ReportsServiceImpl implements ReportsService {
 		return buffer.toString();
 	}
 	
-	public InputStream getInputStream(String string) {
+	private InputStream getInputStream(String string) {
 		if (string != null)
 			return new ByteArrayInputStream(string.getBytes());
 		else
 			return null;
 	}
 	
-	public List<ChannelType> getChannelTypesInUse(List<Integer> applicationIdList) {
+	private List<ChannelType> getChannelTypesInUse(List<Integer> applicationIdList) {
 		List<ChannelType> channels = channelTypeDao.retrieveAll();
 		List<ChannelType> returnChannels = new ArrayList<ChannelType>();
 		
@@ -281,7 +333,7 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	// We don't want to count multiple findings that merged to one vuln from the same channel
 	// it skews the numbers.
-	public Set<Integer> getFindingsToSkip(List<Integer> applicationIdList) {
+	private Set<Integer> getFindingsToSkip(List<Integer> applicationIdList) {
 		Set<Integer> findingIdsToSkip = new HashSet<Integer>();
 		Set<Integer> vulnSeenChannels = new HashSet<Integer>();
 		
@@ -321,7 +373,7 @@ public class ReportsServiceImpl implements ReportsService {
 		return findingIdsToSkip;
 	}
 	
-	public InputStream addCorrectColumns(InputStream inputStream, List<Integer> applicationIdList) {
+	private InputStream addCorrectColumns(InputStream inputStream, List<Integer> applicationIdList) {
 		log.debug("Adding the correct headers to the CWE Channel report Input Stream.");
 		
 		String string = getString(inputStream);
@@ -386,4 +438,150 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		return getInputStream(string);
 	}
+
+	public boolean hasGlobalAuthority() {
+		return SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().contains(
+						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+	}
+
+	
+	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
+		List<Integer> applicationIdList = new ArrayList<Integer>();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+		if (reportParameters.getOrganizationId() < 0) {
+			if (reportParameters.getApplicationId() < 0) {
+				List<Application> appList = null;
+				
+				if (hasGlobalAuthority()) {
+					appList = applicationDao.retrieveAllActive();
+				} else if (teamIds == null || teamIds.size() == 0) {
+					appList = new ArrayList<Application>();
+				} else {
+					appList = applicationDao.retrieveAllActiveFilter(teamIds);
+				}
+				
+				for (Application app : appList) {
+					applicationIdList.add(app.getId());
+				}
+				
+				Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+				if (appIds != null && !appIds.isEmpty()) {
+					applicationIdList.addAll(appIds);
+				}
+			} else {
+				applicationIdList.add(reportParameters.getApplicationId());
+			}
+		} else if (hasGlobalPermission(Permission.READ_ACCESS) ||
+				teamIds.contains(reportParameters.getOrganizationId())) {
+			Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
+			if (reportParameters.getApplicationId() < 0) {
+				List<Application> appList = org.getActiveApplications();
+				for (Application app : appList) {
+					if (app.isActive()) {
+						applicationIdList.add(app.getId());
+					}
+				}
+			} else {
+				applicationIdList.add(reportParameters.getApplicationId());
+			}
+		}
+		
+		return applicationIdList;
+	}
+	
+	// TODO rethink some of this - it's a little slow at a few hundred vulns. 
+	// The emphasis on genericism through the design makes it harder to pull channel-specific info from vulns.
+	public String scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {		
+		
+		List<List<String>> tableListOfLists = new ArrayList<List<String>>();
+		List<String> headerList = new ArrayList<String>(); // this facilitates headers
+		List<Application> applicationList = new ArrayList<Application>();
+		
+		// this map is used to insert the value into the correct space.
+		Map<Integer, Integer> channelIdToTablePositionMap = new HashMap<Integer, Integer>();
+		
+		// positions 0, 1, and 2 are the generic name, path, and parameter of the vulnerability.
+		// 3 is open status
+		// This also represents the number of headers.
+		int columnCount = 4;
+		
+		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
+
+		for (int id : applicationIdList) {
+			Application application = applicationDao.retrieveById(id);
+			
+			if (application == null || application.getChannelList() == null 
+					|| application.getVulnerabilities() == null)
+				continue;
+			applicationList.add(application);
+						
+			for (ApplicationChannel channel : application.getChannelList()) {
+				if (channel == null || channel.getScanCounter() == null
+						|| channel.getChannelType() == null 
+						|| channel.getChannelType().getId() == null
+						|| channel.getChannelType().getName() == null)
+					continue;
+				
+				int channelTypeId = channel.getChannelType().getId();
+				
+				if (!channelIdToTablePositionMap.containsKey(channelTypeId)) {
+					headerList.add(channel.getChannelType().getName());
+					channelIdToTablePositionMap.put(channelTypeId, columnCount++);
+				}
+			}
+		}
+		
+		for (Application application : applicationList) {
+			for (Vulnerability vuln : application.getVulnerabilities()) {
+				if (vuln == null || vuln.getFindings() == null
+						|| (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+					continue;
+				}
+				
+				List<String> tempList = new ArrayList<String>(columnCount);
+				
+				String falsePositive = vuln.getIsFalsePositive() ? "FP" : "OPEN";
+
+				tempList.addAll(Arrays.asList(vuln.getGenericVulnerability().getName(),
+											  vuln.getSurfaceLocation().getPath(), 
+											  vuln.getSurfaceLocation().getParameter(),
+											  falsePositive));
+				
+				for (int i = 4; i < columnCount; i++) {
+					tempList.add(" ");
+				}
+				
+				// For each finding, if the path to the channel type ID is not null, put an X in the table
+				for (Finding finding : vuln.getFindings()) {
+					if (finding != null && finding.getScan() != null 
+							&& finding.getScan().getApplicationChannel() != null 
+							&& finding.getScan().getApplicationChannel().getChannelType() != null
+							&& finding.getScan().getApplicationChannel().getChannelType().getId() != null) 
+					{
+						Integer tablePosition = channelIdToTablePositionMap.get(
+								finding.getScan().getApplicationChannel().getChannelType().getId());
+						if (tablePosition != null) {
+							tempList.set(tablePosition, "X");
+						}
+					}
+				}
+				
+				tableListOfLists.add(tempList);
+			}
+		}
+		
+		model.addAttribute("headerList", headerList);
+		model.addAttribute("listOfLists", tableListOfLists);
+		model.addAttribute("columnCount", columnCount);
+				
+		return "reports/scannerComparisonByVulnerability";
+	}
+	
+	public boolean hasGlobalPermission(Permission permission) {
+		return SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
+	}
+	
 }
