@@ -36,7 +36,7 @@
 					<c:out value="${ user.name }"/>
 				</td>
 				<td>
-					<a id="editUserModal${ user.id }Link" href="#editUserModal${ user.id }" role="button" class="btn" data-toggle="modal">Edit</a>
+					<a id="editUserModal${ status.count }Link" href="#editUserModal${ user.id }" role="button" class="btn" data-toggle="modal">Edit</a>
 					<div id="editUserModal${ user.id }" class="modal hide fade" tabindex="-1"
 							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<%@ include file="/WEB-INF/views/config/users/editUserForm.jsp" %>
@@ -64,7 +64,7 @@
 					<spring:url value="/configuration/users/{userId}/permissions" var="editPermissionsUrl">
 						<spring:param name="userId" value="${ user.id }"/>
 					</spring:url>
-					<a class="btn" href="${ fn:escapeXml(editPermissionsUrl) }">Edit Permissions</a>
+					<a id="editPermissions${ status.count }" class="btn" href="${ fn:escapeXml(editPermissionsUrl) }">Edit Permissions</a>
 				</td>
 			</tr>
 		</c:forEach>
