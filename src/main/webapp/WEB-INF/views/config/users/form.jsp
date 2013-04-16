@@ -14,7 +14,7 @@
 		<tr>
 			<td class="no-color">Password</td>
 			<td class="no-color">
-				<form:password id="passwordInput" path="unencryptedPassword${ status.count }" />
+				<form:password id="passwordInput${ status.count }" path="unencryptedPassword" />
 			</td>
 			<td class="no-color" style="padding-left: 5px">
 				<form:errors path="password" cssClass="errors" />
@@ -23,7 +23,7 @@
 		<tr>
 			<td class="no-color">Confirm</td>
 			<td class="no-color">
-				<form:password id="passwordConfirmInput" path="passwordConfirm${ status.count }" />
+				<form:password id="passwordConfirmInput${ status.count }" path="passwordConfirm" />
 			</td>
 		</tr>
 		<tr>
@@ -36,7 +36,7 @@
 		<tr>
 			<td class="no-color">Global Access</td>
 			<td class="no-color" style="text-align: left;">
-				<form:checkbox onclick="toggleRoles('${ user.id }')" id="hasGlobalGroupAccessCheckbox${ status.count }" 
+				<form:checkbox onclick="toggleRoles('${ status.count }')" id="hasGlobalGroupAccessCheckbox${ status.count }" 
 					path="hasGlobalGroupAccess" value="${user.hasGlobalGroupAccess}"/>
 			</td>
 		</tr>
