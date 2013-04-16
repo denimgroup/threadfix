@@ -99,7 +99,7 @@ public class HttpRestUtils {
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
 		
-		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils().new AcceptAllTrustFactory(), 443));
+		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils.AcceptAllTrustFactory(), 443));
 
 		PostMethod post = new PostMethod(request);
 		
@@ -322,7 +322,7 @@ public class HttpRestUtils {
 	 * @author mcollins
 	 *
 	 */
-	public class AcceptAllTrustManager implements X509TrustManager {
+	public static class AcceptAllTrustManager implements X509TrustManager {
 	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 	    public X509Certificate[] getAcceptedIssuers() { return null; }
