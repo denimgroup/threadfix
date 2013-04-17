@@ -265,13 +265,13 @@ public class ReportsServiceImpl implements ReportsService {
 					JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, path
-					+ "jasper/images/" + appIdString + "/");
+					+ "jasper/" + appIdString);
 
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"jasper/images/" + appIdString + "/");
+					"jasper/" + appIdString + "/");
 
 			exporter.exportReport();
 
