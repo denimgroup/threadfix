@@ -203,7 +203,8 @@ public class PortfolioReportController {
 		model.addAttribute("tableContents", tableContents);
 		model.addAttribute("old",oldArray);
 		model.addAttribute("teamName", teamName);
-		return "reports/portfolioReport";
+		model.addAttribute("contentPage", "reports/portfolioReport.jsp");
+		return "ajaxSuccessHarness";
 	}
 	
 	private String[][] createDateTable(int[][] appsByCriticality) {

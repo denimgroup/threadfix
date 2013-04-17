@@ -180,7 +180,7 @@ public class ReportsController {
 	private String addParameterToReport(StringBuffer buffer) {
 		String resultString = buffer.toString();
 		String regex = "(.*<img [^>]*img_[^\"]*)(.*)";
-		return resultString.replaceAll(regex, "$1?do_it" + new Random().nextInt() + "$2");
+		return resultString.replaceAll(regex, "$1?" + new Random().nextInt() + "$2");
 	}
 	
 	private String returnError(HttpServletRequest request, Model model,

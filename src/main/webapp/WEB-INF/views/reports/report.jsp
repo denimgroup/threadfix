@@ -2,12 +2,13 @@
 
 <body id="table">
 
+	<spring:url value="/reports/ajax/export" var="exportUrl"></spring:url>	
 	<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
 
 	<div>
 		<c:if test="${ csvEnabled }">
 			<a id="submitTeamModal" class="btn btn-primary"
-					onclick="javascript:submitAjaxReport('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 2);return false;">
+					onclick="javascript:submitAjaxReport('<c:out value="${ exportUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 2);return false;">
 				Export CSV
 			</a>
 		</c:if>

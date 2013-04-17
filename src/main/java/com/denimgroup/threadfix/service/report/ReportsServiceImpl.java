@@ -254,18 +254,24 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 			exporter.setParameter(JRExporterParameter.OUTPUT_STRING_BUFFER,
 					report);
+			
+			StringBuffer appIdString = new StringBuffer();
+			appIdString.append(fileName.charAt(0));
+			for (Integer id : applicationIdList) {
+				appIdString.append(id);
+			}
 
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, path
-					+ "jasper/images/");
+					+ "jasper/images/" + appIdString + "/");
 
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"jasper/images/");
+					"jasper/images/" + appIdString + "/");
 
 			exporter.exportReport();
 
@@ -575,8 +581,9 @@ public class ReportsServiceImpl implements ReportsService {
 		model.addAttribute("headerList", headerList);
 		model.addAttribute("listOfLists", tableListOfLists);
 		model.addAttribute("columnCount", columnCount);
+		model.addAttribute("contentPage", "reports/scannerComparisonByVulnerability.jsp");
 				
-		return "reports/scannerComparisonByVulnerability";
+		return "ajaxSuccessHarness";
 	}
 	
 	public boolean hasGlobalPermission(Permission permission) {
