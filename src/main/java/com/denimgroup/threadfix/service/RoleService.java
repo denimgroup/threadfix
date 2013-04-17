@@ -8,7 +8,9 @@ import com.denimgroup.threadfix.data.entities.Role;
 
 public interface RoleService {
 	
-	public static String SUCCESS = "Success";
+	// TODO switch to a bean or enum return
+	public static final String SUCCESS = "Success";
+	public static final String FIELD_ERROR = "Field Error";
 
 	/**
 	 * 

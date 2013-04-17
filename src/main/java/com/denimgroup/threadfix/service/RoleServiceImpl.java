@@ -94,6 +94,7 @@ public class RoleServiceImpl implements RoleService {
 
 		if (error != null) {
 			result.rejectValue("displayName", null, null, error);
+			return FIELD_ERROR;
 		}
 		
 		if (databaseRole != null) {
