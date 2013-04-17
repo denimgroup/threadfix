@@ -27,7 +27,6 @@
 					<th style="text-align: left">Application</th>
 					<th>Defect Tracker</th>
 					<th>Scanner</th>
-					<th>Scan Type</th>
 					<th style="width: 120px" class="long">Scan Date</th>
 					<th>Total Vulns</th>
 					<th>Critical</th>
@@ -38,7 +37,7 @@
 			</thead>
 			<tbody id="wafTableBody">
 				<tr class="bodyRow">
-					<td colspan="11" style="text-align: center;">Loading Scans.</td>
+					<td colspan="10" style="text-align: center;">Loading Scans.</td>
 				</tr>
 			</tbody>
 		</table>
