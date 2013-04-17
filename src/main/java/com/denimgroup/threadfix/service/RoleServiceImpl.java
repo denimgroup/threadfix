@@ -73,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public String validateRole(Role role, BindingResult result) {
 		if (result.hasFieldErrors("displayName")) {
-			return result.getFieldError("displayName").getDefaultMessage();
+			return FIELD_ERROR;
 		}
 		
 		String error = null, name = role.getDisplayName();

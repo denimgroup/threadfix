@@ -139,7 +139,9 @@ public class RolesController {
 		
 		String resultString = roleService.validateRole(role, result);
 		if (!resultString.equals(RoleService.SUCCESS)) {
-			model.addAttribute("errorMessage", resultString);
+			if (!resultString.equals(RoleService.FIELD_ERROR)) {
+				model.addAttribute("errorMessage", resultString);
+			}
 			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/form.jsp");
 			return "ajaxFailureHarness";
