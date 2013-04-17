@@ -163,11 +163,13 @@ public class OrganizationsController {
 			return "403";
 			
 		} else {
+			
+			String teamName = organization.getName();
 			organizationService.deactivateOrganization(organization);
 			status.setComplete();
 			log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
 			ControllerUtils.addSuccessMessage(request, 
-					"Team " + organization.getName() + " has been edited successfully.");
+					"Team " + teamName + " has been deleted successfully.");
 			return "redirect:/organizations";
 		}
 	}
