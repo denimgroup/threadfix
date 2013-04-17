@@ -59,7 +59,6 @@ public abstract class BasePage {
 	
 	public TeamIndexPage clickOrganizationHeaderLink() {
 		driver.findElementById("orgHeader").click();
-		sleep(1000);
 		return new TeamIndexPage(driver);
 	}
 	

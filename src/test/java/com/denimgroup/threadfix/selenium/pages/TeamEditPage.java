@@ -26,12 +26,12 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class OrganizationEditPage extends BasePage {
+public class TeamEditPage extends BasePage {
 
 	private WebElement nameInput;
 	private WebElement updateButton;
 	
-	public OrganizationEditPage(WebDriver webdriver) {
+	public TeamEditPage(WebDriver webdriver) {
 		super(webdriver);
 		nameInput = driver.findElementById("nameInput");
 		updateButton = driver.findElementById("updateButton");
@@ -45,7 +45,7 @@ public class OrganizationEditPage extends BasePage {
 		return nameInput.getText();
 	}
 
-	public OrganizationEditPage setNameInput(String text){
+	public TeamEditPage setNameInput(String text){
 		nameInput.clear();
 		nameInput.sendKeys(text);
 		return this;
@@ -56,9 +56,9 @@ public class OrganizationEditPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
-	public OrganizationEditPage clickUpdateButtonInvalid() {
+	public TeamEditPage clickUpdateButtonInvalid() {
 		updateButton.click();
-		return new OrganizationEditPage(driver);
+		return new TeamEditPage(driver);
 	}
 
 }

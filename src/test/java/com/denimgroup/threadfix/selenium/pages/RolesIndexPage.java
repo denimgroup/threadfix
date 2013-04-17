@@ -91,15 +91,20 @@ public class RolesIndexPage extends BasePage {
 		}
 		return new RolesIndexPage(driver);
 	}
-		
-
-	public RolesIndexPage clickEditLink(String oldName) {
-		editLinks.get(names.indexOf(oldName)).click();
+	
+	public RolesIndexPage clickSaveRoleInvalid(String oldName){ 
+		if(oldName == null){
+			driver.findElementById("newRoleFormSubmitButton").click();
+		}else{
+			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
+		}
 		return new RolesIndexPage(driver);
 	}
-
-	public RolesIndexPage clickCreateRoleButtonInvalid() {
-		clickSaveRole(null);
+	
+		
+	public RolesIndexPage clickEditLink(String oldName) {
+		editLinks.get(getIndex(oldName)).click();
+		waitForElement(driver.findElementById("editRoleModal"+(getIndex(oldName)+1)));
 		return new RolesIndexPage(driver);
 	}
 
@@ -107,24 +112,25 @@ public class RolesIndexPage extends BasePage {
 		return driver.findElementByClassName("alert-error").getText();
 	}
 	
-	public boolean getNewPermissionValue(String permissionName) {
-		return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
+	public String getNameError(){
+		return driver.findElementById("displayName.errors").getText();
 	}
 	
 	public boolean getPermissionValue(String permissionName, String oldName) {
-		return driver.findElementById("editRoleModal"+(getIndex(oldName))).findElement(By.id(permissionName + "True")).isSelected();
+		if(oldName == null){
+			return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
+		}
+		return driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + "True")).isSelected();
 	}
-	
-	public RolesIndexPage setNewPermissionValue(String permissionName, boolean value) {
-		String target = value ? "True" : "False";
-		driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + target)).click();
 		
-		return new RolesIndexPage(driver);
-	}
-	
 	public RolesIndexPage setPermissionValue(String permissionName, boolean value,String oldName) {
-		String target = value ? "True" : "False";
-		driver.findElementById("editRoleModal"+(getIndex(oldName))).findElement(By.id(permissionName + target)).click();
+		if(oldName == null){
+			String target = value ? "True" : "False";
+			driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + target)).click();
+		}else{
+			String target = value ? "True" : "False";
+			driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + target)).click();
+		}
 		
 		return new RolesIndexPage(driver);
 	}
@@ -132,11 +138,6 @@ public class RolesIndexPage extends BasePage {
 	
 	public RolesIndexPage clickCloseModal(){
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		return new RolesIndexPage(driver);
-	}
-
-	public RolesIndexPage clickUpdateRoleButtonInvalid(int row) {
-		driver.findElementsById("submitRemoteProviderFormButton").get(row).click();
 		return new RolesIndexPage(driver);
 	}
 	
@@ -150,5 +151,9 @@ public class RolesIndexPage extends BasePage {
 	
 	public boolean isDeleteValidationPresent(String role){
 		return driver.findElementByClassName("alert-success").getText().contains("Role "+role+" was deleted successfully.");
+	}
+	
+	public boolean isNamePresent(String name){
+		return getIndex(name) != -1;
 	}
 }

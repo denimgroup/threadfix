@@ -61,9 +61,9 @@ public class TeamDetailPage extends BasePage {
 		backToList.click();
 		return new TeamIndexPage(driver);
 	}
-	public OrganizationEditPage clickEditOrganizationLink() {
+	public TeamEditPage clickEditOrganizationLink() {
 		editOrganizationLink.click();
-		return new OrganizationEditPage(driver);
+		return new TeamEditPage(driver);
 	}
 	
 	public TeamIndexPage clickDeleteButton() {
