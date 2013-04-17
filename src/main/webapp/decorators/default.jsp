@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/delete.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/header.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,14 +28,6 @@
 		});
 		
   		if(top != self) top.location.replace(location);
-  		
-  		function toggleHelp() {
-  			if ($("#helpText").css('display') === 'none') {
-  				$("#helpText").css('display','inline-block');
-  			} else {
-  				$("#helpText").css('display','none');
-  			}
-  		}
 	</script>
 	
 	<!--[if lt IE 7]>

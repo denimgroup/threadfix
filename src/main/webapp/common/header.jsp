@@ -3,21 +3,8 @@
 <div id="logoBar"></div>
 <div id="logo">
 	<a  href="<spring:url value="/dashboard" htmlEscape="true"/>">
-		<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo.png" class="transparent_png" alt="Threadfix" />
+		<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo-super-short.png" class="transparent_png" alt="Threadfix" />
 	</a>
-</div>
-<div id="loginInfo">
-	<table style="width:100%">
-		<tr>
-			<td id="logout" style="padding-right:15px">
-				<spring:message code="user.status"/>
-				<security:authentication property="principal.username"/> | <a id="toggleHelpLink" href="javascript:toggleHelp()" >Toggle Help</a> |
-				<strong><a id="logoutLink" href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-					<spring:message code="user.logout"/>
-				</a></strong>
-			</td>
-		</tr>
-	</table>
 </div>
 <div id="menu">
 	<table>
@@ -40,67 +27,86 @@
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
 					</td>
 				</security:authorize>
-				<td id="tab-config" style="width: 20px;">
+				<td id="tab-user" style="width: 130px;">
 					<div class="dropdown normalLinks">
-						<a id="configurationHeader" href="#">*</a>
-						<ul class="dropdown-menu pull-right" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
-							    <li class="normalLinks">
-							    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
-							    </li>
-						    </security:authorize>
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
-							    <li class="normalLinks">
-							    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
-							    </li>
-						    </security:authorize>
-						    <li class="normalLinks">
-						    	<a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
-						    </li>
-						    <li class="normalLinks">
-						    	<a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
-						    </li>
-						    <li class="normalLinks">
-						    	<a id="changePasswordLink" href="<spring:url value="/configuration/users/password" htmlEscape="true"/>">Change My Password</a>
-						    </li>
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
-								<li class="divider" role="presentation"></li>
+					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+						<div style="display:inline-block;margin-top:6px;">
+						<a href="#">
+							<i class="icon-user icon-white"></i> <security:authentication property="principal.username"/>
+							<span id="header-caret" class="caret-down" style="padding-left:0px"></span>
+						</a>
+						</div>
+				  	 </div>
+					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+						<li class="normalLinks">
+					    	<a id="changePasswordLink" href="<spring:url value="/configuration/users/password" htmlEscape="true"/>">Change My Password</a>
+					    </li>
+						<li class="normalLinks">
+							<a id="toggleHelpLink" href="javascript:toggleHelp()">Toggle Help</a>
+						</li>
+						<li class="normalLinks">
+							<a id="logoutLink" href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+								<spring:message code="user.logout"/>
+							</a>
+						</li>
+					</ul>
+				   </div>
+				</td>
+				<td id="tab-config" style="width: 30px;padding-left:0px;">
 					
-							    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
-								<li class="normalLinks">
-									<a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
-								</li>
-								</security:authorize>
-								<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
-						 		<li class="normalLinks">
-									<a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
-								</li>
-								</security:authorize>
-								<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
-								<li class="normalLinks">
-									<a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
-								</li>
-								</security:authorize>
-								<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
-								<li class="normalLinks">
-									<a id="configureDefaultsLink" href="<spring:url value="/configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
-								</li>
-								</security:authorize>
+					<div class="dropdown normalLinks">
+					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+						<div style="display:inline-block;margin-top:6px;">
+						<a href="#">
+							<i class="icon-cog icon-white"></i>
+						</a>
+						</div>
+				  	 </div>
+					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
+						    <li class="normalLinks">
+						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
+						    </li>
+					    </security:authorize>
+						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
+						    <li class="normalLinks">
+						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
+						    </li>
+					    </security:authorize>
+					    <li class="normalLinks">
+					    	<a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
+					    </li>
+					    <li class="normalLinks">
+					    	<a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
+					    </li>
+						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
+							<li class="divider" role="presentation"></li>
+				
+						    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+							<li class="normalLinks">
+								<a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
+							</li>
 							</security:authorize>
-						</ul>
+							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
+					 		<li class="normalLinks">
+								<a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
+							</li>
+							</security:authorize>
+							<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
+							<li class="normalLinks">
+								<a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
+							</li>
+							</security:authorize>
+							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+							<li class="normalLinks">
+								<a id="configureDefaultsLink" href="<spring:url value="/configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
+							</li>
+							</security:authorize>
+						</security:authorize>
+					</ul>
 				   </div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<script>
-		$("#tab-config").bind({
-			mouseenter : function(e) {
-				$("#configurationHeader").dropdown('toggle');
-			},
-			mouseleave : function(e) {
-				$("#configurationHeader").dropdown('toggle');
-			}
-		});
-	</script>
 </div>

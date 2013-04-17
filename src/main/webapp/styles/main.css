@@ -42,8 +42,9 @@ body {
 	height: auto !important;
 	height: 91%;
 	background-image: url(../images/hdr-bg-repeat.png), url(../images/main-top-gradient.png);
-	background-position: top left, 0 60px;
+	background-position: top left, 0 37px;
 	background-repeat: repeat-x;
+	background-size: auto 42px;
 }
 
 #main {
@@ -69,10 +70,8 @@ body {
 }
 
 #menu {
-    margin-top: -28px;
-    margin-top: 13px;
 	padding-bottom: 30px;
-	;
+	margin-top: -32px;
 }
 
 #menu a {
@@ -81,9 +80,9 @@ body {
 }
 
 #menu table {
-	margin-left: 480px;
+	margin-left: 330px;
 	color: #fff;
-	width: 460px;
+	width: 610px;
 }
 
 #menu li.normalLinks a {
@@ -654,6 +653,16 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	vertical-align:middle;
 }
 
+#tab-user div.dropdown .caret-down {
+    border-top: 4px solid #FFFFFF;
+    border-bottom: 0px solid #FFFFFF;
+}
+
+#tab-user div.dropdown.open .caret-down {
+    border-bottom: 0px solid #FFFFFF;
+    border-top: 4px solid #FFFFFF;
+}
+
 .pointer {
 	cursor:pointer;
 }
@@ -687,4 +696,20 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 .reportFilterHeader th {
 	background-color: #DDDDDD;
 	text-align:center;
+}
+
+.config-header {
+	margin-top:0px;
+}
+
+#tab-config, #tab-user {
+	cursor:pointer;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	background-image: url("/threadfix/images/glyphicons-halflings.png");
+}
+
+[class^="icon-"].icon-white, [class*=" icon-"].icon-white {
+	background-image: url("/threadfix/images/glyphicons-halflings-white.png");
 }
