@@ -89,5 +89,9 @@ public interface ApplicationDao {
 	 * @param app
 	 */
 	List<Vulnerability> getVulns(Application app);
+	
+	/**
+	 */
+	List<Integer> getTopTenVulnerableAppsFromList(List<Integer> applicationIdList);
 
 }

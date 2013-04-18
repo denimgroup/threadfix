@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+	name="pointInTimeGraph" pageWidth="372" pageHeight="200"
+	whenNoDataType="NoDataSection" columnWidth="372" leftMargin="0" rightMargin="0" 
+	topMargin="0" bottomMargin="0">
+	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
+	<queryString language="hql">
+		<![CDATA[SELECT application.name as name, 
+						count(vulnerability) as vulnCount
+				 FROM Application as application join application.vulnerabilities as vulnerability
+				 WHERE application.id IN ($P{appId}) AND
+				    application.active = true AND
+				 	vulnerability.active = true
+				 GROUP BY application.name
+				 ORDER BY count(vulnerability) desc]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="vulnCount" class="java.lang.Number"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="200">
+			<barChart>
+			  <chart isShowLegend="true">
+				  <reportElement x="0" y="0" width="372" height="200"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+			  </chart>
+			  <categoryDataset>
+			  	<categorySeries>
+			  		<seriesExpression><![CDATA["Vuln Count"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{vulnCount}]]></valueExpression>
+			  	</categorySeries>
+			  </categoryDataset>
+			  <barPlot>
+			  	<plot orientation="Horizontal">
+					<seriesColor seriesOrder="1" color="#A63603"/>			  	
+			  	</plot>
+				<categoryAxisFormat>
+					<axisFormat>
+						<labelFont/>
+						<tickLabelFont/>
+					</axisFormat>
+				</categoryAxisFormat>
+				<valueAxisFormat>
+					<axisFormat>
+						<labelFont/>
+						<tickLabelFont/>
+					</axisFormat>
+				</valueAxisFormat>
+			  </barPlot>
+			</barChart> 
+		</band>
+	</summary>
+</jasperReport>

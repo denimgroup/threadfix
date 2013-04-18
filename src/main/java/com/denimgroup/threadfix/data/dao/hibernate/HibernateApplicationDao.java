@@ -152,4 +152,21 @@ public class HibernateApplicationDao implements ApplicationDao {
 				.createQuery("from Vulnerability vuln where vuln.application = :appId")
 						.setInteger("appId", app.getId()).list();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getTopTenVulnerableAppsFromList(
+			List<Integer> applicationIdList) {
+		return sessionFactory.getCurrentSession()
+				.createQuery("SELECT application.id as id " +
+						" FROM Application as application join application.vulnerabilities as vulnerability " +
+						" WHERE application.id IN (:applicationIdList) AND " +
+						"    application.active = true AND " +
+						" 	vulnerability.active = true " +
+						 "GROUP BY application.id " +
+						 "ORDER BY count(vulnerability) desc")
+				.setParameterList("applicationIdList", applicationIdList)
+				.setMaxResults(10)
+				.list();
+	}
 }

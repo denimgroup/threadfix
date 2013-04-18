@@ -128,8 +128,12 @@ public class ReportsServiceImpl implements ReportsService {
 			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS, null);
 		}
 		
+		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
+			applicationIdList = applicationDao.getTopTenVulnerableAppsFromList(applicationIdList);
+		}
+		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
-	
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("appId", applicationIdList);
 		String path = request.getSession().getServletContext().getRealPath("/");

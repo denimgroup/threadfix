@@ -92,21 +92,21 @@ public class DashboardController {
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
 	public String leftReport(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return report(model,request,response);
+		return report(model, request, response, ReportFormat.POINT_IN_TIME_GRAPH);
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
 	public String rightReport(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return report(model,request,response);
+		return report(model, request, response, ReportFormat.TOP_TEN_APPS);
 	}
 	
-	public String report(Model model, HttpServletRequest request, HttpServletResponse response) {
+	public String report(Model model, HttpServletRequest request, HttpServletResponse response, ReportFormat reportFormat) {
 		log.info("hit report ajax");
 		ReportParameters parameters = new ReportParameters();
 		parameters.setApplicationId(-1);
 		parameters.setOrganizationId(-1);
 		parameters.setFormatId(1);
-		parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
+		parameters.setReportFormat(reportFormat);
 		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
 		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
 			model.addAttribute("jasperReport", resultBean.getReport());
