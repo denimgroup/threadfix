@@ -109,7 +109,7 @@ public class EditUserController {
 				result.rejectValue("name", "errors.nameTaken");
 				model.addAttribute("accessControlMapModel", getMapModel(userId));
 				model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
-				model.addAttribute("contentPage", "config/users/form.jsp");
+				model.addAttribute("contentPage", "config/users/editUserForm.jsp");
 				return "ajaxFailureHarness";
 			}
 			
