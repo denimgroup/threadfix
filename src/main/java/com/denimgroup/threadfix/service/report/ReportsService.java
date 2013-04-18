@@ -39,7 +39,14 @@ import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 public interface ReportsService {
 	
 	enum ReportCheckResult {
-		VALID, NO_APPLICATIONS, BAD_REPORT_TYPE, IO_ERROR
+		VALID("Valid"), NO_APPLICATIONS("No Applications"), BAD_REPORT_TYPE("Bad Report Type"), IO_ERROR("IO Error");
+		
+		private String text;
+		
+		ReportCheckResult(String text) {
+			this.text = text;
+		}
+		public String toString() { return text; }
 	}
 
 	ReportCheckResultBean generateReport(ReportParameters parameters, 

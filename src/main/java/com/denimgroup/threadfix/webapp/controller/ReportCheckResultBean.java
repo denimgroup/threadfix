@@ -13,4 +13,10 @@ public class ReportCheckResultBean {
 	
 	public StringBuffer getReport() { return report; }
 	public ReportCheckResult getReportCheckResult() { return reportCheckResult; }
+	
+	@Override
+	public String toString() {
+		return "Report Check: { status: " + reportCheckResult.toString() + 
+				", report: " + (report == null ? " empty }" : " not empty }");
+	}
 }
