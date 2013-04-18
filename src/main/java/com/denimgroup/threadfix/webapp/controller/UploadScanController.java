@@ -122,7 +122,7 @@ public class UploadScanController {
 		
 		if (myChannelId == null) {
 			log.warn("Unable to load a suitable Application Channel.");
-			return index(appId, orgId, SCANNER_TYPE_ERROR, null);
+			return index(orgId, appId, SCANNER_TYPE_ERROR, null);
 		}
 		
 		ScanCheckResultBean returnValue = null;
@@ -131,7 +131,7 @@ public class UploadScanController {
 		
 		if (fileName == null || fileName.equals("")) {
 			log.warn("Saving the file to disk did not return a file name. Returning to scan upload page.");
-			return index(appId, orgId, "Unable to save the file to disk.", null);
+			return index(orgId, appId, "Unable to save the file to disk.", null);
 		}
 		
 		try {
