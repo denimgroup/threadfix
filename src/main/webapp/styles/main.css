@@ -569,12 +569,11 @@ table.bold-headers tr th {
 }
 
 .right-tile {
-	width:50%;
-	float:right;
+	margin-left:500px;
 }
 
 .margin-bottom {
-	 margin-bottom:18px;
+	margin-bottom:18px;
 }
 
 .margin-top {

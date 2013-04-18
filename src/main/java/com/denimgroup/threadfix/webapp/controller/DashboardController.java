@@ -32,12 +32,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.VulnerabilityCommentService;
 import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
 
 /**
  * @author bbeverly
@@ -52,6 +55,7 @@ public class DashboardController {
 	
 	private VulnerabilityCommentService vulnerabilityCommentService;
 	private ScanService scanService;
+	private ReportsService reportsService;
 
 	@Autowired
 	public DashboardController(ScanService scanService,
@@ -61,6 +65,7 @@ public class DashboardController {
 			VulnerabilityCommentService vulnerabilityCommentService){
 		this.vulnerabilityCommentService = vulnerabilityCommentService;
 		this.scanService = scanService;
+		this.reportsService = reportsService;
 	}
 	
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
@@ -71,8 +76,42 @@ public class DashboardController {
 		
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent());
 		model.addAttribute("recentScans", scanService.loadMostRecent());
+		ReportParameters parameters = new ReportParameters();
+		parameters.setApplicationId(-1);
+		parameters.setOrganizationId(-1);
+		parameters.setFormatId(1);
+		parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
+		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+		
+		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
+			model.addAttribute("pointInTimeReport", resultBean.getReport());
+		}
 		
 		return "dashboard/dashboard";
 	}
 	
+	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
+	public String leftReport(Model model, HttpServletRequest request, HttpServletResponse response) {
+		return report(model,request,response);
+	}
+	
+	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
+	public String rightReport(Model model, HttpServletRequest request, HttpServletResponse response) {
+		return report(model,request,response);
+	}
+	
+	public String report(Model model, HttpServletRequest request, HttpServletResponse response) {
+		log.info("hit report ajax");
+		ReportParameters parameters = new ReportParameters();
+		parameters.setApplicationId(-1);
+		parameters.setOrganizationId(-1);
+		parameters.setFormatId(1);
+		parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
+		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
+			model.addAttribute("jasperReport", resultBean.getReport());
+		}
+		return "reports/report";
+	}
+
 }

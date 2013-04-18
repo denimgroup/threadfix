@@ -12,11 +12,13 @@
 				Export CSV
 			</a>
 		</c:if>
-										
-		<a id="submitTeamModal" class="btn btn-primary"
-				onclick="javascript:submitAjaxReport('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 3);return false;">
-			Export PDF
-		</a>
+		
+		<c:if test="${ pdfEnabled }">
+			<a id="submitTeamModal" class="btn btn-primary"
+					onclick="javascript:submitAjaxReport('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 3);return false;">
+				Export PDF
+			</a>
+		</c:if>
 	</div>
 	${jasperReport}
 	

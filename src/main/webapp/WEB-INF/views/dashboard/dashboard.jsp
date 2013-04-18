@@ -2,12 +2,13 @@
 
 <head>
 	<title>Dashboard</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard_page.js"></script>
 </head>
 
 <body class="dashboard">
 	<h2>Dashboard</h2>
 	
-	<div style="width:1000px;height:1200px;">
+	<div style="height:1200px;">
 		<div class="alert">
 		    <button type="button" class="close" data-dismiss="alert">&times;</button>
 		    <strong>Warning!</strong> A Defect Submission failed. <a href="#">Check your configuration</a>
@@ -20,14 +21,16 @@
 	    
 	    <div class="left-tile">
 	    	<h4>Vulnerability Breakdown</h4>
-	    	
-	    	<img src="<%=request.getContextPath()%>/images/graph1.PNG">
+	    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
+			<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
+	    	<div id="leftTileReport"></div>
 	    </div>
 	    
-	     <div style="margin-left:500px;">
+	     <div class="right-tile">
 	    	<h4>Top 10 Vulnerable Applications</h4>
-	    		
-	    	<img src="<%=request.getContextPath()%>/images/graph2.PNG">
+	    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
+			<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
+	    	<div id="rightTileReport"></div>
 	    </div>
 	    
 	    <div style="margin-top:100px">
@@ -81,7 +84,7 @@
 				</table>
 		    </div>
 		    
-		     <div style="margin-left:500px;">
+		    <div class="right-tile">
 		    	<h4>Recent Comments</h4>
 		    	<table class="table table-striped">
 					<thead>

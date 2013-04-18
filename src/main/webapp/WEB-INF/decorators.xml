@@ -1,6 +1,8 @@
 <decorators defaultdir="/decorators">
     <excludes>
     	<pattern>/login*</pattern>
+    	<pattern>/dashboard/leftReport*</pattern>
+    	<pattern>/dashboard/rightReport*</pattern>
     	<pattern>/reports/ajax*</pattern>
     	<pattern>/scans/table*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>

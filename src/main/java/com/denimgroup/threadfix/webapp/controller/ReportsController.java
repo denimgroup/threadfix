@@ -163,6 +163,7 @@ public class ReportsController {
 				log.info("Finished generating report.");
 				model.addAttribute("jasperReport", addParameterToReport(report));
 				model.addAttribute("csvEnabled", csvEnabled);
+				model.addAttribute("pdfEnabled", true);
 				model.addAttribute("reportId",reportParameters.getReportId());
 				return "reports/report";
 				
