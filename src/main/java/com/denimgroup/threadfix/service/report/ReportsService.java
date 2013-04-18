@@ -43,10 +43,26 @@ public interface ReportsService {
 		
 		private String text;
 		
-		ReportCheckResult(String text) {
-			this.text = text;
-		}
+		ReportCheckResult(String text) { this.text = text; }
 		public String toString() { return text; }
+	}
+	
+	public enum ReportFormat { 
+		BAD_FORMAT(""),
+		TRENDING("trending.jrxml"), 
+		POINT_IN_TIME("pointInTime.jrxml"), 
+		VULNERABILITY_PROGRESS_BY_TYPE("cwe.jrxml"), 
+		CHANNEL_COMPARISON_BY_VULN_TYPE("cweChannel.jrxml"), 
+		CHANNEL_COMPARISON_SUMMARY("scannerComparison.jrxml"), 
+		CHANNEL_COMPARISON_DETAIL("scannerComparisonByVulnerability"), 
+		MONTHLY_PROGRESS_REPORT("monthlyBarChart.jrxml"),
+		PORTFOLIO_REPORT("portfolioReport"),
+		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml");
+		
+		private String fileName;
+		
+		ReportFormat(String fileName) { this.fileName = fileName; }
+		public String getFileName() { return fileName; }
 	}
 
 	ReportCheckResultBean generateReport(ReportParameters parameters, 

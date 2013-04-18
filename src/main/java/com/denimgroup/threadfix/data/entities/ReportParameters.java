@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.data.entities;
 
 import java.io.Serializable;
 
+import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
+
 public class ReportParameters implements Serializable {
 
 	private static final long serialVersionUID = -1005210910671815370L;
@@ -33,6 +35,7 @@ public class ReportParameters implements Serializable {
 	private int applicationId;
 	private int reportId;
 	private int formatId;
+	private ReportFormat reportFormat;
 
 	public ReportParameters() {
 		this.organizationId = 0;
@@ -78,5 +81,28 @@ public class ReportParameters implements Serializable {
 	public void setFormatId(int formatId) {
 		this.formatId = formatId;
 	}
-
+	
+	private static final ReportFormat[] REPORTS = { ReportFormat.BAD_FORMAT, ReportFormat.TRENDING,
+		ReportFormat.POINT_IN_TIME, ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE, 
+		ReportFormat.CHANNEL_COMPARISON_BY_VULN_TYPE, ReportFormat.CHANNEL_COMPARISON_SUMMARY,
+		ReportFormat.CHANNEL_COMPARISON_DETAIL, ReportFormat.MONTHLY_PROGRESS_REPORT,
+		ReportFormat.PORTFOLIO_REPORT };
+	
+	// Translate reportId to the appropriate enum
+	public ReportFormat getReportFormat() {
+		if (reportFormat == null) {
+			if (getReportId() < 0 || getReportId() > REPORTS.length - 1 ||
+				REPORTS[getReportId()] == null) {
+				return ReportFormat.BAD_FORMAT;
+			} else {
+				return REPORTS[getReportId()];
+			}
+		} else {
+			return reportFormat;
+		}
+	}
+	
+	public void setReportFormat(ReportFormat format) {
+		this.reportFormat = format;
+	}
 }

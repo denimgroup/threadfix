@@ -88,10 +88,6 @@ import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 @Service
 public class ReportsServiceImpl implements ReportsService {
 	
-	private static final String[] reports = { "", "trending.jrxml", "pointInTime.jrxml", 
-		"cwe.jrxml", "cweChannel.jrxml", "scannerComparison.jrxml", "scannerComparisonByVulnerability",
-		"monthlyBarChart.jrxml", "portfolioReport" };
-	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
 	private SessionFactory sessionFactory = null;
@@ -122,8 +118,7 @@ public class ReportsServiceImpl implements ReportsService {
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters, 
 			HttpServletRequest request, HttpServletResponse response) {
-		if (parameters.getReportId() < 1 || parameters.getReportId() > reports.length - 1 ||
-				reports[parameters.getReportId()] == null) {
+		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
 			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE, null);
 		}
 		
@@ -148,7 +143,7 @@ public class ReportsServiceImpl implements ReportsService {
 			format = "HTML";
 		}
 		
-		String reportFile = reports[parameters.getReportId()];
+		String reportFile = parameters.getReportFormat().getFileName();
 		try {
 			StringBuffer report = getReport(path, reportFile, format, params, applicationIdList, response);
 			return new ReportCheckResultBean(ReportCheckResult.VALID, report);
