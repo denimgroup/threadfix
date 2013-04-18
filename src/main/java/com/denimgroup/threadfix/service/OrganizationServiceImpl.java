@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -129,7 +127,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	@Override
 	public List<Organization> loadAllActiveFilter() {
-		if (hasGlobalPermission(Permission.READ_ACCESS))
+		if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
 		
 		Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
@@ -162,8 +160,4 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return organizationDao.retrieveAllActiveFilter(teamIds);
 	}
 	
-	public boolean hasGlobalPermission(Permission permission) {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
-	}
 }

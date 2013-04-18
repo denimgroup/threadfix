@@ -20,15 +20,10 @@ import com.denimgroup.threadfix.data.entities.Waf;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
-
-	public boolean hasGlobalPermission(Permission permission) {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
-	}
 	
 	@Override
 	public boolean isAuthorized(Permission permission, Integer orgId, Integer appId) {
-		if (hasGlobalPermission(permission))
+		if (PermissionUtils.hasGlobalPermission(permission))
 			return true;
 		
 		if (orgId == null && appId == null) {
@@ -82,7 +77,7 @@ public class PermissionServiceImpl implements PermissionService {
 			return false;
 		}
 		
-		if (hasGlobalPermission(Permission.READ_ACCESS)) {
+		if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS)) {
 			return true;
 		}
 		
@@ -151,7 +146,7 @@ public class PermissionServiceImpl implements PermissionService {
 		if (organization == null || organization.getActiveApplications() == null) {
 			return newApps;
 		}
-		if (hasGlobalPermission(Permission.READ_ACCESS)) {
+		if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS)) {
 			return organization.getActiveApplications();
 		}
 		
@@ -178,7 +173,7 @@ public class PermissionServiceImpl implements PermissionService {
 	
 	@Override
 	public void filterApps(List<RemoteProviderType> providers) {
-		boolean global = hasGlobalPermission(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+		boolean global = PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
 
 		for (RemoteProviderType type : providers) {
 			if (global) {

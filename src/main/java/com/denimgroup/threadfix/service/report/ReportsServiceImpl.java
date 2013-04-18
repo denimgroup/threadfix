@@ -79,6 +79,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.PermissionUtils;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 
@@ -479,7 +480,7 @@ public class ReportsServiceImpl implements ReportsService {
 			} else {
 				applicationIdList.add(reportParameters.getApplicationId());
 			}
-		} else if (hasGlobalPermission(Permission.READ_ACCESS) ||
+		} else if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS) ||
 				teamIds.contains(reportParameters.getOrganizationId())) {
 			Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
 			if (reportParameters.getApplicationId() < 0) {
@@ -499,6 +500,7 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	// TODO rethink some of this - it's a little slow at a few hundred vulns. 
 	// The emphasis on genericism through the design makes it harder to pull channel-specific info from vulns.
+	@Override
 	public String scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {		
 		
 		List<List<String>> tableListOfLists = new ArrayList<List<String>>();
@@ -585,10 +587,4 @@ public class ReportsServiceImpl implements ReportsService {
 				
 		return "ajaxSuccessHarness";
 	}
-	
-	public boolean hasGlobalPermission(Permission permission) {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
-	}
-	
 }
