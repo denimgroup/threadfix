@@ -32,9 +32,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
-import com.denimgroup.threadfix.selenium.pages.UserEditPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserNewPage;
 
 public class UserTests extends BaseTest {
 
@@ -194,77 +192,76 @@ public class UserTests extends BaseTest {
 
 		// Set up the two User objects for the test
 
-		UserNewPage newUserPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickAddUserLink();
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+											.clickManageUsersLink()
+											.clickAddUserLink()
+											.enterName(baseUserName,null)
+											.enterPassword("lengthy password 2",null)
+											.enterConfirmPassword("lengthy password 2",null)
+											.clickAddNewUserBtn()
+											.clickAddUserLink()
+											.enterName(userNameDuplicateTest,null)
+											.enterPassword("lengthy password 2",null)
+											.enterConfirmPassword("lengthy password 2",null)
+											.clickAddNewUserBtn();
 
-		newUserPage.setNameInput(userNameDuplicateTest);
-		newUserPage.setPasswordInput(userNameDuplicateTest);
-		newUserPage.setPasswordConfirmInput(userNameDuplicateTest);
 
-		newUserPage = newUserPage.clickAddUserButton().clickCancelLink()
-				.clickAddUserLink();
-
-		newUserPage.setNameInput(baseUserName);
-		newUserPage.setPasswordInput(baseUserName);
-		newUserPage.setPasswordConfirmInput(baseUserName);
 
 		// Test submission with no changes
-		UserIndexPage userIndexPage = newUserPage
-				.clickAddUserButton()
-				.clickUpdateUserButton();
+		userIndexPage = userIndexPage.clickEditLink(baseUserName)
+								.clickUpdateUserBtn(baseUserName);
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
-		UserEditPage editUserPage = userIndexPage.clickEditLink(baseUserName);
 
 		// Test Empty
-		editUserPage.setNameInput("");
-		editUserPage.setPasswordInput("");
-		editUserPage.setPasswordConfirmInput("");
+		userIndexPage = userIndexPage.clickEditLink(baseUserName)
+								.enterName("",baseUserName)
+								.enterPassword("",baseUserName)
+								.enterConfirmPassword("",baseUserName)
+								.clickUpdateUserBtnInvalid(baseUserName);
 
-		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
-
-		assertTrue("Name error not present", editUserPage.getNameError().equals("Name is a required field."));
+		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
+		//assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
 
 		// Test White Space
-		editUserPage.setNameInput("        ");
-		editUserPage.setPasswordInput("  ");
-		editUserPage.setPasswordConfirmInput("  ");
+		userIndexPage = userIndexPage.enterName("        ",null)
+								.enterPassword("  ",null)
+								.enterConfirmPassword("  ",null)
+								.clickUpdateUserBtnInvalid(baseUserName);
 
-		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
 
-		assertTrue("Name error not present", editUserPage.getNameError().equals("Name is a required field."));
+
+		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
+		//assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
 
 		// Test non-matching passwords
-		editUserPage.setNameInput("new name");
-		editUserPage.setPasswordInput("lengthy password 1");
-		editUserPage.setPasswordConfirmInput("lengthy password 2");
-		editUserPage.setRoleSelect("Administrator");
+		userIndexPage = userIndexPage.enterName("new name",null)
+									.enterPassword("lengthy password 1",null)
+									.enterConfirmPassword("lengthy password 2",null)
+									.clickUpdateUserBtnInvalid(baseUserName);
 
-		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
-		assertTrue("Password matching error is not correct.", editUserPage.getPasswordError().equals("Passwords do not match."));
+		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
 
 		// Test length
-		editUserPage.setNameInput("Test User");
-		editUserPage.setPasswordInput("test");
-		editUserPage.setPasswordConfirmInput("test");
+		userIndexPage = userIndexPage.enterName("Test User",null)
+									.enterPassword("test",null)
+									.enterConfirmPassword("test",null)
+									.clickUpdateUserBtnInvalid(baseUserName);
 
-		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
 
-		assertTrue("Password length error not present", editUserPage.getPasswordError().equals("Password has a minimum length of 12."));
+		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
 		// Test name uniqueness check
+		userIndexPage = userIndexPage.enterName(userNameDuplicateTest,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickUpdateUserBtnInvalid(baseUserName);
 
-		editUserPage.setNameInput(userNameDuplicateTest);
-		editUserPage.setRoleSelect("Administrator");
-		editUserPage.setPasswordConfirmInput("lengthy password 2");
-		editUserPage.setPasswordInput("lengthy password 2");
 
-		editUserPage = editUserPage.clickUpdateUserButtonInvalid();
-		assertTrue("Name uniqueness error is not correct.", editUserPage.getNameError().equals("That name is already taken."));
+		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 
 		// Delete the users and logout
 
-		loginPage = editUserPage.clickCancelLink()
+		loginPage = userIndexPage.clickCancel()
 				.clickDeleteButton(baseUserName)
 				.clickDeleteButton(userNameDuplicateTest)
 				.logout();
@@ -273,10 +270,10 @@ public class UserTests extends BaseTest {
 	@Test
 	public void navigationTest() {
 		loginPage.login("user", "password")
-		.clickChangePasswordLink();
+				.clickManageUsersLink();
 
 		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("User Password Change Page not found", PageText.contains("User Password Change"));
+		assertTrue("User Password Change Page not found", PageText.contains("Manage Users"));
 	}
 
 	@Test
@@ -330,10 +327,10 @@ public class UserTests extends BaseTest {
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.setNameInput("testuser")
-				.setPasswordConfirmInput("testpassword")
-				.setPasswordInput("testpassword")
-				.clickAddUserButton()
+				.enterName("testuser",null)
+				.enterPassword("testpassword",null)
+				.enterConfirmPassword("testpassword",null)
+				.clickAddNewUserBtn()
 				.logout()
 				.login("testuser", "testpassword")
 				.clickChangePasswordLink()

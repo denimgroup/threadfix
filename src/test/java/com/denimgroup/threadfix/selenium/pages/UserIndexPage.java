@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -87,33 +88,33 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage enterName(String name,String oldName){
 		if(oldName == null){
-			driver.findElementsById("nameInput").get(getNumRows()).clear();
-			driver.findElementsById("nameInput").get(getNumRows()).sendKeys(name);
+			driver.findElementById("nameInput").clear();
+			driver.findElementById("nameInput").sendKeys(name);
 		}else{
-			driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
-			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(name);
+			driver.findElementById("nameInput"+(getIndex(oldName)+1)).clear();
+			driver.findElementById("nameInput"+(getIndex(oldName)+1)).sendKeys(name);
 		}
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage enterPassword(String password,String oldName){
 		if(oldName == null){
-			driver.findElementsById("passwordInput").get(getNumRows()-1).clear();
-			driver.findElementsById("passwordInput").get(getNumRows()-1).sendKeys(password);
+			driver.findElementById("passwordInput").clear();
+			driver.findElementById("passwordInput").sendKeys(password);
 		}else{
-			driver.findElementsById("passwordInput").get(getIndex(oldName)-1).clear();
-			driver.findElementsById("passwordInput").get(getIndex(oldName)-1).sendKeys(password);
+			driver.findElementById("passwordInput"+(getIndex(oldName)+1)).clear();
+			driver.findElementById("passwordInput"+(getIndex(oldName)+1)).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage enterConfirmPassword(String password,String oldName){
 		if(oldName == null){
-			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).clear();
-			driver.findElementsById("passwordConfirmInput").get(getNumRows()-1).sendKeys(password);
+			driver.findElementById("passwordConfirmInput").clear();
+			driver.findElementById("passwordConfirmInput").sendKeys(password);
 		}else{
-			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)-1).clear();
-			driver.findElementsById("passwordConfirmInput").get(getIndex(oldName)-1).sendKeys(password);
+			driver.findElementById("passwordConfirmInput"+(getIndex(oldName)+1)).clear();
+			driver.findElementById("passwordConfirmInput"+(getIndex(oldName)+1)).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -188,5 +189,10 @@ public class UserIndexPage extends BasePage {
 	
 	public String getPasswordError(){
 		return driver.findElementById("password.errors").getText().trim();
+	}
+	
+	public UserIndexPage clickCancel(){
+		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+		return new UserIndexPage(driver);	
 	}
 }

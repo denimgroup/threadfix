@@ -39,7 +39,6 @@ public class UserChangePasswordPage extends BasePage {
 		newPassword = driver.findElementById("passwordInput");
 		confirmPassword = driver.findElementById("passwordConfirmInput");
 		updatePasswordButton = driver.findElementById("updateUserButton");
-		backToConfigurationLink = driver.findElementById("cancelLink");
 	}
 
 	public static UserChangePasswordPage open(WebDriver webdriver) {
@@ -64,9 +63,9 @@ public class UserChangePasswordPage extends BasePage {
 		return this;
 	}
 
-	public ConfigurationIndexPage clickUpdate() {
+	public UserChangePasswordPage clickUpdate() {
 		updatePasswordButton.click();
-		return new ConfigurationIndexPage(driver);
+		return new UserChangePasswordPage(driver);
 	}
 	
 	public UserChangePasswordPage clickUpdateInvalid() {

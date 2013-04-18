@@ -27,11 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class RemoteProvidersIndexPage extends BasePage {
-	private List<WebElement> name = new ArrayList<WebElement>();
+	/*private List<WebElement> name = new ArrayList<WebElement>();
 	private List<WebElement> userName = new ArrayList<WebElement>();
 	private List<WebElement> apiKey = new ArrayList<WebElement>();
 	private List<WebElement> configureButton = new ArrayList<WebElement>();
@@ -43,10 +44,16 @@ public class RemoteProvidersIndexPage extends BasePage {
 	private List<WebElement> appImportScanLinks = new ArrayList<WebElement>();
 	private List<WebElement> updateAppsLink = new ArrayList<WebElement>();
 	private List<WebElement> clearConfig = new ArrayList<WebElement>();
-
+*/
+	private WebElement qualysConfigButton;
+	private WebElement veracodeConfigButton;
+	private WebElement whiteHateConfigButton;
 	public RemoteProvidersIndexPage(WebDriver webDriver) {
 		super(webDriver);
-
+		qualysConfigButton = driver.findElementById("configure1");
+		veracodeConfigButton = driver.findElementById("configure2");
+		whiteHateConfigButton = driver.findElementById("configure3");
+/*
 		for (int i = 1; i <= getNumEdit(); i++) {
 			name.add(driver.findElementById("name" + i));
 			userName.add(driver.findElementById("username" + i));
@@ -75,9 +82,122 @@ public class RemoteProvidersIndexPage extends BasePage {
 
 				}
 			}
-		}
+		}*/
 	}
-
+	
+	public RemoteProvidersIndexPage clickConfigureQualys(){
+		qualysConfigButton.click();
+		waitForElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickConfigureVeracode(){
+		veracodeConfigButton.click();
+		waitForElement(driver.findElementById("remoteProviderEditModal2"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
+		whiteHateConfigButton.click();
+		waitForElement(driver.findElementById("remoteProviderEditModal1"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setQualysUsername(String user){
+		driver.findElementsById("usernameInput").get(0).clear();
+		driver.findElementsById("usernameInput").get(0).sendKeys(user);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setQualysPassword(String password){
+		driver.findElementsById("passwordInput").get(0).clear();
+		driver.findElementsById("passwordInput").get(0).sendKeys(password);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setQualysUS(){
+		driver.findElementById("isEuropean1").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setQualysEU(){
+		driver.findElementById("isEuropean2").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveQualys(){
+		driver.findElementById("submitRemoteProviderFormButton3").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveQualysInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton3").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage closeModal(){
+		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setVeraUsername(String user){
+		driver.findElementsById("usernameInput").get(1).clear();
+		driver.findElementsById("usernameInput").get(1).sendKeys(user);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setVeraPassword(String password){
+		driver.findElementsById("passwordInput").get(1).clear();
+		driver.findElementsById("passwordInput").get(1).sendKeys(password);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveVera(){
+		driver.findElementById("submitRemoteProviderFormButton2").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveVeraInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton2").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage setWhiteHatAPI(String api){
+		driver.findElementById("apiKeyInput").clear();
+		driver.findElementById("apiKeyInput").sendKeys(api);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveWhiteHat(){
+		driver.findElementById("submitRemoteProviderFormButton1").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveWhiteHatInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton1").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public String getErrorMessage(){
+		return driver.findElementByClassName("alert-error").getText();
+	}
+	
+	public RemoteProvidersIndexPage clearWhiteHat(){
+		driver.findElementById("clearConfig3").click();
+		handleAlert();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public String successAlert(){
+		return driver.findElementByClassName("alert-success").getText();
+	}
+	
+//old methods
+/*	
 	public int getNumEdit() {
 		return driver.findElementsByLinkText("Configure").size();
 
@@ -133,5 +253,5 @@ public class RemoteProvidersIndexPage extends BasePage {
 		
 		return new RemoteProvidersIndexPage(driver);
 	}
-
+*/
 }
