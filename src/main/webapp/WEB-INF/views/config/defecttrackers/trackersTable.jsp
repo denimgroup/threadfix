@@ -2,6 +2,10 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
+<c:if test="${ canManageDefectTrackers }">
+	<a id="addNewDTButton" href="#createDefectTracker" role="button" class="btn" data-toggle="modal">Add New Defect Tracker</a>
+</c:if>
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -47,6 +51,5 @@
 </table>
 
 <c:if test="${ canManageDefectTrackers }">
-	<a id="addNewDTButton" href="#createDefectTracker" role="button" class="btn" data-toggle="modal">Add New Defect Tracker</a>
 	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
 </c:if>

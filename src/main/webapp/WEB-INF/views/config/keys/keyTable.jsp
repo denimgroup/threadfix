@@ -2,6 +2,8 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf"%>
 
+<a id="createNewKeyModalButton" href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -55,5 +57,3 @@
 		</c:forEach>
 	</tbody>
 </table>
-
-<a id="createNewKeyModalButton" href="#newKeyModalDiv" role="button" class="btn" data-toggle="modal">Create New Key</a>

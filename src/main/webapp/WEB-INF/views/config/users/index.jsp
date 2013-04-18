@@ -19,6 +19,8 @@
 	
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
+	
+	<a id="newUserModalLink" href="#newUserModal" role="button" class="btn" data-toggle="modal">Add User</a>
 
 	<table class="table table-striped">
 		<thead>
@@ -71,7 +73,6 @@
 		</tbody>
 	</table>
 	
-	<a id="newUserModalLink" href="#newUserModal" role="button" class="btn" data-toggle="modal">Add User</a>
 	<div id="newUserModal" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<%@ include file="/WEB-INF/views/config/users/newUserForm.jsp" %>

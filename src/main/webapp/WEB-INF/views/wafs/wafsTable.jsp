@@ -2,6 +2,10 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
+<c:if test="${ canManageWafs }">
+	<a id="addWafModalButton" href="#createWaf" role="button" class="btn" data-toggle="modal">Add WAF</a>
+</c:if>
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -50,7 +54,6 @@
 	</tbody>
 </table>
 <c:if test="${ canManageWafs }">
-	<a id="addWafModalButton" href="#createWaf" role="button" class="btn" data-toggle="modal">Add WAF</a>
 	<div id="createWaf" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
