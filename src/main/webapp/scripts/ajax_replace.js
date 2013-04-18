@@ -360,3 +360,26 @@ function toggleExpandable(expandable, caret) {
 		$(caret).removeClass('expanded');
 	}
 }
+
+function toggleExpandableWithReport(expandable, caret, reportDiv) {
+	toggleExpandable(expandable, caret);
+	
+	if ($("#" + reportDiv)[0] && !$("#" + reportDiv).attr('data-loaded')) {
+		$.ajax({
+			type : "GET",
+			url : $("#" + reportDiv).attr('data-url'),
+			dataType : "text",
+			success : function(text) {
+				 if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+					 $("#" + reportDiv).html(text);
+					 $("#" + reportDiv).attr('data-loaded', '1');
+				} else {
+					$("#connectionUnavailableMessage").css("display", "");
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				$("#connectionUnavailableMessage").css("display", "");
+		    }
+		});
+	}
+}

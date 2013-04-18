@@ -84,6 +84,7 @@
         		protected-regex ^/reports/ajax$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/addComment$,
+        		protected-regex ^/organizations/[0-9]+/getReport$,
         		protected-regex ^/configuration/users/[0-9]+/access/[0-9]+/edit$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanTab$,

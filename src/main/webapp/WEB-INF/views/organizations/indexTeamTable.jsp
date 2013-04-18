@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
-		<tr class="pointer" onclick="javascript:toggleExpandable('#teamInfoDiv${ organization.id}', '#caret${ organization.id }')">
+		<tr class="pointer" onclick="javascript:toggleExpandableWithReport('#teamInfoDiv${ organization.id}', '#caret${ organization.id }', 'reportDiv${organization.id}')">
 			<td>
 				<span id="caret${ organization.id }" class="caret-right"></span>
 			</td>
@@ -29,9 +29,13 @@
 					<div>
 					</c:if>
 					<c:if test="${ not empty organization.applications }">
-						<img src="<%=request.getContextPath()%>/images/DummyPieChart.PNG" style="width:280px">
+					
+						<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
+							<spring:param name="orgId" value="${ organization.id }"/>
+						</spring:url>
+						<div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv${organization.id}" data-url="<c:out value="${ reportUrl }"/>"></div>
 						
-					<div style="float:right">
+					<div>
 						<table>
 							<thead>
 								<tr>

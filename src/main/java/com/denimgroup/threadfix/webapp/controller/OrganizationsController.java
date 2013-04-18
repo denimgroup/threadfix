@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -53,6 +55,9 @@ import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
 import com.denimgroup.threadfix.webapp.viewmodels.QuickStartModel;
 
 /**
@@ -75,6 +80,7 @@ public class OrganizationsController {
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
 	private OrganizationService organizationService = null;
+	private ReportsService reportsService = null;
 	private ApplicationService applicationService = null;
 	private ApplicationCriticalityService applicationCriticalityService = null;
 	private PermissionService permissionService = null;
@@ -83,13 +89,14 @@ public class OrganizationsController {
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
 			ChannelTypeService channelTypeService, PermissionService permissionService, 
-			ApplicationService applicationService, 
+			ReportsService reportsService, ApplicationService applicationService, 
 			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.applicationCriticalityService = applicationCriticalityService;
 		this.permissionService = permissionService;
 		this.channelTypeService = channelTypeService;
+		this.reportsService = reportsService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -139,6 +146,29 @@ public class OrganizationsController {
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			return mav;
+		}
+	}
+	
+	@RequestMapping("/{orgId}/getReport")
+	public ModelAndView getReport(@PathVariable("orgId") int orgId,
+			HttpServletRequest request, HttpServletResponse response,
+			Model model) {
+		Organization organization = organizationService.loadOrganization(orgId);
+		if (organization == null || !organization.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
+			throw new ResourceNotFoundException();
+			
+		} else {
+			ReportParameters parameters = new ReportParameters();
+			parameters.setApplicationId(-1);
+			parameters.setOrganizationId(orgId);
+			parameters.setFormatId(1);
+			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
+			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
+				model.addAttribute("jasperReport", resultBean.getReport());
+			}
+			return new ModelAndView("reports/report");
 		}
 	}
 	
