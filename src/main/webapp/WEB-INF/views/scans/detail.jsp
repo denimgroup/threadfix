@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Findings</title>
+	<title>Scan Details</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 	<spring:url value="{scanId}/table" var="tableUrl">

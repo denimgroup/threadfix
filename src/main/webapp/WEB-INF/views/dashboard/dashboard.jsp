@@ -1,5 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<head>
+	<title>Dashboard</title>
+</head>
+
 <body class="dashboard">
 	<h2>Dashboard</h2>
 	
