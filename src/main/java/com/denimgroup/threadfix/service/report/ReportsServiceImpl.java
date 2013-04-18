@@ -60,8 +60,6 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -445,13 +443,6 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		return getInputStream(string);
 	}
-
-	public boolean hasGlobalAuthority() {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(
-						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
-	}
-
 	
 	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<Integer>();
@@ -461,7 +452,7 @@ public class ReportsServiceImpl implements ReportsService {
 			if (reportParameters.getApplicationId() < 0) {
 				List<Application> appList = null;
 				
-				if (hasGlobalAuthority()) {
+				if (PermissionUtils.hasGlobalReadAccess()) {
 					appList = applicationDao.retrieveAllActive();
 				} else if (teamIds == null || teamIds.size() == 0) {
 					appList = new ArrayList<Application>();

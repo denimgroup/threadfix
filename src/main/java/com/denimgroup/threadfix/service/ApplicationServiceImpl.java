@@ -31,8 +31,6 @@ import java.util.Set;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -113,7 +111,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public List<Application> loadAllActiveFilter(Set<Integer> authenticatedTeamIds) {
 		
-		if (hasGlobalAuthority()) {
+		if (PermissionUtils.hasGlobalReadAccess()) {
 			return loadAllActive();
 		}
 		
@@ -124,12 +122,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);
 	}
 	
-	public boolean hasGlobalAuthority() {
-		return SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().contains(
-						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
-	}
-
 	@Override
 	public Application loadApplication(int applicationId) {
 		return applicationDao.retrieveById(applicationId);

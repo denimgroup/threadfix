@@ -22,5 +22,11 @@ public class PermissionUtils {
 		return authentication != null && authentication
 				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
 	}
-	
+
+	public static boolean hasGlobalReadAccess() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		return authentication != null && authentication.getAuthorities().contains(
+						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+	}
 }
