@@ -80,24 +80,24 @@ public class ReportTests extends BaseTest {
 
 	@Test
 	public void testCreateBasicApplicationnoscan() {
-		String orgName = "testCreateApplicationOrg";
-		String appName = "testCreateApplicationApp";
+		String teamName = "testCreateTeam" + getRandomString(5);
+		String appName = "testCreateApp" + getRandomString(5);
 		String urlText = "http://testurl.com";
 
 		// set up an organization
+
 		ReportsIndexPage reportsIndexPage = loginPage.login("user", "password")
-											.clickOrganizationHeaderLink()
-											.clickAddTeamButton()
-											.addNewTeam(orgName)
-											.expandTeamRowByName(orgName)
-											.addNewApplication(orgName, appName, urlText, "Low")
-											.clickReportsHeaderLink();
-
-
-
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.addNewApplication(teamName, appName, urlText, "Low")
+				.clickReportsHeaderLink();
+		
 		// Run Trending Report
 		String PageText = driver.findElementByTagName("h2").getText();
 		assertTrue("Reports Page not found", PageText.contains("Reports"));
+		
 		reportsIndexPage = reportsIndexPage.fillAllClickSaveReport("Trending Report",
 				"testCreateApplicationOrg", "testCreateApplicationApp", "HTML");
 		
@@ -105,7 +105,7 @@ public class ReportTests extends BaseTest {
 
 		// Delete organization and Logout
 		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
-								.expandTeamRowByName(orgName)
+								.expandTeamRowByName(teamName)
 								.clickViewTeamLink()
 								.clickDeleteButton()
 								.logout();

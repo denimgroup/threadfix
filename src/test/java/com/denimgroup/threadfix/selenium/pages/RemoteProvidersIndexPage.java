@@ -30,6 +30,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class RemoteProvidersIndexPage extends BasePage {
 	/*private List<WebElement> name = new ArrayList<WebElement>();
@@ -165,6 +166,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
+	// WhiteHat Methods
 	public RemoteProvidersIndexPage setWhiteHatAPI(String api){
 		driver.findElementById("apiKeyInput").clear();
 		driver.findElementById("apiKeyInput").sendKeys(api);
@@ -180,6 +182,38 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveWhiteHatInvalid(){
 		driver.findElementById("submitRemoteProviderFormButton1").click();
 		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String team, String app){
+		clickEditWhiteHatButton(appRow);
+		selectTeamModal(team);
+		selectAppModal(app);
+		saveMappingWhiteHat();
+		return new RemoteProvidersIndexPage(driver);
+	}
+
+	public RemoteProvidersIndexPage saveMappingWhiteHat(){
+		driver.findElementByClassName("modal-footer").findElement(By.linkText("Update Application")).click();
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickEditWhiteHatButton(int row){
+		driver.findElementById("provider3updateMapping" + row).click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public UserIndexPage selectTeamModal(String role){
+		WebElement a = driver.findElementById("orgSelect1");
+		new Select(a).selectByVisibleText(role);
+		return new UserIndexPage(driver);
+	}
+	
+	
+	public UserIndexPage selectAppModal(String role){
+		WebElement a = driver.findElementById("appSelect1");
+		new Select(a).selectByVisibleText(role);
+		return new UserIndexPage(driver);
 	}
 	
 	public String getErrorMessage(){
