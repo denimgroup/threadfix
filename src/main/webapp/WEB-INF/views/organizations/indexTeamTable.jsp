@@ -2,7 +2,8 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
-<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
+	style="margin-bottom:8px;margin-top:10px;">Add Team</a>
 
 <c:if test="${ not empty organizationList }">
 <table class="table table-hover white-inner-table">
@@ -23,20 +24,17 @@
 		</tr>
 		<tr class="expandable">
 			<td colspan="7">
-				<div id="teamInfoDiv${organization.id}" class="collapse"> 
+				<div id="teamInfoDiv${organization.id}" class="collapse">
+					<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
+						<spring:param name="orgId" value="${ organization.id }"/>
+					</spring:url>
+					<div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv${organization.id}" data-url="<c:out value="${ reportUrl }"/>"></div>
+					<div id="teamAppTableDiv${ status.count }">
 					<c:if test="${ empty organization.applications }">
-						No applications found.<br>
-					<div>
+						No applications found.
 					</c:if>
 					<c:if test="${ not empty organization.applications }">
-					
-						<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
-							<spring:param name="orgId" value="${ organization.id }"/>
-						</spring:url>
-						<div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv${organization.id}" data-url="<c:out value="${ reportUrl }"/>"></div>
-						
-					<div>
-						<table>
+						<table id="teamAppTable${ status.count }">
 							<thead>
 								<tr>
 									<th></th>
