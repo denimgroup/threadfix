@@ -47,7 +47,7 @@
 									<th class="centered">Low</th>
 								</tr>
 							</thead>
-						<c:forEach var="application" items="${ organization.applications }">
+						<c:forEach var="application" items="${ organization.applications }" varStatus="innerStatus">
 							<c:if test="${ application.active }">
 								<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
 									<spring:param name="orgId" value="${ organization.id }"/>
@@ -59,7 +59,7 @@
 								</spring:url>
 								<tr>
 									<td class="right-align" style="padding:5px;">
-										<a id="applicationLink${ application.id }" href="${ fn:escapeXml(appUrl) }">
+										<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
 											<c:out value="${ application.name }"/>
 										</a>
 									</td>
@@ -69,6 +69,7 @@
 									<td class="centered" id="numMediumVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[2] }"/></td>
 									<td class="centered" id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
 									<td class="centered" style="padding:5px;">
+										<a id="uploadScanModalLink${ status.count }-${ innerStatus.count }" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 									</td>
 								</tr>

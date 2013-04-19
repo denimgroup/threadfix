@@ -1,6 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 <div id="uploadScan${ application.id }" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">

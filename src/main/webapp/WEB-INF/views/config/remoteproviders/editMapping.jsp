@@ -17,7 +17,7 @@
 				<tr>
 					<td class="no-color">Team</td>
 					<td class="no-color">
-						<form:select path="application.organization.id" id="orgSelect${ remoteProviderApplication.id }">
+						<form:select path="application.organization.id" id="orgSelect">
 							<option value="-1">Pick a Team</option>
 							<c:forEach var="organization" items="${ organizationList }">
 								<c:if test="${ organization.active and not empty organization.applications}">
@@ -39,7 +39,7 @@
 				<tr>
 					<td class="no-color" style="padding-right:10px">Application</td>
 					<td class="no-color">
-						<form:select path="application.id" id="appSelect${ remoteProviderApplication.id }">
+						<form:select path="application.id" id="appSelect">
 							<option value="-1"></option>
 							
 							<c:if test="${ not empty remoteProviderApplication.application }">
@@ -67,13 +67,12 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitRemoteProviderFormButton${ remoteProviderApplication.id }" class="btn btn-primary" 
+		<a id="submitRemoteProviderFormButton" class="btn btn-primary" 
 			onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#remoteProviderApplicationForm${ remoteProviderApplication.id }', '#remoteProviderApplicationMappingModal${ remoteProviderApplication.id }', '#headerDiv', '#remoteProviderApplicationMappingModal${ remoteProviderApplication.id }');return false;">Update Application</a>
 	</div>
 </form:form>
 <script type="text/javascript">
 	$("#orgSelect<c:out value='${ remoteProviderApplication.id }'/>").change(function() {
-		alert
 		$("#appSelect<c:out value='${ remoteProviderApplication.id }'/>").html('');
 		var options = '';
 		

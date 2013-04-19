@@ -66,6 +66,7 @@
 	</div>
 	
 	<c:if test="${ canUploadScans }">
+		<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
 	</c:if>
