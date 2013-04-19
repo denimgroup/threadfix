@@ -355,4 +355,22 @@ public class UserTests extends BaseTest {
 
 		userIndexPage.logout();
 	}
+	
+	@Test
+	public void testDeleteLastUserRemoveLastRole(){
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickDeleteButton("user");
+		assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
+		
+		userIndexPage = userIndexPage.clickEditLink("user")
+									.chooseRoleForGlobalAccess("User", "user")
+									.clickUpdateUserBtnInvalid("user");
+		
+		assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
+		
+		userIndexPage.clickCancel();
+	}
+	
+	
 }

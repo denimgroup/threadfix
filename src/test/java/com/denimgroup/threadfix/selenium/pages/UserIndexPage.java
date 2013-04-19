@@ -139,9 +139,9 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
 		if(oldName == null){
-			new Select(driver.findElementsById("roleSelect").get(getNumRows())).deselectByVisibleText(role);
+			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
 		}else{
-			new Select(driver.findElementsById("roleSelect").get(getIndex(oldName))).deselectByVisibleText(role);
+			new Select(driver.findElementById("roleSelect"+(getIndex(oldName)+1))).selectByVisibleText(role);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -194,5 +194,9 @@ public class UserIndexPage extends BasePage {
 	public UserIndexPage clickCancel(){
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
 		return new UserIndexPage(driver);	
+	}
+	
+	public boolean isGlobalAccessErrorPresent(){
+		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
 	}
 }

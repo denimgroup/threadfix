@@ -179,12 +179,9 @@ public class RoleTests extends BaseTest {
 	// these tests are to ensure that threadfix cannot enter a state with no users that
 	// have permissions to manage users / roles / groups
 	
-	//this test was inconsistent and will be put off for now
 	
 	@Test
-	@Ignore
 	public void testRemoveRolesFromUser() {
-		String roleName = "test" + getRandomString(10);
 		String admin = "Administrator";
 		
 		rolesIndexPage = loginPage.login("user", "password")
@@ -203,44 +200,64 @@ public class RoleTests extends BaseTest {
 				rolesIndexPage.getDisplayNameError().contains("You cannot remove the Manage Users privilege from this role."));
 		
 		rolesIndexPage = rolesIndexPage.clickCloseModal()
-									.clickCreateRole()
-									.setRoleName(roleName,null)
-									.clickSaveRole(null)
-									.clickEditLink(roleName);
+									.clickManageRolesLink()
+									.clickEditLink(admin);
 		
-		
-		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName)
-					.clickSaveRole(roleName)
-					.clickEditLink(roleName)
-					.setPermissionValue(protectedPermission, false,roleName)
-					.clickSaveRole(roleName)
-					.clickEditLink(roleName)
-					.setPermissionValue(protectedPermission, true,roleName)
-					.clickSaveRole(roleName)
-					.clickEditLink(admin)
-					.setPermissionValue(protectedPermission, false,admin)
-					.clickSaveRole(admin)
-					.clickEditLink(roleName)
-					.setPermissionValue(protectedPermission, false,roleName)
-					.clickSaveRoleInvalid(roleName);
-
-			assertTrue("Protected permission was not protected correctly.", 
-					rolesIndexPage.getDisplayNameError().contains(
-							"You cannot remove this privilege from this role."));
-			
-			rolesIndexPage.setPermissionValue(protectedPermission, true,roleName);
+		for (String role : Role.ALL_PERMISSIONS) {
+			assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(role,admin));
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickCloseModal().clickEditLink(admin);
+	}
+	
+	@Test
+	public void testDeleteRoleWithUserAttached(){
+		String roleName = "test" + getRandomString(10);
+		String roleName2 = "test" + getRandomString(10);
+		rolesIndexPage = loginPage.login("user", "password")
+								.clickManageRolesLink();
 		
-		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			rolesIndexPage.setPermissionValue(protectedPermission, true,admin);
+		rolesIndexPage = rolesIndexPage.clickCreateRole()
+				.setRoleName(roleName,null)
+				.clickSaveRole(null)
+				.clickCreateRole()
+				.setRoleName(roleName2,null)
+				.clickSaveRole(null)
+				.clickEditLink(roleName);
+		
+		for (String protectedPermission : Role.ALL_PERMISSIONS) {
+			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName);
 		}
 		
-		rolesIndexPage.clickSaveRole(roleName).clickDeleteButton(roleName);
-		assertTrue("Validation message is not Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
+		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName).clickEditLink(roleName2);
+		
+		for (String protectedPermission : Role.ALL_PERMISSIONS) {
+			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName2);
+		}
+		
+		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName2)
+					.clickManageUsersLink()
+					.clickEditLink("user")
+					.chooseRoleForGlobalAccess(roleName, "user")
+					.clickUpdateUserBtn("user")
+					.clickManageRolesLink()
+					.clickDeleteButton(roleName);
+		
+		
+		assertTrue("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
+		
+		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
+									.clickEditLink("user")
+									.chooseRoleForGlobalAccess(roleName2, "user")
+									.clickUpdateUserBtn("user")
+									.clickManageRolesLink()
+									.clickDeleteButton(roleName);
+		
+		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
+		
+		rolesIndexPage.clickManageUsersLink()
+				.clickEditLink("user")
+				.chooseRoleForGlobalAccess("Administrator", "user")
+				.clickUpdateUserBtn("user");
 	}
 	
 	/**
