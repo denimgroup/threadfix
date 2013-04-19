@@ -16,7 +16,7 @@
 	<h2>Edit User <c:out value="${ user.name }"/> Permissions</h2>
 	
 	<a id="addPermissionButton" style="text-decoration:none;" role="button" 
-			class="btn" href="javascript:showAddModal()">
+			class="btn" href="#myModal" data-toggle="modal">
 		Add Permissions
 	</a>
 	
@@ -73,8 +73,6 @@
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal"
-				aria-hidden="true">x</button>
 			<h4 id="myModalLabel">Add Permissions Mapping</h4>
 		</div>
 		<div class="modal-body">
@@ -114,7 +112,6 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button id="submitModalAdd" class="btn btn-primary" onclick="javascript:submitModal('<c:out value="${newUrl}"/>');return false;">Add Mapping</button>
-			<button id="submitModalEdit" class="btn btn-primary" onclick="javascript:submitEditModal();return false;">Save Edit</button>
 		</div>
 	</div>
 	</form:form>
