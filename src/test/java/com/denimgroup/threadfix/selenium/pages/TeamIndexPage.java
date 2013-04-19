@@ -86,7 +86,10 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public TeamIndexPage expandTeamRowByName(String name){
-		driver.findElementById("teamName"+(getIndex(name)+1)).click();	
+		driver.findElementById("teamName"+(getIndex(name)+1)).click();
+		if(!driver.findElementById("teamInfoDiv"+(getIndex(name)+1)).getText().contains("No applications found.")){
+			//populate application list
+		}
 		return new TeamIndexPage(driver);
 	}
 		
