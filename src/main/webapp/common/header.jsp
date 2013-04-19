@@ -31,7 +31,7 @@
 					<div class="dropdown normalLinks">
 					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
-						<a href="#">
+						<a id="tabUserAnchor" href="#">
 							<i class="icon-user icon-white"></i> <security:authentication property="principal.username"/>
 							<span id="header-caret" class="caret-down" style="padding-left:0px"></span>
 						</a>
@@ -57,7 +57,7 @@
 					<div class="dropdown normalLinks">
 					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
-						<a href="#">
+						<a id="tabConfigAnchor" href="#">
 							<i class="icon-cog icon-white"></i>
 						</a>
 						</div>
