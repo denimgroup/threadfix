@@ -57,6 +57,10 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage testClickApp(int num){
+		driver.findElementById("appLink" + num).click();
+		return new ApplicationDetailPage(driver);
+	}
 	
 	public ApplicationDetailPage setPassword(String dtPass){
 		driver.findElementById("password").clear();

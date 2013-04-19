@@ -68,6 +68,24 @@ public class ReportsIndexPage extends BasePage {
 		sleep(1000);
 	}
 
+	public ReportsIndexPage clickReportType(String reportType) {
+		driver.findElementById(reportType).click();
+		sleep(1000);
+		return new ReportsIndexPage(driver);
+	}
+	
+	public ReportsIndexPage clickReportType(String reportType) {
+		driver.findElementById(reportType).click();
+		sleep(1000);
+		return new ReportsIndexPage(driver);
+	}
+	
+	public ReportsIndexPage clickReportType(String reportType) {
+		driver.findElementById(reportType).click();
+		sleep(1000);
+		return new ReportsIndexPage(driver);
+	}
+	
 	public ReportsIndexPage fillAllClickSaveReport(String reportSelect,String teamSelect, String ApplicationSelect,String formatSelect) {
 		fillRequiredReport(reportSelect,teamSelect, ApplicationSelect,formatSelect);
 		selectReportList(reportSelect);

@@ -34,21 +34,36 @@ import org.openqa.selenium.support.ui.Select;
 public class TeamIndexPage extends BasePage {
 
 	private List<WebElement> names = new ArrayList<WebElement>();
-	
+	private ArrayList<ArrayList<WebElement>> teams = new ArrayList<ArrayList<WebElement>>();
+
 	public TeamIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		for(int i=1;i<=getNumRows();i++){
-			names.add(driver.findElementById("teamName"+i));
+		for (int i = 1; i <= getNumTeamRows(); i++) {
+			names.add(driver.findElementById("teamName" + i));
 		}
+
 	}
-	
-	public int getNumRows() {
-		if(!(driver.findElementById("teamTable").getText().equals("Add Team"))){
+
+	public int getNumTeamRows() {
+		if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
 			return driver.findElementsByClassName("expandable").size();
 		}
 		return 0;
 	}
-	
+
+	public int getNumAppRows(String teamName) {
+		System.out.println("id = teamAppTableDiv" + (getIndex(teamName) + 1));
+		System.out.println(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
+				.getText());
+		if (!(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
+				.getText().contains("No applications found."))) {
+			return driver
+					.findElementById("teamAppTableDiv" + (getIndex(teamName) + 1))
+					.findElements(By.className("bodyRow")).size();
+		}
+		return 0;
+	}
+
 	public int getIndex(String teamName) {
 		int i = -1;
 		for (WebElement name : names) {
@@ -60,160 +75,196 @@ public class TeamIndexPage extends BasePage {
 		}
 		return -1;
 	}
-	
+
 	public TeamIndexPage clickAddTeamButton() {
 		driver.findElementById("addTeamModalButton").click();
 		waitForElement(driver.findElementById("myTeamModal"));
 		return new TeamIndexPage(driver);
 	}
-	
-	
-	public TeamIndexPage setTeamName(String name){
+
+	public TeamIndexPage setTeamName(String name) {
 		driver.findElementById("teamNameInput").clear();
 		driver.findElementById("teamNameInput").sendKeys(name);
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage addNewTeam(){
+
+	public TeamIndexPage addNewTeam() {
 		driver.findElementById("submitTeamModal").click();
 		waitForInvisibleElement(driver.findElementById("myTeamModal"));
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage addNewTeamInvalid(){
+
+	public TeamIndexPage addNewTeamInvalid() {
 		driver.findElementById("submitTeamModal").click();
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage expandTeamRowByName(String name){
-		driver.findElementById("teamName"+(getIndex(name)+1)).click();
-		if(!driver.findElementById("teamInfoDiv"+(getIndex(name)+1)).getText().contains("No applications found.")){
-			//populate application list
+
+	public TeamIndexPage expandTeamRowByName(String name) {
+		driver.findElementById("teamName" + (getIndex(name) + 1)).click();
+		if (!driver.findElementById("teamAppTableDiv" + (getIndex(name) + 1))
+				.getText().contains("No applications found.")) {
+			// populate application list
+			for (int i = 0; i < getNumTeamRows(); i++) {
+				teams.add(new ArrayList<WebElement>());
+				for (int j = 0; j < getNumAppRows(name); j++) {
+					teams.get(i).add(
+							driver.findElementById(("applicationLink" + (i + 1))
+									+ "-" + (j + 1)));
+				}
+			}
 		}
+
 		return new TeamIndexPage(driver);
 	}
-		
-	public boolean teamAddedToTable(String name){
-	
+
+	public boolean teamAddedToTable(String name) {
+
 		return getIndex(name) != -1;
 	}
-	
-	public TeamDetailPage clickViewTeamLink(){
-		driver.findElementByClassName("in").findElement(By.linkText("View Team")).click();
-		return new TeamDetailPage(driver);
+
+	public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
+		System.out.println("Num rows " + getNumAppRows(teamName));
+		driver.findElementByClassName("in")
+				.findElement(By.linkText("View Team")).click();
+		for (int j = 0; j < getNumAppRows(teamName); j++) {
+			System.out.println("on " + j);
+			if(teams.get(getIndex(teamName)).get(j).getText().equals(appName)){
+				teams.get(getIndex(teamName)).get(j).click();
+			}
+		}
+		return new ApplicationDetailPage(driver);
 	}
-	
-	public TeamIndexPage clickAddNewApplication(String teamName){
-		driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).click();
+
+	public TeamIndexPage clickAddNewApplication(String teamName) {
+		driver.findElementsByLinkText("Add Application")
+				.get(getIndex(teamName)).click();
 		waitForElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage setApplicationName(String appName,String teamName){
+
+	public TeamIndexPage setApplicationName(String appName, String teamName) {
 		driver.findElementsById("nameInput").get(getIndex(teamName)).clear();
-		driver.findElementsById("nameInput").get(getIndex(teamName)).sendKeys(appName);
+		driver.findElementsById("nameInput").get(getIndex(teamName))
+				.sendKeys(appName);
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage setApplicationUrl(String url,String teamName){
+
+	public TeamIndexPage setApplicationUrl(String url, String teamName) {
 		driver.findElementsById("urlInput").get(getIndex(teamName)).clear();
-		driver.findElementsById("urlInput").get(getIndex(teamName)).sendKeys(url);
-		return new TeamIndexPage(driver);	
-	}
-	
-	public TeamIndexPage setApplicationCritic(String critic,String teamName){
-		new Select(driver.findElementsById("criticalityId").get(getIndex(teamName))).selectByVisibleText(critic);
+		driver.findElementsById("urlInput").get(getIndex(teamName))
+				.sendKeys(url);
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage saveApplication(){
-		driver.findElementByClassName("modal-footer").findElement(By.linkText("Add Application")).click();
+
+	public TeamIndexPage setApplicationCritic(String critic, String teamName) {
+		new Select(driver.findElementsById("criticalityId").get(
+				getIndex(teamName))).selectByVisibleText(critic);
+		return new TeamIndexPage(driver);
+	}
+
+	public TeamIndexPage saveApplication() {
+		driver.findElementByClassName("modal-footer")
+				.findElement(By.linkText("Add Application")).click();
 		waitForInvisibleElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage saveApplicationInvalid(){
-		driver.findElementByClassName("modal-footer").findElement(By.linkText("Add Application")).click();
+
+	public TeamIndexPage saveApplicationInvalid() {
+		driver.findElementByClassName("modal-footer")
+				.findElement(By.linkText("Add Application")).click();
 		return new TeamIndexPage(driver);
 	}
-	
-	public TeamIndexPage addNewApplication(String teamName, String appName, String url, String critic){
+
+	public TeamIndexPage addNewApplication(String teamName, String appName,
+			String url, String critic) {
 		expandTeamRowByName(teamName);
 		clickAddNewApplication(teamName);
-		setApplicationName(appName,teamName);
-		setApplicationUrl(url,teamName);
-		setApplicationCritic(critic,teamName);
+		setApplicationName(appName, teamName);
+		setApplicationUrl(url, teamName);
+		setApplicationCritic(critic, teamName);
 		saveApplication();
 		return new TeamIndexPage(driver);
-		
+
 	}
-		
-	public String getNameErrorMessage(){
+
+	public String getNameErrorMessage() {
 		return driver.findElementById("name.errors").getText();
 	}
-	
-	public String getUrlErrorMessage(){
+
+	public String getUrlErrorMessage() {
 		return driver.findElementById("url.errors").getText();
 	}
-	
-	
-	public ApplicationDetailPage clickApplicationDetailLink(String appName){
+
+	/*
+	public ApplicationDetailPage clickApplicationDetailLink(String appName) {
 		driver.findElementByLinkText(appName).click();
 		return new ApplicationDetailPage(driver);
 	}
-	
-	
-	public boolean isAppPresent(String appName){
+	*/
+	public boolean isAppPresent(String appName) {
 		return driver.findElementByLinkText(appName).isDisplayed();
 	}
-		
 
 	public TeamIndexPage clickUploadScan(String appName) {
-		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
-			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
-				driver.findElementsById("uploadScanModalLink").get(i-1).click();
-				waitForElement(driver.findElementById("uploadScan"+i));
+		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+				.size(); i++)
+			if (driver.findElementById("applicationLink" + i).getText()
+					.equals(appName)) {
+				driver.findElementsById("uploadScanModalLink").get(i - 1)
+						.click();
+				waitForElement(driver.findElementById("uploadScan" + i));
 				break;
 			}
 		return new TeamIndexPage(driver);
-		
+
 	}
-	
-	public TeamIndexPage setFileInput(String file,String appName){
-		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
-			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
-				driver.findElementById("fileInput"+i).clear();
-				driver.findElementById("fileInput"+i).sendKeys(file);
+
+	public TeamIndexPage setFileInput(String file, String appName) {
+		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+				.size(); i++)
+			if (driver.findElementById("applicationLink" + i).getText()
+					.equals(appName)) {
+				driver.findElementById("fileInput" + i).clear();
+				driver.findElementById("fileInput" + i).sendKeys(file);
 				break;
 			}
 		return new TeamIndexPage(driver);
 	}
 
 	public TeamIndexPage clickUploadScanButton(String appName) {
-		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
-			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
-				driver.findElementById("submitScanModal"+i).click();
-				waitForInvisibleElement(driver.findElementById("uploadScan"+i));
+		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+				.size(); i++)
+			if (driver.findElementById("applicationLink" + i).getText()
+					.equals(appName)) {
+				driver.findElementById("submitScanModal" + i).click();
+				waitForInvisibleElement(driver
+						.findElementById("uploadScan" + i));
 				break;
 			}
 		return new TeamIndexPage(driver);
 	}
-	
+
 	public TeamIndexPage clickUploadScanButtonInvalid(String appName) {
-		for(int i = 1;i<=driver.findElementsByClassName("right-align").size();i++)
-			if(driver.findElementById("applicationLink"+i).getText().equals(appName)){
-				driver.findElementById("submitScanModal"+i).click();
+		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+				.size(); i++)
+			if (driver.findElementById("applicationLink" + i).getText()
+					.equals(appName)) {
+				driver.findElementById("submitScanModal" + i).click();
 				break;
 			}
 		return new TeamIndexPage(driver);
 	}
-	
-	public boolean isTeamPresent(String teamName){
+
+	public boolean isTeamPresent(String teamName) {
 		return getIndex(teamName) != -1;
 	}
-	
-	public boolean isCreateValidtionPresent(String teamName){
-		return driver.findElementByClassName("alert-success").getText().contains("Team "+teamName+" has been created successfully.");
+
+	public boolean isCreateValidtionPresent(String teamName) {
+		return driver
+				.findElementByClassName("alert-success")
+				.getText()
+				.contains(
+						"Team " + teamName + " has been created successfully.");
 	}
-	
+
 }
