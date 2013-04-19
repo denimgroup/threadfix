@@ -33,13 +33,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitKeyModal" class="btn btn-primary" onclick="javascript:submitAjaxModal('${fn:escapeXml(saveUrl)}', '#editKeyForm${ key.id }', '#formDiv${ key.id }', '#tableDiv', '#editKeyModal${ key.id }');return false;">Update Key</a>
+		<a id="submitKeyModal" 
+			data-id="<c:out value='${ key.id }'/>" class="submitKeyModalEdit btn btn-primary">Update Key</a>
 	</div>
 </form:form>
-<script>
-$("#editKeyForm<c:out value='key.id'/>").keypress(function(e){
-    if (e.which == 13){
-        $("#submitKeyModal").click();
-    }
-});
-</script>

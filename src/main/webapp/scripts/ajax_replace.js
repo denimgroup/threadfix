@@ -334,12 +334,6 @@ function addDTAndRefresh(url) {
 	return submitAjaxModal(url, '#addDTForm', '#addDTFormDiv', '#appDTDiv', '#addDefectTracker');
 }
 
-function deleteKey(url) {
-	if (confirm('Are you sure you want to delete this API Key?'))
-		return basicPost(url, '#deleteForm', '#tableDiv');
-	return false;
-}
-
 function deleteWaf(url) {
 	if (confirm('Are you sure you want to delete this WAF? This won\'t work if the WAF has applications attached.'))
 		return basicPost(url, '#deleteForm', '#defectTableDiv');
@@ -383,3 +377,33 @@ function toggleExpandableWithReport(expandable, caret, reportDiv) {
 		});
 	}
 }
+
+var documentReadyFunctions = [
+	function() {
+		$(".focus").focus();
+		$(".modal");
+		setTimeout(function() {
+			$(".modal").on("shown", function() {
+		    	$(".modal-body").attr('tab-index','-1');
+		    	$(".modal.in .modal-body input").first().focus();
+		    });
+		}, 1500);
+	},
+	function() {
+		if(top != self) top.location.replace(location);
+	}
+];
+
+function addToDocumentReadyFunctions(readyFunction) {
+	documentReadyFunctions[documentReadyFunctions.length] = readyFunction;
+}
+
+function timeout1500(timeoutFunction) {
+	setTimeout(timeoutFunction, 1500);
+}
+
+$(document).ready(function(){
+	for (var i = 0; i < documentReadyFunctions.length; i++) {
+		documentReadyFunctions[i]();
+	}
+});

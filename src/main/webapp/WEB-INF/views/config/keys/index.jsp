@@ -2,7 +2,7 @@
 
 <head>
 	<title>API Keys</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/api_keys_page.js"></script>
 </head>
 
 <body>

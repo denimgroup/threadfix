@@ -46,11 +46,9 @@ function reloadTable() {
 	});
 }
 
-$(document).ready(function(){ 
+addToDocumentReadyFunctions(function(){ 
 	reloadTable();
-	
 	$("#submitTeamModal").click(function() {
 		submitAjaxModal($("#organizationForm").attr("action"),'#organizationForm', '#formDiv', '#teamTable', '#myTeamModal','');
 	});
-	
 });

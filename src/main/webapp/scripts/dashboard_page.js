@@ -18,7 +18,7 @@ function submitAjaxReport(formId,successDiv) {
 		dataType : "text",
 		success : function(text) {
 			
-			 if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+			if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(successDiv).html(text);
 			} else {
 				try {
@@ -38,7 +38,5 @@ function submitAjaxReport(formId,successDiv) {
 	return false;
 }
 
-$(document).ready(function(){ 
-	reloadLeft();
-	reloadRight();
-});
+addToDocumentReadyFunctions(reloadLeft);
+addToDocumentReadyFunctions(reloadRight);

@@ -46,8 +46,9 @@
 					<spring:url value="/configuration/keys/{keyId}/delete" var="keyDeleteUrl">
 						<spring:param name="keyId" value="${ key.id }" />
 					</spring:url>
-					<form:form id="deleteForm" method="POST" action="${ fn:escapeXml(keyDeleteUrl) }">
-						<a id="deleteButton" class="btn btn-primary" type="submit" onclick="return deleteKey('<c:out value='${ keyDeleteUrl }'/>');">Delete</a>
+					<form:form id="deleteForm${ key.id }" method="POST" action="${ fn:escapeXml(keyDeleteUrl) }">
+						<a id="deleteButton" class="apiKeyDeleteButton btn btn-primary" 
+								type="submit" data-id="<c:out value='${ key.id }'/>">Delete</a>
 					</form:form>
 				</td>
 				<td id="restricted${ status.count }">
