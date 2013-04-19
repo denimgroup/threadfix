@@ -45,6 +45,35 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage clickAddDefectTrackerButton(){
+		driver.findElementById("addDefectTrackerButton").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	
+	public ApplicationDetailPage setUsername(String dtName){
+		driver.findElementById("username").clear();
+		driver.findElementById("username").sendKeys(dtName);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	
+	public ApplicationDetailPage setPassword(String dtPass){
+		driver.findElementById("password").clear();
+		driver.findElementById("password").sendKeys(dtPass);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickTestConnection(){
+		driver.findElementById("testConnectionLink").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage selectProduct(String product){
+		new Select(driver.findElementById("projectList")).selectByVisibleText(product);
+		return new ApplicationDetailPage(driver);
+	}
+	
 	public ApplicationDetailPage addNewDefectTracker(String defectTrackerName, String defectTrackerURL, String defectTrackerType){
 		clickShowDetails();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));

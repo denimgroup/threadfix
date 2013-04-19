@@ -125,8 +125,11 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage clickDeleteButton(String name){
 		for(int i = 0; i < getNumRows(); i ++){
+			System.out.println(names.get(i).getText() + " and name = " + name);
 			if(name.equals(names.get(i).getText())){
-				driver.findElementById("deleteButton" + (i + 1)).click();
+				//driver.findElementById("deleteButton" + (i + 1)).click();
+				System.out.println("Got in here");
+				deleteButtons.get(i).click();
 				handleAlert();
 			}
 		}

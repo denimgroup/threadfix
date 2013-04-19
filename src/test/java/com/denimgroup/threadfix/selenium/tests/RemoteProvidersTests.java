@@ -220,6 +220,7 @@ public class RemoteProvidersTests extends BaseTest {
 				pageText.contains("Remote Providers"));
 	}
 
+	/*
 	@Ignore
 	@Test
 	public void addTeamsNoApp() {
@@ -246,7 +247,8 @@ public class RemoteProvidersTests extends BaseTest {
 		assertTrue("Remote Provider Page not found",
 				PageText.contains("Remote Providers"));
 	}
-
+	*/
+	/*
 	@Ignore
 	@Test
 	public void addNoTeam() {
@@ -271,10 +273,12 @@ public class RemoteProvidersTests extends BaseTest {
 		assertTrue("Remote Provider Page not found",
 				pageText.contains("Remote Providers"));
 	}
-
+	*/
+	
 	// Need to have team - NewTeam White hat and application - WhiteHat
 	// Application
 
+	/*
 	@Ignore
 	@Test
 	public void importScan() {
@@ -310,5 +314,5 @@ public class RemoteProvidersTests extends BaseTest {
         	.clickRemoteProvidersLink()
         	.clickClearConfigButton(0);
 	}
-	
+	*/
 }

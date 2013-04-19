@@ -55,6 +55,7 @@ public class ManualUploadTests extends BaseTest {
 		driver.quit();
 	}
 
+	/*
 	@Test
 	public void testNavigation() {
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -62,7 +63,9 @@ public class ManualUploadTests extends BaseTest {
 		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
+	*/
 
+	/*
 	@Test
 	public void testAllSeveritiesDynamic() {
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -90,7 +93,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
+	*/
+	/*
 	@Test
 	public void testAllSeveritiesStatic() {
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -119,7 +123,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-
+	*/
+	/*
 	@Test
 	public void dynamicValidationTest(){
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -137,7 +142,8 @@ public class ManualUploadTests extends BaseTest {
 		applicationDetailPage = new ApplicationDetailPage(driver);
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
+	*/
+	/*
 	@Test
 	public void staticValidationTest(){
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -153,7 +159,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
-
+	*/
+	/*
 	@Test
 	public void dynamicInvalidVulnsTest(){
 		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
@@ -168,11 +175,12 @@ public class ManualUploadTests extends BaseTest {
 		
 		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
+	*/
 	
 	///////////////////////////////////////////
 	// EDIT ///////////////////////////////////
 	///////////////////////////////////////////
-	
+	/*
 	@Test
 	public void testEditDynamic() {
 		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
@@ -212,7 +220,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
+	*/
+	/*
 	@Test
 	public void testEditStatic() {
 		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
@@ -256,7 +265,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		applicationDetailPage.clickDeleteLink().clickDeleteButton().logout();
 	}
-	
+	*/
+	/*
 	@Test
 	public void testEditSwitchStaticDynamic() {
 		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
@@ -307,7 +317,8 @@ public class ManualUploadTests extends BaseTest {
 		
 		editPage.clickStaticSubmit().clickDeleteLink().clickDeleteButton().logout();
 	}
-	
+	*/
+	/*
 	@Test
 	public void testEditValidation() {
 		String cwe1 = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, 
@@ -362,8 +373,10 @@ public class ManualUploadTests extends BaseTest {
 	
 		editPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
 	}
+	*/
 	
-	private ManualUploadPage getToManualSubmissionPage(String orgName, String appName) {
+	/*
+	private ManualUploadPage getToManualSubmissionPageOLD(String orgName, String appName) {
 		return loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
@@ -381,4 +394,16 @@ public class ManualUploadTests extends BaseTest {
 				.clickAddApplicationButton()
 				.clickAddFindingManuallyLink();
 	}
+	*/
+	/*
+	private ManualUploadPage getToManualSubmissionPage(String teamName, String appName) {
+		return loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.addNewApplication(teamName, appName, "http://test.com", "Low")
+				//.ManualSubmissionPage;
+	}
+			*/
 }
