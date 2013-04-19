@@ -53,6 +53,7 @@ public abstract class BasePage {
 	}
 	
 	public LoginPage logout() {
+		clickUserTab();
 		driver.findElementById("logoutLink").click();
 		return new LoginPage(driver);
 	}
@@ -63,7 +64,7 @@ public abstract class BasePage {
 	}
 	
 	public WafIndexPage clickWafsHeaderLink() {
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("wafsLink").click();
 		return new WafIndexPage(driver);
 	}
@@ -74,57 +75,60 @@ public abstract class BasePage {
 		return new ReportsIndexPage(driver);
 	}
 	
-	public void hoverOverAdministration(){
-		
-		Actions builder = new Actions(driver); 
-		Actions hoverOverRegistrar = builder.moveToElement(driver.findElementById("configurationHeader"));
-		hoverOverRegistrar.perform();
+	public void clickConfigTab(){
+		driver.findElementById("tabConfigAnchor").click();
 	}
 	
+	public void clickUserTab(){
+		driver.findElementById("tabUserAnchor").click();
+	}
+	
+	
+	
 	public ApiKeysIndexPage clickApiKeysLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("apiKeysLink").click();
 		return new ApiKeysIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage clickDefectTrackersLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("defectTrackersLink").click();
 		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickRemoteProvidersLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("remoteProvidersLink").click();
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public UserChangePasswordPage clickChangePasswordLink(){
-		hoverOverAdministration();
+		clickUserTab();
 		driver.findElementById("changePasswordLink").click();
 		return new UserChangePasswordPage(driver);
 	}
 	
 	public UserIndexPage clickManageUsersLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("manageUsersLink").click();
 		return new UserIndexPage(driver);
 	}
 	
 	public RolesIndexPage clickManageRolesLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("manageRolesLink").click();
 		return new RolesIndexPage(driver);
 	}
 	
 	public ErrorLogPage clickViewLogsLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("viewLogsLink").click();
 		return new ErrorLogPage(driver);
 	}
 	
 	public ConfigureDefaultsPage clickConfigureDefaultsLink(){
-		hoverOverAdministration();
+		clickConfigTab();
 		driver.findElementById("viewLogsLink").click();
 		return new ConfigureDefaultsPage(driver);
 		

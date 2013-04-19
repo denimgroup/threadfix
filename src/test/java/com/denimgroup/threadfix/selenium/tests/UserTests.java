@@ -50,9 +50,8 @@ public class UserTests extends BaseTest {
 	@Test
 	public void testCreateUser() {
 		String userName = "testCreateUser", password = "testCreateUser";
-
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
-													.clickManageUsersLink();
+												.clickManageUsersLink();
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 

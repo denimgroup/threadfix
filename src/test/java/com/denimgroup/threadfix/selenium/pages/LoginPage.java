@@ -74,6 +74,7 @@ public class LoginPage extends BasePage {
 	
 	private DashboardPage clickLogin() {
 		loginButton.click();
+		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}
 }
