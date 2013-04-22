@@ -33,7 +33,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitKeyModal" 
-			data-id="<c:out value='${ key.id }'/>" class="submitKeyModalEdit btn btn-primary">Update Key</a>
+		<a id="submitKeyModal" class="modalSubmit btn btn-primary" data-success-div="tableDiv">Update Key</a>
 	</div>
 </form:form>

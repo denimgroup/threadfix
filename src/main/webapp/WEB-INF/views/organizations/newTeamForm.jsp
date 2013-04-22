@@ -11,6 +11,6 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeTeamModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="btn btn-primary">Add Team</a>
+		<a id="submitTeamModal" class="modalSubmit btn btn-primary" data-success-div="teamTable">Add Team</a>
 	</div>
 </form:form>

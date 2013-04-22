@@ -1,3 +1,75 @@
+function delay(timeoutFunction) {
+	return function() {
+		setTimeout(timeoutFunction, 1100);
+	};
+}
+
+var modalRefreshFunctions = [ 
+	delay(addModalSubmitEvents),
+	function () {
+		setTimeout(function() {
+			$(".modal").on("shown", function() {
+				$(".modal-body").attr('tab-index','-1');
+				$(".modal.in .modal-body input").first().focus();
+			});
+		}, 1500);
+	}
+];
+
+function submitAjaxModalFunction(url, formId, formDiv, successDiv, modalName, expandable, successClick) {
+	return function () {
+		var successFunction = function() {
+			if (successClick !== "#undefined") {
+				$(successClick).click();
+			}
+			if (expandable !== "#undefined") {
+				$(expandable).collapse('show'); 
+			}
+			for (var i = 0; i < modalRefreshFunctions.length; i++) {
+				modalRefreshFunctions[i]();
+			}
+		};
+		
+		submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, modalName, successFunction); 
+	};
+}
+
+function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, modalName, successFunction) {
+	$.ajax({
+		type : "POST",
+		url : url,
+		data : $(formId).serializeArray(),
+		contentType : "application/x-www-form-urlencoded",
+		dataType : "text",
+		success : function(text) {
+			
+			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+				$(formDiv).html(text);
+			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+				$(modalName).on('hidden', function () {
+					$(successDiv).html(text);
+					successFunction();
+				});
+				$(modalName).modal('hide');
+				$(".clear-after-submit").val('');
+			} else {
+				try {
+					var json = JSON.parse($.trim(text));
+					if (json.isJSONRedirect) {
+						window.location.href = json.redirectURL;
+					}
+				} catch (e) {
+					history.go(0);
+				}
+			}
+		},
+		error : function (xhr, ajaxOptions, thrownError){
+			history.go(0);
+		}
+	});
+	return false;
+}
+
 function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 	$.ajax({
 		type : "POST",
@@ -276,18 +348,6 @@ function switchWafModals() {
     return false;
 };
 
-function addWafAndRefresh(url) {
-	return submitAjaxModal(url, '#addWafForm', '#addWaf', '#appWafDiv', '#addWaf');
-}
-
-function createWafAndRefresh(url) {
-	return submitAjaxModal(url, '#wafForm', '#createWaf', '#appWafDiv', '#createWaf');
-}
-
-function updateWafAndRefresh(url, wafForm, editWafDiv) {
-	return submitAjaxModal(url, wafForm, editWafDiv, '#appWafDiv', editWafDiv);
-}
-
 function switchTabs(url) {
 	return basicGet(url, '#tabsDiv');
 }
@@ -328,10 +388,6 @@ function createDTAndRefresh(url) {
 	    });
 	}, 1500);
     return false;
-}
-
-function addDTAndRefresh(url) {
-	return submitAjaxModal(url, '#addDTForm', '#addDTFormDiv', '#appDTDiv', '#addDefectTracker');
 }
 
 function deleteWaf(url) {
@@ -378,6 +434,75 @@ function toggleExpandableWithReport(expandable, caret, reportDiv) {
 	}
 }
 
+// This function makes some assumptions about how your modal is laid out:
+// 1. It is contained in a form which is to be submitted, and has an appropriate action attribute
+// 2. That form is enclosed in a parent div which can be replaced with any failure content
+// 3. var form = element.closest("form");, var div = form.closest("div");, var modal = element.closest(".modal"); all work
+// 4. the item has a data-success-div which is to be replaced
+//
+// This allows you to add the class and the success div and not care about anything else
+function addModalSubmitEvents() {
+	$(".modalSubmit").each(function() {
+		var element = $(this);
+		if (!element.attr('data-has-function')) {
+			var form = element.closest("form");
+			if (!form || form.length === 0) { form = $("#" + element.attr("data-form")); };
+			var div = form.closest("div");
+			var modal = element.closest(".modal");
+			var submitFunction = submitAjaxModalFunction(
+					form.attr("action"), 
+					"#" + form.attr("id"), 
+					"#" + div.attr("id"), 
+					"#" + element.attr("data-success-div"), 
+					"#" + modal.attr("id"),
+					'#' + element.attr("data-expandable"),
+					'#' + element.attr("data-success-click"));
+			form.keypress(function(e) {
+			    if (e.which == 13){
+			    	submitFunction();
+			    }
+			});
+			element.click(function() {
+				submitFunction();
+				return false;
+			});
+			element.attr("data-has-function","1");
+		}
+	});
+}
+
+function addAppSelectFunctions() {
+	$(".selectFiller").each(function() {
+		var element = $(this);
+		if (!element.attr('data-has-function')) {
+			var targetSelect = '#' + element.attr('data-select-target');
+			
+			var changeFunction = function() {
+				var selectedElement = $("#" + element.attr('id')).find(":selected");
+				if (selectedElement.attr("value") !== "-1") {
+					$(targetSelect).html('');
+					var objs = JSON.parse(selectedElement.attr('data-select-items'));
+					for (index in objs) {
+						var app = objs[index];
+						if (app.id !== "do-not-use") {
+							$(targetSelect).append($('<option>', {
+								value: app.id,
+								text : app.name
+							}));
+						}
+					};
+				}
+			};
+			
+			element.on("change", changeFunction);
+			changeFunction();
+			
+			element.attr("data-has-function","1");
+		}
+	});
+}
+
+// this is a list of functions that get executed in $(document).ready
 var documentReadyFunctions = [
 	function() {
 		$(".focus").focus();
@@ -391,17 +516,21 @@ var documentReadyFunctions = [
 	},
 	function() {
 		if(top != self) top.location.replace(location);
-	}
+	},
+	addModalSubmitEvents,
+	addAppSelectFunctions
 ];
 
+// helper method to add to the document ready stuff
 function addToDocumentReadyFunctions(readyFunction) {
 	documentReadyFunctions[documentReadyFunctions.length] = readyFunction;
 }
 
-function timeout1500(timeoutFunction) {
-	setTimeout(timeoutFunction, 1500);
+function addToModalRefreshFunctions(readyFunction) {
+	modalRefreshFunctions[modalRefreshFunctions.length] = readyFunction;
 }
 
+// Executes documentReadyFunctions.
 $(document).ready(function(){
 	for (var i = 0; i < documentReadyFunctions.length; i++) {
 		documentReadyFunctions[i]();

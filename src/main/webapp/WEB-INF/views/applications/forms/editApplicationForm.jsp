@@ -7,7 +7,7 @@
 		<spring:param name="orgId" value="${ application.organization.id }"/>
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
-	<form:form style="margin-bottom:0px;" id="editAppForm" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
+	<form:form style="margin-bottom:0px;" id="editAppForm" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(editSaveUrl)}">
 	<div class="modal-body">
 		<table>
 			<tr class="left-align">
@@ -41,15 +41,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitAppModal${ organization.id }" class="btn btn-primary" 
-		onclick="javascript:submitAjaxModal('<c:out value="${editSaveUrl }"/>','#editAppForm', '#editAppFormDiv', '#headerDiv', '#editApplicationModal');return false;">Save Changes</a>
+		<a id="submitAppModal${ organization.id }" class="modalSubmit btn btn-primary" data-success-div="headerDiv">Save Changes</a>
 	</div>
-		
 </form:form>
-<script>
-$("#myAppForm<c:out value='organization.id'/>").keypress(function(e){
-    if (e.which == 13){
-        $("#submitAppModal<c:out value='organization.id'/>").click();
-    }
-});
-</script>

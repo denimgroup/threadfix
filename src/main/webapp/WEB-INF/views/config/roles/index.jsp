@@ -2,7 +2,6 @@
 
 <head>
 	<title>Manage Roles</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 </head>
 
 <body>

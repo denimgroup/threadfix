@@ -13,6 +13,6 @@
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="addUserButton" class="btn btn-primary"
-		onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#nameAndPasswordForm', '#newUserModal', '#tableDiv', '#newUserModal');return false;">Add User</a>
+	<a id="addUserButton" class="modalSubmit btn btn-primary" data-success-div="tableDiv" 
+			data-form="nameAndPasswordForm">Add User</a>
 </div>

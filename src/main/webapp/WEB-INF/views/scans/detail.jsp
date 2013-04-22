@@ -4,19 +4,6 @@
 	<title>Scan Details</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
-	<spring:url value="{scanId}/table" var="tableUrl">
-		<spring:param name="scanId" value="${ scan.id }"/>
-	</spring:url>
-	<spring:url value="{scanId}/unmappedTable" var="unmappedTableUrl">
-		<spring:param name="scanId" value="${ scan.id }"/>
-	</spring:url>
-	<script type="text/javascript">
-	window.onload = function()
-    {
-		refillElement('#toReplace', '<c:out value="${ tableUrl }"/>', 1, '<c:out value="${ loginUrl }"/>');
-		refillElement('#toReplace2', '<c:out value="${ unmappedTableUrl }"/>', 1, '<c:out value="${ loginUrl }"/>');
-    };
-    </script>
 </head>
 
 <body id="apps">
@@ -28,6 +15,13 @@
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />
 		<spring:param name="appId" value="${ scan.application.id }" />
 	</spring:url>
+	<spring:url value="{scanId}/table" var="tableUrl">
+		<spring:param name="scanId" value="${ scan.id }"/>
+	</spring:url>
+	<spring:url value="{scanId}/unmappedTable" var="unmappedTableUrl">
+		<spring:param name="scanId" value="${ scan.id }"/>
+	</spring:url>
+	<spring:url value="/login.jsp" var="loginUrl" />
 
 	<ul class="breadcrumb">
 	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
@@ -149,7 +143,8 @@
 	</c:if>
 	
 	<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
-		<div id="toReplace" style="margin-top:340px">
+		<div id="toReplace" style="margin-top:340px" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
+			data-login-url="<c:out value="${ loginUrl }"/>">
 		<h3 style="padding-top:140px">Successfully Mapped Findings</h3>
 		<table class="table table-striped" id="1">
 			<thead>
@@ -170,7 +165,8 @@
 		</table>
 		</div>
 		
-		<div id="toReplace2">
+		<div id="toReplace2"class="refreshOnLoad" data-source-url="<c:out value="${ unmappedTableUrl }"/>" 
+			data-login-url="<c:out value="${ loginUrl }"/>">
 		<h3>Unmapped Findings</h3>
 		<table class="table table-striped" id="2">
 			<thead>

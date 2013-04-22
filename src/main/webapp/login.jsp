@@ -9,16 +9,8 @@
 	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/login_page.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$(".focus").focus();
-		});
-	</script>
-	
-	<script type="text/javascript">
-  		if(top != self) top.location.replace(location);
-	</script>
 </head>
 
 <body>

@@ -9,7 +9,7 @@
 			lastId = id;
 			$("#myModalLabel").html("Edit Permissions Mapping");
 			$("#submitModalAdd").css("display","none");
-			$("#submitModalEdit").removeAttr("style")
+			$("#submitModalEdit").css("display","");
 			$("#myModal").modal('show');
 			<c:forEach var="teamMap" items="${ maps }">
 				<c:if test="${ teamMap.active }">
@@ -68,12 +68,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="map" items="${ maps }">
+			<c:forEach var="map" items="${ maps }" varStatus="status">
 				<c:if test="${ map.allApps and map.active}">
 					<tr class="bodyRow">
-						<td><c:out value="${ map.organization.name }"/></td>
-						<td>All</td>
-						<td><c:out value="${ map.role.displayName }"/></td>
+						<td id="teamName${ status.count }"><c:out value="${ map.organization.name }"/></td>
+						<td id="applicationName${ status.count }">All</td>
+						<td id="roleName${ status.count }"><c:out value="${ map.role.displayName }"/></td>
 						<td style="text-align:center">
 							<input class="btn" id="editAppMap${ status.count }" type="submit" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
 						</td>
@@ -90,9 +90,9 @@
 					<c:forEach varStatus="status" var="appMap" items="${ map.accessControlApplicationMaps }">
 						<c:if test="${ appMap.active }">
 							<tr class="bodyRow">
-								<td><c:out value="${ map.organization.name }"/></td>
-								<td><c:out value="${ appMap.application.name }"/></td>
-								<td><c:out value="${ appMap.role.displayName }"/></td>
+								<td id="teamName${ status.count }"><c:out value="${ map.organization.name }"/></td>
+								<td id="applicationName${ status.count }"><c:out value="${ appMap.application.name }"/></td>
+								<td id="roleName${ status.count }"><c:out value="${ appMap.role.displayName }"/></td>
 								<td style="text-align:center">
 									<input id="editAppMap${ status.count }" type="submit" class="btn" onclick="javascript:showEditModal(<c:out value="${ map.id }"/>)" value="Edit" />
 								</td>

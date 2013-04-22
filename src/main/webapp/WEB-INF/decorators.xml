@@ -21,6 +21,7 @@
     	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/new*</pattern>
     	<pattern>/organizations/*/applications/*/scans/upload*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>

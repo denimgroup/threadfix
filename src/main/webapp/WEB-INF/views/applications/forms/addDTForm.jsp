@@ -72,13 +72,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal" class="btn btn-primary" onclick="javascript:addDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Add Defect Tracker</a>
+		<a id="submitDTModal" class="modalSubmit btn btn-primary" data-success-div="appDTDiv">Add Defect Tracker</a>
 	</div>
 </form:form>
-<script>
-$("#addDTForm").keypress(function(e){
-    if (e.which == 13){
-        $("#submitDTModal").click();
-    }
-});
-</script>

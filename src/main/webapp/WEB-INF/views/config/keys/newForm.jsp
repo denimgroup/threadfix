@@ -28,6 +28,8 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeNewKeyFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitKeyModalCreate" class="btn btn-primary">Create Key</a>
+		<a id="submitKeyModalCreate" class="modalSubmit btn btn-primary" data-success-div="tableDiv">
+			Create Key
+		</a>
 	</div>
 </form:form>

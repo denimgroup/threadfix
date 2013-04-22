@@ -1,6 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-
 <div class="modal-header">
 	<h4 id="myModalLabel">Edit Mapping for <c:out value="${ remoteProviderApplication.nativeId }"/></h4>
 </div>
@@ -17,14 +16,24 @@
 				<tr>
 					<td class="no-color">Team</td>
 					<td class="no-color">
-						<form:select path="application.organization.id" id="orgSelect">
+						<form:select path="application.organization.id" id="orgSelect${ outerStatus.count }-${ innerStatus.count }"
+								class="selectFiller"
+								data-select-target="appSelect${ outerStatus.count }-${ innerStatus.count }">
+							<c:set var="optionsBase" value="[{\"id\":\"do-not-use\", \"name\":\"\"}"/>
 							<option value="-1">Pick a Team</option>
 							<c:forEach var="organization" items="${ organizationList }">
 								<c:if test="${ organization.active and not empty organization.applications}">
-									<option value="${ organization.id }"
-									<c:if test="${ organization.id == remoteProviderApplication.application.organization.id }">
-										selected=selected
-									</c:if>
+									<c:set var="options" value="${ optionsBase }"/>
+									<c:set var="quote" value="\""/>
+									<c:forEach var="application" items="${ organization.activeApplications}">
+										<c:set var="options" value="${options},{${ quote }id${ quote }:${ quote }${ application.id }${ quote }, ${ quote }name${ quote }:${ quote }${ application.name }${ quote }}"/>
+									</c:forEach>
+									<c:set var="options" value="${options}]"/>
+									
+										<option value="${ organization.id }" data-select-items="<c:out value="${ options }"/>"
+										<c:if test="${ organization.id == remoteProviderApplication.application.organization.id }">
+											selected=selected
+										</c:if>
 									>
 										<c:out value="${ organization.name }"/>
 									</option>
@@ -39,7 +48,7 @@
 				<tr>
 					<td class="no-color" style="padding-right:10px">Application</td>
 					<td class="no-color">
-						<form:select path="application.id" id="appSelect">
+						<form:select path="application.id" id="appSelect${ outerStatus.count }-${ innerStatus.count }">
 							<option value="-1"></option>
 							
 							<c:if test="${ not empty remoteProviderApplication.application }">
@@ -67,23 +76,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitRemoteProviderFormButton" class="btn btn-primary" 
-			onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#remoteProviderApplicationForm${ remoteProviderApplication.id }', '#remoteProviderApplicationMappingModal${ remoteProviderApplication.id }', '#headerDiv', '#remoteProviderApplicationMappingModal${ remoteProviderApplication.id }');return false;">Update Application</a>
+		<a id="submitRemoteProviderFormButton" class="modalSubmit btn btn-primary" data-success-div="headerDiv">
+			Update Application</a>
 	</div>
 </form:form>
-<script type="text/javascript">
-	$("#orgSelect<c:out value='${ remoteProviderApplication.id }'/>").change(function() {
-		$("#appSelect<c:out value='${ remoteProviderApplication.id }'/>").html('');
-		var options = '';
-		
-		<c:forEach var="organization" items="${organizationList}">
-		    if("${organization.id}" == $("#orgSelect<c:out value='${ remoteProviderApplication.id }'/>").val()) {
-				<c:forEach var="application" items="${ organization.activeApplications}">
-					options += '<option value="${ application.id}"><c:out value="${ application.name }"/></option>';
-				</c:forEach>
-		    }
-		</c:forEach>
-
-		$("#appSelect<c:out value='${ remoteProviderApplication.id }'/>").append(options);
-	});
-</script>

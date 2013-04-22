@@ -119,7 +119,6 @@ public class AddWafController {
 					", the type " + waf.getWafType().getName() + 
 					" and ID " + waf.getId() + ".");
 			
-			status.setComplete();
 			return "redirect:/wafs/" + waf.getId();
 		}
 	}
@@ -188,8 +187,6 @@ public class AddWafController {
 			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
 					", the type " + waf.getWafType().getName() + 
 					" and ID " + waf.getId() + ".");
-			
-			status.setComplete();
 			
 			model.addAttribute(wafService.loadAll());
 			model.addAttribute("newWaf", new Waf());

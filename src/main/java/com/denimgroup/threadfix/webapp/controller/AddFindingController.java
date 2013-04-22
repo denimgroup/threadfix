@@ -121,6 +121,12 @@ public class AddFindingController {
 		mav.addObject(application);
 		return mav;
 	}
+	
+	private String returnForm(ModelMap model, int appId) {
+		model.addAttribute("contentPage", "applications/forms//manualFindingForm.jsp");
+		model.addAttribute("application", applicationService.loadApplication(appId));
+		return "ajaxFailureHarness";
+	}
 
 	@RequestMapping(params = "group=static", method = RequestMethod.POST)
 	public String staticSubmit(@PathVariable("appId") int appId,
@@ -136,7 +142,7 @@ public class AddFindingController {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("isStatic",true);
-			return "scans/form";
+			return returnForm(model, appId);
 			
 		} else {
 			finding.setIsStatic(true);
@@ -146,10 +152,11 @@ public class AddFindingController {
 				log.warn("The merge failed. Returning the form again.");
 				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
 				model.addAttribute("static",true);
-				return "scans/form";
+				return returnForm(model, appId);
 			} else {
 				status.setComplete();
-				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
+				return "ajaxRedirectHarness";
 			}
 		}
 	}
@@ -168,7 +175,7 @@ public class AddFindingController {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("isStatic",false);
-			return "scans/form";
+			return returnForm(model, appId);
 		} else {
 			finding.setIsStatic(false);
 			boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
@@ -177,10 +184,11 @@ public class AddFindingController {
 				log.warn("The merge failed. Returning the form again.");
 				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
 				model.addAttribute("static",false);
-				return "scans/form";
+				return returnForm(model, appId);
 			} else {
 				status.setComplete();
-				return "redirect:/organizations/" + orgId + "/applications/" + appId;
+				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
+				return "ajaxRedirectHarness";
 			}
 		}
 	}

@@ -27,13 +27,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="btn btn-primary" onclick="javascript:addWafAndRefresh('<c:out value="${saveUrl }"/>');return false;">Update Application</a>
+		<a id="submitTeamModal" class="modalSubmit btn btn-primary" data-success-div="appWafDiv">Update Application</a>
 	</div>
 </form:form>
-<script>
-$("#addWafForm").keypress(function(e){
-    if (e.which == 13){
-        $("#submitTeamModal").click();
-    }
-});
-</script>

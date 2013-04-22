@@ -39,6 +39,7 @@ function reloadTable() {
 		url : tableDiv.attr("data-url"),
 		success : function(text) {
 			tableDiv.html(text);
+			addModalSubmitEvents();
 		},
 		error : function (xhr, ajaxOptions, thrownError){
 			history.go(0);
@@ -48,7 +49,4 @@ function reloadTable() {
 
 addToDocumentReadyFunctions(function(){ 
 	reloadTable();
-	$("#submitTeamModal").click(function() {
-		submitAjaxModal($("#organizationForm").attr("action"),'#organizationForm', '#formDiv', '#teamTable', '#myTeamModal','');
-	});
 });

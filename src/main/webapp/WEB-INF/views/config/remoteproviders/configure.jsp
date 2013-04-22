@@ -75,16 +75,8 @@
  --%></div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="btn btn-primary" 
-		onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#remoteProviderEditForm${ remoteProviderType.id }', '#remoteProviderEditModal${ remoteProviderType.id }', '#headerDiv', '#remoteProviderEditModal${ remoteProviderType.id }');return false;">Save Changes</a>
+	<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="modalSubmit btn btn-primary" 
+			data-success-div="headerDiv">Save Changes</a>
 </div>
 	
 </form:form>
-<script>
-	$("#remoteProviderForm<c:out value='remoteProviderType.id'/>").keypress(function(e){
-	    if (e.which == 13){
-	        $("#submitRemoteProviderFormButton<c:out value='remoteProviderType.id'/>").click();
-	    }
-	});
-</script>
-		

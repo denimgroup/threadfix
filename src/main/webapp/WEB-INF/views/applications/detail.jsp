@@ -3,19 +3,11 @@
 <head>
 	<title><c:out value="${ application.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/confirm.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-comments.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/authentication.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_search.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/radio_select.js"></script>
-	<script type="text/javascript">
-	window.onload = function()
-    {
-		$('#vulnTab').button('toggle');
-		toggleFilters(false, null, null);//refillElement('#toReplace', '${ application.id }/table', 1);
-    };
-    </script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application_page.js"></script>
 </head>
 
 <body id="apps">

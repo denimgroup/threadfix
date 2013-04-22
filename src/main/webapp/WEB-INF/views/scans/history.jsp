@@ -1,25 +1,21 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-<title>Scan History</title>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
-<spring:url value="/scans/table" var="tableUrl" />
-<spring:url value="/login.jsp" var="loginUrl" />
-<script type="text/javascript">
-	window.onload = function() {
-		refillElementSort('#toReplace', '<c:out value="${ tableUrl }"/>', 1,
-				null, '<c:out value="${ loginUrl }"/>');
-	};
-</script>
-
+	<title>Scan History</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 </head>
 
 <body id="scans">
 	<h2>Scan History</h2>
-	<div id="helpText">This page lists all of the scans that have
-		been uploaded to ThreadFix.</div>
-	<div id="toReplace">
+	
+	<div id="helpText">
+		This page lists all of the scans that have been uploaded to ThreadFix.
+	</div>
+		
+	<spring:url value="/scans/table" var="tableUrl" />
+	<spring:url value="/login.jsp" var="loginUrl" />
+	<div id="toReplace" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
+			data-login-url="<c:out value="${ loginUrl }"/>">
 		<table class="table">
 			<thead>
 				<tr>

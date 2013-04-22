@@ -1,15 +1,16 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<div class="modal-header">
-	<h4 id="myModalLabel">New Role</h4>
-</div>
+<spring:url value="/configuration/roles/new" var="saveUrl"></spring:url>
+<form:form id="newRoleForm" modelAttribute="role" method="post"
+		action="${fn:escapeXml(saveUrl) }">
+	<div class="modal-header">
+		<h4 id="myModalLabel">New Role</h4>
+	</div>
+	
+	<div class="modal-body" id="newRoleModalBody">
+		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 
-<div class="modal-body" id="newRoleModalBody">
-	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
-
-	<spring:url value="/configuration/roles/new" var="saveUrl"></spring:url>
-	<form:form id="newRoleForm" modelAttribute="role" method="post"
-			action="${fn:escapeXml(saveUrl) }">
+	
 		<table class="dataTable">
 			<tbody>
 				<tr>
@@ -234,19 +235,17 @@
 				</tr>
 			</tbody>
 		</table>
-		<br />
-	</form:form>
-</div>
-<div class="modal-footer">
-	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="newRoleFormSubmitButton" class="btn btn-primary"
-		onclick="javascript:submitAjaxModal('<c:out value="${ saveUrl }"/>','#newRoleForm', '#createRoleModal', '#tableDiv', '#createRoleModal');return false;">Save Role</a>
-</div>
-<script>
-	$("#newRoleModalBody").keypress(function(e){
-	    if (e.which == 13){
-	        $("#newRoleFormSubmitButton").click();
-	    }
-	});
-</script>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<a id="newRoleFormSubmitButton" class="modalSubmit btn btn-primary" data-success-div="tableDiv">Save Role</a>
+	</div>
+	<script>
+		$("#newRoleModalBody").keypress(function(e){
+		    if (e.which == 13){
+		        $("#newRoleFormSubmitButton").click();
+		    }
+		});
+	</script>
+</form:form>
 		

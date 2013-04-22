@@ -2,7 +2,6 @@
 
 <head>
 	<title>Manage Users</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user_page.js"></script>
 </head>
 

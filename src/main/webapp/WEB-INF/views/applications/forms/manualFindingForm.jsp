@@ -179,42 +179,6 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeManualFindingModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button id="dynamicSubmit" name="dynamicSubmit" class="dynamic btn btn-primary" onclick="javascript:submitAjaxModal('<c:out value="${submitUrl }"/>', '#manualFindingForm', '#manualFindingFormDiv', '', '#addManualFindingModal');return false;">Submit</button>
-		<button id="staticSubmit" name="staticSubmit" class="btn btn-primary static"   onclick="javascript:submitAjaxModal('<c:out value="${submitUrl }"/>', '#manualFindingForm', '#manualFindingFormDiv', '', '#addManualFindingModal');return false;">Submit</button>
+		<a id="dynamicSubmit" name="dynamicSubmit" data-success-div="modal-footer" class="modalSubmit btn btn-primary">Submit</a>
 	</div>
-	<script>
-		current = -1;
-		
-		$("#cv_select").change(function(){
-			var selectedItem = $("#cv_select option:selected").val();
-			$("#txtSearch").val(selectedItem);
-		});
-		
-		$("#url_select").change(function(){
-			var selectedItem = $("#url_select option:selected").val();
-			$("#urlSearch").val(selectedItem);
-		});
-		
-		var choice = $('input:radio[name=group]:checked').val();
-		if(choice == 'dynamic') {
-			$('.dynamic').show();
-			$('.static').hide();
-		}
-		if(choice == 'static') {
-			$('.static').show();
-			$('.dynamic').hide();
-		}
-		
-		$('input:radio[name=group]').click(function(){
-			var choice = $('input:radio[name=group]:checked').val();
-			if(choice == 'dynamic') {
-				$('.dynamic').show();
-				$('.static').hide();
-			}
-			if(choice == 'static') {
-				$('.static').show();
-				$('.dynamic').hide();
-			}
-		});
-	</script>
 </form:form>

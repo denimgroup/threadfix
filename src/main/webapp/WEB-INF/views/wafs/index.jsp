@@ -2,7 +2,6 @@
 
 <head>
 	<title>WAFs</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
 </head>
 
 <body id="wafs">

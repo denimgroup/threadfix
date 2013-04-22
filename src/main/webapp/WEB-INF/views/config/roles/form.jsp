@@ -1,17 +1,16 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<div class="modal-header">
-	<h4 id="myModalLabel">Edit Role</h4>
-</div>
-
-<div class="modal-body">
-	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
-
-	<spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
-		<spring:param name="roleId" value="${ editRole.id }"/>
-	</spring:url>
-	<form:form id="roleEditForm${ status.count }" modelAttribute="editRole" method="post"
-			action="${fn:escapeXml(saveEditUrl) }">
+<spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
+	<spring:param name="roleId" value="${ editRole.id }"/>
+</spring:url>
+<form:form id="roleEditForm${ status.count }" modelAttribute="editRole" method="post"
+		action="${fn:escapeXml(saveEditUrl) }">
+	<div class="modal-header">
+		<h4 id="myModalLabel">Edit Role</h4>
+	</div>
+	
+	<div class="modal-body">
+		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 		<table class="dataTable">
 			<tbody>
 				<tr>
@@ -266,10 +265,11 @@
 				</tr>
 			</tbody>
 		</table>
-	</form:form>
-</div>
-<div class="modal-footer">
-	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="btn btn-primary" 
-		onclick="javascript:submitAjaxModal('<c:out value="${ saveEditUrl }"/>','#roleEditForm${ status.count }', '#editRoleModal${ status.count }', '#tableDiv', '#editRoleModal${ status.count }');return false;">Save Role</a>
-</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<a id="submitRemoteProviderFormButton${ remoteProviderType.id }" class="modalSubmit btn btn-primary" 
+				data-success-div="tableDiv">Save Role</a>
+	</div>
+</form:form>
+

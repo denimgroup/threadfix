@@ -14,7 +14,7 @@
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
-		<tr class="pointer" onclick="javascript:toggleExpandableWithReport('#teamInfoDiv${ organization.id}', '#caret${ organization.id }', 'reportDiv${organization.id}')">
+		<tr id="teamRow${ organization.id }" class="pointer" onclick="javascript:toggleExpandableWithReport('#teamInfoDiv${ organization.id}', '#caret${ organization.id }', 'reportDiv${organization.id}')">
 			<td>
 				<span id="caret${ organization.id }" class="caret-right"></span>
 			</td>

@@ -112,6 +112,7 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button id="submitModalAdd" class="btn btn-primary" onclick="javascript:submitModal('<c:out value="${newUrl}"/>');return false;">Add Mapping</button>
+			<button id="submitModalEdit" class="btn btn-primary" style="display:none" onclick="javascript:submitEditModal();return false;">Edit Mapping</button>
 		</div>
 	</div>
 	</form:form>

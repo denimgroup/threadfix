@@ -152,3 +152,9 @@ function ToggleCheckboxes(tableId, cb_col){
 		} 
 	}
 }
+
+addToDocumentReadyFunctions(function() {
+	$(".refreshOnLoad").each(function() {
+		refillElementSort('#' + $(this).attr("id"), $(this).attr("data-source-url"), 1, null, $(this).attr("data-login-url"));
+	});
+});

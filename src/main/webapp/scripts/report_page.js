@@ -1,7 +1,7 @@
 var lastReportId = 1;
 var lastFormatId = 1;
 
-function reload(url) {
+function reload(url) { 
 	submitAjaxReport(url, '#reportForm', '#formDiv', '#successDiv', lastReportId, lastFormatId);
 }
 
@@ -70,3 +70,16 @@ function submitAjaxReport(url, formId, formDiv, successDiv, reportId, formatId) 
 	}, 1500);
 	return false;
 }
+
+addToDocumentReadyFunctions(function() {
+	var orgSelect = $("#orgSelect");
+	var appSelect = $("#appSelect");
+	orgSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
+	appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
+
+	$(".sidebar").on("click", function() {
+		selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"))
+	});
+
+	submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
+});

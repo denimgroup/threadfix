@@ -13,13 +13,7 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button class="btn btn-primary" onclick="javascript:submitAjaxModal('${ fn:escapeXml(commentUrl) }', '#addCommentForm${ vulnerability.id }', '#commentFormDiv${ vulnerability.id }', '#commentDiv${ vulnerability.id }', '#commentModal${ vulnerability.id }');return false;" id="addCommentButton${ vulnerability.id }" type="button">Add Comment</button>
+		<button class="modalSubmit btn btn-primary" data-success-url="commentDiv${ vulnerability.id }" 
+				id="addCommentButton${ vulnerability.id }" type="button">Add Comment</button>
 	</div>
 </form>
-<script>
-$("#addCommentForm<c:out value='vulnerability.id'/>").keypress(function(e){
-    if (e.which == 13){
-        $("#addCommentButton<c:out value='vulnerability.id'/>").click();
-    }
-});
-</script>
