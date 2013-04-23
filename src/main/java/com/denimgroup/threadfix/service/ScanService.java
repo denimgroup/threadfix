@@ -133,8 +133,9 @@ public interface ScanService {
 	String getScannerType(MultipartFile file);
 
 	/**
+	 * @param number
 	 */
-	List<Scan> loadMostRecent();
+	List<Scan> loadMostRecent(int number);
 	
 	
 	/**

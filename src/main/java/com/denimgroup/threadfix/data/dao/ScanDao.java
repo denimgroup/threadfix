@@ -152,8 +152,9 @@ public interface ScanDao {
 	void deleteFindingsAndScan(Scan scan);
 
 	/**
+	 * @param number 
 	 */
-	List<Scan> retrieveMostRecent();
+	List<Scan> retrieveMostRecent(int number);
 	
 	/**
 	 *

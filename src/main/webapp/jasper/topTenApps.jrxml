@@ -2,8 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-	name="pointInTimeGraph" pageWidth="372" pageHeight="200"
-	whenNoDataType="NoDataSection" columnWidth="372" leftMargin="0" rightMargin="0" 
+	name="pointInTimeGraph" pageWidth="430" pageHeight="250"
+	whenNoDataType="NoDataSection" columnWidth="430" leftMargin="0" rightMargin="0" 
 	topMargin="0" bottomMargin="0">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
@@ -29,10 +29,10 @@
 	<field name="high" class="java.lang.Long"/>
 	<field name="critical" class="java.lang.Long"/>
 	<summary>
-		<band height="200">
+		<band height="250">
 			<stackedBarChart>
 			  <chart isShowLegend="true">
-				  <reportElement x="0" y="0" width="372" height="200"/>
+				  <reportElement x="0" y="0" width="430" height="250"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>

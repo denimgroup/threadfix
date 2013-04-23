@@ -74,8 +74,8 @@ public class DashboardController {
 	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 		log.info("Hit the dashboard");
 		
-		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent());
-		model.addAttribute("recentScans", scanService.loadMostRecent());
+		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent(5));
+		model.addAttribute("recentScans", scanService.loadMostRecent(5));
 		ReportParameters parameters = new ReportParameters();
 		parameters.setApplicationId(-1);
 		parameters.setOrganizationId(-1);

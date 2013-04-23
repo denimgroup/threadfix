@@ -405,8 +405,8 @@ public class ScanServiceImpl implements ScanService {
 	}
 	
 	@Override
-	public List<Scan> loadMostRecent() {
-		return scanDao.retrieveMostRecent();
+	public List<Scan> loadMostRecent(int number) {
+		return scanDao.retrieveMostRecent(number);
 	}
 	
 	@Override

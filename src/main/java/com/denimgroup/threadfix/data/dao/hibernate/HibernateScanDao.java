@@ -304,11 +304,11 @@ public class HibernateScanDao implements ScanDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Scan> retrieveMostRecent() {
+	public List<Scan> retrieveMostRecent(int number) {
 		return sessionFactory.getCurrentSession()
 				.createCriteria(Scan.class)
 				.addOrder(Order.desc("id"))
-				.setMaxResults(15)
+				.setMaxResults(number)
 				.list();
 	}
 	

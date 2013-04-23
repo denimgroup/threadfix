@@ -8,117 +8,116 @@
 <body class="dashboard">
 	<h2>Dashboard</h2>
 	
-	<div style="height:1200px;">
-		<div class="alert">
-		    <button type="button" class="close" data-dismiss="alert">&times;</button>
-		    <strong>Warning!</strong> A Defect Submission failed. <a href="#">Check your configuration</a>
-	    </div>    
-	    
-	    <div class="alert">
-		    <button type="button" class="close" data-dismiss="alert">&times;</button>
-		    <strong>Warning!</strong> jdoe@denimgroup has requested a user account. <a href="#">Add One</a>
-	    </div>
-	    
-	    <div class="left-tile">
-	    	<h4>Vulnerability Breakdown</h4>
-	    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
-			<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-	    	<div id="leftTileReport"></div>
-	    </div>
-	    
-	     <div class="right-tile">
-	    	<h4>Top 10 Vulnerable Applications</h4>
-	    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
-			<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-	    	<div id="rightTileReport"></div>
-	    </div>
-	    
-	    <div style="margin-top:100px">
-		     <div class="left-tile">
-		    	<h4 style="margin-top:0px;">Recent Scans</h4>
-		    	<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Application</th>
-							<th>Channel</th>
-							<th>Scan Date</th>
-							<th class="short">Total Vulns</th>
-						</tr>
-					</thead>
-					<tbody id="wafTableBody">
-					<c:if test="${ empty recentScans }">
-						<tr class="bodyRow">
-							<td colspan="4" style="text-align:center;">No scans found.</td>
-						</tr>
-					</c:if>
-					<c:forEach var="scan" items="${ recentScans }" varStatus="status">
-						<tr class="bodyRow">
-							<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
-		                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
-		                       <spring:param name="appId" value="${ scan.application.id }"/>
-			                </spring:url>
-							<td id="application${ status.count }">
-								<a id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
-									<c:out value="${ scan.applicationChannel.application.name }"/>
-								</a>
-							</td>
-							<td id="channelType${ status.count }">
-								<c:out value="${ scan.applicationChannel.channelType.name }"/>
-							</td>
-							<td>
-						        <spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}" var="detailUrl">
-				                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
-				                       <spring:param name="appId" value="${ scan.application.id }"/>
-				                       <spring:param name="scanId" value="${ scan.id }"/>
-				                </spring:url>
-								<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
-									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="yy/MM/dd_hh:mm"/>
-								</a>
-							</td>
-							<td id="numTotalVulnerabilities${ status.count }">
-								<c:out value="${ scan.numberTotalVulnerabilities }"/>
-							</td>
-						</tr>
-					</c:forEach>
-					</tbody>
-				</table>
+	<div class="container-fluid">
+	
+		<div class="row-fluid">
+		    <div class="span6">
+		    	<h4>Vulnerability Breakdown</h4>
+		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
+				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
+		    	<div id="leftTileReport"></div>
 		    </div>
 		    
-		    <div class="right-tile">
-		    	<h4>Recent Comments</h4>
-		    	<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>User</th>
-							<th>Vulnerability</th>
-							<th class="last">Comment</th>
-						<tr>
-					</thead>
-					<tbody>
-						<c:if test="${ empty recentComments }">
+		     <div class="span6">
+		    	<h4>Top 10 Vulnerable Applications</h4>
+		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
+				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
+		    	<div id="rightTileReport"></div>
+		    </div>
+		</div>
+	    
+	    <div class="row-fluid">
+	    	<div class="row-fluid" style="padding-top:20px;">
+			     <div class="span6">
+			    	<h4>Recent Scans</h4>
+			    	<table class="table table-bordered thick-borders">
+						<thead>
 							<tr>
-								<td colspan="3">No comments were retrieved.</td>
+								<th class="thick-left">Application</th>
+								<th style="width:70px">View More</th>
+							</tr>
+						</thead>
+						<tbody id="wafTableBody">
+						<c:if test="${ empty recentScans }">
+							<tr class="bodyRow">
+								<td class="thick-left" colspan="4" style="text-align:center;">No scans found.</td>
 							</tr>
 						</c:if>
-						<c:forEach var="comment" items="${ recentComments }" varStatus="status">
+						<c:forEach var="scan" items="${ recentScans }" varStatus="status">
 							<tr class="bodyRow">
-								<td id="commentUser${ status.count }"><c:out value="${ comment.user.name }" /></td>
-								<td id="commentVuln${ status.count }">
-									<spring:url value="/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnId}" var="vulnUrl">
-										<spring:param name="orgId" value="${ comment.vulnerability.application.organization.id }" />
-										<spring:param name="appId" value="${ comment.vulnerability.application.id }" />
-										<spring:param name="vulnId" value="${ comment.vulnerability.id }" />
-									</spring:url>
-									<a href="${ fn:escapeXml(vulnUrl) }">
-										<c:out value="${ comment.vulnerability.id }" />
+								<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+			                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
+			                       <spring:param name="appId" value="${ scan.application.id }"/>
+				                </spring:url>
+								<td class="thick-left" id="application${ status.count }">
+									<a id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
+										<c:out value="${ scan.applicationChannel.application.name }"/>
 									</a>
 								</td>
-								<td id="commentText${ status.count }"><c:out value="${ comment.comment }" /></td>
+								<td class="no-left-border" id="channelType${ status.count }">
+									<spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}" var="detailUrl">
+					                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
+					                       <spring:param name="appId" value="${ scan.application.id }"/>
+					                       <spring:param name="scanId" value="${ scan.id }"/>
+					                </spring:url>
+									<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
+										View More
+									</a>
+								</td>
+							</tr>
+							<tr class="no-top-border">
+								<td class="thick-left">
+									<c:out value="${ scan.applicationChannel.channelType.name }"/> Scan at 
+									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="yy/MM/dd hh:mm"/><br>
+									<c:out value="${ scan.numberTotalVulnerabilities }"/> Vulnerabilities found
+								</td>
 							</tr>
 						</c:forEach>
-					</tbody>
-				</table>
-		    </div>
+						</tbody>
+					</table>
+			    </div>
+			    
+			    <div class="span6">
+			    	<h4>Recent Comments</h4>
+			    	<table class="table table-bordered thick-borders">
+						<thead>
+							<tr>
+								<th class="thick-left">User</th>
+								<th>Vulnerability</th>
+								<th style="width:70px">View More</th>
+							<tr>
+						</thead>
+						<tbody>
+							<c:if test="${ empty recentComments }">
+								<tr>
+									<td class="thick-left" colspan="3">No comments were retrieved.</td>
+								</tr>
+							</c:if>
+							<c:forEach var="comment" items="${ recentComments }" varStatus="status">
+								<tr class="bodyRow">
+									<td class="thick-left" id="commentUser${ status.count }"><c:out value="${ comment.user.name }" /></td>
+									<td class="no-left-border" id="commentVulnId${ status.count }">
+										<c:out value="${ comment.vulnerability.id }" />
+									</td>
+									<td class="no-left-border" id="viewMoreLink${ status.count }">
+										<spring:url value="/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnId}" var="vulnUrl">
+											<spring:param name="orgId" value="${ comment.vulnerability.application.organization.id }" />
+											<spring:param name="appId" value="${ comment.vulnerability.application.id }" />
+											<spring:param name="vulnId" value="${ comment.vulnerability.id }" />
+										</spring:url>
+										<a href="${ fn:escapeXml(vulnUrl) }#commentDiv${ comment.vulnerability.id }">
+											View More
+										</a>
+									</td>
+								</tr>
+								<tr class="no-top-border">
+									<td class="thick-left" colspan="3" id="commentText${ status.count }"><c:out value="${ comment.comment }" /></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+			    </div>
+			</div>
 	    </div>
 	</div>
 </body>

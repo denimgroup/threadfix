@@ -713,3 +713,20 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 [class^="icon-"].icon-white, [class*=" icon-"].icon-white {
 	background-image: url("/threadfix/images/glyphicons-halflings-white.png");
 }
+
+.no-top-border td {
+	border-top:0px;
+}
+
+.table.table-bordered td.no-left-border, .table.table-bordered th.no-left-border {
+	border-left: 0px none;
+}
+
+.table.table-bordered td.thick-left, .table.table-bordered th.thick-left {
+	border-left: 2px solid #DDDDDD;
+}
+
+.table.table-bordered.thick-borders {
+	border-width: 2px 2px 2px 0;
+}
+
