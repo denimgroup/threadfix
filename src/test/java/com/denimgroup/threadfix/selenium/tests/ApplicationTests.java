@@ -81,13 +81,8 @@ public class ApplicationTests extends BaseTest {
 											.expandTeamRowByName(teamName)
 											.clickViewAppLink(appName, teamName);
 
-		System.out.println("Got to after testClickApp(1)");
 		
-		/*
-		System.out.println("Name text = " + applicationDetailPage.getNameText());
-		
-		assertTrue("The name was not preserved correctly.", 
-				appName.equals(applicationDetailPage.getNameText()));
+		assertTrue("The name was not preserved correctly.", applicationDetailPage.getNameText().contains(appName));
 		
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
@@ -101,7 +96,7 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteLink()
 										.clickDeleteButton()
 										.logout();
-		*/
+		
 	}
 	
 	@Test 
@@ -128,7 +123,7 @@ public class ApplicationTests extends BaseTest {
 		teamIndexPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
-										.addNewTeam(orgName)
+										.addNewTeam()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, emptyString, emptyString, "Low");
 		

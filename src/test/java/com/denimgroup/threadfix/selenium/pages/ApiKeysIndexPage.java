@@ -46,7 +46,7 @@ public class ApiKeysIndexPage extends BasePage {
 	public int getNumRows() {
 		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
 		
-		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().equals("No keys found.")) {
+		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().contains("No keys found.")) {
 			return 0;
 		}		
 		
@@ -91,7 +91,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage clickSubmitButton(String oldNote){
 		if(oldNote == null){
-			driver.findElementsById("submitKeyModal").get(getNumRows()).click();
+			driver.findElementById("submitKeyModalCreate").click();
 		}else{
 			driver.findElementsById("submitKeyModal").get(getIndex(oldNote)).click();
 		}
@@ -106,7 +106,7 @@ public class ApiKeysIndexPage extends BasePage {
 			driver.findElementsById("note").get(getIndex(oldNote)).clear();
 			driver.findElementsById("note").get(getIndex(oldNote)).sendKeys(newNote);	
 		}
-		return new ApiKeysIndexPage(driver);
+		return this;
 	}
 	
 	public ApiKeysIndexPage setRestricted(String oldNote){
@@ -140,7 +140,7 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 	
 	public boolean isRestricted(String note){
-		return driver.findElementById("restricted"+(getIndex(note)+1)).getText().trim().equals("true".trim());
+		return driver.findElementById("restricted"+(getIndex(note)+1)).getText().trim().contains("true");
 	}
 	
 	public boolean isCorrectLength(String note){

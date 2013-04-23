@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -136,7 +137,11 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage clickActionButton(){
-		driver.findElementById("appActionButton").click();
+		Actions clickBtn = new Actions(driver);
+				clickBtn.moveToElement(driver.findElementById("appActionButton"));
+				clickBtn.click();
+				//clickBtn.build();
+				clickBtn.perform();
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -204,6 +209,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public TeamDetailPage clickDeleteLink() {
 		clickActionButton();
+		sleep(500);
 		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();

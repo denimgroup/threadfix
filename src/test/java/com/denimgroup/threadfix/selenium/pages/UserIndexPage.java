@@ -79,6 +79,11 @@ public class UserIndexPage extends BasePage {
 		handleAlert();
 		return new LoginPage(driver);
 	}
+	
+	public UserPermissionsPage clickEditPermissions(String name){
+		driver.findElementById("editPermissions"+(getIndex(name)+1)).click();
+		return new UserPermissionsPage(driver);
+	}
 
 	public UserIndexPage clickAddUserLink() {
 		addUserLink.click();
@@ -191,8 +196,8 @@ public class UserIndexPage extends BasePage {
 		return driver.findElementById("password.errors").getText().trim();
 	}
 	
-	public UserIndexPage clickCancel(){
-		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+	public UserIndexPage clickCancel(String name){
+		driver.findElementsByClassName("modal-footer").get(getIndex(name)).findElement(By.className("btn")).click();
 		return new UserIndexPage(driver);	
 	}
 	

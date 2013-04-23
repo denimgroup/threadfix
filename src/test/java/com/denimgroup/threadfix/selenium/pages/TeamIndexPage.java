@@ -34,7 +34,7 @@ import org.openqa.selenium.support.ui.Select;
 public class TeamIndexPage extends BasePage {
 
 	private List<WebElement> names = new ArrayList<WebElement>();
-	private ArrayList<ArrayList<WebElement>> teams = new ArrayList<ArrayList<WebElement>>();
+	private List<WebElement> apps = new ArrayList<WebElement>();
 
 	public TeamIndexPage(WebDriver webdriver) {
 		super(webdriver);
@@ -52,14 +52,12 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public int getNumAppRows(String teamName) {
-		System.out.println("id = teamAppTableDiv" + (getIndex(teamName) + 1));
+		System.out.println("id = teamAppTable" + (getIndex(teamName) + 1));
 		System.out.println(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText());
 		if (!(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found."))) {
-			return driver
-					.findElementById("teamAppTableDiv" + (getIndex(teamName) + 1))
-					.findElements(By.className("bodyRow")).size();
+			return driver.findElementById("teamAppTable" + (getIndex(teamName) + 1)).findElements(By.className("app-row")).size();
 		}
 		return 0;
 	}
@@ -70,6 +68,18 @@ public class TeamIndexPage extends BasePage {
 			i++;
 			String text = name.getText().trim();
 			if (text.equals(teamName.trim())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public int getAppIndex(String appName){
+		int i = -1;
+		for(WebElement app : apps){
+			i++;
+			String text = app.getText().trim();
+			if(text.equals(appName.trim())){
 				return i;
 			}
 		}
@@ -101,43 +111,37 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage expandTeamRowByName(String name) {
 		driver.findElementById("teamName" + (getIndex(name) + 1)).click();
-		if (!driver.findElementById("teamAppTableDiv" + (getIndex(name) + 1))
-				.getText().contains("No applications found.")) {
-			// populate application list
-			for (int i = 0; i < getNumTeamRows(); i++) {
-				teams.add(new ArrayList<WebElement>());
-				for (int j = 0; j < getNumAppRows(name); j++) {
-					teams.get(i).add(
-							driver.findElementById(("applicationLink" + (i + 1))
-									+ "-" + (j + 1)));
-				}
-			}
-		}
 
 		return new TeamIndexPage(driver);
 	}
+	
+	public void populateAppList(String teamName){
+		apps = new ArrayList<WebElement>();
+		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
+				.getText().contains("No applications found.")) {
+				for (int j = 0; j < getNumAppRows(teamName); j++) {
+					System.out.println("team index " + getIndex(teamName)+" j "+j);
+					apps.add(
+							driver.findElementById(("applicationLink" + (getIndex(teamName) + 1))
+									+ "-" + (j + 1)));
+				}
+		}
+	}
 
 	public boolean teamAddedToTable(String name) {
-
 		return getIndex(name) != -1;
 	}
 
 	public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
+		populateAppList(teamName);
 		System.out.println("Num rows " + getNumAppRows(teamName));
-		driver.findElementByClassName("in")
-				.findElement(By.linkText("View Team")).click();
-		for (int j = 0; j < getNumAppRows(teamName); j++) {
-			System.out.println("on " + j);
-			if(teams.get(getIndex(teamName)).get(j).getText().equals(appName)){
-				teams.get(getIndex(teamName)).get(j).click();
-			}
-		}
+		System.out.println("num apps " + apps.size());
+		apps.get(getAppIndex(appName)).click();
 		return new ApplicationDetailPage(driver);
 	}
 
 	public TeamIndexPage clickAddNewApplication(String teamName) {
-		driver.findElementsByLinkText("Add Application")
-				.get(getIndex(teamName)).click();
+		driver.findElementByLinkText("Add Application").click();
 		waitForElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}

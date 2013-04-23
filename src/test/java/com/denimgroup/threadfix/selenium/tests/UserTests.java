@@ -260,10 +260,15 @@ public class UserTests extends BaseTest {
 
 		// Delete the users and logout
 
-		loginPage = userIndexPage.clickCancel()
+		userIndexPage = userIndexPage.clickCancel(baseUserName)
+				.clickManageUsersLink()
 				.clickDeleteButton(baseUserName)
-				.clickDeleteButton(userNameDuplicateTest)
-				.logout();
+				.clickDeleteButton(userNameDuplicateTest);
+		
+		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(baseUserName));
+		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(userNameDuplicateTest));
+		
+		
 	}
 
 	@Test
@@ -368,7 +373,7 @@ public class UserTests extends BaseTest {
 		
 		assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
 		
-		userIndexPage.clickCancel();
+		userIndexPage.clickCancel("user");
 	}
 	
 	
