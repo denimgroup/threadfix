@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+	name="trending" pageWidth="372" pageHeight="200" orientation="Landscape" leftMargin="0" rightMargin="0" 
+	topMargin="0" bottomMargin="0" columnWidth="372">
+	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
+	<field name="criticalVulns" class="java.lang.Long"/>
+	<field name="highVulns" class="java.lang.Long"/>
+	<field name="mediumVulns" class="java.lang.Long"/>
+	<field name="lowVulns" class="java.lang.Long"/>
+	<field name="importTime" class="java.lang.String"/>
+	<summary>
+		<band height="200">
+			<stackedBarChart>
+				<chart>
+					<reportElement x="0" y="0" width="372" height="200" />
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Low"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{importTime}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{lowVulns} != null ? $F{lowVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Medium"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{importTime}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{mediumVulns} != null ? $F{mediumVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["High"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{importTime}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{highVulns} != null ? $F{highVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Critical"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{importTime}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{criticalVulns} != null ? $F{criticalVulns} : new Integer(0)]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot labelRotation="45.0">
+						<seriesColor seriesOrder="0" color="#002F5D"/>
+						<seriesColor seriesOrder="1" color="#FD8D3C"/>
+						<seriesColor seriesOrder="2" color="#E6550D"/>
+						<seriesColor seriesOrder="3" color="#A63603"/>
+					</plot>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</summary>
+</jasperReport>

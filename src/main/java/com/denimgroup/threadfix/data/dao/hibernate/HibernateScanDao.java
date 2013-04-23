@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,9 +116,11 @@ public class HibernateScanDao implements ScanDao {
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
 		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList)").setParameterList("idList", applicationIdList).list();
+			.createQuery("from Scan scan where scan.application.id in (:idList)")
+			.setParameterList("idList", applicationIdList)
+			.list();
 	}
-
+	
 	@Override
 	public Scan retrieveById(int id) {
 		return (Scan) sessionFactory.getCurrentSession().get(Scan.class, id);
@@ -334,5 +337,29 @@ public class HibernateScanDao implements ScanDao {
 			.addOrder(Order.desc("importTime"));
 
 		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> getCountsForScans(List<Integer> ids) {
+		if (ids == null || ids.isEmpty()) return new HashMap<String, Object>();
+		
+		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.genericSeverity.intValue = ";
+		String vulnIds = " and vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan.id in ";
+		
+		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
+				"select new map( scan.id as id, " +
+						selectStart + "2" + vulnIds + "(:scanIds2))) as low, " +
+						selectStart + "3" + vulnIds + "(:scanIds3))) as medium, " +
+						selectStart + "4" + vulnIds + "(:scanIds4))) as high, " +
+						selectStart + "5" + vulnIds + "(:scanIds5))) as critical)" +
+						" from Scan scan where scan.id = :scanId"
+				)
+				.setParameterList("scanIds2", ids)
+				.setParameterList("scanIds3", ids)
+				.setParameterList("scanIds4", ids)
+				.setParameterList("scanIds5", ids)
+				.setInteger("scanId", ids.get(0))
+				.uniqueResult();
 	}
 }

@@ -75,6 +75,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.PermissionUtils;
@@ -147,9 +148,9 @@ public class ReportsServiceImpl implements ReportsService {
 			format = "HTML";
 		}
 		
-		String reportFile = parameters.getReportFormat().getFileName();
+		ReportFormat reportFormat = parameters.getReportFormat();
 		try {
-			StringBuffer report = getReport(path, reportFile, format, params, applicationIdList, response);
+			StringBuffer report = getReport(path, reportFormat, format, params, applicationIdList, response);
 			return new ReportCheckResultBean(ReportCheckResult.VALID, report);
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
@@ -158,14 +159,15 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 
 	@SuppressWarnings("resource")
-	private StringBuffer getReport(String path, String fileName, String format,
+	private StringBuffer getReport(String path, ReportFormat reportFormat, String format,
 			Map<String, Object> parameters, List<Integer> applicationIdList, 
 			HttpServletResponse response) throws IOException {
 
-		if (fileName == null || fileName.trim().equals(""))
+		if (reportFormat == null || reportFormat.getFileName() == null || 
+				reportFormat.getFileName().trim().equals(""))
 			return null;
 
-		File file = new File(path + "jasper/" + fileName);
+		File file = new File(path + "jasper/" + reportFormat.getFileName());
 		InputStream inputStream = null;
 		
 		if (parameters != null) {
@@ -189,7 +191,7 @@ public class ReportsServiceImpl implements ReportsService {
 		try {
 			inputStream = new FileInputStream(file);
 			
-			if (fileName.contains("cweChannel")) {
+			if (reportFormat == ReportFormat.CHANNEL_COMPARISON_BY_VULN_TYPE) {
 				inputStream = addCorrectColumns(inputStream, applicationIdList);
 				parameters.put("badFindingIds", getFindingsToSkip(applicationIdList));
 			}
@@ -222,13 +224,17 @@ public class ReportsServiceImpl implements ReportsService {
 
 			JasperPrint jasperPrint = null;
 			
-			if (fileName.equals("trending.jrxml")) {
+			if (reportFormat == ReportFormat.TRENDING) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
-			} else if (fileName.equals("monthlyBarChart.jrxml")) {
+			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
+				List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, 
+						new JasperSixMonthSummaryReport(scanList, scanDao));
+			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
-			} else if (fileName.equals("cwe.jrxml")) {
+			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperCWEReport(applicationIdList,vulnerabilityDao));
-			} else if (fileName.equals("scannerComparison.jrxml")) {
+			} else if (reportFormat == ReportFormat.CHANNEL_COMPARISON_SUMMARY) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
 			} else {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
@@ -254,7 +260,7 @@ public class ReportsServiceImpl implements ReportsService {
 					report);
 			
 			StringBuffer appIdString = new StringBuffer();
-			appIdString.append(fileName.charAt(0));
+			appIdString.append(reportFormat.getFileName().charAt(0));
 			for (Integer id : applicationIdList) {
 				appIdString.append(id);
 			}

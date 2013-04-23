@@ -92,7 +92,7 @@ public class DashboardController {
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
 	public String leftReport(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return report(model, request, response, ReportFormat.POINT_IN_TIME_GRAPH);
+		return report(model, request, response, ReportFormat.SIX_MONTH_SUMMARY);
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.POST)

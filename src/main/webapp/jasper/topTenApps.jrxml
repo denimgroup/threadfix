@@ -20,24 +20,6 @@
 	</queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="vulnCount" class="java.lang.Number"/>
-	<background>
-		<band/>
-	</background>
-	<title>
-		<band/>
-	</title>
-	<columnHeader>
-		<band/>
-	</columnHeader>
-	<detail>
-		<band/>
-	</detail>
-	<columnFooter>
-		<band/>
-	</columnFooter>
-	<pageFooter>
-		<band/>
-	</pageFooter>
 	<summary>
 		<band height="200">
 			<barChart>

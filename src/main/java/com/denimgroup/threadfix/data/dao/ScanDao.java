@@ -166,4 +166,9 @@ public interface ScanDao {
 	 *
 	 */
 	List<Scan> getTableScans(Integer page);
+	
+	/**
+	 * 
+	 */
+	Map<String, Object> getCountsForScans(List<Integer> ids);
 }
