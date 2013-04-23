@@ -3,6 +3,7 @@
 <head>
 	<title><c:out value="${ organization.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/team_detail_page.js"></script>
 </head>
 
 <body id="apps">
@@ -10,8 +11,30 @@
 	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
 	    <li class="active"><c:out value="${ organization.name }"/></li>
     </ul>
-	<h3 id="name" style="padding-top:5px;"><c:out value="${ organization.name }"/></h3>
+	<h2 id="name" style="padding-top:5px;"><c:out value="${ organization.name }"/></h2>
 	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
+	
+	<div class="container-fluid">
+		<div class="row-fluid">
+		    <div class="span6">
+		    	<h4>Vulnerability Breakdown</h4>
+		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
+				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
+					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>
+				</form>
+		    	<div id="leftTileReport"></div>
+		    </div>
+		    
+		     <div class="span6">
+		    	<h4>Top 10 Vulnerable Applications</h4>
+		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
+				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
+					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>
+				</form>
+		    	<div id="rightTileReport"></div>
+		    </div>
+		</div>
+	</div>
 	
 	<h3 style="padding-top:5px;">Applications</h3>
 	<table class="table table-striped">

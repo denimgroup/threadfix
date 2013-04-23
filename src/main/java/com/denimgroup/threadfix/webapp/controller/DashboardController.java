@@ -56,6 +56,8 @@ public class DashboardController {
 	private VulnerabilityCommentService vulnerabilityCommentService;
 	private ScanService scanService;
 	private ReportsService reportsService;
+	
+	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
 	@Autowired
 	public DashboardController(ScanService scanService,
@@ -68,11 +70,8 @@ public class DashboardController {
 		this.reportsService = reportsService;
 	}
 	
-	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
-
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-		log.info("Hit the dashboard");
 		
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent(5));
 		model.addAttribute("recentScans", scanService.loadMostRecent(5));
@@ -101,10 +100,18 @@ public class DashboardController {
 	}
 	
 	public String report(Model model, HttpServletRequest request, HttpServletResponse response, ReportFormat reportFormat) {
-		log.info("hit report ajax");
+		
+		int orgId = -1, appId = -1;
+		if (request.getParameter("orgId") != null) {
+			orgId = safeParseInt(request.getParameter("orgId"));
+		}
+		if (request.getParameter("appId") != null) {
+			appId = safeParseInt(request.getParameter("appId"));
+		}
+		
 		ReportParameters parameters = new ReportParameters();
-		parameters.setApplicationId(-1);
-		parameters.setOrganizationId(-1);
+		parameters.setApplicationId(appId);
+		parameters.setOrganizationId(orgId);
 		parameters.setFormatId(1);
 		parameters.setReportFormat(reportFormat);
 		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
@@ -112,6 +119,19 @@ public class DashboardController {
 			model.addAttribute("jasperReport", resultBean.getReport());
 		}
 		return "reports/report";
+	}
+	
+	public int safeParseInt(String string) {
+		if (string.matches("^[0-9]+$")) {
+			try {
+				return Integer.valueOf(string);
+			} catch (NumberFormatException e) {
+				log.warn("Non-numeric string was passed to DashboardController", e); // should never happen
+			}
+		} else {
+			log.warn("Non-numeric string was passed to DashboardController");
+		}
+		return -1;
 	}
 
 }
