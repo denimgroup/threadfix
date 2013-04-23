@@ -9,20 +9,28 @@
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="hql">
-		<![CDATA[SELECT application.name as name, 
-						count(vulnerability) as vulnCount
-				 FROM Application as application join application.vulnerabilities as vulnerability
-				 WHERE application.id IN ($P{appId}) AND
-				    application.active = true AND
-				 	vulnerability.active = true
-				 GROUP BY application.name
-				 ORDER BY count(vulnerability) desc]]>
+		<![CDATA[SELECT 
+			application.name as name,
+			count(vulnerability) as vulnCount,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical
+				 FROM Application application join application.vulnerabilities as vulnerability
+				 where application.id in ($P{appId})
+				 	AND application.active = true
+				 	AND vulnerability.genericSeverity.intValue != 1
+			GROUP BY application.name
+			ORDER BY count(vulnerability) desc ]]>
 	</queryString>
 	<field name="name" class="java.lang.String"/>
-	<field name="vulnCount" class="java.lang.Number"/>
+	<field name="low" class="java.lang.Long"/>
+	<field name="medium" class="java.lang.Long"/>
+	<field name="high" class="java.lang.Long"/>
+	<field name="critical" class="java.lang.Long"/>
 	<summary>
 		<band height="200">
-			<barChart>
+			<stackedBarChart>
 			  <chart isShowLegend="true">
 				  <reportElement x="0" y="0" width="372" height="200"/>
 					<chartTitle/>
@@ -31,14 +39,32 @@
 			  </chart>
 			  <categoryDataset>
 			  	<categorySeries>
-			  		<seriesExpression><![CDATA["Vuln Count"]]></seriesExpression>
+			  		<seriesExpression><![CDATA["Low"]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{vulnCount}]]></valueExpression>
+					<valueExpression><![CDATA[$F{low}]]></valueExpression>
+			  	</categorySeries>
+			  	<categorySeries>
+			  		<seriesExpression><![CDATA["Medium"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{medium}]]></valueExpression>
+			  	</categorySeries>
+			  	<categorySeries>
+			  		<seriesExpression><![CDATA["High"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{high}]]></valueExpression>
+			  	</categorySeries>
+			  	<categorySeries>
+			  		<seriesExpression><![CDATA["Critical"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{critical}]]></valueExpression>
 			  	</categorySeries>
 			  </categoryDataset>
 			  <barPlot>
 			  	<plot orientation="Horizontal">
-					<seriesColor seriesOrder="1" color="#A63603"/>			  	
+					<seriesColor seriesOrder="0" color="#002F5D"/>
+					<seriesColor seriesOrder="1" color="#FD8D3C"/>
+					<seriesColor seriesOrder="2" color="#E6550D"/>
+					<seriesColor seriesOrder="3" color="#A63603"/>		  	
 			  	</plot>
 				<categoryAxisFormat>
 					<axisFormat>
@@ -53,7 +79,7 @@
 					</axisFormat>
 				</valueAxisFormat>
 			  </barPlot>
-			</barChart> 
+			</stackedBarChart> 
 		</band>
 	</summary>
 </jasperReport>
