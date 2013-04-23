@@ -16,6 +16,14 @@ var modalRefreshFunctions = [
 	}
 ];
 
+var modalFailureFunctions = [
+    delay(addModalSubmitEvents),
+    function () {
+    	$(".modal-body").attr('tab-index','-1');
+		$(".modal.in .modal-body input").first().focus();
+    }
+];
+
 function submitAjaxModalFunction(url, formId, formDiv, successDiv, modalName, expandable, successClick) {
 	return function () {
 		var successFunction = function() {
@@ -45,6 +53,9 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 			
 			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
 				$(formDiv).html(text);
+				for (var i = 0; i < modalFailureFunctions.length; i++) {
+					modalFailureFunctions[i]();
+				}
 			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(modalName).on('hidden', function () {
 					$(successDiv).html(text);
@@ -447,7 +458,8 @@ function addModalSubmitEvents() {
 		if (!element.attr('data-has-function')) {
 			var form = element.closest("form");
 			if (!form || form.length === 0) { form = $("#" + element.attr("data-form")); };
-			var div = form.closest("div");
+			var div = $("#" + element.attr("data-form-div"));
+			if (!div || div.length === 0) { div = form.closest("div"); };
 			var modal = element.closest(".modal");
 			var submitFunction = submitAjaxModalFunction(
 					form.attr("action"), 

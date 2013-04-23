@@ -730,3 +730,16 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	border-width: 2px 2px 2px 0;
 }
 
+div.box-shadow {
+	-moz-box-shadow: 0 0 30px 5px #fff;
+    -webkit-box-shadow: 2px 2px 4px 1px #fff;
+    box-shadow: 2px 2px 4px 1px #fff;
+}
+
+#main-content .report-image {
+	padding:2px;
+	border: 2px #DDDDDD solid;
+	z-index:2;
+	float:left;
+	border-radius: 4px 4px 4px 4px;
+}
