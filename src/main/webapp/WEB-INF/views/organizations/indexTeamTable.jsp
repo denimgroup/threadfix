@@ -11,6 +11,7 @@
 		<tr>
 			<th style="width:8px"></th>
 			<th>Name</th>
+			<th style="width:70px;"></th>
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
@@ -21,9 +22,15 @@
 			<td id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
+			<td>
+				<spring:url value="/organizations/{orgId}" var="organizationUrl">
+					<spring:param name="orgId" value="${ organization.id }"/>
+				</spring:url>
+				<a id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
+			</td>
 		</tr>
 		<tr class="expandable">
-			<td colspan="7">
+			<td colspan="3">
 				<div id="teamInfoDiv${organization.id}" class="collapse">
 					<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
 						<spring:param name="orgId" value="${ organization.id }"/>
@@ -37,12 +44,13 @@
 						<table id="teamAppTable${ status.count }">
 							<thead>
 								<tr>
-									<th></th>
-									<th class="centered">Open Vulns</th>
+									<th style="width:70px;"></th>
+									<th class="centered">#Vulns</th>
 									<th class="centered">Critical</th>
 									<th class="centered">High</th>
 									<th class="centered">Medium</th>
 									<th class="centered">Low</th>
+									<th></th>
 								</tr>
 							</thead>
 						<c:forEach var="application" items="${ organization.applications }" varStatus="innerStatus">
@@ -56,10 +64,12 @@
 									<spring:param name="appId" value="${ application.id }"/>
 								</spring:url>
 								<tr>
-									<td class="right-align" style="padding:5px;">
+									<td class="right-align" style="padding:5px;word-wrap: break-word;">
+										<div style="word-wrap: break-word;width:120px;">
 										<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
 											<c:out value="${ application.name }"/>
 										</a>
+										</div>
 									</td>
 									<td class="centered" id="numTotalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[5] }"/></td>
 									<td class="centered" id="numCriticalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[4] }"/></td>
@@ -87,14 +97,9 @@
 						</table>
 					
 					</c:if>
-					<spring:url value="/organizations/{orgId}" var="organizationUrl">
-						<spring:param name="orgId" value="${ organization.id }"/>
-					</spring:url>
+					
 					<div style="margin-top:10px;margin-bottom:7px;">
 						<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
-						<span style="padding-left:8px;">
-							<a id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
-						</span>
 					</div>
 					</div>
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
