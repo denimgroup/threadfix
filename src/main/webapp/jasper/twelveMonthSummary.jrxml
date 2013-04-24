@@ -15,7 +15,7 @@
 	<summary>
 		<band height="500">
 			<stackedBarChart>
-				<chart>
+				<chart customizerClass="com.denimgroup.threadfix.service.report.CategoryIntegerTicksChartCustomizer">
 					<reportElement x="0" y="0" width="675" height="500" />
 				</chart>
 				<categoryDataset>

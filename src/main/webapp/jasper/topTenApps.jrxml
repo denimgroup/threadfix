@@ -31,7 +31,7 @@
 	<summary>
 		<band height="250">
 			<stackedBarChart>
-			  <chart isShowLegend="true">
+			  <chart customizerClass="com.denimgroup.threadfix.service.report.CategoryIntegerTicksChartCustomizer" isShowLegend="true">
 				  <reportElement x="0" y="0" width="422" height="250"/>
 					<chartTitle/>
 					<chartSubtitle/>
