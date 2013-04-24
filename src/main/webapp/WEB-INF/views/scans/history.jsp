@@ -21,14 +21,14 @@
 				<tr>
 					<th style="text-align: left" class="first">Team</th>
 					<th style="text-align: left">Application</th>
-					<th>Defect Tracker</th>
 					<th>Scanner</th>
 					<th style="width: 120px" class="long">Scan Date</th>
 					<th>Total Vulns</th>
 					<th>Critical</th>
-					<th>Major</th>
-					<th>Minor</th>
-					<th class="last">Trivial</th>
+					<th>High</th>
+					<th>Medium</th>
+					<th>Low</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody id="wafTableBody">

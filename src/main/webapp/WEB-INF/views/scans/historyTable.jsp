@@ -59,14 +59,14 @@
 			<tr>
 				<th style="text-align: left" class="first">Team</th>
 				<th style="text-align: left">Application</th>
-				<th>Defect Tracker</th>
 				<th>Scanner</th>
 				<th style="width: 120px" class="long">Scan Date</th>
 				<th>Total Vulns</th>
 				<th>Critical</th>
 				<th>High</th>
 				<th>Medium</th>
-				<th class="last">Low</th>
+				<th>Low</th>
+				<th style="width:70px"></th>
 			</tr>
 		</thead>
 		<tbody id="wafTableBody">
@@ -92,27 +92,12 @@
 						</spring:url> <a href="<c:out value="${ appUrl }"/>"> <c:out
 								value="${ scan.application.name }" />
 					</a></td>
-					<td id="defectTracker${ status.count }"><c:if
-							test="${ not empty scan.application.defectTracker.url }">
-							<a
-								href="<c:out value="${ scan.application.defectTracker.url }"/>">
-								<c:out value="${ scan.application.defectTracker.name }" />
-							</a>
-						</c:if></td>
 					<td id="channelType${ status.count }"><c:out
 							value="${ scan.applicationChannel.channelType.name }" /></td>
-					<td><spring:url
-							value="/organizations/{teamId}/applications/{appId}/scans/{scanId}"
-							var="scanUrl">
-							<spring:param name="teamId"
-								value="${ scan.application.organization.id }" />
-							<spring:param name="appId" value="${ scan.application.id }" />
-							<spring:param name="scanId" value="${ scan.id }" />
-						</spring:url> <a id="importTime${ status.count }"
-						href="${ fn:escapeXml(scanUrl) }"> <fmt:formatDate
-								value="${ scan.importTime.time }" type="both" dateStyle="short"
+					<td>
+						<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short"
 								timeStyle="short" />
-					</a></td>
+					</td>
 					<td style="text-align: center"
 						id="numTotalVulnerabilities${ status.count }"><c:out
 							value="${ scan.numberTotalVulnerabilities }" /></td>
@@ -128,6 +113,16 @@
 					<td style="text-align: center"
 						id="numLowVulnerabilities${ status.count }"><c:out
 							value="${ scan.numberLowVulnerabilities + scan.numberInfoVulnerabilities }" /></td>
+					<td>
+						<spring:url value="/organizations/{teamId}/applications/{appId}/scans/{scanId}" var="scanUrl">
+							<spring:param name="teamId" value="${ scan.application.organization.id }" />
+							<spring:param name="appId" value="${ scan.application.id }" />
+							<spring:param name="scanId" value="${ scan.id }" />
+						</spring:url> 
+						<a id="importTime${ status.count }" href="${ fn:escapeXml(scanUrl) }"> 
+							View Scan
+						</a>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
