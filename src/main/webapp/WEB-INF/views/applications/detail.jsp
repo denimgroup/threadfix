@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_search.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/radio_select.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan_page.js"></script>
 </head>
 
 <body id="apps">
