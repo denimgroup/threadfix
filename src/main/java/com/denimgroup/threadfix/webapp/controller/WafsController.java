@@ -85,7 +85,8 @@ public class WafsController {
 	}
 
 	@RequestMapping("/{wafId}")
-	public ModelAndView detail(@PathVariable("wafId") int wafId) {
+	public ModelAndView detail(@PathVariable("wafId") int wafId,
+			HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("wafs/detail");
 		Waf waf = wafService.loadWaf(wafId);
 		
@@ -114,6 +115,7 @@ public class WafsController {
 			}
 		}
 		mav.addObject("hasApps", hasApps);
+		mav.addObject("wafTypeList", wafService.loadAllWafTypes());
 		
 		if (waf.getApplications() != null && waf.getApplications().size() != 0) {
 			boolean globalAccess = permissionService.isAuthorized(Permission.READ_ACCESS, null,null);
@@ -165,6 +167,8 @@ public class WafsController {
 		permissionService.addPermissions(mav, null, null, 
 				Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
 		
+		mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
+		
 		return mav;
 	}
 
@@ -200,7 +204,7 @@ public class WafsController {
 
 	@RequestMapping(value = "/{wafId}", method = RequestMethod.POST)
 	public ModelAndView download(@PathVariable("wafId") int wafId,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		Waf waf = wafService.loadWaf(wafId);
 		if (waf == null)
 			return null;
@@ -210,7 +214,7 @@ public class WafsController {
 		String pageString = wafService.getAllRuleText(waf);
 		
 		if (pageString == null) {
-			return detail(wafId);
+			return detail(wafId, request);
 		}
 		
 		response.setContentType("application/octet-stream");

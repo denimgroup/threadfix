@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
@@ -79,56 +79,35 @@ public class EditWafController {
 	public List<WafType> populateWafTypes() {
 		return wafService.loadAllWafTypes();
 	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("wafId") int wafId, Model model) {
-		Waf waf = wafService.loadWaf(wafId);
+	
+	@RequestMapping(value="ajax", method = RequestMethod.POST)
+	public String editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+			BindingResult result, SessionStatus status, Model model) {
 		
-		if (waf == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Waf", wafId));
-			throw new ResourceNotFoundException();
-		}
+		String editResult = editSubmit(wafId, waf, result, status, model);
 		
-		ModelAndView mav = new ModelAndView("wafs/form");
-		mav.addObject(waf);
-		return mav;
-	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public String editSubmit(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
-			BindingResult result, SessionStatus status) {
-		if (result.hasErrors()) {
-			return "wafs/form";
+		if (editResult.equals("Success")) {
+			return index(model, "The WAF " + waf.getName() + " has been successfully edited.");
 		} else {
-			
-			if (waf.getName().trim().equals("")) {
-				result.rejectValue("name", null, null, "This field cannot be blank");
-			} else {
-				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
-				if (databaseWaf != null && !databaseWaf.getId().equals(waf.getId())) {
-					result.rejectValue("name", "errors.nameTaken");
-				}
-			}
-			
-			if (waf.getWafType() == null)
-				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
-			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
-				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
-			
-			if (result.hasErrors())
-				return "wafs/form";
-			
-			wafService.storeWaf(waf);
-			
-			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug("The Waf " + waf.getName() + " (id=" + waf.getId() + ") has been edited by user " + currentUser);
-			
-			return "redirect:/wafs/" + String.valueOf(wafId);
+			return editResult;
 		}
 	}
 	
-	@RequestMapping(value="ajax", method = RequestMethod.POST)
-	public String editSubmitAjax(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+	@RequestMapping(value="detail/ajax", method = RequestMethod.POST)
+	public String editSubmitFromDetail(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+			BindingResult result, SessionStatus status, Model model, HttpServletRequest request) {
+		String editResult = editSubmit(wafId, waf, result, status, model);
+		
+		if (editResult.equals("Success")) {
+			ControllerUtils.addSuccessMessage(request, "This WAF has been successfully updated.");
+			model.addAttribute("contentPage", "/wafs/" + wafId);
+			return "ajaxRedirectHarness";
+		} else {
+			return editResult;
+		}
+	}
+	
+	public String editSubmit(int wafId, Waf waf,
 			BindingResult result, SessionStatus status, Model model) {
 		waf.setId(wafId);
 		
@@ -153,7 +132,7 @@ public class EditWafController {
 			
 			if (result.hasErrors()) {
 				model.addAttribute("contentPage", "wafs/forms/editWafForm.jsp");
-				return "wafs/form";
+				return "ajaxFailureHarness";
 			}
 			
 			wafService.storeWaf(waf);
@@ -161,7 +140,7 @@ public class EditWafController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Waf " + waf.getName() + " (id=" + waf.getId() + ") has been edited by user " + currentUser);
 			
-			return index(model, "The WAF " + waf.getName() + " has been successfully edited.");
+			return "Success";
 		}
 	}
 	

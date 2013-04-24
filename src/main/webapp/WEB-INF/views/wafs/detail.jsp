@@ -5,7 +5,31 @@
 </head>
 
 <body id="wafs">
-	<h2 id="nameText" ><c:out value="${ waf.name }"/></h2>
+	<h2 id="nameText" ><c:out value="${ waf.name }"/>
+		<span>
+			<c:if test="${ canManageWafs }">
+				<a id="editWafModalButton" href="#editWafModal" role="button" class="btn" data-toggle="modal">Edit WAF</a>
+				<spring:url value="{wafId}/delete" var="deleteUrl">
+					<spring:param name="wafId" value="${ waf.id }"/>
+				</spring:url>
+			
+				<c:if test="${ not hasApps }">
+					<a class="btn btn-danger" id="deleteButton" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this WAF?')">Delete WAF</a> 
+				</c:if>
+				<c:if test="${ hasApps }">
+					<a class="btn btn-danger" id="deleteButton" onclick="return alert('Remove the Applications from this WAF and try again.')">Delete WAF</a>
+				</c:if>	
+			</c:if>
+		</span>
+	</h2>
+	
+	<div id="editWafModal" class="modal hide fade" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<spring:url value="/wafs/{wafId}/edit/detail/ajax" var="updateUrl">
+			<spring:param name="wafId" value="${ waf.id }"/>
+		</spring:url>
+		<%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
+	</div>		
 	
 	<div id="helpText">
 		This page is used to generate rules and upload WAF logs to correlate their results with your existing Vulnerabilities.
@@ -20,28 +44,8 @@
 			</tr>
 		</tbody>
 	</table>
-	<br />
-	<spring:url value="{wafId}/edit" var="editUrl">
-		<spring:param name="wafId" value="${ waf.id }"/>
-	</spring:url>
 	
-	<c:if test="${ canManageWafs }">
-	<a id="editLink" href="${ fn:escapeXml(editUrl) }">Edit WAF</a> | 
-	<spring:url value="{wafId}/delete" var="deleteUrl">
-		<spring:param name="wafId" value="${ waf.id }"/>
-	</spring:url>
-	
-	<c:if test="${ not hasApps }">
-		<a id="deleteButton" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this WAF?')">Delete WAF</a> | 
-	</c:if>
-	<c:if test="${hasApps}">
-		<a id="deleteButton" onclick="return alert('Remove the Applications from this WAF and try again.')">Delete WAF</a> | 
-	</c:if>	
-	</c:if>
-	
-	<a id="backToListLink" href="<spring:url value="/wafs" />">Back to WAF Index</a>
-	
-	<br />
+	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	
 	<c:if test="${ canManageWafs and not empty waf.wafRules and hasApps }">
 		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
@@ -64,7 +68,6 @@
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
-
 
 	<c:if test="${hasApps}">
 

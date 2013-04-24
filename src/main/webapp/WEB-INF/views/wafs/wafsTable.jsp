@@ -32,6 +32,9 @@
 				<a id="editWafModalButton${ status.count }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit WAF</a>
 				<div id="editWaf${ waf.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<spring:url value="/wafs/{wafId}/edit/ajax" var="updateUrl">
+						<spring:param name="wafId" value="${ waf.id }"/>
+					</spring:url>
 					<%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
 				</div>
 			</td>
