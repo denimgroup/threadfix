@@ -422,29 +422,6 @@ function toggleExpandable(expandable, caret) {
 	}
 }
 
-function toggleExpandableWithReport(expandable, caret, reportDiv) {
-	toggleExpandable(expandable, caret);
-	
-	if ($("#" + reportDiv)[0] && !$("#" + reportDiv).attr('data-loaded')) {
-		$.ajax({
-			type : "GET",
-			url : $("#" + reportDiv).attr('data-url'),
-			dataType : "text",
-			success : function(text) {
-				 if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
-					 $("#" + reportDiv).html(text);
-					 $("#" + reportDiv).attr('data-loaded', '1');
-				} else {
-					$("#connectionUnavailableMessage").css("display", "");
-				}
-			},
-			error : function (xhr, ajaxOptions, thrownError){
-				$("#connectionUnavailableMessage").css("display", "");
-		    }
-		});
-	}
-}
-
 // This function makes some assumptions about how your modal is laid out:
 // 1. It is contained in a form which is to be submitted, and has an appropriate action attribute
 // 2. That form is enclosed in a parent div which can be replaced with any failure content

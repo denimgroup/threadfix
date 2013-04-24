@@ -11,7 +11,8 @@
 
 	<spring:url value="/organizations/teamTable" var="tableUrl"/>
 	<div id="teamTable" data-url="<c:out value="${ tableUrl }"/>">
-		<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+		<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" 
+				data-toggle="modal" style="margin-bottom:8px;margin-top:10px;">Add Team</a>
 	</div>
 	
 	<div id="myTeamModal" class="modal hide fade" tabindex="-1"

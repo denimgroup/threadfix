@@ -15,18 +15,19 @@
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
-		<tr id="teamRow${ organization.id }" class="pointer" onclick="javascript:toggleExpandableWithReport('#teamInfoDiv${ organization.id}', '#caret${ organization.id }', 'reportDiv${organization.id}')">
-			<td>
+		<tr id="teamRow${ organization.id }" class="pointer" data-target-div="teamInfoDiv${ organization.id}"
+				data-caret-div="caret${ organization.id }" data-report-div="reportDiv${organization.id}">
+			<td class="expandableTrigger">
 				<span id="caret${ organization.id }" class="caret-right"></span>
 			</td>
-			<td id="teamName${ status.count }">
+			<td class="expandableTrigger" id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
 			<td>
 				<spring:url value="/organizations/{orgId}" var="organizationUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
 				</spring:url>
-				<a id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
+				<a style="text-decoration:none" id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
 			</td>
 		</tr>
 		<tr class="expandable">

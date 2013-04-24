@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-	name="pointInTimeGraph" pageWidth="360" pageHeight="200"
+	name="pointInTimeGraph" pageWidth="360" pageHeight="250"
 	whenNoDataType="NoDataSection" columnWidth="320" leftMargin="0" rightMargin="0" 
 	topMargin="0" bottomMargin="0">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
@@ -78,10 +78,10 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="200">
+		<band height="250">
 			<pieChart>
 				<chart isShowLegend="false" customizerClass="com.denimgroup.threadfix.service.report.PointInTimeChartCustomizer">
-					<reportElement x="0" y="0" width="360" height="200"/>
+					<reportElement x="0" y="0" width="360" height="250"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>

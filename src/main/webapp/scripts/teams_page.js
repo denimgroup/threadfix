@@ -40,6 +40,7 @@ function reloadTable() {
 		success : function(text) {
 			tableDiv.html(text);
 			addModalSubmitEvents();
+			addExpandsHandlers();
 		},
 		error : function (xhr, ajaxOptions, thrownError){
 			history.go(0);
@@ -47,6 +48,50 @@ function reloadTable() {
 	});
 }
 
+function addExpandsHandlers() {
+	$(".expandableTrigger").each(function() {
+		var element = $(this);
+		if (!element.attr('data-has-function')) {
+			var parentTr = element.closest("tr");
+			parentTr.attr("background-color", "yellow");
+			var targetDiv = '#' + parentTr.attr('data-target-div');
+			var caretDiv = '#' + parentTr.attr('data-caret-div');
+			var reportDiv = '#' + parentTr.attr('data-report-div');
+			
+			element.on("click", function() {
+				$(targetDiv).collapse('toggle');
+				if ($(caretDiv).attr('class').indexOf('expanded') == -1) {
+					$(caretDiv).addClass('expanded');
+				} else {
+					$(caretDiv).removeClass('expanded');
+				}
+				
+				if ($(reportDiv)[0] && !$(reportDiv).attr('data-loaded')) {
+					$.ajax({
+						type : "GET",
+						url : $(reportDiv).attr('data-url'),
+						dataType : "text",
+						success : function(text) {
+							 if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
+								 $(reportDiv).html(text);
+								 $(reportDiv).attr('data-loaded', '1');
+							} else {
+								$("#connectionUnavailableMessage").css("display", "");
+							}
+						},
+						error : function (xhr, ajaxOptions, thrownError){
+							$("#connectionUnavailableMessage").css("display", "");
+					    }
+					});
+				}
+			});
+			
+			element.attr("data-has-function","1");
+		}
+	});
+}
+
 addToDocumentReadyFunctions(function(){ 
 	reloadTable();
+	addExpandsHandlers();
 });
