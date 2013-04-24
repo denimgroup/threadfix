@@ -730,6 +730,10 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	border-width: 2px 2px 2px 0;
 }
 
+.table.table-bordered.thick-borders  th{
+	background-color:#EEEEEE;
+}
+
 div.box-shadow {
 	-moz-box-shadow: 0 0 30px 5px #fff;
     -webkit-box-shadow: 2px 2px 4px 1px #fff;
