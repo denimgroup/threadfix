@@ -47,7 +47,7 @@
 	</div>
 	</c:if>
 
-	<table class="table table-striped" id="1">
+	<table class="table" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
@@ -66,7 +66,22 @@
 		</c:when>
 		<c:otherwise>
 		<c:forEach var="finding" items="${ findingList }" varStatus="status">
-			<tr class="bodyRow">
+			<c:if test="${ finding.channelSeverity.numericValue == 5 }">
+			      <c:set var="color" value="error" />
+			</c:if>
+			<c:if test="${ finding.channelSeverity.numericValue == 4 }">
+			      <c:set var="color" value="warning" />
+			</c:if>
+			<c:if test="${ finding.channelSeverity.numericValue == 3 }">
+			      <c:set var="color" value="success" />
+			</c:if>
+			<c:if test="${ finding.channelSeverity.numericValue == 2 }">
+			      <c:set var="color" value="info" />
+			</c:if>
+			<c:if test="${ finding.channelSeverity.numericValue == 1 }">
+			      <c:set var="color" value="info" />
+			</c:if>
+			<tr class="bodyRow <c:out value="${ color }"/>">
 				<td id="unmappedSeverity${ status.count }">
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>
