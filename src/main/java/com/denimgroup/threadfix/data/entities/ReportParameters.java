@@ -86,7 +86,7 @@ public class ReportParameters implements Serializable {
 		ReportFormat.POINT_IN_TIME, ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE, 
 		ReportFormat.CHANNEL_COMPARISON_BY_VULN_TYPE, ReportFormat.CHANNEL_COMPARISON_SUMMARY,
 		ReportFormat.CHANNEL_COMPARISON_DETAIL, ReportFormat.MONTHLY_PROGRESS_REPORT,
-		ReportFormat.PORTFOLIO_REPORT };
+		ReportFormat.PORTFOLIO_REPORT, ReportFormat.TWELVE_MONTH_SUMMARY, ReportFormat.TOP_TWENTY_APPS };
 	
 	// Translate reportId to the appropriate enum
 	public ReportFormat getReportFormat() {

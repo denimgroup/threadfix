@@ -57,8 +57,10 @@ public interface ReportsService {
 		CHANNEL_COMPARISON_DETAIL("scannerComparisonByVulnerability"), 
 		MONTHLY_PROGRESS_REPORT("monthlyBarChart.jrxml"),
 		SIX_MONTH_SUMMARY("sixMonthSummary.jrxml"),
+		TWELVE_MONTH_SUMMARY("twelveMonthSummary.jrxml"),
 		PORTFOLIO_REPORT("portfolioReport"),
 		TOP_TEN_APPS("topTenApps.jrxml"),
+		TOP_TWENTY_APPS("topTwentyApps.jrxml"),
 		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml");
 		
 		private String fileName;

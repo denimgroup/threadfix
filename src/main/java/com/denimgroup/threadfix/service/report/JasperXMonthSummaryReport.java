@@ -34,10 +34,10 @@ import com.denimgroup.threadfix.data.entities.Scan;
  * @author mcollins
  *
  */
-public class JasperSixMonthSummaryReport implements JRDataSource {
+public class JasperXMonthSummaryReport implements JRDataSource {
 	private List<Scan> scanList, normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
-	private int index = 0;
+	private int index = 0, numMonths = 0;
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
 	private Map<Integer, Map<YearAndMonth, Scan>> channelScanMap = new HashMap<>();
 	private Map<YearAndMonth, Calendar> timeMap = new HashMap<>();
@@ -46,9 +46,15 @@ public class JasperSixMonthSummaryReport implements JRDataSource {
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
 	
-	public JasperSixMonthSummaryReport(List<Scan> scanList, ScanDao scanDao) {
+	public JasperXMonthSummaryReport(List<Scan> scanList, ScanDao scanDao, int numMonths) {
 		this.scanDao = scanDao;
 		this.scanList = scanList;
+		
+		if (numMonths > 0 && numMonths <= 12) {
+			this.numMonths = numMonths;
+		} else {
+			numMonths = 6;
+		}
 		
 		if (this.scanList != null && this.scanList.size() > 0) {			
 			Collections.sort(this.scanList, Scan.getTimeComparator());
@@ -79,7 +85,7 @@ public class JasperSixMonthSummaryReport implements JRDataSource {
 
 		addIntermediateScans(channelScanMap, now); 
 		
-		Map<YearAndMonth, List<Integer>> results = collapseScans(channelScanMap, now.past6Months());
+		Map<YearAndMonth, List<Integer>> results = collapseScans(channelScanMap, now.pastXMonths(numMonths));
 		
 		return getFinalScans(results);
 	}
@@ -145,11 +151,16 @@ public class JasperSixMonthSummaryReport implements JRDataSource {
 		return scanList;
 	}
 	
+	public static void main(String[] args) {
+		YearAndMonth test = new YearAndMonth(2013, 4);
+		System.out.println(test.pastXMonths(12));
+	}
+	
 	///////////////////////////////////////////////////////////////////
 	//   This method makes it easier to use dates as keys in a map.  //
 	///////////////////////////////////////////////////////////////////
 	
-	class YearAndMonth implements Comparable<YearAndMonth> {
+	static class YearAndMonth implements Comparable<YearAndMonth> {
 		
 		private int year, month;
 		YearAndMonth(int year, int month) { this.year = year; this.month = month; }
@@ -166,6 +177,8 @@ public class JasperSixMonthSummaryReport implements JRDataSource {
 		}
 		
 		public YearAndMonth addMonths(int num) {
+			if (num == 0) { return this; }
+			
 			if (month + num > 12) {
 				return new YearAndMonth(year + ((month + num) / 12), ((month + num) % 12));
 			} else if (month + num < 1) {
@@ -175,15 +188,14 @@ public class JasperSixMonthSummaryReport implements JRDataSource {
 			}
 		}
 		
-		public List<YearAndMonth> past6Months() {
-			return Arrays.asList(new YearAndMonth[] {
-				this, 
-				this.addMonths(-1),
-				this.addMonths(-2),
-				this.addMonths(-3),
-				this.addMonths(-4),
-				this.addMonths(-5),
-			});
+		public List<YearAndMonth> pastXMonths(int numMonths) {
+			YearAndMonth array[] = new YearAndMonth[numMonths];
+			
+			for (int i = 0; i < numMonths; i ++) {
+				array[i] = this.addMonths(- i);
+			}
+			
+			return Arrays.asList(array);
 		}
 		
 		public String getMonthName() {

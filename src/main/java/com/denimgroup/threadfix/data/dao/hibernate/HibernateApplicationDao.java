@@ -155,7 +155,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Integer> getTopTenVulnerableAppsFromList(
+	public List<Integer> getTopXVulnerableAppsFromList(int numApps,
 			List<Integer> applicationIdList) {
 		return sessionFactory.getCurrentSession()
 				.createQuery("SELECT application.id as id " +
@@ -166,7 +166,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 						 "GROUP BY application.id " +
 						 "ORDER BY count(vulnerability) desc")
 				.setParameterList("applicationIdList", applicationIdList)
-				.setMaxResults(10)
+				.setMaxResults(numApps)
 				.list();
 	}
 }

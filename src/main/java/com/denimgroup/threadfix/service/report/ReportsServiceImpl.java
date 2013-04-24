@@ -130,8 +130,10 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		
 		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
-			applicationIdList = applicationDao.getTopTenVulnerableAppsFromList(applicationIdList);
-		}
+			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
+		} else if (parameters.getReportFormat() == ReportFormat.TOP_TWENTY_APPS) {
+			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
+		} 
 		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 		
@@ -229,7 +231,11 @@ public class ReportsServiceImpl implements ReportsService {
 			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
 				List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, 
-						new JasperSixMonthSummaryReport(scanList, scanDao));
+						new JasperXMonthSummaryReport(scanList, scanDao, 6));
+			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
+				List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, 
+						new JasperXMonthSummaryReport(scanList, scanDao, 12));
 			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {

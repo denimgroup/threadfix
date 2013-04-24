@@ -92,6 +92,6 @@ public interface ApplicationDao {
 	
 	/**
 	 */
-	List<Integer> getTopTenVulnerableAppsFromList(List<Integer> applicationIdList);
+	List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> applicationIdList);
 
 }

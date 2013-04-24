@@ -116,6 +116,14 @@
 						<td><a>Portfolio Report</a></td>
 						<td><div class="sidebar-arrow" id="arrow8">&gt;</div></td>
 					</tr>
+					<tr class="sidebar sidebar9" data-report-id="9" data-url="<c:out value="${ emptyUrl }"/>">
+						<td><a>Last 12 Months</a></td>
+						<td><div class="sidebar-arrow" id="arrow9">&gt;</div></td>
+					</tr>
+					<tr class="sidebar sidebar10" data-report-id="10" data-url="<c:out value="${ emptyUrl }"/>">
+						<td><a>Top Twenty Applications</a></td>
+						<td><div class="sidebar-arrow" id="arrow10">&gt;</div></td>
+					</tr>
 				</table>
 					
 				</div>
