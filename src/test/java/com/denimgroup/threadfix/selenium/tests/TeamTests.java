@@ -67,9 +67,8 @@ public class TeamTests extends BaseTest {
 		assertTrue("The validation is not present",teamIndexPage.isCreateValidtionPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 
-		teamIndexPage = teamIndexPage.expandTeamRowByName(newOrgName)
-													.clickViewTeamLink()
-													.clickDeleteButton();
+		teamIndexPage = teamIndexPage.clickViewTeamLink(newOrgName)
+									.clickDeleteButton();
 		assertFalse("The organization was still present after attempted deletion.", teamIndexPage.isTeamPresent(newOrgName));
 	
 		loginPage = teamIndexPage.logout();
@@ -100,7 +99,7 @@ public class TeamTests extends BaseTest {
 		
 		// Test browser length limit
 		teamIndexPage = teamIndexPage.setTeamName(longInput)
-													.addNewTeam();
+									.addNewTeam();
 		String orgName ="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 		assertTrue("The organization name was not cropped correctly.", teamIndexPage.isTeamPresent(orgName));
 		
@@ -116,8 +115,7 @@ public class TeamTests extends BaseTest {
 		
 		// Delete and logout
 		loginPage = teamIndexPage.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgName)
-									.clickViewTeamLink()
+									.clickViewTeamLink(orgName)
 									.clickDeleteButton()
 									.logout();
 	}
@@ -138,8 +136,7 @@ public class TeamTests extends BaseTest {
 		
 		// Edit that organization
 		teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-													.expandTeamRowByName(newOrgName)
-													.clickViewTeamLink()
+													.clickViewTeamLink(newOrgName)
 													.clickEditOrganizationLink()
 													.setNameInput(editedOrgName)
 													.clickUpdateButtonValid();
@@ -147,8 +144,7 @@ public class TeamTests extends BaseTest {
 		
 		teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
 		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedOrgName));
-		teamIndexPage = teamIndexPage.expandTeamRowByName(editedOrgName)
-									.clickViewTeamLink()
+		teamIndexPage = teamIndexPage.clickViewTeamLink(editedOrgName)
 									.clickDeleteButton();
 		
 		assertFalse("The organization was still present after attempted deletion.", teamIndexPage.isTeamPresent(editedOrgName));
@@ -175,15 +171,14 @@ public class TeamTests extends BaseTest {
 																.clickAddTeamButton()
 																.setTeamName(orgNameDuplicateTest)
 																.addNewTeam()
-																.expandTeamRowByName(orgName)
-																.clickViewTeamLink();
+																.clickViewTeamLink(orgName);
 		
 		// Test edit with no changes
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink().clickUpdateButtonValid();
 		assertTrue("Organization Page did not save the name correctly.", orgName.equals(teamDetailPage.getOrgName()));
 		
 		// Test empty input
-		editTeamPage = teamDetailPage.clickEditOrganizationLink()
+		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
 													 .setNameInput(emptyString)
 													 .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(editTeamPage.getErrorText()));
@@ -201,7 +196,7 @@ public class TeamTests extends BaseTest {
 		assertTrue("The organization name was not cropped correctly.", teamDetailPage.getOrgName().length() == Organization.NAME_LENGTH);
 		
 		// Test name duplication checking
-		editTeamPage = teamDetailPage.clickEditOrganizationLink()
+		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
 													 .setNameInput(orgNameDuplicateTest)
 													 .clickUpdateButtonInvalid();
 		
@@ -209,12 +204,10 @@ public class TeamTests extends BaseTest {
 				
 		// Delete and logout
 		loginPage = editTeamPage.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgName)
-									.clickViewTeamLink()
+									.clickViewTeamLink(orgName)
 									.clickDeleteButton()
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgNameDuplicateTest)
-									.clickViewTeamLink()
+									.clickViewTeamLink(orgNameDuplicateTest)
 									.clickDeleteButton()
 									.logout();
 	}

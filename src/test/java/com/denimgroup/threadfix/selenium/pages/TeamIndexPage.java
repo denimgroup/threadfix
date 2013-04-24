@@ -52,10 +52,7 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public int getNumAppRows(String teamName) {
-		System.out.println("id = teamAppTable" + (getIndex(teamName) + 1));
-		System.out.println(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
-				.getText());
-		if (!(driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
+		if (!(driver.findElementById("teamAppTableDiv" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found."))) {
 			return driver.findElementById("teamAppTable" + (getIndex(teamName) + 1)).findElements(By.className("app-row")).size();
 		}
@@ -141,8 +138,8 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage clickAddNewApplication(String teamName) {
-		driver.findElementByLinkText("Add Application").click();
-		waitForElement(driver.findElementByClassName("modal"));
+		driver.findElementById("teamAppTableDiv"+(getIndex(teamName)+1)).findElement(By.linkText("Add Application")).click();
+		waitForElement(driver.findElementByClassName("in"));
 		return new TeamIndexPage(driver);
 	}
 
@@ -167,26 +164,22 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage saveApplication() {
-		driver.findElementByClassName("modal-footer")
-				.findElement(By.linkText("Add Application")).click();
+		driver.findElementByClassName("modalSubmit").click();
 		waitForInvisibleElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}
 
 	public TeamIndexPage saveApplicationInvalid() {
-		driver.findElementByClassName("modal-footer")
-				.findElement(By.linkText("Add Application")).click();
+		driver.findElementByClassName("modalSubmit").click();
 		return new TeamIndexPage(driver);
 	}
 
 	public TeamIndexPage addNewApplication(String teamName, String appName,
 			String url, String critic) {
-		expandTeamRowByName(teamName);
 		clickAddNewApplication(teamName);
 		setApplicationName(appName, teamName);
 		setApplicationUrl(url, teamName);
 		setApplicationCritic(critic, teamName);
-		saveApplication();
 		return new TeamIndexPage(driver);
 
 	}
@@ -269,6 +262,16 @@ public class TeamIndexPage extends BasePage {
 				.getText()
 				.contains(
 						"Team " + teamName + " has been created successfully.");
+	}
+
+	public BasePage closeModal() {
+		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+		return new TeamIndexPage(driver);
+	}
+
+	public TeamDetailPage clickViewTeamLink(String teamName) {
+		driver.findElementsByLinkText("View Team").get(getIndex(teamName)).click();
+		return new TeamDetailPage(driver);
 	}
 
 }

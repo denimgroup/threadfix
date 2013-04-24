@@ -46,25 +46,41 @@ public class TeamDetailPage extends BasePage {
 		super(webdriver);
 		
 		orgName = driver.findElementById("name");
-		backToList = driver.findElementById("backToList");
 		deleteButton = driver.findElementById("deleteLink");
-		editOrganizationLink = driver.findElementById("editOrganizationLink");
+		editOrganizationLink = driver.findElementById("teamModalButton");
 		applicationsTableBody = driver.findElementById("applicationsTableBody");
-		addApplicationLink = driver.findElementById("addApplicationLink");
+		addApplicationLink = driver.findElementByLinkText("Add Application");
 	}
 	
 	public String getOrgName() {
 		return orgName.getText();
 	}
 	
-	public TeamIndexPage clickBackToList() {
-		backToList.click();
-		return new TeamIndexPage(driver);
-	}
-	public TeamEditPage clickEditOrganizationLink() {
+	
+	public TeamDetailPage clickEditOrganizationLink() {
 		editOrganizationLink.click();
-		return new TeamEditPage(driver);
+		waitForElement(driver.findElementById("teamModal"));
+		return new TeamDetailPage(driver);
 	}
+	
+	public TeamDetailPage setNameInput(String editedOrgName) {
+		driver.findElementById("teamNameInput").clear();
+		driver.findElementById("teamNameInput").sendKeys(editedOrgName);
+		return new TeamDetailPage(driver);
+	}
+	
+	public TeamDetailPage clickUpdateButtonValid() {
+		driver.findElementById("submitTeamModal").click();
+		waitForInvisibleElement(driver.findElementById("teamModal"));
+		return new TeamDetailPage(driver);
+	}
+	
+	public TeamDetailPage clickUpdateButtonInvalid() {
+		driver.findElementById("submitTeamModal").click();
+		return new TeamDetailPage(driver);
+	}
+	
+	
 	
 	public TeamIndexPage clickDeleteButton() {
 		deleteButton.click();
@@ -120,4 +136,6 @@ public class TeamDetailPage extends BasePage {
 		addApplicationLink.click();
 		return new ApplicationAddPage(driver);
 	}
+
+
 }

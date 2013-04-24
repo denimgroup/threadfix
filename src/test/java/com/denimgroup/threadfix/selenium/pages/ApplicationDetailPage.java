@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -137,11 +138,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage clickActionButton(){
-		Actions clickBtn = new Actions(driver);
-				clickBtn.moveToElement(driver.findElementById("appActionButton"));
-				clickBtn.click();
-				//clickBtn.build();
-				clickBtn.perform();
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("document.getElementById('appActionButton').click();");
+		System.out.println("clicked");
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -184,21 +183,22 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public String getUrlText(){
-		return driver.findElementById("urlText").getText();
+		return driver.findElementById("urlText").getText().trim();
 	}
 	
 	public String getDefectTrackerText() {
-		return driver.findElementById("defectTrackerText").getText();
+		return driver.findElementById("defectTrackerText").getText().trim();
 	}
 	
 	/*public String getOrganizationText(){
 		return driver.findElementById("organizationText").getText();
 	}*/
 	
-	public ApplicationEditPage clickEditLink() {
+	public ApplicationDetailPage clickEditLink() {
 		clickActionButton();
-		driver.findElementById("editLink").click();
-		return new ApplicationEditPage(driver);
+		driver.findElementById("editApplicationModalButton").click();
+		waitForElement(driver.findElementById("editAppForm"));
+		return new ApplicationDetailPage(driver);
 	}
 	
 	public TeamDetailPage clickTeamLink() {
@@ -208,8 +208,6 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public TeamDetailPage clickDeleteLink() {
-		clickActionButton();
-		sleep(500);
 		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();
@@ -269,6 +267,44 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("addWafButton").click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
 		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage setNameInput(String appName2) {
+		driver.findElementById("nameInput").clear();
+		driver.findElementById("nameInput").sendKeys(appName2);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setUrlInput(String url){
+		driver.findElementById("urlInput").clear();
+		driver.findElementById("urlInput").sendKeys(url);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setAppCritic(String critic){
+		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage clickUpdateApplicationButton() {
+		driver.findElementById("submitAppModal").click();
+		waitForInvisibleElement(driver.findElementById("editAppForm"));
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
+		driver.findElementById("submitAppModal").click();
+		return new ApplicationDetailPage(driver);
+	}
+
+	public String getNameError() {
+		// TODO Auto-generated method stub
+		return driver.findElementById("name.errors").getText().trim();
+	}
+
+	public String getUrlError() {
+		// TODO Auto-generated method stub
+		return driver.findElementById("url.errors").getText().trim();
 	}
 
 }

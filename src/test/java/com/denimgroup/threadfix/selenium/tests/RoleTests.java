@@ -79,7 +79,7 @@ public class RoleTests extends BaseTest {
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name2));
 
 	}
-//had to take \n out of whitespace because the modals do not like enter yet fails due to no whitespace validation yet
+
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
@@ -95,7 +95,7 @@ public class RoleTests extends BaseTest {
 				.clickSaveRoleInvalid(null);
 
 		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getDisplayNameError().contains("This field cannot be blank"));
+				rolesIndexPage.getNameError().contains("This field cannot be blank"));
 
 		// Test whitespace
 
