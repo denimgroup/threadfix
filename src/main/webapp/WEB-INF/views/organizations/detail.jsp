@@ -11,8 +11,29 @@
 	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
 	    <li class="active"><c:out value="${ organization.name }"/></li>
     </ul>
-	<h2 id="name" style="padding-top:5px;"><c:out value="${ organization.name }"/></h2>
-	<div id="helpText">This page is used to group the Applications and Maturity Assessments for a specific Team.</div>
+	<h2 id="name" style="padding-top:5px;">
+		<c:out value="${ organization.name }"/>
+		<c:if test="${ canManageTeams }">
+			<span>
+				<a id="teamModalButton" href="#teamModal" 
+					role="button" class="btn" data-toggle="modal">Edit</a>
+				<spring:url value="{orgId}/delete" var="deleteUrl">
+					<spring:param name="orgId" value="${ organization.id }"/>
+				</spring:url>
+				<a id="deleteLink" class="btn btn-danger" href="${ fn:escapeXml(deleteUrl) }" 
+						onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a>
+			</span>
+		</c:if>
+	</h2>
+	
+	<div id="teamModal" class="modal hide fade" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="editFormDiv">
+			<%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>
+		</div>
+	</div>
+	
+	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -37,6 +58,21 @@
 	</div>
 	
 	<h3 style="padding-top:5px;">Applications</h3>
+	<c:if test="${ canManageApplications }">
+		<div style="margin-top:10px;margin-bottom:7px;">
+			<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
+		</div>
+		<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="formDiv${ organization.id }">
+				<spring:url value="/organizations/{orgId}/detail/modalAddApp" var="saveUrl">
+					<spring:param name="orgId" value="${ organization.id }"/>
+				</spring:url>
+				<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+			</div>
+		</div>
+	</c:if>
+	
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -78,90 +114,7 @@
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
-			<c:if test="${ canManageApplications }">
-			<tr class="footer">
-				<td class="first" colspan="2">
-					<spring:url value="{orgId}/applications/new" var="newAppUrl">
-						<spring:param name="orgId" value="${ organization.id }"/>
-					</spring:url>
-					<a id="addApplicationLink" href="${ fn:escapeXml(newAppUrl) }">Add Application</a>
-				</td>
-				<td colspan="7" class="pagination last" style="text-align:right"></td>
-			</tr>
-			</c:if>
 		</tbody>
 	</table>
 	
-	<h3>Maturity Assessments</h3>
-	<div id="helpText">Maturity Assessments are designed to help evaluate a team's existing software security practices.</div>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th class="long first">Maturity Assessment</th>
-				<th class="medium">User</th>
-				<th class="medium">Status</th>
-				<th class="last">Started On</th>
-			</tr>
-		</thead>
-		<tbody>
-	<c:choose>
-		<c:when test="${ empty organization.surveyResults }">
-			<tr class="bodyRow">
-				<td colspan="4" style="text-align:center;"> No Maturity Assessments found.</td>
-			</tr>
-		</c:when>
-		<c:otherwise>
-			<c:forEach var="result" items="${ organization.surveyResults }">
-			<tr class="bodyRow">
-				<td>
-				<c:choose>
-					<c:when test="${ !(result.status eq 'Submitted') }" >
-						<spring:url value="{orgId}/surveys/{resultId}/edit" var="surveyUrl">
-							<spring:param name="orgId" value="${ organization.id }" />
-							<spring:param name="resultId" value="${ result.id }" />
-						</spring:url>
-					</c:when>
-					<c:otherwise>
-						<spring:url value="{orgId}/surveys/{resultId}" var="surveyUrl">
-							<spring:param name="orgId" value="${ organization.id }" />
-							<spring:param name="resultId" value="${ result.id }" />
-						</spring:url>
-					</c:otherwise>
-				</c:choose>
-					<a href="${ fn:escapeXml(surveyUrl)}">
-						<c:out value="${ result.survey.name }"/>
-					</a>
-				</td>
-				<td><c:out value="${ result.user }"/></td>
-				<td><c:out value="${ result.status }"/></td>
-				<td>
-					<fmt:formatDate value="${ result.createdDate }" type="both" dateStyle="short" timeStyle="short" />
-				</td>
-			</tr>
-			</c:forEach>
-		</c:otherwise>
-	</c:choose>
-			<tr class="footer">
-				<td colspan="2" class="first">
-					<spring:url value="{orgId}/surveys/new" var="newSurveyUrl">
-						<spring:param name="orgId" value="${ organization.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(newSurveyUrl) }">Take a Maturity Assessment</a>
-				</td>  
-				<td colspan="2" class="pagination last" style="text-align:right"></td>
-			</tr>
-		</tbody>
-	</table>
-	<br />
-	<c:if test="${ canManageTeams }">
-		<spring:url value="{orgId}/edit" var="editUrl">
-			<spring:param name="orgId" value="${ organization.id }"/>
-		</spring:url>
-		<a id="editOrganizationLink" href="${ fn:escapeXml(editUrl) }">Edit Team</a> | 
-		<spring:url value="{orgId}/delete" var="deleteUrl">
-			<spring:param name="orgId" value="${ organization.id }"/>
-		</spring:url>
-		<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a> | 
-	</c:if>
-	<a id="backToList" href="<spring:url value="/organizations" />">Home</a>
 </body>

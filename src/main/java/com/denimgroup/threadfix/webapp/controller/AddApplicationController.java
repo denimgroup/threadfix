@@ -113,34 +113,6 @@ public class AddApplicationController {
 		dataBinder.setValidator(new BeanValidator());
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public String newForm(@PathVariable("orgId") int orgId, Model model) {
-		Organization organization = organizationService.loadOrganization(orgId);
-		if (organization != null) {
-			
-			if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-				return "403";
-			}
-			
-			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
-					Permission.CAN_MANAGE_WAFS);
-			
-			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
-					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
-			
-			model.addAttribute("canSetWaf", permissionService.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, null));
-			
-			Application application = new Application();
-			application.setOrganization(organization);
-			model.addAttribute(application);
-			return "applications/form";
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
-			throw new ResourceNotFoundException();
-		}
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
 	public String newSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,

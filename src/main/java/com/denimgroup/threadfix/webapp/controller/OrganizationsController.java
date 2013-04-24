@@ -126,7 +126,8 @@ public class OrganizationsController {
 	}
 
 	@RequestMapping("/{orgId}")
-	public ModelAndView detail(@PathVariable("orgId") int orgId) {
+	public ModelAndView detail(@PathVariable("orgId") int orgId,
+			HttpServletRequest request) {
 		Organization organization = organizationService.loadOrganization(orgId);
 		List<Application> apps = permissionService.filterApps(organization);
 		if (organization == null || !organization.isActive()) {
@@ -145,6 +146,8 @@ public class OrganizationsController {
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
+			mav.addObject("application", new Application());
+			mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
 			return mav;
 		}
 	}
@@ -204,10 +207,39 @@ public class OrganizationsController {
 		}
 	}
 	
+	@RequestMapping(value="/{orgId}/detail/modalAddApp", method = RequestMethod.POST)
+	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
+			@Valid @ModelAttribute Application application, BindingResult result,
+			SessionStatus status, Model model, HttpServletRequest request) {
+		String submitResult = submitApp(orgId, application,result,status,model,request);
+		
+		if (submitResult.equals("Success")) {
+			status.setComplete();
+			model.addAttribute("contentPage", "/organizations/" + orgId);
+			return "ajaxRedirectHarness";
+		} else {
+			return submitResult;
+		}
+	}
+	
 	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
+	public String submitAppTeamIndex(@PathVariable("orgId") int orgId,
+			@Valid @ModelAttribute Application application, BindingResult result,
+			SessionStatus status, Model model, HttpServletRequest request) {
+		
+		String submitResult = submitApp(orgId, application,result,status,model,request);
+		
+		if (submitResult.equals("Success")) {
+			return teamTable(model,request);
+		} else {
+			return submitResult;
+		}
+	}
+	
 	public String submitApp(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
+
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
@@ -252,8 +284,8 @@ public class OrganizationsController {
 					"Application " + application.getName() + " was successfully created in team " + 
 					application.getOrganization().getName() + ".");
 			
-			status.setComplete();
-			return "redirect:/organizations/teamTable";
+			return "Success";
 		}
 	}
+	
 }

@@ -53,7 +53,6 @@ function addExpandsHandlers() {
 		var element = $(this);
 		if (!element.attr('data-has-function')) {
 			var parentTr = element.closest("tr");
-			parentTr.attr("background-color", "yellow");
 			var targetDiv = '#' + parentTr.attr('data-target-div');
 			var caretDiv = '#' + parentTr.attr('data-caret-div');
 			var reportDiv = '#' + parentTr.attr('data-report-div');
@@ -95,3 +94,5 @@ addToDocumentReadyFunctions(function(){
 	reloadTable();
 	addExpandsHandlers();
 });
+
+addToModalRefreshFunctions(addExpandsHandlers);

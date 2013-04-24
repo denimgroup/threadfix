@@ -3,10 +3,7 @@
 <div class="modal-header">
 	<h4 id="myModalLabel">New Application</h4>
 </div>
-<spring:url value="/organizations/{orgId}/modalAddApp" var="saveUrl">
-	<spring:param name="orgId" value="${ organization.id }"/>
-</spring:url>
-	<form:form style="margin-bottom:0px;" id="myAppForm${ organization.id }" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
+<form:form style="margin-bottom:0px;" id="myAppForm${ organization.id }" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 	<div class="modal-body">
 		<table>
 			<tr class="left-align">
@@ -41,6 +38,6 @@
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitAppModal${ organization.id }" class="modalSubmit btn btn-primary" 
-			data-success-div="teamTable" data-success-click="teamRow${ organization.id }">Add Application</a>
+			data-success-div="teamTable" data-success-click="teamCaret${ organization.id }">Add Application</a>
 	</div>
 </form:form>

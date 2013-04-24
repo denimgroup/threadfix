@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -49,7 +48,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
-@RequestMapping("/organizations/{orgId}/edit")
+@RequestMapping("/organizations/{orgId}/modalEdit")
 @SessionAttributes("organization")
 public class EditOrganizationController {
 	
@@ -77,26 +76,8 @@ public class EditOrganizationController {
 		dataBinder.setValidator(new BeanValidator());
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("orgId") int orgId, Model model) {
-		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
-			return new ModelAndView("403");
-		}
-
-		Organization organization = organizationService.loadOrganization(orgId);
-		if (organization != null && organization.isActive()) {
-			ModelAndView mav = new ModelAndView("organizations/form");
-			mav.addObject(organization);
-			return mav;
-		} else  {
-			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
-			throw new ResourceNotFoundException();
-		}
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
-	public String editSubmit(@PathVariable("orgId") int orgId,
+	public String editSubmit(@PathVariable("orgId") int orgId, Model model,
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status, HttpServletRequest request) {
 		
@@ -106,18 +87,21 @@ public class EditOrganizationController {
 		}
 		
 		if (result.hasErrors()) {
-			return "organizations/form";
+			model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+			return "ajaxFailureHarness";
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
-				return "organizations/form";
+				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+				return "ajaxFailureHarness";
 			}
 			
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null && !databaseOrganization.getId().equals(organization.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
-				return "organizations/form";
+				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+				return "ajaxFailureHarness";
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -129,7 +113,8 @@ public class EditOrganizationController {
 					"Team " + organization.getName() + " has been edited successfully.");
 			
 			status.setComplete();
-			return "redirect:/organizations/" + String.valueOf(orgId);
+			model.addAttribute("contentPage", "/organizations/" + String.valueOf(orgId));
+			return "ajaxRedirectHarness";
 		}
 	}
 

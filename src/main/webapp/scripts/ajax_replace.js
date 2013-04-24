@@ -28,10 +28,10 @@ function submitAjaxModalFunction(url, formId, formDiv, successDiv, modalName, ex
 	return function () {
 		var successFunction = function() {
 			if (successClick !== "#undefined") {
-				$(successClick).click();
+				setTimeout(function(){$(successClick).click();}, 200);
 			}
 			if (expandable !== "#undefined") {
-				$(expandable).collapse('show'); 
+				$(expandable).collapse('toggle'); 
 			}
 			for (var i = 0; i < modalRefreshFunctions.length; i++) {
 				modalRefreshFunctions[i]();

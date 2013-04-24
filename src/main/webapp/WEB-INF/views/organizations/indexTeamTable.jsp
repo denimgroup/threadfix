@@ -17,7 +17,7 @@
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
 		<tr id="teamRow${ organization.id }" class="pointer" data-target-div="teamInfoDiv${ organization.id}"
 				data-caret-div="caret${ organization.id }" data-report-div="reportDiv${organization.id}">
-			<td class="expandableTrigger">
+			<td id="teamCaret${ organization.id }" class="expandableTrigger">
 				<span id="caret${ organization.id }" class="caret-right"></span>
 			</td>
 			<td class="expandableTrigger" id="teamName${ status.count }">
@@ -106,6 +106,9 @@
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<div id="formDiv${ organization.id }">
+							<spring:url value="/organizations/{orgId}/modalAddApp" var="saveUrl">
+								<spring:param name="orgId" value="${ organization.id }"/>
+							</spring:url>
 							<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
 						</div>
 					</div>
