@@ -47,14 +47,13 @@
 	</div>
 	</c:if>
 
-	<table class="table table-striped sortable" id="1">
+	<table class="table table-striped" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
 				<th>Vulnerability Type</th>
 				<th>Path</th>
 				<th>Parameter</th>
-				<th>Vulnerability Link</th>
 				<th class="last">Number Merged Results</th>
 			</tr>
 		</thead>
@@ -62,7 +61,7 @@
 	<c:choose>
 		<c:when test="${ empty findingList }">
 			<tr class="bodyRow">
-				<td colspan="6" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
+				<td colspan="5" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
 			</tr>
 		</c:when>
 		<c:otherwise>
@@ -85,14 +84,6 @@
 				</td>
 				<td id="unmappedParameter${ status.count }">
 					<c:out value="${ finding.surfaceLocation.parameter }"/>
-				</td>
-				<td>
-					<spring:url value="../vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				    	<spring:param name="vulnerabilityId" value="${ finding.vulnerability.id }" />
-			    	</spring:url>
-			    	<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-						<c:out value="${ finding.vulnerability.id }"/>
-					</a>
 				</td>
 				<td id="unmappedMergedResults${ status.count }">
 					<c:out value="${ finding.numberMergedResults }"/>

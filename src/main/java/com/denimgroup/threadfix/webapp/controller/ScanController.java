@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,10 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -53,7 +53,6 @@ public class ScanController {
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
 	private ScanService scanService;
-	private ApplicationService applicationService;
 	private ScanDeleteService scanDeleteService;
 	private FindingService findingService;
 	private PermissionService permissionService;
@@ -61,12 +60,10 @@ public class ScanController {
 	@Autowired
 	public ScanController(ScanService scanService,
 			PermissionService organizationService,
-			ApplicationService applicationService,
 			ScanDeleteService scanDeleteService,
 			FindingService findingService) {
 		this.scanService = scanService;
 		this.permissionService = organizationService;
-		this.applicationService = applicationService;
 		this.scanDeleteService = scanDeleteService;
 		this.findingService = findingService;
 	}
@@ -76,27 +73,6 @@ public class ScanController {
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.setValidator(new BeanValidator());
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView viewScans(@PathVariable("orgId") Integer orgId, 
-			@PathVariable("appId") Integer appId) {
-		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
-			return new ModelAndView("403");
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		
-		if (application == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		ModelAndView mav = new ModelAndView("scans/index");
-		mav.addObject(application);
-		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
-		return mav;
 	}
 
 	@RequestMapping(value = "/{scanId}", method = RequestMethod.GET)
@@ -135,7 +111,8 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId) {
+			@PathVariable("scanId") Integer scanId,
+			HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS,orgId,appId)){
 			return new ModelAndView("403");
@@ -147,7 +124,9 @@ public class ScanController {
 				scanDeleteService.deleteScan(scan);
 			}
 		}
-		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
+		
+		ControllerUtils.addSuccessMessage(request, "The scan was successfully deleted.");
+		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
 	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
