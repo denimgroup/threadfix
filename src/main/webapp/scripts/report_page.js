@@ -78,8 +78,13 @@ addToDocumentReadyFunctions(function() {
 	appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 
 	$(".sidebar").on("click", function() {
-		selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"))
+		selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"));
 	});
 
-	submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
+	if ($("#successDiv").attr('data-first-report') !== "") {
+		var elementId = ".sidebar" + $("#successDiv").attr('data-first-report');
+		$(elementId).click();
+	} else {
+		submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
+	}
 });

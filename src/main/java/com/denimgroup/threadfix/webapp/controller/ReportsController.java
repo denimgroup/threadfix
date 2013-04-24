@@ -40,6 +40,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
@@ -94,7 +95,15 @@ public class ReportsController {
 	public String index(Model model, HttpServletRequest request) {
 		model.addAttribute("reportParameters", new ReportParameters());
 		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
+		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
 		return "reports/index";
+	}
+	
+	@RequestMapping(value="/{reportId}", method = RequestMethod.GET)
+	public String toReport(@PathVariable("reportId") int reportId,
+			Model model, HttpServletRequest request) {
+		ControllerUtils.addItem(request, "reportId", reportId);
+		return "redirect:/reports";
 	}
 	
 	@RequestMapping(value="/ajax/export", method = RequestMethod.POST)

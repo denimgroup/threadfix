@@ -128,7 +128,7 @@
 					
 				</div>
 				
-				<div class="span8" id="successDiv" style="margin-top:75px"></div>
+				<div class="span8" id="successDiv" data-first-report="<c:out value="${ firstReport }"/>" style="margin-top:75px"></div>
 			</div>
 		</div>
 	

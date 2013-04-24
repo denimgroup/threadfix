@@ -12,14 +12,20 @@
 	
 		<div class="row-fluid">
 		    <div class="span6">
-		    	<h4>Vulnerability Breakdown</h4>
+		    	<spring:url value="/reports/9" var="reportsUrl"/>
+		    	<h4>Vulnerability Breakdown <span style="font-size:12px;float:right;">
+		    		<a href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+		    	</h4>
 		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
 				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
 		    	<div id="leftTileReport"></div>
 		    </div>
 		    
 		     <div class="span6">
-		    	<h4>Top 10 Vulnerable Applications</h4>
+		     	<spring:url value="/reports/10" var="reportsUrl"/>
+		    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
+		    		<a href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+		    	</h4>
 		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
 				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
 		    	<div id="rightTileReport"></div>

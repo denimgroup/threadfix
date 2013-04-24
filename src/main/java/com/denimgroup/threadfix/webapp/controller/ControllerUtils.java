@@ -10,6 +10,10 @@ public class ControllerUtils {
 	private ControllerUtils() {
 		// Nobody can instantiate this class
 	}
+	
+	public static Object getItem(HttpServletRequest request, String key) {
+		return getAttribute(request, key);
+	}
 
 	public static Object getErrorMessage(HttpServletRequest request) {
 		return getAttribute(request, ERROR_MESSAGE);
@@ -17,6 +21,10 @@ public class ControllerUtils {
 	
 	public static Object getSuccessMessage(HttpServletRequest request) {
 		return getAttribute(request, SUCCESS_MESSAGE);
+	}
+	
+	public static void addItem(HttpServletRequest request, String key, Object item) {
+		addMessage(request, key, item);
 	}
 	
 	public static void addSuccessMessage(HttpServletRequest request, String successMessage) {
@@ -43,7 +51,7 @@ public class ControllerUtils {
 		return returnValue;
 	}
 	
-	private static void addMessage(HttpServletRequest request, String key, String message) {
+	private static void addMessage(HttpServletRequest request, String key, Object message) {
 		if (request == null || message == null) {
 			return;
 		}
