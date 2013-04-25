@@ -121,6 +121,7 @@ body#config #tab-config li.normalLinks a:hover {
 body#apps #tab-apps,
 body.dashboard #tab-dashboard,
 body#wafs #tab-wafs,
+body#scans #tab-scans,
 body#reports #tab-reports,
 body#config #tab-config {
 	background: url(../images/btn-bg-over.png) right center repeat-x;
@@ -129,6 +130,7 @@ body#config #tab-config {
 body#apps #tab-apps a,
 body.dashboard #tab-dashboard a,
 body#wafs #tab-wafs a,
+body#scans #tab-scans a,
 body#reports #tab-reports a,
 body#config #tab-config a {
 	color: #43678b;
@@ -137,6 +139,7 @@ body#config #tab-config a {
 
 body#apps #tab-apps a:hover,
 body#wafs #tab-wafs a:hover,
+body#scans #tab-scans a:hover,
 body.dashboard #tab-dashboard a:hover,
 body#reports #tab-reports a:hover,
 body#config #tab-config a:hover {
@@ -396,6 +399,7 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	padding-top:0px;
 	padding-bottom:0px;
 	min-height:250px;
+	text-decoration:none;
 }
 
 .table tr.expandable td table tr td {
