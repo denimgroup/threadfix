@@ -103,6 +103,7 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage addNewTeamInvalid() {
 		driver.findElementById("submitTeamModal").click();
+		sleep(500);
 		return new TeamIndexPage(driver);
 	}
 
@@ -163,14 +164,14 @@ public class TeamIndexPage extends BasePage {
 		return new TeamIndexPage(driver);
 	}
 
-	public TeamIndexPage saveApplication() {
-		driver.findElementByClassName("modalSubmit").click();
+	public TeamIndexPage saveApplication(String teamName) {
+		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
 		waitForInvisibleElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}
 
-	public TeamIndexPage saveApplicationInvalid() {
-		driver.findElementByClassName("modalSubmit").click();
+	public TeamIndexPage saveApplicationInvalid(String teamName) {
+		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
 		return new TeamIndexPage(driver);
 	}
 
@@ -273,5 +274,7 @@ public class TeamIndexPage extends BasePage {
 		driver.findElementsByLinkText("View Team").get(getIndex(teamName)).click();
 		return new TeamDetailPage(driver);
 	}
+
+
 
 }

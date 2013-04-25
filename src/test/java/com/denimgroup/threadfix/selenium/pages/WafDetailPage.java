@@ -43,8 +43,7 @@ public class WafDetailPage extends BasePage {
 		
 		nameText = driver.findElementById("nameText");
 		wafTypeText = driver.findElementById("wafTypeText");
-		editLink = driver.findElementById("editLink");
-		backToListLink = driver.findElementById("backToListLink");
+		editLink = driver.findElementById("editWafModalButton");
 		deleteButton = driver.findElementById("deleteButton");
 	}
 

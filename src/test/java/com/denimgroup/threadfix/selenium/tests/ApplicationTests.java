@@ -73,8 +73,7 @@ public class ApplicationTests extends BaseTest {
 				.addNewTeam()
 				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication();
-										
+				.saveApplication(teamName);		
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 											.expandTeamRowByName(teamName)
 											.clickViewAppLink(appName, teamName);
@@ -124,16 +123,15 @@ public class ApplicationTests extends BaseTest {
 										.addNewTeam()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, emptyString, emptyString, "Low")
-										.saveApplicationInvalid();
+										.saveApplicationInvalid(orgName);
 		
 		assertTrue("The correct error did not appear for the name field.", 
 				teamIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		teamIndexPage = teamIndexPage.closeModal()
-													.clickOrganizationHeaderLink()
-													.expandTeamRowByName(orgName)
-													.addNewApplication(orgName, whiteSpace, whiteSpace, "Low")
-													.saveApplicationInvalid();
+		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+									.expandTeamRowByName(orgName)
+									.addNewApplication(orgName, whiteSpace, whiteSpace, "Low")
+									.saveApplicationInvalid(orgName);
 		
 		
 		assertTrue("The correct error did not appear for the name field.", 
@@ -142,21 +140,19 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 		
 		// Test URL format
-		teamIndexPage = teamIndexPage.closeModal()
-													.clickOrganizationHeaderLink()
-													.expandTeamRowByName(orgName)
-													.addNewApplication(orgName, "dummyApp", urlText, "Low")
-													.saveApplicationInvalid();
+		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+									.expandTeamRowByName(orgName)
+									.addNewApplication(orgName, "dummyApp", urlText, "Low")
+									.saveApplicationInvalid(orgName);
 		
 		assertTrue("The correct error did not appear for the url field.", 
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 
 		// Test browser field length limits
-		applicationDetailPage = teamIndexPage.closeModal()
-				.clickOrganizationHeaderLink()
+		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(orgName)
 				.addNewApplication(orgName, longInputName, longInputUrl, "Low")
-				.saveApplication()
+				.saveApplication(orgName)
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(orgName)
 				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",orgName);
@@ -174,7 +170,7 @@ public class ApplicationTests extends BaseTest {
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
 												.expandTeamRowByName(orgName)
 												.addNewApplication(orgName, appName, "http://dummyurl", "Low")
-												.saveApplicationInvalid();
+												.saveApplicationInvalid(orgName);
 		
 		assertTrue("The duplicate message didn't appear correctly.", 
 				teamIndexPage.getNameErrorMessage().contains("That name is already taken."));
@@ -201,7 +197,7 @@ public class ApplicationTests extends BaseTest {
 				.addNewTeam()
 				.expandTeamRowByName(orgName)
 				.addNewApplication(orgName, appName1, urlText1, "Low")
-				.saveApplication();
+				.saveApplication(orgName);
 	
 		
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
@@ -270,11 +266,11 @@ public class ApplicationTests extends BaseTest {
 										.addNewTeam()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName2, validUrlText, "Low")
-										.saveApplication()
+										.saveApplication(orgName)
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, validUrlText, "Low")
-										.saveApplication()
+										.saveApplication(orgName)
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.clickViewAppLink(appName,orgName)
@@ -361,7 +357,7 @@ public class ApplicationTests extends BaseTest {
 										.addNewTeam()
 										.expandTeamRowByName(orgName)
 										.addNewApplication(orgName, appName, appUrl, "Low")
-										.saveApplication()
+										.saveApplication(orgName)
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(orgName)
 										.clickViewAppLink(appName,orgName)
@@ -425,7 +421,7 @@ public class ApplicationTests extends BaseTest {
 										 .addNewTeam()
 										 .expandTeamRowByName(orgName)
 										 .addNewApplication(orgName, appName, appUrl, "Low")
-										 .saveApplication()
+										 .saveApplication(orgName)
 										 .clickOrganizationHeaderLink()
 										 .expandTeamRowByName(orgName)
 										 .clickViewAppLink(appName,orgName)

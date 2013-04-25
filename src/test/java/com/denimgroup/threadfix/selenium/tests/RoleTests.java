@@ -106,7 +106,9 @@ public class RoleTests extends BaseTest {
 
 		// Test duplicates
 
-		rolesIndexPage = rolesIndexPage.setRoleName(normalName,null)
+		rolesIndexPage = rolesIndexPage.clickManageRolesLink()
+				.clickCreateRole()
+				.setRoleName(normalName,null)
 				.clickSaveRole(null)
 				.clickManageRolesLink()
 				.clickCreateRole()

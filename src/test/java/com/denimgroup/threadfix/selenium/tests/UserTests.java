@@ -207,7 +207,8 @@ public class UserTests extends BaseTest {
 
 
 		// Test submission with no changes
-		userIndexPage = userIndexPage.clickEditLink(baseUserName)
+		userIndexPage = userIndexPage.clickManageUsersLink()
+								.clickEditLink(baseUserName)
 								.clickUpdateUserBtn(baseUserName);
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 
@@ -247,7 +248,7 @@ public class UserTests extends BaseTest {
 									.clickUpdateUserBtnInvalid(baseUserName);
 
 
-		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+		assertTrue("Password length error not present", userIndexPage.getPasswordError().contains("Password has a minimum length of 12."));
 
 		// Test name uniqueness check
 		userIndexPage = userIndexPage.enterName(userNameDuplicateTest,null)

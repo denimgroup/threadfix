@@ -171,6 +171,7 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
 		driver.findElementsById("addUserButton").get(getIndex(name)).click();
+		sleep(500);
 		return new UserIndexPage(driver);
 	}
 	

@@ -140,7 +140,7 @@ public class TeamTests extends BaseTest {
 													.clickEditOrganizationLink()
 													.setNameInput(editedOrgName)
 													.clickUpdateButtonValid();
-		assertTrue("Editing did not change the name.", editedOrgName.equals(teamDetailPage.getOrgName()));
+		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedOrgName));
 		
 		teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
 		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedOrgName));
@@ -175,7 +175,7 @@ public class TeamTests extends BaseTest {
 		
 		// Test edit with no changes
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink().clickUpdateButtonValid();
-		assertTrue("Organization Page did not save the name correctly.", orgName.equals(teamDetailPage.getOrgName()));
+		assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
 		
 		// Test empty input
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()

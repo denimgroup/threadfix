@@ -98,6 +98,7 @@ public class RolesIndexPage extends BasePage {
 		}else{
 			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
 		}
+		sleep(500);
 		return new RolesIndexPage(driver);
 	}
 	
