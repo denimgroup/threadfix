@@ -130,7 +130,7 @@
 		<div class="row-fluid">
 			<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings == 0 }">
 				<div id="toReplace" style="margin-top:340px">
-				<h3>Findings</h3>
+				<h4>Findings</h4>
 				<table class="table table-striped" id="1">
 					<thead>
 						<tr>
@@ -159,7 +159,7 @@
 			<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
 				<div id="toReplace" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
 					data-login-url="<c:out value="${ loginUrl }"/>">
-				<h3 style="padding-top:140px">Successfully Mapped Findings</h3>
+				<h4 style="padding-top:140px">Successfully Mapped Findings</h4>
 				<table class="table table-striped" id="1">
 					<thead>
 						<tr>
@@ -180,7 +180,7 @@
 				
 				<div id="toReplace2"class="refreshOnLoad" data-source-url="<c:out value="${ unmappedTableUrl }"/>" 
 					data-login-url="<c:out value="${ loginUrl }"/>">
-				<h3>Unmapped Findings</h3>
+				<h4>Unmapped Findings</h4>
 				<table class="table table-striped" id="2">
 					<thead>
 						<tr>

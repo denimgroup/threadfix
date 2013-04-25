@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-	<h3 style="padding-top:8px">Successfully Mapped Findings:</h3>
+	<h4 style="padding-top:8px">Successfully Mapped Findings</h4>
 
 	<spring:url value="/login.jsp" var="loginUrl"/>
 	<spring:url value="{scanId}/table" var="tableUrl">
@@ -55,7 +55,8 @@
 				<th>Path</th>
 				<th>Parameter</th>
 				<th>Vulnerability Link</th>
-				<th class="last">Number Merged Results</th>
+				<th>Number Merged Results</th>
+				<th style="width:80px"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -88,13 +89,7 @@
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>
 				<td>
-					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
-					<spring:param name="scanId" value="${ scan.id }" />
-						<spring:param name="findingId" value="${ finding.id }" />
-					</spring:url>
-					<a id="mappedVulnType${ status.count }" href="${ fn:escapeXml(findingUrl) }">
-					    <c:out value="${ finding.channelVulnerability.name }"/>
-					</a>
+					<c:out value="${ finding.channelVulnerability.name }"/>
 				</td>
 				<td id="mappedPath${ status.count }">
 					<c:out value="${ finding.surfaceLocation.path }"/>
@@ -113,6 +108,15 @@
 				<td>
 					<c:out value="${ finding.numberMergedResults }"/>
 				</td>
+				<td>
+					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
+					<spring:param name="scanId" value="${ scan.id }" />
+						<spring:param name="findingId" value="${ finding.id }" />
+					</spring:url>
+					<a id="mappedVulnType${ status.count }" href="${ fn:escapeXml(findingUrl) }">
+						View Finding
+					</a>
+				</td>
 			</tr>
 		</c:forEach>
 		</c:otherwise>
@@ -128,3 +132,4 @@
 		}
 	});
 	</script>
+	

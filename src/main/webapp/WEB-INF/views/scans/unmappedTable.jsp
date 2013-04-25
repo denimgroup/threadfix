@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-	<h3 style="padding-top:8px">Unmapped Findings:</h3>
+	<h4 style="padding-top:8px">Unmapped Findings</h4>
 
 	<spring:url value="/login.jsp" var="loginUrl"/>
 	<spring:url value="{scanId}/table" var="tableUrl">
@@ -36,7 +36,7 @@
 		
 		<c:if test="${ page <= numPages - 2 }">
 			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
-		</c:if>
+		</c:if>Findings:
 		
 		<c:if test="${ page < numPages - 2 }">
 			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
@@ -55,6 +55,7 @@
 				<th>Path</th>
 				<th>Parameter</th>
 				<th class="last">Number Merged Results</th>
+				<th style="width:80px"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -86,13 +87,7 @@
 					<c:out value="${ finding.channelSeverity.name }"/>
 				</td>
 				<td id="unmappedVulnerability${ status.count }">
-					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
-					<spring:param name="scanId" value="${ scan.id }" />
-						<spring:param name="findingId" value="${ finding.id }" />
-					</spring:url>
-					<a href="${ fn:escapeXml(findingUrl) }">
-					    <c:out value="${ finding.channelVulnerability.name }"/>
-					</a>
+					<c:out value="${ finding.channelVulnerability.name }"/>
 				</td>
 				<td id="unmappedPath${ status.count }">
 					<c:out value="${ finding.surfaceLocation.path }"/>
@@ -102,6 +97,15 @@
 				</td>
 				<td id="unmappedMergedResults${ status.count }">
 					<c:out value="${ finding.numberMergedResults }"/>
+				</td>
+				<td>
+					<spring:url value="{scanId}/findings/{findingId}" var="findingUrl">
+					<spring:param name="scanId" value="${ scan.id }" />
+						<spring:param name="findingId" value="${ finding.id }" />
+					</spring:url>
+					<a href="${ fn:escapeXml(findingUrl) }">
+						View Finding
+					</a>
 				</td>
 			</tr>
 		</c:forEach>

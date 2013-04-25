@@ -30,22 +30,39 @@
 
 	<h2>Finding Details</h2>
 	
+	<div style="padding-bottom:10px">
+		<c:if test="${ not empty finding.vulnerability }">
+			<spring:url value="../../../vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
+				<spring:param name="vulnerabilityId" value="${ finding.vulnerability.id }" />
+			</spring:url>
+			<a class="btn" href="${ fn:escapeXml(vulnerabilityUrl) }">
+				<c:out value="View Vulnerability"/>
+			</a>
+			<c:if test="${ canModifyVulnerabilities }">
+				<spring:url value="{findingId}/merge" var="mergeUrl">
+					<spring:param name="findingId" value="${ finding.id }"/>
+				</spring:url>
+				<a class="btn" href="${ fn:escapeXml(mergeUrl) }">Merge with Other Findings</a>
+			</c:if>
+		</c:if>
+	</div>
+	
 	<table class="dataTable">
 		<tbody>
 			<tr>
-				<td class="bold">Channel Vulnerability</td>
+				<td class="bold">Scanner Vulnerability</td>
 				<td class="inputValue"><c:out value="${ finding.channelVulnerability.name }"/></td>
 			</tr>
 			<tr>
-				<td class="bold">Channel Severity</td>
+				<td class="bold">Scanner Severity</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/></td>
 			</tr>
 			<tr>
-				<td class="bold">Generic Vulnerability</td>
+				<td class="bold">CWE Vulnerability</td>
 				<td class="inputValue"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
 			</tr>
 			<tr>
-				<td class="bold">Generic Severity</td>
+				<td class="bold">Severity</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
 			<tr>
@@ -58,25 +75,6 @@
 			</tr>
 		</tbody>
 	</table>
-	
-	<div style="padding-top:10px">
-		<c:if test="${ not empty finding.vulnerability }">
-			<spring:url value="../../../vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				<spring:param name="vulnerabilityId" value="${ finding.vulnerability.id }" />
-			</spring:url>
-			<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-				<c:out value="View Vulnerability"/>
-			</a>
-			<c:if test="${ canModifyVulnerabilities }">
-				<br/>
-				<spring:url value="{findingId}/merge" var="mergeUrl">
-					<spring:param name="findingId" value="${ finding.id }"/>
-				</spring:url>
-				<a href="${ fn:escapeXml(mergeUrl) }">Merge with Other Findings</a>
-			</c:if>
-		</c:if>
-	</div>
-
 	
 	<c:if test="${ not empty finding.dataFlowElements }">
 		<h3>Data Flow</h3>
