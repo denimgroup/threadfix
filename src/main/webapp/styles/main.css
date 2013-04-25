@@ -399,6 +399,9 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	padding-top:0px;
 	padding-bottom:0px;
 	min-height:250px;
+}
+
+.table tr.expandable a {
 	text-decoration:none;
 }
 
