@@ -328,13 +328,11 @@ a.sortheader {
 .inputValue {
 	padding-left: 10px;
 	padding-right: 20px;
-	white-space: nowrap;
 }
 
 .inputValue-2 {
 	padding-left: 10px;
 	padding-right: 20px;
-	white-space: nowrap;
 }
 
 input[type="radio"], input[type="checkbox"] {
