@@ -95,6 +95,7 @@ public class ApplicationTests extends BaseTest {
 										.logout();
 		
 	}
+	
 	@Test 
 	public void testCreateBasicApplicationValidation() {
 		String orgName = "testCreateApplicationOrg2a";
