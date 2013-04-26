@@ -4,7 +4,8 @@
 	<spring:param name="orgId" value="${ application.organization.id }"/>
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
-<form:form id="submitDefectForm" modelAttribute="defectViewModel" method="post" action="${ fn:escapeXml(defectUrl) }">
+<form:form id="submitDefectForm" modelAttribute="defectViewModel" data-has-metadata="${ empty projectMetadata ? '' : '1' }"
+		 method="post" action="${ fn:escapeXml(defectUrl) }">
 	<div class="modal-body">
 	<table class="dataTable">
 		<tbody>

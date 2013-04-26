@@ -368,7 +368,9 @@ function createDTAndRefresh(url) {
 				$('#defectTableDiv').html(text);
 			    $('#createDefectTracker').modal('hide');
 			    $('#addDefectTracker').modal('show');
-			    
+			    for (var i = 0; i < modalRefreshFunctions.length; i++) {
+					modalRefreshFunctions[i]();
+				}
 			} else {$("#nameInput").focus();
 				try {
 					var json = JSON.parse($.trim(text));

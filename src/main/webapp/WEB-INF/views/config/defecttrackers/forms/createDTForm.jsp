@@ -51,6 +51,7 @@
 		</table>
 	</div>
 	<div class="modal-footer">
+		<input type="hidden" name="applicationId" value="<c:out value="${ application.id }"/>">
 		<button id="closeNewDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitDTCreateModal" class="btn btn-primary" onclick="javascript:createDTAndRefresh('<c:out value="${saveUrl }"/>');return false;">Create Defect Tracker</a>
 	</div>

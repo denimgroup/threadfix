@@ -145,8 +145,6 @@
 	
 	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %> 
 	
-	<c:if test="${ not empty application.defectTracker }">
-		<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
-	</c:if>
+	<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
 	
 </body>

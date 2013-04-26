@@ -95,6 +95,7 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanTab$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmission$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositiveTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedVulnerabilities/table$,

@@ -153,9 +153,7 @@ public class ApplicationsController {
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
-		if (application.getDefectTracker() != null) {
-			addDefectModelAttributes(model,appId,orgId);
-		}
+		
 		return "applications/detail";
 	}
 	
@@ -171,7 +169,11 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 		
-//		applicationService.decryptCredentials(application);
+		if (application.getDefectTracker() == null) {
+			return;
+		}
+		
+		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
@@ -182,6 +184,16 @@ public class ApplicationsController {
 		
 		model.addAttribute("projectMetadata", data);
 		model.addAttribute(new DefectViewModel());
+	}
+	
+	@RequestMapping("/{appId}/defectSubmission")
+	public String getDefectSubmissionForm(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId, SessionStatus status, Model model) {
+		
+		addDefectModelAttributes(model, appId, orgId);
+		model.addAttribute("contentPage", "defects/submitDefectForm.jsp");
+		
+		return "ajaxSuccessHarness";
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")

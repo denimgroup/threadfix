@@ -11,6 +11,71 @@ function switchWafModals() {
     return false;
 };
 
+var reloadDefectSubmissionDiv = function () {
+	
+	var tableDiv = $("#submitDefectFormDiv");
+	if (tableDiv) {
+		$.ajax({
+			type : "GET",
+			url : tableDiv.attr("data-refresh-url"),
+			success : function(text) {
+				tableDiv.html(text);
+				if ($("#submitDefectForm").attr("data-has-metadata")) {
+					$(".submitDefectActionLink").css("display","");
+					$(".missingDefectTrackerMessage").css("display","none");
+				} else {
+					$(".submitDefectActionLink").css("display","none");
+					$(".missingDefectTrackerMessage").css("display","");
+				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
+		    }
+		});
+	}
+};
+
+var addAppPageEvents = function () {
+	$("#addWafButton").on("click", function() {
+		if ($("#addWafDivInForm").attr("data-has-wafs")) {
+			$("#addWaf").modal('show');
+		} else {
+			$("#createWaf").modal('show');
+		}
+	});
+	
+	$("#addDefectTrackerButton").on("click", function() {
+		if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
+			$("#addDefectTracker").modal('show');
+		} else {
+			$("#createDefectTracker").modal('show');
+		}
+	});
+	
+	$("#jsonLink").on("click", function() {
+		jsonTest($("#appDTDiv").attr("data-json-test-url"));
+	});
+	
+	$("a.missingDefectTrackerMessage").on("click", function() {
+		alert('Please add a Defect Tracker and try again.');
+	});
+};
+
+var showSubmitLinks = function () {
+	if ($("#submitDefectForm").attr("data-has-metadata")) {
+		$(".submitDefectActionLink").css("display","");
+		$(".missingDefectTrackerMessage").css("display","none");
+	} else if ($("#editDefectTrackerButton").length != 0) {
+		reloadDefectSubmissionDiv();
+	}
+	
+	setTimeout(function () {
+		if ($("#addDefectTrackerButton").length != 0) {
+			reloadDefectSubmissionDiv();
+		}
+	}, 1100);
+};
+
 addToDocumentReadyFunctions(function () {
 	$('#vulnTab').button('toggle');
 	toggleFilters(false, null, null);
@@ -51,24 +116,9 @@ addToDocumentReadyFunctions(function () {
 		}
 	});
 	
-	$("#addWafButton").on("click", function() {
-		if ($("#addWafDivInForm").attr("data-has-wafs")) {
-			$("#addWaf").modal('show');
-		} else {
-			$("#createWaf").modal('show');
-		}
-	});
-	
-	$("#addDefectTrackerButton").on("click", function() {
-		if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
-			$("#addDefectTracker").modal('show');
-		} else {
-			$("#createDefectTracker").modal('show');
-		}
-	});
-	
-	$("#jsonLink").on("click", function() {
-		jsonTest($("#appDTDiv").attr("data-json-test-url"));
-	});
-	
+	addAppPageEvents();
+	showSubmitLinks();
 });
+
+addToModalRefreshFunctions(showSubmitLinks);
+addToModalRefreshFunctions(addAppPageEvents);

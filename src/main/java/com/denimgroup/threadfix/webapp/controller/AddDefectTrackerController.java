@@ -47,6 +47,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -58,14 +59,17 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 public class AddDefectTrackerController {
 
 	private DefectTrackerService defectTrackerService;
+	private ApplicationService applicationService;
 	
 	public AddDefectTrackerController(){}
 	
 	private final Log log = LogFactory.getLog(AddDefectTrackerController.class);
 
 	@Autowired
-	public AddDefectTrackerController(DefectTrackerService defectTrackerService) {
+	public AddDefectTrackerController(ApplicationService applicationService,
+			DefectTrackerService defectTrackerService) {
 		this.defectTrackerService = defectTrackerService;
+		this.applicationService = applicationService;
 	}
 
 	@InitBinder
@@ -137,24 +141,35 @@ public class AddDefectTrackerController {
 					", the type " + defectTracker.getDefectTrackerType().getName() + 
 					", and the ID " + defectTracker.getId());
 			
-			ControllerUtils.addSuccessMessage(request, 
-					"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
-			
 			String referrer = request.getHeader("referer");
 			if (referrer.endsWith("configuration/defecttrackers")) {
 				model.addAttribute("contentPage", "/configuration/defecttrackers");
+				ControllerUtils.addSuccessMessage(request, 
+						"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
 				return "ajaxRedirectHarness";
+			} else {
+			
+				Application application = null;
+				if (request.getParameter("applicationId") != null) {
+					Integer testId = null;
+					try {
+						testId = Integer.valueOf((String)request.getParameter("applicationId"));
+						application = applicationService.loadApplication(testId);
+					} catch (NumberFormatException e) {
+						log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
+					}
+				}
+				
+				model.addAttribute("application", application);
+				model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
+				
+				model.addAttribute("newDefectTracker", defectTracker);
+				model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+				model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
+				model.addAttribute("defectTracker", new DefectTracker());
+				
+				return "ajaxSuccessHarness";
 			}
-			
-			model.addAttribute("application", new Application());
-			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
-			
-			model.addAttribute("newDefectTracker", defectTracker);
-			model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-			model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
-			model.addAttribute("defectTracker", new DefectTracker());
-			
-			return "ajaxSuccessHarness";
 		}
 	}
 }
