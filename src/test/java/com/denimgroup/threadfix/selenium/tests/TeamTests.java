@@ -181,12 +181,12 @@ public class TeamTests extends BaseTest {
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
 													 .setNameInput(emptyString)
 													 .clickUpdateButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(editTeamPage.getErrorText()));
+		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test whitespace input
-		editTeamPage = editTeamPage.setNameInput(whiteSpaceString)
+		teamDetailPage = teamDetailPage.setNameInput(whiteSpaceString)
 												   .clickUpdateButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(editTeamPage.getErrorText()));
+		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test browser length limit
 		teamDetailPage = editTeamPage.setNameInput(longInput)
@@ -200,10 +200,10 @@ public class TeamTests extends BaseTest {
 													 .setNameInput(orgNameDuplicateTest)
 													 .clickUpdateButtonInvalid();
 		
-		assertTrue(editTeamPage.getErrorText().equals("That name is already taken."));
+		assertTrue(teamDetailPage.getErrorText().equals("That name is already taken."));
 				
 		// Delete and logout
-		loginPage = editTeamPage.clickOrganizationHeaderLink()
+		loginPage = teamDetailPage.clickOrganizationHeaderLink()
 									.clickViewTeamLink(orgName)
 									.clickDeleteButton()
 									.clickOrganizationHeaderLink()

@@ -172,13 +172,13 @@ public class WafIndexPage extends BasePage {
 	public WafIndexPage setNewNameInput(String name){
 		driver.findElementById("wafCreateNameInput").clear();
 		driver.findElementById("wafCreateNameInput").sendKeys(name);
-		return this;
+		return new WafIndexPage(driver);
 	}
 	
 	public WafIndexPage setNameInput(String oldName,String newName){
 		driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
 		driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
-		return this;
+		return new WafIndexPage(driver);
 	}
 	
 	
@@ -188,7 +188,7 @@ public class WafIndexPage extends BasePage {
 		}else{
 			new Select(driver.findElementsById("typeSelect").get(getIndex(oldName))).selectByVisibleText(type);
 		}
-		return this;
+		return new WafIndexPage(driver);
 	}
 	
 	public String getNameErrorsText(){

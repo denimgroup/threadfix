@@ -149,7 +149,9 @@ public class WafTests extends BaseTest {
 		
 		assertFalse("The waf was already present.", wafIndexPage.isNamePresent(newWafName));
 		
-		wafIndexPage = wafIndexPage.clickAddWafLink().createNewWaf(newWafName, type).clickCreateWaf();
+		wafIndexPage = wafIndexPage.clickAddWafLink()
+								.createNewWaf(newWafName, type)
+								.clickCreateWaf();
 		
 		//assertTrue("Waf Page did not save the name correctly.", newWafName.equals(wafIndexPage.getWafName(1)));
 		
@@ -240,12 +242,14 @@ public class WafTests extends BaseTest {
 		log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
-		wafIndexPage.setNewNameInput(whiteSpaceString);
+		wafIndexPage = wafIndexPage.setNewNameInput(whiteSpaceString);
 		wafIndexPage = wafIndexPage.clickCreateWafInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		wafIndexPage.setNewNameInput(longInput);
+		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
+								.clickAddWafLink()
+								.setNewNameInput(longInput);
 		wafIndexPage = wafIndexPage.clickCreateWaf();
 		
 		assertTrue("The waf name was not cropped correctly.", wafIndexPage.getNameText(1).length() == Waf.NAME_LENGTH);
@@ -258,10 +262,10 @@ public class WafTests extends BaseTest {
 		
 		wafIndexPage.clickCreateWafInvalid();
 		
-		//assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
+		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
 		
 		// Delete and logout
-		loginPage = wafIndexPage.clickDeleteWaf(wafName).logout();
+		loginPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
 		
 		
 	}
