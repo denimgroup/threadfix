@@ -44,7 +44,10 @@
 						</td>
 					</tr>
 				</c:if>
-				<tr id="appDTDiv">
+				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
+					<spring:param name="orgId" value="${ application.organization.id }" />
+				</spring:url>
+				<tr id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
 					<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
 				</tr>
 				<tr id="appWafDiv">

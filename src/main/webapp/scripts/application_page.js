@@ -67,4 +67,8 @@ addToDocumentReadyFunctions(function () {
 		}
 	});
 	
+	$("#jsonLink").on("click", function() {
+		jsonTest($("#appDTDiv").attr("data-json-test-url"));
+	});
+	
 });

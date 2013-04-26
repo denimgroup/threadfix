@@ -25,12 +25,23 @@
 						<select style="margin:5px;" id="defectTrackerId" name="defectTracker.id">
 							<option value="0">&lt;none&gt;</option>
 							<c:forEach items="${ defectTrackerList }" var="listDefectTracker">
-								<c:if test="${ not empty newDefectTracker && newDefectTracker.id == listDefectTracker.id}">
-									<option value="${ listDefectTracker.id }" selected="selected"><c:out value="${ listDefectTracker.name }"/></option>
-								</c:if>
-								<c:if test="${ empty newDefectTracker || newDefectTracker.id != listDefectTracker.id}">
-									<option value="${ listDefectTracker.id }"><c:out value="${ listDefectTracker.name }"/></option>
-								</c:if>
+								<c:choose>
+									<c:when test="${ not empty newDefectTracker && newDefectTracker.id == listDefectTracker.id}">
+										<option value="${ listDefectTracker.id }" selected="selected">
+											<c:out value="${ listDefectTracker.name }"/>
+										</option>
+									</c:when>
+									<c:when test="${ empty newDefectTracker && not empty application.defectTracker && 
+											application.defectTracker.id == listDefectTracker.id}">
+										<option value="${ listDefectTracker.id }" selected="selected">
+											<c:out value="${ listDefectTracker.name }"/>
+										</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${ listDefectTracker.id }"><c:out value="${ listDefectTracker.name }"/></option>
+									</c:otherwise>
+								</c:choose>
+								
 							</c:forEach>
 						</select>
 						<c:if test="${ canManageDefectTrackers }">
@@ -63,14 +74,10 @@
 			</tr>
 			<tr class="left-align">
 				<td>
-				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
-					<spring:param name="orgId" value="${ application.organization.id }" />
-					</spring:url>
-				<a id="testConnectionLink" href="javascript:jsonTest('${ fn:escapeXml(testUrl) }');" id="jsonLink">Test Connection</a>
+					<a href="#" id="jsonLink">Test Connection</a>
 				</td>
 				<td>
-				<div id="toReplaceDT">
-				</div>
+					<div id="toReplaceDT"></div>
 				</td>
 			</tr>
 			<tr class="left-align">
