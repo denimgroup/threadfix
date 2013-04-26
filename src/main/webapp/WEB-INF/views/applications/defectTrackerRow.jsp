@@ -4,7 +4,7 @@
 <c:choose>
 	<c:when test="${ empty application.defectTracker }">
 		<td class="inputValue">
-			<a id="addDefectTrackerButton" href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Add Defect Tracker</a>
+			<a id="addDefectTrackerButton" role="button" class="btn">Add Defect Tracker</a>
 		</td>
 	</c:when>
 	<c:otherwise>

@@ -140,9 +140,21 @@ public class AddDefectTrackerController {
 			ControllerUtils.addSuccessMessage(request, 
 					"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
 			
-			model.addAttribute("application", new Application());
+			String referrer = request.getHeader("referer");
+			if (referrer.endsWith("configuration/defecttrackers")) {
+				model.addAttribute("contentPage", "/configuration/defecttrackers");
+				return "ajaxRedirectHarness";
+			}
 			
-			return "applications/addDTForm";
+			model.addAttribute("application", new Application());
+			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
+			
+			model.addAttribute("newDefectTracker", defectTracker);
+			model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+			model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
+			model.addAttribute("defectTracker", new DefectTracker());
+			
+			return "ajaxSuccessHarness";
 		}
 	}
 }

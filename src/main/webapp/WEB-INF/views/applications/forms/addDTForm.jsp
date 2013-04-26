@@ -1,20 +1,38 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<div class="modal-header">
+	<h4 id="myModalLabel">Add Defect Tracker</h4>
+</div>
+<div id="addDTFormDiv">
 <spring:url value="/organizations/{orgId}/applications/{appId}/edit/addDTAjax" var="saveUrl">
 	<spring:param name="orgId" value="${ application.organization.id }"/>
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 <form:form id="addDTForm" style="margin-bottom:0px;" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
-	<div class="modal-body">
+	<div id="addDefectTrackerDivInForm" class="modal-body"
+		<c:if test="${ empty defectTrackerList }">
+			data-has-defect-trackers=""
+		</c:if>
+		<c:if test="${ not empty defectTrackerList }">
+			data-has-defect-trackers="1"
+		</c:if>
+	>
 		<table>
 			<tr class="left-align">
 				<td>Defect Tracker</td>
 				<td class="inputValue">
 					<c:if test="${ not empty defectTrackerList }">
-						<form:select style="margin:5px;" id="defectTrackerId" path="defectTracker.id">
-							<form:option value="0" label="<none>"/>
-							<form:options items="${defectTrackerList}" itemValue="id" itemLabel="displayName"/>
-						</form:select>
+						<select style="margin:5px;" id="defectTrackerId" name="defectTracker.id">
+							<option value="0">&lt;none&gt;</option>
+							<c:forEach items="${ defectTrackerList }" var="listDefectTracker">
+								<c:if test="${ not empty newDefectTracker && newDefectTracker.id == listDefectTracker.id}">
+									<option value="${ listDefectTracker.id }" selected="selected"><c:out value="${ listDefectTracker.name }"/></option>
+								</c:if>
+								<c:if test="${ empty newDefectTracker || newDefectTracker.id != listDefectTracker.id}">
+									<option value="${ listDefectTracker.id }"><c:out value="${ listDefectTracker.name }"/></option>
+								</c:if>
+							</c:forEach>
+						</select>
 						<c:if test="${ canManageDefectTrackers }">
 							<a style="padding-left:10px;" id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
 						</c:if>
@@ -75,3 +93,4 @@
 		<a id="submitDTModal" class="modalSubmit btn btn-primary" data-success-div="appDTDiv">Add Defect Tracker</a>
 	</div>
 </form:form>
+</div>
