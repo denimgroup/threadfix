@@ -67,4 +67,10 @@ public class TableSortBean {
 	public void setCweFilter(String cweFilter) {
 		this.cweFilter = cweFilter;
 	}
+	
+	// This is currently used to decide whether or not the vulnerabilities should be put into groups or not.
+	public boolean isDefaultBean() {
+		return field == 0 && descriptionFilter.isEmpty() && locationFilter.isEmpty() && 
+				parameterFilter.isEmpty() && severityFilter.isEmpty() && sort == 0;
+	}
 }

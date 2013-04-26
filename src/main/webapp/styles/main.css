@@ -756,3 +756,7 @@ div.box-shadow {
 	float:left;
 	border-radius: 4px 4px 4px 4px;
 }
+
+.defaultHide {
+	display: none;
+}

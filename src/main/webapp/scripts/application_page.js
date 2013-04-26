@@ -149,6 +149,21 @@ function addExpandsHandlers() {
 			element.attr("data-has-function","1");
 		}
 	});
+	
+	$(".vulnSectionHeader").on("click", function () {
+		
+		if ($(this).attr("data-expanded") === "0") {
+			$("." + $(this).attr("data-toggle-class")).removeClass("defaultHide");
+			$(this).attr("data-expanded", "1");
+			$("#" + $(this).attr("data-caret")).addClass("expanded");
+			$(this).attr("data-has-function", "1");
+		} else {
+			$("." + $(this).attr("data-toggle-class")).addClass("defaultHide");
+			$(this).attr("data-expanded", "0");
+			$("#" + $(this).attr("data-caret")).removeClass("expanded");
+			$(this).attr("data-has-function", "1");
+		}
+	});
 }
 
 addToModalRefreshFunctions(addExpandsHandlers);
