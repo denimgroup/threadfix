@@ -3,7 +3,9 @@
 <div class="modal-header">
 	<h4 id="myModalLabel">Create New WAF</h4>
 </div>
-<spring:url value="/wafs/new/ajax" var="saveUrl"/>
+<spring:url value="/{createWafUrl}" var="saveUrl">
+	<spring:param name="createWafUrl" value="${ createWafUrl }"/>
+</spring:url>
 <form:form id="wafForm" style="margin-bottom:0px;" modelAttribute="waf" method="post" action="${ fn:escapeXml(saveUrl) }">
 	<div class="modal-body">
 		<table class="dataTable">
@@ -33,7 +35,6 @@
 	</div>
 	<div class="modal-footer">
 		<input type="hidden" name="applicationId" value="<c:out value="${ application.id }"/>">
-		<input type="hidden" name="wafsPage" value="<c:out value="${ wafList }"/>">
 		<button id="closeCreateWafModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a id="submitWafModal" class="modalSubmit btn btn-primary" data-success-div="appWafDiv">Create WAF</a>
 	</div>

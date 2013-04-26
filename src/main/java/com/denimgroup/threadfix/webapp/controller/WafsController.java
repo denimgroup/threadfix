@@ -74,11 +74,18 @@ public class WafsController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
-		model.addAttribute(wafService.loadAll());
+		List<Waf> wafs = wafService.loadAll();
+		model.addAttribute(wafs);
 		model.addAttribute("newWaf", new Waf());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		
+		for (Waf waf: wafs) {
+			waf.setDelete(wafService.canDelete(waf));
+		}
+		
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
+		model.addAttribute("createWafUrl", "wafs/new/ajax");
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
 		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		return "wafs/index";
@@ -177,18 +184,9 @@ public class WafsController {
 	public String deleteWaf(@PathVariable("wafId") int wafId, 
 			SessionStatus status, HttpServletRequest request) {
 		Waf waf = wafService.loadWaf(wafId);
+		boolean canDelete = wafService.canDelete(waf);
 		
-		boolean hasApps = false;
-		if (waf != null && waf.getApplications() != null) {
-			for (Application application : waf.getApplications()) {
-				if (application.isActive()) {
-					hasApps = true;
-					break;
-				}
-			}
-		}
-		
-		if (waf != null && !hasApps) {
+		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
 			status.setComplete();
 			ControllerUtils.addSuccessMessage(request, 

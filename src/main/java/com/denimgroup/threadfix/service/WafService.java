@@ -113,4 +113,8 @@ public interface WafService {
 	 * @return
 	 */
 	List<WafRule> loadCurrentRules(Waf waf);
+	
+	/**
+	 */
+	boolean canDelete(Waf waf);
 }

@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -53,6 +54,8 @@ public class Waf extends AuditableEntity {
 
 	private List<Application> applicationList;
 	private List<WafRule> wafRuleList;
+	
+	boolean canDelete = false;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -109,6 +112,15 @@ public class Waf extends AuditableEntity {
 
 	public void setWafRules(List<WafRule> wafRuleList) {
 		this.wafRuleList = wafRuleList;
+	}
+	
+	@Transient
+	public boolean getCanDelete() {
+		return canDelete;
+	}
+	
+	public void setDelete(boolean canDelete) {
+		this.canDelete = canDelete;
 	}
 
 }

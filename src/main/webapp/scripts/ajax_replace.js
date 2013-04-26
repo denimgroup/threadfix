@@ -349,19 +349,6 @@ function basicPost(url, formId, target) {
 	return false;
 }
 
-// These are for the application page.
-function switchDTModals() {
-    $("#addDefectTracker").modal('hide');
-    $("#createDefectTracker").modal('show');
-    return false;
-};
-
-function switchWafModals() {
-    $("#addWaf").modal('hide');
-    $("#createWaf").modal('show');
-    return false;
-};
-
 function switchTabs(url) {
 	return basicGet(url, '#tabsDiv');
 }
@@ -384,8 +371,10 @@ function createDTAndRefresh(url) {
 			    
 			} else {$("#nameInput").focus();
 				try {
-					var json = JSON.parse(text);
-					alert(json.error);
+					var json = JSON.parse($.trim(text));
+					if (json.isJSONRedirect) {
+						window.location.href = json.redirectURL;
+					}
 				} catch (e) {
 					history.go(0);
 				}
@@ -405,7 +394,7 @@ function createDTAndRefresh(url) {
 }
 
 function deleteWaf(url) {
-	if (confirm('Are you sure you want to delete this WAF? This won\'t work if the WAF has applications attached.'))
+	if (confirm('Are you sure you want to delete this WAF?'))
 		return basicPost(url, '#deleteForm', '#defectTableDiv');
 	return false;
 }
@@ -451,6 +440,7 @@ function addModalSubmitEvents() {
 					'#' + element.attr("data-success-click"));
 			form.keypress(function(e) {
 			    if (e.which == 13){
+			    	e.preventDefault();
 			    	submitFunction();
 			    }
 			});

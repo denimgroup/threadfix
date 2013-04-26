@@ -90,41 +90,60 @@ public class AddWafController {
 		dataBinder.setAllowedFields(new String [] { "name", "wafType.id", "applicationId" });
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String newSubmit(@Valid @ModelAttribute Waf waf, BindingResult result,
-			SessionStatus status) {
-		if (result.hasErrors()) {
-			return "wafs/form";
-		} else {
-			if (waf.getName().trim().equals("")) {
-				result.rejectValue("name", null, null, "This field cannot be blank");
-			} else {
-				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
-				if (databaseWaf != null)
-					result.rejectValue("name", "errors.nameTaken");
-			}
-			
-			if (waf.getWafType() == null)
-				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
-			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
-				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
-			
-			if (result.hasErrors())
-				return "wafs/form";
-			
-			wafService.storeWaf(waf);
-			
-			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
-					", the type " + waf.getWafType().getName() + 
-					" and ID " + waf.getId() + ".");
-			
-			return "redirect:/wafs/" + waf.getId();
+	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
+	public String newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf, 
+			BindingResult result,
+			SessionStatus status, Model model,
+			HttpServletRequest request) {
+		model.addAttribute("createWafUrl", "/wafs/new/ajax/appPage");
+		
+		String validationResult = newSubmit(waf,result,status,model,request);
+		
+		if (validationResult != "SUCCESS") {
+			return validationResult;
 		}
+		
+		Application application = null;
+		if (request.getParameter("applicationId") != null) {
+			Integer testId = null;
+			try {
+				testId = Integer.valueOf((String)request.getParameter("applicationId"));
+				application = applicationService.loadApplication(testId);
+			} catch (NumberFormatException e) {
+				log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
+			}
+		}
+		
+		if (application != null) {
+			application.setWaf(waf);
+			applicationService.storeApplication(application);
+		}
+		model.addAttribute(application);
+		model.addAttribute("contentPage", "applications/wafRow.jsp");
+		
+		return "ajaxSuccessHarness";
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
 	public String newSubmitAjax(@Valid @ModelAttribute Waf waf, 
+			BindingResult result,
+			SessionStatus status, Model model,
+			HttpServletRequest request) {
+		model.addAttribute("createWafUrl", "/wafs/new/ajax");
+
+		String validationResult = newSubmit(waf,result,status,model,request);
+		
+		if (validationResult != "SUCCESS") {
+			return validationResult;
+		}
+		
+		model.addAttribute("successMessage", "WAF " + waf.getName() + " was successfully created.");
+		model.addAttribute("contentPage", "wafs/wafsTable.jsp");
+		
+		return "ajaxSuccessHarness";
+	}
+	
+	public String newSubmit(@Valid @ModelAttribute Waf waf, 
 			BindingResult result,
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
@@ -148,40 +167,12 @@ public class AddWafController {
 			else 
 				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
 			
-			Application application = null;
-			if (request.getParameter("wafsPage") == null) {
-				application = null;
-				if (request.getParameter("applicationId") != null) {
-					Integer testId = null;
-					try {
-						testId = Integer.valueOf((String)request.getParameter("applicationId"));
-						application = applicationService.loadApplication(testId);
-					} catch (NumberFormatException e) {
-						log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
-					}
-				}
-				
-				if (application == null) {
-					result.rejectValue("wafType.id", null, null, "Please stop trying to play with the hidden field.");
-				}
-			}
-			
 			if (result.hasErrors()) {
 				model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
 				return "ajaxFailureHarness";
 			}
 			
 			wafService.storeWaf(waf);
-			
-			if (application != null) {
-				application.setWaf(waf);
-				applicationService.storeApplication(application);
-				model.addAttribute(application);
-				model.addAttribute("contentPage", "applications/wafRow.jsp");
-			} else {
-				model.addAttribute("successMessage", "WAF " + waf.getName() + " was successfully created.");
-				model.addAttribute("contentPage", "wafs/wafsTable.jsp");
-			}
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a WAF with the name " + waf.getName() + 
@@ -194,8 +185,7 @@ public class AddWafController {
 			model.addAttribute("wafPage", true);
 			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 			
-			return "ajaxSuccessHarness";
+			return "SUCCESS";
 		}
 	}
-
 }

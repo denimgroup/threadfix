@@ -137,12 +137,7 @@
 	
 	<div id="addDefectTracker" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:600px;">
-		<div class="modal-header">
-			<h4 id="myModalLabel">Add Defect Tracker</h4>
-		</div>
-		<div id="addDTFormDiv">
-			<%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
-		</div>
+		<%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
 	</div>
 	
 	<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %> 

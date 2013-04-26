@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
@@ -233,6 +234,20 @@ public class WafServiceImpl implements WafService {
 			return waf.getWafRules();
 		else
 			return wafRuleDao.retrieveByWafAndDirective(waf, waf.getLastWafRuleDirective());
+	}
+	
+	@Override
+	public boolean canDelete(Waf waf) {
+		boolean hasApps = false;
+		if (waf != null && waf.getApplications() != null) {
+			for (Application application : waf.getApplications()) {
+				if (application.isActive()) {
+					hasApps = true;
+					break;
+				}
+			}
+		}
+		return !hasApps;
 	}
 
 }

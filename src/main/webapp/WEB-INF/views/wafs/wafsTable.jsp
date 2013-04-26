@@ -43,7 +43,16 @@
 					<spring:param name="wafId" value="${ waf.id }" />
 				</spring:url>
 				<form:form id="deleteForm" method="POST" action="${ fn:escapeXml(wafDeleteUrl) }">
-					<a id="deleteWaf${ status.count }" class="btn btn-primary" type="submit" onclick="return deleteWaf('<c:out value='${ wafDeleteUrl }'/>');">Delete</a>
+					<a id="deleteWaf${ status.count }" class="btn btn-primary" type="submit" 
+					
+						<c:if test="${ waf.canDelete }">					
+							onclick="return deleteWaf('<c:out value='${ wafDeleteUrl }'/>');"
+						</c:if>
+						<c:if test="${ not waf.canDelete }">					
+							onclick="return alert('Remove the applications from this WAF and try again.')"
+						</c:if>
+						
+						>Delete</a>
 				</form:form>
 			</td>
 			<td class="centered">

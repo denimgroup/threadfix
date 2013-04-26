@@ -141,6 +141,7 @@ public class ApplicationsController {
 		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
+		model.addAttribute("createWafUrl", "wafs/new/ajax/appPage");
 		model.addAttribute("newWaf", new Waf());
 		model.addAttribute("wafList", wafService.loadAll());
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());

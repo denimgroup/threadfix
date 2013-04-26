@@ -8,7 +8,14 @@
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 <form:form id="addWafForm" style="margin-bottom:0px;" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
-	<div class="modal-body">
+	<div id="addWafDivInForm" class="modal-body"
+		<c:if test="${ empty wafList }">
+			data-has-wafs=""
+		</c:if>
+		<c:if test="${ not empty wafList }">
+			data-has-wafs="1"
+		</c:if>
+	>
 		<table>
 			<tr>
 				<td>WAF</td>
