@@ -116,6 +116,14 @@ addToDocumentReadyFunctions(function () {
 		}
 	});
 	
+	$("#showDetailsLink").on("click", function() {
+		if ($("#appInfoDiv").attr('class').indexOf('in') == -1) {
+			$(this).html("Show Less");
+		} else {
+			$(this).html("Show More");
+		}
+	});
+	
 	addAppPageEvents();
 	showSubmitLinks();
 	addExpandsHandlers();

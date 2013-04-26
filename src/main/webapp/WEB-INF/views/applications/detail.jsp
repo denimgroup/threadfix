@@ -34,6 +34,16 @@
 	</div>
 	
 	<div id="appInfoDiv" class="collapse">
+		<c:if test="${ canManageApplications }">
+			<a class="btn" id="editApplicationModalButton" href="#editApplicationModal" 
+					role="button" data-toggle="modal">
+				Edit
+			</a>
+			<a class="btn" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
+					onclick="return confirm('Are you sure you want to delete the application?')">
+				Delete
+			</a>
+		</c:if>
 		<table class="dataTable" style="margin-bottom:18px">
 			<tbody>
 				<c:if test="${ not empty application.url }">

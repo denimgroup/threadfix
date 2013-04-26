@@ -8,30 +8,10 @@
 
 <h2 style="padding-bottom:5px;">
 	
-	<span class="pointer" onclick="javascript:toggleExpandable('#appInfoDiv', '#headerCaret')" id="nameText">
-		<span style="width:8px"><span id="headerCaret" class="caret-right caret-title"></span></span> 
-		<c:out value="${ application.name }"/>
-	</span>
-<c:if test="${ canManageApplications }">
-		<div id="appActionDiv" class="btn-group">
-			<button id="appActionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
-			<ul class="dropdown-menu">
-				<li>
-					<a id="editApplicationModalButton" href="#editApplicationModal" role="button" data-toggle="modal">Edit</a>
-				</li>
-				<li>
-					<a id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" onclick="return confirm('Are you sure you want to delete the application?')">
-						Delete
-					</a>
-				</li>
-				<li>
-					<a id="showDetailsLink${ status.count }" href="#" data-toggle="collapse" data-target="#appInfoDiv">
-						Show Details
-					</a>
-				</li>
-			</ul>
-		</div>
-	</c:if>
+	<c:out value="${ application.name }"/>
+	<a class="btn" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
+		Show More
+	</a>
 </h2>
 
 <div id="editApplicationModal" class="modal hide fade" tabindex="-1"
