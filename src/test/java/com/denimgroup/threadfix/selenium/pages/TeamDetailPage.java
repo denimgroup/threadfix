@@ -137,5 +137,9 @@ public class TeamDetailPage extends BasePage {
 		return new ApplicationAddPage(driver);
 	}
 
+	public String getErrorText() {
+		return "";
+	}
+
 
 }

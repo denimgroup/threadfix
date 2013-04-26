@@ -230,7 +230,8 @@ public class RoleTests extends BaseTest {
 			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName);
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName).clickEditLink(roleName2);
+		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
+									.clickEditLink(roleName2);
 		
 		for (String protectedPermission : Role.ALL_PERMISSIONS) {
 			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName2);
@@ -256,10 +257,14 @@ public class RoleTests extends BaseTest {
 		
 		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
 		
-		rolesIndexPage.clickManageUsersLink()
+		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickEditLink("user")
 				.chooseRoleForGlobalAccess("Administrator", "user")
-				.clickUpdateUserBtn("user");
+				.clickUpdateUserBtn("user")
+				.clickManageRolesLink()
+				.clickDeleteButton(roleName2);
+		
+		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName2));
 	}
 	
 	/**
