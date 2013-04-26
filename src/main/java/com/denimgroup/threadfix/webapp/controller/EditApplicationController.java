@@ -138,7 +138,7 @@ public class EditApplicationController {
 			model.addAttribute("canSetWaf", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, appId));
 			
-			model.addAttribute("contentPage", "applications/form");
+			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
 			return "ajaxFailureHarness";
 		} else {
 			applicationService.storeApplication(application);

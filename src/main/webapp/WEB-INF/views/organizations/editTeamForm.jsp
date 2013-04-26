@@ -1,7 +1,14 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<h4 id="myModalLabel">Edit Team <c:out value="${ organization.name }"/></h4>
+	<h4 id="myModalLabel">Edit Team 
+		<c:if test="${ empty organization.name }">
+			<c:out value="${ originalName }"/>
+		</c:if>
+		<c:if test="${ not empty organization.name }">
+			<c:out value="${ organization.name }"/>
+		</c:if>
+	</h4>
 </div>
 <spring:url value="/organizations/{orgId}/modalEdit" var="saveUrl">
 	<spring:param name="orgId" value="${ organization.id }"/>

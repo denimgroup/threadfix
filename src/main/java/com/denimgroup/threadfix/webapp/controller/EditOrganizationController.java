@@ -88,12 +88,16 @@ public class EditOrganizationController {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+			Organization dbOrg = organizationService.loadOrganization(orgId);
+			model.addAttribute("originalName", dbOrg.getName());
 			return "ajaxFailureHarness";
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+				Organization dbOrg = organizationService.loadOrganization(orgId);
+				model.addAttribute("originalName", dbOrg.getName());
 				return "ajaxFailureHarness";
 			}
 			
@@ -101,6 +105,8 @@ public class EditOrganizationController {
 			if (databaseOrganization != null && !databaseOrganization.getId().equals(organization.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
 				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+				Organization dbOrg = organizationService.loadOrganization(orgId);
+				model.addAttribute("originalName", dbOrg.getName());
 				return "ajaxFailureHarness";
 			}
 			
@@ -112,7 +118,6 @@ public class EditOrganizationController {
 			ControllerUtils.addSuccessMessage(request, 
 					"Team " + organization.getName() + " has been edited successfully.");
 			
-			status.setComplete();
 			model.addAttribute("contentPage", "/organizations/" + String.valueOf(orgId));
 			return "ajaxRedirectHarness";
 		}

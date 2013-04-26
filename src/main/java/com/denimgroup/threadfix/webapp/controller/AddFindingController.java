@@ -123,7 +123,7 @@ public class AddFindingController {
 	}
 	
 	private String returnForm(ModelMap model, int appId) {
-		model.addAttribute("contentPage", "applications/forms//manualFindingForm.jsp");
+		model.addAttribute("contentPage", "applications/forms/manualFindingForm.jsp");
 		model.addAttribute("application", applicationService.loadApplication(appId));
 		return "ajaxFailureHarness";
 	}
