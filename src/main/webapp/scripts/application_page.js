@@ -118,7 +118,31 @@ addToDocumentReadyFunctions(function () {
 	
 	addAppPageEvents();
 	showSubmitLinks();
+	addExpandsHandlers();
 });
 
+function addExpandsHandlers() {
+	$(".expandableTrigger").each(function() {
+		var element = $(this);
+		if (!element.attr('data-has-function')) {
+			var parentTr = element.closest("tr");
+			var targetDiv = '#' + parentTr.attr('data-target-div');
+			var caretDiv = '#' + parentTr.attr('data-caret-div');
+			
+			element.on("click", function() {
+				$(targetDiv).collapse('toggle');
+				if ($(caretDiv).attr('class').indexOf('expanded') == -1) {
+					$(caretDiv).addClass('expanded');
+				} else {
+					$(caretDiv).removeClass('expanded');
+				}
+			});
+			
+			element.attr("data-has-function","1");
+		}
+	});
+}
+
+addToModalRefreshFunctions(addExpandsHandlers);
 addToModalRefreshFunctions(showSubmitLinks);
 addToModalRefreshFunctions(addAppPageEvents);

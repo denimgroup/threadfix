@@ -90,6 +90,10 @@ function refillElementSort(elementId, endPoint, page, field, login)
 					$(caret).addClass('caret-down');
 					$(caret).removeClass('caret-up');
 				}
+				
+				if (addExpandsHandlers) {
+					addExpandsHandlers();
+				}
 			} else {
 				// Kind of a hack
 				alert('Logging out.');

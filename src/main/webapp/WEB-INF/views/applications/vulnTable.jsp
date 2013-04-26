@@ -89,6 +89,7 @@
 				<th class="pointer" style="min-width:90px;" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">
 					Parameter<span id="headerCaret4" class="caret-down"></span>
 				</th>
+				<th style="width:65px;"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -118,26 +119,32 @@
 			<c:if test="${ vulnerability.genericSeverity.name == 'Info' }">
 			      <c:set var="color" value="info" />
 			</c:if>
-			<tr class="bodyRow <c:out value="${ color }"/>">
+			<tr class="bodyRow pointer <c:out value="${ color }"/>" data-target-div="vulnInfoDiv${vulnerability.id}"
+					data-caret-div="caret${vulnerability.id }">
 				<c:if test="${ canModifyVulnerabilities }">
-					<td>
+					<td class="expandableTrigger">
 						<input class="vulnIdCheckbox" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 						<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 					</td>
 				</c:if>
-				<td class="pointer" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
+				<td class="expandableTrigger" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
 					<span id="caret${vulnerability.id }" class="caret-right"></span>
 				</td>
+				<td class="expandableTrigger">
+					<c:out value="${ vulnerability.genericVulnerability.name }"/>
+				</td>
+				<td class="expandableTrigger" id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
+				<td class="expandableTrigger" id="path${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+				<td class="expandableTrigger" id="parameter${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 				<td>
 					<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 				        <spring:param name="appId" value="${ application.id }" />
 					    <spring:param name="vulnerabilityId" value="${ vulnerability.id }" />
 				    </spring:url>
-				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }"><c:out value="${ vulnerability.genericVulnerability.name }"/></a>
+				    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }">
+						View More
+					</a>
 				</td>
-				<td id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
-				<td id="path${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
-				<td id="parameter${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 			</tr>
 			<tr class="bodyRow <c:out value="${ color }"/> expandable">
 				<td colspan="7">
