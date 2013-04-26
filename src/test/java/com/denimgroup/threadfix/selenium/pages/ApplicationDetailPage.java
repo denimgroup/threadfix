@@ -34,173 +34,216 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ApplicationDetailPage extends BasePage {
-	
-	WebDriverWait wait = new WebDriverWait(driver,10);
-	
+
+	WebDriverWait wait = new WebDriverWait(driver, 10);
+
 	public ApplicationDetailPage(WebDriver webdriver) {
 		super(webdriver);
 	}
-	
-	public ApplicationDetailPage clickShowDetails(){
+
+	public ApplicationDetailPage clickShowDetails() {
 		driver.findElementById("showDetailsLink").click();
 		waitForElement(driver.findElementById("appInfoDiv"));
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickAddDefectTrackerButton(){
+
+	public ApplicationDetailPage clickAddDefectTrackerButton() {
 		driver.findElementById("addDefectTrackerButton").click();
 		return new ApplicationDetailPage(driver);
 	}
-	
-	
-	public ApplicationDetailPage setUsername(String dtName){
+
+	public ApplicationDetailPage setUsername(String dtName) {
 		driver.findElementById("username").clear();
 		driver.findElementById("username").sendKeys(dtName);
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage testClickApp(int num){
+
+	public ApplicationDetailPage testClickApp(int num) {
 		driver.findElementById("appLink" + num).click();
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage setPassword(String dtPass){
+
+	public ApplicationDetailPage setPassword(String dtPass) {
 		driver.findElementById("password").clear();
 		driver.findElementById("password").sendKeys(dtPass);
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickTestConnection(){
-		driver.findElementById("testConnectionLink").click();
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage selectProduct(String product){
-		new Select(driver.findElementById("projectList")).selectByVisibleText(product);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage addNewDefectTracker(String defectTrackerName, String defectTrackerURL, String defectTrackerType){
-		clickShowDetails();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
-		//TODO missing id
-		driver.findElementByLinkText("Add Defect Tracker").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
-		//TODO missing id
-		driver.findElementByLinkText("Add Defect Tracker").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createDefectTracker")));
-		driver.findElementById("nameInput").sendKeys(defectTrackerName);
-		driver.findElementById("urlInput").sendKeys(defectTrackerURL);
-		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(defectTrackerType);
-		driver.findElementById("submitDTModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("createDefectTracker")));
-		//TODO currently does not allow you to add a defect tracker from application detail page
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage addDefectTracker(String defectTracker, String username, String password, String productname){
-		clickShowDetails();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
-		//TODO missing id
-		driver.findElementByLinkText("Add Defect Tracker").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
-		new Select(driver.findElementById("defectTrackerId")).selectByVisibleText(defectTracker);
-		driver.findElementById("username").sendKeys(username);
-		driver.findElementById("password").sendKeys(password);
-		driver.findElementByLinkText("Test Connection").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("jsonResult")));
-		new Select(driver.findElementById("projectList")).selectByVisibleText(productname);
-		driver.findElementById("submitDTModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addDTForm")));
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage addNewWaf(String Name,String Type){
-		clickShowDetails();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("appInfoDiv")));
-		//TODO should be switched to id
-		driver.findElementByLinkText("Add WAF").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
-		driver.findElementByLinkText("Create New WAF").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createWaf")));
-		driver.findElementById("nameInput").sendKeys(Name);
-		new Select(driver.findElementById("typeSelect")).selectByVisibleText(Type);
-		driver.findElementById("submitTeamModal").click();
-		//TODO currently does not allow you to add a waf from application detail page
+
+	public ApplicationDetailPage clickTestConnection() {
+		driver.findElementById("jsonLink").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("jsonResult")));
 		return new ApplicationDetailPage(driver);
 	}
 
-	public ApplicationDetailPage addWaf(String wafName){
+	public ApplicationDetailPage selectProduct(String product) {
+		new Select(driver.findElementById("projectList"))
+				.selectByVisibleText(product);
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage selectDefectTracker(String defectTracker) {
+		new Select(driver.findElementById("defectTrackerId"))
+				.selectByVisibleText(defectTracker);
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage clickSubmitTrackerButton() {
+		driver.findElementById("submitDTModal").click();
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage addNewDefectTracker(String defectTrackerName,
+			String defectTrackerURL, String defectTrackerType) {
+		// clickShowDetails().clickAddDefectTrackerButton().setUsername(defectTrackerName).setUrlInput(defectTrackerURL).selectProduct()
+		return new ApplicationDetailPage(driver);
+		/*
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
+		 * "appInfoDiv"))); //TODO missing id
+		 * driver.findElementByLinkText("Add Defect Tracker").click();
+		 * wait.until
+		 * (ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
+		 * //TODO missing id
+		 * driver.findElementByLinkText("Add Defect Tracker").click();
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
+		 * "createDefectTracker")));
+		 * driver.findElementById("nameInput").sendKeys(defectTrackerName);
+		 * driver.findElementById("urlInput").sendKeys(defectTrackerURL); new
+		 * Select
+		 * (driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText
+		 * (defectTrackerType); driver.findElementById("submitDTModal").click();
+		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(
+		 * "createDefectTracker"))); //TODO currently does not allow you to add
+		 * a defect tracker from application detail page return new
+		 * ApplicationDetailPage(driver);
+		 */
+	}
+
+	public ApplicationDetailPage addDefectTracker(String defectTracker,
+			String username, String password, String productname) {
+		return clickShowDetails().clickAddDefectTrackerButton()
+				.selectDefectTracker(defectTracker).setUsername(username)
+				.setPassword(password).clickTestConnection()
+				.selectProduct(productname).clickSubmitTrackerButton();
+		/*
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("appInfoDiv"))); // TODO missing id
+		 * driver.findElementByLinkText("Add Defect Tracker").click();
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("addDTForm"))); new
+		 * Select(driver.findElementById("defectTrackerId"))
+		 * .selectByVisibleText(defectTracker);
+		 * driver.findElementById("username").sendKeys(username);
+		 * driver.findElementById("password").sendKeys(password);
+		 * driver.findElementByLinkText("Test Connection").click();
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("jsonResult"))); new
+		 * Select(driver.findElementById("projectList"))
+		 * .selectByVisibleText(productname);
+		 * driver.findElementById("submitDTModal").click();
+		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By
+		 * .id("addDTForm"))); return new ApplicationDetailPage(driver);
+		 */
+	}
+
+	public ApplicationDetailPage addNewWaf(String Name, String Type) {
+		clickShowDetails();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("appInfoDiv")));
+		// TODO should be switched to id
+		driver.findElementByLinkText("Add WAF").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("addWafForm")));
+		driver.findElementByLinkText("Create New WAF").click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("createWaf")));
+		driver.findElementById("nameInput").sendKeys(Name);
+		new Select(driver.findElementById("typeSelect"))
+				.selectByVisibleText(Type);
+		driver.findElementById("submitTeamModal").click();
+		// TODO currently does not allow you to add a waf from application
+		// detail page
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage addWaf(String wafName) {
 		Select s = new Select(driver.findElementById("wafSelect"));
 		s.selectByVisibleText(wafName);
 		driver.findElementById("submitTeamModal").click();
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickActionButton(){
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("document.getElementById('appActionButton').click();");
-		System.out.println("clicked");
+
+	public ApplicationDetailPage clickActionButton() {
+		driver.findElementById("showDetailsLink").click();
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage addManualFinding(Boolean stat,String cwe,String url,String sourceFile,String lineNum,String Parameter,String Severity,String description){
+
+	public ApplicationDetailPage addManualFinding(Boolean stat, String cwe,
+			String url, String sourceFile, String lineNum, String Parameter,
+			String Severity, String description) {
 		driver.findElementById("addManualFindinModalLink").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addManualFinding")));
-		if(stat){driver.findElementById("staticRadioButton").click();}
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("addManualFinding")));
+		if (stat) {
+			driver.findElementById("staticRadioButton").click();
+		}
 		driver.findElementById("txtSearch").sendKeys(cwe);
 		driver.findElementById("urlDynamicSearch").sendKeys(url);
 		driver.findElementById("urlStaticSearch").sendKeys(sourceFile);
 		driver.findElementById("urlSearch").sendKeys(lineNum);
 		driver.findElementById("parameterInput").sendKeys(Parameter);
-		new Select(driver.findElementById("severityInput")).selectByVisibleText(Severity);
+		new Select(driver.findElementById("severityInput"))
+				.selectByVisibleText(Severity);
 		driver.findElementById("descriptionInput").sendKeys(description);
 		driver.findElementById("submitDTModal").click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addManualFinding")));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By
+				.id("addManualFinding")));
 		return new ApplicationDetailPage(driver);
 	}
+
 	public String getElementText(String id) {
 		return driver.findElementById(id).getText();
 	}
-	
+
 	public ApplicationDetailPage clickRefreshLink() {
 		driver.findElementById("refreshLink").click();
 		return new ApplicationDetailPage(driver);
 	}
-	
+
 	public VulnerabilityPage clickVulnLink(int indexFromOne) {
 		driver.findElementById("vulnName" + indexFromOne).click();
 		return new VulnerabilityPage(driver);
 	}
-	
-	public String getWafText(){
+
+	public String getWafText() {
 		waitForElement(driver.findElementById("wafText"));
 		return driver.findElementById("wafText").getText();
 	}
-	
-	public String getNameText(){
+
+	public String getNameText() {
 		return driver.findElementById("nameText").getText();
 	}
-	
-	public String getUrlText(){
+
+	public String getUrlText() {
 		return driver.findElementById("urlText").getText().trim();
 	}
-	
+
 	public String getDefectTrackerText() {
 		return driver.findElementById("defectTrackerText").getText().trim();
 	}
-	
-	/*public String getOrganizationText(){
-		return driver.findElementById("organizationText").getText();
-	}*/
-	
+
+	/*
+	 * public String getOrganizationText(){ return
+	 * driver.findElementById("organizationText").getText(); }
+	 */
+
 	public ApplicationDetailPage clickEditLink() {
 		clickActionButton();
 		driver.findElementById("editApplicationModalButton").click();
 		waitForElement(driver.findElementById("editAppForm"));
 		return new ApplicationDetailPage(driver);
 	}
-	
+
 	public TeamDetailPage clickTeamLink() {
 		driver.findElementById("organizationText").click();
 		sleep(300);
@@ -209,14 +252,14 @@ public class ApplicationDetailPage extends BasePage {
 
 	public TeamDetailPage clickDeleteLink() {
 		driver.findElementById("deleteLink").click();
-		
+
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
-		
+
 		return new TeamDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickDetailsLink(){
+
+	public ApplicationDetailPage clickDetailsLink() {
 		clickActionButton();
 		driver.findElementById("showDetailsLink").click();
 		waitForElement(driver.findElementById("appInfoDiv"));
@@ -237,35 +280,39 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("addFindingManuallyLink").click();
 		return new ManualUploadPage(driver);
 	}
-	
+
 	public int getNumRows() {
 		return driver.findElementsByClassName("bodyRow").size();
 	}
 
 	public ApplicationDetailPage waitForScans() {
-		
+
 		ApplicationDetailPage returnPage = this;
-		
+
 		String appName = getNameText();
-		
-		returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
-		
+
+		returnPage = returnPage.clickTeamLink()
+				.clickTextLinkInApplicationsTableBody(appName);
+
 		while (!isElementPresent("ajaxVulnTable")) {
-			returnPage = returnPage.clickTeamLink().clickTextLinkInApplicationsTableBody(appName);
+			returnPage = returnPage.clickTeamLink()
+					.clickTextLinkInApplicationsTableBody(appName);
 			sleep(2000);
 		}
 		return returnPage;
 	}
-	
-	public ApplicationDetailPage clickEditWaf(){
+
+	public ApplicationDetailPage clickEditWaf() {
 		driver.findElementById("editWafButton").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWaf")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("addWaf")));
 		return new ApplicationDetailPage(driver);
 	}
 
 	public ApplicationDetailPage clickAddWaf() {
 		driver.findElementById("addWafButton").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addWafForm")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.id("addWafForm")));
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -274,15 +321,16 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("nameInput").sendKeys(appName2);
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage setUrlInput(String url){
+
+	public ApplicationDetailPage setUrlInput(String url) {
 		driver.findElementById("urlInput").clear();
 		driver.findElementById("urlInput").sendKeys(url);
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage setAppCritic(String critic){
-		new Select(driver.findElementById("criticalityId")).selectByVisibleText(critic);
+
+	public ApplicationDetailPage setAppCritic(String critic) {
+		new Select(driver.findElementById("criticalityId"))
+				.selectByVisibleText(critic);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -291,7 +339,7 @@ public class ApplicationDetailPage extends BasePage {
 		waitForInvisibleElement(driver.findElementById("editAppForm"));
 		return new ApplicationDetailPage(driver);
 	}
-	
+
 	public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
 		driver.findElementById("submitAppModal").click();
 		return new ApplicationDetailPage(driver);
@@ -307,4 +355,9 @@ public class ApplicationDetailPage extends BasePage {
 		return driver.findElementById("url.errors").getText().trim();
 	}
 
+	public boolean isDefectTrackerAttached() {
+		if (driver.findElementById("defectTrackerText").isEnabled())
+			return true;
+		return false;
+	}
 }

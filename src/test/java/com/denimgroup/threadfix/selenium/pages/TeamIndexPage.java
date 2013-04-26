@@ -118,7 +118,6 @@ public class TeamIndexPage extends BasePage {
 		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found.")) {
 				for (int j = 0; j < getNumAppRows(teamName); j++) {
-					System.out.println("team index " + getIndex(teamName)+" j "+j);
 					apps.add(
 							driver.findElementById(("applicationLink" + (getIndex(teamName) + 1))
 									+ "-" + (j + 1)));
@@ -132,8 +131,6 @@ public class TeamIndexPage extends BasePage {
 
 	public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
 		populateAppList(teamName);
-		System.out.println("Num rows " + getNumAppRows(teamName));
-		System.out.println("num apps " + apps.size());
 		apps.get(getAppIndex(appName)).click();
 		return new ApplicationDetailPage(driver);
 	}
@@ -214,9 +211,15 @@ public class TeamIndexPage extends BasePage {
 				break;
 			}
 		return new TeamIndexPage(driver);
-
 	}
-
+	
+	/*
+	public ApplicationDetailPage clickAppLink(String appName, String teamName) {
+		driver.findElementById("applicationLink" + getIndex(teamName) + "-" + getIndex(appName)).click();
+		return new ApplicationDetailPage(driver);
+	}
+    */
+	
 	public TeamIndexPage setFileInput(String file, String appName) {
 		for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
