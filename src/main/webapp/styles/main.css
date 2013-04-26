@@ -700,7 +700,11 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 
 .reportFilterHeader th {
 	background-color: #DDDDDD;
-	text-align:center;
+	line-height: 13px;
+}
+
+.reportFilterHeader {
+	line-height: 13px;
 }
 
 .config-header {

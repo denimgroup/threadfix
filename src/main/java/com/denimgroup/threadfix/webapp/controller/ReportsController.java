@@ -48,6 +48,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -112,18 +113,28 @@ public class ReportsController {
 			HttpServletResponse response) throws IOException {
 		
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
-				request, response);
+				request);
 		
 		ReportCheckResult reportCheckResult = reportCheckResultBean.getReportCheckResult();
 		
 		if (reportCheckResult == ReportCheckResult.VALID) {
 			StringBuffer report = reportCheckResultBean.getReport();
 			String pageString = report.toString();
-			response.setContentType("application/octet-stream");
 			
-			String fileName = reportParameters.getFormatId() == 2 ? "report_csv.csv" : "report_pdf.pdf";
+			boolean isPdf = reportParameters.getFormatId() == 3;
+			
+			String fileName = "report";
+			
+			if (isPdf) {
+				response.setContentType("application/pdf");
+				fileName = "report_pdf.pdf";
+			} else {
+				response.setContentType("application/octet-stream");
+				fileName = "report_csv.csv";
+			}
+			
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
+			
 			ServletOutputStream out = response.getOutputStream();
 
 			InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
@@ -152,20 +163,24 @@ public class ReportsController {
 			HttpServletResponse response) throws IOException {
 		
 		// reroute if it's scanner comparison or portfolio report
-		if (reportParameters.getReportId() == 6) {
+		if (reportParameters.getReportFormat() == ReportFormat.CHANNEL_COMPARISON_DETAIL) {
 			return reportsService.scannerComparisonByVulnerability(model, reportParameters);
-		} else if (reportParameters.getReportId() == 8) {
+		} else if (reportParameters.getReportFormat() == ReportFormat.PORTFOLIO_REPORT) {
 			return new PortfolioReportController(organizationService).index(
 					model, request, reportParameters.getOrganizationId());
 		}
+		if (reportParameters.getFormatId() != 1) {
+			return processExportRequest(model, reportParameters, result, status, request, response);
+		}
 		
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
-				request, response);
+				request);
 		
 		ReportCheckResult reportCheckResult = reportCheckResultBean.getReportCheckResult();
 		
 		if (reportCheckResult == ReportCheckResult.VALID) {
-			boolean csvEnabled = !(reportParameters.getReportId() == 1 || reportParameters.getReportId() == 7);
+			boolean csvEnabled = !(reportParameters.getReportFormat() == ReportFormat.TRENDING || 
+					reportParameters.getReportFormat() == ReportFormat.MONTHLY_PROGRESS_REPORT);
 			StringBuffer report = reportCheckResultBean.getReport();
 			
 			if (report != null) {

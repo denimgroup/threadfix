@@ -25,9 +25,29 @@ package com.denimgroup.threadfix.data.entities;
 
 import java.io.Serializable;
 
-import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
-
 public class ReportParameters implements Serializable {
+	
+	public enum ReportFormat { 
+		BAD_FORMAT(""),
+		TRENDING("trending.jrxml"), 
+		POINT_IN_TIME("pointInTime.jrxml"), 
+		VULNERABILITY_PROGRESS_BY_TYPE("cwe.jrxml"), 
+		CHANNEL_COMPARISON_BY_VULN_TYPE("cweChannel.jrxml"), 
+		CHANNEL_COMPARISON_SUMMARY("scannerComparison.jrxml"), 
+		CHANNEL_COMPARISON_DETAIL("scannerComparisonByVulnerability"), 
+		MONTHLY_PROGRESS_REPORT("monthlyBarChart.jrxml"),
+		SIX_MONTH_SUMMARY("sixMonthSummary.jrxml"),
+		TWELVE_MONTH_SUMMARY("twelveMonthSummary.jrxml"),
+		PORTFOLIO_REPORT("portfolioReport"),
+		TOP_TEN_APPS("topTenApps.jrxml"),
+		TOP_TWENTY_APPS("topTwentyApps.jrxml"),
+		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml");
+		
+		private String fileName;
+		
+		ReportFormat(String fileName) { this.fileName = fileName; }
+		public String getFileName() { return fileName; }
+	}
 
 	private static final long serialVersionUID = -1005210910671815370L;
 

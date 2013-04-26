@@ -40,6 +40,16 @@ function submitAjaxReport(url, formId, formDiv, successDiv, reportId, formatId) 
 					$(formDiv).html(text);
 				} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 					$(successDiv).html(text);
+					if ($("#reportDiv").attr("data-show-csv-export")) {
+						$("#csvLink").css("display","");
+					} else{
+						$("#csvLink").css("display","none");
+					}
+					if ($("#reportDiv").attr("data-show-pdf-export")) {
+						$("#pdfLink").css("display","");
+					} else{
+						$("#pdfLink").css("display","none");
+					}
 				} else {
 					try {
 						var json = JSON.parse($.trim(text));
@@ -87,4 +97,9 @@ addToDocumentReadyFunctions(function() {
 	} else {
 		submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
 	}
+	
+	$(".reportDownload").on("click", function() {
+		submitAjaxReport($(this).attr("data-url"), '#reportForm', '#formDiv', '#successDiv', $("#reportDiv").attr("data-report-id"), $(this).attr("data-format-id"));
+	});
 });
+

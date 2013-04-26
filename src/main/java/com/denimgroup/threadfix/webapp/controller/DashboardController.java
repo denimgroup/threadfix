@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -40,7 +41,6 @@ import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.VulnerabilityCommentService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
 
 /**
  * @author bbeverly
@@ -80,7 +80,7 @@ public class DashboardController {
 		parameters.setOrganizationId(-1);
 		parameters.setFormatId(1);
 		parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
 		
 		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
 			model.addAttribute("pointInTimeReport", resultBean.getReport());
@@ -90,16 +90,16 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
-	public String leftReport(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return report(model, request, response, ReportFormat.SIX_MONTH_SUMMARY);
+	public String leftReport(Model model, HttpServletRequest request) {
+		return report(model, request, ReportFormat.SIX_MONTH_SUMMARY);
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
-	public String rightReport(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return report(model, request, response, ReportFormat.TOP_TEN_APPS);
+	public String rightReport(Model model, HttpServletRequest request) {
+		return report(model, request, ReportFormat.TOP_TEN_APPS);
 	}
 	
-	public String report(Model model, HttpServletRequest request, HttpServletResponse response, ReportFormat reportFormat) {
+	public String report(Model model, HttpServletRequest request, ReportFormat reportFormat) {
 		
 		int orgId = -1, appId = -1;
 		if (request.getParameter("orgId") != null) {
@@ -114,7 +114,7 @@ public class DashboardController {
 		parameters.setOrganizationId(orgId);
 		parameters.setFormatId(1);
 		parameters.setReportFormat(reportFormat);
-		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
 		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
 			model.addAttribute("jasperReport", resultBean.getReport());
 		}

@@ -39,9 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
@@ -75,6 +73,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.PermissionService;
@@ -83,6 +82,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 
 /**
+ * @author mcollins
  * @author drivera
  * 
  */
@@ -118,7 +118,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request) {
 		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
 			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE, null);
 		}
@@ -152,7 +152,7 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		ReportFormat reportFormat = parameters.getReportFormat();
 		try {
-			StringBuffer report = getReport(path, reportFormat, format, params, applicationIdList, response);
+			StringBuffer report = getReport(path, reportFormat, format, params, applicationIdList);
 			return new ReportCheckResultBean(ReportCheckResult.VALID, report);
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
@@ -162,8 +162,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 	@SuppressWarnings("resource")
 	private StringBuffer getReport(String path, ReportFormat reportFormat, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList, 
-			HttpServletResponse response) throws IOException {
+			Map<String, Object> parameters, List<Integer> applicationIdList) throws IOException {
 
 		if (reportFormat == null || reportFormat.getFileName() == null || 
 				reportFormat.getFileName().trim().equals(""))
@@ -247,18 +246,8 @@ public class ReportsServiceImpl implements ReportsService {
 			}
 			
 			if(format.equals("PDF")) {
-				response.setContentType( "application/pdf" );
-				response.setHeader("Content-Disposition", "attachment; filename=\"threadfix_report_" + applicationIdList
-						+ ".pdf\"");
-
-				ServletOutputStream out = response.getOutputStream();
-								
 				byte[] pdfByteArray = JasperExportManager.exportReportToPdf(jasperPrint);
-				
-				out.write(pdfByteArray, 0, pdfByteArray.length);
-				out.flush();
-				out.close();
-				return null;
+				return new StringBuffer(pdfByteArray.toString());
 			}
 			
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

@@ -1,26 +1,13 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <body id="table">
-
-	<spring:url value="/reports/ajax/export" var="exportUrl"></spring:url>	
-	<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
-
-	<div>
-		<c:if test="${ csvEnabled }">
-			<a id="submitTeamModal" class="btn btn-primary"
-					onclick="javascript:submitAjaxReport('<c:out value="${ exportUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 2);return false;">
-				Export CSV
-			</a>
-		</c:if>
-		
-		<c:if test="${ pdfEnabled }">
-			<a id="submitTeamModal" class="btn btn-primary"
-					onclick="javascript:submitAjaxReport('<c:out value="${ emptyUrl }"/>', '#reportForm', '#formDiv', '#successDiv', ${ reportId }, 3);return false;">
-				Export PDF
-			</a>
-		</c:if>
+	
+	<div id="reportDiv" 
+			data-report-id="<c:out value="${ reportId }"/>"
+			data-show-csv-export="<c:if test="${ csvEnabled }">1</c:if>" 
+			data-show-pdf-export="<c:if test="${ pdfEnabled }">1</c:if>">
+		${jasperReport}
 	</div>
-	${jasperReport}
 	
 	<script>window.onload=function(){$('p').each(function(index) { $(this).css('line-height','1.5');});};</script>
 </body>

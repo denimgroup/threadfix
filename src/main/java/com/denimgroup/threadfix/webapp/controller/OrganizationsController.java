@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -57,7 +57,6 @@ import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportFormat;
 import com.denimgroup.threadfix.webapp.viewmodels.QuickStartModel;
 
 /**
@@ -154,8 +153,7 @@ public class OrganizationsController {
 	
 	@RequestMapping("/{orgId}/getReport")
 	public ModelAndView getReport(@PathVariable("orgId") int orgId,
-			HttpServletRequest request, HttpServletResponse response,
-			Model model) {
+			HttpServletRequest request, Model model) {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
@@ -167,7 +165,7 @@ public class OrganizationsController {
 			parameters.setOrganizationId(orgId);
 			parameters.setFormatId(1);
 			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request, response);
+			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
 			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
 				model.addAttribute("jasperReport", resultBean.getReport());
 			}
