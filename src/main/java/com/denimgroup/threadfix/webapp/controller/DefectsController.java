@@ -88,7 +88,7 @@ public class DefectsController {
 				defectViewModel.getSeverity(), defectViewModel.getPriority(),
 				defectViewModel.getStatus(), orgId, appId);
 		
-		ControllerUtils.addSuccessMessage(request, "Defect Submission was added to the queue.");
+		ControllerUtils.addSuccessMessage(request, "The Defect was submitted to the tracker.");
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		return "ajaxRedirectHarness";
 	}
@@ -112,7 +112,7 @@ public class DefectsController {
 		queueSender.addDefectTrackerVulnUpdate(orgId, appId);
 		
 		ControllerUtils.addSuccessMessage(request, 
-				"The Defect Tracker update was successfully added to the queue for processing.");
+				"The Defect Tracker update request was submitted to the tracker.");
 
 		return "redirect:/organizations/" + app.getOrganization().getId() + 
 				"/applications/" + app.getId();
