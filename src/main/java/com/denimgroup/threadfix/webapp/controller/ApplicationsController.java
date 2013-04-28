@@ -169,7 +169,8 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		if (application.getDefectTracker() == null) {
+		if (application.getDefectTracker() == null ||
+				application.getDefectTracker().getDefectTrackerType() == null) {
 			return;
 		}
 		
@@ -182,6 +183,8 @@ public class ApplicationsController {
 			data = dt.getProjectMetadata();
 		}
 		
+		model.addAttribute("defectTrackerName", 
+				application.getDefectTracker().getDefectTrackerType().getName());
 		model.addAttribute("projectMetadata", data);
 		model.addAttribute(new DefectViewModel());
 	}
@@ -191,6 +194,7 @@ public class ApplicationsController {
 			@PathVariable("appId") int appId, SessionStatus status, Model model) {
 		
 		addDefectModelAttributes(model, appId, orgId);
+		
 		model.addAttribute("contentPage", "defects/submitDefectForm.jsp");
 		
 		return "ajaxSuccessHarness";

@@ -16,21 +16,6 @@
 						<form:options items="${projectMetadata.components}"/>
 					</form:select>
 				</td>
-				
-				<td>Version:</td>
-				<td class="inputValue">
-					<form:select style="width:120px;" path="version">
-						<form:options items="${projectMetadata.versions}"/>
-					</form:select>
-				</td>
-				<td>Severity:</td>
-				<td class="inputValue">
-					<form:select style="width:120px;" path="severity">
-						<form:options items="${projectMetadata.severities}"/>
-					</form:select>
-				</td>
-			</tr>
-			<tr>
 				<td>Priority:</td>
 				<td class="inputValue">
 					<form:select style="width:120px;" path="priority">
@@ -44,6 +29,22 @@
 					</form:select>
 				</td>
 			</tr>
+			<c:if test="${ defectTrackerName != 'Jira' }">
+				<tr>
+					<td>Version:</td>
+					<td class="inputValue">
+						<form:select style="width:120px;" path="version">
+							<form:options items="${projectMetadata.versions}"/>
+						</form:select>
+					</td>
+					<td>Severity:</td>
+					<td class="inputValue">
+						<form:select style="width:120px;" path="severity">
+							<form:options items="${projectMetadata.severities}"/>
+						</form:select>
+					</td>
+				</tr>
+			</c:if>
 			<tr>
 				<td>Title:</td>
 				<td colspan="5" class="inputValue">
