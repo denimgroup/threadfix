@@ -133,7 +133,11 @@ public class ReportsServiceImpl implements ReportsService {
 			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
 		} else if (parameters.getReportFormat() == ReportFormat.TOP_TWENTY_APPS) {
 			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
-		} 
+		}
+		
+		if (applicationIdList == null || applicationIdList.isEmpty()) {
+			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS, null);
+		}
 		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 		
@@ -228,13 +232,9 @@ public class ReportsServiceImpl implements ReportsService {
 			if (reportFormat == ReportFormat.TRENDING) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
-				List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, 
-						new JasperXMonthSummaryReport(scanList, scanDao, 6));
+				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 6);
 			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
-				List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, 
-						new JasperXMonthSummaryReport(scanList, scanDao, 12));
+				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 12);
 			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
@@ -243,6 +243,10 @@ public class ReportsServiceImpl implements ReportsService {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
 			} else {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
+			}
+			
+			if (jasperPrint == null) {
+				return null;
 			}
 			
 			if(format.equals("PDF")) {
@@ -288,6 +292,18 @@ public class ReportsServiceImpl implements ReportsService {
 		log.debug("Returning report.");
 		
 		return report;
+	}
+	
+	private JasperPrint getXMonthReport(List<Integer> applicationIdList, Map<String, Object> parameters,
+			JasperReport jasperReport, int numMonths) throws JRException {
+		List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+		if (scanList == null || scanList.isEmpty()) {
+			log.info("Unable to fill Jasper Report - no scans were found.");
+			return null;
+		} else {
+			return JasperFillManager.fillReport(jasperReport, parameters, 
+				new JasperXMonthSummaryReport(scanList, scanDao, numMonths));
+		}
 	}
 
 	private String getString(InputStream inputStream) {
