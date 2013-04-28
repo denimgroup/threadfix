@@ -43,7 +43,9 @@
 				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
 					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>
 				</form>
-		    	<div id="leftTileReport"></div>
+		    	<div id="leftTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
 		    </div>
 		    
 		     <div class="span6">
@@ -52,7 +54,9 @@
 				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
 					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>
 				</form>
-		    	<div id="rightTileReport"></div>
+		    	<div id="rightTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
 		    </div>
 		</div>
 	</div>
@@ -87,33 +91,33 @@
 			</tr>
 		</thead>
 		<tbody id="applicationsTableBody">
-	<c:choose>
-		<c:when test="${empty apps}">
-			<tr class="bodyRow">
-				<td colspan="8" style="text-align:center;">No applications found.</td>
-			</tr>
-		</c:when>
-		<c:otherwise>
-			<c:forEach var="app" items="${ apps }" varStatus="status">
-			<tr class="bodyRow">
-				<td id="appName${ status.count }">
-					<spring:url value="{orgId}/applications/{appId}" var="appUrl">
-						<spring:param name="orgId" value="${ organization.id }"/>
-						<spring:param name="appId" value="${ app.id }"/>
-					</spring:url>
-					<a id="appLink${ status.count }" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
-				</td>
-				<td id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
-				<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
-				<td id="appTotalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
-				<td id="appCriticalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[4] }"/></td>
-				<td id="appHighVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[3] }"/></td>
-				<td id="appMediumVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[2] }"/></td>
-				<td id="appLowVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[1] }"/></td>
-			</tr>
-			</c:forEach>
-		</c:otherwise>
-	</c:choose>
+			<c:choose>
+				<c:when test="${empty apps}">
+					<tr class="bodyRow">
+						<td colspan="8" style="text-align:center;">No applications found.</td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="app" items="${ apps }" varStatus="status">
+					<tr class="bodyRow">
+						<td id="appName${ status.count }">
+							<spring:url value="{orgId}/applications/{appId}" var="appUrl">
+								<spring:param name="orgId" value="${ organization.id }"/>
+								<spring:param name="appId" value="${ app.id }"/>
+							</spring:url>
+							<a id="appLink${ status.count }" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
+						</td>
+						<td id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
+						<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
+						<td id="appTotalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
+						<td id="appCriticalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[4] }"/></td>
+						<td id="appHighVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[3] }"/></td>
+						<td id="appMediumVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[2] }"/></td>
+						<td id="appLowVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[1] }"/></td>
+					</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
 		</tbody>
 	</table>
 	

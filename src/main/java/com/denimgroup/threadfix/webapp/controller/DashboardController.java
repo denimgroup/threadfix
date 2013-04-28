@@ -91,11 +91,13 @@ public class DashboardController {
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
 	public String leftReport(Model model, HttpServletRequest request) {
+		model.addAttribute("showEmptyBox", true);
 		return report(model, request, ReportFormat.SIX_MONTH_SUMMARY);
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
 	public String rightReport(Model model, HttpServletRequest request) {
+		model.addAttribute("showEmptyBox", true);
 		return report(model, request, ReportFormat.TOP_TEN_APPS);
 	}
 	

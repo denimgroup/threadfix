@@ -6,6 +6,10 @@
 			data-report-id="<c:out value="${ reportId }"/>"
 			data-show-csv-export="<c:if test="${ csvEnabled }">1</c:if>" 
 			data-show-pdf-export="<c:if test="${ pdfEnabled }">1</c:if>">
+			
+		<c:if test="${ showEmptyBox && empty jasperReport }">
+			<%@include file="/WEB-INF/views/reports/emptyReport.jspf" %>
+		</c:if>
 		${jasperReport}
 	</div>
 	

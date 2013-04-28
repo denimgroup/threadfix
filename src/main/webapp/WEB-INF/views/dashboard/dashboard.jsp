@@ -18,7 +18,9 @@
 		    	</h4>
 		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
 				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-		    	<div id="leftTileReport"></div>
+		    	<div id="leftTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
 		    </div>
 		    
 		     <div class="span6">
@@ -28,7 +30,9 @@
 		    	</h4>
 		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
 				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-		    	<div id="rightTileReport"></div>
+		    	<div id="rightTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
 		    </div>
 		</div>
 	    

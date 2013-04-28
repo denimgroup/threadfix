@@ -20,6 +20,19 @@ function submitAjaxReport(formId,successDiv) {
 			
 			if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(successDiv).html(text);
+				$("td").each(function(){
+					if ($(this).attr("width") === "50%") {
+						$(this).remove();
+					}
+				});
+				$("img").each(function(){
+					var src = $(this).attr("src");
+					if (src.slice(src.length - 2) === "px") {
+						$(this).remove();
+					}
+				});
+				$("img").attr("style","");
+				$("img").addClass("report-image");
 			} else {
 				try {
 					var json = JSON.parse($.trim(text));

@@ -67,9 +67,9 @@
 								<tr class="app-row">
 									<td class="right-align" style="padding:5px;word-wrap: break-word;">
 										<div style="word-wrap: break-word;width:120px;">
-										<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
-											<c:out value="${ application.name }"/>
-										</a>
+											<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
+												<c:out value="${ application.name }"/>
+											</a>
 										</div>
 									</td>
 									<td class="centered" id="numTotalVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[5] }"/></td>
