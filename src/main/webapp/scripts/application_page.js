@@ -152,16 +152,74 @@ function addExpandsHandlers() {
 	
 	$(".vulnSectionHeader").on("click", function () {
 		
-		if ($(this).attr("data-expanded") === "0") {
-			$("." + $(this).attr("data-toggle-class")).removeClass("defaultHide");
-			$(this).attr("data-expanded", "1");
-			$("#" + $(this).attr("data-caret")).addClass("expanded");
-			$(this).attr("data-has-function", "1");
+		var parentTr = $(this).closest("tr");
+		
+		if (parentTr.attr("data-expanded") === "0") {
+			$("." + parentTr.attr("data-toggle-class")).removeClass("defaultHide");
+			parentTr.attr("data-expanded", "1");
+			$("#" + parentTr.attr("data-caret")).addClass("expanded");
+			parentTr.attr("data-has-function", "1");
 		} else {
-			$("." + $(this).attr("data-toggle-class")).addClass("defaultHide");
-			$(this).attr("data-expanded", "0");
-			$("#" + $(this).attr("data-caret")).removeClass("expanded");
-			$(this).attr("data-has-function", "1");
+			$("." + parentTr.attr("data-toggle-class")).addClass("defaultHide");
+			parentTr.attr("data-expanded", "0");
+			$("#" + parentTr.attr("data-caret")).removeClass("expanded");
+			parentTr.attr("data-has-function", "1");
+		}
+	});
+
+	var isChecked = function(element, index, array) {
+		return $(element).attr("checked") === "checked";
+	};
+
+	$(".categoryCheckbox").each(function () {
+		var target = $(this).attr("data-target-class");
+		var outerThis = $(this);
+		$(".vulnIdCheckbox." + target).on("change", function() {
+				
+			if ($(".vulnIdCheckbox." + target).toArray().every(isChecked)) {
+				$(outerThis).attr("checked", "checked");
+			} else {
+				$(outerThis).removeAttr("checked"); 
+			}
+			
+			if ($(".vulnIdCheckbox").toArray().every(isChecked) && $(".categoryCheckbox").toArray().every(isChecked)) {
+				$("#chkSelectAll").attr("checked", "checked");
+			} else {
+				$("#chkSelectAll").removeAttr("checked");
+			}
+		});
+	});
+	
+	$(".categoryCheckbox").on("click", function () {
+		var target = $(this).attr("data-target-class");
+		var outerThis = $(this);
+
+		if (outerThis.attr("checked") === "checked") {
+			$(".vulnIdCheckbox." + target).attr("checked", "checked");
+			if ($(".vulnIdCheckbox").toArray().every(isChecked) && $(".categoryCheckbox").toArray().every(isChecked)) {
+				$("#chkSelectAll").attr("checked", "checked");
+			}
+		} else {
+			$("#chkSelectAll").removeAttr("checked");
+			$(".vulnIdCheckbox." + target).removeAttr("checked");
+		}
+	});
+	
+	$("#chkSelectAll").on("click", function() {
+		if ($(this).attr("checked") === "checked") {
+			$(".categoryCheckbox").each(function() {
+				$(this).attr("checked", "checked");
+			});
+			$(".vulnIdCheckbox").each(function() {
+				$(this).attr("checked", "checked");
+			});
+		} else {
+			$(".categoryCheckbox").each(function() {
+				$(this).removeAttr("checked");
+			});
+			$(".vulnIdCheckbox").each(function() {
+				$(this).removeAttr("checked");
+			});
 		}
 	});
 }

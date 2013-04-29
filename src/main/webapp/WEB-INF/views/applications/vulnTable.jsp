@@ -113,14 +113,17 @@
 			</c:if>
 		
 			<c:if test="${ vulnGroup.showHeader && fn:length(vulnGroup.vulnerabilities) != 0 }">
-				<tr class="pointer vulnSectionHeader ${ vulnGroup.colorClass }"
+				<tr class="pointer ${ vulnGroup.colorClass }"
 						data-caret="caret${ vulnGroup.name }"
 						data-toggle-class="${ rowClass }"
 						data-expanded="0">
 					<td>
+						<input type="checkbox" class="categoryCheckbox" data-target-class="<c:out value="${ vulnGroup.name }"/>">
+					</td>
+					<td class="vulnSectionHeader">
 						<span id="caret${ vulnGroup.name }" class="caret-right"></span>
 					</td>
-					<td colspan="2">
+					<td class="vulnSectionHeader">
 						Toggle <c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/> 
 							<c:out value="${ vulnGroup.name }"/> Vulnerabilities
 					</td>
@@ -147,8 +150,8 @@
 				<tr class="bodyRow pointer <c:out value="${ color }"/> ${ rowClass } ${ hideClass }" data-target-div="vulnInfoDiv${vulnerability.id}"
 						data-caret-div="caret${vulnerability.id }">
 					<c:if test="${ canModifyVulnerabilities }">
-						<td class="expandableTrigger">
-							<input class="vulnIdCheckbox" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
+						<td>
+							<input class="vulnIdCheckbox <c:out value="${ vulnGroup.name }"/>" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 							<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 						</td>
 					</c:if>
