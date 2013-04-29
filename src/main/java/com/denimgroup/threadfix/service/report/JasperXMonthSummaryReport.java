@@ -151,16 +151,11 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		return scanList;
 	}
 	
-	public static void main(String[] args) {
-		YearAndMonth test = new YearAndMonth(2013, 4);
-		System.out.println(test.pastXMonths(12));
-	}
-	
 	///////////////////////////////////////////////////////////////////
 	//   This method makes it easier to use dates as keys in a map.  //
 	///////////////////////////////////////////////////////////////////
 	
-	static class YearAndMonth implements Comparable<YearAndMonth> {
+	class YearAndMonth implements Comparable<YearAndMonth> {
 		
 		private int year, month;
 		YearAndMonth(int year, int month) { this.year = year; this.month = month; }
