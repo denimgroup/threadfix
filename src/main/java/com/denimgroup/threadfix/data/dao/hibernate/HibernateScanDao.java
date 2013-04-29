@@ -307,6 +307,8 @@ public class HibernateScanDao implements ScanDao {
 	public List<Scan> retrieveMostRecent(int number) {
 		return sessionFactory.getCurrentSession()
 				.createCriteria(Scan.class)
+				.createAlias("application", "app")
+				.add(Restrictions.eq("app.active", true))
 				.addOrder(Order.desc("id"))
 				.setMaxResults(number)
 				.list();

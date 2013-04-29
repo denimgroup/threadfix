@@ -8,6 +8,18 @@
 <body class="dashboard">
 	<h2>Dashboard</h2>
 	
+	<spring:url value="/organizations/withModal" var="teamsUrl"/>
+	
+	<c:if test="${ empty teams }">
+	    <div class="alert">
+		    <button type="button" class="close" data-dismiss="alert">&times;</button>
+		    <strong>No teams found!</strong> To upload scans, first you need to create teams and applications.  
+		    <a href="<c:out value="${ teamsUrl }"/>#myTeamModal">
+		    	Get started
+		    </a>
+  	 	</div>
+	</c:if>
+	
 	<div class="container-fluid">
 	
 		<div class="row-fluid">

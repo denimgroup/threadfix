@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
-import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
@@ -56,6 +56,7 @@ public class DashboardController {
 	private VulnerabilityCommentService vulnerabilityCommentService;
 	private ScanService scanService;
 	private ReportsService reportsService;
+	private OrganizationService organizationService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
@@ -63,10 +64,11 @@ public class DashboardController {
 	public DashboardController(ScanService scanService,
 			ReportsService reportsService,
 			PermissionService permissionService,
-			ApplicationService applicationService,
+			OrganizationService organizationService,
 			VulnerabilityCommentService vulnerabilityCommentService){
 		this.vulnerabilityCommentService = vulnerabilityCommentService;
 		this.scanService = scanService;
+		this.organizationService = organizationService;
 		this.reportsService = reportsService;
 	}
 	
@@ -75,16 +77,7 @@ public class DashboardController {
 		
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent(5));
 		model.addAttribute("recentScans", scanService.loadMostRecent(5));
-		ReportParameters parameters = new ReportParameters();
-		parameters.setApplicationId(-1);
-		parameters.setOrganizationId(-1);
-		parameters.setFormatId(1);
-		parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
-		
-		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
-			model.addAttribute("pointInTimeReport", resultBean.getReport());
-		}
+		model.addAttribute("teams", organizationService.loadAllActive());
 		
 		return "dashboard/dashboard";
 	}

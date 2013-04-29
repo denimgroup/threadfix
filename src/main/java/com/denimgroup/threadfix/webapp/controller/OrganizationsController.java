@@ -57,7 +57,6 @@ import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
-import com.denimgroup.threadfix.webapp.viewmodels.QuickStartModel;
 
 /**
  * @author bbeverly
@@ -99,10 +98,16 @@ public class OrganizationsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
-		addModelObjects(model);
-		model.addAttribute("quickStartModel", new QuickStartModel());
+	public String index(Model model, HttpServletRequest request) {
+		model.addAttribute("application", new Application());
+		model.addAttribute("organization", new Organization());
 		return "organizations/index";
+	}
+	
+	@RequestMapping(value="/withModal", method = RequestMethod.GET)
+	public String indexShowModal(HttpServletRequest request) {
+		ControllerUtils.addItem(request, "showTeamModal", 1);
+		return "redirect:/organizations";
 	}
 	
 	private void addModelObjects(Model model) {
@@ -158,7 +163,6 @@ public class OrganizationsController {
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
-			
 		} else {
 			ReportParameters parameters = new ReportParameters();
 			parameters.setApplicationId(-1);
@@ -178,6 +182,7 @@ public class OrganizationsController {
 		addModelObjects(model);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("contentPage", "organizations/indexTeamTable.jsp");
+		model.addAttribute("showTeamModal", ControllerUtils.getItem(request, "showTeamModal"));
 		return "ajaxSuccessHarness";
 	}
 
@@ -197,7 +202,6 @@ public class OrganizationsController {
 			
 			String teamName = organization.getName();
 			organizationService.deactivateOrganization(organization);
-			status.setComplete();
 			log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
 			ControllerUtils.addSuccessMessage(request, 
 					"Team " + teamName + " has been deleted successfully.");

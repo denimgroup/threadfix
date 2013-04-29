@@ -31,6 +31,12 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName, collapsibl
 	});
 }
 
+var showModalIfAttributePresent = function() {
+	if ($("#addTeamModalButton").attr("data-default-show")) {
+		$("#addTeamModalButton").click();
+	}
+};
+
 function reloadTable() {
 	
 	var tableDiv = $("#teamTable");
@@ -41,6 +47,7 @@ function reloadTable() {
 			tableDiv.html(text);
 			addModalSubmitEvents();
 			addExpandsHandlers();
+			showModalIfAttributePresent();
 		},
 		error : function (xhr, ajaxOptions, thrownError){
 			history.go(0);
