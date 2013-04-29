@@ -4,11 +4,11 @@
     <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
     <li class="active"><c:out value="${ application.name }"/></li>
-   </ul>
+</ul>
 
 <h2 style="padding-bottom:5px;">
 	
-	<c:out value="${ application.name }"/>
+	<span id="nameText"><c:out value="${ application.name }"/></span>
 	<a class="btn header-button" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
 		Show More
 	</a>
