@@ -760,3 +760,7 @@ div.box-shadow {
 .defaultHide {
 	display: none;
 }
+
+.header-button {
+	font-weight: normal;
+}

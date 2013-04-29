@@ -66,7 +66,7 @@
 								</spring:url>
 								<tr class="app-row">
 									<td style="padding:5px;word-wrap: break-word;">
-										<div style="word-wrap: break-word;max-width:120px;">
+										<div style="word-wrap: break-word;max-width:120px;text-align:left;">
 											<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
 												<c:out value="${ application.name }"/>
 											</a>

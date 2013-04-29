@@ -9,7 +9,7 @@
 <h2 style="padding-bottom:5px;">
 	
 	<c:out value="${ application.name }"/>
-	<a class="btn" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
+	<a class="btn header-button" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
 		Show More
 	</a>
 </h2>

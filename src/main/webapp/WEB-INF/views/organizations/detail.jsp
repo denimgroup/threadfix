@@ -16,11 +16,11 @@
 		<c:if test="${ canManageTeams }">
 			<span>
 				<a id="teamModalButton" href="#teamModal" 
-					role="button" class="btn" data-toggle="modal">Edit</a>
+					role="button" class="btn header-button" data-toggle="modal">Edit</a>
 				<spring:url value="{orgId}/delete" var="deleteUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
 				</spring:url>
-				<a id="deleteLink" class="btn btn-danger" href="${ fn:escapeXml(deleteUrl) }" 
+				<a id="deleteLink" class="btn btn-danger header-button" href="${ fn:escapeXml(deleteUrl) }" 
 						onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a>
 			</span>
 		</c:if>
