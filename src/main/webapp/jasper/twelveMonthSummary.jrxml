@@ -42,10 +42,10 @@
 				</categoryDataset>
 				<barPlot>
 					<plot labelRotation="45.0">
-						<seriesColor seriesOrder="0" color="#002F5D"/>
-						<seriesColor seriesOrder="1" color="#FD8D3C"/>
-						<seriesColor seriesOrder="2" color="#E6550D"/>
-						<seriesColor seriesOrder="3" color="#A63603"/>
+						<seriesColor seriesOrder="0" color="#c4e3f3"/>
+						<seriesColor seriesOrder="1" color="#d0e9c6"/>
+						<seriesColor seriesOrder="2" color="#faf2cc"/>
+						<seriesColor seriesOrder="3" color="#EBCCCC"/>
 					</plot>
 				</barPlot>
 			</stackedBarChart>

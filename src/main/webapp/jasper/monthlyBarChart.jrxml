@@ -88,9 +88,9 @@
 				</categoryDataset>
 				<barPlot>
 					<plot labelRotation="45.0">
-						<seriesColor seriesOrder="0" color="#002F5D"/>
-						<seriesColor seriesOrder="1" color="#96160B"/>
-						<seriesColor seriesOrder="2" color="#CA4E00"/>
+						<seriesColor seriesOrder="0" color="#EBCCCC"/>	
+						<seriesColor seriesOrder="1" color="#d0e9c6"/>
+						<seriesColor seriesOrder="2" color="#c4e3f3"/>
 					</plot>
 				</barPlot>
 			</stackedBarChart>
