@@ -69,9 +69,9 @@ public class WafAddPage extends BasePage {
 		return this;
 	}
 
-	public WafDetailPage clickAddWafButton() {
+	public WafRulesPage clickAddWafButton() {
 		addWafButton.click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 	
 	public WafAddPage clickAddWafButtonInvalid() {
@@ -79,9 +79,9 @@ public class WafAddPage extends BasePage {
 		return new WafAddPage(driver);
 	}
 
-	public WafDetailPage clickCancelLink() {
+	public WafRulesPage clickCancelLink() {
 		cancelLink.click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 
 }

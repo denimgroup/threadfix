@@ -190,35 +190,16 @@ public class TeamIndexPage extends BasePage {
 		return driver.findElementById("url.errors").getText();
 	}
 
-	/*
-	public ApplicationDetailPage clickApplicationDetailLink(String appName) {
-		driver.findElementByLinkText(appName).click();
-		return new ApplicationDetailPage(driver);
-	}
-	*/
 	public boolean isAppPresent(String appName) {
 		return driver.findElementByLinkText(appName).isDisplayed();
 	}
 
-	public TeamIndexPage clickUploadScan(String appName) {
-		for (int i = 1; i <= driver.findElementsByClassName("right-align")
-				.size(); i++)
-			if (driver.findElementById("applicationLink" + i).getText()
-					.equals(appName)) {
-				driver.findElementsById("uploadScanModalLink").get(i - 1)
-						.click();
-				waitForElement(driver.findElementById("uploadScan" + i));
-				break;
-			}
+	public TeamIndexPage clickUploadScan(String appName,String teamName) {
+		driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).click();
+		waitForElement(driver.findElementByClassName("in"));
 		return new TeamIndexPage(driver);
 	}
 	
-	/*
-	public ApplicationDetailPage clickAppLink(String appName, String teamName) {
-		driver.findElementById("applicationLink" + getIndex(teamName) + "-" + getIndex(appName)).click();
-		return new ApplicationDetailPage(driver);
-	}
-    */
 	
 	public TeamIndexPage setFileInput(String file, String appName) {
 		for (int i = 1; i <= driver.findElementsByClassName("right-align")

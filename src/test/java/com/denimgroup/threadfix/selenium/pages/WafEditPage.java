@@ -67,9 +67,9 @@ public class WafEditPage extends BasePage {
 		typeSelect.selectByVisibleText(code);
 	}
 
-	public WafDetailPage clickUpdateWafButton() {
+	public WafRulesPage clickUpdateWafButton() {
 		updateWafButton.click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 	
 	public WafEditPage clickUpdateWafButtonInvalid() {
@@ -77,9 +77,9 @@ public class WafEditPage extends BasePage {
 		return new WafEditPage(driver);
 	}
 
-	public WafDetailPage clickCancelLink() {
+	public WafRulesPage clickCancelLink() {
 		cancelLink.click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 
 }

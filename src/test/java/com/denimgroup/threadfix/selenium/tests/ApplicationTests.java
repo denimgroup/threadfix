@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.WafDetailPage;
+import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class ApplicationTests extends BaseTest {
@@ -51,7 +51,7 @@ public class ApplicationTests extends BaseTest {
 	private TeamIndexPage teamIndexPage;
 	private ApplicationEditPage applicationEditPage;
 	private WafIndexPage wafIndexPage;
-	private WafDetailPage wafDetailPage;
+	private WafRulesPage wafDetailPage;
 	
 	@Before
 	public void init() {

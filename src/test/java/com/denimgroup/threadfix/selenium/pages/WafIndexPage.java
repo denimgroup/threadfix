@@ -69,9 +69,9 @@ public class WafIndexPage extends BasePage {
 		return -1;
 	}
 	
-	public WafDetailPage clickRules(String wafName){
+	public WafRulesPage clickRules(String wafName){
 		driver.findElementsByLinkText("Rules").get(getIndex(wafName)).click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 /*
 	public WafIndexPage clickDeleteWaf(int i){

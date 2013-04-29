@@ -29,7 +29,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-public class WafDetailPage extends BasePage {
+public class WafRulesPage extends BasePage {
 
 	private WebElement nameText;
 	private WebElement wafTypeText;
@@ -38,7 +38,7 @@ public class WafDetailPage extends BasePage {
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement deleteButton;
 	
-	public WafDetailPage(WebDriver webdriver) {
+	public WafRulesPage(WebDriver webdriver) {
 		super(webdriver);
 		
 		nameText = driver.findElementById("nameText");
@@ -65,9 +65,9 @@ public class WafDetailPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 
-	public WafDetailPage clickGenerateWafRulesButton() {
+	public WafRulesPage clickGenerateWafRulesButton() {
 		driver.findElementById("generateWafRulesButton").click();
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 
 	public TeamIndexPage clickDownloadWafRulesButton() {
@@ -106,13 +106,13 @@ public class WafDetailPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 	
-	public WafDetailPage clickDeleteButtonInvalid() {
+	public WafRulesPage clickDeleteButtonInvalid() {
 		deleteButton.click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		
-		return new WafDetailPage(driver);
+		return new WafRulesPage(driver);
 	}
 
 	public String getWafDirectiveSelect(){
