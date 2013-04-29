@@ -43,8 +43,7 @@
 			    	<table class="table table-bordered thick-borders">
 						<thead>
 							<tr>
-								<th class="thick-left">Application</th>
-								<th style="width:70px">View More</th>
+								<th colspan="2" class="thick-left">Application</th>
 							</tr>
 						</thead>
 						<tbody id="wafTableBody">
@@ -70,9 +69,11 @@
 					                       <spring:param name="appId" value="${ scan.application.id }"/>
 					                       <spring:param name="scanId" value="${ scan.id }"/>
 					                </spring:url>
-									<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
-										View More
-									</a>
+					                <div style="float:right;width:70px;">
+										<a id="scanLink${ status.count }" id="importTime${ status.count }" href="${ fn:escapeXml(detailUrl) }">
+											View More
+										</a>
+									</div>
 								</td>
 							</tr>
 							<tr class="no-top-border">
@@ -93,8 +94,7 @@
 						<thead>
 							<tr>
 								<th class="thick-left">User</th>
-								<th>Vulnerability</th>
-								<th style="width:70px">View More</th>
+								<th colspan="2">Vulnerability</th>
 							<tr>
 						</thead>
 						<tbody>
@@ -115,9 +115,11 @@
 											<spring:param name="appId" value="${ comment.vulnerability.application.id }" />
 											<spring:param name="vulnId" value="${ comment.vulnerability.id }" />
 										</spring:url>
-										<a href="${ fn:escapeXml(vulnUrl) }#commentDiv${ comment.vulnerability.id }">
-											View More
-										</a>
+										<div style="float:right;width:70px;">
+											<a href="${ fn:escapeXml(vulnUrl) }#commentDiv${ comment.vulnerability.id }">
+												View More
+											</a>
+										</div>
 									</td>
 								</tr>
 								<tr class="no-top-border">
