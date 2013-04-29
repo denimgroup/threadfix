@@ -100,7 +100,7 @@
 						<tbody>
 							<c:if test="${ empty recentComments }">
 								<tr>
-									<td class="thick-left" colspan="3">No comments were retrieved.</td>
+									<td style="text-align:center" class="thick-left" colspan="3">No comments found.</td>
 								</tr>
 							</c:if>
 							<c:forEach var="comment" items="${ recentComments }" varStatus="status">
