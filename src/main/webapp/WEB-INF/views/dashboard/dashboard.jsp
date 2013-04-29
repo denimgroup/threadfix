@@ -14,7 +14,7 @@
 		    <div class="span6">
 		    	<spring:url value="/reports/9" var="reportsUrl"/>
 		    	<h4>Vulnerability Burndown <span style="font-size:12px;float:right;">
-		    		<a href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+		    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 		    	</h4>
 		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
 				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
@@ -26,7 +26,7 @@
 		     <div class="span6">
 		     	<spring:url value="/reports/10" var="reportsUrl"/>
 		    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
-		    		<a href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+		    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 		    	</h4>
 		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
 				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
