@@ -78,8 +78,8 @@
 							</tr>
 							<tr class="no-top-border">
 								<td class="thick-left">
-									<c:out value="${ scan.applicationChannel.channelType.name }"/> Scan at 
 									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="yy/MM/dd hh:mm"/><br>
+									<c:out value="${ scan.applicationChannel.channelType.name }"/> (<c:out value="${ scan.scannerType }"/>)<br>
 									<c:out value="${ scan.numberTotalVulnerabilities }"/> Vulnerabilities found
 								</td>
 							</tr>

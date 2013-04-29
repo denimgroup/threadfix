@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -78,6 +79,19 @@ public class Scan extends BaseEntity {
 	
 	private Integer totalNumberSkippedResults = null;
 	private Integer totalNumberFindingsMergedInScan = null;
+	
+	// These are for determining what type of scanner was used
+	private static final List<String> dynamicTypes = Arrays.asList(new String[]{ ChannelType.ACUNETIX_WVS,
+			ChannelType.APPSCAN_ENTERPRISE, ChannelType.ARACHNI, ChannelType.BURPSUITE, ChannelType.NESSUS,
+			ChannelType.NETSPARKER, ChannelType.NTO_SPIDER, ChannelType.SKIPFISH, ChannelType.W3AF,
+			ChannelType.WEBINSPECT, ChannelType.ZAPROXY, ChannelType.QUALYSGUARD_WAS, ChannelType.APPSCAN_DYNAMIC
+	});
+	private static final List<String> staticTypes = Arrays.asList(new String[]{ ChannelType.APPSCAN_SOURCE,
+			ChannelType.FINDBUGS, ChannelType.FORTIFY, ChannelType.VERACODE, ChannelType.CAT_NET,
+			ChannelType.BRAKEMAN
+	});
+	private static final List<String> mixedTypes = Arrays.asList(new String[]{ ChannelType.SENTINEL });
+	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 	
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "applicationChannelId")
@@ -354,4 +368,20 @@ public class Scan extends BaseEntity {
 		this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
 	}
 
+	@Transient
+	public String getScannerType() {
+		if (getApplicationChannel() != null && getApplicationChannel().getChannelType() != null
+				&& getApplicationChannel().getChannelType().getName() != null) {
+			String scannerName = getApplicationChannel().getChannelType().getName();
+			if (dynamicTypes.contains(scannerName)) {
+				return DYNAMIC; 
+			} else if (staticTypes.contains(scannerName)) {
+				return STATIC;
+			} else if (mixedTypes.contains(scannerName)) {
+				return MIXED;
+			}
+		}
+
+		return null;
+	}
 }
