@@ -44,7 +44,7 @@ body {
 	background-image: url(../images/hdr-bg-repeat.png), url(../images/main-top-gradient.png);
 	background-position: top left, 0 37px;
 	background-repeat: repeat-x;
-	background-size: auto 42px;
+	background-size: 1px 42px;
 }
 
 #main {
