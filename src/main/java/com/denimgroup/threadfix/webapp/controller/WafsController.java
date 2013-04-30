@@ -78,11 +78,6 @@ public class WafsController {
 		model.addAttribute(wafs);
 		model.addAttribute("newWaf", new Waf());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-		
-		for (Waf waf: wafs) {
-			waf.setDelete(wafService.canDelete(waf));
-		}
-		
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
 		model.addAttribute("createWafUrl", "wafs/new/ajax");
@@ -184,7 +179,7 @@ public class WafsController {
 	public String deleteWaf(@PathVariable("wafId") int wafId, 
 			SessionStatus status, HttpServletRequest request) {
 		Waf waf = wafService.loadWaf(wafId);
-		boolean canDelete = wafService.canDelete(waf);
+		boolean canDelete = waf != null && waf.getCanDelete();
 		
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);

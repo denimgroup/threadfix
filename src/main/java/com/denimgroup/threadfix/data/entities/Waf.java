@@ -116,11 +116,16 @@ public class Waf extends AuditableEntity {
 	
 	@Transient
 	public boolean getCanDelete() {
-		return canDelete;
-	}
-	
-	public void setDelete(boolean canDelete) {
-		this.canDelete = canDelete;
+		boolean hasActiveApplication = false;
+		if (getApplications() != null) {
+			for (Application application : getApplications()) {
+				if (application.isActive()) {
+					hasActiveApplication = true;
+					break;
+				}
+			}
+		}
+		return !hasActiveApplication;
 	}
 
 }
