@@ -42,7 +42,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public interface ChannelImporter {
 
 	public static final String SUCCESSFUL_SCAN = "Valid Scan file.";
-	public static final String OLD_SCAN_ERROR = "A newer scan has been uploaded in this channel.";
+	public static final String OLD_SCAN_ERROR = "A newer scan from this scanner has been uploaded.";
 	public static final String EMPTY_SCAN_ERROR = "Scan file is empty.";
 	public static final String DUPLICATE_ERROR = "Scan file has already been uploaded.";
 	public static final String WRONG_FORMAT_ERROR = "Scan file is in the wrong format.";
