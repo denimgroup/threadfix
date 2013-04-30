@@ -33,7 +33,7 @@
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
 	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings
 		<span>
-			<a href="#statisticsDiv" data-toggle="collapse" class="btn header-button">Toggle Statistics</a>
+			<a href="#statisticsDiv" data-toggle="collapse" class="btn header-button">Show Statistics</a>
 			<a class="btn btn-danger scanDelete header-button" data-delete-form="deleteForm">Delete Scan</a>
 		</span>
 	</h2>
@@ -138,7 +138,6 @@
 							<th>Vulnerability Type</th>
 							<th>Path</th>
 							<th>Parameter</th>
-							<th>Vulnerability Link</th>
 							<th class="last">Number Merged Results</th>
 						</tr>
 					</thead>

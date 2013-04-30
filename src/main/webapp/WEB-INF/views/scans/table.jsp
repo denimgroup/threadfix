@@ -1,6 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-	<h4 style="padding-top:8px">Successfully Mapped Findings</h4>
+	<h4 style="padding-top:8px">Mapped Findings</h4>
 
 	<spring:url value="/login.jsp" var="loginUrl"/>
 	<spring:url value="{scanId}/table" var="tableUrl">
@@ -54,7 +54,6 @@
 				<th>Vulnerability Type</th>
 				<th>Path</th>
 				<th>Parameter</th>
-				<th>Vulnerability Link</th>
 				<th>Number Merged Results</th>
 				<th style="width:80px"></th>
 			</tr>
@@ -96,14 +95,6 @@
 				</td>
 				<td id="mappedParameter${ status.count }">
 					<c:out value="${ finding.surfaceLocation.parameter }"/>
-				</td>
-				<td id="mappedVulnId${ status.count }">
-					<spring:url value="../vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
-				    	<spring:param name="vulnerabilityId" value="${ finding.vulnerability.id }" />
-			    	</spring:url>
-			    	<a href="${ fn:escapeXml(vulnerabilityUrl) }">
-						<c:out value="${ finding.vulnerability.id }"/>
-					</a>
 				</td>
 				<td>
 					<c:out value="${ finding.numberMergedResults }"/>
