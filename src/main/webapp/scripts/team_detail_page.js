@@ -57,3 +57,13 @@ function submitAjaxReport(formId,successDiv, viewMore) {
 
 addToDocumentReadyFunctions(reloadLeft);
 addToDocumentReadyFunctions(reloadRight);
+addToDocumentReadyFunctions(
+	function() {
+		$("#showDetailsLink").on("click", function() {
+		if ($("#teamInfoDiv").attr('class').indexOf('in') == -1) {
+			$(this).html("Show Less");
+		} else {
+			$(this).html("Show More");
+		}
+	});
+});
