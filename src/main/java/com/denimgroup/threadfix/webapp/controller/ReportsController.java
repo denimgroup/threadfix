@@ -102,6 +102,7 @@ public class ReportsController {
 		model.addAttribute("reportParameters", new ReportParameters());
 		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
 		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
+		model.addAttribute("firstTeamId", ControllerUtils.getItem(request, "teamId"));
 		return "reports/index";
 	}
 	
@@ -109,6 +110,15 @@ public class ReportsController {
 	public String toReport(@PathVariable("reportId") int reportId,
 			Model model, HttpServletRequest request) {
 		ControllerUtils.addItem(request, "reportId", reportId);
+		return "redirect:/reports";
+	}
+	
+	@RequestMapping(value="/{reportId}/{teamId}", method = RequestMethod.GET)
+	public String toReport(@PathVariable("reportId") int reportId,
+			@PathVariable("teamId") int teamId,
+			Model model, HttpServletRequest request) {
+		ControllerUtils.addItem(request, "reportId", reportId);
+		ControllerUtils.addItem(request, "teamId", teamId);
 		return "redirect:/reports";
 	}
 	

@@ -38,7 +38,15 @@
 	<div class="container-fluid">
 		<div class="row-fluid">
 		    <div class="span6">
-		    	<h4>Vulnerability Breakdown</h4>
+		    	<h4>
+		    		Vulnerability Burndown
+		    		<spring:url value="/reports/9/{orgId}" var="reportsUrl">
+		    			<spring:param name="orgId" value="${ organization.id }"/>
+		    		</spring:url>
+					<span style="font-size:12px;float:right;">
+			    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+			    	</span>
+		    	</h4>
 		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
 				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
 					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>
@@ -49,7 +57,15 @@
 		    </div>
 		    
 		     <div class="span6">
-		    	<h4>Top 10 Vulnerable Applications</h4>
+		    	<h4>
+		    		Top 10 Vulnerable Applications
+		    		<spring:url value="/reports/10/{orgId}" var="reportsUrl">
+		    			<spring:param name="orgId" value="${ organization.id }"/>
+		    		</spring:url>
+			    	<span style="font-size:12px;float:right;">
+			    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+		    		</span>
+		    	</h4>
 		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
 				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
 					<input style="display:none" name="orgId" value="<c:out value="${ organization.id }"/>"/>

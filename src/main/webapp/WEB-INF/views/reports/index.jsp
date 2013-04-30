@@ -125,7 +125,11 @@
 												<c:forEach var="application" items="${ organization.activeApplications}">
 													<c:set var="options" value="${options},{${ quote }id${ quote }:${ quote }${ application.id }${ quote }, ${ quote }name${ quote }:${ quote }${ application.name }${ quote }}"/>
 												</c:forEach>
-												<option value="${ organization.id }" data-select-items="<c:out value="${ options }"/>]">
+												<option value="${ organization.id }" 
+													<c:if test="${ not empty firstTeamId and firstTeamId == organization.id }">
+														selected="selected"								
+													</c:if>
+												data-select-items="<c:out value="${ options }"/>]">
 													<c:out value="${ organization.name }" />
 												</option>
 											</c:if>

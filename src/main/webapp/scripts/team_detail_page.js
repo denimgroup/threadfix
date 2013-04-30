@@ -1,12 +1,12 @@
 function reloadLeft() {
-	submitAjaxReport('#leftReportForm', '#leftTileReport');
+	submitAjaxReport('#leftReportForm', '#leftTileReport', '#leftViewMore');
 }
 
 function reloadRight() {
-	submitAjaxReport('#rightReportForm', '#rightTileReport');
+	submitAjaxReport('#rightReportForm', '#rightTileReport', '#rightViewMore');
 }
 
-function submitAjaxReport(formId,successDiv) {
+function submitAjaxReport(formId,successDiv, viewMore) {
 	
 	$("#connectionUnavailableMessage").css("display", "none");
 	
@@ -20,6 +20,10 @@ function submitAjaxReport(formId,successDiv) {
 			
 			if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(successDiv).html(text);
+				if (text.indexOf("<img") !== -1) {
+					$(viewMore).css("display","");
+				}
+				
 				$("td").each(function(){
 					if ($(this).attr("width") === "50%") {
 						$(this).remove();
