@@ -392,6 +392,17 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	width:auto;
 }
 
+.grey-background {
+	background-color:#F5F5F5;
+}
+
+.table tr.grey-background > td {
+	border-top:0px;
+	padding-top:0px;
+	padding-bottom:0px;
+	min-height:250px;
+}
+
 .table tr.expandable > td {
 	border-top:0px;
 	padding-top:0px;
@@ -551,7 +562,6 @@ table.bold-headers tr th {
 .table tbody tr.info td, .table tbody tr.info th {
 	background-color:#d9edf7;
 }
-
 
 .table-hover tbody tr.error.expandable:hover td, .table-hover tbody tr.error.expandable:hover th {
 	background-color: #F2DEDE;

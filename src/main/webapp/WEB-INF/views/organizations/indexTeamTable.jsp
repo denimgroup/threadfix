@@ -31,7 +31,7 @@
 				<a style="text-decoration:none" id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
 			</td>
 		</tr>
-		<tr class="expandable">
+		<tr class="grey-background">
 			<td colspan="3">
 				<div id="teamInfoDiv${organization.id}" class="collapse">
 					<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
