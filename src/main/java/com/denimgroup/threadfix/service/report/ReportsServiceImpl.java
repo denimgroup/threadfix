@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -218,6 +219,11 @@ public class ReportsServiceImpl implements ReportsService {
 		} else {
 			exporter = new JRHtmlExporter();
 			log.info("Starting HTML report generation.");
+			
+			if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
+				parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+			}
+			
 		}
 
 		parameters.put("HIBERNATE_SESSION", sessionFactory.getCurrentSession());

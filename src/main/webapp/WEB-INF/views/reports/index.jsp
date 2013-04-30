@@ -49,9 +49,17 @@
 						<tr class="reportFilterHeader">
 							<th colspan="2">Trending Reports</th>
 						</tr>
-						<tr class="sidebar sidebar1 sidebar-active" data-report-id="1" data-url="<c:out value="${ emptyUrl }"/>">
+						<tr class="sidebar sidebar1
+								<c:if test="${ hasVulnerabilities }">
+										sidebar-active
+								</c:if>
+								" data-report-id="1" data-url="<c:out value="${ emptyUrl }"/>">
 							<td><a>Trending Scans</a></td>
-							<td><div class="sidebar-arrow sidebar-active" id="arrow1">&gt;</div></td>
+							<td><div class="sidebar-arrow
+									<c:if test="${ hasVulnerabilities }">
+											sidebar-active
+									</c:if>
+									" id="arrow1">&gt;</div></td>
 						</tr>
 						<tr class="sidebar sidebar7" data-report-id="7" data-url="<c:out value="${ emptyUrl }"/>">
 							<td><a>Monthly Progress</a></td>
@@ -62,7 +70,7 @@
 							<td><div class="sidebar-arrow" id="arrow9">&gt;</div></td>
 						</tr>
 						<tr class="sidebar sidebar10" data-report-id="10" data-url="<c:out value="${ emptyUrl }"/>">
-							<td><a>Top 20 Applications</a></td>
+							<td><a>Top 20 Vulnerable Applications</a></td>
 							<td><div class="sidebar-arrow" id="arrow10">&gt;</div></td>
 						</tr>
 						
@@ -154,7 +162,18 @@
 					</div>
 					
 					<div class="row-fluid">
-						<div class="span12" id="successDiv" data-first-report="<c:out value="${ firstReport }"/>"></div>
+						<div class="span12" id="successDiv" 
+								<c:if test="${ not hasVulnerabilities }">
+									data-hide-reports="1" 
+								</c:if>
+								data-first-report="<c:out value="${ firstReport }"/>">
+							<c:if test="${ not hasVulnerabilities }">
+								<div class="alert alert-danger" style="margin-top:10px">
+									<button class="close" data-dismiss="alert" type="button">×</button>
+									<strong>No Vulnerabilities found.</strong> Upload a scan and try again.
+								</div>
+							</c:if>
+						</div>
 					</div>
 				</div>
 			</div>

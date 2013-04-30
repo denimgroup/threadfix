@@ -97,9 +97,9 @@
 		</band>
 	</summary>
 	<noData>
-		<band height="25">
+		<band height="50">
 			<staticText>
-				<reportElement x="0" y="0" width="800" height="25"/>
+				<reportElement x="0" y="0" width="800" height="50"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>

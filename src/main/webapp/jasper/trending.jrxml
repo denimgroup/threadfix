@@ -105,11 +105,11 @@
 		</band>
 	</summary>
 	<noData>
-		<band height="20">
+		<band height="50">
 			<staticText>
-				<reportElement x="222" y="0" width="309" height="20"/>
+				<reportElement x="222" y="0" width="309" height="50"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
+					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[No Data Found For Trending Report]]></text>
 			</staticText>

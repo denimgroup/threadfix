@@ -455,6 +455,11 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	text-align:right;
 }
 
+.table-hover tbody tr.grey-background:hover div.modal td,
+.table-hover tbody tr.grey-background:hover div.modal th {
+	background-color:#FFFFFF;
+}
+
 .table-hover tbody tr.expandable:hover td,
 .table-hover tbody tr.expandable:hover th {
 	background-color:#FFFFFF;

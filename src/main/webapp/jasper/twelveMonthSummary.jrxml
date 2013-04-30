@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
 	name="trending" pageWidth="675" pageHeight="500" orientation="Landscape" leftMargin="0" rightMargin="0" 
-	topMargin="0" bottomMargin="0" columnWidth="422">
+	whenNoDataType="NoDataSection" topMargin="0" bottomMargin="0" columnWidth="422">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
@@ -51,4 +51,15 @@
 			</stackedBarChart>
 		</band>
 	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="0" width="800" height="50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Data Found For Vulnerability Burndown Report]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>

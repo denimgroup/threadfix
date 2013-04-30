@@ -84,22 +84,28 @@ function submitAjaxReport(url, formId, formDiv, successDiv, reportId, formatId) 
 addToDocumentReadyFunctions(function() {
 	var orgSelect = $("#orgSelect");
 	var appSelect = $("#appSelect");
-	orgSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
-	appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 
-	$(".sidebar").on("click", function() {
-		selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"));
-	});
-
-	if ($("#successDiv").attr('data-first-report') !== "") {
-		var elementId = ".sidebar" + $("#successDiv").attr('data-first-report');
-		$(elementId).click();
-	} else {
-		submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
-	}
+	if (!$("#successDiv").attr("data-hide-reports")) {
+		orgSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
+		appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 	
-	$(".reportDownload").on("click", function() {
-		submitAjaxReport($(this).attr("data-url"), '#reportForm', '#formDiv', '#successDiv', $("#reportDiv").attr("data-report-id"), $(this).attr("data-format-id"));
-	});
+		$(".sidebar").on("click", function() {
+			selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"));
+		});
+	
+		if ($("#successDiv").attr('data-first-report') !== "") {
+			var elementId = ".sidebar" + $("#successDiv").attr('data-first-report');
+			$(elementId).click();
+		} else {
+			submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
+		}
+		
+		$(".reportDownload").on("click", function() {
+			submitAjaxReport($(this).attr("data-url"), '#reportForm', '#formDiv', '#successDiv', $("#reportDiv").attr("data-report-id"), $(this).attr("data-format-id"));
+		});
+	} else {
+		orgSelect.attr("disabled","disabled");
+		appSelect.attr("disabled","disabled");
+	}
 });
 

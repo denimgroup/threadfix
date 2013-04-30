@@ -34,10 +34,13 @@
 		<tr class="grey-background">
 			<td colspan="3">
 				<div id="teamInfoDiv${organization.id}" class="collapse">
-					<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
-						<spring:param name="orgId" value="${ organization.id }"/>
-					</spring:url>
-					<div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv${organization.id}" data-url="<c:out value="${ reportUrl }"/>"></div>
+					<c:if test="${ organization.vulnerabilityReport[5] != 0 }">
+						<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
+							<spring:param name="orgId" value="${ organization.id }"/>
+						</spring:url>
+						<div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv${organization.id}" data-url="<c:out value="${ reportUrl }"/>"></div>
+					</c:if>
+				
 					<div id="teamAppTableDiv${ status.count }">
 					<c:if test="${ empty organization.applications }">
 						No applications found.

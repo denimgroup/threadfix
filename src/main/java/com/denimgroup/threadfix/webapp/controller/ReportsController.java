@@ -52,6 +52,7 @@ import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
@@ -65,13 +66,16 @@ public class ReportsController {
 	private OrganizationService organizationService;
 	private PermissionService permissionService;
 	private ReportsService reportsService;
+	private VulnerabilityService vulnerabilityService;
 	
 	@Autowired
 	public ReportsController(OrganizationService organizationService,
+			VulnerabilityService vulnerabilityService,
 			PermissionService permissionService,
 			ReportsService reportsService) {
 		this.organizationService = organizationService;
 		this.permissionService = permissionService;
+		this.vulnerabilityService = vulnerabilityService;
 		this.reportsService = reportsService;
 	}
 
@@ -94,6 +98,7 @@ public class ReportsController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
+		model.addAttribute("hasVulnerabilities", vulnerabilityService.activeVulnerabilitiesExist());
 		model.addAttribute("reportParameters", new ReportParameters());
 		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
 		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
