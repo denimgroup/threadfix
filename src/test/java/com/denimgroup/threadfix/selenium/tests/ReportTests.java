@@ -104,11 +104,11 @@ public class ReportTests extends BaseTest {
 		assertTrue("Reports Page not found", reportsIndexPage.isReportPresent());
 
 		// Delete organization and Logout
-		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
-								.expandTeamRowByName(teamName)
-								.clickViewTeamLink()
-								.clickDeleteButton()
-								.logout();
+//		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
+//								.expandTeamRowByName(teamName)
+//								.clickViewTeamLink()
+//								.clickDeleteButton()
+//								.logout();
 
 	}
 /*

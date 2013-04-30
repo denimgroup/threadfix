@@ -18,12 +18,12 @@ public class UserPermissionsPage extends BasePage {
 	}
 	
 	
-	public int getIndex(String teamName, String Application, String role){
-		//waiting on ids for the fields
-		List<WebElement> teams;
-		List<WebElement> apps;
-		List<WebElement> roles;
-		
-	}
+//	public int getIndex(String teamName, String Application, String role){
+//		//waiting on ids for the fields
+//		List<WebElement> teams;
+//		List<WebElement> apps;
+//		List<WebElement> roles;
+//		
+//	}
 
 }

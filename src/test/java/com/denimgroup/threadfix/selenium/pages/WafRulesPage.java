@@ -34,7 +34,6 @@ public class WafRulesPage extends BasePage {
 	private WebElement nameText;
 	private WebElement wafTypeText;
 	private WebElement editLink;
-	private WebElement backToListLink;
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement deleteButton;
 	
@@ -60,10 +59,6 @@ public class WafRulesPage extends BasePage {
 		return new WafEditPage(driver);
 	}
 
-	public WafIndexPage clickBackToListLink() {
-		backToListLink.click();
-		return new WafIndexPage(driver);
-	}
 
 	public WafRulesPage clickGenerateWafRulesButton() {
 		driver.findElementById("generateWafRulesButton").click();
@@ -119,8 +114,9 @@ public class WafRulesPage extends BasePage {
 		return new Select(driver.findElementById("wafDirectiveSelect")).getFirstSelectedOption().getText();
 	}
 
-	public void setWafDirectiveSelect(String code){
+	public WafRulesPage setWafDirectiveSelect(String code){
 		new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
+		return new WafRulesPage(driver);
 	}
 	
 }

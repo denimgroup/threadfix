@@ -330,17 +330,23 @@ public class WafTests extends BaseTest {
 									.clickAddTeamButton()
 									.setTeamName(orgName)
 									.addNewTeam()
+									.clickOrganizationHeaderLink()
 									.expandTeamRowByName(orgName)
 									.addNewApplication(orgName, appName, urlText, "Low")
 									.saveApplication(orgName);
+		
+		organizationIndexPage.populateAppList(orgName);
+		
+//		organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
+//									.setFileInput("C:\\Users\\jtomsett\\Desktop\\ThreadFix\\test-scans\\burp-demo-site.xml", appName)
+//									.clickUploadScanButton(appName);
 
 		//boolean first = true;
-
-		/*for (String channelc : fileMap.keySet()) {
-			organizationIndexPage = organizationIndexPage.expandTeamRowByName(orgName)
-													.clickUploadScan(appName,orgName);
-		}
-
+		
+//		for (String channelc : fileMap.keySet()) {
+//			organizationIndexPage = organizationIndexPage.clickUploadScan(appName,orgName);
+//		}
+		String s;
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -355,14 +361,18 @@ public class WafTests extends BaseTest {
 			} else {
 				continue;
 			}
-
-			wafIndexPage = organizationIndexPage
-					// clickAddChannelButton()
-					.setFileInput(mapEntry.getValue(),appName)
+			s = mapEntry.getValue();
+			System.out.println(s);
+			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
+					.setFileInput(s, appName)
 					.clickUploadScanButton(appName)
-					.clickWafsHeaderLink();
+					.clickOrganizationHeaderLink()
+					.expandTeamRowByName(orgName);
+			
+			organizationIndexPage.populateAppList(orgName);
+			
 
-		}*/
+		}
 		
 		//Creating a new Waf
 		
@@ -421,6 +431,12 @@ public class WafTests extends BaseTest {
 		wafDetailPage = new WafRulesPage(driver);
 		String PageText6 = driver.findElementById("wafrule").getText();
 		assertTrue("Waf rule not generated", PageText6.contains("SecRule"));
+		wafDetailPage.clickOrganizationHeaderLink()
+				.clickViewTeamLink(orgName)
+				.clickDeleteButton()
+				.clickWafsHeaderLink()
+				.clickDeleteWaf(newWafName);
+		
 	}
 	/*
 	// Generate Snort Waf Rules

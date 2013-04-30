@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -46,7 +48,7 @@ public class TeamIndexPage extends BasePage {
 
 	public int getNumTeamRows() {
 		if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
-			return driver.findElementsByClassName("expandable").size();
+			return driver.findElementsByClassName("pointer").size();
 		}
 		return 0;
 	}
@@ -138,13 +140,13 @@ public class TeamIndexPage extends BasePage {
 	public TeamIndexPage clickAddNewApplication(String teamName) {
 		driver.findElementById("teamAppTableDiv"+(getIndex(teamName)+1)).findElement(By.linkText("Add Application")).click();
 		waitForElement(driver.findElementByClassName("in"));
+		sleep(500);
 		return new TeamIndexPage(driver);
 	}
 
 	public TeamIndexPage setApplicationName(String appName, String teamName) {
 		driver.findElementsById("nameInput").get(getIndex(teamName)).clear();
-		driver.findElementsById("nameInput").get(getIndex(teamName))
-				.sendKeys(appName);
+		driver.findElementsById("nameInput").get(getIndex(teamName)).sendKeys(appName);
 		return new TeamIndexPage(driver);
 	}
 
@@ -202,19 +204,22 @@ public class TeamIndexPage extends BasePage {
 	
 	
 	public TeamIndexPage setFileInput(String file, String appName) {
-		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+		//driver.findElementById("fileInput"+modalNumber()).click();
+		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
 			if (driver.findElementById("applicationLink" + i).getText()
 					.equals(appName)) {
 				driver.findElementById("fileInput" + i).clear();
 				driver.findElementById("fileInput" + i).sendKeys(file);
 				break;
-			}
+			}*/
 		return new TeamIndexPage(driver);
 	}
 
-	public TeamIndexPage clickUploadScanButton(String appName) {
-		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+	public ApplicationDetailPage clickUploadScanButton(String appName) {
+		driver.findElementById("submitScanModal"+modalNumber()).click();
+		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
 			if (driver.findElementById("applicationLink" + i).getText()
 					.equals(appName)) {
@@ -222,18 +227,21 @@ public class TeamIndexPage extends BasePage {
 				waitForInvisibleElement(driver
 						.findElementById("uploadScan" + i));
 				break;
-			}
-		return new TeamIndexPage(driver);
+			}*/
+		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
+		return new ApplicationDetailPage(driver);
 	}
 
 	public TeamIndexPage clickUploadScanButtonInvalid(String appName) {
-		for (int i = 1; i <= driver.findElementsByClassName("right-align")
+		driver.findElementById("submitScanModal"+modalNumber()).click();
+		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
 			if (driver.findElementById("applicationLink" + i).getText()
 					.equals(appName)) {
 				driver.findElementById("submitScanModal" + i).click();
 				break;
-			}
+			}*/
 		return new TeamIndexPage(driver);
 	}
 
@@ -258,6 +266,17 @@ public class TeamIndexPage extends BasePage {
 		driver.findElementsByLinkText("View Team").get(getIndex(teamName)).click();
 		return new TeamDetailPage(driver);
 	}
+	
+	public int modalNumber(){
+		String s = driver.findElementByClassName("modal").getAttribute("id");
+		Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
+		Matcher matcher = pattern.matcher(s);
+		if(matcher.find()){
+			return  Integer.parseInt(matcher.group(1));
+		}
+		return -1;
+	}
+	
 
 
 
