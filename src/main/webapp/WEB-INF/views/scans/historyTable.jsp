@@ -66,6 +66,7 @@
 				<th>High</th>
 				<th>Medium</th>
 				<th>Low</th>
+				<th>Info</th>
 				<th style="width:70px"></th>
 			</tr>
 		</thead>
@@ -98,21 +99,24 @@
 						<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short"
 								timeStyle="short" />
 					</td>
-					<td style="text-align: center"
-						id="numTotalVulnerabilities${ status.count }"><c:out
-							value="${ scan.numberTotalVulnerabilities }" /></td>
-					<td style="text-align: center"
-						id="numCriticalVulnerabilities${ status.count }"><c:out
-							value="${ scan.numberCriticalVulnerabilities }" /></td>
-					<td style="text-align: center"
-						id="numHighVulnerabilities${ status.count }"><c:out
-							value="${ scan.numberHighVulnerabilities }" /></td>
-					<td style="text-align: center"
-						id="numMediumVulnerabilities${ status.count }"><c:out
-							value="${ scan.numberMediumVulnerabilities }" /></td>
-					<td style="text-align: center"
-						id="numLowVulnerabilities${ status.count }"><c:out
-							value="${ scan.numberLowVulnerabilities + scan.numberInfoVulnerabilities }" /></td>
+					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberTotalVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numCriticalVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberCriticalVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numHighVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberHighVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numMediumVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberMediumVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numLowVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberLowVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numInfoVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberInfoVulnerabilities }" />
+					</td>
 					<td>
 						<spring:url value="/organizations/{teamId}/applications/{appId}/scans/{scanId}" var="scanUrl">
 							<spring:param name="teamId" value="${ scan.application.organization.id }" />
@@ -126,21 +130,21 @@
 				</tr>
 			</c:forEach>
 		</tbody>
-		<script>
-			$('.disableSubmitOnEnter').keypress(function(e) {
-				if (e.which == 13)
-					return false;
-			});
-			$('.refillElementOnEnter').keypress(
-					function(e) {
-						if (e.which == 13) {
-							refillElementDropDownPage('#toReplace',
-									'<c:out value="${ tableUrl }"/>',
-									'<c:out value="${ loginUrl }"/>');
-							return false;
-						}
-					});
-		</script>
 	</table>
+	<script>
+		$('.disableSubmitOnEnter').keypress(function(e) {
+			if (e.which == 13)
+				return false;
+		});
+		$('.refillElementOnEnter').keypress(
+				function(e) {
+					if (e.which == 13) {
+						refillElementDropDownPage('#toReplace',
+								'<c:out value="${ tableUrl }"/>',
+								'<c:out value="${ loginUrl }"/>');
+						return false;
+					}
+				});
+	</script>
 
 </body>

@@ -55,6 +55,7 @@
 									<th class="centered">High</th>
 									<th class="centered">Medium</th>
 									<th class="centered">Low</th>
+									<th class="centered">Info</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -81,6 +82,7 @@
 									<td class="centered" id="numHighVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[3] }"/></td>
 									<td class="centered" id="numMediumVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[2] }"/></td>
 									<td class="centered" id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
+									<td class="centered" id="numInfoVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[0] }"/></td>
 									<td class="centered" style="padding:5px;">
 										<a id="uploadScanModalLink${ status.count }-${ innerStatus.count }" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
@@ -97,6 +99,7 @@
 									<td id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
 									<td id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
 									<td id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
+									<td id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
 									<td></td>
 								</tr>
 						</table>

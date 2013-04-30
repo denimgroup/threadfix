@@ -87,7 +87,8 @@
 				<th class="short">Critical</th>
 				<th class="short">High</th>
 				<th class="short">Medium</th>
-				<th class="short last">Low</th>
+				<th class="short">Low</th>
+				<th class="short">Info</th>
 			</tr>
 		</thead>
 		<tbody id="applicationsTableBody">
@@ -114,11 +115,11 @@
 						<td id="appHighVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[3] }"/></td>
 						<td id="appMediumVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[2] }"/></td>
 						<td id="appLowVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[1] }"/></td>
+						<td id="appInfoVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[0] }"/></td>
 					</tr>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
 		</tbody>
 	</table>
-	
 </body>

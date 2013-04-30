@@ -32,6 +32,9 @@
 	<variable name="lowCount" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
 	</variable>
+	<variable name="infoCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
 	<variable name="totalCount" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount}]]></variableExpression>
 	</variable>
@@ -47,6 +50,9 @@
 	<variable name="lowAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
 	</variable>
+	<variable name="infoAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
 	<variable name="criticalPercent" class="java.lang.String">
 		<variableExpression><![CDATA["" + ($V{criticalCount} != 0 ? (100 * $V{criticalCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
@@ -58,6 +64,9 @@
 	</variable>
 	<variable name="lowPercent" class="java.lang.String">
 		<variableExpression><![CDATA["" + ($V{lowCount} != 0 ? (100 * $V{lowCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="infoPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{infoCount} != 0 ? (100 * $V{infoCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<background>
 		<band/>
@@ -102,6 +111,10 @@
 					<pieSeries>
 						<keyExpression><![CDATA["Low"]]></keyExpression>
 						<valueExpression><![CDATA[$V{lowCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["Info"]]></keyExpression>
+						<valueExpression><![CDATA[$V{infoCount}]]></valueExpression>
 					</pieSeries>
 				</pieDataset>
 				<piePlot labelFormat="{0}">

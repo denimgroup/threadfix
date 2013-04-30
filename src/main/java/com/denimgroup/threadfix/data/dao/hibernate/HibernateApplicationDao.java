@@ -130,7 +130,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 		
 		long result = (Long) sessionFactory.getCurrentSession()
 				.createQuery("select count(*) from Vulnerability vuln " +
-						"where application = :app and active = true and genericSeverity.intValue != 1")
+						"where application = :app and active = true")
 				.setInteger("app", application.getId())
 				.uniqueResult();
 		ints.add((int) result);
