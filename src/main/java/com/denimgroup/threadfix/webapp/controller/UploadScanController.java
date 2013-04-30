@@ -182,7 +182,8 @@ public class UploadScanController {
 
 		if (app.getOrganization() != null) {
 			ControllerUtils.addSuccessMessage(request, 
-					"The scan was successfully added to the queue for processing.");
+					"The scan was successfully submitted for processing. This page will refresh when it finishes.");
+			ControllerUtils.addItem(request, "checkForRefresh", 1);
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
 			return mav;

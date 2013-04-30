@@ -21,8 +21,14 @@
 	<spring:url value="{appId}/delete" var="deleteUrl">
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
+	<spring:url value="{appId}/progress/{numScans}" var="dataRefreshUrl">
+		<spring:param name="appId" value="${ application.id }"/>
+		<spring:param name="numScans" value="${ fn:length(application.scans) }"/>
+	</spring:url>
 	
-	<div id="headerDiv">
+	<div id="headerDiv" 
+			data-wait-for-refresh="<c:out value="${ checkForRefresh }"/>" 
+			data-refresh-url="<c:out value="${ dataRefreshUrl }"/>">
 		<%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>
 	</div>
 	

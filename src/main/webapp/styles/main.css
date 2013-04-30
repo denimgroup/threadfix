@@ -444,12 +444,12 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	vertical-align: middle;
 }
 
-.table tr.expandable td table tr.totalsRow td {
+.table tr.grey-background td table tr.totalsRow td {
 	border-top: 1px solid #DDDDDD;
 	text-align: center;
 }
 
-.table tr.expandable td table tr.totalsRow td.totals {
+.table tr.grey-background td table tr.totalsRow td.totals {
 	padding:5px;
 	font-weight:bold;
 	text-align:right;

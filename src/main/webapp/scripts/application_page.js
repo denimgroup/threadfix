@@ -124,6 +124,26 @@ addToDocumentReadyFunctions(function () {
 		}
 	});
 	
+	if ($("#headerDiv").attr("data-wait-for-refresh")) {
+		var poll = function() {
+			setTimeout(function(){
+				$.ajax({
+					url: $("#headerDiv").attr("data-refresh-url"), 
+					success: function(data) {
+						if (data.wait) {
+							poll();
+						} else if (data.isJSONRedirect) {
+							window.location.href = data.redirectURL;
+							return;
+						}
+					}, 
+					dataType: "json", 
+				});
+			}, 1000);
+		};
+		poll();
+	}
+	
 	addAppPageEvents();
 	showSubmitLinks();
 	addExpandsHandlers();

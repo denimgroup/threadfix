@@ -130,6 +130,8 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 		
+		Object checkForRefresh = ControllerUtils.getItem(request, "checkForRefresh");
+		model.addAttribute("checkForRefresh", checkForRefresh);
 		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
 		model.addAttribute("dynamicPathList", findingService.getRecentDynamicPaths(appId));
 		model.addAttribute("staticPathList", findingService.getRecentStaticPaths(appId));
