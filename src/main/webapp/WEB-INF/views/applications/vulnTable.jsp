@@ -124,8 +124,8 @@
 						<span id="caret${ vulnGroup.name }" class="caret-right"></span>
 					</td>
 					<td class="vulnSectionHeader">
-						Toggle <c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/> 
-							<c:out value="${ vulnGroup.name }"/> Vulnerabilities
+						<c:out value="${ vulnGroup.name }"/>
+						(<c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/>) 
 					</td>
 					<td colspan="4"></td>
 				</tr>

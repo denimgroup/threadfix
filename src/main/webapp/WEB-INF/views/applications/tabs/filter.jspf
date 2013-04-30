@@ -1,6 +1,9 @@
-<span id="linksSpan" style="padding-left:6px;"><a id="filterLink" href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;
-<a id="clearFilterLink" href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>&nbsp;|&nbsp;
-<a id="hideFilterLink" href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a>
+<span id="linksSpan" style="padding-left:6px;">
+
+	<a id="hideFilterLink" href="javascript:toggleFilters(false, '#toReplace', '${ tableUrl }');">Hide Filters</a>&nbsp;|&nbsp;
+	<a id="filterLink" href="javascript:filter('#toReplace', '${ tableUrl }');">Filter</a>&nbsp;|&nbsp;
+	<a id="clearFilterLink" href="javascript:clearFilters('#toReplace', '${ tableUrl }');">Clear Filters</a>
+
 </span>
 <span id="showFilters" style="display:none;padding-left:6px;">
 	<a id="showFiltersLink" href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>

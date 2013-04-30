@@ -35,6 +35,14 @@ var reloadDefectSubmissionDiv = function () {
 	}
 };
 
+var defectTrackerAddFunction = function() {
+	if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
+		$("#addDefectTracker").modal('show');
+	} else {
+		$("#createDefectTracker").modal('show');
+	}
+};
+
 var addAppPageEvents = function () {
 	$("#addWafButton").on("click", function() {
 		if ($("#addWafDivInForm").attr("data-has-wafs")) {
@@ -44,21 +52,13 @@ var addAppPageEvents = function () {
 		}
 	});
 	
-	$("#addDefectTrackerButton").on("click", function() {
-		if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
-			$("#addDefectTracker").modal('show');
-		} else {
-			$("#createDefectTracker").modal('show');
-		}
-	});
+	$("#addDefectTrackerButton").on("click", defectTrackerAddFunction);
 	
 	$("#jsonLink").on("click", function() {
 		jsonTest($("#appDTDiv").attr("data-json-test-url"));
 	});
 	
-	$("a.missingDefectTrackerMessage").on("click", function() {
-		alert('Please add a Defect Tracker and try again.');
-	});
+	$("a.missingDefectTrackerMessage").on("click", defectTrackerAddFunction);
 };
 
 var showSubmitLinks = function () {

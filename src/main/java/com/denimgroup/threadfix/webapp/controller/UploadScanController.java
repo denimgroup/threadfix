@@ -121,7 +121,7 @@ public class UploadScanController {
 		Integer myChannelId = scanService.calculateScanType(appId, orgId, file, request.getParameter("channelId"));
 		
 		if (myChannelId == null) {
-			log.warn("Unable to load a suitable Application Channel.");
+			log.warn("ThreadFix was unable to figure out what scanner type to use.");
 			return index(orgId, appId, SCANNER_TYPE_ERROR, null);
 		}
 		

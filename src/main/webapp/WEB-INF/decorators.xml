@@ -25,6 +25,7 @@
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
     	<pattern>/organizations/*/applications/*/scans/new*</pattern>
     	<pattern>/organizations/*/applications/*/scans/upload*</pattern>
+    	<pattern>/organizations/*/applications/*/defects*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/configuration/users/*/access*</pattern>

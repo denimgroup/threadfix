@@ -4,13 +4,13 @@
 	<thead>
 		<tr>
 			<th class="first">Channel</th>
-			<th class="long">Scan Date</th>
+			<th>Scan Date</th>
 			<c:if test="${ not canUploadScans }">
-				<th class="short last">Total Vulns</th>
+				<th>Total Vulns</th>
 			</c:if>
 			<c:if test="${ canUploadScans }">
-				<th class="short">Total Vulns</th>
-				<th class="medium">Delete Scan</th>
+				<th style="text-align:center">Total Vulns</th>
+				<th class="medium"></th>
 			</c:if>
 			<th class="medium"></th>
 		</tr>
@@ -27,7 +27,9 @@
 			<td>
 				<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 			</td>
-			<td id="numTotalVulnerabilities${ status.count }"><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
+			<td style="text-align:center" id="numTotalVulnerabilities${ status.count }">
+				<c:out value="${ scan.numberTotalVulnerabilities }"/>
+			</td>
 			<c:if test="${ canUploadScans }">
 			<td>
                 <a class="btn btn-danger scanDelete" data-delete-form="deleteForm${ scan.id }">Delete Scan</a>
