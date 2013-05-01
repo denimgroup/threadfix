@@ -29,9 +29,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TeamIndexPage extends BasePage {
 
@@ -165,7 +169,7 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage saveApplication(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		waitForInvisibleElement(driver.findElementByClassName("modal-header"));
 		return new TeamIndexPage(driver);
 	}
 
@@ -219,19 +223,12 @@ public class TeamIndexPage extends BasePage {
 
 	public ApplicationDetailPage clickUploadScanButton(String appName) {
 		driver.findElementById("submitScanModal"+modalNumber()).click();
-		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
-				.size(); i++)
-			if (driver.findElementById("applicationLink" + i).getText()
-					.equals(appName)) {
-				driver.findElementById("submitScanModal" + i).click();
-				waitForInvisibleElement(driver
-						.findElementById("uploadScan" + i));
-				break;
-			}*/
 		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
-		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
-		return new ApplicationDetailPage(driver);
+		//waitForElement(driver.findElementById("anyid"));
+			return new ApplicationDetailPage(driver);
+
 	}
+	
 
 	public TeamIndexPage clickUploadScanButtonInvalid(String appName) {
 		driver.findElementById("submitScanModal"+modalNumber()).click();

@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -59,8 +60,15 @@ public abstract class BasePage {
 	}
 	
 	public TeamIndexPage clickOrganizationHeaderLink() {
-		driver.findElementById("orgHeader").click();
-		return new TeamIndexPage(driver);
+			driver.findElementById("orgHeader").click();
+			sleep(500);
+			return new TeamIndexPage(driver);
+//		try{
+//			return new TeamIndexPage(driver);
+//		}catch (UnhandledAlertException e){
+//			driver.findElementById("orgHeader").click();
+//			return new TeamIndexPage(driver);
+//		}
 	}
 	
 	public WafIndexPage clickWafsHeaderLink() {

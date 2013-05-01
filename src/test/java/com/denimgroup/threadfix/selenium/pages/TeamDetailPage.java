@@ -35,9 +35,6 @@ import org.openqa.selenium.WebElement;
 public class TeamDetailPage extends BasePage {
 	
 	private WebElement orgName;
-	private WebElement backToList;
-	private WebElement deleteButton;
-	private WebElement editOrganizationLink;
 	private WebElement applicationsTableBody;
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement addApplicationLink;
@@ -46,8 +43,6 @@ public class TeamDetailPage extends BasePage {
 		super(webdriver);
 		
 		orgName = driver.findElementById("name");
-		deleteButton = driver.findElementById("deleteLink");
-		editOrganizationLink = driver.findElementById("teamModalButton");
 		applicationsTableBody = driver.findElementById("applicationsTableBody");
 		addApplicationLink = driver.findElementByLinkText("Add Application");
 	}
@@ -58,7 +53,8 @@ public class TeamDetailPage extends BasePage {
 	
 	
 	public TeamDetailPage clickEditOrganizationLink() {
-		editOrganizationLink.click();
+		clickShowMore();
+		driver.findElementById("teamModalButton").click();
 		waitForElement(driver.findElementById("teamModal"));
 		return new TeamDetailPage(driver);
 	}
@@ -80,10 +76,14 @@ public class TeamDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
-	
+	public TeamDetailPage clickShowMore(){
+		driver.findElementById("showDetailsLink").click();
+		return new TeamDetailPage(driver);
+	}
 	
 	public TeamIndexPage clickDeleteButton() {
-		deleteButton.click();
+		clickShowMore();
+		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
