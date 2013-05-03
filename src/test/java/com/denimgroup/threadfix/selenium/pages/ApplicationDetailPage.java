@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -302,15 +305,11 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 
-	public ScanIndexPage clickViewScansLink() {
-		driver.findElementById("viewScansLink").click();
-		return new ScanIndexPage(driver);
+	public ApplicationDetailPage clickViewScansLink() {
+		driver.findElementById("scanTabLink").click();
+		return new ApplicationDetailPage(driver);
 	}
 
-	public UploadScanPage clickUploadScanLink() {
-		driver.findElementById("uploadScanLink").click();
-		return new UploadScanPage(driver);
-	}
 
 	public ManualUploadPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
@@ -382,12 +381,10 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public String getNameError() {
-		// TODO Auto-generated method stub
 		return driver.findElementById("name.errors").getText().trim();
 	}
 
 	public String getUrlError() {
-		// TODO Auto-generated method stub
 		return driver.findElementById("url.errors").getText().trim();
 	}
 
@@ -395,5 +392,47 @@ public class ApplicationDetailPage extends BasePage {
 		if (driver.findElementById("defectTrackerText").isEnabled())
 			return true;
 		return false;
+	}
+
+	public ApplicationDetailPage clickDeleteScanButton(int i) {
+		driver.findElementsByClassName("scanDelete").get(i).click();
+		handleAlert();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setFileInput(String file) {
+		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage submitScan(){
+		driver.findElementById("submitScanModal"+modalNumber()).click();
+		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage submitScanInvalid(){
+		driver.findElementById("submitScanModal"+modalNumber()).click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public int modalNumber(){
+		String s = driver.findElementByClassName("modal").getAttribute("id");
+		Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
+		Matcher matcher = pattern.matcher(s);
+		if(matcher.find()){
+			return  Integer.parseInt(matcher.group(1));
+		}
+		return -1;
+	}
+	
+	public boolean isDuplicateScan(){
+		return driver.findElementByClassName("alert-error").getText().contains("Scan file has already been uploaded.");
+	}
+
+	public ApplicationDetailPage clickUploadScanLink() {
+		driver.findElementById("uploadScanModalLink").click();
+		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
+		return new ApplicationDetailPage(driver);
 	}
 }

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
@@ -49,8 +50,8 @@ public class ScanTests extends BaseTest {
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
-	public TeamIndexPage organizationIndexPage;
-	public TeamDetailPage organizationDetailPage;
+	public TeamIndexPage teamIndexPage;
+	public TeamDetailPage teamDetailPage;
 	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	
@@ -91,162 +92,114 @@ public class ScanTests extends BaseTest {
 		
 		return ScanTests.class.getClassLoader().getResource(string).toString();
 	}
-//	
-//	@Test
-//	public void testAddApplicationChannels() {
-//		String orgName = "normalOrgName";
-//		String appName = "normalAppName";
-//		String appUrl = "http://normalurl.com";
-//				
-//		applicationDetailPage = loginPage.login("user", "password")
-//										 .clickTeamHeaderLink()
-//										 .clickAddTeamButton()
-//										 .setNameInput(orgName)
-//										 .clickSubmitButtonValid()
-//										 .clickAddApplicationLink()
-//										 .setNameInput(appName)
-//										 .setUrlInput(appUrl)
-//										 .clickAddApplicationButton();
-//		
-//		boolean first = true;
-//		
-//		for (String channel : SCAN_FILE_MAP.keySet()) {
-//			if (first) {
-//				first = false;
-//				uploadScanPage = applicationDetailPage.clickUploadScanLinkFirstTime()
-//												 	  .setChannelTypeSelect(channel)
-//													  .clickAddChannelButton();
-//													  
-//			} else {
-//				uploadScanPage = uploadScanPage.clickAddAnotherChannelLink()
-//											   .setChannelTypeSelect(channel)
-//											   .clickAddChannelButton();
-//			}
-//		}
-//		
-//		// Make sure that all options made it through
-//		List<String> channelOptionsList = uploadScanPage.getChannelSelectContents();
-//		for (String string : channelOptionsList) {
-//			assertTrue("One of the Channel Types was not present.", SCAN_FILE_MAP.keySet().contains(string));
-//		}
-//		
-//		// Make sure that no options are left to add
-//		addChannelPage = uploadScanPage.clickAddAnotherChannelLink();
-//		List<String> optionsToAdd = addChannelPage.getChannelTypeSelectContents();
-//		assertTrue("There were more options available than there should have been.", optionsToAdd.size() == 0);
-//		
-//		//cleanup
-//		loginPage = addChannelPage.clickCancelButton()
-//								  .clickDeleteLink()
-//								  .clickDeleteButton()
-//								  .logout();
-//	}
-//	
-//	// Mostly smoke test
-//	@Test
-//	public void testUploadScans() throws MalformedURLException {
-//		
-//		// log in
-//		organizationIndexPage = loginPage.login("user", "password");
-//		
-//		// create an org and an app and upload the scan, then delete everything
-//		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
-//			if (mapEntry.getValue() != null){
-//				File appScanFile = null;
-//				
-//				if (System.getProperty("scanFileBaseLocation") == null) {
-//					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-//				} else {
-//					appScanFile = new File(mapEntry.getValue());
-//				}
-//				assertTrue("The test file did not exist.", appScanFile.exists());
-//			} else {
-//				continue;
-//			}
-//			
-//			organizationIndexPage = organizationIndexPage.clickTeamHeaderLink()
-//				 										 .clickAddTeamButton()
-//														 .setNameInput(mapEntry.getKey() + "normaltest")
-//														 .clickSubmitButtonValid()
-//														 .clickAddApplicationLink()
-//														 .setNameInput(mapEntry.getKey() + "normaltest")
-//														 .setUrlInput("http://" + mapEntry.getKey())
-//														 .clickAddApplicationButton()
-//														 .clickUploadScanLinkFirstTime()
-//														 .setChannelTypeSelect(mapEntry.getKey())
-//														 .clickAddChannelButton()
-//														 .setFileInput(mapEntry.getValue())
-//														 .setChannelSelect(mapEntry.getKey())
-//														 .clickUploadScanButton()
-//														 .clickRefreshLink()
-//														 .waitForScans()
-//														 .clickViewScansLink()
-//														 .clickDeleteScanButton(0)
-//														 .clickBackToAppLink()
-//														 .clickDeleteLink()
-//														 .clickDeleteButton();
-//		}
-//	}
-//	
-//	@Test
-//	public void testUploadDuplicateScans() throws MalformedURLException {
-//		// log in
-//		organizationIndexPage = loginPage.login("user", "password");
-//		
-//		// create an org and an app and upload the scan, then delete everything
-//		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
-//			if (mapEntry.getValue() != null){
-//				File appScanFile = null;
-//				
-//				if (System.getProperty("scanFileBaseLocation") == null) {
-//					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-//				} else {
-//					appScanFile = new File(mapEntry.getValue());
-//				}
-//				assertTrue("The test file did not exist.", appScanFile.exists());
-//			} else {
-//				continue;
-//			}
-//			
-//			uploadScanPage = organizationIndexPage.clickTeamHeaderLink()
-//				 								  .clickAddTeamButton()
-//												  .setNameInput(mapEntry.getKey() + "duplicate")
-//												  .clickSubmitButtonValid()
-//												  .clickAddApplicationLink()
-//												  .setNameInput(mapEntry.getKey() + "duplicate")
-//												  .setUrlInput("http://" + mapEntry.getKey())
-//												  .clickAddApplicationButton()
-//												  .clickUploadScanLinkFirstTime()
-//												  .setChannelTypeSelect(mapEntry.getKey())
-//												  .clickAddChannelButton()
-//												  .setFileInput(mapEntry.getValue())
-//												  .setChannelSelect(mapEntry.getKey())
-//												  .clickUploadScanButton()
-//												  .clickRefreshLink()
-//												  .waitForScans()
-//												  .clickUploadScanLink()
-//												  .setFileInput(mapEntry.getValue())
-//												  .setChannelSelect(mapEntry.getKey())												  
-//												  .clickUploadScanButtonInvalid();
-//
-//			assertTrue("The correct error text was not present.", 
-//					uploadScanPage.getScanError().equals(appWasAlreadyUploadedErrorText));
-//			
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				System.out.println("Thread interrupted. Continuing.");
-//			}
-//			
-//			organizationIndexPage = uploadScanPage.clickCancelLink()
-//												  .clickViewScansLink()
-//					 							  .clickDeleteScanButton(0)
-//					 							  .clickBackToAppLink()
-//												  .clickDeleteLink()
-//												  .clickDeleteButton();
-//		}
-//	}
-//
+	@Ignore
+	@Test
+	public void testAddApplicationChannels() {
+		String orgName = "normalOrgName";
+		String appName = "normalAppName";
+		String appUrl = "http://normalurl.com";
+				
+		teamIndexPage = loginPage.login("user", "password")
+										 .clickOrganizationHeaderLink()
+										 .clickAddTeamButton()
+										 .setTeamName(orgName)
+										 .addNewTeam()
+										 .expandTeamRowByName(orgName)
+										 .addNewApplication(orgName, appName, appUrl, "Low")
+										 .saveApplication(orgName);	
+		
+		//cleanup
+		loginPage = teamIndexPage.clickViewTeamLink(orgName)
+								.clickDeleteButton()
+								.logout();
+	}
+	
+	// Mostly smoke test
+	@Test
+	public void testUploadScans() throws MalformedURLException {
+		
+		// log in
+		teamIndexPage = loginPage.login("user", "password")
+								.clickOrganizationHeaderLink();
+		
+		// create an org and an app and upload the scan, then delete everything
+		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
+			if (mapEntry.getValue() != null){
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
+				assertTrue("The test file did not exist.", appScanFile.exists());
+			} else {
+				continue;
+			}
+			
+			teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+				 										 .clickAddTeamButton()
+														 .setTeamName(mapEntry.getKey() + "normaltest")
+														 .addNewTeam()
+														 .expandTeamRowByName(mapEntry.getKey() + "normaltest")
+														 .addNewApplication(mapEntry.getKey() + "normaltest", mapEntry.getKey() + "normaltest", "http://" + mapEntry.getKey(), "Low")
+														 .saveApplication(mapEntry.getKey() + "normaltest");
+			teamIndexPage.populateAppList(mapEntry.getKey() + "normaltest");
+			teamIndexPage = teamIndexPage.clickUploadScan(mapEntry.getKey() + "normaltest", mapEntry.getKey() + "normaltest")
+														 .setFileInput(mapEntry.getValue(),mapEntry.getKey() + "normaltest")
+														 .clickUploadScanButton(mapEntry.getKey() + "normaltest")
+														 .clickViewScansLink()
+														 .clickDeleteScanButton(0)
+														 .clickOrganizationHeaderLink()
+														 .clickViewTeamLink(mapEntry.getKey() + "normaltest")
+														 .clickDeleteButton();
+
+		}
+	}
+	
+	@Test
+	public void testUploadDuplicateScans() throws MalformedURLException {
+		// log in
+		teamIndexPage = loginPage.login("user", "password")
+								.clickOrganizationHeaderLink();
+		
+		// create an org and an app and upload the scan, then delete everything
+		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
+			if (mapEntry.getValue() != null){
+				File appScanFile = null;
+				
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
+				assertTrue("The test file did not exist.", appScanFile.exists());
+			} else {
+				continue;
+			}
+			teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+					 .clickAddTeamButton()
+					 .setTeamName(mapEntry.getKey() + "duplicate")
+					 .addNewTeam()
+					 .expandTeamRowByName(mapEntry.getKey() + "duplicate")
+					 .addNewApplication(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate", "http://" + mapEntry.getKey(), "Low")
+					 .saveApplication(mapEntry.getKey() + "duplicate");
+			teamIndexPage.populateAppList(mapEntry.getKey() + "duplicate");
+			applicationDetailPage = teamIndexPage.clickUploadScan(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate")
+					 .setFileInput(mapEntry.getValue(),mapEntry.getKey() + "duplicate")
+					 .clickUploadScanButton(mapEntry.getKey() + "duplicate")
+					 .clickUploadScanLink()
+					 .setFileInput(mapEntry.getValue())
+					 .submitScanInvalid();
+			assertTrue("Duplicate error not displayed",applicationDetailPage.isDuplicateScan());
+			
+			
+			teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+					.clickViewTeamLink(mapEntry.getKey() + "duplicate")
+					.clickDeleteButton();
+		}
+	}
+
 //	@Test
 //	public void microsoftCatNetScan() {
 //		String key = "Microsoft CAT.NET";
@@ -725,28 +678,23 @@ public class ScanTests extends BaseTest {
 //	
 //	
 //	public void runScanTest(String scannerName, String[][] expectedResults) {
-//		organizationIndexPage = loginPage.login("user", "password");
+//		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 //		
 //		String orgName = scannerName + getRandomString(10);
 //		
-//		organizationIndexPage.sleep(200);
-//		
-//		applicationDetailPage = organizationIndexPage.clickTeamHeaderLink()
+//		//teamIndexPage.sleep(200);
+//
+//		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 //													 .clickAddTeamButton()
-//													 .setNameInput(orgName)
-//													 .clickSubmitButtonValid()
-//													 .clickAddApplicationLink()
-//													 .setNameInput(scannerName + getRandomString(10))
-//													 .setUrlInput("http://" + scannerName)
-//													 .clickAddApplicationButton()
-//													 .clickUploadScanLinkFirstTime()
-//													 .setChannelTypeSelect(scannerName)
-//													 .clickAddChannelButton()
+//													 .setTeamName(orgName)
+//													 .addNewTeam()
+//													 .expandTeamRowByName(orgName)
+//													 .addNewApplication(orgName, scannerName + getRandomString(10), "http://" + scannerName, "Low")
+//													 .saveApplication(orgName)
+//													 .clickViewAppLink(scannerName + getRandomString(10), orgName)
+//													 .clickUploadScanLink()
 //													 .setFileInput(SCAN_FILE_MAP.get(scannerName))
-//													 .setChannelSelect(scannerName)
-//													 .clickUploadScanButton()
-//													 .clickRefreshLink()
-//													 .waitForScans();
+//													 .submitScan();
 //		
 //		assertTrue("The vuln counts don't match.", expectedResults.length == applicationDetailPage.getNumRows());
 //		
@@ -777,11 +725,8 @@ public class ScanTests extends BaseTest {
 //					false);
 //		}
 //		
-//		applicationDetailPage.clickViewScansLink()
-//							 .clickDeleteScanButton(0)
-//							 .clickBackToAppLink()
-//							 .clickDeleteLink()
-//							 .clickDeleteButton()
-//							 .logout();
+//		applicationDetailPage.clickOrganizationHeaderLink()
+//							.clickViewTeamLink(orgName)
+//							.clickDeleteButton();
 //	}
 }

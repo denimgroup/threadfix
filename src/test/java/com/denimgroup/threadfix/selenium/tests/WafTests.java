@@ -41,7 +41,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
 import com.denimgroup.threadfix.selenium.pages.GeneratedReportPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
@@ -54,10 +53,8 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class WafTests extends BaseTest {
 	private FirefoxDriver driver;
-	//private WebDriver driver;
 	private static LoginPage loginPage;
 	private WafIndexPage wafIndexPage;
-	private ApplicationEditPage applicationEditPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
 	public TeamIndexPage teamIndexPage;
@@ -447,7 +444,6 @@ public class WafTests extends BaseTest {
 				.saveApplication(orgName);
 
 		organizationIndexPage.populateAppList(orgName);
-		int i = 1;
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -469,7 +465,6 @@ public class WafTests extends BaseTest {
 					.expandTeamRowByName(orgName);
 			
 			organizationIndexPage.populateAppList(orgName);
-			i++;
 		}
 
 		//Creating a new Waf
