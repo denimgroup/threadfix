@@ -121,10 +121,12 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage addDefectTracker(String defectTracker,
 			String username, String password, String productname) {
-		return clickShowDetails().clickAddDefectTrackerButton()
+		    clickShowDetails().clickAddDefectTrackerButton()
 				.selectDefectTracker(defectTracker).setUsername(username)
 				.setPassword(password).clickTestConnection()
 				.selectProduct(productname).clickSubmitTrackerButton();
+		    waitForElement(driver.findElementById("defectTrackerText"));;
+		    return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
 		 * .id("appInfoDiv"))); // TODO missing id
