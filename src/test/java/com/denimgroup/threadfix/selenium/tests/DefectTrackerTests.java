@@ -896,6 +896,93 @@ public class DefectTrackerTests extends BaseTest {
 		loginPage = defectTrackerIndexPage.clickDefectTrackersLink().logout();
 	}
 
+	@Test
+	public void testSwitchDefectTrackers() {
+		assertFalse("JIRA_PASSWORD is not assigned from system properties",
+				JIRA_PASSWORD == null);
+		assertFalse("JIRA_USERNAME is not assigned from system properties",
+				JIRA_USERNAME == null);
+		assertFalse("JIRA_URL is not assigned from system properties",
+				JIRA_URL == null);
+		assertFalse("JIRA_PROJECTNAME is not assigned from system properties",
+				JIRA_PROJECTNAME == null);
+
+		String newDefectTrackerNameOne = "testEditDefectTracker1"
+				+ getRandomString(3);
+		String newDefectTrackerNameTwo = "testEditDefectTracker2"
+				+ getRandomString(3);
+		String type = "Jira";
+		String teamName = "jIRAAttachTestTeam" + getRandomString(3);
+		String appName = "JIRAAttachTestApp" + getRandomString(3);
+		String urlText = "http://test.com";
+
+		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
+				"password").clickDefectTrackersLink();
+
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.clickAddDefectTrackerButton();
+
+		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
+				newDefectTrackerNameOne);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null, type);
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.enterURL(null, JIRA_URL);
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.clickSaveNewDefectTracker();
+		
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.clickAddDefectTrackerButton();
+		
+		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
+				newDefectTrackerNameTwo);
+		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null, type);
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.enterURL(null, JIRA_URL);
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.clickSaveNewDefectTracker();
+
+		
+		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.expandTeamRowByName(teamName)
+				.addNewApplication(teamName, appName, urlText, "Low")
+				.saveApplication(teamName)
+				.clickViewAppLink(appName, teamName)
+				.addDefectTracker(newDefectTrackerNameOne, JIRA_USERNAME,
+						JIRA_PASSWORD, JIRA_PROJECTNAME);
+		
+		assertTrue("Defect tracker wasn't attached correctly",
+				applicationDetailPage.clickActionButton()
+						.isDefectTrackerAttached());
+
+		sleep(4000);
+		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName)
+				.editDefectTracker(newDefectTrackerNameTwo, JIRA_USERNAME, JIRA_PASSWORD, JIRA_PROJECTNAME);
+
+		assertTrue("Defect tracker wasn't attached correctly",
+				applicationDetailPage.clickActionButton()
+						.isDefectTrackerAttached());
+		
+		// Delete Both
+		sleep(4000);
+		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName);
+		sleep(1500);
+		TeamDetailPage teamDetailPage = applicationDetailPage.clickActionButton()
+				.clickDeleteLink();
+		
+		sleep(1500);
+		loginPage = teamDetailPage.clickDeleteButton()
+				.clickDefectTrackersLink()
+				.clickDeleteButton(newDefectTrackerNameOne).clickDeleteButton(newDefectTrackerNameTwo).logout();
+	}
+	
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);

@@ -62,6 +62,11 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("appLink" + num).click();
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public ApplicationDetailPage clickEditDefectTrackerButton() {
+		driver.findElementById("editDefectTrackerButton").click();
+		return new ApplicationDetailPage(driver);
+	}
 
 	public ApplicationDetailPage setPassword(String dtPass) {
 		driver.findElementById("password").clear();
@@ -127,6 +132,35 @@ public class ApplicationDetailPage extends BasePage {
 				.selectProduct(productname).clickSubmitTrackerButton();
 		    waitForElement(driver.findElementById("defectTrackerText"));;
 		    return new ApplicationDetailPage(driver);
+		/*
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("appInfoDiv"))); // TODO missing id
+		 * driver.findElementByLinkText("Add Defect Tracker").click();
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("addDTForm"))); new
+		 * Select(driver.findElementById("defectTrackerId"))
+		 * .selectByVisibleText(defectTracker);
+		 * driver.findElementById("username").sendKeys(username);
+		 * driver.findElementById("password").sendKeys(password);
+		 * driver.findElementByLinkText("Test Connection").click();
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
+		 * .id("jsonResult"))); new
+		 * Select(driver.findElementById("projectList"))
+		 * .selectByVisibleText(productname);
+		 * driver.findElementById("submitDTModal").click();
+		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By
+		 * .id("addDTForm"))); return new ApplicationDetailPage(driver);
+		 */
+	}
+	
+	public ApplicationDetailPage editDefectTracker(String defectTracker,
+			String username, String password, String productname) {
+		clickShowDetails().clickEditDefectTrackerButton()
+		.selectDefectTracker(defectTracker).setUsername(username)
+		.setPassword(password).clickTestConnection()
+		.selectProduct(productname).clickSubmitTrackerButton();
+		waitForElement(driver.findElementById("defectTrackerText"));;
+		return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
 		 * .id("appInfoDiv"))); // TODO missing id
