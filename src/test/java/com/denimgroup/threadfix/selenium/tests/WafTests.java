@@ -607,39 +607,44 @@ public class WafTests extends BaseTest {
 				.clickEditWaf(wafName)
 				.clickUpdateWaf()
 				.clickWafsHeaderLink();
-		assertTrue("Waf Page did not save the name correctly.", wafName.equals(WafRulesPage.getNameText()));
-		WafEditPage editWafPage = WafRulesPage.clickEditLink();
+		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(wafName));
 		
 		// Test empty and whitespace input
-		editWafPage.setNameInput(emptyString);
-		editWafPage = editWafPage.clickUpdateWafButtonInvalid();
-		log.debug("Output is '" + editWafPage.getNameErrorsText() + "'");
-		assertTrue("The correct error text was not present", emptyInputError.equals(editWafPage.getNameErrorsText()));
+		 wafIndexPage = wafIndexPage.clickWafsHeaderLink()
+								.clickEditWaf(wafName)
+								.editWaf(wafName, emptyString, type2)
+				 				.clickUpdateWafInvalid();
+		//log.debug("Output is '" + editWafPage.getNameErrorsText() + "'");
+		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
-		editWafPage.setNameInput(whiteSpaceString);
-		editWafPage = editWafPage.clickUpdateWafButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(editWafPage.getNameErrorsText()));
+		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
+				.clickEditWaf(wafName)
+				.editWaf(wafName, whiteSpaceString, type2)
+ 				.clickUpdateWafInvalid();
+		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		editWafPage.setNameInput(longInput);
-		WafRulesPage = editWafPage.clickUpdateWafButton();
+		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
+				.clickEditWaf(wafName)
+				.editWaf(wafName, longInput, type2)
+ 				.clickUpdateWaf();
 		
-		wafName = WafRulesPage.getNameText();
+		wafName = wafIndexPage.getWafName(1);
 		
-		assertTrue("The waf name was not cropped correctly.", WafRulesPage.getNameText().length() == Waf.NAME_LENGTH);
+		assertTrue("The waf name was not cropped correctly.", wafName.length() == Waf.NAME_LENGTH);
 		
 		// Test name duplication checking
-		editWafPage = WafRulesPage.clickEditLink();
-		editWafPage.setNameInput(wafNameDuplicateTest);
-		editWafPage.clickUpdateWafButtonInvalid();
+		wafIndexPage = wafIndexPage.clickEditWaf(wafName)
+								.editWaf(wafName, wafNameDuplicateTest, type2)
+								.clickUpdateWafInvalid();
 		
-		assertTrue(editWafPage.getNameErrorsText().equals("That name is already taken."));
+		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
 					
 		// Delete and logout
-		wafIndexPage = editWafPage.clickWafsLink().clickTextLinkInWafTableBody(wafName).clickDeleteButton();
-		wafIndexPage = wafIndexPage.clickTextLinkInWafTableBody(wafNameDuplicateTest).clickDeleteButton();
+		wafIndexPage.clickDeleteWaf(wafName)
+					.clickDeleteWaf(wafNameDuplicateTest)
+					.logout();
 		
-		loginPage = wafIndexPage.logout();
 	}
 	
 }

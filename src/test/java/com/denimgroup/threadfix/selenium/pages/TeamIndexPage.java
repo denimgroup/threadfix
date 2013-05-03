@@ -224,6 +224,8 @@ public class TeamIndexPage extends BasePage {
 	public ApplicationDetailPage clickUploadScanButton(String appName) {
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForElement(driver.findElementById("nameText"));
+		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
 		//waitForElement(driver.findElementById("anyid"));
 			return new ApplicationDetailPage(driver);
 
