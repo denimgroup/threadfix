@@ -122,6 +122,17 @@ public class ReportsController {
 		return "redirect:/reports";
 	}
 	
+	@RequestMapping(value="/{reportId}/{teamId}/{appId}", method = RequestMethod.GET)
+	public String toReport(@PathVariable("reportId") int reportId,
+			@PathVariable("teamId") int teamId,
+			@PathVariable("appId") int appId,
+			Model model, HttpServletRequest request) {
+		ControllerUtils.addItem(request, "reportId", reportId);
+		ControllerUtils.addItem(request, "teamId", teamId);
+		ControllerUtils.addItem(request, "appId", appId);
+		return "redirect:/reports";
+	}
+	
 	@RequestMapping(value="/ajax/export", method = RequestMethod.POST)
 	public String processExportRequest(Model model, @ModelAttribute ReportParameters reportParameters,
 			BindingResult result, SessionStatus status, HttpServletRequest request, 

@@ -90,9 +90,15 @@ function refillElementSort(elementId, endPoint, page, field, login)
 					$(caret).addClass('caret-down');
 					$(caret).removeClass('caret-up');
 				}
-				
-				if (addExpandsHandlers) {
-					addExpandsHandlers();
+//				
+//				if (addExpandsHandlers) {
+//					addExpandsHandlers();
+//				}
+
+				if (modalRefreshFunctions) {
+					for (var i = 0; i < modalRefreshFunctions.length; i++) {
+						modalRefreshFunctions[i]();
+					}
 				}
 			} else {
 				// Kind of a hack

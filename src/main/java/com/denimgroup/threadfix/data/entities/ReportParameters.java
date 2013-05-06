@@ -41,6 +41,7 @@ public class ReportParameters implements Serializable {
 		PORTFOLIO_REPORT("portfolioReport"),
 		TOP_TEN_APPS("topTenApps.jrxml"),
 		TOP_TWENTY_APPS("topTwentyApps.jrxml"),
+		TOP_TEN_VULNS("topTenVulns.jrxml"),
 		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml");
 		
 		private String fileName;

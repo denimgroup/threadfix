@@ -91,7 +91,11 @@ public class DashboardController {
 	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
 	public String rightReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
-		return report(model, request, ReportFormat.TOP_TEN_APPS);
+		if (request.getParameter("appId") != null) {
+			return report(model, request, ReportFormat.TOP_TEN_VULNS);
+		} else {
+			return report(model, request, ReportFormat.TOP_TEN_APPS);
+		}
 	}
 	
 	public String report(Model model, HttpServletRequest request, ReportFormat reportFormat) {

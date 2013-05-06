@@ -12,7 +12,17 @@
 	<a class="btn header-button" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
 		Show More
 	</a>
+	
+	<c:if test="${ canUploadScans }">
+		<span style="float:right">
+			<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn header-button" data-toggle="modal">Upload Scan</a>
+			<a id="addManualFindingModalLink" href="#addManualFindingModal" role="button" class="btn header-button" data-toggle="modal">Add Manual Finding</a>
+		</span>
+	</c:if>
 </h2>
+
+<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
 
 <div id="editApplicationModal" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

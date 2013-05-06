@@ -5,7 +5,7 @@
 	<c:when test="${ empty application.waf }">
 	<td class="inputValue">
 		<div id="appWafDiv">
-			<a id="addWafButton" role="button" class="btn">Add WAF</a>
+			<a id="addWafButton" role="button" class="btn">Add</a>
 		</div>
 	</td>
 	</c:when>
@@ -18,7 +18,7 @@
 		<em>(<c:out value="${ application.waf.wafType.name }"/>)</em>
 	</td>
 	<td>
-		<a id="editWafButton" href="#addWaf" role="button" class="btn" data-toggle="modal">Edit WAF</a>
+		<a id="editWafButton" href="#addWaf" role="button" class="btn" data-toggle="modal">Edit</a>
 	</td>
 	</c:otherwise>
 </c:choose>

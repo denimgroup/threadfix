@@ -45,7 +45,7 @@
 					role="button" data-toggle="modal">
 				Edit
 			</a>
-			<a class="btn" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
+			<a class="btn btn-danger" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
 					onclick="return confirm('Are you sure you want to delete the application?')">
 				Delete
 			</a>
@@ -77,13 +77,53 @@
 		</table>
 	</div>
 	
-	<c:if test="${ canUploadScans }">
-		<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
-		<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
-		<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
-	</c:if>
+	<c:if test="${ not empty application.scans }">
 	
-	<c:if test="${ not empty application.scans }"> 
+	<div class="container-fluid">
+		<div class="row-fluid">
+		    <div class="span6">
+		    	<h4>
+		    		Vulnerability Burndown
+		    		<spring:url value="/reports/9/{orgId}/{appId}" var="reportsUrl">
+		    			<spring:param name="orgId" value="${ application.organization.id }"/>
+		    			<spring:param name="appId" value="${ application.id }"/>
+		    		</spring:url>
+					<span style="font-size:12px;float:right;">
+			    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+			    	</span>
+		    	</h4>
+		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
+				<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
+					<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
+					<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
+				</form>
+		    	<div id="leftTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
+		    </div>
+		    
+		     <div class="span6">
+		    	<h4>
+		    		Top 10 Vulnerabilities
+		    		<spring:url value="/reports/3/{orgId}/{appId}" var="reportsUrl">
+		    			<spring:param name="orgId" value="${ application.organization.id }"/>
+		    			<spring:param name="appId" value="${ application.id }"/>
+		    		</spring:url>
+			    	<span style="font-size:12px;float:right;">
+			    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+		    		</span>
+		    	</h4>
+		    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
+				<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
+					<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
+					<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
+				</form>
+		    	<div id="rightTileReport">
+		    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+		    	</div>
+		    </div>
+		</div>
+	</div>
 	
 		<spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
 			<spring:param name="orgId" value="${ application.organization.id }"/>

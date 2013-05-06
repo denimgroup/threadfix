@@ -13,7 +13,7 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button class="modalSubmit btn btn-primary" data-success-url="commentDiv${ vulnerability.id }" 
+		<button class="modalSubmit btn btn-primary" data-success-div="commentDiv${ vulnerability.id }" 
 				id="addCommentButton${ vulnerability.id }" type="button">Add Comment</button>
 	</div>
 </form>

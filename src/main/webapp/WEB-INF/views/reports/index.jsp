@@ -149,13 +149,15 @@
 									<spring:url value="/reports/ajax/export" var="exportUrl"></spring:url>	
 									<spring:url value="/reports/ajax" var="emptyUrl"></spring:url>	
 							
-									<a id="csvLink" class="reportDownload btn btn-primary" style="display:none"
+									<a id="csvLink" 
+											class="reportDownload btn btn-primary" style="display:none"
 											data-url="<c:out value="${ exportUrl }"/>"
 											data-format-id="2">
 										Export CSV
 									</a>
 								
-									<a id="pdfLink" class="reportDownload btn btn-primary" style="display:none"
+									<a id="pdfLink" 
+											class="reportDownload btn btn-primary" style="display:none"
 											data-url="<c:out value="${ exportUrl }"/>"
 											data-format-id="3">
 										Export PDF
