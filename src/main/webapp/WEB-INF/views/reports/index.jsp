@@ -37,7 +37,6 @@
 				</div>
 			</c:if>
 			
-			
 			<div class="row-fluid">
 	
 				<div class="span3" style="float:left" id="formDiv">
@@ -47,7 +46,7 @@
 					
 					<table class="table">
 						<tr class="reportFilterHeader">
-							<th colspan="2">Trending Reports</th>
+							<th colspan="2">Trending</th>
 						</tr>
 						<tr class="sidebar sidebar1
 								<c:if test="${ hasVulnerabilities }">
@@ -75,7 +74,7 @@
 						</tr>
 						
 						<tr class="reportFilterHeader">
-							<th colspan="2">Progress Reports</th>
+							<th colspan="2">Snapshot</th>
 						</tr>
 						<tr class="sidebar sidebar2" data-report-id="2" data-url="<c:out value="${ emptyUrl }"/>">
 							<td><a>Point in Time</a></td>
@@ -91,7 +90,7 @@
 						</tr>
 						
 						<tr class="reportFilterHeader">
-							<th colspan="2">Scanner Comparison Reports</th>
+							<th colspan="2">Comparison</th>
 						</tr>
 						<tr class="sidebar sidebar4" data-report-id="4" data-url="<c:out value="${ emptyUrl }"/>">
 							<td><a>Comparison By Vulnerability</a></td>
