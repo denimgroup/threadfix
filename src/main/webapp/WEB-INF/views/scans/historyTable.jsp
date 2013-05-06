@@ -57,10 +57,10 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th style="text-align: left" class="first">Team</th>
-				<th style="text-align: left">Application</th>
-				<th>Scanner</th>
 				<th style="width: 120px" class="long">Scan Date</th>
+				<th style="text-align: left">Application</th>
+				<th style="text-align: left" class="first">Team</th>
+				<th>Scanner</th>
 				<th>Total Vulns</th>
 				<th>Critical</th>
 				<th>High</th>
@@ -78,13 +78,10 @@
 			</c:if>
 			<c:forEach var="scan" items="${ scanList }" varStatus="status">
 				<tr class="bodyRow">
-					<td id="team${ status.count }"><spring:url
-							value="/organizations/{teamId}" var="teamUrl">
-							<spring:param name="teamId"
-								value="${ scan.application.organization.id }" />
-						</spring:url> <a href="<c:out value="${ teamUrl }"/>"> <c:out
-								value="${ scan.application.organization.name }" />
-					</a></td>
+					<td>
+						<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short"
+								timeStyle="short" />
+					</td>
 					<td id="application${ status.count }"><spring:url
 							value="/organizations/{teamId}/applications/{appId}" var="appUrl">
 							<spring:param name="teamId"
@@ -93,12 +90,15 @@
 						</spring:url> <a href="<c:out value="${ appUrl }"/>"> <c:out
 								value="${ scan.application.name }" />
 					</a></td>
+					<td id="team${ status.count }"><spring:url
+							value="/organizations/{teamId}" var="teamUrl">
+							<spring:param name="teamId"
+								value="${ scan.application.organization.id }" />
+						</spring:url> <a href="<c:out value="${ teamUrl }"/>"> <c:out
+								value="${ scan.application.organization.name }" />
+					</a></td>
 					<td id="channelType${ status.count }"><c:out
 							value="${ scan.applicationChannel.channelType.name }" /></td>
-					<td>
-						<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short"
-								timeStyle="short" />
-					</td>
 					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
 						<c:out value="${ scan.numberTotalVulnerabilities }" />
 					</td>

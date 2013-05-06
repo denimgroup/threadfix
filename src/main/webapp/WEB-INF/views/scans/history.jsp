@@ -6,7 +6,7 @@
 </head>
 
 <body id="scans">
-	<h2>Scan History</h2>
+	<h2>Scans</h2>
 	
 	<div id="helpText">
 		This page lists all of the scans that have been uploaded to ThreadFix.
@@ -19,10 +19,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th style="text-align: left" class="first">Team</th>
-					<th style="text-align: left">Application</th>
-					<th>Scanner</th>
 					<th style="width: 120px" class="long">Scan Date</th>
+					<th style="text-align: left">Application</th>
+					<th style="text-align: left" class="first">Team</th>
+					<th>Scanner</th>
 					<th>Total Vulns</th>
 					<th>Critical</th>
 					<th>High</th>
