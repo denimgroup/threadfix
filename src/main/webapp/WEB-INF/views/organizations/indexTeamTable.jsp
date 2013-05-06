@@ -3,8 +3,9 @@
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
 <a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
-	data-default-show="<c:out value="${ showTeamModal }"/>"
-	style="margin-bottom:8px;margin-top:10px;">Add Team</a>
+	data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
+<a class="btn" id="expandAllButton">Expand All</a>
+<a class="btn" id="collapseAllButton">Collapse All</a>
 
 <c:if test="${ not empty organizationList }">
 <table class="table table-hover white-inner-table">

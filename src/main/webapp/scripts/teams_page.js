@@ -98,23 +98,27 @@ function addExpandsHandlers() {
 			element.attr("data-has-function","1");
 		}
 	});
-}
-
-addToDocumentReadyFunctions(function(){ 
 	
 	$("#expandAllButton").on("click",function() {
 		$(".expandableTrigger").each(function(){
-			$("#" + $(this).closest("tr").attr("data-target-div")).collapse('show');
+			var target = $("#" + $(this).closest("tr").attr("data-target-div"));
+			if (target.attr('class').indexOf("in") == -1) {
+				$("#" + $(this).closest("tr").attr("data-caret-div")).click();
+			}
 		});
 	});
 	
 	$("#collapseAllButton").on("click",function() {
 		$(".expandableTrigger").each(function(){
-			$("#" + $(this).closest("tr").attr("data-target-div")).collapse('hide');
+			var target = $("#" + $(this).closest("tr").attr("data-target-div"));
+			if (target.attr('class').indexOf("in") != -1) {
+				$("#" + $(this).closest("tr").attr("data-caret-div")).click();
+			}
 		});
 	});
-	
-	
+}
+
+addToDocumentReadyFunctions(function(){
 	reloadTable();
 	addExpandsHandlers();
 });
