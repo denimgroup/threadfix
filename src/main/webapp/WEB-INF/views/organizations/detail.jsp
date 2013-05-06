@@ -117,7 +117,7 @@
 			<c:choose>
 				<c:when test="${empty apps}">
 					<tr class="bodyRow">
-						<td colspan="8" style="text-align:center;">No applications found.</td>
+						<td colspan="9" style="text-align:center;">No applications found.</td>
 					</tr>
 				</c:when>
 				<c:otherwise>

@@ -2,10 +2,12 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
-<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
-	data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
-<a class="btn" id="expandAllButton">Expand All</a>
-<a class="btn" id="collapseAllButton">Collapse All</a>
+<div style="padding-bottom:10px">
+	<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
+		data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
+	<a class="btn" id="expandAllButton">Expand All</a>
+	<a class="btn" id="collapseAllButton">Collapse All</a>
+</div>
 
 <c:if test="${ not empty organizationList }">
 <table class="table table-hover white-inner-table">
@@ -13,6 +15,12 @@
 		<tr>
 			<th style="width:8px"></th>
 			<th>Name</th>
+			<th class="centered"># Vulns</th>
+			<th class="centered">Critical</th>
+			<th class="centered">High</th>
+			<th class="centered">Medium</th>
+			<th class="centered">Low</th>
+			<th class="centered">Info</th>
 			<th style="width:70px;"></th>
 		</tr>
 	</thead>
@@ -25,6 +33,17 @@
 			<td class="expandableTrigger" id="teamName${ status.count }">
 				<c:out value="${ organization.name }"/>
 			</td>
+			<td class="centered expandableTrigger" id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
+			<td class="centered expandableTrigger" id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>
+			<td class="centered expandableTrigger" id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
+			<td class="centered expandableTrigger" id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
+			<td class="centered expandableTrigger" id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
+			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
+			<td class="centered" style="width:140px;"> 
+				<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" 
+						role="button" class="btn" data-toggle="modal">
+					Add Application
+				</a>
 			<td>
 				<spring:url value="/organizations/{orgId}" var="organizationUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
@@ -33,7 +52,7 @@
 			</td>
 		</tr>
 		<tr class="grey-background">
-			<td colspan="3">
+			<td colspan="10">
 				<div id="teamInfoDiv${organization.id}" class="collapse">
 					<c:if test="${ organization.vulnerabilityReport[5] != 0 }">
 						<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
@@ -51,7 +70,7 @@
 							<thead>
 								<tr>
 									<th style="width:70px;"></th>
-									<th class="centered">#Vulns</th>
+									<th class="centered"># Vulns</th>
 									<th class="centered">Critical</th>
 									<th class="centered">High</th>
 									<th class="centered">Medium</th>
@@ -91,25 +110,9 @@
 								</tr>
 							</c:if>
 						</c:forEach>
-								<tr class="totalsRow">
-									<td class="totals">
-										Totals
-									</td>
-									<td id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
-									<td id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>
-									<td id="numHighVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[3] }"/></td>
-									<td id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
-									<td id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
-									<td id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
-									<td></td>
-								</tr>
 						</table>
-					
 					</c:if>
 					
-					<div style="margin-top:10px;margin-bottom:7px;">
-						<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
-					</div>
 					</div>
 					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

@@ -444,17 +444,6 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	vertical-align: middle;
 }
 
-.table tr.grey-background td table tr.totalsRow td {
-	border-top: 1px solid #DDDDDD;
-	text-align: center;
-}
-
-.table tr.grey-background td table tr.totalsRow td.totals {
-	padding:5px;
-	font-weight:bold;
-	text-align:right;
-}
-
 .table-hover tbody tr.grey-background:hover div.modal td,
 .table-hover tbody tr.grey-background:hover div.modal th {
 	background-color:#FFFFFF;
@@ -517,6 +506,11 @@ th.headerSortDown {
 }
 
 .table th table th.centered, .table td table td.centered {
+	text-align:center;
+	vertical-align:middle;
+}
+
+.table th.centered, .table td.centered {
 	text-align:center;
 	vertical-align:middle;
 }
