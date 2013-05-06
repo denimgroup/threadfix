@@ -127,7 +127,7 @@
 						<c:out value="${ vulnGroup.name }"/>
 						(<c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/>) 
 					</td>
-					<td colspan="4"></td>
+					<td class="vulnSectionHeader" colspan="4"></td>
 				</tr>
 			</c:if>
 		

@@ -12,26 +12,28 @@ function switchWafModals() {
 };
 
 var reloadDefectSubmissionDiv = function () {
-	
 	var tableDiv = $("#submitDefectFormDiv");
-	if (tableDiv) {
-		$.ajax({
-			type : "GET",
-			url : tableDiv.attr("data-refresh-url"),
-			success : function(text) {
-				tableDiv.html(text);
-				if ($("#submitDefectForm").attr("data-has-metadata")) {
-					$(".submitDefectActionLink").css("display","");
-					$(".missingDefectTrackerMessage").css("display","none");
-				} else {
-					$(".submitDefectActionLink").css("display","none");
-					$(".missingDefectTrackerMessage").css("display","");
-				}
-			},
-			error : function (xhr, ajaxOptions, thrownError){
-				history.go(0);
-		    }
-		});
+	
+	if (!$("#submitDefectForm").attr("data-has-metadata")) {
+		if (tableDiv) {
+			$.ajax({
+				type : "GET",
+				url : tableDiv.attr("data-refresh-url"),
+				success : function(text) {
+					tableDiv.html(text);
+					if ($("#submitDefectForm").attr("data-has-metadata")) {
+						$(".submitDefectActionLink").css("display","");
+						$(".missingDefectTrackerMessage").css("display","none");
+					} else {
+						$(".submitDefectActionLink").css("display","none");
+						$(".missingDefectTrackerMessage").css("display","");
+					}
+				},
+				error : function (xhr, ajaxOptions, thrownError){
+					history.go(0);
+			    }
+			});
+		}
 	}
 };
 
@@ -79,6 +81,31 @@ var addAppPageEvents = function () {
 	});
 	
 	$("a.missingDefectTrackerMessage").on("click", defectTrackerAddFunction);
+	
+	if (!$("#expandAllVulns").attr("data-has-function")) {
+		$("#expandAllVulns").on("click",function() {
+			$("td.vulnSectionHeader .caret-right").each(function() {
+				if ($(this).attr("class").indexOf("expanded") == -1) {
+					$(this).click();
+				}
+			});
+		});
+		$("#expandAllVulns").attr("data-has-function","1");
+	}
+	if (!$("#collapseAllVulns").attr("data-has-function")) {
+		$("#collapseAllVulns").on("click",function() {
+			if ($(".vulnSectionHeader").size() == 0) {
+				$("#vulnTabLink").click();
+			} else {
+				$("td.vulnSectionHeader .caret-right").each(function() {
+					if ($(this).attr("class").indexOf("expanded") != -1) {
+						$(this).click();
+					}
+				});
+			}
+		});
+		$("#collapseAllVulns").attr("data-has-function","1");
+	}
 };
 
 var showSubmitLinks = function () {
@@ -90,7 +117,7 @@ var showSubmitLinks = function () {
 	}
 	
 	setTimeout(function () {
-		if ($("#addDefectTrackerButton").length != 0) {
+		if ($("#editDefectTrackerButton").length != 0) {
 			reloadDefectSubmissionDiv();
 		}
 	}, 1100);

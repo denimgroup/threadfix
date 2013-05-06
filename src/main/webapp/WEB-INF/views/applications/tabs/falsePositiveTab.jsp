@@ -19,6 +19,11 @@
 	<a class="btn" id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Not False Positive</a>
 </c:if>
 
+<span style="float:right">
+	<a class="btn" id="expandAllVulns">Expand All</a>
+	<a class="btn" id="collapseAllVulns">Collapse All</a>
+</span>
+
 <%@ include file="/WEB-INF/views/applications/tabs/filter.jspf" %>
 
 <%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>
