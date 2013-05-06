@@ -34,6 +34,9 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName, collapsibl
 var showModalIfAttributePresent = function() {
 	if ($("#addTeamModalButton").attr("data-default-show")) {
 		$("#addTeamModalButton").click();
+		$("#myTeamModal").on("shown", function() {
+			$("#teamNameInput").focus();
+		});
 	}
 };
 
