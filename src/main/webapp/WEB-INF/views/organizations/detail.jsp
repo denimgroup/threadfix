@@ -45,7 +45,7 @@
 		<div class="row-fluid">
 		    <div class="span6">
 		    	<h4>
-		    		Vulnerability Burndown
+		    		6 Month Vulnerability Burndown
 		    		<spring:url value="/reports/9/{orgId}" var="reportsUrl">
 		    			<spring:param name="orgId" value="${ organization.id }"/>
 		    		</spring:url>

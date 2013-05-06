@@ -25,7 +25,7 @@
 		<div class="row-fluid">
 		    <div class="span6">
 		    	<spring:url value="/reports/9" var="reportsUrl"/>
-		    	<h4>Vulnerability Burndown <span style="font-size:12px;float:right;">
+		    	<h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
 		    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 		    	</h4>
 		    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
