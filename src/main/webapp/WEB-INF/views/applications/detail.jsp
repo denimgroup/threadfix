@@ -23,7 +23,7 @@
 	</spring:url>
 	<spring:url value="{appId}/progress/{numScans}" var="dataRefreshUrl">
 		<spring:param name="appId" value="${ application.id }"/>
-		<spring:param name="numScans" value="${ fn:length(application.scans) }"/>
+		<spring:param name="numScans" value="${ numScansBeforeUpload }"/>
 	</spring:url>
 	
 	<div id="headerDiv" 

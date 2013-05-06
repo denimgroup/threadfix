@@ -151,6 +151,11 @@ public class UploadScanController {
 
 		if (returnValue != null && returnValue.getScanCheckResult() != null &&
 				ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
+			if (app.getScans() == null) {
+				ControllerUtils.addItem(request, "numScansBeforeUpload", 0);
+			} else {
+				ControllerUtils.addItem(request, "numScansBeforeUpload", app.getScans().size());
+			}
 			scanService.addFileToQueue(myChannelId, fileName, returnValue.getTestDate());
 		} else if (returnValue != null && returnValue.getScanCheckResult() != null &&
 				ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {

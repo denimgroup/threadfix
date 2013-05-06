@@ -131,6 +131,8 @@ public class ApplicationsController {
 		}
 		
 		Object checkForRefresh = ControllerUtils.getItem(request, "checkForRefresh");
+		Object numScansBeforeUpload = ControllerUtils.getItem(request, "numScansBeforeUpload");
+		model.addAttribute("numScansBeforeUpload", numScansBeforeUpload);
 		model.addAttribute("checkForRefresh", checkForRefresh);
 		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
 		model.addAttribute("dynamicPathList", findingService.getRecentDynamicPaths(appId));
