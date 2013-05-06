@@ -76,11 +76,11 @@
 					<th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
 				</c:if>			    
 				<th style="width:8px;"></th>
-				<th class="pointer" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">
-					Type<span id="headerCaret1" class="caret-down"></span>
-				</th>
 				<th class="pointer" style="min-width:70px" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 2, '<c:out value="${ loginUrl }"/>')">
 					Severity<span id="headerCaret2" class="caret-down"></span>
+				</th>
+				<th class="pointer" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">
+					Type<span id="headerCaret1" class="caret-down"></span>
 				</th>
 				<th class="pointer" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 3, '<c:out value="${ loginUrl }"/>')">
 					Path<span id="headerCaret3" class="caret-down"></span>
@@ -158,10 +158,10 @@
 					<td class="expandableTrigger" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
 						<span id="caret${vulnerability.id }" class="caret-right"></span>
 					</td>
+					<td class="expandableTrigger" id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
 					<td class="expandableTrigger">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
-					<td class="expandableTrigger" id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
 					<td class="expandableTrigger" id="path${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
 					<td class="expandableTrigger" id="parameter${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 					<td>
