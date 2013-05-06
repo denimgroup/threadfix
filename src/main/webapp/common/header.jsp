@@ -3,7 +3,7 @@
 <div id="logoBar"></div>
 <div id="logo">
 	<a  href="<spring:url value="/dashboard" htmlEscape="true"/>">
-		<img src="<%=request.getContextPath()%>/images/hdr-threadfix-logo-super-short.png" class="transparent_png" alt="Threadfix" />
+		<img src="<%=request.getContextPath()%>/images/TF_logo_w_arrow.png" class="transparent_png" alt="Threadfix" />
 	</a>
 </div>
 <div id="menu">
@@ -16,8 +16,8 @@
 				<td id="tab-dashboard" style="width: 130px;">
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
-				<td id="tab-apps" style="width: 90px;">
-					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Teams</a>
+				<td id="tab-apps" style="width: 120px;">
+					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Applications</a>
 				</td>
 				<td id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
@@ -62,7 +62,7 @@
 						</a>
 						</div>
 				  	 </div>
-					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="configurationHeader" class="dropdown-menu config-header" style="text-align:left;" aria-labelledby="configurationHeader" role="menu">
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 						    <li class="normalLinks">
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>

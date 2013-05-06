@@ -98,6 +98,20 @@ function addExpandsHandlers() {
 }
 
 addToDocumentReadyFunctions(function(){ 
+	
+	$("#expandAllButton").on("click",function() {
+		$(".expandableTrigger").each(function(){
+			$("#" + $(this).closest("tr").attr("data-target-div")).collapse('show');
+		});
+	});
+	
+	$("#collapseAllButton").on("click",function() {
+		$(".expandableTrigger").each(function(){
+			$("#" + $(this).closest("tr").attr("data-target-div")).collapse('hide');
+		});
+	});
+	
+	
 	reloadTable();
 	addExpandsHandlers();
 });
