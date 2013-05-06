@@ -9,8 +9,9 @@
 <h2 style="padding-bottom:5px;">
 	
 	<span id="nameText"><c:out value="${ application.name }"/></span>
-	<a class="btn header-button" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#appInfoDiv">
-		Show More
+	<a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
+			role="button" data-toggle="modal">
+		Edit / Delete
 	</a>
 	
 	<c:if test="${ canUploadScans }">
@@ -29,7 +30,7 @@
 	<div id="editAppFormDiv">
 		<%@ include file="/WEB-INF/views/applications/forms/editApplicationForm.jsp" %>
 	</div>
-</div>
+</div> 
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 

@@ -97,7 +97,9 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal" class="modalSubmit btn btn-primary" data-success-div="appDTDiv">Add Defect Tracker</a>
+		<a id="submitDTModal" class="modalSubmit btn btn-primary" 
+				data-success-div="appDTDiv"
+				data-success-click="editApplicationModal">Add Defect Tracker</a>
 	</div>
 </form:form>
 </div>

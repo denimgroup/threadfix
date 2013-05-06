@@ -39,44 +39,6 @@
 		</c:if>
 	</div>
 	
-	<div id="appInfoDiv" class="collapse">
-		<c:if test="${ canManageApplications }">
-			<a class="btn" id="editApplicationModalButton" href="#editApplicationModal" 
-					role="button" data-toggle="modal">
-				Edit
-			</a>
-			<a class="btn btn-danger" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
-					onclick="return confirm('Are you sure you want to delete the application?')">
-				Delete
-			</a>
-		</c:if>
-		<table class="dataTable" style="margin-bottom:18px">
-			<tbody>
-				<c:if test="${ not empty application.url }">
-					<tr>
-						<td>URL</td>
-						<td class="inputValue">
-							<a id="urlText" href="<spring:url value="${ fn:escapeXml(application.url) }" />"><c:out value="${ application.url }" /></a>
-						</td>
-					</tr>
-				</c:if>
-				<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
-					<spring:param name="orgId" value="${ application.organization.id }" />
-				</spring:url>
-				<tr id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
-					<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
-				</tr>
-				<tr id="appWafDiv">
-					<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
-				</tr>
-				<tr>
-					<td>Criticality</td>
-					<td class="inputValue"><c:out value="${ application.applicationCriticality.name }"/></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	
 	<c:if test="${ not empty application.scans }">
 	
 	<div class="container-fluid">

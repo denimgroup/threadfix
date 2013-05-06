@@ -1,7 +1,14 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 	<div class="modal-header">
-		<h4 id="myModalLabel">Edit Application</h4>
+		<h4 id="myModalLabel">Edit Application
+			<span style="float:right">
+				<a class="btn btn-danger header-button" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
+						onclick="return confirm('Are you sure you want to delete the application?')">
+					Delete
+				</a>
+			</span>
+		</h4>
 	</div>
 	<spring:url value="/organizations/{orgId}/applications/{appId}/edit" var="editSaveUrl">
 		<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -37,6 +44,16 @@
 					<form:errors path="applicationCriticality.id" cssClass="errors" />
 				</td>
 			</tr>
+			<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
+				<spring:param name="orgId" value="${ application.organization.id }" />
+			</spring:url>
+			<tr class="left-align" id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
+				<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
+			</tr>
+			<tr class="left-align" id="appWafDiv">
+				<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
+			</tr>
+			
 		</table>
 	</div>
 	<div class="modal-footer">

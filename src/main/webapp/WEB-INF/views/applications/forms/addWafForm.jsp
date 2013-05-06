@@ -34,6 +34,10 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="modalSubmit btn btn-primary" data-success-div="appWafDiv">Update Application</a>
+		<a id="submitTeamModal" class="modalSubmit btn btn-primary" 
+				data-success-div="appWafDiv"
+				data-success-click="editApplicationModal">
+			Update Application
+		</a>
 	</div>
 </form:form>

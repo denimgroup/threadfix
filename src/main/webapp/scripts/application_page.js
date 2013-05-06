@@ -52,7 +52,27 @@ var addAppPageEvents = function () {
 		}
 	});
 	
+	var showEditModal = function() { $("#editApplicationModal").modal('show'); };
+	
+	$("#addWaf").on('hidden', showEditModal);
+	$("#createWaf").on('hidden', showEditModal);
+	$("#addDefectTracker").on('hidden', showEditModal);
+	
 	$("#addDefectTrackerButton").on("click", defectTrackerAddFunction);
+	
+	$("#addWafButton").on("click", function() {
+		$("#editApplicationModal").modal('hide');
+	});
+	$("#editWafButton").on("click", function() {
+		$("#editApplicationModal").modal('hide');
+	});
+	
+	$("#editDefectTrackerButton").on("click", function() {
+		$("#editApplicationModal").modal('hide');
+	});
+	$("#addDefectTrackerButton").on("click", function() {
+		$("#editApplicationModal").modal('hide');
+	});
 	
 	$("#jsonLink").on("click", function() {
 		jsonTest($("#appDTDiv").attr("data-json-test-url"));
@@ -113,14 +133,6 @@ addToDocumentReadyFunctions(function () {
 		if(choice == 'static') {
 			$('.static').show();
 			$('.dynamic').hide();
-		}
-	});
-	
-	$("#showDetailsLink").on("click", function() {
-		if ($("#appInfoDiv").attr('class').indexOf('in') == -1) {
-			$(this).html("Show Less");
-		} else {
-			$(this).html("Show More");
 		}
 	});
 	
