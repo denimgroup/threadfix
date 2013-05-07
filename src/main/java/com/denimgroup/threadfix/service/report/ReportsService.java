@@ -38,7 +38,11 @@ import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 public interface ReportsService {
 	
 	enum ReportCheckResult {
-		VALID("Valid"), NO_APPLICATIONS("No Applications"), BAD_REPORT_TYPE("Bad Report Type"), IO_ERROR("IO Error");
+		VALID("Valid"), 
+		NO_APPLICATIONS("No Applications"), 
+		BAD_REPORT_TYPE("Bad Report Type"), 
+		IO_ERROR("IO Error"),
+		OTHER_ERROR("Unable to generate report.");
 		
 		private String text;
 		

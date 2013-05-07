@@ -68,6 +68,8 @@ public class ReportsController {
 	private ReportsService reportsService;
 	private VulnerabilityService vulnerabilityService;
 	
+	private Random random = new Random();
+	
 	@Autowired
 	public ReportsController(OrganizationService organizationService,
 			VulnerabilityService vulnerabilityService,
@@ -141,46 +143,63 @@ public class ReportsController {
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
 				request);
 		
-		ReportCheckResult reportCheckResult = reportCheckResultBean.getReportCheckResult();
+		ReportCheckResult reportCheckResult = null;
+		
+		if (reportCheckResultBean != null) {
+			reportCheckResult = reportCheckResultBean.getReportCheckResult();
+		} else {
+			reportCheckResult = ReportCheckResult.OTHER_ERROR;
+		}
 		
 		if (reportCheckResult == ReportCheckResult.VALID) {
-			StringBuffer report = reportCheckResultBean.getReport();
-			String pageString = report.toString();
-			
 			boolean isPdf = reportParameters.getFormatId() == 3;
 			
 			String fileName = "report";
+			InputStream in = null;
 			
 			if (isPdf) {
 				response.setContentType("application/pdf");
 				fileName = "report_pdf.pdf";
+				if (reportCheckResultBean.getReportBytes() != null) {
+					in = new ByteArrayInputStream(reportCheckResultBean.getReportBytes());
+				}
 			} else {
 				response.setContentType("application/octet-stream");
 				fileName = "report_csv.csv";
+				StringBuffer report = reportCheckResultBean.getReport();
+				if (report != null) {
+					String pageString = report.toString();
+					if (pageString != null) {
+						in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
+					}
+				}
 			}
 			
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-			
-			ServletOutputStream out = response.getOutputStream();
 
-			InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
+			if (in != null) {
+				ServletOutputStream out = response.getOutputStream();
 
-			byte[] outputByte = new byte[65535];
-			
-			int remainingSize = in.read(outputByte, 0, 65535);
-			
-			// copy binary content to output stream
-			while (remainingSize != -1) {
-				out.write(outputByte, 0, remainingSize);
-				remainingSize = in.read(outputByte, 0, 65535);
+				byte[] outputByteBuffer = new byte[65535];
+				
+				int remainingSize = in.read(outputByteBuffer, 0, 65535);
+				
+				// copy binary content to output stream
+				while (remainingSize != -1) {
+					out.write(outputByteBuffer, 0, remainingSize);
+					remainingSize = in.read(outputByteBuffer, 0, 65535);
+				}
+				in.close();
+				out.flush();
+				out.close();
+				return null;
+			} else {
+				log.warn("Unable to find data for report.");
+				return returnError(request, model, ReportCheckResult.OTHER_ERROR);
 			}
-			in.close();
-			out.flush();
-			out.close();
-			return null;
-		} else {
-			return returnError(request, model, reportCheckResult);
 		}
+		
+		return returnError(request, model, reportCheckResult);
 	}
 
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
@@ -231,7 +250,7 @@ public class ReportsController {
 	private String addParameterToReport(StringBuffer buffer) {
 		String resultString = buffer.toString();
 		String regex = "(.*<img [^>]*img_[^\"]*)(.*)";
-		return resultString.replaceAll(regex, "$1?" + new Random().nextInt() + "$2");
+		return resultString.replaceAll(regex, "$1?" + random.nextInt() + "$2");
 	}
 	
 	private String returnError(HttpServletRequest request, Model model,

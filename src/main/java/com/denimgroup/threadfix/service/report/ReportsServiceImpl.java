@@ -121,13 +121,13 @@ public class ReportsServiceImpl implements ReportsService {
 	public ReportCheckResultBean generateReport(ReportParameters parameters, 
 			HttpServletRequest request) {
 		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
-			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE, null);
+			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE);
 		}
 		
 		List<Integer> applicationIdList = getApplicationIdList(parameters);
 	
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS, null);
+			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 		}
 		
 		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
@@ -137,7 +137,7 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS, null);
+			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 		}
 		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
@@ -157,16 +157,15 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		ReportFormat reportFormat = parameters.getReportFormat();
 		try {
-			StringBuffer report = getReport(path, reportFormat, format, params, applicationIdList);
-			return new ReportCheckResultBean(ReportCheckResult.VALID, report);
+			return getReport(path, reportFormat, format, params, applicationIdList);
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
-			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR, null);
+			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
 		}
 	}
 
 	@SuppressWarnings("resource")
-	private StringBuffer getReport(String path, ReportFormat reportFormat, String format,
+	private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
 			Map<String, Object> parameters, List<Integer> applicationIdList) throws IOException {
 
 		if (reportFormat == null || reportFormat.getFileName() == null || 
@@ -226,7 +225,9 @@ public class ReportsServiceImpl implements ReportsService {
 			
 		}
 
-		parameters.put("HIBERNATE_SESSION", sessionFactory.getCurrentSession());
+		if (sessionFactory != null) {
+			parameters.put("HIBERNATE_SESSION", sessionFactory.getCurrentSession());
+		}
 		try {
 			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
 
@@ -257,7 +258,11 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			if(format.equals("PDF")) {
 				byte[] pdfByteArray = JasperExportManager.exportReportToPdf(jasperPrint);
-				return new StringBuffer(pdfByteArray.toString());
+				if (pdfByteArray != null) {
+					return new ReportCheckResultBean(ReportCheckResult.VALID, null, pdfByteArray);
+				} else {
+					return null;
+				}
 			}
 			
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -297,7 +302,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 		log.debug("Returning report.");
 		
-		return report;
+		return new ReportCheckResultBean(ReportCheckResult.VALID, report, null);
 	}
 	
 	private JasperPrint getXMonthReport(List<Integer> applicationIdList, Map<String, Object> parameters,
