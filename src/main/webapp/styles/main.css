@@ -767,6 +767,23 @@ div.box-shadow {
 	border-radius: 4px 4px 4px 4px;
 }
 
+#main-content .report-image table {
+	margin-bottom:0px;
+}
+
+.vuln-comment-word-wrap {
+	word-wrap: break-word;
+	max-width:700px;
+}
+
+.report-image .vuln-comment-word-wrap {
+	max-width:200px;
+}
+
+#main-content .right-tile .report-image {
+	padding:0px;
+}
+
 .defaultHide {
 	display: none;
 }
@@ -774,3 +791,18 @@ div.box-shadow {
 .header-button {
 	font-weight: normal;
 }
+
+.tf-bread-crumb {
+	list-style: none outside none;
+	margin-left:0px;
+	margin-top:-25px;
+}
+
+.tf-bread-crumb li {
+	display: inline-block;
+}
+
+.tf-bread-crumb a {
+	text-decoration:underline;
+}
+

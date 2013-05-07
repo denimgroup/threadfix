@@ -23,10 +23,10 @@
 	</spring:url>
 	<spring:url value="/login.jsp" var="loginUrl" />
 
-	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
-	    <li><a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
-	    <li><a href="${ fn:escapeXml(appUrl) }"><c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
+	<ul class="tf-bread-crumb">
+	    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+	    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
+	    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
 	    <li class="active"><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan</li>
     </ul>
 

@@ -1,9 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<ul class="breadcrumb">
-    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
-    <li><a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
-    <li class="active"><c:out value="${ application.name }"/></li>
+<ul class="tf-bread-crumb">
+    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
+    <li class="active">Application: <c:out value="${ application.name }"/></li>
 </ul>
 
 <h2 style="padding-bottom:5px;">

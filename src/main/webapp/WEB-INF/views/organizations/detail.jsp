@@ -7,9 +7,9 @@
 </head>
 
 <body id="apps">
-	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/"/>">Teams</a> <span class="divider">/</span></li>
-	    <li class="active"><c:out value="${ organization.name }"/></li>
+	<ul class="tf-bread-crumb">
+	    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+	    <li class="active">Team: <c:out value="${ organization.name }"/></li>
     </ul>
 	<h2 id="name" style="padding-top:5px;">
 		<c:out value="${ organization.name }"/>
