@@ -9,7 +9,7 @@
 	<div class="modal-body">
 		<span class="errors"><c:out value="${ commentError }"/></span><br>
 		Comment:
-		<textarea style="margin:10px;width: 497px; height: 215px;" class="textbox focus" id="commentInputBox" name="comments"></textarea>
+		<textarea style="margin:10px;width: 497px; height: 215px;" class="textbox clear-after-submit" id="commentInputBox" name="comments"></textarea>
 	</div>
 	<div class="modal-footer">
 		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

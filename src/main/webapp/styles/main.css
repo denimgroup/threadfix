@@ -42,7 +42,7 @@ body {
 	height: auto !important;
 	height: 91%;
 	background-image: url(../images/hdr-bg-repeat.png), url(../images/main-top-gradient.png);
-	background-position: top left, 0 37px;
+	background-position: top left, 0 25px;
 	background-repeat: repeat-x;
 	background-size: 1px 42px;
 }
@@ -449,12 +449,6 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	background-color:#FFFFFF;
 }
 
-.table-hover tbody tr.expandable:hover td,
-.table-hover tbody tr.expandable:hover th {
-	background-color:#FFFFFF;
-}
-
-
 .table-striped tbody > tr:nth-child(2n+1) > td.no-color, 
 .table-striped tbody > tr:nth-child(2n+1) > th.no-color {
 	background-color:#FFFFFF;
@@ -531,7 +525,11 @@ table.bold-headers tr th {
 	margin-bottom:0px;
 }
 
-.table-hover tbody tr.error:hover td, .table-hover tbody tr.error:hover th {
+.table-hover tbody tr.expandable:hover table td, .table-hover tbody tr.expandable:hover table th {
+	background-color: #FFF;
+}
+
+/* .table-hover tbody tr.error:hover td, .table-hover tbody tr.error:hover th {
 	background-color: #EBCCCC;
 }
 
@@ -563,21 +561,13 @@ table.bold-headers tr th {
 	background-color:#d9edf7;
 }
 
-.table-hover tbody tr.error.expandable:hover td, .table-hover tbody tr.error.expandable:hover th {
-	background-color: #F2DEDE;
-}
-
-.table-hover tbody tr.warning.expandable:hover td, .table-hover tbody tr.warning.expandable:hover th {
-	background-color: #fcf8e3;
-}
-
 .table-hover tbody tr.success.expandable:hover td, .table-hover tbody tr.success.expandable:hover th {
 	background-color: #dff0d8;
 }
 
 .table-hover tbody tr.info.expandable:hover td, .table-hover tbody tr.info.expandable:hover th {
 	background-color: #d9edf7;
-}
+} */
 
 .left-tile {
 	width:45%;
@@ -585,7 +575,7 @@ table.bold-headers tr th {
 }
 
 .right-tile {
-	margin-left:500px;
+	margin-left:450px;
 }
 
 .margin-bottom {

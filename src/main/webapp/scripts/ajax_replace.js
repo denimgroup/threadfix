@@ -4,16 +4,19 @@ function delay(timeoutFunction) {
 	};
 }
 
+
+function modalFocusTimeout() {
+	setTimeout(function() {
+		$(".modal").on("shown", function() {
+	    	$(".modal-body").attr('tab-index','-1');
+	    	$(".modal.in .modal-body input, .modal.in .modal-body textarea").first().focus();
+	    });
+	}, 1500);
+}
+
 var modalRefreshFunctions = [ 
 	delay(addModalSubmitEvents),
-	function () {
-		setTimeout(function() {
-			$(".modal").on("shown", function() {
-				$(".modal-body").attr('tab-index','-1');
-				$(".modal.in .modal-body input").first().focus();
-			});
-		}, 1500);
-	}
+	function () { modalFocusTimeout(); }
 ];
 
 var modalFailureFunctions = [
@@ -113,12 +116,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 			history.go(0);
 	    }
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -156,12 +154,7 @@ function submitAjaxScan(url, formId, formDiv, channelId) {
 			history.go(0);
 		}
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-			$(".modal-body").attr('tab-index','-1');
-			$(".modal.in .modal-body input").first().focus();
-		});
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -191,12 +184,7 @@ function submitAjax(url, formId, formDiv, successDiv) {
 			history.go(0);
 	    }
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -231,12 +219,7 @@ function submitVulnTableOperation(url, formDiv, successDiv) {
 			history.go(0);
 		}
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -277,12 +260,7 @@ function submitDefect(formId, formDiv, successDiv) {
 			history.go(0);
 		}
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -342,12 +320,7 @@ function basicPost(url, formId, target) {
 			history.go(0);
 		}
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
 	return false;
 }
 
@@ -388,12 +361,7 @@ function createDTAndRefresh(url) {
 			history.go(0);
 	    }
 	});
-	setTimeout(function() {
-		$(".modal").on("shown", function() {
-	    	$(".modal-body").attr('tab-index','-1');
-	    	$(".modal.in .modal-body input").first().focus();
-	    });
-	}, 1500);
+	modalFocusTimeout();
     return false;
 }
 
@@ -491,12 +459,7 @@ var documentReadyFunctions = [
 	function() {
 		$(".focus").focus();
 		$(".modal");
-		setTimeout(function() {
-			$(".modal").on("shown", function() {
-		    	$(".modal-body").attr('tab-index','-1');
-		    	$(".modal.in .modal-body input").first().focus();
-		    });
-		}, 1500);
+		modalFocusTimeout();
 	},
 	function() {
 		if(top != self) top.location.replace(location);

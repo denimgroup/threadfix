@@ -180,39 +180,47 @@
 							<div class="left-tile">
 								<c:if test="${not empty vulnerability.findings}">
 									<h4>Scan History</h4>
-									<table class="table">
-										<thead class="table">
-											<tr class="left-align <c:out value="${ color }"/>">
-												<th class="first">Channel</th>
-												<th>Scan Date</th>
-												<th class="last">User</th>
-											</tr>
-										</thead>
-										<tbody>
-											<c:forEach var="finding" items="${ vulnerability.findings }" varStatus="status">
-												<tr class="left-align bodyRow <c:out value="${ color }"/>">
-													<td id="scan${ status.count }ChannelType"><c:out
-															value="${ finding.scan.applicationChannel.channelType.name }" /></td>
-													<td id="scan${ status.count }ImportTime"><fmt:formatDate value="${ finding.scan.importTime.time }"
-															type="both" dateStyle="short" timeStyle="medium" /></td>
-													<td id="scan${ status.count }ChannelType${ status.count }"><c:if test="${ not empty finding.scan.user }">
-															<!-- Got info from scan, the normal case -->
-															<c:out value="${ finding.scan.user.name}" />
-														</c:if> <c:if
-															test="${ empty finding.scan.user and not empty finding.user }">
-															<!-- Got info from finding, probably a manual scan -->
-															<c:out value="${ finding.user.name}" />
-														</c:if> <c:if test="${ empty finding.scan.user and empty finding.user }">
-													No user found. Probably a remote scan.
-												</c:if></td>
+									<div class="report-image" style="width:422px;margin-bottom:20px;background-color:#FFF;padding:0px;">
+										<table class="table" style="margin-bottom:0px;">
+											<thead class="table">
+												<tr class="left-align">
+													<th class="first">Channel</th>
+													<th>Scan Date</th>
+													<th class="last">User</th>
 												</tr>
-											</c:forEach>
-										</tbody>
-									</table>
+											</thead>
+											<tbody>
+												<c:forEach var="finding" items="${ vulnerability.findings }" varStatus="status">
+													<tr class="left-align bodyRow">
+														<td id="scan${ status.count }ChannelType"><c:out
+																value="${ finding.scan.applicationChannel.channelType.name }" /></td>
+														<td id="scan${ status.count }ImportTime"><fmt:formatDate value="${ finding.scan.importTime.time }"
+																type="both" dateStyle="short" timeStyle="medium" /></td>
+														<td id="scan${ status.count }ChannelType${ status.count }"><c:if test="${ not empty finding.scan.user }">
+																<!-- Got info from scan, the normal case -->
+																<c:out value="${ finding.scan.user.name}" />
+															</c:if> <c:if
+																test="${ empty finding.scan.user and not empty finding.user }">
+																<!-- Got info from finding, probably a manual scan -->
+																<c:out value="${ finding.user.name}" />
+															</c:if> <c:if test="${ empty finding.scan.user and empty finding.user }">
+														No user found. Probably a remote scan.
+													</c:if></td>
+													</tr>
+												</c:forEach>
+											</tbody>
+										</table>
+									</div>
 								</c:if>
 							</div>
-							<div class="right-tile" id="commentDiv${ vulnerability.id }">
-								<%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>							
+							
+							<div class="right-tile">
+								<h4>Comments</h4>
+								<div class="report-image" id="commentDiv${ vulnerability.id }" style="width:450px;margin-bottom:10px;">
+									<%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>							
+								</div>
+								<br>
+								<%@include file="/WEB-INF/views/applications/modals/vulnCommentModal.jsp"%>
 							</div>
 						</div>
 					</td>
