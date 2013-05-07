@@ -106,6 +106,10 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		}
 	    	}
 	    	
+	    	if (lineNum == null) {
+	    		lineNum = -1;
+	    	}
+	    	
 	    	return new DataFlowElement(null, lineNum, atts.getValue("sourcefile"), position);
 	    }
 

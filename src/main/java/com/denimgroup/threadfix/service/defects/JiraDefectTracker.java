@@ -355,7 +355,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			for (Defect defect : defectList) {
 				if (defect != null) {
 					String result = getStatus(defect);
-					boolean isOpen = result != null && !result.equals("Resolved") || !result.equals("Closed");
+					boolean isOpen = result != null && (!result.equals("Resolved") || !result.equals("Closed"));
 					returnMap.put(defect, isOpen);
 				}
 			}

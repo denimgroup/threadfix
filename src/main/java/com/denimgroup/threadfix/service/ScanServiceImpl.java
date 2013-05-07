@@ -295,9 +295,9 @@ public class ScanServiceImpl implements ScanService {
 		
 		ScanCheckResultBean result = importer.checkFile();
 		
-		if (result == null || result.getScanCheckResult() == null|| 
+		if (result == null || result.getScanCheckResult() == null || 
 				(!result.getScanCheckResult().equals(ChannelImporter.SUCCESSFUL_SCAN)
-				&& !result.equals(ChannelImporter.EMPTY_SCAN_ERROR))) {
+				&& !result.getScanCheckResult().equals(ChannelImporter.EMPTY_SCAN_ERROR))) {
 			importer.deleteScanFile();
 		}
 		

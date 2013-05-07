@@ -57,8 +57,6 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	
 	//TODO change structure of getStart / getEnd here and in other classes
 	
-	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
 	public BigIPASMGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
 		this.wafRuleDao = wafRuleDao;
 		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
@@ -226,6 +224,8 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 			 String parameter = rule.getParameter();
 			 String[] attackSignatures = vulnTypeSignatureMap.get(rule.getVulnerabilityDesc());
 
+			 SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			 
 			 String date = null;
 			 if (rule.getCreatedDate() != null) {
 				 date = dateFormatter.format(rule.getCreatedDate());
@@ -308,6 +308,8 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 					.replaceAll("\\{responseScrubbing\\}", responseScrubbing))
 				  .append(BigIPStrings.XML_START_CSRF_ENABLED);
 		 }
+		 
+		 SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 
 		 start.append(BigIPStrings.XML_START_FINAL
 				 			.replaceAll("\\{date\\}", 

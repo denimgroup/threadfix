@@ -76,10 +76,11 @@ public class RoleServiceImpl implements RoleService {
 			return FIELD_ERROR;
 		}
 		
-		String error = null, name = role.getDisplayName();
+		String name = role.getDisplayName();
 
 		if (name == null || name.trim().length() == 0) {
-			error = "This field cannot be blank";
+			result.rejectValue("displayName", null, null, "This field cannot be blank");
+			return FIELD_ERROR;
 		}
 		
 		Role databaseRole = loadRole(name.trim());
@@ -90,11 +91,6 @@ public class RoleServiceImpl implements RoleService {
 		
 		if (name.length() > Role.NAME_LENGTH) {
 			return "The maximum length for name is " + Role.NAME_LENGTH + " characters.";
-		}
-
-		if (error != null) {
-			result.rejectValue("displayName", null, null, error);
-			return FIELD_ERROR;
 		}
 		
 		if (databaseRole != null) {

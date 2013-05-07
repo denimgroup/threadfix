@@ -179,7 +179,11 @@ public class PortfolioReportController {
 					}
 				}
 				
-				oldArray.set(startCount, upperBound > 365);
+				if (upperBound != null) {
+					oldArray.set(startCount, upperBound > 365);
+				} else {
+					oldArray.set(startCount, false);
+				}
 			}
 			
 			tableContents.add(teamRow);

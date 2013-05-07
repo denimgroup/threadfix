@@ -160,7 +160,9 @@ public class EditDefectTrackerController {
 			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
 			SessionStatus status, Model model) {
 		
-		defectTracker.setId(defectTrackerId);
+		if (defectTracker != null) {
+			defectTracker.setId(defectTrackerId);
+		}
 		
 		DefectTracker databaseDefectTracker = null;
 		
@@ -200,14 +202,14 @@ public class EditDefectTrackerController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			if (defectTracker != null) {
 				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
+				model.addAttribute("successMessage", 
+						"Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
 			}
 			
 			model.addAttribute(defectTrackerService.loadAllDefectTrackers());
 			model.addAttribute("defectTracker", new DefectTracker());
 			model.addAttribute("editDefectTracker", new DefectTracker());
 			model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
-			model.addAttribute("successMessage", 
-					"Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
 
 			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");

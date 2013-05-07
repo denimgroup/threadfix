@@ -115,13 +115,15 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		
 		for (YearAndMonth time : times) {
 			scanIds.put(time, new ArrayList<Integer>());
-			for (Integer key : scansHash.keySet()) {
-				if (scansHash != null && scansHash.get(key) != null && scansHash.get(key).get(time) != null) {
-					Scan scan = scansHash.get(key).get(time);
-				
-					scanIds.get(time).add(scan.getId());
-					if (!timeMap.containsKey(time)) {
-						timeMap.put(time, scan.getImportTime());
+			if (scansHash != null) {
+				for (Integer key : scansHash.keySet()) {
+					if (scansHash.get(key) != null && scansHash.get(key).get(time) != null) {
+						Scan scan = scansHash.get(key).get(time);
+					
+						scanIds.get(time).add(scan.getId());
+						if (!timeMap.containsKey(time)) {
+							timeMap.put(time, scan.getImportTime());
+						}
 					}
 				}
 			}
