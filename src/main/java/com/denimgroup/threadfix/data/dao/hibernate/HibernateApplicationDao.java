@@ -120,7 +120,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 			long result = (Long) sessionFactory.getCurrentSession()
 				.createQuery("select count(*) from Vulnerability vuln " +
 						"where genericSeverity.intValue = :value " +
-						"and application = :app and active = true")
+						"and application = :app and active = true and isFalsePositive = false")
 				.setInteger("value", i)
 				.setInteger("app", application.getId())
 				.uniqueResult();
@@ -130,7 +130,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 		
 		long result = (Long) sessionFactory.getCurrentSession()
 				.createQuery("select count(*) from Vulnerability vuln " +
-						"where application = :app and active = true")
+						"where application = :app and active = true and isFalsePositive = false")
 				.setInteger("app", application.getId())
 				.uniqueResult();
 		ints.add((int) result);
@@ -161,8 +161,9 @@ public class HibernateApplicationDao implements ApplicationDao {
 				.createQuery("SELECT application.id as id " +
 						" FROM Application as application join application.vulnerabilities as vulnerability " +
 						" WHERE application.id IN (:applicationIdList) AND " +
-						"    application.active = true AND " +
-						" 	vulnerability.active = true " +
+						"   application.active = true AND " +
+						" 	vulnerability.active = true AND " +
+						"   vulnerability.isFalsePositive = false " +
 						 "GROUP BY application.id " +
 						 "ORDER BY count(vulnerability) desc")
 				.setParameterList("applicationIdList", applicationIdList)

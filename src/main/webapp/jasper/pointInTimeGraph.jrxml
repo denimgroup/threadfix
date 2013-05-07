@@ -14,7 +14,8 @@
 						vulnerability.application.name as name
 				 FROM Vulnerability as vulnerability
 				 WHERE vulnerability.application.id IN ($P{appId}) AND
-				 vulnerability.active = true
+				 vulnerability.active = true AND
+				 vulnerability.isFalsePositive = false
 				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
 	</queryString>
 	<field name="severity" class="java.lang.String"/>
@@ -36,7 +37,7 @@
 		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
 	</variable>
 	<variable name="totalCount" class="java.lang.Integer">
-		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount}]]></variableExpression>
+		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount} + $V{infoCount}]]></variableExpression>
 	</variable>
 	<variable name="highAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>

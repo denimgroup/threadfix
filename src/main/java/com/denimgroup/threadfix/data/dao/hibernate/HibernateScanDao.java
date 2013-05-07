@@ -346,16 +346,18 @@ public class HibernateScanDao implements ScanDao {
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
 		if (ids == null || ids.isEmpty()) return new HashMap<String, Object>();
 		
-		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.genericSeverity.intValue = ";
+		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and " +
+				"(vulnerability.active = true OR vulnerability.foundByScanner = true) AND " +
+				"(vulnerability.genericSeverity.intValue = ";
 		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan.id in ";
 		String orMapIds = " or vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan.id in ";
 
 		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
 				"select new map( scan.id as id, " +
-						selectStart + "2" + vulnIds + "(:scanIds2))" + orMapIds + "(:scanIds22)))) as low, " +
-						selectStart + "3" + vulnIds + "(:scanIds3))" + orMapIds + "(:scanIds32)))) as medium, " +
-						selectStart + "4" + vulnIds + "(:scanIds4))" + orMapIds + "(:scanIds42)))) as high, " +
-						selectStart + "5" + vulnIds + "(:scanIds5))" + orMapIds + "(:scanIds52)))) as critical)" +
+						selectStart + "2" + vulnIds + "(:scanIds2))" + orMapIds + "(:scanIds22))))) as low, " +
+						selectStart + "3" + vulnIds + "(:scanIds3))" + orMapIds + "(:scanIds32))))) as medium, " +
+						selectStart + "4" + vulnIds + "(:scanIds4))" + orMapIds + "(:scanIds42))))) as high, " +
+						selectStart + "5" + vulnIds + "(:scanIds5))" + orMapIds + "(:scanIds52))))) as critical)" +
 						" from Scan scan where scan.id = :scanId"
 				)
 				.setParameterList("scanIds2", ids)
