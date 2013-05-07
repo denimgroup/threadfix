@@ -89,19 +89,42 @@ addToDocumentReadyFunctions(function() {
 		orgSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 		appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 	
-		$(".sidebar").on("click", function() {
-			selectReportType($(this).attr("data-url"), $(this).attr("data-report-id"));
+		var hideSelects = function() {
+			console.log("hideselect started");
+			$(".reportTypeSelect").each(function(){
+				console.log("hiding select");
+				$(this).css("display","none");
+			});
+		};
+		
+		$(".reportTypeListSelector").on("click", function() {
+			hideSelects();
+			var select = $("#" + $(this).attr("data-report-list"));
+			console.log("showing select");
+			select.css("display","");
+			var selectedReport = select.children(":selected");
+			selectReportType(selectedReport.attr("data-url"), selectedReport.attr("data-report-id"));
+		});
+		
+		$(".reportTypeSelect").on("change", function() {
+			var selectedReport = $(this).children(":selected");
+			selectReportType(selectedReport.attr("data-url"), selectedReport.attr("data-report-id"));
 		});
 	
 		if ($("#successDiv").attr('data-first-report') !== "") {
-			var elementId = ".sidebar" + $("#successDiv").attr('data-first-report');
-			$(elementId).click();
-		} else {
-			submitAjaxReport(orgSelect.attr("data-refresh-url"), '#reportForm', '#formDiv', '#successDiv', 1, 1);
+			var targetOption = $("option[data-report-id=" + $("#successDiv").attr('data-first-report') + "]");
+			targetOption.prop("selected", true);
+			targetOption.closest("select").val(targetOption.val());
 		}
 		
 		$(".reportDownload").on("click", function() {
 			submitAjaxReport($(this).attr("data-url"), '#reportForm', '#formDiv', '#successDiv', $("#reportDiv").attr("data-report-id"), $(this).attr("data-format-id"));
+		});
+
+		$(".reportTypeListSelector").each(function() {
+			if ($(this).closest("li").attr("class").indexOf("active") != -1) {
+				$(this).click();
+			}
 		});
 	} else {
 		orgSelect.attr("disabled","disabled");

@@ -465,19 +465,17 @@ function addAppSelectFunctions() {
 			
 			var changeFunction = function() {
 				var selectedElement = $("#" + element.attr('id')).find(":selected");
-				if (selectedElement.attr("value") !== "-1") {
-					$(targetSelect).html('');
-					var objs = JSON.parse(selectedElement.attr('data-select-items'));
-					for (index in objs) {
-						var app = objs[index];
-						if (app.id !== "do-not-use") {
-							$(targetSelect).append($('<option>', {
-								value: app.id,
-								text : app.name
-							}));
-						}
-					};
-				}
+				$(targetSelect).html('');
+				var objs = JSON.parse(selectedElement.attr('data-select-items'));
+				for (index in objs) {
+					var app = objs[index];
+					if (app.id !== "do-not-use") {
+						$(targetSelect).append($('<option>', {
+							value: app.id,
+							text : app.name
+						}));
+					}
+				};
 			};
 			
 			element.on("change", changeFunction);
