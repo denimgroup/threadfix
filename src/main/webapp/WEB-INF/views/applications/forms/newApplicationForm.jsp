@@ -21,6 +21,13 @@
 			  	</td>
 			</tr>
 			<tr class="left-align">
+				<td style="padding:5px;">Unique ID</td>
+				<td style="padding:5px;">
+					<form:input style="margin-bottom:0px;" id="uniqueIdInput" path="uniqueId" size="50" maxlength="255" />
+				  	<form:errors path="uniqueId" cssClass="errors" />
+			  	</td>
+			</tr>
+			<tr class="left-align">
 				<td style="padding:5px;">Team</td>
 				<td style="padding:5px;"><c:out value="${ organization.name }"/></td>
 			</tr>

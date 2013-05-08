@@ -45,6 +45,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
@@ -105,7 +106,8 @@ public class EditApplicationController {
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", 
-				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id" });
+				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
+				"uniqueId"});
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -132,6 +134,15 @@ public class EditApplicationController {
 			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
 					Permission.CAN_MANAGE_WAFS);
 			
+			if (application.getWaf() != null && application.getWaf().getId() == null) {
+				application.setWaf(null);
+			}
+			
+			if (application.getDefectTracker() != null && 
+					application.getDefectTracker().getId() == null) {
+				application.setDefectTracker(null);
+			}
+			
 			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
 			
@@ -152,6 +163,7 @@ public class EditApplicationController {
 					Permission.CAN_MANAGE_APPLICATIONS );
 			
 			model.addAttribute("application", application);
+			model.addAttribute("finding", new Finding());
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
 			
 			ControllerUtils.addSuccessMessage(request, 

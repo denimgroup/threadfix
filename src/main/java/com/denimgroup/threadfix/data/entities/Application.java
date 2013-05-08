@@ -63,6 +63,9 @@ public class Application extends AuditableEntity {
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
 	private String url;
 	
+	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
+	private String uniqueId;
+	
 	@Size(max = 255, message = "{errors.maxlength} 255.")
 	private String projectRoot;
 
@@ -120,6 +123,15 @@ public class Application extends AuditableEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	@Column(length = 255)
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	@Column(length = 50)
@@ -379,4 +391,5 @@ public class Application extends AuditableEntity {
 		uploadableChannels = returnList;
 		return returnList;
 	}
+
 }
