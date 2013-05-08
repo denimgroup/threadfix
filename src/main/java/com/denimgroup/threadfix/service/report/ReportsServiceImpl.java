@@ -270,7 +270,7 @@ public class ReportsServiceImpl implements ReportsService {
 					report);
 			
 			StringBuffer appIdString = new StringBuffer();
-			appIdString.append(reportFormat.getFileName().charAt(0));
+			appIdString.append(reportFormat.getFileName().substring(0, 2));
 			for (Integer id : applicationIdList) {
 				appIdString.append(id);
 			}
@@ -447,7 +447,7 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			String textFieldTag = "\n<textField>\n"
 				+ "<reportElement x=\"" + location + "\" y=\"0\" width=\"" + increment + "\" height=\"20\"/>\n"
-				+ "\t<textElement verticalAlignment=\"Middle\">\n"
+				+ "\t<textElement textAlignment=\"Center\" verticalAlignment=\"Middle\">\n"
 				+ "\t\t<font size=\"12\" pdfFontName=\"Helvetica-Bold\"/>\n"
 				+ "\t</textElement>\n"
 				+ "\t<textFieldExpression class=\"java.lang.Long\"><![CDATA[\\$F{count_"
@@ -458,7 +458,7 @@ public class ReportsServiceImpl implements ReportsService {
 			
 			String headerText = "<staticText>\n"
 				+ "<reportElement x=\"" + location + "\" y=\"90\" width=\"" + increment + "\" height=\"20\"/>\n"
-				+ "<textElement verticalAlignment=\"Middle\">\n"
+				+ "<textElement textAlignment=\"Center\" verticalAlignment=\"Middle\">\n"
 				+ "\t<font size=\"12\" pdfFontName=\"Helvetica-Bold\"/>\n"
 				+ "</textElement>\n"
 				+ "<text><![CDATA[" + channelType.getName() + "]]></text>\n"

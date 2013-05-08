@@ -25,21 +25,21 @@
 	<pageHeader>
 		<band height="115" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="1100" height="40"/>
+				<reportElement x="0" y="0" width="830" height="40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Vulnerability Progress By Type]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="40" width="1100" height="20"/>
+				<reportElement x="0" y="40" width="830" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="60" width="1100" height="20"/>
+				<reportElement x="0" y="60" width="830" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -50,38 +50,38 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Description]]></text>
+				<text><![CDATA[Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="470" y="92" width="100" height="20"/>
-				<textElement>
+				<reportElement x="470" y="92" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Total Number]]></text>
+				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="570" y="92" width="110" height="20"/>
-				<textElement>
+				<reportElement x="540" y="92" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Percentage Fixed]]></text>
+				<text><![CDATA[% Fixed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="680" y="92" width="240" height="20"/>
-				<textElement>
+				<reportElement x="610" y="92" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Average Age of Remaining Vulnerabilities]]></text>
+				<text><![CDATA[Average Age]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="920" y="92" width="150" height="20"/>
-				<textElement>
+				<reportElement x="680" y="92" width="150" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Average Time to Close]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="113" width="1070" height="1"/>
+				<reportElement x="0" y="113" width="830" height="1"/>
 			</line>
 		</band>
 	</pageHeader>
@@ -98,29 +98,29 @@
 			<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="470" y="0" width="65" height="20"/>
-				<textElement textAlignment="Right">
+				<reportElement x="470" y="0" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="570" y="0" width="85" height="20"/>
-				<textElement textAlignment="Right">
+				<reportElement x="540" y="0" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{percentClosed}+"%"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="680" y="0" width="207" height="20"/>
-				<textElement textAlignment="Right">
+				<reportElement x="610" y="0" width="70" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{averageAgeOpen}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="920" y="0" width="110" height="20"/>
-				<textElement textAlignment="Right">
+				<reportElement x="680" y="0" width="150" height="20"/>
+				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Long"><![CDATA[$F{averageTimeToClose}]]></textFieldExpression>

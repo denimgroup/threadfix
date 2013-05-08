@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-	name="pointInTimeGraph" pageWidth="675" pageHeight="500"
+	name="pointInTimeGraph" pageWidth="675" pageHeight="580"
 	whenNoDataType="NoDataSection" columnWidth="675" leftMargin="0" rightMargin="0" 
 	topMargin="0" bottomMargin="0">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
@@ -28,6 +28,31 @@
 	<field name="medium" class="java.lang.Long"/>
 	<field name="high" class="java.lang.Long"/>
 	<field name="critical" class="java.lang.Long"/>
+	<pageHeader>
+		<band height="80">
+			<staticText>
+				<reportElement x="0" y="0" width="675" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Top 20 Vulnerable Applications]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="675" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="675" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
 	<summary>
 		<band height="500">
 			<stackedBarChart>

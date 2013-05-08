@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-	name="trending" pageWidth="675" pageHeight="500" orientation="Landscape" leftMargin="0" rightMargin="0" 
+	name="trending" pageWidth="675" pageHeight="580" orientation="Landscape" leftMargin="0" rightMargin="0" 
 	whenNoDataType="NoDataSection" topMargin="0" bottomMargin="0" columnWidth="422">
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
@@ -12,6 +12,31 @@
 	<field name="mediumVulns" class="java.lang.Long"/>
 	<field name="lowVulns" class="java.lang.Long"/>
 	<field name="importTime" class="java.lang.String"/>
+	<pageHeader>
+		<band height="80">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[12 Month Vulnerability Breakdown]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="222" y="40" width="309" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Team: " + $P{orgName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="60" width="309" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Application: " + $P{appName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
 	<summary>
 		<band height="500">
 			<stackedBarChart>
