@@ -808,3 +808,35 @@ div.box-shadow {
 	text-decoration:underline;
 }
 
+.table.tf-colors tbody tr.error > td {
+    background-color: #EBCCCC;
+}
+
+.table-hover.tf-colors tbody tr.error:hover > td {
+    background-color: #F2DEDE;
+}
+
+.table.tf-colors tbody tr.success > td {
+    background-color: #D0E9C6;
+}
+
+.table-hover.tf-colors tbody tr.success:hover > td {
+    background-color: #DFF0D8;
+}
+
+.table.tf-colors tbody tr.info > td {
+    background-color: #C4E3F3;
+}
+
+.table-hover.tf-colors tbody tr.info:hover > td {
+    background-color: #D9EDF7;
+}
+
+.table.tf-colors tbody tr.warning > td {
+    background-color: #FAF2CC;
+}
+
+.table-hover.tf-colors tbody tr.warning:hover > td {
+    background-color: #FCF8E3;
+}
+
