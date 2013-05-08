@@ -3,7 +3,7 @@
 <div id="logoBar"></div>
 <div id="logo">
 	<a  href="<spring:url value="/dashboard" htmlEscape="true"/>">
-		<img src="<%=request.getContextPath()%>/images/TF_logo_w_arrow.png" class="transparent_png" alt="Threadfix" />
+		<img src="<%=request.getContextPath()%>/images/TF_logo_w_arrow_strap.png" class="transparent_png" alt="Threadfix" />
 	</a>
 </div>
 <div id="menu">
