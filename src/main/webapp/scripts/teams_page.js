@@ -83,6 +83,7 @@ function addExpandsHandlers() {
 						success : function(text) {
 							 if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 								 $(reportDiv).html(text);
+								 $(reportDiv).find("td[width='50%']").remove();
 								 $(reportDiv).attr('data-loaded', '1');
 							} else {
 								$("#connectionUnavailableMessage").css("display", "");

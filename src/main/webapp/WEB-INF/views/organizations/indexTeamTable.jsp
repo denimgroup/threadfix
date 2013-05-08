@@ -14,13 +14,14 @@
 	<thead>
 		<tr>
 			<th style="width:8px"></th>
-			<th>Name</th>
-			<th class="centered"># Vulns</th>
-			<th class="centered">Critical</th>
-			<th class="centered">High</th>
-			<th class="centered">Medium</th>
-			<th class="centered">Low</th>
-			<th class="centered">Info</th>
+			<th style="width:98px;">Name</th>
+			<th class="centered fixed-team-header">Total</th>
+			<th class="centered fixed-team-header">Critical</th>
+			<th class="centered fixed-team-header">High</th>
+			<th class="centered fixed-team-header">Medium</th>
+			<th class="centered fixed-team-header">Low</th>
+			<th class="centered fixed-team-header">Info</th>
+			<th></th>
 			<th style="width:70px;"></th>
 		</tr>
 	</thead>
@@ -39,7 +40,7 @@
 			<td class="centered expandableTrigger" id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
 			<td class="centered expandableTrigger" id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
 			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
-			<td class="centered" style="width:140px;"> 
+			<td style="text-align:right"> 
 				<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" 
 						role="button" class="btn" data-toggle="modal">
 					Add Application
@@ -70,13 +71,13 @@
 							<thead>
 								<tr>
 									<th style="width:70px;"></th>
-									<th class="centered"># Vulns</th>
-									<th class="centered">Critical</th>
-									<th class="centered">High</th>
-									<th class="centered">Medium</th>
-									<th class="centered">Low</th>
-									<th class="centered">Info</th>
-									<th></th>
+									<th class="centered fixed-team-header">Total</th>
+									<th class="centered fixed-team-header">Critical</th>
+									<th class="centered fixed-team-header">High</th>
+									<th class="centered fixed-team-header">Medium</th>
+									<th class="centered fixed-team-header">Low</th>
+									<th class="centered fixed-team-header">Info</th>
+									<th style="width:100px;"></th>
 								</tr>
 							</thead>
 						<c:forEach var="application" items="${ organization.applications }" varStatus="innerStatus">
@@ -91,7 +92,7 @@
 								</spring:url>
 								<tr class="app-row">
 									<td style="padding:5px;word-wrap: break-word;">
-										<div style="word-wrap: break-word;max-width:120px;text-align:left;">
+										<div style="word-wrap: break-word;width:120px;text-align:left;">
 											<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
 												<c:out value="${ application.name }"/>
 											</a>
