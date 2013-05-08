@@ -36,7 +36,7 @@
 			  </chart>
 			  <categoryDataset>
 			  	<categorySeries>
-			  		<seriesExpression><![CDATA["Low"]]></seriesExpression>
+			  		<seriesExpression><![CDATA["Number of Vulnerabilities"]]></seriesExpression>
 					<categoryExpression><![CDATA[$V{idLabel}]]></categoryExpression>
 					<valueExpression><![CDATA[$F{vulnCount}]]></valueExpression>
 			  	</categorySeries>
