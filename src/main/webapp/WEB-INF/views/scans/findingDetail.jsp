@@ -20,7 +20,7 @@
 		<spring:param name="scanId" value="${ finding.scan.id }" />
 	</spring:url>
 
-	<ul class="tf-bread-crumb">
+	<ul class="breadcrumb">
 	    <li><a href="<spring:url value="/"/>">Applications Index</a><span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team <c:out value="${ finding.scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application <c:out value="${ finding.scan.application.name }"/></a><span class="divider">/</span></li>

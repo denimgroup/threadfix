@@ -840,3 +840,11 @@ div.box-shadow {
     background-color: #FCF8E3;
 }
 
+.breadcrumb {
+	margin-top:-15px;
+}
+
+.fixed-team-header {
+	width:10px;	
+}
+

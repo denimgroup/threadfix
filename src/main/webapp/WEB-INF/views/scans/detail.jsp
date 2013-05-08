@@ -23,7 +23,7 @@
 	</spring:url>
 	<spring:url value="/login.jsp" var="loginUrl" />
 
-	<ul class="tf-bread-crumb">
+	<ul class="breadcrumb">
 	    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
