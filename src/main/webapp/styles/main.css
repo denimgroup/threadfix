@@ -770,6 +770,10 @@ div.box-shadow {
 	max-width:200px;
 }
 
+.dashboard .vuln-comment-word-wrap {
+	max-width:400px;
+}
+
 #main-content .right-tile .report-image {
 	padding:0px;
 }

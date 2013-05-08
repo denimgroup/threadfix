@@ -135,7 +135,11 @@
 									</td>
 								</tr>
 								<tr class="no-top-border">
-									<td class="thick-left" colspan="3" id="commentText${ status.count }"><c:out value="${ comment.comment }" /></td>
+									<td class="thick-left" colspan="3" id="commentText${ status.count }">
+										<div class="vuln-comment-word-wrap">
+											<c:out value="${ comment.comment }" />
+										</div>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>
