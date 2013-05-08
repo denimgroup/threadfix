@@ -28,10 +28,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -212,8 +209,9 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 
-	public ApplicationDetailPage clickActionButton() {
-		driver.findElementById("showDetailsLink").click();
+	public ApplicationDetailPage clickEditDeleteBtn() {
+		driver.findElementById("editApplicationModalButton").click();
+		waitForElement(driver.findElementById("editApplicationModal"));
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -276,12 +274,12 @@ public class ApplicationDetailPage extends BasePage {
 	 * driver.findElementById("organizationText").getText(); }
 	 */
 
-	public ApplicationDetailPage clickEditLink() {
-		clickActionButton();
-		driver.findElementById("editApplicationModalButton").click();
-		waitForElement(driver.findElementById("editAppForm"));
-		return new ApplicationDetailPage(driver);
-	}
+//	public ApplicationDetailPage clickEditLink() {
+//		clickEditDeleteBtn();
+//		driver.findElementById("editApplicationModalButton").click();
+//		waitForElement(driver.findElementById("editAppForm"));
+//		return new ApplicationDetailPage(driver);
+//	}
 
 	public TeamDetailPage clickTeamLink() {
 		driver.findElementById("organizationText").click();
@@ -299,7 +297,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public ApplicationDetailPage clickDetailsLink() {
-		clickActionButton();
+		clickEditDeleteBtn();
 		driver.findElementById("showDetailsLink").click();
 		waitForElement(driver.findElementById("appInfoDiv"));
 		return new ApplicationDetailPage(driver);
@@ -314,6 +312,13 @@ public class ApplicationDetailPage extends BasePage {
 	public ManualUploadPage clickAddFindingManuallyLink() {
 		driver.findElementById("addFindingManuallyLink").click();
 		return new ManualUploadPage(driver);
+	}
+	
+	public ApplicationDetailPage clickCloseManualFindingButton() {
+		driver.findElementById("closeManualFindingModalButton").click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By
+				.id("closeManualFindingModalButton")));
+		return new ApplicationDetailPage(driver);
 	}
 
 	public int getNumRows() {
@@ -371,7 +376,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickUpdateApplicationButton() {
 		driver.findElementById("submitAppModal").click();
-		waitForInvisibleElement(driver.findElementById("editAppForm"));
+		waitForInvisibleElement(driver.findElementById("editApplicationModal"));
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -434,5 +439,73 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("uploadScanModalLink").click();
 		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
 		return new ApplicationDetailPage(driver);
+	}
+	
+	
+	public ApplicationDetailPage fillAllClickSaveDynamic(Boolean dynamicRadioButton, String cwe, String url, 
+			String param, String severity, String description) {
+		fillRequiredManual(cwe, url, param, severity,description);
+		clickDynamicSubmit();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+
+	public ApplicationDetailPage fillRequiredManual(String cwe, String url, String param, String severity, String description) {
+		setCWE(cwe);
+		setURL(url);
+		setParameter(param);
+		selectSeverityList(severity);
+		setDescription(description);
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickDynamicSubmit() {
+		driver.findElementById("dynamicSubmit").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	
+	public ApplicationDetailPage clickStaticSubmit() {
+		driver.findElementById("staticSubmit").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickDynamicSubmitInvalid() {
+		driver.findElementById("dynamicSubmit").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setCWE(String Status) {
+		driver.findElementById("txtSearch").clear();
+		driver.findElementById("txtSearch").sendKeys(Status);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setURL(String Status) {
+		driver.findElementById("urlDynamicSearch").clear();
+		driver.findElementById("urlDynamicSearch").sendKeys(Status);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setParameter(String Status) {
+		driver.findElementById("parameterInput").clear();
+		driver.findElementById("parameterInput").sendKeys(Status);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage setDescription(String Status) {
+		driver.findElementById("descriptionInput").clear();
+		driver.findElementById("descriptionInput").sendKeys(Status);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public String selectSeverityList(String text) {
+		Select severity = new Select(driver.findElementById("severityInput"));
+		severity.selectByVisibleText(text);
+		return severity.getFirstSelectedOption().getText();
 	}
 }

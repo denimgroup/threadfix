@@ -377,7 +377,7 @@ public class WafTests extends BaseTest {
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
 				 .expandTeamRowByName(orgName)
 				 .clickViewAppLink(appName,orgName)
-				 .clickActionButton()
+				 .clickEditDeleteBtn()
 				 .clickAddWaf()
 				 .addWaf(newWafName);
 
@@ -484,7 +484,7 @@ public class WafTests extends BaseTest {
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
 				 .expandTeamRowByName(orgName)
 				 .clickViewAppLink(appName,orgName)
-				 .clickActionButton()
+				 .clickEditDeleteBtn()
 				 .clickAddWaf()
 				 .addWaf(newWafName);
 

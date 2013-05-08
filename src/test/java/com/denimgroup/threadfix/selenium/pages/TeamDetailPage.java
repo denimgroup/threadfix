@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -67,7 +68,11 @@ public class TeamDetailPage extends BasePage {
 	
 	public TeamDetailPage clickUpdateButtonValid() {
 		driver.findElementById("submitTeamModal").click();
-		waitForInvisibleElement(driver.findElementById("teamModal"));
+		try{
+			waitForInvisibleElement(driver.findElementById("teamModal"));
+		}catch(TimeoutException e){
+			driver.findElementById("submitTeamModal").click();
+		}
 		return new TeamDetailPage(driver);
 	}
 	
@@ -99,6 +104,16 @@ public class TeamDetailPage extends BasePage {
 			}
 		}
 		return false;
+	}
+	
+	public TeamIndexPage clickExpandAll(){
+		driver.findElementById("expandAllButton").click();
+		return new TeamIndexPage(driver);
+	}
+	
+	public TeamIndexPage clickCollapseAll(){
+		driver.findElementById("collapseAllButton").click();
+		return new TeamIndexPage(driver);
 	}
 
 	public ApplicationDetailPage clickTextLinkInApplicationsTableBody(String text) {
@@ -138,7 +153,7 @@ public class TeamDetailPage extends BasePage {
 	}
 
 	public String getErrorText() {
-		return "";
+		return driver.findElementById("name.errors").getText().trim();
 	}
 
 

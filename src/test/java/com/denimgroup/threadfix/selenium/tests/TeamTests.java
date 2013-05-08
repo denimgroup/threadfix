@@ -33,7 +33,6 @@ import org.openqa.selenium.WebDriver;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamEditPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class TeamTests extends BaseTest {
@@ -43,7 +42,6 @@ public class TeamTests extends BaseTest {
 	
 	private TeamIndexPage teamIndexPage;
 	private TeamDetailPage teamDetailPage;
-	private TeamEditPage editTeamPage;
 	
 	@Before
 	public void init() {
@@ -189,11 +187,13 @@ public class TeamTests extends BaseTest {
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test browser length limit
-		teamDetailPage = editTeamPage.setNameInput(longInput)
+		teamDetailPage = teamDetailPage.setNameInput(longInput)
 													 .clickUpdateButtonValid();
-		orgName = teamDetailPage.getOrgName();
 		
-		assertTrue("The organization name was not cropped correctly.", teamDetailPage.getOrgName().length() == Organization.NAME_LENGTH);
+		orgName = longInput.substring(0, Organization.NAME_LENGTH+1);
+		
+		assertFalse("The organization name was not cropped correctly.", teamDetailPage.getOrgName().contains(orgName));
+		orgName = longInput.substring(0,Organization.NAME_LENGTH);
 		
 		// Test name duplication checking
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()

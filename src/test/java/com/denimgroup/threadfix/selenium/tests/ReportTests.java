@@ -2,20 +2,15 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Map.Entry;
+//import java.util.Map;
 import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
+//import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
@@ -42,15 +37,15 @@ public class ReportTests extends BaseTest {
 
 	Random generator = new Random();
 
-	private String[] criticalities = { ApplicationCriticality.LOW,
-			ApplicationCriticality.MEDIUM, ApplicationCriticality.HIGH,
-			ApplicationCriticality.CRITICAL };
+//	private String[] criticalities = { ApplicationCriticality.LOW,
+//			ApplicationCriticality.MEDIUM, ApplicationCriticality.HIGH,
+//			ApplicationCriticality.CRITICAL };
 
 	boolean mySQL = true;
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
-	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
+//	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
 
 	@Before
 	public void init() {

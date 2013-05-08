@@ -30,10 +30,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.EditMappingPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.RemoteProviderCredentialsPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
 

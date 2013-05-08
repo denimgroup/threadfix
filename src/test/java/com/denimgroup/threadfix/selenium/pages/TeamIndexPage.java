@@ -29,13 +29,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TeamIndexPage extends BasePage {
 
@@ -142,7 +138,7 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage clickAddNewApplication(String teamName) {
-		driver.findElementById("teamAppTableDiv"+(getIndex(teamName)+1)).findElement(By.linkText("Add Application")).click();
+		driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).click();
 		waitForElement(driver.findElementByClassName("in"));
 		sleep(500);
 		return new TeamIndexPage(driver);

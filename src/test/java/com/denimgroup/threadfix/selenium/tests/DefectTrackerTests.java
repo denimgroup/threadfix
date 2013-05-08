@@ -710,7 +710,7 @@ public class DefectTrackerTests extends BaseTest {
 						BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickActionButton()
+				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 
 		sleep(4000);
@@ -718,7 +718,7 @@ public class DefectTrackerTests extends BaseTest {
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName);
 		sleep(1500);
-		TeamDetailPage teamDetailPage = applicationDetailPage.clickActionButton()
+		TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
 				.clickDeleteLink();
 		sleep(1500);
 		loginPage = teamDetailPage.clickDeleteButton()
@@ -771,7 +771,7 @@ public class DefectTrackerTests extends BaseTest {
 						TFS_PASSWORD, TFS_PROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickActionButton()
+				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 
 		sleep(4000);
@@ -779,7 +779,7 @@ public class DefectTrackerTests extends BaseTest {
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName);
 		sleep(1500);
-		TeamDetailPage teamDetailPage = applicationDetailPage.clickActionButton()
+		TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
 				.clickDeleteLink();
 		sleep(1500);
 		loginPage = teamDetailPage.clickDeleteButton()
@@ -832,7 +832,7 @@ public class DefectTrackerTests extends BaseTest {
 						JIRA_PASSWORD, JIRA_PROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickActionButton()
+				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 
 		sleep(4000);
@@ -840,7 +840,7 @@ public class DefectTrackerTests extends BaseTest {
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName);
 		sleep(1500);
-		TeamDetailPage teamDetailPage = applicationDetailPage.clickActionButton()
+		TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
 				.clickDeleteLink();
 		sleep(1500);
 		loginPage = teamDetailPage.clickDeleteButton()
@@ -955,7 +955,7 @@ public class DefectTrackerTests extends BaseTest {
 						JIRA_PASSWORD, JIRA_PROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickActionButton()
+				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 
 		sleep(4000);
@@ -965,7 +965,7 @@ public class DefectTrackerTests extends BaseTest {
 				.editDefectTracker(newDefectTrackerNameTwo, JIRA_USERNAME, JIRA_PASSWORD, JIRA_PROJECTNAME);
 
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickActionButton()
+				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 		
 		// Delete Both
@@ -974,7 +974,7 @@ public class DefectTrackerTests extends BaseTest {
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName);
 		sleep(1500);
-		TeamDetailPage teamDetailPage = applicationDetailPage.clickActionButton()
+		TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
 				.clickDeleteLink();
 		
 		sleep(1500);
