@@ -92,6 +92,7 @@ var addAppPageEvents = function () {
 		});
 		$("#expandAllVulns").attr("data-has-function","1");
 	}
+	
 	if (!$("#collapseAllVulns").attr("data-has-function")) {
 		$("#collapseAllVulns").on("click",function() {
 			if ($(".vulnSectionHeader").size() == 0) {
@@ -191,6 +192,7 @@ addToDocumentReadyFunctions(function () {
 });
 
 function addExpandsHandlers() {
+	
 	$(".expandableTrigger").each(function() {
 		var element = $(this);
 		if (!element.attr('data-has-function')) {
@@ -214,16 +216,24 @@ function addExpandsHandlers() {
 	$(".vulnSectionHeader").on("click", function () {
 		
 		var parentTr = $(this).closest("tr");
+		var toggleClass = parentTr.attr("data-toggle-class");
+		var targetCaret = parentTr.attr("data-caret");
 		
 		if (parentTr.attr("data-expanded") === "0") {
-			$("." + parentTr.attr("data-toggle-class")).removeClass("defaultHide");
+			$("." + toggleClass).removeClass("defaultHide");
 			parentTr.attr("data-expanded", "1");
-			$("#" + parentTr.attr("data-caret")).addClass("expanded");
+			$("#" + targetCaret).addClass("expanded");
 			parentTr.attr("data-has-function", "1");
 		} else {
-			$("." + parentTr.attr("data-toggle-class")).addClass("defaultHide");
+			$("." + toggleClass + " td.expandableTrigger .caret-right").each(function() {
+				if ($(this).attr("class").indexOf("expanded") != -1) {
+					$(this).closest("td").click();
+				}
+			}); 
+			
+			$("." + toggleClass).addClass("defaultHide");
 			parentTr.attr("data-expanded", "0");
-			$("#" + parentTr.attr("data-caret")).removeClass("expanded");
+			$("#" + targetCaret).removeClass("expanded");
 			parentTr.attr("data-has-function", "1");
 		}
 	});

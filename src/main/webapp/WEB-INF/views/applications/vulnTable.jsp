@@ -158,7 +158,7 @@
 							<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 						</td>
 					</c:if>
-					<td class="expandableTrigger" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
+					<td class="expandableTrigger">
 						<span id="caret${vulnerability.id }" class="caret-right"></span>
 					</td>
 					<td class="expandableTrigger" id="severity${ index }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
@@ -177,7 +177,7 @@
 						</a>
 					</td>
 				</tr>
-				<tr class="bodyRow <c:out value="${ color }"/> expandable">
+				<tr class="bodyRow <c:out value="${ color }"/> expandable ${ rowClass } ${ hideClass }">
 					<td colspan="7">
 						<div id="vulnInfoDiv${vulnerability.id}" class="collapse">
 							<div class="left-tile">
