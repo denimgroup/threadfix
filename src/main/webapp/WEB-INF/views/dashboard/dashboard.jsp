@@ -55,7 +55,8 @@
 			    	<table class="table table-bordered thick-borders">
 						<thead>
 							<tr>
-								<th colspan="2" class="thick-left">Application</th>
+								<th class="thick-left">Date</th>
+								<th colspan="2">Application</th>
 							</tr>
 						</thead>
 						<tbody id="wafTableBody">
@@ -66,14 +67,19 @@
 						</c:if>
 						<c:forEach var="scan" items="${ recentScans }" varStatus="status">
 							<tr class="bodyRow">
+								<td class="thick-left">
+									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="MM/dd/yy"/><br>
+								</td>
 								<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
 			                       <spring:param name="orgId" value="${ scan.application.organization.id }"/>
 			                       <spring:param name="appId" value="${ scan.application.id }"/>
 				                </spring:url>
-								<td class="thick-left" id="application${ status.count }">
-									<a style="text-decoration:underline;" id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
-										<c:out value="${ scan.applicationChannel.application.name }"/>
-									</a>
+								<td class="no-left-border" id="application${ status.count }">
+									<div style="max-width:240px;" class="ellipsis">
+										<a style="text-decoration:underline;" id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
+											<c:out value="${ scan.applicationChannel.application.name }"/>
+										</a>
+									</div>
 								</td>
 								<td class="no-left-border" id="channelType${ status.count }">
 									<spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}" var="detailUrl">
@@ -89,10 +95,9 @@
 								</td>
 							</tr>
 							<tr class="no-top-border">
-								<td class="thick-left">
-									<fmt:formatDate value="${ scan.importTime.time }" type="both" pattern="yy/MM/dd hh:mm"/><br>
-									<c:out value="${ scan.applicationChannel.channelType.name }"/> (<c:out value="${ scan.scannerType }"/>)<br>
-									<c:out value="${ scan.numberTotalVulnerabilities }"/> Vulnerabilities found
+								<td class="thick-left" colspan="3">
+									<span style="font-weight:bold;color:red;"><c:out value="${ scan.numberTotalVulnerabilities }"/></span> Vulnerabilities from
+									<c:out value="${ scan.applicationChannel.channelType.name }"/> (<c:out value="${ scan.scannerType }"/>)
 								</td>
 							</tr>
 						</c:forEach>
@@ -105,7 +110,7 @@
 			    	<table class="table table-bordered thick-borders">
 						<thead>
 							<tr>
-								<th class="thick-left">User</th>
+								<th class="thick-left">Application</th>
 								<th colspan="2">Vulnerability</th>
 							<tr>
 						</thead>
@@ -117,9 +122,21 @@
 							</c:if>
 							<c:forEach var="comment" items="${ recentComments }" varStatus="status">
 								<tr class="bodyRow">
-									<td class="thick-left" id="commentUser${ status.count }"><c:out value="${ comment.user.name }" /></td>
+									<td class="thick-left" id="commentUser${ status.count }">
+										<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+					                    	<spring:param name="orgId" value="${ comment.vulnerability.application.organization.id }"/>
+					                    	<spring:param name="appId" value="${ comment.vulnerability.application.id }"/>
+										</spring:url>
+										<div style="width:142px;" class="ellipsis">
+											<a style="text-decoration:underline;" href="<c:out value="${ appUrl }"/>">
+												<c:out value="${ comment.vulnerability.application.name }" />
+											</a>
+										</div>
+									</td>
 									<td class="no-left-border" id="commentVulnId${ status.count }">
-										<c:out value="${ comment.vulnerability.id }" />
+										<div style="width:197px;" class="ellipsis">
+											<c:out value="${ comment.vulnerability.genericVulnerability.name }" />
+										</div>
 									</td>
 									<td class="no-left-border" id="viewMoreLink${ status.count }">
 										<spring:url value="/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnId}" var="vulnUrl">
@@ -127,16 +144,16 @@
 											<spring:param name="appId" value="${ comment.vulnerability.application.id }" />
 											<spring:param name="vulnId" value="${ comment.vulnerability.id }" />
 										</spring:url>
-										<div style="float:right;width:70px;">
+										<div style="float:right;width:35px;">
 											<a href="${ fn:escapeXml(vulnUrl) }#commentDiv${ comment.vulnerability.id }">
-												View More
+												View
 											</a>
 										</div>
 									</td>
 								</tr>
 								<tr class="no-top-border">
 									<td class="thick-left" colspan="3" id="commentText${ status.count }">
-										<div class="vuln-comment-word-wrap">
+										<div class="vuln-comment-word-wrap ellipsis">
 											<c:out value="${ comment.comment }" />
 										</div>
 									</td>

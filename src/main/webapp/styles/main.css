@@ -774,6 +774,14 @@ div.box-shadow {
 	max-width:400px;
 }
 
+.ellipsis {
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+}
+
 #main-content .right-tile .report-image {
 	padding:0px;
 }
