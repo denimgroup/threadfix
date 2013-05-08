@@ -5,6 +5,7 @@
 	name="topTenGraph" pageWidth="422" pageHeight="250"
 	whenNoDataType="NoDataSection" columnWidth="422" leftMargin="0" rightMargin="0" 
 	topMargin="0" bottomMargin="0">
+	<parameter name="vulnIds" class="java.util.List" isForPrompting="false"/>
 	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
@@ -15,6 +16,7 @@
 				 FROM Application application join application.vulnerabilities as vulnerability
 				 where application.id in ($P{appId})
 				 	AND application.active = true
+				 	AND vulnerability.genericVulnerability.id in ($P{vulnIds})
 			GROUP BY vulnerability.genericVulnerability.id
 			ORDER BY count(vulnerability) desc ]]>
 	</queryString>

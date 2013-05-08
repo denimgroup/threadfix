@@ -105,6 +105,7 @@ public class ReportsController {
 		model.addAttribute("error", ControllerUtils.getErrorMessage(request));
 		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
 		model.addAttribute("firstTeamId", ControllerUtils.getItem(request, "teamId"));
+		model.addAttribute("firstAppId", ControllerUtils.getItem(request, "appId"));
 		return "reports/index";
 	}
 	

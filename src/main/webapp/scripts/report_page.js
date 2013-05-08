@@ -90,9 +90,7 @@ addToDocumentReadyFunctions(function() {
 		appSelect.on("change", function() { reload(orgSelect.attr("data-refresh-url")); });
 	
 		var hideSelects = function() {
-			console.log("hideselect started");
 			$(".reportTypeSelect").each(function(){
-				console.log("hiding select");
 				$(this).css("display","none");
 			});
 		};
@@ -100,7 +98,6 @@ addToDocumentReadyFunctions(function() {
 		$(".reportTypeListSelector").on("click", function() {
 			hideSelects();
 			var select = $("#" + $(this).attr("data-report-list"));
-			console.log("showing select");
 			select.css("display","");
 			var selectedReport = select.children(":selected");
 			selectReportType(selectedReport.attr("data-url"), selectedReport.attr("data-report-id"));
@@ -110,22 +107,33 @@ addToDocumentReadyFunctions(function() {
 			var selectedReport = $(this).children(":selected");
 			selectReportType(selectedReport.attr("data-url"), selectedReport.attr("data-report-id"));
 		});
+		
+		if ($("#appSelect").attr("data-first-app-id")) {
+			$("#appSelect").val($("#appSelect").attr("data-first-app-id"));
+		}
 	
 		if ($("#successDiv").attr('data-first-report') !== "") {
 			var targetOption = $("option[data-report-id=" + $("#successDiv").attr('data-first-report') + "]");
+			hideSelects();
+			targetOption.closest("select").css("display","");
+			$(".reportTypeListSelector").closest("li").removeClass("active");
 			targetOption.prop("selected", true);
 			targetOption.closest("select").val(targetOption.val());
+			$("#" + targetOption.closest("select").attr("data-tab")).closest("li").click();
+			$("#" + targetOption.closest("select").attr("data-tab")).closest("li").addClass("active");
+			selectReportType(targetOption.attr("data-url"), targetOption.attr("data-report-id"));
+		} else {
+			$(".reportTypeListSelector").each(function() {
+				if ($(this).closest("li").attr("class").indexOf("active") != -1) {
+					$(this).click();
+				}
+			});
 		}
 		
 		$(".reportDownload").on("click", function() {
 			submitAjaxReport($(this).attr("data-url"), '#reportForm', '#formDiv', '#successDiv', $("#reportDiv").attr("data-report-id"), $(this).attr("data-format-id"));
 		});
-
-		$(".reportTypeListSelector").each(function() {
-			if ($(this).closest("li").attr("class").indexOf("active") != -1) {
-				$(this).click();
-			}
-		});
+		
 	} else {
 		orgSelect.attr("disabled","disabled");
 		appSelect.attr("disabled","disabled");

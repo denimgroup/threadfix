@@ -126,7 +126,7 @@
 			Application
 			<span id="appDropDown">
 				<form:select style="margin-bottom:0px;width:160px;" path="applicationId"
-						id="appSelect">
+						id="appSelect" data-first-app-id="${ firstAppId }">
 					<option value="-1">All</option>
 				</form:select>
 				<form:errors path="applicationId" />

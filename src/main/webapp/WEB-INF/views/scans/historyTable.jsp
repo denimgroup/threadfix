@@ -61,7 +61,7 @@
 				<th style="text-align: left">Application</th>
 				<th style="text-align: left" class="first">Team</th>
 				<th>Scanner</th>
-				<th>Total Vulns</th>
+				<th style="width:70px;">Total Vulns</th>
 				<th>Critical</th>
 				<th>High</th>
 				<th>Medium</th>

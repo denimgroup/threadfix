@@ -191,6 +191,10 @@ public class ReportsServiceImpl implements ReportsService {
 			} else {
 				parameters.put("appName", "All");
 			}
+			
+			if (reportFormat == ReportFormat.TOP_TEN_VULNS) {
+				parameters.put("vulnIds", vulnerabilityDao.getTopTenVulnTypes(applicationIdList));
+			}
 		}
 
 		try {

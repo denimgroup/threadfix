@@ -69,7 +69,7 @@
 	
 	</c:if>
 	
-	<table class="table sortable table-hover" id="anyid">
+	<table class="table sortable table-hover tf-colors" id="anyid">
 		<thead>
 			<tr>
 				<c:if test="${ canModifyVulnerabilities }">
@@ -103,6 +103,8 @@
 			</tr>
 		</c:if>
 		
+		<c:set var="index" value="0"/>
+		
 		<c:forEach var="vulnGroup" items="${ vulnerabilityGroups }">
 			<c:set var="rowClass" value="${ vulnGroup.name }" />
 			<c:if test="${ vulnGroup.showHeader }">
@@ -131,7 +133,8 @@
 				</tr>
 			</c:if>
 		
-			<c:forEach var="vulnerability" items="${vulnGroup.vulnerabilities}" varStatus="vulnStatus">
+			<c:forEach var="vulnerability" items="${vulnGroup.vulnerabilities}">
+				<c:set var="index" value="${ index + 1 }"/>
 				<c:if test="${ vulnerability.genericSeverity.name == 'Critical' }">
 				      <c:set var="color" value="error" />
 				</c:if>
@@ -151,25 +154,25 @@
 						data-caret-div="caret${vulnerability.id }">
 					<c:if test="${ canModifyVulnerabilities }">
 						<td>
-							<input class="vulnIdCheckbox <c:out value="${ vulnGroup.name }"/>" id="vulnerabilityIds${ vulnStatus.count }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
+							<input class="vulnIdCheckbox <c:out value="${ vulnGroup.name }"/>" id="vulnerabilityIds${ index }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 							<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
 						</td>
 					</c:if>
 					<td class="expandableTrigger" onclick="javascript:toggleExpandable('#vulnInfoDiv${vulnerability.id}', '#caret${vulnerability.id }')">
 						<span id="caret${vulnerability.id }" class="caret-right"></span>
 					</td>
-					<td class="expandableTrigger" id="severity${ vulnStatus.count }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
+					<td class="expandableTrigger" id="severity${ index }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
 					<td class="expandableTrigger">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
-					<td class="expandableTrigger" id="path${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
-					<td class="expandableTrigger" id="parameter${ vulnStatus.count }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
+					<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+					<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 					<td>
 						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 					        <spring:param name="appId" value="${ application.id }" />
 						    <spring:param name="vulnerabilityId" value="${ vulnerability.id }" />
 					    </spring:url>
-					    <a id="vulnName${vulnStatus.count}" href="${ fn:escapeXml(vulnerabilityUrl) }">
+					    <a id="vulnName${index}" href="${ fn:escapeXml(vulnerabilityUrl) }">
 							View More
 						</a>
 					</td>
