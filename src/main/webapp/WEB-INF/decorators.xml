@@ -1,34 +1,5 @@
 <decorators defaultdir="/decorators">
     <excludes>
-    	<pattern>/login*</pattern>
-    	<pattern>/dashboard/leftReport*</pattern>
-    	<pattern>/dashboard/rightReport*</pattern>
-    	<pattern>/reports/ajax*</pattern>
-    	<pattern>/scans/table*</pattern>
-    	<pattern>/organizations/*/applications/*/table*</pattern>
-    	<pattern>/organizations/*/modalAddApp*</pattern>
-    	<pattern>/organizations/teamTable*</pattern>
-    	<pattern>/organizations/modalAdd*</pattern>
-    	<pattern>/organizations/*/getReport*</pattern>
-    	<pattern>/organizations/*/modalEdit*</pattern>
-    	<pattern>/organizations/*/applications/*/edit*</pattern>
-    	<pattern>/organizations/*/applications/*/defectSubmission*</pattern>
-    	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
-    	<pattern>/organizations/*/applications/*/edit/wafAjax*</pattern>
-    	<pattern>/organizations/*/applications/*/edit/addDTAjax*</pattern>
-    	<pattern>/organizations/*/applications/*/vulnTab*</pattern>
-    	<pattern>/organizations/*/applications/*/scanTab*</pattern>
-    	<pattern>/organizations/*/applications/*/closedTab*</pattern>
-    	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
-    	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
-    	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
-    	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
-    	<pattern>/organizations/*/applications/*/scans/new*</pattern>
-    	<pattern>/organizations/*/applications/*/scans/upload*</pattern>
-    	<pattern>/organizations/*/applications/*/defects*</pattern>
-    	<pattern>/organizations/*/applications/*/progress/*</pattern>
-    	<pattern>/organizations/*/applications/*/defectTable*</pattern>
-    	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/configuration/users/*/access*</pattern>
     	<pattern>/configuration/users/*/edit*</pattern>
     	<pattern>/configuration/users/new*</pattern>
@@ -42,6 +13,35 @@
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
     	<pattern>/configuration/remoteproviders/*/configure*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
+    	<pattern>/dashboard/leftReport*</pattern>
+    	<pattern>/dashboard/rightReport*</pattern>
+    	<pattern>/login*</pattern>
+    	<pattern>/organizations/teamTable*</pattern>
+    	<pattern>/organizations/modalAdd*</pattern>
+    	<pattern>/organizations/*/applications/*/table*</pattern>
+    	<pattern>/organizations/*/applications/*/defects*</pattern>
+    	<pattern>/organizations/*/applications/*/defectSubmission*</pattern>
+    	<pattern>/organizations/*/applications/*/defectTable*</pattern>
+    	<pattern>/organizations/*/applications/*/edit*</pattern>
+    	<pattern>/organizations/*/applications/*/edit/wafAjax*</pattern>
+    	<pattern>/organizations/*/applications/*/edit/addDTAjax*</pattern>
+    	<pattern>/organizations/*/applications/*/vulnTab*</pattern>
+    	<pattern>/organizations/*/applications/*/closedTab*</pattern>
+    	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
+    	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
+    	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
+    	<pattern>/organizations/*/applications/*/progress/*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/new*</pattern>
+    	<pattern>/organizations/*/applications/*/scans/upload*</pattern>
+    	<pattern>/organizations/*/applications/*/scanTab*</pattern>
+    	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
+    	<pattern>/organizations/*/getReport*</pattern>
+    	<pattern>/organizations/*/modalAddApp*</pattern>
+    	<pattern>/organizations/*/modalEdit*</pattern>
+    	<pattern>/reports/ajax*</pattern>
+    	<pattern>/scans/table*</pattern>
     	<pattern>/wafs/new/ajax*</pattern>
     	<pattern>/wafs/new/ajax/appPage*</pattern>
     	<pattern>/wafs/*/edit/ajax*</pattern>
