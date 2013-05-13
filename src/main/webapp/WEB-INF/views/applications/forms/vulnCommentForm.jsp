@@ -8,8 +8,14 @@
 <form id="addCommentForm${ vulnerability.id }" method="post" action="${ fn:escapeXml(commentUrl) }">
 	<div class="modal-body">
 		<span class="errors"><c:out value="${ commentError }"/></span><br>
+		<span style="display:none" id="lengthError${ vulnerability.id }" class="errors">Maximum length is 200 characters.</span><br>
 		Comment:
-		<textarea style="margin:10px;width: 497px; height: 215px;" class="textbox clear-after-submit" id="commentInputBox" name="comments"></textarea>
+		<textarea style="margin:10px;width: 497px; height: 215px;" 
+			class="textbox clear-after-submit" 
+			id="commentInputBox"
+			data-max-length="200"
+			data-error="lengthError${ vulnerability.id }"
+			name="comments"></textarea>
 	</div>
 	<div class="modal-footer">
 		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

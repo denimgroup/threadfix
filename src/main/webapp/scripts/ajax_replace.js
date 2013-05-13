@@ -16,7 +16,7 @@ function modalFocusTimeout() {
 
 var modalRefreshFunctions = [ 
 	delay(addModalSubmitEvents),
-	function () { setCheckboxValues(); },
+	function () { addFormEvents(); },
 	function () { modalFocusTimeout(); }
 ];
 
@@ -462,10 +462,24 @@ var addHeaderFunctions = function() {
 	});
 };
 
-var setCheckboxValues = function() {
+var addFormEvents = function() {
 	$(".set-value-on-load").each(function(){
 		if ($(this).attr("data-value") === "true") {
 			$(this).attr("checked", "checked");
+		}
+	});
+	
+	$("textarea").each(function() {
+		if ($(this).attr('data-max-length')) {
+			$(this).bind('input propertychange', function() {  
+		        var maxLength = $(this).attr('data-max-length');  
+		        if ($(this).val().length > maxLength) {  
+		            $(this).val($(this).val().substring(0, maxLength));
+		            $("#" + $(this).attr('data-error')).css("display","");
+		        } else {
+		        	$("#" + $(this).attr('data-error')).css("display","none");
+		        }
+		    });
 		}
 	});
 };
@@ -483,7 +497,7 @@ var documentReadyFunctions = [
 	addModalSubmitEvents,
 	addAppSelectFunctions,
 	addHeaderFunctions,
-	setCheckboxValues
+	addFormEvents
 ];
 
 // helper method to add to the document ready stuff
