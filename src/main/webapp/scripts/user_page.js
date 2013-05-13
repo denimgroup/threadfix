@@ -11,15 +11,32 @@ function toggleRoles(id) {
 	}
 }
 
-function togglePassword(id) {
-	if ($("#isLdapUserCheckbox").is(':checked')){
-		$("#passwordConfirmInput" + id).attr("disabled","disabled");
-		$("#passwordInput" + id).attr("disabled","disabled");
-	} else {
-		$("#passwordConfirmInput" + id).removeAttr("disabled","");
-		$("#passwordInput" + id).removeAttr("disabled","");
-	}
-}
+var addPasswordHandlers = function() {
+	
+	$(".ldapCheckbox").each(function(){
+		if ($(this).attr("data-value") === "true") {
+			$(this).attr("checked", "checked");
+		}
+	});
+	
+	$(".ldapCheckbox").each(function(){
+		if ($(this).is(':checked')){
+			$("." + $(this).attr("data-target-class")).attr("disabled","disabled");
+		} else {
+			$("." + $(this).attr("data-target-class")).removeAttr("disabled","");
+		}
+	});
+	
+	$(".ldapCheckbox").on("click", function(){
+		if ($(this).is(':checked')){
+			$("." + $(this).attr("data-target-class")).attr("disabled","disabled");
+		} else {
+			$("." + $(this).attr("data-target-class")).removeAttr("disabled","");
+		}
+	});
+};
+
+addToDocumentReadyFunctions(addPasswordHandlers);
 
 function toggleAppSelect(id) {
 	if ($("#allAppsCheckbox" + id).is(':checked')){

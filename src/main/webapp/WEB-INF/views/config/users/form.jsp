@@ -14,7 +14,7 @@
 		<tr>
 			<td class="no-color">Password</td>
 			<td class="no-color">
-				<form:password id="passwordInput${ status.count }" path="unencryptedPassword" />
+				<form:password class="password${ status.count }" id="passwordInput${ status.count }" path="unencryptedPassword" />
 			</td>
 			<td class="no-color" style="padding-left: 5px">
 				<form:errors path="password" cssClass="errors" />
@@ -23,21 +23,26 @@
 		<tr>
 			<td class="no-color">Confirm</td>
 			<td class="no-color">
-				<form:password id="passwordConfirmInput${ status.count }" path="passwordConfirm" />
+				<form:password class="password${ status.count }" id="passwordConfirmInput${ status.count }" path="passwordConfirm" />
 			</td>
 		</tr>
 		<tr>
 			<td class="no-color">LDAP user</td>
 			<td class="no-color" style="text-align: left;">
-				<form:checkbox onclick="togglePassword('${ status.count }')" id="isLdapUserCheckbox${ status.count }" 
-					path="isLdapUser" value="${user.isLdapUser}" />
+				<form:checkbox class="ldapCheckbox"
+					data-target-class="password${ status.count }"
+					id="isLdapUserCheckbox${ status.count }" 
+					path="isLdapUser"
+					data-value="${user.isLdapUser}" />
 			</td>
 		</tr>
 		<tr>
 			<td class="no-color">Global Access</td>
 			<td class="no-color" style="text-align: left;">
-				<form:checkbox onclick="toggleRoles('${ status.count }')" id="hasGlobalGroupAccessCheckbox${ status.count }" 
-					path="hasGlobalGroupAccess" value="${user.hasGlobalGroupAccess}"/>
+				<form:checkbox onclick="toggleRoles('${ status.count }')" 
+					id="hasGlobalGroupAccessCheckbox${ status.count }" 
+					path="hasGlobalGroupAccess" 
+					value="${user.hasGlobalGroupAccess}"/>
 			</td>
 		</tr>
 		<tr>
