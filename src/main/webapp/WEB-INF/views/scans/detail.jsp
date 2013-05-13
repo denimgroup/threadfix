@@ -49,63 +49,56 @@
 	
 	<div class="container-fluid">
 		<div id="statisticsDiv" class="row-fluid collapse">
-			<div class="span6">
-				<h4>Information</h4>
+			<div class="span4">
+				<h4>Import Statistics</h4>
 				<table class="dataTable">
 					<tbody>
 						<tr>
-							<td>Total Scan Results</td>
+							<td>Imported Results</td>
 							<td class="inputValue">
 								<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
 													totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
 							</td>
 						</tr>
 						<tr>
-							<td>Total Repeat Findings (not included below)</td>
-							<td class="inputValue"><c:out value="${ scan.numberRepeatFindings }"/> findings 
-												(<c:out value="${ scan.numberRepeatResults }"/> total results)</td>
+							<td>Duplicate Results</td>
+							<td class="inputValue"><c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults }"/></td>
 						</tr>
 						<tr>
-							<td>Total Findings</td>
+							<td style="font-weight:bold">Total Findings</td>
 							<td class="inputValue"><c:out value="${ totalFindings + 
 														scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
-						</tr>
-						<tr>
-							<td>Duplicate Results Skipped</td>
-							<td class="inputValue"><c:out value="${ scan.totalNumberSkippedResults }"/></td>
-						</tr>
-						<tr>
-							<td>Total Findings matched to Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ totalFindings }"/></td>
-						</tr>
-						<tr>
-							<td>Total Findings not matched to Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
-						</tr>
-						<tr>
-							<td>Findings merged to Vulnerabilities from other Findings in this Scan</td>
-							<td class="inputValue"><c:out value="${ scan.totalNumberFindingsMergedInScan }"/></td>
-						</tr>
-						<tr>
-							<td>Number of Findings missing Channel Vulnerability mappings</td>
-							<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns }"/></td>
-						</tr>
-						<tr>
-							<td>Number of Findings missing Generic Mappings</td>
-							<td class="inputValue"><c:out value="${ scan.numWithoutGenericMappings }"/></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-	
-			<div class="span6">
-				<h4>Vulnerability Counts</h4>
+			<div class="span4">
+				<h4>Finding Statistics</h4>
 				<table class="dataTable">
 					<tbody>
 						<tr>
-							<td>Total Vulnerabilities</td>
+							<td>Findings without Vulnerabilities</td>
+							<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
+						</tr>
+						<tr>
+							<td>Findings with Vulnerabilities</td>
+							<td class="inputValue"><c:out value="${ totalFindings }"/></td>
+						</tr>
+						<tr>
+							<td>Duplicate Findings</td>
+							<td class="inputValue"><c:out value="${ totalFindings - vulnData[1] }"/></td>
+						</tr>
+						<tr>
+							<td style="font-weight:bold">Total Vulnerabilities</td>
 							<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
 						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="span4">
+				<h4>Vulnerability Statistics</h4>
+				<table class="dataTable">
+					<tbody>
 						<tr>
 							<td>New Vulnerabilities</td>
 							<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
