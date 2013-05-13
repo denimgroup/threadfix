@@ -71,6 +71,9 @@ function addExpandsHandlers() {
 				$(targetDiv).collapse('toggle');
 				if ($(caretDiv).attr('class').indexOf('expanded') == -1) {
 					$(caretDiv).addClass('expanded');
+					$('html, body').animate({
+				         scrollTop: $(this).offset().top
+				     }, 2);
 				} else {
 					$(caretDiv).removeClass('expanded');
 				}
