@@ -78,9 +78,6 @@
 		<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div id="formDiv${ organization.id }">
-				<spring:url value="/organizations/{orgId}/detail/modalAddApp" var="saveUrl">
-					<spring:param name="orgId" value="${ organization.id }"/>
-				</spring:url>
 				<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
 			</div>
 		</div>

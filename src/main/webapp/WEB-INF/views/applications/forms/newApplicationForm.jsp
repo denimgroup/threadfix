@@ -3,6 +3,9 @@
 <div class="modal-header">
 	<h4 id="myModalLabel">New Application</h4>
 </div>
+<spring:url value="/organizations/{orgId}/modalAddApp" var="saveUrl">
+	<spring:param name="orgId" value="${ organization.id }"/>
+</spring:url>
 <form:form style="margin-bottom:0px;" id="myAppForm${ organization.id }" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
 	<div class="modal-body">
 		<table>

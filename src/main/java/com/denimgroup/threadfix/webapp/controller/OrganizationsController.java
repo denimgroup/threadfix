@@ -209,31 +209,34 @@ public class OrganizationsController {
 		}
 	}
 	
-	@RequestMapping(value="/{orgId}/detail/modalAddApp", method = RequestMethod.POST)
+	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
 	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
-		String submitResult = submitApp(orgId, application,result,status,model,request);
 		
-		if (submitResult.equals("Success")) {
-			status.setComplete();
-			model.addAttribute("contentPage", "/organizations/" + orgId);
-			return "ajaxRedirectHarness";
-		} else {
-			return submitResult;
+		Organization team = organizationService.loadOrganization(orgId);
+		
+		if (team == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
+			throw new ResourceNotFoundException();
 		}
-	}
-	
-	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
-	public String submitAppTeamIndex(@PathVariable("orgId") int orgId,
-			@Valid @ModelAttribute Application application, BindingResult result,
-			SessionStatus status, Model model, HttpServletRequest request) {
+		
+		String referrer = request.getHeader("referer");
+		boolean detailPage = referrer.contains("/organizations/");
 		
 		String submitResult = submitApp(orgId, application,result,status,model,request);
 		
 		if (submitResult.equals("Success")) {
-			return teamTable(model,request);
+			if (detailPage) {
+				status.setComplete();
+				model.addAttribute("contentPage", "/organizations/" + orgId);
+				return "ajaxRedirectHarness";
+			} else {
+				return teamTable(model,request);
+			}
 		} else {
+			model.addAttribute("organization", team);
+			
 			return submitResult;
 		}
 	}
