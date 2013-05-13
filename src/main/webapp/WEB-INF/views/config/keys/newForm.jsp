@@ -8,7 +8,11 @@
 			<tr>
 				<td>Note (optional) </td>
 				<td class="inputValue">
-					<form:input path="note" cssClass="focus" size="70" maxlength="255" value="${ note }" />
+					<form:input path="note" 
+						cssClass="focus clear-after-submit" 
+						size="70" 
+						maxlength="255" 
+						value="${ note }" />
 				</td>
 				<td style="padding-left:5px">
 					<form:errors path="note" cssClass="errors" />
@@ -17,7 +21,7 @@
 			<tr>
 				<td>Restricted?</td>
 				<td class="inputValue">
-					<form:checkbox path="isRestrictedKey"/>
+					<form:checkbox cssClass="clear-after-submit" path="isRestrictedKey"/>
 				</td>
 				<td style="padding-left:5px">
 					<form:errors path="isRestrictedKey" cssClass="errors" />

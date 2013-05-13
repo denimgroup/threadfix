@@ -13,7 +13,12 @@
 				<tr>
 					<td style="padding-left:8px;">Note (optional)</td>
 					<td class="inputValue">
-						<form:input style="margin-bottom:0px;" path="note" cssClass="focus" size="70" maxlength="255" value="${ key.note }" />
+						<form:input style="margin-bottom:0px;" 
+							path="note" 
+							cssClass="focus" 
+							size="70" 
+							maxlength="255" 
+							value="${ key.note }" />
 					</td>
 					<td style="padding-left:5px">
 						<form:errors path="note" cssClass="errors" />
@@ -22,7 +27,10 @@
 				<tr>
 					<td style="padding-left:8px;">Restricted?</td>
 					<td class="inputValue">
-						<form:checkbox style="margin-bottom:0px;" path="isRestrictedKey"/>
+						<form:checkbox style="margin-bottom:0px;"
+							path="isRestrictedKey" 
+							data-value="${ key.isRestrictedKey }"
+							cssClass="set-value-on-load" />
 					</td>
 					<td style="padding-left:5px">
 						<form:errors path="isRestrictedKey" cssClass="errors" />

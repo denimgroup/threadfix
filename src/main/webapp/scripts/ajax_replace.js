@@ -16,6 +16,7 @@ function modalFocusTimeout() {
 
 var modalRefreshFunctions = [ 
 	delay(addModalSubmitEvents),
+	function () { setCheckboxValues(); },
 	function () { modalFocusTimeout(); }
 ];
 
@@ -66,6 +67,7 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 				});
 				$(modalName).modal('hide');
 				$(".clear-after-submit").val('');
+				$(".clear-after-submit").prop("checked",false)
 			} else {
 				try {
 					var json = JSON.parse($.trim(text));
@@ -460,6 +462,14 @@ var addHeaderFunctions = function() {
 	});
 };
 
+var setCheckboxValues = function() {
+	$(".set-value-on-load").each(function(){
+		if ($(this).attr("data-value") === "true") {
+			$(this).attr("checked", "checked");
+		}
+	});
+};
+
 // this is a list of functions that get executed in $(document).ready
 var documentReadyFunctions = [
 	function() {
@@ -472,7 +482,8 @@ var documentReadyFunctions = [
 	},
 	addModalSubmitEvents,
 	addAppSelectFunctions,
-	addHeaderFunctions
+	addHeaderFunctions,
+	setCheckboxValues
 ];
 
 // helper method to add to the document ready stuff
