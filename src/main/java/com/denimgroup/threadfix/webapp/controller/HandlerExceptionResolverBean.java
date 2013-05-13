@@ -72,7 +72,9 @@ public class HandlerExceptionResolverBean implements HandlerExceptionResolver, O
 			
 			log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
 				
-			return new ModelAndView("exception", "id", exceptionLog.getUUID());
+			ModelAndView mav = new ModelAndView("exception", "uuid", exceptionLog.getUUID());
+			mav.addObject("logId", exceptionLog.getId());
+			return mav;
 		}
 	}
 }

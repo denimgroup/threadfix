@@ -16,7 +16,11 @@
 			-- <c:out value="${ log.type }"/><br/>
 		 </a>
 			
-		<div id="${ log.id }" style="display:none;">
+		<div id="${ log.id }" 
+			<c:if test="${ empty logId or logId != log.id }">
+				style="display:none;"
+			</c:if>
+		>
 			<pre><c:out value="${ log.exceptionStackTrace }"/></pre>
 		</div>
 	</c:forEach>
