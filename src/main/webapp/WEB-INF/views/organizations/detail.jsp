@@ -14,23 +14,10 @@
 	<h2 id="name" style="padding-top:5px;">
 		<c:out value="${ organization.name }"/>
 		<c:if test="${ canManageTeams }">
-			<a class="btn header-button" id="showDetailsLink" href="#" data-toggle="collapse" data-target="#teamInfoDiv">
-				Show More
-			</a>
+			<a id="teamModalButton" href="#teamModal" 
+				role="button" class="btn header-button" data-toggle="modal">Edit / Delete</a>
 		</c:if>
 	</h2>
-	
-	<div id="teamInfoDiv" class="collapse">
-		<c:if test="${ canManageTeams }">
-			<a id="teamModalButton" href="#teamModal" 
-					role="button" class="btn header-button" data-toggle="modal">Edit</a>
-				<spring:url value="{orgId}/delete" var="deleteUrl">
-					<spring:param name="orgId" value="${ organization.id }"/>
-				</spring:url>
-				<a id="deleteLink" class="btn btn-danger header-button" href="${ fn:escapeXml(deleteUrl) }" 
-						onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a>
-		</c:if>
-	</div>
 	
 	<div id="teamModal" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

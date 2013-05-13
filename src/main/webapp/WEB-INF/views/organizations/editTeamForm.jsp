@@ -8,6 +8,13 @@
 		<c:if test="${ not empty organization.name }">
 			<c:out value="${ organization.name }"/>
 		</c:if>
+		<span style="float:right;margin-top:-5px;">
+			<spring:url value="{orgId}/delete" var="deleteUrl">
+				<spring:param name="orgId" value="${ organization.id }"/>
+			</spring:url>
+			<a id="deleteLink" class="btn btn-danger header-button" href="${ fn:escapeXml(deleteUrl) }" 
+					onclick="return confirm('Are you sure you want to delete this Team?')">Delete Team</a>
+		</span>
 	</h4>
 </div>
 <spring:url value="/organizations/{orgId}/modalEdit" var="saveUrl">

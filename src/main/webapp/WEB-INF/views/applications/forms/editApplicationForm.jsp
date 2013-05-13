@@ -2,7 +2,7 @@
 
 	<div class="modal-header">
 		<h4 id="myModalLabel">Edit Application
-			<span style="float:right">
+			<span style="float:right;margin-top:-5px;">
 				<a class="btn btn-danger header-button" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
 						onclick="return confirm('Are you sure you want to delete the application?')">
 					Delete

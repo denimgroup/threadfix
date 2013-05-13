@@ -848,3 +848,7 @@ div.box-shadow {
 	width:10px;	
 }
 
+.modal .modal-header h4 {
+	text-align:left;
+}
+
