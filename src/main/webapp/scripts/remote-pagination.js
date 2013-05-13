@@ -107,7 +107,7 @@ function refillElementSort(elementId, endPoint, page, field, login)
 			}
 		},
 		error : function (xhr, ajaxOptions, thrownError){
-			alert("Request for table data failed.");
+			// TODO show an error
 	    }
 	});
 }
