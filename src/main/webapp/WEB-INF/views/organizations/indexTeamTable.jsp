@@ -22,6 +22,7 @@
 			<th class="centered fixed-team-header">Low</th>
 			<th class="centered fixed-team-header">Info</th>
 			<th></th>
+			<th style="width:130px;"></th>
 			<th style="width:70px;"></th>
 		</tr>
 	</thead>
@@ -40,7 +41,8 @@
 			<td class="centered expandableTrigger" id="numMediumVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[2] }"/></td>
 			<td class="centered expandableTrigger" id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
 			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
-			<td style="text-align:right"> 
+			<td class="expandableTrigger"></td>
+			<td> 
 				<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" 
 						role="button" class="btn" data-toggle="modal">
 					Add Application
@@ -53,7 +55,7 @@
 			</td>
 		</tr>
 		<tr class="grey-background">
-			<td colspan="10">
+			<td colspan="11">
 				<div id="teamInfoDiv${organization.id}" class="collapse">
 					<c:if test="${ organization.vulnerabilityReport[5] != 0 }">
 						<spring:url value="/organizations/{orgId}/getReport" var="reportUrl">
