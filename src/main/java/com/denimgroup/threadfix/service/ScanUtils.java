@@ -1,9 +1,12 @@
 package com.denimgroup.threadfix.service;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.io.Reader;
 
 import org.xml.sax.InputSource;
@@ -97,5 +100,28 @@ public class ScanUtils {
 		InputSource source = new InputSource(fileReader);
 		source.setEncoding("UTF-8");
 		xmlReader.parse(source);
+	}
+	
+	public static boolean isZip(String fileName) {
+		RandomAccessFile file = null;
+		try {
+			file = new RandomAccessFile(new File(fileName), "r");  
+			// these are the magic bytes for a zip file
+	        return file.readInt() == 0x504B0304;
+		} catch (FileNotFoundException e) {
+			STATIC_LOGGER.warn("The file was not found. Check the usage of this method.", e);
+		} catch (IOException e) {
+			STATIC_LOGGER.warn("IOException. Weird.", e);
+		} finally {
+			if (file != null) {
+				try {
+					file.close();
+				} catch (IOException e) {
+					STATIC_LOGGER.error("Encountered IOException when attempting to close a file.");
+				}
+			}
+		}
+		
+		return false;
 	}
 }

@@ -29,9 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -414,7 +414,7 @@ public class ScanServiceImpl implements ScanService {
 		String returnString = null;
 		saveFile("tempFile",file);
 		
-		if (isZip("tempFile")) {
+		if (ScanUtils.isZip("tempFile")) {
 			returnString = figureOutZip("tempFile");
 		} else if (file.getOriginalFilename().endsWith("json")){
 			//probably brakeman
@@ -428,29 +428,6 @@ public class ScanServiceImpl implements ScanService {
 		return returnString;
 	}
 	
-	private boolean isZip(String fileName) {
-		RandomAccessFile file = null;
-		try {
-			file = new RandomAccessFile(new File(fileName), "r");  
-			// these are the magic bytes for a zip file
-	        return file.readInt() == 0x504B0304;
-		} catch (FileNotFoundException e) {
-			log.warn("The file was not found. Check the usage of this method.", e);
-		} catch (IOException e) {
-			log.warn("IOException. Weird.", e);
-		} finally {
-			if (file != null) {
-				try {
-					file.close();
-				} catch (IOException e) {
-					log.error("Encountered IOException when attempting to close a file.");
-				}
-			}
-		}
-		
-		return false;
-	}
-	
 	// We currently only have zip files for skipfish and fortify
 	// if we support a few more it would be worth a more modular style
 	private String figureOutZip(String fileName) {
@@ -459,15 +436,20 @@ public class ScanServiceImpl implements ScanService {
 		ZipFile zipFile = null;
 		try {
 			zipFile = new ZipFile(fileName);
-			ZipEntry firstFile = ((ZipEntry)zipFile.entries().nextElement());
 			
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ChannelType.FORTIFY;
-			} else if ((zipFile.getEntry("samples.js") != null && zipFile.getEntry("summary.js") != null)
-					|| (firstFile.isDirectory() && firstFile.getName() != null &&
-						(zipFile.getEntry(firstFile.getName() + "samples.js") != null && 
-						zipFile.getEntry(firstFile.getName() + "summary.js") != null))) {
-				result = ChannelType.SKIPFISH;
+			} else {
+				for (Enumeration<?> entries = zipFile.entries(); entries.hasMoreElements();) {
+					Object entry = entries.nextElement();
+					if (entry != null && entry instanceof ZipEntry) {
+						String name = ((ZipEntry) entry).getName();
+						if (name != null && name.endsWith("issue_index.js")) {
+							result = ChannelType.SKIPFISH;
+							break;
+						}
+					}
+				}
 			}
 		} catch (FileNotFoundException e) {
 			log.warn("Unable to find zip file.", e);
@@ -513,11 +495,12 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.W3AF, "w3afrun");
 		addToMap(ChannelType.NESSUS, "NessusClientData_v2", "Policy", "policyName", "Preferences", "ServerPreferences");
 		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
-		addToMap(ChannelType.ZAPROXY, "site", "alerts");
+		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
-		addToMap(ChannelType.APPSCAN_SOURCE,  "AssessmentRun", "AssessmentStats" );
-		addToMap(ChannelType.NTO_SPIDER, "VULNS","VULNLIST");
+		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
+		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
+		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
 	}
 	
 	private static void addToMap(String name, String... tags) { map.put(name, tags); }
