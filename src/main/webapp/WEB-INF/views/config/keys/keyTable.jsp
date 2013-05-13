@@ -27,7 +27,7 @@
 				<td id="key${ status.count }">
 					<c:out value="${ key.apiKey }"></c:out>
 				</td>
-				<td id="note${ status.count }">
+				<td style="max-width:320px;word-wrap: break-word;" id="note${ status.count }">
 					<c:out value="${ key.note }"></c:out>
 				</td>
 				<td class="centered">
