@@ -13,17 +13,17 @@
 				<security:authorize ifNotGranted="ROLE_CAN_GENERATE_REPORTS">
 					<td id="tab-spaces" style="width:110px;background:none;"></td>
 				</security:authorize>
-				<td id="tab-dashboard" style="width: 130px;">
+				<td class="clickInsideLink" id="tab-dashboard" style="width: 130px;">
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
-				<td id="tab-apps" style="width: 120px;">
+				<td class="clickInsideLink" id="tab-apps" style="width: 120px;">
 					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Applications</a>
 				</td>
-				<td id="tab-scans" style="width: 90px;">
+				<td class="clickInsideLink" id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-					<td id="tab-reports" style="width: 110px;">
+					<td class="clickInsideLink" id="tab-reports" style="width: 110px;">
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
 					</td>
 				</security:authorize>

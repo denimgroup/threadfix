@@ -454,6 +454,12 @@ function addAppSelectFunctions() {
 	});
 }
 
+var addHeaderFunctions = function() {
+	$(".clickInsideLink").on("click", function() {
+		window.location.href = $(this).children("a").attr("href");
+	});
+};
+
 // this is a list of functions that get executed in $(document).ready
 var documentReadyFunctions = [
 	function() {
@@ -465,7 +471,8 @@ var documentReadyFunctions = [
 		if(top != self) top.location.replace(location);
 	},
 	addModalSubmitEvents,
-	addAppSelectFunctions
+	addAppSelectFunctions,
+	addHeaderFunctions
 ];
 
 // helper method to add to the document ready stuff
