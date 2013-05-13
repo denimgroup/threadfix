@@ -190,11 +190,29 @@ public class HibernateFindingDao implements FindingDao {
 				.list();
 	}
 	
+	// While we could probably combine these queries, the resulting subquery would be very complicated.
+	@SuppressWarnings("unchecked")
 	public Criteria getScanIdAndPageCriteria(Integer scanId, int page) {
-		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
-				.add(Restrictions.eq("active", true))
-				.add(Restrictions.eq("scan.id", scanId))
-				.createAlias("channelSeverity", "severity")
+		
+		List<Integer> mappedFindingIds = (List<Integer>) sessionFactory.getCurrentSession()
+				.createQuery("select finding.id from ScanRepeatFindingMap map " +
+						"where map.scan.id = :scanId")
+				.setInteger("scanId", scanId)
+				.list(); 
+				
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.add(Restrictions.eq("active", true));
+		
+		if (mappedFindingIds != null && !mappedFindingIds.isEmpty()) {
+			criteria.add(Restrictions.or(
+					Restrictions.eq("scan.id", scanId),
+					Restrictions.in("id", mappedFindingIds))
+			);
+		} else {
+			criteria.add(Restrictions.eq("scan.id", scanId));
+		}
+				
+		return criteria.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
 				.setFirstResult((page - 1) * 100).setMaxResults(100)
