@@ -123,14 +123,14 @@
 				<c:otherwise>
 					<c:forEach var="app" items="${ apps }" varStatus="status">
 					<tr class="bodyRow">
-						<td id="appName${ status.count }">
+						<td style="max-width:200px;" class="ellipsis" id="appName${ status.count }">
 							<spring:url value="{orgId}/applications/{appId}" var="appUrl">
 								<spring:param name="orgId" value="${ organization.id }"/>
 								<spring:param name="appId" value="${ app.id }"/>
 							</spring:url>
 							<a id="appLink${ status.count }" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
 						</td>
-						<td id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
+						<td class="ellipsis" style="max-width:200px;" id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
 						<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
 						<td id="appTotalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
 						<td id="appCriticalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[4] }"/></td>
