@@ -51,7 +51,7 @@
 	    <div class="row-fluid">
 	    	<div class="row-fluid" style="padding-top:20px;">
 			     <div class="span6">
-			    	<h4>Recent Scans</h4>
+			    	<h4>Recent Uploads</h4>
 			    	<table class="table table-bordered thick-borders">
 						<thead>
 							<tr>
