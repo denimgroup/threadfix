@@ -11,8 +11,7 @@
 		<tr>
 			<th class="long first">Name</th>
 			<th class="medium">Type</th>
-			<th class="centered">Edit</th>
-			<th class="centered">Delete</th>
+			<th class="centered">Edit / Delete</th>
 			<th class="centered last">Rules</th>
 		</tr>
 	</thead>
@@ -29,7 +28,7 @@
 			</td>
 			<td id="wafType${ status.count }"><c:out value="${ waf.wafType.name }"/></td>
 			<td class="centered">	
-				<a id="editWafModalButton${ status.count }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit WAF</a>
+				<a id="editWafModalButton${ status.count }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit / Delete</a>
 				<div id="editWaf${ waf.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<spring:url value="/wafs/{wafId}/edit/ajax" var="updateUrl">
@@ -37,23 +36,6 @@
 					</spring:url>
 					<%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
 				</div>
-			</td>
-			<td class="centered">	
-				<spring:url value="/wafs/{wafId}/delete" var="wafDeleteUrl">
-					<spring:param name="wafId" value="${ waf.id }" />
-				</spring:url>
-				<form:form id="deleteForm" method="POST" action="${ fn:escapeXml(wafDeleteUrl) }">
-					<a id="deleteWaf${ status.count }" class="btn btn-primary" type="submit" 
-					
-						<c:if test="${ waf.canDelete }">					
-							onclick="return deleteWaf('<c:out value='${ wafDeleteUrl }'/>');"
-						</c:if>
-						<c:if test="${ not waf.canDelete }">					
-							onclick="return alert('Remove the applications from this WAF and try again.')"
-						</c:if>
-						
-						>Delete</a>
-				</form:form>
 			</td>
 			<td class="centered">
 				<spring:url value="/wafs/{wafId}" var="wafUrl">

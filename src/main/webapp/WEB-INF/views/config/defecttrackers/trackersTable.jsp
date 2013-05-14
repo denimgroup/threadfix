@@ -12,8 +12,7 @@
 		    <th class="medium first">Name</th>
 			<th class="long">URL</th>
 			<th>Type</th>
-			<th class="centered">Edit</th>
-			<th class="centered">Delete</th>
+			<th class="centered">Edit / Delete</th>
 		</tr>
 	</thead>
 	<tbody id="defectTrackerTableBody">
@@ -34,16 +33,8 @@
 				<c:out value="${ defectTracker.defectTrackerType.name }"/>
 			</td>
 			<td class="centered">	
-				<a id="editDefectTracker${ status.count }Button" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit</a>
+				<a id="editDefectTracker${ status.count }Button" href="#editDefectTracker${ defectTracker.id }" role="button" class="btn" data-toggle="modal">Edit / Delete</a>
 				<%@ include file="/WEB-INF/views/config/defecttrackers/modals/editDTModal.jsp" %>
-			</td>
-			<td class="centered">
-				<spring:url value="/configuration/defecttrackers/{defectTrackerId}/delete" var="deleteUrl">
-					<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
-				</spring:url>
-				<form:form id="deleteForm${ defectTracker.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }">
-					<a id="deleteButton${ status.count }" class="btn btn-primary" type="submit" onclick="return deleteDefectTracker('<c:out value='${ deleteUrl }'/>');">Delete</a>
-				</form:form>
 			</td>
 		</tr>
 	</c:forEach>

@@ -373,9 +373,11 @@ function deleteWaf(url) {
 	return false;
 }
 
-function deleteDefectTracker(url) {
-	if (confirm('Are you sure you want to delete this Defect Tracker? You will lose all associated Defects.'))
-		return basicPost(url, '#deleteForm', '#defectTableDiv');
+function deleteDefectTracker(url, id) {
+	if (confirm('Are you sure you want to delete this Defect Tracker? You will lose all associated Defects.')) {
+		$('#' + id).closest(".modal").modal('hide');
+		basicPost(url, '#deleteForm', '#defectTableDiv');
+	}
 	return false;
 }
 

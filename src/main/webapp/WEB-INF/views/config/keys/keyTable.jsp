@@ -9,8 +9,7 @@
 		<tr>
 			<th class="medium first">Key</th>
 			<th class="short">Note</th>
-			<th class="short centered">Edit</th>
-			<th class="short centered">Delete</th>
+			<th class="short centered">Edit / Delete</th>
 			<c:if test="${ not empty apiKeyList }">
 				<th class="short last">Restricted</th>
 			</c:if>
@@ -41,15 +40,6 @@
 							<%@ include file="/WEB-INF/views/config/keys/editForm.jsp" %>
 						</div>
 					</div>
-				</td>
-				<td class="centered">
-					<spring:url value="/configuration/keys/{keyId}/delete" var="keyDeleteUrl">
-						<spring:param name="keyId" value="${ key.id }" />
-					</spring:url>
-					<form:form id="deleteForm${ key.id }" method="POST" action="${ fn:escapeXml(keyDeleteUrl) }">
-						<a id="deleteButton" class="apiKeyDeleteButton btn btn-primary" 
-								type="submit" data-id="<c:out value='${ key.id }'/>">Delete</a>
-					</form:form>
 				</td>
 				<td id="restricted${ status.count }">
 					<c:out value="${ key.isRestrictedKey }"/>

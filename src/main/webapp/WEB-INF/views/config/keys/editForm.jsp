@@ -1,7 +1,18 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<h4 id="myModalLabel">Edit Key</h4>
+	<h4 id="myModalLabel">Edit Key
+	
+		<span style="float:right;margin-top:-5px;">
+			<spring:url value="/configuration/keys/{keyId}/delete" var="keyDeleteUrl">
+				<spring:param name="keyId" value="${ key.id }" />
+			</spring:url>
+			<form:form id="deleteForm${ key.id }" method="POST" action="${ fn:escapeXml(keyDeleteUrl) }">
+				<a id="deleteButton" class="apiKeyDeleteButton btn btn-danger header-button" 
+						type="submit" data-id="<c:out value='${ key.id }'/>">Delete</a>
+			</form:form>
+		</span>
+	</h4>
 </div>
 <spring:url value="/configuration/keys/{keyId}/edit" var="saveUrl">
 	<spring:param name="keyId" value="${ key.id }"/>
