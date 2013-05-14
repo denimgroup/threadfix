@@ -79,7 +79,7 @@
 									<th class="centered fixed-team-header">Medium</th>
 									<th class="centered fixed-team-header">Low</th>
 									<th class="centered fixed-team-header">Info</th>
-									<th style="width:100px;"></th>
+									<th style="width:110px;"></th>
 								</tr>
 							</thead>
 						<c:forEach var="application" items="${ organization.applications }" varStatus="innerStatus">

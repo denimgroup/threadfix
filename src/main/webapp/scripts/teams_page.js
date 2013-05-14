@@ -68,15 +68,19 @@ function addExpandsHandlers() {
 			var reportDiv = '#' + parentTr.attr('data-report-div');
 			
 			element.on("click", function() {
-				$(targetDiv).collapse('toggle');
-				if ($(caretDiv).attr('class').indexOf('expanded') == -1) {
+				if ($(targetDiv).attr('class').indexOf('in') === -1) {
 					$(caretDiv).addClass('expanded');
-					$('html, body').animate({
+					$(targetDiv).css("min-height:250px;");
+					$('body').animate({
 				         scrollTop: $(this).offset().top
 				     }, 2);
+					$(targetDiv).collapse('show');
 				} else {
 					$(caretDiv).removeClass('expanded');
+					$(targetDiv).collapse('hide');
 				}
+				
+				
 				
 				if ($(reportDiv)[0] && !$(reportDiv).attr('data-loaded')) {
 					$.ajax({

@@ -400,14 +400,12 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	border-top:0px;
 	padding-top:0px;
 	padding-bottom:0px;
-	min-height:250px;
 }
 
 .table tr.expandable > td {
 	border-top:0px;
 	padding-top:0px;
 	padding-bottom:0px;
-	min-height:250px;
 }
 
 .table tr.expandable a {
