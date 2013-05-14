@@ -92,7 +92,7 @@
 		<band height="20" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="470" height="20"/>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font size="12"/>
 				</textElement>
 			<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
