@@ -125,9 +125,9 @@ script "get crs" do
   cwd "/vagrant"
   code <<-EOH
 	cd /etc/apache2
-    wget http://sourceforge.net/projects/mod-security/files/modsecurity-crs/0-CURRENT/modsecurity-crs_2.2.5.tar.gz
-    tar xzf modsecurity-crs_2.2.5.tar.gz
-    mv modsecurity-crs_2.2.5 modsecurity-crs
+    wget https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master
+    tar xzf master
+    mv SpiderLabs* modsecurity-crs
     cd modsecurity-crs
 	sudo cp modsecurity_crs_10_setup.conf.example modsecurity_crs_10_config.conf
   EOH
