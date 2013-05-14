@@ -4,6 +4,7 @@
 	<title>Home</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.form.js"></script>
 </head>
 
 <body id="apps">

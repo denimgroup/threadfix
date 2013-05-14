@@ -51,10 +51,3 @@
 		<button id="submitScanModal${ application.id }" onclick="javascript:submitAjaxScan('<c:out value="${uploadUrl }"/>','fileInput${ application.id }', '#scanFormDiv${ application.id }', 'channelSelect${ application.id }');return false;" class="btn btn-primary">Upload Scan</button>
 	</div>
 </form:form>
-<script>
-$("#scanForm<c:out value='application.id'/>").keypress(function(e){
-    if (e.which == 13){
-        $("#submitScanModal<c:out value='application.id'/>").click();
-    }
-});
-</script>

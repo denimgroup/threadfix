@@ -70,7 +70,7 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 				$(".clear-after-submit").prop("checked",false)
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -105,7 +105,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 			    $(".clear-after-submit").val('');
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -123,27 +123,38 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 }
 
 function submitAjaxScan(url, formId, formDiv, channelId) {
-	var fileInput = document.getElementById(formId);
-	var file = fileInput.files[0];
-	var formData = new FormData();
-	formData.append('file', file);
-	formData.append('channelId', $('#' + channelId).val());
 	
-	$.ajax({
+//	var formData;
+//	if (!('FormData' in window)) {
+//		var fileInput = document.getElementById(formId);
+//		var file = fileInput.file;
+//		formData = new FormData();
+//		formData.append('file', file);
+//		formData.append('channelId', $('#' + channelId).val());
+//	} else {
+//		var fileInput = document.getElementById(formId);
+//		var file = fileInput.files[0];
+//		formData = new FormData();
+//		formData.append('file', file);
+//		formData.append('channelId', $('#' + channelId).val());
+//	}
+	
+	$("#" + formId).closest("form").ajaxSubmit({
 		type : "POST",
 		url : url,
-		data : formData,
+//		data : formData,
 		contentType : "multipart/form-data",
 		cache: false,
         contentType: false,
         processData: false,
 		success : function(text) {
 			
-			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">" ||
+					$.trim(text).slice(0,5) === "<form") {
 				$(formDiv).html(text);
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -175,7 +186,7 @@ function submitAjax(url, formId, formDiv, successDiv) {
 				$(successDiv).html(text);
 			} else {
 				try {
-					var json = JSON.parse(text);
+					var json = $.parseJSON(text);
 					alert(json.error);
 				} catch (e) {
 					history.go(0);
@@ -208,7 +219,7 @@ function submitVulnTableOperation(url, formDiv, successDiv) {
 				$(successDiv).html(text);
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -249,7 +260,7 @@ function submitDefect(formId, formDiv, successDiv) {
 				$(successDiv).html(text);
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -279,7 +290,7 @@ function basicGet(url, target) {
 				}
 			} else {
 				try {
-					var json = JSON.parse(text);
+					var json = $.parseJSON(text);
 					alert(json.error);
 				} catch (e) {
 					history.go(0);
@@ -311,7 +322,7 @@ function basicPost(url, formId, target) {
 				$(target).html(text);
 			} else {
 				try {
-					var json = JSON.parse(text);
+					var json = $.parseJSON(text);
 					alert(json.error);
 				} catch (e) {
 					history.go(0);
@@ -350,7 +361,7 @@ function createDTAndRefresh(url) {
 				}
 			} else {$("#nameInput").focus();
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}
@@ -438,7 +449,7 @@ function addAppSelectFunctions() {
 			var changeFunction = function() {
 				var selectedElement = $("#" + element.attr('id')).find(":selected");
 				$(targetSelect).html('');
-				var objs = JSON.parse(selectedElement.attr('data-select-items'));
+				var objs = $.parseJSON(selectedElement.attr('data-select-items'));
 				for (index in objs) {
 					var app = objs[index];
 					if (app.id !== "do-not-use") {
