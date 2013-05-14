@@ -190,13 +190,13 @@ public class OrganizationsController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status,
 			HttpServletRequest request) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null))
+			return "403";
+			
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
-			
-		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null)){
-			return "403";
 			
 		} else {
 			
@@ -213,6 +213,8 @@ public class OrganizationsController {
 	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null))
+			return "403";
 		
 		Organization team = organizationService.loadOrganization(orgId);
 		
@@ -244,7 +246,6 @@ public class OrganizationsController {
 	public String submitApp(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
-
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
