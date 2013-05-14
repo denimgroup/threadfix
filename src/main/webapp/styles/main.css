@@ -854,3 +854,8 @@ div.box-shadow {
     width: 40%;
 }
 
+.delete-span {
+	float:right;
+	margin-top:-5px;
+	font-weight: normal;
+}

@@ -3,7 +3,7 @@
 <div class="modal-header">
 	<h4 id="myModalLabel">Edit Key
 	
-		<span style="float:right;margin-top:-5px;">
+		<span class="delete-span">
 			<spring:url value="/configuration/keys/{keyId}/delete" var="keyDeleteUrl">
 				<spring:param name="keyId" value="${ key.id }" />
 			</spring:url>

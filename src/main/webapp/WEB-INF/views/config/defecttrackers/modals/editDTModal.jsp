@@ -5,7 +5,7 @@
 	<div class="modal-header">
 		<h4 id="myModalLabel">
 			Edit Defect Tracker
-			<span style="float:right; margin-top:-5px;">
+			<span class="delete-span">
 				<spring:url value="/configuration/defecttrackers/{defectTrackerId}/delete" var="deleteUrl">
 					<spring:param name="defectTrackerId" value="${ defectTracker.id }" />
 				</spring:url>

@@ -33,7 +33,13 @@
 					<spring:url value="/configuration/keys/{keyId}/edit" var="keyEditUrl">
 						<spring:param name="keyId" value="${ key.id }" />
 					</spring:url>
-					<a id="editKey${ status.count }" href="#editKeyModal${ key.id }" role="button" class="btn" data-toggle="modal">Edit</a> 
+					<a id="editKey${ status.count }" 
+							href="#editKeyModal${ key.id }" 
+							role="button" 
+							class="btn" 
+							data-toggle="modal">
+						Edit / Delete
+					</a> 
 					<div id="editKeyModal${ key.id }" class="modal hide fade" tabindex="-1"
 						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<div id="formDiv${ key.id }">

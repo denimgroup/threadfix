@@ -1,14 +1,33 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<div class="modal-header">
+	<h4 id="myModalLabel">
+		Edit Role
+		<span class="delete-span">
+			<spring:url value="/configuration/roles/{roleId}/delete" var="roleDeleteUrl">
+				<spring:param name="roleId" value="${ editRole.id }" />
+			</spring:url>
+			<form:form method="POST" action="${ fn:escapeXml(roleDeleteUrl) }">
+			<button class="btn btn-danger" type="submit" id="delete${ status.count }"
+				
+				<c:if test="${ editRole.canDelete }">
+				onclick="return confirm('Are you sure you want to delete this Role? All users will have their privileges revoked.')" 
+				</c:if>
+				
+				<c:if test="${ not editRole.canDelete }">
+				onclick="alert('This role cannot be deleted because it is the last role with permissions to manage either groups, users, or roles.'); return false;" 
+				</c:if>
+				
+				>Delete</button>
+			</form:form>
+		</span>
+	</h4>
+</div>
 <spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
 	<spring:param name="roleId" value="${ editRole.id }"/>
 </spring:url>
 <form:form id="roleEditForm${ status.count }" modelAttribute="editRole" method="post"
 		action="${fn:escapeXml(saveEditUrl) }">
-	<div class="modal-header">
-		<h4 id="myModalLabel">Edit Role</h4>
-	</div>
-	
 	<div class="modal-body">
 		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 		<table class="dataTable">
