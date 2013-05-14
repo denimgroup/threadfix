@@ -404,7 +404,7 @@ function addModalSubmitEvents() {
 			var form = element.closest("form");
 			if (!form || form.length === 0) { form = $("#" + element.attr("data-form")); };
 			var div = $("#" + element.attr("data-form-div"));
-			if (!div || div.length === 0) { div = form.closest("div"); };
+			if (!div || div.length === 0) { div = form.closest(".modal"); };
 			var modal = element.closest(".modal");
 			var submitFunction = submitAjaxModalFunction(
 					form.attr("action"), 
