@@ -119,6 +119,7 @@ public class AddWafController {
 			applicationService.storeApplication(application);
 		}
 		model.addAttribute(application);
+		model.addAttribute("addedWaf", true);
 		model.addAttribute("contentPage", "applications/wafRow.jsp");
 		
 		return "ajaxSuccessHarness";

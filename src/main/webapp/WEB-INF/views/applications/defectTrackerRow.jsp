@@ -12,7 +12,13 @@
 			<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="defectTrackerUrl">
 				<spring:param name="defectTrackerId" value="${ application.defectTracker.id }"/>
 			</spring:url>
-			<a id="defectTrackerText" href="${ fn:escapeXml(defectTrackerUrl) }"><c:out value="${ application.defectTracker.name }"/></a>
+			<a id="defectTrackerText" 
+					<c:if test="${ addedDefectTracker }">
+						data-added-tracker="true"
+					</c:if>
+					href="${ fn:escapeXml(defectTrackerUrl) }">
+				<c:out value="${ application.defectTracker.name }"/>
+			</a>
 			<em>(<a href="<spring:url value="${ fn:escapeXml(application.defectTracker.url) }" />"><c:out value="${ fn:escapeXml(application.defectTracker.url) }"/></a>)</em>
 		</td>
 		<td style="padding:5px;">

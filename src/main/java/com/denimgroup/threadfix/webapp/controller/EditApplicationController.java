@@ -220,6 +220,7 @@ public class EditApplicationController {
 			model.addAttribute("contentPage", "applications/forms/addWafForm.jsp");
 			return "ajaxFailureHarness";
 		} else {
+			model.addAttribute("addedWaf", true);
 			model.addAttribute("contentPage", "applications/wafRow.jsp");
 			return "ajaxSuccessHarness";
 		}
@@ -265,6 +266,7 @@ public class EditApplicationController {
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 			
+			model.addAttribute("addedDefectTracker", true);
 			model.addAttribute("contentPage", "applications/defectTrackerRow.jsp");
 			return "ajaxSuccessHarness";
 		}

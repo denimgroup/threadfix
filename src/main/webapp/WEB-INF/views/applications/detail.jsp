@@ -33,6 +33,16 @@
 		<%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>
 	</div>
 	
+	<div id="addWafSuccessMessage" style="display:none" class="alert alert-success">
+		<button class="close" type="button">x</button>
+		The WAF <span id="wafName"></span> has been added to the Application.
+	</div>
+	
+	<div id="addDefectTrackerSuccessMessage" style="display:none" class="alert alert-success">
+		<button class="close" type="button">x</button>
+		The Defect Tracker <span id="defectTrackerName"></span> has been added to the Application.
+	</div>
+	
 	<div style="padding-top:10px;" id="helpText">
 		Applications are used to store, unify, and manipulate scan results from security scanners.
 		<c:if test="${ empty application.scans }">

@@ -54,12 +54,6 @@ var addAppPageEvents = function () {
 		}
 	});
 	
-	var showEditModal = function() { $("#editApplicationModal").modal('show'); };
-	
-	$("#addWaf").on('hidden', showEditModal);
-	$("#createWaf").on('hidden', showEditModal);
-	$("#addDefectTracker").on('hidden', showEditModal);
-	
 	$("#addDefectTrackerButton").on("click", defectTrackerAddFunction);
 	
 	$("#addWafButton").on("click", function() {
@@ -354,6 +348,32 @@ function submitAjaxReport(formId,successDiv, viewMore) {
 	return false;
 }
 
+var showSuccessMessages = function() {
+	if ($("#defectTrackerText").attr("data-added-tracker")) {
+		$("#addDefectTrackerSuccessMessage").css("display","");
+		$("#defectTrackerName").html($("#defectTrackerText").html());
+	} else {
+		$("#addDefectTrackerSuccessMessage").css("display","none");
+	}
+		
+	if ($("#wafText").attr("data-added-waf")) {
+		$("#addWafSuccessMessage").css("display","");
+		$("#wafName").html($("#wafText").html());
+	} else {
+		$("#addWafSuccessMessage").css("display","none");
+	}
+	
+	$("#addWafSuccessMessage").find("button").on("click", function(){
+		$("#wafText").removeAttr("data-added-waf");
+		$("#addWafSuccessMessage").css("display","none");
+	});
+	$("#addDefectTrackerSuccessMessage").find("button").on("click", function(){
+		$("#defectTrackerText").removeAttr("data-added-tracker");
+		$("#addDefectTrackerSuccessMessage").css("display","none");
+	});
+};
+
+addToModalRefreshFunctions(showSuccessMessages);
 addToModalRefreshFunctions(addExpandsHandlers);
 addToModalRefreshFunctions(showSubmitLinks);
 addToModalRefreshFunctions(addAppPageEvents);
