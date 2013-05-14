@@ -850,3 +850,7 @@ div.box-shadow {
 	text-align:left;
 }
 
+#successDiv div.dataTables_length {
+    width: 40%;
+}
+
