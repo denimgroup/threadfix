@@ -332,7 +332,7 @@ function submitAjaxReport(formId,successDiv, viewMore) {
 				$("img").addClass("report-image");
 			} else {
 				try {
-					var json = JSON.parse($.trim(text));
+					var json = $.parseJSON($.trim(text));
 					if (json.isJSONRedirect) {
 						window.location.href = json.redirectURL;
 					}

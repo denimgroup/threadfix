@@ -93,7 +93,7 @@ showResponse = function(type, text, element) {
 	} else {
 		try
 		{
-		   var json = JSON.parse(text);
+		   var json = $.parseJSON(text);
 		   message = json.message;
 		   
 		   if (message === "Default Password") {

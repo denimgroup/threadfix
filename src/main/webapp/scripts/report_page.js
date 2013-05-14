@@ -52,7 +52,7 @@ function submitAjaxReport(url, formId, formDiv, successDiv, reportId, formatId) 
 					}
 				} else {
 					try {
-						var json = JSON.parse($.trim(text));
+						var json = $.parseJSON($.trim(text));
 						if (json.isJSONRedirect) {
 							window.location.href = json.redirectURL;
 						}

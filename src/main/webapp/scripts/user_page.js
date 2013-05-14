@@ -73,7 +73,7 @@ function submitModal(url) {
 				}, 1000);
 			} else {
 				try {
-					var json = JSON.parse(text);
+					var json = $.parseJSON(text);
 					alert(json.error);
 				} catch (e) {
 					history.go(0);
