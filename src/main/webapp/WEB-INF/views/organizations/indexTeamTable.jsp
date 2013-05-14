@@ -65,10 +65,10 @@
 					</c:if>
 				
 					<div id="teamAppTableDiv${ status.count }">
-					<c:if test="${ empty organization.applications }">
+					<c:if test="${ empty organization.activeApplications }">
 						No applications found.
 					</c:if>
-					<c:if test="${ not empty organization.applications }">
+					<c:if test="${ not empty organization.activeApplications }">
 						<table id="teamAppTable${ status.count }">
 							<thead>
 								<tr>
