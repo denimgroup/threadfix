@@ -201,11 +201,13 @@ function addExpandsHandlers() {
 			var caretDiv = '#' + parentTr.attr('data-caret-div');
 			
 			element.on("click", function() {
-				$(targetDiv).collapse('toggle');
-				if ($(caretDiv).attr('class').indexOf('expanded') == -1) {
+				
+				if ($(targetDiv).attr('class').indexOf('in') == -1) {
 					$(caretDiv).addClass('expanded');
+					$(targetDiv).collapse('show');
 				} else {
 					$(caretDiv).removeClass('expanded');
+					$(targetDiv).collapse('hide');
 				}
 			});
 			

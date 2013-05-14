@@ -124,25 +124,9 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 
 function submitAjaxScan(url, formId, formDiv, channelId) {
 	
-//	var formData;
-//	if (!('FormData' in window)) {
-//		var fileInput = document.getElementById(formId);
-//		var file = fileInput.file;
-//		formData = new FormData();
-//		formData.append('file', file);
-//		formData.append('channelId', $('#' + channelId).val());
-//	} else {
-//		var fileInput = document.getElementById(formId);
-//		var file = fileInput.files[0];
-//		formData = new FormData();
-//		formData.append('file', file);
-//		formData.append('channelId', $('#' + channelId).val());
-//	}
-	
 	$("#" + formId).closest("form").ajaxSubmit({
 		type : "POST",
 		url : url,
-//		data : formData,
 		contentType : "multipart/form-data",
 		cache: false,
         contentType: false,
