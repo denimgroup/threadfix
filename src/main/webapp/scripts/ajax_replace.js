@@ -304,6 +304,9 @@ function basicPost(url, formId, target) {
 		success : function(text) {
 			if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(target).html(text);
+				for (var i = 0; i < modalRefreshFunctions.length; i++) {
+					modalRefreshFunctions[i]();
+				}
 			} else {
 				try {
 					var json = $.parseJSON(text);

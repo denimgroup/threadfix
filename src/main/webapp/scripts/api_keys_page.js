@@ -3,9 +3,6 @@ function deleteKey(form) {
 		if (confirm('Are you sure you want to delete this API Key?')) {
 			basicPost($(form).attr("action"), form, '#tableDiv');
 			$(this).closest(".modal").modal('hide');
-			for (var i = 0; i < modalRefreshFunctions.length; i++) {
-				modalRefreshFunctions[i]();
-			}
 		}
 		return false;
 	};
