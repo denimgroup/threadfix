@@ -670,6 +670,10 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 	cursor:pointer;
 }
 
+.clickInsideLink {
+	cursor:pointer;
+}
+
 .sidebar-arrow {
 	display:none;
 }
