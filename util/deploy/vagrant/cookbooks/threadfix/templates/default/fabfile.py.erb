@@ -20,7 +20,7 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone %s' % source_code_loc)
+        result = local('git clone -b new_pages %s' % source_code_loc)
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
@@ -72,7 +72,7 @@ def change_owners() :
     local('sudo mkdir /var/lib/tomcat7/webapps/threadfix/jasper/images')
     # Tomcat must own these directories so that logs, scans, and report images are writable
     local('sudo chown tomcat7 /var/lib/tomcat7') 
-    local('sudo chown tomcat7 /var/lib/tomcat7/webapps/threadfix/jasper/images') 
+    local('sudo chown tomcat7:tomcat7 /var/lib/tomcat7/webapps/threadfix/jasper/images') 
     local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
