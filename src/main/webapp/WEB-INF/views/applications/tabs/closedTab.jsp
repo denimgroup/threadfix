@@ -21,22 +21,12 @@
 
 <c:if test="${ canModifyVulnerabilities }">
    	<div id="btnDiv1" class="btn-group">
-		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
+		<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
 			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
-	<script>
-	$("#actionButton1").bind({
-		mouseenter : function(e) {
-			$("#actionButton1").dropdown('toggle');
-		},
-		mouseleave : function(e) {
-			$("#actionButton1").dropdown('toggle');
-		}
-	});
-	</script>
 </c:if>
 
 <span style="float:right">
@@ -49,23 +39,13 @@
 <%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>
 
 <c:if test="${ canModifyVulnerabilities }">
-   	<div id="btnDiv1" class="btn-group">
-		<button id="actionButton1" class="btn dropdown-toggle" type="button">Action <span class="caret"></span></button>
+   	<div id="btnDiv2" class="btn-group">
+		<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a id="markOpenButton" onclick="javascript:submitVulnTableOperation('${ openUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Open</a></li>
 			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
 		</ul>
 	</div>
-	<script>
-	$("#actionButton1").bind({
-		mouseenter : function(e) {
-			$("#actionButton1").dropdown('toggle');
-		},
-		mouseleave : function(e) {
-			$("#actionButton1").dropdown('toggle');
-		}
-	});
-	</script>
 </c:if>
 
 </form:form>
