@@ -43,7 +43,7 @@
 			  </categoryDataset>
 			  <barPlot>
 			  	<plot orientation="Horizontal">
-					<seriesColor seriesOrder="0" color="#EBCCCC"/>  	
+					<seriesColor seriesOrder="0" color="#DB6D1D"/>  	
 			  	</plot>
 				<categoryAxisFormat>
 					<axisFormat>

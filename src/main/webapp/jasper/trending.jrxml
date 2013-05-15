@@ -85,8 +85,8 @@
 				<timeSeriesPlot>
 					<plot>
 						<seriesColor seriesOrder="0" color="#000000"/>
-						<seriesColor seriesOrder="1" color="#96160B"/>
-						<seriesColor seriesOrder="2" color="#CA4E00"/>
+						<seriesColor seriesOrder="1" color="#DB6D1D"/>
+						<seriesColor seriesOrder="2" color="#FDE05E"/>
 					</plot>
 					<timeAxisFormat>
 						<axisFormat>

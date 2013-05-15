@@ -47,7 +47,7 @@
 	</div>
 	</c:if>
 
-	<table class="table" id="1">
+	<table class="table tf-colors" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
