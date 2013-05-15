@@ -157,7 +157,7 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		ReportFormat reportFormat = parameters.getReportFormat();
 		try {
-			return getReport(path, reportFormat, format, params, applicationIdList);
+			return getReport(path, reportFormat, format, params, applicationIdList, request);
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
 			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
@@ -166,7 +166,8 @@ public class ReportsServiceImpl implements ReportsService {
 
 	@SuppressWarnings("resource")
 	private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList) throws IOException {
+			Map<String, Object> parameters, List<Integer> applicationIdList, 
+			HttpServletRequest request) throws IOException {
 
 		if (reportFormat == null || reportFormat.getFileName() == null || 
 				reportFormat.getFileName().trim().equals(""))
@@ -273,23 +274,22 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.setParameter(JRExporterParameter.OUTPUT_STRING_BUFFER,
 					report);
 			
-			StringBuffer appIdString = new StringBuffer();
-			appIdString.append(reportFormat.getFileName().substring(0, 2));
-			for (Integer id : applicationIdList) {
-				appIdString.append(id);
-			}
-
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
-					Boolean.TRUE);
-			exporter.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, path
-					+ "jasper/" + appIdString);
+					Boolean.FALSE);
+			
+			String mapKey = getMapKey(reportFormat.getFileName(), applicationIdList);
+			
+			Map<Object, Object> imagesMap = new HashMap<>();
+			request.getSession().setAttribute(mapKey, imagesMap);
+            
+			exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
 
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"/threadfix/jasper/" + appIdString + "/");
+					"/threadfix/jasperimage/" + mapKey + "/");
 
 			exporter.exportReport();
 
@@ -307,6 +307,38 @@ public class ReportsServiceImpl implements ReportsService {
 		log.debug("Returning report.");
 		
 		return new ReportCheckResultBean(ReportCheckResult.VALID, report, null);
+	}
+	
+	/**
+	 * This method determines how the image map is stored. Down the road we may want
+	 * to look at ways to use this to cache images for quick retrieval later.
+	 * 
+	 * @param fileName
+	 * @param applicationIdList
+	 * @return a key for the images map
+	 */
+	private String getMapKey(String fileName, List<Integer> applicationIdList) {
+		StringBuilder appIdString = new StringBuilder();
+		
+		String shorterFileName = fileName;
+		if (fileName.indexOf('.') != -1) {
+			shorterFileName = fileName.substring(0, fileName.indexOf('.'));
+		}
+		
+		if (shorterFileName.length() > 10) {
+			appIdString.append(shorterFileName.substring(0, 10));
+		} else {
+			appIdString.append(shorterFileName);
+		}
+		
+		for (Integer id : applicationIdList) {
+			appIdString.append(id);
+			if (appIdString.length() > 20) {
+				break;
+			}
+		}
+		
+		return appIdString.toString();
 	}
 	
 	private JasperPrint getXMonthReport(List<Integer> applicationIdList, Map<String, Object> parameters,

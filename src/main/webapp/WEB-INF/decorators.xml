@@ -15,6 +15,7 @@
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
     	<pattern>/dashboard/leftReport*</pattern>
     	<pattern>/dashboard/rightReport*</pattern>
+    	<pattern>/jasperimage/*/*</pattern>
     	<pattern>/login*</pattern>
     	<pattern>/organizations/teamTable*</pattern>
     	<pattern>/organizations/modalAdd*</pattern>
