@@ -142,7 +142,7 @@ public class AddDefectTrackerController {
 					", and the ID " + defectTracker.getId());
 			
 			String referrer = request.getHeader("referer");
-			if (referrer.endsWith("configuration/defecttrackers")) {
+			if (referrer.contains("configuration/defecttrackers")) {
 				model.addAttribute("contentPage", "/configuration/defecttrackers");
 				ControllerUtils.addSuccessMessage(request, 
 						"Defect Tracker " + defectTracker.getName() + " has been created successfully.");

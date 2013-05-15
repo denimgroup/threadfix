@@ -103,7 +103,6 @@ public class DefectTrackersController {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		if (defectTracker != null) {
 			defectTrackerService.deleteById(defectTrackerId);
-			status.setComplete();
 			addModelAttributes(model);
 			model.addAttribute("successMessage", 
 					"Defect Tracker " + defectTracker.getName() + " has been deleted successfully.");
