@@ -29,13 +29,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -485,7 +486,7 @@ public class ScanServiceImpl implements ScanService {
 		return null;
 	}
 	
-	private static final Map<String, String[]> map = new HashMap<String, String[]>();
+	private static final Set<Entry<String, String[]>> map = new HashSet<>();
 	static {
 		addToMap(ChannelType.APPSCAN_DYNAMIC, "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
 		addToMap(ChannelType.ARACHNI, "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
@@ -495,19 +496,22 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.W3AF, "w3afrun");
 		addToMap(ChannelType.NESSUS, "NessusClientData_v2", "Policy", "policyName", "Preferences", "ServerPreferences");
 		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
-		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
 		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
 		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
+		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
+		addToMap(ChannelType.ZAPROXY, "OWASPZAPReport", "site", "alerts");
 	}
 	
-	private static void addToMap(String name, String... tags) { map.put(name, tags); }
+	private static void addToMap(String name, String... tags) { 
+		map.add(new SimpleEntry<String, String[]>(name, tags)); 
+	}
 	
 	private String getType(List<String> scanTags) {
 		
-		for (Entry<String, String[]> entry : map.entrySet())
+		for (Entry<String, String[]> entry : map)
 		if (matches(scanTags, entry.getValue())) {
 			return entry.getKey();
 		}
