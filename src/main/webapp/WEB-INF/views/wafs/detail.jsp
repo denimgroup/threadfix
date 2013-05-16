@@ -23,6 +23,12 @@
 	
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	
+	<c:if test="${ not hasApps }">
+		<div class="alert alert-error" style="margin-top:10px;">
+			You need to attach an Application to this WAF before you can start to generate rules.
+		</div>
+	</c:if>
+	
 	<c:if test="${ canManageWafs and not empty waf.wafRules and hasApps }">
 		<spring:url value="/wafs/${waf.id}/upload" var="uploadUrl">
 			<spring:param name="wafId" value="${ waf.id }"/>
