@@ -195,13 +195,14 @@ function addExpandsHandlers() {
 			var caretDiv = '#' + parentTr.attr('data-caret-div');
 			
 			element.on("click", function() {
-				
 				if ($(targetDiv).attr('class').indexOf('in') == -1) {
 					$(caretDiv).addClass('expanded');
-					$(targetDiv).collapse('show');
+					$(targetDiv).addClass("in");
+					$(targetDiv).css("height","auto");
 				} else {
 					$(caretDiv).removeClass('expanded');
-					$(targetDiv).collapse('hide');
+					$(targetDiv).removeClass("in");
+					$(targetDiv).css("height","0px");
 				}
 			});
 			
@@ -209,28 +210,32 @@ function addExpandsHandlers() {
 		}
 	});
 	
-	$(".vulnSectionHeader").on("click", function () {
-		
+	$(".vulnSectionHeader").each(function() {
 		var parentTr = $(this).closest("tr");
-		var toggleClass = parentTr.attr("data-toggle-class");
-		var targetCaret = parentTr.attr("data-caret");
 		
-		if (parentTr.attr("data-expanded") === "0") {
-			$("." + toggleClass).removeClass("defaultHide");
-			parentTr.attr("data-expanded", "1");
-			$("#" + targetCaret).addClass("expanded");
-			parentTr.attr("data-has-function", "1");
-		} else {
-			$("." + toggleClass + " td.expandableTrigger .caret-right").each(function() {
-				if ($(this).attr("class").indexOf("expanded") != -1) {
-					$(this).closest("td").click();
+		if (!$(this).attr("data-has-function")) {
+			$(this).on("click", function () {
+				
+				var toggleClass = parentTr.attr("data-toggle-class");
+				var targetCaret = parentTr.attr("data-caret");
+				
+				if (!parentTr.attr("data-expanded") || parentTr.attr("data-expanded") === "0") {
+					$("." + toggleClass).removeClass("defaultHide");
+					parentTr.attr("data-expanded", "1");
+					$("#" + targetCaret).addClass("expanded");
+				} else {
+					$("." + toggleClass + " td.expandableTrigger .caret-right").each(function() {
+						if ($(this).attr("class").indexOf("expanded") != -1) {
+							$(this).closest("td").click();
+						}
+					}); 
+					
+					$("." + toggleClass).addClass("defaultHide");
+					parentTr.attr("data-expanded", "0");
+					$("#" + targetCaret).removeClass("expanded");
 				}
-			}); 
-			
-			$("." + toggleClass).addClass("defaultHide");
-			parentTr.attr("data-expanded", "0");
-			$("#" + targetCaret).removeClass("expanded");
-			parentTr.attr("data-has-function", "1");
+			});
+			$(this).attr("data-has-function", "1");
 		}
 	});
 
