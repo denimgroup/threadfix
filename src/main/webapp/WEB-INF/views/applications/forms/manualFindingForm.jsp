@@ -1,5 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+	<div class="modal-header">
+		<h4><c:if test="${ finding['new'] }">New</c:if> Finding</h4>
+	</div>
 <spring:url value="/organizations/{orgId}/applications/{appId}/scans/new" var="submitUrl">
 	<spring:param name="orgId" value="${ application.organization.id }"/>
 	<spring:param name="appId" value="${ application.id }"/>
