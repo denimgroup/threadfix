@@ -6,6 +6,10 @@
 </spring:url>
 <form:form id="scanForm${ application.id }" style="margin-bottom:0px" modelAttribute="application" method="post" autocomplete="off" action="${ fn:escapeXml(uploadUrl) }" enctype="multipart/form-data">
 	<div class="modal-body">
+		<div id="noScanFound${ application.id }" class="alert alert-error" style="display:none;text-align:left;">
+			<button class="close" type="button" onclick="javascript:$('#noScanFound${ application.id }').css('display','none');">×</button>
+			Please select a scan file.
+		</div>
 		<c:if test="${ not empty message }">
 			<div class="alert alert-error">
 				<button class="close" data-dismiss="alert" type="button">×</button>
@@ -48,6 +52,6 @@
 	<div class="modal-footer">
 		<span style="float:left;font-size:8;" class="errors">Average file uploads take a few seconds but <br>larger files (2GB+) can take several minutes.</span>
 		<button id="closeScanModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button id="submitScanModal${ application.id }" onclick="javascript:submitAjaxScan('<c:out value="${uploadUrl }"/>','fileInput${ application.id }', '#scanFormDiv${ application.id }', 'channelSelect${ application.id }');return false;" class="btn btn-primary">Upload Scan</button>
+		<button id="submitScanModal${ application.id }" onclick="javascript:submitAjaxScan('<c:out value="${uploadUrl }"/>','fileInput${ application.id }', '#scanFormDiv${ application.id }', 'channelSelect${ application.id }', 'noScanFound${ application.id }');return false;" class="btn btn-primary">Upload Scan</button>
 	</div>
 </form:form>

@@ -122,36 +122,41 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 	return false;
 }
 
-function submitAjaxScan(url, formId, formDiv, channelId) {
+function submitAjaxScan(url, formId, formDiv, channelId, errorDiv) {
 	
-	$("#" + formId).closest("form").ajaxSubmit({
-		type : "POST",
-		url : url,
-		contentType : "multipart/form-data",
-		cache: false,
-        contentType: false,
-        processData: false,
-		success : function(text) {
-			
-			if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">" ||
-					$.trim(text).slice(0,5) === "<form") {
-				$(formDiv).html(text);
-			} else {
-				try {
-					var json = $.parseJSON($.trim(text));
-					if (json.isJSONRedirect) {
-						window.location.href = json.redirectURL;
+	if ($("#" + formId).val() === "") {
+		$("#" + errorDiv).css("display","");
+	} else {
+		$("#" + formId).closest("form").ajaxSubmit({
+			type : "POST",
+			url : url,
+			contentType : "multipart/form-data",
+			cache: false,
+	        contentType: false,
+	        processData: false,
+			success : function(text) {
+				
+				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">" ||
+						$.trim(text).slice(0,5) === "<form") {
+					$(formDiv).html(text);
+				} else {
+					try {
+						var json = $.parseJSON($.trim(text));
+						if (json.isJSONRedirect) {
+							window.location.href = json.redirectURL;
+						}
+					} catch (e) {
+						history.go(0);
 					}
-				} catch (e) {
-					history.go(0);
 				}
+			},
+			error : function (xhr, ajaxOptions, thrownError){
+				history.go(0);
 			}
-		},
-		error : function (xhr, ajaxOptions, thrownError){
-			history.go(0);
-		}
-	});
-	modalFocusTimeout();
+		});
+		modalFocusTimeout();
+	}
+	
 	return false;
 }
 
