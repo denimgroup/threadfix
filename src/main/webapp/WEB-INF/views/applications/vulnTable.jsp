@@ -119,9 +119,11 @@
 						data-caret="caret${ vulnGroup.name }"
 						data-toggle-class="${ rowClass }"
 						data-expanded="0">
-					<td>
-						<input type="checkbox" class="categoryCheckbox" data-target-class="<c:out value="${ vulnGroup.name }"/>">
-					</td>
+					<c:if test="${ canModifyVulnerabilities }">
+						<td>
+							<input type="checkbox" class="categoryCheckbox" data-target-class="<c:out value="${ vulnGroup.name }"/>">
+						</td>
+					</c:if>
 					<td class="vulnSectionHeader">
 						<span id="caret${ vulnGroup.name }" class="caret-right"></span>
 					</td>
@@ -180,6 +182,15 @@
 				<tr class="bodyRow <c:out value="${ color }"/> expandable ${ rowClass } ${ hideClass }">
 					<td colspan="7">
 						<div id="vulnInfoDiv${vulnerability.id}" class="collapse">
+							<c:if test="${ not empty application.defectTracker }">
+								<div style="width:100%">
+								<c:if test="${ not empty vulnerability.defect }">
+									<a target="_blank" href="<c:out value="${ vulnerability.defect.defectURL }"/>">
+										View Defect
+									</a>
+								</c:if>
+								</div>
+							</c:if>
 							<div class="left-tile">
 								<c:if test="${not empty vulnerability.findings}">
 									<h4>Scan History</h4>
