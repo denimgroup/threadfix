@@ -3,44 +3,64 @@
 	<h4 style="padding-top:8px">Unmapped Findings</h4>
 
 	<spring:url value="/login.jsp" var="loginUrl"/>
-	<spring:url value="{scanId}/table" var="tableUrl">
+	<spring:url value="{scanId}/unmappedTable" var="tableUrl">
 		<spring:param name="scanId" value="${ scan.id }"/>
 	</spring:url>
 	<c:if test="${ numFindings > 100 }">
-	<div style="padding-bottom:8px">	
-		<c:if test="${ page > 4 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
-		</c:if>
-	
-		<c:if test="${ page >= 4 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
-		</c:if>
-	
-		<c:if test="${ page >= 3 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
-		</c:if>
+	<div style="padding-bottom:8px" class="pagination">	
+		<ul>
+			<c:if test="${ page > 4 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
+				</li>
+			</c:if>
 		
-		<c:if test="${ page >= 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
-		</c:if>
+			<c:if test="${ page >= 4 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 3 }"/></a>
+				</li>
+			</c:if>
 		
-		<c:out value="${ page }"/>
-	
-		<c:if test="${ page <= numPages }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
-		</c:if>
+			<c:if test="${ page >= 3 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 2 }"/></a>
+				</li>
+			</c:if>
+			
+			<c:if test="${ page >= 2 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page - 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page - 1 }"/></a>
+				</li>
+			</c:if>
+			
+			<li class="active">
+				<a href="#"><c:out value="${ page }"/></a>
+			</li>
 		
-		<c:if test="${ page <= numPages - 1 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
-		</c:if>
-		
-		<c:if test="${ page <= numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
-		</c:if>Findings:
-		
-		<c:if test="${ page < numPages - 2 }">
-			<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
-		</c:if>
+			<c:if test="${ page <= numPages }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 1 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 1 }"/></a>
+				</li>
+			</c:if>
+			
+			<c:if test="${ page <= numPages - 1 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 2 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 2 }"/></a>
+				</li>
+			</c:if>
+			
+			<c:if test="${ page <= numPages - 2 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ page + 3 }, '<c:out value="${ loginUrl }"/>')"><c:out value="${ page + 3 }"/></a>
+				</li>
+			</c:if>
+			
+			<c:if test="${ page < numPages - 2 }">
+				<li>
+					<a href="javascript:refillElement('#toReplace2', '${tableUrl}', ${ numPages + 1 }, '<c:out value="${ loginUrl }"/>')">Last (<c:out value="${ numPages + 1}"/>)</a>
+				</li>
+			</c:if>
+		</ul>
 		
 		<input type="text" class="refillElementOnEnter2" id="pageInput" />
 		<a href="javascript:refillElementDropDownPage('#toReplace2', '${ tableUrl }', '<c:out value="${ loginUrl }"/>')">Go to page</a>
