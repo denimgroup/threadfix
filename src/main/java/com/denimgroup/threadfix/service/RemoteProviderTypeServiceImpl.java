@@ -161,6 +161,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			
 			databaseRemoteProviderType.setApiKey(apiKey);
 			databaseRemoteProviderType.setUsername(username);
+			databaseRemoteProviderType.setPassword(password);
 		
 			List<RemoteProviderApplication> apps = remoteProviderApplicationService
 													.getApplications(databaseRemoteProviderType);
