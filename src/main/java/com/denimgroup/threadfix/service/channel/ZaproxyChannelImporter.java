@@ -23,6 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -31,6 +36,7 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
@@ -41,6 +47,19 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
+	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
+	
+	private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
+	private static void addToSet(String[] array, String key) {
+		alternativesMap.add(new SimpleEntry<String[], String>(array,  key));
+	}
+	static {
+		addToSet(new String[] {"sql", "injection"},  SQL_INJECTION);
+		addToSet(new String[] {"sqli"},  SQL_INJECTION);
+		addToSet(new String[] {"cross", "site", "scripting"},  XSS);
+		addToSet(new String[] {"xss"},  XSS);
+	}
+	
 	@Autowired
 	public ZaproxyChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
@@ -55,6 +74,20 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	@Override
 	public Scan parseInput() {
 		return parseSAXInput(new ZaproxySAXParser());
+	}
+	
+	private String getAlternative(String possibility) {
+		String lower = possibility.toLowerCase();
+		MAP: for (Entry<String[], String> entry : alternativesMap) {
+			for (String key : entry.getKey()) {
+				if (!lower.contains(key)) {
+					continue MAP;
+				}
+			}
+			// if we get here then the string contains all the keys
+			return entry.getValue();
+		}
+		return null;
 	}
 	
 	public class ZaproxySAXParser extends HandlerWithBuilder {
@@ -100,6 +133,16 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	} else if ("otherinfo".equals(qName)) {
 	    		Finding finding = constructFinding(currentPath, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
+	    		
+	    		if (finding != null && finding.getChannelVulnerability() == null) {
+	    			
+	    			String channelVulnerabilityCode = getAlternative(currentChannelVulnCode);
+	    			if (channelVulnerabilityCode != null) {
+		    			ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
+		    			finding.setChannelVulnerability(channelVulnerability);
+	    			}
+	    		}
+	    		
 	    		add(finding);
 	    	
 	    		currentParameter       = null;
