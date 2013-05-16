@@ -87,7 +87,7 @@ public class RolesIndexPage extends BasePage {
 			waitForInvisibleElement(driver.findElementById("createRoleModal"));
 		}else{
 			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
-			waitForInvisibleElement(driver.findElementByClassName("modal"));
+//			waitForInvisibleElement(driver.findElementById("roleEditForm"+(getIndex(oldName)+1)));
 		}
 		return new RolesIndexPage(driver);
 	}

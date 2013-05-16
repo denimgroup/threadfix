@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -102,7 +103,11 @@ public class WafIndexPage extends BasePage {
 	
 	public WafIndexPage clickCreateWaf(){
 		driver.findElementById("submitWafModal").click();
+		try{
 		waitForInvisibleElement(driver.findElementById("createWaf"));
+		}catch(StaleElementReferenceException e){
+			
+		}
 		return new WafIndexPage(driver);
 	}
 	

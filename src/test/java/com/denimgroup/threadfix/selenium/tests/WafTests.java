@@ -335,6 +335,7 @@ public class WafTests extends BaseTest {
 		organizationIndexPage.populateAppList(orgName);
 		
 		String s;
+		int cnt = 1;
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -352,12 +353,12 @@ public class WafTests extends BaseTest {
 			s = mapEntry.getValue();
 			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
 					.setFileInput(s, appName)
-					.clickUploadScanButton(appName)
+					.clickUploadScanButton(appName,cnt)
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(orgName);
 			
 			organizationIndexPage.populateAppList(orgName);
-			
+			cnt++;
 
 		}
 		
@@ -444,6 +445,7 @@ public class WafTests extends BaseTest {
 				.saveApplication(orgName);
 
 		organizationIndexPage.populateAppList(orgName);
+		int cnt = 1;
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -460,11 +462,12 @@ public class WafTests extends BaseTest {
 			s = mapEntry.getValue();
 			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
 					.setFileInput(s, appName)
-					.clickUploadScanButton(appName)
+					.clickUploadScanButton(appName,cnt)
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(orgName);
 			
 			organizationIndexPage.populateAppList(orgName);
+			cnt++;
 		}
 
 		//Creating a new Waf

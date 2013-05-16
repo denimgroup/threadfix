@@ -23,15 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
 
 public class TeamIndexPage extends BasePage {
 
@@ -219,9 +229,33 @@ public class TeamIndexPage extends BasePage {
 
 	public ApplicationDetailPage clickUploadScanButton(String appName) {
 		driver.findElementById("submitScanModal"+modalNumber()).click();
+		try{
 		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		}catch(StaleElementReferenceException e){
+			
+		}
 		waitForElement(driver.findElementById("nameText"));
 		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
+		//waitForElement(driver.findElementById("anyid"));
+			return new ApplicationDetailPage(driver);
+
+	}
+	
+	public ApplicationDetailPage clickUploadScanButton(String appName,int cnt) {
+		driver.findElementById("submitScanModal"+modalNumber()).click();
+		try{
+		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		}catch(StaleElementReferenceException e){
+			
+		}
+		waitForElement(driver.findElementById("nameText"));
+//		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
+		try{
+			while(!driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt)));
+		}catch(StaleElementReferenceException e){
+			
+		}catch(UnhandledAlertException e){
+		}
 		//waitForElement(driver.findElementById("anyid"));
 			return new ApplicationDetailPage(driver);
 
