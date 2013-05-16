@@ -67,7 +67,8 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 				});
 				$(modalName).modal('hide');
 				$(".clear-after-submit").val('');
-				$(".clear-after-submit").prop("checked",false)
+				$(".clear-after-submit").prop("checked",false);
+				$(formDiv).find(".hide-after-submit").css("display","none");
 			} else {
 				try {
 					var json = $.parseJSON($.trim(text));
@@ -135,7 +136,6 @@ function submitAjaxScan(url, formId, formDiv, channelId, errorDiv) {
 	        contentType: false,
 	        processData: false,
 			success : function(text) {
-				
 				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">" ||
 						$.trim(text).slice(0,5) === "<form") {
 					$(formDiv).html(text);
@@ -478,8 +478,8 @@ var addFormEvents = function() {
 		if ($(this).attr('data-max-length')) {
 			$(this).bind('input propertychange', function() {  
 		        var maxLength = $(this).attr('data-max-length');  
-		        if ($(this).val().length > maxLength) {  
-		            $(this).val($(this).val().substring(0, maxLength));
+		        if ($(this).val().length >= maxLength) {  
+		            $(this).val($(this).val().substring(0, maxLength-1));
 		            $("#" + $(this).attr('data-error')).css("display","");
 		        } else {
 		        	$("#" + $(this).attr('data-error')).css("display","none");
@@ -505,6 +505,8 @@ var documentReadyFunctions = [
 	addFormEvents
 ];
 
+addToModalFailureFunctions(addFormEvents);
+
 // helper method to add to the document ready stuff
 function addToDocumentReadyFunctions(readyFunction) {
 	documentReadyFunctions[documentReadyFunctions.length] = readyFunction;
@@ -512,6 +514,10 @@ function addToDocumentReadyFunctions(readyFunction) {
 
 function addToModalRefreshFunctions(readyFunction) {
 	modalRefreshFunctions[modalRefreshFunctions.length] = readyFunction;
+}
+
+function addToModalFailureFunctions(readyFunction) {
+	modalFailureFunctions[modalFailureFunctions.length] = readyFunction;
 }
 
 // Executes documentReadyFunctions.
