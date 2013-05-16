@@ -125,6 +125,7 @@ public class AddFindingController {
 	private String returnForm(ModelMap model, int appId) {
 		model.addAttribute("contentPage", "applications/forms/manualFindingForm.jsp");
 		model.addAttribute("application", applicationService.loadApplication(appId));
+		model.addAttribute("manualSeverities", findingService.getManualSeverities());
 		return "ajaxFailureHarness";
 	}
 

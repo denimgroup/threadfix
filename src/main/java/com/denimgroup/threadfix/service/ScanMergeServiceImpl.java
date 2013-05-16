@@ -619,6 +619,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.debug("Null input to processManualFinding");
 			return false;
 		}
+		
+		ChannelType manualChannelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
 
 		Scan scan = getManualScan(applicationId);
 		if (scan == null || scan.getApplicationChannel() == null
@@ -635,16 +637,22 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		// Set the channelVulnerability
 		ChannelVulnerability channelVulnerability = channelVulnerabilityDao
-				.retrieveByCode(
-						channelTypeDao.retrieveByName(ChannelType.MANUAL),
+				.retrieveByCode(manualChannelType,
 						finding.getChannelVulnerability().getCode());
 		finding.setChannelVulnerability(channelVulnerability);
 
-		// Set the channelSeverity so we can get the corresponding
-		// genericSeverity when appMerge is called.
-		ChannelSeverity channelSeverity = channelSeverityDao
-				.retrieveById(finding.getChannelSeverity().getId());
-		finding.setChannelSeverity(channelSeverity);
+		if (finding.getChannelSeverity() != null &&
+				finding.getChannelSeverity().getId() != null) {
+			// Set the channelSeverity so we can get the corresponding
+			// genericSeverity when appMerge is called.
+			ChannelSeverity channelSeverity = channelSeverityDao
+					.retrieveById(finding.getChannelSeverity().getId());
+			finding.setChannelSeverity(channelSeverity);
+		} else {
+			ChannelSeverity channelSeverity = channelSeverityDao
+					.retrieveByCode(manualChannelType, GenericSeverity.MEDIUM);
+			finding.setChannelSeverity(channelSeverity);
+		}
 
 		if (!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
