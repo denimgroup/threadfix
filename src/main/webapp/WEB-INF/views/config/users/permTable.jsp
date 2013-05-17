@@ -55,7 +55,6 @@
 			}
 		}
 		
-		togglePassword();
 	</script>
 	<table class="table table-striped">
 		<thead>
