@@ -343,7 +343,12 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private JasperPrint getXMonthReport(List<Integer> applicationIdList, Map<String, Object> parameters,
 			JasperReport jasperReport, int numMonths) throws JRException {
-		List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+		List<List<Scan>> scanList = new ArrayList<>();
+		
+		for (Integer id : applicationIdList) {
+			scanList.add(applicationDao.retrieveById(id).getScans());
+		}
+		
 		if (scanList == null || scanList.isEmpty()) {
 			log.info("Unable to fill Jasper Report - no scans were found.");
 			return null;

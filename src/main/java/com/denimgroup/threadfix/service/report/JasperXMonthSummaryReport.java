@@ -35,20 +35,17 @@ import com.denimgroup.threadfix.data.entities.Scan;
  *
  */
 public class JasperXMonthSummaryReport implements JRDataSource {
-	private List<Scan> scanList, normalizedScans = new ArrayList<>();
+	private List<List<Scan>> normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
 	private int index = 0, numMonths = 0;
 	private Map<String, Object> resultsHash = new HashMap<String, Object>();
-	private Map<Integer, Map<YearAndMonth, Scan>> channelScanMap = new HashMap<>();
-	private Map<YearAndMonth, Calendar> timeMap = new HashMap<>();
 	
 	private ScanDao scanDao = null;
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
 	
-	public JasperXMonthSummaryReport(List<Scan> scanList, ScanDao scanDao, int numMonths) {
+	public JasperXMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths) {
 		this.scanDao = scanDao;
-		this.scanList = scanList;
 		
 		if (numMonths > 0 && numMonths <= 12) {
 			this.numMonths = numMonths;
@@ -56,9 +53,11 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			numMonths = 6;
 		}
 		
-		if (this.scanList != null && this.scanList.size() > 0) {			
-			Collections.sort(this.scanList, Scan.getTimeComparator());
-			normalizedScans = buildNormalizedScans(this.scanList);
+		if (scanLists != null && scanLists.size() > 0) {		
+			for (List<Scan> scanList : scanLists) {
+				Collections.sort(scanList, Scan.getTimeComparator());
+				normalizedScans.add(buildNormalizedScans(scanList));
+			}
 		}
 		
 		index = -1;
@@ -70,6 +69,8 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	
 	private List<Scan> buildNormalizedScans(List<Scan> startingScans) {
 
+		Map<Integer, Map<YearAndMonth, Scan>> channelScanMap = new HashMap<>();
+		
 		for (Scan scan : startingScans) {
 			YearAndMonth yearAndMonth = new YearAndMonth(scan.getImportTime());
 			
@@ -111,6 +112,8 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	
 	private Map<YearAndMonth, List<Integer>> collapseScans(Map<Integer, Map<YearAndMonth, Scan>> scansHash, 
 				List<YearAndMonth> times) {
+		Map<YearAndMonth, Calendar> timeMap = new HashMap<>();
+		
 		Map<YearAndMonth, List<Integer>> scanIds = new HashMap<>();
 		
 		for (YearAndMonth time : times) {
@@ -137,17 +140,31 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		
 		for (YearAndMonth yearAndMonth : new TreeSet<YearAndMonth>(results.keySet())) {
 			
-			Scan scan = new Scan();
+			List<Integer> result = results.get(yearAndMonth);
+			if (result != null && !result.isEmpty()) {
+				Map<String, Object> map = scanDao.getCountsForScans(result);
+				
+				Scan scan = new Scan();
+				scan.setNumberCriticalVulnerabilities((Long) map.get("critical"));
+				scan.setNumberHighVulnerabilities((Long) map.get("high"));
+				scan.setNumberMediumVulnerabilities((Long) map.get("medium"));
+				scan.setNumberLowVulnerabilities((Long) map.get("low"));
+				
+				dateList.add(yearAndMonth.getMonthName());
+				
+				scanList.add(scan);
+			} else {
+				Scan scan = new Scan();
+				scan.setNumberCriticalVulnerabilities(0L);
+				scan.setNumberHighVulnerabilities(0L);
+				scan.setNumberMediumVulnerabilities(0L);
+				scan.setNumberLowVulnerabilities(0L);
+				dateList.add(yearAndMonth.getMonthName());
+				
+				scanList.add(scan);
+			}
 			
-			Map<String, Object> map = scanDao.getCountsForScans(results.get(yearAndMonth));
 			
-			scan.setNumberCriticalVulnerabilities((Long) map.get("critical"));
-			scan.setNumberHighVulnerabilities((Long) map.get("high"));
-			scan.setNumberMediumVulnerabilities((Long) map.get("medium"));
-			scan.setNumberLowVulnerabilities((Long) map.get("low"));
-			dateList.add(yearAndMonth.getMonthName());
-			
-			scanList.add(scan);
 		}
 		
 		return scanList;
@@ -250,7 +267,8 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 
 	@Override
 	public boolean next() {
-		if (normalizedScans != null && index < normalizedScans.size() - 1) {
+		if (normalizedScans != null && normalizedScans.size() > 0 && 
+				index < normalizedScans.get(0).size() - 1) {
 			if (index == -1)
 				index = 0;
 			else
@@ -265,16 +283,20 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	private void buildHash() {
 		resultsHash.clear();
 
-		Scan scan = normalizedScans.get(index);
+		long numCritical = 0,numHigh = 0,numMedium = 0,numLow = 0;
+		for (List<Scan> scanList: normalizedScans) {
+			
+			Scan scan = scanList.get(index);
+			numCritical += scan.getNumberCriticalVulnerabilities();
+			numHigh += scan.getNumberHighVulnerabilities();
+			numMedium += scan.getNumberMediumVulnerabilities();
+			numLow += scan.getNumberLowVulnerabilities();
+		}
 		
-		resultsHash.put("criticalVulns", scan.getNumberCriticalVulnerabilities());
-		resultsHash.put("highVulns", scan.getNumberHighVulnerabilities());
-		resultsHash.put("mediumVulns", scan.getNumberMediumVulnerabilities());
-		resultsHash.put("lowVulns", scan.getNumberLowVulnerabilities());
-
-		if (scan.getApplication() != null
-				&& scan.getApplication().getName() != null)
-			resultsHash.put("name", scan.getApplication().getName());
+		resultsHash.put("criticalVulns", numCritical);
+		resultsHash.put("highVulns", numHigh);
+		resultsHash.put("mediumVulns", numMedium);
+		resultsHash.put("lowVulns", numLow);
 
 		if (dateList.get(index) != null)
 			resultsHash.put("importTime", dateList.get(index));
