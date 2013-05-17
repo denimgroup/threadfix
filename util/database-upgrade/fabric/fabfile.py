@@ -4,9 +4,11 @@ from fabric.contrib.console import confirm
 import datetime, re
 
 source_code_loc='https://code.google.com/p/threadfix'
-local_working_folder_loc = '/home/vagrant' #where fabfile is running from
+local_working_folder_loc = '$(pwd)' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
 local_path = 'threadfix/src/main/resources' #path to .deploy files
+mysql_user = 'threadfix'
+mysql_password = 'tfpassword'
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
@@ -20,7 +22,7 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone -b 1.2 %s' % source_code_loc)
+        result = local('git clone -b 1.1 %s' % source_code_loc)
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
@@ -36,16 +38,34 @@ def exchange_files():
     if res.failed and confirm('Deploy files were not found. Abort recommended. Abort?'):
         abort('Aborting because deploy files not found.')
 
+# Updates the Java version from 6 to 7
+@task
+@runs_once
+def install_java_7():
+    local('sudo apt-get update && sudo apt-get upgrade')
+    local('sudo service tomcat7 stop')
+    local('sudo apt-get install openjdk-7-jdk -y && sudo update-java-alternatives -s java-1.7.0-openjdk-i386')
+    local('sudo touch /usr/share/tomcat7/bin/setenv.sh && sudo chown $(whoami) /usr/share/tomcat7/bin/setenv.sh && sudo echo "\nJAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386/" >> /usr/share/tomcat7/bin/setenv.sh')
+    local('sudo chown tomcat7:tomcat7 /usr/share/tomcat7/bin/setenv.sh')
+    local("sudo sed -i 's/#JAVA_HOME=\/usr\/lib\/jvm\/openjdk-6-jdk/JAVA_HOME=\/usr\/lib\/jvm\/java-7-openjdk-i386/g' /etc/default/tomcat7")
+    local("sudo sed -i 's/\/usr\/lib\/jvm\/java-6-openjdk/\/usr\/lib\/jvm\/java-7-openjdk-i386/g' /etc/init.d/tomcat7")
+
 # creates the WAR file from the source code
 @task
 @runs_once
 def build_war():
     with lcd('%s/threadfix' % local_working_folder_loc):
-        local('update-java-alternatives -s java-1.7.0-openjdk-i386')
-        local('sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-i386 /usr/lib/jvm/default-java')
         res = local('mvn package -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
+
+# Updates the database to contain new mappings
+@task
+def update_database():
+    print('About to back up database and run updates.')
+    folder_name = now.year*100000000 + now.month*1000000 + now.day*10000 + now.hour*100 + now.minute
+    local('mysqldump -u %s -p%s threadfix > threadfixdump%s.sql' % (mysql_user, mysql_password, folder_name))
+    local('java -jar dbupdate.jar //localhost:3306/threadfix %s %s' % (mysql_user, mysql_password))
 
 # moves the WAR file to the remote server, updates the database and restarts tomcat 
 @task
@@ -59,6 +79,7 @@ def deploy_war():
         local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
         local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
+    local('sudo cp /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties %s/threadfix/WEB-INF/classes/jdbc.properties' % (server_target_loc))
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
     local('sudo cp %s/threadfix/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
 	# We need to move the mysql / deploy config files to replace the development ones
@@ -72,9 +93,9 @@ def change_owners() :
     local('sudo mkdir /var/lib/tomcat7/webapps/threadfix/jasper/images')
     # Tomcat must own these directories so that logs, scans, and report images are writable
     local('sudo chown tomcat7 /var/lib/tomcat7') 
-    local('sudo chown tomcat7:tomcat7 /var/lib/tomcat7/webapps/threadfix/jasper/images') 
+    local('sudo chown tomcat7 /var/lib/tomcat7/webapps/threadfix/jasper/images') 
     local('sudo service tomcat7 start')  #start tomcat
-
+    
 # verifies the login page
 @task
 def verify_site():
@@ -86,26 +107,14 @@ def verify_site():
     else:
         print('WARNING: The HTTP response was not successful.')
 
-@task
-def slow_deploy():
-    if confirm('Ready to delete old source code locally?'):
-        remove_old_code()
-        if confirm('Ready to obtain new source code?'):
-            clone_code()
-            if confirm('Ready to exchange debug files for deploy files?'):
-                exchange_files()
-                if confirm('Ready to build the WAR file?'):
-                    build_war()
-                    if confirm('Ready to deploy to the remote server(s)? (This will take a few minutes)'):
-                        deploy_war()
-                        if confirm('Ready to verify the login page?'):
-                            verify_site()
-
 @task(default=True)
-def deploy():
+def deploy_new_war():
     remove_old_code()
     clone_code()
     exchange_files()
+    install_java_7()
     build_war()
-    #deploy_war()
-    #verify_site()
+    update_database()
+    deploy_war()
+    change_owners()
+    verify_site()
