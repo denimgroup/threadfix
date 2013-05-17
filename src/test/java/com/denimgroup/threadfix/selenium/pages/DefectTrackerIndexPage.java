@@ -37,7 +37,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	private Select defectTrackerTypeSelect;
 	private WebElement addDefectTrackerButton;
 	private List<WebElement> editButtons = new ArrayList<WebElement>();
-	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
+//	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
 
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
@@ -52,7 +52,7 @@ public class DefectTrackerIndexPage extends BasePage {
 		
 		for (int i = 1; i <= getNumRows(); i++) {
 			editButtons.add(driver.findElementById("editDefectTracker" + i + "Button"));
-			deleteButtons.add(driver.findElementById("deleteButton" + i));
+//			deleteButtons.add(driver.findElementById("deleteButton" + i));
 			names.add(driver.findElementById("defectTrackerName" + i));
 		}
 	}
@@ -124,15 +124,21 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public DefectTrackerIndexPage clickDeleteButton(String name){
-		for(int i = 0; i < getNumRows(); i ++){
-			System.out.println(names.get(i).getText() + " and name = " + name);
-			if(name.equals(names.get(i).getText())){
-				//driver.findElementById("deleteButton" + (i + 1)).click();
-				System.out.println("Got in here");
-				deleteButtons.get(i).click();
-				handleAlert();
-			}
-		}
+////		for(int i = 0; i < getNumRows(); i ++){
+//////			System.out.println(names.get(i).getText() + " and name = " + name);
+////			if(name.equals(names.get(i).getText())){
+////				//driver.findElementById("deleteButton" + (i + 1)).click();
+//////				System.out.println("Got in here");
+//////				driver.fin
+//////				deleteButtons.get(i).click();
+//				handleAlert();
+//			}
+//		}
+		
+		clickEditLink(name);
+		sleep(500);
+		driver.findElementById("deleteButton"+(getIndex(name)+1)).click();
+		handleAlert();
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -241,7 +247,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
 		driver.findElementByLinkText("Update Defect Tracker").click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		waitForInvisibleElement(driver.findElementByClassName("in"));
 		return new DefectTrackerIndexPage(driver);
 	}
 	

@@ -83,6 +83,7 @@ public class ApiKeysIndexPage extends BasePage {
 	
 
 	public ApiKeysIndexPage clickDelete(String note) {
+		clickEdit(note);
 		driver.findElementsById("deleteButton").get(getIndex(note)).click();
 		handleAlert();
 

@@ -54,7 +54,6 @@ public class TeamDetailPage extends BasePage {
 	
 	
 	public TeamDetailPage clickEditOrganizationLink() {
-		clickShowMore();
 		driver.findElementById("teamModalButton").click();
 		waitForElement(driver.findElementById("teamModal"));
 		return new TeamDetailPage(driver);
@@ -87,7 +86,8 @@ public class TeamDetailPage extends BasePage {
 	}
 	
 	public TeamIndexPage clickDeleteButton() {
-		clickShowMore();
+		clickEditOrganizationLink();
+		sleep(500);
 		driver.findElementById("deleteLink").click();
 		
 		Alert alert = driver.switchTo().alert();

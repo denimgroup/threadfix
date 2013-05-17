@@ -151,7 +151,7 @@ public class DefectTrackerTests extends BaseTest {
 		assertTrue("The defectTracker was not present in the table.",
 				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(1);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(newDefectTrackerName);
 		assertFalse(
 				"The defectTracker was still present after attempted deletion.",
 				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));

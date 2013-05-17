@@ -35,7 +35,7 @@ public class UserIndexPage extends BasePage {
 	
 	private WebElement addUserLink;
 	
-	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
+//	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> editLinks = new ArrayList<WebElement>();
 
@@ -49,7 +49,7 @@ public class UserIndexPage extends BasePage {
 		addUserLink = driver.findElementById("newUserModalLink");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
-			deleteButtons.add(driver.findElementById("delete" + i));
+//			deleteButtons.add(driver.findElementById("delete" + i));
 			names.add(driver.findElementById("name" + i));
 			editLinks.add(driver.findElementById("editUserModal" + i +"Link"));
 			//edit permissions buttons
@@ -69,13 +69,17 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickDeleteButton(String roleName) {
-		deleteButtons.get(getIndex(roleName)).click();
+		clickEditLink(roleName);
+		sleep(500);
+		driver.findElementById("delete"+(getIndex(roleName)+1)).click();
 		handleAlert();
 		return new UserIndexPage(driver);
 	}
 	
 	public LoginPage clickDeleteButtonSameUser(String roleName) {
-		deleteButtons.get(getIndex(roleName)).click();
+		clickEditLink(roleName);
+		sleep(500);
+		driver.findElementById("delete"+(getIndex(roleName)+1)).click();
 		handleAlert();
 		return new LoginPage(driver);
 	}
