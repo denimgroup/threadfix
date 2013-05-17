@@ -4,8 +4,8 @@
 	<h4 id="myModalLabel">Add Comment</h4>
 </div>
 <spring:url value="/organizations/{orgId}/applications/{applicationId}/vulnerabilities/{vulnerabilityId}/addComment" var="commentUrl">
-	<spring:param name="orgId" value="${ application.organization.id }" />
-	<spring:param name="applicationId" value="${ application.id }" />
+	<spring:param name="orgId" value="${ vulnerability.application.organization.id }" />
+	<spring:param name="applicationId" value="${ vulnerability.application.id }" />
 	<spring:param name="vulnerabilityId" value="${ vulnerability.id }" />
 </spring:url>
 <form id="addCommentForm${ vulnerability.id }" method="post" action="${ fn:escapeXml(commentUrl) }">
