@@ -9,7 +9,7 @@ function refillElement(elementId, endPoint, page, login)
 }
 
 function refillElementDropDownPage(elementId, endPoint, login) {
-	refillElementSort(elementId, endPoint, $("#pageInput").val(), login);
+	refillElement(elementId, endPoint, $("#pageInput").val(), login);
 }
 
 function refillElementSort(elementId, endPoint, page, field, login)
@@ -27,7 +27,7 @@ function refillElementSort(elementId, endPoint, page, field, login)
 	}
 	
 	var caretState = false;
-	if (field != null) {
+	if (field) {
 		caretState = $('#headerCaret' + field).attr('class').indexOf('caret-up') == -1;
 	}
 	
