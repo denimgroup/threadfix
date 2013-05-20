@@ -381,7 +381,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
+		sleep(500);
 		driver.findElementById("submitAppModal").click();
+		System.out.println("1");
 		return new ApplicationDetailPage(driver);
 	}
 

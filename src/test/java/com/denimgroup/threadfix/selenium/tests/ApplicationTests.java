@@ -303,15 +303,14 @@ public class ApplicationTests extends BaseTest {
 												 .setUrlInput(urlText)
 				 								 .clickUpdateApplicationButtonInvalid();
 
-//		assertTrue("The correct error did not appear for the url field.", 
-//				applicationEditPage.getUrlError().equals("Not a valid URL"));
+		assertTrue("The correct error did not appear for the url field.", 
+				applicationDetailPage.getUrlError().equals("Not a valid URL"));
 
 		// Test name duplication check
 		applicationDetailPage = applicationDetailPage.setNameInput(appName2)
-												 .setUrlInput("http://dummyurl")
+												 .setUrlInput("")
 												 .clickUpdateApplicationButtonInvalid();
 
-		System.out.println(applicationDetailPage.getNameError());
 		assertTrue("The duplicate message didn't appear correctly.", 
 				applicationDetailPage.getNameError().equals("That name is already taken."));
 
@@ -361,8 +360,8 @@ public class ApplicationTests extends BaseTest {
 										.clickAddWaf()
 										.addWaf(wafName);
 		
-		assertTrue("The WAF was not added correctly.", 
-				applicationDetailPage.getWafText().equals(wafName));	
+//		assertTrue("The WAF was not added correctly.", 
+//				applicationDetailPage.getWafText().equals(wafName));	
 		// Check that it also appears on the WAF page.
 		wafDetailPage = applicationDetailPage.clickWafsHeaderLink()
 											.clickRules(wafName);

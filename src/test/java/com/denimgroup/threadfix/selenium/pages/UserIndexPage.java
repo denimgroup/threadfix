@@ -169,7 +169,7 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickUpdateUserBtn(String name){
 		driver.findElementsById("addUserButton").get(getIndex(name)).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		waitForInvisibleElement(driver.findElementByClassName("in"));
 		return new UserIndexPage(driver);
 	}
 	

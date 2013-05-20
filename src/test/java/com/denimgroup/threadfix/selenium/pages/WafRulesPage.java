@@ -42,8 +42,6 @@ public class WafRulesPage extends BasePage {
 		
 		nameText = driver.findElementById("nameText");
 		wafTypeText = driver.findElementById("wafTypeText");
-		editLink = driver.findElementById("editWafModalButton");
-		deleteButton = driver.findElementById("deleteButton");
 	}
 
 	public String getNameText(){
