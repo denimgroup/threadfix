@@ -13,9 +13,11 @@ function toggleRoles(id) {
 
 var addPasswordHandlers = function() {
 	
-	$(".ldapCheckbox").each(function(){
+	$(".ldapCheckbox, .globalAccessCheckBox").each(function(){
 		if ($(this).attr("data-value") === "true") {
 			$(this).attr("checked", "checked");
+		} else {
+			$(this).removeAttr("checked");
 		}
 	});
 	

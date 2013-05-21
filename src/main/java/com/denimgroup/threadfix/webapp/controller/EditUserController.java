@@ -88,11 +88,11 @@ public class EditUserController {
 	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
 			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
 		
-		User editedUser = userService.applyChanges(user, userId);
+		userService.applyChanges(user, userId);
 		
-		new UserValidator(roleService).validate(editedUser, result);
+		new UserValidator(roleService).validate(user, result);
 		
-		if (userService.hasRemovedAdminPermissions(editedUser) && !userService.canDelete(editedUser)) {
+		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
 			result.rejectValue("hasGlobalGroupAccess", null, null, 
 					"This would leave users unable to access the user management portion of ThreadFix.");
 		}
@@ -104,8 +104,8 @@ public class EditUserController {
 			return "ajaxFailureHarness";
 		} else {
 
-			User databaseUser = userService.loadUser(editedUser.getName());
-			if (databaseUser != null && !databaseUser.getId().equals(editedUser.getId())) {
+			User databaseUser = userService.loadUser(user.getName());
+			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
 				model.addAttribute("accessControlMapModel", getMapModel(userId));
 				model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
@@ -113,24 +113,28 @@ public class EditUserController {
 				return "ajaxFailureHarness";
 			}
 			
-			if (editedUser.getGlobalRole() != null && editedUser.getGlobalRole().getId() != null) {
-				Role role = roleService.loadRole(editedUser.getGlobalRole().getId());
+			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
+				Role role = roleService.loadRole(user.getGlobalRole().getId());
 				if (role == null) {
-					editedUser.setGlobalRole(null);
+					user.setGlobalRole(null);
 				}
 			}
 			
 			String globalGroupAccess = request.getParameter("hasGlobalGroupAccess");
 			
 			Boolean hasGlobalGroup = globalGroupAccess != null && globalGroupAccess.equals("true");
-			editedUser.setHasGlobalGroupAccess(hasGlobalGroup);
-			userService.storeUser(editedUser);
+			user.setHasGlobalGroupAccess(hasGlobalGroup);
+			if (!hasGlobalGroup) {
+				user.setGlobalRole(null);
+			}
+			userService.storeUser(user);
+			status.setComplete();
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
-			log.info("The User " + editedUser.getName() + " (id=" + editedUser.getId() + ") has been edited by user " + currentUser);
+			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
 			ControllerUtils.addSuccessMessage(request, 
 					"User " + user.getName() + " has been edited successfully.");

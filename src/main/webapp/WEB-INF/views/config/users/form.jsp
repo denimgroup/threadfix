@@ -41,8 +41,9 @@
 			<td class="no-color" style="text-align: left;">
 				<form:checkbox onclick="toggleRoles('${ status.count }')" 
 					id="hasGlobalGroupAccessCheckbox${ status.count }" 
+					class="globalAccessCheckBox"
 					path="hasGlobalGroupAccess" 
-					value="${user.hasGlobalGroupAccess}"/>
+					data-value="${user.hasGlobalGroupAccess}"/>
 			</td>
 		</tr>
 		<tr>
@@ -54,10 +55,13 @@
 				</form:select>
 				
 				<c:if test="${ not user.hasGlobalGroupAccess }">
-					<script>$("#roleSelect<c:out value='${ user.id }'/>").attr("disabled","disabled");</script>
+					<script>$("#roleSelect<c:out value='${ status.count }'/>").attr("disabled","disabled");</script>
 				</c:if>
 				<c:if test="${ user.hasGlobalGroupAccess }">
-					<script>$("#roleSelect<c:out value='${ user.id }'/>").val(<c:out value='${ user.globalRole.id }'/>)</script>
+					<script>$("#roleSelect<c:out value='${ status.count }'/>").val(<c:out value='${ user.globalRole.id }'/>);</script>
+				</c:if>
+				<c:if test="${ empty user.globalRole }">
+					<script>$("#roleSelect<c:out value='${ status.count }'/>").val(0);</script>
 				</c:if>
 			</td>
 			<td class="no-color" style="border: 0px solid black; background-color: white; padding-left: 5px">
