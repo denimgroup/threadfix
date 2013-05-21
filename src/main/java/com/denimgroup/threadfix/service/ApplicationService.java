@@ -161,4 +161,9 @@ public interface ApplicationService {
 	 */
 	long getVulnCount(Integer appId, boolean open);
 
+	/**
+	 * 
+	 */
+	void validateDefectTracker(Application application, BindingResult result);
+
 }

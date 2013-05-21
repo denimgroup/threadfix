@@ -385,6 +385,21 @@ public class ApplicationServiceImpl implements ApplicationService {
 			decryptCredentials(application);
 		}
 			
+		if (databaseApplication != null && !databaseApplication.getId().equals(
+				application.getId())) {
+			result.rejectValue("name", "errors.nameTaken");
+		}
+		
+		Integer databaseWafId = null;
+		if (databaseApplication != null && databaseApplication.getWaf() != null)
+			databaseWafId = databaseApplication.getWaf().getId();
+		
+		// remove any outdated vuln -> waf rule links
+		updateWafRules(loadApplication(application.getId()), databaseWafId);
+	}
+	
+	@Override
+	public void validateDefectTracker(Application application, BindingResult result) {
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
 		
 		if (hasNewDefectTracker || (application.getDefectTracker() == null 
@@ -400,18 +415,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 				}
 			}
 		}
-		
-		if (databaseApplication != null && !databaseApplication.getId().equals(
-				application.getId())) {
-			result.rejectValue("name", "errors.nameTaken");
-		}
-		
-		Integer databaseWafId = null;
-		if (databaseApplication != null && databaseApplication.getWaf() != null)
-			databaseWafId = databaseApplication.getWaf().getId();
-		
-		// remove any outdated vuln -> waf rule links
-		updateWafRules(loadApplication(application.getId()), databaseWafId);
 	}
 	
 	@Override

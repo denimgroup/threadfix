@@ -121,6 +121,19 @@ public class EditApplicationController {
 			return "403";
 		}
 		
+		Application databaseApplication = applicationService.loadApplication(appId);
+		if (databaseApplication == null || !databaseApplication.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		// These should not be editable in this method.
+		// TODO split into 3 controllers and use setAllowedFields
+		application.setWaf(databaseApplication.getWaf());
+		application.setDefectTracker(databaseApplication.getDefectTracker());
+		application.setUserName(databaseApplication.getUserName());
+		application.setPassword(databaseApplication.getPassword());
+		
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
 		}
@@ -238,6 +251,7 @@ public class EditApplicationController {
 		
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
+			applicationService.validateDefectTracker(application, result);
 		}
 		
 		if (application.getName() != null && application.getName().trim().equals("")

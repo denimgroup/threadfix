@@ -1,5 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<spring:url value="{appId}/edit" var="editUrl">
+	<spring:param name="appId" value="${ application.id }"/>
+</spring:url>
+<spring:url value="{appId}/delete" var="deleteUrl">
+	<spring:param name="appId" value="${ application.id }"/>
+</spring:url>
 	<div class="modal-header">
 		<h4 id="myModalLabel">Edit Application
 			<span class="delete-span">
