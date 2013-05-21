@@ -112,6 +112,12 @@ public class OrganizationsController {
 	
 	private void addModelObjects(Model model) {
 		List<Organization> organizations = organizationService.loadAllActiveFilter();
+		
+		if (organizations != null) {
+			for (Organization organization : organizations) {
+				organization.setApplications(permissionService.filterApps(organization));
+			}
+		}
 
 		// for quick start
 		model.addAttribute("channels", channelTypeService.getChannelTypeOptions(null));
