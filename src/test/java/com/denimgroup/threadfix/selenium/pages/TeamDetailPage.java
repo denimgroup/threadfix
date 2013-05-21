@@ -43,7 +43,7 @@ public class TeamDetailPage extends BasePage {
 	public TeamDetailPage(WebDriver webdriver) {
 		super(webdriver);
 		
-		orgName = driver.findElementById("name");
+//		orgName = driver.findElementById("name");
 		applicationsTableBody = driver.findElementById("applicationsTableBody");
 		addApplicationLink = driver.findElementByLinkText("Add Application");
 	}

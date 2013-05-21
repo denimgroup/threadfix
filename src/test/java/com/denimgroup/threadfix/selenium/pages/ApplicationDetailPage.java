@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -288,10 +289,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public TeamDetailPage clickDeleteLink() {
+		clickEditDeleteBtn();
 		driver.findElementById("deleteLink").click();
-
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
+		handleAlert();
 
 		return new TeamDetailPage(driver);
 	}
@@ -376,14 +376,18 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickUpdateApplicationButton() {
 		driver.findElementById("submitAppModal").click();
-		waitForInvisibleElement(driver.findElementById("editApplicationModal"));
+		try {
+			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
+		}catch(TimeoutException e){
+			driver.findElementById("submitAppModal").click();
+			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
+		}
 		return new ApplicationDetailPage(driver);
 	}
 
 	public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
-		sleep(500);
+		sleep(1000);
 		driver.findElementById("submitAppModal").click();
-		System.out.println("1");
 		return new ApplicationDetailPage(driver);
 	}
 

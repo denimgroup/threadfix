@@ -121,6 +121,11 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage expandTeamRowByName(String name) {
 		driver.findElementById("teamName" + (getIndex(name) + 1)).click();
+		try{
+			populateAppList(name);
+		}catch(NoSuchElementException e){
+			
+		}
 
 		return new TeamIndexPage(driver);
 	}
@@ -175,7 +180,7 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage saveApplication(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal-header"));
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
 		return new TeamIndexPage(driver);
 	}
 

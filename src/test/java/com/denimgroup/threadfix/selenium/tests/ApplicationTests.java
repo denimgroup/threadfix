@@ -83,7 +83,6 @@ public class ApplicationTests extends BaseTest {
 		//cleanup
 		loginPage = teamIndexPage.expandTeamRowByName(teamName)
 										.clickViewAppLink(appName, teamName)
-										.clickEditDeleteBtn()
 										.clickDeleteLink()
 										.clickDeleteButton()
 										.logout();
