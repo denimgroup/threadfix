@@ -7,6 +7,9 @@ function reloadRight() {
 }
 
 function submitAjaxReport(formId,successDiv, viewMore) {
+	if ($(formId).size() === 0) {
+		return;
+	}
 	
 	$("#connectionUnavailableMessage").css("display", "none");
 	

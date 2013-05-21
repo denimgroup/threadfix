@@ -60,6 +60,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
@@ -83,6 +84,7 @@ public class ScanServiceImpl implements ScanService {
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	private EmptyScanDao emptyScanDao = null;
 	private QueueSender queueSender = null;
+	private PermissionService permissionService = null;
 
 	@Autowired
 	public ScanServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
@@ -92,6 +94,7 @@ public class ScanServiceImpl implements ScanService {
 			ApplicationDao applicationDao,
 			ApplicationChannelDao applicationChannelDao,
 			EmptyScanDao emptyScanDao,
+			PermissionService permissionService,
 			QueueSender queueSender) {
 		this.scanDao = scanDao;
 		this.channelTypeDao = channelTypeDao;
@@ -102,6 +105,7 @@ public class ScanServiceImpl implements ScanService {
 		this.applicationDao = applicationDao;
 		this.queueSender = queueSender;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
+		this.permissionService = permissionService;
 	}
 
 	@Override
@@ -406,8 +410,15 @@ public class ScanServiceImpl implements ScanService {
 	}
 	
 	@Override
-	public List<Scan> loadMostRecent(int number) {
-		return scanDao.retrieveMostRecent(number);
+	public List<Scan> loadMostRecentFiltered(int number) {
+		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+			return scanDao.retrieveMostRecent(number);
+		}
+		
+		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+		
+		return scanDao.retrieveMostRecent(number, appIds, teamIds);
 	}
 	
 	@Override
@@ -560,11 +571,26 @@ public class ScanServiceImpl implements ScanService {
 	
 	@Override
 	public int getScanCount() {
-		return scanDao.getScanCount();
+		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+			return scanDao.getScanCount();
+		}
+		
+		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+		
+		return scanDao.getScanCount(appIds, teamIds);
 	}
 	
+	@Override
 	public List<Scan> getTableScans(Integer page) {
-		return scanDao.getTableScans(page);
+		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+			return scanDao.getTableScans(page);
+		}
+		
+		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+		
+		return scanDao.getTableScans(page, appIds, teamIds);
 	}
 	
 }

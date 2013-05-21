@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
@@ -324,45 +326,6 @@ public class HibernateScanDao implements ScanDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Scan> retrieveMostRecent(int number) {
-		return sessionFactory.getCurrentSession()
-				.createCriteria(Scan.class)
-				.createAlias("application", "app")
-				.add(Restrictions.eq("app.active", true))
-				.addOrder(Order.desc("id"))
-				.setMaxResults(number)
-				.list();
-	}
-	
-	public int getScanCount() {
-		Long result = (Long) sessionFactory.getCurrentSession().createQuery(
-				"select count(*) from Scan scan"
-				).uniqueResult();
-		return safeLongToInt(result);
-	}
-	public static int safeLongToInt(long l) {
-		if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-			return Integer.MAX_VALUE;
-		}
-		return (int) l;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Scan> getTableScans(Integer page) {
-
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Scan.class);
-
-		criteria.createAlias("application", "app")
-			.add(Restrictions.eq("app.active", true))
-			.setFirstResult((page - 1) * 100)
-			.setMaxResults(100)
-			.addOrder(Order.desc("importTime"));
-
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
 		if (ids == null || ids.isEmpty()) return new HashMap<String, Object>();
 		
@@ -390,5 +353,128 @@ public class HibernateScanDao implements ScanDao {
 				.setParameterList("scanIds52", ids)
 				.setInteger("scanId", ids.get(0))
 				.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Scan> retrieveMostRecent(int number, Set<Integer> authenticatedAppIds, 
+			Set<Integer> authenticatedTeamIds) {
+
+		Criteria baseCriteria = getBaseScanCriteria()
+				.addOrder(Order.desc("id"))
+				.setMaxResults(number);
+		
+		Criteria result = addFiltering(baseCriteria, authenticatedTeamIds, authenticatedAppIds);
+		
+		if (result == null) {
+			return new ArrayList<Scan>();
+		} else {
+			return baseCriteria.list();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Scan> retrieveMostRecent(int number) {
+		return getBaseScanCriteria()
+				.addOrder(Order.desc("id"))
+				.setMaxResults(number)
+				.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Scan> getTableScans(Integer page) {
+
+		return getBaseScanCriteria()
+			.setFirstResult((page - 1) * 100)
+			.setMaxResults(100)
+			.addOrder(Order.desc("importTime"))
+			.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Scan> getTableScans(Integer page, Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds) {
+		
+		Criteria criteria = getBaseScanCriteria()
+			.setFirstResult((page - 1) * 100)
+			.setMaxResults(100)
+			.addOrder(Order.desc("importTime"));
+		
+		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
+		
+		if (filteredCriteria == null) {
+			return new ArrayList<Scan>();
+		} else {
+			return criteria.list();
+		}
+	}
+	
+	@Override
+	public int getScanCount() {
+
+		Long result = (Long) getBaseScanCriteria()
+			.setProjection(Projections.rowCount())
+			.uniqueResult();
+		
+		return safeLongToInt(result);
+	}
+	
+	@Override
+	public int getScanCount(Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds) {
+
+		Criteria criteria = getBaseScanCriteria()
+			.setProjection(Projections.rowCount());
+		
+		
+		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
+		
+		if (filteredCriteria == null) {
+			return 0;
+		} else {
+			return safeLongToInt((Long) filteredCriteria.uniqueResult());
+		}
+	}
+	
+	private Criteria getBaseScanCriteria() {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(Scan.class)
+				.createAlias("application", "app")
+				.add(Restrictions.eq("app.active", true));
+	}
+	
+	private Criteria addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
+		
+		boolean useAppIds = appIds != null && !appIds.isEmpty(),
+				useTeamIds = teamIds != null && !teamIds.isEmpty();
+		
+		if (!useAppIds && !useTeamIds) {
+			return null;
+		}
+		
+		if (useAppIds && useTeamIds) {
+			criteria.createAlias("app.organization", "team")
+				.add(Restrictions.eq("team.active", true))
+				.add(Restrictions.or(
+						Restrictions.in("app.id", appIds),
+						Restrictions.in("team.id", teamIds)
+						));
+		} else if (useAppIds) {
+			criteria
+				.add(Restrictions.in("app.id", appIds));
+		} else if (useTeamIds) {
+			criteria.createAlias("app.organization", "team")
+				.add(Restrictions.in("team.id", teamIds))
+				.add(Restrictions.eq("team.active", true));
+		}
+		return criteria;
+	}
+	
+	private static int safeLongToInt(long l) {
+		if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		}
+		return (int) l;
 	}
 }

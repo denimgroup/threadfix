@@ -32,6 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -56,6 +57,7 @@ public class DashboardController {
 	private VulnerabilityCommentService vulnerabilityCommentService;
 	private ScanService scanService;
 	private ReportsService reportsService;
+	private PermissionService permissionService;
 	private OrganizationService organizationService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
@@ -70,14 +72,18 @@ public class DashboardController {
 		this.scanService = scanService;
 		this.organizationService = organizationService;
 		this.reportsService = reportsService;
+		this.permissionService = permissionService;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
-		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecent(5));
-		model.addAttribute("recentScans", scanService.loadMostRecent(5));
-		model.addAttribute("teams", organizationService.loadAllActive());
+		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecentFiltered(5));
+		model.addAttribute("recentScans", scanService.loadMostRecentFiltered(5));
+		
+		model.addAttribute("teams", organizationService.loadAllActiveFilter());
+		
+		permissionService.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
 		
 		return "dashboard/dashboard";
 	}

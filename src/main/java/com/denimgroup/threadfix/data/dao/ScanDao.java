@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
@@ -157,16 +158,30 @@ public interface ScanDao {
 	List<Scan> retrieveMostRecent(int number);
 	
 	/**
-	 *
+	 * @param number 
+	 */
+	List<Scan> retrieveMostRecent(int number, Set<Integer> authenticatedAppIds, 
+			Set<Integer> authenticatedTeamIds);
+	
+	/**
 	 *
 	 */
 	int getScanCount();
 
 	/**
-	 *
+	 * 
+	 */
+	int getScanCount(Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds);
+
+	/**
 	 *
 	 */
 	List<Scan> getTableScans(Integer page);
+	
+	/**
+	 *
+	 */
+	List<Scan> getTableScans(Integer page, Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds);
 	
 	/**
 	 * 

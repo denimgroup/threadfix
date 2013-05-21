@@ -12,14 +12,18 @@
 
 	<spring:url value="/organizations/teamTable" var="tableUrl"/>
 	<div id="teamTable" data-url="<c:out value="${ tableUrl }"/>" style="margin-bottom:8px;margin-top:10px;">
-		<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" 
-				data-toggle="modal">Add Team</a>
+		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+			<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" 
+					data-toggle="modal">Add Team</a>
+		</security:authorize>
 	</div>
 	
-	<div id="myTeamModal" class="modal hide fade" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div id="formDiv">
-			<%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+		<div id="myTeamModal" class="modal hide fade" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="formDiv">
+				<%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
+			</div>
 		</div>
-	</div>
+	</security:authorize>
 </body>

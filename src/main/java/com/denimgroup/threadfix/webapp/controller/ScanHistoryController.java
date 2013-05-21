@@ -79,19 +79,23 @@ public class ScanHistoryController {
 		ModelAndView mav = new ModelAndView("scans/history");
 		return mav;
 	}
+	
 	@RequestMapping(value="/table",method = RequestMethod.POST)
 	public ModelAndView getScanTable(@RequestBody TableSortBean bean) {
-		log.info("Hit scan history table page.");
 
-		int page = bean.getPage();
-		int scanCount = scanService.getScanCount();
-		int totalPages = (scanCount / 100) + 1;
+		int page = 0, scanCount = 0, totalPages = 0;
+		
+		page = bean.getPage();
+		scanCount = scanService.getScanCount();
+		totalPages = (scanCount / 100) + 1;
 		if (scanCount % 100 == 0) {
 			totalPages -= 1;
 		}
 		if (page > totalPages) page = totalPages;
 		if (page < 1) page = 1;
+		
 		List<Scan> scans = scanService.getTableScans(page);
+		
 		ModelAndView mav = new ModelAndView("scans/historyTable");
 		mav.addObject("scanList", scans);
 		mav.addObject("scanTypes", getTypes(scans));
@@ -100,6 +104,7 @@ public class ScanHistoryController {
 		mav.addObject("numScans", scanCount);
 		return mav;
 	}
+	
 	private String[] getTypes(List<Scan> scanList) {
 		String[] types = new String[scanList.size()];
 		for (int i = 0; i < scanList.size(); i++) {

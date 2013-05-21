@@ -2,12 +2,26 @@
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
+
 <div style="padding-bottom:10px">
-	<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
-		data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
-	<a class="btn" id="expandAllButton">Expand All</a>
-	<a class="btn" id="collapseAllButton">Collapse All</a>
+	<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+		<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal" 
+			data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
+	</security:authorize>
+	<c:if test="${ not empty organizationList }">
+		<a class="btn" id="expandAllButton">Expand All</a>
+		<a class="btn" id="collapseAllButton">Collapse All</a>
+	</c:if>
 </div>
+
+<c:if test="${ empty organizationList }">
+	<security:authorize ifNotGranted="ROLE_CAN_MANAGE_TEAMS">
+		<div class="alert alert-error">
+			You don't have permission to access any ThreadFix applications or to create one for yourself. 
+			Contact your administrator to get help.
+		</div>
+	</security:authorize>
+</c:if>
 
 <c:if test="${ not empty organizationList }">
 <table class="table table-hover white-inner-table">
@@ -117,12 +131,14 @@
 					</c:if>
 					
 					</div>
-					<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
-						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div id="formDiv${ organization.id }">
-							<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+						<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div id="formDiv${ organization.id }">
+								<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+							</div>
 						</div>
-					</div>
+					</security:authorize>
 				</div>
 			</td>
 		</tr>

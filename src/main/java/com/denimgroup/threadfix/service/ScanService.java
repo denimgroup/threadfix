@@ -135,14 +135,14 @@ public interface ScanService {
 	/**
 	 * @param number
 	 */
-	List<Scan> loadMostRecent(int number);
-	
+	List<Scan> loadMostRecentFiltered(int number);
 	
 	/**
 	 */
 	int getScanCount();
 	
 	/**
+	 * @param authenticatedAppIds 
 	 */
 	List<Scan> getTableScans(Integer page);
 
