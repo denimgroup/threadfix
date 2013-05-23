@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -86,7 +87,6 @@ public class WafIndexPage extends BasePage {
 		clickEditWaf(wafName);
 		driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)).click();
 		handleAlert();
-		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 
@@ -106,6 +106,9 @@ public class WafIndexPage extends BasePage {
 		driver.findElementById("submitWafModal").click();
 		try{
 		waitForInvisibleElement(driver.findElementById("createWaf"));
+		}catch(TimeoutException e){
+			driver.findElementById("submitWafModal").click();
+			waitForInvisibleElement(driver.findElementById("createWaf"));
 		}catch(StaleElementReferenceException e){
 			
 		}
@@ -146,20 +149,24 @@ public class WafIndexPage extends BasePage {
 	
 	public WafIndexPage clickEditWaf(String wafName){
 		driver.findElementById("editWafModalButton"+(getIndex(wafName)+1)).click();
-		waitForElement(driver.findElementByClassName("modal"));
+		waitForElement(driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)));
 		return new WafIndexPage(driver);
 	}
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
-		driver.findElementById("nameInput").clear();
-		driver.findElementById("nameInput").sendKeys(newName);
-		new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+		driver.findElementsById("nameInput").get(getIndex(wafName)).clear();
+		driver.findElementsById("nameInput").get(getIndex(wafName)).sendKeys(newName);
+		new Select(driver.findElementsById("typeSelect").get(getIndex(wafName))).selectByVisibleText(type);
 		return new WafIndexPage(driver);
 	}
 	
-	public WafIndexPage clickUpdateWaf(){
+	public WafIndexPage clickUpdateWaf(String oldWafName){
 		driver.findElementByLinkText("Update WAF").click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		try{
+			waitForInvisibleElement(driver.findElementById("deleteWaf"+(getIndex(oldWafName)+1)));
+		}catch(StaleElementReferenceException e){
+			
+		}
 		return new WafIndexPage(driver);
 	}
 	

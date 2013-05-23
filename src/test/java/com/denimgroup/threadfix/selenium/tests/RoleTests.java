@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
@@ -181,7 +182,7 @@ public class RoleTests extends BaseTest {
 	// these tests are to ensure that threadfix cannot enter a state with no users that
 	// have permissions to manage users / roles / groups
 	
-	
+	@Ignore
 	@Test
 	public void testRemoveRolesFromUser() {
 		String admin = "Administrator";

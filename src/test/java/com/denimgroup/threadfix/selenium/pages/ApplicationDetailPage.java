@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -381,6 +382,8 @@ public class ApplicationDetailPage extends BasePage {
 		}catch(TimeoutException e){
 			driver.findElementById("submitAppModal").click();
 			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
+		}catch(StaleElementReferenceException e){
+			
 		}
 		return new ApplicationDetailPage(driver);
 	}

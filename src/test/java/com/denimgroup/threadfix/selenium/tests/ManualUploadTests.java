@@ -55,15 +55,12 @@ public class ManualUploadTests extends BaseTest {
 		driver.quit();
 	}
 
-	/*
+
 	@Test
 	public void testNavigation() {
-		manualUploadPage = getToManualSubmissionPage(getRandomString(15),getRandomString(15));
-		assertTrue("Manual Finding Submission Page Not Found", manualUploadPage.getH2Tag().contains("New Finding"));
-		
-		manualUploadPage.clickBack().clickDeleteLink().clickDeleteButton().logout();
+		loginPage.login("user", "password").logout();
+		//No longer a dedicated page, left in to avoid error in jenkins until the other tests are running.
 	}
-	*/
 
 	/*
 	@Test

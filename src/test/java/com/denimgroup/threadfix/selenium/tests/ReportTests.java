@@ -72,40 +72,40 @@ public class ReportTests extends BaseTest {
 		String pageText = loginPage.login("user", "password").clickReportsHeaderLink().getH2Tag();
 		assertTrue("Reports Page not found", pageText.contains("Reports"));
 	}
-
-	@Test
-	public void testCreateBasicApplicationnoscan() {
-		String teamName = "testCreateTeam" + getRandomString(5);
-		String appName = "testCreateApp" + getRandomString(5);
-		String urlText = "http://testurl.com";
-
-		// set up an organization
-
-		ReportsIndexPage reportsIndexPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.clickReportsHeaderLink();
-		
-		// Run Trending Report
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("Reports Page not found", PageText.contains("Reports"));
-		
-		reportsIndexPage = reportsIndexPage.fillAllClickSaveReport("Trending Report",
-				"testCreateApplicationOrg", "testCreateApplicationApp", "HTML");
-		
-		assertTrue("Reports Page not found", reportsIndexPage.isReportPresent());
-
-		// Delete organization and Logout
-//		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
-//								.expandTeamRowByName(teamName)
-//								.clickViewTeamLink()
-//								.clickDeleteButton()
-//								.logout();
-
-	}
+//reports require manual testing for now, can make automated tests to make sure the webelements generate
+//	@Test
+//	public void testCreateBasicApplicationnoscan() {
+//		String teamName = "testCreateTeam" + getRandomString(5);
+//		String appName = "testCreateApp" + getRandomString(5);
+//		String urlText = "http://testurl.com";
+//
+//		// set up an organization
+//
+//		ReportsIndexPage reportsIndexPage = loginPage.login("user", "password")
+//				.clickOrganizationHeaderLink()
+//				.clickAddTeamButton()
+//				.setTeamName(teamName)
+//				.addNewTeam()
+//				.addNewApplication(teamName, appName, urlText, "Low")
+//				.clickReportsHeaderLink();
+//		
+//		// Run Trending Report
+//		String PageText = driver.findElementByTagName("h2").getText();
+//		assertTrue("Reports Page not found", PageText.contains("Reports"));
+//		
+//		reportsIndexPage = reportsIndexPage.fillAllClickSaveReport("Trending Report",
+//				"testCreateApplicationOrg", "testCreateApplicationApp", "HTML");
+//		
+//		assertTrue("Reports Page not found", reportsIndexPage.isReportPresent());
+//
+//		// Delete organization and Logout
+////		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
+////								.expandTeamRowByName(teamName)
+////								.clickViewTeamLink()
+////								.clickDeleteButton()
+////								.logout();
+//
+//	}
 /*
 	@Ignore // this test consistenly generates OutOfMemoryErrors on my box. We don't want to screw up all the tests.
 	@Test

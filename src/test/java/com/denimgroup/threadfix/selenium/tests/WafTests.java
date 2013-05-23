@@ -35,6 +35,7 @@ import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -106,7 +107,7 @@ public class WafTests extends BaseTest {
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 
-		loginPage = wafIndexPage.clickDeleteWaf(newWafName).clickWafsHeaderLink().logout();
+		loginPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(newWafName).clickWafsHeaderLink().logout();
 		
 		//assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(newWafName));
 	
@@ -248,8 +249,7 @@ public class WafTests extends BaseTest {
 								.clickAddWafLink()
 								.setNewNameInput(longInput);
 		wafIndexPage = wafIndexPage.clickCreateWaf();
-		
-		assertTrue("The waf name was not cropped correctly.", wafIndexPage.getNameText(1).length() == Waf.NAME_LENGTH);
+		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking
 		String wafName = wafIndexPage.getNameText(1);
@@ -295,7 +295,7 @@ public class WafTests extends BaseTest {
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
 								.clickEditWaf(newOrgName)
 								.editWaf(newOrgName, editedOrgName, type2)
-								.clickUpdateWaf()
+								.clickUpdateWaf(newOrgName)
 								.clickWafsHeaderLink();
 		
 
@@ -315,7 +315,6 @@ public class WafTests extends BaseTest {
 	
 	
 	//Create mod-Security Waf and generate rules
-	
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
 		String orgName = "testCreateOrg2";
@@ -578,7 +577,7 @@ public class WafTests extends BaseTest {
 		
 		String emptyInputError = "This field cannot be blank";
 		
-		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+		String longInput = "aaaaaaaaaaaaaaaaaaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 		//create dummy wafs
 		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();
 		assertFalse("The waf was already present.", wafIndexPage.isNamePresent(wafName));
@@ -603,7 +602,7 @@ public class WafTests extends BaseTest {
 		// Test submission with no changes
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
 				.clickEditWaf(wafName)
-				.clickUpdateWaf()
+				.clickUpdateWaf(wafName)
 				.clickWafsHeaderLink();
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(wafName));
 		
@@ -625,11 +624,10 @@ public class WafTests extends BaseTest {
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
 				.clickEditWaf(wafName)
 				.editWaf(wafName, longInput, type2)
- 				.clickUpdateWaf();
+ 				.clickUpdateWaf(wafName);
 		
 		wafName = wafIndexPage.getWafName(1);
-		
-		assertTrue("The waf name was not cropped correctly.", wafName.length() == Waf.NAME_LENGTH);
+		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking
 		wafIndexPage = wafIndexPage.clickEditWaf(wafName)

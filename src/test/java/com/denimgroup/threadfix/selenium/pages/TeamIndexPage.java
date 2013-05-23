@@ -45,14 +45,14 @@ import org.openqa.selenium.support.ui.Select;
 
 public class TeamIndexPage extends BasePage {
 
-	private List<WebElement> names = new ArrayList<WebElement>();
+//	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> apps = new ArrayList<WebElement>();
 
 	public TeamIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		for (int i = 1; i <= getNumTeamRows(); i++) {
-			names.add(driver.findElementById("teamName" + i));
-		}
+//		for (int i = 1; i <= getNumTeamRows(); i++) {
+//			names.add(driver.findElementById("teamName" + i));
+//		}
 
 	}
 
@@ -73,6 +73,10 @@ public class TeamIndexPage extends BasePage {
 
 	public int getIndex(String teamName) {
 		int i = -1;
+		List<WebElement> names = new ArrayList<WebElement>();
+		for (int j = 1; j <= getNumTeamRows(); j++) {
+			names.add(driver.findElementById("teamName" + j));
+		}
 		for (WebElement name : names) {
 			i++;
 			String text = name.getText().trim();
