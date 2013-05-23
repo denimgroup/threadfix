@@ -162,7 +162,9 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickAddNewUserBtnInvalid(){
+		sleep(500);
 		driver.findElementsById("addUserButton").get(getNumRows()).click();
+		sleep(500);
 		return new UserIndexPage(driver);
 	}
 	
@@ -174,11 +176,15 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
+		sleep(500);
 		driver.findElementsById("addUserButton").get(getIndex(name)).click();
 		sleep(500);
 		return new UserIndexPage(driver);
 	}
 	
+	public String getGlobalAccessRole(String name){
+		return new Select(driver.findElementById("roleSelect"+(getIndex(name)+1))).getAllSelectedOptions().get(0).getText().trim(); 
+	}
 	
 	public boolean isUserNamePresent(String userName) {
 		return getIndex(userName) != -1;

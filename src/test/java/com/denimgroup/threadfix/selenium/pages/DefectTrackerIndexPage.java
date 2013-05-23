@@ -247,7 +247,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
 		driver.findElementByLinkText("Update Defect Tracker").click();
-		waitForInvisibleElement(driver.findElementByClassName("in"));
+//		waitForInvisibleElement(driver.findElementByClassName("in"));
 		return new DefectTrackerIndexPage(driver);
 	}
 	

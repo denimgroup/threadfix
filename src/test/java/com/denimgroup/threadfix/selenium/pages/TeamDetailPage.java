@@ -35,7 +35,7 @@ import org.openqa.selenium.WebElement;
 
 public class TeamDetailPage extends BasePage {
 	
-	private WebElement orgName;
+//	private WebElement orgName;
 	private WebElement applicationsTableBody;
 	private WebElement lastItemFoundInApplicationsTableBodyLink;
 	private WebElement addApplicationLink;
@@ -43,13 +43,13 @@ public class TeamDetailPage extends BasePage {
 	public TeamDetailPage(WebDriver webdriver) {
 		super(webdriver);
 		
-		orgName = driver.findElementById("name");
+//		orgName = driver.findElementById("name");
 		applicationsTableBody = driver.findElementById("applicationsTableBody");
 		addApplicationLink = driver.findElementByLinkText("Add Application");
 	}
 	
 	public String getOrgName() {
-		return orgName.getText();
+		return driver.findElementById("name").getText();
 	}
 	
 	

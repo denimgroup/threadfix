@@ -11,6 +11,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
 import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class RoleTests extends BaseTest {
 
@@ -185,8 +186,20 @@ public class RoleTests extends BaseTest {
 	public void testRemoveRolesFromUser() {
 		String admin = "Administrator";
 		
-		rolesIndexPage = loginPage.login("user", "password")
-				.clickManageRolesLink()
+		 UserIndexPage userIndexPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickAddUserLink();
+		 userIndexPage.enterName("RoleRemoval",null)
+		 				.enterPassword("passwordpassword", null)
+		 				.enterConfirmPassword("passwordpassword", null)
+		 				.chooseRoleForGlobalAccess(admin, null)
+		 				.clickAddNewUserBtn()
+		 				.clickEditLink("user")
+		 				.chooseRoleForGlobalAccess("Read Access", "user")
+		 				.clickUpdateUserBtn("user");
+		 
+		
+		rolesIndexPage = userIndexPage.clickManageRolesLink()
 				.clickEditLink(admin);
 		
 		for (String role : Role.ALL_PERMISSIONS) {
@@ -207,6 +220,12 @@ public class RoleTests extends BaseTest {
 		for (String role : Role.ALL_PERMISSIONS) {
 			assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(role,admin));
 		}
+		
+		rolesIndexPage.clickManageUsersLink()
+						.clickEditLink("user")
+						.chooseRoleForGlobalAccess(admin, "user")
+						.clickUpdateUserBtn("user")
+						.clickDeleteButton("RoleRemoval");
 		
 	}
 	

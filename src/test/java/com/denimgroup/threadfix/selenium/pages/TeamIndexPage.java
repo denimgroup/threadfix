@@ -108,8 +108,10 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage addNewTeam() {
+		int cnt = getNumTeamRows() + 1;
 		driver.findElementById("submitTeamModal").click();
-		waitForInvisibleElement(driver.findElementById("myTeamModal"));
+		waitForElement(driver.findElementById("teamName"+cnt));
+//		waitForInvisibleElement(driver.findElementById("myTeamModal"));
 		return new TeamIndexPage(driver);
 	}
 
