@@ -118,6 +118,7 @@ public class UserTests extends BaseTest {
 		userIndexPage.enterConfirmPassword("lengthy password 2",null);
 
 		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+		System.out.println(userIndexPage.getPasswordError());
 		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
 
 		// Create a user

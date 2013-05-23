@@ -639,7 +639,8 @@ public class WafTests extends BaseTest {
 		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
 					
 		// Delete and logout
-		wafIndexPage.clickDeleteWaf(wafName)
+		wafIndexPage.clickWafsHeaderLink()
+					.clickDeleteWaf(wafName)
 					.clickDeleteWaf(wafNameDuplicateTest)
 					.logout();
 		
