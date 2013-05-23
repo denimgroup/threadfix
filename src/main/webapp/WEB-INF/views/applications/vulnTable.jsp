@@ -179,7 +179,7 @@
 						<td >
 							<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/>" style="width:100%;text-align:center;">
 							<c:if test="${ not empty vulnerability.defect }">
-								<a id="bugLink${ vulnerability.id }"
+								<a id="bugLink${ index }"
 										target="_blank" 
 										href="<c:out value="${ vulnerability.defect.defectURL }"/>">
 									<img src="<%=request.getContextPath()%>/images/icn_bug.png" class="transparent_png" alt="Threadfix" />
