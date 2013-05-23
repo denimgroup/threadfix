@@ -294,6 +294,14 @@ function addExpandsHandlers() {
 			});
 		}
 	});
+	
+	$(".tooltip-container").each(function() {
+		if (!$(this).attr("data-has-function")) {
+			$(this).tooltip();
+			$(this).attr("data-has-function","1");
+		}
+	});
+	
 }
 
 function reloadLeft() {

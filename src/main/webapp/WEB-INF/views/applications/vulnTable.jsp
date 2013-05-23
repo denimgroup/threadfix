@@ -88,6 +88,9 @@
 				<th class="pointer" style="min-width:90px;" onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 4, '<c:out value="${ loginUrl }"/>')">
 					Parameter<span id="headerCaret4" class="caret-down"></span>
 				</th>
+				<c:if test="${ not empty application.defectTracker }">
+					<th>Defect</th>
+				</c:if>
 				<th style="width:65px;"></th>
 			</tr>
 		</thead>
@@ -132,6 +135,9 @@
 						(<c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/>) 
 					</td>
 					<td class="vulnSectionHeader" colspan="4"></td>
+					<c:if test="${ not empty application.defectTracker }">
+						<td class="vulnSectionHeader"></td>
+					</c:if>
 				</tr>
 			</c:if>
 		
@@ -169,6 +175,19 @@
 					</td>
 					<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
 					<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
+					<c:if test="${ not empty application.defectTracker }">
+						<td >
+							<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/>" style="width:100%;text-align:center;">
+							<c:if test="${ not empty vulnerability.defect }">
+								<a id="bugLink${ vulnerability.id }"
+										target="_blank" 
+										href="<c:out value="${ vulnerability.defect.defectURL }"/>">
+									<img src="<%=request.getContextPath()%>/images/icn_bug.png" class="transparent_png" alt="Threadfix" />
+								</a>
+							</c:if>
+							</div>
+						</td>
+					</c:if>
 					<td>
 						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 					        <spring:param name="appId" value="${ application.id }" />
@@ -180,17 +199,12 @@
 					</td>
 				</tr>
 				<tr class="bodyRow <c:out value="${ color }"/> expandable ${ rowClass } ${ hideClass }">
-					<td colspan="7">
+					<c:set var="numColumns" value="7"/>
+					<c:if test="${ not empty application.defectTracker }">
+						<c:set var="numColumns" value="8"/>
+					</c:if>
+					<td colspan="<c:out value="${ numColumns }"/>">
 						<div id="vulnInfoDiv${vulnerability.id}" class="collapse">
-							<c:if test="${ not empty application.defectTracker }">
-								<div style="width:100%">
-								<c:if test="${ not empty vulnerability.defect }">
-									<a target="_blank" href="<c:out value="${ vulnerability.defect.defectURL }"/>">
-										View Defect
-									</a>
-								</c:if>
-								</div>
-							</c:if>
 							<div class="left-tile">
 								<c:if test="${not empty vulnerability.findings}">
 									<h4>Scan History</h4>
