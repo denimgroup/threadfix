@@ -288,7 +288,7 @@ public class DefectTrackerTests extends BaseTest {
 
 		assertTrue("Editing did not change the name.",
 				defectTrackerIndexPage
-						.doesNameExist("testEditDefectTracker-edit"));
+						.doesNameExist(editedDefectTrackerName));
 
 		defectTrackerIndexPage = defectTrackerIndexPage
 				.clickDefectTrackersLink();
