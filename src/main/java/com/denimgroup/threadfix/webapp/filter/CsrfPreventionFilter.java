@@ -64,6 +64,8 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  */
 public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements Filter {
 	
+	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
+	//	for the entire application (each class doesn't need to repeat this code)
 	private static final String RANDOM_ALGORITHM = "SHA1PRNG";
 	private static final String RANDOM_PROVIDER = "SUN";
 	

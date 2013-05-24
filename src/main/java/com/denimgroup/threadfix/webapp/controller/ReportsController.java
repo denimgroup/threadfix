@@ -253,6 +253,8 @@ public class ReportsController {
 		}
 	}
 	
+	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
+	//	for the entire application (each class doesn't need to repeat this code)
 	private SecureRandom getRandomSource() {
         if (this.random == null) {
 			try {
