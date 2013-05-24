@@ -38,7 +38,6 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -84,6 +83,17 @@ public class TeamIndexPage extends BasePage {
 				return i;
 			}
 		}
+		names = new ArrayList<WebElement>();
+		for (int j = 1; j <= getNumTeamRows(); j++) {
+			names.add(driver.findElementById("teamName" + j));
+		}
+		for (WebElement name : names) {
+			i++;
+			String text = name.getText().trim();
+			if (text.equals(teamName.trim())) {
+				return i;
+			}
+		}
 		return -1;
 	}
 	
@@ -115,6 +125,7 @@ public class TeamIndexPage extends BasePage {
 		int cnt = getNumTeamRows() + 1;
 		driver.findElementById("submitTeamModal").click();
 		waitForElement(driver.findElementById("teamName"+cnt));
+		sleep(500);
 //		waitForInvisibleElement(driver.findElementById("myTeamModal"));
 		return new TeamIndexPage(driver);
 	}

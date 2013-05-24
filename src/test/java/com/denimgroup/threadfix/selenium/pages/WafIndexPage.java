@@ -87,6 +87,7 @@ public class WafIndexPage extends BasePage {
 		clickEditWaf(wafName);
 		driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)).click();
 		handleAlert();
+		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 
