@@ -76,7 +76,15 @@ public class ThreadFixUserDetails extends User {
 
 	@Override
 	public boolean equals(Object o) {
-		return super.equals(o);
+		boolean retVal;
+		
+		if (o instanceof ThreadFixUserDetails) {
+			retVal = super.equals(o);
+		} else {
+			retVal = false;
+		}
+		
+		return(retVal);
 	}
 
 	@Override

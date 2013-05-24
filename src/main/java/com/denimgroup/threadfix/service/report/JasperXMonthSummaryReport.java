@@ -218,19 +218,23 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		
 		@Override
 		public int compareTo(YearAndMonth o) {
-			if (o instanceof YearAndMonth) {
-				YearAndMonth other = ((YearAndMonth) o);
-				if (other.year > this.year) {
-					return -1;
-				} else if (this.year > other.year) {
-					return 1;
-				} else if (other.month > this.month)  {
-					return -1;
-				} else if (this.month > other.month){
-					return 1;
-				}
+			
+			int retVal;
+			
+			YearAndMonth other = ((YearAndMonth) o);
+			if (other.year > this.year) {
+				retVal = -1;
+			} else if (this.year > other.year) {
+				retVal = 1;
+			} else if (other.month > this.month)  {
+				retVal = -1;
+			} else if (this.month > other.month) {
+				retVal = 1;
+			} else {
+				retVal = 0;
 			}
-			return 0;
+			
+			return(retVal);
 		}
 		
 		public boolean equals(Object o) {
