@@ -64,7 +64,10 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  */
 public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements Filter {
 	
-    private Random randomSource = null;
+	private static final String RANDOM_ALGORITHM = "SHA1PRNG";
+	private static final String RANDOM_PROVIDER = "SUN";
+	
+    private SecureRandom randomSource = null;
     
     private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
 
@@ -236,11 +239,11 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
 
         if (randomSource == null) {
 			try {
-				randomSource = SecureRandom.getInstance("SHA1PRNG", "SUN");
+				randomSource = SecureRandom.getInstance(RANDOM_ALGORITHM, RANDOM_PROVIDER);
 			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
+				log.error("Unable to find algorithm " + RANDOM_ALGORITHM, e);
 			} catch (NoSuchProviderException e) {
-				e.printStackTrace();
+				log.error("Unable to find provider " + RANDOM_PROVIDER, e);
 			}
         }
         

@@ -26,9 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +63,9 @@ import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 @PreAuthorize("hasRole('ROLE_CAN_GENERATE_REPORTS')")
 public class ReportsController {
 	
+	private static final String RANDOM_ALGORITHM = "SHA1PRNG";
+	private static final String RANDOM_PROVIDER = "SUN";
+	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
 
 	private OrganizationService organizationService;
@@ -68,7 +73,7 @@ public class ReportsController {
 	private ReportsService reportsService;
 	private VulnerabilityService vulnerabilityService;
 	
-	private Random random = new Random();
+	private SecureRandom random;
 	
 	@Autowired
 	public ReportsController(OrganizationService organizationService,
@@ -248,10 +253,23 @@ public class ReportsController {
 		}
 	}
 	
+	private SecureRandom getRandomSource() {
+        if (this.random == null) {
+			try {
+				this.random = SecureRandom.getInstance(RANDOM_ALGORITHM, RANDOM_PROVIDER);
+			} catch (NoSuchAlgorithmException e) {
+				log.error("Unable to find algorithm " + RANDOM_ALGORITHM, e);
+			} catch (NoSuchProviderException e) {
+				log.error("Unable to find provider " + RANDOM_PROVIDER, e);
+			}
+        }
+        return(this.random);
+	}
+	
 	private String addParameterToReport(StringBuffer buffer) {
 		String resultString = buffer.toString();
 		String regex = "(.*<img [^>]*img_[^\"]*)(.*)";
-		return resultString.replaceAll(regex, "$1?" + random.nextInt() + "$2");
+		return resultString.replaceAll(regex, "$1?" + getRandomSource().nextInt() + "$2");
 	}
 	
 	private String returnError(HttpServletRequest request, Model model,
