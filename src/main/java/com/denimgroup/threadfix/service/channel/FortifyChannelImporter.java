@@ -750,7 +750,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		try {
 			return Float.valueOf(s);
 		} catch (NumberFormatException e) {
-			log.warn("Encountered a non-float value for a float field in the Fortify FPR. This shouldn't happen.");
+			log.warn("Encountered a non-float value for a float field in the Fortify FPR. This shouldn't happen.", e);
 			return null;
 		}
 	}

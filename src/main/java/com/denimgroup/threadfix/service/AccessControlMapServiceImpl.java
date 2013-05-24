@@ -195,7 +195,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 						intMap.put(Integer.valueOf(matches[0]), Integer.valueOf(matches[1]));
 					}
 				} catch (NumberFormatException e) {
-					log.warn("Incorrect format passed into model from web interface. Integers could not be parsed.");
+					log.warn("Incorrect format passed into model from web interface. Integers could not be parsed.", e);
 				}
 			}
 		}

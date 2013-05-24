@@ -284,7 +284,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		try {
 	    			lineNum = Integer.valueOf(currentDataFlowLineNum);
 	    		} catch (NumberFormatException e) {
-	    			log.error("CAT.NET file contained a non-numeric value in its line number field.");
+	    			log.error("CAT.NET file contained a non-numeric value in its line number field.", e);
 	    		}
 	    		
 	    		DataFlowElement newElement = new DataFlowElement(currentDataFlowFile, 

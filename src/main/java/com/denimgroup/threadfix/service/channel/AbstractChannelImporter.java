@@ -406,7 +406,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				stream.close();
 			} catch (IOException ex) {
-				log.warn("Closing an input stream failed.");
+				log.warn("Closing an input stream failed.", ex);
 			}
 		}
 	}
@@ -550,7 +550,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			
 			log.debug("Saved zip file to disk. Returning zip file.");
 		} catch (ZipException e) {
-			log.warn("There was a ZipException while trying to save and open the file - probably not in a zip format.");
+			log.warn("There was a ZipException while trying to save and open the file - probably not in a zip format.", e);
 		} catch (IOException e) {
 			log.warn("There was an IOException error in the unpackZipStream method: " + e + ".");
 		} finally {
@@ -559,7 +559,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				try {
 					out.close();
 				} catch (IOException ex) {
-					log.warn("Closing an input stream failed.");
+					log.warn("Closing an input stream failed.", ex);
 				}
 			}
 		}

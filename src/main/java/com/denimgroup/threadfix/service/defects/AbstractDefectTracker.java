@@ -241,7 +241,7 @@ public abstract class AbstractDefectTracker {
 			try {
 				stream.close();
 			} catch (IOException ex) {
-				log.warn("Closing an input stream failed.");
+				log.warn("Closing an input stream failed.", ex);
 			}
 		}
 	}
@@ -319,7 +319,7 @@ public abstract class AbstractDefectTracker {
 		try {
 			return new JSONArray(responseContents);
 		} catch (JSONException e) {
-			log.warn("JSON Parsing failed.");
+			log.warn("JSON Parsing failed.", e);
 			return null;
 		}
 	}
@@ -333,7 +333,7 @@ public abstract class AbstractDefectTracker {
 		try {
 			return new JSONObject(responseContents);
 		} catch (JSONException e) {
-			log.warn("JSON Parsing failed.");
+			log.warn("JSON Parsing failed.", e);
 			return null;
 		}
 	}
@@ -347,7 +347,7 @@ public abstract class AbstractDefectTracker {
 		try {
 			return object.getInt("id");
 		} catch (JSONException e) {
-			log.warn("Failed when trying to parse an ID out of the object.");
+			log.warn("Failed when trying to parse an ID out of the object.", e);
 			return null;
 		}
 	}

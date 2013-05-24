@@ -102,7 +102,7 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		try {
 	    			lineNum = Integer.valueOf(start);
 	    		} catch (NumberFormatException e) {
-	    			log.error("FindBugs had a non-integer value in its line number field.");
+	    			log.error("FindBugs had a non-integer value in its line number field.", e);
 	    		}
 	    	}
 	    	

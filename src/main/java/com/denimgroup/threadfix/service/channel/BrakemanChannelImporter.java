@@ -85,7 +85,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			String dateString = scanInfo.getString("timestamp");
 			return getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy",dateString);
 		} catch (JSONException e) {
-			log.warn("JSON input was probably version 1.");
+			log.warn("JSON input was probably version 1.", e);
 			return null;
 		}
 	}
@@ -125,7 +125,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					isVersion2 = true;
 				}
 			} catch (JSONException e) {
-				log.info("JSONException raised when trying to create a JSON Object. Probably version 1.");
+				log.info("JSONException raised when trying to create a JSON Object. Probably version 1.", e);
 			}
 		}
 	
@@ -201,7 +201,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 									try {
 										element.setLineNumber(Integer.valueOf(lineString));
 									} catch (NumberFormatException e) {
-										log.error("Non-numeric value found in Brakeman JSON file.");
+										log.error("Non-numeric value found in Brakeman JSON file.", e);
 									}
 								}
 							}
