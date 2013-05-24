@@ -80,6 +80,7 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("jsonLink").click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By
 				.id("jsonResult")));
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -128,11 +129,16 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage addDefectTracker(String defectTracker,
 			String username, String password, String productname) {
-		    clickShowDetails().clickAddDefectTrackerButton()
-				.selectDefectTracker(defectTracker).setUsername(username)
-				.setPassword(password).clickTestConnection()
-				.selectProduct(productname).clickSubmitTrackerButton();
-		    waitForElement(driver.findElementById("defectTrackerText"));;
+			clickEditDeleteBtn()
+				.clickAddDefectTrackerButton()
+				.selectDefectTracker(defectTracker)
+				.setUsername(username)
+				.setPassword(password)
+				.clickTestConnection()
+				.selectProduct(productname)
+				.clickSubmitTrackerButton();
+//		    waitForElement(driver.findElementById("defectTrackerText"));
+			sleep(1000);
 		    return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
@@ -157,11 +163,16 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage editDefectTracker(String defectTracker,
 			String username, String password, String productname) {
-		clickShowDetails().clickEditDefectTrackerButton()
-		.selectDefectTracker(defectTracker).setUsername(username)
-		.setPassword(password).clickTestConnection()
-		.selectProduct(productname).clickSubmitTrackerButton();
-		waitForElement(driver.findElementById("defectTrackerText"));;
+		clickEditDeleteBtn()
+			.clickEditDefectTrackerButton()
+			.selectDefectTracker(defectTracker)
+			.setUsername(username)
+			.setPassword(password)
+			.clickTestConnection()
+			.selectProduct(productname)
+			.clickSubmitTrackerButton();
+//		waitForElement(driver.findElementById("defectTrackerText"));
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
@@ -291,6 +302,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public TeamDetailPage clickDeleteLink() {
 		clickEditDeleteBtn();
+		sleep(1000);
 		driver.findElementById("deleteLink").click();
 		handleAlert();
 

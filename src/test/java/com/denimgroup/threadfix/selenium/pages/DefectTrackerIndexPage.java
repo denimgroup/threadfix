@@ -79,7 +79,9 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage clickEditLink(String roleName) {
+		sleep(1000);
 		editButtons.get(getIndex(roleName)).click();
+		sleep(1000);
 		return new DefectTrackerIndexPage(driver);
 	}
 	/*
@@ -99,7 +101,7 @@ public class DefectTrackerIndexPage extends BasePage {
 			driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
 			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
 		}
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage enterType(String oldName, String newType){
@@ -108,7 +110,7 @@ public class DefectTrackerIndexPage extends BasePage {
 		}else{
 			new Select(driver.findElementsById("defectTrackerTypeSelect").get(getIndex(oldName))).selectByVisibleText(newType);
 		}
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	
@@ -120,7 +122,7 @@ public class DefectTrackerIndexPage extends BasePage {
 			driver.findElementsById("urlInput").get(getIndex(oldName)).clear();
 			driver.findElementsById("urlInput").get(getIndex(oldName)).sendKeys(newURL);
 		}
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage clickDeleteButton(String name){
@@ -144,7 +146,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public DefectTrackerIndexPage clickCloseButton() {
 		driver.findElementById("closeNewDTModalButton").click();
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	
@@ -159,13 +161,13 @@ public class DefectTrackerIndexPage extends BasePage {
 	public DefectTrackerIndexPage setNameInput(String text){
 		driver.findElementById("nameInput").clear();
 		driver.findElementById("nameInput").sendKeys(text);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage setNameInput(String text,int row){
 		driver.findElementsById("nameInput").get(row).clear();
 		driver.findElementsById("nameInput").get(row).sendKeys(text);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 
 	public String getUrlInput(){
@@ -175,13 +177,13 @@ public class DefectTrackerIndexPage extends BasePage {
 	public DefectTrackerIndexPage setUrlInput(String text){
 		driver.findElementById("urlInput").clear();
 		driver.findElementById("urlInput").sendKeys(text);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage setUrlInput(String text,int row){
 		driver.findElementsById("urlInput").get(row).clear();
 		driver.findElementsById("urlInput").get(row).sendKeys(text);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 
 	public String getDefectTrackerTypeSelect(){
@@ -190,18 +192,18 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code){
 		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(code);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code, int row){
 		new Select(driver.findElementsById("defectTrackerTypeSelect").get(row)).selectByVisibleText(code);
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		addDefectTrackerButton.click();
 		waitForElement(driver.findElementById("createDefectTracker"));
-		return this;
+		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public DefectTrackerIndexPage clickAddDefectTrackerButtonInvalid() {
@@ -230,6 +232,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
 		driver.findElementById("submitDTCreateModal").click();
 		waitForInvisibleElement(driver.findElementById("createDefectTracker"));
+		sleep(500);
 		return new DefectTrackerIndexPage(driver);
 	}
 
@@ -248,6 +251,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
 		driver.findElementByLinkText("Update Defect Tracker").click();
 //		waitForInvisibleElement(driver.findElementByClassName("in"));
+		sleep(3000);
 		return new DefectTrackerIndexPage(driver);
 	}
 	
