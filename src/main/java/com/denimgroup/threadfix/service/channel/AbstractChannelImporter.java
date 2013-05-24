@@ -280,15 +280,18 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			try {
 				location.setUrl(new URL(url));
 			} catch (MalformedURLException e) {
-				if (hosts != null)
-					for (String host : hosts)
+				if (hosts != null) {
+					for (String host : hosts) {
 		    			if (url.startsWith(host)) {
 		    				location.setHost(host);
 			    			location.setPath("/" + url.substring(host.length()));
 		    			}
+					}
+				}
 	    		
-	    		if (location.getPath() == null)
+	    		if (location.getPath() == null) {
 	    			location.setPath(url);
+	    		}
 			}
 		
 		if (parameter != null && !parameter.isEmpty())
