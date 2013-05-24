@@ -403,6 +403,7 @@ public class ApplicationDetailPage extends BasePage {
 	public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
 		sleep(1000);
 		driver.findElementById("submitAppModal").click();
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 

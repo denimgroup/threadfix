@@ -125,7 +125,7 @@ public class TeamIndexPage extends BasePage {
 		int cnt = getNumTeamRows() + 1;
 		driver.findElementById("submitTeamModal").click();
 		waitForElement(driver.findElementById("teamName"+cnt));
-		sleep(500);
+		sleep(1000);
 //		waitForInvisibleElement(driver.findElementById("myTeamModal"));
 		return new TeamIndexPage(driver);
 	}
