@@ -20,7 +20,7 @@ public class RolesIndexPage extends BasePage {
 		createNewRoleLink = driver.findElementById("createRoleModalLink");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
-			names.add(driver.findElementById("role" + i));
+//			names.add(driver.findElementById("role" + i));
 			editLinks.add(driver.findElementById("editModalLink" + i));
 //			deleteButtons.add(driver.findElementById("delete" + i));
 		}
@@ -42,6 +42,9 @@ public class RolesIndexPage extends BasePage {
 	
 	public int getIndex(String roleName) {
 		int i = -1;
+		for (int j = 1; j <= getNumRows(); j++) {
+			names.add(driver.findElementById("role" + j));
+		}
 		for (WebElement name : names) {
 			i++;
 			String text = name.getText().trim();
@@ -52,9 +55,9 @@ public class RolesIndexPage extends BasePage {
 		return -1;
 	}
 	
-	public String getNameContents(int row) {
-		return names.get(row).getText();
-	}
+//	public String getNameContents(int row) {
+//		return names.get(row).getText();
+//	}
 		
 	public RolesIndexPage clickDeleteButton(String roleName) {
 		clickEditLink(roleName);
@@ -90,6 +93,7 @@ public class RolesIndexPage extends BasePage {
 			waitForInvisibleElement(driver.findElementById("createRoleModal"));
 		}else{
 			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
+			sleep(1000);
 //			waitForInvisibleElement(driver.findElementById("roleEditForm"+(getIndex(oldName)+1)));
 		}
 		return new RolesIndexPage(driver);
