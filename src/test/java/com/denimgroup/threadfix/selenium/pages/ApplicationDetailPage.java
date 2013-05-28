@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -253,6 +252,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public String getElementText(String id) {
+//		System.out.println(id + ": " + driver.findElementById(id).getText());
 		return driver.findElementById(id).getText();
 	}
 
@@ -335,8 +335,18 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 
-	public int getNumRows() {
-		return driver.findElementsByClassName("bodyRow").size();
+	public boolean getNumRows(int cnt) {
+		int i = 0;
+		if(!driver.findElementById("vulnTabLink").getText().contains(Integer.toString(cnt))){
+			System.out.println("tab");
+			return false;
+		}
+		i+=driver.findElementsByClassName("expandable").size();
+		if(i!=cnt && cnt<=100){
+			return false;
+		}
+		
+		return true;
 	}
 
 	public ApplicationDetailPage waitForScans() {
@@ -435,7 +445,8 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage submitScan(){
 		driver.findElementById("submitScanModal"+modalNumber()).click();
-		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
+//		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -532,5 +543,19 @@ public class ApplicationDetailPage extends BasePage {
 		Select severity = new Select(driver.findElementById("severityInput"));
 		severity.selectByVisibleText(text);
 		return severity.getFirstSelectedOption().getText();
+	}
+	
+	public ApplicationDetailPage clickExpandAllVulns(){
+		driver.findElementById("expandAllVulns").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public boolean isScanPresent(String scan){
+		return driver.findElementById("wafTableBody").getText().contains(scan);
+	}
+	
+	public boolean isScanCountCorrect(int cnt){
+		return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
 	}
 }

@@ -229,7 +229,7 @@ public class RoleTests extends BaseTest {
 						.clickDeleteButton("RoleRemoval");
 		
 	}
-	
+	@Ignore
 	@Test
 	public void testDeleteRoleWithUserAttached(){
 		String roleName = "test" + getRandomString(10);

@@ -148,7 +148,6 @@ public class RemoteProvidersTests extends BaseTest {
 													.setVeraPassword("Password Bad")
 													.saveVeraInvalid();
 
-		System.out.println(indexPage.getErrorMessage().toString());
 		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 	// Remove Configuration User Name Pwd
