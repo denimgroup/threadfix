@@ -170,7 +170,7 @@
 						<span id="caret${vulnerability.id }" class="caret-right"></span>
 					</td>
 					<td class="expandableTrigger" id="severity${ index }"><c:out value="${ vulnerability.genericSeverity.name }"/></td>
-					<td class="expandableTrigger">
+					<td class="expandableTrigger" id="type${ index }">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
 					<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
