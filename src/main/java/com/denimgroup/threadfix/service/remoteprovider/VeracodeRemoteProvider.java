@@ -300,7 +300,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
     						try {
     							dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
     						} catch (NumberFormatException e) {
-    							log.error("Non-numeric value found in Veracode results when trying to parse line number.");
+    							log.error("Non-numeric value '" + atts.getValue("line") + "' found in Veracode results when trying to parse line number.", e);
     						}
     						dataFlowElement.setSourceFileName(sourceFileLocation);
     						finding.setDataFlowElements(new ArrayList<DataFlowElement>());

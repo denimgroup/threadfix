@@ -243,7 +243,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
     			return Integer.parseInt(maybeInt);
     		} catch (NumberFormatException e) {
     			log.warn("AppScan Source importer found a non-integer " +
-    					"value in the " + name + " number attribute. Continuing.");
+    					"value of '" + maybeInt + "' in the '" + name + "' number attribute. Continuing.");
     		}
 	    	return null;
 	    }

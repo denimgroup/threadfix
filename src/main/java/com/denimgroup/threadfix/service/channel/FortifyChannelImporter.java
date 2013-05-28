@@ -147,6 +147,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		try {
 			return Integer.parseInt(input);
 		} catch (NumberFormatException e) {
+			log.warn("Got an invalid value '" + input + "' for what should have been a number", e);
 			return -1;
 		}
 	}

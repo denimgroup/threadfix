@@ -163,7 +163,7 @@ public class EditManualFindingController {
 					URL resultURL = new URL(finding.getSurfaceLocation().getPath());
 					finding.getSurfaceLocation().setUrl(resultURL);
 				} catch (MalformedURLException e) {
-					log.info("Path was not given in URL format, leaving it as it was.");
+					log.info("Path of '" + finding.getSurfaceLocation().getPath() + "' was not given in URL format, leaving it as it was.");
 				}
 			}
 			

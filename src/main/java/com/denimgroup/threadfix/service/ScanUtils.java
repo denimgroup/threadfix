@@ -117,7 +117,7 @@ public class ScanUtils {
 				try {
 					file.close();
 				} catch (IOException e) {
-					STATIC_LOGGER.error("Encountered IOException when attempting to close a file.");
+					STATIC_LOGGER.error("Encountered IOException when attempting to close a file.", e);
 				}
 			}
 		}

@@ -122,7 +122,7 @@ public class ScanServiceImpl implements ScanService {
 			try {
 				channelId = Integer.valueOf(channelIdString);
 			} catch (NumberFormatException e) {
-				log.error("channelId was not null and was not a number.");
+				log.error("Provided channelId of '" + channelIdString + "' was not null and was not a number.", e);
 			}
 		}
 		
@@ -491,7 +491,7 @@ public class ScanServiceImpl implements ScanService {
 			
 			return getType(collector.tags);
 		} catch (IOException e) {
-			log.error("Encountered IOException. Returning null.");
+			log.error("Encountered IOException. Returning null.", e);
 		}
 		
 		return null;

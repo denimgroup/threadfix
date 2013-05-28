@@ -135,6 +135,7 @@ public class FindingsController {
 		
 		try {
 			id = Integer.parseInt(vulnerabilityId);
+			log.info("Bad vulnerabilityId provided '" + vulnerabilityId + "'. Should have been an integer");
 		} catch (NumberFormatException e) {
 			return merge(findingId, scanId, model, orgId, appId);
 		}

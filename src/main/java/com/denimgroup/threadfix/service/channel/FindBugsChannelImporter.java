@@ -63,14 +63,14 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 		return parseSAXInput(new FindBugsSAXParser());
 	}
 	
-	private static Calendar getCalendarFromTimeInMillisString(String timeInMillis) {
+	private Calendar getCalendarFromTimeInMillisString(String timeInMillis) {
 		try {
 			Long timeLong = Long.valueOf(timeInMillis);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(timeLong);
 			return calendar;
 		} catch (NumberFormatException e) {
-			//log.warn("Invalid date timestamp in FindBugs file.", e);
+			log.warn("Invalid date timestamp in FindBugs file.", e);
 			return null;
 		}
 	}
