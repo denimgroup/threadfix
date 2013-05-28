@@ -219,6 +219,7 @@ public class ApplicationDetailPage extends BasePage {
 		Select s = new Select(driver.findElementById("wafSelect"));
 		s.selectByVisibleText(wafName);
 		driver.findElementById("submitTeamModal").click();
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -440,6 +441,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage submitScanInvalid(){
 		driver.findElementById("submitScanModal"+modalNumber()).click();
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -454,7 +456,8 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public boolean isDuplicateScan(){
-		return driver.findElementByClassName("alert-error").getText().contains("Scan file has already been uploaded.");
+		sleep(1000);
+		return driver.findElementByClassName("in").findElements(By.className("alert-error")).get(1).getText().contains("Scan file has already been uploaded.");
 	}
 
 	public ApplicationDetailPage clickUploadScanLink() {
