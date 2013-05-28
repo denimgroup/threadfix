@@ -35,7 +35,6 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 
 public class DefectTrackerTests extends BaseTest {
 
