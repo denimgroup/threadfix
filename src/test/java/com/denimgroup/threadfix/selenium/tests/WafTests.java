@@ -351,8 +351,8 @@ public class WafTests extends BaseTest {
 			}
 			s = mapEntry.getValue();
 			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
-					.setFileInput(s, appName)
-					.clickUploadScanButton(appName,cnt)
+					.setFileInput(s, orgName,appName)
+					.clickUploadScanButton(orgName,appName,cnt)
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(orgName);
 			
@@ -460,8 +460,8 @@ public class WafTests extends BaseTest {
 			}
 			s = mapEntry.getValue();
 			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
-					.setFileInput(s, appName)
-					.clickUploadScanButton(appName,cnt)
+					.setFileInput(s, orgName,appName)
+					.clickUploadScanButton(orgName,appName,cnt)
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(orgName);
 			

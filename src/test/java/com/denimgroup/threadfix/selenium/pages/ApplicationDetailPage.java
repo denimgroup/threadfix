@@ -27,9 +27,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -348,23 +350,31 @@ public class ApplicationDetailPage extends BasePage {
 		
 		return true;
 	}
-
-	public ApplicationDetailPage waitForScans() {
-
-		ApplicationDetailPage returnPage = this;
-
-		String appName = getNameText();
-
-		returnPage = returnPage.clickTeamLink()
-				.clickTextLinkInApplicationsTableBody(appName);
-
-		while (!isElementPresent("ajaxVulnTable")) {
-			returnPage = returnPage.clickTeamLink()
-					.clickTextLinkInApplicationsTableBody(appName);
-			sleep(2000);
-		}
-		return returnPage;
+	
+	public ApplicationDetailPage clickVulnTab(){
+		driver.findElementById("vulnTabLink").click();
+		sleep(1000);
+		waitForElement(driver.findElementById("expandAllVulns"));
+		return new ApplicationDetailPage(driver);
 	}
+	
+
+//	public ApplicationDetailPage waitForScans() {
+//
+//		ApplicationDetailPage returnPage = this;
+//
+//		String appName = getNameText();
+//
+//		returnPage = returnPage.clickTeamLink()
+//				.clickTextLinkInApplicationsTableBody(appName);
+//
+//		while (!isElementPresent("ajaxVulnTable")) {
+//			returnPage = returnPage.clickTeamLink()
+//					.clickTextLinkInApplicationsTableBody(appName);
+//			sleep(2000);
+//		}
+//		return returnPage;
+//	}
 
 	public ApplicationDetailPage clickEditWaf() {
 		driver.findElementById("editWafButton").click();
@@ -444,10 +454,38 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage submitScan(){
+		int scanCnt = scanCount();
+		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
-		sleep(3000);
+		waitForElement(driver.findElementById("scanTabLink"));
+		while(scanCnt != scanCnt+1){
+			scanCnt = scanCount();
+			sleep(100);
+			if(timer>=100){
+				break;
+			}
+			timer++;
+			
+		}
 		return new ApplicationDetailPage(driver);
+	}
+	
+	public int scanCount(){
+		WebElement scanTab;
+		try{
+			scanTab = driver.findElementById("scanTabLink");
+		}catch(NoSuchElementException e){
+			return 0;
+		}
+		
+		String scanText = scanTab.getText().trim();
+		Pattern pattern = Pattern.compile("(\\d+)\\nScan$");
+		Matcher matcher = pattern.matcher(scanText);
+		if(matcher.find()){
+			return Integer.parseInt(matcher.group(1));
+		}
+		return -1;
 	}
 	
 	public ApplicationDetailPage submitScanInvalid(){
@@ -470,6 +508,7 @@ public class ApplicationDetailPage extends BasePage {
 		sleep(1000);
 		return driver.findElementByClassName("in").findElements(By.className("alert-error")).get(1).getText().contains("Scan file has already been uploaded.");
 	}
+	
 
 	public ApplicationDetailPage clickUploadScanLink() {
 		driver.findElementById("uploadScanModalLink").click();
@@ -477,6 +516,11 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage clickCloseScanUploadModal(){
+		driver.findElementById("closeScanModalButton").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
 	
 	public ApplicationDetailPage fillAllClickSaveDynamic(Boolean dynamicRadioButton, String cwe, String url, 
 			String param, String severity, String description) {
@@ -547,7 +591,8 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(2000);
+		sleep(1000);
+		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
 	

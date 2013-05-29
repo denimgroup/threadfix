@@ -135,48 +135,48 @@ public class ScanTests extends BaseTest {
 //		}
 //	}
 //	
-	@Test
-	public void testUploadDuplicateScans() throws MalformedURLException {
-		// log in
-		teamIndexPage = loginPage.login("user", "password")
-								.clickOrganizationHeaderLink();
-		
-		// create an org and an app and upload the scan, then delete everything
-		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
-			if (mapEntry.getValue() != null){
-				File appScanFile = null;
-				
-				if (System.getProperty("scanFileBaseLocation") == null) {
-					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-				} else {
-					appScanFile = new File(mapEntry.getValue());
-				}
-				assertTrue("The test file did not exist.", appScanFile.exists());
-			} else {
-				continue;
-			}
-			teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
-					 .clickAddTeamButton()
-					 .setTeamName(mapEntry.getKey() + "duplicate")
-					 .addNewTeam()
-					 .expandTeamRowByName(mapEntry.getKey() + "duplicate")
-					 .addNewApplication(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate", "http://" + mapEntry.getKey(), "Low")
-					 .saveApplication(mapEntry.getKey() + "duplicate");
-			teamIndexPage.populateAppList(mapEntry.getKey() + "duplicate");
-			applicationDetailPage = teamIndexPage.clickUploadScan(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate")
-					 .setFileInput(mapEntry.getValue(),mapEntry.getKey() + "duplicate")
-					 .clickUploadScanButton(mapEntry.getKey() + "duplicate")
-					 .clickUploadScanLink()
-					 .setFileInput(mapEntry.getValue())
-					 .submitScanInvalid();
-			assertTrue("Duplicate error not displayed",applicationDetailPage.isDuplicateScan());
-			
-			
-			teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-					.clickViewTeamLink(mapEntry.getKey() + "duplicate")
-					.clickDeleteButton();
-		}
-	}
+//	@Test
+//	public void testUploadDuplicateScans() throws MalformedURLException {
+//		// log in
+//		teamIndexPage = loginPage.login("user", "password")
+//								.clickOrganizationHeaderLink();
+//		
+//		// create an org and an app and upload the scan, then delete everything
+//		for (Entry<String, String> mapEntry : SCAN_FILE_MAP.entrySet()) {
+//			if (mapEntry.getValue() != null){
+//				File appScanFile = null;
+//				
+//				if (System.getProperty("scanFileBaseLocation") == null) {
+//					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+//				} else {
+//					appScanFile = new File(mapEntry.getValue());
+//				}
+//				assertTrue("The test file did not exist.", appScanFile.exists());
+//			} else {
+//				continue;
+//			}
+//			teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+//					 .clickAddTeamButton()
+//					 .setTeamName(mapEntry.getKey() + "duplicate")
+//					 .addNewTeam()
+//					 .expandTeamRowByName(mapEntry.getKey() + "duplicate")
+//					 .addNewApplication(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate", "http://" + mapEntry.getKey(), "Low")
+//					 .saveApplication(mapEntry.getKey() + "duplicate");
+//			teamIndexPage.populateAppList(mapEntry.getKey() + "duplicate");
+//			applicationDetailPage = teamIndexPage.clickUploadScan(mapEntry.getKey() + "duplicate", mapEntry.getKey() + "duplicate")
+//					 .setFileInput(mapEntry.getValue(),mapEntry.getKey() + "duplicate",mapEntry.getKey() + "duplicate")
+//					 .clickUploadScanButton(mapEntry.getKey() + "duplicate",mapEntry.getKey() + "duplicate")
+//					 .clickUploadScanLink()
+//					 .setFileInput(mapEntry.getValue())
+//					 .submitScanInvalid();
+//			assertTrue("Duplicate error not displayed",applicationDetailPage.isDuplicateScan());
+//			
+//			
+//			teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+//					.clickViewTeamLink(mapEntry.getKey() + "duplicate")
+//					.clickDeleteButton();
+//		}
+//	}
 
 	@Test
 	public void microsoftCatNetScan() {
@@ -707,6 +707,49 @@ public class ScanTests extends BaseTest {
 		applicationDetailPage = applicationDetailPage.clickViewScansLink();
 		assertTrue("Scan Count is incorrect.", applicationDetailPage.isScanCountCorrect(1));	
 		assertTrue("Scan Tab is incorrect.", applicationDetailPage.isScanPresent(scannerName));
+		
+		int scanCount = applicationDetailPage.scanCount();
+		//duplicate scan checking
+		applicationDetailPage = applicationDetailPage.clickUploadScanLink()
+		 											.setFileInput(SCAN_FILE_MAP.get(scannerName))
+		 											.submitScanInvalid();
+		
+		assertTrue("Duplicate error not displayed",applicationDetailPage.isDuplicateScan());
+		
+		applicationDetailPage.clickCloseScanUploadModal()
+							.clickVulnTab()
+							.clickExpandAllVulns();
+		
+		assertTrue("Scan count is incorrect", scanCount == applicationDetailPage.scanCount());
+		
+		for (int i=1; i <= expectedResults.length; i++) {
+			String[] thisVuln = new String[] {
+					applicationDetailPage.getElementText("type" + i),
+					applicationDetailPage.getElementText("severity" + i),
+					applicationDetailPage.getElementText("path" + i),
+					applicationDetailPage.getElementText("parameter" + i)
+				};
+			tableResults[i-1] = thisVuln;
+		}
+		
+		outer: for (int i=0; i <= expectedResults.length - 1; i++) {
+			for (int j=0; j <= expectedResults.length-1; j++) {
+				if (expectedResults[i][0].equals(tableResults[j][0]) &&
+						expectedResults[i][1].equals(tableResults[j][1]) &&
+						expectedResults[i][2].equals(tableResults[j][2]) &&
+						expectedResults[i][3].equals(tableResults[j][3])) {
+					continue outer;
+				}
+			}
+			assertTrue("Didn't find a vuln after duplicate scan upload: " + expectedResults[i][0] 
+					+ ", " + expectedResults[i][1]
+					+ ", " + expectedResults[i][2]
+					+ ", " + expectedResults[i][3], 
+					false);
+		}
+		
+		assertTrue("Unexpected vulns were added", applicationDetailPage.getNumRows(expectedResults.length));
+		
 		
 		applicationDetailPage.clickOrganizationHeaderLink()
 							.clickViewTeamLink(orgName)

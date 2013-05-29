@@ -46,9 +46,13 @@ public class TeamIndexPage extends BasePage {
 
 //	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> apps = new ArrayList<WebElement>();
+	public int modalNum;
+	public String appModalId;
 
 	public TeamIndexPage(WebDriver webdriver) {
 		super(webdriver);
+		modalNum = 0;
+		appModalId = "";
 //		for (int i = 1; i <= getNumTeamRows(); i++) {
 //			names.add(driver.findElementById("teamName" + i));
 //		}
@@ -112,28 +116,28 @@ public class TeamIndexPage extends BasePage {
 	public TeamIndexPage clickAddTeamButton() {
 		driver.findElementById("addTeamModalButton").click();
 		waitForElement(driver.findElementById("myTeamModal"));
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage setTeamName(String name) {
 		driver.findElementById("teamNameInput").clear();
 		driver.findElementById("teamNameInput").sendKeys(name);
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage addNewTeam() {
 		int cnt = getNumTeamRows() + 1;
 		driver.findElementById("submitTeamModal").click();
 		waitForElement(driver.findElementById("teamName"+cnt));
+		waitForElement(driver.findElementByClassName("alert-success"));
 		sleep(1000);
-//		waitForInvisibleElement(driver.findElementById("myTeamModal"));
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage addNewTeamInvalid() {
 		driver.findElementById("submitTeamModal").click();
-		sleep(500);
-		return new TeamIndexPage(driver);
+		sleep(1000);
+		return setPage();
 	}
 
 	public TeamIndexPage expandTeamRowByName(String name) {
@@ -144,7 +148,7 @@ public class TeamIndexPage extends BasePage {
 			
 		}
 
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 	
 	public void populateAppList(String teamName){
@@ -170,41 +174,51 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage clickAddNewApplication(String teamName) {
+		appModalId = getAppModalId(teamName);
 		driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).click();
-		waitForElement(driver.findElementByClassName("in"));
-		sleep(500);
-		return new TeamIndexPage(driver);
+		waitForElement(driver.findElementById(appModalId));
+		return setPage();
+	}
+	
+	public String getAppModalId(String teamName){
+		String s = driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("href");
+		Pattern pattern = Pattern.compile("#(myAppModal[0-9]+)$");
+		Matcher matcher = pattern.matcher(s);
+		if(matcher.find()){
+			return  matcher.group(1);
+		}
+		return "";
 	}
 
 	public TeamIndexPage setApplicationName(String appName, String teamName) {
 		driver.findElementsById("nameInput").get(getIndex(teamName)).clear();
 		driver.findElementsById("nameInput").get(getIndex(teamName)).sendKeys(appName);
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage setApplicationUrl(String url, String teamName) {
 		driver.findElementsById("urlInput").get(getIndex(teamName)).clear();
 		driver.findElementsById("urlInput").get(getIndex(teamName))
 				.sendKeys(url);
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage setApplicationCritic(String critic, String teamName) {
 		new Select(driver.findElementsById("criticalityId").get(
 				getIndex(teamName))).selectByVisibleText(critic);
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage saveApplication(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
-		sleep(1000);
-		return new TeamIndexPage(driver);
+		waitForInvisibleElement(driver.findElementById(appModalId));
+		appModalId = "";
+		return setPage();
 	}
 
 	public TeamIndexPage saveApplicationInvalid(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamIndexPage addNewApplication(String teamName, String appName,
@@ -213,7 +227,7 @@ public class TeamIndexPage extends BasePage {
 		setApplicationName(appName, teamName);
 		setApplicationUrl(url, teamName);
 		setApplicationCritic(critic, teamName);
-		return new TeamIndexPage(driver);
+		return setPage();
 
 	}
 
@@ -230,16 +244,22 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public TeamIndexPage clickUploadScan(String appName,String teamName) {
+		modalNum = modalNumber(teamName,appName);
 		driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).click();
-		waitForElement(driver.findElementByClassName("in"));
-		sleep(2000);
-		return new TeamIndexPage(driver);
+		waitForElement(driver.findElementById("uploadScan"+modalNum));
+		return setPage();
 	}
 	
+	public TeamIndexPage setPage(){
+		TeamIndexPage page = new TeamIndexPage(driver);
+		page.modalNum = modalNum;
+		page.appModalId = appModalId;
+		return page;
+	}
 	
-	public TeamIndexPage setFileInput(String file, String appName) {
+	public TeamIndexPage setFileInput(String file, String teamName, String appName) {
 		//driver.findElementById("fileInput"+modalNumber()).click();
-		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+		driver.findElementById("fileInput"+modalNum).sendKeys(file);
 		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
 			if (driver.findElementById("applicationLink" + i).getText()
@@ -248,13 +268,13 @@ public class TeamIndexPage extends BasePage {
 				driver.findElementById("fileInput" + i).sendKeys(file);
 				break;
 			}*/
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
-	public ApplicationDetailPage clickUploadScanButton(String appName) {
-		driver.findElementById("submitScanModal"+modalNumber()).click();
+	public ApplicationDetailPage clickUploadScanButton(String teamName, String appName) {
+		driver.findElementById("submitScanModal"+modalNum).click();
 		try{
-		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNum));
 		}catch(StaleElementReferenceException e){
 			
 		}
@@ -265,10 +285,10 @@ public class TeamIndexPage extends BasePage {
 
 	}
 	
-	public ApplicationDetailPage clickUploadScanButton(String appName,int cnt) {
-		driver.findElementById("submitScanModal"+modalNumber()).click();
+	public ApplicationDetailPage clickUploadScanButton(String teamName, String appName,int cnt) {
+		driver.findElementById("submitScanModal"+modalNum).click();
 		try{
-		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNum));
 		}catch(StaleElementReferenceException e){
 			
 		}
@@ -286,8 +306,8 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 
-	public TeamIndexPage clickUploadScanButtonInvalid(String appName) {
-		driver.findElementById("submitScanModal"+modalNumber()).click();
+	public TeamIndexPage clickUploadScanButtonInvalid(String teamName, String appName) {
+		driver.findElementById("submitScanModal"+modalNum).click();
 		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
 				.size(); i++)
 			if (driver.findElementById("applicationLink" + i).getText()
@@ -295,7 +315,7 @@ public class TeamIndexPage extends BasePage {
 				driver.findElementById("submitScanModal" + i).click();
 				break;
 			}*/
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public boolean isTeamPresent(String teamName) {
@@ -312,7 +332,7 @@ public class TeamIndexPage extends BasePage {
 
 	public BasePage closeModal() {
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		return new TeamIndexPage(driver);
+		return setPage();
 	}
 
 	public TeamDetailPage clickViewTeamLink(String teamName) {
@@ -320,9 +340,9 @@ public class TeamIndexPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
-	public int modalNumber(){
-		String s = driver.findElementByClassName("modal").getAttribute("id");
-		Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
+	public int modalNumber(String teamName, String appName){
+		String s = driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).getAttribute("href");
+		Pattern pattern = Pattern.compile("#uploadScan([0-9]+)$");
 		Matcher matcher = pattern.matcher(s);
 		if(matcher.find()){
 			return  Integer.parseInt(matcher.group(1));
