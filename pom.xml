@@ -432,6 +432,11 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<artifactId>cglib</artifactId>
 			<version>${cglib.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>${jgit.version}</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -509,6 +514,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<itext.version>2.1.7</itext.version>
 		<jasperreports.version>4.5.0</jasperreports.version>
 		<javassist.version>3.12.0.GA</javassist.version>
+		<jgit.version>2.3.1.201302201838-r</jgit.version>
 		<jstl.version>1.2</jstl.version>
 		<jta.version>1.1</jta.version>
 		<log4j.version>1.2.16</log4j.version>
