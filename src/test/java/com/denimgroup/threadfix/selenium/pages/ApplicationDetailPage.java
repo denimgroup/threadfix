@@ -446,7 +446,7 @@ public class ApplicationDetailPage extends BasePage {
 	public ApplicationDetailPage submitScan(){
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
-		sleep(2000);
+		sleep(3000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -547,7 +547,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(1000);
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 	

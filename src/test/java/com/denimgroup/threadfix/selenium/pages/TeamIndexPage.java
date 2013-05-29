@@ -232,7 +232,7 @@ public class TeamIndexPage extends BasePage {
 	public TeamIndexPage clickUploadScan(String appName,String teamName) {
 		driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).click();
 		waitForElement(driver.findElementByClassName("in"));
-		sleep(1000);
+		sleep(2000);
 		return new TeamIndexPage(driver);
 	}
 	

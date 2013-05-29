@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -262,8 +263,12 @@ public class DefectTrackerIndexPage extends BasePage {
 	
 	public boolean doesNameExist(String name){
 		for(int i = 1; i <= getNumRows(); i ++){
-			if(name.equals(getNameText(i))){
-				return true;
+			try{
+				if(name.equals(getNameText(i))){
+					return true;
+				}
+			}catch(NoSuchElementException e){
+				return false;
 			}
 		}
 		return false;
