@@ -91,10 +91,20 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public ApiKeysIndexPage clickSubmitButton(String oldNote){
+		int oldCnt = getNumRows();
+		int timer = 0;
 		if(oldNote == null){
 			driver.findElementById("submitKeyModalCreate").click();
+			while(getNumRows()!=(oldCnt+1)){
+				if(timer >= 10){
+					break;
+				}
+				timer++;
+				sleep(100);
+			}
 		}else{
 			driver.findElementsById("submitKeyModal").get(getIndex(oldNote)).click();
+			sleep(1000);
 		}
 		return new ApiKeysIndexPage(driver);
 	}
