@@ -57,6 +57,8 @@ public abstract class AbstractDefectTracker {
 	protected final static String LOGIN_FAILURE = "Invalid username / password combination";
 	protected final static String BAD_CONFIGURATION = "Your configuration is invalid: check your URL.";
 	public final static String INVALID_CERTIFICATE = "The indicated server has an invalid or self-signed certificate.";
+	public final static String BAD_URL = "The defect tracker URL is not valid.";
+	public final static String IO_ERROR = "There were problems communicating with the defect tracker server.";
 
 	// Common log for all Defect Tracker Exporters.
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
@@ -251,7 +253,7 @@ public abstract class AbstractDefectTracker {
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			log.warn("URL used for POST was bad: '" + urlString + "'");
 			return null;
 		}
 		
@@ -274,7 +276,24 @@ public abstract class AbstractDefectTracker {
 			
 			return is;
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warn("IOException encountered trying to post to URL with message: " + e.getMessage());
+			if(httpConnection == null) {
+				log.warn("HTTP connection was null so we cannot do further debugging of why the HTTP request failed");
+			} else {
+				try {
+					InputStream errorStream = httpConnection.getErrorStream();
+					if(errorStream == null) {
+						log.warn("Error stream from HTTP connection was null");
+					} else {
+						log.warn("Error stream from HTTP connection was not null. Attempting to get response text.");
+						String postErrorResponse = IOUtils.toString(errorStream);
+						log.warn("Error text in response was '" + postErrorResponse + "'");
+					}
+				} catch (IOException e2) {
+					log.warn("IOException encountered trying to read the reason for the previous IOException: "
+								+ e2.getMessage(), e2);
+				}
+			}
 		} finally {
 			if (outputWriter != null) {
 				try {

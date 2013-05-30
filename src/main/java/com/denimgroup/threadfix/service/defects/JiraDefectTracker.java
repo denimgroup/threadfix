@@ -82,27 +82,45 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		return tempUrl;
 	}
 	
+	/**
+	 * 
+	 * @param urlString JIRA URL to connect to
+	 * @return true if we get an HTTP 401, false if we get another HTTP response code (such as 200:OK)
+	 * 		or if an exception occurs
+	 */
 	private boolean requestHas401Error(String urlString) {
-		URL url = null;
+		log.info("Checking to see if we get an HTTP 401 error for the JIRA URL '" + urlString + "'");
+		
+		boolean retVal;
+		
 		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		try {
+			URL url = new URL(urlString);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
-
-			return connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED;
+			
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+				retVal = true;
+			} else {
+				log.info("Got a non-401 HTTP repsonse code of: " + connection.getResponseCode());
+				retVal = false;
+			}
+		} catch (MalformedURLException e) {
+			log.warn("JIRA URL string of '" + urlString + "' is not a valid URL.", e);
+			setLastError(BAD_URL);
+			retVal = false;
 		} catch (SSLHandshakeException e) {
-			log.warn("Certificate Error encountered while trying to find the response code.");
+			log.warn("Certificate Error encountered while trying to find the response code.", e);
 			setLastError(INVALID_CERTIFICATE);
+			retVal = false;
 		} catch (IOException e) {
-			log.warn("IOException encountered while trying to find the response code.", e);
+			log.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
+			setLastError(IO_ERROR);
+			retVal = false;
 		}
-		return false;
+		
+		log.info("Return value will be " + retVal);
+		
+		return (retVal);
 	}
 	
 	private boolean hasXSeraphLoginReason() {
@@ -199,7 +217,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 						
 			return valid;
 		} catch (JSONException e) {
-			log.info("JIRA credentials check did not return JSON, something is wrong.");
+			log.warn("JIRA credentials check did not return JSON, something is wrong.", e);
 			return false;
 		}
 	}
@@ -224,9 +242,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		boolean valid = requestHas401Error(getUrlWithRest() + "user");
 		
 		if (valid) {
-			log.info("JIRA URL was valid, returned 401 error.");
+			log.info("JIRA URL was valid, returned 401 response as expected because we do not yet have credentials.");
 		} else {
-			log.info("JIRA URL was invalid, 401 error not returned.");
+			log.warn("JIRA URL was invalid or some other problem occurred, 401 response was expected but not returned.");
 		}
 		
 		return valid;
@@ -316,6 +334,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		String description = makeDescription(vulnerabilities, metadata);
 		
+		//	TODO - Use a better JSON API to construct the JSON message. JSONObject.quote() is nice
+		//	and all, but...
 		String payload = "{ \"fields\": {" +
 				" \"project\": { \"id\": " + JSONObject.quote(projectsHash.get(getProjectName())) + " }," +
 				" \"summary\": " + JSONObject.quote(metadata.getDescription()) + "," +
