@@ -506,7 +506,17 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public boolean isDuplicateScan(){
 		sleep(1000);
-		return driver.findElementByClassName("in").findElements(By.className("alert-error")).get(1).getText().contains("Scan file has already been uploaded.");
+		String s = "";
+		for(int i=0;i<10;i++){
+			try{
+				s = driver.findElementByClassName("in").findElements(By.className("alert-error")).get(1).getText();
+			}catch(IndexOutOfBoundsException e){
+				sleep(500);
+				continue;
+			}
+			break;
+		}
+		return s.contains("Scan file has already been uploaded.");
 	}
 	
 

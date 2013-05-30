@@ -29,6 +29,7 @@ import org.openqa.selenium.WebElement;
 public class LoginPage extends BasePage {
 
 	static String url = "http://localhost:8080/threadfix/";
+//	static String url = "https://192.168.13.131/threadfix/";
 	private WebElement usernameField;
 	private WebElement passwordField;
 	private WebElement loginButton;
