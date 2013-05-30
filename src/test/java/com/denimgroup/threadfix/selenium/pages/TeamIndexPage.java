@@ -287,6 +287,7 @@ public class TeamIndexPage extends BasePage {
 	
 	public ApplicationDetailPage clickUploadScanButton(String teamName, String appName,int cnt) {
 		driver.findElementById("submitScanModal"+modalNum).click();
+		int i = 0;
 		try{
 		waitForInvisibleElement(driver.findElementById("uploadScan"+modalNum));
 		}catch(StaleElementReferenceException e){
@@ -295,7 +296,13 @@ public class TeamIndexPage extends BasePage {
 		waitForElement(driver.findElementById("nameText"));
 //		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
 		try{
-			while(!driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt)));
+			while(!driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt))){
+				if(i==10){
+					break;
+				}
+				i++;
+				sleep(500);
+			}
 		}catch(StaleElementReferenceException e){
 			
 		}catch(UnhandledAlertException e){

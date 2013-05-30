@@ -458,6 +458,7 @@ public class ApplicationDetailPage extends BasePage {
 		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
+		sleep(2000);
 		waitForElement(driver.findElementById("scanTabLink"));
 		while(scanCnt != scanCnt+1){
 			scanCnt = scanCount();

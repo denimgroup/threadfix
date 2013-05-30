@@ -157,7 +157,8 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickAddNewUserBtn(){
 		driver.findElementsById("addUserButton").get(getNumRows()).click();
-		waitForInvisibleElement(driver.findElementById("newUserModal"));
+		sleep(1000);
+//		waitForInvisibleElement(driver.findElementById("newUserModal"));
 		return new UserIndexPage(driver);
 	}
 	

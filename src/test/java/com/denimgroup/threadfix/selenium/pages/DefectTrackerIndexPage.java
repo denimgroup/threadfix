@@ -217,6 +217,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public String getUrlErrorsText() {
+		sleep(2000);
 		return driver.findElementById("url.errors").getText();
 	}
 
