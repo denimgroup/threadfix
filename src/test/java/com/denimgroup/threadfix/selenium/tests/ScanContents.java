@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -174,6 +175,7 @@ public class ScanContents extends BaseTest{
 			{CSRF, "Medium", "/demo/XSS-reflected2.php",""},
 		
 	};
+	
 	
 	public final static String[][] ntospiderResults = new String [][] {
 			{"Improper Authentication", "Critical", "/bank/login.aspx", ""},
@@ -437,5 +439,7 @@ public class ScanContents extends BaseTest{
 		
 		return ScanTests.class.getClassLoader().getResource(string).toString();
 	}
+	
+
 	
 }

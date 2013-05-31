@@ -256,7 +256,6 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public String getElementText(String id) {
-//		System.out.println(id + ": " + driver.findElementById(id).getText());
 		return driver.findElementById(id).getText();
 	}
 
@@ -321,7 +320,7 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 
-	public ApplicationDetailPage clickViewScansLink() {
+	public ApplicationDetailPage clickScansTab() {
 		sleep(1000);
 		driver.findElementById("scanTabLink").click();
 		waitForElement(driver.findElementById("channelType1"));
@@ -341,7 +340,7 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 
-	public boolean getNumRows(int cnt) {
+	public boolean getVulnCount(int cnt) {
 		int i = 0;
 		if(!driver.findElementById("vulnTabLink").getText().contains(Integer.toString(cnt))){
 			System.out.println("tab");
@@ -491,6 +490,16 @@ public class ApplicationDetailPage extends BasePage {
 			return Integer.parseInt(matcher.group(1));
 		}
 		return -1;
+	}
+	
+	public boolean isScanChannelPresent(String channel){
+		int rowCnt = driver.findElementsByClassName("bodyRow").size();
+		for(int i = 1; i <= rowCnt; i++){
+			if(driver.findElementById("channelType"+i).getText().trim().equals(channel)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public ApplicationDetailPage submitScanInvalid(){

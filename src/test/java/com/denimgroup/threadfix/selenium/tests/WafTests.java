@@ -69,7 +69,7 @@ public class WafTests extends BaseTest {
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
-	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
+	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
 
 	@Before
 	public void init() {
