@@ -327,14 +327,13 @@ public class WafTests extends BaseTest {
 									.setTeamName(orgName)
 									.addNewTeam()
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgName)
 									.addNewApplication(orgName, appName, urlText, "Low")
 									.saveApplication(orgName);
 		
 		organizationIndexPage.populateAppList(orgName);
 		
-		String s;
-		int cnt = 1;
+		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
+		
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -349,16 +348,9 @@ public class WafTests extends BaseTest {
 			} else {
 				continue;
 			}
-			s = mapEntry.getValue();
-			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
-					.setFileInput(s, orgName,appName)
-					.clickUploadScanButton(orgName,appName,cnt)
-					.clickOrganizationHeaderLink()
-					.expandTeamRowByName(orgName);
-			
-			organizationIndexPage.populateAppList(orgName);
-			cnt++;
-
+			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
+					 									.setFileInput(mapEntry.getValue())
+					 									.submitScan();
 		}
 		
 		//Creating a new Waf
@@ -431,7 +423,6 @@ public class WafTests extends BaseTest {
 		String orgName = "testCreateOrg1";
 		String appName = "testCreateApp1";
 		String urlText = "http://testurl.com";
-		String s = "";
 
 		//set up an organization
 		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
@@ -444,7 +435,9 @@ public class WafTests extends BaseTest {
 				.saveApplication(orgName);
 
 		organizationIndexPage.populateAppList(orgName);
-		int cnt = 1;
+		
+		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
+		
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
@@ -458,15 +451,9 @@ public class WafTests extends BaseTest {
 			} else {
 				continue;
 			}
-			s = mapEntry.getValue();
-			organizationIndexPage = organizationIndexPage.clickUploadScan(appName, orgName)
-					.setFileInput(s, orgName,appName)
-					.clickUploadScanButton(orgName,appName,cnt)
-					.clickOrganizationHeaderLink()
-					.expandTeamRowByName(orgName);
-			
-			organizationIndexPage.populateAppList(orgName);
-			cnt++;
+			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
+						.setFileInput(mapEntry.getValue())
+						.submitScan();
 		}
 
 		//Creating a new Waf

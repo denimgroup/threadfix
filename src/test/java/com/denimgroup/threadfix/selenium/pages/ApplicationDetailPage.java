@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -320,7 +322,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public ApplicationDetailPage clickViewScansLink() {
+		sleep(1000);
 		driver.findElementById("scanTabLink").click();
+		waitForElement(driver.findElementById("channelType1"));
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -481,7 +485,7 @@ public class ApplicationDetailPage extends BasePage {
 		}
 		
 		String scanText = scanTab.getText().trim();
-		Pattern pattern = Pattern.compile("(\\d+)\\nScan$");
+		Pattern pattern = Pattern.compile("^\\s*(\\d+)");
 		Matcher matcher = pattern.matcher(scanText);
 		if(matcher.find()){
 			return Integer.parseInt(matcher.group(1));
@@ -614,4 +618,5 @@ public class ApplicationDetailPage extends BasePage {
 	public boolean isScanCountCorrect(int cnt){
 		return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
 	}
+	
 }
