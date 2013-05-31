@@ -22,37 +22,6 @@ public class WebXMLParser {
 		// intentionally inaccessible
 	}
 	
-	// TODO we may be able to get better results with some more advanced logic here
-	// maybe skip directories like "test", look in specific paths or at least check guesses
-	// on the other hand I don't really see this being a bottleneck
-	public static File findWebXMLInDirectory(File inputFile) {
-		if (inputFile == null || !inputFile.exists()) {
-			return null;
-		}
-		
-    	List<File> directories = new ArrayList<>();
-    	for (File file : inputFile.listFiles()) {
-    		
-    		if (file.isDirectory() && file.getName().equals("WEB-INF")) {
-    			// we can skip ahead because this is where web.xml is supposed to be
-    			return findWebXMLInDirectory(file);
-    		} else if (file.isFile() && file.getName().equals("web.xml")) {
-    			return file;
-    		} else if (file.isDirectory()) {
-    			directories.add(file);
-    		}
-    	}
-    	
-    	for (File directory : directories) {
-    		File maybeWebXML = findWebXMLInDirectory(directory);
-    		if (maybeWebXML != null) {
-    			return maybeWebXML;
-    		}
-    	}
-    	
-    	return null;
-	}
-	
 	public static ServletMappings getServletMappings(File file) {
 		if (file == null || !file.exists()) {
 			return new ServletMappings(null,null);

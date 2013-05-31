@@ -33,7 +33,7 @@ public class WebXMLParserTests {
     		File projectDirectory = new File(testRoot + extensions[i]);
     		assertTrue(projectDirectory != null && projectDirectory.exists());
     		
-    		File file = WebXMLParser.findWebXMLInDirectory(projectDirectory);
+    		File file = new ProjectDirectory(projectDirectory).findWebXML();
     		assertTrue(file.getName().equals("web.xml"));
     		
     		assertTrue(file.getAbsolutePath().equals(results[i]));
@@ -54,6 +54,25 @@ public class WebXMLParserTests {
     }
     
     @Test
+    public void testMappings() {
+    	String[] paths = {
+    		"/attack",
+    		"/attack?Screen=65&menu=200&stage=1",
+    		"/lessons/RoleBasedAccessControl/images/dbSchema.jpg",
+    		"/lessons/RoleBasedAccessControl/images/orgChart.jpg",
+    	};
+    	
+    	System.out.println(webGoat.getClassMappings());
+    	System.out.println(webGoat.getServletMappings());
+    	
+    	for (String path : paths) {
+    		System.out.println(webGoat.getClassForURL(path));
+    		System.out.println(path);
+    		System.out.println();
+    	}
+    }
+    
+    @Test
     public void testTypeGuessing() {
     	assertTrue(vulnClinic.guessApplicationType() == ApplicationType.SPRING);
     	assertTrue(wavsep.guessApplicationType() == ApplicationType.JSP);
@@ -62,7 +81,7 @@ public class WebXMLParserTests {
     
     @Test
     public void testBadInput() {
-    	assertTrue(WebXMLParser.findWebXMLInDirectory(null) == null);
+    	assertTrue(new ProjectDirectory(null).findWebXML() == null);
     	ServletMappings nullInputMappings = WebXMLParser.getServletMappings(null);
     	assertTrue(nullInputMappings != null);
     	assertTrue(nullInputMappings.getClassMappings() == null);
@@ -70,7 +89,7 @@ public class WebXMLParserTests {
     	
     	File doesntExist = new File("This/path/doesnt/exist");
     	
-    	assertTrue(WebXMLParser.findWebXMLInDirectory(doesntExist) == null);
+    	assertTrue(new ProjectDirectory(doesntExist).findWebXML() == null);
     	
     	
     }
