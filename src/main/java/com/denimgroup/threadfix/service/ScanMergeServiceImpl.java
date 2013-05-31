@@ -68,6 +68,8 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+import com.denimgroup.threadfix.service.framework.AbstractURLCalculator;
+import com.denimgroup.threadfix.service.framework.URLCalculatorFactory;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -465,6 +467,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		importer.setFileName(fileName);
 		Scan scan = importer.parseInput();
+		
+		AbstractURLCalculator urlCalculator = URLCalculatorFactory
+				.getAppropriateCalculator(applicationChannel.getApplication());
+		if (urlCalculator != null) {
+			urlCalculator.findMatches(scan);
+		}
 
 		if (scan == null) {
 			log.warn("The " + applicationChannel.getChannelType().getName()
