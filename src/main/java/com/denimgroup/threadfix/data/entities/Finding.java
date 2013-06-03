@@ -77,6 +77,7 @@ public class Finding extends AuditableEntity {
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "vulnerabilityId")
 	public Vulnerability getVulnerability() {
 		return vulnerability;
