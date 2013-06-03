@@ -81,9 +81,8 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickTestConnection() {
 		driver.findElementById("jsonLink").click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By
-				.id("jsonResult")));
-		sleep(1000);
+		waitForElement(driver.findElementById("jsonResult"));
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -615,7 +614,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(1000);
+		sleep(2000);
 		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
