@@ -4,13 +4,6 @@ public class ThreadFixRestClient {
 	
 	HttpRestUtils util = new HttpRestUtils();
 	
-	public String addApplicationChannel(String appId, String channelName) {
-		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + appId + "/addChannel",
-				new String[] { "apiKey",      "channelName" }, 
-				new String[] {  util.getKey(), channelName });
-		return result;
-	}
-	
 	public String addWaf(String appId, String wafId) {
 		String result = util.httpPost(util.getUrl() + "/teams/0/applications/"
 					+ appId + "/setWaf", 
@@ -35,6 +28,28 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
+	public String getRules(String wafId) {
+		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId + "/rules" +
+				"?apiKey=" + util.getKey());
+		
+		return result;
+	}
+
+	public String searchForWafByName(String name) {
+		String result = util.httpGet(util.getUrl() + "/wafs/lookup" +
+				"?apiKey=" + util.getKey() +
+				"&name=" + name);
+		
+		return result;
+	}
+	
+	public String searchForWafById(String wafId) {
+		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId +
+				"?apiKey=" + util.getKey());
+		
+		return result;
+	}
+	
 	public String createWaf(String name, String type) {
 		String result = util.httpPost(util.getUrl() + "/wafs/new",
 				new String[] {"apiKey",      "name", "type"},
@@ -43,10 +58,8 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
-	public String getRules(String wafId) {
-		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId + "/rules" +
-				"?apiKey=" + util.getKey());
-		
+	public String getAllTeams() {
+		String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
 		return result;
 	}
 	
@@ -61,14 +74,6 @@ public class ThreadFixRestClient {
 		String result = util.httpGet(util.getUrl() + "/teams/0/applications/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
-		
-		return result;
-	}
-	
-	public String searchForApplicationChannel(String appId, String channelName) {
-		String result = util.httpGet(util.getUrl() + "/teams/0/applications/" + appId + "/lookupChannel" +
-				"?apiKey=" + util.getKey() +
-				"&channelName=" + channelName);
 		
 		return result;
 	}
@@ -88,21 +93,6 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
-	public String searchForWafById(String wafId) {
-		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId +
-				"?apiKey=" + util.getKey());
-		
-		return result;
-	}
-
-	public String searchForWafByName(String name) {
-		String result = util.httpGet(util.getUrl() + "/wafs/lookup" +
-				"?apiKey=" + util.getKey() +
-				"&name=" + name);
-		
-		return result;
-	}
-	
 	public void setKey(String key) {
 		util.setKey(key);
 	}
@@ -111,17 +101,15 @@ public class ThreadFixRestClient {
 		util.setUrl(url);
 	}
 
-	// TODO remove the 0 and 4 in the URL.
-	// Doesn't matter now but the numbers are not right.
-	public String uploadScan(String applicationChannelId, String filePath) {
-		String result = util.httpPostFile(util.getUrl() + "/teams/0/applications/4/upload", 
+	public String uploadScan(String applicationId, String filePath) {
+		String result = util.httpPostFile(util.getUrl() + "/teams/0/applications/" + applicationId + "/upload", 
 				filePath,
-				new String[] { "apiKey",       "channelId" },
-				new String[] {  util.getKey(), applicationChannelId });
+				new String[] { "apiKey"       },
+				new String[] {  util.getKey() });
 		return result;
 	}
-	
-	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
+
+		public String addDynamicFinding(String applicationId, String vulnType, String severity, 
 			String nativeId, String parameter, String longDescription,
 			String fullUrl, String path) {
 		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +

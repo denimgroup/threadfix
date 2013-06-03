@@ -1,7 +1,32 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webservices.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -12,6 +37,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Properties;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -30,20 +56,17 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HttpRestUtils {
 	
-	protected final Log log = LogFactory.getLog("HttpRestUtils");
-	
 	public final String API_KEY_ERROR = "Authentication failed, check your API Key.";
 	
 	private String url = null;
 	private String key = null;
+	private Properties properties;
 	
 	public String httpPostFile(String request, String fileName, String[] paramNames,
 			String[] paramVals) {
@@ -54,8 +77,6 @@ public class HttpRestUtils {
 	
 	public String httpPostFile(String request, File file, String[] paramNames,
 			String[] paramVals) {
-		
-		log.debug("Requesting " + request);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
@@ -78,7 +99,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				log.warn("Status was not 200.");
+				System.err.println("Status was not 200.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -101,9 +122,7 @@ public class HttpRestUtils {
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
 		
-		log.debug("Requesting " + request);
-		
-		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils.AcceptAllTrustFactory(), 443));
+		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils().new AcceptAllTrustFactory(), 443));
 
 		PostMethod post = new PostMethod(request);
 		
@@ -111,14 +130,13 @@ public class HttpRestUtils {
 		
 		try {
 			for (int i = 0; i < paramNames.length; i++) {
-				if (paramNames[i] != null && paramVals[i] != null)
-					post.addParameter(paramNames[i], paramVals[i]);
+				post.addParameter(paramNames[i], paramVals[i]);
 			}
 			
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				log.warn("Status was not 200.");
+				System.err.println("Status was not 200.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
@@ -140,7 +158,7 @@ public class HttpRestUtils {
 
 	public String httpGet(String urlStr) {
 		
-		log.debug("Requesting " + urlStr);
+		System.out.println("Requesting " + urlStr);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlStr);
@@ -151,7 +169,7 @@ public class HttpRestUtils {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				log.warn("Status was not 200.");
+				System.err.println("Status was not 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();
@@ -232,29 +250,107 @@ public class HttpRestUtils {
 	// These methods help persist the URL and API Key so they don't have to be entered each time.
 	public void setUrl(String url) {
 		this.url = url;
+//		writeProperty("url", url);
 	}
 	
 	public void setKey(String key) {
 		this.key = key;
+//		writeProperty("key", key);
 	}
 	
 	public String getUrl() {
-		return url == null ? "https://localhost:8443/threadfix/rest" : url;
+		if (url == null) {
+			url = getProperty("url");
+			if (url == null) {
+				url = "http://localhost:8080/threadfix/rest";
+			}
+		}
+		
+		return url;
 	}
 	
 	public String getKey() {
+		if (key == null) {
+			key = getProperty("key");
+			if (key == null) {
+				System.out.println("Please set your API key with the command 's k {key}'");
+			}
+		}
+		
 		return key;
 	}
-
+	
+	private String getProperty(String propName) {
+		if (properties == null) {
+			readProperties();
+			if (properties == null) {
+				properties = new Properties();
+				writeProperties();
+			}
+		}
+		
+		return properties.getProperty(propName);
+	}
+	
+//	private void writeProperty(String propName, String propValue) {
+//		readProperties();
+//		properties.setProperty(propName, propValue);
+//		writeProperties();
+//	}
+	
+	private void readProperties() {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream("threadfix.properties");
+			if (properties == null) {
+				properties = new Properties();
+			}
+			properties.load(in);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeProperties() {
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream("threadfix.properties");
+			properties.store(out, "Writing.");
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/**
 	 * These two classes allow the self-signed SSL cert to work. We might be able to cut this down.
 	 * @author mcollins
 	 *
 	 */
-	public static class AcceptAllTrustManager implements X509TrustManager {
+	public class AcceptAllTrustManager implements X509TrustManager {
 	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-	    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[]{}; }
+	    public X509Certificate[] getAcceptedIssuers() { return null; }
 	}
 
 	public class AcceptAllTrustFactory implements ProtocolSocketFactory {
