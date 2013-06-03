@@ -206,13 +206,14 @@ public class ApplicationRestController extends RestController {
 	 * Allows the user to upload a scan to an existing application channel.
 	 * @param appId
 	 * @param request
-	 * @param channelId
+	 * @param applicationId
 	 * @param file
 	 * @return Status response. We may change this to make it more useful.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
-	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, HttpServletRequest request,
-			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
+	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, 
+			@PathVariable("teamId") int teamId, HttpServletRequest request,
+			@RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 
 		String result = checkKey(request, UPLOAD);
@@ -220,12 +221,14 @@ public class ApplicationRestController extends RestController {
 			return result;
 		}
 		
-		String fileName = scanService.saveFile(channelId, file);
+		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
-		ScanCheckResultBean returnValue = scanService.checkFile(channelId, fileName);
+		String fileName = scanService.saveFile(myChannelId, file);
+		
+		ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 		
 		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
-			Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, fileName);
+			Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 			return scan;
 		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
 			return "You attempted to upload an empty scan.";

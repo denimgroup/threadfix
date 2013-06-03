@@ -44,7 +44,7 @@ public interface ScanService {
 	
 	/**
 	 */
-	Integer calculateScanType(int appId, int orgId, MultipartFile file, String channelIdString);
+	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
 
 	/**
 	 * @param scanId
