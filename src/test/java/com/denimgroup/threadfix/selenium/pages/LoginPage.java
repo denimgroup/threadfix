@@ -29,9 +29,6 @@ import org.openqa.selenium.WebElement;
 public class LoginPage extends BasePage {
 
 	static String url = "http://localhost:8080/threadfix/";
-	private WebElement usernameField;
-	private WebElement passwordField;
-	private WebElement loginButton;
 	private WebElement rememberCheckbox;
 
 	public LoginPage(WebDriver webdriver) {
@@ -43,9 +40,6 @@ public class LoginPage extends BasePage {
 		}
 		
 		webdriver.get(url);
-		usernameField = driver.findElementById("username");
-		passwordField = driver.findElementById("password");
-		loginButton = driver.findElementById("login");
 		//rememberCheckbox = driver.findElementById("checkbox");
 	}
 	
@@ -56,24 +50,38 @@ public class LoginPage extends BasePage {
 	public DashboardPage login(String user, String password) {
 		return setUsername(user).setPassword(password).clickLogin();
 	}
+	
+	public LoginPage loginInvalid(String user, String password) {
+		setUsername(user).setPassword(password);
+		driver.findElementById("login").click();
+		return new LoginPage(driver);
+	}
+	
+	public boolean isloginError(){
+		return driver.findElementById("loginError").getText().trim().equals("Error: Username or Password incorrect");
+	}
 
 	public LoginPage checkRememberCheckbox() {
 		rememberCheckbox.click();
 		return this;
 	}
 	
+	public boolean isLoggedOut(){
+		return driver.getCurrentUrl().contains("login");
+	}
+	
 	private LoginPage setUsername(String user) {
-		usernameField.sendKeys(user);
+		driver.findElementById("username").sendKeys(user);
 		return this;
 	}
 	
 	private LoginPage setPassword(String password) {
-		passwordField.sendKeys(password);
+		driver.findElementById("password").sendKeys(password);
 		return this;
 	}
 	
 	private DashboardPage clickLogin() {
-		loginButton.click();
+		driver.findElementById("login").click();
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}

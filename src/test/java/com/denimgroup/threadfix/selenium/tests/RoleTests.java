@@ -288,8 +288,9 @@ public class RoleTests extends BaseTest {
 	
 	/**
 	 * Try to set users for the role such that no one will have admin permissions
+	 * will be dangerous to run on regression(if it fails all other tests could fail)
 	 */
-	//user page is not complete yet
+	@Ignore
 	@Test
 	public void testRemoveUsersFromRole() {
 		// Test on admin role
@@ -313,12 +314,15 @@ public class RoleTests extends BaseTest {
 	
 	/**
 	 * Try to delete the last users with admin permissions
+	 * will be dangerous to run on regression(if it fails all other tests could fail)
 	 */
-	//user page is not complete yet
+	@Ignore
 	@Test
 	public void testDeleteUsers() {
 		
 	}
+	
+	
 	
 
 }

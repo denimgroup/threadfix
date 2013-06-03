@@ -130,18 +130,22 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickLDAP(String oldName){
 		if(oldName == null){
-			driver.findElementsById("isLdapUserCheckbox").get(getNumRows()).click();
+			driver.findElementById("newUserModal").findElement(By.id("isLdapUserCheckbox")).click();
 		}else{
-			driver.findElementsById("isLdapUserCheckbox").get(getIndex(oldName)).click();
+			driver.findElementById("isLdapUserCheckbox"+(getIndex(oldName)+1)).click();
 		}
 		return new UserIndexPage(driver);
 	}
 	
+	public boolean isLDAPSelected(String oldName){
+		return driver.findElementById("isLdapUserCheckbox"+(getIndex(oldName)+1)).isSelected();
+	}
+	
 	public UserIndexPage clickGlobalAccess(String oldName){
 		if(oldName == null){
-			driver.findElementsById("hasGlobalGroupAccessCheckbox").get(getNumRows()).click();
+			driver.findElementById("hasGlobalGroupAccessCheckbox" + (getIndex(oldName)+1)).click();
 		}else{
-			driver.findElementsById("hasGlobalGroupAccessCheckbox").get(getIndex(oldName)).click();
+			driver.findElementById("hasGlobalGroupAccessCheckbox" + (getIndex(oldName)+1)).click();
 		}
 		return new UserIndexPage(driver);
 	}
@@ -211,10 +215,25 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickCancel(String name){
 		driver.findElementsByClassName("modal-footer").get(getIndex(name)).findElement(By.className("btn")).click();
+		sleep(1000);
 		return new UserIndexPage(driver);	
 	}
 	
 	public boolean isGlobalAccessErrorPresent(){
 		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
+	}
+	
+	public boolean isRoleSelected(String oldName,String role){
+		sleep(1000);
+		if(oldName == null){
+			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
+		}else{
+			return new Select(driver.findElementById("roleSelect"+(getIndex(oldName)+1))).getFirstSelectedOption().getText().contains(role);
+		}
+
+	}
+	
+	public boolean isGlobalAccessSelected(String oldName){
+		return driver.findElementById("hasGlobalGroupAccessCheckbox" + (getIndex(oldName)+1)).isSelected();
 	}
 }

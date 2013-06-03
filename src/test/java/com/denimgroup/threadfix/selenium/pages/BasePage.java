@@ -190,4 +190,8 @@ public abstract class BasePage {
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
 	}
+	
+	public boolean isLoggedInUser(String user){
+		return driver.findElementById("tabUserAnchor").getText().trim().contains(user);
+	}
 }

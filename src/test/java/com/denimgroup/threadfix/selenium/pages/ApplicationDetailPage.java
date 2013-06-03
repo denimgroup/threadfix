@@ -23,8 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -461,7 +460,8 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
 		sleep(2000);
-		waitForElement(driver.findElementById("scanTabLink"));
+		waitForScanUpload(0);
+//		waitForElement(driver.findElementById("scanTabLink"));
 		while(scanCnt != scanCnt+1){
 			scanCnt = scanCount();
 			sleep(100);
@@ -472,6 +472,19 @@ public class ApplicationDetailPage extends BasePage {
 			
 		}
 		return new ApplicationDetailPage(driver);
+	}
+	
+	public void waitForScanUpload(int timer){
+		if(timer == 10){
+			throw new NoSuchElementException("Unable to locate element: {\"method\":\"id\",\"selector\":\"scanTabLink\"}");
+		}
+		try{
+			driver.findElementById("scanTabLink");
+		}catch(NoSuchElementException e){
+			sleep(1000);
+			waitForScanUpload(timer+1);
+		}
+		
 	}
 	
 	public int scanCount(){
@@ -615,7 +628,7 @@ public class ApplicationDetailPage extends BasePage {
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
 		sleep(2000);
-		waitForElement(driver.findElementById("vulnName1"));
+//		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
 	

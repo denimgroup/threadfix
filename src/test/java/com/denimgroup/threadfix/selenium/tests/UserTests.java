@@ -31,6 +31,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -72,7 +73,7 @@ public class UserTests extends BaseTest {
 
 	@Test 
 	public void testUserFieldValidation() {
-
+		DashboardPage dashboardPage;
 		StringBuilder stringBuilder = new StringBuilder("");
 		for (int i = 0; i < 400; i++) { stringBuilder.append('i'); }
 
@@ -121,17 +122,24 @@ public class UserTests extends BaseTest {
 
 		// Create a user
 		userIndexPage.enterName(longInput,null);
-		userIndexPage.enterPassword("dummy password",null);
-		userIndexPage.enterConfirmPassword("dummy password",null);
+		userIndexPage.enterPassword(longInput,null);
+		userIndexPage.enterConfirmPassword(longInput,null);
 
 		userIndexPage = userIndexPage.clickAddNewUserBtn();
+		
 		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
 		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
-
-
-		userIndexPage = userIndexPage.clickAddUserLink();
-
+		
+		dashboardPage = userIndexPage.logout()
+					.login(userName, longInput);
+		
+		assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+		
+		userIndexPage = dashboardPage.logout()
+					.login("user", "password")
+					.clickManageUsersLink()
+					.clickAddUserLink();
 		// Test name uniqueness check
 
 		userIndexPage.enterName(userName,null);
@@ -140,6 +148,8 @@ public class UserTests extends BaseTest {
 
 		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
+		
+		
 
 		userIndexPage = userIndexPage.clickDeleteButton(userName);
 
@@ -186,8 +196,13 @@ public class UserTests extends BaseTest {
 
 	@Test 
 	public void testEditUserFieldValidation() {
+		DashboardPage dashboardPage;
 		String baseUserName = "testEditUser";
 		String userNameDuplicateTest = "duplicate user";
+		StringBuilder stringBuilder = new StringBuilder("");
+		for (int i = 0; i < 400; i++) { stringBuilder.append('a'); }
+
+		String longInput = stringBuilder.toString();
 
 		// Set up the two User objects for the test
 
@@ -249,21 +264,39 @@ public class UserTests extends BaseTest {
 
 
 		assertTrue("Password length error not present", userIndexPage.getPasswordError().contains("Password has a minimum length of 12."));
-
+		
+		//max length check
+		userIndexPage = userIndexPage.enterName(longInput,null)
+				.enterPassword(longInput,null)
+				.enterConfirmPassword(longInput,null)
+				.clickUpdateUserBtn(baseUserName);
+						  
+		String userName = "aaaaaaaaaaaaaaaaaaaaaaaaa";
+		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
+		dashboardPage = userIndexPage.logout()
+				.login(userName, longInput);
+	
+		assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+	
 		// Test name uniqueness check
-		userIndexPage = userIndexPage.enterName(userNameDuplicateTest,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
-				.clickUpdateUserBtnInvalid(baseUserName);
+		userIndexPage = dashboardPage.logout()
+				.login("user", "password")
+				.clickManageUsersLink()
+				.clickEditLink(userName)
+				.enterName(userNameDuplicateTest,userName)
+				.enterPassword("lengthy password 2",userName)
+				.enterConfirmPassword("lengthy password 2",userName)
+				.clickUpdateUserBtnInvalid(userName);
 
 
 		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 
 		// Delete the users and logout
 
-		userIndexPage = userIndexPage.clickCancel(baseUserName)
+		userIndexPage = userIndexPage.clickCancel(userName)
 				.clickManageUsersLink()
-				.clickDeleteButton(baseUserName)
+				.clickDeleteButton(userName)
 				.clickDeleteButton(userNameDuplicateTest);
 		
 		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(baseUserName));
@@ -282,7 +315,7 @@ public class UserTests extends BaseTest {
 	}
 
 	@Test
-	public void testValidation() {
+	public void testChangePasswordValidation() {
 		changePasswordPage = loginPage.login("user", "password")
 				.clickChangePasswordLink()
 				.setCurrentPassword(" ")
@@ -377,6 +410,89 @@ public class UserTests extends BaseTest {
 		
 		userIndexPage.clickCancel("user");
 	}
+	
+	@Test
+	public void createLdapUser(){
+		String baseUserName = "testLdapUser";
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(baseUserName,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickLDAP(null)
+				.clickAddNewUserBtn()
+				.clickEditLink(baseUserName);
+		
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
+		//turnoff ldap
+		userIndexPage = userIndexPage.clickLDAP(baseUserName)
+									.clickUpdateUserBtn(baseUserName)
+									.clickEditLink(baseUserName);
+		
+		assertFalse("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
+		//turn ldap on
+		userIndexPage = userIndexPage.clickLDAP(baseUserName)
+									.clickUpdateUserBtn(baseUserName)
+									.clickEditLink(baseUserName)
+									.clickCancel(baseUserName);
+		
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
+		
+		userIndexPage.clickDeleteButton(baseUserName)
+					.logout();
+		
+		
+	}
+	
+	@Test
+	public void changeUserRoleTest(){
+		String baseUserName = "testChangeRoleUser";
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(baseUserName,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickAddNewUserBtn()
+				.clickEditLink(baseUserName);
+		
+		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(baseUserName, "Administrator"));
+		
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("User",baseUserName)
+									.clickUpdateUserBtn(baseUserName)
+									.clickEditLink(baseUserName);
+		
+		assertTrue("User role was not selected",userIndexPage.isRoleSelected(baseUserName, "User"));
+		
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access",baseUserName)
+				.clickUpdateUserBtn(baseUserName)
+				.clickEditLink(baseUserName);
+		
+		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(baseUserName, "Read Access"));
+		
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator",baseUserName)
+				.clickUpdateUserBtn(baseUserName)
+				.clickEditLink(baseUserName)
+				.clickGlobalAccess(baseUserName)
+				.clickUpdateUserBtn(baseUserName)
+				.clickEditLink(baseUserName);
+		
+		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected(baseUserName));
+		
+		userIndexPage = userIndexPage.clickGlobalAccess(baseUserName)
+									.clickUpdateUserBtn(baseUserName)
+									.clickEditLink(baseUserName);
+
+		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected(baseUserName));
+		
+		userIndexPage.clickCancel(baseUserName)
+					.clickDeleteButton(baseUserName)
+					.logout();
+		
+		
+	}
+	
 	
 	
 }
