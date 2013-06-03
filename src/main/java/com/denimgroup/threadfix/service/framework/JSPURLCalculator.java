@@ -40,8 +40,7 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 	@Override
 	public boolean findMatch(Finding finding) {
 		
-		if (finding == null || finding.getDataFlowElements() == null || 
-				finding.getDataFlowElements().isEmpty() || aboveWebInf == null || !aboveWebInf.isDirectory()) {
+		if (finding == null || aboveWebInf == null || !aboveWebInf.isDirectory()) {
 			return false;
 		}
 		
@@ -49,27 +48,42 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 		
 		boolean match = false;
 		
-		for (DataFlowElement element : finding.getDataFlowElements()) {
-			if (element != null && element.getSourceFileName() != null) {
-				String elementPath = element.getSourceFileName();
-				if (elementPath.contains(topDirectory)) {
-					
-					String strippedPath = elementPath.substring(elementPath.indexOf(topDirectory) + topDirectory.length());
-					
-					if (finding.getSurfaceLocation() != null) {
-						finding.getSurfaceLocation().setPath(applicationRoot + strippedPath);
-					}
-					
-					
-					System.out.println("stripped path = " + strippedPath);
-					
-					String pathAttempt = aboveWebInf.getAbsolutePath() + strippedPath;
-					
-					if (new File(pathAttempt).exists()) {
-						System.out.println("located file at " + pathAttempt);
-						match = true;
-					} else {
-						System.out.println("unable to locate file at " + pathAttempt);
+		if (finding.getDataFlowElements() == null || 
+				finding.getDataFlowElements().isEmpty()) {
+			
+			// Attempt dynamic matching
+			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null &&
+					finding.getSurfaceLocation().getPath().contains(applicationRoot)) {
+				String path = finding.getSurfaceLocation().getPath();
+				finding.getSurfaceLocation().setPath(path.substring(path.indexOf(applicationRoot)));
+				match = true;
+			}
+			
+		} else {
+			
+			// Attempt static matching
+			for (DataFlowElement element : finding.getDataFlowElements()) {
+				if (element != null && element.getSourceFileName() != null) {
+					String elementPath = element.getSourceFileName();
+					if (elementPath.contains(topDirectory)) {
+						
+						String strippedPath = elementPath.substring(elementPath.indexOf(topDirectory) + topDirectory.length());
+						
+						if (finding.getSurfaceLocation() != null) {
+							finding.getSurfaceLocation().setPath(applicationRoot + strippedPath);
+						}
+						
+						
+						System.out.println("stripped path = " + strippedPath);
+						
+						String pathAttempt = aboveWebInf.getAbsolutePath() + strippedPath;
+						
+						if (new File(pathAttempt).exists()) {
+							System.out.println("located file at " + pathAttempt);
+							match = true;
+						} else {
+							System.out.println("unable to locate file at " + pathAttempt);
+						}
 					}
 				}
 			}
