@@ -115,7 +115,7 @@ public class ScanServiceImpl implements ScanService {
 	}
 	
 	@Override
-	public Integer calculateScanType(int appId, int orgId, MultipartFile file, String channelIdString) {
+	public Integer calculateScanType(int appId, MultipartFile file, String channelIdString) {
 		ChannelType type = null;
 		
 		Integer channelId = -1;

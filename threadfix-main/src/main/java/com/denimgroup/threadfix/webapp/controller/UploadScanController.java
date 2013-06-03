@@ -118,7 +118,7 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
-		Integer myChannelId = scanService.calculateScanType(appId, orgId, file, request.getParameter("channelId"));
+		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
 		if (myChannelId == null) {
 			log.warn("ThreadFix was unable to figure out what scanner type to use.");
