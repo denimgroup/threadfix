@@ -31,6 +31,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
+import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
@@ -489,6 +491,196 @@ public class UserTests extends BaseTest {
 		userIndexPage.clickCancel(baseUserName)
 					.clickDeleteButton(baseUserName)
 					.logout();
+		
+		
+	}
+	// If this test fails with the defaults changed it could cause the other user tests to fail
+	@Ignore
+	@Test
+	public void disableGlobalAccessTest(){
+		String baseUserName = "configureDefaultsUser";
+		ConfigureDefaultsPage configDefaultsPage = loginPage.login("user", "password")
+											.clickConfigureDefaultsLink()
+											.setRoleSelect("User")
+											.clickUpdateDefaults();
+		
+		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
+		
+		UserIndexPage userIndexPage = configDefaultsPage.clickManageUsersLink()
+														.clickAddUserLink()
+														.enterName(baseUserName,null)
+														.enterPassword("lengthy password 2",null)
+														.enterConfirmPassword("lengthy password 2",null)
+														.clickAddNewUserBtn()
+														.clickEditLink(baseUserName);
+		
+		assertTrue("User role was not selected",userIndexPage.isRoleSelected(baseUserName, "User"));
+		
+		configDefaultsPage = userIndexPage.clickCancel(baseUserName)
+										.clickDeleteButton(baseUserName)
+										.clickConfigureDefaultsLink()
+										.setRoleSelect("Administrator")
+										.clickUpdateDefaults();
+		
+		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
+		
+		userIndexPage = configDefaultsPage.clickManageUsersLink()
+										.clickAddUserLink()
+										.enterName(baseUserName,null)
+										.enterPassword("lengthy password 2",null)
+										.enterConfirmPassword("lengthy password 2",null)
+										.clickAddNewUserBtn()
+										.clickEditLink(baseUserName);
+		
+		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(baseUserName, "Administrator"));
+		
+		configDefaultsPage = userIndexPage.clickCancel(baseUserName)
+										.clickDeleteButton(baseUserName)
+										.clickConfigureDefaultsLink()
+										.checkGlobalGroupCheckbox()
+										.clickUpdateDefaults();
+		
+		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
+		
+		userIndexPage = configDefaultsPage.clickManageUsersLink()
+										.clickAddUserLink()
+										.enterName(baseUserName,null)
+										.enterPassword("lengthy password 2",null)
+										.enterConfirmPassword("lengthy password 2",null)
+										.clickAddNewUserBtn()
+										.clickEditLink(baseUserName);
+		
+		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(baseUserName, "Read Access"));
+		
+		userIndexPage.clickCancel(baseUserName)
+					.clickDeleteButton(baseUserName)
+					.clickConfigureDefaultsLink()
+					.checkGlobalGroupCheckbox()
+					.clickUpdateDefaults()
+					.logout();
+			
+	}
+	
+	@Test
+	public void userPasswordChangeTest(){
+		String baseUserName = "passwordChangeUser";
+		DashboardPage dashboardPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(baseUserName,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickAddNewUserBtn()
+				.logout()
+				.login(baseUserName, "lengthy password 2");
+		
+		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
+		
+		UserChangePasswordPage passwordChangePage = dashboardPage.clickChangePasswordLink()
+																.setCurrentPassword("lengthy password 2")
+																.setNewPassword("lengthy password 3")
+																.setConfirmPassword("lengthy password 3")
+																.clickUpdate();
+		
+		assertTrue("Password change did not save",passwordChangePage.isSaveSuccessful());
+		
+		loginPage = passwordChangePage.logout()
+						.loginInvalid(baseUserName,"lengthy password 2");
+		
+		assertTrue("Able to login with old password",loginPage.isloginError());
+		
+		dashboardPage = loginPage.login(baseUserName, "lengthy password 3");
+				
+		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
+		
+		dashboardPage.logout()
+					.login("user", "password")
+					.clickManageUsersLink()
+					.clickDeleteButton(baseUserName)
+					.logout();
+		
+		
+	}
+	
+	@Test
+	public void userPasswordChangeValidationTest(){
+		String baseUserName = "passwordChangeValidation";
+		DashboardPage dashboardPage = loginPage.login("user", "password")
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(baseUserName,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickAddNewUserBtn()
+				.logout()
+				.login(baseUserName, "lengthy password 2");
+		
+		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
+		//wrong current password
+		UserChangePasswordPage passwordChangePage = dashboardPage.clickChangePasswordLink()
+																.setCurrentPassword("WRONGPASSWORD!!!!")
+																.setNewPassword("lengthy password 3")
+																.setConfirmPassword("lengthy password 3")
+																.clickUpdateInvalid();
+		
+		assertTrue("Wrong current PW error not displayed",
+				passwordChangePage.getErrorText("currentPassword").equals("That was not the correct password."));
+		
+		//blank new password
+		passwordChangePage = passwordChangePage
+										.setCurrentPassword("lengthy password 2")
+										.setNewPassword("")
+										.setConfirmPassword("")
+										.clickUpdateInvalid();
+		
+		assertTrue("Blank new PW error not displayed",
+				passwordChangePage.getErrorText("password").equals("You must enter a new password."));
+		//different confirm and new passwords
+		passwordChangePage = passwordChangePage
+										.setCurrentPassword("lengthy password 2")
+										.setNewPassword("lengthy password 3")
+										.setConfirmPassword("lengthy password 34")
+										.clickUpdateInvalid();
+		
+		assertTrue("Blank confirm PW error not displayed",
+				passwordChangePage.getErrorText("password").equals("Passwords do not match."));
+		//short password
+		passwordChangePage = passwordChangePage
+										.setCurrentPassword("lengthy password 2")
+										.setNewPassword("password")
+										.setConfirmPassword("password")
+										.clickUpdateInvalid();
+		
+		assertTrue("short PW error not displayed",
+				passwordChangePage.getErrorText("password").equals("Password has a minimum length of 12."));
+		//can you still change password
+		passwordChangePage = passwordChangePage
+										.setCurrentPassword("lengthy password 2")
+										.setNewPassword("lengthy password 3")
+										.setConfirmPassword("lengthy password 3")
+										.clickUpdate();
+		
+		assertTrue("Password change did not save",passwordChangePage.isSaveSuccessful());
+		
+		loginPage = passwordChangePage.logout()
+						.loginInvalid(baseUserName, "");
+		
+		assertTrue("blank password allowed login",loginPage.isloginError());
+		
+		loginPage = loginPage.loginInvalid(baseUserName,"password");
+		
+		assertTrue("short password allowed login",loginPage.isloginError());
+		
+		dashboardPage = loginPage.login(baseUserName,"lengthy password 3");
+		
+		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
+		
+		dashboardPage.logout()
+					.login("user", "password")
+					.clickManageUsersLink()
+					.clickDeleteButton(baseUserName)
+					.logout();
+		
 		
 		
 	}

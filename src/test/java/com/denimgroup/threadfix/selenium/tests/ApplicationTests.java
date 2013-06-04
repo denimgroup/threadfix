@@ -32,7 +32,6 @@ import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.ApplicationEditPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
@@ -43,7 +42,6 @@ public class ApplicationTests extends BaseTest {
 	private static LoginPage loginPage;
 	private ApplicationDetailPage applicationDetailPage;
 	private TeamIndexPage teamIndexPage;
-	private ApplicationEditPage applicationEditPage;
 	private WafIndexPage wafIndexPage;
 	private WafRulesPage wafDetailPage;
 

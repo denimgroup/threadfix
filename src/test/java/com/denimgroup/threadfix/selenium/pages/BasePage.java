@@ -136,9 +136,15 @@ public abstract class BasePage {
 	
 	public ConfigureDefaultsPage clickConfigureDefaultsLink(){
 		clickConfigTab();
-		driver.findElementById("viewLogsLink").click();
+		driver.findElementById("configureDefaultsLink").click();
 		return new ConfigureDefaultsPage(driver);
 		
+	}
+	
+	public DashboardPage clickDashboardLink(){
+		driver.findElementById("dashboardHeader").click();
+		sleep(1000);
+		return new DashboardPage(driver);
 	}
 	
 	public void sleep(int num) {

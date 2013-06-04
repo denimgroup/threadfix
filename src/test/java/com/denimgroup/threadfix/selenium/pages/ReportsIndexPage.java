@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -36,6 +37,23 @@ public class ReportsIndexPage extends BasePage {
 	
 	public ReportsIndexPage(WebDriver webdriver) {
 		super(webdriver);
+	}
+	
+	public String getCurrentReport(){
+		Select reportDropdown;
+		try{
+			reportDropdown = new Select(driver.findElementById("trendingReportSelect"));
+		}catch(NoSuchElementException e){
+			try{
+				reportDropdown = new Select(driver.findElementById("snapshotReportSelect"));
+			}catch(NoSuchElementException f){
+					reportDropdown = new Select(driver.findElementById("comparisonReportSelect"));
+			}
+			
+		}
+		System.out.println(reportDropdown.getFirstSelectedOption().getText().trim());
+		return reportDropdown.getFirstSelectedOption().getText().trim();
+		
 	}
 	
 	public String selectTeamList(String text) {
