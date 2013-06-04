@@ -475,7 +475,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public void waitForScanUpload(int timer){
-		if(timer == 10){
+		if(timer == 20){
 			throw new NoSuchElementException("Unable to locate element: {\"method\":\"id\",\"selector\":\"scanTabLink\"}");
 		}
 		try{
@@ -627,7 +627,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(2000);
+		sleep(3000);
 //		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
