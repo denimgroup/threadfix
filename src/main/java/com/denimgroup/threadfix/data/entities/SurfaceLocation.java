@@ -100,7 +100,6 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PATH_LENGTH)
-	@JsonIgnore
 	public String getPath() {
 		return path;
 	}
