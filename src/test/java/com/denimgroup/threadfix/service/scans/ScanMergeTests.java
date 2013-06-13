@@ -22,9 +22,6 @@ import com.denimgroup.threadfix.webservices.tests.ThreadFixRestClient;
 
 public class ScanMergeTests extends BaseRestTest {
 	
-	private String wavsepFPRPath = "/SBIR/wavsep.fpr";
-	private String wavsepAppscanPath = "/SBIR/wavsep.xml";
-	
 	private String wavsepUrl = "http://satgit2.denimgroup.com/sbir/wavsep.git";
 	
 	@Test
@@ -36,7 +33,7 @@ public class ScanMergeTests extends BaseRestTest {
 		goodClient.setKey(GOOD_API_KEY);
 		goodClient.setUrl(BASE_URL);
 		
-		Integer appId = 4; // setupApplication(goodClient);
+		Integer appId = 6;//setupApplication("petclinic", goodClient);
 	
 		String jsonToLookAt = goodClient.searchForApplicationById(appId.toString());
 		
@@ -57,12 +54,12 @@ public class ScanMergeTests extends BaseRestTest {
 			
 		}
 		
-		List<SimpleVuln> target = getTarget();
+		List<SimpleVuln> target = getTarget("petclinic");
 		
 		compareResults(result, target);
 	}
 	
-	// First draft will only compare the appscan results and their merges.
+	// First draft will only compare the appscan results and which findings they merge to.
 	public void compareResults(List<SimpleVuln> results, List<SimpleVuln> target) {
 		Map<String, SimpleVuln> appScanSimpleVulnMap = new HashMap<>();
 		
@@ -132,23 +129,19 @@ public class ScanMergeTests extends BaseRestTest {
 		return null;
 	}
 	
-	public Integer setupApplication(ThreadFixRestClient goodClient) {
+	public Integer setupApplication(String applicationName, ThreadFixRestClient goodClient) {
 		Integer teamId = getId(getJSONObject(goodClient.createTeam(getRandomString(23))));
 		Integer appId  = getId(getJSONObject(goodClient.createApplication(
 				teamId.toString(), getRandomString(23), wavsepUrl)));
 
-		URL url = this.getClass().getResource(wavsepFPRPath);
-		
-		File testFile = new File(url.getFile());
+		File testFile = getFPR(applicationName);
 
 		String response = goodClient.uploadScan(appId.toString(), testFile.getAbsolutePath());
 		
 		assertTrue(response != null);
 		assertTrue(getJSONObject(response) != null);
 		
-		url = this.getClass().getResource(wavsepAppscanPath);
-		
-		testFile = new File(url.getFile());
+		testFile = getAppscanXML(applicationName);
 		
 		String response2 = goodClient.uploadScan(appId.toString(), testFile.getAbsolutePath());
 		
@@ -161,12 +154,25 @@ public class ScanMergeTests extends BaseRestTest {
 		return appId;
 	}
 	
-	public List<SimpleVuln> getTarget() throws IOException {
+	public File getFPR(String applicationName) {
+		return getResource("/SBIR/" + applicationName + ".fpr");
+	}
+	
+	public File getAppscanXML(String applicationName) {
+		return getResource("/SBIR/" + applicationName + ".xml");
+	}
+	
+	public File getResource(String path) {
+		URL url = this.getClass().getResource(path);
+		return new File(url.getFile());
+	}
+	
+	public List<SimpleVuln> getTarget(String applicationName) throws IOException {
 		List<SimpleVuln> appScanMerges = new ArrayList<>();
 		
 		int count = 0;
 		
-		URL url = this.getClass().getResource("/SBIR/wavsep-merge.csv");
+		URL url = this.getClass().getResource("/SBIR/" + applicationName + "-merge.csv");
 		
 		File testFile = new File(url.getFile());
 		
@@ -175,16 +181,16 @@ public class ScanMergeTests extends BaseRestTest {
 		while (reader.ready()) {
 			count ++;
 			String lineContents = reader.readLine();
-			String[] stuff = lineContents.split(",");
-			if (stuff.length != 6) {
+			String[] splitContents = lineContents.split(",");
+			if (splitContents.length != 6) {
 				System.out.println("line " + 
 						count + 
 						" has a problem - " + 
-						stuff.length + 
+						splitContents.length + 
 						" parts instead of 6.");
 				System.out.println(lineContents);
 			} else {
-				appScanMerges.add(SimpleVuln.buildSimpleVuln(stuff));
+				appScanMerges.add(SimpleVuln.buildSimpleVuln(splitContents));
 			}
 		}
 		

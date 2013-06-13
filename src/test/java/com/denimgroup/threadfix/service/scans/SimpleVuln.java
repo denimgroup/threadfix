@@ -28,8 +28,8 @@ class SimpleVuln {
 		this.parameter = parameter;
 		this.genericVuln = genericVuln;
 		this.notes = notes;
-		this.fortifyNativeIds = new HashSet<>(Arrays.asList(new String[] { fortifyNativeId } ));
-		this.appscanNativeIds = new HashSet<>(Arrays.asList(new String[] { appscanNativeId } ));
+		this.fortifyNativeIds = setContaining(fortifyNativeId);
+		this.appscanNativeIds = setContaining(appscanNativeId);
 		
 		if (path == null) {
 			this.path = "";
@@ -75,8 +75,10 @@ class SimpleVuln {
 				case ChannelType.FORTIFY: fortifyNativeIds.add(finding.getString("nativeId")); break;
 			}
 		}
-		
-		
+	}
+	
+	private Set<String> setContaining(String... strings) {
+		return new HashSet<>(Arrays.asList(strings));
 	}
 	
 	public Set<String> getAppscanNativeIds() {

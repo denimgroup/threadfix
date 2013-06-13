@@ -36,8 +36,8 @@
 /petclinic/owners/7/pets/9/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,bbfd1e8e6962522cdf815abd2e87921e,,Fortify didn't have any findings in javascript files
 /petclinic/owners/10/pets/12/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,12d3ee16ef568fe025c83fe9000d503e,,Fortify didn't have any findings in javascript files
 /petclinic/owners.html,lastName,Application Error,36dcaa4017ed01020cfaa2b929dbef37,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
-/petclinic/owners.html,dti,Application Error,a20742b0283c6c4a9c883fee8927452d,,"This is a PDF download, not an error"
-/petclinic/owners.html,dtt,Application Error,7d86a1d0bea9569f5e1a0a13b36fd784,,"This is a PDF download, not an error"
+/petclinic/owners.html,dti,Application Error,a20742b0283c6c4a9c883fee8927452d,,This is a PDF download not an error
+/petclinic/owners.html,dtt,Application Error,7d86a1d0bea9569f5e1a0a13b36fd784,,This is a PDF download not an error
 /petclinic/datatablesController/datatables-74056.js,t,Application Error,d2cee4d477f4cf25f397e8b935416e74,,Fortify didn't have any findings in javascript files
 /petclinic/datatablesController/datatables-74056.js,id,Application Error,295a625b3a1b90e3866ad84e163c9dba,,Fortify didn't have any findings in javascript files
 /petclinic/datatablesController/datatables-74056.js,c,Application Error,e6740676fa6a366afbe7a2126bd4e527,,Fortify didn't have any findings in javascript files
