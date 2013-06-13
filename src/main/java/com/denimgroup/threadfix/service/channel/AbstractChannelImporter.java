@@ -785,7 +785,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return null;
 	}
 	
-	protected abstract class HandlerWithBuilder extends DefaultHandler {
+	public abstract class HandlerWithBuilder extends DefaultHandler {
 		private StringBuilder builder = new StringBuilder();
 
 		protected void addTextToBuilder(char ch[], int start, int length) {

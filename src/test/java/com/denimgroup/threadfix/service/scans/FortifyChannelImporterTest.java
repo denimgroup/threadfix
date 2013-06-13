@@ -122,28 +122,31 @@ public class FortifyChannelImporterTest extends AbstractChannelImporter {
 		
 			URL url = test.getClass().getResource("/SBIR/" + app + ".fpr");
 			test.setFileName(url.getFile());
-			
-			Scan result = test.parseInput();
-			
 			FileWriter writer = new FileWriter(new File("C:\\test\\SBIR\\" + app + "-fortify.csv"));
-			
-			for (Finding finding : result.getFindings()) {
-				writer.append(finding.getSourceFileLocation());
-				writer.append(",");
-				writer.append(finding.getSurfaceLocation().getParameter());
-				writer.append(",");
-				writer.append(finding.getChannelVulnerability().getName());
-				writer.append(",");
-				writer.append(finding.getChannelSeverity().getName());
-				writer.append(",");
-				writer.append(finding.getNativeId());
-				writer.append("\n");
+
+			try {
+				Scan result = test.parseInput();
+				
+				for (Finding finding : result.getFindings()) {
+					writer.append(finding.getSourceFileLocation());
+					writer.append(",");
+					writer.append(finding.getSurfaceLocation().getParameter());
+					writer.append(",");
+					writer.append(finding.getChannelVulnerability().getName());
+					writer.append(",");
+					writer.append(finding.getChannelSeverity().getName());
+					writer.append(",");
+					writer.append(finding.getNativeId());
+					writer.append("\n");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				writer.flush();
+				writer.close();
+				test.closeInputStream(test.inputStream);
 			}
-			
-			writer.flush();
-			writer.close();
-			
-			test.closeInputStream(test.inputStream);
 		}
 	}
 	

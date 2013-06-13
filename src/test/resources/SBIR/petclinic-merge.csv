@@ -1,0 +1,61 @@
+/petclinic/owners/9/pets/new.html,type,Blind SQL Injection,77aa749edf66125a36ae30c79c047b01,,Fortify only found SQL Injection on other pages
+/petclinic/owners/6/edit.html,firstName,Blind SQL Injection,fdc1ec26bc6363ef99a51fd955346e09,,Fortify only found SQL Injection on other pages
+/petclinic/owners/8/pets/10/edit,name,Blind SQL Injection,cea13a6fe64236b5b897c4e1487ecd84,,Fortify only found SQL Injection on other pages
+/petclinic/owners/8/pets/10/edit,type,Blind SQL Injection,7505e59d0912a09c6019a72eae9c0d4,,Fortify only found SQL Injection on other pages
+/petclinic/owners/3/pets/4/edit,name,Blind SQL Injection,b1f7e40c6738db858f64edcd6e79f47a,,Fortify only found SQL Injection on other pages
+/petclinic/owners/4/pets/5/visits/new,description,Blind SQL Injection,4054c867b8edad825d4e4468b3e7ac9a,,Fortify only found SQL Injection on other pages
+/petclinic/owners/5/edit.html,firstName,Blind SQL Injection,de3788e457ed989ea63fd2cdbce7cb33,,Fortify only found SQL Injection on other pages
+/petclinic/owners/7/edit.html,firstName,Blind SQL Injection,3ecc9827cb89de2f30b0fe1eae47399f,,Fortify only found SQL Injection on other pages
+/petclinic/owners/7/edit.html,lastName,Blind SQL Injection,b56ce6005b384a52fc340b6a6a278ef5,,Fortify only found SQL Injection on other pages
+/petclinic/owners/1/edit.html,lastName,Blind SQL Injection,d7dc65c1dd13dff059580ec67013b6e6,,Fortify only found SQL Injection on other pages
+/petclinic/owners/1/pets/new.html,birthDate,Blind SQL Injection,9c15ddd09ff1dfd9cedad4b5e6be8b5d,,Fortify only found SQL Injection on other pages
+/petclinic/owners/10/pets/12/visits/new,description,Blind SQL Injection,1a07468c95c11f782dee9ab5b7fb6c05,,Fortify only found SQL Injection on other pages
+/petclinic/owners.html,lastName,Cross-Site Scripting,177544467ecaab91ea649bc56e0eee7b,,Fortify didn't find any XSS
+/petclinic/owners/6/pets/8/edit,name,Cross-Site Scripting,396c4557ad116336f602bd2407356485,,Fortify didn't find any XSS
+/petclinic/owners/1/pets/1/visits/new,null,Cross-Site Scripting,31a6f39bf6e1430fa68fbbcdc11f7396,,Fortify didn't find any XSS
+/petclinic/owners.html,lastName,SQL Injection ,f95c1cfa0701fe2847ec90937156f640,F4B239E280210E3ADF7044526BBE3F13;7FB3F7B4BF0EBD97F3BA5FEA8BC0E682,Both of these correspond to /owners.html and lastName
+/petclinic/owners.html,lastName,Link Injection (facilitates Cross-Site Request Forgery),676bc41e2c7e8be7699c2cb9461795cb,3B26AC0415FAF39019A9F5F1B07304DF,I think this is the same one but I'm not 100% sure
+/petclinic/owners.html,lastName,Phishing Through Frames,ee00391b41b90e02a133bd02d2d625bd,,Fortify doesn't have anything for this
+/petclinic/owners.html,null,Database Error Pattern Found,9a03e5eea88abe6b949849a476c1e215,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages. This one will be hard to identify because 
+/petclinic/owners/6,null,Include File Download,bd8bd196d4cf9e75b204d8ef8f565e85,,Fortify didn't have any findings in javascript files
+/petclinic/owners/9,null,Include File Download,51348da87877641171d0f002273b5b1d,,Fortify didn't have any findings in javascript files
+/petclinic/owners/9/pets/11/visits/new,null,Include File Download,55e2390b3d56cc8d9df1d83f0798c564,,Fortify didn't have any findings in javascript files
+/petclinic/owners/6/pets/7/visits/new,null,Include File Download,fd52eef52be55086cffd5001cd67dd86,,Fortify didn't have any findings in javascript files
+/petclinic/owners/6/pets/8/visits/new,null,Include File Download,eea6990b8d1c24915b29238c8c2d2b74,,Fortify didn't have any findings in javascript files
+/petclinic/owners/3/pets/4/visits/new,null,Include File Download,24fdfad9bab00fbdefde18fee89f2741,,Fortify didn't have any findings in javascript files
+/petclinic/owners/4/pets/5/visits/new,null,Include File Download,dcd692b77e0ead375e3393efc14e6efe,,Fortify didn't have any findings in javascript files
+/petclinic/owners/7/pets/9/visits/new,null,Include File Download,c03a50dd6f4f6a403800dcc442788e70,,Fortify didn't have any findings in javascript files
+/petclinic/owners/10/pets/12/visits/new,null,Include File Download,757468c7518f5317a34600abc5823126,,Fortify didn't have any findings in javascript files
+/petclinic/owners/6,null,Multiple Vendor %20 Script Source Code Disclosure,abfdc9a27dfe6113c67359e8b4e961f,,Fortify didn't have any findings in javascript files
+/petclinic/owners/9,null,Multiple Vendor %20 Script Source Code Disclosure,772f144276c5a7541e2ca1c6c4e7b568,,Fortify didn't have any findings in javascript files
+/petclinic/owners/9/pets/11/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,bce98dc3cc35dcd8e94dfcba541b11ec,,Fortify didn't have any findings in javascript files
+/petclinic/owners/6/pets/7/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,645db1a593f6f4da4b6988161c68674f,,Fortify didn't have any findings in javascript files
+/petclinic/owners/6/pets/8/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,f7e1f4be81b9f35584d7d54f9b75daa7,,Fortify didn't have any findings in javascript files
+/petclinic/owners/3/pets/4/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,8a384f2645dbbcd65c16a166c24f5960,,Fortify didn't have any findings in javascript files
+/petclinic/owners/4/pets/5/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,892cbb05975a1f44f8ade53d69afe0d8,,Fortify didn't have any findings in javascript files
+/petclinic/owners/7/pets/9/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,bbfd1e8e6962522cdf815abd2e87921e,,Fortify didn't have any findings in javascript files
+/petclinic/owners/10/pets/12/visits/new,null,Multiple Vendor %20 Script Source Code Disclosure,12d3ee16ef568fe025c83fe9000d503e,,Fortify didn't have any findings in javascript files
+/petclinic/owners.html,lastName,Application Error,36dcaa4017ed01020cfaa2b929dbef37,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners.html,dti,Application Error,a20742b0283c6c4a9c883fee8927452d,,"This is a PDF download, not an error"
+/petclinic/owners.html,dtt,Application Error,7d86a1d0bea9569f5e1a0a13b36fd784,,"This is a PDF download, not an error"
+/petclinic/datatablesController/datatables-74056.js,t,Application Error,d2cee4d477f4cf25f397e8b935416e74,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-74056.js,id,Application Error,295a625b3a1b90e3866ad84e163c9dba,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-74056.js,c,Application Error,e6740676fa6a366afbe7a2126bd4e527,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-74403.js,id,Application Error,134986389d44cd55d8967a2b6ae5fa71,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-74403.js,c,Application Error,7f4fdb853e7b09c2310b2e123a058fe4,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-42721.js,t,Application Error,bc24ebfbf2db1d83b502cc87daeb5745,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-42721.js,id,Application Error,6897d3a24ec6c91f08d402c8d9e6a580,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-42721.js,c,Application Error,b2c4c06e9b4ccb22ef387f2e6065d7a6,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-87982.js,t,Application Error,1938420bc0b9cd0e33b66ab57af151db,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-87982.js,id,Application Error,65f95b774b46497cc60b9f110e5fc47f,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-87982.js,c,Application Error,dc002c953a6b50c68f807ad5398e4413,,Fortify didn't have any findings in javascript files
+/petclinic/datatablesController/datatables-74403.js,t,Application Error,9c9df71883af6a5a24b424439fd05428,,Fortify didn't have any findings in javascript files
+/petclinic/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js,null,Client-Side (JavaScript) Cookie References,834aa430510c93acdc416b453b3b0d74,,Fortify didn't have any findings in javascript files
+/petclinic/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js;jsessionid=7BEA0FAF69F461980789EA444BF2237B,null,Client-Side (JavaScript) Cookie References,2820ed66e89d0e04346f5ccfa6ac67d4,,Fortify didn't have any findings in javascript files
+/petclinic/oups.html;jsessionid=7BEA0FAF69F461980789EA444BF2237B,null,HTML Comments Sensitive Information Disclosure,8feb7b901ad151039c72f20d52e60ee0,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/9/pets/new.html,null,HTML Comments Sensitive Information Disclosure,25c66f273e67d903c09fbc6f4b19804b,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/8/pets/10/edit,null,HTML Comments Sensitive Information Disclosure,f109071384834fe26a0c3206b9b84e8a,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/6/pets/7/visits/new,null,HTML Comments Sensitive Information Disclosure,c0f83838cc54f755215391fc7f4065bd,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/6/pets/8/visits/new,null,HTML Comments Sensitive Information Disclosure,d5946b75f84e935cb5344f6360e9b457,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/7/pets/9/visits/new,null,HTML Comments Sensitive Information Disclosure,f5ba3388b9162bc7054dd189886af0b1,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
+/petclinic/owners/10/pets/12/visits/new,null,HTML Comments Sensitive Information Disclosure,4f5a864a087f087f91bac176f638ae8f,D720DF2A39E943FBEB8F3D7913C145FB,The same exception JSP is displayed across all these pages
