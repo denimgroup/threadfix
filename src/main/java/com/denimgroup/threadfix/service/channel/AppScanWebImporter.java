@@ -171,25 +171,21 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		hosts.add(atts.getValue(0));
 	    	
 	    	if (issueTypes) {
-	    		// ISSUETYPE
-	    		if ("IssueType".equals(qName))
-	    			currentIssueTypeId = atts.getValue(0);
-	    		else if ("Severity".equals(qName))
-	    			grabSeverity = true;
-	    		else if ("link".equals(qName))
-	    			grabCWE = true;
-	    		else if ("Issues".equals(qName))
-	    			issueTypes = false;
-	    		else if ("name".equals(qName))
-	    			grabIssueTypeName = true;
+	    		
+	    		switch (qName) {
+	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
+	    			case "Severity" : grabSeverity = true; break;
+	    			case "link" : issueTypes = false; break;
+	    			case "name" : grabIssueTypeName = true; break;
+	    		}
 	    			    	
 	    	} else {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
 		    	}
-		    	else if ("Entity".equals(qName) && atts.getValue(1) != null && atts.getValue(1).trim().equals("Parameter"))
-		    		currentParam = atts.getValue(0);
+		    	else if ("Entity".equals(qName))
+		    		currentParam = atts.getValue("Name");
 		    	else if ("Url".equals(qName))
 		    		grabUrlText = true;
 		    	else if (date == null && "OriginalHttpTraffic".equals(qName)) {

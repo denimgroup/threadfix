@@ -22,11 +22,11 @@ class SimpleVuln {
 		return new SimpleVuln(args[0], args[1], args[2], args[3], args[4], args[5]);
 	}
 	
-	public SimpleVuln(String path, String parameter, String genericVuln,
+	public SimpleVuln(String path, String parameter, String genericVulnId,
 			String appscanNativeId, String fortifyNativeId, String notes) {
 		this.path = path;
 		this.parameter = parameter;
-		this.genericVuln = genericVuln;
+		this.genericVulnId = genericVulnId;
 		this.notes = notes;
 		this.fortifyNativeIds = setContaining(fortifyNativeId);
 		this.appscanNativeIds = setContaining(appscanNativeId);
@@ -37,7 +37,7 @@ class SimpleVuln {
 		if (parameter == null) {
 			this.parameter = "";
 		}
-		if (genericVuln == null) {
+		if (genericVulnId == null) {
 			this.genericVuln = "";
 		}
 	}
@@ -110,7 +110,7 @@ class SimpleVuln {
 	}
 	
 	public String toString() {
-		return "{ " + genericVuln + ", " + path + ", " + parameter + " }";
+		return "{ "+ path + ", "  + genericVuln + ", " + parameter + " }";
 	}
 	
 	public boolean equals(Object other) {

@@ -505,7 +505,7 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.NETSPARKER, "netsparker", "target", "url", "scantime", "vulnerability", "url", "type", "severity");
 		addToMap(ChannelType.CAT_NET, "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
 		addToMap(ChannelType.W3AF, "w3afrun");
-		addToMap(ChannelType.NESSUS, "NessusClientData_v2", "Policy", "policyName", "Preferences", "ServerPreferences");
+		addToMap(ChannelType.NESSUS, "NessusClientData_v2");
 		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
@@ -522,9 +522,10 @@ public class ScanServiceImpl implements ScanService {
 	
 	private String getType(List<String> scanTags) {
 		
-		for (Entry<String, String[]> entry : map)
-		if (matches(scanTags, entry.getValue())) {
-			return entry.getKey();
+		for (Entry<String, String[]> entry : map) {
+			if (matches(scanTags, entry.getValue())) {
+				return entry.getKey();
+			}
 		}
 		
 		return null;

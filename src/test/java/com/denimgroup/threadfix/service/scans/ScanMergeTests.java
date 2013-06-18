@@ -33,7 +33,7 @@ public class ScanMergeTests extends BaseRestTest {
 		goodClient.setKey(GOOD_API_KEY);
 		goodClient.setUrl(BASE_URL);
 		
-		Integer appId = 6;//setupApplication("petclinic", goodClient);
+		Integer appId = 4;//setupApplication("petclinic", goodClient);
 	
 		String jsonToLookAt = goodClient.searchForApplicationById(appId.toString());
 		
@@ -51,10 +51,9 @@ public class ScanMergeTests extends BaseRestTest {
 			if (vuln.getAppscanNativeIds() != null) {
 				result.add(vuln);
 			}
-			
 		}
 		
-		List<SimpleVuln> target = getTarget("petclinic");
+		List<SimpleVuln> target = getTarget("wavsep");
 		
 		compareResults(result, target);
 	}
@@ -71,62 +70,25 @@ public class ScanMergeTests extends BaseRestTest {
 			}
 		}
 		
-		int correctNoMatch = 0, correctMatch = 0, wrong = 0, missing = 0;
+		TestResult matchResults = new TestResult();
 		
 		for (SimpleVuln vuln : target) {
 			for (String nativeId : vuln.getAppscanNativeIds()) {
 				if (appScanSimpleVulnMap.containsKey(nativeId)) {
 					SimpleVuln targetVuln = appScanSimpleVulnMap.get(nativeId);
-					
-					String targetVulnFortifyId = getFortifyParameter(targetVuln);
-					String vulnFortifyId = getFortifyParameter(vuln);
-					
-					boolean targetVulnEmptyFortify = targetVulnFortifyId == null;
-					boolean vulnEmptyFortify = vulnFortifyId == null;
-					
-					if (targetVulnEmptyFortify && vulnEmptyFortify) {
-						correctNoMatch += 1;
-					} else if (!targetVulnEmptyFortify && !vulnEmptyFortify &&
-							vulnFortifyId.equals(targetVulnFortifyId)) {
-						correctMatch += 1;
-					} else {
-						wrong += 1;
-					}
-				} else { 
-					missing += 1;
+					matchResults.analyze(vuln, targetVuln);
+				} else {
+					matchResults.addMissing(nativeId);
 				}
 			}
 		}
 		
-		System.out.println("Total              : " + (correctNoMatch + correctMatch + wrong + missing));
-		System.out.println("Correct With Match : " + correctMatch);
-		System.out.println("Correct No Match   : " + correctNoMatch);
-		System.out.println("Wrong              : " + wrong);
-		System.out.println("Missing            : " + missing);
+		System.out.println(matchResults);
 		
-		if (missing > 0) {
+		if (matchResults.hasMissing()) {
 			System.out.println("We have more than 0 missing. " +
 					"This means we need a better method of building the hash.");
 		}
-	}
-	
-	public String getFortifyParameter(SimpleVuln vuln) {
-		if (vuln == null || vuln.getFortifyNativeIds() == null || vuln.getFortifyNativeIds().isEmpty()) {
-			return null;
-		}
-		
-		if (vuln.getFortifyNativeIds().size() > 1) {
-			System.out.println("More than one Fortify finding for " + vuln + 
-					". This extraction might not be accurate.");
-		}
-		
-		for (String nativeId : vuln.getFortifyNativeIds()) {
-			if (nativeId != null && !nativeId.isEmpty() && !nativeId.equals("null")) {
-				return nativeId;
-			}
-		}
-		
-		return null;
 	}
 	
 	public Integer setupApplication(String applicationName, ThreadFixRestClient goodClient) {

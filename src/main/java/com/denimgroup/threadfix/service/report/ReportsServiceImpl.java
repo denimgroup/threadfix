@@ -140,6 +140,8 @@ public class ReportsServiceImpl implements ReportsService {
 			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 		}
 		
+		long startTime = System.currentTimeMillis();
+		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 		
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -161,6 +163,8 @@ public class ReportsServiceImpl implements ReportsService {
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
 			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
+		} finally {
+			System.out.println("Total milliseconds taken to generate report: " + (System.currentTimeMillis() - startTime));
 		}
 	}
 
