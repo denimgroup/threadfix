@@ -1,0 +1,52 @@
+/bodgeit/login.jsp,username,Authentication Bypass Using SQL Injection,2bc1df07d73fba0ae6c02e8a0fff10d0,F5F5DF2FA6BBAD75FEF2B8FDBA85E438,root/login.jsp:44 from 33
+/bodgeit/basket.jsp,price,Blind SQL Injection,e634a546e75fbcf0822a08c8327787fd,,Fortify didn't find a vector for anything containing a price variable. It does have the sink marked at root/basket.jsp:205 SQLi
+/bodgeit/basket.jsp,productid,Blind SQL Injection,e6d9bf6b0ccbe019f2909b2e3d82c7b1,991FDC49E6E6581B357CE982AA639C61;9B3B19D14460A240BF61DF8DE4DC5DBE;5D9C4CC1D3FE170C4288003B884C97E2;2EE1A60B1144F612F5AEEE59772EBEAD;,These four Fortify findings all correspond to the same tuple but are different sinks. I think that means in ThreadFix they are all the same vuln but there may be one that manifests in the way that appscan can find. I'm not sure if there's an important distinction to be made there but it is probably worth further inspection.
+/bodgeit/login.jsp,username,Blind SQL Injection,7437cb15f7f638b2514906347ce123ec,F5F5DF2FA6BBAD75FEF2B8FDBA85E438,root/login.jsp:44 from 33
+/bodgeit/login.jsp,password,Blind SQL Injection,ad44150d4dc4f6894b0b765f891c74fb,CEB9F03563F6DD8FEC73391744EE16D8,root/login.jsp:44 from 34
+/bodgeit/search.jsp,q,Blind SQL Injection (Time Based),c9b2e5b4678706fad84f06e8662a3dc0,10D0C26D57CF7697B7DC7DCFE5608E7A,You can't tell this from the data flow in Fortify. Could be difficult to merge automatically
+/bodgeit/register.jsp,username,Cross-Site Scripting,b5822bbb6c9b58ac77c3f8d950e3dcf3,BA2F6B5F9B76CBB434BA3E9D5BDEA7C5,root/header.jsp:29
+/bodgeit/search.jsp,q,Cross-Site Scripting,70056ddfe4e204ce4372ae3c6720f8fd,E37BE229D7046E087E894CCD95564A92,root/search.jsp:44
+/bodgeit/login.jsp,username,Cross-Site Scripting,b4e689d0d7a8acd825634dd3be12cace,29838936A9C4CBECCB090F6A47696A75,root/login.jsp:109
+/bodgeit/basket.jsp,productid,Stored Cross-Site Scripting,8fb9567be840744cc4a10361217e251d,65F778BB4CE9A13C1FF622503A9604EA,Fortify was unable to find the complete trace but you can inject in the productid parameter at line 183 and it should surface at 275 which is where Fortify found it.
+/bodgeit/register.jsp,password2,Stored Cross-Site Scripting,165ad11a4d1aafbfe47c8c6ecf7f323e,,Fortify didn't find XSS vulns at this location for non-cookie parameters
+/bodgeit/register.jsp,username,Stored Cross-Site Scripting,1e5a9a4004e1803eba132a703657e207,,Fortify didn't find XSS vulns at this location for non-cookie parameters
+/bodgeit/register.jsp,password1,Stored Cross-Site Scripting,5abe4a5e9cbe4c7bb3578190d2dab7a3,,Fortify didn't find XSS vulns at this location for non-cookie parameters
+/bodgeit/contact.jsp,anticsrf,Stored Cross-Site Scripting,c50f8d45472d2d974506bbc90b2838a8,,Fortify didn't find anticsrf
+/bodgeit/contact.jsp,comments,Stored Cross-Site Scripting,aa113d21429a4e5fdb6a189c3ab23c79,63EE29E7F33F3CC9C0876EED40017337,Fortify didn't find the complete trace but it did find the sink
+/bodgeit/contact.jsp,user1@thebodgeitstore.com,Stored Cross-Site Scripting,5edb1c5b869b2ed2367006e20602e83c,,Fortify didn't find user1@thebodgeitstore.com
+/bodgeit/product.jsp,prodid,Stored Cross-Site Scripting,b4ee9ce1725c5baa8eeedd813d29b0c3,,False positive. This is protected by Integer.valueOf which throws an exception that generates the output that AppScan saw.
+/bodgeit/search.jsp,q,Link Injection (facilitates Cross-Site Request Forgery),b4bccb225f002ea6f475d33c3456cbc5,2C02C84AD78A2D88419FAD8ADB06D6A9,root/search.jsp:96 CSRF
+/bodgeit/search.jsp,q,Phishing Through Frames,c2633789e2484957f6f240fd97addf17,,Fortify didn't explicitly find an open redirect vuln here
+/bodgeit/password.jsp,password.jsp,Autocomplete HTML Attribute Not Disabled for Password Field,ba9682ba2e689c2b199ee28546c769b7,50F9CFCB33696D57A79679942A6396CE,root/password.jsp:87
+/bodgeit/register.jsp,register.jsp,Autocomplete HTML Attribute Not Disabled for Password Field,2ae64cbddf7c357fd54fee5482db20df,,Fortify didn't find this
+/bodgeit/login.jsp,login.jsp,Autocomplete HTML Attribute Not Disabled for Password Field,d7a9a3150b0ac5ad34efbb4a87b64653,,Fortify didn't find this
+/bodgeit/basket.jsp,basket.jsp,Cacheable SSL Page Found,394a8cd84b504b72e3eddeb88e0a931e,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/about.jsp,about.jsp,Cacheable SSL Page Found,88c962df27229613b844a11225080b4f,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/advanced.jsp,advanced.jsp,Cacheable SSL Page Found,ae622583c43540e8fb21fec1d6a67337,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/search.jsp,search.jsp,Cacheable SSL Page Found,4f88d6fffdbd6f5241d9d83f04d5180e,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/contact.jsp,contact.jsp,Cacheable SSL Page Found,92ececebf0c7d9555ae110d94539db74,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/home.jsp,home.jsp,Cacheable SSL Page Found,cc64d6bcb9b5795f18c9ba49808f06f8,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/login.jsp,login.jsp,Cacheable SSL Page Found,7c01c5ca4a37c1ff9c9f78849ab40155,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/product.jsp,product.jsp,Cacheable SSL Page Found,8648e6de4b6df91f68297bc6dbdf654,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/password.jsp,password.jsp,Cacheable SSL Page Found,ccb352a9777ac87517f49c8913d6fd88,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/score.jsp,score.jsp,Cacheable SSL Page Found,c8348265f917acda2e666099be3a68eb,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/admin.jsp,admin.jsp,Cacheable SSL Page Found,43ad98af86feb52ca341e17de0fbec7e,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/register.jsp,register.jsp,Cacheable SSL Page Found,c201467a750831c30da136821b143ed3,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
+/bodgeit/register.jsp,username,Email Address Pattern Found in Parameter Value,25861358900e779308d44419556c731e,,Fortify didn't find this
+/bodgeit/basket.jsp,b_id,Missing Secure Attribute in Encrypted Session (SSL) Cookie,8c58c1e4121a1dfe1761d49e47069ac4,E0C392864DB4CF54FDD6AD4536DE19A6,root/basket.jsp:110 Cookie Security: Cookie not Sent Over SSL
+/bodgeit/basket.jsp,quantity_18,Application Error,c44a1550ccf899e19c0db82fac8d46e4,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_9,Application Error,539c9b89fc0facd7835dccdb40ddb3ed,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_30,Application Error,a1b0d3dffb332ef3f72dd1ddcdecca7d,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_15,Application Error,e6e2dc0cbe5b15621f45e76f43b7a41c,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity,Application Error,6cb0bd58afd403889886b5d2d8d9b848,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 205 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_6,Application Error,78d208c82a0f1bf86bd892278c38fd83,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_10,Application Error,9f033d7f0c359649d69b5f20f3d2cd1a,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/basket.jsp,quantity_22,Application Error,afc6cba326079026a9a68ae2335d0da9,,This doesn't match any Fortify vulns. The problem stems from not catching NumberFormatException at line 244 - the exception stack trace is printed in the default tomcat error message
+/bodgeit/password.jsp,password.jsp,Email Address Pattern Found,99e4c10c080cb95288a1db910c29e894,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/about.jsp,about.jsp,Email Address Pattern Found,29738a80cb4e9711332e91110bb7c652,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/score.jsp,score.jsp,Email Address Pattern Found,8653f55e82ebe3ad6577dc5e755d2f31,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/admin.jsp,admin.jsp,Email Address Pattern Found,6db45cca0b19e89c162d1f43388abd2f,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/home.jsp,home.jsp,Email Address Pattern Found,917054e5870f39183663e5b8d4641f10,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/login.jsp,login.jsp,Email Address Pattern Found,4c2c242d25d0348708f1bab05a3bded8,,Fortify doesn't automatically mark email patterns as vulnerabilities.
+/bodgeit/,"td align=""center"" width=""16%""><a href=""admin.jsp"">Admin</a></td",HTML Comments Sensitive Information Disclosure,36cae1046057399bddb7935a3a68cd,,Fortify didn't find this
+/bodgeit,10.2.10.192,SSL Certificate Domain Name Mismatch,9322b078932e6487d833dec2ec3bade5,,These are all environment issues in the tomcat used when I ran AppScan. Fortify won't find them.
