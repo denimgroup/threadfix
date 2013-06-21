@@ -2,18 +2,10 @@ package com.denimgroup.threadfix.service.scans;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -62,43 +54,19 @@ public class ScanMergeTests extends BaseRestTest {
 		
 		// Parsing / analysis
 		
-		List<SimpleVuln> results = parseVulnsFromJSON(jsonToLookAt);
+		debug("Reading in manual merge results from JSON output.");
 		
-		List<SimpleVuln> target = getTarget(application);
+		List<SimpleVuln> results = SimpleVulnCollectionParser.parseVulnsFromJSON(jsonToLookAt);
 		
-		compareResults(results, target);
-	}
-	
-	// First draft will only compare the appscan results and which findings they merge to.
-	private void compareResults(List<SimpleVuln> results, List<SimpleVuln> target) {
-		debug("Comparing results from ThreadFix and manual merge.");
+		debug("Reading in manual merge results from CSV file.");
 		
-		Map<String, SimpleVuln> resultMap = new HashMap<>();
+		List<SimpleVuln> target  = SimpleVulnCollectionParser.parseVulnsFromMergeCSV(application);
 		
-		for (SimpleVuln vuln : results) {
-			if (vuln.getAppscanNativeIds() != null) {
-				for (String nativeId : vuln.getAppscanNativeIds()) {
-					resultMap.put(nativeId, vuln);
-				}
-			}
-		}
+		TestResult result = TestResult.compareResults(results, target);
 		
-		TestResult matchResults = new TestResult();
+		System.out.println(result);
 		
-		for (SimpleVuln targetVuln : target) {
-			for (String nativeId : targetVuln.getAppscanNativeIds()) {
-				if (resultMap.containsKey(nativeId)) {
-					SimpleVuln result = resultMap.get(nativeId);
-					matchResults.analyze(targetVuln, result);
-				} else {
-					matchResults.addMissing(targetVuln);
-				}
-			}
-		}
-		
-		System.out.println(matchResults);
-		
-		if (matchResults.hasMissing()) {
+		if (result.hasMissing()) {
 			System.out.println("We have more than 0 missing. " +
 					"This means we need a better method of building the hash " +
 					"or that native ID generation is incorrect.");
@@ -131,59 +99,6 @@ public class ScanMergeTests extends BaseRestTest {
 			assertTrue(response != null);
 			assertTrue(getJSONObject(response) != null);
 		}
-	}
-	
-	private List<SimpleVuln> getTarget(WebApplication application) throws IOException {
-		debug("Reading in manual merge results from CSV file.");
-		
-		List<SimpleVuln> appScanMerges = new ArrayList<>();
-		
-		int count = 0;
-		
-		File testFile = application.getMergeCsvFile();
-		
-		BufferedReader reader = new BufferedReader(new FileReader(testFile));
-		
-		while (reader.ready()) {
-			count ++;
-			String lineContents = reader.readLine();
-			String[] splitContents = lineContents.split(",");
-			if (splitContents.length != 6) {
-				System.out.println("line " + 
-						count + 
-						" has a problem - " + 
-						splitContents.length + 
-						" parts instead of 6.");
-				System.out.println(lineContents);
-			} else {
-				appScanMerges.add(SimpleVuln.buildSimpleVuln(splitContents));
-			}
-		}
-		
-		reader.close();
-		return appScanMerges;
-	}
-	
-	private List<SimpleVuln> parseVulnsFromJSON(String applicationJSON) throws JSONException {
-		debug("Parsing vulnerabilities from resulting JSON.");
-		
-		assertTrue(applicationJSON != null);
-		
-		JSONArray vulns = new JSONObject(applicationJSON).getJSONArray("vulnerabilities");
-		
-		assertTrue(vulns != null);
-		
-		List<SimpleVuln> result = new ArrayList<>();
-		
-		for (int i = 0; i < vulns.length(); i ++) {
-			SimpleVuln vuln = new SimpleVuln(vulns.getJSONObject(i));
-			
-			if (vuln.getAppscanNativeIds() != null) {
-				result.add(vuln);
-			}
-		}
-		
-		return result;
 	}
 	
 	public void debug(String message) {

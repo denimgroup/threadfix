@@ -1,8 +1,10 @@
 package com.denimgroup.threadfix.service.scans;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 class TestResult {
@@ -16,8 +18,39 @@ class TestResult {
 	private List<SimpleVuln> 
 		incorrectMappingVulns = new ArrayList<>(),
 		incorrectCWEVulns = new ArrayList<>();
+		
+	private TestResult() {}
+
+	// First draft will only compare the appscan results and which findings they merge to.
+	public static TestResult compareResults(List<SimpleVuln> results, List<SimpleVuln> target) {
+		
+		Map<String, SimpleVuln> resultMap = new HashMap<>();
+		
+		for (SimpleVuln vuln : results) {
+			if (vuln.getAppscanNativeIds() != null) {
+				for (String nativeId : vuln.getAppscanNativeIds()) {
+					resultMap.put(nativeId, vuln);
+				}
+			}
+		}
+		
+		TestResult matchResults = new TestResult();
+		
+		for (SimpleVuln targetVuln : target) {
+			for (String nativeId : targetVuln.getAppscanNativeIds()) {
+				if (resultMap.containsKey(nativeId)) {
+					SimpleVuln result = resultMap.get(nativeId);
+					matchResults.analyze(targetVuln, result);
+				} else {
+					matchResults.addMissing(targetVuln);
+				}
+			}
+		}
+		
+		return matchResults;
+	}
 	
-	public void analyze(SimpleVuln vuln, SimpleVuln targetVuln) {
+	private void analyze(SimpleVuln vuln, SimpleVuln targetVuln) {
 		String targetVulnFortifyId = getFortifyParameter(targetVuln);
 		String vulnFortifyId = getFortifyParameter(vuln);
 		
@@ -72,14 +105,14 @@ class TestResult {
 		return builder.toString();
 	}
 	
-	public void addVulnsToBuilder(String name, Iterable<SimpleVuln> vulns, StringBuilder builder) {
+	private void addVulnsToBuilder(String name, Iterable<SimpleVuln> vulns, StringBuilder builder) {
 		builder.append(name);
 		for (SimpleVuln vuln : vulns) {
 			builder.append(vuln).append("\n");
 		}
 	}
 	
-	public String getFortifyParameter(SimpleVuln vuln) {
+	private String getFortifyParameter(SimpleVuln vuln) {
 		if (vuln == null || vuln.getFortifyNativeIds() == null || vuln.getFortifyNativeIds().isEmpty()) {
 			return null;
 		}

@@ -13,21 +13,23 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 class SimpleVuln {
 	private String path, parameter, genericVuln, genericVulnId, notes;
 	private Set<String> appscanNativeIds, fortifyNativeIds;
+	private Integer lineNumber = null;
 	
-	public static SimpleVuln buildSimpleVuln(String[] args) {
+	public static SimpleVuln buildSimpleVuln(String[] args, int lineNumber) {
 		if (args.length != 6) {
 			throw new IllegalArgumentException();
 		}
 		
-		return new SimpleVuln(args[0], args[1], args[2], args[3], args[4], args[5]);
+		return new SimpleVuln(args[0], args[1], args[2], args[3], args[4], args[5], lineNumber);
 	}
 	
 	public SimpleVuln(String path, String parameter, String genericVulnId,
-			String appscanNativeId, String fortifyNativeId, String notes) {
+			String appscanNativeId, String fortifyNativeId, String notes, int lineNumber) {
 		this.path = path;
 		this.parameter = parameter;
 		this.genericVulnId = genericVulnId;
 		this.notes = notes;
+		this.lineNumber = lineNumber;
 		this.fortifyNativeIds = setContaining(fortifyNativeId);
 		this.appscanNativeIds = setContaining(appscanNativeId);
 		
@@ -107,6 +109,10 @@ class SimpleVuln {
 	
 	public String getNotes() {
 		return notes;
+	}
+	
+	public Integer getLineNumber() {
+		return lineNumber;
 	}
 	
 	public String toString() {
