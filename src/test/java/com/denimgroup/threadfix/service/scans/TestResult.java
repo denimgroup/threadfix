@@ -1,11 +1,14 @@
 package com.denimgroup.threadfix.service.scans;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class TestResult {
 	// These are for finding IDs
-	private int correctNoMatch = 0, correctMatch = 0, wrong = 0, missing = 0;
+	private int correctNoMatch = 0, correctMatch = 0, wrong = 0;
+	private Set<SimpleVuln> missingIds = new HashSet<>();
 	
 	// These are for vuln types
 	private int correctCWE = 0, incorrectCWE = 0;
@@ -41,35 +44,39 @@ class TestResult {
 		}
 	}
 
-	public void addMissing(String missingNativeId) {
-		missing += 1;
+	public void addMissing(SimpleVuln vuln) {
+		missingIds.add(vuln);
 	}
 	
 	public boolean hasMissing() {
-		return missing != 0;
+		return missingIds.size() != 0;
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder(
-			"Total              : " + (correctNoMatch + correctMatch + wrong + missing) +
+			"Total              : " + (correctNoMatch + correctMatch + wrong + missingIds.size()) +
 			"\nCorrect With Match : " + correctMatch + 
 			"\nCorrect No Match   : " + correctNoMatch + 
 			"\nWrong              : " + wrong + 
-			"\nMissing            : " + missing + 
+			"\nMissing            : " + missingIds.size() + 
 			"\nCWE Matches        : " + correctCWE +
 			"\nWrong CWEs         : " + incorrectCWE + "\n");
 		
-		builder.append("\nIncorrect Mappings:\n");
-		for (SimpleVuln vuln : incorrectMappingVulns) {
-			builder.append(vuln).append("\n");
-		}
-		
-		builder.append("\nIncorrect CWEs:\n");
-		for (SimpleVuln vuln : incorrectCWEVulns) {
-			builder.append(vuln).append("\n");
+		if (missingIds.size() != 0) {
+			addVulnsToBuilder("\nMissing ids:\n", missingIds, builder);
+		} else {
+			addVulnsToBuilder("\nIncorrect Mappings:\n", incorrectMappingVulns, builder);
+			addVulnsToBuilder("\nIncorrect CWEs:\n", incorrectCWEVulns, builder);
 		}
 		
 		return builder.toString();
+	}
+	
+	public void addVulnsToBuilder(String name, Iterable<SimpleVuln> vulns, StringBuilder builder) {
+		builder.append(name);
+		for (SimpleVuln vuln : vulns) {
+			builder.append(vuln).append("\n");
+		}
 	}
 	
 	public String getFortifyParameter(SimpleVuln vuln) {

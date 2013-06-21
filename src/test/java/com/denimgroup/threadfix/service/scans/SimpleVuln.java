@@ -110,7 +110,7 @@ class SimpleVuln {
 	}
 	
 	public String toString() {
-		return "{ "+ path + ", "  + genericVuln + ", " + parameter + " }";
+		return "{ "+ path + ", "  + genericVuln + ", " + parameter + ", " + appscanNativeIds + " }";
 	}
 	
 	public boolean equals(Object other) {
