@@ -12,6 +12,8 @@ class TestResult {
 	private int correctNoMatch = 0, correctMatch = 0, wrong = 0;
 	private Set<SimpleVuln> missingIds = new HashSet<>();
 	
+	private List<Difference> differences = new ArrayList<>();
+	
 	// These are for vuln types
 	private int correctCWE = 0, incorrectCWE = 0;
 	
@@ -22,27 +24,27 @@ class TestResult {
 	private TestResult() {}
 
 	// First draft will only compare the appscan results and which findings they merge to.
-	public static TestResult compareResults(List<SimpleVuln> results, List<SimpleVuln> target) {
+	public static TestResult compareResults(List<SimpleVuln> csvResults, List<SimpleVuln> jsonResults) {
 		
 		Map<String, SimpleVuln> resultMap = new HashMap<>();
 		
-		for (SimpleVuln vuln : results) {
-			if (vuln.getAppscanNativeIds() != null) {
-				for (String nativeId : vuln.getAppscanNativeIds()) {
-					resultMap.put(nativeId, vuln);
+		for (SimpleVuln csvVuln : csvResults) {
+			if (csvVuln.getAppscanNativeIds() != null) {
+				for (String nativeId : csvVuln.getAppscanNativeIds()) {
+					resultMap.put(nativeId, csvVuln);
 				}
 			}
 		}
 		
 		TestResult matchResults = new TestResult();
 		
-		for (SimpleVuln targetVuln : target) {
-			for (String nativeId : targetVuln.getAppscanNativeIds()) {
+		for (SimpleVuln jsonVuln : jsonResults) {
+			for (String nativeId : jsonVuln.getAppscanNativeIds()) {
 				if (resultMap.containsKey(nativeId)) {
-					SimpleVuln result = resultMap.get(nativeId);
-					matchResults.analyze(targetVuln, result);
+					SimpleVuln csvVuln = resultMap.get(nativeId);
+					matchResults.analyze(jsonVuln, csvVuln);
 				} else {
-					matchResults.addMissing(targetVuln);
+					matchResults.addMissing(jsonVuln);
 				}
 			}
 		}
@@ -50,30 +52,33 @@ class TestResult {
 		return matchResults;
 	}
 	
-	private void analyze(SimpleVuln vuln, SimpleVuln targetVuln) {
-		String targetVulnFortifyId = getFortifyParameter(targetVuln);
-		String vulnFortifyId = getFortifyParameter(vuln);
+	private void analyze(SimpleVuln jsonVuln, SimpleVuln csvVuln) {
+		String csvFortifyId  = getFortifyParameter(csvVuln);
+		String jsonFortifyId = getFortifyParameter(jsonVuln);
 		
-		boolean targetVulnEmptyFortify = targetVulnFortifyId == null;
-		boolean vulnEmptyFortify = vulnFortifyId == null;
+		boolean targetVulnEmptyFortify = csvFortifyId == null;
+		boolean vulnEmptyFortify = jsonFortifyId == null;
 		
 		// Compare finding matches
 		if (targetVulnEmptyFortify && vulnEmptyFortify) {
 			correctNoMatch += 1;
 		} else if (!targetVulnEmptyFortify && !vulnEmptyFortify &&
-				vulnFortifyId.equals(targetVulnFortifyId)) {
+				jsonFortifyId.equals(csvFortifyId)) {
 			correctMatch += 1;
 		} else {
 			wrong += 1;
-			incorrectMappingVulns.add(vuln);
+			differences.add(Difference.fortifyIdDifference(csvVuln, jsonVuln));
+			incorrectMappingVulns.add(jsonVuln);
 		}
 		
 		// Compare generic vuln IDs
-		if (targetVuln.getGenericVulnId().equals(vuln.getGenericVulnId())) {
+		if (csvVuln.getGenericVulnId().equals(jsonVuln.getGenericVulnId())) {
 			correctCWE += 1;
 		} else {
+			differences.add(Difference.mergeDifference(csvVuln, jsonVuln));
+			
 			incorrectCWE += 1;
-			incorrectCWEVulns.add(vuln);
+			incorrectCWEVulns.add(jsonVuln);
 		}
 	}
 
@@ -96,18 +101,19 @@ class TestResult {
 			"\nWrong CWEs         : " + incorrectCWE + "\n");
 		
 		if (missingIds.size() != 0) {
-			addVulnsToBuilder("\nMissing ids:\n", missingIds, builder);
+			addItemsToBuilder("\nMissing ids (get your mappings right first):\n", missingIds, builder);
 		} else {
-			addVulnsToBuilder("\nIncorrect Mappings:\n", incorrectMappingVulns, builder);
-			addVulnsToBuilder("\nIncorrect CWEs:\n", incorrectCWEVulns, builder);
+			addItemsToBuilder("\nProblems:\n", differences, builder);
+//			addItemsToBuilder("\nIncorrect Mappings:\n", incorrectMappingVulns, builder);
+//			addItemsToBuilder("\nIncorrect CWEs:\n", incorrectCWEVulns, builder);
 		}
 		
 		return builder.toString();
 	}
 	
-	private void addVulnsToBuilder(String name, Iterable<SimpleVuln> vulns, StringBuilder builder) {
+	private void addItemsToBuilder(String name, Iterable<?> vulns, StringBuilder builder) {
 		builder.append(name);
-		for (SimpleVuln vuln : vulns) {
+		for (Object vuln : vulns) {
 			builder.append(vuln).append("\n");
 		}
 	}

@@ -55,14 +55,12 @@ public class ScanMergeTests extends BaseRestTest {
 		// Parsing / analysis
 		
 		debug("Reading in manual merge results from JSON output.");
-		
-		List<SimpleVuln> results = SimpleVulnCollectionParser.parseVulnsFromJSON(jsonToLookAt);
+		List<SimpleVuln> jsonResults = SimpleVulnCollectionParser.parseVulnsFromJSON(jsonToLookAt);
 		
 		debug("Reading in manual merge results from CSV file.");
+		List<SimpleVuln> csvResults  = SimpleVulnCollectionParser.parseVulnsFromMergeCSV(application);
 		
-		List<SimpleVuln> target  = SimpleVulnCollectionParser.parseVulnsFromMergeCSV(application);
-		
-		TestResult result = TestResult.compareResults(results, target);
+		TestResult result = TestResult.compareResults(csvResults, jsonResults);
 		
 		System.out.println(result);
 		
