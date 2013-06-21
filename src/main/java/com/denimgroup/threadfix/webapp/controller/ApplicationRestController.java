@@ -107,17 +107,19 @@ public class ApplicationRestController extends RestController {
 		String name = request.getParameter("name");
 		String url = request.getParameter("url");
 		
-		if (name == null || url == null) {
-			log.warn("Call to New Application was missing either the name or URL parameter.");
+		if (name == null) {
+			log.warn("Call to New Application was missing the name parameter.");
 			return CREATION_FAILED;
 		}
 		
-		// test URL format
-		try {
-			new URL(url);
-		} catch (MalformedURLException e) {
-			log.warn("The supplied URL was not formatted correctly.");
-			return CREATION_FAILED;
+		if (url != null) {
+			// test URL format
+			try {
+				new URL(url);
+			} catch (MalformedURLException e) {
+				log.warn("The supplied URL was not formatted correctly.");
+				return CREATION_FAILED;
+			}
 		}
 		
 		Organization organization = organizationService.loadOrganization(teamId);
@@ -128,10 +130,12 @@ public class ApplicationRestController extends RestController {
 		}
 		
 		Application application = new Application();
-		if (name != null && url != null) {
+		if (name != null) {
 			application.setOrganization(organization);
 			application.setName(name.trim());
-			application.setUrl(url.trim());
+			if (url != null) {
+				application.setUrl(url.trim());
+			}
 			// TODO include this as a parameter
 			application.setApplicationCriticality(
 					applicationCriticalityService.loadApplicationCriticality(
