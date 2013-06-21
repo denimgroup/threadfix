@@ -57,8 +57,7 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 			nativeIdMap = new HashMap<>();
 	
 	@Autowired
-	public AppScanWebImporterTest() {
-	}
+	public AppScanWebImporterTest() {}
 	
 	public static void main(String[] args) throws IOException {
 //		
@@ -68,39 +67,54 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 //		
 		AppScanWebImporterTest test = new AppScanWebImporterTest();
 		
-		String [] apps = { "wavsep" };//, "petclinic", "webgoat" };
+		String [] apps = { "petclinic" };
 		
 		for (String app : apps) {
 		
 			URL url = test.getClass().getResource("/SBIR/" + app + ".xml");
 			test.setFileName(url.getFile());
-			FileWriter writer = new FileWriter(new File("C:\\test\\SBIR\\" + app + ".csv"));
-			
 			try {
-				Scan result = test.parseInput();
-				
-				System.out.println("start");
-				for (Finding finding : result.getFindings()) {
-					writer.append(finding.getSurfaceLocation().getPath());
-					writer.append(",");
-					writer.append(finding.getSurfaceLocation().getParameter());
-					writer.append(",");
-					writer.append(finding.getChannelVulnerability().getName());
-					writer.append(",");
-					writer.append(finding.getChannelSeverity().getName());
-					writer.append(",");
-					writer.append(finding.getNativeId());
-					writer.append("\n");
+			
+				FileWriter writer = null;
+				try {
+					writer = new FileWriter(new File("C:\\test\\SBIR\\" + app + ".csv"));
+					Scan result = test.parseInput();
 					
-//					String firstNativeId = test.getNativeId(finding);
-//					finding.getChannelVulnerability().setName(finding.getChannelVulnerability().getCode());
-//					String secondNativeId = test.getNativeId(finding);
-//					System.out.println("map.put(\"" + secondNativeId + "\", \"" + firstNativeId + "\");");
+					System.out.println("start");
+					for (Finding finding : result.getFindings()) {
+						writer.append(finding.getSurfaceLocation().getPath());
+						writer.append(",");
+						writer.append(finding.getSurfaceLocation().getParameter());
+						writer.append(",");
+						writer.append(finding.getChannelVulnerability().getName());
+						writer.append(",");
+						writer.append(finding.getChannelSeverity().getName());
+						writer.append(",");
+						writer.append(finding.getNativeId());
+						writer.append(",");
+						
+						if (!finding.getSourceFileLocation().equals("Parameter"))
+							finding.getSurfaceLocation().setParameter(null);
+						
+						writer.append(test.getNativeId(finding));
+						writer.append(",");
+						
+						if (!finding.getSourceFileLocation().equals("Parameter"))
+							finding.getSurfaceLocation().setParameter("null");
+						
+						writer.append(test.getNativeId(finding));
+						writer.append("\n");
+						
+//						String firstNativeId = test.getNativeId(finding);
+//						finding.getChannelVulnerability().setName(finding.getChannelVulnerability().getCode());
+//						String secondNativeId = test.getNativeId(finding);
+//						System.out.println("map.put(\"" + secondNativeId + "\", \"" + firstNativeId + "\");");
+					}
+				} finally {
+					writer.flush();
+					writer.close();
 				}
 			} finally {
-			
-				writer.flush();
-				writer.close();
 				test.closeInputStream(test.inputStream);
 			}
 		}
@@ -146,6 +160,7 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 		private String currentParam = null;
 		private String currentIssueTypeId = null;
 		private String requestText = null;
+		private String currentEntityType = null;
 		
 		private final Map<String, ChannelSeverity> severityMap;
 						
@@ -221,26 +236,24 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 	    		hosts.add(atts.getValue(0));
 	    	
 	    	if (issueTypes) {
-	    		// ISSUETYPE
-	    		if ("IssueType".equals(qName))
-	    			currentIssueTypeId = atts.getValue(0);
-	    		else if ("Severity".equals(qName))
-	    			grabSeverity = true;
-	    		else if ("link".equals(qName))
-	    			grabCWE = true;
-	    		else if ("Issues".equals(qName))
-	    			issueTypes = false;
-	    		else if ("name".equals(qName))
-	    			grabIssueTypeName = true;
+	    		
+	    		switch (qName) {
+	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
+	    			case "Severity"  : grabSeverity = true;                   break;
+	    			case "link"      : grabCWE = true;                        break;
+	    			case "Issues"    : issueTypes = false;                    break;
+	    			case "name"      : grabIssueTypeName = true;              break;
+	    		}
 	    			    	
 	    	} else {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
 		    	}
-		    	else if ("Entity".equals(qName) && atts.getValue(1) != null && atts.getValue(1).trim().equals("Parameter"))
-		    		currentParam = atts.getValue(0);
-		    	else if ("Url".equals(qName))
+		    	else if ("Entity".equals(qName)) {
+		    		currentParam = atts.getValue("Name");
+		    		currentEntityType = atts.getValue("Type");
+		    	} else if ("Url".equals(qName))
 		    		grabUrlText = true;
 		    	else if (date == null && "OriginalHttpTraffic".equals(qName)) {
 		    		requestText = "";
@@ -291,7 +304,7 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 	    		SurfaceLocation location = new SurfaceLocation();
 	    		
 	    		for (String host : hosts)
-	    			if (currentUrl.startsWith(host)) {
+	    			if (currentUrl != null && currentUrl.startsWith(host)) {
 	    				location.setHost(host);
 		    			location.setPath("/" + currentUrl.substring(host.length()));
 	    			}
@@ -305,6 +318,8 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 	    		finding.setChannelVulnerability(currentChannelVuln);
 	    		finding.setChannelSeverity(currentChannelSeverity);
 	    		
+	    		finding.setSourceFileLocation(currentEntityType);
+	    		
 	    		finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
 	    		
@@ -313,6 +328,7 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 	    		currentChannelVuln = null;
 	    		currentUrl = null;
 	    		currentParam = null;
+	    		currentEntityType = null;
 	    		
 	    	} else if (date == null && "OriginalHttpTraffic".equals(qName)) {
 	    		date = attemptToParseDateFromHTTPResponse(requestText);

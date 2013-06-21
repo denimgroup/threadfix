@@ -116,35 +116,39 @@ public class FortifyChannelImporterTest extends AbstractChannelImporter {
 	public static void main(String[] args) throws IOException {
 		FortifyChannelImporterTest test = new FortifyChannelImporterTest();
 		
-		String [] apps = { "wavsep", "petclinic", "webgoat" };
+		String [] apps = { "bodgeit" };//{ "wavsep", "petclinic", "webgoat" };
 		
 		for (String app : apps) {
 		
 			URL url = test.getClass().getResource("/SBIR/" + app + ".fpr");
 			test.setFileName(url.getFile());
-			FileWriter writer = new FileWriter(new File("C:\\test\\SBIR\\" + app + "-fortify.csv"));
-
+			
 			try {
-				Scan result = test.parseInput();
-				
-				for (Finding finding : result.getFindings()) {
-					writer.append(finding.getSourceFileLocation());
-					writer.append(",");
-					writer.append(finding.getSurfaceLocation().getParameter());
-					writer.append(",");
-					writer.append(finding.getChannelVulnerability().getName());
-					writer.append(",");
-					writer.append(finding.getChannelSeverity().getName());
-					writer.append(",");
-					writer.append(finding.getNativeId());
-					writer.append("\n");
+				FileWriter writer = new FileWriter(new File("C:\\test\\SBIR\\" + app + "-fortify.csv"));
+	
+				try {
+					Scan result = test.parseInput();
+					
+					for (Finding finding : result.getFindings()) {
+						writer.append(finding.getSourceFileLocation());
+						writer.append(",");
+						writer.append(finding.getSurfaceLocation().getParameter());
+						writer.append(",");
+						writer.append(finding.getChannelVulnerability().getName());
+						writer.append(",");
+						writer.append(finding.getChannelSeverity().getName());
+						writer.append(",");
+						writer.append(finding.getNativeId());
+						writer.append("\n");
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					writer.flush();
+					writer.close();
 				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
 			} finally {
-				writer.flush();
-				writer.close();
 				test.closeInputStream(test.inputStream);
 			}
 		}
