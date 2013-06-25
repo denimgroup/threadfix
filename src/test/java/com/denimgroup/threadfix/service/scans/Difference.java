@@ -1,51 +1,46 @@
 package com.denimgroup.threadfix.service.scans;
 
 public class Difference implements Comparable<Difference> {
-	private String message;
-	private SimpleVuln result, target;
-	private Integer lineNumber;
+	private final String expected, actual;
+	private final Integer lineNumber;
+	private final Type type;
+	
+	private enum Type {
+		VULN_TYPE("CWE"), FINDINGS("Finding"), PATH("Path");
+		private String name;
+		public String toString() { return name; }
+		Type(String name) { this.name = name; }
+	}
 
-	private Difference(String message, SimpleVuln csvVuln, SimpleVuln jsonVuln) {
-		this.message = message;
-		this.result = csvVuln;
-		this.target = jsonVuln;
-		this.lineNumber = csvVuln.getLineNumber();
+	private Difference(Type type, Integer lineNumber, String expected, String actual) {
+		this.expected = expected;
+		this.actual = actual;
+		this.lineNumber = lineNumber;
+		this.type = type;
 	}
 	
 	public static Difference mergeDifference(SimpleVuln csvVuln, SimpleVuln jsonVuln) {
-		return new Difference("Vulnerability type was incorrect at line " 
-				+ csvVuln.getLineNumber() 
-				+ ". Expected type was " + csvVuln.getGenericVulnId() 
-				+ " and actual type was " + jsonVuln.getGenericVulnId(), 
-				csvVuln, jsonVuln);
+		return new Difference(Type.VULN_TYPE, csvVuln.getLineNumber(),
+				csvVuln.getGenericVulnId(),
+				jsonVuln.getGenericVulnId());
 	}
 	
 	public static Difference fortifyIdDifference(SimpleVuln csvVuln, SimpleVuln jsonVuln) {
-		return new Difference("Finding merge was incorrect at line " 
-				+ csvVuln.getLineNumber() 
-				+ ". Expected Fortify IDs were " + csvVuln.getFortifyNativeIds() 
-				+ " and actual Fortify IDs were " + jsonVuln.getFortifyNativeIds(), 
-				csvVuln, jsonVuln);
+		return new Difference(Type.FINDINGS, csvVuln.getLineNumber(),
+				csvVuln.getFortifyNativeIds().toString(),
+				jsonVuln.getFortifyNativeIds().toString());
 	}
 	
 	public static Difference pathDifference(SimpleVuln csvVuln, SimpleVuln jsonVuln) {
-		return new Difference("Path was incorrect at line " 
-				+ csvVuln.getLineNumber() 
-				+ ". Expected path was " + csvVuln.getPath() 
-				+ " and actual path was " + jsonVuln.getParameter(), 
-				csvVuln, jsonVuln);
-	}
-	
-	public SimpleVuln getResult() {
-		return result;
-	}
-	
-	public SimpleVuln getTarget() {
-		return target;
+		return new Difference(Type.PATH, csvVuln.getLineNumber(),
+				csvVuln.getPath(),
+				jsonVuln.getPath());
 	}
 	
 	public String toString() { 
-		return message; 
+		return lineNumber + ". " + type + " was incorrect. " + 
+				"Expected: " + expected + 
+				", actual: " + actual; 
 	}
 	
 	@Override

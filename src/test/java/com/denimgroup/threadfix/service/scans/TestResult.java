@@ -15,12 +15,9 @@ class TestResult {
 	
 	private List<Difference> differences = new ArrayList<>();
 	
-	// These are for vuln types
-	private int correctCWE = 0, incorrectCWE = 0;
-	
-	private List<SimpleVuln> 
-		incorrectMappingVulns = new ArrayList<>(),
-		incorrectCWEVulns = new ArrayList<>();
+	// These are for vuln types + paths
+	private int correctCWE = 0, incorrectCWE = 0,
+			correctPath = 0, incorrectPath = 0;
 		
 	private TestResult() {}
 
@@ -69,17 +66,22 @@ class TestResult {
 		} else {
 			wrong += 1;
 			differences.add(Difference.fortifyIdDifference(csvVuln, jsonVuln));
-			incorrectMappingVulns.add(jsonVuln);
 		}
 		
 		// Compare generic vuln IDs
 		if (csvVuln.getGenericVulnId().equals(jsonVuln.getGenericVulnId())) {
 			correctCWE += 1;
 		} else {
-			differences.add(Difference.mergeDifference(csvVuln, jsonVuln));
-			
 			incorrectCWE += 1;
-			incorrectCWEVulns.add(jsonVuln);
+			differences.add(Difference.mergeDifference(csvVuln, jsonVuln));
+		}
+		
+		// Compare paths
+		if (csvVuln.getPath().equals(jsonVuln.getPath())) {
+			correctPath += 1;
+		} else {
+			differences.add(Difference.pathDifference(csvVuln, jsonVuln));
+			incorrectPath += 1;
 		}
 	}
 
@@ -99,15 +101,16 @@ class TestResult {
 			"\nWrong              : " + wrong + 
 			"\nMissing            : " + missingIds.size() + 
 			"\nCWE Matches        : " + correctCWE +
-			"\nWrong CWEs         : " + incorrectCWE + "\n");
+			"\nWrong CWEs         : " + incorrectCWE + 
+			"\nPath Matches       : " + correctPath +
+			"\nWrong Paths        : " + incorrectPath + 
+			"\n");
 		
 		if (missingIds.size() != 0) {
-			addItemsToBuilder("\nMissing ids (get your mappings right first):\n", missingIds, builder);
+			addItemsToBuilder("\nMissing ids (get your native IDs right first):\n", missingIds, builder);
 		} else {
 			Collections.sort(differences);
 			addItemsToBuilder("\nProblems:\n", differences, builder);
-//			addItemsToBuilder("\nIncorrect Mappings:\n", incorrectMappingVulns, builder);
-//			addItemsToBuilder("\nIncorrect CWEs:\n", incorrectCWEVulns, builder);
 		}
 		
 		return builder.toString();
