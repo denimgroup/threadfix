@@ -16,8 +16,10 @@ class TestResult {
 	private List<Difference> differences = new ArrayList<>();
 	
 	// These are for vuln types + paths
-	private int correctCWE = 0, incorrectCWE = 0,
-			correctPath = 0, incorrectPath = 0;
+	private int 
+			correctCWE = 0, incorrectCWE = 0,
+			correctPath = 0, incorrectPath = 0,
+			correctParam = 0, incorrectParam = 0;
 		
 	private TestResult() {}
 
@@ -73,7 +75,7 @@ class TestResult {
 			correctCWE += 1;
 		} else {
 			incorrectCWE += 1;
-			differences.add(Difference.mergeDifference(csvVuln, jsonVuln));
+			differences.add(Difference.cweDifference(csvVuln, jsonVuln));
 		}
 		
 		// Compare paths
@@ -82,6 +84,14 @@ class TestResult {
 		} else {
 			differences.add(Difference.pathDifference(csvVuln, jsonVuln));
 			incorrectPath += 1;
+		}
+		
+		// Compare parameters
+		if (csvVuln.getParameter().equals(jsonVuln.getParameter())) {
+			correctParam += 1;
+		} else {
+			differences.add(Difference.parameterDifference(csvVuln, jsonVuln));
+			incorrectParam += 1;
 		}
 	}
 
@@ -104,6 +114,8 @@ class TestResult {
 			"\nWrong CWEs         : " + incorrectCWE + 
 			"\nPath Matches       : " + correctPath +
 			"\nWrong Paths        : " + incorrectPath + 
+			"\nParameter Matches  : " + correctParam +
+			"\nWrong Parameter    : " + incorrectParam + 
 			"\n");
 		
 		if (missingIds.size() != 0) {
