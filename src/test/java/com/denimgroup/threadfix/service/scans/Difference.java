@@ -1,20 +1,22 @@
 package com.denimgroup.threadfix.service.scans;
 
-public class Difference {
+public class Difference implements Comparable<Difference> {
 	private String message;
 	private SimpleVuln result, target;
+	private Integer lineNumber;
 
-	private Difference(String message, SimpleVuln result, SimpleVuln target) {
+	private Difference(String message, SimpleVuln csvVuln, SimpleVuln jsonVuln) {
 		this.message = message;
-		this.result = result;
-		this.target = target;
+		this.result = csvVuln;
+		this.target = jsonVuln;
+		this.lineNumber = csvVuln.getLineNumber();
 	}
 	
 	public static Difference mergeDifference(SimpleVuln csvVuln, SimpleVuln jsonVuln) {
 		return new Difference("Vulnerability type was incorrect at line " 
 				+ csvVuln.getLineNumber() 
-				+ ". Expected type was " + csvVuln.getGenericVuln() 
-				+ " and actual type was " + jsonVuln.getGenericVuln(), 
+				+ ". Expected type was " + csvVuln.getGenericVulnId() 
+				+ " and actual type was " + jsonVuln.getGenericVulnId(), 
 				csvVuln, jsonVuln);
 	}
 	
@@ -25,9 +27,13 @@ public class Difference {
 				+ " and actual Fortify IDs were " + jsonVuln.getFortifyNativeIds(), 
 				csvVuln, jsonVuln);
 	}
-
-	public String getMessage() {
-		return message;
+	
+	public static Difference pathDifference(SimpleVuln csvVuln, SimpleVuln jsonVuln) {
+		return new Difference("Path was incorrect at line " 
+				+ csvVuln.getLineNumber() 
+				+ ". Expected path was " + csvVuln.getPath() 
+				+ " and actual path was " + jsonVuln.getParameter(), 
+				csvVuln, jsonVuln);
 	}
 	
 	public SimpleVuln getResult() {
@@ -38,5 +44,15 @@ public class Difference {
 		return target;
 	}
 	
-	public String toString() { return message; }
+	public String toString() { 
+		return message; 
+	}
+	
+	@Override
+	public int compareTo(Difference o) {
+		if (lineNumber == null || o == null || o.lineNumber == null) {
+			return 0;
+		}
+		return lineNumber.compareTo(o.lineNumber);
+	}
 }

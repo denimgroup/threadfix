@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.service.scans;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -103,6 +104,7 @@ class TestResult {
 		if (missingIds.size() != 0) {
 			addItemsToBuilder("\nMissing ids (get your mappings right first):\n", missingIds, builder);
 		} else {
+			Collections.sort(differences);
 			addItemsToBuilder("\nProblems:\n", differences, builder);
 //			addItemsToBuilder("\nIncorrect Mappings:\n", incorrectMappingVulns, builder);
 //			addItemsToBuilder("\nIncorrect CWEs:\n", incorrectCWEVulns, builder);
@@ -111,10 +113,11 @@ class TestResult {
 		return builder.toString();
 	}
 	
-	private void addItemsToBuilder(String name, Iterable<?> vulns, StringBuilder builder) {
+	private void addItemsToBuilder(String name, Iterable<?> items, StringBuilder builder) {
 		builder.append(name);
-		for (Object vuln : vulns) {
-			builder.append(vuln).append("\n");
+		
+		for (Object item : items) {
+			builder.append(item).append("\n");
 		}
 	}
 	
