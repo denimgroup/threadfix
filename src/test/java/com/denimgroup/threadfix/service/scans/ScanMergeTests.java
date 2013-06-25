@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.json.JSONException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.webservices.tests.BaseRestTest;
@@ -18,13 +17,11 @@ public class ScanMergeTests extends BaseRestTest {
 	
 	static final ThreadFixRestClient GOOD_CLIENT = getGoodClient();
 
-	@Ignore
 	@Test
 	public void testWavsepMerge() throws IOException, JSONException {
 		testApplication(WebApplication.WAVSEP, 1);
 	}
 	
-	@Ignore
 	@Test
 	public void testBodgeItMerge() throws IOException, JSONException {
 		testApplication(WebApplication.BODGEIT, 2);
