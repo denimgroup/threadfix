@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+	name="pointInTimeGraph" pageWidth="360" pageHeight="250"
+	whenNoDataType="NoDataSection" columnWidth="320" leftMargin="0" rightMargin="0" 
+	topMargin="0" bottomMargin="0">
+	<parameter name="appId" class="java.util.List" isForPrompting="false"/>
+	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
+	<queryString language="hql">
+		<![CDATA[SELECT vulnerability.genericSeverity.name as severity, 
+						vulnerability.openTime as importTime, 
+						vulnerability.application.name as name
+				 FROM Vulnerability as vulnerability
+				 WHERE vulnerability.application.id IN ($P{appId}) AND
+				 vulnerability.active = true AND
+				 vulnerability.isFalsePositive = false
+				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
+	</queryString>
+	<field name="severity" class="java.lang.String"/>
+	<field name="importTime" class="java.util.Calendar"/>
+	<field name="name" class="java.lang.String"/>
+	<variable name="highCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="mediumCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Medium".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="criticalCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Critical".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="lowCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="infoCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="totalCount" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount} + $V{infoCount}]]></variableExpression>
+	</variable>
+	<variable name="highAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="criticalAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Critical".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="mediumAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Medium".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="lowAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="infoAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
+	<variable name="criticalPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{criticalCount} != 0 ? (100 * $V{criticalCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="highPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{highCount} != 0 ? (100 * $V{highCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="mediumPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{mediumCount} != 0 ? (100 * $V{mediumCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="lowPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{lowCount} != 0 ? (100 * $V{lowCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="infoPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{infoCount} != 0 ? (100 * $V{infoCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="250">
+			<pieChart>
+				<chart isShowLegend="false" customizerClass="com.denimgroup.threadfix.service.report.PointInTimeChartCustomizer">
+					<reportElement x="0" y="0" width="360" height="250"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<pieSeries>
+						<keyExpression><![CDATA["Critical"]]></keyExpression>
+						<valueExpression><![CDATA[$V{criticalCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["High"]]></keyExpression>
+						<valueExpression><![CDATA[$V{highCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["Medium"]]></keyExpression>
+						<valueExpression><![CDATA[$V{mediumCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["Low"]]></keyExpression>
+						<valueExpression><![CDATA[$V{lowCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["Info"]]></keyExpression>
+						<valueExpression><![CDATA[$V{infoCount}]]></valueExpression>
+					</pieSeries>
+				</pieDataset>
+				<piePlot labelFormat="{0}">
+					<plot/>
+					<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,1530 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet href="vulnerabilities-list.xsl" type="text/xsl" ?>
+<netsparker generated="6/13/2011 1:04:46 PM">
+	<target>
+		<url>http://tftarget/demo/</url>
+        <scantime>230</scantime>
+	</target>
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/OSCommandInjection2.php</url>
+		<type>CommandInjection</type>
+		<severity>Critical</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>fileName</vulnerableparameter>
+		<vulnerableparametervalue>%27%26%20SET%20%2FA%200xFFF9999-2%20%26</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/OSCommandInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/OSCommandInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 48
+Accept-Encoding: gzip, deflate
+
+fileName=%27%26%20SET%20%2FA%200xFFF9999-2%20%26
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:05 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 230
+Content-Type: text/html
+
+
+&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			2684092390		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A1</OWASP>
+            <WASC>31</WASC>
+            <CWE>78</CWE>
+            <CAPEC>88</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/OSCommandInjection2.php</url>
+		<type>BlindCommandInjection</type>
+		<severity>Critical</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>fileName</vulnerableparameter>
+		<vulnerableparametervalue>%27%26%20ping%20-n%2026%20127.0.0.1%20%26</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/OSCommandInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/OSCommandInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 50
+Accept-Encoding: gzip, deflate
+
+fileName=%27%26%20ping%20-n%2026%20127.0.0.1%20%26
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:04 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 1730
+Content-Type: text/html
+
+
+&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			
+Pinging 127.0.0.1 with 32 bytes of data:
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+Reply from 127.0.0.1: bytes=32 time&lt;1ms TTL=128
+
+Ping statistics for 127.0.0.1:
+    Packets: Sent = 26, Received = 26, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+0		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A1</OWASP>
+            <WASC>31</WASC>
+            <CWE>78</CWE>
+            <CAPEC>88</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/EvalInjection2.php</url>
+		<type>RCEPHP</type>
+		<severity>Critical</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>command</vulnerableparameter>
+		<vulnerableparametervalue>%22%2Bprint(int)0xFFF9999-22;//</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/EvalInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/EvalInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 39
+Accept-Encoding: gzip, deflate
+
+command=%22%2Bprint(int)0xFFF9999-22;//
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 205
+Content-Type: text/html
+
+
+&lt;!-- Eval Injection 2  --&gt;
+&lt;!-- This page realizes an Eval Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Eval Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;2684092191&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A1</OWASP>
+            <WASC></WASC>
+            <CWE></CWE>
+            <CAPEC></CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/SQLI2.php</url>
+		<type>XSS</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>username</vulnerableparameter>
+		<vulnerableparametervalue>&apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x000374)&lt;/script&gt;</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/SQLI2.php HTTP/1.1
+Referer: http://tftarget/demo/SQLI.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 94
+Accept-Encoding: gzip, deflate
+
+username=&apos;%22--%3e%3c%2fstyle%3e%3c%2fscript%3e%3cscript%3enetsparker(0x000374)%3c%2fscript%3e
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 568
+Content-Type: text/html
+
+
+&lt;!--
+SQL Injection test page
+This page&apos;s intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+Jimmy&quot;; SELECT id, password as name FROM users where name = &quot;Jimmy
+--&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;SQL Injection Test&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Search Result &lt;/h2&gt;
+		Error Message: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &apos;&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x000374)&lt;/script&gt;&quot;&apos; at line 1
+ 
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A2</OWASP>
+            <WASC>08</WASC>
+            <CWE>79</CWE>
+            <CAPEC>19</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/XPathInjection2.php</url>
+		<type>XSS</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>username</vulnerableparameter>
+		<vulnerableparametervalue>&apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003BC)&lt;/script&gt;</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/XPathInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/XPathInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 105
+Accept-Encoding: gzip, deflate
+
+username=&apos;%22--%3e%3c%2fstyle%3e%3c%2fscript%3e%3cscript%3enetsparker(0x0003BC)%3c%2fscript%3e&amp;password=3
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:01 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 591
+Content-Type: text/html
+
+
+&lt;!-- XPath Injection 2  --&gt;
+&lt;!-- This page realizes an XPath Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;XPath Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	
+	
+Warning: DOMXPath::query(): Invalid predicate in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+
+Warning: DOMXPath::query(): Invalid expression in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+Incompatible XPath key, either &apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003BC)&lt;/script&gt; or 3
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A2</OWASP>
+            <WASC>08</WASC>
+            <CWE>79</CWE>
+            <CAPEC>19</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/XPathInjection2.php</url>
+		<type>XSS</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>password</vulnerableparameter>
+		<vulnerableparametervalue>&apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003C0)&lt;/script&gt;</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/XPathInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/XPathInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 116
+Accept-Encoding: gzip, deflate
+
+username=Ronald+Smith&amp;password=&apos;%22--%3e%3c%2fstyle%3e%3c%2fscript%3e%3cscript%3enetsparker(0x0003C0)%3c%2fscript%3e
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:03 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 602
+Content-Type: text/html
+
+
+&lt;!-- XPath Injection 2  --&gt;
+&lt;!-- This page realizes an XPath Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;XPath Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	
+	
+Warning: DOMXPath::query(): Invalid predicate in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+
+Warning: DOMXPath::query(): Invalid expression in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+Incompatible XPath key, either Ronald Smith or &apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003C0)&lt;/script&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A2</OWASP>
+            <WASC>08</WASC>
+            <CWE>79</CWE>
+            <CAPEC>19</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/EvalInjection2.php</url>
+		<type>XSS</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>command</vulnerableparameter>
+		<vulnerableparametervalue>&lt;script&gt;ns(0x0003E6)&lt;/script&gt;</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/EvalInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/EvalInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 47
+Accept-Encoding: gzip, deflate
+
+command=%3cscript%3ens(0x0003E6)%3c%2fscript%3e
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:11 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 224
+Content-Type: text/html
+
+
+&lt;!-- Eval Injection 2  --&gt;
+&lt;!-- This page realizes an Eval Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Eval Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;&lt;script&gt;ns(0x0003E6)&lt;/script&gt;&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A2</OWASP>
+            <WASC>08</WASC>
+            <CWE>79</CWE>
+            <CAPEC>19</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/XSS-reflected2.php</url>
+		<type>XSS</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>username</vulnerableparameter>
+		<vulnerableparametervalue>&apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003E7)&lt;/script&gt;</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/XSS-reflected2.php HTTP/1.1
+Referer: http://tftarget/demo/XSS-reflected.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 94
+Accept-Encoding: gzip, deflate
+
+username=&apos;%22--%3e%3c%2fstyle%3e%3c%2fscript%3e%3cscript%3enetsparker(0x0003E7)%3c%2fscript%3e
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:12 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 288
+Content-Type: text/html
+
+
+&lt;!-- XSS2.php - Reflected
+     This file accepts the payload from XSS.php. --&gt;
+	 
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;XSS Test - Reflected&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Reflected XSS &lt;/h2&gt;
+
+		Welcome &apos;&quot;--&gt;&lt;/style&gt;&lt;/script&gt;&lt;script&gt;netsparker(0x0003E7)&lt;/script&gt;!&lt;br /&gt;
+
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A2</OWASP>
+            <WASC>08</WASC>
+            <CWE>79</CWE>
+            <CAPEC>19</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/OSCommandInjection2.php</url>
+		<type>PossibleLocalFileInclusion</type>
+		<severity>Important</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>fileName</vulnerableparameter>
+		<vulnerableparametervalue>OSCommandInjection2.php</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/OSCommandInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/OSCommandInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 32
+Accept-Encoding: gzip, deflate
+
+fileName=OSCommandInjection2.php
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 586
+Content-Type: text/html
+
+
+&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			&lt;?php
+			
+			$to_exec = &quot;type &quot; . $_POST[&apos;fileName&apos;];
+			
+			$response = system($to_exec, $receiver);
+
+			print_r($receiver);
+			
+			?&gt;
+		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+0		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A4</OWASP>
+            <WASC>33</WASC>
+            <CWE>22</CWE>
+            <CAPEC>126</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/OSCommandInjection2.php</url>
+		<type>PHPSourceCodeDisclosure</type>
+		<severity>Medium</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>fileName</vulnerableparameter>
+		<vulnerableparametervalue>OSCommandInjection2.php</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/OSCommandInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/OSCommandInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 32
+Accept-Encoding: gzip, deflate
+
+fileName=OSCommandInjection2.php
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 18:00:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 586
+Content-Type: text/html
+
+
+&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			&lt;?php
+			
+			$to_exec = &quot;type &quot; . $_POST[&apos;fileName&apos;];
+			
+			$response = system($to_exec, $receiver);
+
+			print_r($receiver);
+			
+			?&gt;
+		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+0		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/LDAPInjection.php</url>
+		<type>AutoCompleteEnabled</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/LDAPInjection.php HTTP/1.1
+Referer: http://tftarget/demo/
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:11 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 546
+Content-Type: text/html
+
+
+&lt;!-- LDAP Injection  --&gt;
+&lt;!-- This page demonstrates an LDAP Injection vulnerability. --&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;LDAP Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; LDAP Injection &lt;/h2&gt;
+	This is a login created to be vulnerable to LDAP Injection.&lt;br/&gt;
+	Submitting * for the username will log you in as the first user.&lt;br/&gt;
+	
+	&lt;form action=&quot;LDAPInjection2.php&quot; method=&quot;post&quot;&gt;
+		Name: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br/&gt;
+		Password: &lt;input type=&quot;text&quot; name=&quot;password&quot; /&gt;&lt;br/&gt;
+		&lt;input type=&quot;submit&quot; /&gt;
+	&lt;/form&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Field Name">password</info>
+		</extrainformation>
+
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/</url>
+		<type>ApacheVersion</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/ HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
+ETag: &quot;2000000023431-384-4a54837b0b761&quot;
+Accept-Ranges: bytes
+Content-Length: 900
+Content-Type: text/html
+
+
+&lt;!-- XSS TEST - STORED --&gt;
+&lt;!-- The goal is to pull the payload from the database. After that we&apos;ll see. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Threadfix Vulnerability Demos&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Demo List &lt;/h2&gt;
+	&lt;ol&gt;
+		&lt;li&gt;&lt;a href=&quot;XSS.php&quot;&gt;XSS&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;SQLI.php&quot;&gt;SQL Injection&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;PredictableResource.php&quot;&gt;Predictable Resource Location&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;PathTraversal.php?action=PathTraversal.php&quot;&gt;Path Traversal&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;DirectoryIndexing/&quot;&gt;Directory Indexing&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;XPathInjection.php&quot;&gt;XPath Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;LDAPInjection.php&quot;&gt;LDAP Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;FormatString.php&quot;&gt;Format String Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;OSCommandInjection.php&quot;&gt;OS Command Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;EvalInjection.php&quot;&gt;Eval Injection&lt;/a&gt;&lt;/li&gt;
+	&lt;/ol&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Extracted Version">Apache/2.2.19 (Win32)</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A6</OWASP>
+            <WASC>13</WASC>
+            <CWE></CWE>
+            <CAPEC></CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/</url>
+		<type>PHPVersion</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/ HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
+ETag: &quot;2000000023431-384-4a54837b0b761&quot;
+Accept-Ranges: bytes
+Content-Length: 900
+Content-Type: text/html
+
+
+&lt;!-- XSS TEST - STORED --&gt;
+&lt;!-- The goal is to pull the payload from the database. After that we&apos;ll see. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Threadfix Vulnerability Demos&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Demo List &lt;/h2&gt;
+	&lt;ol&gt;
+		&lt;li&gt;&lt;a href=&quot;XSS.php&quot;&gt;XSS&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;SQLI.php&quot;&gt;SQL Injection&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;PredictableResource.php&quot;&gt;Predictable Resource Location&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;PathTraversal.php?action=PathTraversal.php&quot;&gt;Path Traversal&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;DirectoryIndexing/&quot;&gt;Directory Indexing&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;XPathInjection.php&quot;&gt;XPath Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;LDAPInjection.php&quot;&gt;LDAP Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;FormatString.php&quot;&gt;Format String Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;OSCommandInjection.php&quot;&gt;OS Command Injection&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href=&quot;EvalInjection.php&quot;&gt;Eval Injection&lt;/a&gt;&lt;/li&gt;
+	&lt;/ol&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Extracted Version">PHP/5.3.6</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A6</OWASP>
+            <WASC>13</WASC>
+            <CWE></CWE>
+            <CAPEC></CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/SQLI2.php</url>
+		<type>DatabaseErrorMessages</type>
+		<severity>Low</severity>
+		
+		<vulnerableparametertype>Post</vulnerableparametertype>
+		<vulnerableparameter>username</vulnerableparameter>
+		<vulnerableparametervalue>%22%26%20ping%20-n%2026%20127.0.0.1%20%26</vulnerableparametervalue>
+
+		<rawrequest><![CDATA[POST /demo/SQLI2.php HTTP/1.1
+Referer: http://tftarget/demo/SQLI.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+Host: tftarget
+Content-Length: 50
+Accept-Encoding: gzip, deflate
+
+username=%22%26%20ping%20-n%2026%20127.0.0.1%20%26
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:44 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 527
+Content-Type: text/html
+
+
+&lt;!--
+SQL Injection test page
+This page&apos;s intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+Jimmy&quot;; SELECT id, password as name FROM users where name = &quot;Jimmy
+--&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;SQL Injection Test&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Search Result &lt;/h2&gt;
+		Error Message: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &apos;26 127.0.0.1 &amp;&quot;&apos; at line 1
+ 
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A6</OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="True">
+		<url>http://tftarget/demo/</url>
+		<type>TRACETRACKIdentified</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[TRACE /demo/ HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:10 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Transfer-Encoding: chunked
+Content-Type: message/http
+
+
+TRACE /demo/ HTTP/1.1
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A6</OWASP>
+            <WASC>14</WASC>
+            <CWE>16</CWE>
+            <CAPEC></CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/PredictableResource.php</url>
+		<type>InternalIPLeakage</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/PredictableResource.php HTTP/1.1
+Referer: http://tftarget/demo/
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:11 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 375
+Content-Type: text/html
+
+
+&lt;!-- Predictable Resource
+     This file tells you where the (hopefully) poorly hidden files are. --&gt;
+	 
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Predictable Resource Location&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Predictable Resource Location &lt;/h2&gt;
+
+	&lt;ul&gt;
+		&lt;li&gt;There is a backup of this file at http://192.168.1.30:8080/demo/PredictableResource.php.bak&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Extracted IP Address(es)">192.168.1.30</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/PredictableResource.php.bak</url>
+		<type>BackupFileFound</type>
+		<severity>Low</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/PredictableResource.php.bak HTTP/1.1
+Referer: http://tftarget/demo/PredictableResource.php.bak
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Last-Modified: Thu, 02 Jun 2011 21:45:34 GMT
+ETag: &quot;2000000023438-10b-4a4c18e8b9b80&quot;
+Accept-Ranges: bytes
+Content-Length: 267
+Content-Type: text/plain
+
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Predictable Resource Location&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Predictable Resource Location &lt;/h2&gt;
+
+	&lt;ul&gt;
+		&lt;li&gt;There is a backup of this file at http://192.168.1.30:8080/demo/PredictableResource.php.bak&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A7</OWASP>
+            <WASC>34</WASC>
+            <CWE>425</CWE>
+            <CAPEC>87</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/DirectoryIndexing/</url>
+		<type>ApacheDirectoryListing</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/DirectoryIndexing/ HTTP/1.1
+Referer: http://tftarget/demo/
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:14 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Content-Length: 297
+Content-Type: text/html;charset=UTF-8
+
+
+&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 3.2 Final//EN&quot;&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;Index of /demo/DirectoryIndexing&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+&lt;h1&gt;Index of /demo/DirectoryIndexing&lt;/h1&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/demo/&quot;&gt; Parent Directory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;admin.txt&quot;&gt; admin.txt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP>A6</OWASP>
+            <WASC>16</WASC>
+            <CWE>548</CWE>
+            <CAPEC>127</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/PathTraversal.php?action=PathTraversal.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/PathTraversal.php?action=PathTraversal.php HTTP/1.1
+Referer: http://tftarget/demo/
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:11 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 147
+Content-Type: text/html
+
+
+
+Parse error: syntax error, unexpected &apos;;&apos; in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\PathTraversal.php on line 10
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\PathTraversal.php on line 10</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/XSS-cookie.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/XSS-cookie.php HTTP/1.1
+Referer: http://tftarget/demo/XSS.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:14 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 923
+Content-Type: text/html
+
+
+&lt;!--
+Response Splitting
+Injecting a newline into a cookie allows you to return any http response you want.
+This page exhibits this vulnerability.
+
+value2;%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20302%20Moved%20Temporarily%0d%0aContent-Type:%20text/html%0d%0aContent-Length%2026%0d%0a%0d%0a&lt;html&gt;&lt;h2&gt;DONE&lt;/h2&gt;&lt;/html&gt;
+302%20Moved%20Temporarily
+--&gt;
+
+
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 11
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Response Splitting&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h2&gt; Response Splitting &lt;/h2&gt;
+		The cookie&apos;s value is 
+Notice: Undefined index: vuln in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 26
+		&lt;form action=&quot;ResponseSplitting.php&quot; method=&quot;post&quot;&gt;
+			Name: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;
+			&lt;input type=&quot;submit&quot; /&gt;
+		&lt;/form&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">&lt;ul&gt;
+&lt;li&gt;C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 11&lt;/li&gt;&lt;li&gt;C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 26&lt;/li&gt;&lt;/ul&gt;
+</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/SQLI2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/SQLI2.php HTTP/1.1
+Referer: http://tftarget/demo/SQLI.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:14 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 481
+Content-Type: text/html
+
+
+&lt;!--
+SQL Injection test page
+This page&apos;s intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+Jimmy&quot;; SELECT id, password as name FROM users where name = &quot;Jimmy
+--&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;SQL Injection Test&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Search Result &lt;/h2&gt;
+		
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\SQLI2.php on line 16
+ 
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\SQLI2.php on line 16</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/FormatString2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/FormatString2.php HTTP/1.1
+Referer: http://tftarget/demo/FormatString.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 342
+Content-Type: text/html
+
+
+&lt;!-- String Format Injection 2  --&gt;
+&lt;!-- This page realizes an String Format Injection vulnerability. --&gt;
+
+
+Notice: Undefined index: name in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\FormatString2.php on line 6
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;500 Internal Server Error&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Internal Server Error&lt;/h1&gt; ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\FormatString2.php on line 6</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/LDAPInjection2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/LDAPInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/LDAPInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 344
+Content-Type: text/html
+
+
+&lt;!-- LDAP Injection 2  --&gt;
+&lt;!-- This page realizes an LDAP Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;LDAP Injection2&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	
+	
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\LDAPInjection2.php on line 25
+Login failed.&lt;br&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\LDAPInjection2.php on line 25</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/XPathInjection2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/XPathInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/XPathInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:16 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 494
+Content-Type: text/html
+
+
+&lt;!-- XPath Injection 2  --&gt;
+&lt;!-- This page realizes an XPath Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;XPath Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	
+	
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+
+Notice: Undefined index: password in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19
+The User was not found.
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XPathInjection2.php on line 19</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/EvalInjection2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/EvalInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/EvalInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 473
+Content-Type: text/html
+
+
+&lt;!-- Eval Injection 2  --&gt;
+&lt;!-- This page realizes an Eval Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Eval Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+Notice: Undefined index: command in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 10
+
+Notice: Undefined index: command in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 14
+&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">&lt;ul&gt;
+&lt;li&gt;C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 10&lt;/li&gt;&lt;li&gt;C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 14&lt;/li&gt;&lt;/ul&gt;
+</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/OSCommandInjection2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/OSCommandInjection2.php HTTP/1.1
+Referer: http://tftarget/demo/OSCommandInjection.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 366
+Content-Type: text/html
+
+
+&lt;!-- OS Command Injection 2  --&gt;
+&lt;!-- This page realizes an OS Command Injection vulnerability. --&gt;
+
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;OS Command Injection&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;pre&gt;
+			
+Notice: Undefined index: fileName in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\OSCommandInjection2.php on line 12
+1		&lt;/pre&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\OSCommandInjection2.php on line 12</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+	<vulnerability confirmed="False">
+		<url>http://tftarget/demo/XSS-reflected2.php</url>
+		<type>PossibleInternalWindowsPathLeakage</type>
+		<severity>Information</severity>
+		
+
+		<rawrequest><![CDATA[GET /demo/XSS-reflected2.php HTTP/1.1
+Referer: http://tftarget/demo/XSS-reflected.php
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; Netsparker)
+Cache-Control: no-cache
+Host: tftarget
+Accept-Encoding: gzip, deflate
+ ]]></rawrequest>
+		<rawresponse><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 17:59:17 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 369
+Content-Type: text/html
+
+
+&lt;!-- XSS2.php - Reflected
+     This file accepts the payload from XSS.php. --&gt;
+	 
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;XSS Test - Reflected&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+	&lt;h2&gt; Reflected XSS &lt;/h2&gt;
+
+		Welcome 
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-reflected2.php on line 12
+!&lt;br /&gt;
+
+	&lt;/body&gt;
+&lt;/html&gt;
+ ]]></rawresponse>
+
+		<extrainformation>
+			<info name="Identified Internal Path(s)">C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-reflected2.php on line 12</info>
+		</extrainformation>
+
+
+        <classification>
+            <OWASP></OWASP>
+            <WASC>13</WASC>
+            <CWE>200</CWE>
+            <CAPEC>118</CAPEC>
+        </classification>
+				
+	</vulnerability>
+
+</netsparker>

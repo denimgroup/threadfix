@@ -1,0 +1,17 @@
+Active Directory support can be added by editing the security.xml file and inserting xml similar to this:
+
+	<security:ldap-server id="ldapServer" manager-dn="{dn}" manager-password="{pw}" url="{url}"  /> 
+
+under the LDAP Configuration comment tag and xml similar to this:
+
+	<security:ldap-authentication-provider 
+              server-ref="ldapServer" 
+              user-search-base="OU={Company Name}"
+              user-search-filter="(sAMAccountName={0})"
+              group-role-attribute="cn"
+              group-search-base="{search base}"
+	    	  group-search-filter="{search filter}"
+              user-context-mapper-ref="ldapToCustomConfigBean"
+              />
+
+inside the security:authentication-manager tag. You will of course have to substitute in real values anywhere things are inside curly braces.

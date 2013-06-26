@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<w3afrun start="1309962639" startstr="Wed Jul 06 09:30:39 2011" xmloutputversion="1.00">
+    <scaninfo target="http://192.168.1.20/demo/">
+        <audit>
+            <plugin name="xpath"/>
+            <plugin name="xss"/>
+            <plugin name="osCommanding"/>
+            <plugin name="blindSqli"/>
+            <plugin name="xsrf"/>
+            <plugin name="formatString"/>
+            <plugin name="sqli"/>
+            <plugin name="LDAPi"/>
+            <plugin name="eval"/>
+            <plugin name="responseSplitting"/>
+        </audit>
+        <bruteforce/>
+        <grep>
+            <plugin name="httpAuthDetect"/>
+            <plugin name="error500"/>
+            <plugin name="collectCookies"/>
+        </grep>
+        <evasion/>
+        <output>
+            <plugin name="xmlFile">
+                <config parameter="fileName" value="output-w3af-2.xml"/>
+            </plugin>
+            <plugin name="textFile">
+                <config parameter="verbose" value="True"/>
+                <config parameter="fileName" value="output-w3af.txt"/>
+                <config parameter="httpFileName" value="output-http.txt"/>
+                <config parameter="showCaller" value="False"/>
+            </plugin>
+            <plugin name="console">
+                <config parameter="verbose" value="False"/>
+            </plugin>
+        </output>
+        <mangle/>
+        <discovery>
+            <plugin name="fingerprint_WAF"/>
+            <plugin name="detectTransparentProxy"/>
+            <plugin name="detectReverseProxy"/>
+            <plugin name="webSpider">
+                <config parameter="onlyForward" value="True"/>
+                <config parameter="followRegex" value=".*"/>
+                <config parameter="ignoreRegex" value=""/>
+            </plugin>
+            <plugin name="urlFuzzer"/>
+            <plugin name="findBackdoor"/>
+            <plugin name="afd"/>
+            <plugin name="allowedMethods"/>
+        </discovery>
+    </scaninfo>
+    <vulnerability id="[4094]" method="POST" name="OS commanding vulnerability" plugin="osCommanding" severity="High" url="http://192.168.1.20/demo/OSCommandInjection2.php" var="fileName">
+        OS Commanding was found at: &quot;http://192.168.1.20/demo/OSCommandInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;fileName=type+%25SYSTEMROOT%25%5Cwin.ini&quot;. This vulnerability was found in the request with id 4094.
+    </vulnerability>
+    <vulnerability id="[22]" method="None" name="Unhandled error in web application" plugin="error500" severity="Medium" url="http://192.168.1.20/demo/" var="None">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 22.
+    </vulnerability>
+    <vulnerability id="[23]" method="None" name="Unhandled error in web application" plugin="error500" severity="Medium" url="http://192.168.1.20/demo/" var="None">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 23.
+    </vulnerability>
+    <information id="[4094]" name="OS commanding vulnerability" plugin="osCommanding" url="http://192.168.1.20/demo/OSCommandInjection2.php">
+        OS Commanding was found at: &quot;http://192.168.1.20/demo/OSCommandInjection2.php&quot;, using HTTP method POST. The sent post-data was: &quot;fileName=type+%25SYSTEMROOT%25%5Cwin.ini&quot;. This vulnerability was found in the request with id 4094.
+    </information>
+    <information id="[33]" name="Found reverse proxy" plugin="detectReverseProxy" url="http://192.168.1.20/demo/">
+        The remote web server seems to have a reverse proxy installed. This information was found in the request with id 33.
+    </information>
+    <information name="Active filter detected" plugin="afd" url="None">
+        The remote network has an active filter. IMPORTANT: The result of all the other plugins will be unaccurate, web applications could be vulnerable but &quot;protected&quot; by the active filter.
+    </information>
+    <information id="[22]" name="Unhandled error in web application" plugin="error500" url="http://192.168.1.20/demo/">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 22.
+    </information>
+    <information id="[23]" name="Unhandled error in web application" plugin="error500" url="http://192.168.1.20/demo/">
+        An unidentified web application error (HTTP response code 500) was found at: &quot;http://192.168.1.20/demo/&quot;. Enable all plugins and try again, if the vulnerability still is not identified, please verify mannually and report it to the w3af developers. This vulnerability was found in the request with id 23.
+    </information>
+    <information id="[17]" name="Allowed methods for http://192.168.1.20/demo/" plugin="allowedMethods" url="http://192.168.1.20/demo/">
+        The URL &quot;http://192.168.1.20/demo/&quot; has the following allowed methods: GET, HEAD, OPTIONS, POST, TRACE. This information was found in the request with id 17.
+    </information>
+</w3afrun>

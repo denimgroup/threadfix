@@ -1,0 +1,248 @@
+OWASP Orizon source code assessment report
+Project name:   C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager
+Scan duration:  742.913s
+Engine version: v1.19 (1835)
+File reviewed:  66
+File vulnerables:  10
+Security score:  0.0
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\data\entities\SentinelVulnerabilitySourceInfo.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 37: empty catch detected (0)
+
+
+
+* [medium] line 37: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\defecttracking\tfs\TfsConnectionImpl.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 347: empty catch detected (0)
+
+
+
+* [medium] line 347: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\vulnerability\dynamic\appscan\AppScanVulnerabilitySource.java
+Issues found: 10
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 190: empty catch detected (0)
+
+
+
+* [medium] line 192: empty catch detected (0)
+
+
+
+* [medium] line 269: empty catch detected (0)
+
+
+
+* [medium] line 271: empty catch detected (0)
+
+
+
+* [medium] line 327: empty catch detected (0)
+
+
+
+* [medium] line 190: empty catch detected (0)
+
+
+
+* [medium] line 192: empty catch detected (0)
+
+
+
+* [medium] line 269: empty catch detected (0)
+
+
+
+* [medium] line 271: empty catch detected (0)
+
+
+
+* [medium] line 327: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\util\Util.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 27: empty catch detected (0)
+
+
+
+* [medium] line 27: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\data\entities\SentinelVulnerabilitySourceInfo.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 37: empty catch detected (0)
+
+
+
+* [medium] line 37: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\defecttracking\bugzilla\BugzillaIntegration.java
+Issues found: 1
+Lines of comment: 64
+Score: 0.0
+
+* [low] line 194: found potential dangerous keyword during crawling (execute) (0)
+
+191    		loginArray[0] = loginMap;
+192    		
+193    		Object loginResult;
+194 -> 		loginResult = client.execute("User.login", loginArray);
+195    		System.out.println("Login result: " + loginResult);
+196    	}
+197    	
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\defecttracking\tfs\TfsConnectionImpl.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 347: empty catch detected (0)
+
+
+
+* [medium] line 347: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\vulnerability\dynamic\appscan\AppScanVulnerabilitySource.java
+Issues found: 10
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 190: empty catch detected (0)
+
+
+
+* [medium] line 192: empty catch detected (0)
+
+
+
+* [medium] line 269: empty catch detected (0)
+
+
+
+* [medium] line 271: empty catch detected (0)
+
+
+
+* [medium] line 327: empty catch detected (0)
+
+
+
+* [medium] line 190: empty catch detected (0)
+
+
+
+* [medium] line 192: empty catch detected (0)
+
+
+
+* [medium] line 269: empty catch detected (0)
+
+
+
+* [medium] line 271: empty catch detected (0)
+
+
+
+* [medium] line 327: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\service\vulnerability\stat\sca\SCAVulnerabilitySource.java
+Issues found: 1
+Lines of comment: 1
+Score: 0.0
+
+* [low] line 120: found potential dangerous keyword during crawling (delete) (0)
+
+117    
+118    		// Text File Output
+119    		File f = new File(outFilename);// "C:\\Documents and Settings\\mmcbryde\\Desktop\\out.xml"
+120 -> 		f.delete();
+121    		File parent = new File(f.getParent());
+122    
+123    		if (!parent.exists()) {
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------
+Filename: C:\Java\orizon-1.19\lib\..\..\Workspaces\VulnerabilityManager\VulnerabilityManager\src\com\denimgroup\vm\util\Util.java
+Issues found: 2
+Lines of comment: 0
+Score: 0.0
+
+* [medium] line 27: empty catch detected (0)
+
+
+
+* [medium] line 27: empty catch detected (0)
+
+
+
+
+Recipe cooked in 0.0s
+
+--------------------------------------------------------------------------------

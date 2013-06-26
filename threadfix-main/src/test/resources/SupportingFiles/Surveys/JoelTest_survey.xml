@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	This adaptation of the "Joel Test" based on a blog post from Joel Spolsky <LINK_HERE>
+	
+	It was adapted to be used with the Vulnerability Manager application developed and released by
+	Denim Group, Ltd. <http://www.denimgroup.com>.  Vulnerability Manager is distributed in the
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	
+	Questions about the adaptation can be sent to <mailto:dan@denimgroup.com>  Questions about
+	the original source material should be directed to the the author, Joel Spolsky.  The original
+	article can be found here <http://www.joelonsoftware.com/articles/fog0000000043.html>
+-->
+
+<survey>
+	
+	<name>"Joel Test" Survey</name>
+	
+	<level number="1">Performs this activity</level>
+	
+	<section name="Practices" color="#0B5679" lightColor="#E5ECF4">
+	
+		<practice name="Source Control">
+			<objective level="1">
+				<description>Source control is in use</description>
+				<question>
+					Do you use source control?
+				</question>
+			</objective>
+		</practice>
+
+		<practice name="One-Step Build">
+			<objective level="1">
+				<description>Builds can be made in one step</description>
+				<question>
+					Can you make a build in one step?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Daily Builds">
+			<objective level="1">
+				<description>Daily builds are being made</description>
+				<question>
+					Do you make daily builds?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Bug Database">
+			<objective level="1">
+				<description>A bug database is in use</description>
+				<question>
+					Do you have a bug database?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Bugfixes Before New Code">
+			<objective level="1">
+				<description>Bugs are fixed before writing new code</description>
+				<question>
+					Do you fix bugs before writing new code?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Up-To-Date Schedule">
+			<objective level="1">
+				<description>The schedule is up-to-date</description>
+				<question>
+					Do you have an up-to-date schedule?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Spec">
+			<objective level="1">
+				<description>A spec exists</description>
+				<question>
+					Do you have a spec?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Quiet Working Conditions for Programmers">
+			<objective level="1">
+				<description>Programmers have quiet working conditions</description>
+				<question>
+					Do programmers have quiet working conditions?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Best Tools Money Can Buy">
+			<objective level="1">
+				<description>The best tools money can buy are in use</description>
+				<question>
+					Do you use the best tools money can buy?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Testers">
+			<objective level="1">
+				<description>Testers are available</description>
+				<question>
+					Do you have testers?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Candidates Write Code During Their Interview">
+			<objective level="1">
+				<description>Candidates write code during their interview</description>
+				<question>
+					Do new candidates write code during their interview?
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Hallway Usability Testing">
+			<objective level="1">
+				<description>Hallway usability testing is being performed</description>
+				<question>
+					Do you do hallway usability testing?
+				</question>
+			</objective>
+		</practice>
+		
+	</section>
+	
+</survey>

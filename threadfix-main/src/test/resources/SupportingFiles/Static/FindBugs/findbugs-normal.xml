@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="1.3.9" sequence="1" timestamp="1316719323958" analysisTimestamp="1316719314184" release="">
+  <Project></Project>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.aliasing.Aliasing1">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing1" sourcefile="Aliasing1.java" sourcepath="securibench/micro/aliasing/Aliasing1.java"/>
+    </Class>
+    <Method classname="securibench.micro.aliasing.Aliasing1" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing1" start="25" end="30" startBytecode="0" endBytecode="135" sourcefile="Aliasing1.java" sourcepath="securibench/micro/aliasing/Aliasing1.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.aliasing.Aliasing1" start="25" end="25" startBytecode="3" endBytecode="3" sourcefile="Aliasing1.java" sourcepath="securibench/micro/aliasing/Aliasing1.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="23" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.aliasing.Aliasing1" start="29" end="29" startBytecode="24" endBytecode="24" sourcefile="Aliasing1.java" sourcepath="securibench/micro/aliasing/Aliasing1.java"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE" first="1">
+    <Class classname="securibench.micro.aliasing.Aliasing3">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing3" sourcefile="Aliasing3.java" sourcepath="securibench/micro/aliasing/Aliasing3.java"/>
+    </Class>
+    <Method classname="securibench.micro.aliasing.Aliasing3" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing3" start="25" end="33" startBytecode="0" endBytecode="23" sourcefile="Aliasing3.java" sourcepath="securibench/micro/aliasing/Aliasing3.java"/>
+    </Method>
+    <LocalVariable name="name" register="3" pc="30" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.aliasing.Aliasing3" start="29" end="29" startBytecode="29" endBytecode="29" sourcefile="Aliasing3.java" sourcepath="securibench/micro/aliasing/Aliasing3.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="name"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.TWO_STORES_MULTIPLE_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.COPY_VALUE" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.BASE_VALUE" value="true"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.aliasing.Aliasing4">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing4" sourcefile="Aliasing4.java" sourcepath="securibench/micro/aliasing/Aliasing4.java"/>
+    </Class>
+    <Method classname="securibench.micro.aliasing.Aliasing4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.aliasing.Aliasing4" start="25" end="34" startBytecode="0" endBytecode="197" sourcefile="Aliasing4.java" sourcepath="securibench/micro/aliasing/Aliasing4.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.aliasing.Aliasing4" start="25" end="25" startBytecode="3" endBytecode="3" sourcefile="Aliasing4.java" sourcepath="securibench/micro/aliasing/Aliasing4.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="35" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.aliasing.Aliasing4" start="31" end="31" startBytecode="36" endBytecode="36" sourcefile="Aliasing4.java" sourcepath="securibench/micro/aliasing/Aliasing4.java"/>
+  </BugInstance>
+  <BugInstance type="SA_LOCAL_SELF_COMPUTATION" priority="2" abbrev="SA" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.arrays.Arrays4">
+      <SourceLine classname="securibench.micro.arrays.Arrays4" sourcefile="Arrays4.java" sourcepath="securibench/micro/arrays/Arrays4.java"/>
+    </Class>
+    <Method classname="securibench.micro.arrays.Arrays4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.arrays.Arrays4" start="21" end="29" startBytecode="0" endBytecode="172" sourcefile="Arrays4.java" sourcepath="securibench/micro/arrays/Arrays4.java"/>
+    </Method>
+    <LocalVariable name="n" register="4" pc="41" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.arrays.Arrays4" start="28" end="28" startBytecode="41" endBytecode="41" sourcefile="Arrays4.java" sourcepath="securibench/micro/arrays/Arrays4.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic1">
+      <SourceLine classname="securibench.micro.basic.Basic1" sourcefile="Basic1.java" sourcepath="securibench/micro/basic/Basic1.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic1" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic1" start="21" end="25" startBytecode="0" endBytecode="117" sourcefile="Basic1.java" sourcepath="securibench/micro/basic/Basic1.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic1" start="21" end="21" startBytecode="3" endBytecode="3" sourcefile="Basic1.java" sourcepath="securibench/micro/basic/Basic1.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="str" register="3" pc="19" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic1" start="24" end="24" startBytecode="20" endBytecode="20" sourcefile="Basic1.java" sourcepath="securibench/micro/basic/Basic1.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic10">
+      <SourceLine classname="securibench.micro.basic.Basic10" sourcefile="Basic10.java" sourcepath="securibench/micro/basic/Basic10.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic10" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic10" start="21" end="33" startBytecode="0" endBytecode="253" sourcefile="Basic10.java" sourcepath="securibench/micro/basic/Basic10.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic10" start="21" end="21" startBytecode="3" endBytecode="3" sourcefile="Basic10.java" sourcepath="securibench/micro/basic/Basic10.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="s5" register="9" pc="57" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic10" start="32" end="32" startBytecode="58" endBytecode="58" sourcefile="Basic10.java" sourcepath="securibench/micro/basic/Basic10.java"/>
+  </BugInstance>
+  <BugInstance type="DMI_RANDOM_USED_ONLY_ONCE" priority="1" abbrev="BC" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic12">
+      <SourceLine classname="securibench.micro.basic.Basic12" sourcefile="Basic12.java" sourcepath="securibench/micro/basic/Basic12.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic12" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic12" start="22" end="33" startBytecode="0" endBytecode="212" sourcefile="Basic12.java" sourcepath="securibench/micro/basic/Basic12.java"/>
+    </Method>
+    <Method classname="java.util.Random" name="nextBoolean" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.util.Random" start="308" end="308" startBytecode="0" endBytecode="37" sourcefile="Random.java" sourcepath="java/util/Random.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic12" start="24" end="24" startBytecode="24" endBytecode="24" sourcefile="Basic12.java" sourcepath="securibench/micro/basic/Basic12.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic16$Widget">
+      <SourceLine classname="securibench.micro.basic.Basic16$Widget" sourcefile="Basic16.java" sourcepath="securibench/micro/basic/Basic16.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.basic.Basic16$Widget" start="20" end="20" startBytecode="0" endBytecode="0" sourcefile="Widget.java" sourcepath="securibench/micro/basic/Widget.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic17$Widget">
+      <SourceLine classname="securibench.micro.basic.Basic17$Widget" sourcefile="Basic17.java" sourcepath="securibench/micro/basic/Basic17.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.basic.Basic17$Widget" start="20" end="20" startBytecode="0" endBytecode="0" sourcefile="Widget.java" sourcepath="securibench/micro/basic/Widget.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic18">
+      <SourceLine classname="securibench.micro.basic.Basic18" sourcefile="Basic18.java" sourcepath="securibench/micro/basic/Basic18.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic18" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic18" start="23" end="31" startBytecode="0" endBytecode="169" sourcefile="Basic18.java" sourcepath="securibench/micro/basic/Basic18.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic18" start="23" end="23" startBytecode="3" endBytecode="3" sourcefile="Basic18.java" sourcepath="securibench/micro/basic/Basic18.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="s" register="3" pc="39" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic18" start="28" end="28" startBytecode="40" endBytecode="40" sourcefile="Basic18.java" sourcepath="securibench/micro/basic/Basic18.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" abbrev="OBL" category="EXPERIMENTAL" first="1">
+    <Class classname="securibench.micro.basic.Basic19">
+      <SourceLine classname="securibench.micro.basic.Basic19" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic19" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic19" start="25" end="40" startBytecode="0" endBytecode="282" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Method>
+    <Class classname="java.sql.Statement" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.Statement" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="30" end="30" startBytecode="37" endBytecode="37" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="39" end="39" startBytecode="93" endBytecode="93" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="33" end="33" startBytecode="67" endBytecode="67" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="35" end="35" startBytecode="69" endBytecode="69" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="39" end="39" startBytecode="91" endBytecode="91" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="40" end="40" startBytecode="96" endBytecode="96" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="ODR_OPEN_DATABASE_RESOURCE" priority="2" abbrev="ODR" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic19">
+      <SourceLine classname="securibench.micro.basic.Basic19" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic19" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic19" start="25" end="40" startBytecode="0" endBytecode="40" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Method>
+    <Type descriptor="Ljava/sql/PreparedStatement;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.sql.PreparedStatement" sourcefile="PreparedStatement.java" sourcepath="java/sql/PreparedStatement.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="30" end="30" startBytecode="37" endBytecode="37" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic19">
+      <SourceLine classname="securibench.micro.basic.Basic19" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic19" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic19" start="25" end="40" startBytecode="0" endBytecode="40" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic19" start="30" end="30" startBytecode="37" endBytecode="37" sourcefile="Basic19.java" sourcepath="securibench/micro/basic/Basic19.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic2">
+      <SourceLine classname="securibench.micro.basic.Basic2" sourcefile="Basic2.java" sourcepath="securibench/micro/basic/Basic2.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic2" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic2" start="22" end="30" startBytecode="0" endBytecode="170" sourcefile="Basic2.java" sourcepath="securibench/micro/basic/Basic2.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic2" start="22" end="22" startBytecode="3" endBytecode="3" sourcefile="Basic2.java" sourcepath="securibench/micro/basic/Basic2.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="str" register="3" pc="40" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic2" start="28" end="28" startBytecode="41" endBytecode="41" sourcefile="Basic2.java" sourcepath="securibench/micro/basic/Basic2.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" abbrev="OBL" category="EXPERIMENTAL" first="1">
+    <Class classname="securibench.micro.basic.Basic20">
+      <SourceLine classname="securibench.micro.basic.Basic20" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic20" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic20" start="26" end="43" startBytecode="0" endBytecode="305" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Method>
+    <Class classname="java.sql.Statement" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.Statement" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="31" end="31" startBytecode="21" endBytecode="21" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="32" end="32" startBytecode="28" endBytecode="28" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="41" end="41" startBytecode="102" endBytecode="102" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="35" end="35" startBytecode="76" endBytecode="76" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="37" end="37" startBytecode="78" endBytecode="78" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="41" end="41" startBytecode="100" endBytecode="100" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="43" end="43" startBytecode="105" endBytecode="105" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="ODR_OPEN_DATABASE_RESOURCE" priority="2" abbrev="ODR" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic20">
+      <SourceLine classname="securibench.micro.basic.Basic20" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic20" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic20" start="26" end="43" startBytecode="0" endBytecode="43" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Method>
+    <Type descriptor="Ljava/sql/Statement;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.sql.Statement" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="31" end="31" startBytecode="21" endBytecode="21" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic20">
+      <SourceLine classname="securibench.micro.basic.Basic20" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic20" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic20" start="26" end="43" startBytecode="0" endBytecode="43" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic20" start="32" end="32" startBytecode="46" endBytecode="46" sourcefile="Basic20.java" sourcepath="securibench/micro/basic/Basic20.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" abbrev="OBL" category="EXPERIMENTAL" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="429" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <Class classname="java.sql.ResultSet" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.ResultSet" sourcefile="ResultSet.java" sourcepath="java/sql/ResultSet.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="38" end="38" startBytecode="136" endBytecode="136" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="47" end="47" startBytecode="192" endBytecode="192" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="41" end="41" startBytecode="166" endBytecode="166" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="43" end="43" startBytecode="168" endBytecode="168" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="47" end="47" startBytecode="190" endBytecode="190" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="48" end="48" startBytecode="195" endBytecode="195" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" abbrev="OBL" category="EXPERIMENTAL" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="429" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <Class classname="java.sql.Statement" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.Statement" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="33" end="33" startBytecode="30" endBytecode="30" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="34" end="34" startBytecode="37" endBytecode="37" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="35" end="35" startBytecode="62" endBytecode="62" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="36" end="36" startBytecode="88" endBytecode="88" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="37" end="37" startBytecode="107" endBytecode="107" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="36" end="36" startBytecode="111" endBytecode="111" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="38" end="38" startBytecode="117" endBytecode="117" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="47" end="47" startBytecode="192" endBytecode="192" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="41" end="41" startBytecode="166" endBytecode="166" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="43" end="43" startBytecode="168" endBytecode="168" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="47" end="47" startBytecode="190" endBytecode="190" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="48" end="48" startBytecode="195" endBytecode="195" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="ODR_OPEN_DATABASE_RESOURCE" priority="2" abbrev="ODR" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="80" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <Type descriptor="Ljava/sql/Statement;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.sql.Statement" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="33" end="33" startBytecode="30" endBytecode="30" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="80" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="34" end="34" startBytecode="56" endBytecode="56" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="80" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="35" end="35" startBytecode="82" endBytecode="82" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="80" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="36" end="36" startBytecode="111" endBytecode="111" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+  </BugInstance>
+  <BugInstance type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" priority="2" abbrev="SQL" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic21">
+      <SourceLine classname="securibench.micro.basic.Basic21" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic21" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic21" start="27" end="48" startBytecode="0" endBytecode="80" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic21" start="38" end="38" startBytecode="136" endBytecode="136" sourcefile="Basic21.java" sourcepath="securibench/micro/basic/Basic21.java"/>
+  </BugInstance>
+  <BugInstance type="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" priority="2" abbrev="RV" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic22">
+      <SourceLine classname="securibench.micro.basic.Basic22" sourcefile="Basic22.java" sourcepath="securibench/micro/basic/Basic22.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic22" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic22" start="24" end="33" startBytecode="0" endBytecode="143" sourcefile="Basic22.java" sourcepath="securibench/micro/basic/Basic22.java"/>
+    </Method>
+    <Method classname="java.io.File" name="createNewFile" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.File" start="881" end="883" startBytecode="0" endBytecode="58" sourcefile="File.java" sourcepath="java/io/File.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic22" start="32" end="32" startBytecode="31" endBytecode="31" sourcefile="Basic22.java" sourcepath="securibench/micro/basic/Basic22.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" abbrev="OS" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic23">
+      <SourceLine classname="securibench.micro.basic.Basic23" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic23" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic23" start="25" end="35" startBytecode="0" endBytecode="22" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/InputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.InputStream" start="28" end="350" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic23" start="31" end="31" startBytecode="34" endBytecode="34" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" abbrev="OS" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic23">
+      <SourceLine classname="securibench.micro.basic.Basic23" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic23" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic23" start="25" end="35" startBytecode="0" endBytecode="22" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Writer;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Writer" start="33" end="277" sourcefile="Writer.java" sourcepath="java/io/Writer.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic23" start="29" end="29" startBytecode="18" endBytecode="18" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" abbrev="OS" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic23">
+      <SourceLine classname="securibench.micro.basic.Basic23" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic23" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic23" start="25" end="35" startBytecode="0" endBytecode="22" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Writer;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Writer" start="33" end="277" sourcefile="Writer.java" sourcepath="java/io/Writer.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic23" start="30" end="30" startBytecode="26" endBytecode="26" sourcefile="Basic23.java" sourcepath="securibench/micro/basic/Basic23.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic27">
+      <SourceLine classname="securibench.micro.basic.Basic27" sourcefile="Basic27.java" sourcepath="securibench/micro/basic/Basic27.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic27" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic27" start="24" end="33" startBytecode="0" endBytecode="214" sourcefile="Basic27.java" sourcepath="securibench/micro/basic/Basic27.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic27" start="29" end="29" startBytecode="42" endBytecode="42" sourcefile="Basic27.java" sourcepath="securibench/micro/basic/Basic27.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.basic.Basic27" start="30" end="30" startBytecode="68" endBytecode="68" sourcefile="Basic27.java" sourcepath="securibench/micro/basic/Basic27.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="30" end="30" startBytecode="64" endBytecode="67" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="31" end="31" startBytecode="71" endBytecode="74" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="43" end="43" startBytecode="91" endBytecode="94" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="44" end="44" startBytecode="98" endBytecode="101" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="53" end="53" startBytecode="113" endBytecode="116" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="54" end="54" startBytecode="120" endBytecode="123" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="64" end="64" startBytecode="141" endBytecode="144" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="65" end="65" startBytecode="148" endBytecode="151" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="83" end="83" startBytecode="199" endBytecode="202" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="84" end="84" startBytecode="206" endBytecode="209" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="93" end="93" startBytecode="221" endBytecode="224" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="94" end="94" startBytecode="228" endBytecode="231" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="110" end="110" startBytecode="265" endBytecode="268" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="111" end="111" startBytecode="272" endBytecode="275" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="122" end="122" startBytecode="287" endBytecode="290" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="123" end="123" startBytecode="294" endBytecode="297" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="RpC_REPEATED_CONDITIONAL_TEST" priority="2" abbrev="RpC" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="123" end="123" startBytecode="294" endBytecode="297" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="124" end="124" startBytecode="301" endBytecode="304" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="21" startBytecode="3" endBytecode="3" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="134" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="57" end="57" startBytecode="135" endBytecode="135" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic28">
+      <SourceLine classname="securibench.micro.basic.Basic28" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic28" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="132" startBytecode="0" endBytecode="582" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="21" end="21" startBytecode="3" endBytecode="3" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="310" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic28" start="125" end="125" startBytecode="311" endBytecode="311" sourcefile="Basic28.java" sourcepath="securibench/micro/basic/Basic28.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic29">
+      <SourceLine classname="securibench.micro.basic.Basic29" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic29" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="36" startBytecode="0" endBytecode="221" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="26" startBytecode="3" endBytecode="3" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="33" end="33" startBytecode="57" endBytecode="57" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic29">
+      <SourceLine classname="securibench.micro.basic.Basic29" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic29" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="36" startBytecode="0" endBytecode="221" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="26" startBytecode="3" endBytecode="3" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="34" end="34" startBytecode="70" endBytecode="70" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic29">
+      <SourceLine classname="securibench.micro.basic.Basic29" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic29" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="36" startBytecode="0" endBytecode="221" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="26" end="26" startBytecode="3" endBytecode="3" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.basic.Basic29" start="35" end="35" startBytecode="80" endBytecode="80" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic29$Node">
+      <SourceLine classname="securibench.micro.basic.Basic29$Node" sourcefile="Basic29.java" sourcepath="securibench/micro/basic/Basic29.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.basic.Basic29$Node" start="20" end="20" startBytecode="0" endBytecode="0" sourcefile="Node.java" sourcepath="securibench/micro/basic/Node.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic30">
+      <SourceLine classname="securibench.micro.basic.Basic30" sourcefile="Basic30.java" sourcepath="securibench/micro/basic/Basic30.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic30" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic30" start="26" end="34" startBytecode="0" endBytecode="180" sourcefile="Basic30.java" sourcepath="securibench/micro/basic/Basic30.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic30" start="26" end="26" startBytecode="3" endBytecode="3" sourcefile="Basic30.java" sourcepath="securibench/micro/basic/Basic30.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.basic.Basic30" start="33" end="33" startBytecode="57" endBytecode="57" sourcefile="Basic30.java" sourcepath="securibench/micro/basic/Basic30.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic30$Data">
+      <SourceLine classname="securibench.micro.basic.Basic30$Data" sourcefile="Basic30.java" sourcepath="securibench/micro/basic/Basic30.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.basic.Basic30$Data" start="20" end="20" startBytecode="0" endBytecode="0" sourcefile="Data.java" sourcepath="securibench/micro/basic/Data.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic31$Data">
+      <SourceLine classname="securibench.micro.basic.Basic31$Data" sourcefile="Basic31.java" sourcepath="securibench/micro/basic/Basic31.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.basic.Basic31$Data" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Data.java" sourcepath="securibench/micro/basic/Data.java"/>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_FIELD" priority="2" abbrev="UuF" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic31$Data">
+      <SourceLine classname="securibench.micro.basic.Basic31$Data" sourcefile="Basic31.java" sourcepath="securibench/micro/basic/Basic31.java"/>
+    </Class>
+    <Field classname="securibench.micro.basic.Basic31$Data" name="value1" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic31$Data" sourcefile="Basic31.java" sourcepath="securibench/micro/basic/Basic31.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.basic.Basic31$Data" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Data.java" sourcepath="securibench/micro/basic/Data.java"/>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_FIELD" priority="2" abbrev="UuF" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.basic.Basic31$Data">
+      <SourceLine classname="securibench.micro.basic.Basic31$Data" sourcefile="Basic31.java" sourcepath="securibench/micro/basic/Basic31.java"/>
+    </Class>
+    <Field classname="securibench.micro.basic.Basic31$Data" name="value2" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic31$Data" sourcefile="Basic31.java" sourcepath="securibench/micro/basic/Basic31.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.basic.Basic31$Data" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Data.java" sourcepath="securibench/micro/basic/Data.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic32">
+      <SourceLine classname="securibench.micro.basic.Basic32" sourcefile="Basic32.java" sourcepath="securibench/micro/basic/Basic32.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic32" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic32" start="21" end="26" startBytecode="0" endBytecode="117" sourcefile="Basic32.java" sourcepath="securibench/micro/basic/Basic32.java"/>
+    </Method>
+    <LocalVariable name="header" register="3" pc="19" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic32" start="25" end="25" startBytecode="20" endBytecode="20" sourcefile="Basic32.java" sourcepath="securibench/micro/basic/Basic32.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic34">
+      <SourceLine classname="securibench.micro.basic.Basic34" sourcefile="Basic34.java" sourcepath="securibench/micro/basic/Basic34.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic34" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic34" start="22" end="33" startBytecode="0" endBytecode="196" sourcefile="Basic34.java" sourcepath="securibench/micro/basic/Basic34.java"/>
+    </Method>
+    <LocalVariable name="headerValue" register="5" pc="49" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic34" start="31" end="31" startBytecode="50" endBytecode="50" sourcefile="Basic34.java" sourcepath="securibench/micro/basic/Basic34.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic35">
+      <SourceLine classname="securibench.micro.basic.Basic35" sourcefile="Basic35.java" sourcepath="securibench/micro/basic/Basic35.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic35" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic35" start="22" end="34" startBytecode="0" endBytecode="215" sourcefile="Basic35.java" sourcepath="securibench/micro/basic/Basic35.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.basic.Basic35" start="30" end="30" startBytecode="59" endBytecode="59" sourcefile="Basic35.java" sourcepath="securibench/micro/basic/Basic35.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" abbrev="OS" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.basic.Basic36">
+      <SourceLine classname="securibench.micro.basic.Basic36" sourcefile="Basic36.java" sourcepath="securibench/micro/basic/Basic36.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic36" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic36" start="24" end="30" startBytecode="0" endBytecode="20" sourcefile="Basic36.java" sourcepath="securibench/micro/basic/Basic36.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Reader;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Reader" start="49" end="232" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Type>
+    <SourceLine classname="securibench.micro.basic.Basic36" start="25" end="25" startBytecode="7" endBytecode="7" sourcefile="Basic36.java" sourcepath="securibench/micro/basic/Basic36.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic4">
+      <SourceLine classname="securibench.micro.basic.Basic4" sourcefile="Basic4.java" sourcepath="securibench/micro/basic/Basic4.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic4" start="22" end="35" startBytecode="0" endBytecode="206" sourcefile="Basic4.java" sourcepath="securibench/micro/basic/Basic4.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic4" start="22" end="22" startBytecode="3" endBytecode="3" sourcefile="Basic4.java" sourcepath="securibench/micro/basic/Basic4.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="str" register="3" pc="68" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic4" start="31" end="31" startBytecode="69" endBytecode="69" sourcefile="Basic4.java" sourcepath="securibench/micro/basic/Basic4.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic8">
+      <SourceLine classname="securibench.micro.basic.Basic8" sourcefile="Basic8.java" sourcepath="securibench/micro/basic/Basic8.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic8" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic8" start="22" end="39" startBytecode="0" endBytecode="208" sourcefile="Basic8.java" sourcepath="securibench/micro/basic/Basic8.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic8" start="22" end="22" startBytecode="3" endBytecode="3" sourcefile="Basic8.java" sourcepath="securibench/micro/basic/Basic8.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="str" register="3" pc="76" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic8" start="34" end="34" startBytecode="77" endBytecode="77" sourcefile="Basic8.java" sourcepath="securibench/micro/basic/Basic8.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.basic.Basic9">
+      <SourceLine classname="securibench.micro.basic.Basic9" sourcefile="Basic9.java" sourcepath="securibench/micro/basic/Basic9.java"/>
+    </Class>
+    <Method classname="securibench.micro.basic.Basic9" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.basic.Basic9" start="22" end="33" startBytecode="0" endBytecode="243" sourcefile="Basic9.java" sourcepath="securibench/micro/basic/Basic9.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.basic.Basic9" start="22" end="22" startBytecode="3" endBytecode="3" sourcefile="Basic9.java" sourcepath="securibench/micro/basic/Basic9.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="s1" register="3" pc="61" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.basic.Basic9" start="32" end="32" startBytecode="62" endBytecode="62" sourcefile="Basic9.java" sourcepath="securibench/micro/basic/Basic9.java"/>
+  </BugInstance>
+  <BugInstance type="DM_STRING_CTOR" priority="2" abbrev="Dm" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.collections.Collections13">
+      <SourceLine classname="securibench.micro.collections.Collections13" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+    </Class>
+    <Method classname="securibench.micro.collections.Collections13" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.collections.Collections13" start="27" end="40" startBytecode="0" endBytecode="313" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.collections.Collections13" start="33" end="33" startBytecode="57" endBytecode="57" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+  </BugInstance>
+  <BugInstance type="DM_STRING_CTOR" priority="2" abbrev="Dm" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.collections.Collections13">
+      <SourceLine classname="securibench.micro.collections.Collections13" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+    </Class>
+    <Method classname="securibench.micro.collections.Collections13" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.collections.Collections13" start="27" end="40" startBytecode="0" endBytecode="313" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.collections.Collections13" start="34" end="34" startBytecode="77" endBytecode="77" sourcefile="Collections13.java" sourcepath="securibench/micro/collections/Collections13.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures1$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures1$C" sourcefile="Datastructures1.java" sourcepath="securibench/micro/datastructures/Datastructures1.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures1$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" abbrev="UrF" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures1$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures1$C" sourcefile="Datastructures1.java" sourcepath="securibench/micro/datastructures/Datastructures1.java"/>
+    </Class>
+    <Field classname="securibench.micro.datastructures.Datastructures1$C" name="tag" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures1$C" sourcefile="Datastructures1.java" sourcepath="securibench/micro/datastructures/Datastructures1.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures1$C" start="24" end="24" startBytecode="12" endBytecode="12" sourcefile="Datastructures1.java" sourcepath="securibench/micro/datastructures/Datastructures1.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures2$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures2$C" sourcefile="Datastructures2.java" sourcepath="securibench/micro/datastructures/Datastructures2.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures2$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures3$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures3$C" sourcefile="Datastructures3.java" sourcepath="securibench/micro/datastructures/Datastructures3.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures3$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures4$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures4$C" sourcefile="Datastructures4.java" sourcepath="securibench/micro/datastructures/Datastructures4.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures4$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures5$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures5$C" sourcefile="Datastructures5.java" sourcepath="securibench/micro/datastructures/Datastructures5.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures5$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.datastructures.Datastructures6$C">
+      <SourceLine classname="securibench.micro.datastructures.Datastructures6$C" sourcefile="Datastructures6.java" sourcepath="securibench/micro/datastructures/Datastructures6.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.datastructures.Datastructures6$C" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="C.java" sourcepath="securibench/micro/datastructures/C.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.factories.Factories3$StringWrapper">
+      <SourceLine classname="securibench.micro.factories.Factories3$StringWrapper" sourcefile="Factories3.java" sourcepath="securibench/micro/factories/Factories3.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.factories.Factories3$StringWrapper" start="20" end="20" startBytecode="0" endBytecode="0" sourcefile="StringWrapper.java" sourcepath="securibench/micro/factories/StringWrapper.java"/>
+  </BugInstance>
+  <BugInstance type="SE_BAD_FIELD" priority="2" abbrev="Se" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.inter.Inter3">
+      <SourceLine classname="securibench.micro.inter.Inter3" sourcefile="Inter3.java" sourcepath="securibench/micro/inter/Inter3.java"/>
+    </Class>
+    <Field classname="securibench.micro.inter.Inter3" name="writer" signature="Ljava/io/PrintWriter;" isStatic="false">
+      <SourceLine classname="securibench.micro.inter.Inter3" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Inter3.java" sourcepath="securibench/micro/inter/Inter3.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="SE_NO_SERIALVERSIONID" priority="2" abbrev="SnVI" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.inter.Inter6">
+      <SourceLine classname="securibench.micro.inter.Inter6" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.inter.Inter6">
+      <SourceLine classname="securibench.micro.inter.Inter6" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Class>
+    <Method classname="securibench.micro.inter.Inter6" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.inter.Inter6" start="31" end="35" startBytecode="0" endBytecode="100" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Method>
+    <Field classname="securibench.micro.inter.Inter6" name="name" signature="Ljava/lang/String;" isStatic="true">
+      <SourceLine classname="securibench.micro.inter.Inter6" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.inter.Inter6" start="31" end="31" startBytecode="8" endBytecode="8" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.inter.Inter6">
+      <SourceLine classname="securibench.micro.inter.Inter6" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Class>
+    <Method classname="securibench.micro.inter.Inter6" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.inter.Inter6" start="31" end="35" startBytecode="0" endBytecode="100" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Method>
+    <Field classname="securibench.micro.inter.Inter6" name="writer" signature="Ljava/io/PrintWriter;" isStatic="true">
+      <SourceLine classname="securibench.micro.inter.Inter6" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.inter.Inter6" start="32" end="32" startBytecode="17" endBytecode="17" sourcefile="Inter6.java" sourcepath="securibench/micro/inter/Inter6.java"/>
+  </BugInstance>
+  <BugInstance type="SE_NO_SERIALVERSIONID" priority="2" abbrev="SnVI" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.inter.Inter7">
+      <SourceLine classname="securibench.micro.inter.Inter7" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.inter.Inter7">
+      <SourceLine classname="securibench.micro.inter.Inter7" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Class>
+    <Method classname="securibench.micro.inter.Inter7" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.inter.Inter7" start="46" end="50" startBytecode="0" endBytecode="103" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Method>
+    <Field classname="securibench.micro.inter.Inter7" name="name" signature="Ljava/lang/String;" isStatic="true">
+      <SourceLine classname="securibench.micro.inter.Inter7" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.inter.Inter7" start="46" end="46" startBytecode="8" endBytecode="8" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.inter.Inter7">
+      <SourceLine classname="securibench.micro.inter.Inter7" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Class>
+    <Method classname="securibench.micro.inter.Inter7" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.inter.Inter7" start="46" end="50" startBytecode="0" endBytecode="103" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Method>
+    <Field classname="securibench.micro.inter.Inter7" name="writer" signature="Ljava/io/PrintWriter;" isStatic="true">
+      <SourceLine classname="securibench.micro.inter.Inter7" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.inter.Inter7" start="47" end="47" startBytecode="17" endBytecode="17" sourcefile="Inter7.java" sourcepath="securibench/micro/inter/Inter7.java"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE" first="1">
+    <Class classname="securibench.micro.pred.Pred1">
+      <SourceLine classname="securibench.micro.pred.Pred1" sourcefile="Pred1.java" sourcepath="securibench/micro/pred/Pred1.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred1" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred1" start="23" end="28" startBytecode="0" endBytecode="4" sourcefile="Pred1.java" sourcepath="securibench/micro/pred/Pred1.java"/>
+    </Method>
+    <LocalVariable name="name" register="3" pc="9" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred1" start="23" end="23" startBytecode="8" endBytecode="8" sourcefile="Pred1.java" sourcepath="securibench/micro/pred/Pred1.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="name"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.METHOD_RESULT" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.BASE_VALUE" value="true"/>
+  </BugInstance>
+  <BugInstance type="DMI_RANDOM_USED_ONLY_ONCE" priority="1" abbrev="BC" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.pred.Pred2">
+      <SourceLine classname="securibench.micro.pred.Pred2" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred2" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred2" start="24" end="35" startBytecode="0" endBytecode="168" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+    </Method>
+    <Method classname="java.util.Random" name="nextBoolean" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.util.Random" start="308" end="308" startBytecode="0" endBytecode="37" sourcefile="Random.java" sourcepath="java/util/Random.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.pred.Pred2" start="24" end="24" startBytecode="7" endBytecode="7" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred2">
+      <SourceLine classname="securibench.micro.pred.Pred2" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred2" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred2" start="24" end="35" startBytecode="0" endBytecode="168" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred2" start="28" end="28" startBytecode="22" endBytecode="22" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="4" pc="44" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred2" start="33" end="33" startBytecode="45" endBytecode="45" sourcefile="Pred2.java" sourcepath="securibench/micro/pred/Pred2.java"/>
+  </BugInstance>
+  <BugInstance type="DMI_RANDOM_USED_ONLY_ONCE" priority="1" abbrev="BC" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.pred.Pred3">
+      <SourceLine classname="securibench.micro.pred.Pred3" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred3" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred3" start="24" end="35" startBytecode="0" endBytecode="168" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+    </Method>
+    <Method classname="java.util.Random" name="nextBoolean" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.util.Random" start="308" end="308" startBytecode="0" endBytecode="37" sourcefile="Random.java" sourcepath="java/util/Random.java"/>
+    </Method>
+    <SourceLine classname="securibench.micro.pred.Pred3" start="24" end="24" startBytecode="7" endBytecode="7" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred3">
+      <SourceLine classname="securibench.micro.pred.Pred3" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred3" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred3" start="24" end="35" startBytecode="0" endBytecode="168" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred3" start="28" end="28" startBytecode="22" endBytecode="22" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="4" pc="44" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred3" start="33" end="33" startBytecode="45" endBytecode="45" sourcefile="Pred3.java" sourcepath="securibench/micro/pred/Pred3.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred4">
+      <SourceLine classname="securibench.micro.pred.Pred4" sourcefile="Pred4.java" sourcepath="securibench/micro/pred/Pred4.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred4" start="23" end="31" startBytecode="0" endBytecode="144" sourcefile="Pred4.java" sourcepath="securibench/micro/pred/Pred4.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred4" start="25" end="25" startBytecode="5" endBytecode="5" sourcefile="Pred4.java" sourcepath="securibench/micro/pred/Pred4.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="4" pc="28" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred4" start="29" end="29" startBytecode="29" endBytecode="29" sourcefile="Pred4.java" sourcepath="securibench/micro/pred/Pred4.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred5">
+      <SourceLine classname="securibench.micro.pred.Pred5" sourcefile="Pred5.java" sourcepath="securibench/micro/pred/Pred5.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred5" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred5" start="23" end="31" startBytecode="0" endBytecode="158" sourcefile="Pred5.java" sourcepath="securibench/micro/pred/Pred5.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred5" start="25" end="25" startBytecode="5" endBytecode="5" sourcefile="Pred5.java" sourcepath="securibench/micro/pred/Pred5.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="4" pc="42" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred5" start="29" end="29" startBytecode="43" endBytecode="43" sourcefile="Pred5.java" sourcepath="securibench/micro/pred/Pred5.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred6">
+      <SourceLine classname="securibench.micro.pred.Pred6" sourcefile="Pred6.java" sourcepath="securibench/micro/pred/Pred6.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred6" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred6" start="23" end="32" startBytecode="0" endBytecode="151" sourcefile="Pred6.java" sourcepath="securibench/micro/pred/Pred6.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred6" start="26" end="26" startBytecode="8" endBytecode="8" sourcefile="Pred6.java" sourcepath="securibench/micro/pred/Pred6.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="4" pc="31" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred6" start="30" end="30" startBytecode="32" endBytecode="32" sourcefile="Pred6.java" sourcepath="securibench/micro/pred/Pred6.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred7">
+      <SourceLine classname="securibench.micro.pred.Pred7" sourcefile="Pred7.java" sourcepath="securibench/micro/pred/Pred7.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred7" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred7" start="23" end="34" startBytecode="0" endBytecode="180" sourcefile="Pred7.java" sourcepath="securibench/micro/pred/Pred7.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred7" start="28" end="28" startBytecode="15" endBytecode="15" sourcefile="Pred7.java" sourcepath="securibench/micro/pred/Pred7.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="5" pc="42" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred7" start="32" end="32" startBytecode="43" endBytecode="43" sourcefile="Pred7.java" sourcepath="securibench/micro/pred/Pred7.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred8">
+      <SourceLine classname="securibench.micro.pred.Pred8" sourcefile="Pred8.java" sourcepath="securibench/micro/pred/Pred8.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred8" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred8" start="23" end="30" startBytecode="0" endBytecode="161" sourcefile="Pred8.java" sourcepath="securibench/micro/pred/Pred8.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred8" start="23" end="23" startBytecode="3" endBytecode="3" sourcefile="Pred8.java" sourcepath="securibench/micro/pred/Pred8.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="45" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred8" start="28" end="28" startBytecode="46" endBytecode="46" sourcefile="Pred8.java" sourcepath="securibench/micro/pred/Pred8.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.pred.Pred9">
+      <SourceLine classname="securibench.micro.pred.Pred9" sourcefile="Pred9.java" sourcepath="securibench/micro/pred/Pred9.java"/>
+    </Class>
+    <Method classname="securibench.micro.pred.Pred9" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.pred.Pred9" start="23" end="30" startBytecode="0" endBytecode="161" sourcefile="Pred9.java" sourcepath="securibench/micro/pred/Pred9.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.pred.Pred9" start="23" end="23" startBytecode="3" endBytecode="3" sourcefile="Pred9.java" sourcepath="securibench/micro/pred/Pred9.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="45" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.pred.Pred9" start="28" end="28" startBytecode="46" endBytecode="46" sourcefile="Pred9.java" sourcepath="securibench/micro/pred/Pred9.java"/>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH" priority="2" abbrev="NP" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.reflection.Refl1">
+      <SourceLine classname="securibench.micro.reflection.Refl1" sourcefile="Refl1.java" sourcepath="securibench/micro/reflection/Refl1.java"/>
+    </Class>
+    <Method classname="securibench.micro.reflection.Refl1" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.reflection.Refl1" start="25" end="52" startBytecode="0" endBytecode="465" sourcefile="Refl1.java" sourcepath="securibench/micro/reflection/Refl1.java"/>
+    </Method>
+    <LocalVariable name="idMethod" register="5" pc="74" role="LOCAL_VARIABLE_VALUE_OF"/>
+    <SourceLine classname="securibench.micro.reflection.Refl1" start="40" end="40" startBytecode="94" endBytecode="94" sourcefile="Refl1.java" sourcepath="securibench/micro/reflection/Refl1.java" role="SOURCE_LINE_DEREF"/>
+    <SourceLine classname="securibench.micro.reflection.Refl1" start="32" end="32" startBytecode="75" endBytecode="75" sourcefile="Refl1.java" sourcepath="securibench/micro/reflection/Refl1.java" role="SOURCE_LINE_KNOWN_NULL"/>
+  </BugInstance>
+  <BugInstance type="SE_NO_SERIALVERSIONID" priority="2" abbrev="SnVI" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.reflection.Refl4">
+      <SourceLine classname="securibench.micro.reflection.Refl4" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.reflection.Refl4">
+      <SourceLine classname="securibench.micro.reflection.Refl4" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Class>
+    <Method classname="securibench.micro.reflection.Refl4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.reflection.Refl4" start="32" end="43" startBytecode="0" endBytecode="176" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Method>
+    <Field classname="securibench.micro.reflection.Refl4" name="name" signature="Ljava/lang/String;" isStatic="true">
+      <SourceLine classname="securibench.micro.reflection.Refl4" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.reflection.Refl4" start="32" end="32" startBytecode="8" endBytecode="8" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+  </BugInstance>
+  <BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="2" abbrev="ST" category="STYLE" first="1">
+    <Class classname="securibench.micro.reflection.Refl4">
+      <SourceLine classname="securibench.micro.reflection.Refl4" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Class>
+    <Method classname="securibench.micro.reflection.Refl4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.reflection.Refl4" start="32" end="43" startBytecode="0" endBytecode="176" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Method>
+    <Field classname="securibench.micro.reflection.Refl4" name="writer" signature="Ljava/io/PrintWriter;" isStatic="true">
+      <SourceLine classname="securibench.micro.reflection.Refl4" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.reflection.Refl4" start="33" end="33" startBytecode="17" endBytecode="17" sourcefile="Refl4.java" sourcepath="securibench/micro/reflection/Refl4.java"/>
+  </BugInstance>
+  <BugInstance type="SE_BAD_FIELD" priority="2" abbrev="Se" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.sanitizers.Sanitizers1">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers1" sourcefile="Sanitizers1.java" sourcepath="securibench/micro/sanitizers/Sanitizers1.java"/>
+    </Class>
+    <Field classname="securibench.micro.sanitizers.Sanitizers1" name="writer" signature="Ljava/io/PrintWriter;" isStatic="false">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers1" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Sanitizers1.java" sourcepath="securibench/micro/sanitizers/Sanitizers1.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="SE_BAD_FIELD" priority="2" abbrev="Se" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.sanitizers.Sanitizers2">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers2" sourcefile="Sanitizers2.java" sourcepath="securibench/micro/sanitizers/Sanitizers2.java"/>
+    </Class>
+    <Field classname="securibench.micro.sanitizers.Sanitizers2" name="writer" signature="Ljava/io/PrintWriter;" isStatic="false">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers2" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Sanitizers2.java" sourcepath="securibench/micro/sanitizers/Sanitizers2.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="SE_BAD_FIELD" priority="2" abbrev="Se" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.sanitizers.Sanitizers4">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers4" sourcefile="Sanitizers4.java" sourcepath="securibench/micro/sanitizers/Sanitizers4.java"/>
+    </Class>
+    <Field classname="securibench.micro.sanitizers.Sanitizers4" name="writer" signature="Ljava/io/PrintWriter;" isStatic="false">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers4" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Sanitizers4.java" sourcepath="securibench/micro/sanitizers/Sanitizers4.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="SE_BAD_FIELD" priority="2" abbrev="Se" category="BAD_PRACTICE" first="1">
+    <Class classname="securibench.micro.sanitizers.Sanitizers6">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers6" sourcefile="Sanitizers6.java" sourcepath="securibench/micro/sanitizers/Sanitizers6.java"/>
+    </Class>
+    <Field classname="securibench.micro.sanitizers.Sanitizers6" name="writer" signature="Ljava/io/PrintWriter;" isStatic="false">
+      <SourceLine classname="securibench.micro.sanitizers.Sanitizers6" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="Sanitizers6.java" sourcepath="securibench/micro/sanitizers/Sanitizers6.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.session.Session1">
+      <SourceLine classname="securibench.micro.session.Session1" sourcefile="Session1.java" sourcepath="securibench/micro/session/Session1.java"/>
+    </Class>
+    <Method classname="securibench.micro.session.Session1" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.session.Session1" start="24" end="31" startBytecode="0" endBytecode="182" sourcefile="Session1.java" sourcepath="securibench/micro/session/Session1.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.session.Session1" start="24" end="24" startBytecode="3" endBytecode="3" sourcefile="Session1.java" sourcepath="securibench/micro/session/Session1.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="52" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.session.Session1" start="30" end="30" startBytecode="53" endBytecode="53" sourcefile="Session1.java" sourcepath="securibench/micro/session/Session1.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="1" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.session.Session2">
+      <SourceLine classname="securibench.micro.session.Session2" sourcefile="Session2.java" sourcepath="securibench/micro/session/Session2.java"/>
+    </Class>
+    <Method classname="securibench.micro.session.Session2" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.session.Session2" start="24" end="33" startBytecode="0" endBytecode="221" sourcefile="Session2.java" sourcepath="securibench/micro/session/Session2.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.session.Session2" start="24" end="24" startBytecode="3" endBytecode="3" sourcefile="Session2.java" sourcepath="securibench/micro/session/Session2.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <LocalVariable name="name" register="3" pc="66" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="securibench.micro.session.Session2" start="31" end="31" startBytecode="67" endBytecode="67" sourcefile="Session2.java" sourcepath="securibench/micro/session/Session2.java"/>
+  </BugInstance>
+  <BugInstance type="SA_FIELD_DOUBLE_ASSIGNMENT" priority="2" abbrev="SA" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates3">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates3" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" start="27" end="34" startBytecode="0" endBytecode="166" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Method>
+    <Field classname="securibench.micro.strong_updates.StrongUpdates3$Widget" name="value" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3$Widget" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" start="30" end="30" startBytecode="29" endBytecode="29" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates3">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates3" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" start="27" end="34" startBytecode="0" endBytecode="166" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" start="27" end="27" startBytecode="3" endBytecode="3" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3" start="33" end="33" startBytecode="47" endBytecode="47" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates3$Widget">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3$Widget" sourcefile="StrongUpdates3.java" sourcepath="securibench/micro/strong_updates/StrongUpdates3.java"/>
+    </Class>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates3$Widget" start="22" end="22" startBytecode="0" endBytecode="0" sourcefile="Widget.java" sourcepath="securibench/micro/strong_updates/Widget.java"/>
+  </BugInstance>
+  <BugInstance type="SA_FIELD_DOUBLE_ASSIGNMENT" priority="2" abbrev="SA" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates4">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" start="28" end="33" startBytecode="0" endBytecode="121" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+    </Method>
+    <Field classname="securibench.micro.strong_updates.StrongUpdates4" name="name" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" start="29" end="29" startBytecode="15" endBytecode="15" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates4">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates4" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" start="28" end="33" startBytecode="0" endBytecode="121" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" start="28" end="28" startBytecode="4" endBytecode="4" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates4" start="32" end="32" startBytecode="30" endBytecode="30" sourcefile="StrongUpdates4.java" sourcepath="securibench/micro/strong_updates/StrongUpdates4.java"/>
+  </BugInstance>
+  <BugInstance type="SA_FIELD_DOUBLE_ASSIGNMENT" priority="2" abbrev="SA" category="CORRECTNESS" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates5">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates5" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" start="25" end="32" startBytecode="0" endBytecode="162" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+    </Method>
+    <Field classname="securibench.micro.strong_updates.StrongUpdates5" name="name" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+    </Field>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" start="27" end="27" startBytecode="22" endBytecode="22" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+  </BugInstance>
+  <BugInstance type="XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER" priority="2" abbrev="XSS" category="SECURITY" first="1">
+    <Class classname="securibench.micro.strong_updates.StrongUpdates5">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+    </Class>
+    <Method classname="securibench.micro.strong_updates.StrongUpdates5" name="doGet" signature="(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V" isStatic="false">
+      <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" start="25" end="32" startBytecode="0" endBytecode="162" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+    </Method>
+    <String value="name" role="STRING_PARAMETER_NAME"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" start="26" end="26" startBytecode="11" endBytecode="11" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java" role="SOURCE_LINE_GENERATED_AT"/>
+    <SourceLine classname="securibench.micro.strong_updates.StrongUpdates5" start="30" end="30" startBytecode="39" endBytecode="39" sourcefile="StrongUpdates5.java" sourcepath="securibench/micro/strong_updates/StrongUpdates5.java"/>
+  </BugInstance>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Thu, 22 Sep 2011 14:21:54 -0500" total_classes="143" referenced_classes="217" total_bugs="0" total_size="2418" num_packages="13" vm_version="19.0-b09" cpu_seconds="17.02" clock_seconds="60.45" peak_mbytes="890.08" alloc_mbytes="682.69" gc_seconds="1.62">
+    <PackageStats package="securibench.micro" total_bugs="0" total_types="2" total_size="17">
+      <ClassStats class="securibench.micro.BasicTestCase" sourceFile="BasicTestCase.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.MicroTestCase" sourceFile="MicroTestCase.java" interface="true" size="4" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.aliasing" total_bugs="0" total_types="6" total_size="104">
+      <ClassStats class="securibench.micro.aliasing.Aliasing1" sourceFile="Aliasing1.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.aliasing.Aliasing2" sourceFile="Aliasing2.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.aliasing.Aliasing3" sourceFile="Aliasing3.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.aliasing.Aliasing4" sourceFile="Aliasing4.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.aliasing.Aliasing5" sourceFile="Aliasing5.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.aliasing.Aliasing6" sourceFile="Aliasing6.java" interface="false" size="22" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.arrays" total_bugs="0" total_types="10" total_size="148">
+      <ClassStats class="securibench.micro.arrays.Arrays1" sourceFile="Arrays1.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays10" sourceFile="Arrays10.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays2" sourceFile="Arrays2.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays3" sourceFile="Arrays3.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays4" sourceFile="Arrays4.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays5" sourceFile="Arrays5.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays6" sourceFile="Arrays6.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays7" sourceFile="Arrays7.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays8" sourceFile="Arrays8.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.arrays.Arrays9" sourceFile="Arrays9.java" interface="false" size="14" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.basic" total_bugs="0" total_types="47" total_size="758">
+      <ClassStats class="securibench.micro.basic.Basic1" sourceFile="Basic1.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic10" sourceFile="Basic10.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic11" sourceFile="Basic11.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic12" sourceFile="Basic12.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic13" sourceFile="Basic13.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic14" sourceFile="Basic14.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic15" sourceFile="Basic15.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic16" sourceFile="Basic16.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic16$Widget" sourceFile="Basic16.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic17" sourceFile="Basic17.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic17$Widget" sourceFile="Basic17.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic18" sourceFile="Basic18.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic19" sourceFile="Basic19.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic2" sourceFile="Basic2.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic20" sourceFile="Basic20.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic21" sourceFile="Basic21.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic22" sourceFile="Basic22.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic23" sourceFile="Basic23.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic24" sourceFile="Basic24.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic25" sourceFile="Basic25.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic26" sourceFile="Basic26.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic27" sourceFile="Basic27.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic28" sourceFile="Basic28.java" interface="false" size="53" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic29" sourceFile="Basic29.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic29$Node" sourceFile="Basic29.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic3" sourceFile="Basic3.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic30" sourceFile="Basic30.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic30$Data" sourceFile="Basic30.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic31" sourceFile="Basic31.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic31$Data" sourceFile="Basic31.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic32" sourceFile="Basic32.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic33" sourceFile="Basic33.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic34" sourceFile="Basic34.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic35" sourceFile="Basic35.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic36" sourceFile="Basic36.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic37" sourceFile="Basic37.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic38" sourceFile="Basic38.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic39" sourceFile="Basic39.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic4" sourceFile="Basic4.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic40" sourceFile="Basic40.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic41" sourceFile="Basic41.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic42" sourceFile="Basic42.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic5" sourceFile="Basic5.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic6" sourceFile="Basic6.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic7" sourceFile="Basic7.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic8" sourceFile="Basic8.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.basic.Basic9" sourceFile="Basic9.java" interface="false" size="18" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.collections" total_bugs="0" total_types="15" total_size="267">
+      <ClassStats class="securibench.micro.collections.Collections1" sourceFile="Collections1.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections10" sourceFile="Collections10.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections11" sourceFile="Collections11.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections11b" sourceFile="Collections11b.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections12" sourceFile="Collections12.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections13" sourceFile="Collections13.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections14" sourceFile="Collections14.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections2" sourceFile="Collections2.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections3" sourceFile="Collections3.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections4" sourceFile="Collections4.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections5" sourceFile="Collections5.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections6" sourceFile="Collections6.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections7" sourceFile="Collections7.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections8" sourceFile="Collections8.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.collections.Collections9" sourceFile="Collections9.java" interface="false" size="19" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.datastructures" total_bugs="0" total_types="12" total_size="208">
+      <ClassStats class="securibench.micro.datastructures.Datastructures1" sourceFile="Datastructures1.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures1$C" sourceFile="Datastructures1.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures2" sourceFile="Datastructures2.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures2$C" sourceFile="Datastructures2.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures3" sourceFile="Datastructures3.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures3$C" sourceFile="Datastructures3.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures4" sourceFile="Datastructures4.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures4$C" sourceFile="Datastructures4.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures5" sourceFile="Datastructures5.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures5$C" sourceFile="Datastructures5.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures6" sourceFile="Datastructures6.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="securibench.micro.datastructures.Datastructures6$C" sourceFile="Datastructures6.java" interface="false" size="14" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.factories" total_bugs="0" total_types="4" total_size="54">
+      <ClassStats class="securibench.micro.factories.Factories1" sourceFile="Factories1.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.factories.Factories2" sourceFile="Factories2.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.factories.Factories3" sourceFile="Factories3.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.factories.Factories3$StringWrapper" sourceFile="Factories3.java" interface="false" size="9" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.inter" total_bugs="0" total_types="17" total_size="332">
+      <ClassStats class="securibench.micro.inter.Inter1" sourceFile="Inter1.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter10" sourceFile="Inter10.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter11" sourceFile="Inter11.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter12" sourceFile="Inter12.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter13" sourceFile="Inter13.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter14" sourceFile="Inter14.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter2" sourceFile="Inter2.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter3" sourceFile="Inter3.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter4" sourceFile="Inter4.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter5" sourceFile="Inter5.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter6" sourceFile="Inter6.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter6$ReflectivelyCreated" sourceFile="Inter6.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter7" sourceFile="Inter7.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter7$Base" sourceFile="Inter7.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter7$ReflectivelyCreated" sourceFile="Inter7.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter8" sourceFile="Inter8.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="securibench.micro.inter.Inter9" sourceFile="Inter9.java" interface="false" size="24" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.pred" total_bugs="0" total_types="9" total_size="139">
+      <ClassStats class="securibench.micro.pred.Pred1" sourceFile="Pred1.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred2" sourceFile="Pred2.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred3" sourceFile="Pred3.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred4" sourceFile="Pred4.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred5" sourceFile="Pred5.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred6" sourceFile="Pred6.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred7" sourceFile="Pred7.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred8" sourceFile="Pred8.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="securibench.micro.pred.Pred9" sourceFile="Pred9.java" interface="false" size="15" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.reflection" total_bugs="0" total_types="6" total_size="114">
+      <ClassStats class="securibench.micro.reflection.Refl1" sourceFile="Refl1.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="securibench.micro.reflection.Refl2" sourceFile="Refl2.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="securibench.micro.reflection.Refl3" sourceFile="Refl3.java" interface="false" size="28" bugs="0"/>
+      <ClassStats class="securibench.micro.reflection.Refl3$ReflectivelyCreated" sourceFile="Refl3.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="securibench.micro.reflection.Refl4" sourceFile="Refl4.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="securibench.micro.reflection.Refl4$ReflectivelyCreated" sourceFile="Refl4.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.sanitizers" total_bugs="0" total_types="6" total_size="142">
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers1" sourceFile="Sanitizers1.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers2" sourceFile="Sanitizers2.java" interface="false" size="28" bugs="0"/>
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers3" sourceFile="Sanitizers3.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers4" sourceFile="Sanitizers4.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers5" sourceFile="Sanitizers5.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.sanitizers.Sanitizers6" sourceFile="Sanitizers6.java" interface="false" size="29" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.session" total_bugs="0" total_types="3" total_size="53">
+      <ClassStats class="securibench.micro.session.Session1" sourceFile="Session1.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.session.Session2" sourceFile="Session2.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="securibench.micro.session.Session3" sourceFile="Session3.java" interface="false" size="19" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="securibench.micro.strong_updates" total_bugs="0" total_types="6" total_size="82">
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates1" sourceFile="StrongUpdates1.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates2" sourceFile="StrongUpdates2.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates3" sourceFile="StrongUpdates3.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates3$Widget" sourceFile="StrongUpdates3.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates4" sourceFile="StrongUpdates4.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="securibench.micro.strong_updates.StrongUpdates5" sourceFile="StrongUpdates5.java" interface="false" size="16" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.InfiniteLoop" totalMilliseconds="11" invocations="143" avgMicrosecondsPerInvocation="80" maxMicrosecondsPerInvocation="707" standardDeviationMircosecondsPerInvocation="63"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindUnsyncGet" totalMilliseconds="11" invocations="143" avgMicrosecondsPerInvocation="80" maxMicrosecondsPerInvocation="715" standardDeviationMircosecondsPerInvocation="59"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison" totalMilliseconds="11" invocations="143" avgMicrosecondsPerInvocation="82" maxMicrosecondsPerInvocation="426" standardDeviationMircosecondsPerInvocation="39"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SwitchFallthrough" totalMilliseconds="11" invocations="143" avgMicrosecondsPerInvocation="83" maxMicrosecondsPerInvocation="269" standardDeviationMircosecondsPerInvocation="38"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteUnconditionalParamDerefs" totalMilliseconds="11" invocations="143" avgMicrosecondsPerInvocation="83" maxMicrosecondsPerInvocation="433" standardDeviationMircosecondsPerInvocation="47"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BadResultSetAccess" totalMilliseconds="12" invocations="143" avgMicrosecondsPerInvocation="85" maxMicrosecondsPerInvocation="254" standardDeviationMircosecondsPerInvocation="45"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RedundantInterfaces" totalMilliseconds="12" invocations="143" avgMicrosecondsPerInvocation="85" maxMicrosecondsPerInvocation="5260" standardDeviationMircosecondsPerInvocation="446"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SynchronizationOnSharedBuiltinConstant" totalMilliseconds="12" invocations="143" avgMicrosecondsPerInvocation="87" maxMicrosecondsPerInvocation="212" standardDeviationMircosecondsPerInvocation="39"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RuntimeExceptionCapture" totalMilliseconds="12" invocations="143" avgMicrosecondsPerInvocation="88" maxMicrosecondsPerInvocation="312" standardDeviationMircosecondsPerInvocation="55"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="12" invocations="217" avgMicrosecondsPerInvocation="59" maxMicrosecondsPerInvocation="997" standardDeviationMircosecondsPerInvocation="123"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.MethodReturnCheck" totalMilliseconds="13" invocations="143" avgMicrosecondsPerInvocation="92" maxMicrosecondsPerInvocation="361" standardDeviationMircosecondsPerInvocation="65"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindHEmismatch" totalMilliseconds="13" invocations="143" avgMicrosecondsPerInvocation="96" maxMicrosecondsPerInvocation="275" standardDeviationMircosecondsPerInvocation="39"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RepeatedConditionals" totalMilliseconds="14" invocations="143" avgMicrosecondsPerInvocation="98" maxMicrosecondsPerInvocation="2027" standardDeviationMircosecondsPerInvocation="169"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="14" invocations="217" avgMicrosecondsPerInvocation="66" maxMicrosecondsPerInvocation="989" standardDeviationMircosecondsPerInvocation="147"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DuplicateBranches" totalMilliseconds="14" invocations="143" avgMicrosecondsPerInvocation="103" maxMicrosecondsPerInvocation="9503" standardDeviationMircosecondsPerInvocation="794"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref$CheckCallSitesAndReturnInstructions" totalMilliseconds="14" invocations="589" avgMicrosecondsPerInvocation="25" maxMicrosecondsPerInvocation="283" standardDeviationMircosecondsPerInvocation="37"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.Naming" totalMilliseconds="15" invocations="143" avgMicrosecondsPerInvocation="104" maxMicrosecondsPerInvocation="232" standardDeviationMircosecondsPerInvocation="28"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="15" invocations="217" avgMicrosecondsPerInvocation="69" maxMicrosecondsPerInvocation="786" standardDeviationMircosecondsPerInvocation="99"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.LiveLocalStoreDataflowFactory" totalMilliseconds="15" invocations="589" avgMicrosecondsPerInvocation="25" maxMicrosecondsPerInvocation="206" standardDeviationMircosecondsPerInvocation="23"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="16" invocations="143" avgMicrosecondsPerInvocation="114" maxMicrosecondsPerInvocation="412" standardDeviationMircosecondsPerInvocation="68"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.URLProblems" totalMilliseconds="17" invocations="143" avgMicrosecondsPerInvocation="124" maxMicrosecondsPerInvocation="368" standardDeviationMircosecondsPerInvocation="68"/>
+      <ClassProfile name="edu.umd.cs.findbugs.DetectorToDetector2Adapter" totalMilliseconds="22" invocations="15783" avgMicrosecondsPerInvocation="1" maxMicrosecondsPerInvocation="289" standardDeviationMircosecondsPerInvocation="2"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref" totalMilliseconds="22" invocations="143" avgMicrosecondsPerInvocation="155" maxMicrosecondsPerInvocation="905" standardDeviationMircosecondsPerInvocation="81"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="23" invocations="234" avgMicrosecondsPerInvocation="101" maxMicrosecondsPerInvocation="678" standardDeviationMircosecondsPerInvocation="88"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.TypeQualifierNullnessAnnotationDatabase" totalMilliseconds="23" invocations="3652" avgMicrosecondsPerInvocation="6" maxMicrosecondsPerInvocation="571" standardDeviationMircosecondsPerInvocation="16"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.UnreadFields" totalMilliseconds="26" invocations="143" avgMicrosecondsPerInvocation="182" maxMicrosecondsPerInvocation="953" standardDeviationMircosecondsPerInvocation="104"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantDataflowFactory" totalMilliseconds="27" invocations="589" avgMicrosecondsPerInvocation="47" maxMicrosecondsPerInvocation="474" standardDeviationMircosecondsPerInvocation="53"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer" totalMilliseconds="27" invocations="143" avgMicrosecondsPerInvocation="195" maxMicrosecondsPerInvocation="21755" standardDeviationMircosecondsPerInvocation="1811"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SerializableIdiom" totalMilliseconds="28" invocations="143" avgMicrosecondsPerInvocation="199" maxMicrosecondsPerInvocation="1034" standardDeviationMircosecondsPerInvocation="129"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.StreamResourceTracker" totalMilliseconds="29" invocations="36" avgMicrosecondsPerInvocation="820" maxMicrosecondsPerInvocation="12282" standardDeviationMircosecondsPerInvocation="1952"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="30" invocations="208" avgMicrosecondsPerInvocation="147" maxMicrosecondsPerInvocation="3285" standardDeviationMircosecondsPerInvocation="443"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindOpenStream" totalMilliseconds="31" invocations="143" avgMicrosecondsPerInvocation="217" maxMicrosecondsPerInvocation="1047" standardDeviationMircosecondsPerInvocation="183"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantPoolGenFactory" totalMilliseconds="35" invocations="143" avgMicrosecondsPerInvocation="250" maxMicrosecondsPerInvocation="30331" standardDeviationMircosecondsPerInvocation="2524"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindSelfComparison" totalMilliseconds="36" invocations="143" avgMicrosecondsPerInvocation="254" maxMicrosecondsPerInvocation="22689" standardDeviationMircosecondsPerInvocation="1883"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CrossSiteScripting" totalMilliseconds="43" invocations="143" avgMicrosecondsPerInvocation="305" maxMicrosecondsPerInvocation="26622" standardDeviationMircosecondsPerInvocation="2210"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.LoadOfKnownNullValue" totalMilliseconds="44" invocations="143" avgMicrosecondsPerInvocation="307" maxMicrosecondsPerInvocation="20704" standardDeviationMircosecondsPerInvocation="1715"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindInconsistentSync2" totalMilliseconds="44" invocations="143" avgMicrosecondsPerInvocation="311" maxMicrosecondsPerInvocation="28321" standardDeviationMircosecondsPerInvocation="2350"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="44" invocations="591" avgMicrosecondsPerInvocation="75" maxMicrosecondsPerInvocation="1179" standardDeviationMircosecondsPerInvocation="88"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="56" invocations="217" avgMicrosecondsPerInvocation="259" maxMicrosecondsPerInvocation="4477" standardDeviationMircosecondsPerInvocation="599"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindDeadLocalStores" totalMilliseconds="59" invocations="143" avgMicrosecondsPerInvocation="413" maxMicrosecondsPerInvocation="42759" standardDeviationMircosecondsPerInvocation="3566"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="78" invocations="606" avgMicrosecondsPerInvocation="128" maxMicrosecondsPerInvocation="4368" standardDeviationMircosecondsPerInvocation="236"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="88" invocations="848" avgMicrosecondsPerInvocation="104" maxMicrosecondsPerInvocation="1951" standardDeviationMircosecondsPerInvocation="166"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="92" invocations="217" avgMicrosecondsPerInvocation="424" maxMicrosecondsPerInvocation="69717" standardDeviationMircosecondsPerInvocation="4719"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="105" invocations="595" avgMicrosecondsPerInvocation="177" maxMicrosecondsPerInvocation="25228" standardDeviationMircosecondsPerInvocation="1051"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.MultithreadedInstanceAccess" totalMilliseconds="117" invocations="143" avgMicrosecondsPerInvocation="820" maxMicrosecondsPerInvocation="110870" standardDeviationMircosecondsPerInvocation="9235"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="133" invocations="589" avgMicrosecondsPerInvocation="227" maxMicrosecondsPerInvocation="18759" standardDeviationMircosecondsPerInvocation="818"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="140" invocations="589" avgMicrosecondsPerInvocation="238" maxMicrosecondsPerInvocation="67640" standardDeviationMircosecondsPerInvocation="2783"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="158" invocations="589" avgMicrosecondsPerInvocation="269" maxMicrosecondsPerInvocation="55477" standardDeviationMircosecondsPerInvocation="2297"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="158" invocations="589" avgMicrosecondsPerInvocation="269" maxMicrosecondsPerInvocation="31005" standardDeviationMircosecondsPerInvocation="1314"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="198" invocations="2646" avgMicrosecondsPerInvocation="74" maxMicrosecondsPerInvocation="36286" standardDeviationMircosecondsPerInvocation="1110"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="206" invocations="301" avgMicrosecondsPerInvocation="685" maxMicrosecondsPerInvocation="158159" standardDeviationMircosecondsPerInvocation="9093"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FormatStringChecker" totalMilliseconds="290" invocations="143" avgMicrosecondsPerInvocation="2028" maxMicrosecondsPerInvocation="280618" standardDeviationMircosecondsPerInvocation="23378"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRunInvocations" totalMilliseconds="404" invocations="143" avgMicrosecondsPerInvocation="2830" maxMicrosecondsPerInvocation="402160" standardDeviationMircosecondsPerInvocation="33511"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteNonnullReturnValues" totalMilliseconds="577" invocations="143" avgMicrosecondsPerInvocation="4040" maxMicrosecondsPerInvocation="434543" standardDeviationMircosecondsPerInvocation="37557"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="1145" invocations="15" avgMicrosecondsPerInvocation="76399" maxMicrosecondsPerInvocation="1143716" standardDeviationMircosecondsPerInvocation="285252"/>
+      <ClassProfile name="edu.umd.cs.findbugs.FindBugs2" totalMilliseconds="1255" invocations="2" avgMicrosecondsPerInvocation="627555" maxMicrosecondsPerInvocation="1089856" standardDeviationMircosecondsPerInvocation="462300"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="3281" invocations="607" avgMicrosecondsPerInvocation="5406" maxMicrosecondsPerInvocation="148384" standardDeviationMircosecondsPerInvocation="14141"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History>
+    <AppVersion sequence="0" timestamp="1316719323955" release="" codeSize="0" numClasses="0"/>
+  </History>
+</BugCollection>
