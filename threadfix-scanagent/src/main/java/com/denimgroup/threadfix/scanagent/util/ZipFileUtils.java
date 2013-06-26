@@ -8,6 +8,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
+
 public class ZipFileUtils {
 	/**
 	 * Prevent instantiation
@@ -61,11 +63,7 @@ public class ZipFileUtils {
 	        continue;
 	      } finally {
 	        if (fos != null) {
-	          try {
-	            fos.close();
-	          } catch (IOException e) {
-	            // ignore
-	          }
+	        	IOUtils.closeQuietly(fos);
 	        }
 	      }
 	    }

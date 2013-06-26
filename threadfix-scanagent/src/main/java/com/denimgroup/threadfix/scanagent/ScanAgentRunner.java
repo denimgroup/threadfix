@@ -263,5 +263,4 @@ public final class ScanAgentRunner {
 			log.info("No scanners configured (NULL)");
 		}
 	}
-
 }
