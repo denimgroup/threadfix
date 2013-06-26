@@ -50,6 +50,8 @@ public final class ScanAgentRunner {
 	public static final String SCAN_AGENT_VERSION = "2.0.0-DEVELOPMENT-1";
 	static Logger log = Logger.getLogger(ScanAgentRunner.class);
 	
+	private String threadFixServerUrl;
+	private String threadFixApiKey;
 	private int pollIntervalInSeconds;
 	private OperatingSystem operatingSystem;
 	private List<Scanner> availableScanners;
@@ -173,6 +175,8 @@ public final class ScanAgentRunner {
 	{
 		boolean retVal = false;
 		
+		this.threadFixServerUrl = config.getString("scanagent.threadFixServerUrl");
+		this.threadFixApiKey = config.getString("scanagent.threadFixApiKey");
 		this.pollIntervalInSeconds = config.getInt("scanagent.pollInterval");
 		this.maxTasks = config.getInt("scanagent.maxTasks");
 		//	TODO - Auto-detect the operating system and version
