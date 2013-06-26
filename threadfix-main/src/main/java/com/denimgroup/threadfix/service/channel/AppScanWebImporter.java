@@ -174,9 +174,10 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    		switch (qName) {
 	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
-	    			case "Severity" : grabSeverity = true; break;
-	    			case "link" : issueTypes = false; break;
-	    			case "name" : grabIssueTypeName = true; break;
+	    			case "Issue"     : issueTypes = false;                    break;
+	    			case "Severity"  : grabSeverity = true;                   break;
+	    			case "link"      : grabCWE = true;                        break;
+	    			case "name"      : grabIssueTypeName = true;              break;
 	    		}
 	    			    	
 	    	} else {
