@@ -53,22 +53,22 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	
-	private static final Map<String, String> regexMap = new HashMap<String,String>();
+	private static final Map<String, String> REGEX_MAP = new HashMap<String,String>();
 	static {
-		regexMap.put("System.Data.Common.DbDataReader.get_Item", 
+		REGEX_MAP.put("System.Data.Common.DbDataReader.get_Item", 
 				"System\\.Data\\.Common\\.DbDataReader\\.get_Item " +
 				"\\( \\(System\\.String\\)\"([^\"]+)\"");
-		regexMap.put("System.Web.HttpRequest.get_Item", 
+		REGEX_MAP.put("System.Web.HttpRequest.get_Item", 
 				"System\\.Web\\.HttpRequest\\.get_Item \\( \\(System.String\\)\"([^\"]+)\" \\)");
-		regexMap.put("System.Web.UI.WebControls.TextBox.get_Text", 
+		REGEX_MAP.put("System.Web.UI.WebControls.TextBox.get_Text", 
 				"([^ >\\.]+) . System.Web.UI.WebControls.TextBox.get_Text \\(\\)");
-		regexMap.put("System.Web.UI.WebControls.HiddenField.get_Text", 
+		REGEX_MAP.put("System.Web.UI.WebControls.HiddenField.get_Text", 
 				"([^ >\\.]+) . System.Web.UI.WebControls.HiddenField.get_Value \\(\\)");
-		regexMap.put("javax.servlet.http.HttpSession.getAttribute",
+		REGEX_MAP.put("javax.servlet.http.HttpSession.getAttribute",
 				"javax\\.servlet\\.http\\.HttpSession\\.getAttribute \\( \"([^\"]+)\" \\)");
-		regexMap.put("java.sql.ResultSet.getString",
+		REGEX_MAP.put("java.sql.ResultSet.getString",
 				"java\\.sql\\.ResultSet\\.getString \\( \"([^\"]+)\" \\)");
-		regexMap.put("javax.servlet.ServletRequest.getParameter",
+		REGEX_MAP.put("javax.servlet.ServletRequest.getParameter",
 				"javax\\.servlet\\.ServletRequest\\.getParameter \\( \"([^\"]+)\" \\)");
 	}
 
@@ -222,7 +222,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	
     		String line = finding.getDataFlowElements().get(0).getLineText();
     		
-    		for (Entry<String, String> entry : regexMap.entrySet()) {
+    		for (Entry<String, String> entry : REGEX_MAP.entrySet()) {
     			if (entry != null && entry.getKey() != null && 
     					line.contains(entry.getKey())) {
     				String possibleParameter = getRegexResult(line, entry.getValue());
@@ -277,22 +277,6 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	
 	    	return returnList;
 	    }
-	}
-
-	public static void main(String[] args) {
-//		String testString = "2,4.,66,35.,27..";
-//		
-//		String[] strings = testString.split("(,|\\.+,|\\.+)");
-//		
-//		for (String string:strings) {
-//			if (!string.trim().isEmpty())
-//				System.out.println(string);
-//		}
-//		
-		String string = "this-&gt;lblCcf . System.Web.UI.WebControls.Label.set_Text ( reader -&gt; System.Data.Common.DbDataReader.get_Item((System.String)&quot;CcfUsed&quot;) -&gt; System.Object.ToString() )";
-		String regex = "System\\.Data\\.Common\\.DbDataReader\\.get_Item\\(\\(System\\.String\\)&quot;([^&]+)&quot;";
-		System.out.println(getRegexResult2(string, regex));
-		
 	}
 	
 	public static String getRegexResult2(String targetString, String regex) {

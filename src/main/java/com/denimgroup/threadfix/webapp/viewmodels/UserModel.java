@@ -6,7 +6,7 @@ public class UserModel {
 
 	private User user;
 	
-	private boolean isDeletable, isThisUser;
+	private boolean deletable, thisUser;
 	
 	public User getUser() {
 		return user;
@@ -17,19 +17,19 @@ public class UserModel {
 	}
 
 	public boolean isDeletable() {
-		return isDeletable;
+		return deletable;
 	}
 
 	public void setDeletable(boolean isDeletable) {
-		this.isDeletable = isDeletable;
+		this.deletable = isDeletable;
 	}
 
 	public boolean isThisUser() {
-		return isThisUser;
+		return thisUser;
 	}
 
 	public void setThisUser(boolean isThisUser) {
-		this.isThisUser = isThisUser;
+		this.thisUser = isThisUser;
 	}
 	
 }

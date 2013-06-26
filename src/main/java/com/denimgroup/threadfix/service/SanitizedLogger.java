@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 public class SanitizedLogger {
 	
 	private final Logger log;
-	private static final String myCanonicalClassName = SanitizedLogger.class.getCanonicalName();
+	private static final String MY_CANONICAL_CLASS_NAME = SanitizedLogger.class.getCanonicalName();
 	
 	public SanitizedLogger(String className) {
 		log = Logger.getLogger(className);
@@ -27,35 +27,35 @@ public class SanitizedLogger {
 	 * @param message
 	 */
 	public void debug(String message) {
-		log.log(myCanonicalClassName, Level.DEBUG, sanitize(message), null);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.DEBUG, sanitize(message), null);
 	}
 	
 	public void debug(String message, Throwable ex) {
-		log.log(myCanonicalClassName, Level.DEBUG, sanitize(message), ex);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.DEBUG, sanitize(message), ex);
 	}
 	
 	public void info(String message) {
-		log.log(myCanonicalClassName, Level.INFO, sanitize(message), null);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.INFO, sanitize(message), null);
 	}
 	
 	public void info(String message, Throwable ex) {
-		log.log(myCanonicalClassName, Level.INFO, sanitize(message), ex);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.INFO, sanitize(message), ex);
 	}
 	
 	public void warn(String message) {
-		log.log(myCanonicalClassName, Level.WARN, sanitize(message), null);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.WARN, sanitize(message), null);
 	}
 	
 	public void warn(String message, Throwable ex) {
-		log.log(myCanonicalClassName, Level.WARN, sanitize(message), ex);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.WARN, sanitize(message), ex);
 	}
 	
 	public void error(String message) {
-		log.log(myCanonicalClassName, Level.ERROR, sanitize(message), null);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.ERROR, sanitize(message), null);
 	}
 	
 	public void error(String message, Throwable ex) {
-		log.log(myCanonicalClassName, Level.ERROR, sanitize(message), ex);
+		log.log(MY_CANONICAL_CLASS_NAME, Level.ERROR, sanitize(message), ex);
 	}
 	
 	/**

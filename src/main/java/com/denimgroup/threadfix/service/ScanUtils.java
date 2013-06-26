@@ -23,7 +23,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author mcollins
  *
  */
-public class ScanUtils {
+public final class ScanUtils {
 	
 	private static final SanitizedLogger STATIC_LOGGER = new SanitizedLogger(ScanUtils.class);
 
@@ -84,19 +84,19 @@ public class ScanUtils {
 		xmlReader.setErrorHandler(handler);
 				
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
-		stream = new BufferedInputStream(stream);
+		BufferedInputStream newStream = new BufferedInputStream(stream);
 		
 		// UTF-8 contains 3 characters at the start of a file, which is a problem. = null;
 		// The SAX parser sees them as characters in the prolog and throws an exception.
 		// This code removes them if they are present.
-		stream.mark(4);
+		newStream.mark(4);
 		
-		if (stream.read() == 239) {
-			stream.read(); stream.read();
+		if (newStream.read() == 239) {
+			newStream.read(); newStream.read();
 		} else
-			stream.reset();
+			newStream.reset();
 		
-		Reader fileReader = new InputStreamReader(stream,"UTF-8");
+		Reader fileReader = new InputStreamReader(newStream,"UTF-8");
 		InputSource source = new InputSource(fileReader);
 		source.setEncoding("UTF-8");
 		xmlReader.parse(source);

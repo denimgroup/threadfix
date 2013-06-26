@@ -56,8 +56,9 @@ public class PathTree {
 
 	public List<List<String>> getPrintout() {
 		for (List<String> pathPrint : printout) {
-			for (int i = 0; i < depth - pathPrint.size(); i++)
+			for (int i = 0; i < depth - pathPrint.size(); i++) {
 				pathPrint.add(null);
+			}
 		}
 		return printout;
 	}
@@ -90,8 +91,9 @@ public class PathTree {
 				Node newChild = new Node(pathArray[i]);
 				node.appendChild(newChild);
 				pathList.add(pathArray[i]);
-				if (depth < i + 1)
+				if (depth < i + 1) {
 					depth = i + 1;
+				}
 				node = newChild;
 			}
 		}

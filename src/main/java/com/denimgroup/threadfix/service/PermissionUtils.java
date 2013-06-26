@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 
-public class PermissionUtils {
+public final class PermissionUtils {
 
 	private PermissionUtils() {
 		// This prevents instantiation of this class

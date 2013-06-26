@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  * @author bbeverly
  * 
  */
-public class DefectTrackerFactory {
+public final class DefectTrackerFactory {
 
 	protected static final SanitizedLogger STATIC_LOG = new SanitizedLogger(DefectTrackerFactory.class);
 	

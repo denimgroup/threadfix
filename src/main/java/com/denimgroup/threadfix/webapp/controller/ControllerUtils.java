@@ -2,7 +2,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ControllerUtils {
+public final class ControllerUtils {
 	
 	private static final String SUCCESS_MESSAGE = "successMessage";
 	private static final String ERROR_MESSAGE = "errorMessage";
