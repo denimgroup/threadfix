@@ -1,9 +1,0 @@
-echo "Starting the first database encryption script."
-
-sudo apt-get install ecryptfs-utils -y > /dev/null
-cd ../
-sudo chown tfuser vagrant
-cd tfuser
-ecryptfs-setup-private
-
-echo "Please log out and back in, then execute 'bash encrypt2.sh'"

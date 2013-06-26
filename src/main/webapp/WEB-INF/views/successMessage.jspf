@@ -1,8 +1,0 @@
-<%@ include file="/common/taglibs.jsp"%>
-
-<c:if test="${ not empty successMessage }">
-	<div class="alert alert-success">
-		<button class="close" data-dismiss="alert" type="button">×</button>
-		<c:out value="${ successMessage }"/>
-	</div>
-</c:if>
