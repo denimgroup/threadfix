@@ -87,16 +87,12 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	if ("Name".equals(qName)) {
-	    		getChannelVulnText = true;
-	    	} else if ("Affects".equals(qName)) {
-	    		getUrlText = true;
-	    	} else if ("Details".equals(qName)) {
-	    		getParamText = true;
-	    	} else if ("Severity".equals(qName)) {
-	    		getSeverityText = true;
-	    	} else if ("StartTime".equals(qName)) {
-	    		getDateText = true;
+	    	switch (qName) {
+		    	case "Name"      : getChannelVulnText = true; break;
+		    	case "Affects"   : getUrlText = true;         break;
+		    	case "Details"   : getParamText = true;       break;
+		    	case "Severity"  : getSeverityText = true;    break;
+		    	case "StartTime" : getDateText = true;        break;
 	    	}
 	    }
 
