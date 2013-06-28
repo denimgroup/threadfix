@@ -64,6 +64,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
@@ -275,14 +276,14 @@ public class ScanServiceImpl implements ScanService {
 	public ScanCheckResultBean checkFile(Integer channelId, String fileName) {
 		if (channelId == null || fileName == null) {
 			log.warn("Scan file checking failed because there was null input.");
-			return new ScanCheckResultBean(ChannelImporter.NULL_INPUT_ERROR);
+			return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR);
 		}
 		
 		ApplicationChannel channel = applicationChannelDao.retrieveById(channelId);
 		
 		if (channel == null) {
 			log.warn("The ApplicationChannel could not be loaded.");
-			return new ScanCheckResultBean(ChannelImporter.OTHER_ERROR);
+			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
 		}
 		
 		ChannelImporterFactory factory = new ChannelImporterFactory(
@@ -293,7 +294,7 @@ public class ScanServiceImpl implements ScanService {
 		
 		if (importer == null) {
 			log.warn("No importer could be loaded for the ApplicationChannel.");
-			return  new ScanCheckResultBean(ChannelImporter.OTHER_ERROR);
+			return  new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
 		}
 				
 		importer.setFileName(fileName);
@@ -301,8 +302,8 @@ public class ScanServiceImpl implements ScanService {
 		ScanCheckResultBean result = importer.checkFile();
 		
 		if (result == null || result.getScanCheckResult() == null || 
-				(!result.getScanCheckResult().equals(ChannelImporter.SUCCESSFUL_SCAN)
-				&& !result.getScanCheckResult().equals(ChannelImporter.EMPTY_SCAN_ERROR))) {
+				(!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
+				&& !result.getScanCheckResult().equals(ScanImportStatus.EMPTY_SCAN_ERROR))) {
 			importer.deleteScanFile();
 		}
 		
@@ -310,15 +311,13 @@ public class ScanServiceImpl implements ScanService {
 		
 		if (scanQueueDate != null && result.getTestDate() != null && 
 				!result.getTestDate().after(scanQueueDate)) {
-			String status = "There is a more recent " + channel.getChannelType().getName() + 
-								" scan on the queue for this application.";
-			log.warn(status);
-			return new ScanCheckResultBean(status, result.getTestDate());
+			log.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
+			return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());
 		}
 
 		if (result == null) {
 			log.warn("The checkFile() method of the importer returned null, check to make sure that it is implemented correctly.");
-			return new ScanCheckResultBean(ChannelImporter.OTHER_ERROR);
+			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
 		} else {
 			return result;
 		}
@@ -511,7 +510,7 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
 		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
-		addToMap(ChannelType.NTO_SPIDER, "VulnSummary", "VULNLIST");
+		addToMap(ChannelType.NTO_SPIDER, "VulnSummary");
 		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
 		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
 		addToMap(ChannelType.ZAPROXY, "OWASPZAPReport", "site", "alerts");

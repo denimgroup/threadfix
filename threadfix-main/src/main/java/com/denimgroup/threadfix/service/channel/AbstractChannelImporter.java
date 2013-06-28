@@ -100,7 +100,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	// setFileName.
 	protected InputStream inputStream;
 	
-	protected String testStatus;
+	protected ScanImportStatus testStatus;
 
 	protected ChannelType channelType;
 	protected ApplicationChannel applicationChannel;
@@ -646,14 +646,14 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		log.debug("Starting SAX Test.");
 		
 		if (inputStream == null) {
-			log.warn(NULL_INPUT_ERROR);
-			return new ScanCheckResultBean(NULL_INPUT_ERROR);
+			log.warn(ScanImportStatus.NULL_INPUT_ERROR.toString());
+			return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR);
 		}
 		
 		if (doSAXExceptionCheck) {
 			if (ScanUtils.isBadXml(inputStream)) {
 				log.warn("Bad XML format - ensure correct, uniform encoding.");
-				return new ScanCheckResultBean(BADLY_FORMED_XML);
+				return new ScanCheckResultBean(ScanImportStatus.BADLY_FORMED_XML);
 			}
 			closeInputStream(inputStream);
 			try {
@@ -666,78 +666,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		ScanUtils.readSAXInput(handler, FILE_CHECK_COMPLETED, inputStream);
 		closeInputStream(inputStream);
 		
-		log.info(testStatus);
+		log.info(testStatus.toString());
 		return new ScanCheckResultBean(testStatus, testDate);
 	}
 
 	/**
-//<<<<<<< HEAD
-//	 * This method checks through the XML with a blank parser to determine
-//	 * whether SAX parsing will fail due to an exception.
-//	 */
-//	protected boolean isBadXml(InputStream inputStream) {
-//		try {
-//			readSAXInput(new DefaultHandler());
-//		} catch (SAXException e) {
-//			log.warn("Trying to read XML returned the error " + e.getMessage());
-//			return true;
-//		} catch (IOException e) {
-//			log.warn("Trying to read XML returned the error " + e.getMessage());
-//			return true;
-//		} finally {
-//			closeInputStream(inputStream);
-//		}
-//
-//		return false;
-//	}
-//	
-//	/**
-//	 *  This method with one argument sets up the SAXParser and inputStream correctly
-//	 * and executes the parsing. With two it adds a completion code and exception handling.
-//	 * @param handler
-//	 * @param completionCode
-//	 */
-//	protected void readSAXInput(DefaultHandler handler, String completionCode) {
-//		try {
-//			readSAXInput(handler);
-//		} catch (IOException e) {
-//			log.error("Problems reading file.", e);
-//		} catch (SAXException e) {
-//			if (!e.getMessage().equals(completionCode)) {
-//				log.warn("SAX parsing problems.", e);
-//			}
-//		} finally {
-//			closeInputStream(inputStream);
-//		}
-//	}
-//	
-//	protected void readSAXInput(DefaultHandler handler) throws SAXException, IOException {
-//		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-//		xmlReader.setContentHandler(handler);
-//		xmlReader.setErrorHandler(handler);
-//				
-//		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
-//		inputStream = new BufferedInputStream(inputStream);
-//		
-//		// UTF-8 contains 3 characters at the start of a file, which is a problem. = null;
-//		// The SAX parser sees them as characters in the prolog and throws an exception.
-//		// This code removes them if they are present.
-//		inputStream.mark(4);
-//		
-//		if (inputStream.read() == 239) {
-//			inputStream.read(); inputStream.read();
-//		} else
-//			inputStream.reset();
-//		
-//		Reader fileReader = new InputStreamReader(inputStream,"UTF-8");
-//		InputSource source = new InputSource(fileReader);
-//		source.setEncoding("UTF-8");
-//		xmlReader.parse(source);
-//	}
-//	
-	/**
-//=======
-//>>>>>>> easy-start
 	 * This method requires that the AbstractChannelImporter fields
 	 * applicationChannel and testDate have valid values.
 	 * 
@@ -745,9 +678,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * or a success code.
 	 * @return
 	 */
-	protected String checkTestDate() {
+	protected ScanImportStatus checkTestDate() {
 		if (applicationChannel == null || testDate == null)
-			return OTHER_ERROR;
+			return ScanImportStatus.OTHER_ERROR;
 		
 		List<Scan> scanList = applicationChannel.getScanList();
 		
@@ -756,14 +689,14 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 				if (scan != null && scan.getImportTime() != null) {
 					int result = scan.getImportTime().compareTo(testDate);
 					if (result == 0)
-						return DUPLICATE_ERROR;
+						return ScanImportStatus.DUPLICATE_ERROR;
 					else if (result > 0)
-						return OLD_SCAN_ERROR;
+						return ScanImportStatus.OLD_SCAN_ERROR;
 				}
 			}
 		}
 		
-		return SUCCESSFUL_SCAN;
+		return ScanImportStatus.SUCCESSFUL_SCAN;
 	}
 
 	/**

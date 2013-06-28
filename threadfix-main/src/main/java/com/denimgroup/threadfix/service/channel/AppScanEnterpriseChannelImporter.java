@@ -182,13 +182,13 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	correctFormat = report && control && row;
 	    	
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	
 	    	if (testStatus == null) {
 	    		if (!hasFindings)
-		    		testStatus = EMPTY_SCAN_ERROR;
+		    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    		else 
-	    			testStatus = SUCCESSFUL_SCAN;
+	    			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    	}
 	    }
 

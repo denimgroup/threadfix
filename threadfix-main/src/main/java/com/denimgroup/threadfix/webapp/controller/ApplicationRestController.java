@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.channel.ChannelImporter;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/rest/teams/{teamId}/applications")
@@ -224,10 +224,10 @@ public class ApplicationRestController extends RestController {
 		
 		ScanCheckResultBean returnValue = scanService.checkFile(channelId, fileName);
 		
-		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
+		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
 			Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, fileName);
 			return scan;
-		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
+		} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
 			return "You attempted to upload an empty scan.";
 		} else {
 			return "The scan upload attempt returned this message: " + returnValue.getScanCheckResult();

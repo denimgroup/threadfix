@@ -185,18 +185,18 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 		
 	    private void setTestStatus() {
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 	    
-	    private String checkTestDate() {
+	    private ScanImportStatus checkTestDate() {
 			if (applicationChannel == null || testDate == null)
-				return OTHER_ERROR;
+				return ScanImportStatus.OTHER_ERROR;
 			
 			List<Scan> scanList = applicationChannel.getScanList();
 			
@@ -205,9 +205,9 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 					int result = scan.getImportTime().compareTo(testDate);
 					
 					if (result == 0) {
-						return DUPLICATE_ERROR;
+						return ScanImportStatus.DUPLICATE_ERROR;
 					} else if (result > 0) {
-						return OLD_SCAN_ERROR;
+						return ScanImportStatus.OLD_SCAN_ERROR;
 					} else if (scan.getImportTime().getTimeInMillis() % 1000 == 0
 							&& (scan.getImportTime().getTimeInMillis() / 1000) ==
 							   (testDate.getTimeInMillis() / 1000)){
@@ -215,13 +215,13 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 						// MySQL doesn't support milliseconds. FindBugs does. 
 						// This should make it work.
 						
-						return DUPLICATE_ERROR;
+						return ScanImportStatus.DUPLICATE_ERROR;
 					}
 				}
 			}
 			
 			log.info("Scan time compare returning success.");
-			return SUCCESSFUL_SCAN;
+			return ScanImportStatus.SUCCESSFUL_SCAN;
 		}
 
 	    ////////////////////////////////////////////////////////////////////
