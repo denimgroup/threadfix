@@ -9,13 +9,12 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 	
 	// TODO figure out the best way to get the application root into this class
 	// I'm guessing it'll be in the Application
-	String applicationRoot = "/wavsep";
 	
-	private ProjectDirectory projectDirectory = null;
-	private File aboveWebInf = null;
+	private final ProjectDirectory projectDirectory;
+	private final File aboveWebInf;
 
-	public JSPURLCalculator(ServletMappings mappings, File workTree) {
-		super(mappings, workTree);
+	public JSPURLCalculator(ServletMappings mappings, File workTree, String applicationName) {
+		super(mappings, workTree, applicationName);
 		projectDirectory = new ProjectDirectory(workTree);
 		aboveWebInf = findDirectoryAboveWebInf();
 	}
@@ -55,7 +54,8 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null &&
 					finding.getSurfaceLocation().getPath().contains(applicationRoot)) {
 				String path = finding.getSurfaceLocation().getPath();
-				finding.getSurfaceLocation().setPath(path.substring(path.indexOf(applicationRoot)));
+				finding.getSurfaceLocation().setPath(path.substring(
+						path.indexOf(applicationRoot) + applicationRoot.length()));
 				match = true;
 			}
 			
@@ -70,9 +70,8 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 						String strippedPath = elementPath.substring(elementPath.indexOf(topDirectory) + topDirectory.length());
 						
 						if (finding.getSurfaceLocation() != null) {
-							finding.getSurfaceLocation().setPath(applicationRoot + strippedPath);
+							finding.getSurfaceLocation().setPath(strippedPath);
 						}
-						
 						
 						System.out.println("stripped path = " + strippedPath);
 						

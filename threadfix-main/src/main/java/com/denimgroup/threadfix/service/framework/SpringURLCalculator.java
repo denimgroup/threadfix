@@ -6,8 +6,9 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 public class SpringURLCalculator extends AbstractURLCalculator {
 
-	public SpringURLCalculator(ServletMappings mappings, File workTree) {
-		super(mappings, workTree);
+	public SpringURLCalculator(ServletMappings mappings, File workTree,
+			String applicationRoot) {
+		super(mappings, workTree, applicationRoot);
 	}
 
 	@Override

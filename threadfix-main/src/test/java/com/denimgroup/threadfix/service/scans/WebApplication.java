@@ -4,9 +4,10 @@ import java.io.File;
 import java.net.URL;
 
 public enum WebApplication {
+	
 	WAVSEP("wavsep", "http://satgit2.denimgroup.com/sbir/wavsep.git"), 
-	BODGEIT("bodgeit", null), 
-	PETCLINIC("petclinic", null);
+	BODGEIT("bodgeit", "http://satgit2.denimgroup.com/sbir/bodgeit.git"), 
+	PETCLINIC("petclinic", "http://satgit2.denimgroup.com/sbir/petclinic.git");
 	
 	WebApplication(String name, String url) { 
 		this.name = name; 

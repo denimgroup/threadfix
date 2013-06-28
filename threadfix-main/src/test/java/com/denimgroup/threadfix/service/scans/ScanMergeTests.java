@@ -74,7 +74,7 @@ public class ScanMergeTests extends BaseRestTest {
 		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(getRandomString(23))));
 		Integer appId  = getId(getJSONObject(GOOD_CLIENT.createApplication(
 			teamId.toString(), 
-			application.getName() + getRandomString(10), 
+			application.getName(), 
 			application.getUrl())));
 		
 		uploadScans(appId, application.getFPRPath(), application.getAppscanXMLPath());

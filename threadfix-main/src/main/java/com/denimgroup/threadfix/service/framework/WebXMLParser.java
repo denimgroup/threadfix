@@ -74,7 +74,9 @@ public class WebXMLParser {
 			if (qName.equals("servlet-mapping")) {
 				mappings.add(new UrlPatternMapping(servletName, urlPattern));
 			} else if (qName.equals("servlet")) {
-				servlets.add(new ClassMapping(servletName, servletClass));
+				if (servletName != null && servletClass != null) {
+					servlets.add(new ClassMapping(servletName, servletClass));
+				}
 			} else if (qName.equals("servlet-name")) {
 				servletName = builder.toString();
 				builder = null;

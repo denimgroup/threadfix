@@ -10,6 +10,7 @@ public abstract class AbstractURLCalculator {
 
 	protected final ServletMappings mappings;
 	protected final File workTree;
+	protected final String applicationRoot;
 	
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	
@@ -18,7 +19,7 @@ public abstract class AbstractURLCalculator {
 	 * @param mappings
 	 * @param workTree
 	 */
-	public AbstractURLCalculator(ServletMappings mappings, File workTree) {
+	public AbstractURLCalculator(ServletMappings mappings, File workTree, String applicationRoot) {
 		if (mappings == null) {
 			throw new IllegalArgumentException("Servlet Mappings cannot be null.");
 		}
@@ -29,6 +30,7 @@ public abstract class AbstractURLCalculator {
 		
 		this.mappings = mappings;
 		this.workTree = workTree;
+		this.applicationRoot = "/" + applicationRoot;
 		
 		if (!this.workTree.exists()) {
 			log.warn("File doesn't exist.");

@@ -132,11 +132,6 @@ public class ServletMappings {
 	}
 	
 	public ApplicationType guessApplicationType() {
-		if ((allServletMappings == null || allServletMappings.size() == 0) &&
-				(servlets == null || servlets.size() == 0)) {
-			// Not using JSPs
-			return ApplicationType.JSP;
-		}
 		
 		for (ClassMapping mapping : servlets) {
 			if (mapping.getClassWithPackage().equals(
@@ -148,10 +143,10 @@ public class ServletMappings {
 				return ApplicationType.SPRING;
 			}
 		}
-		
-		// For now, let's assume it's a servlet-driven app if it's got multiple servlets 
-		// and not a Spring dispatcher servlet.
-		return ApplicationType.SERVLET;
+
+		// Since we're only looking at two types of applications, this logic is pretty simple
+		// In a full-blown implementation, this method would be able to return lots of other types too.
+		return ApplicationType.JSP;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
