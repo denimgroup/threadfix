@@ -46,11 +46,15 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, String> tagMap = new HashMap<String, String>();
 	static {
-		tagMap.put("VULNTYPE", CHANNEL_VULN_KEY);
-		tagMap.put("ATTACKSCORE", CHANNEL_SEVERITY_KEY);
-		tagMap.put("PARAMETERNAME", PARAMETER_KEY);
-		tagMap.put("NORMALIZEDURL", PATH_KEY);
+		tagMap.put("vulntype", CHANNEL_VULN_KEY);
+		tagMap.put("attackscore", CHANNEL_SEVERITY_KEY);
+		tagMap.put("parametername", PARAMETER_KEY);
+		tagMap.put("normalizedurl", PATH_KEY);
 	}
+	
+	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate", 
+			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
+			VULN_SUMMARY = "VulnSummary";
 
 	@Autowired
 	public NTOSpiderChannelImporter(ChannelTypeDao channelTypeDao,
@@ -91,22 +95,22 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	if (date == null && "SCANDATE".equals(qName)) {
+	    	if (date == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
-	    	} else if ("VULN".equals(qName)) {
+	    	} else if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		findingMap = new HashMap<String, String>();
 	    		inFinding = true;
-	    	} else if (inFinding && tagMap.containsKey(qName)) {
-	    		itemKey = tagMap.get(qName);
+	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
+	    		itemKey = tagMap.get(qName.toLowerCase());
 	    	}
 	    }
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if ("VULN".equals(qName)) {
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		
 	    		if (findingMap.get(PARAMETER_KEY) != null && 
-	    				findingMap.get(PARAMETER_KEY).equals("N/A")) {
+	    				findingMap.get(PARAMETER_KEY).equals(N_A)) {
 	    			findingMap.remove(PARAMETER_KEY);
 	    		}
 	    		
@@ -125,7 +129,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
+	    			date = getCalendarFromString(DATE_PATTERN, tempDateString);
 	    		}
 	    		getDate = false;
 	    	}
@@ -170,29 +174,29 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	    @Override
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if ("VULNLIST".equals(qName)) {
+	    	if (VULN_LIST.equalsIgnoreCase(qName) || VULN_SUMMARY.equalsIgnoreCase(qName)) {
 	    		correctFormat = true;
 	    	}
 	    	
-	    	if (testDate == null && "SCANDATE".equals(qName)) {
+	    	if (testDate == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
 	    	}
 	    }
 	    
 	    @Override
-	    public void endElement (String uri, String name, String qName) throws SAXException {	    	
+	    public void endElement (String uri, String name, String qName) throws SAXException { 	
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
+	    			testDate = getCalendarFromString(DATE_PATTERN, tempDateString);
 	    		}
 	    		
 	    		hasDate = testDate != null;
 	    		getDate = false;
 	    	}
 	    	
-	    	if ("VULN".equals(qName)) {
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
 	    		throw new SAXException(FILE_CHECK_COMPLETED);

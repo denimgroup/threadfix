@@ -511,6 +511,7 @@ public class ScanServiceImpl implements ScanService {
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
 		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
+		addToMap(ChannelType.NTO_SPIDER, "VulnSummary", "VULNLIST");
 		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
 		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
 		addToMap(ChannelType.ZAPROXY, "OWASPZAPReport", "site", "alerts");
@@ -522,9 +523,10 @@ public class ScanServiceImpl implements ScanService {
 	
 	private String getType(List<String> scanTags) {
 		
-		for (Entry<String, String[]> entry : map)
-		if (matches(scanTags, entry.getValue())) {
-			return entry.getKey();
+		for (Entry<String, String[]> entry : map) {
+			if (matches(scanTags, entry.getValue())) {
+				return entry.getKey();
+			}
 		}
 		
 		return null;
