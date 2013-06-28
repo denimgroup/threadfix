@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +45,13 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class ArachniChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, String> tagMap = new HashMap<String, String>();
+	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
-		tagMap.put("name", CHANNEL_VULN_KEY);
-		tagMap.put("code", CHANNEL_SEVERITY_KEY);
-		tagMap.put("variable", PARAMETER_KEY);
-		tagMap.put("var", PARAMETER_KEY);
-		tagMap.put("url", PATH_KEY);
+		tagMap.put("name", FindingKey.VULN_CODE);
+		tagMap.put("code", FindingKey.SEVERITY_CODE);
+		tagMap.put("variable", FindingKey.PARAMETER);
+		tagMap.put("var", FindingKey.PARAMETER);
+		tagMap.put("url", FindingKey.PATH);
 	}
 	
 	// Since the severity mappings are static and not included in the XML output,
@@ -120,9 +121,9 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		private boolean getDate   = false;
 		private boolean inFinding = false;
 		
-		private String itemKey = null;
+		private FindingKey itemKey = null;
 	
-		private Map<String, String> findingMap = null;
+		private Map<FindingKey, String> findingMap = null;
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -142,7 +143,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    	if ("finish_datetime".equals(qName)) {
 	    		getDate = true;
 	    	} else if ("issue".equals(qName)) {
-	    		findingMap = new HashMap<String, String>();
+	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
@@ -154,13 +155,13 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    	if ("issue".equals(qName)) {
 	    		// TODO instead look into why this error occurs
 	    		
-	    		if (findingMap.get(CHANNEL_VULN_KEY) != null && 
-	    				findingMap.get(CHANNEL_VULN_KEY).equals("Cross-Site Scripting in HTML ")) {
-	    			findingMap.put(CHANNEL_VULN_KEY, 
+	    		if (findingMap.get(FindingKey.VULN_CODE) != null && 
+	    				findingMap.get(FindingKey.VULN_CODE).equals("Cross-Site Scripting in HTML ")) {
+	    			findingMap.put(FindingKey.VULN_CODE, 
 	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
 	    		}
 	    		
-	    		findingMap.put(CHANNEL_SEVERITY_KEY, severityMap.get(findingMap.get(CHANNEL_VULN_KEY)));
+	    		findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
 
 	    		Finding finding = constructFinding(findingMap);
 	    		

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,12 +45,12 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, String> tagMap = new HashMap<String, String>();
+	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
-		tagMap.put("vulntype", CHANNEL_VULN_KEY);
-		tagMap.put("attackscore", CHANNEL_SEVERITY_KEY);
-		tagMap.put("parametername", PARAMETER_KEY);
-		tagMap.put("normalizedurl", PATH_KEY);
+		tagMap.put("vulntype",      FindingKey.VULN_CODE);
+		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
+		tagMap.put("parametername", FindingKey.PARAMETER);
+		tagMap.put("normalizedurl", FindingKey.PATH);
 	}
 	
 	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate", 
@@ -76,9 +77,9 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		private boolean getDate   = false;
 		private boolean inFinding = false;
 		
-		private String itemKey = null;
+		private FindingKey itemKey = null;
 	
-		private Map<String, String> findingMap = null;
+		private Map<FindingKey, String> findingMap = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -98,7 +99,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    	if (date == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
 	    	} else if (VULN_TAG.equalsIgnoreCase(qName)) {
-	    		findingMap = new HashMap<String, String>();
+	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
 	    		itemKey = tagMap.get(qName.toLowerCase());
@@ -109,9 +110,9 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		
-	    		if (findingMap.get(PARAMETER_KEY) != null && 
-	    				findingMap.get(PARAMETER_KEY).equals(N_A)) {
-	    			findingMap.remove(PARAMETER_KEY);
+	    		if (findingMap.get(FindingKey.PARAMETER) != null && 
+	    				findingMap.get(FindingKey.PARAMETER).equals(N_A)) {
+	    			findingMap.remove(FindingKey.PARAMETER);
 	    		}
 	    		
 	    		Finding finding = constructFinding(findingMap);

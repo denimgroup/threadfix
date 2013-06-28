@@ -92,11 +92,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
-	// These keys and the new constructFinding() method can be used to write new importers more quickly.
-	protected static final String CHANNEL_VULN_KEY = "channelVulnerabilityCode";
-	protected static final String PATH_KEY = "path";
-	protected static final String PARAMETER_KEY = "parameter";
-	protected static final String CHANNEL_SEVERITY_KEY = "channelSeverityCode";
+	protected enum FindingKey {
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID
+	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
 	// setFileName.
@@ -250,12 +248,14 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * important common information that findings have.
 	 */
 	
-	protected Finding constructFinding(Map<String, String> findingMap) {
+	protected Finding constructFinding(Map<FindingKey, String> findingMap) {
 		if (findingMap == null || findingMap.size() == 0)
 			return null;
 		
-		return constructFinding(findingMap.get(PATH_KEY), findingMap.get(PARAMETER_KEY), 
-				findingMap.get(CHANNEL_VULN_KEY), findingMap.get(CHANNEL_SEVERITY_KEY));
+		return constructFinding(findingMap.get(FindingKey.PATH), 
+				findingMap.get(FindingKey.PARAMETER), 
+				findingMap.get(FindingKey.VULN_CODE), 
+				findingMap.get(FindingKey.SEVERITY_CODE)); 
 	}
 	
 	/**

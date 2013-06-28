@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.remoteprovider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,7 +210,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		public Finding finding = new Finding();
 		
-		private Map<String, String> map = new HashMap<String, String>();
+		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
 		
 		private boolean creatingVuln = false;
 		
@@ -219,7 +220,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			if (finding == null) {
 				log.warn("Finding was null.");
 			} else {
-				finding.setNativeId(map.get("nativeId"));
+				finding.setNativeId(map.get(FindingKey.NATIVE_ID));
 			}
 			
 			saxFindingList.add(finding);
@@ -231,21 +232,21 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		creatingVuln = true;
 	    		map.clear();
 
-	    		map.put("nativeId", atts.getValue("id"));
-	    		map.put(CHANNEL_VULN_KEY, atts.getValue("class"));
-	    		map.put(CHANNEL_SEVERITY_KEY, atts.getValue("severity"));
+	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
+	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
+	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
 	    	} else if (creatingVuln) {
 		    	if (qName.equals("request")) {
-		    		map.put(PATH_KEY, atts.getValue("url"));
+		    		map.put(FindingKey.PATH, atts.getValue("url"));
 		    	} else if (qName.equals("param")) {
-		    		map.put(PARAMETER_KEY, atts.getValue("name"));
+		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
 		    	}
 		    	
-		    	if (map.get("nativeId") != null &&
-		    			map.get(CHANNEL_VULN_KEY) != null &&
-		    			map.get(CHANNEL_SEVERITY_KEY) != null &&
-		    			map.get(PATH_KEY) != null &&
-		    			map.get(PARAMETER_KEY) != null) {
+		    	if (map.get(FindingKey.NATIVE_ID) != null &&
+		    			map.get(FindingKey.VULN_CODE) != null &&
+		    			map.get(FindingKey.SEVERITY_CODE) != null &&
+		    			map.get(FindingKey.PATH) != null &&
+		    			map.get(FindingKey.PARAMETER) != null) {
 		    		creatingVuln = false;
 		    		addFinding();
 		    	}
