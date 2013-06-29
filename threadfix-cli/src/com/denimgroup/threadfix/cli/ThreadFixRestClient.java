@@ -138,5 +138,12 @@ public class ThreadFixRestClient {
 				new String[] {  util.getKey(), applicationChannelId });
 		return result;
 	}
+	
+	public String queueScan(String applicationId, String scannerType) {
+		String result = util.httpPost(util.getUrl() + "/tasks/queueScan",
+				new String[] { "apiKey",       "applicationId",		"scannerType" },
+				new String[] {  util.getKey(), applicationId, scannerType });
+		return(result);
+	}
 
 }

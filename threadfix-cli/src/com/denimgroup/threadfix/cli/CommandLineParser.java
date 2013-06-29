@@ -53,6 +53,14 @@ public class CommandLineParser {
 				.create("s");
 		options.addOption(set);
 		
+		Option queueScan = OptionBuilder.withArgName("property> <value")
+				.withValueSeparator(' ')
+				.hasArgs(2)
+				.withLongOpt("queueScan")
+				.withDescription("Queue a scan for the given applicationId with the given scanner type")
+				.create("q");
+		options.addOption(queueScan);
+		
 		Option createTeam = OptionBuilder.withArgName("name")
 				.hasArg()
 				.withLongOpt("create-team")
@@ -199,6 +207,14 @@ public class CommandLineParser {
 			} else if (cmd.hasOption("teams")) {
 				System.out.println("Getting all teams.");
 				System.out.println(client.getAllTeams());
+				
+			} else if (cmd.hasOption("q")) {
+				String[] queueArgs = cmd.getOptionValues("q");
+				if (queueArgs.length != 2) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Queueing a scan.");
+				System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
 				
 			} else if (cmd.hasOption("u")) {
 				String[] uploadArgs = cmd.getOptionValues("u");

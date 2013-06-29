@@ -51,6 +51,7 @@ public class Application extends AuditableEntity {
 	
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
+	private List<ScanQueueTask> scanQueueTasks;
 
 	public static final int NAME_LENGTH = 60;
 	public static final int URL_LENGTH = 255;
@@ -246,6 +247,15 @@ public class Application extends AuditableEntity {
 
 	public void setChannelList(List<ApplicationChannel> channelList) {
 		this.channelList = channelList;
+	}
+	
+	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+	public List<ScanQueueTask> getScanQueueTasks() {
+		return(this.scanQueueTasks);
+	}
+	
+	public void setScanQueueTasks(List<ScanQueueTask> scanQueueTasks) {
+		this.scanQueueTasks = scanQueueTasks;
 	}
 
 	@OneToMany(mappedBy = "application")
