@@ -53,7 +53,7 @@ public class CommandLineParser {
 				.create("s");
 		options.addOption(set);
 		
-		Option queueScan = OptionBuilder.withArgName("property> <value")
+		Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
 				.withValueSeparator(' ')
 				.hasArgs(2)
 				.withLongOpt("queueScan")
