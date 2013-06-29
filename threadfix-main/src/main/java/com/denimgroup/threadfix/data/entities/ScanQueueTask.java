@@ -46,6 +46,12 @@ public class ScanQueueTask extends AuditableEntity {
 
 	private static final long serialVersionUID = 886166865576713403L;
 	
+	public static final int STATUS_QUEUED = 1;
+	public static final int STATUS_ASSIGNED = 2;
+	public static final int STATUS_COMLETE_SUCCESSFUL = 3;
+	public static final int STATUS_COMPLETE_DELETED = 4;
+	public static final int STATUS_COMPLETE_TIMEDOUT = 5;
+	
 	private int taskId;
 	private Application application;
 	private List<ScanStatus> scanStatuses;

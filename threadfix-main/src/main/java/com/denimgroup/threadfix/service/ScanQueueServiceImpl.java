@@ -52,8 +52,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			myCal.add(Calendar.HOUR, 12);
 			myTask.setTimeoutTime(myCal.getTime());
 			myTask.setScanner(scannerType);
-			//	TOFIX - Actually make statuses
-			myTask.setStatus(1);
+			myTask.setStatus(ScanQueueTask.STATUS_QUEUED);
 			myTask.setScanAgentInfo("Junk Scan Agent Info");
 			
 			scanQueueTaskDao.saveOrUpdate(myTask);
@@ -64,6 +63,16 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		}
 		
 		return(retVal);
+	}
+	
+	/**
+	 * Run through all items in the scan queue and clear out any scans
+	 * that have timed out.
+	 * 
+	 * TOFIX - Implement me!
+	 */
+	private void cleanScanQueue() {
+		//	TOFIX - Implement me!
 	}
 	
 	/**
