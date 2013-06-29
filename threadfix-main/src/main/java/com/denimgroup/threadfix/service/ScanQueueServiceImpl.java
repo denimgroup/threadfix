@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 @Service
 @Transactional(readOnly = false)
 public class ScanQueueServiceImpl implements ScanQueueService {
+	
+	protected final SanitizedLogger log = new SanitizedLogger(ScanQueueServiceImpl.class);
 
 	private ApplicationDao applicationDao;
 	private ChannelTypeDao channelTypeDao;
@@ -55,8 +58,9 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			
 			scanQueueTaskDao.saveOrUpdate(myTask);
 			retVal = myTask.getId();
+			log.info("Created ScanQueueTask with id: " + retVal);
 		} else {
-			//	TOFIX - Log this errors
+			log.warn("Invalid applicationId of " + applicationId + " provided. No scan queued");
 		}
 		
 		return(retVal);
