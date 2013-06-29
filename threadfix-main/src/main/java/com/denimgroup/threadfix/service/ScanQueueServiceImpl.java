@@ -54,6 +54,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			myTask.setScanAgentInfo("Junk Scan Agent Info");
 			
 			scanQueueTaskDao.saveOrUpdate(myTask);
+			retVal = myTask.getId();
 		} else {
 			//	TOFIX - Log this errors
 		}
