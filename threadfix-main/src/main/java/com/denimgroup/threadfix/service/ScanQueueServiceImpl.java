@@ -2,8 +2,8 @@ package com.denimgroup.threadfix.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +61,15 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		} else {
 			log.warn("Invalid applicationId of " + applicationId + " provided. No scan queued");
 		}
+		
+		return(retVal);
+	}
+	
+	@Override
+	public List<ScanQueueTask> loadAll() {
+		List<ScanQueueTask> retVal;
+		
+		retVal = scanQueueTaskDao.retrieveAll();
 		
 		return(retVal);
 	}
