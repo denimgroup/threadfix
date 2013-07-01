@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,6 +46,10 @@ public class Defect extends AuditableEntity {
 	
 	public static final int STATUS_LENGTH = 255;
 	public static final int URL_LENGTH = 255;
+	
+	// TODO make this smarter
+	public final static Set<String> OPEN_CODES   = new HashSet<>(Arrays.asList(new String[] { "Active", "Open", "New" }));
+	public final static Set<String> CLOSED_CODES = new HashSet<>(Arrays.asList(new String[] { "Closed", "Resolved" }));
 
 	public enum TrackerType {
 		BUGZILLA, JIRA
