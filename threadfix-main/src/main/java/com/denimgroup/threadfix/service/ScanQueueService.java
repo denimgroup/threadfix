@@ -9,4 +9,8 @@ public interface ScanQueueService {
 	int queueScan(int applicationId, String scannerType);
 	
 	List<ScanQueueTask> loadAll();
+	
+	ScanQueueTask retrieveById(int scanQueueTaskId);
+	
+	boolean taskStatusUpdate(int taskId, String message);
 }

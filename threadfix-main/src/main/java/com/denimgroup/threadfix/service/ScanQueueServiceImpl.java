@@ -15,6 +15,7 @@ import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.ScanStatus;
 
 @Service
 @Transactional(readOnly = false)
@@ -46,7 +47,8 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		if(application != null) {
 			ScanQueueTask myTask = new ScanQueueTask();
 			myTask.setApplication(application);
-			myTask.setCreateTime(new Date());
+			Date now = new Date();
+			myTask.setCreateTime(now);
 			Calendar myCal = Calendar.getInstance();
 			//	TOFIX - Actually calculate the max finish time
 			myCal.add(Calendar.HOUR, 12);
@@ -54,6 +56,12 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			myTask.setScanner(scannerType);
 			myTask.setStatus(ScanQueueTask.STATUS_QUEUED);
 			myTask.setScanAgentInfo("Junk Scan Agent Info");
+			
+			ScanStatus scanStatus = new ScanStatus();
+			scanStatus.setTimestamp(now);
+			scanStatus.setMessage("Scan queued at");
+			
+			myTask.addScanStatus(scanStatus);
 			
 			scanQueueTaskDao.saveOrUpdate(myTask);
 			retVal = myTask.getId();
@@ -65,12 +73,34 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		return(retVal);
 	}
 	
+	public boolean taskStatusUpdate(int taskId, String message) {
+		boolean retVal = false;
+		
+		ScanQueueTask task = this.scanQueueTaskDao.retrieveById(taskId);
+		if(task != null) {
+			ScanStatus status = new ScanStatus();
+			status.setTimestamp(new Date());
+			status.setMessage(message);
+			task.addScanStatus(status);
+			this.scanQueueTaskDao.saveOrUpdate(task);
+			retVal = true;
+		}
+		
+		return(retVal);
+	}
+	
 	@Override
 	public List<ScanQueueTask> loadAll() {
 		List<ScanQueueTask> retVal;
 		
 		retVal = scanQueueTaskDao.retrieveAll();
 		
+		return(retVal);
+	}
+	
+	@Override
+	public ScanQueueTask retrieveById(int scanQueueTaskId) {
+		ScanQueueTask retVal = scanQueueTaskDao.retrieveById(scanQueueTaskId);
 		return(retVal);
 	}
 	

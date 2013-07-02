@@ -27,7 +27,13 @@
 			<tbody>
 				<c:forEach items="${scanQueueTaskList}" var="scanQueueTask"> 
 					<tr>
-						<td><c:out value="${scanQueueTask.id}" /></td> 
+						<td>
+							<spring:url value="/configuration/scanqueue/{scanQueueTaskId}/detail" var="detailUrl">
+								<spring:param name="scanQueueTaskId" value="${ scanQueueTask.id }" />
+							</spring:url>
+							<a href='<c:out value="${detailUrl}" />'><c:out value="${scanQueueTask.id}" />
+							</a>
+						</td> 
 						<td><c:out value="${scanQueueTask.application.name}" /></td>
 						<td><c:out value="${scanQueueTask.status}" /></td>
 						<td><c:out value="${scanQueueTask.scanner}" /></td>

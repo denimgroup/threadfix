@@ -8,4 +8,6 @@ public interface ScanQueueTaskDao {
 	void saveOrUpdate(ScanQueueTask scanQueueTask);
 	
 	List<ScanQueueTask> retrieveAll();
+	
+	ScanQueueTask retrieveById(int scanQueueTaskId);
 }

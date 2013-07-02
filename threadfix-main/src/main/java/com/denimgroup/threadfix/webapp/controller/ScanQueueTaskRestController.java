@@ -16,7 +16,8 @@ import com.denimgroup.threadfix.service.ScanQueueService;
 @RequestMapping("/rest/tasks/")
 public class ScanQueueTaskRestController extends RestController {
 	
-	public final static String QUEUE_SCAN = "queueScan";
+	public final static String OPERATION_QUEUE_SCAN = "queueScan";
+	public final static String OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate";
 	
 	private ScanQueueService scanQueueService;
 	
@@ -44,12 +45,30 @@ public class ScanQueueTaskRestController extends RestController {
 		log.info("Received REST request for a queueing a new " + scannerType
 					+ " scan for applicationId " + applicationId);
 
-		String result = checkKey(request, QUEUE_SCAN);
+		String result = checkKey(request, OPERATION_QUEUE_SCAN);
 		if (!result.equals(API_KEY_SUCCESS)) {
 			return result;
 		}
 
 		retVal = scanQueueService.queueScan(applicationId, scannerType);
+		
+		return(retVal);
+	}
+	
+	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
+	public @ResponseBody Object taskStatusUpdate(HttpServletRequest request,
+			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
+			@RequestParam("message") String message) {
+		boolean retVal = false;
+		
+		log.info("Reeived a REST request to update the status of scan " + scanQueueTaskId);
+		
+		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
 		
 		return(retVal);
 	}

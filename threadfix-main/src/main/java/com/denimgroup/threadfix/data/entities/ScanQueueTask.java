@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -174,5 +175,12 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	public void setScanAgentInfo(String scanAgentInfo) {
 		this.scanAgentInfo = scanAgentInfo;
+	}
+	
+	public void addScanStatus(ScanStatus status) {
+		if(this.scanStatuses == null) {
+			this.scanStatuses = new ArrayList<ScanStatus>();
+		}
+		this.scanStatuses.add(status);
 	}
 }
