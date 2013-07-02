@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
 /**
  * @author bbeverly
@@ -67,4 +68,9 @@ public interface QueueSender {
 	void addSubmitDefect(List<Integer> vulns, String summary, String preamble, 
 			String component, String version, String severity, String priority, 
 			String status, Integer orgId, Integer applicationId);
+
+	/**
+	 * @param id
+	 */
+	void addRemoteProviderImport(RemoteProviderType remoteProviderType);
 }

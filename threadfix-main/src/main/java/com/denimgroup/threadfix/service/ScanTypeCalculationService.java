@@ -21,20 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.queue;
+package com.denimgroup.threadfix.service;
 
-/**
- * @author bbeverly
- * 
- */
-public interface QueueConstants {
+import org.springframework.web.multipart.MultipartFile;
 
-	static final String DEFECT_TRACKER_SYNC_REQUEST = "DEFECT_TRACKER_SYNC_REQUEST";
-	static final String IMPORT_SCANS_REQUEST = "IMPORT_SCANS_REQUEST";
+public interface ScanTypeCalculationService {
 
-	static final String IMPORT_REMOTE_PROVIDER_SCANS_REQUEST = "IMPORT_REMOTE_PROVIDER_SCANS_REQUEST";
-	static final String NORMAL_SCAN_TYPE = "Scan";
-	static final String DEFECT_TRACKER_VULN_UPDATE_TYPE = "Defect Tracker Vuln Update";
-	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";
+	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
+	
+	String getScannerType(MultipartFile file);
 
+	String saveFile(Integer channelId, MultipartFile file);
 }

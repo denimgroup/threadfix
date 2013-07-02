@@ -44,6 +44,7 @@ import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.ScanTypeCalculationService;
 import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
@@ -54,6 +55,7 @@ public class UploadScanController {
 			"scanner type for the file. Please choose one from the list.";
 
 	private ScanService scanService;
+	private ScanTypeCalculationService scanTypeCalculationService;
 	private ChannelTypeService channelTypeService;
 	private ApplicationService applicationService;
 	private ApplicationChannelService applicationChannelService;
@@ -64,10 +66,12 @@ public class UploadScanController {
 	@Autowired
 	public UploadScanController(ScanService scanService,
 			ChannelTypeService channelTypeService,
+			ScanTypeCalculationService scanTypeCalculationService,
 			PermissionService permissionService,
 			ApplicationService applicationService,
 			ApplicationChannelService applicationChannelService) {
 		this.scanService = scanService;
+		this.scanTypeCalculationService = scanTypeCalculationService;
 		this.permissionService = permissionService;
 		this.applicationService = applicationService;
 		this.channelTypeService = channelTypeService;
@@ -118,7 +122,7 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
-		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
+		Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
 		if (myChannelId == null) {
 			log.warn("ThreadFix was unable to figure out what scanner type to use.");
@@ -127,7 +131,7 @@ public class UploadScanController {
 		
 		ScanCheckResultBean returnValue = null;
 		
-		String fileName = scanService.saveFile(myChannelId, file);
+		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
 		
 		if (fileName == null || fileName.equals("")) {
 			log.warn("Saving the file to disk did not return a file name. Returning to scan upload page.");

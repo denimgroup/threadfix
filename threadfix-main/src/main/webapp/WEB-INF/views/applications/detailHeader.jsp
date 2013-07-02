@@ -18,6 +18,17 @@
 		<span style="float:right">
 			<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn header-button" data-toggle="modal">Upload Scan</a>
 			<a id="addManualFindingModalLink" href="#addManualFindingModal" role="button" class="btn header-button" data-toggle="modal">Add Manual Finding</a>
+			
+			<c:if test="${ not empty application.defectTracker }">
+				<spring:url value="/organizations/{orgId}/applications/{appId}/defects/update" var="updateDefectUrl">
+					<spring:param name="orgId" value="${ application.organization.id }"/>
+					<spring:param name="appId" value="${ application.id }"/>
+				</spring:url>
+				<a id="updateDefectsLink" href="${ fn:escapeXml(updateDefectUrl) }" role="button" 
+						class="btn header-button">
+					Update Defect Status
+				</a>
+			</c:if>
 		</span>
 	</c:if>
 </h2>

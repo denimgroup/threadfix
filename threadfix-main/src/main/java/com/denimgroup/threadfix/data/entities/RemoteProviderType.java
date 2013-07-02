@@ -153,6 +153,10 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String toString() {
+		return name;
+	}
 
 	@OneToMany(mappedBy = "remoteProviderType")
 	public List<RemoteProviderApplication> getRemoteProviderApplications() {
@@ -197,5 +201,21 @@ public class RemoteProviderType extends BaseEntity  {
 	@Transient
 	public boolean getIsQualys() {
 		return name != null && name.equals(QUALYSGUARD_WAS);
+	}
+	
+	@Transient
+	public boolean getHasConfiguredApplications() {
+		boolean hasAppsWithApps = false;
+		
+		if (remoteProviderApplications != null && !remoteProviderApplications.isEmpty()) {
+			for (RemoteProviderApplication app : getRemoteProviderApplications()) {
+				if (app != null && app.getApplicationChannel() != null) {
+					hasAppsWithApps = true;
+					break;
+				}
+			}
+		}
+		
+		return hasAppsWithApps;
 	}
 }

@@ -48,6 +48,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
 
 @Service
@@ -64,6 +65,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	private ScanMergeService scanMergeService = null;
 	private ApplicationDao applicationDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
+	private QueueSender queueSender = null;
 	
 	@Autowired
 	public RemoteProviderApplicationServiceImpl(ChannelTypeDao channelTypeDao,
@@ -72,6 +74,7 @@ public class RemoteProviderApplicationServiceImpl implements
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ScanMergeService scanMergeService,
 			ApplicationDao applicationDao,
+			QueueSender queueSender,
 			ApplicationChannelDao applicationChannelDao) {
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelTypeDao = channelTypeDao;
@@ -80,6 +83,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		this.scanMergeService = scanMergeService;
 		this.applicationDao = applicationDao;
 		this.applicationChannelDao = applicationChannelDao;
+		this.queueSender = queueSender;
 	}
 	
 	@Override
@@ -243,16 +247,27 @@ public class RemoteProviderApplicationServiceImpl implements
 					
 					remoteProviderApplicationDao.saveOrUpdate(remoteProviderApplication);
 					
-					if (resultScan.getApplicationChannel().getScanList() == null) {
-						resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
+					if (resultScan.getApplicationChannel() == null) {
+						if (remoteProviderApplication.getApplicationChannel() != null) {
+							resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+						} else {
+							log.error("Didn't have enough application channel information.");
+							success = false;
+						}
 					}
 					
-					if (!resultScan.getApplicationChannel().getScanList().contains(resultScan)) {
-						resultScan.getApplicationChannel().getScanList().add(resultScan);
+					if (resultScan.getApplicationChannel() != null) {
+						if (resultScan.getApplicationChannel().getScanList() == null) {
+							resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
+						}
+						
+						if (!resultScan.getApplicationChannel().getScanList().contains(resultScan)) {
+							resultScan.getApplicationChannel().getScanList().add(resultScan);
+						}
+					
+						scanMergeService.processRemoteScan(resultScan);
+						success = true;
 					}
-				
-					scanMergeService.processRemoteScan(resultScan);
-					success = true;
 				}
 			}
 		}
@@ -344,5 +359,21 @@ public class RemoteProviderApplicationServiceImpl implements
 	@Override
 	public List<RemoteProviderApplication> loadAllWithMappings() {
 		return remoteProviderApplicationDao.retrieveAllWithMappings();
+	}
+
+	@Override
+	public void addBulkImportToQueue(RemoteProviderType remoteProviderType) {
+		if (remoteProviderType == null || remoteProviderType.getRemoteProviderApplications() == null ||
+				remoteProviderType.getRemoteProviderApplications().isEmpty()) {
+			log.error("Null remote provider type passed to addBulkImportToQueue. Something went wrong.");
+			return;
+		}
+		
+		if (remoteProviderType.getHasConfiguredApplications()) {
+			log.info("At least one application is configured.");
+			queueSender.addRemoteProviderImport(remoteProviderType);
+		} else {
+			log.error("No apps were configured with applications.");
+		}
 	}
 }
