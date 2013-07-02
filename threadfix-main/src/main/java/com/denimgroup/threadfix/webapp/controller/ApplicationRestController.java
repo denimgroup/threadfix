@@ -25,6 +25,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.ScanTypeCalculationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
@@ -41,6 +42,7 @@ public class ApplicationRestController extends RestController {
 	private OrganizationService organizationService;
 	private ApplicationService applicationService;
 	private ScanService scanService;
+	private ScanTypeCalculationService scanTypeCalculationService;
 	private ScanMergeService scanMergeService;
 	private WafService wafService;
 	private ApplicationCriticalityService applicationCriticalityService;
@@ -61,11 +63,13 @@ public class ApplicationRestController extends RestController {
 	public ApplicationRestController(OrganizationService organizationService,
 			APIKeyService apiKeyService, ApplicationService applicationService,
 			ScanService scanService, ScanMergeService scanMergeService,
+			ScanTypeCalculationService scanTypeCalculationService, 
 			WafService wafService,
 			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
 		this.apiKeyService = apiKeyService;
 		this.applicationService = applicationService;
+		this.scanTypeCalculationService = scanTypeCalculationService;
 		this.scanService = scanService;
 		this.scanMergeService = scanMergeService;
 		this.wafService = wafService;
@@ -208,9 +212,9 @@ public class ApplicationRestController extends RestController {
 			return result;
 		}
 		
-		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
+		Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
-		String fileName = scanService.saveFile(myChannelId, file);
+		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
 		
 		ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 		
