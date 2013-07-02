@@ -46,6 +46,8 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.service.channel.AbstractChannelImporter;
+import com.denimgroup.threadfix.service.channel.HandlerWithBuilder;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -793,7 +795,7 @@ public class FortifyChannelImporterTest extends AbstractChannelImporter {
 		fvdlInputStream = getFileFromZip("audit.fvdl");
 
 		if (zipFile == null || fvdlInputStream == null)
-			return new ScanCheckResultBean(WRONG_FORMAT_ERROR);
+			return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
 						
 		testDate = getTime(auditXmlStream);
 		
@@ -808,13 +810,13 @@ public class FortifyChannelImporterTest extends AbstractChannelImporter {
 		
 		private void setTestStatus() {	    	
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (testDate != null)
 	    		testStatus = checkTestDate();
-	    	if (SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings)
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if (ScanImportStatus.SUCCESSFUL_SCAN == testStatus && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
 	    ////////////////////////////////////////////////////////////////////

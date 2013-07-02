@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,13 +47,13 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, String> tagMap = new HashMap<String, String>();
+	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
-		tagMap.put("issue_type_name", CHANNEL_VULN_KEY);
-		tagMap.put("issue_severity", CHANNEL_SEVERITY_KEY);
-		tagMap.put("security_entity_element", PARAMETER_KEY);
-		tagMap.put("test_url", PATH_KEY);
-		tagMap.put("issue_id", "nativeId");
+		tagMap.put("issue_type_name", FindingKey.VULN_CODE);
+		tagMap.put("issue_severity", FindingKey.SEVERITY_CODE);
+		tagMap.put("security_entity_element", FindingKey.PARAMETER);
+		tagMap.put("test_url", FindingKey.PATH);
+		tagMap.put("issue_id", FindingKey.NATIVE_ID);
 	}
 
 	@Autowired
@@ -111,9 +112,9 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 		private boolean getDate   = false;
 		private boolean inFinding = false;
 		
-		private String itemKey = null;
+		private FindingKey itemKey = null;
 	
-		private Map<String, String> findingMap = null;
+		private Map<FindingKey, String> findingMap = null;
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -131,7 +132,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 				      String qName, Attributes atts)
 	    {
 	    	if ("row".equals(qName)) {
-	    		findingMap = new HashMap<String, String>();
+	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
@@ -143,7 +144,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	if ("row".equals(qName)) {
 	    		Finding finding = constructFinding(findingMap);
 	    		
-	    		finding.setNativeId(findingMap.get("nativeId"));
+	    		finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
 	    		
 	    		add(finding);
 	    		findingMap = null;
@@ -181,13 +182,13 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	correctFormat = report && control && row;
 	    	
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	
 	    	if (testStatus == null) {
 	    		if (!hasFindings)
-		    		testStatus = EMPTY_SCAN_ERROR;
+		    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    		else 
-	    			testStatus = SUCCESSFUL_SCAN;
+	    			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    	}
 	    }
 

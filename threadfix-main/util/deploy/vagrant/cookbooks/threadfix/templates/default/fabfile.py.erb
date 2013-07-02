@@ -6,7 +6,7 @@ import datetime, re
 source_code_loc='https://code.google.com/p/threadfix'
 local_working_folder_loc = '/home/vagrant' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
-local_path = 'threadfix/src/main/resources' #path to .deploy files
+local_path = 'threadfix-main/threadfix/src/main/resources' #path to .deploy files
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
@@ -62,9 +62,9 @@ def deploy_war():
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
     local('sudo cp %s/threadfix/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
 	# We need to move the mysql / deploy config files to replace the development ones
-    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties') 
-    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml') 
-    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/log4j.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/log4j.xml') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/threadfix-main/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/threadfix-main/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml') 
+    #local('sudo mv /var/lib/tomcat7/webapps/threadfix/threadfix-main/WEB-INF/classes/log4j.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/log4j.xml') 
     
 @task
 def change_owners() :

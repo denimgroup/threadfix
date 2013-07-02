@@ -44,6 +44,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
 import com.denimgroup.threadfix.service.channel.AbstractChannelImporter;
+import com.denimgroup.threadfix.service.channel.HandlerWithBuilder;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -361,14 +363,14 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 	    	boolean fileFormat = (xmlReport && appscanInfo && summary && results);
 	    	
 	    	if (!fileFormat) {
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    		return;
 	    	} else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if ((!hasDate || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if ((!hasDate || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
 	    ////////////////////////////////////////////////////////////////////

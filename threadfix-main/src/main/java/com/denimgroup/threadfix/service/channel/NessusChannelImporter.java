@@ -297,15 +297,15 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	correctFormat = clientDataTag && reportTag;
 	    	
 	    	if (!correctFormat) {
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	} else if (hasDate) {
 	    		testStatus = checkTestDate();
 	    	}
 	    	
-	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings) {
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	} else if (testStatus == null) {
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    	}
 	    }
 
