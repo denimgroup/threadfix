@@ -85,7 +85,10 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			scanStatus.setTimestamp(now);
 			scanStatus.setMessage("Scan queued at");
 			
+			scanStatus.setScanQueueTask(myTask);
+			
 			myTask.addScanStatus(scanStatus);
+			
 			
 			scanQueueTaskDao.saveOrUpdate(myTask);
 			retVal = myTask.getId();
