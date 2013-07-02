@@ -68,14 +68,6 @@ public class CommandLineParser {
 				.create("ca");
 		options.addOption(createApp);
 		
-		Option createApplicationChannel = OptionBuilder.withArgName("appId> <scannerName")
-				.withValueSeparator(' ')
-				.hasArgs(2)
-				.withLongOpt("create-app-channel")
-				.withDescription("Creates a ThreadFix application channel and returns its JSON.")
-				.create("cac");
-		options.addOption(createApplicationChannel);
-		
 		Option createWaf = OptionBuilder.withArgName("name> <wafTypeName")
 				.withValueSeparator(' ')
 				.hasArgs(2)
@@ -108,19 +100,11 @@ public class CommandLineParser {
 				.create("sa");
 		options.addOption(searchApp);
 		
-		Option searchApplicationChannel = OptionBuilder.withArgName("appId> <scannerName")
-				.withValueSeparator(' ')
-				.hasArgs(2)
-				.withLongOpt("search-app-channel")
-				.withDescription("Searches for  a ThreadFix application channel and returns its JSON.")
-				.create("sac");
-		options.addOption(searchApplicationChannel);
-		
-		Option upload = OptionBuilder.withArgName("channelId> <file")
+		Option upload = OptionBuilder.withArgName("appId> <file")
 				.withValueSeparator(' ')
 				.hasArgs(2)
 				.withLongOpt("upload")
-				.withDescription("Uploads a scan to the specified channel.")
+				.withDescription("Uploads a scan to the specified application.")
 				.create("u");
 		options.addOption(upload);
 		
@@ -186,15 +170,6 @@ public class CommandLineParser {
 				}
 				System.out.println("Creating an Application with the name " + createArgs[1] + ".");
 				System.out.println(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
-			
-			} else if (cmd.hasOption("cac")) {
-				String[] createArgs = cmd.getOptionValues("cac");
-				if (createArgs.length != 2) {
-					throw new ParseException("Wrong number of arguments.");
-				}
-				System.out.println("Creating an Application Channel for Application " + createArgs[0] + 
-						" and channel type " + createArgs[1] + ".");
-				System.out.println(client.addApplicationChannel(createArgs[0], createArgs[1]));
 
 			} else if (cmd.hasOption("teams")) {
 				System.out.println("Getting all teams.");
@@ -207,7 +182,7 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				System.out.println("Uploading " + uploadArgs[1] + 
-						" to Application Channel " + uploadArgs[0] + ".");
+						" to Application " + uploadArgs[0] + ".");
 				System.out.println(client.uploadScan(uploadArgs[0], uploadArgs[1]));
 
 			} else if (cmd.hasOption("st")) {
@@ -257,16 +232,6 @@ public class CommandLineParser {
 					System.out.println("Unknown property argument. Try either id or name.");
 					return;
 				}
-			
-			} else if (cmd.hasOption("sac")) {
-				String[] searchArgs = cmd.getOptionValues("sac");
-				if (searchArgs.length != 2) {
-					System.out.println("Wrong number of arguments.'");
-				}
-				System.out.println("Searching for an Application Channel for Application " + searchArgs[0] + 
-						" and channel type " + searchArgs[1] + ".");
-				System.out.println(client.searchForApplicationChannel(searchArgs[0], searchArgs[1]));
-
 			
 			} else if (cmd.hasOption("r")) {
 				String[] ruleArgs = cmd.getOptionValues("r");
