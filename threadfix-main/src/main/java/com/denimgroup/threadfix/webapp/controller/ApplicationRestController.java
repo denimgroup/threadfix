@@ -15,22 +15,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.channel.ChannelImporter;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/rest/teams/{teamId}/applications")
@@ -46,8 +42,6 @@ public class ApplicationRestController extends RestController {
 	private ApplicationService applicationService;
 	private ScanService scanService;
 	private ScanMergeService scanMergeService;
-	private ChannelTypeService channelTypeService;
-	private ApplicationChannelService applicationChannelService;
 	private WafService wafService;
 	private ApplicationCriticalityService applicationCriticalityService;
 	
@@ -55,23 +49,18 @@ public class ApplicationRestController extends RestController {
 		LOOKUP = "applicationLookup",
 		NEW = "newApplication",
 		SET_WAF = "setWaf",
-		CHANNEL_LOOKUP = "searchForChannel",
-		UPLOAD = "uploadScan",
-		ADD_CHANNEL = "addChannel";
+		UPLOAD = "uploadScan";
 
 	// TODO finalize which methods need to be restricted
 	static {
 		restrictedMethods.add(NEW);
 		restrictedMethods.add(SET_WAF);
-		restrictedMethods.add(ADD_CHANNEL);
 	}
 	
 	@Autowired
 	public ApplicationRestController(OrganizationService organizationService,
 			APIKeyService apiKeyService, ApplicationService applicationService,
 			ScanService scanService, ScanMergeService scanMergeService,
-			ChannelTypeService channelTypeService,
-			ApplicationChannelService applicationChannelService,
 			WafService wafService,
 			ApplicationCriticalityService applicationCriticalityService) {
 		this.organizationService = organizationService;
@@ -79,8 +68,6 @@ public class ApplicationRestController extends RestController {
 		this.applicationService = applicationService;
 		this.scanService = scanService;
 		this.scanMergeService = scanMergeService;
-		this.channelTypeService = channelTypeService;
-		this.applicationChannelService = applicationChannelService;
 		this.wafService = wafService;
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
@@ -206,13 +193,14 @@ public class ApplicationRestController extends RestController {
 	 * Allows the user to upload a scan to an existing application channel.
 	 * @param appId
 	 * @param request
-	 * @param channelId
+	 * @param applicationId
 	 * @param file
 	 * @return Status response. We may change this to make it more useful.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
-	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, HttpServletRequest request,
-			@RequestParam("channelId") Integer channelId, @RequestParam("file") MultipartFile file) {
+	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, 
+			@PathVariable("teamId") int teamId, HttpServletRequest request,
+			@RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 
 		String result = checkKey(request, UPLOAD);
@@ -220,124 +208,19 @@ public class ApplicationRestController extends RestController {
 			return result;
 		}
 		
-		String fileName = scanService.saveFile(channelId, file);
+		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
-		ScanCheckResultBean returnValue = scanService.checkFile(channelId, fileName);
+		String fileName = scanService.saveFile(myChannelId, file);
 		
-		if (ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
-			Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, fileName);
+		ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
+		
+		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+			Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 			return scan;
-		} else if (ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
+		} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
 			return "You attempted to upload an empty scan.";
 		} else {
 			return "The scan upload attempt returned this message: " + returnValue.getScanCheckResult();
-		}
-	}
-	
-	/**
-	 * Allows the user to add a channel to an existing application.
-	 * @param request
-	 * @param appId
-	 * @param channelName
-	 * @return
-	 */
-	@RequestMapping(headers="Accept=application/json", value="/{appId}/addChannel", method=RequestMethod.POST)
-	public @ResponseBody Object addChannel(HttpServletRequest request,
-			@PathVariable("appId") int appId) {
-		
-		String channelName = request.getParameter("channelName");
-		
-		if (channelName != null) {
-			log.info("Received REST POST request to add channel " + channelName + 
-				" to the application with ID " + appId +".");
-		}
-
-		String result = checkKey(request, ADD_CHANNEL);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
-		}
-		
-		if (channelName == null) {
-			log.warn("Missing parameter channelName.");
-			return ADD_CHANNEL_FAILED;
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		
-		ChannelType type = channelTypeService.loadChannel(channelName);
-				
-		if (application == null) {
-			log.warn("Invalid Application ID.");
-			return ADD_CHANNEL_FAILED;
-		} else if (type == null) {
-			log.warn("Invalid Channel Name.");
-			return ADD_CHANNEL_FAILED;
-		} else {
-			ApplicationChannel applicationChannel = applicationChannelService.retrieveByAppIdAndChannelId(appId, type.getId());
-			if (applicationChannel != null) {
-				log.info("Returning existing ApplicationChannel ID.");
-				return applicationChannel;
-			}
-				
-			applicationChannel = new ApplicationChannel();
-			
-			applicationChannel.setApplication(application);
-			applicationChannel.setChannelType(type);
-			
-			applicationChannelService.storeApplicationChannel(applicationChannel);
-			
-			log.info(channelName + " was successfully added to Application " + application.getName() + ".");
-			return applicationChannel;
-		}
-	}
-	
-	/**
-	 * Allows the user to add a channel to an existing application.
-	 * @param request
-	 * @param appId
-	 * @param channelName
-	 * @return
-	 */
-	@RequestMapping(headers="Accept=application/json", value="/{appId}/lookupChannel", method=RequestMethod.GET)
-	public @ResponseBody Object searchForChannel(HttpServletRequest request,
-			@PathVariable("appId") int appId) {
-		
-		String channelName = request.getParameter("channelName");
-		
-		if (channelName != null) {
-			log.info("Received REST POST request to add channel " + channelName + 
-				" to the application with ID " + appId +".");
-		}
-
-		String result = checkKey(request, CHANNEL_LOOKUP);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
-		}
-		
-		if (channelName == null) {
-			log.warn("Missing parameter channelName.");
-			return CHANNEL_LOOKUP_FAILED;
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		
-		ChannelType type = channelTypeService.loadChannel(channelName);
-				
-		if (application == null) {
-			log.warn("Invalid Application ID.");
-			return CHANNEL_LOOKUP_FAILED;
-		} else if (type == null) {
-			log.warn("Invalid Channel Name.");
-			return CHANNEL_LOOKUP_FAILED;
-		} else {
-			ApplicationChannel applicationChannel = applicationChannelService.retrieveByAppIdAndChannelId(appId, type.getId());
-			if (applicationChannel != null) {
-				log.info("Returning existing ApplicationChannel ID.");
-				return applicationChannel;
-			}
-				
-			log.warn("Channel not found.");
-			return CHANNEL_LOOKUP_FAILED;
 		}
 	}
 	

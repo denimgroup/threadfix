@@ -177,15 +177,25 @@
 					<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 					<c:if test="${ not empty application.defectTracker }">
 						<td >
-							<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/>" style="width:100%;text-align:center;">
 							<c:if test="${ not empty vulnerability.defect }">
-								<a id="bugLink${ index }"
-										target="_blank" 
-										href="<c:out value="${ vulnerability.defect.defectURL }"/>">
-									<img src="<%=request.getContextPath()%>/images/icn_bug.png" class="transparent_png" alt="Threadfix" />
-								</a>
+								<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:center;">
+									<a id="bugLink${ index }"
+											target="_blank" 
+											href="<c:out value="${ vulnerability.defect.defectURL }"/>">
+										<c:choose>
+											<c:when test="${ openCodes.contains(vulnerability.defect.status) }">
+												<img src="<%=request.getContextPath()%>/images/icn_bug_red_stroke.png" class="transparent_png" alt="Threadfix" />
+											</c:when>
+											<c:when test="${ closedCodes.contains(vulnerability.defect.status) }">
+												<img src="<%=request.getContextPath()%>/images/icn_bug_grn_stroke.png" class="transparent_png" alt="Threadfix" />
+											</c:when>
+											<c:otherwise>
+												<img src="<%=request.getContextPath()%>/images/icn_bug_yellow_stroke.png" class="transparent_png" alt="Threadfix" />
+											</c:otherwise>
+										</c:choose>
+									</a>
+								</div>
 							</c:if>
-							</div>
 						</td>
 					</c:if>
 					<td>

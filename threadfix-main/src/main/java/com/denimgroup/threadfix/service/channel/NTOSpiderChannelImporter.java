@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +45,17 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, String> tagMap = new HashMap<String, String>();
+	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
-		tagMap.put("VULNTYPE", CHANNEL_VULN_KEY);
-		tagMap.put("ATTACKSCORE", CHANNEL_SEVERITY_KEY);
-		tagMap.put("PARAMETERNAME", PARAMETER_KEY);
-		tagMap.put("NORMALIZEDURL", PATH_KEY);
+		tagMap.put("vulntype",      FindingKey.VULN_CODE);
+		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
+		tagMap.put("parametername", FindingKey.PARAMETER);
+		tagMap.put("normalizedurl", FindingKey.PATH);
 	}
+	
+	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate", 
+			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
+			VULN_SUMMARY = "VulnSummary";
 
 	@Autowired
 	public NTOSpiderChannelImporter(ChannelTypeDao channelTypeDao,
@@ -72,9 +77,9 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		private boolean getDate   = false;
 		private boolean inFinding = false;
 		
-		private String itemKey = null;
+		private FindingKey itemKey = null;
 	
-		private Map<String, String> findingMap = null;
+		private Map<FindingKey, String> findingMap = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -91,23 +96,23 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	if (date == null && "SCANDATE".equals(qName)) {
+	    	if (date == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
-	    	} else if ("VULN".equals(qName)) {
-	    		findingMap = new HashMap<String, String>();
+	    	} else if (VULN_TAG.equalsIgnoreCase(qName)) {
+	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
-	    	} else if (inFinding && tagMap.containsKey(qName)) {
-	    		itemKey = tagMap.get(qName);
+	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
+	    		itemKey = tagMap.get(qName.toLowerCase());
 	    	}
 	    }
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if ("VULN".equals(qName)) {
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		
-	    		if (findingMap.get(PARAMETER_KEY) != null && 
-	    				findingMap.get(PARAMETER_KEY).equals("N/A")) {
-	    			findingMap.remove(PARAMETER_KEY);
+	    		if (findingMap.get(FindingKey.PARAMETER) != null && 
+	    				findingMap.get(FindingKey.PARAMETER).equals(N_A)) {
+	    			findingMap.remove(FindingKey.PARAMETER);
 	    		}
 	    		
 	    		Finding finding = constructFinding(findingMap);
@@ -125,7 +130,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
+	    			date = getCalendarFromString(DATE_PATTERN, tempDateString);
 	    		}
 	    		getDate = false;
 	    	}
@@ -151,13 +156,13 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		
 	    private void setTestStatus() {
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
@@ -170,29 +175,29 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	    @Override
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if ("VULNLIST".equals(qName)) {
+	    	if (VULN_LIST.equalsIgnoreCase(qName) || VULN_SUMMARY.equalsIgnoreCase(qName)) {
 	    		correctFormat = true;
 	    	}
 	    	
-	    	if (testDate == null && "SCANDATE".equals(qName)) {
+	    	if (testDate == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
 	    	}
 	    }
 	    
 	    @Override
-	    public void endElement (String uri, String name, String qName) throws SAXException {	    	
+	    public void endElement (String uri, String name, String qName) throws SAXException { 	
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = getCalendarFromString("yyyy-MM-dd kk:mm:ss", tempDateString);
+	    			testDate = getCalendarFromString(DATE_PATTERN, tempDateString);
 	    		}
 	    		
 	    		hasDate = testDate != null;
 	    		getDate = false;
 	    	}
 	    	
-	    	if ("VULN".equals(qName)) {
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
 	    		throw new SAXException(FILE_CHECK_COMPLETED);

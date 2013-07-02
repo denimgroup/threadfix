@@ -295,7 +295,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	
 	@Override
 	public ScanCheckResultBean checkFile() {
-		return new ScanCheckResultBean(SUCCESSFUL_SCAN);
+		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
 		//return testSAXInput(new AppScanSourceSAXValidator());
 	}
 	
@@ -306,13 +306,13 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 		
 	    private void setTestStatus() {
 	    	if (!correctFormat)
-	    		testStatus = WRONG_FORMAT_ERROR;
+	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || SUCCESSFUL_SCAN.equals(testStatus)) && !hasFindings)
-	    		testStatus = EMPTY_SCAN_ERROR;
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
-	    		testStatus = SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
 	    ////////////////////////////////////////////////////////////////////

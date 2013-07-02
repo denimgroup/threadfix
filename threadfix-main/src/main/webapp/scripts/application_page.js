@@ -30,7 +30,7 @@ var reloadDefectSubmissionDiv = function () {
 					}
 				},
 				error : function (xhr, ajaxOptions, thrownError){
-					history.go(0);
+					history.go(0);report-image
 			    }
 			});
 		}
@@ -341,8 +341,8 @@ function submitAjaxReport(formId,successDiv, viewMore) {
 						$(this).remove();
 					}
 				});
-				$("img").attr("style","");
-				$("img").addClass("report-image");
+				$("#img").attr("style","");
+				$("#leftTileReport img, #rightTileReport img").addClass("report-image");
 			} else {
 				try {
 					var json = $.parseJSON($.trim(text));

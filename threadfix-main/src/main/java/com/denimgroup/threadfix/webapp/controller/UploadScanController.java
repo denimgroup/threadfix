@@ -44,7 +44,7 @@ import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.channel.ChannelImporter;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
@@ -118,7 +118,7 @@ public class UploadScanController {
 			return new ModelAndView("403");
 		}
 		
-		Integer myChannelId = scanService.calculateScanType(appId, orgId, file, request.getParameter("channelId"));
+		Integer myChannelId = scanService.calculateScanType(appId, file, request.getParameter("channelId"));
 		
 		if (myChannelId == null) {
 			log.warn("ThreadFix was unable to figure out what scanner type to use.");
@@ -150,7 +150,7 @@ public class UploadScanController {
 		}
 
 		if (returnValue != null && returnValue.getScanCheckResult() != null &&
-				ChannelImporter.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
+				ScanImportStatus.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
 			if (app.getScans() == null) {
 				ControllerUtils.addItem(request, "numScansBeforeUpload", 0);
 			} else {
@@ -158,7 +158,7 @@ public class UploadScanController {
 			}
 			scanService.addFileToQueue(myChannelId, fileName, returnValue.getTestDate());
 		} else if (returnValue != null && returnValue.getScanCheckResult() != null &&
-				ChannelImporter.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
+				ScanImportStatus.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
 			Integer emptyScanId = scanService.saveEmptyScanAndGetId(myChannelId, fileName);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");
 			confirmPage.addObject("scanId", emptyScanId);
@@ -169,15 +169,15 @@ public class UploadScanController {
 				ChannelType channelType = null;
 				
 				if (returnValue.getScanCheckResult() != null && 
-						(returnValue.getScanCheckResult().equals(ChannelImporter.BADLY_FORMED_XML) ||
-						returnValue.getScanCheckResult().equals(ChannelImporter.WRONG_FORMAT_ERROR) ||
-						returnValue.getScanCheckResult().equals(ChannelImporter.OTHER_ERROR))) {
+						(returnValue.getScanCheckResult().equals(ScanImportStatus.BADLY_FORMED_XML) ||
+						returnValue.getScanCheckResult().equals(ScanImportStatus.WRONG_FORMAT_ERROR) ||
+						returnValue.getScanCheckResult().equals(ScanImportStatus.OTHER_ERROR))) {
 					ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(myChannelId);
 					channelType = appChannel.getChannelType();
 				}
  				
 				return index(app.getOrganization().getId(), app.getId(), 
-								returnValue.getScanCheckResult(), channelType);
+								returnValue.getScanCheckResult().toString(), channelType);
 			} else {
 				log.warn("The request included an invalidly configured " +
 						 "Application, throwing ResourceNotFoundException.");

@@ -492,20 +492,20 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public ScanCheckResultBean checkFile() {
-		String returnValue = null;
+		ScanImportStatus returnValue = null;
 		
 		InputStream sampleFileInputStream = getSampleFileInputStream();
 		
 		if (sampleFileInputStream == null)
-			return new ScanCheckResultBean(WRONG_FORMAT_ERROR);
+			return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
 		
 		List<?> map = getArrayFromSamplesFile(sampleFileInputStream);
 		
 		if (map == null)
-			returnValue = WRONG_FORMAT_ERROR;
+			returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
 		
 		if (returnValue == null && map.size() == 0)
-			returnValue = EMPTY_SCAN_ERROR;
+			returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
 		
 		if (returnValue == null) {
 			checkMap(map);
@@ -521,7 +521,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		}
 		
 		if (returnValue == null)
-			returnValue = SUCCESSFUL_SCAN;
+			returnValue = ScanImportStatus.SUCCESSFUL_SCAN;
 		
 		deleteZipFile();
 		return new ScanCheckResultBean(returnValue, testDate);
