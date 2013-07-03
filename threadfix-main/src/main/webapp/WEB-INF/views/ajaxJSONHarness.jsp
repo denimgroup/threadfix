@@ -1,3 +1,3 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<c:out value="${ jsonText }"/>
+{ "wait": <c:out value="${ wait }"/> }

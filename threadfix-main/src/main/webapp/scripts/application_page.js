@@ -30,7 +30,7 @@ var reloadDefectSubmissionDiv = function () {
 					}
 				},
 				error : function (xhr, ajaxOptions, thrownError){
-					history.go(0);report-image
+					history.go(0);
 			    }
 			});
 		}
@@ -162,18 +162,19 @@ addToDocumentReadyFunctions(function () {
 		var poll = function() {
 			setTimeout(function(){
 				$.ajax({
+					dataType : "text",
 					url: $("#headerDiv").attr("data-refresh-url"), 
 					success: function(data) {
-						if (data.wait) {
+						var json = $.parseJSON($.trim(data));
+						if (json.wait) {
 							poll();
-						} else if (data.isJSONRedirect) {
-							window.location.href = data.redirectURL;
+						} else if (json.isJSONRedirect) {
+							window.location.href = json.redirectURL;
 							return;
 						}
 					}, 
-					dataType: "json", 
 				});
-			}, 1000);
+			}, 2000);
 		};
 		poll();
 	}

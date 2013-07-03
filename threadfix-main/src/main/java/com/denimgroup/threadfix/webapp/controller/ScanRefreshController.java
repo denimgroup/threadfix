@@ -61,11 +61,15 @@ public class ScanRefreshController {
 		log.info("Hit scan refresh controller.");
 		
 		Application app = applicationService.loadApplication(appId);
-		if (app.getScans() != null && app.getScans().size() != numScans) {
+		
+		if (app == null || !app.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		} else if (app.getScans() != null && app.getScans().size() != numScans) {
 			model.addAttribute("contentPage", "/organizations/" + orgId + " /applications/" + appId);
 			return "ajaxRedirectHarness";
 		} else {
-			model.addAttribute("jsonText", "{ \"wait\": true }");
+			model.addAttribute("wait", "true");
 			return "ajaxJSONHarness";
 		}
 	}
