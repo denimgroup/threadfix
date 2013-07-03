@@ -51,6 +51,10 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * @author mcollins
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
+	
+	// The double slash is the Jira newline wiki syntax.
+	private static final String newLineRegex = "\\\\n", 
+			doubleSlashNewLine = " \\\\\\\\\\\\\\\\ ";
 				
 	// HELPER METHODS
 	
@@ -120,7 +124,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		log.info("Return value will be " + retVal);
 		
-		return (retVal);
+		return retVal;
 	}
 	
 	private boolean hasXSeraphLoginReason() {
@@ -351,6 +355,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 				
 		payload += " } }";
+		
+		payload = payload.replaceAll(newLineRegex, doubleSlashNewLine);
 				
 		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;
