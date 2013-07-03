@@ -19,6 +19,7 @@ public class ScanContents extends BaseTest{
 		SCAN_FILE_MAP.put("Arachni", getScanFilePath("Dynamic","Arachni","php-demo.xml") );
 		SCAN_FILE_MAP.put("WebInspect",getScanFilePath("Dynamic","WebInspect","webinspect-demo-site.xml"));
 		SCAN_FILE_MAP.put("NTO Spider",getScanFilePath("Dynamic","NTOSpider","VulnerabilitiesSummary.xml"));
+		SCAN_FILE_MAP.put("NTO Spider6", getScanFilePath("Dynamic","NTOSpider","VulnerabilitiesSummary6.xml"));
 		SCAN_FILE_MAP.put("Brakeman", getScanFilePath("Static","Brakeman","brakeman.json")); 
 		SCAN_FILE_MAP.put("Fortify 360", getScanFilePath("Static","Fortify","ZigguratUtility.fpr"));
 		SCAN_FILE_MAP.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
@@ -199,6 +200,34 @@ public class ScanContents extends BaseTest{
 			{"Privacy Violation", "Medium", "/survey_questions.aspx", ""},
 			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
 		};
+	
+	public final static String[][] ntoSix = new String [][] {
+		{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/Login.asp", "tfUPass"},
+		{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/Register.asp", "tfRName"},
+		{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/showforum.asp", "id"},
+		{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/showthread.asp", "id"},
+		{"Improper Restriction of Excessive Authentication Attempts", "Critical", "/Login.asp", "tfUPass"},
+		{"Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')", "High", "/Search.asp", "tfSearch"},
+		{"Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')", "High", "/Templatize.asp", "item"},
+		{"Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')", "High", "/showforum.asp", "id"},
+		{"Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')", "High", "/showthread.asp", "id"},
+		{"Integer Overflow or Wraparound", "High", "/showforum.asp", "id"},
+		{"Integer Overflow or Wraparound", "High", "/showthread.asp", "id"},
+		{"Unprotected Transport of Credentials", "High", "/Login.asp", "N/A"},
+		{"Unprotected Transport of Credentials", "High", "/Register.asp", "N/A"},
+		{"Exposure of Backup File to an Unauthorized Control Sphere", "Medium", "/robots.txt", "N/A"},
+		{"Information Exposure", "Medium", "/Templatize.asp", "N/A"},
+		{"Information Exposure", "Medium", "/showforum.asp", "N/A"},
+		{"Information Exposure Through Browser Caching", "Medium", "/Login.asp", "N/A"},
+		{"Information Exposure Through Browser Caching", "Medium", "/Register.asp", "N/A"},
+		{"Information Exposure Through Caching", "Medium", "/Login.asp", "N/A"},
+		{"URL Redirection to Untrusted Site ('Open Redirect')", "Medium", "/Logout.asp", "RetURL"},
+		{"Cleartext Storage of Sensitive Information", "Low", "/", "N/A"},
+		{"Cross-Site Request Forgery (CSRF)", "Low", "/Login.asp", "N/A"},
+		{"Cross-Site Request Forgery (CSRF)", "Low", "/Register.asp", "N/A"},
+		{"Exposure of Backup File to an Unauthorized Control Sphere", "Low", "/login.asp", "N/A"},
+		{"Information Exposure", "Low", "/showthread.asp", "N/A"},
+	};
 	
 	public final static String[][] w3afResults = new String[] [] { 
 		{EVAL_INJECTION,"High", "/demo/EvalInjection2.php","command"},
@@ -422,6 +451,7 @@ public class ScanContents extends BaseTest{
 		SCAN_RESULT_MAP.put("Arachni", arachniResults);
 		SCAN_RESULT_MAP.put("WebInspect",webInspectResults);
 		SCAN_RESULT_MAP.put("NTO Spider",ntospiderResults);
+		SCAN_RESULT_MAP.put("NTO Spider6",ntoSix);
 		SCAN_RESULT_MAP.put("Brakeman", brakemanResults); 
 		SCAN_RESULT_MAP.put("Fortify 360", fortify360Results);
 		SCAN_RESULT_MAP.put("Acunetix WVS", acunetixResults);

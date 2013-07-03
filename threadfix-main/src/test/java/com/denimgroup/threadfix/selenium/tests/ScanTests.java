@@ -29,11 +29,15 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
@@ -42,7 +46,7 @@ import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
-
+//@RunWith (MultiThreadedRunner.class)
 public class ScanTests extends BaseTest {
 	
 	private WebDriver driver;
@@ -125,7 +129,12 @@ public class ScanTests extends BaseTest {
 			
 			applicationDetailPage = applicationDetailPage.clickScansTab();
 			scanCnt++;
-			assertTrue("Scan Channel is not present " + mapEntry.getKey(),applicationDetailPage.isScanChannelPresent(mapEntry.getKey()));
+			String tempName = mapEntry.getKey();
+			if(mapEntry.getKey().equals("NTO Spider6")){
+				tempName = "NTO Spider";
+				
+			}
+			assertTrue("Scan Channel is not present " + mapEntry.getKey(),applicationDetailPage.isScanChannelPresent(tempName));
 			assertTrue("Scan count is incorrect after uploading "+mapEntry.getKey(), scanCnt == applicationDetailPage.scanCount());
 			applicationDetailPage = applicationDetailPage.clickVulnTab();
 		}
@@ -189,6 +198,16 @@ public class ScanTests extends BaseTest {
 	@Test
 	public void ntoSpiderScan() {
 		String key = "NTO Spider";
+		String[][] expectedResults = resultsMap.get(key);
+
+		
+		runScanTest(key, expectedResults);
+	}
+	
+	@Test
+	public void ntoSpiderScan6() {
+		
+		String key = "NTO Spider6";
 		String[][] expectedResults = resultsMap.get(key);
 
 		
@@ -327,10 +346,14 @@ public class ScanTests extends BaseTest {
 					+ ", " + expectedResults[i][3], 
 					false);
 		}
-		
+		String tempName = scannerName;
+		if(scannerName.equals("NTO Spider6")){
+			tempName = "NTO Spider";
+			
+		}
 		applicationDetailPage = applicationDetailPage.clickScansTab();
 		assertTrue("Scan Count is incorrect.", applicationDetailPage.isScanCountCorrect(1));	
-		assertTrue("Scan Tab is incorrect.", applicationDetailPage.isScanPresent(scannerName));
+		assertTrue("Scan Tab is incorrect.", applicationDetailPage.isScanPresent(tempName));
 		
 		int scanCount = applicationDetailPage.scanCount();
 		//duplicate scan checking
