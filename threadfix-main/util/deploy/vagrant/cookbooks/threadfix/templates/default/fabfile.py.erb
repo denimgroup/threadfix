@@ -40,7 +40,7 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix' % local_working_folder_loc):
+    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
         local('update-java-alternatives -s java-1.7.0-openjdk-i386')
         local('sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-i386 /usr/lib/jvm/default-java')
         res = local('mvn package -DskipTests -P mysql')
