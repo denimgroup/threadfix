@@ -31,7 +31,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ConfigurationIndexPage;
 import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
@@ -40,6 +39,11 @@ import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class UserTests extends BaseTest {
 
+	public UserTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
 	private RemoteWebDriver driver;
 	private UserChangePasswordPage changePasswordPage;
 	private static LoginPage loginPage;
@@ -47,7 +51,7 @@ public class UserTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 

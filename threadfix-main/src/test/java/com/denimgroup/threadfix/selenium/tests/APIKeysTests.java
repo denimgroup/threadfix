@@ -25,18 +25,30 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApiKeysIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
+//@RunWith (MultiThreadedRunner.class)
+@RunWith(Parameterized.class)
 public class APIKeysTests extends BaseTest {
-	private FirefoxDriver driver;
+	public APIKeysTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+	private WebDriver driver;
 
 	private static LoginPage loginPage;
-
 	@Before
 	public void init() {
 		super.init();

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
@@ -38,7 +38,12 @@ import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class ApplicationTests extends BaseTest {
-	private WebDriver driver;
+	public ApplicationTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	private ApplicationDetailPage applicationDetailPage;
 	private TeamIndexPage teamIndexPage;
@@ -48,7 +53,7 @@ public class ApplicationTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 	

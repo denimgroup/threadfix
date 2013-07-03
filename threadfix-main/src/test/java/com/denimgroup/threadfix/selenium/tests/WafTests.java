@@ -36,7 +36,7 @@ import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
@@ -52,7 +52,12 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 
 public class WafTests extends BaseTest {
-	private FirefoxDriver driver;
+	public WafTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	private WafIndexPage wafIndexPage;
 	public ApplicationDetailPage applicationDetailPage;
@@ -73,7 +78,7 @@ public class WafTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 		}
 	

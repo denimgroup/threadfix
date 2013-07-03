@@ -23,30 +23,28 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.FindingEditPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.ManualUploadPage;
 
 public class ManualUploadTests extends BaseTest {
-	private FirefoxDriver driver;
-	private ManualUploadPage manualUploadPage;
-	private ApplicationDetailPage applicationDetailPage;
+	public ManualUploadTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+
+	private RemoteWebDriver driver;
 	private LoginPage loginPage;
-	private FindingEditPage editPage;
 
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 

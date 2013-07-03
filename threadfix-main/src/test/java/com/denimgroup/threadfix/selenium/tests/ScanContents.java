@@ -1,11 +1,15 @@
 package com.denimgroup.threadfix.selenium.tests;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class ScanContents extends BaseTest{
+	public ScanContents(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
 	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<String, String>();
 	static {
 		SCAN_FILE_MAP.put("Microsoft CAT.NET", getScanFilePath("Static","CAT.NET","catnet_RiskE.xml") );

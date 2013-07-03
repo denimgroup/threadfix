@@ -1,29 +1,27 @@
 package com.denimgroup.threadfix.selenium.tests;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.*;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
-import com.denimgroup.threadfix.selenium.pages.ScanDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class DashboardTests extends BaseTest{
 
+	public DashboardTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static LoginPage loginPage;
-	private WebDriver driver;
-	private ApplicationDetailPage applicationDetailPage;
-	private TeamIndexPage teamIndexPage;
+	private RemoteWebDriver driver;
 	private DashboardPage dashboardPage;
 	
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 	
