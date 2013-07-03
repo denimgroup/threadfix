@@ -28,12 +28,22 @@ public class Task {
 	
 	private String taskType;
 	private TaskConfig taskConfig;
+	private int taskId;
 	
-	public Task(String taskType, TaskConfig taskConfig) {
+	public Task(int taskId, String taskType, TaskConfig taskConfig) {
+		this.taskId = taskId;
 		this.taskType = taskType;
 		this.taskConfig = taskConfig;
 	}
-	
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
 	public String getTaskType() {
 		return(this.taskType);
 	}
