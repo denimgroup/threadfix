@@ -127,11 +127,11 @@ public class OrganizationsController {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
 		
-		Object test = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object userPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if (test instanceof ThreadFixUserDetails) {
+		if (userPrincipal instanceof ThreadFixUserDetails) {
 			model.addAttribute("shouldChangePassword",
-					!((ThreadFixUserDetails) test).hasChangedInitialPassword());
+					!((ThreadFixUserDetails) userPrincipal).hasChangedInitialPassword());
 		}
 	}
 
