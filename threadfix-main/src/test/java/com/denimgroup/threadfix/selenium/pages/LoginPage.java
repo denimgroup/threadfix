@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public class LoginPage extends BasePage {
 
@@ -40,6 +41,9 @@ public class LoginPage extends BasePage {
 		}
 		
 		webdriver.get(url);
+		if(webdriver instanceof InternetExplorerDriver){
+			driver.get("javascript:document.getElementById('overridelink').click();");
+		}
 		//rememberCheckbox = driver.findElementById("checkbox");
 	}
 	

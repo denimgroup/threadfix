@@ -28,17 +28,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
@@ -49,7 +44,13 @@ import com.denimgroup.threadfix.selenium.tests.ScanContents;
 //@RunWith (MultiThreadedRunner.class)
 public class ScanTests extends BaseTest {
 	
-	private WebDriver driver;
+	public ScanTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
@@ -64,7 +65,7 @@ public class ScanTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 	
