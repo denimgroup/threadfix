@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
@@ -123,11 +122,27 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/update", method = RequestMethod.GET)
-	public String updateApps(@PathVariable("typeId") int typeId) {
+	public String updateApps(@PathVariable("typeId") int typeId, HttpServletRequest request) {
 		log.info("Processing request for RemoteProviderType update.");
 		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
 		remoteProviderApplicationService.updateApplications(remoteProviderType);
 		remoteProviderTypeService.store(remoteProviderType);
+		
+		ControllerUtils.addSuccessMessage(request, "ThreadFix updated applications from " + 
+				remoteProviderType + ".");
+		
+		return "redirect:/configuration/remoteproviders/";
+	}
+	
+	@RequestMapping(value="/{typeId}/importAll", method = RequestMethod.GET)
+	public String importAllScans(@PathVariable("typeId") int typeId, HttpServletRequest request) {
+		log.info("Processing request for RemoteProviderType bulk import.");
+		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
+		
+		remoteProviderApplicationService.addBulkImportToQueue(remoteProviderType);
+		
+		ControllerUtils.addSuccessMessage(request, "ThreadFix is importing scans from " + remoteProviderType + 
+			" in the background. It may take a few minutes to finish the process.");
 		
 		return "redirect:/configuration/remoteproviders/";
 	}
@@ -135,7 +150,6 @@ public class RemoteProvidersController {
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
 	public String importScan(@PathVariable("typeId") int typeId, 
 			HttpServletRequest request, @PathVariable("appId") int appId) {
-		
 		
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
@@ -158,12 +172,6 @@ public class RemoteProvidersController {
 		remoteProviderTypeService.decryptCredentials(
 				remoteProviderApplication.getRemoteProviderType());
 		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		if (remoteProviderApplicationService.importScansForApplication(remoteProviderApplication)) {
 			return "redirect:/organizations/" + 
 						remoteProviderApplication.getApplication().getOrganization().getId() + 
@@ -173,19 +181,6 @@ public class RemoteProvidersController {
 			request.getSession().setAttribute("errorMessage", "No new scans were found.");
 			return "redirect:/configuration/remoteproviders/";
 		}
-	}
-	
-	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.GET)
-	public ModelAndView configureAppForm(@PathVariable("typeId") int typeId,
-			@PathVariable("appId") int appId) {
-		log.info("Processing request for Edit App page.");
-		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
-		
-		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/edit");
-		modelAndView.addObject("remoteProviderApplication", remoteProviderApplication);
-		modelAndView.addObject("organizationList", organizationService.loadAllActiveFilter());
-		return modelAndView;
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
@@ -220,32 +215,7 @@ public class RemoteProvidersController {
 			return "ajaxRedirectHarness";
 		}
 	}
-	
-	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.GET)
-	public ModelAndView configureStart(@PathVariable("typeId") int typeId) {
-		log.info("Processing request for Remote Provider config page.");
-		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
-		 
-		if (remoteProviderType.getPassword() != null) {
-			// This will prevent actual password data being sent to the page
-			remoteProviderType.setPassword(RemoteProviderTypeService.USE_OLD_PASSWORD);
-		}
-		if (remoteProviderType.getApiKey() != null) {
-			remoteProviderType.setApiKey(mask(remoteProviderType.getApiKey()));
-		}
-		
-		boolean isQualys = remoteProviderType.getName() != null && 
-				remoteProviderType.getName().equals(RemoteProviderType.QUALYSGUARD_WAS);
-		
-		ModelAndView modelAndView = new ModelAndView("config/remoteproviders/configure");
-		modelAndView.addObject(remoteProviderType);
-		modelAndView.addObject("isQualys",isQualys);
-		return modelAndView;
-	}
-	
-	
-	
+
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public String configureFinish(@PathVariable("typeId") int typeId,

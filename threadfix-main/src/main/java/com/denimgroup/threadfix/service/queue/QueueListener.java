@@ -41,6 +41,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -54,6 +55,7 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
 
 /**
  * @author bbeverly
+ * @author mcollins
  * 
  */
 @Component
@@ -102,52 +104,90 @@ public class QueueListener implements MessageListener {
 	@Override
 	@Transactional
 	public void onMessage(Message message) {
-		if (message instanceof TextMessage) {
-			TextMessage textMessage = (TextMessage) message;
-			try {
+		try {
+			
+			if (message instanceof TextMessage) {
+				TextMessage textMessage = (TextMessage) message;
 				String text = textMessage.getText();
 				
 				log.info("Processing text message: " + text);
 				
-				if (text.equals(QueueConstants.IMPORT_SCANS_REQUEST)) {
-					importScans();
-				} else if (text.equals(QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE)) {
-					syncTrackers();
+				switch(text) {
+					case QueueConstants.IMPORT_SCANS_REQUEST            : importScans();  break;
+					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE : syncTrackers(); break;
 				}
-				
-			} catch (JMSException je) {
-				log.warn("The JMS message threw an error.");
-				je.printStackTrace();
 			}
-		}
 
-		Thread.currentThread();
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
+			if (message instanceof MapMessage) {
+				MapMessage map = (MapMessage) message;
+			
+				String type = map.getString("type");
+				
+				switch (type) {
+					case QueueConstants.NORMAL_SCAN_TYPE : 
+						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
+								map.getInt("jobStatusId"), map.getString("userName"));
+						break;
+						
+					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
+						processDefectTrackerUpdateRequest(map.getInt("appId"),
+								map.getInt("jobStatusId"));
+						break;
+						
+					case QueueConstants.SUBMIT_DEFECT_TYPE:
+						processSubmitDefect(map.getObject("vulnerabilityIds"),
+								map.getString("summary"), map.getString("preamble"),
+								map.getString("component"), map.getString("version"),
+								map.getString("severity"), map.getString("priority"),
+								map.getString("status"), map.getInt("jobStatusId"));
+						break;
+						
+					case QueueConstants.IMPORT_REMOTE_PROVIDER_SCANS_REQUEST:
+						processRemoteProviderBulkImport(map.getInt("remoteProviderTypeId"),
+								map.getInt("jobStatusId"));
+						break;
+				}
+			}
+			
+		} catch (JMSException e) {
+			log.warn("The JMS message threw an error.");
 			e.printStackTrace();
 		}
+	}
 
-		if (message instanceof MapMessage) {
-			MapMessage map = (MapMessage) message;
-			try {
-				if (map.getString("type").equals(QueueConstants.NORMAL_SCAN_TYPE)) {
-					processScanRequest(map.getInt("channelId"), map.getString("fileName"),
-							map.getInt("jobStatusId"), map.getString("userName"));
-				} else if (map.getString("type").equals(
-						QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE)) {
-					processDefectTrackerUpdateRequest(map.getInt("appId"),
-							map.getInt("jobStatusId"));
-				} else if (map.getString("type").equals(QueueConstants.SUBMIT_DEFECT_TYPE)) {
-					processSubmitDefect(map.getObject("vulnerabilityIds"),
-							map.getString("summary"), map.getString("preamble"),
-							map.getString("component"), map.getString("version"),
-							map.getString("severity"), map.getString("priority"),
-							map.getString("status"), map.getInt("jobStatusId"));
+	private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
+		log.info("Remote Provider Bulk Import job received");
+		updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
+		
+		RemoteProviderType type = remoteProviderTypeService.load(remoteProviderTypeId);
+		
+		if (type == null) {
+			log.error("Type was null, Remote Provider import failed.");
+			closeJobStatus(jobStatusId, "Type was null, Remote Provider import failed.");
+		} else {
+			
+			List<RemoteProviderApplication> applications = type.getRemoteProviderApplications();
+			
+			if (applications == null || applications.isEmpty()) {
+				log.error("No applications found, Remote Provider import failed.");
+				closeJobStatus(jobStatusId, "No applications found, Remote Provider import failed.");
+			} else {
+				
+				updateJobStatus(jobStatusId, "Starting scan import for " + applications.size() + " applications.");
+				
+				for (RemoteProviderApplication application : applications) {
+					if (application != null && application.getApplicationChannel() != null) {
+						boolean success = remoteProviderApplicationService.importScansForApplication(application);
+						
+						if (success) {
+							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
+						} else {
+							log.info("Remote Provider import was successful for application " + application.getNativeId());
+						}
+					}
 				}
-			} catch (JMSException e) {
-				log.warn("The JMS message threw an error.");
-				e.printStackTrace();
+				
+				closeJobStatus(jobStatusId, "Finished updating " + applications.size() + " applications.");
 			}
 		}
 	}
@@ -162,8 +202,7 @@ public class QueueListener implements MessageListener {
 		}
 		
 		for (Application application : apps) {
-			if (application != null &&
-					application.getDefectTracker() != null) {
+			if (application != null && application.getDefectTracker() != null) {
 				defectService.updateVulnsFromDefectTracker(application);
 			}
 		}
@@ -238,7 +277,7 @@ public class QueueListener implements MessageListener {
 		// TODO Move the jobStatus updating to the importer to improve messages
 		// once the messages persist
 		
-		updateJobStatus(jobStatusId, "Job recieved");
+		updateJobStatus(jobStatusId, "Job received");
 		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
@@ -251,7 +290,6 @@ public class QueueListener implements MessageListener {
 					" scan to the Application " + appChannel.getApplication().getName() +
 					" (filename " + fileName + ").");
 		}
-			
 		
 		updateJobStatus(jobStatusId, "Processing Scan from file.");
 		
@@ -331,7 +369,6 @@ public class QueueListener implements MessageListener {
 	@Transactional
 	private void closeJobStatus(Integer id, String status) {
 		JobStatus jobStatus = jobStatusService.loadJobStatus(id);
-		
 		
 		if (jobStatus != null) {
 			jobStatusService.closeJobStatus(jobStatus, status);

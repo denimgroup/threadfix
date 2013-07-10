@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.service;
 import java.util.Calendar;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
@@ -42,10 +40,6 @@ public interface ScanService {
 	 */
 	List<Scan> loadAll();
 	
-	/**
-	 */
-	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
-
 	/**
 	 * @param scanId
 	 * @return
@@ -98,14 +92,6 @@ public interface ScanService {
 
 	/**
 	 * 
-	 * @param channelId
-	 * @param file
-	 * @return
-	 */
-	String saveFile(Integer channelId, MultipartFile file);
-
-	/**
-	 * 
 	 * @param scanId
 	 * @return
 	 */
@@ -124,13 +110,6 @@ public interface ScanService {
 	 * @param scan
 	 */
 	void loadStatistics(Scan scan);
-
-	/**
-	 * 
-	 * @param file
-	 * @return
-	 */
-	String getScannerType(MultipartFile file);
 
 	/**
 	 * @param number

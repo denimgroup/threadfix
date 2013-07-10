@@ -3,21 +3,28 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.*;
 
 import org.junit.*;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.junit.runner.RunWith;
 
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
+@RunWith(MultiThreadedRunner.class)
 public class LoginTests extends BaseTest{
 
 	
-	private WebDriver driver;
+	public LoginTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 	

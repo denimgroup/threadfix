@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
@@ -150,7 +151,7 @@ public class QueueSenderImpl implements QueueSender {
 			e.printStackTrace();
 		}
 
-		sendMap(defectTrackerVulnMap, null, null);
+		sendMap(defectTrackerVulnMap);
 	}
 
 	/*
@@ -189,19 +190,36 @@ public class QueueSenderImpl implements QueueSender {
 			e.printStackTrace();
 		}
 
-		sendMap(submitDefectMap, null, null);
+		sendMap(submitDefectMap);
+	}
+	
+	public void addRemoteProviderImport(RemoteProviderType remoteProviderType) {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		log.info("User " + userName + " is adding a remote provider import to the queue for " + 
+				remoteProviderType.getName() + ".");
+		
+		MapMessage remoteProviderImportMap = new ActiveMQMapMessage();
+
+		try {
+			remoteProviderImportMap.setObject("remoteProviderTypeId", remoteProviderType.getId());
+			remoteProviderImportMap.setString("type", QueueConstants.IMPORT_REMOTE_PROVIDER_SCANS_REQUEST);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			e.printStackTrace();
+		}
+
+		sendMap(remoteProviderImportMap);
 	}
 
-	/**
-	 * @param message
-	 */
 	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}
 
-	/**
-	 * @param map
-	 */
+	private void sendMap(MapMessage map) {
+		sendMap(map, null, null);
+	}
+	
 	private void sendMap(MapMessage map, Calendar calendar, ApplicationChannel applicationChannel) {
 		try {
 			if (map.getString("type") != null) {

@@ -43,9 +43,21 @@
 					<spring:url value="/configuration/remoteproviders/{id}/update" htmlEscape="true" var="updateUrl">
 						<spring:param name="id" value="${ remoteProvider.id }"/>
 					</spring:url>
-					<a class="btn" id="updateApps${ outerStatus.count }" style="font-size:60%;padding-left:10px;padding-right:8px;" href="${ fn:escapeXml(updateUrl) }">Update Apps</a>
+					<a class="btn header-button" id="updateApps${ outerStatus.count }" style="font-size:60%;padding-left:10px;padding-right:8px;" href="${ fn:escapeXml(updateUrl) }">Update Applications</a>
+					
+					<c:if test="${ remoteProvider.hasConfiguredApplications }">
+						<spring:url value="/configuration/remoteproviders/{id}/importAll" htmlEscape="true" var="importAllUrl">
+							<spring:param name="id" value="${ remoteProvider.id }"/>
+						</spring:url>
+						<a class="btn header-button" id="updateApps${ outerStatus.count }" 
+								style="font-size:60%;padding-left:10px;padding-right:8px;" 
+								href="${ fn:escapeXml(importAllUrl) }">
+							Import All Scans
+						</a>
+					</c:if>
+					
 					<c:if test="${ canManageRemoteProviders }">
-						<button id="clearConfig${ outerStatus.count }" onclick="return confirm('Are you sure? This will clear your credentials and delete the apps in the table below.')" class="btn btn-primary" type="submit">Clear <c:out value="${ remoteProvider.name }"/> Configuration</button>
+						<button id="clearConfig${ outerStatus.count }" onclick="return confirm('Are you sure? This will clear your credentials and delete the apps in the table below.')" class="btn btn-primary" type="submit">Clear Configuration</button>
 					</c:if>
 				</h2>
 			</form:form>
@@ -70,12 +82,23 @@
 							</td>
 							<td id="provider${ outerStatus.count }tfteamname${ innerStatus.count }">
 								<c:if test="${ not empty remoteProviderApplication.application }">
-									<c:out value="${ remoteProviderApplication.application.organization.name }"/>
+									<spring:url value="/organizations/{teamId}" htmlEscape="true" var="teamUrl">
+										<spring:param name="teamId" value="${ remoteProviderApplication.application.organization.id }"/>
+									</spring:url>
+									<a href="${ fn:escapeXml(teamUrl) }">
+										<c:out value="${ remoteProviderApplication.application.organization.name }"/>
+									</a>
 								</c:if>
 							</td>
 							<td id="provider${ outerStatus.count }tfappname${ innerStatus.count }">
 								<c:if test="${ not empty remoteProviderApplication.application }">
-									<c:out value="${ remoteProviderApplication.application.name }"/>
+									<spring:url value="/organizations/{teamId}/applications/{appId}" htmlEscape="true" var="applicationUrl">
+										<spring:param name="teamId" value="${ remoteProviderApplication.application.organization.id }"/>
+										<spring:param name="appId" value="${ remoteProviderApplication.application.id }"/>
+									</spring:url>
+									<a href="${ fn:escapeXml(applicationUrl) }">
+										<c:out value="${ remoteProviderApplication.application.name }"/>
+									</a>
 								</c:if>
 							</td>
 							<c:if test="${ canManageRemoteProviders }">

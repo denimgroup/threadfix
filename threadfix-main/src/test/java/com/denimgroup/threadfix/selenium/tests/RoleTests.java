@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
@@ -16,7 +16,13 @@ import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class RoleTests extends BaseTest {
 
-	private WebDriver driver;
+	public RoleTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
+
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 
 	RolesIndexPage rolesIndexPage = null;
@@ -25,7 +31,7 @@ public class RoleTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 

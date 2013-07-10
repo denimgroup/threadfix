@@ -23,7 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -31,27 +36,100 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
+@RunWith(Parameterized.class)
 public abstract class BaseTest {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	private FirefoxDriver driver;
-
+	private WebDriver driver;
+	private static ChromeDriverService service;
+	
+	public BaseTest(String browser){
+		if(browser.equals("chrome")){
+			String location = BaseTest.class.getClassLoader().getResource("Drivers").getFile();
+			String log = "";
+			if(System.getProperty("os.name").startsWith("Windows")){
+				location = location + "/chromedriver.exe";
+				log = "NUL";
+			}else{
+				location = location + "/chromedriver";
+				log = "/dev/null";
+			}
+		    service = new ChromeDriverService.Builder()
+		    							.usingDriverExecutable(new File(location))
+		    							.usingAnyFreePort()
+		    							.withLogFile(new File(log))
+		    							.build();
+		    try {
+				service.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    driver = new RemoteWebDriver(service.getUrl(),DesiredCapabilities.chrome());
+		}
+		
+		if(browser.equals("firefox")){
+			driver = new FirefoxDriver();
+		}
+		
+		if(browser.equals("IE")){
+			String location = BaseTest.class.getClassLoader().getResource("Drivers").getFile();
+			location = location + "/IEDriverServer.exe";
+			DesiredCapabilities capabilities = new DesiredCapabilities();
+			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+			driver = new InternetExplorerDriver(capabilities); 
+		}
+	}
+	
+	@Parameterized.Parameters
+	public static Collection<String[]> drivers() {
+		Collection<String[]> params = new ArrayList<String[]>();
+		String  ff = System.getProperty("FIREFOX");
+		String  chrome = System.getProperty("CHROME");
+		String  ie = System.getProperty("IE");
+		if(!(ff==null) && ff.equals("true")){
+			String[] f = {"firefox"};
+			params.add(f);
+		}
+		
+		if(!(chrome==null) && chrome.equals("true")){
+			String[] f = {"chrome"};
+			params.add(f);
+		}
+		
+		if(!(ie==null) && ie.equals("true")){
+			String[] f = {"IE"};
+			params.add(f);
+		}
+		return params;
+	}
+	
 	@Before
 	public void init() {
-		driver = new FirefoxDriver();
 	}
 
 	@After
 	public void shutDown() {
-		driver.quit();
+		if(driver instanceof InternetExplorerDriver || driver instanceof FirefoxDriver){
+			driver.quit();
+		}else{
+			service.stop();
+		}
 	}
 	
-	public FirefoxDriver getDriver(){
+	public WebDriver getDriver(){
 		log.debug("Getting Driver");
 		return driver;
 	}

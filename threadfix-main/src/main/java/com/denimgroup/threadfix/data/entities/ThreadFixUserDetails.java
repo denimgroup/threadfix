@@ -35,6 +35,7 @@ public class ThreadFixUserDetails extends User {
 	private static final long serialVersionUID = -3748634330559506014L;
 
 	private Boolean hasChangedInitialPassword = false;
+	private boolean isLdapUser = false;
 	
 	private String salt;
 
@@ -60,8 +61,9 @@ public class ThreadFixUserDetails extends User {
 		setTeamMap(teamMap);
 		setApplicationMap(applicationMap);
 		setSalt(salt);
+		setIsLdapUser(isLdapUser != null && isLdapUser);
 		boolean shouldPromptForPassword = (hasChangedInitialPassword != null && hasChangedInitialPassword) ||
-				(isLdapUser != null && isLdapUser);
+				getIsLdapUser();
 		setHasChangedInitialPassword(shouldPromptForPassword);
 		setUserId(userId);
 	}
@@ -122,5 +124,13 @@ public class ThreadFixUserDetails extends User {
 
 	public void setTeamMap(Map<Integer, Set<Permission>> teamMap) {
 		this.teamMap = teamMap;
+	}
+
+	public boolean getIsLdapUser() {
+		return isLdapUser;
+	}
+
+	public void setIsLdapUser(boolean isLdapUser) {
+		this.isLdapUser = isLdapUser;
 	}
 }

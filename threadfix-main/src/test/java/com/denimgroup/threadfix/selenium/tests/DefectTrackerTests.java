@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
@@ -38,7 +38,11 @@ import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
 public class DefectTrackerTests extends BaseTest {
 
-	private WebDriver driver;
+	public DefectTrackerTests(String browser) {
+		super(browser);
+	}
+
+	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
@@ -68,7 +72,7 @@ public class DefectTrackerTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 		assignVars();
 	}

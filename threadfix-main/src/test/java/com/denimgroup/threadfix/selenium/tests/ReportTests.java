@@ -2,15 +2,13 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.assertTrue;
 
-//import java.util.Map;
 import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-//import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
@@ -22,9 +20,13 @@ import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 
 public class ReportTests extends BaseTest {
-	private FirefoxDriver driver;
+	public ReportTests(String browser) {
+		super(browser);
+		// TODO Auto-generated constructor stub
+	}
 
-	// private WebDriver driver;
+	private RemoteWebDriver driver;
+
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public UploadScanPage uploadScanPage;
@@ -37,20 +39,16 @@ public class ReportTests extends BaseTest {
 
 	Random generator = new Random();
 
-//	private String[] criticalities = { ApplicationCriticality.LOW,
-//			ApplicationCriticality.MEDIUM, ApplicationCriticality.HIGH,
-//			ApplicationCriticality.CRITICAL };
 
 	boolean mySQL = true;
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
-//	private static Map<String, String> fileMap = ScanTests.SCAN_FILE_MAP;
 
 	@Before
 	public void init() {
 		super.init();
-		driver = super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
 

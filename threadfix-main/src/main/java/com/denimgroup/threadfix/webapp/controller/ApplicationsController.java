@@ -121,10 +121,11 @@ public class ApplicationsController {
 		long falsePositiveCount = applicationService.getCount(appId, falsePositiveBean);
 		
 		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS, 
-				Permission.CAN_UPLOAD_SCANS, Permission.CAN_MODIFY_VULNERABILITIES, 
-				Permission.CAN_SUBMIT_DEFECTS, Permission.CAN_VIEW_JOB_STATUSES );
-		
-//		applicationService.decryptCredentials(application);
+				Permission.CAN_UPLOAD_SCANS,
+				Permission.CAN_MODIFY_VULNERABILITIES, 
+				Permission.CAN_SUBMIT_DEFECTS, 
+				Permission.CAN_VIEW_JOB_STATUSES,
+				Permission.CAN_GENERATE_REPORTS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);

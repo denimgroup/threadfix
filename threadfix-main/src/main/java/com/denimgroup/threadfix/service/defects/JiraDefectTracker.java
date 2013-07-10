@@ -51,6 +51,10 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * @author mcollins
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
+	
+	// The double slash is the Jira newline wiki syntax.
+	private static final String newLineRegex = "\\\\n", 
+			doubleSlashNewLine = " \\\\\\\\\\\\\\\\ ";
 				
 	// HELPER METHODS
 	
@@ -120,7 +124,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		log.info("Return value will be " + retVal);
 		
-		return (retVal);
+		return retVal;
 	}
 	
 	private boolean hasXSeraphLoginReason() {
@@ -135,7 +139,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		try {
 			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 
-			setupAuthorization(httpConnection, username, password);
+			RestUtils.setupAuthorization(httpConnection, username, password);
 			
 			httpConnection.addRequestProperty("Content-Type", "application/json");
 			httpConnection.addRequestProperty("Accept", "application/json");
@@ -150,12 +154,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 	
 	private List<String> getNamesFromList(String path) {
-		String result = getUrlAsString(getUrlWithRest() + path, username, password);
+		String result = RestUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 
 		List<String> names = new ArrayList<String>();
 		
 		if (result != null) {
-			JSONArray returnArray = getJSONArray(result);
+			JSONArray returnArray = RestUtils.getJSONArray(result);
 		
 			for (int i = 0; i < returnArray.length(); i++) {
 				try {
@@ -170,13 +174,13 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 	
 	private Map<String,String> getNameFieldMap(String path, String field) {
-		String result = getUrlAsString(getUrlWithRest() + path, username, password);
+		String result = RestUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 		
 		if (result == null) {
 			return null;
 		}
 		
-		JSONArray returnArray = getJSONArray(result);
+		JSONArray returnArray = RestUtils.getJSONArray(result);
 		
 		Map<String,String> nameFieldMap = new HashMap<String,String>();
 		
@@ -199,12 +203,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		log.info("Checking JIRA credentials.");
 		lastError = null;
 		
-		String response = getUrlAsString(getUrlWithRest() + "user?username=" + 
+		String response = RestUtils.getUrlAsString(getUrlWithRest() + "user?username=" + 
 											getUsername(),getUsername(),getPassword());
 		
 		try {
-			boolean valid = response != null && getJSONObject(response) != null && 
-					getJSONObject(response).getString("name").equals(getUsername());
+			boolean valid = response != null && RestUtils.getJSONObject(response) != null && 
+					RestUtils.getJSONObject(response).getString("name").equals(getUsername());
 			if (valid) {
 				log.info("JIRA Credentials are valid.");
 			} else {
@@ -351,13 +355,15 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 				
 		payload += " } }";
+		
+		payload = payload.replaceAll(newLineRegex, doubleSlashNewLine);
 				
-		String result = postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
+		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;
 		try {
-			if (result != null && getJSONObject(result) != null &&
-					getJSONObject(result).getString("key") != null) {
-				id = getJSONObject(result).getString("key");
+			if (result != null && RestUtils.getJSONObject(result) != null &&
+					RestUtils.getJSONObject(result).getString("key") != null) {
+				id = RestUtils.getJSONObject(result).getString("key");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -394,7 +400,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		log.info("Updating status for defect " + defect.getNativeId());
 		
-		String result = getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(), 
+		String result = RestUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(), 
 				getUsername(), getPassword());
 		
 		if (result != null) {

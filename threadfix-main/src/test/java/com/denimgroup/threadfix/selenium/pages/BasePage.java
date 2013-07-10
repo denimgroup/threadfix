@@ -33,6 +33,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -42,10 +43,10 @@ public abstract class BasePage {
 	
 	public final static int NUM_SECONDS_TO_WAIT = 20;
 	
-	protected FirefoxDriver driver;
+	protected RemoteWebDriver driver;
 	
 	public BasePage(WebDriver webdriver){
-		driver = (FirefoxDriver) webdriver;
+		driver =  (RemoteWebDriver) webdriver;
 		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
 		
 		log.debug("Loading " + this.getClass().toString());

@@ -6,7 +6,7 @@ import datetime, re
 source_code_loc='https://code.google.com/p/threadfix'
 local_working_folder_loc = '/home/vagrant' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
-local_path = 'threadfix-main/threadfix/src/main/resources' #path to .deploy files
+local_path = 'threadfix/threadfix-main/src/main/resources' #path to .deploy files
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
@@ -40,7 +40,7 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix' % local_working_folder_loc):
+    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
         local('update-java-alternatives -s java-1.7.0-openjdk-i386')
         local('sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-i386 /usr/lib/jvm/default-java')
         res = local('mvn package -DskipTests -P mysql')

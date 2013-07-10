@@ -130,7 +130,9 @@ public class HttpRestUtils {
 		
 		try {
 			for (int i = 0; i < paramNames.length; i++) {
-				post.addParameter(paramNames[i], paramVals[i]);
+				if (paramNames[i] != null && paramVals[i] != null) {
+					post.addParameter(paramNames[i], paramVals[i]);
+				}
 			}
 			
 			HttpClient client = new HttpClient();

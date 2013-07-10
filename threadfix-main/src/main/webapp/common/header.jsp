@@ -38,9 +38,16 @@
 						</div>
 				  	 </div>
 					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
-						<li class="normalLinks">
-					    	<a id="changePasswordLink" href="<spring:url value="/configuration/users/password" htmlEscape="true"/>">Change My Password</a>
-					    </li>
+						
+						<security:authentication var="principal" property="principal" />
+						<c:if test="${ not principal.isLdapUser }">
+							<li class="normalLinks">
+						    	<a id="changePasswordLink" href="<spring:url value="/configuration/users/password" 
+						    			htmlEscape="true"/>">
+						    		Change My Password
+						    	</a>
+						    </li>
+						</c:if>
 						<li class="normalLinks">
 							<a id="toggleHelpLink" href="javascript:toggleHelp()">Toggle Help</a>
 						</li>
