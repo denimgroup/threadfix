@@ -28,9 +28,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,24 +92,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private UserDao userDao = null;
 	private JobStatusService jobStatusService;
 
-	// These generic types should have parameters
-	private static final String[] VULNS_WITH_PARAMS = { 
-			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
-			GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
-			GenericVulnerability.CWE_EVAL_INJECTION,
-			GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
-			GenericVulnerability.CWE_LDAP_INJECTION,
-			GenericVulnerability.CWE_XPATH_INJECTION,
-			GenericVulnerability.CWE_SQL_INJECTION,
-			GenericVulnerability.CWE_OS_COMMAND_INJECTION,
-			GenericVulnerability.CWE_GENERIC_INJECTION
-		};
-	
-	private static final Set<String> VULNS_WITH_PARAMETERS_SET = new TreeSet<String>();
-	
-	static {
-		Collections.addAll(VULNS_WITH_PARAMETERS_SET, VULNS_WITH_PARAMS);
-	}
+	private static final Set<String> VULNS_WITH_PARAMETERS_SET = 
+			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GenericVulnerability.VULNS_WITH_PARAMS)));
 
 	// This string makes getting the applicationRoot simpler.
 	private String projectRoot = null;
@@ -146,7 +132,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.warn("The scan processing failed to produce a scan.");
 			return null;
 		}
-
+		
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
 		
@@ -351,6 +337,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	@Transactional(readOnly = false)
 	public void updateVulnerabilities(Application application) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
+		
+		FindingMatcher matcher = FindingMatcher.getBasicMatcher(application);
 
 		if (vulnerabilities != null) {
 			for (int i = 0; i < vulnerabilities.size(); i++) {
@@ -359,7 +347,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 					Finding finding = vulnerabilities.get(i).getFindings()
 							.get(0);
 					for (int j = i + 1; j < vulnerabilities.size(); j++) {
-						if (doesMatch(finding, vulnerabilities.get(j))) {
+						if (matcher.doesMatch(finding, vulnerabilities.get(j))) {
 
 							for (Finding vulnFinding : vulnerabilities.get(j)
 									.getFindings()) {
@@ -1041,6 +1029,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 */
 	private void appMerge(Scan scan, Application application, Integer statusId) {
 		
+		FindingMatcher matcher = FindingMatcher.getBasicMatcher(application);
+		
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
 		int initialOld = 0, numUnableToParseVuln = 0, numMergedInsideScan = 0;
@@ -1097,7 +1087,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			boolean match = false;
 
 			for (Vulnerability vuln : vulns) {
-				match = doesMatch(finding, vuln);
+				match = matcher.doesMatch(finding, vuln);
 				if (match) {
 					finding.setFirstFindingForVuln(false);
 
@@ -1159,7 +1149,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			// db, compare it to valid new vulns still in memory
 			if (!match) {
 				for (Vulnerability newVuln : newVulns) {
-					match = doesMatch(finding, newVuln);
+					match = matcher.doesMatch(finding, newVuln);
 					if (match) {
 						finding.setFirstFindingForVuln(false);
 
@@ -1265,333 +1255,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scanDao.saveOrUpdate(finding.getScan());
 	}
 
-	/**
-	 * This is the method that determines whether a finding matches a
-	 * vulnerability.
-	 * 
-	 * @param finding
-	 * @param vuln
-	 * @return
-	 */
-	private boolean doesMatch(Finding finding, Vulnerability vuln) {
-		if (finding == null || vuln == null)
-			return false;
-
-		// iterate through the findings of the vulnerability and try to match
-		// them to the finding
-		for (Finding vulnFinding : vuln.getFindings()) {
-			if (!finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()
-						&& dynamicToDynamicMatch(finding, vulnFinding))
-					return true;
-				else if (vulnFinding.getIsStatic()
-						&& dynamicToStaticMatch(finding, vulnFinding))
-					return true;
-			} else if (finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()
-						&& dynamicToStaticMatch(vulnFinding, finding))
-					return true;
-				else if (vulnFinding.getIsStatic()
-						&& staticToStaticMatch(finding, vulnFinding))
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * If a static finding is merged to a vulnerability with at least one static
-	 * finding, this method is used to figure out whether they should be merged.
-	 * 
-	 * @param oldFinding
-	 * @param newFinding
-	 * @return
-	 */
-	private boolean staticToStaticMatch(Finding oldFinding, Finding newFinding) {
-		if (oldFinding == null || newFinding == null)
-			return false;
-
-		// check that parameters match
-		if (oldFinding.getSurfaceLocation() != null
-				&& newFinding.getSurfaceLocation() != null
-				&& (oldFinding.getSurfaceLocation().getParameter() == null
-						|| newFinding.getSurfaceLocation().getParameter() == null || !oldFinding
-						.getSurfaceLocation().getParameter()
-						.equals(newFinding.getSurfaceLocation().getParameter())))
-			return false;
-
-		// check that generic vulns match
-		if (getGenericVulnerability(oldFinding.getChannelVulnerability()) == null
-				|| getGenericVulnerability(newFinding.getChannelVulnerability()) == null
-				|| !getGenericVulnerability(
-						oldFinding.getChannelVulnerability()).getId().equals(
-						getGenericVulnerability(
-								newFinding.getChannelVulnerability()).getId()))
-			return false;
-
-		// If match, compare their DataFlowElement (source file name, line
-		// number and column number)
-		List<DataFlowElement> oldDataFlowElements = oldFinding
-				.getDataFlowElements();
-		List<DataFlowElement> newDataFlowElements = newFinding
-				.getDataFlowElements();
-
-		// If they are not empty, sort them and continue
-		if (oldDataFlowElements != null && oldDataFlowElements.size() != 0
-				&& newDataFlowElements != null
-				&& newDataFlowElements.size() != 0) {
-
-			Collections.sort(oldDataFlowElements);
-			Collections.sort(newDataFlowElements);
-
-			// If both of the DataFlowElement Lists are of size 1, compare
-			// them directly.
-			if (oldDataFlowElements.size() == 1
-					&& newDataFlowElements.size() == 1) {
-				return compareDataFlowElements(oldDataFlowElements.get(0),
-						newDataFlowElements.get(0));
-			}
-			// Otherwise, compare the source and the sink of the two
-			// DateFlowElement.
-			else {
-				return compareDataFlowElements(oldDataFlowElements.get(0),
-						newDataFlowElements.get(0))
-						&& compareDataFlowElements(
-								oldDataFlowElements.get(oldDataFlowElements
-										.size() - 1),
-								newDataFlowElements.get(newDataFlowElements
-										.size() - 1));
-			}
-		}
-
-		return false;
-	}
-
-	// TODO improve this method
-	private boolean dynamicToStaticMatch(Finding dynamicFinding,
-			Finding staticFinding) {
-		if (dynamicFinding == null || staticFinding == null)
-			return false;
-
-		// check to make sure they have the same generic vulnerability - this
-		// part should be ok across types of scanners
-		GenericVulnerability dynamicFindingGenericVuln = getGenericVulnerability(dynamicFinding
-				.getChannelVulnerability());
-		GenericVulnerability staticFindingGenericVuln = getGenericVulnerability(staticFinding
-				.getChannelVulnerability());
-
-		if (dynamicFindingGenericVuln != null
-				&& dynamicFindingGenericVuln.getId() != null
-				&& staticFindingGenericVuln != null
-				&& staticFindingGenericVuln.getId() != null
-				&& dynamicFindingGenericVuln.getId().equals(
-						staticFindingGenericVuln.getId())) {
-
-			// TODO hash out exactly what to do here in all the cases
-
-			// check to see that they have the same path
-			if (dynamicFinding.getSurfaceLocation() != null
-					&& staticFinding.getSurfaceLocation() != null) {
-
-				// the static parameter and path have been guessed at by the
-				// individual scanner
-				// TODO look at how this guessing takes place / maybe move the
-				// guessing here
-				String dynamicParam = dynamicFinding.getSurfaceLocation()
-						.getParameter();
-				String staticParam = staticFinding.getSurfaceLocation()
-						.getParameter();
-				String dynamicPath = dynamicFinding.getSurfaceLocation()
-						.getPath();
-				String staticPath = staticFinding.getSurfaceLocation()
-						.getPath();
-
-				if (dynamicPath != null && !dynamicPath.startsWith("/"))
-					dynamicPath = "/".concat(dynamicPath);
-				if (staticPath != null && !staticPath.startsWith("/"))
-					staticPath = "/".concat(staticPath);
-
-				if (dynamicPath != null && !dynamicPath.trim().equals("")
-						&& staticPath != null && !staticPath.trim().equals("")
-						&& dynamicPath.equals(staticPath)) {
-
-					// barring cases where faulty URL parsing returned a
-					// matching URL,
-					// the findings are on the same page at this point.
-					if ((dynamicParam == null || dynamicParam.trim().equals(""))
-							&& (staticParam == null || staticParam.trim()
-									.equals("")))
-						// if they don't have params, they can be offered as a
-						// potential match
-						return true;
-					else if ((dynamicParam == null || dynamicParam.trim()
-							.equals(""))
-							|| (staticParam == null)
-							|| staticParam.trim().equals(""))
-						// if we get here, one or the other parameter is null,
-						// and should be offered as a potential match
-						return false;
-					else if (dynamicParam.equals(staticFinding
-							.getSurfaceLocation().getParameter()))
-						// if they match all three things, they can be
-						// automatically matched
-						return true;
-					else
-						// if the code reaches this point the parameters are
-						// different and the findings should not be merged
-						return false;
-				} else {
-
-					// if we get here, the paths didn't match for one reason or
-					// another.
-					// if they have the same parameters, we should offer them as
-					// a potential match,
-					// because parsing a URL is not very reliable
-					// check to see that the parameters match or are both
-					// missing
-					if ((dynamicParam == null || dynamicParam.trim().equals(""))
-							&& ((staticParam == null) || staticParam.trim()
-									.equals("")))
-						// if they don't have params, they can't be matched (and
-						// shouldn't be in the system)
-						return false;
-					else if ((dynamicParam == null || dynamicParam.trim()
-							.equals(""))
-							|| (staticParam == null)
-							|| staticParam.trim().equals(""))
-						// if we get here, one or the other parameter is null,
-						// and could be offered as a potential match
-						// because path parsing may have failed.
-						return false;
-					else if (dynamicParam.equals(staticFinding
-							.getSurfaceLocation().getParameter()))
-						// if they have the same param, they should be offered
-						// as a potential match
-						return false;
-					else
-						// null location and no parameter means no match.
-						return false;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	// both findings are assumed to be dynamic.
-	private boolean dynamicToDynamicMatch(Finding newFinding, Finding oldFinding) {
-		if (newFinding == null || oldFinding == null)
-			return false;
-
-		// check to make sure they have the same generic vulnerability
-		GenericVulnerability newFindingGenericVuln = getGenericVulnerability(newFinding
-				.getChannelVulnerability());
-		GenericVulnerability oldFindingGenericVuln = getGenericVulnerability(oldFinding
-				.getChannelVulnerability());
-
-		if (newFindingGenericVuln != null
-				&& newFindingGenericVuln.getId() != null
-				&& oldFindingGenericVuln != null
-				&& oldFindingGenericVuln.getId() != null
-				&& newFindingGenericVuln.getId().equals(
-						oldFindingGenericVuln.getId())) {
-
-			// check to see that they have the same path
-			if (newFinding.getSurfaceLocation() != null
-					&& oldFinding.getSurfaceLocation() != null) {
-				if (newFinding.getSurfaceLocation().getPath() != null
-						&& oldFinding.getSurfaceLocation().getPath() != null
-						&& newFinding
-								.getSurfaceLocation()
-								.getPath()
-								.equals(oldFinding.getSurfaceLocation()
-										.getPath())) {
-
-					// check to see that the parameters match or are both
-					// missing
-					if (newFinding.getSurfaceLocation().getParameter() == null
-							&& oldFinding.getSurfaceLocation().getParameter() == null)
-						return true;
-					else if (newFinding.getSurfaceLocation().getParameter() != null
-							&& newFinding
-									.getSurfaceLocation()
-									.getParameter()
-									.equals(oldFinding.getSurfaceLocation()
-											.getParameter()))
-						return true;
-					// if the code reaches this point the findings are in the
-					// same location but have
-					// different parameters and should be treated as different
-					// vulnerabilities.
-				}
-			}
-		}
-
-		return false;
-	}
-
-	// Not all dataFlowElements have Column Numbers, and the default is 0,
-	// so it is hard to do a meaningful comparison with that data. Plus, we
-	// compared variables before starting the rest of the static-static
-	// comparison.
-	// TODO look at changing this comparison
-	private boolean compareDataFlowElements(DataFlowElement oldElement,
-			DataFlowElement newElement) {
-		if (oldElement == null || newElement == null)
-			return false;
-
-		return sourceFileNameCompare(oldElement.getSourceFileName(),
-				newElement.getSourceFileName())
-				&& oldElement.getLineNumber() == newElement.getLineNumber();
-	}
-
-	// Compare the relative paths according to the application's projectRoot
-	// variable.
-	private boolean sourceFileNameCompare(String fileName1, String fileName2) {
-		if (fileName1 == null || fileName1.trim().equals("")
-				|| fileName2 == null || fileName2.equals(""))
-			return false;
-
-		String path1 = cleanPathString(fileName1);
-		String path2 = cleanPathString(fileName2);
-
-		// if for some reason cleaning the paths failed, compare the uncleaned
-		// paths.
-		if (path1 == null || path1.trim().equals("") || path2 == null
-				|| path2.trim().equals(""))
-			return fileName1.equals(fileName2);
-
-		// if we don't have a project root, or it isn't in one of the paths,
-		// return normal comparison of the cleaned strings.
-		if (projectRoot == null || projectRoot.trim().equals("")
-				|| !path1.contains(projectRoot) || !path2.contains(projectRoot))
-			return path1.equals(path2);
-
-		// if we do have it and it is in both paths, compare the relative paths
-		if (path1.contains(projectRoot) && path2.contains(projectRoot)) {
-			return path1.substring(path1.indexOf(projectRoot)).equals(
-					path2.substring(path2.indexOf(projectRoot)));
-		}
-
-		return false;
-	}
-
-	// we want to compare strings that have been lowercased, have had
-	// their leading / removed, and have / or \ all pointing the same way.
-	private String cleanPathString(String inputString) {
-		if (inputString == null || inputString.trim().equals(""))
-			return null;
-		String outputString = inputString.toLowerCase();
-
-		if (outputString.contains("\\"))
-			outputString = outputString.replace("\\", "/");
-
-		if (outputString.charAt(0) == '/')
-			outputString = outputString.substring(1);
-
-		return outputString;
-	}
+	
 
 	/**
 	 * Find the hashed vulnerability ID(s) and put them into a vulnerability
@@ -1702,19 +1366,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.warn("The finding had neither path nor parameter and no vulnerability could be parsed.");
 			return null;
 		}
-	}
-
-	private GenericVulnerability getGenericVulnerability(
-			ChannelVulnerability channelVulnerability) {
-		if (channelVulnerability == null
-				|| channelVulnerability.getVulnerabilityMaps() == null
-				|| channelVulnerability.getVulnerabilityMaps().size() == 0
-				|| channelVulnerability.getVulnerabilityMaps().get(0) == null
-				|| channelVulnerability.getVulnerabilityMaps().get(0)
-						.getGenericVulnerability() == null)
-			return null;
-		return channelVulnerability.getVulnerabilityMaps().get(0)
-				.getGenericVulnerability();
 	}
 
 	/**
