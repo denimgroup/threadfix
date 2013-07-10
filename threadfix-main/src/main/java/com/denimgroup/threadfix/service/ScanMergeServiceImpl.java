@@ -64,8 +64,6 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
-import com.denimgroup.threadfix.service.framework.AbstractURLCalculator;
-import com.denimgroup.threadfix.service.framework.URLCalculatorFactory;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -90,9 +88,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 	private static final Set<String> VULNS_WITH_PARAMETERS_SET = 
 			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GenericVulnerability.VULNS_WITH_PARAMS)));
-
-	// This string makes getting the applicationRoot simpler.
-	private String projectRoot = null;
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
@@ -131,9 +126,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 		
-		processFindings(scan);
-		scanDao.saveOrUpdate(scan);
-		
 		updateScanCounts(scan);
 
 		return scan;
@@ -145,7 +137,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 * 
 	 * @param scan
 	 */
-	private void processFindings(Scan scan) {
+	private void ensureValidLinks(Scan scan) {
 		if (scan == null) {
 			log.error("The scan processing was unable to complete because the supplied scan was null.");
 			return;
@@ -396,12 +388,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		Scan scan = processScanFile(channelId, fileName, statusId);
 		if (scan == null) {
 			log.warn("processScanFile() failed to return a scan.");
-			return false;//"vulnerability"
+			return false;
 		}
-
-		processFindings(scan);
-		
-		scanDao.saveOrUpdate(scan);
 		
 		if (userName != null) {
 			User user = userDao.retrieveByName(userName);
@@ -415,90 +403,131 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return true;
 	}
 
+	/**
+	 * This is now just a wrapper around mergeScan. Let's perhaps remove it.
+	 */
+	@Override
+	public Scan processRemoteScan(Scan scan) {
+	
+		if (scan == null) {
+			log.warn("The remote import failed.");
+			return null;
+		}
+	
+		mergeScan(scan, scan.getApplicationChannel());
+	
+		return scan;
+	}
+	
 	private Scan processScanFile(Integer channelId, String fileName,
 			Integer statusId) {
 		if (channelId == null || fileName == null) {
 			log.error("processScanFile() received null input and was unable to finish.");
 			return null;
 		}
-
+	
 		File file = new File(fileName);
 		ApplicationChannel applicationChannel = applicationChannelDao
 				.retrieveById(channelId);
-
+	
 		if (applicationChannel == null
 				|| applicationChannel.getChannelType() == null
 				|| !file.exists()) {
 			log.warn("Invalid Application Channel, unable to find a ChannelImporter implementation.");
 			return null;
 		}
-
+	
 		// pick the appropriate parser
 		ChannelImporterFactory factory = new ChannelImporterFactory(
 				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
 				genericVulnerabilityDao);
 		ChannelImporter importer = factory
 				.getChannelImporter(applicationChannel);
-
+	
 		if (importer == null) {
 			log.warn("Unable to find suitable ChannelImporter implementation for "
 					+ applicationChannel.getChannelType().getName()
 					+ ". Returning null.");
 			return null;
 		}
-
+	
 		updateJobStatus(statusId, "Parsing findings from " + 
 				applicationChannel.getChannelType().getName() + " scan file.");
 		log.info("Processing file " + fileName + " on channel "
 				+ applicationChannel.getChannelType().getName() + ".");
-
+	
 		importer.setFileName(fileName);
 		Scan scan = importer.parseInput();
 		
-		AbstractURLCalculator urlCalculator = URLCalculatorFactory
-				.getAppropriateCalculator(applicationChannel.getApplication());
-		if (urlCalculator != null) {
-			urlCalculator.findMatches(scan);
-		}
-
 		if (scan == null) {
 			log.warn("The " + applicationChannel.getChannelType().getName()
 					+ " import failed for file " + fileName + ".");
 			return null;
 		}
-
-		if (scan.getFindings() != null) {
-			log.info("The " + applicationChannel.getChannelType().getName()
-					+ " import was successful for file " + fileName
-					+ " and found " + scan.getFindings().size() + " findings.");
-		}
-		
+	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
+		
+		mergeScan(scan, applicationChannel);
+		
+		importer.deleteScanFile();
+		return scan;
+	}
 
-		projectRoot = null;
-		findOrParseProjectRoot(applicationChannel, scan);
+	private void mergeScan(Scan scan, ApplicationChannel applicationChannel) {
+		if (scan.getFindings() != null && applicationChannel != null
+				&& applicationChannel.getChannelType() != null
+				&& applicationChannel.getChannelType().getName() != null) {
+			log.info("The " + applicationChannel.getChannelType().getName()
+					+ " import was successful" + " and found "
+					+ scan.getFindings().size() + " findings.");
+		}
+	
+		if (applicationChannel == null
+				|| applicationChannel.getApplication() == null
+				|| applicationChannel.getApplication().getId() == null) {
+			log.error("An incorrectly configured application made it to processRemoteScan()");
+			return;
+		}
+	
+		updateProjectRoot(applicationChannel, scan);
 		channelMerger.channelMerge(scan, applicationChannel);
-		applicationScanMerger.applicationMerge(scan, applicationChannel.getApplication(), statusId);
-
+		applicationScanMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
+	
 		scan.setApplicationChannel(applicationChannel);
 		scan.setApplication(applicationChannel.getApplication());
-
+	
 		if (scan.getNumberTotalVulnerabilities() != null
-				&& scan.getNumberNewVulnerabilities() != null)
+				&& scan.getNumberNewVulnerabilities() != null) {
 			log.info(applicationChannel.getChannelType().getName()
 					+ " scan completed processing with "
 					+ scan.getNumberTotalVulnerabilities()
 					+ " total Vulnerabilities ("
 					+ scan.getNumberNewVulnerabilities() + " new).");
-		else
+		} else {
 			log.info(applicationChannel.getChannelType().getName()
 					+ " scan completed.");
-
+		}
+	
 		cleanFindings(scan);
-		importer.deleteScanFile();
-		return scan;
+		ensureValidLinks(scan);
+		scanDao.saveOrUpdate(scan);
 	}
 
+	private void updateProjectRoot(ApplicationChannel applicationChannel, Scan scan) {
+		String projectRoot = ProjectRootParser.findOrParseProjectRoot(applicationChannel, scan);
+		if (projectRoot != null && applicationChannel.getApplication() != null
+				&& applicationChannel.getApplication().getProjectRoot() == null) {
+			applicationChannel.getApplication().setProjectRoot(projectRoot);
+			updateSurfaceLocation(applicationChannel.getApplication());
+			updateSurfaceLocation(scan, projectRoot);
+		}
+	}
+
+	/**
+	 * This method makes sure that the scan's findings don't have any database-incompatible field lengths
+	 * 
+	 * @param scan
+	 */
 	private void cleanFindings(Scan scan) {
 		if (scan == null || scan.getFindings() == null
 				|| scan.getFindings().size() == 0)
@@ -673,7 +702,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scan.getFindings().add(finding);
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
-		processFindings(scan);
+		ensureValidLinks(scan);
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 
@@ -761,154 +790,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return applicationChannel;
 	}
 
-	// TODO test this parser on other projects than RiskE
-	private void findOrParseProjectRoot(ApplicationChannel applicationChannel,
-			Scan scan) {
-		if (applicationChannel.getApplication() != null
-				&& applicationChannel.getApplication().getProjectRoot() != null
-				&& !applicationChannel.getApplication().getProjectRoot().trim()
-						.equals("")) {
-			projectRoot = applicationChannel.getApplication().getProjectRoot()
-					.toLowerCase();
-		}
-
-		// These next two if statements handle the automatic project root
-		// parsing.
-		if (projectRoot == null)
-			projectRoot = parseProjectRoot(scan);
-
-		if (projectRoot != null && applicationChannel.getApplication() != null
-				&& applicationChannel.getApplication().getProjectRoot() == null) {
-			applicationChannel.getApplication().setProjectRoot(projectRoot);
-			updateSurfaceLocation(applicationChannel.getApplication());
-			updateSurfaceLocation(scan, projectRoot);
-		}
-	}
-
-	private String parseProjectRoot(Scan scan) {
-		if (scan == null || scan.getFindings() == null
-				|| scan.getFindings().size() == 0)
-			return null;
-
-		String commonPrefix = null;
-
-		for (Finding finding : scan.getFindings()) {
-			if (finding.getIsStatic()) {
-				List<DataFlowElement> dataFlowElements = finding
-						.getDataFlowElements();
-				if (dataFlowElements == null || dataFlowElements.size() == 0)
-					continue;
-
-				Collections.sort(dataFlowElements);
-
-				if (dataFlowElements.get(0) != null
-						&& dataFlowElements.get(0).getSourceFileName() != null) {
-					if (commonPrefix == null)
-						commonPrefix = dataFlowElements.get(0)
-								.getSourceFileName();
-					else
-						commonPrefix = findCommonPrefix(dataFlowElements.get(0)
-								.getSourceFileName(), commonPrefix);
-				}
-			}
-		}
-
-		if (commonPrefix != null && !commonPrefix.equals("")) {
-			if (commonPrefix.contains("/")) {
-				while (commonPrefix.endsWith("/"))
-					commonPrefix = commonPrefix.substring(0,
-							commonPrefix.length() - 1);
-				if (commonPrefix.contains("/"))
-					commonPrefix = commonPrefix.substring(
-							commonPrefix.lastIndexOf("/") + 1).replace("/", "");
-			}
-		}
-
-		return commonPrefix;
-	}
-
-	private String findCommonPrefix(String newString, String oldString) {
-		if (newString == null || oldString == null)
-			return "";
-		if (newString.toLowerCase().contains(oldString.toLowerCase()))
-			return oldString;
-
-		String newLower = newString.replace("\\", "/").toLowerCase();
-		String oldLower = oldString.replace("\\", "/").toLowerCase();
-
-		String returnString = "";
-
-		for (String string : oldLower.split("/")) {
-			String tempString = returnString.concat(string + "/");
-			if (newLower.startsWith(tempString))
-				returnString = tempString;
-			else
-				break;
-		}
-
-		return oldString.replace("\\", "/").substring(0, returnString.length());
-	}
-
-	
-
-	/**
-	 * This method has a lot of code duplication with processScanFile(). We
-	 * should consolidate.
-	 */
-	@Override
-	public Scan processRemoteScan(Scan scan) {
-
-		if (scan == null) {
-			log.warn("The remote import failed.");
-			return null;
-		}
-
-		ApplicationChannel applicationChannel = scan.getApplicationChannel();
-
-		if (scan.getFindings() != null && applicationChannel != null
-				&& applicationChannel.getChannelType() != null
-				&& applicationChannel.getChannelType().getName() != null) {
-			log.info("The " + applicationChannel.getChannelType().getName()
-					+ " import was successful" + " and found "
-					+ scan.getFindings().size() + " findings.");
-		}
-
-		if (applicationChannel == null
-				|| applicationChannel.getApplication() == null
-				|| applicationChannel.getApplication().getId() == null) {
-			log.error("An incorrectly configured application made it to processRemoteScan()");
-			return scan;
-		}
-
-		projectRoot = null;
-		findOrParseProjectRoot(applicationChannel, scan);
-		channelMerger.channelMerge(scan, applicationChannel);
-		applicationScanMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
-
-		scan.setApplicationChannel(applicationChannel);
-		scan.setApplication(applicationChannel.getApplication());
-
-		if (scan.getNumberTotalVulnerabilities() != null
-				&& scan.getNumberNewVulnerabilities() != null)
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed processing with "
-					+ scan.getNumberTotalVulnerabilities()
-					+ " total Vulnerabilities ("
-					+ scan.getNumberNewVulnerabilities() + " new).");
-		else
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed.");
-
-		cleanFindings(scan);
-		processFindings(scan);
-		scanDao.saveOrUpdate(scan);
-
-		return scan;
-	}
-
-	/**
-	 * @param status
-	 */
 	private void updateJobStatus(Integer statusId, String statusString) {
 		if (statusId != null) {
 			jobStatusService.updateJobStatus(statusId, statusString);
