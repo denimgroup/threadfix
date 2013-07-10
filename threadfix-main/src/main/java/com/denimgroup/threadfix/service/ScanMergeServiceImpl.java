@@ -36,7 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,7 +79,8 @@ import com.denimgroup.threadfix.service.framework.URLCalculatorFactory;
 public class ScanMergeServiceImpl implements ScanMergeService {
 
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
-
+	
+	private ChannelMerger channelMerger = null;
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
@@ -118,6 +118,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
+		this.channelMerger = new ChannelMerger(vulnerabilityDao);
 	}
 
 	@Override
@@ -478,7 +479,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
-		channelMerge(scan, applicationChannel);
+		channelMerger.channelMerge(scan, applicationChannel);
 		appMerge(scan, applicationChannel.getApplication(), statusId);
 
 		scan.setApplicationChannel(applicationChannel);
@@ -850,165 +851,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return oldString.replace("\\", "/").substring(0, returnString.length());
 	}
 
-	/**
-	 * This method weeds out all of the repeat Findings to provide a cleaner
-	 * merge later in appMerge().
-	 * 
-	 * @param scan
-	 * @param applicationChannel
-	 */
-	private void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
-		if (scan == null || applicationChannel == null) {
-			log.warn("Insufficient data to complete Application Channel-wide merging process.");
-			return;
-		}
-
-		if (scan.getFindings() == null)
-			scan.setFindings(new ArrayList<Finding>());
-
-		List<Finding> oldFindings = new ArrayList<Finding>();
-		List<Finding> newFindings = new ArrayList<Finding>();
-		Map<String, Finding> scanHash = new HashMap<String, Finding>();
-		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<String, Vulnerability>();
-		Map<String, Finding> oldNativeIdFindingHash = new HashMap<String, Finding>();
-		Set<Integer> alreadySeenVulnIds = new TreeSet<Integer>();
-		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
-
-		log.info("Starting Application Channel-wide merging process with "
-				+ scan.getFindings().size() + " findings.");
-		for (Finding finding : scan.getFindings()) {
-			if (finding != null && finding.getNativeId() != null
-					&& !finding.getNativeId().isEmpty()) {
-				if (scanHash.containsKey(finding.getNativeId())) {
-					// Increment the merged results counter in the finding
-					// object in the hash
-					scanHash.get(finding.getNativeId()).setNumberMergedResults(
-							scanHash.get(finding.getNativeId())
-									.getNumberMergedResults() + 1);
-				} else {
-					scanHash.put(finding.getNativeId(), finding);
-				}
-			}
-		}
-
-		log.info("After filtering out duplicate native IDs, there are "
-				+ scanHash.keySet().size() + " findings.");
-
-		if (applicationChannel != null
-				&& applicationChannel.getScanList() != null)
-			for (Scan oldScan : applicationChannel.getScanList())
-				if (oldScan != null && oldScan.getId() != null
-						&& oldScan.getFindings() != null
-						&& oldScan.getFindings().size() != 0)
-					oldFindings.addAll(oldScan.getFindings());
-
-		for (Finding finding : oldFindings) {
-			if (finding != null && finding.getNativeId() != null
-					&& !finding.getNativeId().isEmpty()) {
-				oldNativeIdVulnHash.put(finding.getNativeId(),
-						finding.getVulnerability());
-				oldNativeIdFindingHash.put(finding.getNativeId(), finding);
-			}
-		}
-
-		for (String nativeId : scanHash.keySet()) {
-			if (oldNativeIdVulnHash.containsKey(nativeId)) {
-				Finding oldFinding = oldNativeIdFindingHash.get(nativeId), newFinding = scanHash
-						.get(nativeId);
-
-				// If the finding has been newly marked a false positive, update
-				// the existing finding / vuln
-				if (newFinding.isMarkedFalsePositive()
-						&& !oldFinding.isMarkedFalsePositive()) {
-					log.info("A previously imported finding has been marked a false positive "
-							+ "in the scan results. Marking the finding and Vulnerability.");
-					oldFinding.setMarkedFalsePositive(true);
-					if (oldFinding.getVulnerability() != null) {
-						oldFinding.getVulnerability().setIsFalsePositive(true);
-						vulnerabilityDao.saveOrUpdate(oldFinding
-								.getVulnerability());
-					}
-				}
-
-				numberRepeatFindings += 1;
-				numberRepeatResults += newFinding.getNumberMergedResults();
-				// add it to the old finding maps so that we can know that it
-				// was here later
-				// the constructor maps everything correctly
-				new ScanRepeatFindingMap(oldFinding, scan);
-			}
-
-			if (oldNativeIdVulnHash.containsKey(nativeId)
-					&& oldNativeIdVulnHash.get(nativeId) != null
-					&& !alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(
-							nativeId).getId())) {
-				Vulnerability vulnerability = oldNativeIdVulnHash.get(nativeId);
-				alreadySeenVulnIds.add(vulnerability.getId());
-
-				if (applicationChannel.getId() != null
-						&& vulnerability.getOriginalFinding() != null
-						&& vulnerability.getOriginalFinding().getScan() != null
-						&& vulnerability.getOriginalFinding().getScan()
-								.getApplicationChannel() != null
-						&& applicationChannel.getId().equals(
-								vulnerability.getOriginalFinding().getScan()
-										.getApplicationChannel().getId())) {
-					oldVulnerabilitiesInitiallyFromThisChannel += 1;
-				}
-
-				old += 1;
-				total += 1;
-
-				if (!vulnerability.isActive()) {
-					resurfaced += 1;
-					vulnerability.reopenVulnerability(scan,
-							scan.getImportTime());
-					vulnerabilityDao.saveOrUpdate(vulnerability);
-				}
-			} else {
-				if (!oldNativeIdVulnHash.containsKey(nativeId)) {
-					numberNew += 1;
-					total += 1;
-					newFindings.add(scanHash.get(nativeId));
-				}
-			}
-		}
-
-		for (String nativeId : oldNativeIdVulnHash.keySet()) {
-			if (!scanHash.containsKey(nativeId)
-					&& oldNativeIdVulnHash.get(nativeId) != null
-					&& oldNativeIdVulnHash.get(nativeId).isActive()) {
-				if (scan.getImportTime() != null)
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-							scan.getImportTime());
-				else
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-							Calendar.getInstance());
-				vulnerabilityDao
-						.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
-				closed += 1;
-			}
-		}
-
-		log.info("Merged " + old + " Findings to old findings by native ID.");
-		log.info("Closed " + closed + " old vulnerabilities.");
-		log.info(numberRepeatResults
-				+ " results were repeats from earlier scans and were not included in this scan.");
-		log.info(resurfaced + " vulnerabilities resurfaced in this scan.");
-		log.info("Scan completed channel merge with " + numberNew
-				+ " new Findings.");
-
-		scan.setNumberNewVulnerabilities(numberNew);
-		scan.setNumberOldVulnerabilities(old);
-		scan.setNumberTotalVulnerabilities(total);
-		scan.setNumberClosedVulnerabilities(closed);
-		scan.setNumberResurfacedVulnerabilities(resurfaced);
-		scan.setNumberRepeatResults(numberRepeatResults);
-		scan.setNumberRepeatFindings(numberRepeatFindings);
-		scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
-
-		scan.setFindings(newFindings);
-	}
+	
 	
 	/**
 	 * This method is in here to allow passing an application id when the application isn't already in the session.
@@ -1455,7 +1298,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		projectRoot = null;
 		findOrParseProjectRoot(applicationChannel, scan);
-		channelMerge(scan, applicationChannel);
+		channelMerger.channelMerge(scan, applicationChannel);
 		appMerge(scan, applicationChannel.getApplication(), null);
 
 		scan.setApplicationChannel(applicationChannel);
