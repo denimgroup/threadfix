@@ -33,10 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
@@ -60,29 +56,18 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ChannelMerger channelMerger = null;
 	private ApplicationScanMerger applicationScanMerger = null;
 	private ScanDao scanDao = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
-	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	private UserDao userDao = null;
 	private JobStatusService jobStatusService;
 
 	@Autowired
-	public ScanMergeServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
+	public ScanMergeServiceImpl(ScanDao scanDao,
 			VulnerabilityDao vulnerabilityDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
 			ApplicationChannelDao applicationChannelDao,
 			ApplicationDao applicationDao,
 			UserDao userDao,
 			JobStatusService jobStatusService) {
 		this.scanDao = scanDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
@@ -245,11 +230,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	
 		// pick the appropriate parser
-		ChannelImporterFactory factory = new ChannelImporterFactory(
-				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao);
-		ChannelImporter importer = factory
-				.getChannelImporter(applicationChannel);
+		ChannelImporter importer = ChannelImporterFactory.getChannelImporter(applicationChannel);
 	
 		if (importer == null) {
 			log.warn("Unable to find suitable ChannelImporter implementation for "

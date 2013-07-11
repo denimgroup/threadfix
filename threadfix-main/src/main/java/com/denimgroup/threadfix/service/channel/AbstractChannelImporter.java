@@ -51,7 +51,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -112,6 +114,22 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected ChannelSeverityDao channelSeverityDao;
 	protected ChannelTypeDao channelTypeDao;
 	protected GenericVulnerabilityDao genericVulnerabilityDao;
+	
+	/**
+	 * This constructor wires genericVulnerabilityDao, channelTypeDao, channelVulnerabilityDao, and channelSeverityDao.
+	 * It also wires the appropriate channelType object. Subclasses just need to pass the name of the channel.
+	 * @param channelTypeName
+	 */
+	public AbstractChannelImporter(String channelTypeName) {
+		DaoHolder daoHolder = new DaoHolder();
+		
+		this.genericVulnerabilityDao = daoHolder.genericVulnerabilityDao;
+		this.channelTypeDao = daoHolder.channelTypeDao;
+		this.channelVulnerabilityDao = daoHolder.channelVulnerabilityDao;
+		this.channelSeverityDao = daoHolder.channelSeverityDao;
+		
+		this.channelType = daoHolder.channelTypeDao.retrieveByName(channelTypeName);
+	}
 
 	protected String inputFileName;
 	
@@ -125,6 +143,20 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected Calendar testDate = null;
 	
 	protected boolean doSAXExceptionCheck = true;
+	
+	/**
+	 * This class allows us to use autowired beans in the AbstractChannelImporter constructor.
+	 */
+	private static class DaoHolder extends SpringBeanAutowiringSupport {
+		@Autowired
+		public ChannelVulnerabilityDao channelVulnerabilityDao;
+		@Autowired
+		public ChannelSeverityDao channelSeverityDao;
+		@Autowired
+		public ChannelTypeDao channelTypeDao;
+		@Autowired
+		public GenericVulnerabilityDao genericVulnerabilityDao;
+	}
 	
 	@Override
 	public void setChannel(ApplicationChannel applicationChannel) {

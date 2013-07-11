@@ -30,16 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -112,31 +107,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		SPECIAL_REGEX_MAP.put("getHeader", "getHeader\\(\"([a-zA-Z0-9\\._]+)\"\\)");
 	}
 	
-	/**
-	 * Constructor.
-	 * 
-	 * @param channelTypeDao
-	 *            Spring dependency.
-	 * @param channelVulnerabilityDao
-	 *            Spring dependency.
-	 * @param channelSeverityDao
-	 *            Spring dependency.
-	 * @param genericVulnerabilityDao
-	 *            Spring dependency.
-	 * @param vulnerabilityMapLogDao
-	 *            Spring dependency.
-	 */
-	@Autowired
-	public FortifyChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-
-		setChannelType(ChannelType.FORTIFY);
+	public FortifyChannelImporter() {
+		super(ChannelType.FORTIFY);
 		doSAXExceptionCheck = false;
 	}
 

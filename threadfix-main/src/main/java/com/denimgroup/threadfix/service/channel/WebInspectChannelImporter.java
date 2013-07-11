@@ -23,13 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -50,23 +46,8 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	private String bestPractices = "Best Practices";
 		
-	/**
-	 * Constructor with Spring dependencies injected.
-	 * 
-	 * @param channelTypeDao
-	 * @param channelVulnerabilityDao
-	 * @param channelSeverityDao
-	 * @param vulnerabilityMapLogDao
-	 */
-	@Autowired
-	public WebInspectChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		setChannelType(ChannelType.WEBINSPECT);
+	public WebInspectChannelImporter() {
+		super(ChannelType.WEBINSPECT);
 	}
 
 	/*

@@ -32,9 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -61,14 +58,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	}
 	
 	@Autowired
-	public ZaproxyChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.ZAPROXY);
+	public ZaproxyChannelImporter() {
+		super(ChannelType.ZAPROXY);
 	}
 
 	@Override

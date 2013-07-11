@@ -25,30 +25,12 @@ package com.denimgroup.threadfix.service.remoteprovider;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 public class RemoteProviderFactory {
 	
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
-	private ChannelTypeDao channelTypeDao = null;
-	
-	@Autowired
-	public RemoteProviderFactory(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-	}
-
 	public List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType) {
 		RemoteProvider provider = getProvider(remoteProviderType.getName());
 		
@@ -63,14 +45,11 @@ public class RemoteProviderFactory {
 		if (providerType == null) {
 			return null;
 		} else if (providerType.equals(RemoteProviderType.SENTINEL)) {
-			return new WhiteHatRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao);
+			return new WhiteHatRemoteProvider();
 		} else if (providerType.equals(RemoteProviderType.VERACODE)) {
-			return new VeracodeRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao);
+			return new VeracodeRemoteProvider();
 		} else if (providerType.equals(RemoteProviderType.QUALYSGUARD_WAS)) {
-			return new QualysRemoteProvider(channelTypeDao, channelVulnerabilityDao, 
-					channelSeverityDao);
+			return new QualysRemoteProvider();
 		} else {
 			return null;
 		}

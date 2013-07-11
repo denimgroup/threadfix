@@ -38,9 +38,6 @@ import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -58,9 +55,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
-	private ChannelTypeDao channelTypeDao = null;
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
 	private ScanMergeService scanMergeService = null;
 	private ApplicationDao applicationDao = null;
@@ -68,17 +62,12 @@ public class RemoteProviderApplicationServiceImpl implements
 	private QueueSender queueSender = null;
 	
 	@Autowired
-	public RemoteProviderApplicationServiceImpl(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
+	public RemoteProviderApplicationServiceImpl(
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ScanMergeService scanMergeService,
 			ApplicationDao applicationDao,
 			QueueSender queueSender,
 			ApplicationChannelDao applicationChannelDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.scanMergeService = scanMergeService;
 		this.applicationDao = applicationDao;
@@ -276,8 +265,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	private RemoteProviderFactory getRemoteProviderFactory() {
-		return new RemoteProviderFactory(channelTypeDao, 
-				channelVulnerabilityDao, channelSeverityDao);
+		return new RemoteProviderFactory();
 	}
 
 	@Override

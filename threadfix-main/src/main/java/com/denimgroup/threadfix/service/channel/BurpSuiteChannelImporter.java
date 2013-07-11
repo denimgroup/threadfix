@@ -28,14 +28,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -52,15 +48,8 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
 
-	@Autowired
-	public BurpSuiteChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.BURPSUITE);
+	public BurpSuiteChannelImporter() {
+		super(ChannelType.BURPSUITE);
 		
 		doSAXExceptionCheck = false;
 	}

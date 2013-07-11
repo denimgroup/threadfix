@@ -37,13 +37,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
@@ -60,7 +56,6 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 	private String username = null;
 	private String password = null;
-
 	
 	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
 	static {
@@ -146,15 +141,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 		SEVERITIES_MAP.put("150095", "1");
 	}
 	
-	@Autowired
-	public QualysRemoteProvider(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-
-		setChannelType(ChannelType.QUALYSGUARD_WAS);
+	public QualysRemoteProvider() {
+		super(ChannelType.QUALYSGUARD_WAS);
 	}
 
 	@Override
@@ -270,10 +258,6 @@ public class QualysRemoteProvider extends RemoteProvider {
 		log.info("Returning scan IDs " + scanIds + " for application " + app.getNativeId());
 
 		return scanIds;
-	}
-	
-	public QualysRemoteProvider() {
-		
 	}
 	
 	private String getScansForAppUrl(RemoteProviderType type) {

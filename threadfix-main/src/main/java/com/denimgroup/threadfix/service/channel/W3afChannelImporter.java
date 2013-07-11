@@ -28,13 +28,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -51,23 +47,8 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 	
 	public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
 	
-	/**
-	 * Constructor with Spring dependencies injected.
-	 * 
-	 * @param channelTypeDao
-	 * @param channelVulnerabilityDao
-	 * @param channelSeverityDao
-	 * @param vulnerabilityMapLogDao
-	 */
-	@Autowired
-	public W3afChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-
-		setChannelType(ChannelType.W3AF);
+	public W3afChannelImporter() {
+		super(ChannelType.W3AF);
 	}
 
 	/*

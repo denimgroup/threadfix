@@ -28,14 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
@@ -53,25 +48,8 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class AppScanWebImporter extends AbstractChannelImporter {
 
-	/**
-	 * Constructor with Spring dependencies injected.
-	 * 
-	 * @param channelTypeDao
-	 * @param channelVulnerabilityDao
-	 * @param channelSeverityDao
-	 * @param genericVulnerabilityDao
-	 * @param vulnerabilityMapLogDao
-	 */
-	@Autowired
-	public AppScanWebImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-
-		setChannelType(ChannelType.APPSCAN_DYNAMIC);
+	public AppScanWebImporter() {
+		super(ChannelType.APPSCAN_DYNAMIC);
 	}
 
 	/*
