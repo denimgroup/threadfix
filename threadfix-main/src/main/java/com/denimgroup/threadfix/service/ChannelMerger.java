@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -38,15 +41,12 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
-public class ChannelMerger {
+public class ChannelMerger extends SpringBeanAutowiringSupport {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ChannelMerger.class);
 	
-	private final VulnerabilityDao vulnerabilityDao;
-	
-	public ChannelMerger(VulnerabilityDao vulnerabilityDao) {
-		this.vulnerabilityDao = vulnerabilityDao;
-	}
+	@Autowired
+	private VulnerabilityDao vulnerabilityDao;
 	
 	/**
 	 * This is the first round of scan merge that only considers scans from the same scanner
@@ -64,11 +64,11 @@ public class ChannelMerger {
 		if (scan.getFindings() == null)
 			scan.setFindings(new ArrayList<Finding>());
 
-		List<Finding> oldFindings = new ArrayList<Finding>();
-		List<Finding> newFindings = new ArrayList<Finding>();
-		Map<String, Finding> scanHash = new HashMap<String, Finding>();
-		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<String, Vulnerability>();
-		Map<String, Finding> oldNativeIdFindingHash = new HashMap<String, Finding>();
+		List<Finding> oldFindings = new ArrayList<>();
+		List<Finding> newFindings = new ArrayList<>();
+		Map<String, Finding> scanHash = new HashMap<>();
+		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
+		Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
 		Set<Integer> alreadySeenVulnIds = new TreeSet<Integer>();
 		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
 

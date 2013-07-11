@@ -32,10 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -62,16 +60,14 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao,
-			VulnerabilityDao vulnerabilityDao,
 			ApplicationChannelDao applicationChannelDao,
-			ApplicationDao applicationDao,
 			UserDao userDao,
 			JobStatusService jobStatusService) {
 		this.scanDao = scanDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
-		this.channelMerger = new ChannelMerger(vulnerabilityDao);
+		this.channelMerger = new ChannelMerger();
 		this.applicationScanMerger = new ApplicationScanMerger();
 	}
 
