@@ -146,7 +146,7 @@ public final class ScanAgentRunner {
 			log.error("Problems opening sample ZAP session file: " + e.getMessage(), e);
 		}
 
-		retVal = new Task("zap", theConfig);
+		retVal = new Task(1, "zap", theConfig);
 		
 		log.info("Returning new task");
 		
