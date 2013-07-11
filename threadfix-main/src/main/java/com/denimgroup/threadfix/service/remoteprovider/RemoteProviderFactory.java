@@ -31,7 +31,9 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 public class RemoteProviderFactory {
 	
-	public List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType) {
+	private RemoteProviderFactory(){}
+	
+	public static List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType) {
 		RemoteProvider provider = getProvider(remoteProviderType.getName());
 		
 		if (provider == null)
@@ -41,7 +43,7 @@ public class RemoteProviderFactory {
 		return provider.fetchApplications();
 	}
 	
-	public RemoteProvider getProvider(String providerType) {
+	public static RemoteProvider getProvider(String providerType) {
 		if (providerType == null) {
 			return null;
 		} else if (providerType.equals(RemoteProviderType.SENTINEL)) {
@@ -61,7 +63,7 @@ public class RemoteProviderFactory {
 	 * @param remoteProviderApplication
 	 * @return
 	 */
-	public List<Scan> fetchScans(RemoteProviderApplication remoteProviderApplication) {
+	public static List<Scan> fetchScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
 				remoteProviderApplication.getRemoteProviderType() == null) {
 			return null;

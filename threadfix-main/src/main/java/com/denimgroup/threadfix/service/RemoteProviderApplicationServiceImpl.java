@@ -93,8 +93,8 @@ public class RemoteProviderApplicationServiceImpl implements
 	@Override
 	public void updateApplications(RemoteProviderType remoteProviderType) {
 
-		List<RemoteProviderApplication> newApps = getRemoteProviderFactory()
-				.fetchApplications(remoteProviderType);
+		List<RemoteProviderApplication> newApps =
+				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		// We can't use remoteProviderType.getRemoteProviderApplications() 
 		// because the old session is closed
@@ -142,7 +142,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		}
 		
 		List<RemoteProviderApplication> newApps = 
-				getRemoteProviderFactory().fetchApplications(remoteProviderType);
+				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		if (newApps == null || newApps.size() == 0) {
 			return null;
@@ -201,7 +201,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (remoteProviderApplication == null)
 			return false;
 		
-		List<Scan> resultScans = getRemoteProviderFactory().fetchScans(remoteProviderApplication);
+		List<Scan> resultScans = RemoteProviderFactory.fetchScans(remoteProviderApplication);
 		
 		boolean success = false;
 		if (resultScans != null && resultScans.size() > 0) {
@@ -264,10 +264,6 @@ public class RemoteProviderApplicationServiceImpl implements
 		return success;
 	}
 	
-	private RemoteProviderFactory getRemoteProviderFactory() {
-		return new RemoteProviderFactory();
-	}
-
 	@Override
 	public void processApp(BindingResult result, 
 			RemoteProviderApplication remoteProviderApplication) {

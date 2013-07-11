@@ -35,6 +35,8 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
  */
 public class ChannelImporterFactory {
 	
+	private ChannelImporterFactory(){}
+	
 	/**
 	 * Returns a ChannelImporter implementation based on the channel name
 	 * 
