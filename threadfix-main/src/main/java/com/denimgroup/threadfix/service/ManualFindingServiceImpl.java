@@ -56,7 +56,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		this.applicationChannelDao = applicationChannelDao;
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
-		this.applicationScanMerger = new ApplicationScanMerger(applicationDao, scanDao, null);
+		this.vulnerabilityDao = vulnerabilityDao;
+		this.applicationScanMerger = new ApplicationScanMerger();
 	}
 	
 	/**

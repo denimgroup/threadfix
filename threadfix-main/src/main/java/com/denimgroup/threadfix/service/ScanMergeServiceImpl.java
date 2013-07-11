@@ -72,7 +72,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
 		this.channelMerger = new ChannelMerger(vulnerabilityDao);
-		this.applicationScanMerger = new ApplicationScanMerger(applicationDao, scanDao, jobStatusService);
+		this.applicationScanMerger = new ApplicationScanMerger();
 	}
 
 	@Override

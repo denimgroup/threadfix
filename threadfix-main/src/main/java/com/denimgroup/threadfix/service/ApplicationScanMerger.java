@@ -8,10 +8,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
@@ -19,19 +21,14 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
-public class ApplicationScanMerger {
+public class ApplicationScanMerger extends SpringBeanAutowiringSupport {
 	
-	public final ApplicationDao applicationDao;
-	public final ScanDao scanDao;
-	public final JobStatusService jobStatusService;
-	
-	public ApplicationScanMerger(ApplicationDao applicationDao,
-			ScanDao scanDao,
-			JobStatusService jobStatusService) {
-		this.jobStatusService = jobStatusService;
-		this.applicationDao = applicationDao;
-		this.scanDao = scanDao;
-	}
+	@Autowired
+	private ApplicationDao applicationDao;
+	@Autowired
+	private ScanDao scanDao;
+	@Autowired
+	private JobStatusService jobStatusService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationScanMerger.class);
 
@@ -232,20 +229,45 @@ public class ApplicationScanMerger {
 		vuln.getFindings().add(finding);
 
 		// update the generic severity
-		if (vuln.getGenericSeverity() == null
-				|| (vuln.getGenericSeverity().getName() != null
-						&& finding.getChannelSeverity() != null
-						&& getGenericSeverity(finding.getChannelSeverity()) != null
-						&& getGenericSeverity(finding.getChannelSeverity())
-								.getName() != null && GenericSeverity.NUMERIC_MAP
-						.get(vuln.getGenericSeverity().getName()) < GenericSeverity.NUMERIC_MAP
-						.get(getGenericSeverity(finding.getChannelSeverity())
-								.getName()))) {
-			vuln.setGenericSeverity(getGenericSeverity(finding
-					.getChannelSeverity()));
-		}
+		vuln.setGenericSeverity(getHigherSeverity(finding, vuln));
 
 		finding.setVulnerability(vuln);
+	}
+	
+	private GenericSeverity getHigherSeverity(Finding finding, Vulnerability vuln) {
+		GenericSeverity 
+			findingSeverity = getGenericSeverity(finding),
+			vulnSeverity = vuln.getGenericSeverity(),
+			returnSeverity = null;
+		
+		if (findingSeverity != null) {
+			if (vulnSeverity == null) {
+				returnSeverity = findingSeverity;
+			} else if (vulnSeverity.getIntValue() != null &&
+					findingSeverity.getIntValue() != null &&
+					vulnSeverity.getIntValue() > findingSeverity.getIntValue()) {
+				returnSeverity = findingSeverity;
+			}
+		}
+		
+		if (returnSeverity == null) {
+			returnSeverity = vulnSeverity;
+		}
+		
+		return returnSeverity;
+	}
+
+	/**
+	 * @param cs
+	 * @return
+	 */
+	private GenericSeverity getGenericSeverity(Finding finding) {
+		GenericSeverity severity = null;
+	
+		if (finding != null && finding.getChannelSeverity().getSeverityMap() != null)
+			severity = finding.getChannelSeverity().getSeverityMap().getGenericSeverity();
+	
+		return severity;
 	}
 
 	/**
@@ -256,8 +278,7 @@ public class ApplicationScanMerger {
 	 */
 	private void correctExistingScans(Finding finding) {
 		finding.getVulnerability().setSurfaceLocation(
-				finding.getVulnerability().getOriginalFinding()
-						.getSurfaceLocation());
+				finding.getVulnerability().getOriginalFinding().getSurfaceLocation());
 		finding.setFirstFindingForVuln(false);
 		finding.getScan().setNumberNewVulnerabilities(
 				finding.getScan().getNumberNewVulnerabilities() - 1);
@@ -266,13 +287,10 @@ public class ApplicationScanMerger {
 
 		if (finding.getScanRepeatFindingMaps() != null) {
 			for (ScanRepeatFindingMap map : finding.getScanRepeatFindingMaps()) {
-				if (map.getScan() != null
-						&& map.getScan()
-								.getNumberOldVulnerabilitiesInitiallyFromThisChannel() != null) {
-					map.getScan()
-							.setNumberOldVulnerabilitiesInitiallyFromThisChannel(
-									map.getScan()
-											.getNumberOldVulnerabilitiesInitiallyFromThisChannel() - 1);
+				if (map.getScan() != null && map.getScan()
+						.getNumberOldVulnerabilitiesInitiallyFromThisChannel() != null) {
+					map.getScan().setNumberOldVulnerabilitiesInitiallyFromThisChannel(
+						map.getScan().getNumberOldVulnerabilitiesInitiallyFromThisChannel() - 1);
 				}
 			}
 		}
@@ -337,8 +355,7 @@ public class ApplicationScanMerger {
 		String vulnName = genericVulnerability.getName();
 
 		if (finding.getChannelSeverity() != null) {
-			vulnerability.setGenericSeverity(getGenericSeverity(finding
-					.getChannelSeverity()));
+			vulnerability.setGenericSeverity(getGenericSeverity(finding));
 		}
 
 		String param = null;
@@ -379,19 +396,6 @@ public class ApplicationScanMerger {
 		}
 	}
 	
-	/**
-	 * @param cs
-	 * @return
-	 */
-	private GenericSeverity getGenericSeverity(ChannelSeverity cs) {
-		GenericSeverity severity = null;
-
-		if (cs != null && cs.getSeverityMap() != null)
-			severity = cs.getSeverityMap().getGenericSeverity();
-
-		return severity;
-	}
-
 	/**
 	 * Hashes whatever three strings are given to it.
 	 * 
