@@ -102,8 +102,7 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 
 			if (finding.getVulnerability() != null) {
 				if (finding.getVulnerability().getFindings() == null) {
-					finding.getVulnerability().setFindings(
-							new ArrayList<Finding>());
+					finding.getVulnerability().setFindings(new ArrayList<Finding>());
 					finding.getVulnerability().getFindings().add(finding);
 				}
 				finding.getVulnerability().setApplication(
@@ -148,61 +147,41 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 			if (finding == null)
 				continue;
 
-			if (finding.getLongDescription() != null
-					&& finding.getLongDescription().length() > Finding.LONG_DESCRIPTION_LENGTH)
-				finding.setLongDescription(finding.getLongDescription()
-						.substring(0, Finding.LONG_DESCRIPTION_LENGTH - 1));
-			if (finding.getNativeId() != null
-					&& finding.getNativeId().length() > Finding.NATIVE_ID_LENGTH)
-				finding.setNativeId(finding.getNativeId().substring(0,
-						Finding.NATIVE_ID_LENGTH - 1));
-			if (finding.getSourceFileLocation() != null
-					&& finding.getSourceFileLocation().length() > Finding.SOURCE_FILE_LOCATION_LENGTH)
-				finding.setSourceFileLocation(finding.getSourceFileLocation()
-						.substring(0, Finding.SOURCE_FILE_LOCATION_LENGTH - 1));
+			finding.setLongDescription(trim(finding.getLongDescription(), Finding.LONG_DESCRIPTION_LENGTH));
+			finding.setNativeId(trim(finding.getNativeId(), Finding.NATIVE_ID_LENGTH));
+			finding.setSourceFileLocation(trim(finding.getSourceFileLocation(), Finding.SOURCE_FILE_LOCATION_LENGTH));
+			
 
 			if (finding.getSurfaceLocation() != null) {
 				SurfaceLocation location = finding.getSurfaceLocation();
-
-				if (location.getHost() != null
-						&& location.getHost().length() > SurfaceLocation.HOST_LENGTH)
-					location.setHost(location.getHost().substring(0,
-							SurfaceLocation.HOST_LENGTH - 1));
-				if (location.getParameter() != null
-						&& location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH)
-					location.setParameter(location.getParameter().substring(0,
-							SurfaceLocation.PARAMETER_LENGTH - 1));
-				if (location.getPath() != null
-						&& location.getPath().length() > SurfaceLocation.PATH_LENGTH)
-					location.setPath(location.getPath().substring(0,
-							SurfaceLocation.PATH_LENGTH - 1));
-				if (location.getQuery() != null
-						&& location.getQuery().length() > SurfaceLocation.QUERY_LENGTH)
-					location.setQuery(location.getQuery().substring(0,
-							SurfaceLocation.QUERY_LENGTH - 1));
+				
+				location.setHost(trim(location.getHost(), SurfaceLocation.HOST_LENGTH));
+				location.setParameter(trim(location.getParameter(), SurfaceLocation.PARAMETER_LENGTH));
+				location.setPath(trim(location.getPath(), SurfaceLocation.PATH_LENGTH));
+				location.setQuery(trim(location.getQuery(), SurfaceLocation.QUERY_LENGTH));
 
 				finding.setSurfaceLocation(location);
 			}
 
 			if (finding.getDataFlowElements() != null
 					&& finding.getDataFlowElements().size() != 0) {
-				for (DataFlowElement dataFlowElement : finding
-						.getDataFlowElements()) {
-					if (dataFlowElement.getLineText() != null
-							&& dataFlowElement.getLineText().length() > DataFlowElement.LINE_TEXT_LENGTH)
-						dataFlowElement.setLineText(dataFlowElement
-								.getLineText().substring(0,
-										DataFlowElement.LINE_TEXT_LENGTH - 1));
-					if (dataFlowElement.getSourceFileName() != null
-							&& dataFlowElement.getSourceFileName().length() > DataFlowElement.SOURCE_FILE_NAME_LENGTH)
-						dataFlowElement
-								.setSourceFileName(dataFlowElement
-										.getSourceFileName()
-										.substring(0, DataFlowElement.SOURCE_FILE_NAME_LENGTH - 1));
+				for (DataFlowElement dataFlowElement : finding.getDataFlowElements()) {
+					dataFlowElement.setLineText(
+							trim(dataFlowElement.getLineText(), DataFlowElement.LINE_TEXT_LENGTH));
+					dataFlowElement.setSourceFileName(
+							trim(dataFlowElement.getSourceFileName(), DataFlowElement.SOURCE_FILE_NAME_LENGTH));
 				}
 			}
 		}
 	}
 	
-	
+	private static String trim(String inputString, int length) {
+		String returnString = inputString;
+		
+		if (returnString != null && returnString.length() < length) {
+			returnString = returnString.substring(0, length - 1);
+		}
+		
+		return returnString;
+	}
 }
