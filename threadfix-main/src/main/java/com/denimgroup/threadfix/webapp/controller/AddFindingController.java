@@ -49,9 +49,9 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.ScanMergeService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
@@ -62,18 +62,18 @@ public class AddFindingController {
 
 	private ApplicationService applicationService;
 	private PermissionService permissionService;
-	private ScanMergeService scanMergeService;
+	private ManualFindingService manualFindingService;
 	private ChannelVulnerabilityService channelVulnerabilityService;
 	private FindingService findingService;
 
 	@Autowired
 	public AddFindingController(ApplicationService applicationService,
-			ScanMergeService scanMergeService,
+			ManualFindingService manualFindingService,
 			ChannelVulnerabilityService channelVulnerabilityService,
 			FindingService findingService,
 			PermissionService organizationService) {
 		this.applicationService = applicationService;
-		this.scanMergeService = scanMergeService;
+		this.manualFindingService = manualFindingService;
 		this.permissionService = organizationService;
 		this.channelVulnerabilityService = channelVulnerabilityService;
 		this.findingService = findingService;
@@ -147,7 +147,7 @@ public class AddFindingController {
 			
 		} else {
 			finding.setIsStatic(true);
-			boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
+			boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 			
 			if (!mergeResult) {
 				log.warn("The merge failed. Returning the form again.");
@@ -179,7 +179,7 @@ public class AddFindingController {
 			return returnForm(model, appId);
 		} else {
 			finding.setIsStatic(false);
-			boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
+			boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 			
 			if (!mergeResult) {
 				log.warn("The merge failed. Returning the form again.");

@@ -24,19 +24,10 @@
 package com.denimgroup.threadfix.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,15 +42,8 @@ import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
@@ -80,14 +64,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
 	private ChannelSeverityDao channelSeverityDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
-	private ApplicationDao applicationDao = null;
 	private UserDao userDao = null;
 	private JobStatusService jobStatusService;
-
-	private static final Set<String> VULNS_WITH_PARAMETERS_SET = 
-			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GenericVulnerability.VULNS_WITH_PARAMS)));
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
@@ -103,10 +82,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
-		this.vulnerabilityDao = vulnerabilityDao;
 		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		this.applicationChannelDao = applicationChannelDao;
-		this.applicationDao = applicationDao;
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
 		this.channelMerger = new ChannelMerger(vulnerabilityDao);
@@ -131,100 +108,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return scan;
 	}
 
-	/**
-	 * This method ensures that Findings have the correct relationship to the
-	 * other objects before being committed to the database.
-	 * 
-	 * @param scan
-	 */
-	private void ensureValidLinks(Scan scan) {
-		if (scan == null) {
-			log.error("The scan processing was unable to complete because the supplied scan was null.");
-			return;
-		}
-
-		if (scan.getImportTime() == null)
-			scan.setImportTime(Calendar.getInstance());
-
-		if (scan.getFindings() == null) {
-			log.warn("There were no findings to process.");
-			return;
-		}
-
-		int numWithoutPath = 0, numWithoutParam = 0;
-
-		// we need to set up appropriate relationships between the scan's many
-		// objects.
-		SurfaceLocation surfaceLocation = null;
-		for (Finding finding : scan.getFindings()) {
-			if (finding == null) {
-				continue;
-			}
-
-			finding.setScan(scan);
-
-			surfaceLocation = finding.getSurfaceLocation();
-
-			if (surfaceLocation != null) {
-				surfaceLocation.setFinding(finding);
-				if (surfaceLocation.getParameter() == null
-						&& finding.getChannelVulnerability() != null
-						&& finding.getChannelVulnerability()
-								.getGenericVulnerability() != null
-						&& VULNS_WITH_PARAMETERS_SET.contains(finding
-								.getChannelVulnerability()
-								.getGenericVulnerability().getName())) {
-					numWithoutParam++;
-				}
-				if (surfaceLocation.getPath() == null
-						|| surfaceLocation.getPath().trim().equals("")) {
-					numWithoutPath++;
-				}
-			}
-
-			if (finding.getDataFlowElements() != null) {
-				for (DataFlowElement dataFlowElement : finding
-						.getDataFlowElements()) {
-					if (dataFlowElement != null) {
-						dataFlowElement.setFinding(finding);
-					}
-				}
-			}
-
-			if (finding.getVulnerability() != null) {
-				if (finding.getVulnerability().getFindings() == null) {
-					finding.getVulnerability().setFindings(
-							new ArrayList<Finding>());
-					finding.getVulnerability().getFindings().add(finding);
-				}
-				finding.getVulnerability().setApplication(
-						finding.getScan().getApplication());
-				if (finding.getVulnerability().getId() == null) {
-					vulnerabilityDao.saveOrUpdate(finding.getVulnerability());
-				}
-
-				if ((finding.getVulnerability().getOpenTime() == null)
-						|| (finding.getVulnerability().getOpenTime()
-								.compareTo(scan.getImportTime()) > 0))
-					finding.getVulnerability()
-							.setOpenTime(scan.getImportTime());
-			}
-		}
-
-		if (numWithoutParam > 0) {
-			log.warn("There are " + numWithoutParam
-					+ " injection-based findings missing parameters. "
-					+ "This could indicate a bug in the ThreadFix parser.");
-		}
-
-		if (numWithoutPath > 0) {
-			log.warn("There are "
-					+ numWithoutPath
-					+ " findings missing paths. "
-					+ "This probably means there is a bug in the ThreadFix parser.");
-		}
-	}
-
 	@Override
 	@Transactional(readOnly = false)
 	public void updateSurfaceLocation(Application application) {
@@ -236,7 +119,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				for (Finding finding : vuln.getFindings()) {
 					if (finding == null)
 						continue;
-					String newPath = getFindingPathWithRoot(finding,
+					String newPath = StaticFindingPathUtils.getFindingPathWithRoot(finding,
 							application.getProjectRoot());
 					if (newPath == null)
 						continue;
@@ -253,74 +136,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return;
 
 		for (Finding finding : scan.getFindings()) {
-			String newPath = getFindingPathWithRoot(finding, newRoot);
+			String newPath = StaticFindingPathUtils.getFindingPathWithRoot(finding, newRoot);
 			if (newPath == null)
 				continue;
 			if (finding.getSurfaceLocation() != null)
 				finding.getSurfaceLocation().setPath(newPath);
 		}
-	}
-
-	// TODO figure out what to do for dynamic scans when we update, right now we
-	// discard the original path information
-	private String getFindingPathWithRoot(Finding finding,
-			String applicationRoot) {
-		if (finding == null || applicationRoot == null)
-			return null;
-
-		String sourceFileName = null;
-
-		if (!finding.getIsStatic() && finding.getSurfaceLocation() != null
-				&& finding.getSurfaceLocation() != null)
-			sourceFileName = finding.getSurfaceLocation().getPath();
-		else if (finding.getIsStatic())
-			sourceFileName = getStaticFindingPathGuess(finding);
-
-		if (sourceFileName == null)
-			return null;
-
-		if (sourceFileName.contains("\\"))
-			sourceFileName = sourceFileName.replace("\\", "/");
-
-		if (sourceFileName.toLowerCase().contains(
-				"/" + applicationRoot.toLowerCase())) {
-
-			int index = sourceFileName.toLowerCase().indexOf(
-					"/" + applicationRoot.toLowerCase());
-
-			return sourceFileName.substring(index);
-		}
-
-		return null;
-	}
-
-	// this method finds the whole path up to and including any of the
-	// extensions in suffixVals, the prefix will be taken out later
-	private String getStaticFindingPathGuess(Finding finding) {
-		String path = null;
-		String[] suffixVals = { "aspx", "asp", "jsp", "php", "html", "htm",
-				"java", "cs", "config", "js", "cgi", "ascx" };
-
-		if (finding != null
-				&& finding.getIsStatic()
-				&& finding.getDataFlowElements() != null
-				&& finding.getDataFlowElements().size() != 0
-				&& finding.getDataFlowElements().get(0) != null
-				&& finding.getDataFlowElements().get(0).getSourceFileName() != null) {
-			path = finding.getDataFlowElements().get(0).getSourceFileName();
-
-			for (String val : suffixVals) {
-				if (!path.contains(val))
-					continue;
-
-				String temp = getRegexResult(path, "(.+\\." + val + ")");
-				if (temp != null) {
-					path = temp;
-					break;
-				}
-			}
-		}
-		return path;
 	}
 
 	@Override
@@ -355,20 +176,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				}
 			}
 		}
-	}
-
-	private String getRegexResult(String targetString, String regex) {
-		if (targetString == null || targetString.isEmpty() || regex == null
-				|| regex.isEmpty())
-			return null;
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(targetString);
-
-		if (matcher.find())
-			return matcher.group(1);
-		else
-			return null;
 	}
 
 	@Override
@@ -508,8 +315,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 					+ " scan completed.");
 		}
 	
-		cleanFindings(scan);
-		ensureValidLinks(scan);
+		// This is not static because it has an autowired dependency
+		ScanCleanerUtils.clean(scan);
 		scanDao.saveOrUpdate(scan);
 	}
 
@@ -521,273 +328,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			updateSurfaceLocation(applicationChannel.getApplication());
 			updateSurfaceLocation(scan, projectRoot);
 		}
-	}
-
-	/**
-	 * This method makes sure that the scan's findings don't have any database-incompatible field lengths
-	 * 
-	 * @param scan
-	 */
-	private void cleanFindings(Scan scan) {
-		if (scan == null || scan.getFindings() == null
-				|| scan.getFindings().size() == 0)
-			return;
-
-		for (Finding finding : scan.getFindings()) {
-			if (finding == null)
-				continue;
-
-			if (finding.getLongDescription() != null
-					&& finding.getLongDescription().length() > Finding.LONG_DESCRIPTION_LENGTH)
-				finding.setLongDescription(finding.getLongDescription()
-						.substring(0, Finding.LONG_DESCRIPTION_LENGTH - 1));
-			if (finding.getNativeId() != null
-					&& finding.getNativeId().length() > Finding.NATIVE_ID_LENGTH)
-				finding.setNativeId(finding.getNativeId().substring(0,
-						Finding.NATIVE_ID_LENGTH - 1));
-			if (finding.getSourceFileLocation() != null
-					&& finding.getSourceFileLocation().length() > Finding.SOURCE_FILE_LOCATION_LENGTH)
-				finding.setSourceFileLocation(finding.getSourceFileLocation()
-						.substring(0, Finding.SOURCE_FILE_LOCATION_LENGTH - 1));
-
-			if (finding.getSurfaceLocation() != null) {
-				SurfaceLocation location = finding.getSurfaceLocation();
-
-				if (location.getHost() != null
-						&& location.getHost().length() > SurfaceLocation.HOST_LENGTH)
-					location.setHost(location.getHost().substring(0,
-							SurfaceLocation.HOST_LENGTH - 1));
-				if (location.getParameter() != null
-						&& location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH)
-					location.setParameter(location.getParameter().substring(0,
-							SurfaceLocation.PARAMETER_LENGTH - 1));
-				if (location.getPath() != null
-						&& location.getPath().length() > SurfaceLocation.PATH_LENGTH)
-					location.setPath(location.getPath().substring(0,
-							SurfaceLocation.PATH_LENGTH - 1));
-				if (location.getQuery() != null
-						&& location.getQuery().length() > SurfaceLocation.QUERY_LENGTH)
-					location.setQuery(location.getQuery().substring(0,
-							SurfaceLocation.QUERY_LENGTH - 1));
-
-				finding.setSurfaceLocation(location);
-			}
-
-			if (finding.getDataFlowElements() != null
-					&& finding.getDataFlowElements().size() != 0) {
-				for (DataFlowElement dataFlowElement : finding
-						.getDataFlowElements()) {
-					if (dataFlowElement.getLineText() != null
-							&& dataFlowElement.getLineText().length() > DataFlowElement.LINE_TEXT_LENGTH)
-						dataFlowElement.setLineText(dataFlowElement
-								.getLineText().substring(0,
-										DataFlowElement.LINE_TEXT_LENGTH - 1));
-					if (dataFlowElement.getSourceFileName() != null
-							&& dataFlowElement.getSourceFileName().length() > DataFlowElement.SOURCE_FILE_NAME_LENGTH)
-						dataFlowElement
-								.setSourceFileName(dataFlowElement
-										.getSourceFileName()
-										.substring(
-												0,
-												DataFlowElement.SOURCE_FILE_NAME_LENGTH - 1));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Handle the Manual Finding edit submission. 
-	 * It's a wrapper around the normal process manual finding method.
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	public boolean processManualFindingEdit(Finding finding, Integer applicationId) {
-		boolean result = processManualFinding(finding, applicationId);
-		if (result && finding != null && finding.getScan() != null && 
-				finding.getScan().getFindings() != null) {
-			
-			finding.getScan().setNumberTotalVulnerabilities(
-					finding.getScan().getNumberTotalVulnerabilities() - 1);
-			
-			Finding oldFinding = null;
-
-			int id = finding.getId();
-			for (Finding scanFinding : finding.getScan().getFindings()) {
-				if (scanFinding != finding && scanFinding.getId().equals(id)) {
-					oldFinding = scanFinding;
-				}
-			}
-			
-			if (oldFinding != null) {
-				finding.getScan().getFindings().remove(oldFinding);
-				if (oldFinding.getVulnerability() != null && 
-						oldFinding.getVulnerability().getFindings() != null) {
-					Vulnerability vuln = oldFinding.getVulnerability();
-					vuln.getFindings().remove(oldFinding);
-					if (vuln.getFindings().size() == 0) {
-						vuln.getApplication().getVulnerabilities().remove(vuln);
-						vuln.setApplication(null);
-						vulnerabilityDao.delete(vuln);
-					}
-				}
-				vulnerabilityDao.evict(oldFinding);
-			}
-		}
-		return result;
-	}
-	
-	@Override
-	@Transactional(readOnly = false)
-	public boolean processManualFinding(Finding finding, Integer applicationId) {
-		if (finding == null || applicationId == null) {
-			log.debug("Null input to processManualFinding");
-			return false;
-		}
-		
-		ChannelType manualChannelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
-
-		Scan scan = getManualScan(applicationId);
-		if (scan == null || scan.getApplicationChannel() == null
-				|| scan.getApplication() == null || scan.getFindings() == null) {
-			log.debug("processManualFinding could not find or create the necessary manual scan.");
-			return false;
-		}
-
-		String userName = SecurityContextHolder.getContext()
-				.getAuthentication().getName();
-		
-		User user = userDao.retrieveByName(userName);
-		finding.setUser(user);
-
-		// Set the channelVulnerability
-		ChannelVulnerability channelVulnerability = channelVulnerabilityDao
-				.retrieveByCode(manualChannelType,
-						finding.getChannelVulnerability().getCode());
-		finding.setChannelVulnerability(channelVulnerability);
-
-		if (finding.getChannelSeverity() != null &&
-				finding.getChannelSeverity().getId() != null) {
-			// Set the channelSeverity so we can get the corresponding
-			// genericSeverity when appMerge is called.
-			ChannelSeverity channelSeverity = channelSeverityDao
-					.retrieveById(finding.getChannelSeverity().getId());
-			finding.setChannelSeverity(channelSeverity);
-		} else {
-			ChannelSeverity channelSeverity = channelSeverityDao
-					.retrieveByCode(manualChannelType, GenericSeverity.MEDIUM);
-			finding.setChannelSeverity(channelSeverity);
-		}
-
-		if (!finding.getIsStatic()) {
-			finding.setDataFlowElements(null);
-		} else {
-			String path = getStaticFindingPathGuess(finding);
-			if (path != null
-					&& scan.getApplication().getProjectRoot() != null
-					&& scan.getApplication().getProjectRoot().toLowerCase() != null
-					&& path.toLowerCase().contains(
-							scan.getApplication().getProjectRoot()
-									.toLowerCase())) {
-				path = path.substring(path.toLowerCase().indexOf(
-						scan.getApplication().getProjectRoot().toLowerCase()));
-			}
-			finding.getSurfaceLocation().setPath(path);
-		}
-
-		Scan tempScan = new Scan();
-		tempScan.setFindings(new ArrayList<Finding>());
-		tempScan.getFindings().add(finding);
-		applicationScanMerger.applicationMerge(tempScan, applicationId, null);
-
-		scan.getFindings().add(finding);
-		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
-		finding.setScan(scan);
-		ensureValidLinks(scan);
-		scanDao.saveOrUpdate(scan);
-		log.debug("Manual Finding submission was successful.");
-		log.debug(userName + " has added a new finding to the Application " + 
-				finding.getScan().getApplication().getName());
-		return true;
-	}
-
-	private Scan getManualScan(Integer applicationId) {
-		if (applicationId == null)
-			return null;
-
-		ApplicationChannel applicationChannel = null;
-		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ChannelType.MANUAL);
-		if (manualChannel != null)
-			applicationChannel = applicationChannelDao
-					.retrieveByAppIdAndChannelId(applicationId,
-							manualChannel.getId());
-
-		if (applicationChannel != null
-				&& applicationChannel.getScanList() != null
-				&& applicationChannel.getScanList().size() != 0) {
-			return applicationChannel.getScanList().get(0);
-		}
-
-		Scan newManualScan = initializeNewManualScan(applicationId);
-
-		if (applicationChannel == null)
-			applicationChannel = createManualApplicationChannel(applicationId);
-
-		if (applicationChannel == null)
-			return null;
-
-		newManualScan.setApplicationChannel(applicationChannel);
-
-		return newManualScan;
-	}
-
-	private Scan initializeNewManualScan(Integer applicationId) {
-		if (applicationId == null)
-			return null;
-
-		Application application = applicationDao.retrieveById(applicationId);
-		if (application == null)
-			return null;
-
-		Scan scan = new Scan();
-		scan.setApplication(application);
-
-		List<Finding> findingList = new ArrayList<Finding>();
-		scan.setFindings(findingList);
-
-		scan.setNumberNewVulnerabilities(0);
-		scan.setNumberOldVulnerabilities(0);
-		scan.setNumberClosedVulnerabilities(0);
-		scan.setNumberTotalVulnerabilities(0);
-		scan.setNumberResurfacedVulnerabilities(0);
-		scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(0);
-
-		return scan;
-	}
-
-	private ApplicationChannel createManualApplicationChannel(
-			Integer applicationId) {
-		if (applicationId == null)
-			return null;
-
-		Application application = applicationDao.retrieveById(applicationId);
-		if (application == null) {
-			return null;
-		}
-
-		ApplicationChannel applicationChannel = new ApplicationChannel();
-		applicationChannel.setApplication(application);
-		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ChannelType.MANUAL);
-		applicationChannel.setChannelType(manualChannel);
-
-		if (application.getChannelList() == null)
-			application.setChannelList(new ArrayList<ApplicationChannel>());
-
-		application.getChannelList().add(applicationChannel);
-		applicationChannelDao.saveOrUpdate(applicationChannel);
-		applicationDao.saveOrUpdate(application);
-		return applicationChannel;
 	}
 
 	private void updateJobStatus(Integer statusId, String statusString) {
