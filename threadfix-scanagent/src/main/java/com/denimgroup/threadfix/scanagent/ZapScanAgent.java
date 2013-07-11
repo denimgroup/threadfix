@@ -248,7 +248,6 @@ public class ZapScanAgent extends AbstractScanAgent {
 	}
 	
 	/**
-	 * TOFIX - Implement me!
 	 * @param zap
 	 * @return
 	 */
