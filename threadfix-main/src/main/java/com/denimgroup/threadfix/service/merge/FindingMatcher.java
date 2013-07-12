@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.framework.PathUrlTranslator;
+import com.denimgroup.threadfix.service.framework.PathUrlTranslatorFactory;
 
 /**
  * Encapsulates all Finding matching functionality complete with configuration options.
@@ -41,10 +43,13 @@ public class FindingMatcher {
 	
 	private final String projectRoot;
 	private final ScanMergeConfiguration scanMergeConfiguration;
+	private final PathUrlTranslator pathTranslator;
 	
 	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration) {
 		this.projectRoot = scanMergeConfiguration.getApplicationRoot();
 		this.scanMergeConfiguration = scanMergeConfiguration;
+		
+		pathTranslator = PathUrlTranslatorFactory.getTranslator(scanMergeConfiguration);
 	}
 	
 	/**
@@ -85,14 +90,33 @@ public class FindingMatcher {
 	private boolean dynamicToStaticMatch(Finding dynamicFinding, Finding staticFinding) {
 		return dynamicFinding == null || staticFinding == null && 
 				genericVulnsMatch(dynamicFinding, staticFinding) &&
-				compareSurfaceLocationPath(dynamicFinding, staticFinding) &&
+				compareStaticAndDynamicPaths(dynamicFinding, staticFinding) &&
 				compareSurfaceLocationParameter(dynamicFinding, staticFinding);
+	}
+
+	private boolean compareStaticAndDynamicPaths(Finding dynamicFinding,
+			Finding staticFinding) {
+		
+		boolean dynamicMatch = false, staticMatch = false;
+		
+		String staticUrlPathGuess = pathTranslator.getUrlPath(staticFinding);
+		dynamicMatch = comparePaths(staticUrlPathGuess, 
+				dynamicFinding.getSurfaceLocation().getPath());
+		
+		if (!dynamicMatch) {
+			String dynamicFileNameGuess = pathTranslator.getFileName(dynamicFinding);
+			
+			staticMatch = sourceFileNameCompare(dynamicFileNameGuess, 
+					staticFinding.getSourceFileLocation());
+		}
+		
+		return dynamicMatch || staticMatch;
 	}
 
 	private boolean dynamicToDynamicMatch(Finding newFinding, Finding oldFinding) {
 		return newFinding != null && oldFinding != null &&
 				genericVulnsMatch(oldFinding, newFinding) &&
-				compareSurfaceLocationPath(oldFinding, newFinding) &&
+				compareSurfaceLocationPaths(oldFinding, newFinding) &&
 				compareSurfaceLocationParameter(oldFinding, newFinding);
 	}
 	
@@ -105,7 +129,7 @@ public class FindingMatcher {
 	if (staticPath != null && !staticPath.startsWith("/"))
 		staticPath  = "/" + staticPath;
 	 */
-	private boolean compareSurfaceLocationPath(Finding oldFinding, Finding newFinding) {
+	private boolean compareSurfaceLocationPaths(Finding oldFinding, Finding newFinding) {
 		boolean match = true;
 		
 		if (oldFinding != null && newFinding != null &&
@@ -113,17 +137,15 @@ public class FindingMatcher {
 				newFinding.getSurfaceLocation() != null &&
 				oldFinding.getSurfaceLocation().getPath() != null &&
 				newFinding.getSurfaceLocation().getPath() != null) {
-			
-			switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
-				case FULL:   // TODO
-				case PARTIAL:    // TODO
-				default:
-					match = oldFinding.getSurfaceLocation().getPath().equals(
-							newFinding.getSurfaceLocation().getPath());
-			}
+			match = comparePaths(oldFinding.getSurfaceLocation().getPath(),
+					newFinding.getSurfaceLocation().getPath());
 		}
 		
 		return match;
+	}
+	
+	private boolean comparePaths(String path1, String path2) {
+		return path1.equals(path2);
 	}
 	
 	// check to see that the parameters match or are both empty

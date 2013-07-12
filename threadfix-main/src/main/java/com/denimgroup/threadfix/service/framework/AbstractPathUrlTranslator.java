@@ -7,7 +7,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-public abstract class AbstractPathUrlTranslator {
+public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 
 	protected final ServletMappings mappings;
 	protected final File workTree;
@@ -33,10 +33,6 @@ public abstract class AbstractPathUrlTranslator {
 		}
 	}
 
-	public abstract String getFileName(Finding dynamicFinding);
-	
-	public abstract String getUrlPath(Finding staticFinding);
-	
 	public void findMatches(Scan scan) {
 		if (scan == null || scan.getFindings() == null || scan.getFindings().size() == 0) {
 			return;
