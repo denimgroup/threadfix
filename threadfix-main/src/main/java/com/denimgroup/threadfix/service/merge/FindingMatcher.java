@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.merge;
 import java.util.Collections;
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
@@ -43,13 +42,9 @@ public class FindingMatcher {
 	private final String projectRoot;
 	private final ScanMergeConfiguration scanMergeConfiguration;
 	
-	public FindingMatcher(String projectRoot, ScanMergeConfiguration scanMergeConfiguration) {
-		this.projectRoot            = projectRoot;
+	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration) {
+		this.projectRoot = scanMergeConfiguration.getApplicationRoot();
 		this.scanMergeConfiguration = scanMergeConfiguration;
-	}
-	
-	public static FindingMatcher getBasicMatcher(Application application) {
-		return new FindingMatcher(application.getProjectRoot(), ScanMergeConfiguration.getDefaultConfiguration());
 	}
 	
 	/**
@@ -119,7 +114,7 @@ public class FindingMatcher {
 				oldFinding.getSurfaceLocation().getPath() != null &&
 				newFinding.getSurfaceLocation().getPath() != null) {
 			
-			switch (scanMergeConfiguration.sourceCodeAccessLevel) {
+			switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
 				case FULL:   // TODO
 				case PARTIAL:    // TODO
 				default:
@@ -251,7 +246,7 @@ public class FindingMatcher {
 			oldGenericVulnerability = getGenericVulnerability(oldFinding);
 		
 		if (newGenericVulnerability != null && oldGenericVulnerability != null) {
-			switch (scanMergeConfiguration.typeStrategy) {
+			switch (scanMergeConfiguration.getTypeStrategy()) {
 				case TREES:         
 					match = cweTreeMatch(newGenericVulnerability, oldGenericVulnerability);
 					break;

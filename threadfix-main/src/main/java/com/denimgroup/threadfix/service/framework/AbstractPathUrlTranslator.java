@@ -5,12 +5,14 @@ import java.io.File;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-public abstract class AbstractURLCalculator {
+public abstract class AbstractPathUrlTranslator {
 
 	protected final ServletMappings mappings;
 	protected final File workTree;
 	protected final String applicationRoot;
+	protected final ScanMergeConfiguration scanMergeConfiguration;
 	
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	
@@ -19,18 +21,12 @@ public abstract class AbstractURLCalculator {
 	 * @param mappings
 	 * @param workTree
 	 */
-	public AbstractURLCalculator(ServletMappings mappings, File workTree, String applicationRoot) {
-		if (mappings == null) {
-			throw new IllegalArgumentException("Servlet Mappings cannot be null.");
-		}
+	public AbstractPathUrlTranslator(ScanMergeConfiguration configuration) {
 		
-		if (workTree == null) {
-			throw new IllegalArgumentException("Work Tree cannot be null.");
-		}
-		
-		this.mappings = mappings;
-		this.workTree = workTree;
-		this.applicationRoot = "/" + applicationRoot;
+		this.mappings = configuration.getServletMappings();
+		this.workTree = configuration.getWorkTree();
+		this.applicationRoot = "/" + configuration.getApplicationRoot();
+		this.scanMergeConfiguration = configuration;
 		
 		if (!this.workTree.exists()) {
 			log.warn("File doesn't exist.");

@@ -1,16 +1,15 @@
 package com.denimgroup.threadfix.service.framework;
 
-import java.io.File;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-public class ServletURLCalculator extends AbstractURLCalculator {
+public class ServletTranslator extends AbstractPathUrlTranslator {
 
-	public ServletURLCalculator(ServletMappings mappings, File workTree,
-			String applicationRoot) {
-		super(mappings, workTree, applicationRoot);
+	public ServletTranslator(ScanMergeConfiguration scanMergeConfiguration) {
+		super(scanMergeConfiguration);
 	}
 
 	@Override

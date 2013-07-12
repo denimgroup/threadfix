@@ -43,6 +43,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -392,4 +396,23 @@ public class Application extends AuditableEntity {
 		return returnList;
 	}
 
+	@Transient
+	public VulnTypeStrategy getTypeStrategy() {
+		return VulnTypeStrategy.EXACT;
+	}
+	
+	@Transient
+	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
+		return SourceCodeAccessLevel.DETECT;
+	}
+	
+	@Transient
+	public FrameworkType getFrameworkType() {
+		return FrameworkType.DETECT;
+	}
+	
+	@Transient
+	public String getRepositoryUrl() {
+		return getUrl();
+	}
 }

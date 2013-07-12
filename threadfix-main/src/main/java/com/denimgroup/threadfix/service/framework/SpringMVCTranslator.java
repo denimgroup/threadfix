@@ -1,14 +1,12 @@
 package com.denimgroup.threadfix.service.framework;
 
-import java.io.File;
-
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-public class SpringURLCalculator extends AbstractURLCalculator {
+public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 
-	public SpringURLCalculator(ServletMappings mappings, File workTree,
-			String applicationRoot) {
-		super(mappings, workTree, applicationRoot);
+	public SpringMVCTranslator(ScanMergeConfiguration scanMergeConfiguration) {
+		super(scanMergeConfiguration);
 	}
 
 	@Override

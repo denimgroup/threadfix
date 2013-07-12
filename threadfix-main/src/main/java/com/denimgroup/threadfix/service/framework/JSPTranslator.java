@@ -4,8 +4,9 @@ import java.io.File;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-public class JSPURLCalculator extends AbstractURLCalculator {
+public class JSPTranslator extends AbstractPathUrlTranslator {
 	
 	// TODO figure out the best way to get the application root into this class
 	// I'm guessing it'll be in the Application
@@ -13,8 +14,8 @@ public class JSPURLCalculator extends AbstractURLCalculator {
 	private final ProjectDirectory projectDirectory;
 	private final File aboveWebInf;
 
-	public JSPURLCalculator(ServletMappings mappings, File workTree, String applicationName) {
-		super(mappings, workTree, applicationName);
+	public JSPTranslator(ScanMergeConfiguration scanMergeConfiguration) {
+		super(scanMergeConfiguration);
 		projectDirectory = new ProjectDirectory(workTree);
 		aboveWebInf = findDirectoryAboveWebInf();
 	}

@@ -22,15 +22,13 @@ import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.framework.MergeConfigurationGenerator;
 
 public class ApplicationMerger extends SpringBeanAutowiringSupport {
 	
-	@Autowired
-	private ApplicationDao applicationDao;
-	@Autowired
-	private ScanDao scanDao;
-	@Autowired
-	private JobStatusService jobStatusService;
+	@Autowired private ApplicationDao applicationDao;
+	@Autowired private ScanDao scanDao;
+	@Autowired private JobStatusService jobStatusService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationMerger.class);
 
@@ -53,7 +51,8 @@ public class ApplicationMerger extends SpringBeanAutowiringSupport {
 	 */
 	public void applicationMerge(Scan scan, Application application, Integer statusId) {
 		
-		FindingMatcher matcher = FindingMatcher.getBasicMatcher(application);
+		FindingMatcher matcher = new FindingMatcher(
+				MergeConfigurationGenerator.generateConfiguration(application));
 		
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		

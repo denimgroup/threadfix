@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
+import java.io.File;
+
+import com.denimgroup.threadfix.service.framework.ServletMappings;
+
 /**
  * This class is used to hold information about what types of algorithms to use in a vulnerability merge.
  * 
@@ -31,20 +35,48 @@ package com.denimgroup.threadfix.service.merge;
  */
 public class ScanMergeConfiguration {
 	
+	private VulnTypeStrategy typeStrategy;
+	private SourceCodeAccessLevel sourceCodeAccessLevel;
+	private FrameworkType frameworkType;
+	private String applicationRoot;
+	private final File workTree;
+	private final ServletMappings servletMappings;
+	
 	public ScanMergeConfiguration(VulnTypeStrategy typeStrategy, 
-			SourceCodeAccessLevel pathStrategy,
-			FrameworkType frameworkType) {
+			SourceCodeAccessLevel sourceCodeAccessLevel,
+			FrameworkType frameworkType,
+			File workTree,
+			String applicationRoot,
+			ServletMappings servletMappings) {
 		this.typeStrategy  = typeStrategy;
 		this.frameworkType = frameworkType;
-		this.sourceCodeAccessLevel  = pathStrategy;
+		this.sourceCodeAccessLevel  = sourceCodeAccessLevel;
+		this.workTree = workTree;
+		this.applicationRoot = applicationRoot;
+		this.servletMappings = servletMappings;
 	}
 	
-	public final VulnTypeStrategy typeStrategy;
-	public final SourceCodeAccessLevel sourceCodeAccessLevel;
-	public final FrameworkType frameworkType;
+	public String getApplicationRoot() {
+		return applicationRoot;
+	}
 
-	public static ScanMergeConfiguration getDefaultConfiguration() {
-		return new ScanMergeConfiguration(
-				VulnTypeStrategy.BASIC, SourceCodeAccessLevel.DETECT, FrameworkType.DETECT);
+	public File getWorkTree() {
+		return workTree;
+	}
+
+	public ServletMappings getServletMappings() {
+		return servletMappings;
+	}
+
+	public VulnTypeStrategy getTypeStrategy() {
+		return typeStrategy;
+	}
+
+	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
+		return sourceCodeAccessLevel;
+	}
+
+	public FrameworkType getFrameworkType() {
+		return frameworkType;
 	}
 }

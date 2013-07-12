@@ -42,8 +42,8 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+import com.denimgroup.threadfix.service.framework.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
-import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
 import com.denimgroup.threadfix.service.merge.StaticFindingPathUtils;
 
@@ -119,7 +119,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	public void updateVulnerabilities(Application application) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
 		
-		FindingMatcher matcher = FindingMatcher.getBasicMatcher(application);
+		FindingMatcher matcher = new FindingMatcher(MergeConfigurationGenerator.generateConfiguration(application));
 
 		if (vulnerabilities != null) {
 			for (int i = 0; i < vulnerabilities.size(); i++) {
@@ -191,7 +191,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		scanMerger.merge(scan, scan.getApplicationChannel(), ScanMergeConfiguration.getDefaultConfiguration());
+		scanMerger.merge(scan, scan.getApplicationChannel(), 
+				MergeConfigurationGenerator.getDefaultConfiguration());
 	
 		return scan;
 	}
@@ -240,7 +241,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
-		scanMerger.merge(scan, applicationChannel, ScanMergeConfiguration.getDefaultConfiguration());
+		scanMerger.merge(scan, applicationChannel, 
+				MergeConfigurationGenerator.getDefaultConfiguration());
 		
 		importer.deleteScanFile();
 		return scan;
