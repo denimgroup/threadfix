@@ -37,4 +37,6 @@ public interface ScanQueueService {
 	ScanQueueTask retrieveById(int scanQueueTaskId);
 	
 	boolean taskStatusUpdate(int taskId, String message);
+	
+	Object requestTask(String scanners, String agentConfig);
 }

@@ -55,13 +55,39 @@ public class ScanQueueTaskRestController extends RestController {
 		return(retVal);
 	}
 	
+	/**
+	 * TOFIX - Add scanner versions and OS/version to the incoming parameters
+	 * 
+	 * @param request
+	 * @param scanners comma-separated list of scanners available from the agent
+	 * @param agentConfig information about the agent's environment
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="requestTask", method=RequestMethod.POST)
+	public @ResponseBody Object requestTask(HttpServletRequest request,
+			@RequestParam("scanners") String scanners,
+			@RequestParam("agentConfig") String agentConfig) {
+		Object retVal = null;
+		
+		log.info("Received a REST request to get a scan to run");
+		
+		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		retVal = this.scanQueueService.requestTask(scanners, agentConfig);
+		
+		return(retVal);
+	}
+	
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
 	public @ResponseBody Object taskStatusUpdate(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
 		boolean retVal = false;
 		
-		log.info("Reeived a REST request to update the status of scan " + scanQueueTaskId);
+		log.info("Received a REST request to update the status of scan " + scanQueueTaskId);
 		
 		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
 		if (!result.equals(API_KEY_SUCCESS)) {

@@ -131,6 +131,62 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		return(retVal);
 	}
 	
+	@Override
+	public Object requestTask(String scanners, String agentConfig) {
+		Object retVal = null;
+		
+		if(scanners == null) {
+			log.warn("Attempting to request a task with a null list of scanners. Aborting.");
+			return(null);
+		} else if(scanners.length() == 0) {
+			log.warn("Attempting to request a task with an empty list of scanners. Aborting.");
+			return(null);
+		} else {
+			log.debug("Requesting a task for one of these scanners: " + scanners);
+		}
+		
+		String[] scannerArray = scanners.split(",");
+		
+		List<ScanQueueTask> availableTasks = this.scanQueueTaskDao.retrieveAvailable();
+		
+		for(ScanQueueTask task : availableTasks) {
+			log.debug("Examining task: " + task + " to see if we can run it");
+			for(String scanner : scannerArray) {
+				if(scanner.equals(task.getScanner())) {
+					log.info("Found a task for available scanner: " + scanner + ": " + task);
+					//	TOFIX - Look up the TaskConfig for this particular task instead of lazily
+					//	returning the ScanQueueTask itself
+					retVal = task;
+					
+					//	Mark the task as having been assigned
+					//	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
+					task.setStartTime(new Date());
+					task.setStatus(ScanQueueTask.STATUS_ASSIGNED);
+					
+					ScanStatus status = new ScanStatus();
+					status.setScanQueueTask(task);
+					status.setMessage("Assigning task to an agent with agentConfig: " + agentConfig);
+					
+					task.addScanStatus(status);
+					
+					this.scanQueueTaskDao.saveOrUpdate(task);
+					break;
+				} else {
+					log.debug("Scanner: " + scanner + " doesn't match task: " + task);
+				}
+			}
+			
+			//	If an available scanner matches this task, pick it and move on
+			if(retVal != null) {
+				break;
+			}
+		}
+		
+		log.info("Found a suitable task for the agent: " + retVal);
+		
+		return(retVal);
+	}
+	
 	/**
 	 * Run through all items in the scan queue and clear out any scans
 	 * that have timed out.

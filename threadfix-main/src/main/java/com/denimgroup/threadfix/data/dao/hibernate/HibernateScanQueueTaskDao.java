@@ -35,10 +35,18 @@ public class HibernateScanQueueTaskDao implements ScanQueueTaskDao{
 													.addOrder(Order.asc("createdDate")).list());
 	}
 	
+	@Override
 	public ScanQueueTask retrieveById(int scanQueueTaskId) {
 		ScanQueueTask retVal = (ScanQueueTask)sessionFactory.getCurrentSession()
 							.createCriteria(ScanQueueTask.class)
 							.add(Restrictions.eq("id", scanQueueTaskId)).uniqueResult();
 		return(retVal);
+	}
+	
+	@Override
+	public List<ScanQueueTask> retrieveAvailable() {
+		return(sessionFactory.getCurrentSession().createCriteria(ScanQueueTask.class)
+							.add(Restrictions.eq("status",  ScanQueueTask.STATUS_QUEUED))
+							.addOrder(Order.asc("createdDate")).list());
 	}
 }
