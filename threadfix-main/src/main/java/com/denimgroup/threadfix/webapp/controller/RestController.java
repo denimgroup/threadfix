@@ -53,11 +53,9 @@ public abstract class RestController {
 		APIKey key = apiKeyService.loadAPIKey(apiKey);
 		boolean validRequest = key != null;
 
-		// TODO take out the actual key here and use the ID?
-		// Needs a look after we figure out a more general database encryption strategy
 		if (validRequest) {
-			log.info("API key " + apiKey + " authenticated successfully on "
-					+ request.getPathInfo() + ".");
+			log.info("API key with ID: " + key.getId() + " authenticated successfully on path: "
+					+ request.getPathInfo() + " for methodName: " + methodName);
 			
 			if (key.getIsRestrictedKey() &&
 				restrictedMethods.contains(methodName)) {
