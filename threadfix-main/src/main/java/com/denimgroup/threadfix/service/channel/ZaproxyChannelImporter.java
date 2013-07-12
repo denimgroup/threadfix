@@ -225,8 +225,12 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    }
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    	log.debug("Starting XML element with name:" + name + " and qName: " + qName);
 	    	if (getDate) {
+	    		//	TODO - Determine if there is overlap between this code and the handler for OWASPZAPReport tags below.
+	    		//	Looks to be the same code
 	    		String tempDateString = getBuilderText();
+	    		log.debug("Attempting to get scan date from text '" + tempDateString + "'");
 	    		
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
@@ -236,6 +240,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    			if (testDate != null) {
 	    				hasDate = true;
 	    			}
+	    		} else {
+	    			log.debug("Date string appears to be empty or does not contain expected text: '" + anchorString + "'");
 	    		}
 	    		
 	    		getDate = false;
@@ -249,6 +255,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 			if ("OWASPZAPReport".equals(qName)) {
 
 				String tempDateString = atts.getValue("generated");
+				log.debug("Attempting to get scan date from text '" + tempDateString + "'");
 
 				String anchorString = "Report generated at ";
 				if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
@@ -258,7 +265,9 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 					if (testDate != null) {
 						hasDate = true;
 					}
-				}
+				} else {
+	    			log.debug("Date string appears to be empty or does not contain expected text: '" + anchorString + "'");
+	    		}
 
 				correctFormat = true;
 			}

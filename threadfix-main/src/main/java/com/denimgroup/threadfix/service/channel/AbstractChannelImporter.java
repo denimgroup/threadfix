@@ -666,7 +666,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		ScanUtils.readSAXInput(handler, FILE_CHECK_COMPLETED, inputStream);
 		closeInputStream(inputStream);
 		
-		log.info(testStatus.toString());
+		log.info("Scan status: " + testStatus);
 		return new ScanCheckResultBean(testStatus, testDate);
 	}
 
