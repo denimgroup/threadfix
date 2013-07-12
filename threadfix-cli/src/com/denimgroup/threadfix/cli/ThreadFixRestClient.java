@@ -27,6 +27,25 @@ public class ThreadFixRestClient {
 	
 	HttpRestUtils util = new HttpRestUtils();
 	
+	/**
+	 * Default constructor that will read configuration from a local .properties file
+	 */
+	public ThreadFixRestClient() {
+		
+	}
+	
+	/**
+	 * Custom constructor for when you want to programmatically specify the ThreadFix URL and API key
+	 * 
+	 * @param url URL for the ThreadFix server
+	 * @param apiKey API key to use when accessing the ThreadFix server
+	 */
+	public ThreadFixRestClient(String url, String apiKey) {
+		util.setDurable(false);
+		util.setKey(apiKey);
+		util.setUrl(url);
+	}
+	
 	public String createApplication(String teamId, String name, String url) {
 		String result = util.httpPost(util.getUrl() + "/teams/" + teamId + "/applications/new",
 				new String[] {"apiKey",      "name", "url"},

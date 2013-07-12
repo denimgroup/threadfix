@@ -165,6 +165,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					
 					ScanStatus status = new ScanStatus();
 					status.setScanQueueTask(task);
+					status.setTimestamp(new Date());
 					status.setMessage("Assigning task to an agent with agentConfig: " + agentConfig);
 					
 					task.addScanStatus(status);

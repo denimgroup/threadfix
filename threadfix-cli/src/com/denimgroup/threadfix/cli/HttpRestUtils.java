@@ -64,9 +64,20 @@ public class HttpRestUtils {
 	
 	public final String API_KEY_ERROR = "Authentication failed, check your API Key.";
 	
+	//	TODO - Clean up this durable/not stuff
+	private boolean durable = true;
+	
 	private String url = null;
 	private String key = null;
 	private Properties properties;
+	
+	public boolean getDurable() {
+		return(this.durable);
+	}
+	
+	public void setDurable(boolean durable) {
+		this.durable = durable;
+	}
 	
 	public String httpPostFile(String request, String fileName, String[] paramNames,
 			String[] paramVals) {
@@ -299,45 +310,52 @@ public class HttpRestUtils {
 	}
 	
 	private void readProperties() {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream("threadfix.properties");
-			if (properties == null) {
-				properties = new Properties();
-			}
-			properties.load(in);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		if (properties == null) {
+			properties = new Properties();
+		}
+		if(durable) {
+			FileInputStream in = null;
 			try {
-				if (in != null) {
-					in.close();
+				in = new FileInputStream("threadfix.properties");
+				if (properties == null) {
+					properties = new Properties();
 				}
-			} catch(IOException e) {
+				properties.load(in);
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (in != null) {
+						in.close();
+					}
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 	
 	private void writeProperties() {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream("threadfix.properties");
-			properties.store(out, "Writing.");
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		if(durable) {
+			FileOutputStream out = null;
 			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch(IOException e) {
+				out = new FileOutputStream("threadfix.properties");
+				properties.store(out, "Writing.");
+				out.close();
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (out != null) {
+						out.close();
+					}
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
