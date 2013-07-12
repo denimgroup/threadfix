@@ -33,6 +33,10 @@ public abstract class AbstractPathUrlTranslator {
 		}
 	}
 
+	public abstract String getFileName(Finding dynamicFinding);
+	
+	public abstract String getUrlPath(Finding staticFinding);
+	
 	public void findMatches(Scan scan) {
 		if (scan == null || scan.getFindings() == null || scan.getFindings().size() == 0) {
 			return;

@@ -63,4 +63,16 @@ public class ServletTranslator extends AbstractPathUrlTranslator {
 		}
 		return returnName;
 	}
+
+	@Override
+	public String getFileName(Finding dynamicFinding) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUrlPath(Finding staticFinding) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

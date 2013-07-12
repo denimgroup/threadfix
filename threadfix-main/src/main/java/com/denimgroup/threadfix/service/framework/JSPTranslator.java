@@ -37,6 +37,7 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		return aboveWebInf;
 	}
 
+	// What this really does is find a matching file on the filesystem.
 	@Override
 	public boolean findMatch(Finding finding) {
 		
@@ -51,38 +52,31 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		if (finding.getDataFlowElements() == null || 
 				finding.getDataFlowElements().isEmpty()) {
 			
-			// Attempt dynamic matching
-			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null &&
-					finding.getSurfaceLocation().getPath().contains(applicationRoot)) {
-				String path = finding.getSurfaceLocation().getPath();
-				finding.getSurfaceLocation().setPath(path.substring(
-						path.indexOf(applicationRoot) + applicationRoot.length()));
-				match = true;
-			}
-			
 		} else {
-			
+
 			// Attempt static matching
 			for (DataFlowElement element : finding.getDataFlowElements()) {
 				if (element != null && element.getSourceFileName() != null) {
 					String elementPath = element.getSourceFileName();
 					if (elementPath.contains(topDirectory)) {
-						
-						String strippedPath = elementPath.substring(elementPath.indexOf(topDirectory) + topDirectory.length());
-						
+
+						String strippedPath = elementPath.substring(elementPath
+								.indexOf(topDirectory) + topDirectory.length());
+
 						if (finding.getSurfaceLocation() != null) {
 							finding.getSurfaceLocation().setPath(strippedPath);
 						}
-						
+
 						System.out.println("stripped path = " + strippedPath);
-						
-						String pathAttempt = aboveWebInf.getAbsolutePath() + strippedPath;
-						
+
+						String pathAttempt = aboveWebInf.getAbsolutePath()
+								+ strippedPath;
+
 						if (new File(pathAttempt).exists()) {
 							System.out.println("located file at " + pathAttempt);
-							match = true;
 						} else {
-							System.out.println("unable to locate file at " + pathAttempt);
+							System.out.println("unable to locate file at "
+									+ pathAttempt);
 						}
 					}
 				}
@@ -91,53 +85,74 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		
 		return match;
 	}
-	
-//		boolean match = false;
-//		
-//		for (DataFlowElement element : finding.getDataFlowElements()) {
-//			if (element != null && element.getSourceFileName() != null) {
-//				File result = projectDirectory.findFile(
-//						getClassName(element.getSourceFileName()), "java", "src", "main");
-//						
-//				if (result != null) {
-//					match = true;
-//					System.out.println(".");
-//					System.out.println(element.getSourceFileName() + " ("
-//							+ getClassName(element.getSourceFileName()) + " -> " + result.getAbsolutePath());
-//				} else {
-//					System.out.println(",");
-//				}
-//			}
-//		}
-//		
-//		return match;
-//	}
-	
-//	private String getClassName(String input) {
-//		String returnName = input;
-//		
-//		if (returnName.contains("\\")) {
-//			returnName = returnName.replace('\\', '/');
-//		}
-//		
-//		returnName = returnName.replace('/', '.');
-//		if (returnName.contains("java")) {
-//			returnName = returnName.substring(returnName.indexOf("java") + 4);
-//		}
-//		
-//		if (returnName.charAt(0) == '.') {
-//			returnName = returnName.substring(1);
-//		}
-//		
-//		if (returnName.endsWith(".jsp")) {
-//			returnName = returnName.substring(0, returnName.length() - 4);
-//		}
-//		
-//		while (returnName.indexOf('.') != -1) {
-//			returnName = returnName.substring(returnName.indexOf('.') + 1);
-//		}
-//		
-//		return returnName;
-//	}
 
+	@Override
+	public String getFileName(Finding dynamicFinding) {
+		String sourcePath = null;
+		if (dynamicFinding != null && !dynamicFinding.getIsStatic() &&
+				dynamicFinding.getSurfaceLocation() != null &&
+				dynamicFinding.getSurfaceLocation().getPath() != null) {
+			
+			String path = dynamicFinding.getSurfaceLocation().getPath();
+			
+			switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
+				case FULL:    sourcePath = guessSourcePathWithSourceCode(path); break;
+				case PARTIAL: sourcePath = guessSourcePathWithDataFlows(path);  break;
+				default:      sourcePath = guessSourcePathWithNoSource(path);   break;
+			}
+			// TODO implement backwards dynamic path -> static file location matching
+		}
+		return sourcePath;
+	}
+
+	// TODO Figure out what other information we need for this method
+	private String guessSourcePathWithNoSource(String path) {
+		return path;
+	}
+
+	// TODO figure out what other information we need for this method
+	private String guessSourcePathWithDataFlows(String path) {
+		return path;
+	}
+
+	// TODO improve by figuring out the root on the filesystem so we can generate the path from the root
+	private String guessSourcePathWithSourceCode(String path) {
+		return path;
+	}
+
+	@Override
+	public String getUrlPath(Finding staticFinding) {
+		String returnPath = null;
+		if (staticFinding != null && staticFinding.getIsStatic() &&
+				staticFinding.getDataFlowElements() != null && 
+				!staticFinding.getDataFlowElements().isEmpty()) {
+			
+			switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
+				case FULL:    returnPath = guessUrlPathWithSourceCode(staticFinding); break;
+				case PARTIAL: returnPath = guessUrlPathWithDataFlows(staticFinding);  break;
+				default:      returnPath = guessUrlPathWithNoSource(staticFinding);   break;
+			}
+			// TODO implement backwards dynamic path -> static file location matching
+		}
+		return returnPath;
+	}
+	
+	// TODO Figure out what other information we need for this method
+	private String guessUrlPathWithNoSource(Finding finding) {
+		return null;
+	}
+
+	// TODO figure out what other information we need for this method
+	private String guessUrlPathWithDataFlows(Finding finding) {
+		return null;
+	}
+
+	// TODO improve by figuring out the root on the filesystem so we can generate the path from the root
+	private String guessUrlPathWithSourceCode(Finding finding) {
+		if (finding == null || aboveWebInf == null || !aboveWebInf.isDirectory()) {
+			return null;
+		}
+		
+		return null;
+	}
 }

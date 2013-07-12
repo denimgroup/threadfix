@@ -15,5 +15,21 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public String getFileName(Finding dynamicFinding) {
+		log.warn("Spring's unimplemented findMatch method was called.");
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUrlPath(Finding staticFinding) {
+		log.warn("Spring's unimplemented findMatch method was called.");
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

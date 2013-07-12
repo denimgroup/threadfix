@@ -14,4 +14,14 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 		return false;
 	}
 
+	@Override
+	public String getFileName(Finding dynamicFinding) {
+		return null;
+	}
+
+	@Override
+	public String getUrlPath(Finding staticFinding) {
+		return null;
+	}
+
 }
