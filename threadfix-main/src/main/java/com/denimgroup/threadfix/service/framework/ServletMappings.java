@@ -3,6 +3,8 @@ package com.denimgroup.threadfix.service.framework;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+
 public class ServletMappings {
 	
 	public final static String DEFAULT_SERVLET = "Default Servlet";
@@ -131,7 +133,7 @@ public class ServletMappings {
 		return DEFAULT_SERVLET;
 	}
 	
-	public ApplicationType guessApplicationType() {
+	public FrameworkType guessApplicationType() {
 		
 		for (ClassMapping mapping : servlets) {
 			if (mapping.getClassWithPackage().equals(
@@ -140,13 +142,13 @@ public class ServletMappings {
 				// If it's using  a Spring DispatcherServlet, we need to check for
 				// Spring config, not normal config
 				// TODO see about creating a hybrid spring / normal servlet
-				return ApplicationType.SPRING;
+				return FrameworkType.SPRING_MVC;
 			}
 		}
 
 		// Since we're only looking at two types of applications, this logic is pretty simple
 		// In a full-blown implementation, this method would be able to return lots of other types too.
-		return ApplicationType.JSP;
+		return FrameworkType.JSP;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

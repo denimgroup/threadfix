@@ -191,7 +191,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		scanMerger.merge(scan, scan.getApplicationChannel(), ScanMergeConfiguration.getBasicConfiguration());
+		scanMerger.merge(scan, scan.getApplicationChannel(), ScanMergeConfiguration.getDefaultConfiguration());
 	
 		return scan;
 	}
@@ -240,7 +240,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
-		scanMerger.merge(scan, applicationChannel, ScanMergeConfiguration.getBasicConfiguration());
+		scanMerger.merge(scan, applicationChannel, ScanMergeConfiguration.getDefaultConfiguration());
 		
 		importer.deleteScanFile();
 		return scan;

@@ -23,9 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * This class is used to hold information about what types of algorithms to use in a vulnerability merge.
  * 
@@ -34,46 +31,20 @@ import java.util.Set;
  */
 public class ScanMergeConfiguration {
 	
-	public ScanMergeConfiguration(TypeStrategy typeStrategy, 
-			PathStrategy pathStrategy,
-			ParameterStrategy parameterStrategy) {
-		this.typeStrategy      = typeStrategy;
-		this.parameterStrategy = parameterStrategy;
-		this.pathStrategy      = pathStrategy;
+	public ScanMergeConfiguration(VulnTypeStrategy typeStrategy, 
+			SourceCodeAccessLevel pathStrategy,
+			FrameworkType frameworkType) {
+		this.typeStrategy  = typeStrategy;
+		this.frameworkType = frameworkType;
+		this.sourceCodeAccessLevel  = pathStrategy;
 	}
 	
-	public final TypeStrategy typeStrategy;
-	public final PathStrategy pathStrategy;
-	public final ParameterStrategy parameterStrategy;
-	
-	enum TypeStrategy {
-		BASIC, TREES, FAULT_PATTERN
-	}
+	public final VulnTypeStrategy typeStrategy;
+	public final SourceCodeAccessLevel sourceCodeAccessLevel;
+	public final FrameworkType frameworkType;
 
-	enum PathStrategy {
-		BASIC, GUESS_ROOT, USER_ASSISTED, SOURCE_CODE
-	}
-
-	enum ParameterStrategy {
-		BASIC, USER_ASSISTED
-	}
-	
-	public static ScanMergeConfiguration getBasicConfiguration() {
+	public static ScanMergeConfiguration getDefaultConfiguration() {
 		return new ScanMergeConfiguration(
-				TypeStrategy.BASIC, PathStrategy.BASIC, ParameterStrategy.BASIC);
-	}
-
-	public static Set<ScanMergeConfiguration> getAllPermutations() {
-		Set<ScanMergeConfiguration> configurations = new HashSet<>();
-		
-		for (TypeStrategy typeStrategy : TypeStrategy.values()) {
-			for (PathStrategy pathStrategy : PathStrategy.values()) {
-				for (ParameterStrategy parameterStrategy : ParameterStrategy.values()) {
-					configurations.add(new ScanMergeConfiguration(typeStrategy, pathStrategy, parameterStrategy));
-				}
-			}
-		}
-		
-		return configurations;
+				VulnTypeStrategy.BASIC, SourceCodeAccessLevel.DETECT, FrameworkType.DETECT);
 	}
 }

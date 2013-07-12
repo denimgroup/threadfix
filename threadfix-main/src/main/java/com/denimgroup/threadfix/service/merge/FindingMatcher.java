@@ -49,7 +49,7 @@ public class FindingMatcher {
 	}
 	
 	public static FindingMatcher getBasicMatcher(Application application) {
-		return new FindingMatcher(application.getProjectRoot(), ScanMergeConfiguration.getBasicConfiguration());
+		return new FindingMatcher(application.getProjectRoot(), ScanMergeConfiguration.getDefaultConfiguration());
 	}
 	
 	/**
@@ -119,11 +119,10 @@ public class FindingMatcher {
 				oldFinding.getSurfaceLocation().getPath() != null &&
 				newFinding.getSurfaceLocation().getPath() != null) {
 			
-			switch (scanMergeConfiguration.pathStrategy) {
-				case SOURCE_CODE:   // TODO
-				case GUESS_ROOT:    // TODO
-				case USER_ASSISTED: // TODO
-				case BASIC:
+			switch (scanMergeConfiguration.sourceCodeAccessLevel) {
+				case FULL:   // TODO
+				case PARTIAL:    // TODO
+				default:
 					match = oldFinding.getSurfaceLocation().getPath().equals(
 							newFinding.getSurfaceLocation().getPath());
 			}

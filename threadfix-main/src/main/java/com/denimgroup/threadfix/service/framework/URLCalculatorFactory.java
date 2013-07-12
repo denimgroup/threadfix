@@ -34,10 +34,10 @@ public class URLCalculatorFactory {
 					switch (mappings.guessApplicationType()) {
 						case JSP:
 							return new JSPURLCalculator(mappings, repo.getWorkTree(), application.getName());
-						case SERVLET:
-							return new ServletURLCalculator(mappings, repo.getWorkTree(), application.getName());
-						case SPRING:
+						case SPRING_MVC:
 							return new SpringURLCalculator(mappings, repo.getWorkTree(), application.getName());
+						default:
+							return new DefaultURLCalculator(mappings, repo.getWorkTree(), application.getName());
 					}
 				}
 			}
