@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.merge;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.merge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 // TODO maybe move into saveOrUpdate and call it a day
 // Not sure yet though because ensureCorrectRelationships might not be what we want in all cases
@@ -178,7 +179,7 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 	private static String trim(String inputString, int length) {
 		String returnString = inputString;
 		
-		if (returnString != null && returnString.length() < length) {
+		if (returnString != null && returnString.length() > length) {
 			returnString = returnString.substring(0, length - 1);
 		}
 		

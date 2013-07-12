@@ -42,6 +42,10 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+import com.denimgroup.threadfix.service.merge.FindingMatcher;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
+import com.denimgroup.threadfix.service.merge.ScanMerger;
+import com.denimgroup.threadfix.service.merge.StaticFindingPathUtils;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -51,24 +55,23 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 	
-	private ChannelMerger channelMerger = null;
-	private ApplicationScanMerger applicationScanMerger = null;
 	private ScanDao scanDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
 	private UserDao userDao = null;
-	private JobStatusService jobStatusService;
+	private JobStatusService jobStatusService = null;
+	private ScanMerger scanMerger = null;
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao,
 			ApplicationChannelDao applicationChannelDao,
 			UserDao userDao,
-			JobStatusService jobStatusService) {
+			JobStatusService jobStatusService,
+			ScanMerger scanMerger) {
 		this.scanDao = scanDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.userDao = userDao;
 		this.jobStatusService = jobStatusService;
-		this.channelMerger = new ChannelMerger();
-		this.applicationScanMerger = new ApplicationScanMerger();
+		this.scanMerger = scanMerger;
 	}
 
 	@Override
@@ -108,20 +111,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 						finding.getSurfaceLocation().setPath(newPath);
 				}
 			}
-		}
-	}
-
-	private void updateSurfaceLocation(Scan scan, String newRoot) {
-		if (scan == null || scan.getFindings() == null || newRoot == null
-				|| newRoot.trim().equals(""))
-			return;
-
-		for (Finding finding : scan.getFindings()) {
-			String newPath = StaticFindingPathUtils.getFindingPathWithRoot(finding, newRoot);
-			if (newPath == null)
-				continue;
-			if (finding.getSurfaceLocation() != null)
-				finding.getSurfaceLocation().setPath(newPath);
 		}
 	}
 
@@ -202,7 +191,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		mergeScan(scan, scan.getApplicationChannel());
+		scanMerger.merge(scan, scan.getApplicationChannel(), ScanMergeConfiguration.getBasicConfiguration());
 	
 		return scan;
 	}
@@ -251,60 +240,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
-		mergeScan(scan, applicationChannel);
+		scanMerger.merge(scan, applicationChannel, ScanMergeConfiguration.getBasicConfiguration());
 		
 		importer.deleteScanFile();
 		return scan;
-	}
-
-	private void mergeScan(Scan scan, ApplicationChannel applicationChannel) {
-		if (scan.getFindings() != null && applicationChannel != null
-				&& applicationChannel.getChannelType() != null
-				&& applicationChannel.getChannelType().getName() != null) {
-			log.info("The " + applicationChannel.getChannelType().getName()
-					+ " import was successful" + " and found "
-					+ scan.getFindings().size() + " findings.");
-		}
-	
-		if (applicationChannel == null
-				|| applicationChannel.getApplication() == null
-				|| applicationChannel.getApplication().getId() == null) {
-			log.error("An incorrectly configured application made it to processRemoteScan()");
-			return;
-		}
-	
-		updateProjectRoot(applicationChannel, scan);
-		channelMerger.channelMerge(scan, applicationChannel);
-		applicationScanMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
-	
-		scan.setApplicationChannel(applicationChannel);
-		scan.setApplication(applicationChannel.getApplication());
-	
-		if (scan.getNumberTotalVulnerabilities() != null
-				&& scan.getNumberNewVulnerabilities() != null) {
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed processing with "
-					+ scan.getNumberTotalVulnerabilities()
-					+ " total Vulnerabilities ("
-					+ scan.getNumberNewVulnerabilities() + " new).");
-		} else {
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed.");
-		}
-	
-		// This is not static because it has an autowired dependency
-		ScanCleanerUtils.clean(scan);
-		scanDao.saveOrUpdate(scan);
-	}
-
-	private void updateProjectRoot(ApplicationChannel applicationChannel, Scan scan) {
-		String projectRoot = ProjectRootParser.findOrParseProjectRoot(applicationChannel, scan);
-		if (projectRoot != null && applicationChannel.getApplication() != null
-				&& applicationChannel.getApplication().getProjectRoot() == null) {
-			applicationChannel.getApplication().setProjectRoot(projectRoot);
-			updateSurfaceLocation(applicationChannel.getApplication());
-			updateSurfaceLocation(scan, projectRoot);
-		}
 	}
 
 	private void updateJobStatus(Integer statusId, String statusString) {

@@ -26,12 +26,15 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.merge.ApplicationMerger;
+import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
+import com.denimgroup.threadfix.service.merge.StaticFindingPathUtils;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 	
-	private ApplicationScanMerger applicationScanMerger = null;
+	private ApplicationMerger applicationScanMerger = null;
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
@@ -57,7 +60,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
 		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationScanMerger = new ApplicationScanMerger();
+		this.applicationScanMerger = new ApplicationMerger();
 	}
 	
 	/**

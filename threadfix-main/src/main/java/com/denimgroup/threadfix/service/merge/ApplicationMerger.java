@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.merge;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -20,8 +20,10 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.JobStatusService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
-public class ApplicationScanMerger extends SpringBeanAutowiringSupport {
+public class ApplicationMerger extends SpringBeanAutowiringSupport {
 	
 	@Autowired
 	private ApplicationDao applicationDao;
@@ -30,7 +32,7 @@ public class ApplicationScanMerger extends SpringBeanAutowiringSupport {
 	@Autowired
 	private JobStatusService jobStatusService;
 	
-	private final SanitizedLogger log = new SanitizedLogger(ApplicationScanMerger.class);
+	private final SanitizedLogger log = new SanitizedLogger(ApplicationMerger.class);
 
 	/**
 	 * This method is in here to allow passing an application id when the application isn't already in the session.
