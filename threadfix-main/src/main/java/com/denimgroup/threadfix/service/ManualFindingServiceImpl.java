@@ -26,15 +26,15 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.framework.DefaultTranslator;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
 import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
-import com.denimgroup.threadfix.service.merge.StaticFindingPathUtils;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 	
-	private ApplicationMerger applicationScanMerger = null;
+	private ApplicationMerger applicationMerger = null;
 	private ScanDao scanDao = null;
 	private ChannelTypeDao channelTypeDao = null;
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
@@ -51,7 +51,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			ApplicationChannelDao applicationChannelDao,
 			ApplicationDao applicationDao,
 			UserDao userDao,
-			VulnerabilityDao vulnerabilityDao) {
+			VulnerabilityDao vulnerabilityDao,
+			ApplicationMerger applicationMerger) {
 		this.scanDao = scanDao;
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
@@ -60,7 +61,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
 		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationScanMerger = new ApplicationMerger();
+		this.applicationMerger = applicationMerger;
 	}
 	
 	/**
@@ -149,7 +150,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		if (!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
 		} else {
-			String path = StaticFindingPathUtils.getStaticFindingPathGuess(finding);
+			String path = new DefaultTranslator(null, scan).getUrlPath(finding);
 			if (path != null
 					&& scan.getApplication().getProjectRoot() != null
 					&& scan.getApplication().getProjectRoot().toLowerCase() != null
@@ -165,7 +166,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		Scan tempScan = new Scan();
 		tempScan.setFindings(new ArrayList<Finding>());
 		tempScan.getFindings().add(finding);
-		applicationScanMerger.applicationMerge(tempScan, applicationId, null);
+		applicationMerger.applicationMerge(tempScan, applicationId, null);
 
 		scan.getFindings().add(finding);
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);

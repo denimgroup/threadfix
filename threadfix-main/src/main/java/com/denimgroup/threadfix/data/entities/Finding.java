@@ -75,6 +75,8 @@ public class Finding extends AuditableEntity {
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	
+	private String calculatedUrlPath, calculatedFilePath;
 
 	@ManyToOne
 	@JsonIgnore
@@ -137,7 +139,7 @@ public class Finding extends AuditableEntity {
 	public void setSurfaceLocation(SurfaceLocation surfaceLocation) {
 		this.surfaceLocation = surfaceLocation;
 	}
-
+	
 	@OneToMany(mappedBy = "finding")
 	@Cascade( { org.hibernate.annotations.CascadeType.ALL } )
 	@OrderBy("sequence DESC")
@@ -175,6 +177,24 @@ public class Finding extends AuditableEntity {
 	@Column(length = SOURCE_FILE_LOCATION_LENGTH)
 	public void setSourceFileLocation(String sourceFileLocation) {
 		this.sourceFileLocation = sourceFileLocation;
+	}
+	
+	@Column
+	public String getCalculatedUrlPath() {
+		return calculatedUrlPath;
+	}
+
+	public void setCalculatedUrlPath(String calculatedUrlPath) {
+		this.calculatedUrlPath = calculatedUrlPath;
+	}
+
+	@Column
+	public String getCalculatedFilePath() {
+		return calculatedFilePath;
+	}
+
+	public void setCalculatedFilePath(String calculatedFilePath) {
+		this.calculatedFilePath = calculatedFilePath;
 	}
 	
 	@Column
@@ -223,4 +243,5 @@ public class Finding extends AuditableEntity {
 	public void setMarkedFalsePositive(boolean isMarkedFalsePositive) {
 		this.isMarkedFalsePositive = isMarkedFalsePositive;
 	}
+	
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
@@ -15,7 +14,7 @@ public class ScanMergerImpl implements ScanMerger {
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 	
 	private ChannelMerger channelMerger = new ChannelMerger();
-	private ApplicationMerger applicationMerger = new ApplicationMerger();
+	@Autowired private ApplicationMerger applicationMerger;
 	@Autowired private ScanDao scanDao;
 	
 	public void merge(Scan scan, ApplicationChannel applicationChannel, ScanMergeConfiguration configuration) {
@@ -34,7 +33,7 @@ public class ScanMergerImpl implements ScanMerger {
 			return;
 		}
 	
-		updateProjectRoot(applicationChannel, scan);
+		PathGuesser.generateGuesses(configuration, scan);
 		channelMerger.channelMerge(scan, applicationChannel);
 		applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
 	
@@ -55,30 +54,5 @@ public class ScanMergerImpl implements ScanMerger {
 	
 		ScanCleanerUtils.clean(scan);
 		scanDao.saveOrUpdate(scan);
-	}
-
-	private void updateProjectRoot(ApplicationChannel applicationChannel, Scan scan) {
-		String projectRoot = ProjectRootParser.findOrParseProjectRoot(applicationChannel, scan);
-		if (projectRoot != null && applicationChannel.getApplication() != null
-				&& applicationChannel.getApplication().getProjectRoot() == null) {
-			applicationChannel.getApplication().setProjectRoot(projectRoot);
-			// TODO evaluate whether or not we need to do an application-wide surface location update
-//			updateSurfaceLocation(applicationChannel.getApplication());
-			updateSurfaceLocation(scan, projectRoot);
-		}
-	}
-	
-	private void updateSurfaceLocation(Scan scan, String newRoot) {
-		if (scan == null || scan.getFindings() == null || newRoot == null
-				|| newRoot.trim().equals(""))
-			return;
-
-		for (Finding finding : scan.getFindings()) {
-			String newPath = StaticFindingPathUtils.getFindingPathWithRoot(finding, newRoot);
-			if (newPath == null)
-				continue;
-			if (finding.getSurfaceLocation() != null)
-				finding.getSurfaceLocation().setPath(newPath);
-		}
 	}
 }

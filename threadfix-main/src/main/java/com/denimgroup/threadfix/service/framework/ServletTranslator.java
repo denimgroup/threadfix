@@ -4,15 +4,15 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class ServletTranslator extends AbstractPathUrlTranslator {
 
-	public ServletTranslator(ScanMergeConfiguration scanMergeConfiguration) {
-		super(scanMergeConfiguration);
+	public ServletTranslator(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
+		super(scanMergeConfiguration, scan);
 	}
 
-	@Override
 	public boolean findMatch(Finding finding)  {
 		if (finding == null || mappings == null) {
 			return false;

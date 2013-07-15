@@ -46,8 +46,7 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ChannelMerger.class);
 	
-	@Autowired
-	private VulnerabilityDao vulnerabilityDao;
+	@Autowired private VulnerabilityDao vulnerabilityDao;
 	
 	/**
 	 * This is the first round of scan merge that only considers scans from the same scanner

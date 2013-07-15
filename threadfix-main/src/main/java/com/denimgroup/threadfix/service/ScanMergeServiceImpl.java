@@ -42,10 +42,9 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
-import com.denimgroup.threadfix.service.framework.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
+import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
-import com.denimgroup.threadfix.service.merge.StaticFindingPathUtils;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -103,10 +102,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				for (Finding finding : vuln.getFindings()) {
 					if (finding == null)
 						continue;
-					String newPath = StaticFindingPathUtils.getFindingPathWithRoot(finding,
-							application.getProjectRoot());
-					if (newPath == null)
-						continue;
+					String newPath = "";
+//					StaticFindingPathUtils.getFindingPathWithRoot(finding,
+//							application.getProjectRoot());
+//					if (newPath == null)
+//						continue;
 					if (finding.getSurfaceLocation() != null)
 						finding.getSurfaceLocation().setPath(newPath);
 				}

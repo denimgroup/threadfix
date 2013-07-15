@@ -166,7 +166,7 @@ public class EditApplicationController {
 			return "ajaxFailureHarness";
 		} else {
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
+//			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
@@ -274,7 +274,6 @@ public class EditApplicationController {
 			
 		} else {
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			

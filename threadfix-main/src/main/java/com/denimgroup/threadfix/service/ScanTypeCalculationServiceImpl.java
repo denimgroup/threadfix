@@ -169,7 +169,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	}
 	
 	private static void addToMap(String name, String... tags) { 
-		map.add(new SimpleEntry<String, String[]>(name, tags)); 
+		map.add(new SimpleEntry<>(name, tags)); 
 	}
 	
 	private String getType(List<String> scanTags) {

@@ -72,6 +72,8 @@ public class Application extends AuditableEntity {
 	
 	@Size(max = 255, message = "{errors.maxlength} 255.")
 	private String projectRoot;
+	@Size(max = 255, message = "{errors.maxlength} 255.")
+	private String rootPath;
 
 	private Organization organization;
 	private Waf waf;
@@ -290,6 +292,15 @@ public class Application extends AuditableEntity {
 	
 	public void setProjectRoot(String projectRoot) {
 		this.projectRoot = projectRoot;
+	}
+	
+	@Column(length = 256)
+	public String getRootPath() {
+		return rootPath;
+	}
+
+	public void setRootPath(String rootPath) {
+		this.rootPath = rootPath;
 	}
 	
 	@OneToMany(mappedBy = "application")

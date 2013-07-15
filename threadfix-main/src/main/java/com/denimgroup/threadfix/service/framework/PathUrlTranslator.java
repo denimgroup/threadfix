@@ -4,7 +4,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 public interface PathUrlTranslator {
 	
-	String getFileName(Finding dynamicFinding);
+	String getFileName(Finding finding);
 	
-	String getUrlPath(Finding staticFinding);
+	String getUrlPath(Finding finding);
 }

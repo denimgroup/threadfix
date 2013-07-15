@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class JSPTranslator extends AbstractPathUrlTranslator {
@@ -14,8 +15,8 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 	private final ProjectDirectory projectDirectory;
 	private final File aboveWebInf;
 
-	public JSPTranslator(ScanMergeConfiguration scanMergeConfiguration) {
-		super(scanMergeConfiguration);
+	public JSPTranslator(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
+		super(scanMergeConfiguration, scan);
 		projectDirectory = new ProjectDirectory(workTree);
 		aboveWebInf = findDirectoryAboveWebInf();
 	}
@@ -38,7 +39,6 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 	}
 
 	// What this really does is find a matching file on the filesystem.
-	@Override
 	public boolean findMatch(Finding finding) {
 		
 		if (finding == null || aboveWebInf == null || !aboveWebInf.isDirectory()) {

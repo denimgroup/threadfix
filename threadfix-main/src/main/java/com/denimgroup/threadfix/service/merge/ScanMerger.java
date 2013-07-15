@@ -5,6 +5,6 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 public interface ScanMerger {
 	
-	public void merge(Scan scan, ApplicationChannel channel, ScanMergeConfiguration configuration);
+	void merge(Scan scan, ApplicationChannel channel, ScanMergeConfiguration configuration);
 	
 }

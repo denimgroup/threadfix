@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service.framework;
+package com.denimgroup.threadfix.service.merge;
 
 import java.io.File;
 
@@ -7,10 +7,9 @@ import org.eclipse.jgit.lib.Repository;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+import com.denimgroup.threadfix.service.framework.ProjectDirectory;
+import com.denimgroup.threadfix.service.framework.ServletMappings;
+import com.denimgroup.threadfix.service.framework.WebXMLParser;
 import com.denimgroup.threadfix.service.repository.GitService;
 
 public class MergeConfigurationGenerator {
@@ -61,7 +60,7 @@ public class MergeConfigurationGenerator {
 	public static File getWorkTree(Application application) {
 		File applicationDirectory = new File(baseDirectory + application.getId());
 		
-		Repository repo = GitService.cloneGitTreeToDirectory(application.getUrl(), applicationDirectory);
+		Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
 		
 		if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
 			return repo.getWorkTree();
@@ -98,7 +97,7 @@ public class MergeConfigurationGenerator {
 	}
 	
 	private static SourceCodeAccessLevel guessSourceCodeAccessLevel(Application application) {
-		if (application.getRepositoryUrl() != null) {
+		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
 			return SourceCodeAccessLevel.FULL;
 		} else if (hasStaticScans(application)) {
 			return SourceCodeAccessLevel.PARTIAL;

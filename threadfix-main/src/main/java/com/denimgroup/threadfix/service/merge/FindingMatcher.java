@@ -30,8 +30,6 @@ import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.framework.PathUrlTranslator;
-import com.denimgroup.threadfix.service.framework.PathUrlTranslatorFactory;
 
 /**
  * Encapsulates all Finding matching functionality complete with configuration options.
@@ -43,13 +41,10 @@ public class FindingMatcher {
 	
 	private final String projectRoot;
 	private final ScanMergeConfiguration scanMergeConfiguration;
-	private final PathUrlTranslator pathTranslator;
 	
 	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration) {
 		this.projectRoot = scanMergeConfiguration.getApplicationRoot();
 		this.scanMergeConfiguration = scanMergeConfiguration;
-		
-		pathTranslator = PathUrlTranslatorFactory.getTranslator(scanMergeConfiguration);
 	}
 	
 	/**
@@ -69,7 +64,7 @@ public class FindingMatcher {
 					return true;
 				else if (vulnFinding.getIsStatic() && dynamicToStaticMatch(finding, vulnFinding))
 					return true;
-			} else if (finding.getIsStatic()) {
+			} else {
 				if (!vulnFinding.getIsStatic()     && dynamicToStaticMatch(vulnFinding, finding))
 					return true;
 				else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding))
@@ -88,7 +83,7 @@ public class FindingMatcher {
 	}
 
 	private boolean dynamicToStaticMatch(Finding dynamicFinding, Finding staticFinding) {
-		return dynamicFinding == null || staticFinding == null && 
+		return dynamicFinding != null && staticFinding != null && 
 				genericVulnsMatch(dynamicFinding, staticFinding) &&
 				compareStaticAndDynamicPaths(dynamicFinding, staticFinding) &&
 				compareSurfaceLocationParameter(dynamicFinding, staticFinding);
@@ -99,15 +94,12 @@ public class FindingMatcher {
 		
 		boolean dynamicMatch = false, staticMatch = false;
 		
-		String staticUrlPathGuess = pathTranslator.getUrlPath(staticFinding);
-		dynamicMatch = comparePaths(staticUrlPathGuess, 
-				dynamicFinding.getSurfaceLocation().getPath());
+		dynamicMatch = comparePaths(staticFinding.getCalculatedUrlPath(), 
+				dynamicFinding.getCalculatedUrlPath());
 		
 		if (!dynamicMatch) {
-			String dynamicFileNameGuess = pathTranslator.getFileName(dynamicFinding);
-			
-			staticMatch = sourceFileNameCompare(dynamicFileNameGuess, 
-					staticFinding.getSourceFileLocation());
+			staticMatch = sourceFileNameCompare(dynamicFinding.getCalculatedFilePath(), 
+					staticFinding.getCalculatedFilePath());
 		}
 		
 		return dynamicMatch || staticMatch;
@@ -130,22 +122,22 @@ public class FindingMatcher {
 		staticPath  = "/" + staticPath;
 	 */
 	private boolean compareSurfaceLocationPaths(Finding oldFinding, Finding newFinding) {
-		boolean match = true;
+		boolean match = false;
 		
 		if (oldFinding != null && newFinding != null &&
 				oldFinding.getSurfaceLocation() != null &&
 				newFinding.getSurfaceLocation() != null &&
 				oldFinding.getSurfaceLocation().getPath() != null &&
 				newFinding.getSurfaceLocation().getPath() != null) {
-			match = comparePaths(oldFinding.getSurfaceLocation().getPath(),
-					newFinding.getSurfaceLocation().getPath());
+			match = comparePaths(oldFinding.getCalculatedUrlPath(),
+					newFinding.getCalculatedUrlPath());
 		}
 		
 		return match;
 	}
 	
 	private boolean comparePaths(String path1, String path2) {
-		return path1.equals(path2);
+		return path1.equalsIgnoreCase(path2);
 	}
 	
 	// check to see that the parameters match or are both empty
