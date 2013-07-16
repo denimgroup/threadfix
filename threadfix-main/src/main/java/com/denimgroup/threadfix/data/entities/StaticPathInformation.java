@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "StaticPathInformation")
 public class StaticPathInformation extends AuditableEntity {
+	
+	public static final String SPRING_MVC_TYPE = "Spring Method Mapping";
 
 	private static final long serialVersionUID = -5267609483088819614L;
 

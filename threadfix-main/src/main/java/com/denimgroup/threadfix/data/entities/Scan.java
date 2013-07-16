@@ -408,4 +408,9 @@ public class Scan extends BaseEntity {
 
 		return null;
 	}
+	
+	@Transient
+	public boolean isStatic() {
+		return STATIC.equals(getScannerType());
+	}
 }

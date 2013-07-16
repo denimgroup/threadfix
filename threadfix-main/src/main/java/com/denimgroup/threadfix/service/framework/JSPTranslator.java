@@ -17,6 +17,8 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 
 	public JSPTranslator(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
 		super(scanMergeConfiguration, scan);
+		log.info("Using JSP URL - Path translator.");
+		
 		projectDirectory = new ProjectDirectory(workTree);
 		aboveWebInf = findDirectoryAboveWebInf();
 	}

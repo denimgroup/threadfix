@@ -119,7 +119,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	public void updateVulnerabilities(Application application) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
 		
-		FindingMatcher matcher = new FindingMatcher(MergeConfigurationGenerator.generateConfiguration(application));
+		FindingMatcher matcher = new FindingMatcher(
+				MergeConfigurationGenerator.generateConfiguration(application, null));
 
 		if (vulnerabilities != null) {
 			for (int i = 0; i < vulnerabilities.size(); i++) {
@@ -242,7 +243,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
 		scanMerger.merge(scan, applicationChannel, 
-				MergeConfigurationGenerator.getDefaultConfiguration());
+				MergeConfigurationGenerator.generateConfiguration(applicationChannel.getApplication(), scan));
 		
 		importer.deleteScanFile();
 		return scan;

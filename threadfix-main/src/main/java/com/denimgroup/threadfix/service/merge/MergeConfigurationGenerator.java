@@ -5,8 +5,9 @@ import java.io.File;
 import org.eclipse.jgit.lib.Repository;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.StaticPathInformation;
 import com.denimgroup.threadfix.service.framework.ProjectDirectory;
 import com.denimgroup.threadfix.service.framework.ServletMappings;
 import com.denimgroup.threadfix.service.framework.WebXMLParser;
@@ -18,7 +19,7 @@ public class MergeConfigurationGenerator {
 	
 	private MergeConfigurationGenerator(){}
 	
-	public static ScanMergeConfiguration generateConfiguration(Application application) {
+	public static ScanMergeConfiguration generateConfiguration(Application application, Scan scan) {
 		if (application == null) {
 			return null;
 		}
@@ -30,7 +31,7 @@ public class MergeConfigurationGenerator {
 		ServletMappings servletMappings = null; //optional
 		
 		if (accessLevel == SourceCodeAccessLevel.DETECT) {
-			accessLevel = guessSourceCodeAccessLevel(application);
+			accessLevel = guessSourceCodeAccessLevel(application, scan);
 		}
 		
 		if (frameworkType == FrameworkType.DETECT) {
@@ -42,7 +43,7 @@ public class MergeConfigurationGenerator {
 					frameworkType = FrameworkType.NONE;
 				}
 			} else if (accessLevel == SourceCodeAccessLevel.PARTIAL){
-				frameworkType = guessFrameworkTypeFromDataFlows(application);
+				frameworkType = guessFrameworkTypeFromDataFlows(application, scan);
 			} else if (accessLevel == SourceCodeAccessLevel.NONE){
 				frameworkType = FrameworkType.NONE;
 			}
@@ -52,9 +53,45 @@ public class MergeConfigurationGenerator {
 				workTree, application.getProjectRoot(), servletMappings);
 	}
 	
-	private static FrameworkType guessFrameworkTypeFromDataFlows(Application application) {
-		// TODO Write logic for parsing through data flows to attempt to find the correct format.
-		return FrameworkType.NONE;
+	// TODO cache this information so we don't have to calculate every time
+	private static FrameworkType guessFrameworkTypeFromDataFlows(Application application, Scan scan) {
+		FrameworkType returnType = guessFrameworkType(scan);
+		
+		if (returnType == FrameworkType.NONE && application != null && application.getScans() != null) {
+			for (Scan applicationScan : application.getScans()) {
+				FrameworkType scanType = guessFrameworkType(applicationScan);
+				if (scanType != FrameworkType.NONE) {
+					returnType = scanType;
+					break;
+				}
+			}
+		}
+		
+		return returnType;
+	}
+	
+	// TODO improve this 
+	private static FrameworkType guessFrameworkType(Scan scan) {
+		FrameworkType type = FrameworkType.NONE;
+		
+		if (scan != null && scan.isStatic() && scan.getFindings() != null &&
+				!scan.getFindings().isEmpty()) {
+			for (Finding finding : scan.getFindings()) {
+				if (finding != null && finding.getStaticPathInformation() != null && 
+						StaticPathInformation.SPRING_MVC_TYPE.equals(
+							finding.getStaticPathInformation().getName())) {
+					type = FrameworkType.SPRING_MVC;
+					break;
+				} else if (finding != null && finding.getSourceFileLocation() != null &&
+						finding.getSourceFileLocation().endsWith(".jsp")) {
+					type = FrameworkType.JSP;
+					// There is intentionally not a break here. Since Spring projects also contain
+					// JSP files sometimes, we want to only use JSP if no Spring hints are found.
+				}
+			}
+		}
+		
+		return type;
 	}
 
 	public static File getWorkTree(Application application) {
@@ -96,10 +133,10 @@ public class MergeConfigurationGenerator {
 				null, null, null);
 	}
 	
-	private static SourceCodeAccessLevel guessSourceCodeAccessLevel(Application application) {
+	private static SourceCodeAccessLevel guessSourceCodeAccessLevel(Application application, Scan scan) {
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
 			return SourceCodeAccessLevel.FULL;
-		} else if (hasStaticScans(application)) {
+		} else if (hasStaticScans(application) || (scan != null && scan.isStatic())) {
 			return SourceCodeAccessLevel.PARTIAL;
 		} else {
 			return SourceCodeAccessLevel.NONE;
@@ -112,7 +149,7 @@ public class MergeConfigurationGenerator {
 		if (application != null && application.getScans() != null && 
 				!application.getScans().isEmpty()) {
 			for (Scan scan : application.getScans()) {
-				if (ChannelType.STATIC_TYPES.contains(scan.getScannerType())) {
+				if (scan.isStatic()) {
 					returnValue = true;
 					break;
 				}

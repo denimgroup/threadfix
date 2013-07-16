@@ -8,11 +8,13 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 
 	public SpringMVCTranslator(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
 		super(scanMergeConfiguration, scan);
+		
+		log.info("Using Spring MVC URL - Path translator.");
 	}
 
 	@Override
 	public String getFileName(Finding dynamicFinding) {
-		log.warn("Spring's getFileName findMatch method was called.");
+		log.warn("Spring's unimplemented getFileName method was called.");
 		
 		// TODO Auto-generated method stub
 		return null;
