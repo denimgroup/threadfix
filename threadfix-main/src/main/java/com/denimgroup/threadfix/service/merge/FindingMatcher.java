@@ -137,7 +137,7 @@ public class FindingMatcher {
 	}
 	
 	private boolean comparePaths(String path1, String path2) {
-		return path1.equalsIgnoreCase(path2);
+		return path1 != null && path2 != null && path1.equalsIgnoreCase(path2);
 	}
 	
 	// check to see that the parameters match or are both empty

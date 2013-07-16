@@ -6,6 +6,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+
 @Entity
 @Table(name = "StaticPathInformation")
 public class StaticPathInformation extends AuditableEntity {
@@ -58,5 +60,14 @@ public class StaticPathInformation extends AuditableEntity {
 	@Transient
 	public String toString() {
 		return name + " - " + value;
+	}
+	
+	@Transient
+	public FrameworkType guessFrameworkType() {
+		if (name != null && name.equals(SPRING_MVC_TYPE)) {
+			return FrameworkType.SPRING_MVC;
+		} else {
+			return FrameworkType.NONE;
+		}
 	}
 }

@@ -7,7 +7,6 @@ import org.eclipse.jgit.lib.Repository;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.StaticPathInformation;
 import com.denimgroup.threadfix.service.framework.ProjectDirectory;
 import com.denimgroup.threadfix.service.framework.ServletMappings;
 import com.denimgroup.threadfix.service.framework.WebXMLParser;
@@ -78,15 +77,14 @@ public class MergeConfigurationGenerator {
 				!scan.getFindings().isEmpty()) {
 			for (Finding finding : scan.getFindings()) {
 				if (finding != null && finding.getStaticPathInformation() != null && 
-						StaticPathInformation.SPRING_MVC_TYPE.equals(
-							finding.getStaticPathInformation().getName())) {
+						finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
 					type = FrameworkType.SPRING_MVC;
 					break;
 				} else if (finding != null && finding.getSourceFileLocation() != null &&
 						finding.getSourceFileLocation().endsWith(".jsp")) {
 					type = FrameworkType.JSP;
 					// There is intentionally not a break here. Since Spring projects also contain
-					// JSP files sometimes, we want to only use JSP if no Spring hints are found.
+					// JSP files sometimes, we only want to use JSP if no Spring hints are found.
 				}
 			}
 		}
