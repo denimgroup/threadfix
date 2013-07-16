@@ -62,6 +62,7 @@ public class Finding extends AuditableEntity {
 	private String nativeId;
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
+	private StaticPathInformation staticPathInformation;
 	
 	private int numberMergedResults = 1;
 	
@@ -138,6 +139,16 @@ public class Finding extends AuditableEntity {
 
 	public void setSurfaceLocation(SurfaceLocation surfaceLocation) {
 		this.surfaceLocation = surfaceLocation;
+	}
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "staticPathInformationId")
+	public StaticPathInformation getStaticPathInformation() {
+		return staticPathInformation;
+	}
+
+	public void setStaticPathInformation(StaticPathInformation staticPathInformation) {
+		this.staticPathInformation = staticPathInformation;
 	}
 	
 	@OneToMany(mappedBy = "finding")
