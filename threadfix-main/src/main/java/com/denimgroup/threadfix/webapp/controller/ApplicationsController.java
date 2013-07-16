@@ -57,13 +57,17 @@ import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
-@SessionAttributes({"defectTracker", "application", "waf", "defectViewModel"})
+@SessionAttributes({"defectTracker", "application", "waf", "defectViewModel", "scanParametersBean"})
 public class ApplicationsController {
 	
 	public ApplicationsController(){}
@@ -158,6 +162,10 @@ public class ApplicationsController {
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
+		model.addAttribute(ScanParametersBean.getScanParametersBean(application));
+		model.addAttribute("applicationTypes", FrameworkType.values());
+		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
+		model.addAttribute("typeMatchingStrategies", VulnTypeStrategy.values());
 		
 		return "applications/detail";
 	}

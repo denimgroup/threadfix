@@ -56,12 +56,16 @@ public class Application extends AuditableEntity {
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 
-	public static final int NAME_LENGTH = 60;
-	public static final int URL_LENGTH = 255;
+	public static final int 
+		NAME_LENGTH = 60,
+		URL_LENGTH = 255,
+		ENUM_LENGTH = 50;
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
+	
+	String frameworkType, sourceCodeAccessLevel, vulnTypeStrategy, repositoryUrl;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -406,24 +410,56 @@ public class Application extends AuditableEntity {
 		uploadableChannels = returnList;
 		return returnList;
 	}
+	
+	@Column(length = ENUM_LENGTH)
+	public String getFrameworkType() {
+		return frameworkType;
+	}
+
+	public void setFrameworkType(String frameworkType) {
+		this.frameworkType = frameworkType;
+	}
+
+	@Column(length = ENUM_LENGTH)
+	public String getSourceCodeAccessLevel() {
+		return sourceCodeAccessLevel;
+	}
+
+	public void setSourceCodeAccessLevel(String sourceCodeAccessLevel) {
+		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
+	}
+
+	@Column(length = ENUM_LENGTH)
+	public String getVulnTypeStrategy() {
+		return vulnTypeStrategy;
+	}
+
+	public void setVulnTypeStrategy(String vulnTypeStrategy) {
+		this.vulnTypeStrategy = vulnTypeStrategy;
+	}
+
+	@Column(length = URL_LENGTH)
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
 
 	@Transient
-	public VulnTypeStrategy getTypeStrategy() {
-		return VulnTypeStrategy.EXACT;
+	public FrameworkType getFrameworkTypeEnum() {
+		return FrameworkType.getFrameworkType(frameworkType);
 	}
 	
 	@Transient
-	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
-		return SourceCodeAccessLevel.DETECT;
+	public SourceCodeAccessLevel getSourceCodeAccessLevelEnum() {
+		return SourceCodeAccessLevel.getSourceCodeAccessLevel(sourceCodeAccessLevel);
 	}
 	
 	@Transient
-	public FrameworkType getFrameworkType() {
-		return FrameworkType.DETECT;
+	public VulnTypeStrategy getVulnTypeStrategyEnum() {
+		return VulnTypeStrategy.getVulnTypeStrategy(vulnTypeStrategy);
 	}
 	
-	@Transient
-	public String getRepositoryUrl() {
-		return getUrl();
-	}
 }

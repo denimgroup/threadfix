@@ -36,7 +36,8 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 			addStaticMappings(scan);
 		}
 		
-//		TODO get access to the application so we can do this
+		// TODO get access to the application so we can do this
+		// TODO also cache types used for each scan
 //		if (application != null && application.getScans() != null) {
 //			for (Scan applicationScan : application.getScans()) {
 //				addStaticMappings(applicationScan);

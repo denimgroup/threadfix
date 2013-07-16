@@ -18,6 +18,7 @@
 		<span style="float:right">
 			<a id="uploadScanModalLink" href="#uploadScan${ application.id }" role="button" class="btn header-button" data-toggle="modal">Upload Scan</a>
 			<a id="addManualFindingModalLink" href="#addManualFindingModal" role="button" class="btn header-button" data-toggle="modal">Add Manual Finding</a>
+			<a id="editScanParametersLink" href="#editScanParametersModal" role="button" class="btn header-button" data-toggle="modal">Edit Scan Settings</a>
 			
 			<c:if test="${ not empty application.defectTracker }">
 				<spring:url value="/organizations/{orgId}/applications/{appId}/defects/update" var="updateDefectUrl">
@@ -35,6 +36,7 @@
 
 <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 <%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
+<%@ include file="/WEB-INF/views/applications/modals/scanParametersModal.jsp" %>
 
 <div id="editApplicationModal" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

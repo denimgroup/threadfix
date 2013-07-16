@@ -23,9 +23,13 @@ public class MergeConfigurationGenerator {
 			return null;
 		}
 		
-		VulnTypeStrategy typeStrategy     = application.getTypeStrategy();
-		SourceCodeAccessLevel accessLevel = application.getSourceCodeAccessLevel();
-		FrameworkType frameworkType       = application.getFrameworkType();
+		VulnTypeStrategy typeStrategy = 
+				VulnTypeStrategy.getVulnTypeStrategy(application.getVulnTypeStrategy());
+		SourceCodeAccessLevel accessLevel = 
+				SourceCodeAccessLevel.getSourceCodeAccessLevel(application.getSourceCodeAccessLevel());
+		FrameworkType frameworkType = 
+				FrameworkType.getFrameworkType(application.getFrameworkType());
+		
 		File workTree = null; // optional
 		ServletMappings servletMappings = null; //optional
 		
