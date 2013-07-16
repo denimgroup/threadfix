@@ -6,6 +6,8 @@ import java.io.File;
 
 import org.junit.Test;
 
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+
 public class WebXMLParserTests {
 
     // TODO move these to the src/test/resources folder and use that
@@ -54,29 +56,10 @@ public class WebXMLParserTests {
     }
     
     @Test
-    public void testMappings() {
-    	String[] paths = {
-    		"/attack",
-    		"/attack?Screen=65&menu=200&stage=1",
-    		"/lessons/RoleBasedAccessControl/images/dbSchema.jpg",
-    		"/lessons/RoleBasedAccessControl/images/orgChart.jpg",
-    	};
-    	
-    	System.out.println(webGoat.getClassMappings());
-    	System.out.println(webGoat.getServletMappings());
-    	
-    	for (String path : paths) {
-    		System.out.println(webGoat.getClassForURL(path));
-    		System.out.println(path);
-    		System.out.println();
-    	}
-    }
-    
-    @Test
     public void testTypeGuessing() {
-    	assertTrue(vulnClinic.guessApplicationType() == ApplicationType.SPRING);
-    	assertTrue(wavsep.guessApplicationType() == ApplicationType.JSP);
-    	assertTrue(webGoat.guessApplicationType() == ApplicationType.SERVLET);
+    	assertTrue(vulnClinic.guessApplicationType() == FrameworkType.SPRING_MVC);
+    	assertTrue(wavsep.guessApplicationType() == FrameworkType.JSP);
+    	assertTrue(webGoat.guessApplicationType() == FrameworkType.JSP);
     }
     
     @Test

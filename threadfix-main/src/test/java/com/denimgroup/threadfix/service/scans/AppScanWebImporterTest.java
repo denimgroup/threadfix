@@ -37,6 +37,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
@@ -59,7 +60,9 @@ public class AppScanWebImporterTest extends AbstractChannelImporter {
 			nativeIdMap = new HashMap<>();
 	
 	@Autowired
-	public AppScanWebImporterTest() {}
+	public AppScanWebImporterTest() {
+		super(ChannelType.APPSCAN_DYNAMIC);
+	}
 	
 	public static void main(String[] args) throws IOException {
 //		

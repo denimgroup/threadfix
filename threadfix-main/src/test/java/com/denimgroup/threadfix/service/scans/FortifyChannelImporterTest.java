@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -54,6 +55,10 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  * Parses the SCA Fortify fpr output file.
  */
 public class FortifyChannelImporterTest extends AbstractChannelImporter {
+
+	public FortifyChannelImporterTest() {
+		super(ChannelType.FORTIFY);
+	}
 
 	// TODO run through more files and determine whether this method is still valuable
 	// or whether we can use only the 'action' parameter and the column parsing.
