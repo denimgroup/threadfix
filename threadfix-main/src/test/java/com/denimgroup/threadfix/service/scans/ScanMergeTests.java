@@ -10,6 +10,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
 import com.denimgroup.threadfix.webservices.tests.BaseRestTest;
 
 public class ScanMergeTests extends BaseRestTest {
@@ -19,36 +22,38 @@ public class ScanMergeTests extends BaseRestTest {
 	static final ThreadFixRestClient GOOD_CLIENT = getGoodClient();
 
 	@Test
-	@Ignore
 	public void testWavsepMerge() throws IOException, JSONException {
-		testApplication(WebApplication.WAVSEP);
+		testApplicationWithVariations(FrameworkType.JSP, WebApplication.WAVSEP);
 	}
 	
 	@Test
 	public void testBodgeItMerge() throws IOException, JSONException {
-		testApplication(WebApplication.BODGEIT);
+		testApplicationWithVariations(FrameworkType.JSP, WebApplication.BODGEIT);
 	}
 	
 	@Test
 	public void testPetClinicMerge() throws IOException, JSONException {
-		testApplication(WebApplication.PETCLINIC);
+		testApplicationWithVariations(FrameworkType.SPRING_MVC, WebApplication.PETCLINIC);
 	}
-	
-	public void testApplication(WebApplication application) throws JSONException, IOException {
-		testApplication(application, null);
-	}
-	
-	private void testApplication(WebApplication application, Integer id) throws JSONException, IOException {
+
+	private void testApplicationWithVariations(FrameworkType frameworkType, WebApplication application) throws JSONException, IOException {
 		debug("Starting " + application.getName() + " tests.");
 		
 		// set up application
 		
-		Integer appId = id;
-		
-		if (appId == null) {
-			appId = setupApplication(application);
+		for (FrameworkType type : new FrameworkType[] { FrameworkType.NONE, FrameworkType.DETECT, frameworkType }) {
+			for (SourceCodeAccessLevel sourceCodeAccessLevel : SourceCodeAccessLevel.values()) {
+				for (VulnTypeStrategy strategy : VulnTypeStrategy.values()) {
+					testApplication(application, type, sourceCodeAccessLevel, strategy);
+				}
+			}
 		}
+	}
 	
+	private void testApplication(WebApplication application, FrameworkType frameworkType,
+			SourceCodeAccessLevel sourceCodeAccessLevel, VulnTypeStrategy vulnTypeStrategy) throws JSONException, IOException {
+		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel, vulnTypeStrategy);
+
 		String jsonToLookAt = GOOD_CLIENT.searchForApplicationById(appId.toString());
 		
 		// Parsing / analysis
@@ -70,16 +75,23 @@ public class ScanMergeTests extends BaseRestTest {
 		}
 	}
 	
-	private Integer setupApplication(WebApplication application) {
+	private Integer setupApplication(WebApplication application, FrameworkType frameworkType,
+			SourceCodeAccessLevel sourceCodeAccessLevel, VulnTypeStrategy vulnTypeStrategy) {
 		debug("Creating new application and uploading scans.");
 		
-		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(getRandomString(23))));
+		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(
+				application.getName() + "-" + frameworkType + "-" + sourceCodeAccessLevel + "-" + vulnTypeStrategy
+				)));
 		Integer appId  = getId(getJSONObject(GOOD_CLIENT.createApplication(
 			teamId.toString(), 
 			application.getName() + getRandomString(10), 
-			application.getUrl())));
+			null)));
 		
-		GOOD_CLIENT.setParameters(appId.toString(), "EXACT", "NONE", "NONE", null);
+		GOOD_CLIENT.setParameters(appId.toString(), 
+				vulnTypeStrategy.toString(), 
+				sourceCodeAccessLevel.toString(), 
+				frameworkType.toString(), 
+				application.getUrl());
 
 		uploadScans(appId, application.getFPRPath(), application.getAppscanXMLPath());
 
