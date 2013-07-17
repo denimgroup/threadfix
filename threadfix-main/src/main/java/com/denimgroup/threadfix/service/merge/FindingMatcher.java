@@ -53,6 +53,8 @@ public class FindingMatcher {
 	 * 
 	 */
 	public boolean doesMatch(Finding finding, Vulnerability vuln) {
+		System.out.print('`');
+		
 		if (finding == null || vuln == null)
 			return false;
 
@@ -226,7 +228,7 @@ public class FindingMatcher {
 		if (projectRoot == null || projectRoot.trim().equals("")
 				|| !path1.contains(projectRoot) || !path2.contains(projectRoot))
 			return path1.equals(path2);
-
+		
 		// if we do have it and it is in both paths, compare the relative paths
 		if (path1.contains(projectRoot) && path2.contains(projectRoot)) {
 			return path1.substring(path1.indexOf(projectRoot)).equals(
@@ -264,7 +266,7 @@ public class FindingMatcher {
 				case TREES:         
 					match = cweTreeMatch(newGenericVulnerability, oldGenericVulnerability);
 					break;
-				case FAULT_PATTERN: 
+				case SOFTWARE_FAULT_PATTERN: 
 					match = faultPatternMatch(newGenericVulnerability, oldGenericVulnerability);
 					break;
 				default:
@@ -275,18 +277,20 @@ public class FindingMatcher {
 		return match;
 	}
 	
+	// TODO actually implement
 	private boolean cweTreeMatch(
 			GenericVulnerability newGenericVulnerability,
 			GenericVulnerability oldGenericVulnerability) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return newGenericVulnerability.getId().equals(oldGenericVulnerability.getId());
 	}
 
+	// TODO actually implement
 	private boolean faultPatternMatch(
 			GenericVulnerability newGenericVulnerability,
 			GenericVulnerability oldGenericVulnerability) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return newGenericVulnerability.getId().equals(oldGenericVulnerability.getId());
 	}
 
 	private GenericVulnerability getGenericVulnerability(

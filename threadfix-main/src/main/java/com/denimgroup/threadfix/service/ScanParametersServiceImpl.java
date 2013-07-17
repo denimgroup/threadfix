@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 @Service
+@Transactional(readOnly=false)
 public class ScanParametersServiceImpl implements ScanParametersService {
 
 	private ApplicationDao applicationDao;
@@ -45,33 +46,43 @@ public class ScanParametersServiceImpl implements ScanParametersService {
 	}
 	
 	@Override
-	@Transactional(readOnly=false)
-	public void saveConfiguration(Integer appId,
+	public boolean saveConfiguration(Integer appId,
+			ScanParametersBean scanParametersBean) {
+		if (scanParametersBean != null && appId != null) {
+			return saveConfiguration(applicationDao.retrieveById(appId), scanParametersBean);
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean saveConfiguration(Application application,
 			ScanParametersBean scanParametersBean) {
 		
-		if (scanParametersBean != null && appId != null) {
-			Application app = applicationDao.retrieveById(appId);
+		boolean result = false;
+		
+		if (scanParametersBean != null && application != null) {
 			
-			if (app != null) {
+			FrameworkType frameworkType = 
+					FrameworkType.getFrameworkType(scanParametersBean.getApplicationType());
+			SourceCodeAccessLevel accessLevel = 
+					SourceCodeAccessLevel.getSourceCodeAccessLevel(scanParametersBean.getSourceCodeAccessLevel());
+			VulnTypeStrategy typeStrategy =
+					VulnTypeStrategy.getVulnTypeStrategy(scanParametersBean.getTypeMatchingStrategy());
 			
-				FrameworkType frameworkType = 
-						FrameworkType.getFrameworkType(scanParametersBean.getApplicationType());
-				SourceCodeAccessLevel accessLevel = 
-						SourceCodeAccessLevel.getSourceCodeAccessLevel(scanParametersBean.getSourceCodeAccessLevel());
-				VulnTypeStrategy typeStrategy =
-						VulnTypeStrategy.getVulnTypeStrategy(scanParametersBean.getTypeMatchingStrategy());
-				
-				app.setFrameworkType(frameworkType.toString());
-				app.setSourceCodeAccessLevel(accessLevel.toString());
-				app.setVulnTypeStrategy(typeStrategy.toString());
-				
-				if (scanParametersBean.getSourceCodeUrl() != null && 
-						scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {
-					app.setRepositoryUrl(scanParametersBean.getSourceCodeUrl());
-				}
-				
-				applicationDao.saveOrUpdate(app);
+			application.setFrameworkType(frameworkType.toString());
+			application.setSourceCodeAccessLevel(accessLevel.toString());
+			application.setVulnTypeStrategy(typeStrategy.toString());
+			
+			if (scanParametersBean.getSourceCodeUrl() != null && 
+					scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {
+				application.setRepositoryUrl(scanParametersBean.getSourceCodeUrl());
 			}
+			
+			applicationDao.saveOrUpdate(application);
+			result = true;
 		}
+		
+		return result;
 	}
 }

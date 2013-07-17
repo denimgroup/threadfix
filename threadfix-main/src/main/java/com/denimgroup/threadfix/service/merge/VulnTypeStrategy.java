@@ -1,7 +1,7 @@
 package com.denimgroup.threadfix.service.merge;
 
 public enum VulnTypeStrategy {
-	EXACT("Exact"), TREES("Trees"), FAULT_PATTERN("Fault Pattern");
+	EXACT("Exact"), TREES("Trees"), SOFTWARE_FAULT_PATTERN("Software Fault Pattern");
 	
 	VulnTypeStrategy(String displayName) {
 		this.displayName = displayName;

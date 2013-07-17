@@ -1,8 +1,5 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +12,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.ScanParametersService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.ScanTypeCalculationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 @Controller
-@RequestMapping("/rest/teams/{teamId}/applications")
+@RequestMapping("/rest/applications")
 public class ApplicationRestController extends RestController {
 	
 	public static final String CREATION_FAILED = "New Application creation failed.";
@@ -39,15 +34,15 @@ public class ApplicationRestController extends RestController {
 	public static final String SET_WAF_FAILED = "Call to setWaf failed.";
 	public static final String CHANNEL_LOOKUP_FAILED = "Application Channel lookup failed.";
 	
-	private OrganizationService organizationService;
 	private ApplicationService applicationService;
 	private ScanService scanService;
+	private ScanParametersService scanParametersService;
 	private ScanTypeCalculationService scanTypeCalculationService;
 	private ScanMergeService scanMergeService;
 	private WafService wafService;
-	private ApplicationCriticalityService applicationCriticalityService;
 	
 	private final static String DETAIL = "applicationDetail", 
+		SET_PARAMS = "setParameters",
 		LOOKUP = "applicationLookup",
 		NEW = "newApplication",
 		SET_WAF = "setWaf",
@@ -60,85 +55,21 @@ public class ApplicationRestController extends RestController {
 	}
 	
 	@Autowired
-	public ApplicationRestController(OrganizationService organizationService,
-			APIKeyService apiKeyService, ApplicationService applicationService,
-			ScanService scanService, ScanMergeService scanMergeService,
+	public ApplicationRestController(APIKeyService apiKeyService, 
+			ApplicationService applicationService,
+			ScanService scanService, 
+			ScanMergeService scanMergeService,
 			ScanTypeCalculationService scanTypeCalculationService, 
 			WafService wafService,
-			ApplicationCriticalityService applicationCriticalityService) {
-		this.organizationService = organizationService;
+			ScanParametersService scanParametersService) {
+		super(apiKeyService);
 		this.apiKeyService = apiKeyService;
 		this.applicationService = applicationService;
 		this.scanTypeCalculationService = scanTypeCalculationService;
 		this.scanService = scanService;
 		this.scanMergeService = scanMergeService;
 		this.wafService = wafService;
-		this.applicationCriticalityService = applicationCriticalityService;
-	}
-	
-	/**
-	 * Create a new application with the supplied name and URL. 
-	 * The rest of the configuration is done through other methods.
-	 * @param request
-	 * @param teamId
-	 * @return
-	 */
-	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
-	public @ResponseBody Object newApplication(HttpServletRequest request,
-			@PathVariable("teamId") int teamId) {
-		log.info("Received REST request for a new Application.");
-
-		String result = checkKey(request, NEW);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
-		}
-		
-		// By not using @RequestParam notations, we can catch the error in the code
-		// and provide better error messages.
-		String name = request.getParameter("name");
-		String url = request.getParameter("url");
-		
-		if (name == null) {
-			log.warn("Call to New Application was missing the name parameter.");
-			return CREATION_FAILED;
-		}
-		
-		if (url != null) {
-			// test URL format
-			try {
-				new URL(url);
-			} catch (MalformedURLException e) {
-				log.warn("The supplied URL was not formatted correctly.");
-				return CREATION_FAILED;
-			}
-		}
-		
-		Organization organization = organizationService.loadOrganization(teamId);
-		
-		if (organization == null) {
-			log.warn("Invalid Team ID.");
-			return CREATION_FAILED;
-		}
-		
-		Application application = new Application();
-		if (name != null) {
-			application.setOrganization(organization);
-			application.setName(name.trim());
-			if (url != null) {
-				application.setUrl(url.trim());
-			}
-			// TODO include this as a parameter
-			application.setApplicationCriticality(
-					applicationCriticalityService.loadApplicationCriticality(
-							ApplicationCriticality.LOW));
-		}
-		
-		if (applicationService.checkApplication(application)) {
-			applicationService.storeApplication(application);
-			return application;
-		} else {
-			return CREATION_FAILED;
-		}
+		this.scanParametersService = scanParametersService;
 	}
 	
 	/**
@@ -150,7 +81,7 @@ public class ApplicationRestController extends RestController {
 	@RequestMapping(headers="Accept=application/json", value="/{appId}", method=RequestMethod.GET)
 	public @ResponseBody Object applicationDetail(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
-		log.info("Received REST request for Applications with teamId = " + appId + ".");
+		log.info("Received REST request for Applications with id = " + appId + ".");
 
 		String result = checkKey(request, DETAIL);
 		if (!result.equals(API_KEY_SUCCESS)) {
@@ -163,6 +94,52 @@ public class ApplicationRestController extends RestController {
 			log.warn(LOOKUP_FAILED);
 			return LOOKUP_FAILED;
 		}
+		return application;
+	}
+	
+	/**
+	 * Set scan parameters
+	 * @param request
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="/{appId}/setParameters", method=RequestMethod.POST)
+	public @ResponseBody Object setParameters(HttpServletRequest request,
+			@PathVariable("appId") int appId) {
+		log.info("Received REST request to set parameters for application with id = " + appId + ".");
+		
+		String result = checkKey(request, SET_PARAMS);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		
+		if (application == null) {
+			log.warn(LOOKUP_FAILED);
+			return LOOKUP_FAILED;
+		}
+		
+		ScanParametersBean bean = new ScanParametersBean();
+		
+		if (request.getParameter("vulnTypeStrategy") != null) {
+			bean.setTypeMatchingStrategy(request.getParameter("vulnTypeStrategy"));
+		}
+		
+		if (request.getParameter("sourceCodeAccessLevel") != null) {
+			bean.setSourceCodeAccessLevel(request.getParameter("sourceCodeAccessLevel"));
+		}
+		
+		if (request.getParameter("frameworkType") != null) {
+			bean.setApplicationType(request.getParameter("frameworkType"));
+		}
+		
+		if (request.getParameter("repositoryUrl") != null) {
+			bean.setSourceCodeUrl(request.getParameter("repositoryUrl"));
+		}
+		
+		scanParametersService.saveConfiguration(application, bean);
+		
 		return application;
 	}
 	
@@ -186,7 +163,7 @@ public class ApplicationRestController extends RestController {
 			return LOOKUP_FAILED;
 		}
 		
-		log.info("Received REST request for Applications with teamId = " + appName + ".");
+		log.info("Received REST request for Applications with name = " + appName + ".");
 		
 		Application application = applicationService.loadApplication(appName);
 		
@@ -207,8 +184,7 @@ public class ApplicationRestController extends RestController {
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
 	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, 
-			@PathVariable("teamId") int teamId, HttpServletRequest request,
-			@RequestParam("file") MultipartFile file) {
+			HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 
 		String result = checkKey(request, UPLOAD);

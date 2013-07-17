@@ -35,6 +35,17 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
+	public String setParameters(String appId, String vulnTypeStrategy, 
+			String sourceCodeAccessLevel, String frameworkType, String repositoryUrl) {
+		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/setParameters",
+				new String[] {"apiKey",      
+					"vulnTypeStrategy", "sourceCodeAccessLevel", "frameworkType", "repositoryUrl"},
+				new String[] { util.getKey(), 
+					 vulnTypeStrategy,   sourceCodeAccessLevel,   frameworkType,   repositoryUrl});
+		
+		return result;
+	}
+	
 	public String createTeam(String name) {
 		String result = util.httpPost(util.getUrl() + "/teams/new",
 				new String[] {"apiKey",      "name"},
@@ -79,14 +90,14 @@ public class ThreadFixRestClient {
 	}
 	
 	public String searchForApplicationById(String id) {
-		String result = util.httpGet(util.getUrl() + "/teams/0/applications/" + id +
+		String result = util.httpGet(util.getUrl() + "/applications/" + id +
 				"?apiKey=" + util.getKey());
 		
 		return result;
 	}
 
 	public String searchForApplicationByName(String name) {
-		String result = util.httpGet(util.getUrl() + "/teams/0/applications/lookup" +
+		String result = util.httpGet(util.getUrl() + "/applications/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
@@ -117,7 +128,7 @@ public class ThreadFixRestClient {
 	}
 
 	public String uploadScan(String applicationId, String filePath) {
-		String result = util.httpPostFile(util.getUrl() + "/teams/0/applications/" + applicationId + "/upload", 
+		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload", 
 				filePath,
 				new String[] { "apiKey"       },
 				new String[] {  util.getKey() });
@@ -127,7 +138,7 @@ public class ThreadFixRestClient {
 	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
-		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
 					"/addFinding", 
 				new String[] { "apiKey", "vulnType", "severity", 
 								"nativeId", "parameter", "longDescription",
@@ -141,7 +152,7 @@ public class ThreadFixRestClient {
 	public String addStaticFinding(String applicationId, String vulnType, String severity, 
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
-		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
 				"/addFinding", 
 				new String[] { "apiKey", "vulnType", "severity", 
 								"nativeId", "parameter", "longDescription",

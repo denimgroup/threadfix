@@ -48,7 +48,7 @@ public class WafRestController extends RestController {
 	@Autowired
 	public WafRestController(APIKeyService apiKeyService, 
 			WafService wafService, LogParserService logParserService) {
-		this.apiKeyService = apiKeyService;
+		super(apiKeyService);
 		this.wafService = wafService;
 		this.logParserService = logParserService;
 	}

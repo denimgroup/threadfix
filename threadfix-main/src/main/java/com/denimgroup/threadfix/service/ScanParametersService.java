@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 public interface ScanParametersService {
-	void saveConfiguration(Integer appId, ScanParametersBean scanParametersBean);
+	boolean saveConfiguration(Integer appId, ScanParametersBean scanParametersBean);
+	boolean saveConfiguration(Application application, ScanParametersBean scanParametersBean);
 }

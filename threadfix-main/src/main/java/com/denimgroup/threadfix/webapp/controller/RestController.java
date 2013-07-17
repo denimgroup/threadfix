@@ -23,7 +23,17 @@ public abstract class RestController {
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
 	public final static String RESTRICTED_URL_ERROR = "The requested URL is restricted for your API Key.";
 
+	// We need this constructor to ensure that the api key service is set correctly
 	protected APIKeyService apiKeyService = null;
+	
+	/**
+	 * Autowire an APIKeyService in here so you can use checkKey() to authenticate
+	 * @param apiKeyService
+	 */
+	public RestController(APIKeyService apiKeyService) {
+		this.apiKeyService = apiKeyService;
+	}
+	
 	
 	/**
 	 * Implementing classes should add the names of restricted methods to this set
