@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;

@@ -278,15 +278,21 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (application == null || application.getName() == null 
 				|| application.getName().trim().isEmpty()  
 				|| application.getName().length() > Application.NAME_LENGTH) {
+			log.warn("The application's name was invalid.");
 			return false;
 		}
 		
 		if (application.getUrl() != null && 
 				application.getUrl().length() > Application.URL_LENGTH) {
+			log.warn("The application's url was too long.");
 			return false;
 		}
 		
 		Application databaseApplication = loadApplication(application.getName().trim());
+		
+		if (databaseApplication == null) {
+			log.warn("An application with this name was already present in the database.");
+		}
 		return databaseApplication == null;
 	}
 	

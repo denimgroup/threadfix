@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+
 /**
  * This class provides methods for posting GET and POST requests with optional files,
  * as well as a place to put methods and data that would be useful for all REST testing.
@@ -55,8 +57,8 @@ public abstract class BaseRestTest {
 
 	public static ThreadFixRestClient getGoodClient() {
 		ThreadFixRestClient goodClient = new ThreadFixRestClient();
-		goodClient.setKey(GOOD_API_KEY);
-		goodClient.setUrl(BASE_URL);
+		goodClient.setMemoryKey(GOOD_API_KEY);
+		goodClient.setMemoryUrl(BASE_URL);
 		return goodClient;
 	}
 	

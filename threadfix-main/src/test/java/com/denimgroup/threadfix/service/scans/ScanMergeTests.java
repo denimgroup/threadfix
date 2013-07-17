@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.json.JSONException;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.webservices.tests.BaseRestTest;
-import com.denimgroup.threadfix.webservices.tests.ThreadFixRestClient;
 
 public class ScanMergeTests extends BaseRestTest {
 	
@@ -18,18 +19,19 @@ public class ScanMergeTests extends BaseRestTest {
 	static final ThreadFixRestClient GOOD_CLIENT = getGoodClient();
 
 	@Test
+	@Ignore
 	public void testWavsepMerge() throws IOException, JSONException {
-		testApplication(WebApplication.WAVSEP, 1);
+		testApplication(WebApplication.WAVSEP);
 	}
 	
 	@Test
 	public void testBodgeItMerge() throws IOException, JSONException {
-		testApplication(WebApplication.BODGEIT, 2);
+		testApplication(WebApplication.BODGEIT);
 	}
 	
 	@Test
 	public void testPetClinicMerge() throws IOException, JSONException {
-		testApplication(WebApplication.PETCLINIC, 3);
+		testApplication(WebApplication.PETCLINIC);
 	}
 	
 	public void testApplication(WebApplication application) throws JSONException, IOException {
@@ -74,9 +76,11 @@ public class ScanMergeTests extends BaseRestTest {
 		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(getRandomString(23))));
 		Integer appId  = getId(getJSONObject(GOOD_CLIENT.createApplication(
 			teamId.toString(), 
-			application.getName(), 
+			application.getName() + getRandomString(10), 
 			application.getUrl())));
 		
+		GOOD_CLIENT.setParameters(appId.toString(), "EXACT", "NONE", "NONE", null);
+
 		uploadScans(appId, application.getFPRPath(), application.getAppscanXMLPath());
 
 		debug("Application is at " + BASE_URL.replaceAll("/rest","") + 

@@ -84,6 +84,11 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
+	public String addWaf(String appId, String wafId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public String getAllTeams() {
 		String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
 		return result;
@@ -126,7 +131,15 @@ public class ThreadFixRestClient {
 	public void setUrl(String url) {
 		util.setUrl(url);
 	}
-
+	
+	public void setMemoryKey(String key) {
+		util.setMemoryKey(key);
+	}
+	
+	public void setMemoryUrl(String url) {
+		util.setMemoryUrl(url);
+	}
+	
 	public String uploadScan(String applicationId, String filePath) {
 		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload", 
 				filePath,

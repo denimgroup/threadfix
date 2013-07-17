@@ -134,8 +134,10 @@ public class OrganizationRestController extends RestController {
 		
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application);
+			log.info("Application creation was successful. Returning application.");
 			return application;
 		} else {
+			log.warn("Something was invalid.");
 			return CREATION_FAILED;
 		}
 	}
