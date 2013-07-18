@@ -1,13 +1,15 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<h4 id="myModalLabel">Edit Team 
-		<c:if test="${ empty organization.name }">
-			<c:out value="${ originalName }"/>
-		</c:if>
-		<c:if test="${ not empty organization.name }">
-			<c:out value="${ organization.name }"/>
-		</c:if>
+	<h4 id="myModalLabel">
+		<span style="max-width:400px; display:inline-block" class="ellipsis">Edit Team 
+			<c:if test="${ empty organization.name }">
+				<c:out value="${ originalName }"/>
+			</c:if>
+			<c:if test="${ not empty organization.name }">
+				<c:out value="${ organization.name }"/>
+			</c:if>
+		</span>
 		<span class="delete-span">
 			<spring:url value="{orgId}/delete" var="deleteUrl">
 				<spring:param name="orgId" value="${ organization.id }"/>
