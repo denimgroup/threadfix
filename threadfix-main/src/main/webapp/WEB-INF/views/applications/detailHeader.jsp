@@ -7,8 +7,7 @@
 </ul>
 
 <h2 style="padding-bottom:5px;">
-	
-	<span id="nameText"><c:out value="${ application.name }"/></span>
+	<span id="nameText" style="max-width:400px; display:inline-block" class="ellipsis"><c:out value="${ application.name }"/></span>
 	<a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
 			role="button" data-toggle="modal">
 		Edit / Delete
