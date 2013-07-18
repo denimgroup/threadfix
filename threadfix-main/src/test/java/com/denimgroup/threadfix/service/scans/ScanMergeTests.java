@@ -2,7 +2,10 @@ package com.denimgroup.threadfix.service.scans;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 import org.json.JSONException;
@@ -39,19 +42,33 @@ public class ScanMergeTests extends BaseRestTest {
 	private void testApplicationWithVariations(FrameworkType frameworkType, WebApplication application) throws JSONException, IOException {
 		debug("Starting " + application.getName() + " tests.");
 		
-		// set up application
-		
-		for (FrameworkType type : new FrameworkType[] { FrameworkType.NONE, FrameworkType.DETECT, frameworkType }) {
-			for (SourceCodeAccessLevel sourceCodeAccessLevel : SourceCodeAccessLevel.values()) {
-				for (VulnTypeStrategy strategy : VulnTypeStrategy.values()) {
-					testApplication(application, type, sourceCodeAccessLevel, strategy);
+		FileWriter fileWriter = null;
+		try {
+			fileWriter = new FileWriter(
+					new File("C:\\test\\SBIR\\testoutput" + application.getName() + ".csv"));
+			
+			// set up application
+			// we pass in the type because we don't want to do a spring mvc run on a jsp app, for instance.
+			for (FrameworkType type : new FrameworkType[] { FrameworkType.NONE, FrameworkType.DETECT, frameworkType }) {
+				for (SourceCodeAccessLevel sourceCodeAccessLevel : SourceCodeAccessLevel.values()) {
+					for (VulnTypeStrategy strategy : VulnTypeStrategy.values()) {
+						testApplication(application, type, sourceCodeAccessLevel, strategy, fileWriter);
+					}
 				}
+			}
+		} finally {
+			if (fileWriter != null) {
+				fileWriter.close();
 			}
 		}
 	}
 	
-	private void testApplication(WebApplication application, FrameworkType frameworkType,
-			SourceCodeAccessLevel sourceCodeAccessLevel, VulnTypeStrategy vulnTypeStrategy) throws JSONException, IOException {
+	private void testApplication(WebApplication application, 
+			FrameworkType frameworkType,
+			SourceCodeAccessLevel sourceCodeAccessLevel, 
+			VulnTypeStrategy vulnTypeStrategy,
+			Writer writer) throws JSONException, IOException {
+		
 		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel, vulnTypeStrategy);
 
 		String jsonToLookAt = GOOD_CLIENT.searchForApplicationById(appId.toString());
@@ -66,7 +83,8 @@ public class ScanMergeTests extends BaseRestTest {
 		
 		TestResult result = TestResult.compareResults(csvResults, jsonResults);
 		
-		System.out.println(result);
+		writer.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy);
+		writer.write(result.getCsvLine() + "\n");
 		
 		if (result.hasMissing()) {
 			System.out.println("We have more than 0 missing. " +
