@@ -119,7 +119,7 @@ public class FindingsController {
 	}
 	
 	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
-	public String setVulnerability(@RequestParam String vulnerabilityId,
+	public String setVulnerability(@RequestParam(required = false) String vulnerabilityId,
 			@PathVariable("findingId") int findingId,
 			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
@@ -128,6 +128,11 @@ public class FindingsController {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
+		}
+		
+		if (vulnerabilityId == null) {
+			model.addAttribute("errorMessage", "No Vulnerability was selected. Please select one and try again.");
+			return merge(findingId, scanId, model, orgId, appId);
 		}
 		
 		Finding finding = findingService.loadFinding(findingId);
