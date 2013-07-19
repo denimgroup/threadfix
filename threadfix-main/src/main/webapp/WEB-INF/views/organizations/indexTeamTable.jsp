@@ -131,7 +131,7 @@
 					</c:if>
 					
 					</div>
-					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+					<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
 						<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 							<div id="formDiv${ organization.id }">
