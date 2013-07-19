@@ -255,15 +255,25 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 */
 	private String attemptRetrieveResults(ClientApi zap) {
 		String retVal = null;
-		String intermediateXml;
 		
 		try {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-			intermediateXml = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/").toString();
-			// retVal = reformatResults(intermediateXml);
-			retVal = intermediateXml;
+			retVal = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/").toString();
+			if(retVal != null) {
+				log.debug("Length of response file from ZAP is: " + retVal.length());
+			} else {
+				log.warn("Got a null response file from ZAP");
+			}
 		} catch (Exception e) {
 			log.error("Problems attaching to ZAP via proxy connection to get results XML: " + e.getMessage(), e);
+		}
+		
+		//	TOFIX - Get rid of me. This is for debugging.
+		try {
+			Thread.sleep(120000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return(retVal);
