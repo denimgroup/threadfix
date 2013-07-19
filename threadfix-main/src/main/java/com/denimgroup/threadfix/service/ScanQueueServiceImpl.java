@@ -40,6 +40,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.ScanStatus;
+import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 @Service
@@ -134,7 +135,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	
 	@Override
 	public Object requestTask(String scanners, String agentConfig) {
-		TaskConfig retVal = null;
+		Task retVal = null;
 		
 		if(scanners == null) {
 			log.warn("Attempting to request a task with a null list of scanners. Aborting.");
@@ -155,14 +156,19 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			for(String scanner : scannerArray) {
 				if(scanner.equals(task.getScanner())) {
 					log.info("Found a task for available scanner: " + scanner + ": " + task);
+					
+					retVal = new Task();
+					retVal.setTaskId(task.getId());
+					retVal.setTaskType(task.getScanner());
 					//	TOFIX - Look up the TaskConfig for this particular task instead of lazily
 					//	returning a hacked together version
-					retVal = new TaskConfig();
-					retVal.setTargetUrlString("http://localhost:8080/bodgeit/");
-					retVal.setConfigParam("exampleParam1", "exampleValue1");
-					retVal.setConfigParam("exampleParam2", "example Value 2 With Spaces");
-					retVal.setDataBlob("dataBlob1", new byte[] { 0x00, 0x01, 0x02, 0x03 } );
-					retVal.setDataBlob("dataBlob2", new byte[] { -127, -126, -125, -124 } );
+					TaskConfig taskConfig = new TaskConfig();
+					taskConfig.setTargetUrlString(task.getApplication().getUrl());
+					taskConfig.setConfigParam("exampleParam1", "exampleValue1");
+					taskConfig.setConfigParam("exampleParam2", "example Value 2 With Spaces");
+					taskConfig.setDataBlob("dataBlob1", new byte[] { 0x00, 0x01, 0x02, 0x03 } );
+					taskConfig.setDataBlob("dataBlob2", new byte[] { -127, -126, -125, -124 } );
+					retVal.setTaskConfig(taskConfig);
 					
 					//	Mark the task as having been assigned
 					//	TODO - Make sure we're doing everything we need here to set this up to run (end time?)

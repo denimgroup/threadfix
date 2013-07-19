@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.scanagent.configuration;
+package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 
@@ -31,6 +31,10 @@ public class Task {
 	private String taskType;
 	private TaskConfig taskConfig;
 	private int taskId;
+	
+	public Task() {
+		
+	}
 	
 	public Task(int taskId, String taskType, TaskConfig taskConfig) {
 		this.taskId = taskId;
@@ -50,8 +54,16 @@ public class Task {
 		return(this.taskType);
 	}
 	
+	public void setTaskType(String taskType) {
+		this.taskType = taskType;
+	}
+	
 	public TaskConfig getTaskConfig() {
 		return(this.taskConfig);
+	}
+	
+	public void setTaskConfig(TaskConfig taskConfig) {
+		this.taskConfig = taskConfig;
 	}
 	
 	public String toString() {

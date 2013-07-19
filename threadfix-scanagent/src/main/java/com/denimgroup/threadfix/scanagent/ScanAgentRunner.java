@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
-import com.denimgroup.threadfix.scanagent.configuration.Task;
+import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public final class ScanAgentRunner {
@@ -129,8 +129,9 @@ public final class ScanAgentRunner {
 	private Task requestTask() {
 		
 		log.info("Requesting a new task");
-		
 		Task retVal;
+		
+		/*	TODO - Remove this once we have the actual stuff working properly
 		TaskConfig theConfig = null;
 		
 		try {
@@ -148,6 +149,7 @@ public final class ScanAgentRunner {
 		}
 
 		retVal = new Task(1, "zap", theConfig);
+		*/
 		
 		log.info("Returning new task");
 		
@@ -155,7 +157,7 @@ public final class ScanAgentRunner {
 		Object theReturn = tfClient.requestTask("zap", "HARD_CODED_AGENT_CONFIG");
 		log.debug("Here's what we got back from the ThreadFix server: " + theReturn);
 		
-		System.exit(0);
+		retVal = new Task(1, "zap", (TaskConfig)theReturn);
 		
 		return(retVal);
 	}
