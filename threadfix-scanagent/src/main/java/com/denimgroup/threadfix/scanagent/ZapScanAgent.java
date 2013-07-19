@@ -83,10 +83,10 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private String zapExecutablePath;
 	private long zapStartupWaitTime;
 	
-	
-	public boolean doTask(TaskConfig theConfig) {
+	@Override
+	public Object doTask(TaskConfig theConfig) {
 		
-		boolean retVal = false;
+		Object retVal = null;
 		
 		log.info("Attempting to do ZAP task with config: " + theConfig);
 		log.info("Target URL is " + theConfig.getTargetUrlString());
@@ -157,8 +157,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 				} catch (IOException ioe) {
 					log.error("Unable to write results file: " + ioe.getMessage(), ioe);
 				}
-				//	TOFIX - Send the results to the ThreadFix server
-				retVal = true;
+
+				retVal = resultsXml;
 				
 			} else {
 				log.warn("Appears that scan run was unsuccessful. Not goign to pull results");
@@ -203,6 +203,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 		log.info("Attempting to start ZAP instance");
 		
 		String[] args = { zapExecutablePath + "zap.sh", "-daemon" };
+		
+		log.debug("Going to attempt to run ZAP executable at: " + args[0]);
 		
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(zapExecutablePath));
@@ -257,8 +259,9 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		try {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-			intermediateXml = openUrlViaProxy(proxy, "http://zap/XML/core/view/alerts/?zapapiformat=XML&baseurl=&start=&count=").toString();
-			retVal = reformatResults(intermediateXml);
+			intermediateXml = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/").toString();
+			// retVal = reformatResults(intermediateXml);
+			retVal = intermediateXml;
 		} catch (Exception e) {
 			log.error("Problems attaching to ZAP via proxy connection to get results XML: " + e.getMessage(), e);
 		}
@@ -269,10 +272,12 @@ public class ZapScanAgent extends AbstractScanAgent {
 	/**
 	 * Reformats the XML returned by the ZAP API to look like the actual ZAP XML report
 	 * 
+	 * TOFIX - Determine if we can remove this becaues of the new API calls
+	 * 
 	 * @param starterXml XML returned from the ZAP API 
 	 * @return XML that looks like ZAP's normal XML report
 	 */
-	private String reformatResults(String starterXml) {
+	/*private String reformatResults(String starterXml) {
 		String retVal;
 		
 		//	Chop off the '[' and ']' at the front and back of the returned XML string
@@ -303,6 +308,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		return(retVal);
 	}
+	*/
 	
 	/**
 	 * This code taken from:

@@ -40,5 +40,5 @@ public abstract class AbstractScanAgent {
 	}
 	
 	public abstract boolean readConfig(Configuration config);
-	public abstract boolean doTask(TaskConfig config);
+	public abstract Object doTask(TaskConfig config);
 }
