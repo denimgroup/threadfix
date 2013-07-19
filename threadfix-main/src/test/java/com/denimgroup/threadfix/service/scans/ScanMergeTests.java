@@ -25,11 +25,13 @@ public class ScanMergeTests extends BaseRestTest {
 	static final ThreadFixRestClient GOOD_CLIENT = getGoodClient();
 
 	@Test
+	@Ignore
 	public void testWavsepMerge() throws IOException, JSONException {
 		testApplicationWithVariations(FrameworkType.JSP, WebApplication.WAVSEP);
 	}
 	
 	@Test
+	@Ignore
 	public void testBodgeItMerge() throws IOException, JSONException {
 		testApplicationWithVariations(FrameworkType.JSP, WebApplication.BODGEIT);
 	}
@@ -46,6 +48,8 @@ public class ScanMergeTests extends BaseRestTest {
 		try {
 			fileWriter = new FileWriter(
 					new File("C:\\test\\SBIR\\testoutput" + application.getName() + ".csv"));
+			
+			fileWriter.write("framework,source code access,vuln type strategy, total, correctly merged, correct path, correct param, correctCWE\n");
 			
 			// set up application
 			// we pass in the type because we don't want to do a spring mvc run on a jsp app, for instance.

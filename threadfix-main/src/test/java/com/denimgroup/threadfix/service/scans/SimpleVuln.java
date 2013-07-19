@@ -62,6 +62,10 @@ class SimpleVuln {
 			}
 		}
 		
+		if (vulnObject.getString("calculatedUrlPath") != null) {
+			path = vulnObject.getString("calculatedUrlPath");
+		}
+		
 		JSONArray findings = vulnObject.getJSONArray("findings");
 		
 		JSONObject genericVulnObject = vulnObject.getJSONObject("genericVulnerability");

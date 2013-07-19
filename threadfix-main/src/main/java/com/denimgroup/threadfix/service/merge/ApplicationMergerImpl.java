@@ -356,7 +356,15 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 		vulnerability.openVulnerability(Calendar.getInstance());
 		vulnerability.setGenericVulnerability(genericVulnerability);
 		vulnerability.setSurfaceLocation(finding.getSurfaceLocation());
-
+		
+		// TODO calculate some sort of threshold here and figure out whether or not we want to keep
+		// the calculated url path or not.
+		vulnerability.setCalculatedUrlPath(finding.getCalculatedUrlPath());
+		
+		if (finding.getIsStatic()) {
+			vulnerability.setCalculatedFilePath(finding.getCalculatedFilePath());
+		}
+			
 		if (finding.isMarkedFalsePositive()) {
 			log.info("Creating a false positive vulnerability from a finding marked false positive.");
 			vulnerability.setIsFalsePositive(finding.isMarkedFalsePositive());

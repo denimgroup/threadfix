@@ -170,7 +170,7 @@ class TestResult {
 		return null;
 	}
 	
-	// format is merged correctly merged, correct path, correct param, correctCWE
+	// format is total, correctly merged, correct path, correct param, correctCWE
 	public String getCsvLine() {
 		return "," + (wrong + correctMatch + correctNoMatch) + 
 				"," + (correctMatch + correctNoMatch) +
