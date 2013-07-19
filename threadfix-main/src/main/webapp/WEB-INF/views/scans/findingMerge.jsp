@@ -8,6 +8,8 @@
 <body id="apps">
 	<h2>Merge Findings</h2>
 	
+	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
+	
 	<table class="dataTable">
 		<tr>
 			<td>Severity / Generic Severity:</td>
