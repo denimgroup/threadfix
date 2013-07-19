@@ -22,16 +22,27 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.scanagent.configuration;
+package com.denimgroup.threadfix.data.entities;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TOFIX - Need to Hibernate this up
+ * @author dcornell
+ *
+ */
 public class TaskConfig {
 	private URL targetUrl;
 	private Map<String,byte[]> dataBlobs;
 	private Map<String,String> configParams;
+	
+	public TaskConfig() {
+		this.dataBlobs = new HashMap<String,byte[]>();
+		this.configParams = new HashMap<String,String>();
+	}
 	
 	public TaskConfig(URL targetUrl) {
 		this.targetUrl = targetUrl;
@@ -39,12 +50,17 @@ public class TaskConfig {
 		this.configParams = new HashMap<String,String>();
 	}
 	
-	public void setDataBlog(String key, byte[] value) {
+	public void setDataBlob(String key, byte[] value) {
 		this.dataBlobs.put(key,  value);
 	}
 	
 	public byte[] getDataBlob(String key) {
 		return(this.dataBlobs.get(key));
+	}
+	
+	public Map<String, byte[]> getDataBlobs() {
+		//	TODO - Determine if we need to clone this - might get kinda big
+		return(this.dataBlobs);
 	}
 	
 	public void setConfigParam(String key, String value) {
@@ -53,6 +69,20 @@ public class TaskConfig {
 
 	public String getConfigParam(String key) {
 		return(this.configParams.get(key));
+	}
+	
+	public Map<String, String> getConfigParams() {
+		//	TODO - Determine if we need to clone this - might get kinda big
+		return(this.configParams);
+	}
+	
+	public void setTargetUrlString(String targetUrlString) {
+			try {
+				this.targetUrl = new URL(targetUrlString);
+			} catch (MalformedURLException e) {
+				// TOFIX - Figure out what to do if we get a bad URL
+				e.printStackTrace();
+			}
 	}
 	
 	public URL getTargetUrl() {

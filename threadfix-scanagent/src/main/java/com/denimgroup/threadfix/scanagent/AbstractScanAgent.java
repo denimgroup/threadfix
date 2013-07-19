@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.scanagent;
 
 import org.apache.commons.configuration.Configuration;
 
-import com.denimgroup.threadfix.scanagent.configuration.TaskConfig;
+import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public abstract class AbstractScanAgent {
 	private String workDir;

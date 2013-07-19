@@ -44,7 +44,7 @@ import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.configuration.Task;
-import com.denimgroup.threadfix.scanagent.configuration.TaskConfig;
+import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public final class ScanAgentRunner {
 
@@ -139,7 +139,7 @@ public final class ScanAgentRunner {
 			
 			//theConfig = new TaskConfig(new URL("http://localhost:123/"));
 			theConfig = new TaskConfig(new URL("http://localhost:8080/bodgeit/"));
-			theConfig.setDataBlog("configFileData", fileBytes);
+			theConfig.setDataBlob("configFileData", fileBytes);
 			// theConfig = new TaskConfig(new URL("http://demo.testfire.net/"));
 		} catch (MalformedURLException e) {
 			log.error("This should never be able to happen", e);

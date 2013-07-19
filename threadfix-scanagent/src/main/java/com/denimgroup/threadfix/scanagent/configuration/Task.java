@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.scanagent.configuration;
 
+import com.denimgroup.threadfix.data.entities.TaskConfig;
+
 public class Task {
 	
 	private String taskType;
