@@ -11,27 +11,29 @@ import org.json.JSONObject;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 
 class SimpleVuln {
-	private String path, parameter, genericVuln, genericVulnId, notes;
-	private Set<String> appscanNativeIds, fortifyNativeIds;
+	private String path, parameter, genericVuln, genericVulnId, notes, appscanId;
+	private Set<String> fortifyNativeIds, appscanIdsToMatch;
 	private Integer lineNumber = null;
 	
 	public static SimpleVuln buildSimpleVuln(String[] args, int lineNumber) {
-		if (args.length != 6) {
+		if (args.length != 7) {
 			throw new IllegalArgumentException();
 		}
 		
-		return new SimpleVuln(args[0], args[1], args[2], args[3], args[4], args[5], lineNumber);
+		return new SimpleVuln(args[0], args[1], args[2], args[3], args[4], args[5], args[6], lineNumber);
 	}
-	
+
 	public SimpleVuln(String path, String parameter, String genericVulnId,
-			String appscanNativeId, String fortifyNativeId, String notes, int lineNumber) {
+			String appscanNativeId, String fortifyNativeId, String appscanIds, 
+			String notes, int lineNumber) {
 		this.path = path;
 		this.parameter = parameter;
 		this.genericVulnId = genericVulnId;
 		this.notes = notes;
 		this.lineNumber = lineNumber;
-		this.fortifyNativeIds = setContaining(fortifyNativeId);
-		this.appscanNativeIds = setContaining(appscanNativeId);
+		this.appscanId = appscanNativeId;
+		this.fortifyNativeIds  = setContaining(fortifyNativeId);
+		this.appscanIdsToMatch = setContaining(appscanIds.split(";"));
 		
 		if (path == null) {
 			this.path = "";
@@ -47,7 +49,7 @@ class SimpleVuln {
 	public SimpleVuln(JSONObject vulnObject) throws JSONException {
 		JSONObject surfaceLocation = vulnObject.getJSONObject("surfaceLocation");
 		
-		appscanNativeIds = new HashSet<>();
+		appscanIdsToMatch = new HashSet<>();
 		fortifyNativeIds = new HashSet<>();
 		
 		if (surfaceLocation != null) {
@@ -73,18 +75,18 @@ class SimpleVuln {
 				.getJSONObject("channelType")
 				.getString("name");
 			switch (channelName) {
-				case ChannelType.APPSCAN_DYNAMIC: appscanNativeIds.add(finding.getString("nativeId")); break;
+				case ChannelType.APPSCAN_DYNAMIC: appscanIdsToMatch.add(finding.getString("nativeId")); break;
 				case ChannelType.FORTIFY: fortifyNativeIds.add(finding.getString("nativeId")); break;
 			}
 		}
 	}
 	
 	private Set<String> setContaining(String... strings) {
-		return new HashSet<>(Arrays.asList(strings));
-	}
-	
-	public Set<String> getAppscanNativeIds() {
-		return appscanNativeIds;
+		if (strings != null && strings.length != 0 && !"".equals(strings[0].trim())) {
+			return new HashSet<>(Arrays.asList(strings));
+		} else {
+			return new HashSet<>();
+		}
 	}
 	
 	public Set<String> getFortifyNativeIds() {
@@ -93,6 +95,10 @@ class SimpleVuln {
 	
 	public String getPath() {
 		return path;
+	}
+
+	public Set<String> getAppscanIdsToMatch() {
+		return appscanIdsToMatch;
 	}
 
 	public String getParameter() {
@@ -115,8 +121,12 @@ class SimpleVuln {
 		return lineNumber;
 	}
 	
+	public String getAppscanId() {
+		return appscanId;
+	}
+	
 	public String toString() {
-		return "{ "+ path + ", "  + genericVuln + ", " + parameter + ", " + appscanNativeIds + " }";
+		return "{ "+ path + ", "  + genericVuln + ", " + parameter + ", " + appscanId + " }";
 	}
 	
 	public boolean equals(Object other) {

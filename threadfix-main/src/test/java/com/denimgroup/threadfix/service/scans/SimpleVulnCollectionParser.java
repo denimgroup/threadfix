@@ -30,12 +30,12 @@ public class SimpleVulnCollectionParser {
 			count ++;
 			String lineContents = reader.readLine();
 			String[] splitContents = lineContents.split(",");
-			if (splitContents.length != 6) {
+			if (splitContents.length != 7) {
 				System.out.println("line " + 
 						count + 
 						" has a problem - " + 
 						splitContents.length + 
-						" parts instead of 6.");
+						" parts instead of 7.");
 				System.out.println(lineContents);
 			} else {
 				appScanMerges.add(SimpleVuln.buildSimpleVuln(splitContents, count));
@@ -58,7 +58,7 @@ public class SimpleVulnCollectionParser {
 		for (int i = 0; i < vulns.length(); i ++) {
 			SimpleVuln vuln = new SimpleVuln(vulns.getJSONObject(i));
 			
-			if (vuln.getAppscanNativeIds() != null) {
+			if (vuln.getAppscanIdsToMatch() != null) {
 				result.add(vuln);
 			}
 		}

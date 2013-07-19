@@ -19,7 +19,8 @@ class TestResult {
 	private int 
 			correctCWE = 0, incorrectCWE = 0,
 			correctPath = 0, incorrectPath = 0,
-			correctParam = 0, incorrectParam = 0;
+			correctParam = 0, incorrectParam = 0,
+			correctAppscan = 0, incorrectAppscan = 0;
 		
 	private TestResult() {}
 
@@ -29,17 +30,15 @@ class TestResult {
 		Map<String, SimpleVuln> resultMap = new HashMap<>();
 		
 		for (SimpleVuln csvVuln : csvResults) {
-			if (csvVuln.getAppscanNativeIds() != null) {
-				for (String nativeId : csvVuln.getAppscanNativeIds()) {
-					resultMap.put(nativeId, csvVuln);
-				}
+			if (csvVuln.getAppscanId() != null) {
+				resultMap.put(csvVuln.getAppscanId(), csvVuln);
 			}
 		}
 		
 		TestResult matchResults = new TestResult();
 		
 		for (SimpleVuln jsonVuln : jsonResults) {
-			for (String nativeId : jsonVuln.getAppscanNativeIds()) {
+			for (String nativeId : jsonVuln.getAppscanIdsToMatch()) {
 				if (resultMap.containsKey(nativeId)) {
 					SimpleVuln csvVuln = resultMap.get(nativeId);
 					matchResults.analyze(jsonVuln, csvVuln);
@@ -68,6 +67,20 @@ class TestResult {
 		} else {
 			wrong += 1;
 			differences.add(Difference.fortifyIdDifference(csvVuln, jsonVuln));
+		}
+		
+		if (csvVuln.getAppscanIdsToMatch() != null &&
+				jsonVuln.getAppscanIdsToMatch() != null) {
+			// we may want to count the empty / empty and has all / has all separately
+			if (csvVuln.getAppscanIdsToMatch().isEmpty() && jsonVuln.getAppscanIdsToMatch().size() == 1) {
+				correctAppscan += 1;
+			} else if (jsonVuln.getAppscanIdsToMatch().containsAll(csvVuln.getAppscanIdsToMatch())) {
+				correctAppscan += 1;
+			} else {
+				incorrectAppscan += 1;
+			}
+		} else {
+			incorrectAppscan += 1; // shouldn't ever get here
 		}
 		
 		// Compare generic vuln IDs
@@ -116,6 +129,8 @@ class TestResult {
 			"\nWrong Paths        : " + incorrectPath + 
 			"\nParameter Matches  : " + correctParam +
 			"\nWrong Parameter    : " + incorrectParam + 
+			"\nAppscan Matches    : " + correctAppscan +
+			"\nWrong Appscan      : " + incorrectAppscan + 
 			"\n");
 		
 		if (missingIds.size() != 0) {
@@ -161,7 +176,8 @@ class TestResult {
 				"," + (correctMatch + correctNoMatch) +
 				"," + (correctPath) +
 				"," + (correctParam) +
-				"," + (correctCWE)
+				"," + (correctCWE) +
+				"," + (correctAppscan)
 				;
 	}
 }
