@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.JsonUtils;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 
@@ -157,7 +158,7 @@ public final class ScanAgentRunner {
 		Object theReturn = tfClient.requestTask("zap", "HARD_CODED_AGENT_CONFIG");
 		log.debug("Here's what we got back from the ThreadFix server: " + theReturn);
 		
-		retVal = new Task(1, "zap", (TaskConfig)theReturn);
+		retVal = JsonUtils.convertJsonStringToTask((String)theReturn);
 		
 		return(retVal);
 	}
