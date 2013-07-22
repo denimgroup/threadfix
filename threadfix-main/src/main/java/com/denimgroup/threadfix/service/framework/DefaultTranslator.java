@@ -8,13 +8,13 @@ import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 public class DefaultTranslator extends AbstractPathUrlTranslator {
 
 	private final SanitizedLogger log = new SanitizedLogger("DefaultTranslator");
-
+	
 	public DefaultTranslator(ScanMergeConfiguration scanMergeConfiguration,
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
 
-		filePathRoot = findOrParseProjectRoot(scan);
-		urlPathRoot = findOrParseUrlPath(scan);
+		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
+		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan);
 		scan.setFilePathRoot(filePathRoot);
 		scan.setUrlPathRoot(urlPathRoot);
 		
