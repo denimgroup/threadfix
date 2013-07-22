@@ -1,6 +1,8 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -8,6 +10,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class JSPTranslator extends AbstractPathUrlTranslator {
+	
+	private List<String> suffixes = Arrays.asList("jsp");
 	
 	// TODO figure out the best way to get the application root into this class
 	// I'm guessing it'll be in the Application
@@ -157,4 +161,10 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		
 		return null;
 	}
+	
+	@Override
+	protected Iterable<String> getSuffixVals() {
+		return suffixes;
+	}
+	
 }
