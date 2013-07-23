@@ -11,7 +11,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 @Service
 public class ScanMergerImpl implements ScanMerger {
 	
-	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
+	private final SanitizedLogger log = new SanitizedLogger("ScanMergerImpl");
 	
 	private ChannelMerger channelMerger = new ChannelMerger();
 	@Autowired private ApplicationMerger applicationMerger;

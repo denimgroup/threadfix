@@ -7,12 +7,15 @@ import org.eclipse.jgit.lib.Repository;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.framework.ProjectDirectory;
 import com.denimgroup.threadfix.service.framework.ServletMappings;
 import com.denimgroup.threadfix.service.framework.WebXMLParser;
 import com.denimgroup.threadfix.service.repository.GitService;
 
 public class MergeConfigurationGenerator {
+	
+	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
 	private static final String baseDirectory = "C:\\test\\scratch\\";
 	
@@ -29,6 +32,10 @@ public class MergeConfigurationGenerator {
 				SourceCodeAccessLevel.getSourceCodeAccessLevel(application.getSourceCodeAccessLevel());
 		FrameworkType frameworkType = 
 				FrameworkType.getFrameworkType(application.getFrameworkType());
+		
+		log.info("Vulnerability type matching strategy from application: " + typeStrategy.displayName);
+		log.info("Source Code Access Level from application: " + accessLevel.displayName);
+		log.info("Framework Type from application: " + frameworkType.displayName);
 		
 		File workTree = null; // optional
 		ServletMappings servletMappings = null; //optional
@@ -48,7 +55,9 @@ public class MergeConfigurationGenerator {
 			} else if (accessLevel == SourceCodeAccessLevel.PARTIAL){
 				frameworkType = guessFrameworkTypeFromDataFlows(application, scan);
 			} else if (accessLevel == SourceCodeAccessLevel.NONE){
+				// TODO we can still figure out JSP / ASP / PHP
 				frameworkType = FrameworkType.NONE;
+				log.info("Framework Type set to None because there was no source code access.");
 			}
 		}
 		
@@ -58,6 +67,8 @@ public class MergeConfigurationGenerator {
 	
 	// TODO cache this information so we don't have to calculate every time
 	private static FrameworkType guessFrameworkTypeFromDataFlows(Application application, Scan scan) {
+		log.info("Attempting to guess Framework Type from data flows.");
+		
 		FrameworkType returnType = guessFrameworkType(scan);
 		
 		if (returnType == FrameworkType.NONE && application != null && application.getScans() != null) {
@@ -69,6 +80,8 @@ public class MergeConfigurationGenerator {
 				}
 			}
 		}
+		
+		log.info("The data flow Framework Type detection returned: " + returnType.displayName);
 		
 		return returnType;
 	}
@@ -112,6 +125,7 @@ public class MergeConfigurationGenerator {
 	// In the interest of moving on I am going to leave it, but this may need to be re-architected
 	// when we add more framework parsers to ThreadFix
 	private static FrameworkType guessFrameworkTypeFromSourceTree(File workTree) {
+		log.info("Attempting to guess Framework Type from source tree.");
 		
 		FrameworkType frameworkType = FrameworkType.NONE;
 		
@@ -126,6 +140,8 @@ public class MergeConfigurationGenerator {
 			}
 		}
 		
+		log.info("Source tree framework type detection returned: " + frameworkType.displayName);
+		
 		return frameworkType;
 	}
 
@@ -136,13 +152,22 @@ public class MergeConfigurationGenerator {
 	}
 	
 	private static SourceCodeAccessLevel guessSourceCodeAccessLevel(Application application, Scan scan) {
+		log.info("Attempting to detect the Source Code Access Level");
+		
+		SourceCodeAccessLevel returnLevel;
+		
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-			return SourceCodeAccessLevel.FULL;
+			returnLevel = SourceCodeAccessLevel.FULL;
+			log.info("Since there is a configured Repository URL, returning " + returnLevel.displayName);
 		} else if (hasStaticScans(application) || (scan != null && scan.isStatic())) {
-			return SourceCodeAccessLevel.PARTIAL;
+			returnLevel = SourceCodeAccessLevel.PARTIAL;
+			log.info("Since there is at least one static scan in the application, returning " + returnLevel.displayName);
 		} else {
-			return SourceCodeAccessLevel.NONE;
+			returnLevel = SourceCodeAccessLevel.NONE;
+			log.info("Since there was no repository url and there were no static scans, returning " + returnLevel.displayName);
 		}
+		
+		return returnLevel;
 	}
 	
 	private static boolean hasStaticScans(Application application) {
