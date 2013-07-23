@@ -32,9 +32,12 @@
 					Submit Defect
 				</a>
 			</li>
-			<li class="missingDefectTrackerMessage"
+			<li class="missingDefectTrackerMessage" id = "missingDefectTrackerMessage"
 				<c:if test="${ not empty application.defectTracker }">
 					style="display:none"
+				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
 				</c:if>
 			>
 				<a class="missingDefectTrackerMessage" href="#">
@@ -73,8 +76,11 @@
 				<c:if test="${ not empty application.defectTracker }">
 					style="display:none"
 				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
+				</c:if>
 			>
-				<a class="missingDefectTrackerMessage" href="#">
+				<a class="missingDefectTrackerMessage" href="#" >
 					Submit Defect
 				</a>
 			</li>		

@@ -125,7 +125,8 @@ public class ApplicationsController {
 				Permission.CAN_MODIFY_VULNERABILITIES, 
 				Permission.CAN_SUBMIT_DEFECTS, 
 				Permission.CAN_VIEW_JOB_STATUSES,
-				Permission.CAN_GENERATE_REPORTS);
+				Permission.CAN_GENERATE_REPORTS,
+				Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);

@@ -54,7 +54,23 @@ var addAppPageEvents = function () {
 		}
 	});
 	
-	$("#addDefectTrackerButton").on("click", defectTrackerAddFunction);
+	if (!$("#addDefectTrackerButton").attr("data-has-no-manage-app-permisson")) {
+		$("#addDefectTrackerButton").on("click", defectTrackerAddFunction);
+		}
+	else {
+		$("#addDefectTrackerButton").unbind('click').bind('click', function() {
+			alert('You do not have sufficient permissions to add a Defect Tracker to this application. Contact your administrator if you believe you should have access.');
+		});
+	}
+
+	if (!$("#editDefectTrackerButton").attr("data-has-no-manage-app-permisson")) {
+		$("#editDefectTrackerButton").on("click", defectTrackerAddFunction);
+		}
+	else {
+		$("#editDefectTrackerButton").unbind('click').bind('click', function() {
+			alert('You do not have sufficient permissions to edit the Defect Tracker for this application. Contact your administrator if you believe you should have access.');
+		});
+	}
 	
 	$("#addWafButton").on("click", function() {
 		$("#editApplicationModal").modal('hide');
@@ -74,7 +90,14 @@ var addAppPageEvents = function () {
 		jsonTest($("#appDTDiv").attr("data-json-test-url"));
 	});
 	
-	$("a.missingDefectTrackerMessage").on("click", defectTrackerAddFunction);
+	if (!$("#missingDefectTrackerMessage").attr("data-has-no-manage-app-permisson")) {
+		$("a.missingDefectTrackerMessage").on("click", defectTrackerAddFunction);
+		}
+	else {
+		$("a.missingDefectTrackerMessage").unbind('click').bind('click', function() {
+			alert('There is no Defect Tracker associated with this application and you do not have sufficient permissions to add one. Contact your administrator to resolve this issue.');
+		});
+	}
 	
 	if (!$("#expandAllVulns").attr("data-has-function")) {
 		$("#expandAllVulns").on("click",function() {
