@@ -58,7 +58,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
-@SessionAttributes("application")
+@SessionAttributes({"application", "scanParametersBean"})
 public class EditApplicationController {
 	
 	public EditApplicationController(){}
@@ -173,7 +173,7 @@ public class EditApplicationController {
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 			
 			permissionService.addPermissions(model, orgId, appId, 
-					Permission.CAN_MANAGE_APPLICATIONS );
+					Permission.CAN_MANAGE_APPLICATIONS);
 			
 			model.addAttribute("application", application);
 			model.addAttribute("finding", new Finding());
