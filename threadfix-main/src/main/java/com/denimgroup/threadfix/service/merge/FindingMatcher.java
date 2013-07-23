@@ -29,6 +29,7 @@ import java.util.List;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
@@ -39,12 +40,35 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public class FindingMatcher {
 	
-	private final String projectRoot;
+	private final String 
+		urlPathRoot,
+		filePathRoot,
+		projectRoot;
+	
+	private String lowerCaseFilePathRoot = null;
+	
 	private final ScanMergeConfiguration scanMergeConfiguration;
 	
-	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration) {
-		this.projectRoot = scanMergeConfiguration.getApplicationRoot();
+	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
+		
 		this.scanMergeConfiguration = scanMergeConfiguration;
+		
+		if (scan != null) {
+			urlPathRoot = scan.getUrlPathRoot();
+			filePathRoot = scan.getFilePathRoot();
+		} else {
+			filePathRoot = urlPathRoot = null;
+		}
+		
+		if (scanMergeConfiguration.getApplicationRoot() == null) {
+			projectRoot = filePathRoot;
+		} else {
+			projectRoot = scanMergeConfiguration.getApplicationRoot();
+		}
+		
+		if (projectRoot != null) {
+			lowerCaseFilePathRoot = projectRoot.toLowerCase();
+		}
 	}
 	
 	/**
@@ -139,7 +163,23 @@ public class FindingMatcher {
 	}
 	
 	private boolean comparePaths(String path1, String path2) {
-		return path1 != null && path2 != null && path1.equalsIgnoreCase(path2);
+		boolean returnValue = false;
+		
+		if (urlPathRoot == null) {
+			returnValue = path1 != null && path2 != null && path1.equalsIgnoreCase(path2);
+		} else if (path1 != null && path2 != null) {
+			returnValue = extractRootPathIfNecessary(path1).equals(extractRootPathIfNecessary(path2));
+		}
+		
+		return returnValue;
+	}
+	
+	private String extractRootPathIfNecessary(String input) {
+		if (urlPathRoot != null && input.contains(urlPathRoot)) {
+			return input.substring(input.indexOf(urlPathRoot) + urlPathRoot.length());
+		} else {
+			return input;
+		}
 	}
 	
 	// check to see that the parameters match or are both empty
@@ -210,32 +250,40 @@ public class FindingMatcher {
 	// Compare the relative paths according to the application's projectRoot
 	// variable.
 	private boolean sourceFileNameCompare(String fileName1, String fileName2) {
-		if (fileName1 == null || fileName1.trim().equals("")
-				|| fileName2 == null || fileName2.equals(""))
-			return false;
-
-		String path1 = cleanPathString(fileName1);
-		String path2 = cleanPathString(fileName2);
-
-		// if for some reason cleaning the paths failed, compare the uncleaned
-		// paths.
-		if (path1 == null || path1.trim().equals("") || path2 == null
-				|| path2.trim().equals(""))
-			return fileName1.equals(fileName2);
-
-		// if we don't have a project root, or it isn't in one of the paths,
-		// return normal comparison of the cleaned strings.
-		if (projectRoot == null || projectRoot.trim().equals("")
-				|| !path1.contains(projectRoot) || !path2.contains(projectRoot))
-			return path1.equals(path2);
+		boolean returnValue;
 		
-		// if we do have it and it is in both paths, compare the relative paths
-		if (path1.contains(projectRoot) && path2.contains(projectRoot)) {
-			return path1.substring(path1.indexOf(projectRoot)).equals(
-					path2.substring(path2.indexOf(projectRoot)));
+		if (fileName1 == null || fileName1.trim().equals("")
+				|| fileName2 == null || fileName2.equals("")) {
+			returnValue = false;
+			
+		} else {
+
+			// The "cleaning" here returns a standardized slash + downcased string
+			String path1 = cleanPathString(fileName1), path2 = cleanPathString(fileName2);
+
+			// if for some reason cleaning the paths failed, compare the uncleaned
+			// paths.
+			if (path1 == null || path1.trim().equals("") || path2 == null
+					|| path2.trim().equals("")) {
+				returnValue = fileName1.equals(fileName2);
+			}
+			// if we don't have a project root, or it isn't in one of the paths,
+			// return normal comparison of the cleaned strings.
+			else if (lowerCaseFilePathRoot == null || lowerCaseFilePathRoot.trim().equals("")
+					|| !path1.contains(lowerCaseFilePathRoot.toLowerCase()) 
+					|| !path2.contains(lowerCaseFilePathRoot.toLowerCase())) {
+				returnValue = path1.equals(path2);
+			}
+			// if we do have it and it is in both paths, compare the relative paths
+			else if (path1.contains(lowerCaseFilePathRoot) && path2.contains(lowerCaseFilePathRoot)) {
+				returnValue = path1.substring(path1.indexOf(lowerCaseFilePathRoot)).equals(
+						path2.substring(path2.indexOf(lowerCaseFilePathRoot)));
+			} else {
+				returnValue = false;
+			}
 		}
 
-		return false;
+		return returnValue;
 	}
 
 	// we want to compare strings that have been lowercased, have had

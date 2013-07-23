@@ -45,26 +45,32 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final String getFileNameDefault(Finding finding) {
 		String fileName = getLocationInformation(finding);
 		
-		int index = containsIgnoreCase(fileName, filePathRoot);
-			
-		if (index != -1) {
-			fileName = fileName.substring(index);
+		if (fileName != null) {
+			int index = containsIgnoreCase(fileName, filePathRoot);
+				
+			if (index != -1) {
+				fileName = fileName.substring(index);
+			}
+				
+			fileName = standardizeSlashes(fileName);
 		}
-			
+		
 		return fileName;
 	}
 
 	protected final String getUrlPathDefault(Finding finding) {
 		String urlPath = getLocationInformation(finding);
 		
-		int index = containsIgnoreCase(urlPath, urlPathRoot);
-		
-		if (index != -1) {
-			urlPath = urlPath.substring(index);
-		}
-		
-		if (finding.getIsStatic()) {
-			urlPath = cleanStaticUrlPath(urlPath);
+		if (urlPath != null) {
+			int index = containsIgnoreCase(urlPath, urlPathRoot);
+			
+			if (index != -1) {
+				urlPath = urlPath.substring(index);
+			}
+			
+			if (finding.getIsStatic()) {
+				urlPath = cleanStaticUrlPath(urlPath);
+			}
 		}
 			
 		return urlPath;
@@ -105,10 +111,7 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	}
 	
 	private String cleanStaticUrlPath(String urlPath) {
-		String modifiedPath = urlPath;
-		if (urlPath.indexOf('\\') != -1) {
-			modifiedPath = modifiedPath.replace('\\', '/');
-		}
+		String modifiedPath = standardizeSlashes(urlPath);
 		
 		for (String ending : getSuffixVals()) {
 			if (modifiedPath.endsWith(ending)) {
@@ -118,6 +121,10 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		}
 		
 		return modifiedPath;
+	}
+	
+	private String standardizeSlashes(String input) {
+		return input.replace('\\', '/');
 	}
 	
 	/**

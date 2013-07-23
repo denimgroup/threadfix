@@ -355,63 +355,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
     }
 
 	/**
-	 * Attempts to guess the URL given a file name. TODO Make this method better
-	 * 
-	 * @param sourceFileName
-	 *            The file name.
-	 * @return the URL
-	 */
-	protected String convertSourceFileNameToUrl(String sourceFileName, String applicationRoot) {
-		if (sourceFileName == null)
-			return null;
-		
-		String editedSourceFileName = sourceFileName;
-
-		if (editedSourceFileName.contains("\\"))
-			editedSourceFileName = editedSourceFileName.replace("\\", "/");
-
-		boolean parsedFlag = false;
-
-		// TODO - Make a better, more generic way of identifying web root
-		// directory names
-		// maybe ask the user for the application root / use it as the
-		// application url
-		String[] prefixVals = { "wwwroot", "web", "cgi-bin", "cgi", ""};
-		if(applicationRoot != null && !applicationRoot.trim().equals("")){
-			prefixVals[4] = applicationRoot.toLowerCase();
-		}
-		String[] suffixVals = { "aspx", "asp", "jsp", "php", "html", "htm", "java", "cs", "config",
-				"js", "cgi", "ascx" };
-
-		for (String val : prefixVals) {
-			if (!editedSourceFileName.toLowerCase().contains(val))
-				continue;
-
-			String temp = getRegexResult(editedSourceFileName.toLowerCase(), "(/" + val + "/.+)");
-			if (temp != null) {
-				editedSourceFileName = temp;
-				parsedFlag = true;
-				break;
-			}
-		}
-
-		for (String val : suffixVals) {
-			if (!editedSourceFileName.contains(val))
-				continue;
-
-			String temp = getRegexResult(editedSourceFileName, "(.+\\." + val + ")");
-			if (temp != null)
-				return temp.toLowerCase();
-		}
-
-		if (parsedFlag) {
-			return editedSourceFileName;
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Utility to prevent declaring a bunch of Matchers and Patterns.
 	 * 
 	 * @param targetString

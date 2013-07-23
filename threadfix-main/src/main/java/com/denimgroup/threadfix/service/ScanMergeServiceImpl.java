@@ -120,7 +120,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
 		
 		FindingMatcher matcher = new FindingMatcher(
-				MergeConfigurationGenerator.generateConfiguration(application, null));
+				MergeConfigurationGenerator.generateConfiguration(application, null),
+				null);
 
 		if (vulnerabilities != null) {
 			for (int i = 0; i < vulnerabilities.size(); i++) {

@@ -61,7 +61,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 	public void applicationMerge(Scan scan, Application application, Integer statusId) {
 		
 		FindingMatcher matcher = new FindingMatcher(
-				MergeConfigurationGenerator.generateConfiguration(application, scan));
+				MergeConfigurationGenerator.generateConfiguration(application, scan), scan);
 		
 		updateJobStatus(statusId, "Channel merge completed. Starting application merge.");
 		
