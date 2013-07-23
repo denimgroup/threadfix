@@ -39,6 +39,10 @@ public class ProjectDirectory {
 		this.directory = directory;
 	}
 	
+	public String getDirectoryPath() {
+		return directory.getAbsolutePath();
+	}
+	
 	// TODO we may be able to get better results with some more advanced logic here
 	// maybe skip directories like "test", look in specific paths or at least check guesses
 	// on the other hand I don't really see this being a bottleneck

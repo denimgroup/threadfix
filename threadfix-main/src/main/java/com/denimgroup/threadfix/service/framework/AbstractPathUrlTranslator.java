@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
 
 public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	
@@ -43,8 +44,9 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final String applicationRoot;
 	protected final ScanMergeConfiguration scanMergeConfiguration;
 	protected final Scan scan;
+	protected ProjectDirectory projectDirectory = null;
 	
-	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
+	protected final static SanitizedLogger log = new SanitizedLogger(AbstractPathUrlTranslator.class);
 	
 	/**
 	 * Throws IllegalArgumentException if passed null parameters.
@@ -60,6 +62,14 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		this.scanMergeConfiguration = configuration;
 		this.scan = scan;
 		
+		if (scanMergeConfiguration.getSourceCodeAccessLevel() == SourceCodeAccessLevel.FULL) {
+			if (workTree != null && workTree.exists()) {
+				projectDirectory = new ProjectDirectory(workTree);
+			} else {
+				log.warn("Source Code Access Level was set to full but no files were found.");
+			}
+		}
+		
 		if (this.workTree == null || !this.workTree.exists()) {
 			log.warn("Work tree doesn't exist.");
 		}
@@ -74,7 +84,7 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 			if (index != -1) {
 				fileName = fileName.substring(index);
 			}
-				
+			
 			fileName = standardizeSlashes(fileName);
 		}
 		
@@ -169,6 +179,44 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		}
 		
 		return index;
+	}
+	
+	protected final String getFileNameWithSourceCodeDefault(Finding finding, String... hints) {
+		File resultFile = getFileWithSourceCodeDefault(finding, hints);
+		
+		if (resultFile != null && projectDirectory != null && 
+				resultFile.getAbsolutePath().contains(projectDirectory.getDirectoryPath())) {
+			return resultFile.getAbsolutePath().substring(projectDirectory.getDirectoryPath().length());
+		} else {
+			return null;
+		}
+	}
+	
+	protected final File getFileWithSourceCodeDefault(Finding finding, String... hints) {
+		File returnFile = null;
+		
+		if (finding != null && projectDirectory != null) {
+			String fileName = getLocationInformation(finding);
+			if (fileName != null) {
+				returnFile = projectDirectory.findFile(getShortFileName(fileName), hints);
+			}
+		}
+		
+		return returnFile;
+	}
+	
+	private final String getShortFileName(String longName) {
+		String returnString = longName;
+		
+		if (longName.contains("/")) {
+			returnString = returnString.substring(returnString.lastIndexOf('/') + 1);
+		}
+		
+		if (longName.contains("\\")) {
+			returnString = returnString.substring(returnString.lastIndexOf('\\') + 1);
+		}
+		
+		return returnString;
 	}
 	
 }

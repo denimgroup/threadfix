@@ -35,7 +35,7 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 	public DefaultTranslator(ScanMergeConfiguration scanMergeConfiguration,
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
-
+		
 		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
 		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan);
 		scan.setFilePathRoot(filePathRoot);
@@ -48,7 +48,10 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 
 	@Override
 	public String getFileName(Finding finding) {
-		return getFileNameDefault(finding);
+		switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
+			case FULL: return getFileNameWithSourceCodeDefault(finding);
+			default:   return getFileNameDefault(finding);
+		}
 	}
 
 	@Override

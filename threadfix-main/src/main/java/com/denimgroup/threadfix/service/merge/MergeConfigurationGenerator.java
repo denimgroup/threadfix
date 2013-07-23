@@ -67,9 +67,12 @@ public class MergeConfigurationGenerator {
 			accessLevel = guessSourceCodeAccessLevel(application, scan);
 		}
 		
+		if (accessLevel == SourceCodeAccessLevel.FULL) {
+			workTree = getWorkTree(application);
+		}
+		
 		if (frameworkType == FrameworkType.DETECT) {
 			if (accessLevel == SourceCodeAccessLevel.FULL) {
-				workTree = getWorkTree(application);
 				if (workTree != null) {
 					frameworkType = guessFrameworkTypeFromSourceTree(workTree);
 				} else {
