@@ -46,11 +46,13 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
@@ -70,17 +72,20 @@ public class EditApplicationController {
 	private WafService wafService;
 	private PermissionService permissionService;
 	private ApplicationCriticalityService applicationCriticalityService = null;
+	private OrganizationService organizationService;
 	
 	@Autowired
 	public EditApplicationController(ApplicationService applicationService,
 			DefectTrackerService defectTrackerService, WafService wafService,
 			PermissionService permissionService,
-			ApplicationCriticalityService applicationCriticalityService) {
+			ApplicationCriticalityService applicationCriticalityService,
+			OrganizationService organizationService) {
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.wafService = wafService;
 		this.permissionService = permissionService;
 		this.applicationCriticalityService = applicationCriticalityService;
+		this.organizationService = organizationService;
 	}
 
 	@ModelAttribute("defectTrackerList")
@@ -98,6 +103,11 @@ public class EditApplicationController {
 		return applicationCriticalityService.loadAll();
 	}
 	
+	@ModelAttribute("teamList")
+	public List<Organization> populateTeams() {
+		return organizationService.loadAllActive();
+	}
+	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
@@ -107,7 +117,7 @@ public class EditApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName", 
 				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-				"uniqueId"});
+				"uniqueId", "organization.id"});
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

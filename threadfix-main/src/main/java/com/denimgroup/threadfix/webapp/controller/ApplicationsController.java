@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
@@ -76,6 +77,7 @@ public class ApplicationsController {
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
 	private PermissionService permissionService;
+	private OrganizationService organizationService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -83,13 +85,15 @@ public class ApplicationsController {
 			ApplicationCriticalityService applicationCriticalityService,
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
-			PermissionService permissionService) {
+			PermissionService permissionService,
+			OrganizationService organizationService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.permissionService = permissionService;
 		this.findingService = findingService;
 		this.applicationCriticalityService = applicationCriticalityService;
+		this.organizationService = organizationService;
 	}
 
 	@InitBinder
@@ -159,6 +163,7 @@ public class ApplicationsController {
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
+		model.addAttribute("teamList", organizationService.loadAllActive());
 		
 		return "applications/detail";
 	}
