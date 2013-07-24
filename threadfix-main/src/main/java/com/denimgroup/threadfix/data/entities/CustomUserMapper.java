@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,12 +13,16 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.CustomUserDetailService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 
 public class CustomUserMapper implements UserDetailsContextMapper {
+	
+	protected final SanitizedLogger log = new SanitizedLogger(CustomUserMapper.class);
 	
 	private DefaultConfigService defaultConfigService = null;
 	private RoleService roleService = null;
@@ -44,6 +49,7 @@ public class CustomUserMapper implements UserDetailsContextMapper {
 	public UserDetails mapUserFromContext(DirContextOperations arg0,
 			String userName, Collection<GrantedAuthority> arg2) {
 		
+		log.info("User " + userName + " logged in successfully at " + new Date());
 		User dbUser = userService.loadLdapUser(userName);
 		
 		if (dbUser != null) {
