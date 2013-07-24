@@ -8,10 +8,20 @@
 <div>
 <h2 style="padding-bottom:5px;line-height:1">
 	<span id="nameText" style="max-width:400px; display:inline-block" class="ellipsis"><c:out value="${ application.name }"/></span>
-	<span><a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
+	<span>
+	<c:if test="${ canManageApplications }">	
+	<a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
 			role="button" data-toggle="modal">
 		Edit / Delete
-	</a></span>
+	</a>
+	</c:if>
+	<c:if test="${ !canManageApplications }">	
+	<a class="btn header-button" id="viewApplicationModalButton" href="#viewApplicationModal" 
+			role="button" data-toggle="modal">
+		Detail
+	</a>
+	</c:if>
+	</span>
 	
 	<c:if test="${ canUploadScans }">
 		<span style="float:right">
@@ -42,6 +52,12 @@
 		<%@ include file="/WEB-INF/views/applications/forms/editApplicationForm.jsp" %>
 	</div>
 </div> 
+<div id="viewApplicationModal" class="modal hide fade" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="viewAppFormDiv">
+		<%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
+	</div>
+</div>
 
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
