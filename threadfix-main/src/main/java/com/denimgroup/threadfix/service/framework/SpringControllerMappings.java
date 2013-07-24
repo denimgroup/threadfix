@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -41,15 +40,16 @@ public class SpringControllerMappings {
 		
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		
-		for (Entry<String, String> entry : mappings.urlToControllerMap.entrySet()) {
+		for (Entry<String, SpringControllerEndpoint> entry : mappings.urlToControllerMap.entrySet()) {
+			entry.getValue().setFileRoot("C:\\test\\projects\\spring-petclinic");
 			System.out.println(entry);
 		}
 	}
 	
 	public final Collection<File> controllerFiles;
 	
-	public final Map<String, String> urlToControllerMap;
-	public final Map<String, Set<String>> controllerToUrlsMap;
+	public final Map<String, SpringControllerEndpoint> urlToControllerMap;
+	public final Map<String, Set<SpringControllerEndpoint>> controllerToUrlsMap;
 	
 	public final File rootDirectory;
 	
@@ -85,23 +85,15 @@ public class SpringControllerMappings {
 				
 				String fileNameWithoutRoot = file.getAbsolutePath().substring(rootDirectory.getAbsolutePath().length());
 				
-				Set<String> endpoints = standardizeSet(SpringControllerEndpointParser.parseEndpoints(file));
-				controllerToUrlsMap.put(fileNameWithoutRoot, endpoints);
+				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parseEndpoints(file);
 				
-				for (String endpoint : endpoints) {
-					urlToControllerMap.put(endpoint, fileNameWithoutRoot);
+				for (SpringControllerEndpoint endpoint : endpoints) {
+					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
+					urlToControllerMap.put(endpoint.getCleanedUrlPath(), endpoint);
 				}
+
+				controllerToUrlsMap.put(fileNameWithoutRoot, endpoints);
 			}
 		}
-	}
-	
-	private Set<String> standardizeSet(Set<String> inputs) {
-		Set<String> returnSet = new HashSet<String>();
-		
-		for (String string: inputs) {
-			returnSet.add(string.replaceAll("/\\*/", "/{id}/").replaceAll("\\{[^\\}]+\\}", "{id}"));
-		}
-		
-		return returnSet;
 	}
 }

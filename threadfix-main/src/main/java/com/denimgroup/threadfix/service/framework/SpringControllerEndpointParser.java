@@ -21,10 +21,10 @@ public class SpringControllerEndpointParser {
 	
 	private SpringControllerEndpointParser(){}
 	
-	public static Set<String> parseEndpoints(File file) {
+	public static Set<SpringControllerEndpoint> parseEndpoints(File file) {
 		State state = State.START;
 		
-		Set<String> endpoints = new HashSet<>();
+		Set<SpringControllerEndpoint> endpoints = new HashSet<>();
 		
 		if (file != null && file.exists() && file.isFile() && file.getName().endsWith(".java")) {
 			Reader reader = null;
@@ -59,13 +59,13 @@ public class SpringControllerEndpointParser {
 							break;
 						case VALUE:
 							if (tokenizer.sval != null) {
-								endpoints.add(tokenizer.sval);
+								endpoints.add(
+										new SpringControllerEndpoint(file.getAbsolutePath(), tokenizer.sval, tokenizer.lineno()));
 								state = State.START;
 							}
 							break;
 						case END_PAREN:
-							endpoints.add("/");
-							break;
+							// TODO implement class defaults parsing
 					}
 				}
 			} catch (FileNotFoundException e) {
