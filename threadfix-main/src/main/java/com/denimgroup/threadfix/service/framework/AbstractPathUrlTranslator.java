@@ -181,8 +181,8 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		return index;
 	}
 	
-	protected final String getFileNameWithSourceCodeDefault(Finding finding, String... hints) {
-		File resultFile = getFileWithSourceCodeDefault(finding, hints);
+	protected final String getFileNameWithSourceCodeDefault(Finding finding) {
+		File resultFile = getFileWithSourceCodeDefault(finding);
 		
 		if (resultFile != null && projectDirectory != null && 
 				resultFile.getAbsolutePath().contains(projectDirectory.getDirectoryPath())) {
@@ -192,31 +192,16 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		}
 	}
 	
-	protected final File getFileWithSourceCodeDefault(Finding finding, String... hints) {
+	protected final File getFileWithSourceCodeDefault(Finding finding) {
 		File returnFile = null;
 		
 		if (finding != null && projectDirectory != null) {
-			String fileName = getLocationInformation(finding);
-			if (fileName != null) {
-				returnFile = projectDirectory.findFile(getShortFileName(fileName), hints);
+			String path = getLocationInformation(finding);
+			if (path != null) {
+				returnFile = projectDirectory.findFile(path);
 			}
 		}
 		
 		return returnFile;
 	}
-	
-	private final String getShortFileName(String longName) {
-		String returnString = longName;
-		
-		if (longName.contains("/")) {
-			returnString = returnString.substring(returnString.lastIndexOf('/') + 1);
-		}
-		
-		if (longName.contains("\\")) {
-			returnString = returnString.substring(returnString.lastIndexOf('\\') + 1);
-		}
-		
-		return returnString;
-	}
-	
 }
