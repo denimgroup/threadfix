@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.merge;
 
 import java.io.File;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.service.framework.ServletMappings;
 
 /**
@@ -38,7 +39,7 @@ public class ScanMergeConfiguration {
 	private VulnTypeStrategy typeStrategy;
 	private SourceCodeAccessLevel sourceCodeAccessLevel;
 	private FrameworkType frameworkType;
-	private String applicationRoot;
+	private Application application;
 	private final File workTree;
 	private final ServletMappings servletMappings;
 	
@@ -46,18 +47,26 @@ public class ScanMergeConfiguration {
 			SourceCodeAccessLevel sourceCodeAccessLevel,
 			FrameworkType frameworkType,
 			File workTree,
-			String applicationRoot,
+			Application application,
 			ServletMappings servletMappings) {
 		this.typeStrategy  = typeStrategy;
 		this.frameworkType = frameworkType;
 		this.sourceCodeAccessLevel  = sourceCodeAccessLevel;
 		this.workTree = workTree;
-		this.applicationRoot = applicationRoot;
+		this.application = application;
 		this.servletMappings = servletMappings;
 	}
 	
+	public Application getApplication() {
+		return application;
+	}
+	
 	public String getApplicationRoot() {
-		return applicationRoot;
+		if (application != null) {
+			return application.getProjectRoot();
+		} else {
+			return null;
+		}
 	}
 
 	public File getWorkTree() {

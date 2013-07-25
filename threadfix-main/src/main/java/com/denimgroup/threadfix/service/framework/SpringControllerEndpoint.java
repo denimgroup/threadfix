@@ -1,6 +1,8 @@
 package com.denimgroup.threadfix.service.framework;
 
 public class SpringControllerEndpoint {
+	
+	public static final String GENERIC_INT_SEGMENT = "{id}";
 
 	private final String rawFilePath, rawUrlPath;
 	private final int startLineNumber, endLineNumber;
@@ -39,17 +41,27 @@ public class SpringControllerEndpoint {
 
 	public String getCleanedUrlPath() {
 		if (cleanedUrlPath == null) {
-			cleanedUrlPath = cleanUrlPath(rawUrlPath);
+			cleanedUrlPath = cleanUrlPathStatic(rawUrlPath);
 		}
 		
 		return cleanedUrlPath;
 	}
 	
-	public static String cleanUrlPath(String rawUrlPath) {
+	public static String cleanUrlPathStatic(String rawUrlPath) {
 		if (rawUrlPath == null) {
 			return null;
 		} else {
-			return rawUrlPath.replaceAll("/\\*/", "/{id}/").replaceAll("\\{[^\\}]+\\}", "{id}");
+			return rawUrlPath
+					.replaceAll("/\\*/", "/" + GENERIC_INT_SEGMENT + "/")
+					.replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
+		}
+	}
+	
+	public static String cleanUrlPathDynamic(String rawUrlPath) {
+		if (rawUrlPath == null) {
+			return null;
+		} else {
+			return rawUrlPath.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/").replaceAll("\\.html", "");
 		}
 	}
 	

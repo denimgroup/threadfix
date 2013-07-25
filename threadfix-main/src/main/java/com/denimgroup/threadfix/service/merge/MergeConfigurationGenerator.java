@@ -88,7 +88,7 @@ public class MergeConfigurationGenerator {
 		}
 		
 		return new ScanMergeConfiguration(typeStrategy, accessLevel, frameworkType,
-				workTree, application.getProjectRoot(), servletMappings);
+				workTree, application, servletMappings);
 	}
 	
 	// TODO cache this information so we don't have to calculate every time

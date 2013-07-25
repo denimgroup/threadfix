@@ -25,7 +25,10 @@ package com.denimgroup.threadfix.service.framework;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.merge.FrameworkType;
@@ -34,9 +37,11 @@ import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
 
 public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 	
-	public static final String GENERIC_INT_SEGMENT = "{id}";
-	
-	private Map<String, String> mappings = new HashMap<>();
+	private SpringControllerMappings fullMappings = null;
+	/**
+	 * This map is canonical url path -> canonical file path
+	 */
+	private Map<String, String> partialMappings = null;
 
 	public SpringMVCTranslator(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
 		super(scanMergeConfiguration, scan);
@@ -45,100 +50,73 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		
 		SourceCodeAccessLevel accessLevel = scanMergeConfiguration.getSourceCodeAccessLevel();
 		
+		// TODO update these
+		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
+		urlPathRoot  = "/" + CommonPathFinder.findOrParseUrlPath(scan);
+		scan.setFilePathRoot(filePathRoot);
+		scan.setUrlPathRoot(urlPathRoot);
+		
 		switch (accessLevel) {
-			case FULL:    buildMappingsFromFullSource();    break;
-			case PARTIAL: buildMappingsFromPartialSource(); break;
-			default: break; // TODO try to guess some mappings based on numeric URL segments
+			case FULL:    buildFullSourceMappings();    break;
+			case PARTIAL: buildPartialSourceMappings(); break;
+			default: // don't care, just do basic matching
 		}
 	}
 
-	private void buildMappingsFromPartialSource() {
+	private void buildPartialSourceMappings() {
 		log.info("Attempting to build Spring mappings from partial source.");
 		
+		boolean addedMappings = false;
+		
+		partialMappings = new HashMap<>();
+		
 		if (scan != null && scan.isStatic()) {
+			addedMappings = true;
 			addStaticMappings(scan);
 		}
 		
-		// TODO get access to the application so we can do this
-		// TODO also cache types used for each scan
-//		if (application != null && application.getScans() != null) {
-//			for (Scan applicationScan : application.getScans()) {
-//				addStaticMappings(applicationScan);
-//			}
-//		}
+		Application application = scanMergeConfiguration.getApplication();
+		
+		if (application != null && application.getScans() != null) {
+			for (Scan applicationScan : application.getScans()) {
+				if (applicationScan.isStatic()) {
+					addedMappings = true;
+					addStaticMappings(applicationScan);
+				}
+			}
+		}
+		
+		if (addedMappings) {
+			log.info("Successfully built mappings from partial source.");
+		} else {
+			log.error("No partial source found, so no mappings could be parsed.");
+		}
 	}
 	
+	private void buildFullSourceMappings() {
+		if (workTree != null && workTree.exists()) {
+			log.info("Building mappings from full source.");
+			fullMappings = new SpringControllerMappings(workTree);
+		} else {
+			log.error("Attempted to build mappings from nonexistent source. " +
+					"Please configure a repository URL correctly.");
+		}
+	}
+
 	// this implementation is for partial source access
-	// TODO implement for full source access
 	private void addStaticMappings(Scan scan) {
 		if (scan != null && scan.getFindings() != null) {
 			for (Finding finding : scan.getFindings()) {
 				if (finding != null && finding.getStaticPathInformation() != null &&
 						finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
 					String standardizedUrl = 
-							getStandardizedUrlStatic(finding.getStaticPathInformation().getValue());
+							SpringControllerEndpoint.cleanUrlPathStatic(finding.getStaticPathInformation().getValue());
 					
 					// TODO look into whether or not we need to extract information from data flows
-					mappings.put(standardizedUrl, finding.getSourceFileLocation());
+					partialMappings.put(standardizedUrl, finding.getSourceFileLocation());
 				}
 			}
 		}
-	}
-	
-	// requires full source access
-	private void addDynamicMappings(Scan scan) {
-		if (scan != null && scan.getFindings() != null) {
-			for (Finding finding : scan.getFindings()) {
-				if (finding != null && finding.getSurfaceLocation() != null &&
-						finding.getSurfaceLocation().getPath() != null) {
-					String standardizedUrl = 
-							getStandardizedUrlDynamic(finding.getSurfaceLocation().getPath());
-					
-					// TODO utilize source to match this better
-					// probably need to scan for @Controller annotations and extract mappings that way
-					mappings.put(standardizedUrl, "???");
-				}
-			}
-		}
-	}
-	
-	// has a templated portion signifying a variable
-	private String getStandardizedUrlStatic(String url) {
-		return getStandardizedUrl(url, "^\\{.*\\}$"); 
-	}
-	
-	// has an integer url segment which is probably a REST-style parameter
-	private String getStandardizedUrlDynamic(String url) {
-		return getStandardizedUrl(url, "^[0-9]+$"); 
-	}
-	
-	private String getStandardizedUrl(String url, String segmentRegexToRemove) {
-		String standardizedUrl = url;
-		
-		if (url != null && url.contains("/")) {
-			String[] parts = url.split("/");
-			
-			StringBuilder builder = new StringBuilder();
-			for (String part : parts) {
-				if (part != null && !part.isEmpty()) {
-					builder.append("/");
-					if (part.matches(segmentRegexToRemove)) { 
-						builder.append(GENERIC_INT_SEGMENT);
-					} else {
-						builder.append(part);
-					}
-				}
-			}
-			standardizedUrl = builder.toString();
-		}
-		
-		return standardizedUrl;
-	}
-
-	private void buildMappingsFromFullSource() {
-		// TODO Auto-generated method stub
-		log.info("Called Spring's unimplemented buildMappingsFromFullSource method");
-		addDynamicMappings(scan);
 	}
 
 	// TODO utilize source code and find a common root, similar to DefaultTranslator
@@ -148,16 +126,42 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		String fileName = null;
 		
 		if (finding.getIsStatic()) {
-			fileName = finding.getSourceFileLocation();
+			fileName = projectDirectory.findCanonicalFilePath(
+					finding.getSourceFileLocation(), applicationRoot);
 		} else {
-			String urlPathGuess = getUrlPath(finding);
-			
-			if (urlPathGuess != null && mappings.containsKey(urlPathGuess)) {
-				fileName = mappings.get(urlPathGuess);
+			switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
+				case FULL:    fileName = getFilePathFullSource(finding); break;
+				case PARTIAL: fileName = getFilePathPartial(finding);    break;
+				default: // return null, it's ok to not predict a controller with no source
 			}
 		}
 		
 		return fileName;
+	}
+
+	private String getFilePathPartial(Finding finding) {
+		String filePath = null;
+		
+		String canonicalUrlPath = getUrlPath(finding);
+		if (partialMappings != null && canonicalUrlPath != null &&
+				partialMappings.get(canonicalUrlPath) != null) {
+			filePath = partialMappings.get(canonicalUrlPath);
+		}
+		
+		return filePath;
+	}
+
+	private String getFilePathFullSource(Finding finding) {
+		String filePath = null;
+		
+		String canonicalUrlPath = getUrlPath(finding);
+		if (fullMappings != null && canonicalUrlPath != null &&
+				fullMappings.urlToControllerMap != null &&
+				fullMappings.urlToControllerMap.get(canonicalUrlPath) != null) {
+			filePath = fullMappings.urlToControllerMap.get(canonicalUrlPath).getCleanedFilePath();
+		}
+		
+		return filePath;
 	}
 
 	@Override
@@ -166,17 +170,56 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		
 		if (finding != null) {
 			if (finding.getIsStatic()) {
-				if (finding.getStaticPathInformation() != null &&
-						finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
-					urlPath = getStandardizedUrlStatic(finding.getStaticPathInformation().getValue());
+				switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
+					case FULL:    urlPath = getUrlPathFullSource(finding); break;
+					case PARTIAL: urlPath = getUrlPathPartial(finding);    break;
+					default: // return null, it's fine (we shouldn't even get here)
 				}
 			} else {
 				if (finding.getSurfaceLocation() != null) {
-					urlPath = getStandardizedUrlDynamic(finding.getSurfaceLocation().getPath());
+					urlPath = SpringControllerEndpoint.cleanUrlPathDynamic(finding.getSurfaceLocation().getPath());
+					if (urlPath != null && urlPathRoot != null && urlPath.contains(urlPathRoot)) {
+						urlPath = urlPath.replace(urlPathRoot, "");
+					}
 				}
 			}
 		}
 
+		return urlPath;
+	}
+
+	private String getUrlPathPartial(Finding finding) {
+		if (finding.getStaticPathInformation() != null &&
+				finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
+			return SpringControllerEndpoint.cleanUrlPathStatic(finding.getStaticPathInformation().getValue());
+		} else {
+			// TODO look through data flows for matches to the partialMappings map
+			return null;
+		}
+	}
+
+	private String getUrlPathFullSource(Finding staticFinding) {
+		String urlPath = null;
+		
+		if (projectDirectory != null && staticFinding != null && staticFinding.getDataFlowElements() != null) {
+			
+			DFE: for (DataFlowElement dataFlowElement : staticFinding.getDataFlowElements()) {
+				String key = projectDirectory.findCanonicalFilePath(
+						dataFlowElement.getSourceFileName(), applicationRoot);
+				
+				if (key != null && fullMappings.controllerToUrlsMap.get(key) != null) {
+					Set<SpringControllerEndpoint> endpoints = fullMappings.controllerToUrlsMap.get(key);
+					
+					for (SpringControllerEndpoint endpoint : endpoints) {
+						if (endpoint.matchesLineNumber(dataFlowElement.getLineNumber())) {
+							urlPath = endpoint.getCleanedUrlPath();
+							break DFE;
+						}
+					}
+				}
+			}
+		}
+		
 		return urlPath;
 	}
 	

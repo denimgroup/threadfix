@@ -51,6 +51,10 @@ public class ProjectDirectory {
 		return directory.getAbsolutePath();
 	}
 	
+	public File getDirectory() {
+		return directory;
+	}
+	
 	private Map<String, Set<String>> buildMaps(File startingFile) {
 		Map<String, Set<String>> returnMap = new HashMap<>();
 		
@@ -106,7 +110,6 @@ public class ProjectDirectory {
 	/**
 	 * Find the file on the file system given a static or dynamic file path.
 	 * This will find the file on the file system with the same name and longest common
-	 * path to the given path.
 	 * @param path
 	 * @return
 	 */
@@ -145,11 +148,23 @@ public class ProjectDirectory {
 	 * @return
 	 */
 	public String findFilePath(String path) {
+		return findCanonicalFilePath(path, null);
+	}
+	
+	public String findCanonicalFilePath(String path, String root) {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
 		if (pathSegments != null && pathSegments.length > 0) {
 			returnString = findFilePath(pathSegments[pathSegments.length - 1], pathSegments);
+			
+			if (returnString != null) {
+				returnString = returnString.replace('\\', '/');
+			}
+		}
+		
+		if (returnString != null && root != null && returnString.startsWith(root)) {
+			returnString = returnString.substring(root.length());
 		}
 		
 		return returnString;
