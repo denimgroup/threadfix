@@ -46,7 +46,12 @@
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Team</td>
-				<td style="padding:5px;"><c:out value="${ application.organization.name }"/></td>
+				<td style="padding:5px;">
+					<form:select style="margin-bottom:0px;" id="organizationId" path="organization.id">
+						<form:options items="${teamList}" itemValue="id" itemLabel="name"/>
+					</form:select>
+					<form:errors path="organization.id" cssClass="errors" />
+				</td>																
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Criticality</td>

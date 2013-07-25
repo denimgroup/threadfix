@@ -72,7 +72,7 @@
 	<table class="table sortable table-hover tf-colors" id="anyid">
 		<thead>
 			<tr>
-				<c:if test="${ canModifyVulnerabilities }">
+				<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
 					<th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
 				</c:if>			    
 				<th style="width:8px;"></th>
@@ -122,7 +122,7 @@
 						data-caret="caret${ vulnGroup.name }"
 						data-toggle-class="${ rowClass }"
 						data-expanded="0">
-					<c:if test="${ canModifyVulnerabilities }">
+					<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
 						<td>
 							<input type="checkbox" class="categoryCheckbox" data-target-class="<c:out value="${ vulnGroup.name }"/>">
 						</td>
@@ -160,7 +160,7 @@
 				</c:if>
 				<tr class="bodyRow pointer <c:out value="${ color }"/> ${ rowClass } ${ hideClass }" data-target-div="vulnInfoDiv${vulnerability.id}"
 						data-caret-div="caret${vulnerability.id }">
-					<c:if test="${ canModifyVulnerabilities }">
+					<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
 						<td>
 							<input class="vulnIdCheckbox <c:out value="${ vulnGroup.name }"/>" id="vulnerabilityIds${ index }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 							<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">

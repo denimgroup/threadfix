@@ -4,7 +4,11 @@
 <c:choose>
 	<c:when test="${ empty application.defectTracker }">
 		<td style="padding:5px;" class="inputValue">
-			<a id="addDefectTrackerButton" role="button" class="btn">Add</a>
+			<a id="addDefectTrackerButton" role="button" class="btn"
+				<c:if test="${ !canManageApplications }"> data-has-no-manage-app-permisson="true" </c:if>
+			>
+				Add
+			</a>
 		</td>
 	</c:when>
 	<c:otherwise>
@@ -22,7 +26,11 @@
 			<em>(<a href="<spring:url value="${ fn:escapeXml(application.defectTracker.url) }" />"><c:out value="${ fn:escapeXml(application.defectTracker.url) }"/></a>)</em>
 		</td>
 		<td style="padding:5px;">
-			<a id="editDefectTrackerButton" href="#addDefectTracker" role="button" class="btn" data-toggle="modal">Edit</a>
+			<a id="editDefectTrackerButton" role="button" class="btn" data-toggle="modal"
+				<c:if test="${ !canManageApplications }"> data-has-no-manage-app-permisson="true" </c:if>				
+			>				
+				Edit
+			</a>
 		</td>
 	</c:otherwise>
 </c:choose>

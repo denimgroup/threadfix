@@ -19,7 +19,7 @@
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 
-<c:if test="${ canModifyVulnerabilities }">
+<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
    	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
@@ -32,17 +32,20 @@
 					Submit Defect
 				</a>
 			</li>
-			<li class="missingDefectTrackerMessage"
+			<li class="missingDefectTrackerMessage" id = "missingDefectTrackerMessage"
 				<c:if test="${ not empty application.defectTracker }">
 					style="display:none"
+				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
 				</c:if>
 			>
 				<a class="missingDefectTrackerMessage" href="#">
 					Submit Defect
 				</a>
 			</li>
-			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
-			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
+			<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>
+			<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>
 		</ul>
 	</div>
 </c:if>
@@ -56,7 +59,7 @@
 
 <%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>
 
-<c:if test="${ canModifyVulnerabilities }">
+<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
    	<div id="btnDiv2" class="btn-group">
 		<button id="actionButton2" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 		<ul class="dropdown-menu">
@@ -73,13 +76,16 @@
 				<c:if test="${ not empty application.defectTracker }">
 					style="display:none"
 				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
+				</c:if>
 			>
-				<a class="missingDefectTrackerMessage" href="#">
+				<a class="missingDefectTrackerMessage" href="#" >
 					Submit Defect
 				</a>
 			</li>		
-			<li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li>
-			<li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li>
+			<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>
+			<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>
 		</ul>
 	</div>
 </c:if>

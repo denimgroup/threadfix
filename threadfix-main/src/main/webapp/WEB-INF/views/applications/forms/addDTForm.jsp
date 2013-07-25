@@ -44,12 +44,9 @@
 								
 							</c:forEach>
 						</select>
-						<c:if test="${ canManageDefectTrackers }">
-							<a style="padding-left:10px;" id="configureDefectTrackersLink" href="<spring:url value="/configuration/defecttrackers/new"/>">Create a Defect Tracker</a>
-						</c:if>
 					</c:if>
-					<a id="createDefectTrackerButtonInModal" href="#" class="btn" onclick="switchDTModals()">Create New Defect Tracker</a>
 				</td>
+				<td><c:if test="${ canManageDefectTrackers }"><a id="createDefectTrackerButtonInModal" href="#" class="btn" onclick="switchDTModals()">Create New Defect Tracker</a></c:if>	</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="defectTracker.id" cssClass="errors" />
 				</td>
