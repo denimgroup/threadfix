@@ -3,16 +3,17 @@ package com.denimgroup.threadfix.service.framework;
 public class SpringControllerEndpoint {
 
 	private final String rawFilePath, rawUrlPath;
-	private final int lineNumber;
+	private final int startLineNumber, endLineNumber;
 	
 	private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
 	
-	public SpringControllerEndpoint(String filePath, String urlPath, int lineNumber) {
+	public SpringControllerEndpoint(String filePath, String urlPath, int startLineNumber, int endLineNumber) {
 		this.rawFilePath = filePath;
 		this.rawUrlPath = urlPath;
-		this.lineNumber = lineNumber;
+		this.startLineNumber = startLineNumber;
+		this.endLineNumber = endLineNumber;
 	}
 	
 	public String getRawFilePath() {
@@ -38,18 +39,30 @@ public class SpringControllerEndpoint {
 
 	public String getCleanedUrlPath() {
 		if (cleanedUrlPath == null) {
-			cleanedUrlPath = rawUrlPath.replaceAll("/\\*/", "/{id}/").replaceAll("\\{[^\\}]+\\}", "{id}");
+			cleanedUrlPath = cleanUrlPath(rawUrlPath);
 		}
 		
 		return cleanedUrlPath;
 	}
 	
-	public int getLineNumber() {
-		return lineNumber;
+	public static String cleanUrlPath(String rawUrlPath) {
+		if (rawUrlPath == null) {
+			return null;
+		} else {
+			return rawUrlPath.replaceAll("/\\*/", "/{id}/").replaceAll("\\{[^\\}]+\\}", "{id}");
+		}
+	}
+	
+	public boolean matchesLineNumber(int lineNumber) {
+		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
 	
 	@Override
 	public String toString() {
-		return "[" + getCleanedFilePath() + ":" + lineNumber + " -> " + getCleanedUrlPath() + "]"; 
+		return "[" + getCleanedFilePath() + 
+				":" + startLineNumber + 
+				"-" + endLineNumber + 
+				" -> " + getCleanedUrlPath() + 
+				"]"; 
 	}
 }

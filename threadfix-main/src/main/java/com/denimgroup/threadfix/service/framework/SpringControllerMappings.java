@@ -35,6 +35,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class SpringControllerMappings {
 	
+	// test code for petclinic
 	public static void main(String[] args) {
 		File file = new File("C:\\test\\projects\\spring-petclinic");
 		

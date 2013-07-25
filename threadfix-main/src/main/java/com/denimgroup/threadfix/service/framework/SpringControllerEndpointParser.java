@@ -14,7 +14,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 public class SpringControllerEndpointParser {
 	
 	enum State {
-		START, ARROBA, REQUEST_MAPPING, VALUE, END_PAREN
+		START, ARROBA, REQUEST_MAPPING, VALUE, END_PAREN, END_CURLY;
 	}
 	
 	private static final SanitizedLogger log = new SanitizedLogger("SpringControllerEndpointParser");
@@ -23,6 +23,8 @@ public class SpringControllerEndpointParser {
 	
 	public static Set<SpringControllerEndpoint> parseEndpoints(File file) {
 		State state = State.START;
+		String mapping = null;
+		int startLineNumber = 0, curlyBraceCount = 0;
 		
 		Set<SpringControllerEndpoint> endpoints = new HashSet<>();
 		
@@ -57,15 +59,33 @@ public class SpringControllerEndpointParser {
 								state = State.END_PAREN;
 							}
 							break;
-						case VALUE:
-							if (tokenizer.sval != null) {
-								endpoints.add(
-										new SpringControllerEndpoint(file.getAbsolutePath(), tokenizer.sval, tokenizer.lineno()));
-								state = State.START;
-							}
-							break;
 						case END_PAREN:
 							// TODO implement class defaults parsing
+							break;
+						case VALUE:
+							if (tokenizer.sval != null) {
+								mapping = tokenizer.sval;
+								startLineNumber = tokenizer.lineno();
+								state = State.END_CURLY;
+							}
+							break;
+						case END_CURLY:
+							if (tokenizer.ttype == '{') {
+								curlyBraceCount += 1;
+								
+							} else if (tokenizer.ttype == '}') {
+								if (curlyBraceCount == 1) {
+									endpoints.add(new SpringControllerEndpoint(
+											file.getAbsolutePath(), mapping, startLineNumber, tokenizer.lineno()));
+									mapping = null;
+									startLineNumber = -1;
+									curlyBraceCount = 0;
+									state = State.START;
+								} else {
+									curlyBraceCount -= 1;
+								}
+							}
+							break;
 					}
 				}
 			} catch (FileNotFoundException e) {
