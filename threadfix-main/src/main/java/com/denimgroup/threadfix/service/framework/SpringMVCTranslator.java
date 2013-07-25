@@ -207,6 +207,10 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 				String key = projectDirectory.findCanonicalFilePath(
 						dataFlowElement.getSourceFileName(), applicationRoot);
 				
+				if (key.indexOf("/") != 0) {
+					key = "/" + key;
+				}
+				
 				if (key != null && fullMappings.controllerToUrlsMap.get(key) != null) {
 					Set<SpringControllerEndpoint> endpoints = fullMappings.controllerToUrlsMap.get(key);
 					
