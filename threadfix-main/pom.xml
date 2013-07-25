@@ -482,6 +482,29 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 				<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
 			</properties>
 		</profile>
+		<profile>
+			<id>dgvm</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>dgvm</value>
+				</property>
+			<activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven-compiler.version}</version>
+						<configuration combine.self="override">
+							<source>1.7</source>
+							<target>1.7</target>
+							<executable>${env.JAVA_7_HOME}</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<properties>
