@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service.defects;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -107,30 +106,30 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			}
 		} else {
 			staticLog.error("OS name not supported by TFS. " +
-					        "The TFS integration will fail.");
+					"The TFS integration will fail.");
 		}
 
 		if (folderName != null && prefix != null && suffix != null
 				&& names != null) {
-			URL test = TFSDefectTracker.class.getClassLoader()
-					.getResource(folderName);
-					
-			if (test == null) {
-				staticLog.error("Unable to find folder for TFS libraries.");
-			} else {
-				String base = test.toString()
+			try {							
+				URI testUri = TFSDefectTracker.class.getClassLoader()
+						.getResource(folderName).toURI();				
+				String base = testUri.getPath()
 						.replaceFirst("file:", "");
 				try {
 					for (String library : names) {
 						System.load(base + prefix + library + suffix);
 					}
-		
+
 					staticLog.info("Successfully loaded native libraries for "
 							+ osName + ".");
 				} catch (UnsatisfiedLinkError e) {
 					staticLog.error("Unable to locate one of the libraries.", e);
 				}
-			}
+			} catch (URISyntaxException e) {
+				staticLog.error("Unable to convert the path String to a URI.", e);
+			}								
+
 		} else {
 			staticLog.error("Attempt to load TFS native libraries failed..");
 		}

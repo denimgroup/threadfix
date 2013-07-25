@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.denimgroup.threadfix.data.entities.CustomUserMapper;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
@@ -49,6 +51,8 @@ import com.denimgroup.threadfix.data.entities.User;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
+	protected final SanitizedLogger log = new SanitizedLogger(CustomUserDetailService.class);
+	
 	@Autowired
 	private UserService userService;
 	
@@ -104,6 +108,7 @@ public class CustomUserDetailService implements UserDetailsService {
 			throw new UsernameNotFoundException("");
 		}
 		
+		log.info("User " + user.getName() + " logged in successfully at " + new Date());
 		return loadUser(user);
 	}
 	

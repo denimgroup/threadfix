@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
@@ -80,6 +81,7 @@ public class ApplicationsController {
 	private DefectTrackerService defectTrackerService;
 	private WafService wafService;
 	private PermissionService permissionService;
+	private OrganizationService organizationService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -87,13 +89,15 @@ public class ApplicationsController {
 			ApplicationCriticalityService applicationCriticalityService,
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
-			PermissionService permissionService) {
+			PermissionService permissionService,
+			OrganizationService organizationService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
 		this.permissionService = permissionService;
 		this.findingService = findingService;
 		this.applicationCriticalityService = applicationCriticalityService;
+		this.organizationService = organizationService;
 	}
 
 	@InitBinder
@@ -129,7 +133,8 @@ public class ApplicationsController {
 				Permission.CAN_MODIFY_VULNERABILITIES, 
 				Permission.CAN_SUBMIT_DEFECTS, 
 				Permission.CAN_VIEW_JOB_STATUSES,
-				Permission.CAN_GENERATE_REPORTS);
+				Permission.CAN_GENERATE_REPORTS,
+				Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
@@ -166,6 +171,7 @@ public class ApplicationsController {
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
 		model.addAttribute("typeMatchingStrategies", VulnTypeStrategy.values());
+		model.addAttribute("teamList", organizationService.loadAllActive());
 		
 		return "applications/detail";
 	}

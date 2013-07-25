@@ -23,7 +23,8 @@
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
 	<bean class="com.denimgroup.threadfix.data.entities.CustomUserMapper" id="ldapToCustomConfigBean"/>
-	
+	<bean class="com.denimgroup.threadfix.data.entities.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
+		
 	<!-- <security:ldap-server id="ldapServer" 
 		manager-dn="{manager dn}" 
 		manager-password="{manager password}" 
@@ -41,6 +42,7 @@
 		<security:intercept-url pattern="/**" access="ROLE_USER"/>
 		<security:form-login login-page="/login.jsp"/>
 		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
+		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
 	
     <security:authentication-manager>
@@ -56,7 +58,7 @@
 	    	user-search-filter="(sAMAccountName={0})"
 	    	group-role-attribute="cn"
 	    	user-context-mapper-ref="ldapToCustomConfigBean"
-	    	/> -->
+	    	/> -->	
 
     </security:authentication-manager>
 
