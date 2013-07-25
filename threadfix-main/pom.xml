@@ -485,11 +485,12 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<profile>
 			<id>dgvm</id>
 			<activation>
+				<activeByDefault>false</activeByDefault>
 				<property>
 					<name>environment</name>
 					<value>dgvm</value>
 				</property>
-			<activation>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>
