@@ -302,12 +302,13 @@ public class CommandLineParser {
 					println("Wrong number of arguments.");
 					return;
 				}
-				if ("id".equals(searchArgs[1])) {
-					println("Searching for team with the id " + searchArgs[2] + ".");
-					println(client.searchForApplicationById(searchArgs[2]));
-				} else if ("name".equals(searchArgs[1])) {
-					println("Searching for team with the name " + searchArgs[2] + ".");
-					println(client.searchForApplicationByName(searchArgs[2]));
+				
+				if ("id".equals(searchArgs[0])) {
+					System.out.println("Searching for team with the id " + searchArgs[1] + ".");
+					System.out.println(client.searchForApplicationById(searchArgs[1]));
+				} else if ("name".equals(searchArgs[0])) {
+					System.out.println("Searching for team with the name " + searchArgs[1] + ".");
+					System.out.println(client.searchForApplicationByName(searchArgs[1]));
 				} else {
 					println("Unknown property argument. Try either id or name.");
 					return;

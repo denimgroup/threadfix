@@ -54,13 +54,13 @@ def deploy_war():
     server_target_loc = server_base_loc + '/' +  str(folder_name)
     with settings(warn_only=True):
         local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
-    local('sudo mv %s/threadfix/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
+    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
     with cd(server_target_loc):        
         local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
         local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
-    local('sudo cp %s/threadfix/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
+    local('sudo cp %s/threadfix/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
 	# We need to move the mysql / deploy config files to replace the development ones
     #local('sudo mv /var/lib/tomcat7/webapps/threadfix/threadfix-main/WEB-INF/classes/jdbc.properties.mysql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/jdbc.properties') 
     #local('sudo mv /var/lib/tomcat7/webapps/threadfix/threadfix-main/WEB-INF/classes/applicationContext-scheduling.xml.deploy /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/applicationContext-scheduling.xml') 

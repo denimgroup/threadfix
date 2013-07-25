@@ -2,7 +2,7 @@
 	
 <div class="modal-header">
 	<h4 id="myModalLabel">
-		Edit WAF <c:out value="${ waf.name }"/>
+		<span style="max-width:400px; display:inline-block" class="ellipsis">Edit WAF <c:out value="${ waf.name }"/></span>
 		<span class="delete-span">
 			<spring:url value="/wafs/{wafId}/delete" var="wafDeleteUrl">
 				<spring:param name="wafId" value="${ waf.id }" />

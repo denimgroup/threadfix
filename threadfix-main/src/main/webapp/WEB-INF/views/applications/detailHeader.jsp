@@ -5,14 +5,13 @@
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
     <li class="active">Application: <c:out value="${ application.name }"/></li>
 </ul>
-
-<h2 style="padding-bottom:5px;">
-	
-	<span id="nameText"><c:out value="${ application.name }"/></span>
-	<a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
+<div>
+<h2 style="padding-bottom:5px;line-height:1">
+	<span id="nameText" style="max-width:400px; display:inline-block" class="ellipsis"><c:out value="${ application.name }"/></span>
+	<span><a class="btn header-button" id="editApplicationModalButton" href="#editApplicationModal" 
 			role="button" data-toggle="modal">
 		Edit / Delete
-	</a>
+	</a></span>
 	
 	<c:if test="${ canUploadScans }">
 		<span style="float:right">
@@ -32,8 +31,9 @@
 			</c:if>
 		</span>
 	</c:if>
+	
 </h2>
-
+</div>
 <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 <%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>
 <%@ include file="/WEB-INF/views/applications/modals/scanParametersModal.jsp" %>
