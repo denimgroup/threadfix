@@ -125,7 +125,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		
 		String fileName = null;
 		
-		if (finding.getIsStatic()) {
+		if (projectDirectory != null && finding.getIsStatic() && finding.getSourceFileLocation() != null) {
 			fileName = projectDirectory.findCanonicalFilePath(
 					finding.getSourceFileLocation(), applicationRoot);
 		} else {
