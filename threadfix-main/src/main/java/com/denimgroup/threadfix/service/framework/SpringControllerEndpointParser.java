@@ -1,3 +1,26 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
@@ -11,6 +34,9 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
+// TODO recognize String variables
+// TODO support * values:
+// from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
 public class SpringControllerEndpointParser {
 	
 	enum State {
@@ -25,6 +51,9 @@ public class SpringControllerEndpointParser {
 		State state = State.START;
 		String mapping = null;
 		int startLineNumber = 0, curlyBraceCount = 0;
+		
+		boolean inClass = false;
+		String classEndpoint = null;
 		
 		Set<SpringControllerEndpoint> endpoints = new HashSet<>();
 		
@@ -43,18 +72,30 @@ public class SpringControllerEndpointParser {
 						case START: 
 							if (tokenizer.ttype == '@') {
 								state = State.ARROBA;
+							} else if (tokenizer.sval != null && tokenizer.sval.equals("class")) {
+								inClass = true;
 							}
 							break;
 						case ARROBA:
 							if (tokenizer.sval != null && tokenizer.sval.equals("RequestMapping")) {
 								state = State.REQUEST_MAPPING;
 							} else {
-								state = State.ARROBA;
+								state = State.START;
 							}
 							break;
 						case REQUEST_MAPPING:
 							if (tokenizer.sval != null && tokenizer.sval.equals("value")) {
 								state = State.VALUE;
+							} else if (tokenizer.ttype == '"') {
+								// If it immediately starts with a quoted value, use it
+								if (inClass) {
+									mapping = tokenizer.sval;
+									startLineNumber = tokenizer.lineno();
+									state = State.END_CURLY;
+								} else {
+									classEndpoint = tokenizer.sval;
+									state = State.START;
+								}
 							} else if (tokenizer.ttype == ')'){
 								state = State.END_PAREN;
 							}
@@ -64,9 +105,14 @@ public class SpringControllerEndpointParser {
 							break;
 						case VALUE:
 							if (tokenizer.sval != null) {
-								mapping = tokenizer.sval;
-								startLineNumber = tokenizer.lineno();
-								state = State.END_CURLY;
+								if (inClass) {
+									mapping = tokenizer.sval;
+									startLineNumber = tokenizer.lineno();
+									state = State.END_CURLY;
+								} else {
+									classEndpoint = tokenizer.sval;
+									state = State.START;
+								}
 							}
 							break;
 						case END_CURLY:
@@ -75,8 +121,14 @@ public class SpringControllerEndpointParser {
 								
 							} else if (tokenizer.ttype == '}') {
 								if (curlyBraceCount == 1) {
+									
+									String filePath = file.getAbsolutePath();
+									if (classEndpoint != null) {
+										mapping = classEndpoint + mapping;
+									}
+									
 									endpoints.add(new SpringControllerEndpoint(
-											file.getAbsolutePath(), mapping, startLineNumber, tokenizer.lineno()));
+											filePath, mapping, startLineNumber, tokenizer.lineno()));
 									mapping = null;
 									startLineNumber = -1;
 									curlyBraceCount = 0;
