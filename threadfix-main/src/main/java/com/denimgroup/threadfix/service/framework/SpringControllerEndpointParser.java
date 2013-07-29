@@ -24,177 +24,150 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
-
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
-public class SpringControllerEndpointParser {
+public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
+	private Set<SpringControllerEndpoint> endpoints = new HashSet<>();
+	private State state = State.START;
+	private int startLineNumber = 0, curlyBraceCount = 0;
+	private boolean inClass = false;
+	private String classEndpoint = null, currentMapping = null, rootFilePath = null;
+	private List<String> classMethods = new ArrayList<>(), methodMethods = new ArrayList<>();
+
 	enum State {
-		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_CURLY, END_PAREN, END_CURLY;
+		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END, METHOD_BODY;
 	}
 	
-	private static final SanitizedLogger log = new SanitizedLogger("SpringControllerEndpointParser");
+	public static Set<SpringControllerEndpoint> parse(File file) {
+		SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath());
+		EventBasedTokenizerRunner.run(file, parser);
+		return parser.endpoints;
+	}
 	
-	private SpringControllerEndpointParser(){}
+	private SpringControllerEndpointParser(String rootFilePath) {
+		this.rootFilePath = rootFilePath;
+	}
 	
-	public static Set<SpringControllerEndpoint> parseEndpoints(File file) {
-		State state = State.START;
-		int startLineNumber = 0, curlyBraceCount = 0;
-		boolean inClass = false;
-		String classEndpoint = null, currentMapping = null;
-		List<String> classMethods = new ArrayList<>(), methodMethods = new ArrayList<>();
-		
-		Set<SpringControllerEndpoint> endpoints = new HashSet<>();
-		
-		if (file != null && file.exists() && file.isFile() && file.getName().endsWith(".java")) {
-			Reader reader = null;
-			
-			try {
-				reader = new FileReader(file);
-			
-				StreamTokenizer tokenizer = new StreamTokenizer(reader);
-				tokenizer.slashSlashComments(true);
-				tokenizer.slashStarComments(true);
-				
-				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
-					switch(state) {
-						case START: 
-							if (tokenizer.ttype == '@') {
-								state = State.ARROBA;
-							} else if (tokenizer.sval != null && tokenizer.sval.equals("class")) {
-								inClass = true;
-							}
-							break;
-						case ARROBA:
-							if (tokenizer.sval != null && tokenizer.sval.equals("RequestMapping")) {
-								state = State.REQUEST_MAPPING;
-							} else {
-								state = State.START;
-							}
-							break;
-						case REQUEST_MAPPING:
-							if (tokenizer.sval != null && tokenizer.sval.equals("value")) {
-								state = State.VALUE;
-							} else if (tokenizer.sval != null && tokenizer.sval.equals("method")) {
-								state = State.METHOD;
-							} else if (tokenizer.ttype == '"') {
-								// If it immediately starts with a quoted value, use it
-								if (inClass) {
-									currentMapping = tokenizer.sval;
-									startLineNumber = tokenizer.lineno();
-									state = State.END_PAREN;
-								} else {
-									classEndpoint = tokenizer.sval;
-									state = State.START;
-								}
-							} else if (tokenizer.ttype == ')'){
-								state = State.END_PAREN;
-							}
-							break;
-						case VALUE:
-							if (tokenizer.sval != null) {
-								if (inClass) {
-									currentMapping = tokenizer.sval;
-									startLineNumber = tokenizer.lineno();
-								} else {
-									classEndpoint = tokenizer.sval;
-								}
-								state = State.REQUEST_MAPPING;
-							}
-							break;
-						case METHOD:
-							if (tokenizer.sval != null) {
-								if (inClass) {
-									methodMethods.add(tokenizer.sval);
-								} else {
-									classMethods.add(tokenizer.sval);
-								}
-								state = State.REQUEST_MAPPING;
-							} else if (tokenizer.ttype == '{'){
-								state = State.METHOD_CURLY;
-							}
-							break;
-						case METHOD_CURLY:
-							if (tokenizer.sval != null) {
-								if (inClass) {
-									methodMethods.add(tokenizer.sval);
-								} else {
-									classMethods.add(tokenizer.sval);
-								}
-							} else if (tokenizer.ttype == '}') {
-								state = State.REQUEST_MAPPING;
-							}
-							break;
-						case END_PAREN:
-							if (inClass) {
-								state = State.END_CURLY;
-							} else {
-								state = State.START;
-							}
-							break;
-						case END_CURLY:
-							if (tokenizer.ttype == '{') {
-								curlyBraceCount += 1;
-								
-							} else if (tokenizer.ttype == '}') {
-								if (curlyBraceCount == 1) {
-									
-									String filePath = file.getAbsolutePath();
-									if (classEndpoint != null) {
-										currentMapping = classEndpoint + currentMapping;
-									}
-									
-									if (classMethods.isEmpty()) {
-										classMethods.add("RequestMethod.GET");
-									}
-									
-									if (methodMethods == null || methodMethods.isEmpty()) {
-										methodMethods.addAll(classMethods);
-									}
-									
-									endpoints.add(new SpringControllerEndpoint(filePath, currentMapping, 
-											methodMethods, startLineNumber, tokenizer.lineno()));
-									currentMapping = null;
-									methodMethods = new ArrayList<>();
-									startLineNumber = -1;
-									curlyBraceCount = 0;
-									state = State.START;
-								} else {
-									curlyBraceCount -= 1;
-								}
-							}
-							break;
-					}
+	@Override
+	public void processToken(int type, int lineNumber, String stringValue) {
+		switch(state) {
+		case START: 
+			if (type == '@') {
+				state = State.ARROBA;
+			} else if (stringValue != null && stringValue.equals("class")) {
+				inClass = true;
+			}
+			break;
+		case ARROBA:
+			if (stringValue != null && stringValue.equals("RequestMapping")) {
+				state = State.REQUEST_MAPPING;
+			} else {
+				state = State.START;
+			}
+			break;
+		case REQUEST_MAPPING:
+			if (stringValue != null && stringValue.equals("value")) {
+				state = State.VALUE;
+			} else if (stringValue != null && stringValue.equals("method")) {
+				state = State.METHOD;
+			} else if (type == '"') {
+				// If it immediately starts with a quoted value, use it
+				if (inClass) {
+					currentMapping = stringValue;
+					startLineNumber = lineNumber;
+					state = State.ANNOTATION_END;
+				} else {
+					classEndpoint = stringValue;
+					state = State.START;
 				}
-			} catch (FileNotFoundException e) {
-				// shouldn't happen, we check to make sure it exists
-				log.error("Encountered FileNotFoundException while looking for @Controllers", e);
-			} catch (IOException e) {
-				log.warn("Encountered IOException while tokenizing file.", e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						log.error("IOException encountered while trying to close the FileReader.");
-					}
+			} else if (type == ')'){
+				state = State.ANNOTATION_END;
+			}
+			break;
+		case VALUE:
+			if (stringValue != null) {
+				if (inClass) {
+					currentMapping = stringValue;
+					startLineNumber = lineNumber;
+				} else {
+					classEndpoint = stringValue;
+				}
+				state = State.REQUEST_MAPPING;
+			}
+			break;
+		case METHOD:
+			if (stringValue != null) {
+				if (inClass) {
+					methodMethods.add(stringValue);
+				} else {
+					classMethods.add(stringValue);
+				}
+				state = State.REQUEST_MAPPING;
+			} else if (type == '{'){
+				state = State.METHOD_MULTI_VALUE;
+			}
+			break;
+		case METHOD_MULTI_VALUE:
+			if (stringValue != null) {
+				if (inClass) {
+					methodMethods.add(stringValue);
+				} else {
+					classMethods.add(stringValue);
+				}
+			} else if (type == '}') {
+				state = State.REQUEST_MAPPING;
+			}
+			break;
+		case ANNOTATION_END:
+			if (inClass) {
+				state = State.METHOD_BODY;
+			} else {
+				state = State.START;
+			}
+			break;
+		case METHOD_BODY:
+			if (type == '{') {
+				curlyBraceCount += 1;
+				
+			} else if (type == '}') {
+				if (curlyBraceCount == 1) {
+					addEndpoint(lineNumber);
+					state = State.START;
+				} else {
+					curlyBraceCount -= 1;
 				}
 			}
+			break;
+		}
+	}
+	
+	private void addEndpoint(int endLineNumber) {
+		if (classEndpoint != null) {
+			currentMapping = classEndpoint + currentMapping;
 		}
 		
-		return endpoints;
+		// It's ok to add a default method here because we must be past the class-level annotation
+		if (classMethods.isEmpty()) {
+			classMethods.add("RequestMethod.GET");
+		}
+		
+		if (methodMethods == null || methodMethods.isEmpty()) {
+			methodMethods.addAll(classMethods);
+		}
+		
+		endpoints.add(new SpringControllerEndpoint(rootFilePath, currentMapping, 
+				methodMethods, startLineNumber, endLineNumber));
+		currentMapping = null;
+		methodMethods = new ArrayList<>();
+		startLineNumber = -1;
+		curlyBraceCount = 0;
 	}
 	
 }

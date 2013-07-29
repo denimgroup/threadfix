@@ -24,11 +24,6 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,102 +31,82 @@ import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
-public class JSPIncludeParser {
+public class JSPIncludeParser implements EventBasedTokenizer {
+	
+	public static void main(String[] args) {
+		File file = new File("C:\\test\\projects\\spring-petclinic\\src\\main\\" +
+				"webapp\\WEB-INF\\jsp\\owners\\findOwners.jsp");
+		
+		System.out.println(JSPIncludeParser.parse(file));
+	}
+	
+	private State currentState = State.START;
+	private List<File> returnFiles = new ArrayList<File>();
+	private File inputFile;
 	
 	private enum State {
 		START, JSP, COLON, INCLUDE, PAGE, EQUALS
 	}
 	
 	private static final Pattern slashPattern = Pattern.compile("[\\\\/]");
-	
 	private static final SanitizedLogger log = new SanitizedLogger("JSPIncludeParser");
 	
-	private JSPIncludeParser(){}
+	private JSPIncludeParser(File file) {
+		this.inputFile = file;
+	}
 	
-	// TODO modularize / abstract out tokenizer functionality. 
-	// a wrapper that works like SAX parsing would be cool
-	public static List<File> getIncludedFiles(File inputFile) {
-		List<File> returnFiles = new ArrayList<>();
-		
-		State currentState = State.START;
-		
-		// contains() is used instead of endsWith() so we can accept nonstandard jsp extensions like jspf
-		if (inputFile != null && 
-				inputFile.exists() && 
-				inputFile.isFile() && 
-				inputFile.getName().contains(".jsp")) {
-			Reader reader = null;
-			
-			try {
-				reader = new FileReader(inputFile);
-			
-				StreamTokenizer tokenizer = new StreamTokenizer(reader);
-				
-				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
-					
-					switch (currentState) {
-						case START:
-							if (tokenizer.sval != null && tokenizer.sval.equals("jsp")) {
-								currentState = State.JSP;
-							}
-							break;
-						case JSP:
-							if (tokenizer.ttype == ':') {
-								currentState = State.COLON;
-							}
-							break;
-						case COLON:
-							if (tokenizer.sval != null && tokenizer.sval.equals("include")) {
-								currentState = State.INCLUDE;
-							}
-							break;
-						case INCLUDE:
-							if (tokenizer.sval != null && tokenizer.sval.equals("page")) {
-								currentState = State.PAGE;
-							} else if (tokenizer.ttype == '<') {
-								// if we hit another start tag let's head back to the start
-								currentState = State.START;
-							}
-							break;
-						case PAGE:
-							if (tokenizer.ttype == '=') {
-								currentState = State.EQUALS;
-							} else {
-								currentState = State.START;
-							}
-							break;
-						case EQUALS:
-							if (tokenizer.ttype == '"' && tokenizer.sval != null) {
-								returnFiles.add(getRelativeFile(tokenizer.sval, inputFile));
-								currentState = State.START;
-							} else {
-								currentState = State.START;
-							}
-							break;
-						default:
-							break;
-					}
-				}
-				
-			} catch (FileNotFoundException e) {
-				// shouldn't happen, we check to make sure it exists
-				log.error("Encountered FileNotFoundException while looking for nested JSPs", e);
-			} catch (IOException e) {
-				log.warn("Encountered IOException while tokenizing file.", e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						log.error("IOException encountered while trying to close the FileReader.");
-					}
-				}
-			}
-		}
-		
-		return returnFiles;
+	public static List<File> parse(File file) {
+		JSPIncludeParser parser = new JSPIncludeParser(file);
+		EventBasedTokenizerRunner.run(file, parser);
+		return parser.returnFiles;
 	}
 
+	@Override
+	public void processToken(int type, int lineNumber, String stringValue) {
+		switch (currentState) {
+			case START:
+				if (stringValue != null && stringValue.equals("jsp")) {
+					currentState = State.JSP;
+				}
+				break;
+			case JSP:
+				if (type == ':') {
+					currentState = State.COLON;
+				}
+				break;
+			case COLON:
+				if (stringValue != null && stringValue.equals("include")) {
+					currentState = State.INCLUDE;
+				}
+				break;
+			case INCLUDE:
+				if (stringValue != null && stringValue.equals("page")) {
+					currentState = State.PAGE;
+				} else if (type == '<') {
+					// if we hit another start tag let's head back to the start
+					currentState = State.START;
+				}
+				break;
+			case PAGE:
+				if (type == '=') {
+					currentState = State.EQUALS;
+				} else {
+					currentState = State.START;
+				}
+				break;
+			case EQUALS:
+				if (type == '"' && stringValue != null) {
+					returnFiles.add(getRelativeFile(stringValue, inputFile));
+					currentState = State.START;
+				} else {
+					currentState = State.START;
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
 	private static File getRelativeFile(String sval, File inputFile) {
 		File returnFile = null;
 		
@@ -167,5 +142,4 @@ public class JSPIncludeParser {
 		
 		return returnFile;
 	}
-
 }

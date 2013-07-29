@@ -96,7 +96,7 @@ public class SpringControllerMappings {
 					fileNameWithoutRoot = "/" + fileNameWithoutRoot;
 				}
 				
-				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parseEndpoints(file);
+				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(file);
 				
 				for (SpringControllerEndpoint endpoint : endpoints) {
 					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
