@@ -29,7 +29,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -40,7 +42,7 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 public class SpringControllerEndpointParser {
 	
 	enum State {
-		START, ARROBA, REQUEST_MAPPING, VALUE, END_PAREN, END_CURLY;
+		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_CURLY, END_PAREN, END_CURLY;
 	}
 	
 	private static final SanitizedLogger log = new SanitizedLogger("SpringControllerEndpointParser");
@@ -49,11 +51,10 @@ public class SpringControllerEndpointParser {
 	
 	public static Set<SpringControllerEndpoint> parseEndpoints(File file) {
 		State state = State.START;
-		String mapping = null;
 		int startLineNumber = 0, curlyBraceCount = 0;
-		
 		boolean inClass = false;
-		String classEndpoint = null;
+		String classEndpoint = null, currentMapping = null;
+		List<String> classMethods = new ArrayList<>(), methodMethods = new ArrayList<>();
 		
 		Set<SpringControllerEndpoint> endpoints = new HashSet<>();
 		
@@ -86,12 +87,14 @@ public class SpringControllerEndpointParser {
 						case REQUEST_MAPPING:
 							if (tokenizer.sval != null && tokenizer.sval.equals("value")) {
 								state = State.VALUE;
+							} else if (tokenizer.sval != null && tokenizer.sval.equals("method")) {
+								state = State.METHOD;
 							} else if (tokenizer.ttype == '"') {
 								// If it immediately starts with a quoted value, use it
 								if (inClass) {
-									mapping = tokenizer.sval;
+									currentMapping = tokenizer.sval;
 									startLineNumber = tokenizer.lineno();
-									state = State.END_CURLY;
+									state = State.END_PAREN;
 								} else {
 									classEndpoint = tokenizer.sval;
 									state = State.START;
@@ -100,19 +103,45 @@ public class SpringControllerEndpointParser {
 								state = State.END_PAREN;
 							}
 							break;
-						case END_PAREN:
-							// TODO implement class defaults parsing
-							break;
 						case VALUE:
 							if (tokenizer.sval != null) {
 								if (inClass) {
-									mapping = tokenizer.sval;
+									currentMapping = tokenizer.sval;
 									startLineNumber = tokenizer.lineno();
-									state = State.END_CURLY;
 								} else {
 									classEndpoint = tokenizer.sval;
-									state = State.START;
 								}
+								state = State.REQUEST_MAPPING;
+							}
+							break;
+						case METHOD:
+							if (tokenizer.sval != null) {
+								if (inClass) {
+									methodMethods.add(tokenizer.sval);
+								} else {
+									classMethods.add(tokenizer.sval);
+								}
+								state = State.REQUEST_MAPPING;
+							} else if (tokenizer.ttype == '{'){
+								state = State.METHOD_CURLY;
+							}
+							break;
+						case METHOD_CURLY:
+							if (tokenizer.sval != null) {
+								if (inClass) {
+									methodMethods.add(tokenizer.sval);
+								} else {
+									classMethods.add(tokenizer.sval);
+								}
+							} else if (tokenizer.ttype == '}') {
+								state = State.REQUEST_MAPPING;
+							}
+							break;
+						case END_PAREN:
+							if (inClass) {
+								state = State.END_CURLY;
+							} else {
+								state = State.START;
 							}
 							break;
 						case END_CURLY:
@@ -124,12 +153,21 @@ public class SpringControllerEndpointParser {
 									
 									String filePath = file.getAbsolutePath();
 									if (classEndpoint != null) {
-										mapping = classEndpoint + mapping;
+										currentMapping = classEndpoint + currentMapping;
 									}
 									
-									endpoints.add(new SpringControllerEndpoint(
-											filePath, mapping, startLineNumber, tokenizer.lineno()));
-									mapping = null;
+									if (classMethods.isEmpty()) {
+										classMethods.add("RequestMethod.GET");
+									}
+									
+									if (methodMethods == null || methodMethods.isEmpty()) {
+										methodMethods.addAll(classMethods);
+									}
+									
+									endpoints.add(new SpringControllerEndpoint(filePath, currentMapping, 
+											methodMethods, startLineNumber, tokenizer.lineno()));
+									currentMapping = null;
+									methodMethods = new ArrayList<>();
 									startLineNumber = -1;
 									curlyBraceCount = 0;
 									state = State.START;

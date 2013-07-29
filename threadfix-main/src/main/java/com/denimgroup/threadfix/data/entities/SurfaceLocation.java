@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.data.entities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,6 +37,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.service.SanitizedLogger;
 
@@ -45,7 +48,17 @@ public class SurfaceLocation extends BaseEntity {
 	public static final int HOST_LENGTH = 255;
 	public static final int PARAMETER_LENGTH = 255;
 	public static final int PATH_LENGTH = 255;
-	public static final int QUERY_LENGTH = 255;	
+	public static final int QUERY_LENGTH = 255;
+	
+	public static final Set<String> REQUEST_METHODS;
+	
+	static {
+		REQUEST_METHODS = new HashSet<>();
+		
+		for (RequestMethod requestMethod : RequestMethod.values()) {
+			REQUEST_METHODS.add(requestMethod.toString());
+		}
+	};
 
 	private static final long serialVersionUID = -8999892961251231213L;
 	private final SanitizedLogger log = new SanitizedLogger(SurfaceLocation.class);
@@ -65,6 +78,9 @@ public class SurfaceLocation extends BaseEntity {
 	
 	@Size(max = 15, message = "{errors.maxlength}")
 	private String protocol;
+	
+	@Size(max = 15, message = "{errors.maxlength}")
+	private String httpMethod;
 	
 	@Size(max = QUERY_LENGTH, message = "{errors.maxlength}")
 	private String query;
@@ -126,6 +142,15 @@ public class SurfaceLocation extends BaseEntity {
 
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+	
+	@Column(length = 15)
+	public String getHttpMethod() {
+		return httpMethod;
+	}
+	
+	public void setHttpMethod(String httpMethod) {
+		this.httpMethod = httpMethod;
 	}
 
 	@Column(length = QUERY_LENGTH)

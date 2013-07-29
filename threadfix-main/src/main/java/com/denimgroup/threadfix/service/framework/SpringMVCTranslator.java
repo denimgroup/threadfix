@@ -154,11 +154,27 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 	private String getFilePathFullSource(Finding finding) {
 		String filePath = null;
 		
+		String httpMethod = null;
+		if (finding.getSurfaceLocation() != null) {
+			httpMethod = finding.getSurfaceLocation().getHttpMethod();
+		}
+		
 		String canonicalUrlPath = getUrlPath(finding);
 		if (fullMappings != null && canonicalUrlPath != null &&
-				fullMappings.urlToControllerMap != null &&
-				fullMappings.urlToControllerMap.get(canonicalUrlPath) != null) {
-			filePath = fullMappings.urlToControllerMap.get(canonicalUrlPath).getCleanedFilePath();
+				fullMappings.urlToControllerMethodsMap != null &&
+				fullMappings.urlToControllerMethodsMap.get(canonicalUrlPath) != null) {
+			
+			Set<SpringControllerEndpoint> endpoints = 
+					fullMappings.urlToControllerMethodsMap.get(canonicalUrlPath);
+			
+			if (endpoints != null && !endpoints.isEmpty()) {
+				for (SpringControllerEndpoint endpoint : endpoints) {
+					if (httpMethod == null || endpoint.matchesMethod(httpMethod)) {
+						filePath = endpoint.getCleanedFilePath();
+						break;
+					}
+				}
+			}
 		}
 		
 		return filePath;

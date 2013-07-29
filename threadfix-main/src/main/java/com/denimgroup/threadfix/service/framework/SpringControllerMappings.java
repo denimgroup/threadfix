@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -41,15 +42,17 @@ public class SpringControllerMappings {
 		
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		
-		for (Entry<String, SpringControllerEndpoint> entry : mappings.urlToControllerMap.entrySet()) {
-			entry.getValue().setFileRoot("C:\\test\\projects\\spring-petclinic");
-			System.out.println(entry);
+		for (Entry<String, Set<SpringControllerEndpoint>> entry : mappings.urlToControllerMethodsMap.entrySet()) {
+			for (SpringControllerEndpoint endpoint : entry.getValue()) {
+				endpoint.setFileRoot("C:\\test\\projects\\spring-petclinic");
+				System.out.println(endpoint);
+			}
 		}
 	}
 	
 	public final Collection<File> controllerFiles;
 	
-	public final Map<String, SpringControllerEndpoint> urlToControllerMap;
+	public final Map<String, Set<SpringControllerEndpoint>> urlToControllerMethodsMap;
 	public final Map<String, Set<SpringControllerEndpoint>> controllerToUrlsMap;
 	
 	public final File rootDirectory;
@@ -60,7 +63,7 @@ public class SpringControllerMappings {
 		if (rootDirectory != null && rootDirectory.exists()) {
 			controllerFiles = FileUtils.listFiles(rootDirectory, new SpringControllerFileFilter(), TrueFileFilter.INSTANCE);
 		
-			urlToControllerMap = new HashMap<>();
+			urlToControllerMethodsMap = new HashMap<>();
 			controllerToUrlsMap = new HashMap<>();
 			
 			if (controllerFiles != null) {
@@ -68,14 +71,14 @@ public class SpringControllerMappings {
 			}
 		} else {
 			controllerFiles = null;
-			urlToControllerMap = null;
+			urlToControllerMethodsMap = null;
 			controllerToUrlsMap = null;
 		}
 	}
 	
 	private void generateMaps() {
 		if (controllerFiles == null || 
-				urlToControllerMap == null || 
+				urlToControllerMethodsMap == null || 
 				controllerToUrlsMap == null) {
 			return;
 		}
@@ -97,7 +100,11 @@ public class SpringControllerMappings {
 				
 				for (SpringControllerEndpoint endpoint : endpoints) {
 					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
-					urlToControllerMap.put(endpoint.getCleanedUrlPath(), endpoint);
+					String urlPath = endpoint.getCleanedUrlPath();
+					if (!urlToControllerMethodsMap.containsKey(urlPath)) {
+						urlToControllerMethodsMap.put(urlPath, new HashSet<SpringControllerEndpoint>());
+					}
+					urlToControllerMethodsMap.get(endpoint.getCleanedUrlPath()).add(endpoint);
 				}
 
 				controllerToUrlsMap.put(fileNameWithoutRoot, endpoints);

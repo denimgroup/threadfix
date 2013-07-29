@@ -23,22 +23,43 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class SpringControllerEndpoint {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
+	private static final String requestMappingStart = "RequestMethod.";
 	
 	private final String rawFilePath, rawUrlPath;
+	private final Set<String> methods;
 	private final int startLineNumber, endLineNumber;
 	
 	private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
 	
-	public SpringControllerEndpoint(String filePath, String urlPath, int startLineNumber, int endLineNumber) {
+	public SpringControllerEndpoint(String filePath, String urlPath, List<String> methods,
+			int startLineNumber, int endLineNumber) {
 		this.rawFilePath = filePath;
 		this.rawUrlPath = urlPath;
 		this.startLineNumber = startLineNumber;
 		this.endLineNumber = endLineNumber;
+		
+		this.methods = getCleanedSet(methods);
+	}
+	
+	private Set<String> getCleanedSet(List<String> methods) {
+		Set<String> returnSet = new HashSet<>();
+		for (String method : methods) {
+			if (method.startsWith(requestMappingStart)) {
+				returnSet.add(method.substring(requestMappingStart.length()));
+			} else {
+				returnSet.add(method);
+			}
+		}
+		return returnSet;
 	}
 	
 	public String getRawFilePath() {
@@ -84,7 +105,10 @@ public class SpringControllerEndpoint {
 		if (rawUrlPath == null) {
 			return null;
 		} else {
-			return rawUrlPath.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/").replaceAll("\\.html", "");
+			return rawUrlPath
+					.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
+					.replaceAll("\\.html", "")
+					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT);
 		}
 	}
 	
@@ -92,12 +116,22 @@ public class SpringControllerEndpoint {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
 	
+	public boolean matchesMethod(String method) {
+		return method != null && methods != null && methods.contains(method.toUpperCase());
+	}
+
 	@Override
 	public String toString() {
 		return "[" + getCleanedFilePath() + 
 				":" + startLineNumber + 
 				"-" + endLineNumber + 
-				" -> " + getCleanedUrlPath() + 
+				" -> " + getMethod() + 
+				" " + getCleanedUrlPath() + 
 				"]"; 
 	}
+
+	public Set<String> getMethod() {
+		return methods;
+	}
+	
 }
