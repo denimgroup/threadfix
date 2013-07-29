@@ -184,12 +184,7 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final String getFileNameWithSourceCodeDefault(Finding finding) {
 		File resultFile = getFileWithSourceCodeDefault(finding);
 		
-		if (resultFile != null && projectDirectory != null && 
-				resultFile.getAbsolutePath().contains(projectDirectory.getDirectoryPath())) {
-			return resultFile.getAbsolutePath().substring(projectDirectory.getDirectoryPath().length());
-		} else {
-			return null;
-		}
+		return FilePathUtils.getRelativePath(resultFile, projectDirectory.getDirectoryPath());
 	}
 	
 	protected final File getFileWithSourceCodeDefault(Finding finding) {

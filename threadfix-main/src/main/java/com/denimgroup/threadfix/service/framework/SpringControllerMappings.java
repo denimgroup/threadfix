@@ -87,10 +87,7 @@ public class SpringControllerMappings {
 			if (file != null && file.exists() && file.isFile() && file.getAbsolutePath() != null && 
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
 				
-				String fileNameWithoutRoot = 
-						file.getAbsolutePath()
-							.substring(rootDirectory.getAbsolutePath().length())
-							.replace('\\', '/');
+				String fileNameWithoutRoot = FilePathUtils.getRelativePath(file, rootDirectory);
 				
 				if (fileNameWithoutRoot.indexOf("/") != 0) {
 					fileNameWithoutRoot = "/" + fileNameWithoutRoot;

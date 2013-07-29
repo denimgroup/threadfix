@@ -26,7 +26,9 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -41,7 +43,7 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 	}
 	
 	private State currentState = State.START;
-	private List<File> returnFiles = new ArrayList<File>();
+	private Set<File> returnFiles = new HashSet<File>();
 	private File inputFile;
 	
 	private enum State {
@@ -55,7 +57,7 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 		this.inputFile = file;
 	}
 	
-	public static List<File> parse(File file) {
+	public static Set<File> parse(File file) {
 		JSPIncludeParser parser = new JSPIncludeParser(file);
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.returnFiles;
@@ -97,10 +99,8 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 			case EQUALS:
 				if (type == '"' && stringValue != null) {
 					returnFiles.add(getRelativeFile(stringValue, inputFile));
-					currentState = State.START;
-				} else {
-					currentState = State.START;
 				}
+				currentState = State.START;
 				break;
 			default:
 				break;

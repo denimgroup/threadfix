@@ -93,8 +93,10 @@ public class ProjectDirectory {
 			map.put(file.getName(), new HashSet<String>());
 		}
 		
-		if (file.getAbsolutePath().contains(getDirectoryPath())) {
-			map.get(file.getName()).add(file.getAbsolutePath().substring(getDirectoryPath().length()));
+		String canonicalPath = FilePathUtils.getRelativePath(file, getDirectoryPath());
+		
+		if (canonicalPath != null) {
+			map.get(file.getName()).add(canonicalPath);
 		} else {
 			log.warn("Recursive algorithm in ProjectDirectory broke out of its starting directory.");
 		}
