@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -275,5 +278,40 @@ public class ApplicationsController {
 		}
 		
 		return result.substring(1);
+	}
+	
+	@RequestMapping("/{appId}/getDefectsFromDefectTracker")
+	public String getDefectsFromDefectTracker(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId, SessionStatus status, Model model) {
+		
+		log.info("Start getting defect list.");
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		if (application.getDefectTracker() == null ||
+				application.getDefectTracker().getDefectTrackerType() == null) {
+			return "";
+		}		
+		applicationService.decryptCredentials(application);
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+		List<Defect> defectList = new ArrayList<Defect>();
+		
+		ProjectMetadata data = null;
+		if (dt != null) {
+			data = dt.getProjectMetadata();
+			defectList = dt.getDefectList();
+		}
+		model.addAttribute("projectMetadata", data);	
+		model.addAttribute("defectList", defectList);	
+		model.addAttribute(new DefectViewModel());
+		model.addAttribute("contentPage", "defects/mergeDefectForm.jsp");
+		
+		log.info("Ended getting defect list.");
+		
+		return "ajaxSuccessHarness";
 	}
 }
