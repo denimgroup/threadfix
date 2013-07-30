@@ -42,7 +42,7 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		scan.setFilePathRoot(filePathRoot);
 		scan.setUrlPathRoot(urlPathRoot);
 		
-		log.info("Using default URL - Path translator.");
+		log.info("Using JSP URL - Path translator.");
 		log.info("Calculated filesystem root: " + filePathRoot);
 		log.info("Calculated url path root: " + urlPathRoot);
 	}

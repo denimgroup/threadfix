@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
@@ -88,55 +89,78 @@ public class CommonPathFinder {
 	private static String parseRoot(List<String> items) {
 		if (items == null || items.isEmpty())
 			return null;
-
-		String commonPrefix = null;
-
-		for (String string : items) {
-			if (commonPrefix == null) {
-				commonPrefix = string;
-			} else {
-				commonPrefix = findCommonPrefix(string, commonPrefix);
+		
+		String response = null;
+		
+		String[] commonParts = null;
+		int maxLength = Integer.MAX_VALUE;
+		boolean startsWithCharacter = false;
+		
+		String splitCharacter = null;
+		
+		for (String item : items) {
+			if (splitCharacter == null) {
+				if (item.indexOf('\\') != -1) {
+					splitCharacter = "\\";
+				} else if (item.indexOf("/") != -1) {
+					splitCharacter = "/";
+				}
+				startsWithCharacter = item.indexOf(splitCharacter) == 0;
+			}
+			
+			String[] parts = item.split(splitCharacter);
+			
+			if (parts.length < maxLength) {
+				maxLength = parts.length;
+			}
+			
+			commonParts = getCommonParts(commonParts, parts);
+		}
+		
+		if (commonParts != null) {
+			StringBuilder builder = new StringBuilder();
+			
+			for (String string : commonParts) {
+				if (string != null && !string.equals("")) {
+					builder.append(splitCharacter + string);
+				}
+			}
+			
+			response = builder.toString();
+			
+			if (!startsWithCharacter && response.indexOf(splitCharacter) == 0) {
+				response = response.substring(1);
 			}
 		}
-
-		if (commonPrefix != null && !commonPrefix.equals("")) {
-			if (commonPrefix.contains("/")) {
-				while (commonPrefix.endsWith("/")) {
-					commonPrefix = commonPrefix.substring(0,
-							commonPrefix.length() - 1);
-				}
-
-				if (commonPrefix.contains("/")) {
-					commonPrefix = commonPrefix.substring(
-							commonPrefix.lastIndexOf("/") + 1).replace("/", "");
-				}
-			}
-		}
-
-		return commonPrefix;
+		
+		return response;
 	}
 
-	private static String findCommonPrefix(String newString, String oldString) {
-		if (newString == null || oldString == null)
-			return "";
-		if (newString.toLowerCase().contains(oldString.toLowerCase()))
-			return oldString;
-
-		String newLower = newString.replace("\\", "/").toLowerCase();
-		String oldLower = oldString.replace("\\", "/").toLowerCase();
-
-		String returnString = "";
-
-		for (String string : oldLower.split("/")) {
-			String tempString = returnString.concat(string + "/");
-			if (newLower.startsWith(tempString)) {
-				returnString = tempString;
+	private static String[] getCommonParts(String[] soFar, String[] newParts) {
+		
+		String[] returnParts = newParts;
+		
+		if (soFar != null && soFar.length == 0) {
+			returnParts = soFar;
+		} else if (soFar != null) {
+			int endIndex = 0;
+			
+			for (int i = 0; i < soFar.length && i < newParts.length; i++) {
+				if (!soFar[i].equals(newParts[i])) {
+					break;
+				} else {
+					endIndex += 1;
+				}
+			}
+			
+			if (endIndex == 0) {
+				returnParts = new String[]{};
 			} else {
-				break;
+				returnParts = Arrays.copyOfRange(soFar, 0, endIndex);
 			}
 		}
-
-		return oldString.replace("\\", "/").substring(0, returnString.length());
+		
+		return returnParts;
 	}
 	
 }
