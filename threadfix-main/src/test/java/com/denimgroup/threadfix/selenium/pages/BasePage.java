@@ -62,12 +62,6 @@ public abstract class BasePage {
 			driver.findElementById("orgHeader").click();
 			sleep(1000);
 			return new TeamIndexPage(driver);
-//		try{
-//			return new TeamIndexPage(driver);
-//		}catch (UnhandledAlertException e){
-//			driver.findElementById("orgHeader").click();
-//			return new TeamIndexPage(driver);
-//		}
 	}
 	
 	public WafIndexPage clickWafsHeaderLink() {

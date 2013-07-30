@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -38,7 +37,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -56,28 +57,52 @@ public abstract class BaseTest {
 	private WebDriver driver;
 	private static ChromeDriverService service;
 	
+	@Parameters(name="Browser: {0}")
+	public static Collection<String[]> drivers() {
+		Collection<String[]> params = new ArrayList<String[]>();
+		String  ff = System.getProperty("FIREFOX");
+		String  chrome = System.getProperty("CHROME");
+		String  ie = System.getProperty("IE");
+		if(!(ff==null) && ff.equals("true")){
+			String[] f = {"firefox"};
+			params.add(f);
+		}
+		if(!(chrome==null) && chrome.equals("true")){
+			String[] c = {"chrome"};
+			params.add(c);
+		}
+		
+		if(!(ie==null) && ie.equals("true")){
+			String[] e = {"IE"};
+			params.add(e);
+		}
+		return params;
+	}
+	
 	public BaseTest(String browser){
 		if(browser.equals("chrome")){
-			String location = BaseTest.class.getClassLoader().getResource("Drivers").getFile();
-			String log = "";
+			String location = BaseTest.class.getClassLoader().getResource("Drivers").getPath();
+//			String log = "";
 			if(System.getProperty("os.name").startsWith("Windows")){
 				location = location + "/chromedriver.exe";
-				log = "NUL";
+//				log = "NUL";
 			}else{
 				location = location + "/chromedriver";
-				log = "/dev/null";
+//				log = "/dev/null";
 			}
-		    service = new ChromeDriverService.Builder()
-		    							.usingDriverExecutable(new File(location))
-		    							.usingAnyFreePort()
-		    							.withLogFile(new File(log))
-		    							.build();
-		    try {
-				service.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    driver = new RemoteWebDriver(service.getUrl(),DesiredCapabilities.chrome());
+			System.setProperty("webdriver.chrome.driver",location);
+			driver = new ChromeDriver();
+//		    service = new ChromeDriverService.Builder()
+//		    							.usingDriverExecutable(new File(location))
+//		    							.usingAnyFreePort()
+//		    							.withLogFile(new File(log))
+//		    							.build();
+//		    try {
+//				service.start();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		    driver = new RemoteWebDriver(service.getUrl(),DesiredCapabilities.chrome());
 		}
 		
 		if(browser.equals("firefox")){
@@ -91,29 +116,7 @@ public abstract class BaseTest {
 			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 			driver = new InternetExplorerDriver(capabilities); 
 		}
-	}
-	
-	@Parameterized.Parameters
-	public static Collection<String[]> drivers() {
-		Collection<String[]> params = new ArrayList<String[]>();
-		String  ff = System.getProperty("FIREFOX");
-		String  chrome = System.getProperty("CHROME");
-		String  ie = System.getProperty("IE");
-		if(!(ff==null) && ff.equals("true")){
-			String[] f = {"firefox"};
-			params.add(f);
-		}
-		
-		if(!(chrome==null) && chrome.equals("true")){
-			String[] f = {"chrome"};
-			params.add(f);
-		}
-		
-		if(!(ie==null) && ie.equals("true")){
-			String[] f = {"IE"};
-			params.add(f);
-		}
-		return params;
+//		driver = new FirefoxDriver();
 	}
 	
 	@Before

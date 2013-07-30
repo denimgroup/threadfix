@@ -29,7 +29,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public class LoginPage extends BasePage {
 
-	static String url = "http://localhost:8080/threadfix/";
+	static String url = "http://satthreadfix.denimgroup.com:8080/threadfix/";
 	private WebElement rememberCheckbox;
 
 	public LoginPage(WebDriver webdriver) {
