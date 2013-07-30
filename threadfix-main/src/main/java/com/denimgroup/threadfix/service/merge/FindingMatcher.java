@@ -338,7 +338,17 @@ public class FindingMatcher {
 			GenericVulnerability newGenericVulnerability,
 			GenericVulnerability oldGenericVulnerability) {
 		
-		return newGenericVulnerability.getId().equals(oldGenericVulnerability.getId());
+		boolean match = false;
+		
+		if (newGenericVulnerability.getFaultPatternParentId() != null &&
+				oldGenericVulnerability.getFaultPatternParentId() != null) {
+			match = newGenericVulnerability.getFaultPatternParentId().equals(
+					oldGenericVulnerability.getFaultPatternParentId());
+		} else {
+			match = newGenericVulnerability.getId().equals(oldGenericVulnerability.getId());
+		}
+		
+		return match;
 	}
 
 	private GenericVulnerability getGenericVulnerability(
