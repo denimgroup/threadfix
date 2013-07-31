@@ -85,8 +85,10 @@ public class HibernateApplicationDao implements ApplicationDao {
 	}
 
 	@Override
-	public Application retrieveByName(String name) {
-		return (Application) getActiveAppCriteria().add(Restrictions.eq("name",name)).uniqueResult();
+	public Application retrieveByName(String name, int teamId) {
+		return (Application) getActiveAppCriteria().add(Restrictions.eq("name",name))
+				.add(Restrictions.eq("organization.id", teamId))
+				.uniqueResult();
 	}
 	
 	private Criteria getActiveAppCriteria() {

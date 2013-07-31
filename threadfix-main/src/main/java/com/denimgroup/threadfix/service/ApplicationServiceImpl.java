@@ -128,8 +128,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public Application loadApplication(String applicationName) {
-		return applicationDao.retrieveByName(applicationName);
+	public Application loadApplication(String applicationName, int teamId) {
+		return applicationDao.retrieveByName(applicationName, teamId);
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 		}
 		
-		if (applicationDao.retrieveByName(possibleName) == null) {
+		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
 		applicationDao.saveOrUpdate(application);
@@ -286,7 +286,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			return false;
 		}
 		
-		Application databaseApplication = loadApplication(application.getName().trim());
+		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
 		return databaseApplication == null;
 	}
 	
@@ -327,7 +327,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			return;
 		}
 						
-		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim()));
+		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(), application.getOrganization().getId()));
 
 		if (application.getApplicationCriticality() == null ||
 				application.getApplicationCriticality().getId() == null ||
@@ -459,7 +459,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					application.getOrganization().getId(), application.getId());
 		}
 		
-		Application databaseApplication = loadApplication(application.getName().trim());
+		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
 		if (databaseApplication != null)
 			result.rejectValue("name", "errors.nameTaken");
 		
