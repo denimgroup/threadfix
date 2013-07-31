@@ -95,6 +95,12 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 	
+	public UserIndexPage clickCloseAddUserModal(){
+		driver.findElementById("newUserModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new UserIndexPage(driver);
+	}
+	
 	public UserIndexPage enterName(String name,String oldName){
 		if(oldName == null){
 			driver.findElementById("nameInput").clear();
@@ -198,6 +204,7 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickEditLink(String roleName) {
 		editLinks.get(getIndex(roleName)).click();
+		sleep(1000);
 		return new UserIndexPage(driver);
 	}
 	

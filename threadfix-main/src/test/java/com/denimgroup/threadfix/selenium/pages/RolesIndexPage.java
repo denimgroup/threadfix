@@ -109,6 +109,12 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 	
+	public RolesIndexPage clickCloseCreateRoleModal(){
+		driver.findElementById("newRoleForm").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new RolesIndexPage(driver);
+	}
+	
 		
 	public RolesIndexPage clickEditLink(String oldName) {
 		editLinks.get(getIndex(oldName)).click();

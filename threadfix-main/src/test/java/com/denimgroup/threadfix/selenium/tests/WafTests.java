@@ -84,7 +84,7 @@ public class WafTests extends BaseTest {
 	
 	public static URL getScanFilePath(String category, String scannerName,
 			String fileName) {
-		String string = "SupportingFiles/" + category + "/" + scannerName + "/"
+		String string = "/SupportingFiles/" + category + "/" + scannerName + "/"
 				+ fileName;
 
 		return ClassLoader.getSystemResource(string);// .getFile();
@@ -249,8 +249,7 @@ public class WafTests extends BaseTest {
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
-								.clickAddWafLink()
+		wafIndexPage = wafIndexPage
 								.setNewNameInput(longInput);
 		wafIndexPage = wafIndexPage.clickCreateWaf();
 		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
@@ -266,7 +265,7 @@ public class WafTests extends BaseTest {
 		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
 		
 		// Delete and logout
-		loginPage = wafIndexPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
+		loginPage = wafIndexPage.clickCloseCreateWafModal().clickDeleteWaf(wafName).logout();
 		
 		
 	}
@@ -605,19 +604,18 @@ public class WafTests extends BaseTest {
 		//log.debug("Output is '" + editWafPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
-				.clickEditWaf(wafName)
+		wafIndexPage = wafIndexPage
 				.editWaf(wafName, whiteSpaceString, type2)
  				.clickUpdateWafInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
-				.clickEditWaf(wafName)
+		wafIndexPage = wafIndexPage
 				.editWaf(wafName, longInput, type2)
  				.clickUpdateWaf(wafName);
 		
 		wafName = wafIndexPage.getWafName(1);
+//		System.out.println(wafName);
 		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking

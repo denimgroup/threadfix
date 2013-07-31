@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -155,6 +156,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
+		sleep(5000);
 		driver.findElementsById("nameInput").get(getIndex(wafName)).clear();
 		driver.findElementsById("nameInput").get(getIndex(wafName)).sendKeys(newName);
 		new Select(driver.findElementsById("typeSelect").get(getIndex(wafName))).selectByVisibleText(type);
@@ -168,6 +170,7 @@ public class WafIndexPage extends BasePage {
 		}catch(StaleElementReferenceException e){
 			
 		}
+		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 	
@@ -210,5 +213,16 @@ public class WafIndexPage extends BasePage {
 
 	public String getNameText(int row){
 		return  driver.findElementById("wafName" + row).getText();
+	}
+	
+	public WafIndexPage clickCloseCreateWafModal(){
+		driver.findElementById("createWaf").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new WafIndexPage(driver);
+	}
+	public WafIndexPage clickCloseWafModal(){
+		driver.findElementByClassName("modal-footer").findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new WafIndexPage(driver);
 	}
 }

@@ -221,6 +221,18 @@ public class TeamIndexPage extends BasePage {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
 		return setPage();
 	}
+	
+	public TeamIndexPage clickCloseAddAppModal(String teamName){
+		driver.findElementsByClassName("modal-footer").get(getIndex(teamName)).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new TeamIndexPage(driver);
+	}
+	
+	public TeamIndexPage clickCloseAddTeamModal(){
+		driver.findElementById("myTeamModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new TeamIndexPage(driver);
+	}
 
 	public TeamIndexPage addNewApplication(String teamName, String appName,
 			String url, String critic) {

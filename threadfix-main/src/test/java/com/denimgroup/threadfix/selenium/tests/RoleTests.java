@@ -113,7 +113,7 @@ public class RoleTests extends BaseTest {
 
 		// Test duplicates
 
-		rolesIndexPage = rolesIndexPage.clickManageRolesLink()
+		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal()
 				.clickCreateRole()
 				.setRoleName(normalName,null)
 				.clickSaveRole(null)
@@ -125,7 +125,7 @@ public class RoleTests extends BaseTest {
 		assertTrue("Duplicate name error did not show correctly.",
 				rolesIndexPage.getDisplayNameError().contains("A role with this name already exists."));
 
-		rolesIndexPage = rolesIndexPage.clickDeleteButton(normalName);
+		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal().clickDeleteButton(normalName);
 
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(normalName));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));

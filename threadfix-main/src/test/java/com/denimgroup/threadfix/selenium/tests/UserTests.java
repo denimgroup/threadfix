@@ -157,7 +157,7 @@ public class UserTests extends BaseTest {
 		
 		
 
-		userIndexPage = userIndexPage.clickDeleteButton(userName);
+		userIndexPage = userIndexPage.clickCloseAddUserModal().clickDeleteButton(userName);
 
 		userIndexPage.logout();
 	}

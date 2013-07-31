@@ -125,7 +125,8 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("The correct error did not appear for the name field.", 
 				teamIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal(orgName)
+									.clickOrganizationHeaderLink()
 									.expandTeamRowByName(orgName)
 									.addNewApplication(orgName, whiteSpace, whiteSpace, "Low")
 									.saveApplicationInvalid(orgName);
@@ -137,7 +138,8 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 		
 		// Test URL format
-		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal(orgName)
+									.clickOrganizationHeaderLink()
 									.expandTeamRowByName(orgName)
 									.addNewApplication(orgName, "dummyApp", urlText, "Low")
 									.saveApplicationInvalid(orgName);
@@ -146,7 +148,9 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 
 		// Test browser field length limits
-		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+		applicationDetailPage = teamIndexPage
+				.clickCloseAddAppModal(orgName)
+				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(orgName)
 				.addNewApplication(orgName, longInputName, longInputUrl, "Low")
 				.saveApplication(orgName)
@@ -161,7 +165,6 @@ public class ApplicationTests extends BaseTest {
 //				applicationDetailPage.clickDetailsLink().getUrlText().length() == Application.URL_LENGTH);
 		
 		appName = applicationDetailPage.getNameText();
-		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
 		// Test name duplication check
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
@@ -173,7 +176,8 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getNameErrorMessage().contains("That name is already taken."));
 
 		//cleanup
-		loginPage = teamIndexPage.clickOrganizationHeaderLink()
+		loginPage = teamIndexPage.clickCloseAddAppModal(orgName)
+										.clickOrganizationHeaderLink()
 										.clickViewTeamLink(orgName)
 										.clickDeleteButton()
 										.logout();
@@ -377,7 +381,8 @@ public class ApplicationTests extends BaseTest {
 								.clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+		wafDetailPage = wafIndexPage.clickCloseWafModal()
+								.clickOrganizationHeaderLink()
 								.clickViewTeamLink(orgName)
 								.clickDeleteButton()
 								.clickWafsHeaderLink()
@@ -439,7 +444,8 @@ public class ApplicationTests extends BaseTest {
 				applicationDetailPage.getWafText().contains(wafName2));
 		
 		//cleanup
-		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
+		loginPage = applicationDetailPage.clickCloseAppModal()
+										.clickOrganizationHeaderLink()
 										.clickViewTeamLink(orgName)
 										.clickDeleteButton()
 										.clickWafsHeaderLink()

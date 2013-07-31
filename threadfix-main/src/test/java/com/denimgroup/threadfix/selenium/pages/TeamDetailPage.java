@@ -59,6 +59,11 @@ public class TeamDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
+	public TeamDetailPage clickCloseEditModal(){
+		driver.findElementById("editFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		return new TeamDetailPage(driver);
+	}
+	
 	public TeamDetailPage setNameInput(String editedOrgName) {
 		driver.findElementById("teamNameInput").clear();
 		driver.findElementById("teamNameInput").sendKeys(editedOrgName);
@@ -67,11 +72,12 @@ public class TeamDetailPage extends BasePage {
 	
 	public TeamDetailPage clickUpdateButtonValid() {
 		driver.findElementById("submitTeamModal").click();
-		try{
-			waitForInvisibleElement(driver.findElementById("teamModal"));
-		}catch(TimeoutException e){
-			driver.findElementById("submitTeamModal").click();
-		}
+//		try{
+//			waitForInvisibleElement(driver.findElementById("editFormDiv"));
+//		}catch(TimeoutException e){
+//			driver.findElementById("submitTeamModal").click();
+//		}
+		sleep(1000);
 		return new TeamDetailPage(driver);
 	}
 	

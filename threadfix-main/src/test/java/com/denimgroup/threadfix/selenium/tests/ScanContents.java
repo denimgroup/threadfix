@@ -471,7 +471,7 @@ public class ScanContents extends BaseTest{
 			return urlFromCommandLine + string;
 		}
 		
-		return ScanTests.class.getClassLoader().getResource(string).toString();
+		return ScanTests.class.getClassLoader().getResource(string).getPath();
 	}
 	
 

@@ -640,4 +640,10 @@ public class ApplicationDetailPage extends BasePage {
 		return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
 	}
 	
+	public ApplicationDetailPage clickCloseAppModal(){
+		driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
 }

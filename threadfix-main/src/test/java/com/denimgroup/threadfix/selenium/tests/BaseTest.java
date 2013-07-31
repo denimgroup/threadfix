@@ -125,11 +125,11 @@ public abstract class BaseTest {
 
 	@After
 	public void shutDown() {
-		if(driver instanceof InternetExplorerDriver || driver instanceof FirefoxDriver){
+//		if(driver instanceof InternetExplorerDriver || driver instanceof FirefoxDriver){
 			driver.quit();
-		}else{
-			service.stop();
-		}
+//		}else{
+//			service.stop();
+//		}
 	}
 	
 	public WebDriver getDriver(){
