@@ -44,6 +44,29 @@
 					Submit Defect
 				</a>
 			</li>
+			
+			<li class="submitDefectActionLink"
+				<c:if test="${ empty application.defectTracker }">
+					style="display:none"
+				</c:if>
+			>
+				<a class="submitDefectActionLink" id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal">
+					Merge Defect
+				</a>
+			</li>
+			<li class="missingDefectTrackerMessage"
+				<c:if test="${ not empty application.defectTracker }">
+					style="display:none"
+				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
+				</c:if>
+			>
+				<a class="missingDefectTrackerMessage" href="#" >
+					Merge Defect
+				</a>
+			</li>
+						
 			<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>
 			<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>
 		</ul>
@@ -84,6 +107,29 @@
 					Submit Defect
 				</a>
 			</li>		
+
+			<li class="submitDefectActionLink"
+				<c:if test="${ empty application.defectTracker }">
+					style="display:none"
+				</c:if>
+			>
+				<a class="submitDefectActionLink" id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal">
+					Merge Defect
+				</a>
+			</li>
+			<li class="missingDefectTrackerMessage"
+				<c:if test="${ not empty application.defectTracker }">
+					style="display:none"
+				</c:if>
+				<c:if test="${ empty application.defectTracker && !canManageApplications }">
+					data-has-no-manage-app-permisson="true"
+				</c:if>
+			>
+				<a class="missingDefectTrackerMessage" href="#" >
+					Merge Defect
+				</a>
+			</li>
+
 			<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>
 			<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>
 		</ul>

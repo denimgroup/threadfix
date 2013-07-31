@@ -37,6 +37,33 @@ var reloadDefectSubmissionDiv = function () {
 	}
 };
 
+var reloadDefectMergeDiv = function () {
+	var mergeTableDiv = $("#mergeDefectFormDiv");
+	
+	if (!$("#mergeDefectForm").attr("data-has-metadata")) {
+		if (mergeTableDiv) {
+			$.ajax({
+				type : "GET",
+				url : mergeTableDiv.attr("data-refresh-url"),
+				success : function(text) {
+					mergeTableDiv.html(text);
+					if ($("#mergeDefectForm").attr("data-has-metadata")) {
+						$(".submitDefectActionLink").css("display","");
+						$(".missingDefectTrackerMessage").css("display","none");
+					} else {
+						$(".submitDefectActionLink").css("display","none");
+						$(".missingDefectTrackerMessage").css("display","");
+					}
+				},
+				error : function (xhr, ajaxOptions, thrownError){
+					history.go(0);
+			    }
+			});
+		}
+	}	
+	
+};
+
 var defectTrackerAddFunction = function() {
 	if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
 		$("#addDefectTracker").modal('show');
@@ -134,9 +161,17 @@ var showSubmitLinks = function () {
 		reloadDefectSubmissionDiv();
 	}
 	
+	if ($("#mergeDefectForm").attr("data-has-metadata")) {
+		$(".submitDefectActionLink").css("display","");
+		$(".missingDefectTrackerMessage").css("display","none");
+	} else if ($("#editDefectTrackerButton").length != 0) {
+		reloadDefectMergeDiv();
+	}
+	
 	setTimeout(function () {
 		if ($("#editDefectTrackerButton").length != 0) {
 			reloadDefectSubmissionDiv();
+			reloadDefectMergeDiv();
 		}
 	}, 1100);
 };

@@ -349,6 +349,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 				.getAllowedValues().getValues());
 		
 		workItemClient.close();
+		log.info("End Collecting project metadata " + priorities);
 
 		return new ProjectMetadata(emptyList, emptyList, emptyList, statuses,
 				priorities);
@@ -438,5 +439,37 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			}
 			return false;
 		}
+	}
+	
+	@Override
+	public List<Defect> getDefectList() {
+		
+		List<Defect> defects = new ArrayList<Defect>();		
+
+		WorkItemClient workItemClient = getClient();
+		
+		if (workItemClient == null) {
+			log.warn("Getting defect list failed.");
+			return defects;
+		}
+
+		String wiqlQuery = "Select [System.Id] from WorkItems Where [System.TeamProject] = '" + projectName + "'";
+
+		// Run the query and get the results.
+		WorkItemCollection workItems = workItemClient.query(wiqlQuery);
+
+		for (int i = 0; i < workItems.size(); i++) {
+			WorkItem workItem = workItems.getWorkItem(i);
+
+			Defect def = new Defect();
+			def.setNativeId(String.valueOf(workItem.getID()));
+			defects.add(def);
+		}
+		
+		workItemClient.close();
+
+		
+
+		return defects;
 	}
 }

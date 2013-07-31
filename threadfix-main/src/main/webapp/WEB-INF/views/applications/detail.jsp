@@ -178,4 +178,6 @@
 	
 	<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>
 	
+	<%@ include file="/WEB-INF/views/defects/mergeDefectModal.jsp" %>
+	
 </body>

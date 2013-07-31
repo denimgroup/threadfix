@@ -21,6 +21,7 @@
     	<pattern>/organizations/modalAdd*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>
     	<pattern>/organizations/*/applications/*/defects*</pattern>
+    	<pattern>/organizations/*/applications/*/getDefectsFromDefectTracker*</pattern>
     	<pattern>/organizations/*/applications/*/defectSubmission*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/edit*</pattern>

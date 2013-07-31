@@ -657,4 +657,51 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	
 		return tempUrl;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Defect> getDefectList() {		
+		
+		XmlRpcClient client = initializeClient();
+		if (client == null) {
+			return null;
+		}
+
+		String loginStatus = login(client);
+		if (loginStatus == null) {
+			return null;
+		}
+
+		// TODO Pass this information back to the user
+		if (loginStatus.equals(LOGIN_FAILURE) 
+				|| loginStatus.equals(BAD_CONFIGURATION)) {
+			log.warn("Login Failed, check credentials");
+			return null;
+		}		
+		
+		List<Defect> returnList = new ArrayList<Defect>();
+		Map<String, String> queryMap = new HashMap<String, String>();
+		queryMap.put("product", projectName);
+
+		Object queryResult = executeMethod("Bug.search", new Object[] { queryMap });
+		if (queryResult instanceof HashMap) {
+			Map<String,Object[]> returnedData = (HashMap<String, Object[]>) queryResult;
+			Object[] bugsArray = returnedData.get("bugs");
+			for (int i = 0; i < bugsArray.length; i++) {
+				Object currentBug = bugsArray[i];
+				Map<String,Object> currentBugHash = (HashMap<String, Object>) currentBug;
+				if (currentBugHash == null) {
+					continue;
+				}			
+				Integer id = (Integer) currentBugHash.get("id");
+				Defect d = new Defect();
+				d.setNativeId(String.valueOf(id));
+				returnList.add(d);				
+			}
+		} else {
+			log.error("Expected a HashMap return value, but got something else instead.");
+		}
+		
+		return returnList;
+	}
 }
