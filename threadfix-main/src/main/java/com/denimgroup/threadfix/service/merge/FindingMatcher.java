@@ -77,8 +77,6 @@ public class FindingMatcher {
 	 * 
 	 */
 	public boolean doesMatch(Finding finding, Vulnerability vuln) {
-		System.out.print('`');
-		
 		if (finding == null || vuln == null)
 			return false;
 
@@ -115,6 +113,13 @@ public class FindingMatcher {
 				compareSurfaceLocationParameter(dynamicFinding, staticFinding);
 	}
 
+	private boolean dynamicToDynamicMatch(Finding newFinding, Finding oldFinding) {
+		return newFinding != null && oldFinding != null &&
+				genericVulnsMatch(oldFinding, newFinding) &&
+				compareSurfaceLocationPaths(oldFinding, newFinding) &&
+				compareSurfaceLocationParameter(oldFinding, newFinding);
+	}
+
 	private boolean compareStaticAndDynamicPaths(Finding dynamicFinding,
 			Finding staticFinding) {
 		
@@ -131,13 +136,6 @@ public class FindingMatcher {
 		return dynamicMatch || staticMatch;
 	}
 
-	private boolean dynamicToDynamicMatch(Finding newFinding, Finding oldFinding) {
-		return newFinding != null && oldFinding != null &&
-				genericVulnsMatch(oldFinding, newFinding) &&
-				compareSurfaceLocationPaths(oldFinding, newFinding) &&
-				compareSurfaceLocationParameter(oldFinding, newFinding);
-	}
-	
 	// check for exact path match
 	// TODO add configuration to this
 	// TODO I took out this from staticToDynamicMatch -> need to add it back
