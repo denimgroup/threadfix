@@ -36,14 +36,18 @@ public class CommonPathFinder {
 	private CommonPathFinder(){}
 
 	public static final String findOrParseProjectRoot(Scan scan) {
-		return parseRoot(getFilePaths(scan));
+		return findOrParseProjectRoot(scan, null);
+	}
+	
+	public static final String findOrParseProjectRoot(Scan scan, String fileExtension) {
+		return parseRoot(getFilePaths(scan, fileExtension));
 	}
 
 	public static final String findOrParseUrlPath(Scan scan) {
 		return parseRoot(getUrlPaths(scan));
 	}
 
-	private static List<String> getFilePaths(Scan scan) {
+	private static List<String> getFilePaths(Scan scan, String fileExtension) {
 		if (scan == null || scan.getFindings() == null
 				|| scan.getFindings().isEmpty()) {
 			return null;
@@ -59,8 +63,13 @@ public class CommonPathFinder {
 
 				if (dataFlowElements.get(0) != null
 						&& dataFlowElements.get(0).getSourceFileName() != null) {
-					returnString.add(dataFlowElements.get(0)
-							.getSourceFileName());
+					
+					String sourceFileName = dataFlowElements.get(0).getSourceFileName();
+					
+					if (fileExtension == null || sourceFileName.endsWith(fileExtension)) {
+						returnString.add(dataFlowElements.get(0)
+								.getSourceFileName());
+					}
 				}
 			}
 		}
@@ -155,6 +164,8 @@ public class CommonPathFinder {
 			
 			if (endIndex == 0) {
 				returnParts = new String[]{};
+			} else if (endIndex == soFar.length) {
+				returnParts = soFar;
 			} else {
 				returnParts = Arrays.copyOfRange(soFar, 0, endIndex);
 			}

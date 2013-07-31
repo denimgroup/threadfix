@@ -33,7 +33,7 @@ public class FilePathUtils {
 		String returnPath = null;
 		
 		if (projectFile != null && rootFile != null) {
-			returnPath = getRelativePath(projectFile, rootFile.getAbsolutePath());
+			returnPath = getRelativePath(projectFile.getAbsolutePath(), rootFile.getAbsolutePath());
 		}
 		
 		return returnPath;
@@ -42,12 +42,21 @@ public class FilePathUtils {
 	public static String getRelativePath(File projectFile, String projectRoot) {
 		String returnPath = null;
 		
-		if (projectFile != null && projectRoot != null && 
-				projectFile.getAbsolutePath().startsWith(projectRoot)) {
-			returnPath = projectFile
-					.getAbsolutePath()
+		if (projectFile != null && projectRoot != null) {
+			returnPath = getRelativePath(projectFile.getAbsolutePath(), projectRoot);
+		}
+		
+		return returnPath;
+	}
+	
+	public static String getRelativePath(String string, String projectRoot) {
+		String returnPath = null;
+		
+		if (string != null && projectRoot != null && 
+				string.startsWith(projectRoot)) {
+			returnPath = string
 					.substring(projectRoot.length())
-					.replace('\\', '/');;
+					.replace('\\', '/');
 		}
 		
 		return returnPath;
