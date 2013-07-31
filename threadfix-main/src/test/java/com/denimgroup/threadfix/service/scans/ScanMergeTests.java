@@ -31,12 +31,12 @@ public class ScanMergeTests extends BaseRestTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testBodgeItMerge() throws IOException, JSONException {
 		testApplicationWithVariations(FrameworkType.JSP, WebApplication.BODGEIT);
 	}
 	
 	@Test
+	@Ignore
 	public void testPetClinicMerge() throws IOException, JSONException {
 		testApplicationWithVariations(FrameworkType.SPRING_MVC, WebApplication.PETCLINIC);
 	}
@@ -44,25 +44,32 @@ public class ScanMergeTests extends BaseRestTest {
 	private void testApplicationWithVariations(FrameworkType frameworkType, WebApplication application) throws JSONException, IOException {
 		debug("Starting " + application.getName() + " tests.");
 		
-		FileWriter fileWriter = null;
+		FileWriter csvWriter = null, textWriter = null;
 		try {
-			fileWriter = new FileWriter(
+			csvWriter = new FileWriter(
 					new File("C:\\test\\SBIR\\testoutput" + application.getName() + ".csv"));
 			
-			fileWriter.write("framework,source code access,vuln type strategy, total, correctly merged, correct path, correct param, correctCWE\n");
+			textWriter = new FileWriter(
+					new File("C:\\test\\SBIR\\testoutput" + application.getName() + ".txt"));
+			
+			csvWriter.write("framework,source code access,vuln type strategy, total, correctly merged, correct path, correct param, correctCWE\n");
 			
 			// set up application
 			// we pass in the type because we don't want to do a spring mvc run on a jsp app, for instance.
 			for (FrameworkType type : new FrameworkType[] { FrameworkType.NONE, FrameworkType.DETECT, frameworkType }) {
 				for (SourceCodeAccessLevel sourceCodeAccessLevel : SourceCodeAccessLevel.values()) {
 					for (VulnTypeStrategy strategy : VulnTypeStrategy.values()) {
-						testApplication(application, type, sourceCodeAccessLevel, strategy, fileWriter);
+						testApplication(application, type, sourceCodeAccessLevel, strategy, csvWriter, textWriter);
 					}
 				}
 			}
 		} finally {
-			if (fileWriter != null) {
-				fileWriter.close();
+			if (csvWriter != null) {
+				csvWriter.close();
+			}
+			
+			if (textWriter != null) {
+				textWriter.close();
 			}
 		}
 	}
@@ -71,7 +78,7 @@ public class ScanMergeTests extends BaseRestTest {
 			FrameworkType frameworkType,
 			SourceCodeAccessLevel sourceCodeAccessLevel, 
 			VulnTypeStrategy vulnTypeStrategy,
-			Writer writer) throws JSONException, IOException {
+			Writer csvWriter, Writer textWriter) throws JSONException, IOException {
 		
 		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel, vulnTypeStrategy);
 
@@ -87,8 +94,11 @@ public class ScanMergeTests extends BaseRestTest {
 		
 		TestResult result = TestResult.compareResults(csvResults, jsonResults);
 		
-		writer.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy);
-		writer.write(result.getCsvLine() + "\n");
+		csvWriter.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy);
+		csvWriter.write(result.getCsvLine() + "\n");
+		
+		textWriter.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy + "\n");
+		textWriter.write(result.toString());
 		
 		if (result.hasMissing()) {
 			System.out.println("We have more than 0 missing. " +
