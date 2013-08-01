@@ -57,6 +57,7 @@ import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -81,6 +82,7 @@ public class ApplicationsController {
 	private WafService wafService;
 	private PermissionService permissionService;
 	private OrganizationService organizationService;
+	private UserService userService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -89,7 +91,8 @@ public class ApplicationsController {
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
 			PermissionService permissionService,
-			OrganizationService organizationService) {
+			OrganizationService organizationService,
+			UserService userService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
@@ -97,6 +100,7 @@ public class ApplicationsController {
 		this.findingService = findingService;
 		this.applicationCriticalityService = applicationCriticalityService;
 		this.organizationService = organizationService;
+		this.userService = userService;
 	}
 
 	@InitBinder
@@ -133,7 +137,8 @@ public class ApplicationsController {
 				Permission.CAN_SUBMIT_DEFECTS, 
 				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
-				Permission.CAN_MANAGE_DEFECT_TRACKERS);
+				Permission.CAN_MANAGE_DEFECT_TRACKERS,
+				Permission.CAN_MANAGE_USERS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
@@ -167,6 +172,9 @@ public class ApplicationsController {
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
 		model.addAttribute("teamList", organizationService.loadAllActive());
+		if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
+			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
+		}
 		
 		return "applications/detail";
 	}
