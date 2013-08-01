@@ -219,17 +219,18 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage saveApplicationInvalid(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		return setPage();
+		return new TeamIndexPage(driver);
 	}
 	
-	public TeamIndexPage clickCloseAddAppModal(String teamName){
-		driver.findElementsByClassName("modal-footer").get(getIndex(teamName)).findElements(By.className("btn")).get(0).click();
+	
+	public TeamIndexPage clickCloseAddTeamModal(){
+		driver.findElementById("myTeamModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
 		sleep(1000);
 		return new TeamIndexPage(driver);
 	}
 	
-	public TeamIndexPage clickCloseAddTeamModal(){
-		driver.findElementById("myTeamModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+	public TeamIndexPage clickCloseAddAppModal(String teamName){
+		driver.findElementById(getAppModalId(teamName)).findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
 		sleep(1000);
 		return new TeamIndexPage(driver);
 	}
@@ -350,10 +351,7 @@ public class TeamIndexPage extends BasePage {
 						"Team " + teamName + " has been created successfully.");
 	}
 
-	public BasePage closeModal() {
-		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		return setPage();
-	}
+
 
 	public TeamDetailPage clickViewTeamLink(String teamName) {
 		driver.findElementsByLinkText("View Team").get(getIndex(teamName)).click();

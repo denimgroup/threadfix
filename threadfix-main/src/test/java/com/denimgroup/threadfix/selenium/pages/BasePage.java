@@ -32,7 +32,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,7 +50,7 @@ public abstract class BasePage {
 		
 		log.debug("Loading " + this.getClass().toString());
 	}
-	
+	/*--------------click functions--------------*/
 	public LoginPage logout() {
 		clickUserTab();
 		driver.findElementById("logoutLink").click();
@@ -142,6 +141,54 @@ public abstract class BasePage {
 		return new DashboardPage(driver);
 	}
 	
+	
+	/*--------------get functions--------------*/
+	public boolean isElementPresent(String elementId) {
+		try {
+			return driver.findElementById(elementId) != null;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
+	}
+	
+	public String getH2Tag() {
+		return driver.findElementByTagName("h2").getText();
+	}
+
+	public boolean isLoggedInUser(String user){
+		return driver.findElementById("tabUserAnchor").getText().trim().contains(user);
+	}
+	
+	public boolean isDashboardMenuLinkPresent(){
+		return driver.findElementById("dashboardHeader").isDisplayed();
+	}
+	
+	public boolean isApplicationMenuLinkPresent(){
+		return driver.findElementById("orgHeader").isDisplayed();
+	}
+	
+	public boolean isScansMenuLinkPresent(){
+		return driver.findElementById("scansHeader").isDisplayed();
+	}
+	
+	public boolean isReportsMenuLinkPresent(){
+		return driver.findElementById("reportsHeader").isDisplayed();
+	}
+	
+	public boolean isUsersMenuLinkPresent(){
+		return driver.findElementById("tabUserAnchor").isDisplayed();
+	}
+	
+	public boolean isConfigMenuLinkPresent(){
+		return driver.findElementById("tabConfigAnchor").isDisplayed();
+	}
+	
+	public boolean isLogoPresent(){
+		return driver.findElementById("logo").isDisplayed();
+	}
+	
+	
+	/*--------------helper functions--------------*/
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);
@@ -161,18 +208,6 @@ public abstract class BasePage {
 		}
 	}
 	
-	public boolean isElementPresent(String elementId) {
-		try {
-			return driver.findElementById(elementId) != null;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-	
-	public String getH2Tag() {
-		return driver.findElementByTagName("h2").getText();
-	}
-	
 	protected void handleAlert() {
 		sleep(3000);
 		WebDriverWait wait = new WebDriverWait(driver,10);
@@ -180,7 +215,6 @@ public abstract class BasePage {
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		sleep(200);
-//		sleep(1000);
 	}
 	
 	public void waitForElement(WebElement e){
@@ -191,9 +225,5 @@ public abstract class BasePage {
 	public void waitForInvisibleElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
-	}
-	
-	public boolean isLoggedInUser(String user){
-		return driver.findElementById("tabUserAnchor").getText().trim().contains(user);
 	}
 }

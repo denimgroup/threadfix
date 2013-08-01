@@ -419,6 +419,7 @@ public class ApplicationDetailPage extends BasePage {
 		}catch(StaleElementReferenceException e){
 			
 		}
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 

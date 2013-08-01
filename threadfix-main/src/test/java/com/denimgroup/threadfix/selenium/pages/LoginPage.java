@@ -23,14 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginPage extends BasePage {
 
 	static String url = "http://satthreadfix.denimgroup.com:8080/threadfix/";
-	private WebElement rememberCheckbox;
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);
@@ -47,6 +48,7 @@ public class LoginPage extends BasePage {
 		//rememberCheckbox = driver.findElementById("checkbox");
 	}
 	
+	/*----------------perform functions----------------*/
 	public static LoginPage open(WebDriver webdriver) {
 		return new LoginPage(webdriver);
 	}
@@ -61,32 +63,69 @@ public class LoginPage extends BasePage {
 		return new LoginPage(driver);
 	}
 	
+	/*----------------get Functions----------------*/
 	public boolean isloginError(){
 		return driver.findElementById("loginError").getText().trim().equals("Error: Username or Password incorrect");
-	}
-
-	public LoginPage checkRememberCheckbox() {
-		rememberCheckbox.click();
-		return this;
 	}
 	
 	public boolean isLoggedOut(){
 		return driver.getCurrentUrl().contains("login");
 	}
 	
-	private LoginPage setUsername(String user) {
+	public boolean isUserNameFieldPresent(){
+		return driver.findElementById("username").isDisplayed();
+	}
+	
+	public String getUserNameInput(){
+		return driver.findElementById("username").getAttribute("value");
+	}
+	
+	public boolean isPasswordFieldPresent(){
+		return driver.findElementById("password").isDisplayed();
+	}
+	
+	public String getLoginInput(){
+		return driver.findElementById("password").getAttribute("value");
+	}
+	
+	public boolean isLoginButtonPresent(){
+		return driver.findElementById("login").isDisplayed();
+	}
+	
+	public boolean isLoginButtonClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("login")) != null;
+	}
+	
+	public boolean isRememberMeCheckBoxPresent(){
+		return driver.findElementByName("_spring_security_remember_me").isDisplayed();
+	}
+	
+	public boolean isRememeberMeCheckBoxSelected(){
+		return driver.findElementByName("_spring_security_remember_me").isSelected();
+	}
+	
+	
+	
+	/*----------------set functions----------------*/
+	public LoginPage setUsername(String user) {
 		driver.findElementById("username").sendKeys(user);
 		return this;
 	}
 	
-	private LoginPage setPassword(String password) {
+	public LoginPage setPassword(String password) {
 		driver.findElementById("password").sendKeys(password);
 		return this;
 	}
 	
+	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
 		driver.findElementById("login").click();
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
+	}
+	
+	public LoginPage checkRememberCheckbox() {
+		driver.findElementByName("_spring_security_remember_me").click();
+		return this;
 	}
 }

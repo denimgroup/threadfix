@@ -1,5 +1,5 @@
 package com.denimgroup.threadfix.selenium.tests;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.*;
 import org.openqa.selenium.remote.RemoteWebDriver;

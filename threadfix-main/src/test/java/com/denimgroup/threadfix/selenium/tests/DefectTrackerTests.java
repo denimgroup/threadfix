@@ -243,7 +243,7 @@ public class DefectTrackerTests extends BaseTest {
 				"That name is already taken."));
 
 		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickDefectTrackersLink().clickDeleteButton(orgName);
+				.clickCloseCreateDT().clickDeleteButton(orgName);
 	}
 
 	// TODO improve this test - harder to fake with URL checking.

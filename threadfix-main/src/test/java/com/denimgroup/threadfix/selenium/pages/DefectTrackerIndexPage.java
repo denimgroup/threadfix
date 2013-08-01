@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -145,6 +146,11 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 	
+	public DefectTrackerIndexPage clickCloseCreateDT(){
+		driver.findElementById("createDefectTracker").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		return new DefectTrackerIndexPage(driver);
+	}
+	
 	public DefectTrackerIndexPage clickCloseButton() {
 		driver.findElementById("closeNewDTModalButton").click();
 		return new DefectTrackerIndexPage(driver);
@@ -233,8 +239,8 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
 		driver.findElementById("submitDTCreateModal").click();
-		sleep(1000);
-		waitForInvisibleElement(driver.findElementById("createDefectTracker"));
+		sleep(2000);
+//		waitForInvisibleElement(driver.findElementById("createDefectTracker"));
 		return new DefectTrackerIndexPage(driver);
 	}
 

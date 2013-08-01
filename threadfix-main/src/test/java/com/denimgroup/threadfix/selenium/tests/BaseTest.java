@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -45,7 +43,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
@@ -55,8 +52,8 @@ public abstract class BaseTest {
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	private WebDriver driver;
-	private static ChromeDriverService service;
 	
+//	@Parameters
 	@Parameters(name="Browser: {0}")
 	public static Collection<String[]> drivers() {
 		Collection<String[]> params = new ArrayList<String[]>();
