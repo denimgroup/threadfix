@@ -117,4 +117,46 @@ public class HibernateUserDao implements UserDao {
 		
 		return result != null && result > 0;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> retrieveOrgPermissibleUsers(Integer orgId) {
+		
+		List<User> globalUserList = getActiveUserCriteria()
+				.add(Restrictions.eq("hasGlobalGroupAccess", true))
+				.addOrder(Order.asc("name"))
+				.list();	
+		List<User> orgUserList = getActiveUserCriteria()
+				.add(Restrictions.eq("hasGlobalGroupAccess", false))
+				.createAlias("accessControlTeamMaps", "teamMap")
+				.add(Restrictions.eq("teamMap.organization.id",orgId))
+				.addOrder(Order.asc("name"))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();	
+		globalUserList.addAll(orgUserList);
+		
+		return globalUserList;
+				
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> retrieveAppPermissibleUsers(Integer appId) {
+				
+		List<User> globalUserList = getActiveUserCriteria()
+				.add(Restrictions.eq("hasGlobalGroupAccess", true))
+				.addOrder(Order.asc("name"))
+				.list();	
+		List<User> appUserList = getActiveUserCriteria()
+				.add(Restrictions.eq("hasGlobalGroupAccess", false))
+				.createAlias("accessControlTeamMaps", "teamMap")
+				.createAlias("teamMap.accessControlApplicationMaps", "appMap")
+				.add(Restrictions.eq("appMap.application.id",appId))
+				.addOrder(Order.asc("name"))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();	
+		globalUserList.addAll(appUserList);
+		
+		return globalUserList;
+	}
 }

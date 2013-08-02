@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -93,13 +94,19 @@ public class DefectsController {
 			return "ajaxRedirectHarness";
 		}
 
-		queueSender.addSubmitDefect(defectViewModel.getVulnerabilityIds(),
-				defectViewModel.getSummary(), defectViewModel.getPreamble(),
-				defectViewModel.getSelectedComponent(), defectViewModel.getVersion(),
-				defectViewModel.getSeverity(), defectViewModel.getPriority(),
-				defectViewModel.getStatus(), orgId, appId);
+		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(defectViewModel.getVulnerabilityIds());
+		Defect newDefect = defectService.createDefect(vulnerabilities, defectViewModel.getSummary(), 
+				defectViewModel.getPreamble(), 
+				defectViewModel.getSelectedComponent(), 
+				defectViewModel.getVersion(), 
+				defectViewModel.getSeverity(), 
+				defectViewModel.getPriority(), 
+				defectViewModel.getStatus());
 		
-		ControllerUtils.addSuccessMessage(request, "The Defect was submitted to the tracker.");
+		if (newDefect != null)
+			ControllerUtils.addSuccessMessage(request, "The Defect was submitted to the tracker.");
+		else 
+			ControllerUtils.addErrorMessage(request, "The Defect couldn't be submitted to the tracker.");
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		return "ajaxRedirectHarness";
 	}

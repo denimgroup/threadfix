@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -342,4 +343,12 @@ public class UserServiceImpl implements UserService {
 		
 		return user;
 	}
+
+	@Override
+	public List<User> getPermissibleUsers(Integer orgId, Integer appId) {	
+		List<User> resultList = null;
+		if (orgId != null && appId == null) resultList = userDao.retrieveOrgPermissibleUsers(orgId);			
+		if (appId != null) resultList = userDao.retrieveAppPermissibleUsers(appId);			
+		return resultList;
+	}	
 }
