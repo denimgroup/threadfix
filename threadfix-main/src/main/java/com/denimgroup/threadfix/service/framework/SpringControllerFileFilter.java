@@ -44,6 +44,10 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
  */
 public class SpringControllerFileFilter implements IOFileFilter {
 	
+	private SpringControllerFileFilter(){}
+	
+	public static final SpringControllerFileFilter STATIC_FILTER = new SpringControllerFileFilter();
+	
 	private final SanitizedLogger log = new SanitizedLogger("ControllerFileFilter");
 	
 	@Override

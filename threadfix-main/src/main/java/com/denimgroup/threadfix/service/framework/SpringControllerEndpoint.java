@@ -23,34 +23,36 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class SpringControllerEndpoint {
+public class SpringControllerEndpoint implements Comparable<SpringControllerEndpoint> {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	private static final String requestMappingStart = "RequestMethod.";
 	
 	private final String rawFilePath, rawUrlPath;
-	private final Set<String> methods;
+	private final Set<String> methods, parameters;
 	private final int startLineNumber, endLineNumber;
 	
 	private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
 	
-	public SpringControllerEndpoint(String filePath, String urlPath, List<String> methods,
+	public SpringControllerEndpoint(String filePath, String urlPath, 
+			Collection<String> methods, Collection<String> parameters,
 			int startLineNumber, int endLineNumber) {
-		this.rawFilePath = filePath;
-		this.rawUrlPath = urlPath;
+		this.rawFilePath     = filePath;
+		this.rawUrlPath      = urlPath;
 		this.startLineNumber = startLineNumber;
-		this.endLineNumber = endLineNumber;
+		this.endLineNumber   = endLineNumber;
 		
-		this.methods = getCleanedSet(methods);
+		this.parameters = new HashSet<>(parameters);
+		this.methods    = getCleanedSet(methods);
 	}
 	
-	private Set<String> getCleanedSet(List<String> methods) {
+	private Set<String> getCleanedSet(Collection<String> methods) {
 		Set<String> returnSet = new HashSet<>();
 		for (String method : methods) {
 			if (method.startsWith(requestMappingStart)) {
@@ -68,6 +70,10 @@ public class SpringControllerEndpoint {
 
 	public String getRawUrlPath() {
 		return rawUrlPath;
+	}
+	
+	public Set<String> getParameters() {
+		return parameters;
 	}
 
 	public String getCleanedFilePath() {
@@ -127,11 +133,28 @@ public class SpringControllerEndpoint {
 				"-" + endLineNumber + 
 				" -> " + getMethod() + 
 				" " + getCleanedUrlPath() + 
+				" " + getParameters() + 
 				"]"; 
 	}
 
 	public Set<String> getMethod() {
 		return methods;
+	}
+
+	@Override
+	public int compareTo(SpringControllerEndpoint arg0) {
+		int returnValue = 0;
+		
+		if (arg0 != null) {
+			returnValue += 2 * arg0.rawFilePath.compareTo(rawFilePath);
+			if (startLineNumber < arg0.startLineNumber) {
+				returnValue -= 1;
+			} else {
+				returnValue += 1;
+			}
+		}
+		
+		return returnValue;
 	}
 	
 }

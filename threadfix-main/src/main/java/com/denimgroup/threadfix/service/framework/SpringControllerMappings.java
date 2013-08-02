@@ -26,10 +26,10 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -42,11 +42,15 @@ public class SpringControllerMappings {
 		
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		
+		Set<SpringControllerEndpoint> set = new TreeSet<>();
+		
 		for (Entry<String, Set<SpringControllerEndpoint>> entry : mappings.urlToControllerMethodsMap.entrySet()) {
-			for (SpringControllerEndpoint endpoint : entry.getValue()) {
-				endpoint.setFileRoot("C:\\test\\projects\\spring-petclinic");
-				System.out.println(endpoint);
-			}
+			set.addAll(entry.getValue());
+		}
+		
+		for (SpringControllerEndpoint endpoint : set) {
+			endpoint.setFileRoot("C:\\test\\projects\\spring-petclinic");
+			System.out.println(endpoint);
 		}
 	}
 	
@@ -61,7 +65,8 @@ public class SpringControllerMappings {
 	public SpringControllerMappings(File rootDirectory) {
 		this.rootDirectory = rootDirectory;
 		if (rootDirectory != null && rootDirectory.exists()) {
-			controllerFiles = FileUtils.listFiles(rootDirectory, new SpringControllerFileFilter(), TrueFileFilter.INSTANCE);
+			controllerFiles = FileUtils.listFiles(rootDirectory, 
+					SpringControllerFileFilter.STATIC_FILTER, TrueFileFilter.INSTANCE);
 		
 			urlToControllerMethodsMap = new HashMap<>();
 			controllerToUrlsMap = new HashMap<>();
@@ -99,7 +104,7 @@ public class SpringControllerMappings {
 					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
 					String urlPath = endpoint.getCleanedUrlPath();
 					if (!urlToControllerMethodsMap.containsKey(urlPath)) {
-						urlToControllerMethodsMap.put(urlPath, new HashSet<SpringControllerEndpoint>());
+						urlToControllerMethodsMap.put(urlPath, new TreeSet<SpringControllerEndpoint>());
 					}
 					urlToControllerMethodsMap.get(endpoint.getCleanedUrlPath()).add(endpoint);
 				}

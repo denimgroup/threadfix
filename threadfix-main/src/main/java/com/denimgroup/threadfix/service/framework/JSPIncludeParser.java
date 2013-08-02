@@ -74,11 +74,15 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 			case JSP:
 				if (type == ':') {
 					currentState = State.COLON;
+				} else {
+					currentState = State.START;
 				}
 				break;
 			case COLON:
 				if (stringValue != null && stringValue.equals("include")) {
 					currentState = State.INCLUDE;
+				} else {
+					currentState = State.START;
 				}
 				break;
 			case INCLUDE:
