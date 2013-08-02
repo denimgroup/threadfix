@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class JSPIncludes {
@@ -38,43 +37,44 @@ public class JSPIncludes {
 	public static void main(String[] args) {
 		JSPIncludes includes = new JSPIncludes(new File("C:\\Users\\mcollins\\SBIR\\bodgeit"));
 		
-		for (String key : includes.map.keySet()) {
+		for (String key : includes.includeMap.keySet()) {
 			System.out.println(key);
 			
-			for (File file : includes.map.get(key)) {
+			for (File file : includes.includeMap.get(key)) {
 				System.out.println("\t" + file.getAbsolutePath());
 			}
+			
+			JSPParameterParser parser = includes.parameterMap.get(key);
+			
+			System.out.println(parser.getParameterMap());
+			System.out.println(parser.getVariableToParameterMap());
 		}
 	}
 
-	private Map<String, Set<File>> map = new HashMap<>();
+	private Map<String, Set<File>> includeMap = new HashMap<>();
+	private Map<String, JSPParameterParser> parameterMap = new HashMap<>();
 	
 	@SuppressWarnings("unchecked")
 	public JSPIncludes(File rootFile) {
 		Collection<File> jspFiles = FileUtils.listFiles(
-				rootFile, new JSPFileFilter(), TrueFileFilter.INSTANCE);
+				rootFile, JSPFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 
 		for (File file : jspFiles) {
 			Set<File> files = JSPIncludeParser.parse(file);
 			if (files != null && !files.isEmpty()) {
-				map.put(FilePathUtils.getRelativePath(file, rootFile), files);
+				includeMap.put(FilePathUtils.getRelativePath(file, rootFile), files);
+			}
+		}
+		
+		for (File file : jspFiles) {
+			JSPParameterParser parser = JSPParameterParser.parse(file);
+			if (parser != null) {
+				parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parser);
 			}
 		}
 	}
 	
 	public Set<File> getIncludedFiles(String relativePath) {
-		return map.get(relativePath);
+		return includeMap.get(relativePath);
 	}
-	
-	static class JSPFileFilter implements IOFileFilter {
-		@Override
-		public boolean accept(File file) {
-			return file.getName().contains(".jsp");
-		}
-		@Override
-		public boolean accept(File dir, String name) {
-			return name.contains(".jsp");
-		}
-	}
-	
 }

@@ -23,21 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
-/**
- * This class eases token processing using streams. It's meant to be used with 
- * {@link EventBasedTokenizerRunner} which has methods to process a file using an
- * implementation of this class. It calls run for each token that the parser encounters.
- * 
- * @author mcollins
- */
-public interface EventBasedTokenizer {
-	
-	final static Character 
-		EQUALS = '=', 
-		COMMA = ',', 
-		DOUBLE_QUOTE = '"',
-		SEMICOLON = ';';
-	
-	void processToken(int type, int lineNumber, String stringValue);
+import java.io.File;
 
+import org.apache.commons.io.filefilter.IOFileFilter;
+
+public class JSPFileFilter implements IOFileFilter {
+	
+	public static final JSPFileFilter INSTANCE = new JSPFileFilter();
+	private JSPFileFilter(){}
+	
+	@Override
+	public boolean accept(File file) {
+		return file.getName().contains(".jsp");
+	}
+	@Override
+	public boolean accept(File dir, String name) {
+		return name.contains(".jsp");
+	}
 }

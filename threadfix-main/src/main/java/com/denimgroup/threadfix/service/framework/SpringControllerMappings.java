@@ -66,7 +66,7 @@ public class SpringControllerMappings {
 		this.rootDirectory = rootDirectory;
 		if (rootDirectory != null && rootDirectory.exists()) {
 			controllerFiles = FileUtils.listFiles(rootDirectory, 
-					SpringControllerFileFilter.STATIC_FILTER, TrueFileFilter.INSTANCE);
+					SpringControllerFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		
 			urlToControllerMethodsMap = new HashMap<>();
 			controllerToUrlsMap = new HashMap<>();

@@ -47,15 +47,15 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private AnnotationState annotationState = AnnotationState.START;
 	private MethodState methodState = MethodState.START;
 	
-	enum Phase {
+	private enum Phase {
 		ANNOTATION, METHOD
 	}
 	
-	enum AnnotationState {
+	private enum AnnotationState {
 		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END;
 	}
 	
-	enum MethodState {
+	private enum MethodState {
 		START, ARROBA, REQUEST_PARAM, METHOD_BODY;
 	}
 	

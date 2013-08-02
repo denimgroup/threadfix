@@ -46,7 +46,7 @@ public class SpringControllerFileFilter implements IOFileFilter {
 	
 	private SpringControllerFileFilter(){}
 	
-	public static final SpringControllerFileFilter STATIC_FILTER = new SpringControllerFileFilter();
+	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
 	
 	private final SanitizedLogger log = new SanitizedLogger("ControllerFileFilter");
 	

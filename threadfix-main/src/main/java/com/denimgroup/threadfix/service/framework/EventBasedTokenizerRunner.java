@@ -68,6 +68,7 @@ public class EventBasedTokenizerRunner {
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
 				tokenizer.slashSlashComments(true);
 				tokenizer.slashStarComments(true);
+				tokenizer.ordinaryChar('<');
 				
 				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
 					eventTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
