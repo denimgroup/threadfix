@@ -248,7 +248,7 @@ public class DefectServiceImpl implements DefectService {
 		if (application != null) {
 			applicationService.decryptCredentials(application);
 		}
-
+		
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker, exiting.");
@@ -308,5 +308,48 @@ public class DefectServiceImpl implements DefectService {
 	public void deleteByApplicationId(Integer applicationId) {
 		log.info("Deleting Defects connected to the Application with the ID " + applicationId);
 		defectDao.deleteByApplicationId(applicationId);
+	}
+
+	@Override
+	public boolean mergeDefect(List<Vulnerability> vulnerabilities, String id) {
+		
+		if (vulnerabilities == null || vulnerabilities.size() == 0 || vulnerabilities.get(0) == null || 
+				vulnerabilities.get(0).getApplication() == null) {
+			log.warn("Null input, exiting.");
+			return false;
+		}
+		
+		Vulnerability vuln = vulnerabilities.get(0);
+
+		Application application = vuln.getApplication();
+
+		if (application != null) {
+			applicationService.decryptCredentials(application);
+		}
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+		if (dt == null) {
+			log.warn("Unable to load Defect Tracker.");
+			return false;
+		}		
+		Defect defect = new Defect();
+		defect.setNativeId(id);
+		defect.setDefectURL(dt.getBugURL(
+				application.getDefectTracker().getUrl(), id));
+		defect.setApplication(application);
+		List<Defect> defectList = new ArrayList<Defect>();
+		defectList.add(defect);
+		dt.getMultipleDefectStatus(defectList);
+		defectDao.saveOrUpdate(defect);
+
+		for (Vulnerability vulnerability : vulnerabilities) {
+			vulnerability.setDefect(defect);
+			vulnerability.setDefectSubmittedTime(Calendar.getInstance());
+			vulnerabilityDao.saveOrUpdate(vulnerability);
+		}
+
+		log.info("Successfully merged vulns to Defect ID" + id + ".");
+
+		return true;
 	}
 }

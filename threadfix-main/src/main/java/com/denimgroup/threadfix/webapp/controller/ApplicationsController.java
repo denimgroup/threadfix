@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -54,6 +57,7 @@ import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -78,6 +82,7 @@ public class ApplicationsController {
 	private WafService wafService;
 	private PermissionService permissionService;
 	private OrganizationService organizationService;
+	private UserService userService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -86,7 +91,8 @@ public class ApplicationsController {
 			WafService wafService,
 			DefectTrackerService defectTrackerService,
 			PermissionService permissionService,
-			OrganizationService organizationService) {
+			OrganizationService organizationService,
+			UserService userService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
@@ -94,6 +100,7 @@ public class ApplicationsController {
 		this.findingService = findingService;
 		this.applicationCriticalityService = applicationCriticalityService;
 		this.organizationService = organizationService;
+		this.userService = userService;
 	}
 
 	@InitBinder
@@ -130,7 +137,8 @@ public class ApplicationsController {
 				Permission.CAN_SUBMIT_DEFECTS, 
 				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
-				Permission.CAN_MANAGE_DEFECT_TRACKERS);
+				Permission.CAN_MANAGE_DEFECT_TRACKERS,
+				Permission.CAN_MANAGE_USERS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
@@ -164,6 +172,9 @@ public class ApplicationsController {
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
 		model.addAttribute("teamList", organizationService.loadAllActive());
+		if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
+			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
+		}
 		
 		return "applications/detail";
 	}
@@ -275,5 +286,40 @@ public class ApplicationsController {
 		}
 		
 		return result.substring(1);
+	}
+	
+	@RequestMapping("/{appId}/getDefectsFromDefectTracker")
+	public String getDefectsFromDefectTracker(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId, SessionStatus status, Model model) {
+		
+		log.info("Start getting defect list.");
+		Application application = applicationService.loadApplication(appId);
+		if (application == null || !application.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		
+		if (application.getDefectTracker() == null ||
+				application.getDefectTracker().getDefectTrackerType() == null) {
+			return "";
+		}		
+		applicationService.decryptCredentials(application);
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+		List<Defect> defectList = new ArrayList<Defect>();
+		
+		ProjectMetadata data = null;
+		if (dt != null) {
+			data = dt.getProjectMetadata();
+			defectList = dt.getDefectList();
+		}
+		model.addAttribute("projectMetadata", data);	
+		model.addAttribute("defectList", defectList);	
+		model.addAttribute(new DefectViewModel());
+		model.addAttribute("contentPage", "defects/mergeDefectForm.jsp");
+		
+		log.info("Ended getting defect list.");
+		
+		return "ajaxSuccessHarness";
 	}
 }

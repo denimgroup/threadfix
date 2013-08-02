@@ -85,6 +85,12 @@ public abstract class AbstractDefectTracker {
 	 * @return A map with keys from the input list and boolean outputs for open status
 	 */
 	public abstract Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract List<Defect> getDefectList();
 
 	/**
 	 * Return a list of available product names. The credentials and URL need to be set

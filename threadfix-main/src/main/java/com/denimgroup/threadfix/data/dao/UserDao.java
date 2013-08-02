@@ -79,5 +79,19 @@ public interface UserDao {
 	 * @return
 	 */
 	boolean canRemovePermissionFromUser(Integer id, String string);
+	
+	/**
+	 * 
+	 * @param orgId
+	 * @return
+	 */
+	List<User> retrieveOrgPermissibleUsers(Integer orgId);
+	
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<User> retrieveAppPermissibleUsers(Integer appId);
 
 }

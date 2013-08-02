@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 
@@ -54,14 +59,20 @@ public class DefectsController {
 	private ApplicationService applicationService;
 	private PermissionService permissionService;
 	private QueueSender queueSender;
+	private VulnerabilityService vulnerabilityService;
+	private DefectService defectService;
 
 	@Autowired
 	public DefectsController(ApplicationService applicationService, 
 			PermissionService permissionService,
-			QueueSender queueSender) {
+			QueueSender queueSender,
+			VulnerabilityService vulnerabilityService,
+			DefectService defectService) {
 		this.queueSender = queueSender;
 		this.permissionService = permissionService;
 		this.applicationService = applicationService;
+		this.vulnerabilityService = vulnerabilityService;
+		this.defectService = defectService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -116,5 +127,35 @@ public class DefectsController {
 
 		return "redirect:/organizations/" + app.getOrganization().getId() + 
 				"/applications/" + app.getId();
+	}
+
+	@RequestMapping(value = "/merge", method = RequestMethod.POST)
+	public String onMerge(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
+			HttpServletRequest request) {
+		
+		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+			return "403";
+		}
+		
+		List<Integer> vulnerabilityIds = defectViewModel.getVulnerabilityIds();
+		if (vulnerabilityIds == null || vulnerabilityIds.size() == 0) {
+			log.info("No vulnerabilities selected for Defect merge.");
+			String message = "You must select at least one vulnerability to merge.";
+			ControllerUtils.addErrorMessage(request, message);
+			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
+			return "ajaxRedirectHarness";
+		}
+		
+		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(vulnerabilityIds);
+		
+		if (defectService.mergeDefect(vulnerabilities, defectViewModel.getId())) {
+			ControllerUtils.addSuccessMessage(request, "Vulnerability(s) was merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+		} else {
+			ControllerUtils.addErrorMessage(request, "Vulnerability(s) could not be merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+		}
+	
+		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
+		return "ajaxRedirectHarness";
 	}
 }

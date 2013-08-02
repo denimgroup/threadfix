@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,12 +50,14 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
@@ -83,18 +86,21 @@ public class OrganizationsController {
 	private ApplicationCriticalityService applicationCriticalityService = null;
 	private PermissionService permissionService = null;
 	private ChannelTypeService channelTypeService = null;
+	private UserService userService = null;
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
 			ChannelTypeService channelTypeService, PermissionService permissionService, 
 			ReportsService reportsService, ApplicationService applicationService, 
-			ApplicationCriticalityService applicationCriticalityService) {
+			ApplicationCriticalityService applicationCriticalityService,
+			UserService userService) {
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.applicationCriticalityService = applicationCriticalityService;
 		this.permissionService = permissionService;
 		this.channelTypeService = channelTypeService;
 		this.reportsService = reportsService;
+		this.userService = userService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -154,12 +160,16 @@ public class OrganizationsController {
 			permissionService.addPermissions(mav, orgId, null, 
 					Permission.CAN_MANAGE_APPLICATIONS, 
 					Permission.CAN_MANAGE_TEAMS,
-					Permission.CAN_GENERATE_REPORTS);
+					Permission.CAN_GENERATE_REPORTS,
+					Permission.CAN_MANAGE_USERS);
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			mav.addObject("application", new Application());
 			mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
+			if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
+				mav.addObject("users", userService.getPermissibleUsers(orgId, null));
+			}
 			return mav;
 		}
 	}
@@ -301,5 +311,5 @@ public class OrganizationsController {
 			return "Success";
 		}
 	}
-	
+		
 }

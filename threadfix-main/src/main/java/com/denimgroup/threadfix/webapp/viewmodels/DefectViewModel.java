@@ -27,6 +27,7 @@ import java.util.List;
 
 public class DefectViewModel {
 
+	private String id; //Used for merging defect
 	private String summary;
 	private String preamble;
 	private String selectedComponent;
@@ -34,7 +35,15 @@ public class DefectViewModel {
 	private String severity;
 	private String priority;
 	private String status;
-	
+		
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getPriority() {
 		return priority;
 	}

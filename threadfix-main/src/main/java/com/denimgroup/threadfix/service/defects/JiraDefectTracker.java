@@ -459,4 +459,28 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		return returnString;
 	}
 
+	@Override
+	public List<Defect> getDefectList() {		
+			
+		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
+		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword());
+		List<Defect> defectList = new ArrayList<Defect>();
+		try {
+		String str = RestUtils.getJSONObject(result).getString("issues");
+		
+		JSONArray returnArray = RestUtils.getJSONArray(str);
+		
+		for (int i = 0; i < returnArray.length(); i++) {
+			
+				Defect d = new Defect();
+				d.setNativeId(returnArray.getJSONObject(i).getString("key"));
+				defectList.add(d);
+		}
+			} catch (JSONException e) {
+				log.warn("JSON parsing failed when trying to get defect list.");
+			}
+					
+		return defectList;
+	}
+
 }

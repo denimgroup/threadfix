@@ -169,23 +169,24 @@ public class ApplicationRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody Object applicationLookup(HttpServletRequest request) {
-		
+	public @ResponseBody Object applicationLookup(HttpServletRequest request,
+			@PathVariable("teamId") String teamName) {		
 		String appName = request.getParameter("name");
-
 		String result = checkKey(request, LOOKUP);
 		if (!result.equals(API_KEY_SUCCESS)) {
 			return result;
-		}
-		
+		}		
 		if (appName == null) {
 			return LOOKUP_FAILED;
+		}		
+		log.info("Received REST request for Applications in team = " + teamName + ".");		
+		Organization org = organizationService.loadOrganization(teamName);				
+		if (org == null) {
+			log.warn(LOOKUP_FAILED);
+			return LOOKUP_FAILED;
 		}
-		
-		log.info("Received REST request for Applications with teamId = " + appName + ".");
-		
-		Application application = applicationService.loadApplication(appName);
-		
+		int teamId = org.getId();
+		Application application = applicationService.loadApplication(appName, teamId);		
 		if (application == null) {
 			log.warn(LOOKUP_FAILED);
 			return LOOKUP_FAILED;

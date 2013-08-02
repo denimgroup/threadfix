@@ -61,9 +61,10 @@ public interface ApplicationDao {
 
 	/**
 	 * @param name
+	 * @param teamId 
 	 * @return
 	 */
-	Application retrieveByName(String name);
+	Application retrieveByName(String name, int teamId);
 
 	/**
 	 * @param application

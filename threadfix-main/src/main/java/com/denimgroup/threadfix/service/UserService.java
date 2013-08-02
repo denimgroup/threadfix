@@ -129,4 +129,12 @@ public interface UserService {
 	/**
 	 */
 	User applyChanges(User user, Integer userId);
+
+	/**
+	 * 
+	 * @param orgId
+	 * @param appId
+	 * @return
+	 */
+	List<User> getPermissibleUsers(Integer orgId, Integer appId);
 }

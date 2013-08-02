@@ -60,7 +60,7 @@ public interface ApplicationService {
 	 * @param applicationName
 	 * @return
 	 */
-	Application loadApplication(String applicationName);
+	Application loadApplication(String applicationName, int teamId);
 
 	/**
 	 * @param application
