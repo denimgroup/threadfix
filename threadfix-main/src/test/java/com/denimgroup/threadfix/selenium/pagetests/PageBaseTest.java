@@ -47,8 +47,8 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 @RunWith(Parameterized.class)
 public class PageBaseTest {
 	
-	private final String USER = "user";
-	private final String PASSWORD = "password";
+	private final  String USER = "user";
+	private final  String PASSWORD = "password";
 	protected final Log log = LogFactory.getLog(this.getClass());
 	private WebDriver driver;
 	
@@ -120,7 +120,7 @@ public class PageBaseTest {
 	 * This method is a wrapper for RandomStringUtils.random with a preset character set.
 	 * @return random string
 	 */
-	protected String getRandomString(int length) {
+	protected static String getRandomString(int length) {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
@@ -132,7 +132,7 @@ public class PageBaseTest {
 		}
 	}
 	
-	public DashboardPage login(){
+	public  DashboardPage login(){
 		LoginPage loginPage = new LoginPage(driver);
 		return loginPage.login(USER, PASSWORD);
 	}

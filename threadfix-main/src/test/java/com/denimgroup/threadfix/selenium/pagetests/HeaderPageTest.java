@@ -25,10 +25,12 @@ package com.denimgroup.threadfix.selenium.pagetests;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
 
+import org.junit.*;
+
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class HeaderPageTest extends PageBaseTest {
 	public HeaderPageTest(String browser) {
@@ -37,48 +39,147 @@ public class HeaderPageTest extends PageBaseTest {
 
 //	private static LoginPage loginPage;
 //	private RemoteWebDriver driver;
-	private DashboardPage dashboardPage;
+	private  DashboardPage dashboardPage;
+	private  boolean build;
+	private  String teamName = getRandomString(8);;
+	private  String wafName = getRandomString(8);;
+	private  String appName = getRandomString(8);;
+	
+//	@BeforeClass
+//	public void setup(){
+//		build = buildElements();
+//	}
 	
 	@Before
 	public void init() {
 		super.init();
-//		driver = (RemoteWebDriver) super.getDriver();
-		dashboardPage = login();
+		build = buildElements();
+	}
+	
+	@After
+	public  void cleanup(){
+		destroyElements();
 	}
 	
 	@Test
 	public void dashboardHeaderElementPresentTest(){
-		assertTrue("Dashboard header link is not present",dashboardPage.isDashboardMenuLinkPresent());
+		org.junit.Assume.assumeTrue(build);
+		assertTrue("Dashboard header link is not present on dashboard page",dashboardPage.isDashboardMenuLinkPresent());
+//		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
+//		assertTrue("Dashboard header link is not present on Team Index page",ti.isDashboardMenuLinkPresent());
+		
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void applicationsHeaderElementPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isApplicationMenuLinkPresent());
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void scansHeaderElementPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isScansMenuLinkPresent());
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void reportsHeaderElementPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isReportsMenuLinkPresent());
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void userHeaderElementPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isUsersMenuLinkPresent());
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void configHeaderElementPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isConfigMenuLinkPresent());
+		//logout
+		dashboardPage.logout();
 	}
 	
 	@Test
 	public void logoIsPresentTest(){
+		org.junit.Assume.assumeTrue(build);
 		assertTrue("Dashboard header link is not present",dashboardPage.isLogoPresent());
+		//logout
+		dashboardPage.logout();
+	}
+	
+	private  boolean buildElements(){
+		dashboardPage = login();
+		String rtApp = "Demo Site BE";
+		String wafType = "mod_security";
+		String whKey = System.getProperty("WHITEHAT_KEY");
+		if(whKey == null){
+			return false;
+		}
+		//add team
+		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink()
+										.clickAddTeamButton()
+										.setTeamName(teamName)
+										.addNewTeam();
+		//add app
+		ti = ti	.expandTeamRowByName(teamName)
+				.addNewApplication(teamName, appName, "", "Low")
+				.saveApplication(teamName);
+		
+		//import remoteProvider
+		ApplicationDetailPage ap = ti.clickRemoteProvidersLink()
+										.clickConfigureWhiteHat()
+										.setWhiteHatAPI(whKey)
+										.saveWhiteHat()
+										.clickEditMapping(rtApp)
+										.setTeamMapping(rtApp, teamName)
+										.setAppMapping(rtApp, appName)
+										.clickSaveMapping(rtApp)
+										.clickImportScan(rtApp);
+		
+		//add attach waf
+		ap.clickWafsHeaderLink()
+				.clickAddWafLink()
+				.createNewWaf(wafName, wafType)
+				.clickCreateWaf()
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName,teamName)
+				.clickEditDeleteBtn()
+				.clickAddWaf()
+				.addWaf(wafName)
+				.logout();
+		
+		dashboardPage = login();
+		
+		return true;
+	}
+	
+	private void destroyElements(){
+		
+		dashboardPage = login();
+		
+		dashboardPage.clickOrganizationHeaderLink()
+					.clickViewTeamLink(teamName)
+					.clickDeleteButton()
+					.clickRemoteProvidersLink()
+					.clickRemoveWhiteHatConfig()
+					.clickWafsHeaderLink()
+					.clickDeleteWaf(wafName)
+					.logout();
+		
 	}
 	
 }

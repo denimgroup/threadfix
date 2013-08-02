@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -81,7 +85,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 			}
 		}*/
 	}
-	
+	/*-------------- click functions ---------------*/
 	public RemoteProvidersIndexPage clickConfigureQualys(){
 		qualysConfigButton.click();
 		waitForElement(driver.findElementById("remoteProviderEditModal3"));
@@ -100,6 +104,95 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
+	public RemoteProvidersIndexPage saveQualys(){
+		driver.findElementById("submitRemoteProviderFormButton3").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveQualysInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton3").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage closeModal(){
+		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveVera(){
+		driver.findElementById("submitRemoteProviderFormButton2").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveVeraInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton2").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveWhiteHat(){
+		driver.findElementById("submitRemoteProviderFormButton1").click();
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		sleep(2000);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage saveWhiteHatInvalid(){
+		driver.findElementById("submitRemoteProviderFormButton1").click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickEditMapping(String appName){
+		int ids[] = getAppProviderandAppId(appName);
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return null;
+		}
+		driver.findElementById("provider"+ids[0]+"updateMapping"+ids[1]).click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickSaveMapping(String appName){
+		String id =  getAppMapModalId(appName);
+		if(id.equals(""))
+			return null;
+		System.out.println("ID = "+id);
+		driver.findElementById(id).findElement(By.id("submitRemoteProviderFormButton")).click();
+		sleep(2000);
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickCancelMapping(String appName){
+		String id =  getAppMapModalId(appName);
+		if(id.equals(""))
+			return null;
+		driver.findElementById(id).findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	public ApplicationDetailPage clickImportScan(String appName){
+		int ids[] = getAppProviderandAppId(appName);
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return null;
+		}
+		
+		driver.findElementById("provider"+ids[0]+"import"+ids[1]).click();
+		
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public RemoteProvidersIndexPage clickRemoveWhiteHatConfig(){
+		int ids[] = getAppProviderandAppId("Demo Site BE");
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return null;
+		}
+		driver.findElementById("clearConfig"+ids[0]).click();
+		handleAlert();
+		return new RemoteProvidersIndexPage(driver);
+	}
+	
+	/*-------------- set functions ---------------*/
 	public RemoteProvidersIndexPage setQualysUsername(String user){
 		driver.findElementsById("usernameInput").get(0).clear();
 		driver.findElementsById("usernameInput").get(0).sendKeys(user);
@@ -122,23 +215,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public RemoteProvidersIndexPage saveQualys(){
-		driver.findElementById("submitRemoteProviderFormButton3").click();
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage saveQualysInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton3").click();
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage closeModal(){
-		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
 	public RemoteProvidersIndexPage setVeraUsername(String user){
 		driver.findElementsById("usernameInput").get(1).clear();
 		driver.findElementsById("usernameInput").get(1).sendKeys(user);
@@ -151,35 +227,69 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public RemoteProvidersIndexPage saveVera(){
-		driver.findElementById("submitRemoteProviderFormButton2").click();
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage saveVeraInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton2").click();
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	// WhiteHat Methods
 	public RemoteProvidersIndexPage setWhiteHatAPI(String api){
 		driver.findElementById("apiKeyInput").clear();
 		driver.findElementById("apiKeyInput").sendKeys(api);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public RemoteProvidersIndexPage saveWhiteHat(){
-		driver.findElementById("submitRemoteProviderFormButton1").click();
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+	public RemoteProvidersIndexPage setTeamMapping(String mappingAppName, String teamName){
+		int ids[] = getAppProviderandAppId(mappingAppName);
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return null;
+		}
+		new Select(driver.findElementById("orgSelect"+ids[0]+"-"+ids[1])).selectByVisibleText(teamName);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public RemoteProvidersIndexPage saveWhiteHatInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton1").click();
+	public RemoteProvidersIndexPage setAppMapping(String mappingAppName, String appName){
+		int ids[] = getAppProviderandAppId(mappingAppName);
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return null;
+		}
+		new Select(driver.findElementById("appSelect"+ids[0]+"-"+ids[1])).selectByVisibleText(appName);
 		return new RemoteProvidersIndexPage(driver);
 	}
+	/*-------------- get functions ---------------*/
+	public int[] getAppProviderandAppId(String appName){
+		//ids[0] = provider id, ids[1] = appid
+		int[] ids = {-1,-1};
+		String id = "";
+		String pattern = "^provider([0-9]+)appid([0-9]+)$";
+		List<WebElement> tableData = driver.findElements(By.tagName("td"));
+		for(int i = 0; i<tableData.size(); i++){
+			if(tableData.get(i).getText().equals(appName)){
+				id = tableData.get(i).getAttribute("id");
+				break;
+			}
+		}
+		if(!id.equals("")){
+			Pattern p = Pattern.compile(pattern);
+			Matcher m = p.matcher(id);
+			if(m.find()){
+				ids[0] = Integer.parseInt(m.group(1));
+				ids[1] = Integer.parseInt(m.group(2));
+			}
+			
+		}
+		return ids;
+	}
 	
+	public String getAppMapModalId(String appName){
+		int ids[] = getAppProviderandAppId(appName);
+		if(ids[0] == -1 ||  ids[1] == -1 ){
+			return "";
+		}
+		String pattern = "#(remoteProviderApplicationMappingModal[0-9]+)$";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(driver.findElementById("provider"+ids[0]+"updateMapping"+ids[1]).getAttribute("href"));
+		if(m.find())
+			return m.group(1);
+		
+		return "";
+	}
+	
+	/*-------------- action functions ---------------*/
 	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String team, String app){
 		clickEditWhiteHatButton(appRow);
 		selectTeamModal(team);
