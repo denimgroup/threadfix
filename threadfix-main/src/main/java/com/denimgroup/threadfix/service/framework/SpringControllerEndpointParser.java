@@ -35,9 +35,10 @@ import java.util.TreeSet;
 public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
 	private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
-	private int startLineNumber = 0, curlyBraceCount = 0;
+	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;
 	private boolean inClass = false;
-	private String classEndpoint = null, currentMapping = null, rootFilePath = null, lastValue = null;
+	private String classEndpoint = null, currentMapping = null, 
+			rootFilePath = null, lastValue = null, currentModelObject = null;
 	private List<String> 
 		classMethods  = new ArrayList<>(),
 		methodMethods = new ArrayList<>(),
@@ -49,22 +50,23 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		REQUEST_PARAM = "RequestParam",
 		PATH_VARIABLE = "PathVariable",
 		REQUEST_MAPPING = "RequestMapping",
-		CLASS = "class";
+		CLASS = "class",
+		BINDING_RESULT = "BindingResult";
 		
 	private Phase phase = Phase.ANNOTATION;
 	private AnnotationState annotationState = AnnotationState.START;
-	private MethodState methodState = MethodState.START;
+	private SignatureState signatureState = SignatureState.START;
 	
 	private enum Phase {
-		ANNOTATION, METHOD
+		ANNOTATION, SIGNATURE, METHOD
 	}
 	
 	private enum AnnotationState {
 		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END;
 	}
 	
-	private enum MethodState {
-		START, ARROBA, REQUEST_PARAM, METHOD_BODY;
+	private enum SignatureState {
+		START, ARROBA, REQUEST_PARAM;
 	}
 	
 	public static Set<SpringControllerEndpoint> parse(File file) {
@@ -81,37 +83,38 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (phase) {
 			case ANNOTATION: parseAnnotation(type, lineNumber, stringValue); break;
+			case SIGNATURE:  parseSignature(type, lineNumber, stringValue);  break;
 			case METHOD:     parseMethod(type, lineNumber, stringValue);     break;
 		}
 	}
 	
-	private void parseMethod(int type, int lineNumber, String stringValue) {
-		if (type == OPEN_CURLY) {
-			curlyBraceCount += 1;
-		} else if (type == CLOSE_CURLY) {
-			if (curlyBraceCount == 1) {
-				addEndpoint(lineNumber);
-				methodState = MethodState.START;
-				phase = Phase.ANNOTATION;
-			} else {
-				curlyBraceCount -= 1;
-			}
-		}
+	private void setState(SignatureState state) {
+		signatureState = state;
+	}
 	
-		switch (methodState) {
+	private void parseSignature(int type, int lineNumber, String stringValue) {
+		
+		if (lastSymbol == CLOSE_PAREN && type == OPEN_CURLY) {
+			curlyBraceCount = 1;
+			phase = Phase.METHOD;
+		} else {
+			lastSymbol = type;
+		}
+		
+		switch (signatureState) {
 			case START:
 				if (type == ARROBA) {
-					methodState = MethodState.ARROBA;
-				} else if (type == CLOSE_PAREN) {
-					methodState = MethodState.METHOD_BODY;
+					setState(SignatureState.ARROBA);
+				} else if (stringValue != null && stringValue.equals(BINDING_RESULT)) {
+					currentModelObject = lastValue;
 				}
 				break;
 			case ARROBA:
 				if (stringValue != null && 
 						(stringValue.equals(REQUEST_PARAM) || stringValue.equals(PATH_VARIABLE))) {
-					methodState = MethodState.REQUEST_PARAM;
+					setState(SignatureState.REQUEST_PARAM);
 				} else {
-					methodState = MethodState.START;
+					setState(SignatureState.START);
 				}
 				break;
 			case REQUEST_PARAM:
@@ -122,18 +125,31 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 				} else if (type == COMMA) {
 					currentParameters.add(lastValue);
 					lastValue = null;
-					methodState = MethodState.START;
+					setState(SignatureState.START);
 				} else if (type == CLOSE_PAREN) {
 					if (lastValue != null) {
 						currentParameters.add(lastValue);
 						lastValue = null;
 					}
-					methodState = MethodState.METHOD_BODY;
 				}
 				break;
-			case METHOD_BODY:
-				// TODO try to parse out parameters retrieved with HttpServletRequest.getParameter()
-				break;
+		}
+		if (stringValue != null) {
+			lastValue = stringValue;
+		}
+	}
+
+	private void parseMethod(int type, int lineNumber, String stringValue) {
+		if (type == OPEN_CURLY) {
+			curlyBraceCount += 1;
+		} else if (type == CLOSE_CURLY) {
+			if (curlyBraceCount == 1) {
+				addEndpoint(lineNumber);
+				signatureState = SignatureState.START;
+				phase = Phase.ANNOTATION;
+			} else {
+				curlyBraceCount -= 1;
+			}
 		}
 	}
 
@@ -209,7 +225,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 			case ANNOTATION_END:
 				if (inClass) {
 					annotationState = AnnotationState.START;
-					phase = Phase.METHOD;
+					phase = Phase.SIGNATURE;
 				} else {
 					annotationState = AnnotationState.START;
 				}
@@ -222,8 +238,6 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 			currentMapping = classEndpoint + currentMapping;
 		}
 		
-		
-		
 		// It's ok to add a default method here because we must be past the class-level annotation
 		if (classMethods.isEmpty()) {
 			classMethods.add("RequestMethod.GET");
@@ -231,6 +245,11 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		
 		if (methodMethods == null || methodMethods.isEmpty()) {
 			methodMethods.addAll(classMethods);
+		}
+		
+		if (currentModelObject != null) {
+			currentParameters.add(currentModelObject);
+			currentModelObject = null;
 		}
 		
 		endpoints.add(new SpringControllerEndpoint(rootFilePath, currentMapping, 
