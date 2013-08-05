@@ -2,6 +2,7 @@
 
 <head>
 	<title>Remote Providers</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote_providers_page.js"></script>
 </head>
 
 <body>

@@ -13,6 +13,7 @@
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
     	<pattern>/configuration/remoteproviders/*/configure*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
+    	<pattern>/configuration/remoteproviders/*/apps/*/delete/*</pattern>
     	<pattern>/dashboard/leftReport*</pattern>
     	<pattern>/dashboard/rightReport*</pattern>
     	<pattern>/jasperimage/*/*</pattern>
