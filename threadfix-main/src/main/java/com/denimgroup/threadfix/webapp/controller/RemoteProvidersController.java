@@ -192,18 +192,19 @@ public class RemoteProvidersController {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
-//			permissionService.isAuthorized(Permission.CAN_MANAGE_REMOTE_PROVIDERS, null, null);
 			
 			RemoteProviderApplication dbRemoteProviderApplication = 
-					remoteProviderApplicationService.load(appId);
+					remoteProviderApplicationService.load(appId);	
 			
-			dbRemoteProviderApplication.setApplication(remoteProviderApplication.getApplication());
+			if (dbRemoteProviderApplication != null) {
+				remoteProviderApplication.setId(appId);
+				remoteProviderApplication.setRemoteProviderType(dbRemoteProviderApplication.getRemoteProviderType());
+			}
 			
-			remoteProviderApplicationService.processApp(result, dbRemoteProviderApplication);
+			String errMsg = remoteProviderApplicationService.processApp(result, dbRemoteProviderApplication, remoteProviderApplication.getApplication());
 			
-			if (result.hasErrors()) {
-				String error = "Invalid submission.";
-				model.addAttribute("errorMessage", error);
+			if (errMsg != null && !errMsg.isEmpty()) {
+				model.addAttribute("errorMessage", errMsg);
 				model.addAttribute("remoteProviderApplication",remoteProviderApplication);
 				model.addAttribute("contentPage", "config/remoteproviders/editMapping.jsp");
 				model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
@@ -215,6 +216,28 @@ public class RemoteProvidersController {
 			return "ajaxRedirectHarness";
 		}
 	}
+	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
+	@RequestMapping(value="/{typeId}/apps/{rpAppId}/delete/{appId}")
+	public String deleteAppConfiguration(@PathVariable("typeId") int typeId, @PathVariable("rpAppId") int rpAppId,
+			@PathVariable("appId") int appId,
+			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication,
+			BindingResult result, SessionStatus status,
+			Model model, HttpServletRequest request) {
+		if (result.hasErrors()) {
+			return "config/remoteproviders/edit";
+		} else {
+						
+			RemoteProviderApplication dbRemoteProviderApplication = 
+					remoteProviderApplicationService.load(rpAppId);		
+			
+			String errMsg = remoteProviderApplicationService.deleteMapping(result, dbRemoteProviderApplication, appId);
+
+			ControllerUtils.addSuccessMessage(request, "Application successfully deleted. " + errMsg);
+			model.addAttribute("contentPage", "/configuration/remoteproviders");
+			return "ajaxRedirectHarness";
+		}
+	}	
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)

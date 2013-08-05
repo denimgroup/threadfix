@@ -89,6 +89,7 @@
         		protected-regex ^/configuration/keys/[0-9]+/delete$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/configure$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/edit$,
+		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/delete/[0-9]+$,
 		    	protected-regex ^/configuration/roles/new$,
 		    	protected-regex ^/configuration/roles/[0-9]+/edit$,
         		protected-regex ^/configuration/users/[0-9]+/access/[0-9]+/edit$,

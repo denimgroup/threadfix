@@ -21,6 +21,7 @@ var modalRefreshFunctions = [
 ];
 
 var modalFailureFunctions = [
+	addAppSelectFunctions,
     delay(addModalSubmitEvents),
     function () {
     	$(".modal-body").attr('tab-index','-1');
@@ -451,7 +452,13 @@ function addAppSelectFunctions() {
 						}));
 					}
 				};
+				
+				if (element.attr("data-selected-value")) {
+					$(targetSelect).val(element.attr("data-selected-value"));
+				}
 			};
+			
+			
 			
 			element.on("change", changeFunction);
 			changeFunction();
