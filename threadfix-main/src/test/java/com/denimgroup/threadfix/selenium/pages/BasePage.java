@@ -63,6 +63,12 @@ public abstract class BasePage {
 			return new TeamIndexPage(driver);
 	}
 	
+	public ScanIndexPage clickScansHeaderLink(){
+		driver.findElementById("scansHeader").click();
+		sleep(1000);
+		return new ScanIndexPage(driver);
+	}
+	
 	public WafIndexPage clickWafsHeaderLink() {
 		clickConfigTab();
 		driver.findElementById("wafsLink").click();
@@ -163,29 +169,155 @@ public abstract class BasePage {
 		return driver.findElementById("dashboardHeader").isDisplayed();
 	}
 	
+	public boolean isDashboardMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("dashboardHeader")) != null;
+	}
+	
 	public boolean isApplicationMenuLinkPresent(){
 		return driver.findElementById("orgHeader").isDisplayed();
+	}
+	
+	public boolean isApplicationMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("orgHeader")) != null;
 	}
 	
 	public boolean isScansMenuLinkPresent(){
 		return driver.findElementById("scansHeader").isDisplayed();
 	}
 	
+	public boolean isScansMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("scansHeader")) != null;
+	}
+	
 	public boolean isReportsMenuLinkPresent(){
 		return driver.findElementById("reportsHeader").isDisplayed();
+	}
+	
+	public boolean isReportsMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("reportsHeader")) != null;
 	}
 	
 	public boolean isUsersMenuLinkPresent(){
 		return driver.findElementById("tabUserAnchor").isDisplayed();
 	}
 	
+	public boolean isUsersMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("tabUserAnchor")) != null;
+	}
+	
 	public boolean isConfigMenuLinkPresent(){
 		return driver.findElementById("tabConfigAnchor").isDisplayed();
+	}
+	
+	public boolean isConfigMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("tabConfigAnchor")) != null;
 	}
 	
 	public boolean isLogoPresent(){
 		return driver.findElementById("logo").isDisplayed();
 	}
+	
+	public boolean isLogoClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("logo")) != null;
+	}
+	
+	public boolean isApiKeysLinkPresent(){
+		return driver.findElementById("apiKeysLink").isDisplayed();
+	}
+	
+	public boolean isApiKeysMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("apiKeysLink")) != null;
+	}
+	
+	public boolean isWafsLinkPresent(){
+		return driver.findElementById("wafsLink").isDisplayed();
+	}
+	
+	public boolean isWafsMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("wafsLink")) != null;
+	}
+	
+	public boolean isDefectTrackerLinkPresent(){
+		return driver.findElementById("defectTrackersLink").isDisplayed();
+	}
+	
+	public boolean isDefectTrackerMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("defectTrackersLink")) != null;
+	}
+	
+	public boolean isRemoteProvidersLinkPresent(){
+		return driver.findElementById("remoteProvidersLink").isDisplayed();
+	}
+	
+	public boolean isRemoteProvidersMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("remoteProvidersLink")) != null;
+	}
+	
+	public boolean isManageUsersLinkPresent(){
+		return driver.findElementById("manageUsersLink").isDisplayed();
+	}
+	
+	public boolean isManageUsersMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("manageUsersLink")) != null;
+	}
+	
+	public boolean isManageRolesLinkPresent(){
+		return driver.findElementById("manageRolesLink").isDisplayed();
+	}
+	
+	public boolean isManageRolesMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("manageRolesLink")) != null;
+	}
+	
+	public boolean isLogsLinkPresent(){
+		return driver.findElementById("viewLogsLink").isDisplayed();
+	}
+	
+	public boolean isLogsMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("viewLogsLink")) != null;
+	}
+	
+	public boolean isConfigureDefaultsLinkPresent(){
+		return driver.findElementById("configureDefaultsLink").isDisplayed();
+	}
+	
+	public boolean isConfigureDefaultsMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("configureDefaultsLink")) != null;
+	}
+	
+	public boolean isConfigDropDownPresent(){
+		return driver.findElementById("tab-config").findElement(By.id("ConfigurationHeader")).isDisplayed();
+	}
+	
+	public boolean isChangePasswordLinkPresent(){
+		return driver.findElementById("changePasswordLink").isDisplayed();
+	}
+	
+	public boolean isChangePasswordMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("changePasswordLink")) != null;
+	}
+	
+	public boolean isToggleHelpLinkPresent(){
+		return driver.findElementById("toggleHelpLink").isDisplayed();
+	}
+	
+	public boolean isToggleHelpMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("toggleHelpLink")) != null;
+	}
+	
+	public boolean isLogoutLinkPresent(){
+		return driver.findElementById("logoutLink").isDisplayed();
+	}
+	
+	public boolean isLogoutMenuLinkClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("logoutLink")) != null;
+	}
+	
+	public boolean isUserDropDownPresent(){
+		return true;
+//		return driver.findElementById("tab-user").findElement(By.id("ConfigurationHeader")).isDisplayed();
+	}
+	
 	
 	
 	/*--------------helper functions--------------*/

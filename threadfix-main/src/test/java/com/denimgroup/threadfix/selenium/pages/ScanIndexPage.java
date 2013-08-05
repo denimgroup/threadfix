@@ -38,7 +38,7 @@ public class ScanIndexPage extends BasePage {
 	public ScanIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		scanTable = driver.findElementById("wafTableBody");
-		backToApplicationLink = driver.findElementById("backToApplicationLink");
+//		backToApplicationLink = driver.findElementById("backToApplicationLink");
 	}
 
 	public ScanIndexPage clickDeleteScanButton(int index) {
@@ -59,4 +59,64 @@ public class ScanIndexPage extends BasePage {
 		backToApplicationLink.click();
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public int getNumScanRows(){
+		int cnt = driver.findElementsByClassName("bodyRow").size();
+		if(cnt == 1){
+			if(driver.findElementByClassName("bodyRow").getText().contains("No scans found.")){
+				return 0;
+			}
+		}
+		return cnt;
+	}
+	
+	public ApplicationDetailPage clickApplicationLink(String teamName,String appName,String Scanner){
+		if(getNumScanRows()==0){
+			return null;
+		}
+		for(int i=1;i<=getNumScanRows();i++){
+			if(driver.findElementById("application"+i).getText().equals(appName) &&
+					driver.findElementById("team"+i).equals(teamName) &&
+					driver.findElementById("channelType"+i).equals(Scanner)){
+				driver.findElementById("application"+i).click();
+				break;
+			}
+		}
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public TeamDetailPage clickTeamLink(String teamName,String appName,String Scanner){
+		if(getNumScanRows()==0){
+			return null;
+		}
+		for(int i=1;i<=getNumScanRows();i++){
+			if(driver.findElementById("application"+i).getText().equals(appName) &&
+					driver.findElementById("team"+i).equals(teamName) &&
+					driver.findElementById("channelType"+i).equals(Scanner)){
+				driver.findElementById("team"+i).click();
+				break;
+			}
+		}
+		return new TeamDetailPage(driver);
+	}
+	public ScanDetailPage clickAnyViewScanLink(){
+		driver.findElementByLinkText("View Scan").click();
+		return new ScanDetailPage(driver);
+	}
+	public ScanDetailPage clickViewScanLink(String teamName,String appName,String Scanner){
+		if(getNumScanRows()==0){
+			return null;
+		}
+		for(int i=1;i<=getNumScanRows();i++){
+			if(driver.findElementById("application"+i).getText().equals(appName) &&
+					driver.findElementById("team"+i).equals(teamName) &&
+					driver.findElementById("channelType"+i).equals(Scanner)){
+				driver.findElementsByLinkText("View Scan").get(i-1).click();
+				break;
+			}
+		}
+		return new ScanDetailPage(driver);
+	}
+	
+	
 }

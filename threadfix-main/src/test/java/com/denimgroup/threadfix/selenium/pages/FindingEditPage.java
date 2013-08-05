@@ -20,15 +20,15 @@ public class FindingEditPage extends BasePage {
 
 	public FindingEditPage(WebDriver webdriver) {
 		super(webdriver);
-		dynamicButton = driver.findElementById("dynamicRadioButton");
-		staticButton = driver.findElementById("staticRadioButton");
-		cweText = driver.findElementById("txtSearch");
-		urlText = driver.findElementById("urlDynamicSearch");
-		paramText = driver.findElementById("parameterInput");
-		severity = new Select(driver.findElementById("severityInput"));
-		descText = driver.findElementById("descriptionInput");
-		dynamicSubmitButton = driver.findElementById("dynamicSubmit");
-		backLink = driver.findElementById("backToAppLink");
+//		dynamicButton = driver.findElementById("dynamicRadioButton");
+//		staticButton = driver.findElementById("staticRadioButton");
+//		cweText = driver.findElementById("txtSearch");
+//		urlText = driver.findElementById("urlDynamicSearch");
+//		paramText = driver.findElementById("parameterInput");
+//		severity = new Select(driver.findElementById("severityInput"));
+//		descText = driver.findElementById("descriptionInput");
+//		dynamicSubmitButton = driver.findElementById("dynamicSubmit");
+//		backLink = driver.findElementById("backToAppLink");
 	}
 	
 	public FindingEditPage clickDynamicRadioButton() {
@@ -191,6 +191,16 @@ public class FindingEditPage extends BasePage {
 	
 	public String getSourceFile() {
 		return driver.findElementById("urlStaticSearch").getAttribute("value");
+	}
+	
+	public VulnerabilityDetailPage clickViewVuln(){
+		driver.findElementsByClassName("btn").get(0).click();
+		return new VulnerabilityDetailPage(driver);
+	}
+	
+	public MergeFindingPage clickMergeFinding(){
+		driver.findElementsByClassName("btn").get(0).click();
+		return new MergeFindingPage(driver);
 	}
 
 }
