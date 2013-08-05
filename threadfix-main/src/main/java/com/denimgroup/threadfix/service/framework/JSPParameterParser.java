@@ -34,7 +34,6 @@ import java.util.Map;
 /**
  * @author mcollins
  * 
- * TODO restrict to parameters found inside <% %> blocks. Add to state machine
  * TODO handle session attributes?
  *
  */
@@ -65,7 +64,6 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	
 	public static JSPParameterParser parse(File file) {
 		JSPParameterParser parser = new JSPParameterParser();
-		System.out.println(file.getAbsolutePath());
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser;
 	}
@@ -82,29 +80,27 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (pageState) {
 			case START:
-				if (type == '<') {
+				if (type == OPEN_ANGLE_BRACKET) {
 					pageState = PageState.OPEN_ANGLE_BRACKET;
 				}
 				break;
 			case OPEN_ANGLE_BRACKET:
-				if (type == '%') {
+				if (type == PERCENT) {
 					pageState = PageState.IN_JSP;
-					System.out.println("Going in at line " + lineNumber);
-				} else if (type != '<'){
+				} else if (type != OPEN_ANGLE_BRACKET){
 					pageState = PageState.START;
 				}
 				break;
 			case IN_JSP:
-				if (type == '%') {
+				if (type == PERCENT) {
 					pageState = PageState.PERCENTAGE;
 				} else {
 					parseParameters(type, lineNumber, stringValue);
 				}
 				break;
 			case PERCENTAGE:
-				if (type == '>') {
+				if (type == CLOSE_ANGLE_BACKET) {
 					pageState = PageState.START;
-					System.out.println("Exiting at line " + lineNumber);
 				} else {
 					pageState = PageState.IN_JSP;
 					parseParameters(type, lineNumber, stringValue);

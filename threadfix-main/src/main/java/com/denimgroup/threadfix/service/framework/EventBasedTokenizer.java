@@ -33,10 +33,18 @@ package com.denimgroup.threadfix.service.framework;
 public interface EventBasedTokenizer {
 	
 	final static Character 
+		ARROBA = '@',
 		EQUALS = '=', 
 		COMMA = ',', 
 		DOUBLE_QUOTE = '"',
-		SEMICOLON = ';';
+		SEMICOLON = ';',
+		PERCENT = '%',
+		OPEN_ANGLE_BRACKET = '<',
+		CLOSE_ANGLE_BACKET = '>',
+		OPEN_PAREN = '(',
+		CLOSE_PAREN = ')',
+		OPEN_CURLY = '{',
+		CLOSE_CURLY = '}';
 	
 	void processToken(int type, int lineNumber, String stringValue);
 

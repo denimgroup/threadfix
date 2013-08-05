@@ -43,6 +43,14 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		methodMethods = new ArrayList<>(),
 		currentParameters = new ArrayList<>();
 		
+	private static final String 
+		VALUE = "value", 
+		METHOD = "method",
+		REQUEST_PARAM = "RequestParam",
+		PATH_VARIABLE = "PathVariable",
+		REQUEST_MAPPING = "RequestMapping",
+		CLASS = "class";
+		
 	private Phase phase = Phase.ANNOTATION;
 	private AnnotationState annotationState = AnnotationState.START;
 	private MethodState methodState = MethodState.START;
@@ -78,9 +86,9 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	}
 	
 	private void parseMethod(int type, int lineNumber, String stringValue) {
-		if (type == '{') {
+		if (type == OPEN_CURLY) {
 			curlyBraceCount += 1;
-		} else if (type == '}') {
+		} else if (type == CLOSE_CURLY) {
 			if (curlyBraceCount == 1) {
 				addEndpoint(lineNumber);
 				methodState = MethodState.START;
@@ -92,30 +100,30 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
 		switch (methodState) {
 			case START:
-				if (type == '@') {
+				if (type == ARROBA) {
 					methodState = MethodState.ARROBA;
-				} else if (type == ')') {
+				} else if (type == CLOSE_PAREN) {
 					methodState = MethodState.METHOD_BODY;
 				}
 				break;
 			case ARROBA:
 				if (stringValue != null && 
-						(stringValue.equals("RequestParam") || stringValue.equals("PathVariable"))) {
+						(stringValue.equals(REQUEST_PARAM) || stringValue.equals(PATH_VARIABLE))) {
 					methodState = MethodState.REQUEST_PARAM;
 				} else {
 					methodState = MethodState.START;
 				}
 				break;
 			case REQUEST_PARAM:
-				if (type == '"') {
+				if (type == DOUBLE_QUOTE) {
 					currentParameters.add(stringValue);
-				} else if (type != ',' && type != ')') {
+				} else if (type != COMMA && type != CLOSE_PAREN) {
 					lastValue = stringValue;
-				} else if (type == ',') {
+				} else if (type == COMMA) {
 					currentParameters.add(lastValue);
 					lastValue = null;
 					methodState = MethodState.START;
-				} else if (type == ')') {
+				} else if (type == CLOSE_PAREN) {
 					if (lastValue != null) {
 						currentParameters.add(lastValue);
 						lastValue = null;
@@ -132,25 +140,25 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private void parseAnnotation(int type, int lineNumber, String stringValue) {
 		switch(annotationState) {
 			case START: 
-				if (type == '@') {
+				if (type == ARROBA) {
 					annotationState = AnnotationState.ARROBA;
-				} else if (stringValue != null && stringValue.equals("class")) {
+				} else if (stringValue != null && stringValue.equals(CLASS)) {
 					inClass = true;
 				}
 				break;
 			case ARROBA:
-				if (stringValue != null && stringValue.equals("RequestMapping")) {
+				if (stringValue != null && stringValue.equals(REQUEST_MAPPING)) {
 					annotationState = AnnotationState.REQUEST_MAPPING;
 				} else {
 					annotationState = AnnotationState.START;
 				}
 				break;
 			case REQUEST_MAPPING:
-				if (stringValue != null && stringValue.equals("value")) {
+				if (stringValue != null && stringValue.equals(VALUE)) {
 					annotationState = AnnotationState.VALUE;
-				} else if (stringValue != null && stringValue.equals("method")) {
+				} else if (stringValue != null && stringValue.equals(METHOD)) {
 					annotationState = AnnotationState.METHOD;
-				} else if (type == '"') {
+				} else if (type == DOUBLE_QUOTE) {
 					// If it immediately starts with a quoted value, use it
 					if (inClass) {
 						currentMapping = stringValue;
@@ -160,7 +168,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 						classEndpoint = stringValue;
 						annotationState = AnnotationState.START;
 					}
-				} else if (type == ')'){
+				} else if (type == CLOSE_PAREN){
 					annotationState = AnnotationState.ANNOTATION_END;
 				}
 				break;
@@ -183,7 +191,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 						classMethods.add(stringValue);
 					}
 					annotationState = AnnotationState.REQUEST_MAPPING;
-				} else if (type == '{'){
+				} else if (type == OPEN_CURLY){
 					annotationState = AnnotationState.METHOD_MULTI_VALUE;
 				}
 				break;
@@ -194,7 +202,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 					} else {
 						classMethods.add(stringValue);
 					}
-				} else if (type == '}') {
+				} else if (type == CLOSE_CURLY) {
 					annotationState = AnnotationState.REQUEST_MAPPING;
 				}
 				break;
@@ -232,7 +240,6 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		methodMethods = new ArrayList<>();
 		startLineNumber = -1;
 		curlyBraceCount = 0;
-		System.out.println(currentParameters);
 		currentParameters = new ArrayList<>();
 	}
 	
