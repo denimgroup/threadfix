@@ -52,7 +52,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		
 		// TODO update these
 		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
-		urlPathRoot  = "/" + CommonPathFinder.findOrParseUrlPath(scan);
+		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan);
 		scan.setFilePathRoot(filePathRoot);
 		scan.setUrlPathRoot(urlPathRoot);
 		
@@ -223,7 +223,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 				String key = projectDirectory.findCanonicalFilePath(
 						dataFlowElement.getSourceFileName(), applicationRoot);
 				
-				if (key.indexOf("/") != 0) {
+				if (key != null && key.indexOf("/") != 0) {
 					key = "/" + key;
 				}
 				
