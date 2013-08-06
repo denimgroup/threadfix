@@ -265,22 +265,27 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	public void processApp(BindingResult result, 
-			RemoteProviderApplication remoteProviderApplication) {
+	public String processApp(BindingResult result, 
+			RemoteProviderApplication remoteProviderApplication, Application application) {
 
-		Application application = applicationDao.retrieveById(
-				remoteProviderApplication.getApplication().getId());
-		
+		application = applicationDao.retrieveById(application.getId());
+
 		if (application == null) {
-			result.rejectValue("application.id", "errors.invalid", 
-					new String[] {"Application"},"Application choice was invalid.");
-			return;
+			return "Application choice was invalid.";
+		}
+
+		List<RemoteProviderApplication> rpApps = application.getRemoteProviderApplications();
+		for (RemoteProviderApplication rpa: rpApps ) {
+			if (rpa.getRemoteProviderType().getId() == remoteProviderApplication.getRemoteProviderType().getId()) {
+				return "Application already have Mapping for this Remote Provider Type. Please choose another application.";
+			}
 		}
 		
 		if (application.getRemoteProviderApplications() == null) {
 			application.setRemoteProviderApplications(
 					new ArrayList<RemoteProviderApplication>());
-		}
+		} 
+		
 		if (!application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
 			application.getRemoteProviderApplications().add(remoteProviderApplication);
 			remoteProviderApplication.setApplication(application);
@@ -338,6 +343,8 @@ public class RemoteProviderApplicationServiceImpl implements
 			store(remoteProviderApplication);
 			applicationDao.saveOrUpdate(application);
 		}
+		
+		return "";
 	}
 	
 	@Override
@@ -359,5 +366,41 @@ public class RemoteProviderApplicationServiceImpl implements
 		} else {
 			log.error("No apps were configured with applications.");
 		}
+	}
+
+	@Override
+	public String deleteMapping(BindingResult result,
+			RemoteProviderApplication remoteProviderApplication,
+			int appId) {
+
+		Application application = applicationDao.retrieveById(appId);
+		String returnStr = "";
+		
+		List<RemoteProviderApplication> rpAppList = application.getRemoteProviderApplications();
+		if (rpAppList != null && !rpAppList.isEmpty()) {
+			
+			for (RemoteProviderApplication rpa: rpAppList) {
+				if (rpa.getRemoteProviderType().getId() == remoteProviderApplication.getRemoteProviderType().getId()) {
+					if (rpa.getApplicationChannel().getScanList() != null && !rpa.getApplicationChannel().getScanList().isEmpty()) 
+						returnStr = "But this application has Scans associated with the Remote Provider Application!";
+				}
+			}
+			
+		}
+
+		if (application.getRemoteProviderApplications() == null) {
+			application.setRemoteProviderApplications(
+					new ArrayList<RemoteProviderApplication>());
+		} 
+
+		if (application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
+			application.getRemoteProviderApplications().remove(remoteProviderApplication);
+			remoteProviderApplication.setApplication(null);
+		}
+
+		store(remoteProviderApplication);
+		applicationDao.saveOrUpdate(application);
+
+		return returnStr;
 	}
 }

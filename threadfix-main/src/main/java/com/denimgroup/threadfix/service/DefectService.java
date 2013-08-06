@@ -97,4 +97,12 @@ public interface DefectService {
 	 */
 	void deleteByApplicationId(Integer applicationId);
 	
+	/**
+	 * 
+	 * @param vulnerabilities
+	 * @param id
+	 * @return
+	 */
+	boolean mergeDefect(List<Vulnerability> vulnerabilities, String id);
+	
 }

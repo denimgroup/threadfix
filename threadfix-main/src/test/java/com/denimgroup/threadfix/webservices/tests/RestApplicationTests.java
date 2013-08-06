@@ -362,7 +362,7 @@ public class RestApplicationTests extends BaseRestTest {
 		assertFalse(RESTRICTED_URL_RETURNED,
 				result.equals(RestController.RESTRICTED_URL_ERROR));
 		
-		result = restrictedClient.searchForApplicationByName(appName);
+		result = restrictedClient.searchForApplicationByName(appName, teamId.toString());
 		assertFalse(RESTRICTED_URL_RETURNED,
 				result.equals(RestController.RESTRICTED_URL_ERROR));
 		

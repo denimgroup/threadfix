@@ -114,9 +114,9 @@ public class CommandLineParser {
 				.create("sw");
 		options.addOption(searchWaf);
 		
-		Option searchApp = OptionBuilder.withArgName("property> <value")
+		Option searchApp = OptionBuilder.withArgName("property> <value1> <value2")
 				.withValueSeparator(' ')
-				.hasArgs(2)
+				.hasArgs(3)
 				.withLongOpt("search-app")
 				.withDescription("Searches for a ThreadFix application and returns its JSON.")
 				.create("sa");
@@ -297,18 +297,21 @@ public class CommandLineParser {
 				}
 			
 			} else if (cmd.hasOption("sa")) {
-				String[] searchArgs = cmd.getOptionValues("sa");
-				if (searchArgs.length != 2) {
-					println("Wrong number of arguments.");
-					return;
-				}
-				
+				String[] searchArgs = cmd.getOptionValues("sa");				
 				if ("id".equals(searchArgs[0])) {
-					System.out.println("Searching for team with the id " + searchArgs[1] + ".");
+					if (searchArgs.length != 2) {
+						System.out.println("Wrong number of arguments.");
+						return;
+					}
+					System.out.println("Searching for application with the id " + searchArgs[1] + ".");
 					System.out.println(client.searchForApplicationById(searchArgs[1]));
 				} else if ("name".equals(searchArgs[0])) {
-					System.out.println("Searching for team with the name " + searchArgs[1] + ".");
-					System.out.println(client.searchForApplicationByName(searchArgs[1]));
+					if (searchArgs.length != 3) {
+						System.out.println("Wrong number of arguments. You need to input application name and team name as well.");
+						return;
+					}
+					System.out.println("Searching for application with the name " + searchArgs[1] + " of team " + searchArgs[2]);
+					System.out.println(client.searchForApplicationByName(searchArgs[1], searchArgs[2]));
 				} else {
 					println("Unknown property argument. Try either id or name.");
 					return;

@@ -342,4 +342,12 @@ public class UserServiceImpl implements UserService {
 		
 		return user;
 	}
+
+	@Override
+	public List<User> getPermissibleUsers(Integer orgId, Integer appId) {	
+		List<User> resultList = null;
+		if (orgId != null && appId == null) resultList = userDao.retrieveOrgPermissibleUsers(orgId);			
+		if (appId != null) resultList = userDao.retrieveAppPermissibleUsers(appId);			
+		return resultList;
+	}	
 }

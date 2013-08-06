@@ -101,8 +101,8 @@ public class ThreadFixRestClient {
 		return result;
 	}
 
-	public String searchForApplicationByName(String name) {
-		String result = util.httpGet(util.getUrl() + "/applications/lookup" +
+	public String searchForApplicationByName(String name, String teamName) {
+		String result = util.httpGet(util.getUrl() + "/teams/" + teamName + "/applications/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		

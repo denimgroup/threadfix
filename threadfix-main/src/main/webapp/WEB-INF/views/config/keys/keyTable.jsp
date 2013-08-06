@@ -23,10 +23,10 @@
 		</c:if>
 		<c:forEach var="key" items="${ apiKeyList }" varStatus="status">
 			<tr class="bodyRow">
-				<td id="key${ status.count }">
+				<td id="key${ status.count }" style="max-width:270px;">
 					<c:out value="${ key.apiKey }"></c:out>
 				</td>
-				<td style="max-width:320px;word-wrap: break-word;" id="note${ status.count }">
+				<td style="max-width:250px;word-wrap: break-word;" id="note${ status.count }">
 					<c:out value="${ key.note }"></c:out>
 				</td>
 				<td class="centered">

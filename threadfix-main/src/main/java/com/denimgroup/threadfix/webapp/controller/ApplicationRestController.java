@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanParametersService;
 import com.denimgroup.threadfix.service.ScanService;
@@ -40,6 +42,7 @@ public class ApplicationRestController extends RestController {
 	private ScanTypeCalculationService scanTypeCalculationService;
 	private ScanMergeService scanMergeService;
 	private WafService wafService;
+	private OrganizationService organizationService;
 	
 	private final static String DETAIL = "applicationDetail", 
 		SET_PARAMS = "setParameters",
@@ -57,12 +60,14 @@ public class ApplicationRestController extends RestController {
 	@Autowired
 	public ApplicationRestController(APIKeyService apiKeyService, 
 			ApplicationService applicationService,
+			OrganizationService organizationService,
 			ScanService scanService, 
 			ScanMergeService scanMergeService,
 			ScanTypeCalculationService scanTypeCalculationService, 
 			WafService wafService,
 			ScanParametersService scanParametersService) {
 		super(apiKeyService);
+		this.organizationService = organizationService;
 		this.apiKeyService = apiKeyService;
 		this.applicationService = applicationService;
 		this.scanTypeCalculationService = scanTypeCalculationService;
@@ -149,23 +154,26 @@ public class ApplicationRestController extends RestController {
 	 * @param appName
 	 * @return
 	 */
-	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody Object applicationLookup(HttpServletRequest request) {
-		
+	@RequestMapping(headers="Accept=application/json", value="/{teamId}/lookup", method=RequestMethod.GET)
+	public @ResponseBody Object applicationLookup(HttpServletRequest request,
+			@PathVariable("teamId") String teamName) {		
 		String appName = request.getParameter("name");
-
 		String result = checkKey(request, LOOKUP);
 		if (!result.equals(API_KEY_SUCCESS)) {
 			return result;
-		}
-		
+		}		
 		if (appName == null) {
+			return LOOKUP_FAILED;
+		}		
+		log.info("Received REST request for Applications in team = " + teamName + ".");		
+		Organization org = organizationService.loadOrganization(teamName);				
+		if (org == null) {
+			log.warn(LOOKUP_FAILED);
 			return LOOKUP_FAILED;
 		}
 		
-		log.info("Received REST request for Applications with name = " + appName + ".");
-		
-		Application application = applicationService.loadApplication(appName);
+		int teamId = org.getId();
+		Application application = applicationService.loadApplication(appName, teamId);	
 		
 		if (application == null) {
 			log.warn(LOOKUP_FAILED);
