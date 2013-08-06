@@ -52,9 +52,15 @@ public class TeamDetailPage extends BasePage {
 		return driver.findElementById("name").getText();
 	}
 	
+	public TeamDetailPage clickActionButton(){
+		driver.findElementById("actionButton1").click();
+		return new TeamDetailPage(driver);
+	}
+	
 	
 	public TeamDetailPage clickEditOrganizationLink() {
-		driver.findElementById("teamModalButton").click();
+		clickActionButton();
+		driver.findElementById("teamModalButton1").click();
 		waitForElement(driver.findElementById("teamModal"));
 		return new TeamDetailPage(driver);
 	}

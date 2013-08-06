@@ -39,12 +39,12 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 
 public class TeamIndexPage extends BasePage {
 
-//	private List<WebElement> names = new ArrayList<WebElement>();
 	private List<WebElement> apps = new ArrayList<WebElement>();
 	public int modalNum;
 	public String appModalId;
@@ -53,9 +53,6 @@ public class TeamIndexPage extends BasePage {
 		super(webdriver);
 		modalNum = 0;
 		appModalId = "";
-//		for (int i = 1; i <= getNumTeamRows(); i++) {
-//			names.add(driver.findElementById("teamName" + i));
-//		}
 
 	}
 
@@ -368,6 +365,55 @@ public class TeamIndexPage extends BasePage {
 		return -1;
 	}
 	
+	public boolean isAddTeamBtnPresent(){
+		return driver.findElementById("addTeamModalButton").isDisplayed();	
+	}
+	
+	public boolean isAddTeamBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("addTeamModalButton")) != null;
+	}
+	
+	public boolean isExpandAllBtnPresent(){
+		return driver.findElementById("expandAllButton").isDisplayed();	
+	}
+	
+	public boolean isExpandAllBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("expandAllButton")) != null;
+	}
+	
+	public boolean isCollapseAllBtnPresent(){
+		return driver.findElementById("collapseAllButton").isDisplayed();	
+	}
+	
+	public boolean isCollapseAllBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("collapseAllButton")) != null;
+	}
+	
+	public boolean isAddAppBtnPresent(String teamName){
+		return driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).isDisplayed();	
+	}
+	
+	public boolean isAddAppBtnClickable(String teamName){
+		return ExpectedConditions.elementToBeClickable(By.id(
+				driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("id"))) != null;
+	}
+	
+	public boolean isViewTeamLinkPresent(String teamName){
+		return driver.findElementsByLinkText("View Team").get(getIndex(teamName)).isDisplayed();	
+	}
+	
+	public boolean isViewTeamLinkClickable(String teamName){
+		return ExpectedConditions.elementToBeClickable(By.id(
+				driver.findElementsByLinkText("View Team").get(getIndex(teamName)).getAttribute("id"))) != null;
+	}
+	
+	public boolean isAppLinkPresent(String appName){
+		return driver.findElementByLinkText(appName).isDisplayed();
+	}
+	
+	public boolean isAddLinkClickable(String appName){
+		return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
+	}
 
 
 

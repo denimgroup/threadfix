@@ -28,7 +28,6 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.hssf.record.common.FeatFormulaErr2;
 import org.junit.*;
 
 import com.denimgroup.threadfix.selenium.pages.ApiKeysIndexPage;
@@ -58,19 +57,12 @@ public class HeaderPageTest extends PageBaseTest {
 		super(browser);
 	}
 
-//	private static LoginPage loginPage;
-//	private RemoteWebDriver driver;
 	private  DashboardPage dashboardPage;
 	private  boolean build;
 	private  String teamName = getRandomString(8);;
 	private  String wafName = getRandomString(8);;
 	private  String appName = getRandomString(8);;
-	
-//	@BeforeClass
-//	public void setup(){
-//		build = buildElements();
-//	}
-	
+		
 	@Before
 	public void init() {
 		super.init();
@@ -874,96 +866,527 @@ public class HeaderPageTest extends PageBaseTest {
 		org.junit.Assume.assumeTrue(build);
 		int i = 0;
 		Map<String, Boolean> present = PAGE_MAP;
-//		Map<String, Boolean> clickable = PAGE_MAP;
+		Map<String, Boolean> apiPresent = PAGE_MAP;
+		Map<String, Boolean> apiClickable = PAGE_MAP;
+		Map<String, Boolean> wafPresent = PAGE_MAP;
+		Map<String, Boolean> wafClickable = PAGE_MAP;
+		Map<String, Boolean> dtPresent = PAGE_MAP;
+		Map<String, Boolean> dtClickable = PAGE_MAP;
+		Map<String, Boolean> rpPresent = PAGE_MAP;
+		Map<String, Boolean> rpClickable = PAGE_MAP;
+		Map<String, Boolean> userPresent = PAGE_MAP;
+		Map<String, Boolean> userClickable = PAGE_MAP;
+		Map<String, Boolean> rolePresent = PAGE_MAP;
+		Map<String, Boolean> roleClickable = PAGE_MAP;
+		Map<String, Boolean> errorPresent = PAGE_MAP;
+		Map<String, Boolean> errorClickable = PAGE_MAP;
+		Map<String, Boolean> defaultsPresent = PAGE_MAP;
+		Map<String, Boolean> defaultsClickable = PAGE_MAP;
+		Map<String, Boolean> clickable = PAGE_MAP;
 		//Dashboard
-		present.put(PAGE_LIST[i++], dashboardPage.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], dashboardPage.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], dashboardPage.isConfigMenuLinkPresent());
+		dashboardPage.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], dashboardPage.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], dashboardPage.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], dashboardPage.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], dashboardPage.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], dashboardPage.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], dashboardPage.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], dashboardPage.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], dashboardPage.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], dashboardPage.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], dashboardPage.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], dashboardPage.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], dashboardPage.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
+		dashboardPage.clickConfigTab();
 		
 		//Applications Index
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
-		present.put(PAGE_LIST[i++], ti.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ti.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ti.isConfigMenuLinkPresent());
+		ti.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ti.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ti.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ti.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ti.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ti.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ti.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ti.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ti.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ti.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ti.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ti.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ti.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ti.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ti.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ti.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ti.isConfigureDefaultsMenuLinkClickable());
+		ti.clickConfigTab();
 		
 		//Team Detail
 		TeamDetailPage td = ti.clickViewTeamLink(teamName);
-		present.put(PAGE_LIST[i++], td.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], td.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], td.isConfigMenuLinkPresent());
+		td.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], td.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], td.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], td.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], td.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], td.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], td.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], td.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], td.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], td.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], td.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], td.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], td.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], td.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], td.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], td.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], td.isConfigureDefaultsMenuLinkClickable());
+		td.clickConfigTab();
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
 									.expandTeamRowByName(teamName)
 									.clickViewAppLink(appName, teamName);
-		present.put(PAGE_LIST[i++], ad.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ad.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ad.isConfigMenuLinkPresent());
+		ad.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ad.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ad.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ad.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ad.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ad.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ad.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ad.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ad.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ad.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ad.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ad.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ad.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ad.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ad.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ad.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ad.isConfigureDefaultsMenuLinkClickable());
+		ad.clickConfigTab();
 		
 		//Scan Index
 		ScanIndexPage si = ad.clickScansHeaderLink();
-		present.put(PAGE_LIST[i++], si.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], si.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], si.isConfigMenuLinkPresent());
+		si.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], si.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], si.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], si.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], si.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], si.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], si.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], si.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], si.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], si.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], si.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], si.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], si.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], si.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], si.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], si.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], si.isConfigureDefaultsMenuLinkClickable());
+		si.clickConfigTab();
 		
 		//Scan Detail
 		ScanDetailPage sd = si.clickAnyViewScanLink();
-		present.put(PAGE_LIST[i++], sd.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], sd.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], sd.isConfigMenuLinkPresent());
+		sd.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], sd.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], sd.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], sd.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], sd.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], sd.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], sd.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], sd.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], sd.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], sd.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], sd.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], sd.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], sd.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], sd.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], sd.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], sd.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], sd.isConfigureDefaultsMenuLinkClickable());
+		sd.clickConfigTab();
 		
 		//Finding Detail
 		FindingEditPage fe = sd.clickViewFinding(1);
-		present.put(PAGE_LIST[i++], fe.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], fe.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], fe.isConfigMenuLinkPresent());
+		fe.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], fe.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], fe.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], fe.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], fe.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], fe.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], fe.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], fe.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], fe.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], fe.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], fe.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], fe.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], fe.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], fe.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], fe.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], fe.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], fe.isConfigureDefaultsMenuLinkClickable());
+		fe.clickConfigTab();
 		
 		//Vuln Detail
 		VulnerabilityDetailPage vd = fe.clickViewVuln();
-		present.put(PAGE_LIST[i++], vd.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], vd.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], vd.isConfigMenuLinkPresent());
+		vd.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], vd.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], vd.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], vd.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], vd.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], vd.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], vd.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], vd.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], vd.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], vd.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], vd.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], vd.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], vd.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], vd.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], vd.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], vd.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], vd.isConfigureDefaultsMenuLinkClickable());
+		vd.clickConfigTab();
 		
 		//Merge Finding Page
 		MergeFindingPage mf = vd.clickViewFinding().clickMergeFinding();
-		present.put(PAGE_LIST[i++], mf.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], mf.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], mf.isConfigMenuLinkPresent());
+		mf.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], mf.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], mf.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], mf.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], mf.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], mf.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], mf.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], mf.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], mf.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], mf.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], mf.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], mf.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], mf.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], mf.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], mf.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], mf.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], mf.isConfigureDefaultsMenuLinkClickable());
+		mf.clickConfigTab();
 		
 		//Reports Index
 		ReportsIndexPage ri = mf.clickReportsHeaderLink();
-		present.put(PAGE_LIST[i++], ri.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ri.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ri.isConfigMenuLinkPresent());
+		ri.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ri.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ri.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ri.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ri.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ri.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ri.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ri.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ri.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ri.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ri.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ri.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ri.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ri.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ri.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ri.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ri.isConfigureDefaultsMenuLinkClickable());
+		ri.clickConfigTab();
 		
 		//Change Password
 		UserChangePasswordPage pc = ri.clickChangePasswordLink();
-		present.put(PAGE_LIST[i++], pc.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], pc.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], pc.isConfigMenuLinkPresent());
+		pc.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], pc.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], pc.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], pc.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], pc.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], pc.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], pc.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], pc.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], pc.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], pc.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], pc.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], pc.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], pc.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], pc.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], pc.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], pc.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], pc.isConfigureDefaultsMenuLinkClickable());
+		pc.clickConfigTab();
 		
 		//Api key index
 		ApiKeysIndexPage ai = pc.clickApiKeysLink();
-		present.put(PAGE_LIST[i++], ai.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ai.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ai.isConfigMenuLinkPresent());
+		ai.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ai.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ai.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ai.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ai.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ai.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ai.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ai.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ai.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ai.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ai.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ai.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ai.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ai.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ai.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ai.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ai.isConfigureDefaultsMenuLinkClickable());
+		ai.clickConfigTab();
 		
 		//waf index
 		WafIndexPage wi = ai.clickWafsHeaderLink();
-		present.put(PAGE_LIST[i++], wi.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], wi.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], wi.isConfigMenuLinkPresent());
+		wi.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], wi.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], wi.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], wi.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], wi.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], wi.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], wi.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], wi.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], wi.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], wi.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], wi.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], wi.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], wi.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], wi.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], wi.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], wi.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], wi.isConfigureDefaultsMenuLinkClickable());
+		wi.clickConfigTab();
 		
 		//waf rules
 		WafRulesPage wr = wi.clickRules(wafName);
-		present.put(PAGE_LIST[i++], wr.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], wr.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], wr.isConfigMenuLinkPresent());
+		wr.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], wr.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], wr.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], wr.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], wr.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], wr.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], wr.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], wr.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], wr.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], wr.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], wr.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], wr.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], wr.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], wr.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], wr.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], wr.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], wr.isConfigureDefaultsMenuLinkClickable());
+		wr.clickConfigTab();
 		
 		//defect Trackers
 		DefectTrackerIndexPage di = wr.clickDefectTrackersLink();
-		present.put(PAGE_LIST[i++], di.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], di.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], di.isConfigMenuLinkPresent());
+		di.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], di.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], di.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], di.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], di.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], di.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], di.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], di.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], di.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], di.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], di.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], di.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], di.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], di.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], di.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], di.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], di.isConfigureDefaultsMenuLinkClickable());
+		di.clickConfigTab();
 		
 		//remote providers
 		RemoteProvidersIndexPage rem = di.clickRemoteProvidersLink();
-		present.put(PAGE_LIST[i++], rem.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], rem.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], rem.isConfigMenuLinkPresent());
+		rem.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], rem.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], rem.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], rem.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], rem.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], rem.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], rem.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], rem.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], rem.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], rem.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], rem.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], rem.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], rem.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], rem.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], rem.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], rem.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], rem.isConfigureDefaultsMenuLinkClickable());
+		rem.clickConfigTab();
 		
 		//user index
 		UserIndexPage ui = rem.clickManageUsersLink();
-		present.put(PAGE_LIST[i++], ui.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ui.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ui.isConfigMenuLinkPresent());
+		ui.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ui.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ui.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ui.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ui.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ui.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ui.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ui.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ui.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ui.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ui.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ui.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ui.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ui.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ui.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ui.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ui.isConfigureDefaultsMenuLinkClickable());
+		ui.clickConfigTab();
 		
 		//user permissions
 		UserPermissionsPage up = ui.clickEditPermissions("user");
-		present.put(PAGE_LIST[i++], up.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], up.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], up.isConfigMenuLinkPresent());
+		up.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], up.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], up.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], up.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], up.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], up.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], up.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], up.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], up.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], up.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], up.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], up.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], up.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], up.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], up.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], up.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], up.isConfigureDefaultsMenuLinkClickable());
+		up.clickConfigTab();
 		
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
-		present.put(PAGE_LIST[i++], role.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], role.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], role.isConfigMenuLinkPresent());
+		role.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], role.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], role.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], role.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], role.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], role.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], role.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], role.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], role.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], role.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], role.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], role.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], role.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], role.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], role.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], role.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], role.isConfigureDefaultsMenuLinkClickable());
+		role.clickConfigTab();
 		
 		//logs
 		ErrorLogPage ep = role.clickViewLogsLink();
-		present.put(PAGE_LIST[i++], ep.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], ep.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], ep.isConfigMenuLinkPresent());
+		ep.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], ep.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], ep.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], ep.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], ep.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], ep.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], ep.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], ep.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], ep.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], ep.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], ep.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], ep.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], ep.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], ep.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], ep.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], ep.isConfigureDefaultsLinkPresent());
+		defaultsClickable.put(PAGE_LIST[i++], ep.isConfigureDefaultsMenuLinkClickable());
+		ep.clickConfigTab();
 		
 		//configure defaults
 		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
-		present.put(PAGE_LIST[i++], cd.isConfigMenuLinkPresent());
+		clickable.put(PAGE_LIST[i], cd.isConfigMenuLinkClickable());
+		present.put(PAGE_LIST[i], cd.isConfigMenuLinkPresent());
+		cd.clickConfigTab();
+		apiPresent.put(PAGE_LIST[i], cd.isApiKeysLinkPresent());
+		apiClickable.put(PAGE_LIST[i], cd.isApiKeysMenuLinkClickable());
+		wafPresent.put(PAGE_LIST[i], cd.isWafsLinkPresent());
+		wafClickable.put(PAGE_LIST[i], cd.isWafsMenuLinkClickable());
+		dtPresent.put(PAGE_LIST[i], cd.isDefectTrackerLinkPresent());
+		dtClickable.put(PAGE_LIST[i], cd.isDefectTrackerMenuLinkClickable());
+		rpPresent.put(PAGE_LIST[i], cd.isRemoteProvidersLinkPresent());
+		rpClickable.put(PAGE_LIST[i], cd.isRemoteProvidersMenuLinkClickable());
+		userPresent.put(PAGE_LIST[i], cd.isManageUsersLinkPresent());
+		userClickable.put(PAGE_LIST[i], cd.isManageUsersMenuLinkClickable());
+		rolePresent.put(PAGE_LIST[i], cd.isManageRolesLinkPresent());
+		roleClickable.put(PAGE_LIST[i], cd.isManageRolesMenuLinkClickable());
+		errorPresent.put(PAGE_LIST[i], cd.isLogsLinkPresent());
+		errorClickable.put(PAGE_LIST[i], cd.isLogsMenuLinkClickable());
+		defaultsPresent.put(PAGE_LIST[i], cd.isConfigureDefaultsLinkPresent());
+		defaultsPresent.put(PAGE_LIST[i++], cd.isConfigureDefaultsMenuLinkClickable());
+		cd.clickConfigTab();
 		
 		dashboardPage.logout();
 		
-		String alert = mapCheck(present, "Config menu link is not present on ");
-//		.concat(mapCheck(clickable,"DashBoard menu link is not clickable on "));
+		String alert = mapCheck(present, "Config menu link is not present on ")
+				.concat(mapCheck(clickable,"Config menu link is not clickable on "))
+				.concat(mapCheck(apiPresent,"api menu link is not present on "))
+				.concat(mapCheck(apiClickable,"api menu link is not clickable on "))
+				.concat(mapCheck(wafPresent,"waf menu link is not present on "))
+				.concat(mapCheck(wafClickable,"waf menu link is not clickable on "))
+				.concat(mapCheck(dtPresent,"defect tracker menu link is not present on "))
+				.concat(mapCheck(dtClickable,"defect tracker menu link is not clickable on "))
+				.concat(mapCheck(rpPresent,"remote providers menu link is not present on "))
+				.concat(mapCheck(rpClickable,"remote providers menu link is not clickable on "))
+				.concat(mapCheck(userPresent,"manage users menu link is not present on "))
+				.concat(mapCheck(userClickable,"manage users menu link is not clickable on "))
+				.concat(mapCheck(rolePresent,"manage roles menu link is not present on "))
+				.concat(mapCheck(roleClickable,"manage roles menu link is not clickable on "))
+				.concat(mapCheck(errorPresent,"error log menu link is not present on "))
+				.concat(mapCheck(errorClickable,"error log menu link is not clickable on "))
+				.concat(mapCheck(defaultsPresent,"Defaults menu link is not present on "))
+				.concat(mapCheck(defaultsPresent,"Defaults menu link is not clickable on "));
 
 		assertTrue(alert,alert.equals(""));
 	}

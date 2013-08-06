@@ -223,8 +223,14 @@ public class ApplicationDetailPage extends BasePage {
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public ApplicationDetailPage clickActionButton(){
+		driver.findElementById("actionButton1").click();
+		return new ApplicationDetailPage(driver);
+	}
 
 	public ApplicationDetailPage clickEditDeleteBtn() {
+		clickActionButton();
 		driver.findElementById("editApplicationModalButton").click();
 		waitForElement(driver.findElementById("editApplicationModal"));
 		return new ApplicationDetailPage(driver);
