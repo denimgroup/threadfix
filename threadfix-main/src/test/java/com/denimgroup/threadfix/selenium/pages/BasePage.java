@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Alert;
@@ -357,5 +358,9 @@ public abstract class BasePage {
 	public void waitForInvisibleElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
+	}
+	
+	protected static String getRandomString(int length) {
+		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 }
