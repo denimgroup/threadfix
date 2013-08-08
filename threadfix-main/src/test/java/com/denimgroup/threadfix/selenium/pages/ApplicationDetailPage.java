@@ -554,6 +554,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 
 	public ApplicationDetailPage clickUploadScanLink() {
+		clickActionButton();
 		driver.findElementById("uploadScanModalLink").click();
 		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
 		return new ApplicationDetailPage(driver);

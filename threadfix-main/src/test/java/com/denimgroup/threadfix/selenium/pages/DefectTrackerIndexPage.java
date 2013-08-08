@@ -239,7 +239,7 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
 		driver.findElementById("submitDTCreateModal").click();
-		sleep(2000);
+		sleep(4000);
 //		waitForInvisibleElement(driver.findElementById("createDefectTracker"));
 		return new DefectTrackerIndexPage(driver);
 	}

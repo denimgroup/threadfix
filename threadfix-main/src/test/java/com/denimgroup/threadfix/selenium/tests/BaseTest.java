@@ -60,16 +60,16 @@ public abstract class BaseTest {
 		String  ff = System.getProperty("FIREFOX");
 		String  chrome = System.getProperty("CHROME");
 		String  ie = System.getProperty("IE");
-		if(ff.equals("true")){
+		if(ff != null && ff.equals("true")){
 			String[] f = {"firefox"};
 			params.add(f);
 		}
-		if(chrome.equals("true")){
+		if(chrome != null && chrome.equals("true")){
 			String[] c = {"chrome"};
 			params.add(c);
 		}
 		
-		if(ie.equals("true")){
+		if(ie != null && ie.equals("true")){
 			String[] e = {"IE"};
 			params.add(e);
 		}
