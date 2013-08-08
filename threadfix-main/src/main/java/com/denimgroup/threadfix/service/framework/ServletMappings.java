@@ -23,12 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.FrameworkType;
 
 public class ServletMappings {
+	
+	private static final SanitizedLogger log = new SanitizedLogger("ServletMappings");
 	
 	public final static String DEFAULT_SERVLET = "Default Servlet";
 	
@@ -40,6 +44,8 @@ public class ServletMappings {
 		
 	private List<ClassMapping> servlets = null;
 	
+	private ProjectDirectory projectDirectory = null;
+	
 	private UrlPatternMapping
 		defaultServlet = null,
 		contextRootServlet = null;
@@ -49,9 +55,11 @@ public class ServletMappings {
 	///////////////////////////////////////////////////////////////////////////
 	
 	public ServletMappings(List<UrlPatternMapping> servletMappings,
-			List<ClassMapping> servlets) {
+			List<ClassMapping> servlets,
+			ProjectDirectory projectDirectory) {
 		this.allServletMappings = servletMappings;
 		this.servlets = servlets;
+		this.projectDirectory = projectDirectory;
 		
 		sortMappings();
 	}
@@ -157,21 +165,41 @@ public class ServletMappings {
 	}
 	
 	public FrameworkType guessApplicationType() {
+		// Since we're only looking at two types of applications, this logic is pretty simple
+		// In a full-blown implementation, this method would be able to return lots of other types too.
+		FrameworkType frameworkType = FrameworkType.JSP;
+		
+		log.info("About to guess application type from web.xml.");
 		
 		for (ClassMapping mapping : servlets) {
 			if (mapping.getClassWithPackage().equals(
 						"org.springframework.web.servlet.DispatcherServlet")) {
+				// Spring. Let's look for mvc:annotation-driven in the servlet config
 				
-				// If it's using  a Spring DispatcherServlet, we need to check for
-				// Spring config, not normal config
-				// TODO see about creating a hybrid spring / normal servlet
-				return FrameworkType.SPRING_MVC;
+				File configFile = null;
+				
+				if (mapping.getContextConfigLocation() != null) {
+					configFile = projectDirectory.findFile(mapping.getContextConfigLocation());
+				} else {
+					configFile = projectDirectory.findFile("dispatcher-servlet.xml");
+				}
+				
+				if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
+					log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
+					frameworkType = FrameworkType.SPRING_MVC;
+				} else  {
+					if (configFile == null) {
+						log.warn("Unable to locate Spring's dispatcher servlet configuration.");
+					} else {
+						log.warn("Dispatcher servlet configuration parsing did not find the " +
+								"Spring MVC configuration.");
+					}
+				}
 			}
 		}
 
-		// Since we're only looking at two types of applications, this logic is pretty simple
-		// In a full-blown implementation, this method would be able to return lots of other types too.
-		return FrameworkType.JSP;
+		log.info("Determined that the framework type was " + frameworkType);
+		return frameworkType;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

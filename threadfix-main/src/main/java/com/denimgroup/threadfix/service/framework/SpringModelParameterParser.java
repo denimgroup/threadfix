@@ -43,6 +43,7 @@ public class SpringModelParameterParser implements ParameterParser {
 	 *  3. There are no intermediate objects: the first accessor call will be a string.
 	 *  
 	 *  TODO handle owner.pet.name and similar cases
+	 *  TODO add requestvariable
 	 * 
 	 * @param dataFlowElements
 	 * @return

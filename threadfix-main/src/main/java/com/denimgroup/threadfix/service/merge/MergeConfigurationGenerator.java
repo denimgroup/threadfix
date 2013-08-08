@@ -156,9 +156,11 @@ public class MergeConfigurationGenerator {
 		FrameworkType frameworkType = FrameworkType.NONE;
 		
 		if (workTree != null) {
-			File webXML = new ProjectDirectory(workTree).findWebXML();
+			ProjectDirectory projectDirectory = new ProjectDirectory(workTree);
+			
+			File webXML = projectDirectory.findWebXML();
 			if (webXML != null && webXML.exists()) {
-				ServletMappings mappings = WebXMLParser.getServletMappings(webXML);
+				ServletMappings mappings = WebXMLParser.getServletMappings(webXML, projectDirectory);
 				
 				if (mappings != null) {
 					frameworkType = mappings.guessApplicationType();

@@ -45,9 +45,10 @@ public class WebXMLParser {
 		// intentionally inaccessible
 	}
 	
-	public static ServletMappings getServletMappings(File file) {
+	public static ServletMappings getServletMappings(File file,
+			ProjectDirectory projectDirectory) {
 		if (file == null || !file.exists()) {
-			return new ServletMappings(null,null);
+			return new ServletMappings(null,null,null);
 		}
 		
 		ServletParser parser = new WebXMLParser.ServletParser();
@@ -65,7 +66,7 @@ public class WebXMLParser {
 
 		}
 		
-		return new ServletMappings(parser.mappings, parser.servlets);
+		return new ServletMappings(parser.mappings, parser.servlets, projectDirectory);
 	}
 	
 	// this class is private static so that it doesn't share state with its parent class
@@ -75,11 +76,25 @@ public class WebXMLParser {
 		List<ClassMapping> servlets = new ArrayList<>();
 		List<UrlPatternMapping> mappings = new ArrayList<>();
 		
-		String servletName = null, urlPattern = null, servletClass = null;
-		StringBuilder builder = null;
+		String servletName = null, urlPattern = null, servletClass = null, contextConfigLocation = null;
+		StringBuilder builder = new StringBuilder();
 		
+		boolean getContextConfigLocation = false,
+				grabText = false;
+		
+		private static final String 
+			SERVLET_MAPPING = "servlet-mapping",
+			SERVLET = "servlet",
+			SERVLET_NAME = "servlet-name", 
+			URL_PATTERN = "url-pattern", 
+			SERVLET_CLASS = "servlet-class", 
+			PARAM_NAME = "param-name", 
+			PARAM_VALUE = "param-value",
+			CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
+	
 		private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
-			new String[] { "servlet-name", "url-pattern", "servlet-class" }));
+			new String[] { SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
+					PARAM_NAME, PARAM_VALUE }));
 		
 		@Override
 		public void startElement(String uri, String localName,
@@ -87,37 +102,54 @@ public class WebXMLParser {
 				throws SAXException {
 
 			if (tagsToGrab.contains(qName)) {
-				builder = new StringBuilder();
+				grabText = true;
 			}
 		}
 
 		@Override
 		public void endElement(String uri, String localName,
 				String qName) throws SAXException {
-			if (qName.equals("servlet-mapping")) {
-				mappings.add(new UrlPatternMapping(servletName, urlPattern));
-			} else if (qName.equals("servlet")) {
-				if (servletName != null && servletClass != null) {
-					servlets.add(new ClassMapping(servletName, servletClass));
-				}
-			} else if (qName.equals("servlet-name")) {
-				servletName = builder.toString();
-				builder = null;
-			} else if (qName.equals("url-pattern")) {
-				urlPattern = builder.toString();
-				builder = null;
-			} else if (qName.equals("servlet-class")) {
-				servletClass = builder.toString();
-				builder = null;
+			
+			switch (qName) {
+				case SERVLET_NAME:  servletName  = getBuilderText(); break;
+				case URL_PATTERN:   urlPattern   = getBuilderText(); break;
+				case SERVLET_CLASS: servletClass = getBuilderText(); break;
+				case SERVLET_MAPPING:
+					mappings.add(new UrlPatternMapping(servletName, urlPattern));
+					break;
+				case SERVLET:
+					if (servletName != null && servletClass != null) {
+						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation));
+						contextConfigLocation = null;
+					}
+					break;
+				case PARAM_VALUE: 
+					if (getContextConfigLocation) {
+						contextConfigLocation = getBuilderText();
+						getContextConfigLocation = false;
+					}
+					break;
+				case PARAM_NAME:
+					if (CONTEXT_CONFIG_LOCATION.equals(getBuilderText())) {
+						getContextConfigLocation = true;
+					}
+					break;
 			}
 		}
 
 		@Override
 		public void characters(char ch[], int start, int length)
 				throws SAXException {
-			if (builder != null) {
+			if (grabText) {
 				builder.append(ch, start, length);
 			}
+		}
+		
+		private String getBuilderText() {
+			String returnValue = builder.toString();
+			builder.setLength(0);
+			grabText = false;
+			return returnValue;
 		}
 	}
 }

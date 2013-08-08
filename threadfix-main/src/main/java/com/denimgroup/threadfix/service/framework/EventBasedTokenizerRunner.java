@@ -46,7 +46,7 @@ public class EventBasedTokenizerRunner {
 	private static final SanitizedLogger log = new SanitizedLogger("EventBasedTokenizerRunner");
 	
 	/**
-	 * The idiom for parsing and getting results using this
+	 * The default idiom for parsing and getting results using this
 	 * class is 
 	 * 
 	 * <code>
@@ -69,6 +69,7 @@ public class EventBasedTokenizerRunner {
 				tokenizer.slashSlashComments(true);
 				tokenizer.slashStarComments(true);
 				tokenizer.ordinaryChar('<');
+				tokenizer.wordChars(':', ':');
 				
 				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
 					eventTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);

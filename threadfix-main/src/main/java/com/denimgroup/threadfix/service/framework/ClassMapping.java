@@ -25,9 +25,11 @@ package com.denimgroup.threadfix.service.framework;
 
 public class ClassMapping {
 
-	private String servletName, classWithPackage;
+	private final String servletName, classWithPackage, contextConfigLocation;
 	
-	public ClassMapping(String servletName, String classWithPackage) {
+	public static final String CLASSPATH_START = "classpath:";
+	
+	public ClassMapping(String servletName, String classWithPackage, String contextConfigLocation) {
 		if (servletName == null) {
 			throw new IllegalArgumentException("Servlet Name cannot be null.");
 		}
@@ -38,6 +40,13 @@ public class ClassMapping {
 		
 		this.servletName = servletName.trim();
 		this.classWithPackage = classWithPackage.trim();
+		
+		
+		if (contextConfigLocation != null && contextConfigLocation.startsWith(CLASSPATH_START)) {
+			this.contextConfigLocation = contextConfigLocation.substring(CLASSPATH_START.length());
+		} else {
+			this.contextConfigLocation = contextConfigLocation;
+		}
 	}
 	
 	public String getServletName() {
@@ -46,6 +55,10 @@ public class ClassMapping {
 	
 	public String getClassWithPackage() {
 		return classWithPackage;
+	}
+	
+	public String getContextConfigLocation() {
+		return contextConfigLocation;
 	}
 	
 	@Override
