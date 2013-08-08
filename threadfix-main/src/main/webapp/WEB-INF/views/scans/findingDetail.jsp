@@ -73,6 +73,10 @@
 				<td class="bold">Parameter</td>
 				<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 			</tr>
+			<tr>
+				<td class="bold">Native ID</td>
+				<td class="inputValue"><c:out value="${ finding.nativeId }"/></td>
+			</tr>
 		</tbody>
 	</table>
 	
