@@ -65,7 +65,7 @@ public class JSPIncludeParserTests {
 	}
 
 	@Test
-	public void main() {
+	public void testSamples() {
 		for (String key : samples.keySet()) {
 			Set<File> includedFiles = JSPIncludeParser.parse(new File(key));
 			Set<String> filePaths = new HashSet<>();
@@ -75,6 +75,16 @@ public class JSPIncludeParserTests {
 			
 			compare(filePaths, samples.get(key));
 		}
+	}
+	
+	@Test
+	public void testFakeFile() {
+		assertTrue("failure.", JSPIncludeParser.parse(new File(TestConstants.FAKE_FILE)).isEmpty());
+	}
+
+	@Test
+	public void testNullInput() {
+		assertTrue("failure.", JSPIncludeParser.parse(null).isEmpty());
 	}
 	
 	private void compare(Set<String> results, Set<String> expected) {

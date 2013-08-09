@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -35,12 +36,12 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class SpringControllerMappings {
 	
-	public final Collection<File> controllerFiles;
+	private final Collection<File> controllerFiles;
 	
-	public final Map<String, Set<SpringControllerEndpoint>> urlToControllerMethodsMap;
-	public final Map<String, Set<SpringControllerEndpoint>> controllerToUrlsMap;
+	private final Map<String, Set<SpringControllerEndpoint>> urlToControllerMethodsMap;
+	private final Map<String, Set<SpringControllerEndpoint>> controllerToUrlsMap;
 	
-	public final File rootDirectory;
+	private final File rootDirectory;
 	
 	@SuppressWarnings("unchecked")
 	public SpringControllerMappings(File rootDirectory) {
@@ -59,6 +60,22 @@ public class SpringControllerMappings {
 			controllerFiles = null;
 			urlToControllerMethodsMap = null;
 			controllerToUrlsMap = null;
+		}
+	}
+	
+	public Set<SpringControllerEndpoint> getEndpointsFromController(String controllerPath) {
+		if (controllerToUrlsMap != null && controllerToUrlsMap.containsKey(controllerPath)) {
+			return controllerToUrlsMap.get(controllerPath);
+		} else {
+			return new HashSet<>();
+		}
+	}
+	
+	public Set<SpringControllerEndpoint> getEndpointsFromUrl(String controllerPath) {
+		if (urlToControllerMethodsMap != null && urlToControllerMethodsMap.containsKey(controllerPath)) {
+			return urlToControllerMethodsMap.get(controllerPath);
+		} else {
+			return new HashSet<>();
 		}
 	}
 	

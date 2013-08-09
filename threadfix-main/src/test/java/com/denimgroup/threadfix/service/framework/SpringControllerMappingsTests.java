@@ -23,31 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.junit.Test;
 
 public class SpringControllerMappingsTests {
 	
-	// test code for petclinic
 	// This code validates that all the right controllers got in there and 
 	// that they have the correct number of associated endpoints.
 	@Test
-	public void main() {
+	public void testPetClinicControllerToUrls() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		
-		Set<SpringControllerEndpoint> set = new TreeSet<>();
-		
-		for (Entry<String, Set<SpringControllerEndpoint>> entry : mappings.urlToControllerMethodsMap.entrySet()) {
-			set.addAll(entry.getValue());
-		}
-		
-		String controllersPrefix = "\\src\\main\\java\\org\\springframework\\samples\\petclinic\\web\\";
+		String controllersPrefix = "/src/main/java/org/springframework/samples/petclinic/web/";
 		String[] controllerNames = { "CrashController.java", "OwnerController.java", "PetController.java",
 			"VetController.java", "VisitController.java"
 		};
@@ -56,18 +47,83 @@ public class SpringControllerMappingsTests {
 			{ 0, 1 }, { 1, 7 }, { 2, 4 }, { 3, 1 }, { 4, 3 }
 		};
 		
-		assert(mappings.urlToControllerMethodsMap.size() == controllerNames.length);
-		
 		for (String controller : controllerNames) {
-			assert(mappings.urlToControllerMethodsMap.containsKey(controllersPrefix + controller));
+			assertTrue(controllersPrefix + controller + " was not a valid controller key.",
+					!mappings.getEndpointsFromController(controllersPrefix + controller).isEmpty());
 		}
 		
 		// validate that they have the right number of entries
 		for (int i = 0; i < controllerIndexAndEndpointCount.length; i ++) {
-			assert(mappings.urlToControllerMethodsMap.get(
+			assertTrue(mappings.getEndpointsFromController(
 					controllersPrefix + controllerNames[controllerIndexAndEndpointCount[i][0]]).size() == 
 					controllerIndexAndEndpointCount[i][1]);
 		}
+	}
+	
+	// This code validates that the URL -> Controller mapping is working correctly 
+	// that they have the correct number of associated endpoints.
+	@Test
+	public void testPetClinicUrlToControllers() {
+		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
+		SpringControllerMappings mappings = new SpringControllerMappings(file);
+		
+		String[][] singleEndpoints = {
+			{ "/owners/find", TestConstants.SPRING_OWNER_CONTROLLER },
+			{ "/owners/{id}", TestConstants.SPRING_OWNER_CONTROLLER },
+			{ "/owners", TestConstants.SPRING_OWNER_CONTROLLER },
+			{ "/owners/{id}/pets/{id}/visits", TestConstants.SPRING_VISIT_CONTROLLER },
+			{ "/vets", TestConstants.SPRING_VET_CONTROLLER },
+			{ "/oups", TestConstants.SPRING_CRASH_CONTROLLER },
+		};
+		
+		String[][] doubleEndpoints = {
+			{ "/owners/new", TestConstants.SPRING_OWNER_CONTROLLER },
+			{ "/owners/{id}/edit", TestConstants.SPRING_OWNER_CONTROLLER },
+			{ "/owners/{id}/pets/new", TestConstants.SPRING_PET_CONTROLLER },
+			{ "/owners/{id}/pets/{id}/edit", TestConstants.SPRING_PET_CONTROLLER },
+			{ "/owners/{id}/pets/{id}/visits/new", TestConstants.SPRING_VISIT_CONTROLLER },
+		};
+		
+		for (String[] singleEndpoint : singleEndpoints) {
+			assertTrue(singleEndpoint + " should have had one endpoint, but had " +
+					mappings.getEndpointsFromUrl(singleEndpoint[0]).size(),
+					mappings.getEndpointsFromUrl(singleEndpoint[0]).size() == 1);
+			
+			String filePath = mappings.getEndpointsFromUrl(singleEndpoint[0])
+					.iterator().next().getCleanedFilePath().replace('\\', '/');
+			
+			assertTrue("Expected " + singleEndpoint[1] + ", got " + filePath,
+					filePath.equals(singleEndpoint[1]));
+		}
+		
+		for (String[] doubleEndpoint : doubleEndpoints) {
+			assertTrue(doubleEndpoint + " should have had two endpoints, but had " + 
+					mappings.getEndpointsFromUrl(doubleEndpoint[0]).size(),
+					mappings.getEndpointsFromUrl(doubleEndpoint[0]).size() == 2);
+
+			String filePath = mappings.getEndpointsFromUrl(doubleEndpoint[0])
+					.iterator().next().getCleanedFilePath().replace('\\', '/');
+			
+			assertTrue("Expected + " + doubleEndpoint[1] + ", got " + filePath,
+					filePath.equals(doubleEndpoint[1]));
+		}
+	}
+	
+	@Test
+	public void testFakeFileInput() {
+		File file = new File(TestConstants.FAKE_FILE);
+		SpringControllerMappings mappings = new SpringControllerMappings(file);
+		assertTrue(mappings != null);
+	}
+	
+	@Test
+	public void testNullInput() {
+		SpringControllerMappings mappings = new SpringControllerMappings(null);
+		assertTrue(mappings != null);
+		assertTrue(mappings.getEndpointsFromController("").isEmpty());
+		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
 	}
 	
 }

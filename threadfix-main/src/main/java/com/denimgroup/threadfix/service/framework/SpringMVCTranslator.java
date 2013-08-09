@@ -160,12 +160,10 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		}
 		
 		String canonicalUrlPath = getUrlPath(finding);
-		if (fullMappings != null && canonicalUrlPath != null &&
-				fullMappings.urlToControllerMethodsMap != null &&
-				fullMappings.urlToControllerMethodsMap.get(canonicalUrlPath) != null) {
+		if (fullMappings != null && canonicalUrlPath != null) {
 			
 			Set<SpringControllerEndpoint> endpoints = 
-					fullMappings.urlToControllerMethodsMap.get(canonicalUrlPath);
+					fullMappings.getEndpointsFromUrl(canonicalUrlPath);
 			
 			if (endpoints != null && !endpoints.isEmpty()) {
 				for (SpringControllerEndpoint endpoint : endpoints) {
@@ -220,15 +218,15 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		if (projectDirectory != null && staticFinding != null && staticFinding.getDataFlowElements() != null) {
 			
 			DFE: for (DataFlowElement dataFlowElement : staticFinding.getDataFlowElements()) {
-				String key = projectDirectory.findCanonicalFilePath(
+				String fileName = projectDirectory.findCanonicalFilePath(
 						dataFlowElement.getSourceFileName(), applicationRoot);
 				
-				if (key != null && key.indexOf("/") != 0) {
-					key = "/" + key;
+				if (fileName != null && fileName.length() > 0 && fileName.charAt(0) != '/') {
+					fileName = "/" + fileName;
 				}
 				
-				if (key != null && fullMappings.controllerToUrlsMap.get(key) != null) {
-					Set<SpringControllerEndpoint> endpoints = fullMappings.controllerToUrlsMap.get(key);
+				if (fileName != null && !fullMappings.getEndpointsFromController(fileName).isEmpty()) {
+					Set<SpringControllerEndpoint> endpoints = fullMappings.getEndpointsFromController(fileName);
 					
 					for (SpringControllerEndpoint endpoint : endpoints) {
 						if (endpoint.matchesLineNumber(dataFlowElement.getLineNumber())) {

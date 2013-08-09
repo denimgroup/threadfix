@@ -23,38 +23,38 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
-import java.io.BufferedReader;
+import static org.junit.Assert.*;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
-public class DispatcherServletParser {
+import org.junit.Test;
+
+public class DispatcherServletParserTests {
 	
-	// this is much faster than an implementation using the tokenizer.
-	public static boolean usesSpringMvcAnnotations(File file) {
-		boolean returnValue = false;
-		
-		if (file != null && file.exists()) {
-
-			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-			
-				String line = reader.readLine();
-				while (line != null) {
-					if (line.contains("mvc:annotation-driven")) {
-						returnValue = true;
-						break;
-					}
-					
-					line = reader.readLine();
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return returnValue;
+	@Test
+	public void testPetClinic() {
+		assertTrue("The dispatcher servlet parser found false when it should have found true.",
+				DispatcherServletParser.usesSpringMvcAnnotations(
+				new File(TestConstants.MVC_DISPATCHER_1)));
+	}
+	
+	@Test
+	public void testNonMVC() {
+		assertTrue("The dispatcher servlet parser found true when it should have found false.",
+				!DispatcherServletParser.usesSpringMvcAnnotations(
+						new File(TestConstants.MVC_DISPATCHER_2)));
+	}
+	
+	@Test
+	public void testNonExistentFile() {
+		assertTrue("The dispatcher servlet parser found true when it should have found false.",
+				!DispatcherServletParser.usesSpringMvcAnnotations(
+						new File(TestConstants.FAKE_FILE)));
+	}
+	
+	@Test
+	public void testNullInput() {
+		assertTrue("The dispatcher servlet parser found true when it should have found false.",
+				!DispatcherServletParser.usesSpringMvcAnnotations(null));
 	}
 }
