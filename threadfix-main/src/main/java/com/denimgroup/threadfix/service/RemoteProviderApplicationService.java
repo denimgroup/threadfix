@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.springframework.validation.BindingResult;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
@@ -80,8 +81,9 @@ public interface RemoteProviderApplicationService {
 	 * 
 	 * @param result
 	 * @param remoteProviderApplication
+	 * @param application 
 	 */
-	void processApp(BindingResult result, RemoteProviderApplication remoteProviderApplication);
+	String processApp(BindingResult result, RemoteProviderApplication remoteProviderApplication, Application application);
 
 	/**
 	 * 
@@ -93,4 +95,15 @@ public interface RemoteProviderApplicationService {
 	 * 
 	 */
 	void addBulkImportToQueue(RemoteProviderType remoteProviderType);
+
+	/**
+	 * 
+	 * @param result
+	 * @param remoteProviderApplication
+	 * @param appId
+	 * @return
+	 */
+	String deleteMapping(BindingResult result,
+			RemoteProviderApplication remoteProviderApplication,
+			int appId);
 }
