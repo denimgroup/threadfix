@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.service.framework;
 
 import static org.junit.Assert.assertTrue;
 
+import static com.denimgroup.threadfix.service.framework.TestConstants.*;
+
 import java.io.File;
 
 import org.junit.Test;
@@ -10,36 +12,30 @@ import com.denimgroup.threadfix.service.merge.FrameworkType;
 
 public class WebXMLParserTests {
 
-    // TODO move these to the src/test/resources folder and use that
-    private String testRoot = "C:\\test\\projects\\";
-    private String[] extensions = 
-    	{ "spring-petclinic", "wavsep", "webgoat_src" };
-    
-    private String[] results = {
-		"C:\\test\\projects\\spring-petclinic\\src\\main\\webapp\\WEB-INF\\web.xml",
-		"C:\\test\\projects\\wavsep\\trunk\\WebContent\\WEB-INF\\web.xml",
-		"C:\\test\\projects\\webgoat_src\\src\\main\\webapp\\WEB-INF\\web.xml"
-    };
-    
-    ServletMappings vulnClinic = WebXMLParser.getServletMappings(new File(results[0]), 
-    		new ProjectDirectory(new File("C:\\test\\projects\\spring-petclinic")));
-	ServletMappings wavsep = WebXMLParser.getServletMappings(new File(results[1]), null);
-	ServletMappings webGoat = WebXMLParser.getServletMappings(new File(results[2]), null);
+    ServletMappings vulnClinic = WebXMLParser.getServletMappings(new File(PETCLINIC_WEB_XML), 
+    		new ProjectDirectory(new File(PETCLINIC_SOURCE_LOCATION)));
+	ServletMappings wavsep = WebXMLParser.getServletMappings(new File(WAVSEP_WEB_XML), 
+    		new ProjectDirectory(new File(WAVSEP_SOURCE_LOCATION)));
+	ServletMappings bodgeIt = WebXMLParser.getServletMappings(new File(BODGEIT_WEB_XML), 
+    		new ProjectDirectory(new File(BODGEIT_SOURCE_LOCATION)));
 	
     ////////////////////////////////////////////////////////////////
     ///////////////////////////// Tests ////////////////////////////
     ////////////////////////////////////////////////////////////////
     
-    public void testFindWebXML()
-    {
-    	for (int i = 0; i < extensions.length; i++) {
-    		File projectDirectory = new File(testRoot + extensions[i]);
+    public void testFindWebXML() {
+    	String[]
+    			sourceLocations = { PETCLINIC_SOURCE_LOCATION, WAVSEP_SOURCE_LOCATION, BODGEIT_SOURCE_LOCATION },
+    			webXMLLocations = { PETCLINIC_WEB_XML, WAVSEP_WEB_XML, BODGEIT_WEB_XML };
+    	
+    	for (int i = 0; i < sourceLocations.length; i++) {
+    		File projectDirectory = new File(sourceLocations[i]);
     		assertTrue(projectDirectory != null && projectDirectory.exists());
     		
     		File file = new ProjectDirectory(projectDirectory).findWebXML();
     		assertTrue(file.getName().equals("web.xml"));
     		
-    		assertTrue(file.getAbsolutePath().equals(results[i]));
+    		assertTrue(file.getAbsolutePath().equals(webXMLLocations[i]));
     	}
     }
     
@@ -52,15 +48,15 @@ public class WebXMLParserTests {
     	assertTrue(wavsep.getClassMappings().size() == 0);
     	assertTrue(wavsep.getServletMappings().size() == 0);
     	
-    	assertTrue(webGoat.getClassMappings().size() == 7);
-    	assertTrue(webGoat.getServletMappings().size() == 8);
+    	assertTrue(bodgeIt.getClassMappings().size() == 0);
+    	assertTrue(bodgeIt.getServletMappings().size() == 1);
     }
     
     @Test
     public void testTypeGuessing() {
     	assertTrue(vulnClinic.guessApplicationType() == FrameworkType.SPRING_MVC);
     	assertTrue(wavsep.guessApplicationType() == FrameworkType.JSP);
-    	assertTrue(webGoat.guessApplicationType() == FrameworkType.JSP);
+    	assertTrue(bodgeIt.guessApplicationType() == FrameworkType.JSP);
     }
     
     @Test
