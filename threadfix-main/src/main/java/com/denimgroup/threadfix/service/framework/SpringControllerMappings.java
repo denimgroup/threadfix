@@ -27,7 +27,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -35,24 +34,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class SpringControllerMappings {
-	
-	// test code for petclinic
-	public static void main(String[] args) {
-		File file = new File("C:\\test\\projects\\spring-petclinic");
-		
-		SpringControllerMappings mappings = new SpringControllerMappings(file);
-		
-		Set<SpringControllerEndpoint> set = new TreeSet<>();
-		
-		for (Entry<String, Set<SpringControllerEndpoint>> entry : mappings.urlToControllerMethodsMap.entrySet()) {
-			set.addAll(entry.getValue());
-		}
-		
-		for (SpringControllerEndpoint endpoint : set) {
-			endpoint.setFileRoot("C:\\test\\projects\\spring-petclinic");
-			System.out.println(endpoint);
-		}
-	}
 	
 	public final Collection<File> controllerFiles;
 	

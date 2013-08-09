@@ -146,7 +146,7 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 		int returnValue = 0;
 		
 		if (arg0 != null) {
-			returnValue += 2 * arg0.rawFilePath.compareTo(rawFilePath);
+			returnValue -= 2 * arg0.rawFilePath.compareTo(rawFilePath);
 			if (startLineNumber < arg0.startLineNumber) {
 				returnValue -= 1;
 			} else {
