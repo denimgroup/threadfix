@@ -48,6 +48,11 @@ public class LoginPageTests extends PageBaseTest{
 		loginPage = LoginPage.open(driver);
 	}
 	
+	@After
+	public void shutdown(){
+		super.shutDown();
+	}
+	
 	@Test
 	public void usernameFieldPresentTest(){
 		assertTrue("Username field was not present on the page",loginPage.isUserNameFieldPresent());

@@ -29,8 +29,6 @@ import java.util.Collection;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -59,16 +57,16 @@ public class PageBaseTest {
 		String  ff = System.getProperty("FIREFOX");
 		String  chrome = System.getProperty("CHROME");
 		String  ie = System.getProperty("IE");
-		if(ff.equals("true")){
+		if(ff != null && ff.equals("true")){
 			String[] f = {"firefox"};
 			params.add(f);
 		}
-		if(chrome.equals("true")){
+		if(chrome != null && chrome.equals("true")){
 			String[] c = {"chrome"};
 			params.add(c);
 		}
 		
-		if(ie.equals("true")){
+		if(ie != null && ie.equals("true")){
 			String[] e = {"IE"};
 			params.add(e);
 		}
@@ -102,11 +100,9 @@ public class PageBaseTest {
 	}
 	
 	
-	@Before
 	public void init() {
 	}
 
-	@After
 	public void shutDown() {
 			driver.quit();
 	}

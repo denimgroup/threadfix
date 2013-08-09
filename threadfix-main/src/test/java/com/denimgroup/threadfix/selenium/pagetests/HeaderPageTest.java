@@ -72,6 +72,7 @@ public class HeaderPageTest extends PageBaseTest {
 	@After
 	public  void cleanup(){
 		destroyElements();
+		super.shutDown();
 	}
 	
 	@Test

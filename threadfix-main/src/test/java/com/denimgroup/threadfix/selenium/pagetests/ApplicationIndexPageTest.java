@@ -27,13 +27,14 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	@After
 	public  void cleanup(){
 		destroyElements();
+		super.shutDown();
 	}
 	
-	@Test
-	public void buildUpTest(){
-		assertTrue(build);
-		dashboardPage.logout();
-	}
+//	@Test
+//	public void buildUpTest(){
+//		assertTrue(build);
+//		dashboardPage.logout();
+//	}
 	
 	@Test
 	public void addTeamBtnTest(){

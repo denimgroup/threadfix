@@ -352,6 +352,7 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamDetailPage clickViewTeamLink(String teamName) {
 		driver.findElementsByLinkText("View Team").get(getIndex(teamName)).click();
+		sleep(2000);
 		return new TeamDetailPage(driver);
 	}
 	
