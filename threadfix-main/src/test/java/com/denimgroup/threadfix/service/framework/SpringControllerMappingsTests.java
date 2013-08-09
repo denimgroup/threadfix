@@ -52,7 +52,7 @@ public class SpringControllerMappingsTests {
 			"VetController.java", "VisitController.java"
 		};
 		
-		int[][] lengths = {
+		int[][] controllerIndexAndEndpointCount = {
 			{ 0, 1 }, { 1, 7 }, { 2, 4 }, { 3, 1 }, { 4, 3 }
 		};
 		
@@ -63,9 +63,10 @@ public class SpringControllerMappingsTests {
 		}
 		
 		// validate that they have the right number of entries
-		for (int i = 0; i < lengths.length; i ++) {
+		for (int i = 0; i < controllerIndexAndEndpointCount.length; i ++) {
 			assert(mappings.urlToControllerMethodsMap.get(
-					controllersPrefix + controllerNames[lengths[i][0]]).size() == lengths[i][1]);
+					controllersPrefix + controllerNames[controllerIndexAndEndpointCount[i][0]]).size() == 
+					controllerIndexAndEndpointCount[i][1]);
 		}
 	}
 	

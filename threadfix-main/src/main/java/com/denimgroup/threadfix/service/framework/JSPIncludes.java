@@ -34,25 +34,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class JSPIncludes {
 	
-	public static void main(String[] args) {
-		JSPIncludes includes = new JSPIncludes(new File("C:\\Users\\mcollins\\SBIR\\bodgeit"));
-		
-		for (String key : includes.includeMap.keySet()) {
-			System.out.println(key);
-			
-			for (File file : includes.includeMap.get(key)) {
-				System.out.println("\t" + file.getAbsolutePath());
-			}
-			
-			JSPParameterParser parser = includes.parameterMap.get(key);
-			
-			System.out.println(parser.getParameterMap());
-			System.out.println(parser.getVariableToParameterMap());
-		}
-	}
-
-	private Map<String, Set<File>> includeMap = new HashMap<>();
-	private Map<String, JSPParameterParser> parameterMap = new HashMap<>();
+	Map<String, Set<File>> includeMap = new HashMap<>();
+	Map<String, JSPParameterParser> parameterMap = new HashMap<>();
 	
 	@SuppressWarnings("unchecked")
 	public JSPIncludes(File rootFile) {

@@ -37,6 +37,7 @@ public interface EventBasedTokenizer {
 		EQUALS = '=', 
 		COMMA = ',', 
 		DOUBLE_QUOTE = '"',
+		COLON = ':',
 		SEMICOLON = ';',
 		PERCENT = '%',
 		OPEN_ANGLE_BRACKET = '<',
