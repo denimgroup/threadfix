@@ -21,9 +21,10 @@ public class WebXMLParserTests {
 		"C:\\test\\projects\\webgoat_src\\src\\main\\webapp\\WEB-INF\\web.xml"
     };
     
-    ServletMappings vulnClinic = WebXMLParser.getServletMappings(new File(results[0]));
-	ServletMappings wavsep = WebXMLParser.getServletMappings(new File(results[1]));
-	ServletMappings webGoat = WebXMLParser.getServletMappings(new File(results[2]));
+    ServletMappings vulnClinic = WebXMLParser.getServletMappings(new File(results[0]), 
+    		new ProjectDirectory(new File("C:\\test\\projects\\spring-petclinic")));
+	ServletMappings wavsep = WebXMLParser.getServletMappings(new File(results[1]), null);
+	ServletMappings webGoat = WebXMLParser.getServletMappings(new File(results[2]), null);
 	
     ////////////////////////////////////////////////////////////////
     ///////////////////////////// Tests ////////////////////////////
@@ -65,7 +66,7 @@ public class WebXMLParserTests {
     @Test
     public void testBadInput() {
     	assertTrue(new ProjectDirectory(null).findWebXML() == null);
-    	ServletMappings nullInputMappings = WebXMLParser.getServletMappings(null);
+    	ServletMappings nullInputMappings = WebXMLParser.getServletMappings(null, null);
     	assertTrue(nullInputMappings != null);
     	assertTrue(nullInputMappings.getClassMappings() == null);
     	assertTrue(nullInputMappings.getServletMappings() == null);

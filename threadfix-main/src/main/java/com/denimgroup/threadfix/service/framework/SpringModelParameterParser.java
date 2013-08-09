@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,8 +32,13 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 public class SpringModelParameterParser implements ParameterParser {
 	
-	// So we only compile once
-	private static final Pattern MODEL_OBJECT_PATTERN = Pattern.compile("([a-zA-Z0-9_]+), BindingResult");
+	// So we only compile these patterns once
+	private static final Pattern 
+		MODEL_OBJECT_PATTERN     = Pattern.compile("([a-zA-Z0-9_]+), ?BindingResult"),
+		PATH_VARIABLE_WITH_PARAM = Pattern.compile("@PathVariable\\(\"([a-zA-Z0-9]+)\"\\)"),
+		PATH_VARIABLE_NO_PARAM   = Pattern.compile("@PathVariable [^ ]+ ([^,\\)]+)"),
+		REQUEST_PARAM_WITH_PARAM = Pattern.compile("@RequestParam\\(\"([a-zA-Z0-9]+)\"\\)"),
+		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam [^ ]+ ([^,\\)]+)");
 	
 	/**
 	 * Examines the data flow to try to find Spring parameters.
@@ -40,25 +46,26 @@ public class SpringModelParameterParser implements ParameterParser {
 	 * This method takes advantage of a few assumptions:
 	 * 	1. The flow will follow only one parameter.
 	 *  2. The first element in the flow will be the Spring controller method call
-	 *  3. There are no intermediate objects: the first accessor call will be a string.
 	 *  
 	 *  TODO handle owner.pet.name and similar cases
-	 *  TODO add requestvariable
+	 *  TODO add RequestParam
 	 * 
 	 * @param dataFlowElements
 	 * @return
 	 */
 	public String parse(Finding finding) {
+		
 		String parameter = null;
 		
 		if (finding != null && finding.getDataFlowElements() != null && 
 				!finding.getDataFlowElements().isEmpty()) {
 			
-			parameter = attemptModelParsing(finding.getDataFlowElements());
-			if (parameter == null) {
-				parameter = attemptPathVariableParsing(finding.getDataFlowElements().get(0));
-			}
+			List<String> lines = getLines(finding.getDataFlowElements());
 			
+			parameter = attemptModelParsing(lines);
+			if (parameter == null) {
+				parameter = attemptPathVariableParsing(lines);
+			}
 		}
 		
 		if (parameter == null && finding != null && finding.getSurfaceLocation() != null) {
@@ -68,30 +75,55 @@ public class SpringModelParameterParser implements ParameterParser {
 		return parameter;
 	}
 	
-	private String attemptPathVariableParsing(DataFlowElement dataFlowElement) {
+	private List<String> getLines(List<DataFlowElement> dataFlowElements) {
+		List<String> returnList = new ArrayList<>(dataFlowElements.size());
+		
+		for (DataFlowElement element : dataFlowElements) {
+			if (element.getLineText() != null) {
+				returnList.add(element.getLineText());
+			}
+		}
+		
+		return returnList;
+	}
+
+	// TODO move to a system that supports more than one variable
+	private String attemptPathVariableParsing(List<String> lines) {
 		String parameter = null;
 		
-		// try for @PathVariable("ownerId") int ownerId
-		parameter = RegexUtils.getRegexResult(dataFlowElement.getLineText(), "@PathVariable\\(\"([a-zA-Z0-9]+)\"\\)");
+		String elementText = lines.get(0);
 		
-		if (parameter != null) {
+		// try for @PathVariable("ownerId") int ownerId
+		parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_WITH_PARAM);
+		
+		if (parameter == null) {
 			// try for @PathVariable String ownerName
-			parameter = RegexUtils.getRegexResult(dataFlowElement.getLineText(), "@PathVariable [^ ]+ ([^,]+)");
+			parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_NO_PARAM);
+		}
+		
+		if (parameter == null) {
+			// try for @RequestParam("ownerName") String ownerName
+			parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_WITH_PARAM);
+		}
+		
+		if (parameter == null) {
+			// try for @RequestParam String ownerName
+			parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_NO_PARAM);
 		}
 		
 		return parameter;
 	}
 
-	private String attemptModelParsing(List<DataFlowElement> dataFlowElements) {
+	private String attemptModelParsing(List<String> dataFlowElements) {
 		
 		String parameter = null;
 		
 		String modelObject = getModelObject(dataFlowElements.get(0));
 		
 		if (modelObject != null) {
-			for (DataFlowElement element : dataFlowElements) {
-				if (element.getLineText() != null) {
-					parameter = getParameter(element.getLineText(), modelObject);
+			for (String elementText : dataFlowElements) {
+				if (elementText != null) {
+					parameter = getParameter(elementText, modelObject);
 					if (parameter != null) {
 						break;
 					}
@@ -102,8 +134,8 @@ public class SpringModelParameterParser implements ParameterParser {
 		return parameter;
 	}
 	
-	private String getModelObject(DataFlowElement element) {
-		return RegexUtils.getRegexResult(element.getLineText(), MODEL_OBJECT_PATTERN);
+	private String getModelObject(String elementText) {
+		return RegexUtils.getRegexResult(elementText, MODEL_OBJECT_PATTERN);
 	}
 
 	private String getParameter(String line, String modelObject) {

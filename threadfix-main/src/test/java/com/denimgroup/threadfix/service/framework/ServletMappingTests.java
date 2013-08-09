@@ -121,10 +121,10 @@ public class ServletMappingTests {
     // TODO improve this test
 	@Test
     public void testBadInput() {
-    	ServletMappings nullAndNull = new ServletMappings(null, null);
-    	ServletMappings somethingAndNull = new ServletMappings(sampleServletMappings, null);
-    	ServletMappings nullAndSomething = new ServletMappings(null, sampleServlets);
-    	ServletMappings emptyAndEmpty = new ServletMappings(new ArrayList<UrlPatternMapping>(), new ArrayList<ClassMapping>());
+    	ServletMappings nullAndNull = new ServletMappings(null, null, null);
+    	ServletMappings somethingAndNull = new ServletMappings(sampleServletMappings, null, null);
+    	ServletMappings nullAndSomething = new ServletMappings(null, sampleServlets, null);
+    	ServletMappings emptyAndEmpty = new ServletMappings(new ArrayList<UrlPatternMapping>(), new ArrayList<ClassMapping>(), null);
     	
     	ServletMappings[] mappingsArray = { nullAndNull, somethingAndNull, nullAndSomething, emptyAndEmpty };
     	
@@ -136,7 +136,7 @@ public class ServletMappingTests {
     	}
     	
     	try {
-    		new ClassMapping(null, null);
+    		new ClassMapping(null, null, null);
     		assertTrue(false);
     	} catch (IllegalArgumentException e) {
     		
@@ -185,7 +185,7 @@ public class ServletMappingTests {
     ////////////////////////////////////////////////////////////////
     
     private ServletMappings getTestMappings() {
-    	return new ServletMappings(sampleServletMappings, sampleServlets);
+    	return new ServletMappings(sampleServletMappings, sampleServlets, null);
     }
     
     private Entry<String,String> entry(String key, String value) { 
@@ -206,7 +206,7 @@ public class ServletMappingTests {
     	List<ClassMapping> mappings = new ArrayList<>();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {
-    		mappings.add(new ClassMapping(strings[i], strings[i + 1]));
+    		mappings.add(new ClassMapping(strings[i], strings[i + 1], null));
     	}
     	
     	return mappings;

@@ -169,33 +169,38 @@ public class ServletMappings {
 		// In a full-blown implementation, this method would be able to return lots of other types too.
 		FrameworkType frameworkType = FrameworkType.JSP;
 		
-		log.info("About to guess application type from web.xml.");
+		if (projectDirectory != null) {
 		
-		for (ClassMapping mapping : servlets) {
-			if (mapping.getClassWithPackage().equals(
-						"org.springframework.web.servlet.DispatcherServlet")) {
-				// Spring. Let's look for mvc:annotation-driven in the servlet config
-				
-				File configFile = null;
-				
-				if (mapping.getContextConfigLocation() != null) {
-					configFile = projectDirectory.findFile(mapping.getContextConfigLocation());
-				} else {
-					configFile = projectDirectory.findFile("dispatcher-servlet.xml");
-				}
-				
-				if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
-					log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
-					frameworkType = FrameworkType.SPRING_MVC;
-				} else  {
-					if (configFile == null) {
-						log.warn("Unable to locate Spring's dispatcher servlet configuration.");
+			log.info("About to guess application type from web.xml.");
+			
+			for (ClassMapping mapping : servlets) {
+				if (mapping.getClassWithPackage().equals(
+							"org.springframework.web.servlet.DispatcherServlet")) {
+					// Spring. Let's look for mvc:annotation-driven in the servlet config
+					
+					File configFile = null;
+					
+					if (mapping.getContextConfigLocation() != null) {
+						configFile = projectDirectory.findFile(mapping.getContextConfigLocation());
 					} else {
-						log.warn("Dispatcher servlet configuration parsing did not find the " +
-								"Spring MVC configuration.");
+						configFile = projectDirectory.findFile(mapping.getServletName() + "-servlet.xml");
+					}
+					
+					if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
+						log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
+						frameworkType = FrameworkType.SPRING_MVC;
+					} else  {
+						if (configFile == null) {
+							log.warn("Unable to locate Spring's dispatcher servlet configuration.");
+						} else {
+							log.warn("Dispatcher servlet configuration parsing did not find the " +
+									"Spring MVC configuration.");
+						}
 					}
 				}
 			}
+		} else {
+			log.info("Source code was unavailable, ThreadFix couldn't find web.xml.");
 		}
 
 		log.info("Determined that the framework type was " + frameworkType);
