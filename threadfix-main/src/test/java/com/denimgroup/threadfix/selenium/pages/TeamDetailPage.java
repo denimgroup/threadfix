@@ -333,11 +333,11 @@ public class TeamDetailPage extends BasePage {
 	}
 	
 	public boolean isAddAppBtnPresent(){
-		return driver.findElementById(getAppModalId()).isDisplayed();
+		return driver.findElementByLinkText("Add Application").isDisplayed();
 	}
 	
 	public boolean isAddAppBtnClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id(getAppModalId())) != null;
+		return ExpectedConditions.elementToBeClickable(By.linkText("Add Application")) != null;
 	}
 	
 	public boolean isAppLinkPresent(String appName){
@@ -433,6 +433,12 @@ public class TeamDetailPage extends BasePage {
 		clickActionButton();
 		sleep(3000);
 		driver.findElementById("userListModelButton").click();
+		sleep(2000);
+		return new TeamDetailPage(driver);
+	}
+
+	public TeamDetailPage clickCloseUserPermModal() {
+		driver.findElementById("usersModal").findElement(By.className("btn")).click();
 		sleep(2000);
 		return new TeamDetailPage(driver);
 	}

@@ -101,6 +101,9 @@ public class TeamDetailPageTest extends PageBaseTest {
 		boolean editClick = teamdetailPage.isPUEditPermLinkClickable();
 		boolean closePresent = teamdetailPage.isPUClosePresent();
 		boolean closeClick = teamdetailPage.isPUCloseClickable();
+		
+		teamdetailPage.clickCloseUserPermModal().logout();
+		
 		String ep,ec,cp,cc;
 		ep = ec = cp = cc = "";
 		if(!editPresent){ep = "Edit Perm Link was not present";}
@@ -110,7 +113,6 @@ public class TeamDetailPageTest extends PageBaseTest {
 		assertTrue(ep + " | "+ ec + " | "+ cp + " | "+ cc,
 				editPresent && editClick && closePresent && closeClick);
 		
-		teamdetailPage.logout();
 //		assertTrue(true);
 //		dashboardPage.logout();
 	}

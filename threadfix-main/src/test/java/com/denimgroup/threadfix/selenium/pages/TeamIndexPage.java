@@ -173,6 +173,7 @@ public class TeamIndexPage extends BasePage {
 	public TeamIndexPage clickAddNewApplication(String teamName) {
 		appModalId = getAppModalId(teamName);
 		driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).click();
+		sleep(2000);
 		waitForElement(driver.findElementById(appModalId));
 		return setPage();
 	}
