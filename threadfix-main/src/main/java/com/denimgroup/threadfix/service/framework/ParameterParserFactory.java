@@ -27,15 +27,20 @@ import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class ParameterParserFactory {
 	
-	private static final SpringModelParameterParser SPRING_PARSER = new SpringModelParameterParser(null);
-	
 	public static ParameterParser getParameterParser(ScanMergeConfiguration scanMergeConfiguration) {
 		ParameterParser parser = null;
 		
 		if (scanMergeConfiguration != null) {
 			switch (scanMergeConfiguration.getFrameworkType()) {
-				case SPRING_MVC: parser = SPRING_PARSER; break;
-				case JSP:                                break;
+				case SPRING_MVC: 
+					SpringEntityMappings mappings = null;
+					if (scanMergeConfiguration.getWorkTree() != null) {
+						mappings = new SpringEntityMappings(scanMergeConfiguration.getWorkTree());
+					}
+					parser = new SpringModelParameterParser(mappings); 
+					break;
+				
+					// TODO handle other cases
 				default:
 			}
 		}
