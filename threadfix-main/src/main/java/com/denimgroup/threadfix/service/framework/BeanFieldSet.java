@@ -47,6 +47,10 @@ public class BeanFieldSet {
 		return fieldSet.contains(field);
 	}
 	
+	public boolean contains(String paramName) {
+		return getField(paramName) != null;
+	}
+	
 	public void addAll(BeanFieldSet beanFieldSet) {
 		this.fieldSet.addAll(beanFieldSet.fieldSet);
 		for (BeanField field : beanFieldSet.fieldSet) {

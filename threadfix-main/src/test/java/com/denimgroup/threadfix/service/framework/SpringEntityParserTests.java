@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class SpringModelParserTests {
+public class SpringEntityParserTests {
 	
 	File testFile = new File(TestConstants.PETCLINIC_SOURCE_LOCATION + 
 			TestConstants.SPRING_MODELS_PREFIX + TestConstants.SPRING_OWNER_MODEL);

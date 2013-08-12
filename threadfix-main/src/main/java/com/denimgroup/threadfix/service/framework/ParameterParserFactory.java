@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class ParameterParserFactory {
 	
-	private static final SpringModelParameterParser SPRING_PARSER = new SpringModelParameterParser();
+	private static final SpringModelParameterParser SPRING_PARSER = new SpringModelParameterParser(null);
 	
 	public static ParameterParser getParameterParser(ScanMergeConfiguration scanMergeConfiguration) {
 		ParameterParser parser = null;

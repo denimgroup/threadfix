@@ -23,8 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +37,9 @@ import com.denimgroup.threadfix.data.entities.Finding;
 public class SpringParameterParsingTests {
 	
 	// These are immutable so it's ok to use the same one for all the tests
-	SpringModelParameterParser parser = new SpringModelParameterParser();
+	SpringModelParameterParser parser = new SpringModelParameterParser(
+			new SpringEntityMappings(
+			new File(TestConstants.PETCLINIC_SOURCE_LOCATION)));
 	
 	@Test
 	public void testBasicModelParsing() {
@@ -58,7 +61,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(basicModelElements);
 		
-		assertTrue("lastName".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
 	}
 	
 	@Test
@@ -81,7 +85,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(chainedModelElements);
 		
-		assertTrue("owner.lastName".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
 	
 	@Test
@@ -104,7 +109,9 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(chainedMultiLevelModelElements);
 		
-		assertTrue("owner.lastName".equals(parser.parse(finding)));
+		
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
 	
 	@Test
@@ -125,7 +132,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(chainedRequestParamElements1);
 		
-		assertTrue("testParam".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
 	}
 	
 	@Test
@@ -146,7 +154,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(chainedRequestParamElements2);
 		
-		assertTrue("lastName".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
 	}
 	
 	@Test
@@ -167,7 +176,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(chainedPathVariableElements1);
 		
-		assertTrue("testParam".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
 	}
 	
 	@Test
@@ -188,7 +198,8 @@ public class SpringParameterParsingTests {
 		Finding finding = new Finding();
 		finding.setDataFlowElements(pathVariableElements2);
 		
-		assertTrue("lastName".equals(parser.parse(finding)));
+		String result = parser.parse(finding);
+		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
 	}
 
 }

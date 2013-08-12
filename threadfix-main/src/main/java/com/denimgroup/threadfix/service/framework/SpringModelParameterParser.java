@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -34,11 +35,18 @@ public class SpringModelParameterParser implements ParameterParser {
 	
 	// So we only compile these patterns once
 	private static final Pattern 
-		MODEL_OBJECT_PATTERN     = Pattern.compile("([a-zA-Z0-9_]+), ?BindingResult"),
+		ENTITY_TYPE_PATTERN      = Pattern.compile("([a-zA-Z0-9_]+) [^ ]+, ?BindingResult"),
+		ENTITY_OBJECT_PATTERN    = Pattern.compile("([a-zA-Z0-9_]+), ?BindingResult"),
 		PATH_VARIABLE_WITH_PARAM = Pattern.compile("@PathVariable\\(\"([a-zA-Z0-9]+)\"\\)"),
 		PATH_VARIABLE_NO_PARAM   = Pattern.compile("@PathVariable [^ ]+ ([^,\\)]+)"),
 		REQUEST_PARAM_WITH_PARAM = Pattern.compile("@RequestParam\\(\"([a-zA-Z0-9]+)\"\\)"),
 		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam [^ ]+ ([^,\\)]+)");
+	
+	private final SpringEntityMappings mappings;
+	
+	public SpringModelParameterParser(SpringEntityMappings mappings) {
+		this.mappings = mappings;
+	}
 	
 	/**
 	 * Examines the data flow to try to find Spring parameters.
@@ -48,7 +56,6 @@ public class SpringModelParameterParser implements ParameterParser {
 	 *  2. The first element in the flow will be the Spring controller method call
 	 *  
 	 *  TODO handle owner.pet.name and similar cases
-	 *  TODO add RequestParam
 	 * 
 	 * @param dataFlowElements
 	 * @return
@@ -62,8 +69,12 @@ public class SpringModelParameterParser implements ParameterParser {
 			
 			List<String> lines = getLines(finding.getDataFlowElements());
 			
-			parameter = attemptModelParsing(lines);
-			if (parameter == null) {
+			if (mappings == null) {
+				parameter = attemptModelParsingNoMappings(lines);
+			} else {
+				parameter = attemptModelParsingWithMappings(lines);
+			}
+			if (parameter == null || parameter.isEmpty()) {
 				parameter = attemptPathVariableParsing(lines);
 			}
 		}
@@ -114,16 +125,17 @@ public class SpringModelParameterParser implements ParameterParser {
 		return parameter;
 	}
 
-	private String attemptModelParsing(List<String> dataFlowElements) {
+	private String attemptModelParsingNoMappings(List<String> lines) {
 		
 		String parameter = null;
 		
-		String modelObject = getModelObject(dataFlowElements.get(0));
+		String modelObject = getModelObject(lines.get(0));
 		
 		if (modelObject != null) {
-			for (String elementText : dataFlowElements) {
+			for (String elementText : lines) {
 				if (elementText != null) {
 					parameter = getParameter(elementText, modelObject);
+					
 					if (parameter != null) {
 						break;
 					}
@@ -134,8 +146,70 @@ public class SpringModelParameterParser implements ParameterParser {
 		return parameter;
 	}
 	
+	private String attemptModelParsingWithMappings(List<String> lines) {
+		
+		String modelObject = getModelObject(lines.get(0));
+		String initialType = getModelObjectType(lines.get(0));
+		
+		BeanField beanField = new BeanField(initialType, modelObject);
+		
+		List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
+				
+		if (modelObject != null) {
+			for (String elementText : lines) {
+				if (elementText != null) {
+					List<BeanField> beanFields = getParameterWithEntityData(elementText, 
+							fieldChain.get(fieldChain.size() - 1));
+					
+					if (beanFields != null && beanFields.size() > 1) {
+						beanFields.remove(0);
+						fieldChain.addAll(beanFields);
+						beanField = fieldChain.get(fieldChain.size() - 1);
+					}
+					
+					if (beanField.isPrimitiveType()) {
+						break;
+					}
+				}
+			}
+		}
+
+		return buildStringFromFieldChain(fieldChain);
+	}
+	
+	private String buildStringFromFieldChain(List<BeanField> fieldChain) {
+		StringBuilder parameterChainBuilder = new StringBuilder();
+		
+		if (fieldChain.size() > 1) {
+			fieldChain.remove(0);
+			for (BeanField field : fieldChain) {
+				parameterChainBuilder.append(field.getParameterKey()).append('.');
+			}
+			parameterChainBuilder.setLength(parameterChainBuilder.length() - 1);
+		}
+		
+		return parameterChainBuilder.toString();
+	}
+	
 	private String getModelObject(String elementText) {
-		return RegexUtils.getRegexResult(elementText, MODEL_OBJECT_PATTERN);
+		return RegexUtils.getRegexResult(elementText, ENTITY_OBJECT_PATTERN);
+	}
+	
+	private String getModelObjectType(String elementText) {
+		return RegexUtils.getRegexResult(elementText, ENTITY_TYPE_PATTERN);
+	}
+	
+	private List<BeanField> getParameterWithEntityData(String line, BeanField beanField) {
+		List<String> methodCalls = RegexUtils.getRegexResults(line, 
+				Pattern.compile(beanField.getParameterKey() + "(\\.get[^\\(]+\\(\\))+"));
+		
+		List<BeanField> returnField = new ArrayList<>();
+		
+		if (methodCalls != null && !methodCalls.isEmpty()) {
+			returnField = mappings.getFieldsFromMethodCalls(methodCalls.get(0), beanField);
+		}
+		
+		return returnField;
 	}
 
 	private String getParameter(String line, String modelObject) {

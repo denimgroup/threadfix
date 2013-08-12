@@ -26,10 +26,11 @@ package com.denimgroup.threadfix.service.framework;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
 
-public class SpringModelMappingsTests {
+public class SpringEntityMappingsTests {
 
 	@Test
 	public void testOwnerFields() {
@@ -85,6 +86,26 @@ public class SpringModelMappingsTests {
 		BeanFieldSet typeFields = mappings.getFieldsForModel("PetType");
 		
 		assertTrue(typeFields.getField("name").getType().equals("String"));
+	}
+
+	@Test
+	public void testMethodChainResolution() {
+		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
+		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		
+		List<BeanField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()", 
+				new BeanField("Pet", "pet"));
+		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
+		assertTrue(fields.get(1).equals(new BeanField("Owner", "owner")));
+		assertTrue(fields.get(2).equals(new BeanField("String", "lastName")));
+		
+		fields = mappings.getFieldsFromMethodCalls(".getOwner()", 
+				new BeanField("Pet", "pet"));
+		assertTrue(fields.get(1).equals(new BeanField("Owner", "owner")));
+		
+		fields = mappings.getFieldsFromMethodCalls(".getLastName()", 
+				new BeanField("Owner", "owner"));
+		assertTrue(fields.get(1).equals(new BeanField("String", "lastName")));
 		
 	}
 	
