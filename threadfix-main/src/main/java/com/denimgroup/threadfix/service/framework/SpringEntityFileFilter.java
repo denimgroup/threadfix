@@ -28,20 +28,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class can be used with Commons FileUtils to filter for finding Spring @Controllers.
+ * This class can be used with Commons FileUtils to filter for finding Spring Entities.
  *
- * It actually just finds any file with an uncommented @Controller in it.
+ * It actually just finds any file with an uncommented Entity or MappedSuperclass in it.
  * 
  * @author mcollins
  *
  */
-public class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
+public class SpringEntityFileFilter extends ClassAnnotationBasedFileFilter {
 	
-	private SpringControllerFileFilter(){}
+	private SpringEntityFileFilter(){}
 	
-	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
+	public static final SpringEntityFileFilter INSTANCE = new SpringEntityFileFilter();
 	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Controller"));
+	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Entity", "MappedSuperclass"));
 	
 	@Override
 	protected Set<String> getClassAnnotations() {

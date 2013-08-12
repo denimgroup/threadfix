@@ -23,28 +23,34 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-/**
- * This class can be used with Commons FileUtils to filter for finding Spring @Controllers.
- *
- * It actually just finds any file with an uncommented @Controller in it.
- * 
- * @author mcollins
- *
- */
-public class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
+public class BeanFieldSet {
+
+	private Map<String, BeanField> fieldMap = new HashMap<>();
+	private Set<BeanField> fieldSet = null;
 	
-	private SpringControllerFileFilter(){}
+	public BeanFieldSet(Set<BeanField> fields) {
+		fieldSet = fields;
+		for (BeanField field : fields) {
+			fieldMap.put(field.getParameterKey(), field);
+		}
+	}
 	
-	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
+	public BeanField getField(String parameterName) {
+		return fieldMap.get(parameterName);
+	}
 	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Controller"));
+	public boolean contains(BeanField field) {
+		return fieldSet.contains(field);
+	}
 	
-	@Override
-	protected Set<String> getClassAnnotations() {
-		return annotations;
+	public void addAll(BeanFieldSet beanFieldSet) {
+		this.fieldSet.addAll(beanFieldSet.fieldSet);
+		for (BeanField field : beanFieldSet.fieldSet) {
+			fieldMap.put(field.getParameterKey(), field);
+		}
 	}
 }

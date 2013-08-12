@@ -49,7 +49,9 @@ public class TestConstants {
 		SPRING_OWNER_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "OwnerController.java",
 		SPRING_PET_CONTROLLER   = SPRING_CONTROLLERS_PREFIX + "PetController.java",
 		SPRING_VET_CONTROLLER   = SPRING_CONTROLLERS_PREFIX + "VetController.java",
-		SPRING_VISIT_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "VisitController.java"
+		SPRING_VISIT_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "VisitController.java",
+		SPRING_MODELS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/model/",
+		SPRING_OWNER_MODEL = "Owner.java"
 		;
 	
 	private static String getResourcePath(String input) {
