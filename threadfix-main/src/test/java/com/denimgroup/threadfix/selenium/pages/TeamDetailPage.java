@@ -57,6 +57,7 @@ public class TeamDetailPage extends BasePage {
 	
 	public TeamDetailPage clickActionButton(){
 		driver.findElementById("actionButton1").click();
+		sleep(2000);
 		return new TeamDetailPage(driver);
 	}
 	
@@ -430,7 +431,9 @@ public class TeamDetailPage extends BasePage {
 
 	public TeamDetailPage clickUserPermLink() {
 		clickActionButton();
+		sleep(3000);
 		driver.findElementById("userListModelButton").click();
+		sleep(2000);
 		return new TeamDetailPage(driver);
 	}
 

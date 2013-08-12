@@ -111,6 +111,8 @@ public class TeamDetailPageTest extends PageBaseTest {
 				editPresent && editClick && closePresent && closeClick);
 		
 		teamdetailPage.logout();
+//		assertTrue(true);
+//		dashboardPage.logout();
 	}
 	
 	@Test
