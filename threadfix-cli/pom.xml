@@ -15,6 +15,35 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+    			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-assembly-plugin</artifactId>
+    			<configuration>
+    				<archive>
+    					<manifest>
+    						<mainClass>com.denimgroup.threadfix.cli.CommandLineParser</mainClass>
+    					</manifest>
+    				</archive>
+      				<descriptorRefs>
+        				<descriptorRef>jar-with-dependencies</descriptorRef>
+      				</descriptorRefs>
+    			</configuration>
+  			</plugin>
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.denimgroup.threadfix.cli.CommandLineParser</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			-->
 		</plugins>
 	</build>
 	<dependencies>
