@@ -32,7 +32,7 @@ package com.denimgroup.threadfix.service.framework;
  */
 public interface EventBasedTokenizer {
 	
-	final static Character 
+	static Character 
 		ARROBA = '@',
 		EQUALS = '=', 
 		COMMA = ',', 

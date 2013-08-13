@@ -380,8 +380,10 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (rpAppList != null && !rpAppList.isEmpty()) {
 			
 			for (RemoteProviderApplication rpa: rpAppList) {
-				if (rpa.getRemoteProviderType().getId() == remoteProviderApplication.getRemoteProviderType().getId()) {
-					if (rpa.getApplicationChannel().getScanList() != null && !rpa.getApplicationChannel().getScanList().isEmpty()) 
+				if (rpa.getRemoteProviderType().getId().equals(
+						remoteProviderApplication.getRemoteProviderType().getId())) {
+					if (rpa.getApplicationChannel().getScanList() != null && 
+							!rpa.getApplicationChannel().getScanList().isEmpty()) 
 						returnStr = "But this application has Scans associated with the Remote Provider Application!";
 				}
 			}

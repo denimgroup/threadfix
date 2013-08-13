@@ -111,7 +111,7 @@ public class CommonPathFinder {
 			if (splitCharacter == null) {
 				if (item.indexOf('\\') != -1) {
 					splitCharacter = "\\";
-				} else if (item.indexOf("/") != -1) {
+				} else {
 					splitCharacter = "/";
 				}
 				startsWithCharacter = item.indexOf(splitCharacter) == 0;

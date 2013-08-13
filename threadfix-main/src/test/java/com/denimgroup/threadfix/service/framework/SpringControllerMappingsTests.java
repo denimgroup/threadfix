@@ -29,6 +29,7 @@ import java.io.File;
 
 import org.junit.Test;
 
+
 public class SpringControllerMappingsTests {
 	
 	// This code validates that all the right controllers got in there and 
@@ -107,6 +108,11 @@ public class SpringControllerMappingsTests {
 			assertTrue("Expected + " + doubleEndpoint[1] + ", got " + filePath,
 					filePath.equals(doubleEndpoint[1]));
 		}
+		
+		assertTrue(mappings.getEndpointsFromController("").isEmpty());
+		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
 	}
 	
 	@Test
@@ -114,6 +120,10 @@ public class SpringControllerMappingsTests {
 		File file = new File(TestConstants.FAKE_FILE);
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		assertTrue(mappings != null);
+		assertTrue(mappings.getEndpointsFromController("").isEmpty());
+		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
+		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
 	}
 	
 	@Test

@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +11,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+
 
 public class SpringEntityMappings {
 
@@ -46,6 +46,46 @@ private final Collection<File> modelFiles;
 		return fields;
 	}
 	
+	public List<BeanField> getFieldsFromMethodCalls(String methodCalls, BeanField initialField) {
+		List<BeanField> fields = new ArrayList<>();
+		
+	
+		if (methodCalls != null && initialField != null) {
+			fields.add(initialField);
+			
+			BeanField currentField = initialField;
+			String editedCalls = methodCalls;
+			
+			if (methodCalls.startsWith(initialField.getParameterKey())) {
+				editedCalls = methodCalls.substring(initialField.getParameterKey().length());
+			}
+			
+			String[] calls = editedCalls.split("(\\(\\))");
+			
+			for (String call : calls) {
+				if (call != null && ! call.isEmpty()) {
+					String beanAccessor = getParameterFromBeanAccessor(call);
+					if (fieldMap.containsKey(currentField.getType()) &&
+							fieldMap.get(currentField.getType()).contains(beanAccessor)) {
+						BeanField resultField = fieldMap.get(currentField.getType()).getField(beanAccessor);
+						if (resultField != null && !resultField.equals(currentField)) {
+							fields.add(resultField);
+							currentField = resultField;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		
+		return fields;
+	}
+	
+	public boolean isEmpty() {
+		return fieldMap.isEmpty();
+	}
+
 	private void generateMap() {
 		if (modelFiles == null) {
 			return;
@@ -99,36 +139,6 @@ private final Collection<File> modelFiles;
 				}
 			}
 		}
-	}
-	
-	public List<BeanField> getFieldsFromMethodCalls(String methodCalls, BeanField initialField) {
-		BeanField currentField = initialField;
-		String editedCalls = methodCalls;
-		List<BeanField> fields = new ArrayList<>(Arrays.asList(initialField));
-		
-		if (methodCalls.startsWith(initialField.getParameterKey())) {
-			editedCalls = methodCalls.substring(initialField.getParameterKey().length());
-		}
-		
-		String[] calls = editedCalls.split("(\\(\\))");
-		
-		for (String call : calls) {
-			if (call != null && ! call.isEmpty()) {
-				String beanAccessor = getParameterFromBeanAccessor(call);
-				if (fieldMap.containsKey(currentField.getType()) &&
-						fieldMap.get(currentField.getType()).contains(beanAccessor)) {
-					BeanField resultField = fieldMap.get(currentField.getType()).getField(beanAccessor);
-					if (resultField != null && !resultField.equals(currentField)) {
-						fields.add(resultField);
-						currentField = resultField;
-					}
-				} else {
-					break;
-				}
-			}
-		}
-		
-		return fields;
 	}
 	
 	private String getParameterFromBeanAccessor(String methodCall) {

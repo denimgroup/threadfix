@@ -189,13 +189,11 @@ public class ServletMappings {
 					if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
 						log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
 						frameworkType = FrameworkType.SPRING_MVC;
-					} else  {
-						if (configFile == null) {
-							log.warn("Unable to locate Spring's dispatcher servlet configuration.");
-						} else {
-							log.warn("Dispatcher servlet configuration parsing did not find the " +
-									"Spring MVC configuration.");
-						}
+					} else if (configFile == null) {
+						log.warn("Unable to locate Spring's dispatcher servlet configuration.");
+					} else {
+						log.warn("Dispatcher servlet configuration parsing did not find the " +
+								"Spring MVC configuration.");
 					}
 				}
 			}

@@ -69,7 +69,7 @@ public class SpringModelParameterParser implements ParameterParser {
 			
 			List<String> lines = getLines(finding.getDataFlowElements());
 			
-			if (mappings == null) {
+			if (mappings == null || mappings.isEmpty()) {
 				parameter = attemptModelParsingNoMappings(lines);
 			} else {
 				parameter = attemptModelParsingWithMappings(lines);
@@ -90,7 +90,7 @@ public class SpringModelParameterParser implements ParameterParser {
 		List<String> returnList = new ArrayList<>(dataFlowElements.size());
 		
 		for (DataFlowElement element : dataFlowElements) {
-			if (element.getLineText() != null) {
+			if (element != null && element.getLineText() != null) {
 				returnList.add(element.getLineText());
 			}
 		}
@@ -100,26 +100,29 @@ public class SpringModelParameterParser implements ParameterParser {
 
 	// TODO move to a system that supports more than one variable
 	private String attemptPathVariableParsing(List<String> lines) {
+		
 		String parameter = null;
 		
-		String elementText = lines.get(0);
+		if (lines != null && !lines.isEmpty()) {
+			String elementText = lines.get(0);
 		
-		// try for @PathVariable("ownerId") int ownerId
-		parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_WITH_PARAM);
-		
-		if (parameter == null) {
-			// try for @PathVariable String ownerName
-			parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_NO_PARAM);
-		}
-		
-		if (parameter == null) {
-			// try for @RequestParam("ownerName") String ownerName
-			parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_WITH_PARAM);
-		}
-		
-		if (parameter == null) {
-			// try for @RequestParam String ownerName
-			parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_NO_PARAM);
+			// try for @PathVariable("ownerId") int ownerId
+			parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_WITH_PARAM);
+			
+			if (parameter == null) {
+				// try for @PathVariable String ownerName
+				parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_NO_PARAM);
+			}
+			
+			if (parameter == null) {
+				// try for @RequestParam("ownerName") String ownerName
+				parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_WITH_PARAM);
+			}
+			
+			if (parameter == null) {
+				// try for @RequestParam String ownerName
+				parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_NO_PARAM);
+			}
 		}
 		
 		return parameter;
@@ -129,15 +132,17 @@ public class SpringModelParameterParser implements ParameterParser {
 		
 		String parameter = null;
 		
-		String modelObject = getModelObject(lines.get(0));
-		
-		if (modelObject != null) {
-			for (String elementText : lines) {
-				if (elementText != null) {
-					parameter = getParameter(elementText, modelObject);
-					
-					if (parameter != null) {
-						break;
+		if (lines != null && !lines.isEmpty()) {
+			String modelObject = getModelObject(lines.get(0));
+			
+			if (modelObject != null) {
+				for (String elementText : lines) {
+					if (elementText != null) {
+						parameter = getParameter(elementText, modelObject);
+						
+						if (parameter != null) {
+							break;
+						}
 					}
 				}
 			}
@@ -147,34 +152,39 @@ public class SpringModelParameterParser implements ParameterParser {
 	}
 	
 	private String attemptModelParsingWithMappings(List<String> lines) {
+		String result = null;
 		
-		String modelObject = getModelObject(lines.get(0));
-		String initialType = getModelObjectType(lines.get(0));
-		
-		BeanField beanField = new BeanField(initialType, modelObject);
-		
-		List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
-				
-		if (modelObject != null) {
-			for (String elementText : lines) {
-				if (elementText != null) {
-					List<BeanField> beanFields = getParameterWithEntityData(elementText, 
-							fieldChain.get(fieldChain.size() - 1));
+		if (lines != null && !lines.isEmpty()) {
+			String modelObject = getModelObject(lines.get(0));
+			String initialType = getModelObjectType(lines.get(0));
+			
+			BeanField beanField = new BeanField(initialType, modelObject);
+			
+			List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
 					
-					if (beanFields != null && beanFields.size() > 1) {
-						beanFields.remove(0);
-						fieldChain.addAll(beanFields);
-						beanField = fieldChain.get(fieldChain.size() - 1);
-					}
-					
-					if (beanField.isPrimitiveType()) {
-						break;
+			if (modelObject != null) {
+				for (String elementText : lines) {
+					if (elementText != null) {
+						List<BeanField> beanFields = getParameterWithEntityData(elementText, 
+								fieldChain.get(fieldChain.size() - 1));
+						
+						if (beanFields != null && beanFields.size() > 1) {
+							beanFields.remove(0);
+							fieldChain.addAll(beanFields);
+							beanField = fieldChain.get(fieldChain.size() - 1);
+						}
+						
+						if (beanField.isPrimitiveType()) {
+							break;
+						}
 					}
 				}
 			}
+	
+			result = buildStringFromFieldChain(fieldChain);
 		}
-
-		return buildStringFromFieldChain(fieldChain);
+		
+		return result;
 	}
 	
 	private String buildStringFromFieldChain(List<BeanField> fieldChain) {

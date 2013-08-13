@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
@@ -243,7 +244,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 			classMethods.add("RequestMethod.GET");
 		}
 		
-		if (methodMethods == null || methodMethods.isEmpty()) {
+		if (methodMethods.isEmpty()) {
 			methodMethods.addAll(classMethods);
 		}
 		

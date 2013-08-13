@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.framework;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,32 +38,132 @@ import com.denimgroup.threadfix.data.entities.Finding;
 public class SpringParameterParsingTests {
 	
 	// These are immutable so it's ok to use the same one for all the tests
-	SpringModelParameterParser parser = new SpringModelParameterParser(
+	static SpringModelParameterParser parser = new SpringModelParameterParser(
 			new SpringEntityMappings(
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION)));
+	
+	static SpringModelParameterParser[] allParsers = { parser, 
+			new SpringModelParameterParser(null),
+			new SpringModelParameterParser(new SpringEntityMappings(null)) };
 	
 	@Test
 	public void testBasicModelParsing() {
 		
-		// These are from the PetClinic Fortify results
-		List<DataFlowElement> basicModelElements = Arrays.asList(
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
-					"public String processFindForm(Owner owner, BindingResult result, Model model) {"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-					"Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-					"Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+		for (SpringModelParameterParser parser : allParsers) {
+			// These are from the PetClinic Fortify results
+			List<DataFlowElement> basicModelElements = Arrays.asList(
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+						"public String processFindForm(Owner owner, BindingResult result, Model model) {"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+						"Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+						"Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+						"return ownerRepository.findByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+						"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
+				);
+			
+			Finding finding = new Finding();
+			finding.setDataFlowElements(basicModelElements);
+			
+			String result = parser.parse(finding);
+			assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+		}
+	}
+	
+	@Test
+	public void testRequestParamParsing1() {
+		
+		for (SpringModelParameterParser parser : allParsers) {
+			// These are doctored to test other methods of passing Spring parameters
+			List<DataFlowElement> chainedRequestParamElements1 = Arrays.asList(
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+					"public String processFindForm(@RequestParam(\"testParam\") String lastName, Model model) {"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+					"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
 					"return ownerRepository.findByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+				new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
 					"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
-			);
+				);
+			
+			Finding finding = new Finding();
+			finding.setDataFlowElements(chainedRequestParamElements1);
+			
+			String result = parser.parse(finding);
+			assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
+		}
+	}
+	
+	@Test
+	public void testRequestParamParsing2() {
 		
-		Finding finding = new Finding();
-		finding.setDataFlowElements(basicModelElements);
-		
-		String result = parser.parse(finding);
-		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+		for (SpringModelParameterParser parser : allParsers) {
+			// These are doctored to test other methods of passing Spring parameters
+			List<DataFlowElement> chainedRequestParamElements2 = Arrays.asList(
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+					"public String processFindForm(@RequestParam String lastName, Model model) {"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+					"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+					"return ownerRepository.findByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+					"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
+				);
+			
+			Finding finding = new Finding();
+			finding.setDataFlowElements(chainedRequestParamElements2);
+			
+			String result = parser.parse(finding);
+			assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+		}
+	}
+	
+	@Test
+	public void testPathVariableParsing1() {
+		for (SpringModelParameterParser parser : allParsers) {
+			// These are doctored to test other methods of passing Spring parameters
+			List<DataFlowElement> chainedPathVariableElements1 = Arrays.asList(
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+					"public String processFindForm(@PathVariable(\"testParam\") String lastName, Model model) {"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+					"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+					"return ownerRepository.findByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+					"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
+				);
+			
+			Finding finding = new Finding();
+			finding.setDataFlowElements(chainedPathVariableElements1);
+			
+			String result = parser.parse(finding);
+			assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
+		}
+	}
+	
+	@Test
+	public void testPathVariableParsing2() {
+		for (SpringModelParameterParser parser : allParsers) {
+			// These are doctored to test other methods of passing Spring parameters
+			List<DataFlowElement> pathVariableElements2 = Arrays.asList(
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+					"public String processFindForm(@PathVariable String lastName, Model model) {"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+					"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+					"return ownerRepository.findByLastName(lastName);"),
+				new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+					"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
+				);
+			
+			Finding finding = new Finding();
+			finding.setDataFlowElements(pathVariableElements2);
+			
+			String result = parser.parse(finding);
+			assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+		}
 	}
 	
 	@Test
@@ -88,7 +189,7 @@ public class SpringParameterParsingTests {
 		String result = parser.parse(finding);
 		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
-	
+
 	@Test
 	public void testChainedMultiLevelModelParsing() {
 		
@@ -113,93 +214,31 @@ public class SpringParameterParsingTests {
 		String result = parser.parse(finding);
 		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
-	
+
 	@Test
-	public void testRequestParamParsing1() {
+	public void testNullInput() {
 		
-		// These are doctored to test other methods of passing Spring parameters
-		List<DataFlowElement> chainedRequestParamElements1 = Arrays.asList(
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
-				"public String processFindForm(@RequestParam(\"testParam\") String lastName, Model model) {"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-				"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
-				"return ownerRepository.findByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
-				"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
-			);
-		
-		Finding finding = new Finding();
-		finding.setDataFlowElements(chainedRequestParamElements1);
-		
-		String result = parser.parse(finding);
-		assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
-	}
+		for (SpringModelParameterParser parser : allParsers) {
+			String result = parser.parse(null);
+			assertTrue(result == null);
+			
+			Finding finding = new Finding();
+			result = parser.parse(finding);
+			assertTrue(result == null);
 	
-	@Test
-	public void testRequestParamParsing2() {
-		
-		// These are doctored to test other methods of passing Spring parameters
-		List<DataFlowElement> chainedRequestParamElements2 = Arrays.asList(
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
-				"public String processFindForm(@RequestParam String lastName, Model model) {"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-				"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
-				"return ownerRepository.findByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
-				"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
-			);
-		
-		Finding finding = new Finding();
-		finding.setDataFlowElements(chainedRequestParamElements2);
-		
-		String result = parser.parse(finding);
-		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
-	}
-	
-	@Test
-	public void testPathVariableParsing1() {
-		
-		// These are doctored to test other methods of passing Spring parameters
-		List<DataFlowElement> chainedPathVariableElements1 = Arrays.asList(
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
-				"public String processFindForm(@PathVariable(\"testParam\") String lastName, Model model) {"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-				"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
-				"return ownerRepository.findByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
-				"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
-			);
-		
-		Finding finding = new Finding();
-		finding.setDataFlowElements(chainedPathVariableElements1);
-		
-		String result = parser.parse(finding);
-		assertTrue("Parameter was " + result + " instead of testParam", "testParam".equals(result));
-	}
-	
-	@Test
-	public void testPathVariableParsing2() {
-		
-		// These are doctored to test other methods of passing Spring parameters
-		List<DataFlowElement> pathVariableElements2 = Arrays.asList(
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
-				"public String processFindForm(@PathVariable String lastName, Model model) {"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
-				"Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
-				"return ownerRepository.findByLastName(lastName);"),
-			new DataFlowElement("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
-				"\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
-			);
-		
-		Finding finding = new Finding();
-		finding.setDataFlowElements(pathVariableElements2);
-		
-		String result = parser.parse(finding);
-		assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+			List<DataFlowElement> elements = new ArrayList<DataFlowElement>();
+			
+			finding.setDataFlowElements(elements);
+			result = parser.parse(finding);
+			assertTrue(result == null);
+			
+			finding.getDataFlowElements().add(null);
+			finding.getDataFlowElements().add(null);
+			finding.getDataFlowElements().add(null);
+			finding.getDataFlowElements().add(null);
+			result = parser.parse(finding);
+			assertTrue(result == null);
+		}
 	}
 
 }
