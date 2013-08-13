@@ -32,6 +32,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -53,6 +54,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickAddDefectTrackerButton() {
 		driver.findElementById("addDefectTrackerButton").click();
+		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -80,8 +82,8 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickTestConnection() {
 		driver.findElementById("jsonLink").click();
-		waitForElement(driver.findElementById("jsonResult"));
-		sleep(2000);
+		sleep(5000);
+//		waitForElement(driver.findElementById("jsonResult"));
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -99,6 +101,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickSubmitTrackerButton() {
 		driver.findElementById("submitDTModal").click();
+		sleep(4000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -139,7 +142,7 @@ public class ApplicationDetailPage extends BasePage {
 				.selectProduct(productname)
 				.clickSubmitTrackerButton();
 //		    waitForElement(driver.findElementById("defectTrackerText"));
-			sleep(1000);
+			sleep(2000);
 		    return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
@@ -639,6 +642,65 @@ public class ApplicationDetailPage extends BasePage {
 //		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public ApplicationDetailPage clickVulnCheckBox(int num){
+		driver.findElementById("vulnerabilityIds"+num).click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickDefectActionBtn(){
+		driver.findElementsById("actionButton1").get(1).click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickSubmitDefectLink(){
+		clickDefectActionBtn();
+		driver.findElementById("submitDefectButton").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickMergeDefectLink(){
+		clickDefectActionBtn();
+		driver.findElementById("submitDefectActionLink").click();
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickMarkClosedLink(){
+		clickDefectActionBtn();
+		driver.findElementById("markClosedButton").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickMarkFalsePositiveLink(){
+		clickDefectActionBtn();
+		driver.findElementById("markFalsePositiveButton").click();
+		sleep(1000);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage addCommentToFirstVuln(String comment){
+		clickExpandAllVulns();
+		expandFirstVuln();
+		driver.findElementsByLinkText("Add Comment").get(0).click();
+		sleep(1000);
+		driver.findElementsById("commentInputBox").get(0).clear();
+		driver.findElementsById("commentInputBox").get(0).sendKeys(comment);
+		for(int i = 0; i< driver.findElementsByClassName("modal").size(); i++){
+			if(driver.findElementsByClassName("modal").get(i).getAttribute("id").contains("commentModal")){
+				driver.findElementsByClassName("modal").get(i).findElement(By.linkText("Add Comment")).click();
+			}
+		}
+		sleep(3000);
+		return new ApplicationDetailPage(driver);
+		
+	}
+	
+	public ApplicationDetailPage expandFirstVuln(){
+		driver.findElementsByClassName("expandableTrigger").get(1).click();
+		return new ApplicationDetailPage(driver);
+	}
+	
 	
 	public boolean isScanPresent(String scan){
 		return driver.findElementById("wafTableBody").getText().contains(scan);
