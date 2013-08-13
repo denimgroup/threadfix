@@ -12,7 +12,7 @@
 	<tbody>
 		<c:if test="${ empty vulnerability.vulnerabilityComments }">
 			<tr class="bodyRow">
-				<td colspan="4">No comments found.</td>
+				<td colspan="4" style="text-align:center;">No comments found.</td>
 			</tr>
 		</c:if>
 	

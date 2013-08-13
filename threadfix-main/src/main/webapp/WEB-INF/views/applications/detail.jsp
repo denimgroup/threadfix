@@ -116,6 +116,10 @@
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/docsTab" var="docsTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
 		<br>
 	
 		<ul class="nav nav-tabs margin-top">
@@ -151,6 +155,13 @@
 					</a>
 				</li>
 			</c:if>
+			<li class="pointer">
+				<a data-toggle="tab" id="docsTabLink" onclick="javascript:switchTabs('<c:out value="${docsTabUrl }"/>');return false;">
+					${ fn:length(application.documents) } 
+					<c:if test="${ fn:length(application.documents) == 1 }">Document</c:if>
+					<c:if test="${ fn:length(application.documents) != 1 }">Documents</c:if>
+				</a>
+			</li>
 		</ul>
 		
 	    <div id="tabsDiv">
