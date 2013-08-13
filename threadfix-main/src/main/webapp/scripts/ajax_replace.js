@@ -124,7 +124,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 	return false;
 }
 
-function submitAjaxScan(url, formId, formDiv, channelId, errorDiv) {
+function submitAjaxScan(url, formId, formDiv, errorDiv) {	
 	
 	if ($("#" + formId).val() === "") {
 		$("#" + errorDiv).css("display","");

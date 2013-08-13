@@ -101,6 +101,7 @@ public class Application extends AuditableEntity {
 	private List<Scan> scans;
 	private List<Vulnerability> vulnerabilities;
 	private List<RemoteProviderApplication> remoteProviderApplications;
+	private List<Document> documents;
 
 	// these are here so we don't generate them more than we need to
 	private List<Integer> reportList = null;
@@ -296,8 +297,17 @@ public class Application extends AuditableEntity {
 	public void setRemoteProviderApplications(
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
+	}	
+
+	@OneToMany(mappedBy = "application")
+	public List<Document> getDocuments() {
+		return documents;
 	}
-	
+
+	public void setDocuments(List<Document> documents) {
+		this.documents = documents;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "applicationCriticalityId")
 	public ApplicationCriticality getApplicationCriticality() {
