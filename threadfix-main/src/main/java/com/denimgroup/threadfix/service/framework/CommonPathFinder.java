@@ -26,12 +26,19 @@ package com.denimgroup.threadfix.service.framework;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 public class CommonPathFinder {
+	
+	private static final Pattern 
+		BACKSLASH_PATTERN = Pattern.compile("\\\\"), // we have to double escape for Java String + regex pattern
+		FORWARD_SLASH_PATTERN = Pattern.compile("/");
+	
+	private static final char forwardSlash = '/', backwardSlash = '\\';
 	
 	private CommonPathFinder(){}
 
@@ -105,19 +112,22 @@ public class CommonPathFinder {
 		int maxLength = Integer.MAX_VALUE;
 		boolean startsWithCharacter = false;
 		
-		String splitCharacter = null;
+		Pattern splitPattern = null;
+		char splitChar = 0;
 		
 		for (String item : items) {
-			if (splitCharacter == null) {
+			if (splitPattern == null) {
 				if (item.indexOf('\\') != -1) {
-					splitCharacter = "\\";
+					splitPattern = BACKSLASH_PATTERN;
+					splitChar = backwardSlash;
 				} else {
-					splitCharacter = "/";
+					splitPattern = FORWARD_SLASH_PATTERN;
+					splitChar = forwardSlash;
 				}
-				startsWithCharacter = item.indexOf(splitCharacter) == 0;
+				startsWithCharacter = item.indexOf(splitChar) == 0;
 			}
 			
-			String[] parts = item.split(splitCharacter);
+			String[] parts = splitPattern.split(item);
 			
 			if (parts.length < maxLength) {
 				maxLength = parts.length;
@@ -131,13 +141,13 @@ public class CommonPathFinder {
 			
 			for (String string : commonParts) {
 				if (string != null && !string.equals("")) {
-					builder.append(splitCharacter + string);
+					builder.append(splitChar + string);
 				}
 			}
 			
 			response = builder.toString();
 			
-			if (!startsWithCharacter && response.indexOf(splitCharacter) == 0) {
+			if (!startsWithCharacter && response.indexOf(splitChar) == 0) {
 				response = response.substring(1);
 			}
 		}
