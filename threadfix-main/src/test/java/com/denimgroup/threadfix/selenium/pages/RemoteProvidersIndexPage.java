@@ -134,8 +134,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveWhiteHat(){
 		driver.findElementById("submitRemoteProviderFormButton1").click();
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
 		sleep(2000);
+		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	

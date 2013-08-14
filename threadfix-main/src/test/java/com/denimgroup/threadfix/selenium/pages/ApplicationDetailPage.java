@@ -71,6 +71,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickEditDefectTrackerButton() {
 		driver.findElementById("editDefectTrackerButton").click();
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -142,7 +143,7 @@ public class ApplicationDetailPage extends BasePage {
 				.selectProduct(productname)
 				.clickSubmitTrackerButton();
 //		    waitForElement(driver.findElementById("defectTrackerText"));
-			sleep(2000);
+			sleep(3000);
 		    return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By

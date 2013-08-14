@@ -159,7 +159,7 @@ public class APIKeysTests extends BaseTest {
 				   .clickSubmitButton(null)
 				   .waitModalDisappear();
 		assertTrue("Api note is note present.",indexPage.isNotePresent(blankNote));
-		assertTrue("Validation Message not present.",indexPage.isCreateValidationPresent());
+		assertTrue("Validation Message not present 1.",indexPage.isCreateValidationPresent());
 		indexPage =	indexPage.clickEdit(blankNote)
 				.setNote(whiteSpace,blankNote)
 				.clickSubmitButton(blankNote)

@@ -55,6 +55,7 @@ public abstract class BasePage {
 	public LoginPage logout() {
 		clickUserTab();
 		driver.findElementById("logoutLink").click();
+		sleep(2000);
 		return new LoginPage(driver);
 	}
 	
@@ -102,12 +103,14 @@ public abstract class BasePage {
 	public DefectTrackerIndexPage clickDefectTrackersLink(){
 		clickConfigTab();
 		driver.findElementById("defectTrackersLink").click();
+		sleep(2000);
 		return new DefectTrackerIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickRemoteProvidersLink(){
 		clickConfigTab();
 		driver.findElementById("remoteProvidersLink").click();
+		sleep(2000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	

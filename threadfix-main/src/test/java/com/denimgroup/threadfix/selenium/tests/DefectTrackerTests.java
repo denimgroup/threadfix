@@ -54,7 +54,7 @@ public class DefectTrackerTests extends BaseTest {
 	private static String BUGZILLA_USERNAME = null;
 	private static String BUGZILLA_PASSWORD = null;
 	private static String BUGZILLA_URL = null;
-	private static String BUGZILLA_PROJECTNAME = null;
+	private static String BUGZILLA_PROJECTNAME = "For ThreadFix";
 	private static String TFS_USERNAME = null;
 	private static String TFS_PASSWORD = null;
 	private static String TFS_URL = null;
@@ -90,7 +90,7 @@ public class DefectTrackerTests extends BaseTest {
 		if (tmp != null) {
 			JIRA_URL = tmp;
 		}
-		tmp = System.getProperty("jiraProjectName");
+		tmp = System.getProperty("JIRAPROJECTNAME");
 		if (tmp != null) {
 			JIRA_PROJECTNAME = tmp;
 		}
@@ -106,7 +106,7 @@ public class DefectTrackerTests extends BaseTest {
 		if (tmp != null) {
 			BUGZILLA_URL = tmp;
 		}
-		tmp = System.getProperty("bugzillaProjectName");
+		tmp = System.getProperty("BUGZILLAPROJECTNAME");
 		if (tmp != null) {
 			BUGZILLA_PROJECTNAME = tmp;
 		}
@@ -670,7 +670,7 @@ public class DefectTrackerTests extends BaseTest {
 				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
 
-
+		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
 		sleep(1500);
 		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
 										.clickOrganizationHeaderLink()
@@ -787,7 +787,7 @@ public class DefectTrackerTests extends BaseTest {
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
-
+		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
 		sleep(1500);
 		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
 										.clickOrganizationHeaderLink()
@@ -885,8 +885,10 @@ public class DefectTrackerTests extends BaseTest {
 		
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+		
+		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
 
-		sleep(4000);
+		sleep(2000);
 		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
 													.clickOrganizationHeaderLink()
 													.expandTeamRowByName(teamName)
@@ -895,6 +897,8 @@ public class DefectTrackerTests extends BaseTest {
 
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+		
+		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
 		
 		// Delete Both
 		sleep(1500);

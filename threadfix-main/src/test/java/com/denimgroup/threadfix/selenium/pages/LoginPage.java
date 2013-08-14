@@ -60,7 +60,7 @@ public class LoginPage extends BasePage {
 	public LoginPage loginInvalid(String user, String password) {
 		setUsername(user).setPassword(password);
 		driver.findElementById("login").click();
-		sleep(2000);
+		sleep(3000);
 		return new LoginPage(driver);
 	}
 	

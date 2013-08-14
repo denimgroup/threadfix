@@ -320,8 +320,8 @@ public class WafTests extends BaseTest {
 	//Create mod-Security Waf and generate rules
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
-		String orgName = "testCreateOrg2";
-		String appName = "testCreateApp2";
+		String orgName = "testCreateOrg2"+getRandomString(8);
+		String appName = "testCreateApp2"+getRandomString(8);
 		String urlText = "http://testur2.com";
 
 		//set up an organization
@@ -423,8 +423,8 @@ public class WafTests extends BaseTest {
 	// Generate Snort Waf Rules
 	@Test
 	public void attachWafToaNewApp() throws MalformedURLException {
-		String orgName = "testCreateOrg1";
-		String appName = "testCreateApp1";
+		String orgName = "testCreateOrg1"+getRandomString(8);
+		String appName = "testCreateApp1"+getRandomString(8);
 		String urlText = "http://testurl.com";
 
 		//set up an organization
@@ -556,8 +556,8 @@ public class WafTests extends BaseTest {
 
 	@Test
 	public void testEditWafBoundaries(){
-		String wafName = "testEditWafBoundaries";
-		String wafNameDuplicateTest = "testEditWafBoundaries2";
+		String wafName = "testEditWafBoundaries"+getRandomString(8);
+		String wafNameDuplicateTest = "testEditWafBoundaries2"+getRandomString(8);
 		
 		String type1 = "mod_security";
 		String type2 = "Snort";

@@ -130,6 +130,7 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 	
 	public ApiKeysIndexPage waitModalDisappear(){
+		sleep(2000);
 		waitForInvisibleElement(driver.findElementById("newKeyModalDiv"));
 		return new ApiKeysIndexPage(driver);
 	}
