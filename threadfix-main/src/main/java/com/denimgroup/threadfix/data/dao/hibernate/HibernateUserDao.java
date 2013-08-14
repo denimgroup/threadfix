@@ -141,22 +141,33 @@ public class HibernateUserDao implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> retrieveAppPermissibleUsers(Integer appId) {
-				
+	public List<User> retrieveAppPermissibleUsers(Integer orgId, Integer appId) {
+
 		List<User> globalUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", true))
 				.addOrder(Order.asc("name"))
+				.list();
+		List<User> appAllUserList = getActiveUserCriteria()
+				.add(Restrictions.eq("hasGlobalGroupAccess", false))
+				.createAlias("accessControlTeamMaps", "teamMap")
+				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", true), 
+							Restrictions.eq("teamMap.organization.id", orgId)))
+				.addOrder(Order.asc("name"))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();	
 		List<User> appUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", false))
 				.createAlias("accessControlTeamMaps", "teamMap")
 				.createAlias("teamMap.accessControlApplicationMaps", "appMap")
-				.add(Restrictions.eq("appMap.application.id",appId))
+				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", false), 
+						Restrictions.eq("appMap.application.id",appId)))
 				.addOrder(Order.asc("name"))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-				.list();	
+				.list();
 		globalUserList.addAll(appUserList);
-		
+		for (User u: appAllUserList) 
+			if (!globalUserList.contains(u)) globalUserList.add(u);
+
 		return globalUserList;
 	}
 }
