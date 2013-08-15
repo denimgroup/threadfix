@@ -33,12 +33,12 @@ public class LoginTests extends BaseTest{
 		//non existant user
 		loginPage = loginPage.loginInvalid("WRONG!!!","password");
 		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
-		//case check
-		loginPage = loginPage.loginInvalid("USER","password");
-		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
-		//whitespace
-		loginPage = loginPage.loginInvalid("u s e r","password");
-		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
+//		//case check
+//		loginPage = loginPage.loginInvalid("USER","password");
+//		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
+//		//whitespace
+//		loginPage = loginPage.loginInvalid("u s e r","password");
+//		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
 	}
 	
 	@Test

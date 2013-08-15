@@ -35,12 +35,10 @@ import org.openqa.selenium.support.ui.Select;
 
 public class WafIndexPage extends BasePage {
 
-	private WebElement addWafLink;
 	private List<WebElement> names = new ArrayList<WebElement>();
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		addWafLink = driver.findElementById("addWafModalButton");
 		//for (int i = 1; i <= getNumRows(); i++) {
 		//	names.add(driver.findElementById("wafName" + i));
 		//}
@@ -93,7 +91,7 @@ public class WafIndexPage extends BasePage {
 	}
 
 	public WafIndexPage clickAddWafLink() {
-		addWafLink.click();
+		driver.findElementById("addWafModalButton").click();
 		waitForElement(driver.findElementById("createWaf"));
 		return new WafIndexPage(driver);
 	}

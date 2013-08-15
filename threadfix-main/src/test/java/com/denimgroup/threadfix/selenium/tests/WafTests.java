@@ -444,9 +444,8 @@ public class WafTests extends BaseTest {
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
 				File appScanFile = null;
-				
 				if (System.getProperty("scanFileBaseLocation") == null) {
-					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+						appScanFile = new File(new URL(mapEntry.getValue()).getFile());
 				} else {
 					appScanFile = new File(mapEntry.getValue());
 				}
@@ -454,6 +453,7 @@ public class WafTests extends BaseTest {
 			} else {
 				continue;
 			}
+			System.out.println("mapEntry: "+mapEntry.getValue());
 			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
 						.setFileInput(mapEntry.getValue())
 						.submitScan();
