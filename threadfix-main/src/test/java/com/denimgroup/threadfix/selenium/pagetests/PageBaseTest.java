@@ -76,10 +76,6 @@ public class PageBaseTest {
 		return params;
 	}
 	
-	@Test
-	public void blank(){
-		assertTrue(true);
-	}
 	
 	public PageBaseTest(String browser){
 		if(browser.equals("chrome")){
