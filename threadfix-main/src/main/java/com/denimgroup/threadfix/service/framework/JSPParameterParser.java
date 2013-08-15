@@ -62,20 +62,29 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		START, OPEN_ANGLE_BRACKET, IN_JSP, PERCENTAGE
 	}
 	
-	public static JSPParameterParser parse(File file) {
+	public static Map<Integer, List<String>> parse(File file) {
 		JSPParameterParser parser = new JSPParameterParser();
 		EventBasedTokenizerRunner.run(file, parser);
-		return parser;
+		return parser.buildParametersMap();
 	}
 	
-	public Map<String, List<Integer>> getParameterMap() {
-		return parameterToLineNumbersMap;
+	private Map<Integer, List<String>> buildParametersMap() {
+		Map<Integer, List<String>> lineNumToParamMap = new HashMap<>();
+		
+		for (String key : parameterToLineNumbersMap.keySet()) {
+			List<Integer> lineNumbers = parameterToLineNumbersMap.get(key);
+			
+			for (Integer lineNumber : lineNumbers) {
+				if (!lineNumToParamMap.containsKey(lineNumber)) {
+					lineNumToParamMap.put(lineNumber, new ArrayList<String>());
+				}
+				lineNumToParamMap.get(lineNumber).add(key);
+			}
+		}
+		
+		return lineNumToParamMap;
 	}
 	
-	public Map<String, String> getVariableToParameterMap() {
-		return variableToParametersMap;
-	}
-
 	@Override
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (pageState) {

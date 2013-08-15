@@ -39,6 +39,16 @@ public class FilePathUtils {
 		return returnPath;
 	}
 	
+	public static String getRelativePath(String projectFileString, File projectRootFile) {
+		String returnPath = null;
+		
+		if (projectFileString != null && projectRootFile != null) {
+			returnPath = getRelativePath(projectFileString, projectRootFile.getAbsolutePath());
+		}
+		
+		return returnPath;
+	}
+	
 	public static String getRelativePath(File projectFile, String projectRoot) {
 		String returnPath = null;
 		

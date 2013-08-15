@@ -36,8 +36,7 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	
 	protected String filePathRoot, urlPathRoot;
 	
-	private static Iterable<String> SUFFIXES = Arrays.asList("aspx", "asp", "jsp", "php", "html", "htm",
-        "java", "cs", "config", "js", "cgi", "ascx");
+	private static Iterable<String> SUFFIXES = Arrays.asList("html", "htm", "cs");
 	
 	protected final ServletMappings mappings;
 	protected final File workTree;
@@ -49,7 +48,6 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final static SanitizedLogger log = new SanitizedLogger(AbstractPathUrlTranslator.class);
 	
 	/**
-	 * Throws IllegalArgumentException if passed null parameters.
 	 * @param scan 
 	 * @param mappings
 	 * @param workTree
@@ -109,10 +107,6 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 		return urlPath;
 	}
 	
-	/**
-	 * This method is useful to override for g
-	 * @return
-	 */
 	protected Iterable<String> getSuffixVals() {
 		return SUFFIXES;
 	}

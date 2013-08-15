@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 
-public class SpringModelParameterParser implements ParameterParser {
+public class SpringDataFlowParser implements ParameterParser {
 	
 	// So we only compile these patterns once
 	private static final Pattern 
@@ -44,7 +44,7 @@ public class SpringModelParameterParser implements ParameterParser {
 	
 	private final SpringEntityMappings mappings;
 	
-	public SpringModelParameterParser(SpringEntityMappings mappings) {
+	public SpringDataFlowParser(SpringEntityMappings mappings) {
 		this.mappings = mappings;
 	}
 	

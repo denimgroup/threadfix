@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
-
 public class JSPIncludeParser implements EventBasedTokenizer {
 	
 	private State currentState = State.START;
@@ -44,8 +42,7 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 	}
 	
 	private static final Pattern slashPattern = Pattern.compile("[\\\\/]");
-	private static final SanitizedLogger log = new SanitizedLogger("JSPIncludeParser");
-	
+
 	private JSPIncludeParser(File file) {
 		this.inputFile = file;
 	}
@@ -122,8 +119,6 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 	}
 	
 	private static File getRelativeFile(String sval, File inputFile) {
-		File returnFile = null;
-		
 		List<String> 
 			inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(inputFile.getParent()))),
 			svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));
@@ -146,14 +141,6 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 		
 		String resultingString = builder.substring(0, builder.length() - 1);
 		
-		returnFile = new File(resultingString);
-		
-		if (returnFile.exists() && returnFile.isFile()) {
-			log.info("Located included JSP file " + returnFile.getName());
-		} else {
-			log.info("Unable to locate included JSP file.");
-		}
-		
-		return returnFile;
+		return new File(resultingString);
 	}
 }

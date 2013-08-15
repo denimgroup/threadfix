@@ -37,10 +37,17 @@ public class ParameterParserFactory {
 					if (scanMergeConfiguration.getWorkTree() != null) {
 						mappings = new SpringEntityMappings(scanMergeConfiguration.getWorkTree());
 					}
-					parser = new SpringModelParameterParser(mappings); 
+					parser = new SpringDataFlowParser(mappings); 
+					
 					break;
-				
-					// TODO handle other cases
+				case JSP: 
+					JSPMappings jspMappings = null;
+					if (scanMergeConfiguration.getWorkTree() != null) {
+						jspMappings = new JSPMappings(scanMergeConfiguration.getWorkTree());
+					}
+					parser = new JSPDataFlowParser(jspMappings, scanMergeConfiguration); 
+					
+					break;
 				default:
 			}
 		}

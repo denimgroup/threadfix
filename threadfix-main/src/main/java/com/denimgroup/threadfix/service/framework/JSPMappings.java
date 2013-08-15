@@ -26,38 +26,52 @@ package com.denimgroup.threadfix.service.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-public class JSPIncludes {
+public class JSPMappings {
 	
-	Map<String, Set<File>> includeMap = new HashMap<>();
-	Map<String, JSPParameterParser> parameterMap = new HashMap<>();
+	private Map<String, Set<File>> includeMap = new HashMap<>();
+	private Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
+	private File rootFile = null;
 	
 	@SuppressWarnings("unchecked")
-	public JSPIncludes(File rootFile) {
-		Collection<File> jspFiles = FileUtils.listFiles(
-				rootFile, JSPFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+	public JSPMappings(File rootFile) {
+		if (rootFile != null) {
 
-		for (File file : jspFiles) {
-			Set<File> files = JSPIncludeParser.parse(file);
-			if (files != null && !files.isEmpty()) {
-				includeMap.put(FilePathUtils.getRelativePath(file, rootFile), files);
+			this.rootFile = rootFile;
+			Collection<File> jspFiles = FileUtils.listFiles(
+					rootFile, JSPFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+	
+			for (File file : jspFiles) {
+				Set<File> files = JSPIncludeParser.parse(file);
+				if (files != null && !files.isEmpty()) {
+					includeMap.put(FilePathUtils.getRelativePath(file, rootFile), files);
+				}
 			}
-		}
-		
-		for (File file : jspFiles) {
-			JSPParameterParser parser = JSPParameterParser.parse(file);
-			if (parser != null) {
-				parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parser);
+			
+			for (File file : jspFiles) {
+				Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
+				if (parserResults != null) {
+					parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parserResults);
+				}
 			}
 		}
 	}
 	
 	public Set<File> getIncludedFiles(String relativePath) {
 		return includeMap.get(relativePath);
+	}
+	
+	public Map<Integer, List<String>> getParameterMap(String relativePath) {
+		return parameterMap.get(relativePath);
+	}
+	
+	public String getRelativePath(String dataFlowLocation) {
+		return FilePathUtils.getRelativePath(dataFlowLocation, rootFile);
 	}
 }

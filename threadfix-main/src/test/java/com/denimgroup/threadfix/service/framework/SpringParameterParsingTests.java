@@ -38,18 +38,18 @@ import com.denimgroup.threadfix.data.entities.Finding;
 public class SpringParameterParsingTests {
 	
 	// These are immutable so it's ok to use the same one for all the tests
-	static SpringModelParameterParser parser = new SpringModelParameterParser(
+	static SpringDataFlowParser parser = new SpringDataFlowParser(
 			new SpringEntityMappings(
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION)));
 	
-	static SpringModelParameterParser[] allParsers = { parser, 
-			new SpringModelParameterParser(null),
-			new SpringModelParameterParser(new SpringEntityMappings(null)) };
+	static SpringDataFlowParser[] allParsers = { parser, 
+			new SpringDataFlowParser(null),
+			new SpringDataFlowParser(new SpringEntityMappings(null)) };
 	
 	@Test
 	public void testBasicModelParsing() {
 		
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			// These are from the PetClinic Fortify results
 			List<DataFlowElement> basicModelElements = Arrays.asList(
 				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -75,7 +75,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testRequestParamParsing1() {
 		
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DataFlowElement> chainedRequestParamElements1 = Arrays.asList(
 				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -99,7 +99,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testRequestParamParsing2() {
 		
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DataFlowElement> chainedRequestParamElements2 = Arrays.asList(
 				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -122,7 +122,7 @@ public class SpringParameterParsingTests {
 	
 	@Test
 	public void testPathVariableParsing1() {
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DataFlowElement> chainedPathVariableElements1 = Arrays.asList(
 				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -145,7 +145,7 @@ public class SpringParameterParsingTests {
 	
 	@Test
 	public void testPathVariableParsing2() {
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DataFlowElement> pathVariableElements2 = Arrays.asList(
 				new DataFlowElement("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -218,7 +218,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testNullInput() {
 		
-		for (SpringModelParameterParser parser : allParsers) {
+		for (SpringDataFlowParser parser : allParsers) {
 			String result = parser.parse(null);
 			assertTrue(result == null);
 			

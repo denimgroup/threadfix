@@ -27,6 +27,9 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 public interface ParameterParser {
 	
+	/**
+	 * Return the parameter based on the data flow elements
+	 */
 	String parse(Finding finding);
 
 }
