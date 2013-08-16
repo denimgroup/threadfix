@@ -148,7 +148,13 @@ public class DocumentController {
 			else
 				return "redirect:/";
 		}
-		response.setContentType(document.getContentType());
+		
+		String contentType = document.getContentType();
+		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
+			contentType = "text/plain";
+		}
+		
+		response.setContentType(contentType);
 		InputStream in = document.getFile().getBinaryStream();
 		ServletOutputStream out = response.getOutputStream();
 		IOUtils.copy(in, out);
