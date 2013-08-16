@@ -89,9 +89,10 @@ public interface UserDao {
 	
 	/**
 	 * 
-	 * @param appId
+	 * @param orgId
+	 * @param appId 
 	 * @return
 	 */
-	List<User> retrieveAppPermissibleUsers(Integer appId);
+	List<User> retrieveAppPermissibleUsers(Integer orgId, Integer appId);
 
 }
