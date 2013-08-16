@@ -86,6 +86,7 @@ public abstract class BasePage {
 	
 	public void clickConfigTab(){
 		driver.findElementById("tabConfigAnchor").click();
+		sleep(2000);
 	}
 	
 	public void clickUserTab(){

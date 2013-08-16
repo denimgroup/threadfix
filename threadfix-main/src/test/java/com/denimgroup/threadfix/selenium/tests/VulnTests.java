@@ -2,7 +2,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.*;
 
-import java.net.URL;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -71,13 +71,49 @@ public class VulnTests extends BaseTest {
 	public void mergeSingleVulnJira(){
 		assertTrue("Jira",build(JIRA));
 		//merge here
+		//nav to app detail page
+		ApplicationDetailPage ad = loginPage.login("user", "password")
+											.clickOrganizationHeaderLink()
+											.expandTeamRowByName(teamName)
+											.clickViewAppLink(appName, teamName);
+		//submit merge
+		ad = ad.clickExpandAllVulns()
+				.clickVulnCheckBox(1)
+				.clickMergeDefectLink()
+				.selectMergeDefect("THREAD-89")
+				.clickMergeDefectSubmit();
+		
+		//verify
+		ad = ad.clickExpandAllVulns();
+		
+		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+		
+		
+		ad.logout();
 		destroy();
 	}
 	
 	@Test
 	public void mergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		//merge here
+		ApplicationDetailPage ad = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName);
+		//submit merge
+		ad = ad.clickExpandAllVulns()
+				.clickVulnCheckBox(1)
+				.clickMergeDefectLink()
+				.selectMergeDefect("2")
+				.clickMergeDefectSubmit();
+
+		//verify
+		ad = ad.clickExpandAllVulns();
+
+		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+
+
+		ad.logout();
 		destroy();
 	}
 	@Ignore
@@ -91,14 +127,52 @@ public class VulnTests extends BaseTest {
 	@Test
 	public void mergeMultiVulnJira(){
 		assertTrue("Jira",build(JIRA));
-		//merge here
+		ApplicationDetailPage ad = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName);
+		//submit merge
+		ad = ad.clickExpandAllVulns()
+				.clickVulnCheckBox(1)
+				.clickVulnCheckBox(2)
+				.clickVulnCheckBox(3)
+				.clickMergeDefectLink()
+				.selectMergeDefect("THREAD-89")
+				.clickMergeDefectSubmit();
+
+		//verify
+		ad = ad.clickExpandAllVulns();
+
+		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+
+
+		ad.logout();
 		destroy();
 	}
 	
 	@Test
 	public void mergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		//merge here
+		ApplicationDetailPage ad = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName);
+		//submit merge
+		ad = ad.clickExpandAllVulns()
+				.clickVulnCheckBox(1)
+				.clickVulnCheckBox(2)
+				.clickVulnCheckBox(3)
+				.clickMergeDefectLink()
+				.selectMergeDefect("2")
+				.clickMergeDefectSubmit();
+
+		//verify
+		ad = ad.clickExpandAllVulns();
+
+		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+
+
+		ad.logout();
 		destroy();
 	}
 	@Ignore

@@ -167,6 +167,7 @@ public class TeamIndexPage extends BasePage {
 	public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
 		populateAppList(teamName);
 		apps.get(getAppIndex(appName)).click();
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 

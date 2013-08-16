@@ -639,13 +639,15 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(3000);
+		driver.findElementById("expandAllVulns").click();
+		driver.findElementById("expandAllVulns").click();
+		sleep(2000);
 //		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
 	
 	public ApplicationDetailPage clickVulnCheckBox(int num){
-		driver.findElementById("vulnerabilityIds"+num).click();
+		driver.findElementsByClassName("vulnIdCheckbox").get(num).click();
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -662,9 +664,23 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickMergeDefectLink(){
 		clickDefectActionBtn();
-		driver.findElementById("submitDefectActionLink").click();
+		driver.findElementById("mergeDefectButton").click();
+		sleep(3000);
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public ApplicationDetailPage selectMergeDefect(String defect){
+		sleep(30000);
+		new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public ApplicationDetailPage clickMergeDefectSubmit(){
+		driver.findElementsById("mergeDefectButton").get(2).click();
+		sleep(3500);
+		return new ApplicationDetailPage(driver);
+	}
+	
 	
 	public ApplicationDetailPage clickMarkClosedLink(){
 		clickDefectActionBtn();
@@ -715,6 +731,10 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
+	}
+	
+	public int getNumOfSubmitedDefects(){
+		return driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
 	}
 	
 }
