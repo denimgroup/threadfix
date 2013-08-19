@@ -210,7 +210,7 @@ public class TeamIndexPage extends BasePage {
 
 	public TeamIndexPage saveApplication(String teamName) {
 		driver.findElementsByClassName("modalSubmit").get(getIndex(teamName)).click();
-		sleep(1000);
+		sleep(4000);
 //		waitForInvisibleElement(driver.findElementById(appModalId));
 		appModalId = "";
 		return setPage();

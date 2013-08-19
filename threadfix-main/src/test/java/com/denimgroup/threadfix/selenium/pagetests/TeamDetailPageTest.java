@@ -49,6 +49,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 		boolean edLinkClick = teamdetailPage.isEditDeleteLinkClickable();
 		boolean permLinkPresent = teamdetailPage.ispermUsersLinkPresent();
 		boolean permLinkClick = teamdetailPage.ispermUsersLinkClickable();
+		teamdetailPage.logout();
 		String ap,ac,ep,ec,pp,pc;
 		ap = ac = ep = ec = pp = pc = "";
 		if(!actionPresent){ap = "Action button was not present";}
@@ -175,11 +176,11 @@ public class TeamDetailPageTest extends PageBaseTest {
 		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
 		boolean appLinkPresent = teamdetailPage.isAppLinkPresent(appName);
 		boolean appLinkClick = teamdetailPage.isAppLinkClickable(appName);
+		teamdetailPage.logout();
 		String ap,ac;
 		ap = ac = "";
 		if(!appLinkPresent){ap = "Link for app," + appName + " button was not present";}
 		if(!appLinkClick){ap = "Link for app," + appName + " button was not clickable";}
-		
 		assertTrue(ap + " | "+ ac,appLinkPresent && appLinkClick);
 	}
 	
