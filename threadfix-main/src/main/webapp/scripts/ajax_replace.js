@@ -63,6 +63,7 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 				}
 			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(modalName).on('hidden', function () {
+					$('.modal-backdrop').remove();
 					$(successDiv).html(text);
 					successFunction();
 				});

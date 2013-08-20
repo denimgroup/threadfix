@@ -843,3 +843,8 @@ div.box-shadow {
 .typeahead.dropdown-menu li {
 	text-align:left
 }
+
+.modal.wide {
+	width:800px;
+	margin-left:-400px;
+}

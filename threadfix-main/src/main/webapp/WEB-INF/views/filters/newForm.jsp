@@ -1,8 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <spring:url value="/organizations/{orgId}/applications/{appId}/filters/new" var="newFilterUrl">
-	<spring:param name="orgId" value="application.organization.id"/>
-	<spring:param name="appId" value="application.id"/>
+	<spring:param name="orgId" value="${vulnerabilityFilter.application.organization.id}"/>
+	<spring:param name="appId" value="${vulnerabilityFilter.application.id}"/>
 </spring:url>
 <form:form id="newFilterForm" 
 		style="margin-bottom:0px;" 
