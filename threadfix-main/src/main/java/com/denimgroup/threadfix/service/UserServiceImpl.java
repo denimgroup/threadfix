@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;

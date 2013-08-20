@@ -25,22 +25,13 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
-public interface ChannelSeverityService {
-	
-	/**
-	 * 
-	 * @param channelType
-	 * @return
-	 */
-	List<ChannelSeverity> loadByChannel(String channelTypeName);
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	ChannelSeverity loadById(int id);
+public interface GenericSeverityService {
 
+	List<GenericSeverity> loadAll();
+	
+	GenericSeverity load(String name);
+	
+	GenericSeverity load(int id);
 }

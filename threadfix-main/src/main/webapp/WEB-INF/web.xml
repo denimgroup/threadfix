@@ -113,6 +113,7 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/table$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/mark$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/unmark$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/filters/new$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/progress/[0-9]+$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scans/upload$,

@@ -25,22 +25,34 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface ChannelSeverityService {
-	
-	/**
-	 * 
-	 * @param channelType
-	 * @return
-	 */
-	List<ChannelSeverity> loadByChannel(String channelTypeName);
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	ChannelSeverity loadById(int id);
+import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
+@Service
+public class GenericSeverityServiceImpl implements GenericSeverityService {
+
+	GenericSeverityDao genericSeverityDao = null;
+	
+	@Autowired
+	public GenericSeverityServiceImpl(GenericSeverityDao genericSeverityDao ) {
+		this.genericSeverityDao = genericSeverityDao;
+	}
+	
+	@Override
+	public List<GenericSeverity> loadAll() {
+		return genericSeverityDao.retrieveAll();
+	}
+
+	@Override
+	public GenericSeverity load(String name) {
+		return genericSeverityDao.retrieveByName(name);
+	}
+
+	@Override
+	public GenericSeverity load(int id) {
+		return genericSeverityDao.retrieveById(id);
+	}
 }

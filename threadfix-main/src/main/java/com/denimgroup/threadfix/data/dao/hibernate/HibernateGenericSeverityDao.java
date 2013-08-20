@@ -21,41 +21,46 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
-@Service
-@Transactional(readOnly = true)
-public class ChannelSeverityServiceImpl implements ChannelSeverityService {
+@Repository
+public class HibernateGenericSeverityDao implements GenericSeverityDao {
 
-	private ChannelSeverityDao channelSeverityDao;
-	private ChannelTypeDao channelTypeDao;
+	private SessionFactory sessionFactory;
 
 	@Autowired
-	public ChannelSeverityServiceImpl(ChannelTypeDao channelTypeDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelSeverityDao = channelSeverityDao;
-		this.channelTypeDao = channelTypeDao;
-	}
-
-	@Override
-	public List<ChannelSeverity> loadByChannel(String channelTypeName) {
-		return channelSeverityDao.retrieveByChannel(
-				channelTypeDao.retrieveByName(channelTypeName));
+	public HibernateGenericSeverityDao(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public ChannelSeverity loadById(int id) {
-		return channelSeverityDao.retrieveById(id);
+	public List<GenericSeverity> retrieveAll() {
+		return getBaseCriteria().list();
 	}
 
+	@Override
+	public GenericSeverity retrieveByName(String name) {
+		return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("name", name)).uniqueResult();
+	}
+
+	@Override
+	public GenericSeverity retrieveById(int id) {
+		return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("id", id)).uniqueResult();
+	}
+	
+	private Criteria getBaseCriteria() {
+		return sessionFactory.getCurrentSession().createCriteria(GenericSeverity.class);
+	}
 }

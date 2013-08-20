@@ -839,3 +839,7 @@ div.box-shadow {
 	margin-top:-5px;
 	font-weight: normal;
 }
+
+.typeahead.dropdown-menu li {
+	text-align:left
+}

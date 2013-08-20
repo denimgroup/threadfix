@@ -21,26 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
-public interface ChannelSeverityService {
-	
-	/**
-	 * 
-	 * @param channelType
-	 * @return
-	 */
-	List<ChannelSeverity> loadByChannel(String channelTypeName);
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	ChannelSeverity loadById(int id);
+public interface GenericSeverityDao {
 
+	List<GenericSeverity> retrieveAll();
+	
+	GenericSeverity retrieveByName(String name);
+	
+	GenericSeverity retrieveById(int id);
+	
 }
