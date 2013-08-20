@@ -506,7 +506,7 @@ public class ApplicationDetailPage extends BasePage {
 			return 0;
 		}
 		
-		String scanText = scanTab.getText().trim();
+		String scanText = driver.findElementById("scanTabLink").getText().trim();
 		Pattern pattern = Pattern.compile("^\\s*(\\d+)");
 		Matcher matcher = pattern.matcher(scanText);
 		if(matcher.find()){
@@ -639,9 +639,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		driver.findElementById("expandAllVulns").click();
-		driver.findElementById("expandAllVulns").click();
-		sleep(2000);
+		sleep(4000);
 //		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}

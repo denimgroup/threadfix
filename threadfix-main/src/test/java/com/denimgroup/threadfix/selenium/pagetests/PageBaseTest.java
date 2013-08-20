@@ -31,6 +31,9 @@ import java.util.Collection;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -75,6 +78,20 @@ public class PageBaseTest {
 		}
 		return params;
 	}
+	
+	@Before
+	public void before() {
+	}
+
+	@After
+	public void after() {
+
+	}
+//	@Ignore
+//	@Test
+//	public void blank(){
+//		assertTrue(true);
+//	}
 	
 	
 	public PageBaseTest(String browser){

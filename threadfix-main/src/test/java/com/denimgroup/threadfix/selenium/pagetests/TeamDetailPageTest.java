@@ -76,6 +76,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 		boolean savePresent = teamdetailPage.EDSavePresent();
 		boolean saveClick = teamdetailPage.EDSaveClickable();
 		teamdetailPage = teamdetailPage.clickCloseEditModal();
+		teamdetailPage.logout();
 		String mp,dp,dc,np,nc,cp,cc,sp,sc;
 		mp = dp = dc = np = nc = cp = cc = sp = sc = "";
 		if(!modalPresent){mp = "Edit Delete Modal was not present";}
@@ -92,7 +93,6 @@ public class TeamDetailPageTest extends PageBaseTest {
 				modalPresent && deletePresent && deleteClick && namePresent && nameCorrect 
 				&& closePresent && closeClick && savePresent && saveClick);
 		
-		teamdetailPage.logout();
 	}
 	
 	@Test

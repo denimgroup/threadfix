@@ -328,8 +328,8 @@ public class DefectTrackerTests extends BaseTest {
 		defectTrackerIndexPage = defectTrackerIndexPage
 				.clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(
-				newDefectTrackerName).clickDefectTrackersLink();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(newDefectTrackerName)
+													.clickDefectTrackersLink();
 
 		assertFalse(
 				"The defectTracker was still present after attempted deletion.",

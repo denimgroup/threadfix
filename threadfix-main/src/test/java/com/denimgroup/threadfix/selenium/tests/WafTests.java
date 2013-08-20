@@ -453,7 +453,7 @@ public class WafTests extends BaseTest {
 			} else {
 				continue;
 			}
-			System.out.println("mapEntry: "+mapEntry.getValue());
+
 			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
 						.setFileInput(mapEntry.getValue())
 						.submitScan();
@@ -556,8 +556,8 @@ public class WafTests extends BaseTest {
 
 	@Test
 	public void testEditWafBoundaries(){
-		String wafName = "testEditWafBoundaries"+getRandomString(8);
-		String wafNameDuplicateTest = "testEditWafBoundaries2"+getRandomString(8);
+		String wafName = "testEditWafBoundaries"+getRandomString(6);
+		String wafNameDuplicateTest = "testEditWafBoundaries2"+getRandomString(6);
 		
 		String type1 = "mod_security";
 		String type2 = "Snort";
@@ -583,7 +583,7 @@ public class WafTests extends BaseTest {
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(wafName));
 		assertTrue("Waf Page did not save the type correctly.", wafIndexPage.isTextPresentInWafTableBody(type1));
-		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
+//		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(wafNameDuplicateTest));
 		assertTrue("Waf Page did not save the type correctly.", wafIndexPage.isTextPresentInWafTableBody(type1));

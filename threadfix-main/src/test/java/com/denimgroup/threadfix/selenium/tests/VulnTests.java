@@ -353,7 +353,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-90")
+				.selectMergeDefect("THREAD-86")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
