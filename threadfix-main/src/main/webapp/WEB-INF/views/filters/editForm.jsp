@@ -33,13 +33,16 @@
 			<tr>
 				<td>Target Severity Type</td>
 				<td>
-					<form:select style="width:320px"
-						path="targetGenericSeverity.id" 
-						items="${genericSeverities}" 
-						itemLabel="name"
-						itemValue="id"
-						value="${ vulnFilter.targetGenericSeverity.id }"
-						/>
+					<form:select style="width:320px" id="severitySelect" path="targetGenericSeverity.id">
+						<c:forEach var="severity" items="${ genericSeverities }">
+							<option value="${ severity.id }"
+							<c:if test="${ severity.id == vulnFilter.targetGenericSeverity.id }">
+								selected=selected
+							</c:if>
+							><c:out value="${ severity.name }"/></option>
+						</c:forEach>
+					</form:select>
+				
 				</td>
 				<td><form:errors path="targetGenericSeverity.id" cssClass="errors" /></td>
 			</tr>

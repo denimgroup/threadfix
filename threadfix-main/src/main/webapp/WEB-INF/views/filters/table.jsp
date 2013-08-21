@@ -29,7 +29,7 @@
 					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
 				</td>
 				<td id="edit${ status.count}">
-					<a class="btn" href="#editFilterModalDiv${ vulnFilter.id }" data-toggle="modal">Edit/Delete</a>
+					<a class="btn" href="#editFilterModalDiv${ status.count }" data-toggle="modal">Edit/Delete</a>
 				</td>
 			</tr>
 		</c:forEach>
@@ -43,7 +43,7 @@
 			<h4 id="myModalLabel">Edit Vulnerability Filter
 			
 				<span class="delete-span">
-					<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/edit" var="filterDeleteUrl">
+					<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/delete" var="filterDeleteUrl">
 						<spring:param name="filterId" value="${vulnFilter.id}"/>
 						<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
 						<spring:param name="appId" value="${vulnFilter.application.id}"/>
