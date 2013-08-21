@@ -1272,20 +1272,26 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		// iterate through the findings of the vulnerability and try to match
 		// them to the finding
 		for (Finding vulnFinding : vuln.getFindings()) {
-			if (!finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()
-						&& dynamicToDynamicMatch(finding, vulnFinding))
-					return true;
-				else if (vulnFinding.getIsStatic()
-						&& dynamicToStaticMatch(finding, vulnFinding))
-					return true;
-			} else if (finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()
-						&& dynamicToStaticMatch(vulnFinding, finding))
-					return true;
-				else if (vulnFinding.getIsStatic()
-						&& staticToStaticMatch(finding, vulnFinding))
-					return true;
+			if (finding.getDependency() != null && finding.getDependency().getCve() != null) {
+				if (vulnFinding.getDependency() != null && vulnFinding.getDependency().getCve() != null) {
+					return finding.getDependency().getCve().equals(vulnFinding.getDependency().getCve());
+				}
+			} else if (vulnFinding.getDependency() == null) {
+				if (!finding.getIsStatic()) {
+					if (!vulnFinding.getIsStatic()
+							&& dynamicToDynamicMatch(finding, vulnFinding))
+						return true;
+					else if (vulnFinding.getIsStatic()
+							&& dynamicToStaticMatch(finding, vulnFinding))
+						return true;
+				} else if (finding.getIsStatic()) {
+					if (!vulnFinding.getIsStatic()
+							&& dynamicToStaticMatch(vulnFinding, finding))
+						return true;
+					else if (vulnFinding.getIsStatic()
+							&& staticToStaticMatch(finding, vulnFinding))
+						return true;
+				}
 			}
 		}
 
@@ -1656,6 +1662,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (finding.getChannelSeverity() != null) {
 			vulnerability.setGenericSeverity(getGenericSeverity(finding
 					.getChannelSeverity()));
+		}
+		
+		if (finding.getDependency() != null) {
+			// we have a dependency, the vulnerability won't have other info
+			return vulnerability;
 		}
 
 		String param = null;

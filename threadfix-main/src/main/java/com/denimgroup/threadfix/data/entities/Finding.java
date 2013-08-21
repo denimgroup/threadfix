@@ -75,6 +75,8 @@ public class Finding extends AuditableEntity {
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	
+	private Dependency dependency;
 
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
@@ -222,4 +224,15 @@ public class Finding extends AuditableEntity {
 	public void setMarkedFalsePositive(boolean isMarkedFalsePositive) {
 		this.isMarkedFalsePositive = isMarkedFalsePositive;
 	}
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "dependencyId")
+	public Dependency getDependency() {
+		return dependency;
+	}
+
+	public void setDependency(Dependency dependency) {
+		this.dependency = dependency;
+	}
+	
 }
