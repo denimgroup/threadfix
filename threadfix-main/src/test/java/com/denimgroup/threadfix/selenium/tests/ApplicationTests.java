@@ -454,6 +454,25 @@ public class ApplicationTests extends BaseTest {
 										.logout();
 	}
 	
+	@Test
+	public void longNameDeformTest(){
+		String appName = getRandomString(60);
+		String teamName = getRandomString(8);
+		applicationDetailPage = loginPage.login("user", "password")
+										.clickOrganizationHeaderLink()
+										.clickAddTeamButton()
+										.setTeamName(teamName)
+										.addNewTeam()
+										.expandTeamRowByName(teamName)
+										.addNewApplication(teamName, appName, "", "Low")
+										.saveApplication(teamName)
+										.clickOrganizationHeaderLink()
+										.expandTeamRowByName(teamName)
+										.clickViewAppLink(appName,teamName);
+		
+		assertTrue("Application name was too long",applicationDetailPage.getNameWidth()<=400);
+	}
+	
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);

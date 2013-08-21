@@ -134,6 +134,14 @@ public abstract class BaseTest {
 		return driver;
 	}
 	
+	public void sleep(int num) {
+		try {
+			Thread.sleep(num);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * This method is a wrapper for RandomStringUtils.random with a preset character set.
 	 * @return random string

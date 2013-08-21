@@ -2,8 +2,6 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.*;
 
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,6 +12,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.ibm.icu.impl.Assert;
 
 public class VulnTests extends BaseTest {
 	public VulnTests(String browser) {
@@ -411,6 +410,24 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(TFS));
 		//merge here
 		destroy();
+	}
+	
+	@Test
+	public void submitBlankDefect(){
+		assertTrue("blank defect",build(JIRA));
+		ApplicationDetailPage ad = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName)
+				.clickExpandAllVulns()
+				.clickVulnCheckBox(1)
+				.clickSubmitDefectLink()
+				.submitDefect();
+		assertTrue("defect was not submitted",ad.getAlert().contains("The Defect was submitted to the tracker."));
+		ad.logout();
+		sleep(6000);
+		destroy();
+		
 	}
 	
 	private boolean build(int dtType){

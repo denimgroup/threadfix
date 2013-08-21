@@ -157,7 +157,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 		String id =  getAppMapModalId(appName);
 		if(id.equals(""))
 			return null;
-		System.out.println("ID = "+id);
 		driver.findElementById(id).findElement(By.id("submitRemoteProviderFormButton")).click();
 		sleep(2000);
 		return new RemoteProvidersIndexPage(driver);
@@ -178,7 +177,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		}
 		
 		driver.findElementById("provider"+ids[0]+"import"+ids[1]).click();
-		
+		sleep(6000);
 		return new ApplicationDetailPage(driver);
 	}
 	

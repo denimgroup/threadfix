@@ -285,6 +285,10 @@ public class ApplicationDetailPage extends BasePage {
 	public String getNameText() {
 		return driver.findElementById("nameText").getText();
 	}
+	
+	public int getNameWidth(){
+		return driver.findElementById("nameText").getSize().getWidth();
+	}
 
 	public String getUrlText() {
 		return driver.findElementById("urlText").getText().trim();
@@ -485,6 +489,13 @@ public class ApplicationDetailPage extends BasePage {
 		return new ApplicationDetailPage(driver);
 	}
 	
+	public ApplicationDetailPage submitDefect(){
+		driver.findElementById("submitDefectForm").findElement(By.id("submitScanModal")).click();
+		sleep(3000);
+		waitForInvisibleElement(driver.findElementById("submitDefectForm"));
+		return new ApplicationDetailPage(driver);
+	}
+	
 	public void waitForScanUpload(int timer){
 		if(timer == 20){
 			throw new NoSuchElementException("Unable to locate element: {\"method\":\"id\",\"selector\":\"scanTabLink\"}");
@@ -554,6 +565,9 @@ public class ApplicationDetailPage extends BasePage {
 			break;
 		}
 		return s.contains("Scan file has already been uploaded.");
+	}
+	public String getAlert(){
+		return driver.findElementByClassName("alert-success").getText();
 	}
 	
 
@@ -657,6 +671,8 @@ public class ApplicationDetailPage extends BasePage {
 	public ApplicationDetailPage clickSubmitDefectLink(){
 		clickDefectActionBtn();
 		driver.findElementById("submitDefectButton").click();
+		sleep(2000);
+		waitForElement(driver.findElementById("submitDefectForm"));
 		return new ApplicationDetailPage(driver);
 	}
 	
