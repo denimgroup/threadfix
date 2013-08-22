@@ -46,14 +46,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	private List<WebElement> updateAppsLink = new ArrayList<WebElement>();
 	private List<WebElement> clearConfig = new ArrayList<WebElement>();
 */
-	private WebElement qualysConfigButton;
-	private WebElement veracodeConfigButton;
-	private WebElement whiteHateConfigButton;
 	public RemoteProvidersIndexPage(WebDriver webDriver) {
 		super(webDriver);
-		qualysConfigButton = driver.findElementById("configure1");
-		veracodeConfigButton = driver.findElementById("configure2");
-		whiteHateConfigButton = driver.findElementById("configure3");
 /*
 		for (int i = 1; i <= getNumEdit(); i++) {
 			name.add(driver.findElementById("name" + i));
@@ -87,19 +81,19 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	/*-------------- click functions ---------------*/
 	public RemoteProvidersIndexPage clickConfigureQualys(){
-		qualysConfigButton.click();
+		driver.findElementById("configure1").click();
 		waitForElement(driver.findElementById("remoteProviderEditModal3"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		veracodeConfigButton.click();
+		driver.findElementById("configure2").click();
 		waitForElement(driver.findElementById("remoteProviderEditModal2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		whiteHateConfigButton.click();
+		driver.findElementById("configure3").click();
 		waitForElement(driver.findElementById("remoteProviderEditModal1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
