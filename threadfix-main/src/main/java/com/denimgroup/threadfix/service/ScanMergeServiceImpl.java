@@ -87,6 +87,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ApplicationDao applicationDao = null;
 	private UserDao userDao = null;
 	private JobStatusService jobStatusService;
+	private VulnerabilityFilterService vulnerabilityFilterService = null;
 
 	// These generic types should have parameters
 	private static final String[] VULNS_WITH_PARAMS = { 
@@ -119,6 +120,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			ApplicationChannelDao applicationChannelDao,
 			ApplicationDao applicationDao,
 			UserDao userDao,
+			VulnerabilityFilterService vulnerabilityFilterService,
 			JobStatusService jobStatusService) {
 		this.scanDao = scanDao;
 		this.channelTypeDao = channelTypeDao;
@@ -129,6 +131,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		this.applicationChannelDao = applicationChannelDao;
 		this.applicationDao = applicationDao;
 		this.userDao = userDao;
+		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.jobStatusService = jobStatusService;
 	}
 
@@ -408,7 +411,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		Scan scan = processScanFile(channelId, fileName, statusId);
 		if (scan == null) {
 			log.warn("processScanFile() failed to return a scan.");
-			return false;//"vulnerability"
+			return false;
 		}
 
 		processFindings(scan);
@@ -500,6 +503,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 					+ " scan completed.");
 
 		cleanFindings(scan);
+		
+		vulnerabilityFilterService.updateVulnerabilities(scan);
+		
 		importer.deleteScanFile();
 		return scan;
 	}
@@ -609,6 +615,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				vulnerabilityDao.evict(oldFinding);
 			}
 		}
+		
+		vulnerabilityFilterService.updateVulnerabilities(finding.getScan());
 		return result;
 	}
 	
@@ -683,6 +691,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 
 				finding.getScan().getApplication().getName());
+		
+		vulnerabilityFilterService.updateVulnerabilities(finding.getScan());
 		return true;
 	}
 
@@ -1816,6 +1826,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		cleanFindings(scan);
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
+		
+		vulnerabilityFilterService.updateVulnerabilities(applicationChannel.getApplication().getId());
 
 		return scan;
 	}
