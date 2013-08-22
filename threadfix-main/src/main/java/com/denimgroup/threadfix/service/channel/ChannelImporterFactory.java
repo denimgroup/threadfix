@@ -132,6 +132,9 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.APPSCAN_ENTERPRISE)){
 			channelImporter = new AppScanEnterpriseChannelImporter(channelTypeDao, 
 					channelVulnerabilityDao, channelSeverityDao);
+		} else if (channelName.equals(ChannelType.DEPENDENCY_CHECK)){
+			channelImporter = new DependencyCheckChannelImporter(channelTypeDao, 
+					channelVulnerabilityDao, channelSeverityDao);
 		} else {
 			return null;
 		}
