@@ -1,9 +1,22 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<spring:url value="/organizations/{orgId}/applications/{appId}/filters/new" var="newFilterUrl">
-	<spring:param name="orgId" value="${vulnerabilityFilter.application.organization.id}"/>
-	<spring:param name="appId" value="${vulnerabilityFilter.application.id}"/>
-</spring:url>
+<c:choose>
+	<c:when test="${ type == 'Application' }">
+		<spring:url value="/organizations/{orgId}/applications/{appId}/filters/new" var="newFilterUrl">
+			<spring:param name="orgId" value="${vulnerabilityFilter.application.organization.id}"/>
+			<spring:param name="appId" value="${vulnerabilityFilter.application.id}"/>
+		</spring:url>
+	</c:when>
+	<c:when test="${ type == 'Organization' }">
+		<spring:url value="/organizations/{orgId}/filters/new" var="newFilterUrl">
+			<spring:param name="orgId" value="${vulnerabilityFilter.organization.id}"/>
+		</spring:url>
+	</c:when>
+	<c:otherwise>
+		<spring:url value="/configuration/filters/new" var="newFilterUrl"/>
+	</c:otherwise>
+</c:choose>
+
 <form:form id="newFilterForm" 
 		style="margin-bottom:0px;" 
 		modelAttribute="vulnerabilityFilter" 

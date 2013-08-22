@@ -25,15 +25,9 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
@@ -42,17 +36,16 @@ import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
-@Controller
-@RequestMapping("/organizations/{orgId}/applications/{appId}/filters")
-@SessionAttributes("vulnerabilityFilter")
-public class VulnerabilityFilterController {
+public abstract class AbstractVulnFilterController {
 	
-	private VulnerabilityFilterService vulnerabilityFilterService;
-	private GenericVulnerabilityService genericVulnerabilityService;
-	private GenericSeverityService genericSeverityService;
-	private ApplicationService applicationService;
+	protected VulnerabilityFilterService vulnerabilityFilterService;
+	protected GenericVulnerabilityService genericVulnerabilityService;
+	protected GenericSeverityService genericSeverityService;
+	protected ApplicationService applicationService;
+	protected OrganizationService organizationService;
 	
 	@ModelAttribute("genericVulnerabilities")
 	public List<GenericVulnerability> getGenericVulnerabilities() {
@@ -64,37 +57,71 @@ public class VulnerabilityFilterController {
 		return genericSeverityService.loadAll();
 	}
 	
-	public VulnerabilityFilter getNewFilter(int appId) {
+	public String getType(int orgId, int appId) {
+		if (orgId != -1) {
+			return "Organization";
+		} else if (appId != -1) {
+			return "Application";
+		} else {
+			return "Global";
+		}
+	}
+	
+	public VulnerabilityFilter getNewFilter(int orgId, int appId) {
 		VulnerabilityFilter vulnerabilityFilter = new VulnerabilityFilter();
-		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
+		if (appId != -1) {
+			vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
+		} else if (orgId != -1) {
+			vulnerabilityFilter.setOrganization(organizationService.loadOrganization(orgId));
+		} else {
+			vulnerabilityFilter.setGlobal(true);
+		}
 		return vulnerabilityFilter;
 	}
 	
-	@Autowired
-	public VulnerabilityFilterController(
+	public List<VulnerabilityFilter> getVulnerabilityList(int orgId, int appId) {
+		List<VulnerabilityFilter> filters;
+		if (appId != -1) {
+			filters = vulnerabilityFilterService.loadAllApplication(appId);
+		} else if (orgId != -1) {
+			filters = vulnerabilityFilterService.loadAllOrganization(orgId);
+		} else {
+			filters = vulnerabilityFilterService.loadAllGlobal();
+		}
+		return filters;
+	}
+	
+	public AbstractVulnFilterController(
+			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
+		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.genericVulnerabilityService = genericVulnerabilityService;
 		this.genericSeverityService = genericSeverityService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String index(@PathVariable int appId, Model model) {
-		model.addAttribute("vulnerabilityFilter", getNewFilter(appId));
-		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.loadAllApplication(appId));
+	public String indexBackend(Model model, int orgId, int appId) {
+		model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
+		
+		model.addAttribute("globalFilters", vulnerabilityFilterService.loadAllGlobal());
+		
+		model.addAttribute("vulnerabilityFilterList", getVulnerabilityList(orgId, appId));
+		
+		model.addAttribute("type", getType(orgId, appId));
 		return "filters/index";
 	}
 	
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String submitNew(@PathVariable int appId,
+	public String submitNewBackend(
 			VulnerabilityFilter vulnerabilityFilter, 
 			BindingResult bindingResult, 
 			SessionStatus status, 
-			Model model) {
+			Model model,
+			int orgId,
+			int appId) {
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
@@ -109,32 +136,34 @@ public class VulnerabilityFilterController {
 			responsePage = "ajaxFailureHarness";
 			System.out.println("failure");
 		} else {
-			vulnerabilityFilterService.save(appId, vulnerabilityFilter);
+			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
-			model.addAttribute("vulnerabilityFilter", getNewFilter(appId));
+			model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
 			model.addAttribute("contentPage", "filters/table.jsp");
-			model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.loadAllApplication(appId));
+			model.addAttribute("vulnerabilityFilterList", getVulnerabilityList(orgId, appId));
 			responsePage = "ajaxSuccessHarness";
 			System.out.println("success");
 		}
 		
+		model.addAttribute("type", getType(orgId, appId));
 		return responsePage;
 	}
-	
-	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
-	public String submitEdit(@PathVariable int appId,
-			@PathVariable int filterId, 
+
+	public String submitEditBackend( 
 			VulnerabilityFilter vulnerabilityFilter, 
 			BindingResult bindingResult, 
 			SessionStatus status, 
-			Model model) {
+			Model model,
+			int orgId,
+			int appId,
+			int filterId) {
 		
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
 		String responsePage = null;
 		
 		if (!bindingResult.hasErrors()) {
-			vulnerabilityFilter = vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, appId);
+			vulnerabilityFilter = vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, filterId);
 		}
 		
 		if (bindingResult.hasErrors()) {
@@ -143,29 +172,28 @@ public class VulnerabilityFilterController {
 			System.out.println("failure");
 		} else {
 			vulnerabilityFilter.setId(filterId);
-			vulnerabilityFilterService.save(appId, vulnerabilityFilter);
+			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
-			model.addAttribute("vulnerabilityFilter", getNewFilter(appId));
+			model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
 			model.addAttribute("contentPage", "filters/table.jsp");
-			model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.loadAllApplication(appId));
+			model.addAttribute("vulnerabilityFilterList", getVulnerabilityList(orgId, appId));
 			responsePage = "ajaxSuccessHarness";
 			System.out.println("success");
 		}
 		
+		model.addAttribute("type", getType(orgId, appId));
 		return responsePage;
 	}
 	
-	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
-	public String submitDelete(
-			@PathVariable int appId,
-			@PathVariable int filterId, 
-			Model model) {
+	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {
 		
-		vulnerabilityFilterService.delete(appId, filterId);
+		vulnerabilityFilterService.delete(filterId, orgId, appId);
 		
 		model.addAttribute("vulnerabilityFilter", new VulnerabilityFilter());
 		model.addAttribute("contentPage", "filters/table.jsp");
-		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.loadAllApplication(appId));
+		model.addAttribute("vulnerabilityFilterList", getVulnerabilityList(orgId, appId));
+		
+		model.addAttribute("type", getType(orgId, appId));
 		return "ajaxSuccessHarness";
 	}
 }

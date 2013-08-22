@@ -43,11 +43,27 @@
 			<h4 id="myModalLabel">Edit Vulnerability Filter
 			
 				<span class="delete-span">
-					<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/delete" var="filterDeleteUrl">
-						<spring:param name="filterId" value="${vulnFilter.id}"/>
-						<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
-						<spring:param name="appId" value="${vulnFilter.application.id}"/>
-					</spring:url>
+					<c:choose>
+						<c:when test="${ type == 'Application' }">
+							<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/delete" var="filterDeleteUrl">
+								<spring:param name="filterId" value="${vulnFilter.id}"/>
+								<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
+								<spring:param name="appId" value="${vulnFilter.application.id}"/>
+							</spring:url>
+						</c:when>
+						<c:when test="${ type == 'Organization' }">
+							<spring:url value="/organizations/{orgId}/filters/{filterId}/delete" var="filterDeleteUrl">
+								<spring:param name="filterId" value="${vulnFilter.id}"/>
+								<spring:param name="orgId" value="${vulnFilter.organization.id}"/>
+							</spring:url>
+						</c:when>
+						<c:otherwise>
+							<spring:url value="/configuration/filters/{filterId}/delete" var="filterDeleteUrl">
+								<spring:param name="filterId" value="${vulnFilter.id}"/>
+							</spring:url>
+						</c:otherwise>
+					</c:choose>
+					
 					<form:form id="deleteForm${ vulnFilter.id }" method="POST" action="${ fn:escapeXml(filterDeleteUrl) }">
 						<a id="deleteButton" class="filterDeleteButton btn btn-danger header-button" 
 								type="submit" data-id="<c:out value='${ vulnFilter.id }'/>">Delete</a>

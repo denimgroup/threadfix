@@ -1,19 +1,22 @@
 <decorators defaultdir="/decorators">
     <excludes>
-    	<pattern>/configuration/users/*/access*</pattern>
-    	<pattern>/configuration/users/*/edit*</pattern>
-    	<pattern>/configuration/users/new*</pattern>
-    	<pattern>/configuration/roles/new*</pattern>
-    	<pattern>/configuration/roles/*/edit*</pattern>
-    	<pattern>/configuration/keys/*/edit*</pattern>
-    	<pattern>/configuration/keys/new*</pattern>
-    	<pattern>/configuration/keys/*/delete*</pattern>
+    	<pattern>/configuration/filters/new*</pattern>
+    	<pattern>/configuration/filters/*/edit*</pattern>
+    	<pattern>/configuration/filters/*/delete*</pattern>
     	<pattern>/configuration/defecttrackers/new*</pattern>
     	<pattern>/configuration/defecttrackers/*/edit*</pattern>
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
+    	<pattern>/configuration/keys/*/edit*</pattern>
+    	<pattern>/configuration/keys/new*</pattern>
+    	<pattern>/configuration/keys/*/delete*</pattern>
     	<pattern>/configuration/remoteproviders/*/configure*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/delete/*</pattern>
+    	<pattern>/configuration/roles/new*</pattern>
+    	<pattern>/configuration/roles/*/edit*</pattern>
+    	<pattern>/configuration/users/*/access*</pattern>
+    	<pattern>/configuration/users/*/edit*</pattern>
+    	<pattern>/configuration/users/new*</pattern>
     	<pattern>/dashboard/leftReport*</pattern>
     	<pattern>/dashboard/rightReport*</pattern>
     	<pattern>/jasperimage/*/*</pattern>
@@ -48,6 +51,9 @@
     	<pattern>/organizations/*/applications/*/scanTab*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
+    	<pattern>/organizations/*/filters/new*</pattern>
+    	<pattern>/organizations/*/filters/*/edit*</pattern>
+    	<pattern>/organizations/*/filters/*/delete*</pattern>
     	<pattern>/organizations/*/getReport*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/*/modalEdit*</pattern>

@@ -99,6 +99,11 @@
 								<a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
 							</li>
 							</security:authorize>
+							<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+					 		<li class="normalLinks">
+								<a id="vulnFiltersLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">Manage Filters</a>
+							</li>
+							</security:authorize>
 							<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="normalLinks">
 								<a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>

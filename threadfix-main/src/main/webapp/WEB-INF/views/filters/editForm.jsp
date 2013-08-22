@@ -1,10 +1,26 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/edit" var="editFilterUrl">
-	<spring:param name="filterId" value="${vulnFilter.id}"/>
-	<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
-	<spring:param name="appId" value="${vulnFilter.application.id}"/>
-</spring:url>
+<c:choose>
+	<c:when test="${ type == 'Application' }">
+		<spring:url value="/organizations/{orgId}/applications/{appId}/filters/{filterId}/edit" var="editFilterUrl">
+			<spring:param name="filterId" value="${vulnFilter.id}"/>
+			<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
+			<spring:param name="appId" value="${vulnFilter.application.id}"/>
+		</spring:url>
+	</c:when>
+	<c:when test="${ type == 'Organization' }">
+		<spring:url value="/organizations/{orgId}/filters/{filterId}/edit" var="editFilterUrl">
+			<spring:param name="filterId" value="${vulnFilter.id}"/>
+			<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
+		</spring:url>
+	</c:when>
+	<c:otherwise>
+		<spring:url value="/configuration/filters/{filterId}/edit" var="editFilterUrl">
+			<spring:param name="filterId" value="${vulnFilter.id}"/>
+		</spring:url>
+	</c:otherwise>
+</c:choose>
+
 <form:form id="editFilterForm${ status.count }" 
 		style="margin-bottom:0px;" 
 		modelAttribute="vulnerabilityFilter" 

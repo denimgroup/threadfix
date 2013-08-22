@@ -1827,7 +1827,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		processFindings(scan);
 		scanDao.saveOrUpdate(scan);
 		
-		vulnerabilityFilterService.updateVulnerabilities(applicationChannel.getApplication().getId());
+		vulnerabilityFilterService.updateApplicationVulnerabilities(applicationChannel.getApplication().getId());
 
 		return scan;
 	}
