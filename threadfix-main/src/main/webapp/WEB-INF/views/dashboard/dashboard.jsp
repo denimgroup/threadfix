@@ -132,7 +132,9 @@
 								</tr>
 							</c:if>
 							<c:forEach var="comment" items="${ recentComments }" varStatus="status">
-								<c:if test="${ comment.vulnerability.active and comment.vulnerability.application.active }">
+								<c:if test="${ not comment.vulnerability.hidden and 
+										comment.vulnerability.active and 
+										comment.vulnerability.application.active }">
 									<tr class="bodyRow">
 										<td class="thick-left" id="commentUser${ status.count }">
 											<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">

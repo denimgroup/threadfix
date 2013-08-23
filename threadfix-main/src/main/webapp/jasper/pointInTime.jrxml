@@ -14,7 +14,8 @@
 						vulnerability.application.name as name
 				 FROM Vulnerability as vulnerability
 				 WHERE vulnerability.application.id IN ($P{appId}) AND
-				 vulnerability.active = true
+				 vulnerability.active = true AND
+				 vulnerability.hidden = false
 				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
 	</queryString>
 	<field name="severity" class="java.lang.String"/>

@@ -11,7 +11,7 @@
 	<c:when test="${ type == 'Organization' }">
 		<spring:url value="/organizations/{orgId}/filters/{filterId}/edit" var="editFilterUrl">
 			<spring:param name="filterId" value="${vulnFilter.id}"/>
-			<spring:param name="orgId" value="${vulnFilter.application.organization.id}"/>
+			<spring:param name="orgId" value="${vulnFilter.organization.id}"/>
 		</spring:url>
 	</c:when>
 	<c:otherwise>
@@ -53,6 +53,9 @@
 						<c:forEach var="severity" items="${ genericSeverities }">
 							<option value="${ severity.id }"
 							<c:if test="${ severity.id == vulnFilter.targetGenericSeverity.id }">
+								selected=selected
+							</c:if>
+							<c:if test="${ severity.id == -1 and empty vulnFilter.targetGenericSeverity }">
 								selected=selected
 							</c:if>
 							><c:out value="${ severity.name }"/></option>

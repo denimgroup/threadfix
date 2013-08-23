@@ -24,7 +24,12 @@
 					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
 				</td>
 				<td style="word-wrap: break-word;" id="genericSeverity${ status.count }">
-					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
+					<c:if test="${ empty vulnFilter.targetGenericSeverity }">
+						Ignore
+					</c:if>
+					<c:if test="${ not empty vulnFilter.targetGenericSeverity }">
+						<c:out value="${ vulnFilter.targetGenericSeverity.name }"/>
+					</c:if>
 				</td>
 				<td>
 					<c:out value="${ type }"/>
@@ -40,7 +45,12 @@
 					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
 				</td>
 				<td style="word-wrap: break-word;" id="teamGenericSeverity${ status.count }">
-					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
+					<c:if test="${ empty vulnFilter.targetGenericSeverity }">
+						Ignore
+					</c:if>
+					<c:if test="${ not empty vulnFilter.targetGenericSeverity }">
+						<c:out value="${ vulnFilter.targetGenericSeverity.name }"/>
+					</c:if>
 				</td>
 				<td>
 					Team
@@ -58,7 +68,12 @@
 		<c:forEach var="vulnFilter" items="${ globalFilterList }" varStatus="status">
 			<tr class="bodyRow">
 				<td id="globalGenericVulnerability${ status.count }">
-					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
+					<c:if test="${ empty vulnFilter.targetGenericSeverity }">
+						Ignore
+					</c:if>
+					<c:if test="${ not empty vulnFilter.targetGenericSeverity }">
+						<c:out value="${ vulnFilter.targetGenericSeverity.name }"/>
+					</c:if>
 				</td>
 				<td style="word-wrap: break-word;" id="globalGenericSeverity${ status.count }">
 					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>

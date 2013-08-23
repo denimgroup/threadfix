@@ -55,7 +55,14 @@ public abstract class AbstractVulnFilterController {
 	
 	@ModelAttribute("genericSeverities")
 	public List<GenericSeverity> getGenericSeverities() {
-		return genericSeverityService.loadAll();
+		List<GenericSeverity> severities = genericSeverityService.loadAll();
+		
+		GenericSeverity ignoreSeverity = new GenericSeverity();
+		ignoreSeverity.setId(-1);
+		ignoreSeverity.setName("Ignore");
+		severities.add(ignoreSeverity);
+		
+		return severities;
 	}
 	
 	public String getType(int orgId, int appId) {

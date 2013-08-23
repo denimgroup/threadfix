@@ -603,7 +603,7 @@ public class ReportsServiceImpl implements ReportsService {
 		for (Application application : applicationList) {
 			for (Vulnerability vuln : application.getVulnerabilities()) {
 				if (vuln == null || vuln.getFindings() == null
-						|| (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+						|| (!vuln.isActive() && !vuln.getHidden() && !vuln.getIsFalsePositive())) {
 					continue;
 				}
 				

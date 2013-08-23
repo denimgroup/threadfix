@@ -107,4 +107,6 @@ public class GenericSeverity extends BaseEntity {
 	public void setIntValue(Integer intValue) {
 		this.intValue = intValue;
 	}
+	
+	public String toString() { return name; }
 }

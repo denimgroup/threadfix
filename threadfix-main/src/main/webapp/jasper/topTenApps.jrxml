@@ -12,10 +12,10 @@
 		<![CDATA[SELECT 
 			application.name as name,
 			count(vulnerability) as vulnCount,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical,
 			col_5_0_ + col_4_0_ + col_3_0_ + col_2_0_ as col_6_0_
 				 FROM Application application join application.vulnerabilities as vulnerability
 				 where application.id in ($P{appId})

@@ -49,7 +49,7 @@
 				<td>
 					<form:select style="width:320px"
 						path="targetGenericSeverity.id" 
-						items="${genericSeverities}" 
+						items="${ genericSeverities }" 
 						itemLabel="name"
 						itemValue="id"
 						/>

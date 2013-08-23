@@ -83,7 +83,7 @@ public class JasperCWEReport implements JRDataSource {
 			}
 
 			// bump up the correct stats
-			if (vulnerability.isActive()) {
+			if (vulnerability.isActive() && !vulnerability.getHidden()) {
 				statsMap.get(key).put("numOpen", statsMap.get(key).get("numOpen")+1);
 				statsMap.get(key).put("totalAgeOpen", statsMap.get(key).get("totalAgeOpen") + dateDiffInDays(vulnerability.getOpenTime(), now));
 			} else {

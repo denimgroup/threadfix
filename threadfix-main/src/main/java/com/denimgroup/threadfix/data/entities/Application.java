@@ -363,7 +363,7 @@ public class Application extends AuditableEntity {
 	public List<Vulnerability> getActiveVulnerabilities() {
 		List<Vulnerability> result = new ArrayList<Vulnerability>();
 		for(Vulnerability vuln : vulnerabilities) {
-			if(vuln.isActive() && !vuln.getIsFalsePositive()){
+			if(vuln.isActive() && !vuln.getHidden() && !vuln.getIsFalsePositive()){
 				result.add(vuln);
 			}
 		}
