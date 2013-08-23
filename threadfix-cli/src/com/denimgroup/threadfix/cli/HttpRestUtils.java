@@ -89,6 +89,7 @@ public class HttpRestUtils {
 	public String httpPostFile(String request, File file, String[] paramNames,
 			String[] paramVals) {
 		
+		//	TOFIX - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
 		PostMethod filePost = new PostMethod(request);
@@ -110,13 +111,15 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				System.err.println("Status was " + status + " not 200 as expected.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
 				return IOUtils.toString(responseStream);
+			} else {
+				System.err.println("Response stream was null");
 			}
 
 		} catch (FileNotFoundException e1) {
