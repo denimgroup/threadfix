@@ -40,6 +40,8 @@
 		<a id="backButton" class="btn" href="${ backUrl }">Back</a>
 	</c:if>
 	
+	<a id="createNewKeyModalButton" href="#newFilterModalDiv" role="button" class="btn" data-toggle="modal">Create New Filter</a>
+	
 	<div id="tableDiv">
 		<%@ include file="/WEB-INF/views/filters/table.jsp" %>
 	</div>

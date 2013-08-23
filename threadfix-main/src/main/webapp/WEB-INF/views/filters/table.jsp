@@ -1,35 +1,71 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <%@ include file="/WEB-INF/views/successMessage.jspf"%>
-
 <%@ include file="/WEB-INF/views/filters/buildJSON.jspf"%>
-
-<a id="createNewKeyModalButton" href="#newFilterModalDiv" role="button" class="btn" data-toggle="modal">Create New Filter</a>
 
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th class="medium first">Vulnerability Type (CWE)</th>
-			<th class="short">Severity</th>
-			<th class="short">Edit/Delete</th>
+			<th style="width:500px">Vulnerability Type (CWE)</th>
+			<th style="width:50px">Severity</th>
+			<th style="width:50px">Type</th>
+			<th style="width:130px"></th>
 		</tr>
 	</thead>
 	<tbody>
-		<c:if test="${ empty vulnerabilityFilterList }">
+		<c:if test="${ empty vulnerabilityFilterList and empty teamFilterList and empty globalFilterList }">
 			<tr class="bodyRow">
 				<td colspan="4" class="centered">No filters found.</td>
 			</tr>
 		</c:if>
 		<c:forEach var="vulnFilter" items="${ vulnerabilityFilterList }" varStatus="status">
 			<tr class="bodyRow">
-				<td id="genericVulnerability${ status.count }" style="max-width:270px;">
+				<td id="genericVulnerability${ status.count }">
 					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
 				</td>
-				<td style="max-width:250px;word-wrap: break-word;" id="genericSeverity${ status.count }">
+				<td style="word-wrap: break-word;" id="genericSeverity${ status.count }">
 					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
+				</td>
+				<td>
+					<c:out value="${ type }"/>
 				</td>
 				<td id="edit${ status.count}">
 					<a class="btn" href="#editFilterModalDiv${ status.count }" data-toggle="modal">Edit/Delete</a>
+				</td>
+			</tr>
+		</c:forEach>
+		<c:forEach var="vulnFilter" items="${ teamFilterList }" varStatus="status">
+			<tr class="bodyRow">
+				<td id="teamGenericVulnerability${ status.count }">
+					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
+				</td>
+				<td style="word-wrap: break-word;" id="teamGenericSeverity${ status.count }">
+					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
+				</td>
+				<td>
+					Team
+				</td>
+				<td id="edit${ status.count}">
+					<spring:url value="/organizations/{orgId}/filters" var="viewTeamFilterUrl">
+						<spring:param name="orgId"    value="${vulnFilter.organization.id}"/>
+					</spring:url>
+					<a class="btn" href="<c:out value="${ viewTeamFilterUrl }"/>">View Team Filters</a>
+				</td>
+			</tr>
+		</c:forEach>
+		
+		<spring:url value="/configuration/filters" var="viewGlobalFilterUrl"/>
+		<c:forEach var="vulnFilter" items="${ globalFilterList }" varStatus="status">
+			<tr class="bodyRow">
+				<td id="globalGenericVulnerability${ status.count }">
+					<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
+				</td>
+				<td style="word-wrap: break-word;" id="globalGenericSeverity${ status.count }">
+					<c:out value="${ vulnFilter.targetGenericSeverity.name }"></c:out>
+				</td>
+				<td>Global</td>
+				<td id="edit${ status.count}">
+					<a class="btn" href="<c:out value="${ viewGlobalFilterUrl }"/>">View Global Filters</a>
 				</td>
 			</tr>
 		</c:forEach>

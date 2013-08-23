@@ -1,5 +1,6 @@
 <decorators defaultdir="/decorators">
     <excludes>
+    	<pattern>/configuration/filters/readOnly*</pattern>
     	<pattern>/configuration/filters/new*</pattern>
     	<pattern>/configuration/filters/*/edit*</pattern>
     	<pattern>/configuration/filters/*/delete*</pattern>
@@ -51,6 +52,7 @@
     	<pattern>/organizations/*/applications/*/scanTab*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
+    	<pattern>/organizations/*/filters/readOnly*</pattern>
     	<pattern>/organizations/*/filters/new*</pattern>
     	<pattern>/organizations/*/filters/*/edit*</pattern>
     	<pattern>/organizations/*/filters/*/delete*</pattern>
