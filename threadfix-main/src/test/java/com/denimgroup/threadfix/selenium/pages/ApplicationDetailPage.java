@@ -89,6 +89,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public ApplicationDetailPage selectProduct(String product) {
+		sleep(4000);
 		new Select(driver.findElementById("projectList"))
 				.selectByVisibleText(product);
 		return new ApplicationDetailPage(driver);
@@ -470,22 +471,23 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage submitScan(){
-		int scanCnt = scanCount();
-		int timer = 0;
+//		int scanCnt = scanCount();
+//		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
 		sleep(2000);
 		waitForScanUpload(0);
 //		waitForElement(driver.findElementById("scanTabLink"));
-		while(scanCnt != scanCnt+1){
-			scanCnt = scanCount();
-			sleep(100);
-			if(timer>=100){
-				break;
-			}
-			timer++;
-			
-		}
+//		while(scanCnt != scanCnt+1){
+//			scanCnt = scanCount();
+//			sleep(100);
+//			if(timer>=100){
+//				break;
+//			}
+//			timer++;
+//			
+//		}
+		sleep(7000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -512,7 +514,7 @@ public class ApplicationDetailPage extends BasePage {
 	public int scanCount(){
 		WebElement scanTab;
 		try{
-			scanTab = driver.findElementById("scanTabLink");
+			driver.findElementById("scanTabLink").isDisplayed();
 		}catch(NoSuchElementException e){
 			return 0;
 		}

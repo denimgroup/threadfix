@@ -297,8 +297,7 @@ public class DefectTrackerTests extends BaseTest {
 				.clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickDefectTrackersLink().clickDeleteButton(
-						editedDefectTrackerName);
+				.clickDefectTrackersLink().clickDeleteButton(editedDefectTrackerName);
 
 		assertFalse(
 				"The defectTracker was still present after attempted deletion.",
@@ -673,7 +672,6 @@ public class DefectTrackerTests extends BaseTest {
 		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
 		sleep(1500);
 		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
-										.clickOrganizationHeaderLink()
 										.clickViewTeamLink(teamName)
 										.clickDeleteButton()
 										.clickDefectTrackersLink()

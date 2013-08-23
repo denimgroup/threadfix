@@ -318,7 +318,7 @@ public class TeamDetailPage extends BasePage {
 	}
 	
 	public boolean is6MonthChartPresnt(){
-		return driver.findElementsById("reportDiv").get(0).isDisplayed();
+		return driver.findElementById("leftTileReport").isDisplayed();
 	}
 	
 	public boolean isrightViewMoreLinkPresent(){
@@ -330,7 +330,7 @@ public class TeamDetailPage extends BasePage {
 	}
 	
 	public boolean isTop10ChartPresent(){
-		return driver.findElementsById("reportDiv").get(1).isDisplayed();
+		return driver.findElementById("rightTileReport").isDisplayed();
 	}
 	
 	public boolean isAddAppBtnPresent(){

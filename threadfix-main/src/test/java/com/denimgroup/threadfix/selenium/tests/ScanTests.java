@@ -82,7 +82,6 @@ public class ScanTests extends BaseTest {
 	
 	// Uploads every scan type to a single app
 	//needs more verfication
-	@Ignore
 	@Test
 	public void testUploadScans() throws MalformedURLException {
 		String teamName = "uploadScan" + getRandomString(5);
@@ -148,7 +147,6 @@ public class ScanTests extends BaseTest {
 							.clickDeleteButton()
 							.logout();
 	}
-	@Ignore
 	@Test
 	public void microsoftCatNetScan() {
 		String key = "Microsoft CAT.NET";
@@ -159,7 +157,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 //		assertTrue(true);
 	}
-	@Ignore
+	
 	@Test
 	public void findBugsScan() {
 		
@@ -169,7 +167,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void ibmAppscanScan() {
 		String key = "IBM Rational AppScan";
@@ -178,7 +176,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void netsparkerScan(){
 		String key = "Mavituna Security Netsparker";
@@ -188,7 +186,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 	}
 	
-	@Ignore
+	
 	@Test
 	public void skipFishScan(){
 		String key = "Skipfish";
@@ -197,7 +195,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void ntoSpiderScan() {
 		String key = "NTO Spider";
@@ -206,7 +204,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void ntoSpiderScan6() {
 		
@@ -217,7 +215,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 	}
 	
-	@Ignore
+	
 	@Test
 	public void w3afScan() {
 		
@@ -227,7 +225,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);		
 	}
-	@Ignore
+	
 	@Test
 	public void zaproxyScan() {
 		String key = "OWASP Zed Attack Proxy";
@@ -235,7 +233,7 @@ public class ScanTests extends BaseTest {
 
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void nessusScan() {
 		String key = "Nessus";
@@ -244,7 +242,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);		
 	}
-	@Ignore
+	
 	@Test
 	public void arachniScan() {
 		String key = "Arachni";
@@ -254,7 +252,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 	}
 	
-	@Ignore
+	
 	@Test
 	public void webInspectScan() {
 		String key = "WebInspect";
@@ -262,7 +260,7 @@ public class ScanTests extends BaseTest {
 
 		runScanTest(key,expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void brakeManScan() {
 		String key = "Brakeman";
@@ -272,7 +270,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 
 	}
-	@Ignore
+	
 	@Test
 	public void fortify360Scan() {
 		String key = "Fortify 360";
@@ -281,7 +279,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void acunetixScan() {
 		String key = "Acunetix WVS";
@@ -290,7 +288,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	
 	@Test
 	public void burpScan() {
 		String key = "Burp Suite";

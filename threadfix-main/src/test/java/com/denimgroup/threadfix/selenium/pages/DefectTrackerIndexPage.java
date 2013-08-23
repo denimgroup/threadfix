@@ -37,7 +37,6 @@ public class DefectTrackerIndexPage extends BasePage {
 	private WebElement nameInput;
 	private WebElement urlInput;
 	private Select defectTrackerTypeSelect;
-	private WebElement addDefectTrackerButton;
 	private List<WebElement> editButtons = new ArrayList<WebElement>();
 //	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 	private List<WebElement> names = new ArrayList<WebElement>();
@@ -50,7 +49,6 @@ public class DefectTrackerIndexPage extends BasePage {
 		//nameInput = driver.findElementById("nameInput");
 		//urlInput = driver.findElementById("urlInput");
 		//defectTrackerTypeSelect = new Select(driver.findElementById("defectTrackerTypeSelect"));
-		addDefectTrackerButton = driver.findElementById("addNewDTButton");
 		
 		for (int i = 1; i <= getNumRows(); i++) {
 			editButtons.add(driver.findElementById("editDefectTracker" + i + "Button"));
@@ -208,7 +206,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
-		addDefectTrackerButton.click();
+		driver.findElementById("addNewDTButton").click();
 		waitForElement(driver.findElementById("createDefectTracker"));
 		return new DefectTrackerIndexPage(driver);
 	}
