@@ -111,7 +111,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was " + status + " not 200 as expected.");
+				System.err.println("Status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -136,6 +136,8 @@ public class HttpRestUtils {
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
 		
+		String retVal;
+		
 		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils().new AcceptAllTrustFactory(), 443));
 
 		PostMethod post = new PostMethod(request);
@@ -152,13 +154,14 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				System.err.println("Status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
-				return IOUtils.toString(responseStream);
+				retVal = IOUtils.toString(responseStream);
+				return(retVal);
 			}
 
 		} catch (FileNotFoundException e1) {
@@ -263,6 +266,7 @@ public class HttpRestUtils {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
+	//	TODO - Move these from the HttpRestUtils class to somethine cli-specific
 	// These methods help persist the URL and API Key so they don't have to be entered each time.
 	public void setUrl(String url) {
 		writeProperty("url", url);
@@ -276,7 +280,9 @@ public class HttpRestUtils {
 		if (url == null) {
 			url = getProperty("url");
 			if (url == null) {
+				System.out.println("Please set your server URL with the command '--set url {url}'");
 				url = "http://localhost:8080/threadfix/rest";
+				System.out.println("Using default of: " + url);
 			}
 		}
 		
@@ -287,7 +293,7 @@ public class HttpRestUtils {
 		if (key == null) {
 			key = getProperty("key");
 			if (key == null) {
-				System.out.println("Please set your API key with the command 's k {key}'");
+				System.err.println("Please set your API key with the command '--set key {key}'");
 			}
 		}
 		
