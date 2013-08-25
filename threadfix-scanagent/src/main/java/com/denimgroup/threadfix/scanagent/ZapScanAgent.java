@@ -52,28 +52,7 @@ import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
 	static final Logger log = Logger.getLogger(ZapScanAgent.class);
-	
-	/**
-	 * This is the XML string that appears at the front end of the ZAP 2.1 XML returned from
-	 * the ZAP API call
-	 */
-	private static final String XML_PRECURSOR_TO_REMOVE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
-	
-	/**
-	 * This is the XML string that should appear at the start of the ZAP XML report that needs
-	 * to be uploaded
-	 */
-	private static final String XML_PRECURSOR_TO_ADD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-	
-	/**
-	 * This is the XML string that needs to appear just before the ZAP-API-returned XML in order
-	 * to make it look like the standard ZAP XML report. Normally the tag attributes would be filled
-	 * in specific to the app. Here we are trying to to stub these out.
-	 * TODO - Look at generating the host/name/ssl fields based on the TaskConfig if needed
-	 */
-	private static final String XML_PRECURSOR_TO_ADD_FINAL = "<site host=\"localhost\" name=\"http://localhost/\" port=\"80\" ssl=\"false\">";
-	private static final String XML_POSTSCRIPT_TO_ADD = "<portscan/></site></OWASPZAPReport>";
-	
+		
 	private int maxSpiderWaitInSeconds;
 	private int maxScanWaitInSeconds;
 	private int spiderPollWaitInSeconds;
@@ -258,7 +237,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		try {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-			retVal = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/").toString();
+			retVal = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/");
 			if(retVal != null) {
 				log.debug("Length of response file from ZAP is: " + retVal.length());
 			} else {
@@ -268,61 +247,14 @@ public class ZapScanAgent extends AbstractScanAgent {
 			log.error("Problems attaching to ZAP via proxy connection to get results XML: " + e.getMessage(), e);
 		}
 		
-		//	TOFIX - Get rid of me. This is for debugging.
-		try {
-			Thread.sleep(120000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		return(retVal);
 	}
-	
-	/**
-	 * Reformats the XML returned by the ZAP API to look like the actual ZAP XML report
-	 * 
-	 * TOFIX - Determine if we can remove this becaues of the new API calls
-	 * 
-	 * @param starterXml XML returned from the ZAP API 
-	 * @return XML that looks like ZAP's normal XML report
-	 */
-	/*private String reformatResults(String starterXml) {
-		String retVal;
-		
-		//	Chop off the '[' and ']' at the front and back of the returned XML string
-		retVal = starterXml.substring(1, starterXml.length() - 1);
-		
-		//	Chop off the "bad" beginning of the API-returned XML
-		retVal = retVal.replace(XML_PRECURSOR_TO_REMOVE, "");
-		
-		//	Create the tag with the datestamp
-		//	Should look like:
-		//		<OWASPZAPReport generated="Fri, 6 Jul 2012 15:17:03" version="1.2">
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss", Locale.US);
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("<OWASPZAPReport generated=\"");
-		sb.append(dateFormat.format(new Date()));
-		sb.append("\" version=\"1.2\">");
-		
-		//	Prepend the needed stuff
-		retVal = XML_PRECURSOR_TO_ADD
-					+ sb.toString()
-					+ XML_PRECURSOR_TO_ADD_FINAL
-					+  retVal;
-		
-		//	Tack on the stuff we need at the end
-		retVal += XML_POSTSCRIPT_TO_ADD;
-		
-		return(retVal);
-	}
-	*/
 	
 	/**
 	 * This code taken from:
 	 * https://code.google.com/p/zaproxy-test/source/browse/branches/beta/src/org/zaproxy/zap/DaemonWaveIntegrationTest.java
+	 * It has been updated to return a full String with the response rather than a 
+	 * List of Strings containing the individual chunks of the response.
 	 * 
 	 * TODO - Look through and clean up if necessary
 	 * TODO - Clean up the massive Exception being thrown
@@ -332,8 +264,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @return
 	 * @throws Exception
 	 */
-    private static List<String> openUrlViaProxy (Proxy proxy, String apiurl) throws Exception {
-        List<String> response = new ArrayList<>();
+    private static String openUrlViaProxy (Proxy proxy, String apiurl) throws Exception {
+    	StringBuilder response = new StringBuilder();
         URL url = new URL(apiurl);
         HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
         uc.connect();
@@ -343,11 +275,11 @@ public class ZapScanAgent extends AbstractScanAgent {
         String inputLine;
 
         while ((inputLine = in.readLine()) != null) {
-                response.add(inputLine);
+                response.append(inputLine);
         }
 
         in.close();
-        return response;
+        return response.toString();
 }
 	
 	private boolean attemptRunScan(TaskConfig theConfig, ClientApi zap) {

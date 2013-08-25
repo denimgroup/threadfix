@@ -33,23 +33,6 @@ public class JsonUtils {
 			e.printStackTrace();
 		}
 		
-		/*
-		try {
-			JSONObject jsonObject = new JSONObject(jsonText);
-			retVal = new Task();
-			retVal.setTaskId(jsonObject.getInt("taskId"));
-			retVal.setTaskType(jsonObject.getString("taskType"));
-			
-			JSONObject jsonConfig = jsonObject.getJSONObject("taskConfig");
-			TaskConfig config = new TaskConfig();
-			config.setTargetUrlString(jsonConfig.getString("targetUrl"));
-			
-			
-		} catch (JSONException e) {
-			throw new RuntimeException(e);
-		}
-		*/
-		
 		return retVal;
 	}
 }
