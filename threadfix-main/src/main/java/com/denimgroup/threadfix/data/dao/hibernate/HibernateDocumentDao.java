@@ -29,7 +29,6 @@ import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.DocumentDao;
 import com.denimgroup.threadfix.data.entities.Document;
-import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
  * Hibernate Document DAO implementation. Most basic methods are implemented in
