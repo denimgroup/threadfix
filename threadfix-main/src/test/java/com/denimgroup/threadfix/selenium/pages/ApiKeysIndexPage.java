@@ -91,10 +91,12 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
 	public ApiKeysIndexPage clickSubmitButton(String oldNote){
-		int oldCnt = getNumRows();
+		int oldCnt;
 		int timer = 0;
 		if(oldNote == null){
 			driver.findElementById("submitKeyModalCreate").click();
+			sleep(2000);
+			oldCnt = getNumRows();
 			while(getNumRows()!=(oldCnt+1)){
 				if(timer >= 10){
 					break;

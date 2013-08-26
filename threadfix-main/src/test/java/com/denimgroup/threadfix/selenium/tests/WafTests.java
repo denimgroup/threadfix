@@ -356,6 +356,7 @@ public class WafTests extends BaseTest {
 					 									.submitScan();
 		}
 		
+		
 		//Creating a new Waf
 		
 		String newWafName = "testCreateModSecWaf1";

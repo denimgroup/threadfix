@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -467,6 +468,10 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage setFileInput(String file) {
 		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+//		String f = "fileInput"+modalNumber();
+//		JavascriptExecutor js = (JavascriptExecutor) driver;
+//		js.executeScript("javascript:document.getElementById('"+f+"').value='"+file+"'");
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 	
