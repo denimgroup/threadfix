@@ -76,7 +76,10 @@
 				</tr>
 				<tr>
 					<td class="bold">Native ID</td>
-					<td class="inputValue"><c:out value="${ finding.nativeId }"/></td>
+					<td class="inputValue">
+						<c:if test="${ not empty finding.displayId }"><c:out value="${ finding.displayId }" /></c:if>
+						<c:if test="${ empty finding.displayId }"><c:out value="${ finding.nativeId }" /></c:if>						
+					</td>
 				</tr>
 			</c:if>		
 			<c:if test="${ not empty finding.dependency }">			

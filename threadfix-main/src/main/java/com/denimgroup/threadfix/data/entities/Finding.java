@@ -60,6 +60,10 @@ public class Finding extends AuditableEntity {
 	
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;
+	
+	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
+	private String displayId;
+	
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
 	
@@ -117,6 +121,15 @@ public class Finding extends AuditableEntity {
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+	@Column(length = NATIVE_ID_LENGTH)
+	public String getDisplayId() {
+		return displayId;
+	}
+
+	public void setDisplayId(String displayId) {
+		this.displayId = displayId;
 	}
 
 	@ManyToOne
