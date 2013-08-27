@@ -38,21 +38,23 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
 @Controller
 @RequestMapping("/configuration/filters")
-@SessionAttributes("vulnerabilityFilter")
+@SessionAttributes({"vulnerabilityFilter", "severityFilter"})
 public class GlobalFilterController extends AbstractVulnFilterController {
 
 	@Autowired
-	public GlobalFilterController(OrganizationService organizationService,
+	public GlobalFilterController(SeverityFilterService severityFilterService,
+			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
-		super(organizationService, vulnerabilityFilterService, applicationService,
-				genericVulnerabilityService, genericSeverityService);
+		super(severityFilterService, organizationService, vulnerabilityFilterService,
+				applicationService, genericVulnerabilityService, genericSeverityService);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

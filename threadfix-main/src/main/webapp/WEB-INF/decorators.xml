@@ -4,6 +4,7 @@
     	<pattern>/configuration/filters/new*</pattern>
     	<pattern>/configuration/filters/*/edit*</pattern>
     	<pattern>/configuration/filters/*/delete*</pattern>
+    	<pattern>/configuration/severityFilter/set*</pattern>
     	<pattern>/configuration/defecttrackers/new*</pattern>
     	<pattern>/configuration/defecttrackers/*/edit*</pattern>
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
@@ -41,6 +42,7 @@
     	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
     	<pattern>/organizations/*/applications/*/progress/*</pattern>
+    	<pattern>/organizations/*/applications/*/severityFilter/set*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
     	<pattern>/organizations/*/applications/*/scans/new*</pattern>
@@ -56,6 +58,7 @@
     	<pattern>/organizations/*/filters/new*</pattern>
     	<pattern>/organizations/*/filters/*/edit*</pattern>
     	<pattern>/organizations/*/filters/*/delete*</pattern>
+    	<pattern>/organizations/*/filters/severityFilter/set*</pattern>
     	<pattern>/organizations/*/getReport*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/*/modalEdit*</pattern>

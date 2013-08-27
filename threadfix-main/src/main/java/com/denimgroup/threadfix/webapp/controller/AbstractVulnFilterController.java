@@ -33,16 +33,19 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
 public abstract class AbstractVulnFilterController {
 	
 	protected VulnerabilityFilterService vulnerabilityFilterService;
+	protected SeverityFilterService severityFilterService;
 	protected GenericVulnerabilityService genericVulnerabilityService;
 	protected GenericSeverityService genericSeverityService;
 	protected ApplicationService applicationService;
@@ -107,6 +110,24 @@ public abstract class AbstractVulnFilterController {
 		}
 	}
 	
+	private SeverityFilter getSeverityFilter(int orgId, int appId) {
+		SeverityFilter filter;
+		if (appId != -1) {
+			filter = severityFilterService.loadApplication(appId);
+		} else if (orgId != -1) {
+			filter = severityFilterService.loadTeam(orgId);
+		} else {
+			filter = severityFilterService.loadGlobal();
+		}
+		
+		if (filter == null) {
+			filter = new SeverityFilter();
+			filter.setFilters(severityFilterService.getParentFilter(orgId, appId));
+		}
+		
+		return filter;
+	}
+	
 	private List<VulnerabilityFilter> getTeamFilters(int orgId, int appId) {
 		if (appId != -1) {
 			Application app = applicationService.loadApplication(appId);
@@ -119,11 +140,13 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public AbstractVulnFilterController(
+			SeverityFilterService severityFilterService,
 			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
+		this.severityFilterService = severityFilterService;
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
 		this.vulnerabilityFilterService = vulnerabilityFilterService;
@@ -134,6 +157,7 @@ public abstract class AbstractVulnFilterController {
 	public String indexBackend(Model model, int orgId, int appId) {
 		model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
 		model.addAttribute("teamFilterList",      getTeamFilters(orgId, appId));
+		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
 		model.addAttribute("globalFilterList",    getGlobalList(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
@@ -141,9 +165,9 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String submitNewBackend(
-			VulnerabilityFilter vulnerabilityFilter, 
-			BindingResult bindingResult, 
-			SessionStatus status, 
+			VulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status,
 			Model model,
 			int orgId,
 			int appId) {
@@ -176,10 +200,10 @@ public abstract class AbstractVulnFilterController {
 		return responsePage;
 	}
 
-	public String submitEditBackend( 
-			VulnerabilityFilter vulnerabilityFilter, 
-			BindingResult bindingResult, 
-			SessionStatus status, 
+	public String submitEditBackend(
+			VulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status,
 			Model model,
 			int orgId,
 			int appId,

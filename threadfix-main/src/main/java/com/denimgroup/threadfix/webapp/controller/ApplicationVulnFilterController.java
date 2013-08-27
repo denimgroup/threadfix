@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
 @Controller
@@ -47,15 +48,16 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	
 	@Autowired
 	public ApplicationVulnFilterController(
+			SeverityFilterService severityFilterService,
 			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
-		super(organizationService, vulnerabilityFilterService, applicationService,
-				genericVulnerabilityService, genericSeverityService);
+		super(severityFilterService, organizationService, vulnerabilityFilterService,
+				applicationService, genericVulnerabilityService, genericSeverityService);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(@PathVariable int appId, Model model) {
 		return indexBackend(model, -1, appId);
@@ -63,9 +65,9 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String submitNew(@PathVariable int appId,
-			VulnerabilityFilter vulnerabilityFilter, 
-			BindingResult bindingResult, 
-			SessionStatus status, 
+			VulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status,
 			Model model) {
 		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId);
 	}
@@ -73,10 +75,10 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
 	public String submitEdit(
 			@PathVariable int appId,
-			@PathVariable int filterId, 
-			VulnerabilityFilter vulnerabilityFilter, 
-			BindingResult bindingResult, 
-			SessionStatus status, 
+			@PathVariable int filterId,
+			VulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status,
 			Model model) {
 		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId, filterId);
 	}
@@ -84,7 +86,7 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
 	public String submitDelete(
 			@PathVariable int appId,
-			@PathVariable int filterId, 
+			@PathVariable int filterId,
 			Model model) {
 		return submitDeleteBackend(model, -1, appId, filterId);
 	}

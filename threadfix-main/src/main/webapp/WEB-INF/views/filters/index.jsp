@@ -45,4 +45,6 @@
 	<div id="tableDiv">
 		<%@ include file="/WEB-INF/views/filters/table.jsp" %>
 	</div>
+	
+	<%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp" %>
 </body>
