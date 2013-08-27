@@ -79,6 +79,24 @@ public class TeamTests extends BaseTest {
 	}
 	
 	@Test
+	public void longTeamNameEditModalHeader(){
+		String newOrgName = getRandomString(1024);
+		teamDetailPage = loginPage.login("user", "password")
+								.clickOrganizationHeaderLink()
+								.clickAddTeamButton()
+								.setTeamName(newOrgName)
+								.addNewTeam()
+								.clickViewTeamLink(newOrgName.substring(0,60))
+								.clickEditOrganizationLink();
+		int width = teamDetailPage.getEditModalHeaderWidth();
+		teamDetailPage.clickCloseEditModal().clickDeleteButton();
+		
+		assertTrue("Header width was incorrect with long team name",width == 400);
+		
+		
+	}
+	
+	@Test
 	public void testCreateOrganizationBoundaries(){
 		String emptyString = "";
 		String whiteSpaceString = "           ";

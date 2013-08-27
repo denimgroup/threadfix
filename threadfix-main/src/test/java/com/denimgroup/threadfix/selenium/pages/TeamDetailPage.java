@@ -69,6 +69,10 @@ public class TeamDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
+	public int getEditModalHeaderWidth(){
+		return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
+	}
+	
 	public TeamDetailPage clickCloseEditModal(){
 		driver.findElementById("editFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
 		sleep(2000);

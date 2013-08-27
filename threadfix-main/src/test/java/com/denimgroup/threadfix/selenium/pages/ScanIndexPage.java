@@ -117,6 +117,10 @@ public class ScanIndexPage extends BasePage {
 		}
 		return new ScanDetailPage(driver);
 	}
+
+	public int getTableWidth() {
+		return driver.findElementById("toReplace").getSize().width;
+	}
 	
 	
 }

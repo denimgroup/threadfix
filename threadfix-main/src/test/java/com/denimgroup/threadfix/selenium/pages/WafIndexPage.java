@@ -220,9 +220,13 @@ public class WafIndexPage extends BasePage {
 		sleep(1000);
 		return new WafIndexPage(driver);
 	}
-	public WafIndexPage clickCloseWafModal(){
-		driver.findElementByClassName("modal-footer").findElements(By.className("btn")).get(0).click();
+	public WafIndexPage clickCloseWafModal(String wafName){
+		driver.findElementsByClassName("modal-footer").get(getIndex(wafName)).findElements(By.className("btn")).get(0).click();
 		sleep(1000);
 		return new WafIndexPage(driver);
+	}
+
+	public int getWafEditHeaderWidth(String wafName) {
+		return driver.findElementsByClassName("ellipsis").get(getIndex(wafName)).getSize().width;
 	}
 }

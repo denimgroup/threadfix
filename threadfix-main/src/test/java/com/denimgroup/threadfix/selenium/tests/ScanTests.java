@@ -32,11 +32,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 
+
+
 import org.junit.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.pages.ScanIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
@@ -78,6 +81,41 @@ public class ScanTests extends BaseTest {
 		}
 		
 		return ScanTests.class.getClassLoader().getResource(string).toString();
+	}
+	
+	@Test
+	public void longTeamAppNameDisplayTest(){
+		String teamName = getRandomString(1024);
+		String appName = getRandomString(1024);
+		String rtApp = "Demo Site BE";
+		String whKey = System.getProperty("WHITEHAT_KEY");
+		ScanIndexPage scanIndex = loginPage.login("user", "password")
+										.clickScansHeaderLink();
+		int startWidth = scanIndex.getTableWidth();
+		scanIndex = scanIndex.clickOrganizationHeaderLink()
+ 				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.expandTeamRowByName(teamName.substring(0, 60))
+				.addNewApplication(teamName.substring(0, 60), appName, "http://" + appName.substring(0, 20), "Low")
+				.saveApplication(teamName.substring(0, 60))
+				.clickRemoteProvidersLink()
+				.clickConfigureWhiteHat()
+				.setWhiteHatAPI(whKey)
+				.saveWhiteHat()
+				.clickEditMapping(rtApp)
+				.setTeamMapping(rtApp, teamName.substring(0, 60))
+				.setAppMapping(rtApp, appName.substring(0, 60))
+				.clickSaveMapping(rtApp)
+				.clickImportScan(rtApp)
+				.clickScansHeaderLink();
+		int endWidth = scanIndex.getTableWidth();
+		
+		scanIndex.clickOrganizationHeaderLink().clickViewTeamLink(teamName.substring(0, 60)).clickDeleteButton();
+		
+		assertTrue("Scan table is too wide with max app/team length names",startWidth == endWidth);
+		
+		
 	}
 	
 	// Uploads every scan type to a single app

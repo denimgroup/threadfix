@@ -132,7 +132,7 @@ public class DefectTrackerTests extends BaseTest {
 	// for that change
 	@Test
 	public void testCreateDefectTracker() {
-		String newDefectTrackerName = "testCreateDefectTracker";
+		String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(10);
 		String type = "Bugzilla";
 
 		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",

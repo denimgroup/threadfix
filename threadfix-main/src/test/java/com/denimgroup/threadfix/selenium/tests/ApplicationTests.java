@@ -381,7 +381,7 @@ public class ApplicationTests extends BaseTest {
 								.clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafIndexPage.clickCloseWafModal()
+		wafDetailPage = wafIndexPage.clickCloseWafModal(wafName)
 								.clickOrganizationHeaderLink()
 								.clickViewTeamLink(orgName)
 								.clickDeleteButton()

@@ -420,7 +420,23 @@ public class WafTests extends BaseTest {
 				.clickDeleteWaf(newWafName);
 		
 	}
-	
+	@Test
+	public void longWafNameEditModalHeaderTest(){
+		String wafName = getRandomString(1024);
+		String type = "Imperva SecureSphere";
+		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+									.clickWafsHeaderLink()
+									.clickAddWafLink()
+									.createNewWaf(wafName, type)
+									.clickCreateWaf()
+									.clickEditWaf(wafName.substring(0, 50));
+		int width = wafIndexPage.getWafEditHeaderWidth(wafName.substring(0, 50));
+		
+		wafIndexPage.clickCloseWafModal(wafName.substring(0,50)).clickDeleteWaf(wafName.substring(0,50));
+		
+		assertTrue("Waf edit header was too wide",width == 400);
+		
+	}
 	// Generate Snort Waf Rules
 	@Test
 	public void attachWafToaNewApp() throws MalformedURLException {

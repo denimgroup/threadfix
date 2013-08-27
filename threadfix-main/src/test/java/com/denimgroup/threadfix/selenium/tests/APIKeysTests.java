@@ -177,4 +177,57 @@ public class APIKeysTests extends BaseTest {
 		indexPage = indexPage.clickDelete(longNote);
 		assertTrue("Validation Message not present.",indexPage.isDeleteValidationPresent());
 	}
+	
+	@Test
+	public void longApiKeyNoteDisplayCreateTest(){
+		String orig = getRandomString(8);
+		String longNote = getRandomString(2056);
+		int width,widthnew;
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+				   .clickApiKeysLink()
+				   .clickNewLink()			
+				   .setNote(orig,null)
+				   .clickSubmitButton(null)
+				   .waitModalDisappear();
+		
+		width = indexPage.getTableWidth();
+		
+		indexPage = indexPage.clickApiKeysLink()
+				   .clickNewLink()			
+				   .setNote(longNote,null)
+				   .clickSubmitButton(null)
+				   .waitModalDisappear();
+		
+		widthnew = indexPage.getTableWidth();
+		
+		indexPage = indexPage.clickDelete(longNote.substring(0, 255));
+		indexPage = indexPage.clickDelete(orig);
+		
+		assertTrue("Width of table is incorrect after adding a long note",width == widthnew);
+		
+	}
+	
+	@Test
+	public void longApiKeyNoteDisplayEditTest(){
+		String orig = getRandomString(8);
+		String longNote = getRandomString(2056);
+		int width,widthnew;
+		ApiKeysIndexPage indexPage = loginPage.login("user", "password")
+				   .clickApiKeysLink()
+				   .clickNewLink()			
+				   .setNote(orig,null)
+				   .clickSubmitButton(null)
+				   .waitModalDisappear();
+		
+		width = indexPage.getTableWidth();
+		
+		indexPage = indexPage.clickEdit(orig)
+							.setNote(longNote, orig)
+							.clickSubmitButton(orig)
+							.waitModalDisappear();
+		
+		widthnew = indexPage.getTableWidth();
+		indexPage = indexPage.clickDelete(longNote.substring(0, 255));
+		assertTrue("Width of table is incorrect after editing to a long note",width == widthnew);
+	}
 }

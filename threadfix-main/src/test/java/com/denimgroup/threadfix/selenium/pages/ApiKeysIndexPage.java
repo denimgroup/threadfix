@@ -161,6 +161,10 @@ public class ApiKeysIndexPage extends BasePage {
 		return notes.get(getIndex(note)).getText().trim().length()<=255;
 	}
 	
+	public int getTableWidth(){
+		return driver.findElementById("tableDiv").getSize().width;
+	}
+	
 
 	
 }
