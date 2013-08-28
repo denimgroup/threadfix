@@ -37,9 +37,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
@@ -52,11 +54,13 @@ public class SeverityFilterController {
 	public OrganizationService organizationService;
 	public ApplicationService applicationService;
 	public VulnerabilityFilterService vulnerabilityFilterService;
+	public PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(SeverityFilterController.class);
 	
 	@Autowired
 	public SeverityFilterController(
+			PermissionService permissionService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			OrganizationService organizationService,
 			ApplicationService applicationService,
@@ -65,6 +69,7 @@ public class SeverityFilterController {
 		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.applicationService = applicationService;
 		this.organizationService = organizationService;
+		this.permissionService = permissionService;
 	}
 	
 	@InitBinder
@@ -77,8 +82,13 @@ public class SeverityFilterController {
 	public String setGlobalSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request) {
-		String page = doSet(severityFilter, bindingResult, status, model, -1, -1, request);
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, null, null)) {
+			return "403";
+		}
+		
 		model.addAttribute("contentPage", "/configuration/filters");
+		String page = doSet(severityFilter, bindingResult, status, model, -1, -1, request);
 		return page;
 	}
 	
@@ -86,8 +96,13 @@ public class SeverityFilterController {
 	public String setApplicationSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request, @PathVariable int orgId) {
-		String page = doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+			return "403";
+		}
+		
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/filters");
+		String page = doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
 		return page;
 	}
 	
@@ -96,8 +111,13 @@ public class SeverityFilterController {
 			BindingResult bindingResult, SessionStatus status, Model model,
 			@PathVariable int appId, @PathVariable int orgId,
 			HttpServletRequest request) {
-		String page = doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/filters");
+		String page = doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
 		return page;
 	}
 	

@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
@@ -52,13 +53,14 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	
 	@Autowired
 	public OrganizationVulnFilterController(
+			PermissionService permissionService,
 			SeverityFilterService severityFilterService,
 			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
-		super(severityFilterService, organizationService, vulnerabilityFilterService,
+		super(permissionService, severityFilterService, organizationService, vulnerabilityFilterService,
 				applicationService, genericVulnerabilityService, genericSeverityService);
 	}
 	

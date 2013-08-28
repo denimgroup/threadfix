@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
@@ -52,13 +53,14 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	
 	@Autowired
 	public ApplicationVulnFilterController(
+			PermissionService permissionService,
 			SeverityFilterService severityFilterService,
 			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			ApplicationService applicationService,
 			GenericVulnerabilityService genericVulnerabilityService,
 			GenericSeverityService genericSeverityService) {
-		super(severityFilterService, organizationService, vulnerabilityFilterService,
+		super(permissionService, severityFilterService, organizationService, vulnerabilityFilterService,
 				applicationService, genericVulnerabilityService, genericSeverityService);
 	}
 	
@@ -73,7 +75,7 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String submitNew(@PathVariable int appId,
+	public String submitNew(@PathVariable int orgId, @PathVariable int appId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,

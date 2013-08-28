@@ -35,12 +35,14 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
@@ -53,6 +55,7 @@ public abstract class AbstractVulnFilterController {
 	protected GenericSeverityService genericSeverityService;
 	protected ApplicationService applicationService;
 	protected OrganizationService organizationService;
+	protected PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AbstractVulnFilterController.class);
 	private static final String
@@ -153,6 +156,7 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public AbstractVulnFilterController(
+			PermissionService permissionService,
 			SeverityFilterService severityFilterService,
 			OrganizationService organizationService,
 			VulnerabilityFilterService vulnerabilityFilterService,
@@ -165,9 +169,15 @@ public abstract class AbstractVulnFilterController {
 		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.genericVulnerabilityService = genericVulnerabilityService;
 		this.genericSeverityService = genericSeverityService;
+		this.permissionService = permissionService;
 	}
 
 	public String indexBackend(Model model, int orgId, int appId) {
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
 		model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
 		model.addAttribute("teamFilterList",      getTeamFilters(orgId, appId));
 		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
@@ -185,6 +195,10 @@ public abstract class AbstractVulnFilterController {
 			HttpServletRequest request,
 			int orgId,
 			int appId) {
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
@@ -220,6 +234,10 @@ public abstract class AbstractVulnFilterController {
 			int appId,
 			int filterId) {
 		
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
 		String responsePage = null;
@@ -246,6 +264,10 @@ public abstract class AbstractVulnFilterController {
 	
 	public String submitDeleteBackend(Model model,
 			HttpServletRequest request, int orgId, int appId, int filterId) {
+
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
 		
 		vulnerabilityFilterService.delete(filterId, orgId, appId);
 		
