@@ -3,13 +3,13 @@
 <c:choose>
 	<c:when test="${ type == 'Application' }">
 		<spring:url value="/organizations/{orgId}/applications/{appId}/severityFilter/set" var="editFilterUrl">
-			<spring:param name="orgId" value="${application.organization.id}"/>
-			<spring:param name="appId" value="${application.id}"/>
+			<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+			<spring:param name="appId" value="${severityFilter.application.id}"/>
 		</spring:url>
 	</c:when>
 	<c:when test="${ type == 'Organization' }">
 		<spring:url value="/organizations/{orgId}/severityFilter/set" var="editFilterUrl">
-			<spring:param name="orgId" value="${organization.id}"/>
+			<spring:param name="orgId" value="${severityFilter.organization.id}"/>
 		</spring:url>
 	</c:when>
 	<c:otherwise>
@@ -28,7 +28,7 @@
 	<table class="table noBorders">
 		<tbody>
 			<tr>
-				<td>Enabled</td>
+				<td>Enable Severity Filters</td>
 				<td>
 					<form:checkbox id="enabledBox" style="width:320px" path="enabled"/>
 				</td>

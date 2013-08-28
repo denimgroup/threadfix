@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.SeverityFilterDao;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
@@ -41,9 +40,25 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 	}
 
 	@Override
-	@Transactional
-	public void save(SeverityFilter severityFilter) {
-		severityFilterDao.saveOrUpdate(severityFilter);
+	public void save(SeverityFilter severityFilter, int orgId, int appId) {
+		SeverityFilter toSave = null;
+		
+		if (orgId == -1 && appId == -1) {
+			toSave = loadGlobal();
+		} else if (appId != -1) {
+			toSave = loadApplication(appId);
+		} else if (orgId != -1) {
+			toSave = loadTeam(orgId);
+		}
+		
+		if (toSave == null) {
+			toSave = severityFilter;
+		} else {
+			toSave.setEnabled(severityFilter.getEnabled());
+			toSave.setFilters(severityFilter);
+		}
+		
+		severityFilterDao.saveOrUpdate(toSave);
 	}
 
 	@Override

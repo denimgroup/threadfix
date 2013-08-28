@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,7 +56,7 @@ public class SeverityFilterController {
 	}
 	
 	@RequestMapping(value = "/configuration/severityFilter/set", method = RequestMethod.POST)
-	public String setGlobalSeverityFilters(@ModelAttribute SeverityFilter severityFilter,
+	public String setGlobalSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model) {
 		
 		String returnPage = null;
@@ -72,7 +71,7 @@ public class SeverityFilterController {
 			severityFilter.setOrganization(null);
 			severityFilter.setApplication(null);
 			severityFilterService.clean(severityFilter, -1, -1);
-			severityFilterService.save(severityFilter);
+			severityFilterService.save(severityFilter, -1, -1);
 			
 			model.addAttribute("contentPage", "/configuration/filters");
 			returnPage = "ajaxRedirectHarness";
@@ -82,7 +81,7 @@ public class SeverityFilterController {
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/severityFilter/set", method = RequestMethod.POST)
-	public String setTeamSeverityFilters(@ModelAttribute SeverityFilter severityFilter,
+	public String setTeamSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			@PathVariable int appId, @PathVariable int orgId) {
 		
@@ -98,7 +97,7 @@ public class SeverityFilterController {
 			severityFilter.setOrganization(null);
 			severityFilter.setApplication(applicationService.loadApplication(appId));
 			severityFilterService.clean(severityFilter, orgId, appId);
-			severityFilterService.save(severityFilter);
+			severityFilterService.save(severityFilter, orgId, appId);
 			
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/filters");
 			returnPage = "ajaxRedirectHarness";
@@ -108,7 +107,7 @@ public class SeverityFilterController {
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/severityFilter/set", method = RequestMethod.POST)
-	public String setApplicationSeverityFilters(@ModelAttribute SeverityFilter severityFilter,
+	public String setApplicationSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model, @PathVariable int orgId) {
 		
 		String returnPage = null;
@@ -123,7 +122,7 @@ public class SeverityFilterController {
 			severityFilter.setOrganization(organizationService.loadOrganization(orgId));
 			severityFilter.setApplication(null);
 			severityFilterService.clean(severityFilter, orgId, -1);
-			severityFilterService.save(severityFilter);
+			severityFilterService.save(severityFilter, orgId, -1);
 			
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/filters");
 			returnPage = "ajaxRedirectHarness";

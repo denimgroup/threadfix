@@ -58,7 +58,7 @@
     	<pattern>/organizations/*/filters/new*</pattern>
     	<pattern>/organizations/*/filters/*/edit*</pattern>
     	<pattern>/organizations/*/filters/*/delete*</pattern>
-    	<pattern>/organizations/*/filters/severityFilter/set*</pattern>
+    	<pattern>/organizations/*/severityFilter/set*</pattern>
     	<pattern>/organizations/*/getReport*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/*/modalEdit*</pattern>

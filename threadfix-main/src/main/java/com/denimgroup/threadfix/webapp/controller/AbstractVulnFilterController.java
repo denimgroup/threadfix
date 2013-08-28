@@ -120,8 +120,20 @@ public abstract class AbstractVulnFilterController {
 			filter = severityFilterService.loadGlobal();
 		}
 		
+		boolean shouldInherit = filter == null || !filter.getEnabled();
+		
 		if (filter == null) {
 			filter = new SeverityFilter();
+			if (appId != -1) {
+				filter.setApplication(applicationService.loadApplication(appId));
+			} else if (orgId != -1) {
+				filter.setOrganization(organizationService.loadOrganization(orgId));
+			} else {
+				filter.setGlobal(true);
+			}
+		}
+		
+		if (shouldInherit) {
 			filter.setFilters(severityFilterService.getParentFilter(orgId, appId));
 		}
 		

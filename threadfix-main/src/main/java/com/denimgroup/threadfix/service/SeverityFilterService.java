@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.SeverityFilter;
 
 public interface SeverityFilterService {
 
-	void save(SeverityFilter severityFilter);
+	void save(SeverityFilter severityFilter, int orgId, int appId);
 	
 	SeverityFilter loadGlobal();
 	

@@ -28,6 +28,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.SeverityFilterDao;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
@@ -43,6 +44,7 @@ public class HibernateSeverityFilterDao implements SeverityFilterDao {
 	}
 
 	@Override
+	@Transactional
 	public void saveOrUpdate(SeverityFilter severityFilter) {
 		if (severityFilter != null && severityFilter.getId() != null) {
 			sessionFactory.getCurrentSession().merge(severityFilter);
