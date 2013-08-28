@@ -43,7 +43,6 @@
 	<a id="createNewKeyModalButton" href="#newFilterModalDiv" role="button" class="btn" data-toggle="modal">Create New Filter</a>
 	
 	<div id="tableDiv">
-		<br>
 		<%@ include file="/WEB-INF/views/filters/table.jsp" %>
 	</div>
 	

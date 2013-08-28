@@ -23,10 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,6 +61,11 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 		super(severityFilterService, organizationService, vulnerabilityFilterService,
 				applicationService, genericVulnerabilityService, genericSeverityService);
 	}
+	
+	@InitBinder
+	public void setAllowedFields(WebDataBinder dataBinder) {
+		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id");
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(@PathVariable int appId, Model model) {
@@ -68,8 +77,9 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model) {
-		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId);
+			Model model,
+			HttpServletRequest request) {
+		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, request, -1, appId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
@@ -79,15 +89,17 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model) {
-		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId, filterId);
+			Model model,
+			HttpServletRequest request) {
+		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, request, -1, appId, filterId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
 	public String submitDelete(
 			@PathVariable int appId,
 			@PathVariable int filterId,
-			Model model) {
-		return submitDeleteBackend(model, -1, appId, filterId);
+			Model model,
+			HttpServletRequest request) {
+		return submitDeleteBackend(model, request, -1, appId, filterId);
 	}
 }

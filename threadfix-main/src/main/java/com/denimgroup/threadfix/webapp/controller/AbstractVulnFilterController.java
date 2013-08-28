@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,6 +41,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
@@ -50,6 +53,11 @@ public abstract class AbstractVulnFilterController {
 	protected GenericSeverityService genericSeverityService;
 	protected ApplicationService applicationService;
 	protected OrganizationService organizationService;
+	
+	private final SanitizedLogger log = new SanitizedLogger(AbstractVulnFilterController.class);
+	private static final String
+		SUCCESS_MESSAGE = "Vulnerability Filter settings saved successfully.",
+		FAILURE_MESSAGE = "Vulnerability Filter settings were not saved successfully.";
 	
 	@ModelAttribute("genericVulnerabilities")
 	public List<GenericVulnerability> getGenericVulnerabilities() {
@@ -174,6 +182,7 @@ public abstract class AbstractVulnFilterController {
 			BindingResult bindingResult,
 			SessionStatus status,
 			Model model,
+			HttpServletRequest request,
 			int orgId,
 			int appId) {
 
@@ -188,17 +197,13 @@ public abstract class AbstractVulnFilterController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("contentPage", "filters/newForm.jsp");
 			responsePage = "ajaxFailureHarness";
-			System.out.println("failure");
+			log.warn(FAILURE_MESSAGE);
 		} else {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
-			model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
-			model.addAttribute("teamFilterList",      getTeamFilters(orgId, appId));
-			model.addAttribute("globalFilterList",    getGlobalList(orgId, appId));
-			model.addAttribute("contentPage", "filters/table.jsp");
-			model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
-			responsePage = "ajaxSuccessHarness";
-			System.out.println("success");
+			responsePage = returnSuccess(model, orgId, appId);
+			ControllerUtils.addSuccessMessage(request, SUCCESS_MESSAGE);
+			log.info(SUCCESS_MESSAGE);
 		}
 		
 		model.addAttribute("type", getType(orgId, appId));
@@ -210,6 +215,7 @@ public abstract class AbstractVulnFilterController {
 			BindingResult bindingResult,
 			SessionStatus status,
 			Model model,
+			HttpServletRequest request,
 			int orgId,
 			int appId,
 			int filterId) {
@@ -224,35 +230,36 @@ public abstract class AbstractVulnFilterController {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("contentPage", "filters/newForm.jsp");
+			model.addAttribute("type", getType(orgId, appId));
 			responsePage = "ajaxFailureHarness";
-			System.out.println("failure");
+			log.warn(FAILURE_MESSAGE);
 		} else {
 			vulnerabilityFilter.setId(filterId);
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
-			model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
-			model.addAttribute("contentPage", "filters/table.jsp");
-			model.addAttribute("teamFilterList",   getTeamFilters(orgId, appId));
-			model.addAttribute("globalFilterList", getGlobalList(orgId, appId));
-			model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
-			responsePage = "ajaxSuccessHarness";
-			System.out.println("success");
+			responsePage = returnSuccess(model, orgId, appId);
+			ControllerUtils.addSuccessMessage(request, SUCCESS_MESSAGE);
 		}
 		
-		model.addAttribute("type", getType(orgId, appId));
 		return responsePage;
 	}
 	
-	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {
+	public String submitDeleteBackend(Model model,
+			HttpServletRequest request, int orgId, int appId, int filterId) {
 		
 		vulnerabilityFilterService.delete(filterId, orgId, appId);
 		
+		log.info("Vulnerability Filter was successfully deleted");
+		ControllerUtils.addSuccessMessage(request, "Vulnerability Filter was successfully deleted");
+		return returnSuccess(model, orgId, appId);
+	}
+	
+	public String returnSuccess(Model model, int orgId, int appId) {
 		model.addAttribute("vulnerabilityFilter", new VulnerabilityFilter());
 		model.addAttribute("contentPage", "filters/table.jsp");
 		model.addAttribute("teamFilterList",   getTeamFilters(orgId, appId));
 		model.addAttribute("globalFilterList", getGlobalList(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
-		
 		model.addAttribute("type", getType(orgId, appId));
 		return "ajaxSuccessHarness";
 	}

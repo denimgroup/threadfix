@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
@@ -49,6 +52,8 @@ public class SeverityFilterController {
 	public OrganizationService organizationService;
 	public ApplicationService applicationService;
 	public VulnerabilityFilterService vulnerabilityFilterService;
+	
+	private final SanitizedLogger log = new SanitizedLogger(SeverityFilterController.class);
 	
 	@Autowired
 	public SeverityFilterController(
@@ -62,60 +67,28 @@ public class SeverityFilterController {
 		this.organizationService = organizationService;
 	}
 	
+	@InitBinder
+	public void setAllowedFields(WebDataBinder dataBinder) {
+		dataBinder.setAllowedFields("showInfo", "showLow", "showMedium", "showHigh",
+				"showCritical", "id", "global", "enabled", "organization.id", "application.id");
+	}
+	
 	@RequestMapping(value = "/configuration/severityFilter/set", method = RequestMethod.POST)
 	public String setGlobalSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request) {
-		
-		String returnPage = null;
-		
-		if (bindingResult.hasErrors()) {
-			
-			model.addAttribute("contentPage", "filters/severityFilterForm.jsp");
-			returnPage = "ajaxFailureHarness";
-			
-		} else {
-			severityFilter.setGlobal(true);
-			severityFilter.setOrganization(null);
-			severityFilter.setApplication(null);
-			severityFilterService.clean(severityFilter, -1, -1);
-			severityFilterService.save(severityFilter, -1, -1);
-			vulnerabilityFilterService.updateVulnerabilities(-1, -1);
-			
-			ControllerUtils.addSuccessMessage(request, "Filter settings saved successfully.");
-			model.addAttribute("contentPage", "/configuration/filters");
-			returnPage = "ajaxRedirectHarness";
-		}
-		
-		return returnPage;
+		String page = doSet(severityFilter, bindingResult, status, model, -1, -1, request);
+		model.addAttribute("contentPage", "/configuration/filters");
+		return page;
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/severityFilter/set", method = RequestMethod.POST)
 	public String setApplicationSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request, @PathVariable int orgId) {
-		
-		String returnPage = null;
-		
-		if (bindingResult.hasErrors()) {
-			
-			model.addAttribute("contentPage", "filters/severityFilterForm.jsp");
-			returnPage = "ajaxFailureHarness";
-			
-		} else {
-			severityFilter.setGlobal(false);
-			severityFilter.setOrganization(organizationService.loadOrganization(orgId));
-			severityFilter.setApplication(null);
-			severityFilterService.clean(severityFilter, orgId, -1);
-			severityFilterService.save(severityFilter, orgId, -1);
-			vulnerabilityFilterService.updateVulnerabilities(orgId, -1);
-			
-			ControllerUtils.addSuccessMessage(request, "Filter settings saved successfully.");
-			model.addAttribute("contentPage", "/organizations/" + orgId + "/filters");
-			returnPage = "ajaxRedirectHarness";
-		}
-		
-		return returnPage;
+		String page = doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
+		model.addAttribute("contentPage", "/organizations/" + orgId + "/filters");
+		return page;
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/severityFilter/set", method = RequestMethod.POST)
@@ -123,6 +96,15 @@ public class SeverityFilterController {
 			BindingResult bindingResult, SessionStatus status, Model model,
 			@PathVariable int appId, @PathVariable int orgId,
 			HttpServletRequest request) {
+		String page = doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
+		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/filters");
+		return page;
+	}
+	
+	private String doSet(SeverityFilter severityFilter,
+			BindingResult bindingResult, SessionStatus status, Model model,
+			int orgId, int appId,
+			HttpServletRequest request) {
 		
 		String returnPage = null;
 		
@@ -130,20 +112,38 @@ public class SeverityFilterController {
 			
 			model.addAttribute("contentPage", "filters/severityFilterForm.jsp");
 			returnPage = "ajaxFailureHarness";
+			log.warn("Severity Filter settings were not saved successfully.");
 			
 		} else {
-			severityFilter.setGlobal(false);
-			severityFilter.setOrganization(null);
-			severityFilter.setApplication(applicationService.loadApplication(appId));
+			updateSeverityFilter(severityFilter, orgId, appId);
 			severityFilterService.clean(severityFilter, orgId, appId);
 			severityFilterService.save(severityFilter, orgId, appId);
 			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
 			
-			ControllerUtils.addSuccessMessage(request, "Filter settings saved successfully.");
-			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/filters");
+			ControllerUtils.addSuccessMessage(request, "Severity Filter settings saved successfully.");
+			log.info("Severity Filter settings saved successfully.");
 			returnPage = "ajaxRedirectHarness";
 		}
 		
 		return returnPage;
+	}
+	
+	private void updateSeverityFilter(SeverityFilter severityFilter, int orgId, int appId) {
+		
+		if (severityFilter != null) {
+			if (orgId == -1 && appId == -1) {
+				severityFilter.setGlobal(true);
+				severityFilter.setApplication(null);
+				severityFilter.setOrganization(null);
+			} else if (appId != -1) {
+				severityFilter.setGlobal(false);
+				severityFilter.setApplication(applicationService.loadApplication(appId));
+				severityFilter.setOrganization(null);
+			} else {
+				severityFilter.setGlobal(false);
+				severityFilter.setApplication(null);
+				severityFilter.setOrganization(organizationService.loadOrganization(orgId));
+			}
+		}
 	}
 }

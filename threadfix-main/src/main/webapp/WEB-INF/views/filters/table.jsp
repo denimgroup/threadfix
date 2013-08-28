@@ -1,5 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<br>
 <%@ include file="/WEB-INF/views/successMessage.jspf"%>
 <%@ include file="/WEB-INF/views/filters/buildJSON.jspf"%>
 
