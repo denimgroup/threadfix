@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.service;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -70,7 +71,9 @@ public class SanitizedLogger {
 		if(startString == null) {
 			retVal = "<NULL>";
 		} else {
-			retVal = startString.replace("\n", "\\n").replace("\t","\\t").trim();
+			//	This should handle ", \ and various CRLF characters as well as scary Unicode (non-ASCII) stuff
+			// https://commons.apache.org/proper/commons-lang/javadocs/api-3.0/src-html/org/apache/commons/lang3/StringEscapeUtils.html
+			retVal = StringEscapeUtils.escapeJava(startString);
 		}
 		
 		return(retVal);
