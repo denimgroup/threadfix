@@ -33,7 +33,10 @@ public interface RemoteProviderTypeService {
 	String API_KEY_PREFIX = "************************";
 	
 	public static enum ResponseCode {
-		SUCCESS, BAD_ID, NO_APPS;
+		SUCCESS, BAD_ID, NO_APPS,
+		ERROR_NO_SCANS_FOUND,
+		ERROR_NO_NEW_SCANS,
+		ERROR_OTHER;
 	}
 
 	/**

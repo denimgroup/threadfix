@@ -172,13 +172,22 @@ public class RemoteProvidersController {
 		remoteProviderTypeService.decryptCredentials(
 				remoteProviderApplication.getRemoteProviderType());
 		
-		if (remoteProviderApplicationService.importScansForApplication(remoteProviderApplication)) {
+		ResponseCode response = remoteProviderApplicationService.importScansForApplication(remoteProviderApplication);
+		
+		if (response.equals(ResponseCode.SUCCESS)) {
 			return "redirect:/organizations/" + 
 						remoteProviderApplication.getApplication().getOrganization().getId() + 
 						"/applications/" +
 						remoteProviderApplication.getApplication().getId();
 		} else {
-			request.getSession().setAttribute("errorMessage", "No new scans were found.");
+			String errorMsg = null;
+			if (response.equals(ResponseCode.ERROR_NO_SCANS_FOUND))
+				errorMsg = "No scans were found for this Remote Provider.";
+			else if (response.equals(ResponseCode.ERROR_NO_NEW_SCANS))
+				errorMsg = "Application already imported scans from this Remote Provider, no newer scans were found. You have to delete old scans before adding new ones.";
+			else errorMsg = "Error when trying to import scans.";
+			
+			request.getSession().setAttribute("errorMessage", errorMsg);
 			return "redirect:/configuration/remoteproviders/";
 		}
 	}

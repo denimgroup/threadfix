@@ -30,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 
 public interface RemoteProviderApplicationService {
 	/**
@@ -75,7 +76,7 @@ public interface RemoteProviderApplicationService {
 	 * 
 	 * @param appId
 	 */
-	boolean importScansForApplication(RemoteProviderApplication remoteProviderApplication);
+	ResponseCode importScansForApplication(RemoteProviderApplication remoteProviderApplication);
 	
 	/**
 	 * 
