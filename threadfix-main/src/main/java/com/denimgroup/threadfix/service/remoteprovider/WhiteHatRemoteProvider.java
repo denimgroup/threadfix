@@ -232,7 +232,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				// Checking if Finding is open at this time
 				for (int i=0;i<dateInfo.size()-1;i++){
 					if (date.compareTo(dateInfo.get(i).getDate())>=0 && date.compareTo(dateInfo.get(i+1).getDate())<0) {
-						if (!dateInfo.get(i).getStatus().equals("closed")) {
+						if (dateInfo.get(i).getStatus().equals("open")) {
 							saxFindingList.add(finding);
 							isAdded = true;
 							break;
@@ -241,7 +241,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				}
 				if (!isAdded) {
 					if (date.compareTo(dateInfo.get(dateInfo.size()-1).getDate())>=0 
-							&& !dateInfo.get(dateInfo.size()-1).getStatus().equals("closed"))
+							&& dateInfo.get(dateInfo.size()-1).getStatus().equals("open"))
 						saxFindingList.add(finding);
 				}
 			}
