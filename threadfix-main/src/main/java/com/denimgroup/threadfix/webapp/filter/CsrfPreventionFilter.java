@@ -22,6 +22,7 @@
 package com.denimgroup.threadfix.webapp.filter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -325,7 +326,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         }
     }
     
-    private static class LruCache<T> {
+    private static class LruCache<T> implements Serializable {
         // Although the internal implementation uses a Map, this cache
         // implementation is only concerned with the keys.
         private final Map<T,T> cache;
