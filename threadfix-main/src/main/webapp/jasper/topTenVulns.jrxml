@@ -17,6 +17,8 @@
 				 where application.id in ($P{appId})
 				 	AND application.active = true
 				 	AND vulnerability.genericVulnerability.id in ($P{vulnIds})
+				 	AND vulnerability.active = true 
+				 	AND vulnerability.isFalsePositive = false
 			GROUP BY vulnerability.genericVulnerability.id
 			ORDER BY count(vulnerability) desc ]]>
 	</queryString>
