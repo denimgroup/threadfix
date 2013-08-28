@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.beans.Transient;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -62,6 +64,22 @@ public class SeverityFilter extends BaseEntity {
 		this.showMedium = other.showMedium;
 		this.showHigh = other.showHigh;
 		this.showCritical = other.showCritical;
+	}
+	
+	@Transient
+	public boolean shouldHide(GenericSeverity genericSeverity) {
+		boolean result = false;
+		if (genericSeverity != null && genericSeverity.getName() != null) {
+			String name = genericSeverity.getName();
+			switch (name) {
+				case GenericSeverity.CRITICAL: result = !showCritical; break;
+				case GenericSeverity.HIGH:     result = !showHigh;     break;
+				case GenericSeverity.MEDIUM:   result = !showMedium;   break;
+				case GenericSeverity.LOW:      result = !showLow;      break;
+				case GenericSeverity.INFO:     result = !showInfo;     break;
+			}
+		}
+		return result;
 	}
 
 	@ManyToOne

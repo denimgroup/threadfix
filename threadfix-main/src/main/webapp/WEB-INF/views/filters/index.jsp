@@ -25,13 +25,13 @@
 	<c:choose>
 		<c:when test="${ type == 'Application' }">
 			<spring:url value="/organizations/{orgId}/applications/{appId}" var="backUrl">
-				<spring:param name="orgId" value="${application.organization.id}"/>
-				<spring:param name="appId" value="${application.id}"/>
+				<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+				<spring:param name="appId" value="${severityFilter.application.id}"/>
 			</spring:url>
 		</c:when>
 		<c:when test="${ type == 'Organization' }">
 			<spring:url value="/organizations/{orgId}" var="backUrl">
-				<spring:param name="orgId" value="${organization.id}"/>
+				<spring:param name="orgId" value="${severityFilter.organization.id}"/>
 			</spring:url>
 		</c:when>
 	</c:choose>
@@ -43,6 +43,7 @@
 	<a id="createNewKeyModalButton" href="#newFilterModalDiv" role="button" class="btn" data-toggle="modal">Create New Filter</a>
 	
 	<div id="tableDiv">
+		<br>
 		<%@ include file="/WEB-INF/views/filters/table.jsp" %>
 	</div>
 	

@@ -111,14 +111,7 @@ public abstract class AbstractVulnFilterController {
 	}
 	
 	private SeverityFilter getSeverityFilter(int orgId, int appId) {
-		SeverityFilter filter;
-		if (appId != -1) {
-			filter = severityFilterService.loadApplication(appId);
-		} else if (orgId != -1) {
-			filter = severityFilterService.loadTeam(orgId);
-		} else {
-			filter = severityFilterService.loadGlobal();
-		}
+		SeverityFilter filter = severityFilterService.loadFilter(orgId, appId);
 		
 		boolean shouldInherit = filter == null || !filter.getEnabled();
 		

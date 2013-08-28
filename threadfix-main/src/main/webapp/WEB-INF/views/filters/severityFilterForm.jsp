@@ -87,14 +87,11 @@
 		</tbody>
 	</table>
 	</div>
-	<div class="modal-footer">
-		<button id="closeSeverityFilterFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitSeverityFilterForm" 
-				class="modalSubmit btn btn-primary" 
-				data-success-div="tableDiv"
-				data-form-div="severityFilterFormDiv"
-				>
-			Save Changes
-		</a>
-	</div>
+	<a id="submitSeverityFilterForm" 
+			class="modalSubmit btn btn-primary" 
+			data-success-div="tableDiv"
+			data-form-div="severityFilterFormDiv"
+			>
+		Save Security Filter Changes
+	</a>
 </form:form>

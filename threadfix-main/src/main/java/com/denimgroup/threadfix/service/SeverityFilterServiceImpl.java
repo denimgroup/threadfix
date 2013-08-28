@@ -41,15 +41,7 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 
 	@Override
 	public void save(SeverityFilter severityFilter, int orgId, int appId) {
-		SeverityFilter toSave = null;
-		
-		if (orgId == -1 && appId == -1) {
-			toSave = loadGlobal();
-		} else if (appId != -1) {
-			toSave = loadApplication(appId);
-		} else if (orgId != -1) {
-			toSave = loadTeam(orgId);
-		}
+		SeverityFilter toSave = loadFilter(orgId, appId);
 		
 		if (toSave == null) {
 			toSave = severityFilter;
@@ -62,18 +54,14 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 	}
 
 	@Override
-	public SeverityFilter loadGlobal() {
-		return severityFilterDao.retrieveGlobal();
-	}
-
-	@Override
-	public SeverityFilter loadTeam(int orgId) {
-		return severityFilterDao.retrieveTeam(orgId);
-	}
-
-	@Override
-	public SeverityFilter loadApplication(int appId) {
-		return severityFilterDao.retrieveApplication(appId);
+	public SeverityFilter loadFilter(int orgId, int appId) {
+		if (orgId == -1 && appId == -1) {
+			return severityFilterDao.retrieveGlobal();
+		} else if (appId == -1) {
+			return severityFilterDao.retrieveTeam(orgId);
+		} else {
+			return severityFilterDao.retrieveApplication(appId);
+		}
 	}
 
 	@Override
@@ -91,13 +79,13 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 		if (teamId != -1 && appId == -1) {
 			
 			// if we're finding the parent of a team filter, let's use global settings if present
-			SeverityFilter globalFilter = loadGlobal();
+			SeverityFilter globalFilter = loadFilter(-1, -1);
 			if (globalFilter != null && globalFilter.getEnabled()) {
 				returnFilter = globalFilter;
 			}
 			
 		} else if (teamId != -1 && appId != -1) {
-			SeverityFilter targetFilter = loadTeam(teamId);
+			SeverityFilter targetFilter = loadFilter(teamId, -1);
 			
 			if (targetFilter != null && targetFilter.getEnabled()) {
 				// this is an app level filter and there are team settings, so let's use those
@@ -106,7 +94,7 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 			} else {
 				
 				// there are no team settings, so let's look at global
-				targetFilter = loadGlobal();
+				targetFilter = loadFilter(-1, -1);
 				
 				if (targetFilter == null || !targetFilter.getEnabled()) {
 					// this is a team level filter and there are team level settings, so let's use those
@@ -116,6 +104,29 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 		}
 
 		return returnFilter;
+	}
+
+	@Override
+	public SeverityFilter loadEffectiveFilter(int orgId, int appId) {
+		SeverityFilter filter = null;
+		
+		if (orgId != -1 && appId != -1) {
+			filter = loadFilter(orgId, appId);
+		}
+		
+		if ((filter == null || !filter.getEnabled()) && orgId != -1) {
+			filter = loadFilter(orgId, -1);
+		}
+		
+		if (filter == null || !filter.getEnabled()) {
+			filter = loadFilter(-1, -1);
+		}
+		
+		if (filter == null || !filter.getEnabled()) {
+			filter = new SeverityFilter();
+		}
+		
+		return filter;
 	}
 
 }

@@ -29,13 +29,11 @@ public interface SeverityFilterService {
 
 	void save(SeverityFilter severityFilter, int orgId, int appId);
 	
-	SeverityFilter loadGlobal();
-	
-	SeverityFilter loadTeam(int appId);
-	
-	SeverityFilter loadApplication(int appId);
-
 	void clean(SeverityFilter severityFilter, int teamId, int appId);
 
+	SeverityFilter loadFilter(int orgId, int appId);
+
 	SeverityFilter getParentFilter(int teamId, int appId);
+
+	SeverityFilter loadEffectiveFilter(int orgId, int appId);
 }
