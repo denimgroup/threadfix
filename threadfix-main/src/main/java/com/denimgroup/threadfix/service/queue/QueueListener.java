@@ -49,6 +49,7 @@ import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
@@ -177,9 +178,9 @@ public class QueueListener implements MessageListener {
 				
 				for (RemoteProviderApplication application : applications) {
 					if (application != null && application.getApplicationChannel() != null) {
-						boolean success = remoteProviderApplicationService.importScansForApplication(application);
+						ResponseCode success = remoteProviderApplicationService.importScansForApplication(application);
 						
-						if (success) {
+						if (!success.equals(ResponseCode.SUCCESS)) {
 							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
 						} else {
 							log.info("Remote Provider import was successful for application " + application.getNativeId());

@@ -48,6 +48,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
 
@@ -207,14 +208,14 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	@Override
 	@Transactional
-	public boolean importScansForApplication(
+	public ResponseCode importScansForApplication(
 			RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null)
-			return false;
+			return ResponseCode.ERROR_OTHER;
 		
 		List<Scan> resultScans = getRemoteProviderFactory().fetchScans(remoteProviderApplication);
 		
-		boolean success = false;
+		ResponseCode success = ResponseCode.ERROR_OTHER;
 		if (resultScans != null && resultScans.size() > 0) {
 			Collections.sort(resultScans, new Comparator<Scan>() {
 				public int compare(Scan scan1, Scan scan2){
@@ -228,10 +229,13 @@ public class RemoteProviderApplicationServiceImpl implements
 				}
 			});
 			
+			int noOfScanNotFound = 0;
+			int noOfNoNewScans = 0;
 			for (Scan resultScan : resultScans) {
 				if (resultScan == null || resultScan.getFindings() == null 
 						|| resultScan.getFindings().size() == 0) {
 					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
+					noOfScanNotFound++;
 					
 				} else if (remoteProviderApplication.getLastImportTime() != null && 
 							(resultScan.getImportTime() == null ||
@@ -239,6 +243,7 @@ public class RemoteProviderApplicationServiceImpl implements
 									resultScan.getImportTime()))) {
 					log.warn("Remote Scan was not newer than the last imported scan " +
 							"for this RemoteProviderApplication.");
+					noOfNoNewScans++;
 					
 				} else {
 					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
@@ -252,7 +257,6 @@ public class RemoteProviderApplicationServiceImpl implements
 							resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 						} else {
 							log.error("Didn't have enough application channel information.");
-							success = false;
 						}
 					}
 					
@@ -266,12 +270,18 @@ public class RemoteProviderApplicationServiceImpl implements
 						}
 					
 						scanMergeService.processRemoteScan(resultScan);
-						success = true;
+						success = ResponseCode.SUCCESS;
 					}
 				}
 			}
+			
+			if (!success.equals(ResponseCode.SUCCESS)) {
+				if (noOfNoNewScans > 0)
+					success = ResponseCode.ERROR_NO_NEW_SCANS;
+				else if (noOfScanNotFound > 0)
+					success = ResponseCode.ERROR_NO_SCANS_FOUND;
+			}
 		}
-		
 		return success;
 	}
 	
