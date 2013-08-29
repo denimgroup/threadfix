@@ -28,59 +28,70 @@
 	<table class="table noBorders">
 		<tbody>
 			<tr>
-				<td>Enable Severity Filters</td>
+				<td style="width:130px">Enable Severity Filters</td>
 				<td>
-					<form:checkbox id="enabledBox" style="width:320px" path="enabled"/>
+					<form:checkbox id="enabledBox" path="enabled"/>
 				</td>
 				<td><form:errors path="enabled" cssClass="errors" /></td>
 			</tr>
+		</tbody>
+	</table>
+	<table class="table noBorders">
+		<thead>
 			<tr>
-				<td>Show Critical</td>
-				<td>
-					<form:checkbox 
-						class="needsEnabled"
-						style="width:320px"
-						path="showCritical"/>
+				<th style="width:80px;">Severity</th>
+				<th style="width:30px">Show</th>
+				<th style="width:30px">Hide</th>
+			</tr>
+		</thead>
+		<tbody>		
+			<tr>
+				<td>Critical</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showCritical" value="true"/>
+				</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showCritical" value="false"/>
 				</td>
 				<td><form:errors path="showCritical" cssClass="errors" /></td>
 			</tr>
 			<tr>
-				<td>Show High</td>
-				<td>
-					<form:checkbox 
-						class="needsEnabled"
-						style="width:320px"
-						path="showHigh"/>
+				<td>High</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showHigh" value="true"/>
+				</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showHigh" value="false"/>
 				</td>
 				<td><form:errors path="showHigh" cssClass="errors" /></td>
 			</tr>
 			<tr>
-				<td>Show Medium</td>
-				<td>
-					<form:checkbox 
-						class="needsEnabled"
-						style="width:320px"
-						path="showMedium"/>
+				<td>Medium</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showMedium" value="true"/>
+				</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showMedium" value="false"/>
 				</td>
 				<td><form:errors path="showMedium" cssClass="errors" /></td>
 			</tr>
 			<tr>
-				<td>Show Low</td>
-				<td>
-					<form:checkbox 
-						class="needsEnabled"
-						style="width:320px"
-						path="showLow"/>
+				<td>Low</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showLow" value="true"/>
+				</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showLow" value="false"/>
 				</td>
 				<td><form:errors path="showLow" cssClass="errors" /></td>
 			</tr>
 			<tr>
-				<td>Show Info</td>
-				<td>
-					<form:checkbox 
-						class="needsEnabled"
-						style="width:320px"
-						path="showInfo"/>
+				<td>Info</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showInfo" value="true"/>
+				</td>
+				<td class="centered">
+					<form:radiobutton class="needsEnabled" path="showInfo" value="false"/>
 				</td>
 				<td><form:errors path="showInfo" cssClass="errors" /></td>
 			</tr>
@@ -89,9 +100,9 @@
 	</div>
 	<a id="submitSeverityFilterForm" 
 			class="modalSubmit btn btn-primary" 
-			data-success-div="tableDiv"
+			data-success-div="tabsDiv"
 			data-form-div="severityFilterFormDiv"
 			>
-		Save Security Filter Changes
+		Save Severity Filter Changes
 	</a>
 </form:form>

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +33,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.GenericSeverityService;
+import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -55,11 +63,15 @@ public class SeverityFilterController {
 	public ApplicationService applicationService;
 	public VulnerabilityFilterService vulnerabilityFilterService;
 	public PermissionService permissionService;
+	public GenericVulnerabilityService genericVulnerabilityService;
+	public GenericSeverityService genericSeverityService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(SeverityFilterController.class);
 	
 	@Autowired
 	public SeverityFilterController(
+			GenericSeverityService genericSeverityService,
+			GenericVulnerabilityService genericVulnerabilityService,
 			PermissionService permissionService,
 			VulnerabilityFilterService vulnerabilityFilterService,
 			OrganizationService organizationService,
@@ -70,6 +82,25 @@ public class SeverityFilterController {
 		this.applicationService = applicationService;
 		this.organizationService = organizationService;
 		this.permissionService = permissionService;
+		this.genericSeverityService = genericSeverityService;
+		this.genericVulnerabilityService = genericVulnerabilityService;
+	}
+	
+	@ModelAttribute("genericVulnerabilities")
+	public List<GenericVulnerability> getGenericVulnerabilities() {
+		return genericVulnerabilityService.loadAll();
+	}
+	
+	@ModelAttribute("genericSeverities")
+	public List<GenericSeverity> getGenericSeverities() {
+		List<GenericSeverity> severities = genericSeverityService.loadAll();
+		
+		GenericSeverity ignoreSeverity = new GenericSeverity();
+		ignoreSeverity.setId(-1);
+		ignoreSeverity.setName("Ignore");
+		severities.add(ignoreSeverity);
+		
+		return severities;
 	}
 	
 	@InitBinder
@@ -87,9 +118,7 @@ public class SeverityFilterController {
 			return "403";
 		}
 		
-		model.addAttribute("contentPage", "/configuration/filters");
-		String page = doSet(severityFilter, bindingResult, status, model, -1, -1, request);
-		return page;
+		return doSet(severityFilter, bindingResult, status, model, -1, -1, request);
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/severityFilter/set", method = RequestMethod.POST)
@@ -101,9 +130,7 @@ public class SeverityFilterController {
 			return "403";
 		}
 		
-		model.addAttribute("contentPage", "/organizations/" + orgId + "/filters");
-		String page = doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
-		return page;
+		return doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/severityFilter/set", method = RequestMethod.POST)
@@ -116,9 +143,7 @@ public class SeverityFilterController {
 			return "403";
 		}
 		
-		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/filters");
-		String page = doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
-		return page;
+		return doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
 	}
 	
 	private String doSet(SeverityFilter severityFilter,
@@ -140,9 +165,8 @@ public class SeverityFilterController {
 			severityFilterService.save(severityFilter, orgId, appId);
 			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
 			
-			ControllerUtils.addSuccessMessage(request, "Severity Filter settings saved successfully.");
 			log.info("Severity Filter settings saved successfully.");
-			returnPage = "ajaxRedirectHarness";
+			returnPage = returnSuccess(model, orgId, appId);
 		}
 		
 		return returnPage;
@@ -164,6 +188,25 @@ public class SeverityFilterController {
 				severityFilter.setApplication(null);
 				severityFilter.setOrganization(organizationService.loadOrganization(orgId));
 			}
+		}
+	}
+	
+	public String returnSuccess(Model model, int orgId, int appId) {
+		model.addAttribute("vulnerabilityFilter", new VulnerabilityFilter());
+		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
+		model.addAttribute("type", getType(orgId, appId));
+		model.addAttribute("successMessage", "Severity Filter settings saved successfully.");
+		model.addAttribute("contentPage", "filters/tab.jsp");
+		return "ajaxSuccessHarness";
+	}
+	
+	public String getType(int orgId, int appId) {
+		if (orgId == -1 && appId == -1) {
+			return "Global";
+		} else if (appId != -1) {
+			return "Application";
+		} else {
+			return "Organization";
 		}
 	}
 }

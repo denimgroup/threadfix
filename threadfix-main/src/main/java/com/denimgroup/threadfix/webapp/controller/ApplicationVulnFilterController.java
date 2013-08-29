@@ -74,6 +74,11 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 		return indexBackend(model, -1, appId);
 	}
 	
+	@RequestMapping(value = "/tab", method = RequestMethod.GET)
+	public String tab(@PathVariable int appId, Model model) {
+		return tabBackend(model, -1, appId);
+	}
+	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String submitNew(@PathVariable int orgId, @PathVariable int appId,
 			VulnerabilityFilter vulnerabilityFilter,

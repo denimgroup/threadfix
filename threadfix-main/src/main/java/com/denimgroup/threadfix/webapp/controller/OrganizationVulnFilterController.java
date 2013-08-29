@@ -74,6 +74,11 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 		return indexBackend(model, orgId, -1);
 	}
 	
+	@RequestMapping(value = "/tab", method = RequestMethod.GET)
+	public String tab(@PathVariable int orgId, Model model) {
+		return tabBackend(model, orgId, -1);
+	}
+	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String submitNew(@PathVariable int orgId,
 			VulnerabilityFilter vulnerabilityFilter,

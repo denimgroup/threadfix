@@ -32,7 +32,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -89,38 +88,6 @@ public abstract class AbstractVulnFilterController {
 		}
 	}
 	
-	public VulnerabilityFilter getNewFilter(int orgId, int appId) {
-		VulnerabilityFilter vulnerabilityFilter = new VulnerabilityFilter();
-		if (appId != -1) {
-			vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
-		} else if (orgId != -1) {
-			vulnerabilityFilter.setOrganization(organizationService.loadOrganization(orgId));
-		} else {
-			vulnerabilityFilter.setGlobal(true);
-		}
-		return vulnerabilityFilter;
-	}
-	
-	public List<VulnerabilityFilter> getPrimaryVulnerabilityList(int orgId, int appId) {
-		List<VulnerabilityFilter> filters;
-		if (appId != -1) {
-			filters = vulnerabilityFilterService.loadAllApplication(appId);
-		} else if (orgId != -1) {
-			filters = vulnerabilityFilterService.loadAllOrganization(orgId);
-		} else {
-			filters = vulnerabilityFilterService.loadAllGlobal();
-		}
-		return filters;
-	}
-	
-	private List<VulnerabilityFilter> getGlobalList(int orgId, int appId) {
-		if (orgId != -1 || appId != -1) {
-			return vulnerabilityFilterService.loadAllGlobal();
-		} else {
-			return null;
-		}
-	}
-	
 	private SeverityFilter getSeverityFilter(int orgId, int appId) {
 		SeverityFilter filter = severityFilterService.loadFilter(orgId, appId);
 		
@@ -144,17 +111,6 @@ public abstract class AbstractVulnFilterController {
 		return filter;
 	}
 	
-	private List<VulnerabilityFilter> getTeamFilters(int orgId, int appId) {
-		if (appId != -1) {
-			Application app = applicationService.loadApplication(appId);
-			if (app != null && app.getOrganization() != null && app.getOrganization().getId() != null) {
-				return vulnerabilityFilterService.loadAllOrganization(app.getOrganization().getId());
-			}
-		}
-		
-		return null;
-	}
-
 	public AbstractVulnFilterController(
 			PermissionService permissionService,
 			SeverityFilterService severityFilterService,
@@ -173,18 +129,29 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String indexBackend(Model model, int orgId, int appId) {
-
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
-		model.addAttribute("vulnerabilityFilter", getNewFilter(orgId, appId));
-		model.addAttribute("teamFilterList",      getTeamFilters(orgId, appId));
+		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
 		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
-		model.addAttribute("globalFilterList",    getGlobalList(orgId, appId));
-		model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
+		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
 		return "filters/index";
+	}
+	
+	public String tabBackend(Model model, int orgId, int appId) {
+		
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return "403";
+		}
+		
+		model.addAttribute("vulnerabilityFilter",     vulnerabilityFilterService.getNewFilter(orgId, appId));
+		model.addAttribute("severityFilter",          getSeverityFilter(orgId, appId));
+		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
+		model.addAttribute("type", getType(orgId, appId));
+		model.addAttribute("contentPage", "filters/tab.jsp");
+		return "ajaxSuccessHarness";
 	}
 
 	public String submitNewBackend(
@@ -216,7 +183,7 @@ public abstract class AbstractVulnFilterController {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
 			responsePage = returnSuccess(model, orgId, appId);
-			ControllerUtils.addSuccessMessage(request, SUCCESS_MESSAGE);
+			model.addAttribute("successMessage", SUCCESS_MESSAGE);
 			log.info(SUCCESS_MESSAGE);
 		}
 		
@@ -256,7 +223,7 @@ public abstract class AbstractVulnFilterController {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
 			responsePage = returnSuccess(model, orgId, appId);
-			ControllerUtils.addSuccessMessage(request, SUCCESS_MESSAGE);
+			model.addAttribute("successMessage", SUCCESS_MESSAGE);
 		}
 		
 		return responsePage;
@@ -272,17 +239,15 @@ public abstract class AbstractVulnFilterController {
 		vulnerabilityFilterService.delete(filterId, orgId, appId);
 		
 		log.info("Vulnerability Filter was successfully deleted");
-		ControllerUtils.addSuccessMessage(request, "Vulnerability Filter was successfully deleted");
+		model.addAttribute("successMessage", "Vulnerability Filter was successfully deleted");
 		return returnSuccess(model, orgId, appId);
 	}
 	
 	public String returnSuccess(Model model, int orgId, int appId) {
 		model.addAttribute("vulnerabilityFilter", new VulnerabilityFilter());
-		model.addAttribute("contentPage", "filters/table.jsp");
-		model.addAttribute("teamFilterList",   getTeamFilters(orgId, appId));
-		model.addAttribute("globalFilterList", getGlobalList(orgId, appId));
-		model.addAttribute("vulnerabilityFilterList", getPrimaryVulnerabilityList(orgId, appId));
+		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
+		model.addAttribute("contentPage", "filters/table.jsp");
 		return "ajaxSuccessHarness";
 	}
 }

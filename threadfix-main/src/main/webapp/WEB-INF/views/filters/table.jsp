@@ -69,11 +69,11 @@
 		<c:forEach var="vulnFilter" items="${ globalFilterList }" varStatus="status">
 			<tr class="bodyRow">
 				<td id="globalGenericVulnerability${ status.count }">
-					<c:if test="${ empty vulnFilter.targetGenericSeverity }">
+					<c:if test="${ empty vulnFilter.sourceGenericVulnerability }">
 						Ignore
 					</c:if>
-					<c:if test="${ not empty vulnFilter.targetGenericSeverity }">
-						<c:out value="${ vulnFilter.targetGenericSeverity.name }"/>
+					<c:if test="${ not empty vulnFilter.sourceGenericVulnerability }">
+						<c:out value="${ vulnFilter.sourceGenericVulnerability.name }"/>
 					</c:if>
 				</td>
 				<td style="word-wrap: break-word;" id="globalGenericSeverity${ status.count }">

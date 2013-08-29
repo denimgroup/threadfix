@@ -62,12 +62,17 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 					modalFailureFunctions[i]();
 				}
 			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
-				$(modalName).on('hidden', function () {
-					$('.modal-backdrop').remove();
+				if ($(modalName).size() == 1) {
+					$(modalName).on('hidden', function () {
+						$('.modal-backdrop').remove();
+						$(successDiv).html(text);
+						successFunction();
+					});
+					$(modalName).modal('hide');
+				} else {
 					$(successDiv).html(text);
 					successFunction();
-				});
-				$(modalName).modal('hide');
+				}
 				$(".clear-after-submit").val('');
 				$(".clear-after-submit").prop("checked",false);
 				$(formDiv).find(".hide-after-submit").css("display","none");

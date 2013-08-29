@@ -214,7 +214,7 @@ public class HibernateScanDao implements ScanDao {
 			totalMergedResults = (Long) response;
 		}
 		
-		response = (Long) sessionFactory.getCurrentSession()
+		response = sessionFactory.getCurrentSession()
 										 .createQuery("select count(*) from Finding finding where scan = :scan")
 										 .setInteger("scan", scanId)
 										 .uniqueResult();
@@ -269,8 +269,9 @@ public class HibernateScanDao implements ScanDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void deleteFindingsAndScan(Scan scan) {
-		if (scan == null) 
+		if (scan == null) {
 			return;
+		}
 		
 		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
 				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan)")
@@ -327,9 +328,11 @@ public class HibernateScanDao implements ScanDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
-		if (ids == null || ids.isEmpty()) return new HashMap<String, Object>();
+		if (ids == null || ids.isEmpty()) {
+			return new HashMap<String, Object>();
+		}
 		
-		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and " +
+		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
 				"(vulnerability.active = true OR vulnerability.foundByScanner = true) AND " +
 				"(vulnerability.genericSeverity.intValue = ";
 		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan.id in ";
@@ -357,7 +360,7 @@ public class HibernateScanDao implements ScanDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Scan> retrieveMostRecent(int number, Set<Integer> authenticatedAppIds, 
+	public List<Scan> retrieveMostRecent(int number, Set<Integer> authenticatedAppIds,
 			Set<Integer> authenticatedTeamIds) {
 
 		Criteria baseCriteria = getBaseScanCriteria()

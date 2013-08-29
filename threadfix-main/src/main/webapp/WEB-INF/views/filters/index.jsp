@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Vulnerability Filters</title>
+	<title>Manage Filters</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vulnerability_filters.js"></script>
 </head>
 
@@ -40,11 +40,46 @@
 		<a id="backButton" class="btn" href="${ backUrl }">Back</a>
 	</c:if>
 	
-	<a id="createNewKeyModalButton" href="#newFilterModalDiv" role="button" class="btn" data-toggle="modal">Create New Filter</a>
+	<c:if test="${ type == 'Application' }">
+		<spring:url value="/organizations/{orgId}/applications/{appId}/filters/tab" var="appTabUrl">
+			<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+			<spring:param name="appId" value="${severityFilter.application.id}"/>
+		</spring:url>
+		<spring:url value="/organizations/{orgId}/filters/tab" var="orgTabUrl">
+			<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+		</spring:url>
+	</c:if>
+	<c:if test="${ type == 'Organization' }">
+		<spring:url value="/organizations/{orgId}" var="orgTabUrl">
+			<spring:param name="orgId" value="${severityFilter.organization.id}"/>
+		</spring:url>
+	</c:if>
+	<spring:url value="/configuration/filters/tab" var="globalTabUrl"/>
 	
-	<div id="tableDiv">
-		<%@ include file="/WEB-INF/views/filters/table.jsp" %>
-	</div>
+	<ul class="nav nav-tabs margin-top">
+		<c:if test="${ not empty appTabUrl }">
+			<li class="<c:if test="${ type == 'Application' }">active</c:if> pointer">
+				<a data-toggle="tab" class="filterTab" id="applicationTabLink" href="#" data-url="<c:out value="${ appTabUrl }"/>">
+					Application Filters
+				</a>
+			</li>
+		</c:if>
+		<c:if test="${ not empty orgTabUrl }">
+			<li class="<c:if test="${ type == 'Organization' }">active</c:if> pointer">
+				<a data-toggle="tab" class="filterTab" id="teamTabLink" href="#" data-url="<c:out value="${ orgTabUrl }"/>">
+					Team Filters
+				</a>
+			</li>
+		</c:if>
+		<li class="<c:if test="${ type == 'Global' }">active</c:if> pointer">
+			<a data-toggle="tab" class="filterTab" id="globalTabLink" href="#" data-url="<c:out value="${ globalTabUrl }"/>">
+				Global Filters
+			</a>
+		</li>
+	</ul>
 	
-	<%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp" %>
+    <div id="tabsDiv">
+    	<%@ include file="/WEB-INF/views/filters/tab.jsp" %>
+    </div>
+	
 </body>

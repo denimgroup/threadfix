@@ -73,6 +73,11 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	public String index(Model model) {
 		return indexBackend(model, -1, -1);
 	}
+	
+	@RequestMapping(value = "/tab", method = RequestMethod.GET)
+	public String tab(Model model) {
+		return tabBackend(model, -1, -1);
+	}
 
 	@RequestMapping(value="/new", method = RequestMethod.POST)
 	public String submitNew(VulnerabilityFilter vulnerabilityFilter,
