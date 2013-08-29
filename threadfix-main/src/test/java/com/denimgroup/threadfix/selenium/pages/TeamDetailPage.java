@@ -69,6 +69,10 @@ public class TeamDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 	
+	public boolean isAppPresent(String appName){
+		return driver.findElementById("applicationsTableBody").getText().contains(appName);
+	}
+	
 	public int getEditModalHeaderWidth(){
 		return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
 	}

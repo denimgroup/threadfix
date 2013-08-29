@@ -490,6 +490,8 @@ public class VulnTests extends BaseTest {
 																			.addDefectTracker(dtName, uName, pWord, pName);
 		//import scan
 		applicationDetailPage.clickRemoteProvidersLink()
+							.clickRemoteProvidersLink()
+							.clickRemoteProvidersLink()
 							.clickConfigureWhiteHat()
 							.setWhiteHatAPI(whKey)
 							.saveWhiteHat()

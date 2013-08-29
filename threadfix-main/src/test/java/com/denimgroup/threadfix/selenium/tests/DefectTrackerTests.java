@@ -557,8 +557,8 @@ public class DefectTrackerTests extends BaseTest {
 				defectTrackerIndexPage.doesNameExist(replacementName));
 
 		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickDefectTrackersLink().clickDeleteButton(replacementName);
+		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
+													.clickDeleteButton(replacementName);
 	}
 
 	@Test

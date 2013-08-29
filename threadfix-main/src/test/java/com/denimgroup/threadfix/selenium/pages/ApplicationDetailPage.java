@@ -758,5 +758,10 @@ public class ApplicationDetailPage extends BasePage {
 	public int getNumOfSubmitedDefects(){
 		return driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
 	}
+
+	public ApplicationDetailPage setTeam(String team) {
+		new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
+		return new ApplicationDetailPage(driver);
+	}
 	
 }

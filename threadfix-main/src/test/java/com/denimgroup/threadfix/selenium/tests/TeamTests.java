@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
@@ -236,5 +237,48 @@ public class TeamTests extends BaseTest {
 									.clickViewTeamLink(orgNameDuplicateTest)
 									.clickDeleteButton()
 									.logout();
+	}
+	
+	@Test
+	public void switchAppTeam(){
+		String team1 = getRandomString(8);
+		String team2 = getRandomString(8);
+		String appName = getRandomString(8);
+		TeamDetailPage adp = loginPage.login("user", "password").clickOrganizationHeaderLink()
+								.clickAddTeamButton()
+								.setTeamName(team1)
+								.addNewTeam()
+								.clickAddTeamButton()
+								.setTeamName(team2)
+								.addNewTeam()
+								.expandTeamRowByName(team1)
+								.addNewApplication(team1, appName, "", "Low")
+								.saveApplication(team1)
+								.clickOrganizationHeaderLink()
+								.expandTeamRowByName(team1)
+								.clickViewAppLink(appName, team1)
+								.clickEditDeleteBtn()
+								.setTeam(team2)
+								.clickUpdateApplicationButton()
+								.clickOrganizationHeaderLink()
+								.clickViewTeamLink(team1);
+		
+		Boolean oneBool = adp.isAppPresent(appName);
+		
+		adp = adp.clickOrganizationHeaderLink()
+				.clickViewTeamLink(team2);
+		
+		Boolean twoBool = adp.isAppPresent(appName);
+		
+
+		adp.clickOrganizationHeaderLink()
+					.clickViewTeamLink(team1)
+					.clickDeleteButton()
+					.clickOrganizationHeaderLink()
+					.clickViewTeamLink(team2)
+					.clickDeleteButton()
+					.logout();
+		
+		assertTrue("app was not switched properly", !oneBool && twoBool);
 	}
 }
