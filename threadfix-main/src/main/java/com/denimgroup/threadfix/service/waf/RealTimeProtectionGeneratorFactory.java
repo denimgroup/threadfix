@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -40,7 +41,7 @@ public class RealTimeProtectionGeneratorFactory {
 	private WafRuleDao wafRuleDao;
 	private WafRuleDirectiveDao wafRuleDirectiveDao;
 	
-	private final Log log = LogFactory.getLog(RealTimeProtectionGeneratorFactory.class);
+	private final SanitizedLogger log = new SanitizedLogger(this.getClass());
 
 	public RealTimeProtectionGeneratorFactory(WafRuleDao wafRuleDao,
 			WafRuleDirectiveDao wafRuleDirectiveDao) {

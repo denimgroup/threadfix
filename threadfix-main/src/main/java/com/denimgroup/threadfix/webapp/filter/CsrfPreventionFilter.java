@@ -22,6 +22,7 @@
 package com.denimgroup.threadfix.webapp.filter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -248,22 +249,26 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
 			}
         }
         
-        if (randomSource == null)
+        if (randomSource == null) {
         	return null;
+        }
         
         randomSource.nextBytes(random);
        
         for (int j = 0; j < random.length; j++) {
             byte b1 = (byte) ((random[j] & 0xf0) >> 4);
             byte b2 = (byte) (random[j] & 0x0f);
-            if (b1 < 10)
+            if (b1 < 10) {
                 buffer.append((char) ('0' + b1));
-            else
+            } else {
                 buffer.append((char) ('A' + (b1 - 10)));
-            if (b2 < 10)
+            }
+            
+            if (b2 < 10) {
                 buffer.append((char) ('0' + b2));
-            else
+            } else {
                 buffer.append((char) ('A' + (b2 - 10)));
+            }
         }
 
         return buffer.toString();
@@ -313,8 +318,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
 
             String path = url;
             
-            if (path.contains("?"))
+            if (path.contains("?")) {
             	path = path.substring(0,path.indexOf('?'));
+            }
             
             StringBuilder sb = new StringBuilder(path);
             sb.append('?');
@@ -325,7 +331,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         }
     }
     
-    private static class LruCache<T> {
+    private static class LruCache<T> implements Serializable {
         // Although the internal implementation uses a Map, this cache
         // implementation is only concerned with the keys.
         private final Map<T,T> cache;

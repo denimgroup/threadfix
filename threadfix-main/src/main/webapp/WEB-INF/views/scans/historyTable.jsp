@@ -87,16 +87,16 @@
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
 							<spring:param name="appId" value="${ scan.application.id }" />
-						</spring:url> <a href="<c:out value="${ appUrl }"/>"> <c:out
+						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> <c:out
 								value="${ scan.application.name }" />
-					</a></td>
+					</a></div></td>
 					<td id="team${ status.count }"><spring:url
 							value="/organizations/{teamId}" var="teamUrl">
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
-						</spring:url> <a href="<c:out value="${ teamUrl }"/>"> <c:out
+						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>"> <c:out
 								value="${ scan.application.organization.name }" />
-					</a></td>
+					</a></div></td>
 					<td id="channelType${ status.count }"><c:out
 							value="${ scan.applicationChannel.channelType.name }" /></td>
 					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
