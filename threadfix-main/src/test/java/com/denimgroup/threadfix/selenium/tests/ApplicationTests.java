@@ -398,12 +398,12 @@ public class ApplicationTests extends BaseTest {
 	@Test
 	public void testSwitchWafs() {
 		//TODO
-		String wafName1 = "firstWaf";
-		String wafName2 = "wafToSwitch";
-		String type1 = "Snort";
+		String wafName1 = "firstWaf" + getRandomString(8);
+		String wafName2 = "wafToSwitch" + getRandomString(8);
+		String type1 = "Snort" ;
 		String type2 = "mod_security";
-		String orgName = "switchWafOrg";
-		String appName = "switchWafApp";
+		String orgName = "switchWafOrg" + getRandomString(8);
+		String appName = "switchWafApp" + getRandomString(8);
 		String appUrl = "http://testurl.com";
 		
 		// create WAFs and set up the application with one
@@ -458,7 +458,7 @@ public class ApplicationTests extends BaseTest {
 	public void longNameDeformTest(){
 		String appName = getRandomString(60);
 		String teamName = getRandomString(8);
-		loginPage.login("user", "password")
+		applicationDetailPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
 										.setTeamName(teamName)
@@ -469,9 +469,18 @@ public class ApplicationTests extends BaseTest {
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(teamName)
 										.addNewApplication(teamName, appName, "", "Low")
-										.saveApplication(teamName);
+										.saveApplication(teamName)
+										.clickOrganizationHeaderLink()
+										.expandTeamRowByName(teamName)
+										.clickViewAppLink(appName,teamName);
+		Boolean boo = applicationDetailPage.getNameWidth()<=400;
 		
-		assertTrue("Application name was too long",applicationDetailPage.getNameWidth()<=400);
+		applicationDetailPage.clickOrganizationHeaderLink()
+							.clickViewTeamLink(teamName)
+							.clickDeleteButton()
+							.logout();
+		
+		assertTrue("Application name was too long",boo);
 	}
 	
 	@Test
