@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
 import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
@@ -129,6 +130,53 @@ public class RoleTests extends BaseTest {
 
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(normalName));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));
+	}
+	@Test
+	public void addApplicationOnly(){
+		String roleName = "appOnly" + getRandomString(10);
+		String user = getRandomString(10);
+		String pw = getRandomString(15);
+		String teamName = getRandomString(10);
+		String appName = getRandomString(10);
+		ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+															.clickOrganizationHeaderLink()
+															.clickAddTeamButton()
+															.setTeamName(teamName)
+															.addNewTeam()
+															.clickManageRolesLink()
+															.clickCreateRole()
+															.setRoleName(roleName,null)
+															.setPermissionValue("canManageApplications",true,null)
+															.clickSaveRole(null)
+															.clickManageUsersLink()
+															.clickAddUserLink()
+															.enterName(user,null)
+															.enterPassword(pw, null)
+															.enterConfirmPassword(pw, null)
+															.chooseRoleForGlobalAccess(roleName, null)
+															.clickAddNewUserBtn()
+															.logout()
+															.login(user, pw)
+															.clickOrganizationHeaderLink()
+															.expandTeamRowByName(teamName)
+															.addNewApplication(teamName, appName, "", "Low")
+															.saveApplication(teamName)
+															.clickOrganizationHeaderLink()
+															.expandTeamRowByName(teamName)
+															.clickViewAppLink(appName, teamName);
+		
+		Boolean add  = applicationDetailPage.getNameText().contains(appName);
+		
+		applicationDetailPage.logout()
+							.login("user", "password")
+							.clickOrganizationHeaderLink()
+							.clickViewTeamLink(teamName)
+							.clickDeleteButton()
+							.clickManageRolesLink()
+							.clickDeleteButton(roleName)
+							.logout();
+		
+		assertTrue("new role user was not able to add an application",add);
 	}
 	
 	@Test

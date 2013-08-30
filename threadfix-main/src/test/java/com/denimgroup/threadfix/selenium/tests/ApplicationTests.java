@@ -458,7 +458,7 @@ public class ApplicationTests extends BaseTest {
 	public void longNameDeformTest(){
 		String appName = getRandomString(60);
 		String teamName = getRandomString(8);
-		applicationDetailPage = loginPage.login("user", "password")
+		loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
 										.setTeamName(teamName)
@@ -468,9 +468,56 @@ public class ApplicationTests extends BaseTest {
 										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
 										.expandTeamRowByName(teamName)
-										.clickViewAppLink(appName,teamName);
+										.addNewApplication(teamName, appName, "", "Low")
+										.saveApplication(teamName);
 		
 		assertTrue("Application name was too long",applicationDetailPage.getNameWidth()<=400);
+	}
+	
+	@Test
+	public void sameAppNameMultipleTeams(){
+		String appName = getRandomString(10);
+		String teamName1 = getRandomString(10);
+		String teamName2 = getRandomString(10);
+		applicationDetailPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName1)
+				.addNewTeam()
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName2)
+				.addNewTeam()
+				.expandTeamRowByName(teamName1)
+				.addNewApplication(teamName1, appName, "", "Low")
+				.saveApplication(teamName1)
+				.expandTeamRowByName(teamName2)
+				.addNewApplication(teamName2, appName, "", "Low")
+				.saveApplication(teamName2)
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName1)
+				.clickViewAppLink(appName,teamName1);
+		
+		Boolean one  = applicationDetailPage.getNameText().contains(appName);
+		
+		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+													.expandTeamRowByName(teamName2)
+													.clickViewAppLink(appName,teamName2);
+		
+		Boolean two  = applicationDetailPage.getNameText().contains(appName);
+		
+		 applicationDetailPage.clickOrganizationHeaderLink()
+			.clickViewTeamLink(teamName1)
+			.clickDeleteButton()
+			.clickOrganizationHeaderLink()
+			.clickViewTeamLink(teamName2)
+			.clickDeleteButton()
+			.logout();
+		 
+		 assertTrue("Unable to add apps with the same name to different teams", one && two);
+		
+		
+		
 	}
 	
 	public void sleep(int num) {
