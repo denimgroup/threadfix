@@ -32,11 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
@@ -166,6 +161,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		this.scanPollWaitInSeconds = config.getInt("zap.scanPollWaitInSeconds");
 		this.zapHost = config.getString("zap.zapHost");
 		this.zapPort = config.getInt("zap.zapPort");
+		log.debug("ZAP host: " + this.zapHost + ", ZAP port: " + this.zapPort);
 		this.zapExecutablePath = config.getString("zap.zapExecutablePath");
 		//	TODO rename this to reflect that it is in seconds (also requires change to .properties file)
 		this.zapStartupWaitTime = config.getInt("zap.zapStartupWaitTime");

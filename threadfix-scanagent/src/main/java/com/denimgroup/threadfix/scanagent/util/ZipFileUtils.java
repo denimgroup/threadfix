@@ -34,7 +34,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
 
-public class ZipFileUtils {
+public final class ZipFileUtils {
 	/**
 	 * Prevent instantiation
 	 */

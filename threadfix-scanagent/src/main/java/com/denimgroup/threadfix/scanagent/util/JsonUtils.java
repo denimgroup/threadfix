@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public class JsonUtils {
 
