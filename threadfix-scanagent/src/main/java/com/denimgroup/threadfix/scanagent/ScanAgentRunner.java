@@ -128,26 +128,6 @@ public final class ScanAgentRunner {
 		log.info("Requesting a new task");
 		Task retVal;
 		
-		/*	TODO - Remove this once we have the actual stuff working properly
-		TaskConfig theConfig = null;
-		
-		try {
-			
-			byte[] fileBytes = FileUtils.readFileToByteArray(new File("/Users/dcornell/Desktop/zapthreadfix/ZAPTEST.zip"));
-			
-			//theConfig = new TaskConfig(new URL("http://localhost:123/"));
-			theConfig = new TaskConfig(new URL("http://localhost:8080/bodgeit/"));
-			theConfig.setDataBlob("configFileData", fileBytes);
-			// theConfig = new TaskConfig(new URL("http://demo.testfire.net/"));
-		} catch (MalformedURLException e) {
-			log.error("This should never be able to happen", e);
-		} catch (IOException e) {
-			log.error("Problems opening sample ZAP session file: " + e.getMessage(), e);
-		}
-
-		retVal = new Task(1, "zap", theConfig);
-		*/
-		
 		log.info("Returning new task");
 		
 		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
