@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.scanagent;
 
+import java.io.File;
+
 import org.apache.commons.configuration.Configuration;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
@@ -40,5 +42,5 @@ public abstract class AbstractScanAgent {
 	}
 	
 	public abstract boolean readConfig(Configuration config);
-	public abstract Object doTask(TaskConfig config);
+	public abstract File doTask(TaskConfig config);
 }

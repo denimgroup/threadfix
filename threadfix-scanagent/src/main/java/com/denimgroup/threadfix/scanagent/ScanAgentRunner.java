@@ -91,7 +91,8 @@ public final class ScanAgentRunner {
 		//	TODO - Determine if we want to move this inside of the ScanAgent class proper
 		while(myAgent.keepPolling()) {
 			Task currentTask = myAgent.requestTask();
-			Object taskResult = myAgent.doTask(currentTask);
+			File taskResult = myAgent.doTask(currentTask);
+			
 			//	TOFIX - Send task results back to ThreadFix server
 		}
 		log.info("Reached max number of tasks: " + myAgent.numTasksAttempted + ". Shutting down");
@@ -139,8 +140,8 @@ public final class ScanAgentRunner {
 		return(retVal);
 	}
 	
-	private Object doTask(Task theTask) {
-		Object taskResult = null;
+	private File doTask(Task theTask) {
+		File taskResult = null;
 		
 		this.numTasksAttempted++;
 		log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
@@ -149,7 +150,8 @@ public final class ScanAgentRunner {
 		AbstractScanAgent theAgent = this.scannerMap.get(taskType);
 		taskResult = theAgent.doTask(theTask.getTaskConfig());
 		if(taskResult != null) {
-			log.debug("Task appears to have completed successfully: " + theTask);
+			log.info("Task appears to have completed successfully: " + theTask);
+			log.info("Results from task shoudl be located at: " + taskResult.getAbsolutePath());
 		} else {
 			log.warn("Task appears not to have completed successfully: " + theTask);
 		}

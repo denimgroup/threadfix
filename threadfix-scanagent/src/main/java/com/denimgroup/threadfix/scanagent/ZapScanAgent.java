@@ -58,9 +58,9 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private long zapStartupWaitTime;
 	
 	@Override
-	public Object doTask(TaskConfig theConfig) {
+	public File doTask(TaskConfig theConfig) {
 		
-		Object retVal = null;
+		File retVal = null;
 		
 		log.info("Attempting to do ZAP task with config: " + theConfig);
 		log.info("Target URL is " + theConfig.getTargetUrlString());
@@ -127,12 +127,12 @@ public class ZapScanAgent extends AbstractScanAgent {
 				try {
 					String resultsFilename = this.getWorkDir() + File.separator + "ZAPRESULTS.xml";
 					log.debug("Writing results to file: " + resultsFilename);
-					FileUtils.writeStringToFile(new File(resultsFilename), resultsXml);
+					retVal = new File(resultsFilename);
+					FileUtils.writeStringToFile(retVal, resultsXml);
 				} catch (IOException ioe) {
 					log.error("Unable to write results file: " + ioe.getMessage(), ioe);
+					retVal = null;
 				}
-
-				retVal = resultsXml;
 				
 			} else {
 				log.warn("Appears that scan run was unsuccessful. Not goign to pull results");
