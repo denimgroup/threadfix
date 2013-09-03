@@ -234,6 +234,26 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("actionButton1").click();
 		return new ApplicationDetailPage(driver);
 	}
+	
+	public ApplicationDetailPage clickViewPermUsers(){
+		clickActionButton();
+		driver.findElementById("userListModelButton").click();
+		waitForElement(driver.findElementById("usersModal"));
+		return new ApplicationDetailPage(driver);
+	}
+	
+	public int getNumPermUsers(){
+		return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
+	}
+	
+	public boolean isUserPresentPerm(String user){
+		for(int i = 1; i <= getNumPermUsers();i++){
+			if (driver.findElementById("name"+i).getText().contains(user)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public ApplicationDetailPage clickEditDeleteBtn() {
 		clickActionButton();

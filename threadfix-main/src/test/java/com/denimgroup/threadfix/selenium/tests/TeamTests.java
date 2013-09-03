@@ -281,4 +281,153 @@ public class TeamTests extends BaseTest {
 		
 		assertTrue("app was not switched properly", !oneBool && twoBool);
 	}
+	
+	@Test
+	public void viewBasicPermissableUsers(){
+		String teamName = getRandomString(8);
+		teamDetailPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.clickOrganizationHeaderLink()
+				.clickViewTeamLink(teamName)
+				.clickUserPermLink();
+		
+		boolean present = teamDetailPage.isUserPresentPerm("user");
+		
+		teamDetailPage.clickOrganizationHeaderLink()
+								.clickViewTeamLink(teamName)
+								.clickDeleteButton()
+								.logout();
+		assertTrue("user was not in the permissable user list",present);
+	}
+	
+//	@Test
+//	public void addAppOnlyUserView(){
+//		String teamName = getRandomString(8);
+//		String appName = getRandomString(8);
+//		String userName = getRandomString(8);
+//		String password = getRandomString(12);
+//		String role = getRandomString(8);
+//		teamDetailPage = loginPage.login("user", "password")
+//				.clickOrganizationHeaderLink()
+//				.clickAddTeamButton()
+//				.setTeamName(teamName)
+//				.addNewTeam()
+//				.clickManageRolesLink()
+//				.clickCreateRole()
+//				.setRoleName(role,null)
+//				.setPermissionValue("canManageTeams",true,null)
+//				.clickSaveRole(null)
+//				.clickManageUsersLink()
+//				.clickAddUserLink()
+//				.enterName(userName,null)
+//				.enterPassword(password,null)
+//				.enterConfirmPassword(password,null)
+//				.clickGlobalAccess(null)
+//				.clickAddNewUserBtn()
+//				.clickEditPermissions(userName)
+//				.clickAddPermissionsLink()
+//				.setTeamNewPerm(teamName)
+//				.clickAllAppsNewPerm()
+//				.selectAppNewPerm(appName)
+//				.selectAppRoleNewPerm(appName, role)
+//				.clickAddMappingNewPerm()
+//				.clickOrganizationHeaderLink()
+//				.clickViewTeamLink(teamName)
+//				.clickUserPermLink();
+//		
+//		int cnt = applicationDetailPage.getNumPermUsers();
+//		boolean present = teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName);
+//		
+//		teamDetailPage.clickOrganizationHeaderLink()
+//								.clickViewTeamLink(teamName)
+//								.clickDeleteButton()
+//								.clickManageRolesLink()
+//								.clickDeleteButton(role)
+//								.clickManageUsersLink()
+//								.clickDeleteButton(userName)
+//								.logout();
+//		assertTrue("user was not in the permissable user list",present);
+//	}
+	
+	@Test
+	public void addAppAllUserView(){
+		String teamName = getRandomString(8);
+		String userName = getRandomString(8);
+		String password = getRandomString(12);
+		String role = getRandomString(8);
+		teamDetailPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.clickManageRolesLink()
+				.clickCreateRole()
+				.setRoleName(role,null)
+				.setPermissionValue("canManageTeams",true,null)
+				.clickSaveRole(null)
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(userName,null)
+				.enterPassword(password,null)
+				.enterConfirmPassword(password,null)
+				.clickGlobalAccess(null)
+				.clickAddNewUserBtn()
+				.clickEditPermissions(userName)
+				.clickAddPermissionsLink()
+				.setTeamNewPerm(teamName)
+				.setRoleNewPerm(role)
+				.clickAddMappingNewPerm()
+				.clickOrganizationHeaderLink()
+				.clickViewTeamLink(teamName)
+				.clickUserPermLink();
+		
+//		int cnt = applicationDetailPage.getNumPermUsers();
+		boolean present = teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName);
+		
+		teamDetailPage.clickOrganizationHeaderLink()
+								.clickViewTeamLink(teamName)
+								.clickDeleteButton()
+								.clickManageRolesLink()
+								.clickDeleteButton(role)
+								.clickManageUsersLink()
+								.clickDeleteButton(userName)
+								.logout();
+		assertTrue("user was not in the permissable user list",present);
+	}
+	
+	@Test
+	public void addUserNoPermUserView(){
+		String teamName = getRandomString(8);
+		String userName = getRandomString(8);
+		String password = getRandomString(12);
+		teamDetailPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(userName,null)
+				.enterPassword(password,null)
+				.enterConfirmPassword(password,null)
+				.clickGlobalAccess(null)
+				.clickAddNewUserBtn()
+				.clickOrganizationHeaderLink()
+				.clickViewTeamLink(teamName)
+				.clickUserPermLink();
+		
+//		int cnt = applicationDetailPage.getNumPermUsers();
+		boolean present = teamDetailPage.isUserPresentPerm("user") && !teamDetailPage.isUserPresentPerm(userName);
+		
+		teamDetailPage.clickOrganizationHeaderLink()
+								.clickViewTeamLink(teamName)
+								.clickDeleteButton()
+								.clickManageUsersLink()
+								.clickDeleteButton(userName)
+								.logout();
+		assertTrue("user was not in the permissable user list",present);	
+	}
 }

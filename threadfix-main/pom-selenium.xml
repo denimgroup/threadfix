@@ -429,8 +429,8 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<version>${commons.io.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
 			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>

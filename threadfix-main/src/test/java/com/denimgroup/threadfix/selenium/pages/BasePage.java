@@ -351,7 +351,7 @@ public abstract class BasePage {
 		wait.until(ExpectedConditions.alertIsPresent());
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
-		sleep(200);
+		sleep(2000);
 	}
 	
 	public void waitForElement(WebElement e){

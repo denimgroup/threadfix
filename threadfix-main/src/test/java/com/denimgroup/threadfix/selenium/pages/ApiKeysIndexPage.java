@@ -86,6 +86,7 @@ public class ApiKeysIndexPage extends BasePage {
 		clickEdit(note);
 		driver.findElementsById("deleteButton").get(getIndex(note)).click();
 		handleAlert();
+		sleep(1000);
 
 		return new ApiKeysIndexPage(driver);
 	}

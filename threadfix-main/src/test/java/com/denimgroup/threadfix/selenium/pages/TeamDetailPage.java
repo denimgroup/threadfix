@@ -452,5 +452,18 @@ public class TeamDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 
+	public int getNumPermUsers(){
+		return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
+	}
+	
+	public boolean isUserPresentPerm(String user){
+		for(int i = 1; i <= getNumPermUsers();i++){
+			if (driver.findElementById("name"+i).getText().contains(user)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

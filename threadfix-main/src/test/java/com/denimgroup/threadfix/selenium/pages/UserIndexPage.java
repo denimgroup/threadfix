@@ -149,7 +149,7 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage clickGlobalAccess(String oldName){
 		if(oldName == null){
-			driver.findElementById("hasGlobalGroupAccessCheckbox" + (getIndex(oldName)+1)).click();
+			driver.findElementById("hasGlobalGroupAccessCheckbox").click();
 		}else{
 			driver.findElementById("hasGlobalGroupAccessCheckbox" + (getIndex(oldName)+1)).click();
 		}
