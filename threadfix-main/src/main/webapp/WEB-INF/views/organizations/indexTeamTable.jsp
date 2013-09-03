@@ -47,7 +47,7 @@
 				<span id="caret${ organization.id }" class="caret-right"></span>
 			</td>
 			<td class="expandableTrigger" id="teamName${ status.count }">
-				<c:out value="${ organization.name }"/>
+				<div style="word-wrap: break-word;width:300px;text-align:left;"><c:out value="${ organization.name }"/></div>
 			</td>
 			<td class="centered expandableTrigger" id="numTotalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[5] }"/></td>
 			<td class="centered expandableTrigger" id="numCriticalVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[4] }"/></td>

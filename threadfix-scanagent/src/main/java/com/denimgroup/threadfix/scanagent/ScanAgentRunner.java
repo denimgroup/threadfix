@@ -25,9 +25,6 @@
 package com.denimgroup.threadfix.scanagent;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +33,6 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -45,7 +41,6 @@ import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.JsonUtils;
 import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public final class ScanAgentRunner {
 
