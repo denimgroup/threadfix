@@ -188,9 +188,16 @@ public final class ScanAgentRunner {
 		boolean retVal = false;
 		
 		this.threadFixServerUrl = config.getString("scanagent.threadFixServerUrl");
+		log.debug("scanagent.threadFixServerUrl=" + this.threadFixServerUrl);
+		
 		this.threadFixApiKey = config.getString("scanagent.threadFixApiKey");
+		
 		this.pollIntervalInSeconds = config.getInt("scanagent.pollInterval");
+		log.debug("scanagent.pollInterval=" + this.pollIntervalInSeconds);
+		
 		this.maxTasks = config.getInt("scanagent.maxTasks");
+		log.debug("scanagent.maxTasks=" + this.maxTasks);
+		
 		//	TODO - Auto-detect the operating system and version
 		this.operatingSystem = new OperatingSystem("osx", "10.8.2");
 		this.baseWorkDir = config.getString("scanagent.baseWorkDir");
