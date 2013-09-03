@@ -152,6 +152,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return(retVal);
 	}
 
+	@Override
 	public boolean readConfig(Configuration config) {
 		boolean retVal = false;
 		
