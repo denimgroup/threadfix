@@ -127,6 +127,8 @@
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,
         		protected-regex ^/wafs/new/ajax$,
         		protected-regex ^/wafs/new/ajax/appPage$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/getDefectsFromDefectTracker$,
         	</param-value>
     </init-param>
   </filter>
