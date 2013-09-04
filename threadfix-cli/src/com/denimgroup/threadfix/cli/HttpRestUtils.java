@@ -324,14 +324,20 @@ public class HttpRestUtils {
 		}
 		if(durable) {
 			FileInputStream in = null;
+			File propertiesFile = new File("threadfix.properties");
 			try {
-				in = new FileInputStream("threadfix.properties");
+				in = new FileInputStream(propertiesFile);
 				if (properties == null) {
 					properties = new Properties();
 				}
 				properties.load(in);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				try {
+					System.out.println("Cannot find ThreadFix properties file: " + propertiesFile.getCanonicalPath());
+				} catch(IOException ioe) {
+					System.out.println("Cannot find ThreadFix properties file 'threadfix.properties' IOException encountered while trying.");
+					ioe.printStackTrace();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {

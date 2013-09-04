@@ -66,8 +66,10 @@ var reloadDefectMergeDiv = function () {
 
 var defectTrackerAddFunction = function() {
 	if ($("#addDefectTrackerDivInForm").attr("data-has-defect-trackers")) {
+		$("#editApplicationModal").modal('hide');
 		$("#addDefectTracker").modal('show');
 	} else {
+		$("#editApplicationModal").modal('hide');
 		$("#createDefectTracker").modal('show');
 	}
 };
@@ -75,8 +77,10 @@ var defectTrackerAddFunction = function() {
 var addAppPageEvents = function () {
 	$("#addWafButton").on("click", function() {
 		if ($("#addWafDivInForm").attr("data-has-wafs")) {
+			$("#editApplicationModal").modal('hide');
 			$("#addWaf").modal('show');
 		} else {
+			$("#editApplicationModal").modal('hide');
 			$("#createWaf").modal('show');
 		}
 	});

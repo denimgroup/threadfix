@@ -21,6 +21,7 @@ Before using the ThreadFix command-line client you have to set the URL and API k
 > 
 >  java -jar threadfix-cli-2.0-jar-with-dependencies.jar --set url {url}
 
+Please note that the ThreadFix URL should be the base of the ThreadFix installation - for example http://localhost:8080/threadfix/ (the "rest/" component of the API URLs will be added by the command-line client).
 From there, additional calls to "java -jar threadfix-cli-2.0-jar-with-dependencies.jar " can be used to create applications, upload scan files and so on. Running:
 >java -jar threadfix-cli-2.0-jar-with-dependencies.jar
 
