@@ -20,6 +20,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		boolean retVal = false;
 		
 		this.acunetixExecutablePath = config.getString("acunetix.executablePath");
+		log.debug("Acunetix executable located at path: " + this.acunetixExecutablePath);
 		
 		//	TODO - Perform some input validation on the supplied properties so this retVal means something
 		retVal = true;
@@ -34,14 +35,14 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		log.info("Setting up command-line arguments for Acunetix scan");
 		
-		String acunetixExecutable = this.acunetixExecutablePath + "wvs_console.exe";
-		log.debug("Acunetix executable located at: " + acunetixExecutable);
+		String acunetixExecutable = this.acunetixExecutablePath + File.pathSeparator + "wvs_console.exe";
+		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
 		String targetSite = config.getTargetUrlString();
 		log.debug("Site to scan: " + targetSite);
 		
 		String[] args = { acunetixExecutable, "/scan", targetSite, "/exportxml" };
 		
-		log.debug("Going to attempt to run ZAP executable at: " + args[0]);
+		log.debug("Going to attempt to run Acunetix with exe/args: " + args);
 		
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(this.getWorkDir()));
@@ -64,6 +65,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 			
 			String resultsFilename = this.getWorkDir() + File.separator + "export.xml";
 			retVal = new File(resultsFilename);
+			log.info("Returning results via file: " + retVal.getAbsolutePath());
 			
 		} catch (IOException e) {
 			log.error("Problems starting Acunetix instance: " + e.getMessage(), e);

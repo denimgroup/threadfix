@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.scanagent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,19 +145,25 @@ public final class ScanAgentRunner {
 		File taskResult = null;
 		
 		this.numTasksAttempted++;
-		log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
 		
-		String taskType = theTask.getTaskType();
-		AbstractScanAgent theAgent = this.scannerMap.get(taskType);
-		taskResult = theAgent.doTask(theTask.getTaskConfig());
-		if(taskResult != null) {
-			log.info("Task appears to have completed successfully: " + theTask);
-			log.info("Results from task shoudl be located at: " + taskResult.getAbsolutePath());
+		if(theTask == null) {
+			log.warn("Task(" + this.numTasksAttempted + ") was null. Not going to do anything for now.");
 		} else {
-			log.warn("Task appears not to have completed successfully: " + theTask);
+			log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
+			
+			String taskType = theTask.getTaskType();
+			AbstractScanAgent theAgent = this.scannerMap.get(taskType);
+			taskResult = theAgent.doTask(theTask.getTaskConfig());
+			if(taskResult != null) {
+				log.info("Task appears to have completed successfully: " + theTask);
+				log.info("Results from task shoudl be located at: " + taskResult.getAbsolutePath());
+			} else {
+				log.warn("Task appears not to have completed successfully: " + theTask);
+			}
+			
+			log.info("Finished attempting task: " + theTask);
 		}
 		
-		log.info("Finished attempting task: " + theTask);
 		return(taskResult);
 	}
 	
@@ -198,12 +205,6 @@ public final class ScanAgentRunner {
 						AbstractScanAgent newAgent = (AbstractScanAgent)obj;
 						
 						log.debug("Instantiating scanner class seems to have worked. Attempting configuration");
-						boolean configStatus = newAgent.readConfig(config);
-						if(configStatus) {
-							log.debug("Configuration successful");
-						} else {
-							log.warn("Configuration apprears to have run into problems");
-						}
 						
 						String agentWorkDir = this.baseWorkDir + File.separator + scannerName + File.separator;
 						File dirCheck = new File(agentWorkDir);
@@ -214,10 +215,23 @@ public final class ScanAgentRunner {
 								log.debug("Agent work directory: " + agentWorkDir + " exists and is a directory. Good.");
 							}
 						} else {
-							log.warn("Agent work directory: " + agentWorkDir + " does not exist");
+							log.warn("Agent work directory: " + agentWorkDir + " does not exist. Attempting to create.");
+							boolean result = dirCheck.mkdirs();
+							if(!result) {
+								log.error("Unable to create agent work directory: " + agentWorkDir + ". This will likely lead to errors.");
+							} else {
+								log.info("Agent work directory: " + agentWorkDir + " successfully created.");
+							}
 						}
 						log.debug("Agent work directory will be: " + agentWorkDir);
 						newAgent.setWorkDir(agentWorkDir);
+						
+						boolean configStatus = newAgent.readConfig(config);
+						if(configStatus) {
+							log.debug("Configuration successful");
+						} else {
+							log.warn("Configuration apprears to have run into problems");
+						}
 						
 						this.scannerMap.put(scannerName, newAgent);
 						this.availableScanners.add(new Scanner(scannerName, scannerVersion));
