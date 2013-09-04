@@ -111,7 +111,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was " + status + ", not 200 as expected.");
+				System.err.println("Request for '" + request + "' status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -154,7 +154,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was " + status + ", not 200 as expected.");
+				System.err.println("Request for '" + request + "' status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
