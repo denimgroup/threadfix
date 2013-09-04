@@ -49,7 +49,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	public static final int STATUS_QUEUED = 1;
 	public static final int STATUS_ASSIGNED = 2;
-	public static final int STATUS_COMLETE_SUCCESSFUL = 3;
+	public static final int STATUS_COMPLETE_SUCCESSFUL = 3;
 	public static final int STATUS_COMPLETE_DELETED = 4;
 	public static final int STATUS_COMPLETE_TIMEDOUT = 5;
 	
@@ -182,5 +182,47 @@ public class ScanQueueTask extends AuditableEntity {
 			this.scanStatuses = new ArrayList<ScanStatus>();
 		}
 		this.scanStatuses.add(status);
+	}
+	
+	public String showStatusString() {
+		String retVal;
+		
+		switch(this.status) {
+			case STATUS_QUEUED:
+				retVal = "QUEUED";
+				break;
+			case STATUS_ASSIGNED:
+				retVal = "ASSIGNED";
+				break;
+			case STATUS_COMPLETE_SUCCESSFUL:
+				retVal = "COMPLETE_SUCCESSFUL";
+				break;
+			case STATUS_COMPLETE_DELETED:
+				retVal = "COMPLETE_DELETED";
+				break;
+			case STATUS_COMPLETE_TIMEDOUT:
+				retVal = "COMPLETE_TIMEDOUT";
+				break;
+			default:
+				retVal = "<UNKNOWN>";
+				break;
+		}
+		
+		return(retVal);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("{application.id=");
+		sb.append(this.application.getId());
+		sb.append(", scanner=");
+		sb.append(this.scanner);
+		sb.append(", status=");
+		sb.append(this.showStatusString());
+		sb.append("}");
+		
+		return(sb.toString());
 	}
 }

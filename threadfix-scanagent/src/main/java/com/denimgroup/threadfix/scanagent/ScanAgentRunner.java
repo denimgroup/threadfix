@@ -121,6 +121,19 @@ public final class ScanAgentRunner {
 		return(retVal);
 	}
 	
+	private static String makeScannerList(List<Scanner> scanners) {
+		StringBuilder sb = new StringBuilder();
+		String prefix="";
+		
+		for(Scanner scanner : scanners) {
+			sb.append(prefix);
+			sb.append(scanner.getName());
+			prefix = ",";
+		}
+		
+		return(sb.toString());
+	}
+	
 	/**
 	 * TOFIX - Actually pull this from the ThreadFix server
 	 * @return
@@ -128,16 +141,26 @@ public final class ScanAgentRunner {
 	private Task requestTask() {
 		
 		log.info("Requesting a new task");
-		Task retVal;
+		Task retVal = null;
 		
 		log.info("Returning new task");
 		
 		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-		Object theReturn = tfClient.requestTask("zap", "HARD_CODED_AGENT_CONFIG");
-		log.debug("Here's what we got back from the ThreadFix server: " + theReturn);
-		
-		retVal = JsonUtils.convertJsonStringToTask((String)theReturn);
-		
+		//	TOFIX - Actually pull and send our agent config
+		String scannerList = makeScannerList(this.availableScanners);
+		Object theReturn = tfClient.requestTask(scannerList, "HARD_CODED_AGENT_CONFIG");
+		if(theReturn == null) {
+			log.warn("Got a null task back from the ThreadFix server.");
+		} else {
+			String sReturn = (String)theReturn;
+			if(sReturn.length() == 0) {
+				log.warn("Got an empty string back in lieu of a task from the ThreadFix server.");
+			} else {
+				log.debug("Here's what we got back from the ThreadFix server: '" + sReturn + "'");
+				retVal = JsonUtils.convertJsonStringToTask(sReturn);
+			}
+		}
+
 		return(retVal);
 	}
 	

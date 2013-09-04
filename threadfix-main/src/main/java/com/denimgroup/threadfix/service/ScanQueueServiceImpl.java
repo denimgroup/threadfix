@@ -144,15 +144,23 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			log.warn("Attempting to request a task with an empty list of scanners. Aborting.");
 			return(null);
 		} else {
-			log.debug("Requesting a task for one of these scanners: " + scanners);
+			log.info("Requesting a task for one of these scanners: " + scanners);
 		}
 		
 		String[] scannerArray = scanners.split(",");
 		
 		List<ScanQueueTask> availableTasks = this.scanQueueTaskDao.retrieveAvailable();
 		
+		if(availableTasks == null) {
+			log.warn("List of available tasks was null.");
+		} else if (availableTasks.size() == 0) {
+			log.info("Length of list of available tasks was 0. No tasks in queue.");
+		} else {
+			log.info("Looking through " + availableTasks.size() + " possible tasks to find a match.");
+		}
+		
 		for(ScanQueueTask task : availableTasks) {
-			log.debug("Examining task: " + task + " to see if we can run it");
+			log.info("Examining task: " + task + " to see if we can run it");
 			for(String scanner : scannerArray) {
 				if(scanner.equals(task.getScanner())) {
 					log.info("Found a task for available scanner: " + scanner + ": " + task);
@@ -183,6 +191,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					task.addScanStatus(status);
 					
 					this.scanQueueTaskDao.saveOrUpdate(task);
+					log.info("Scanner: " + scanner + " matched the task and the task has been assigned: " + task);
 					break;
 				} else {
 					log.debug("Scanner: " + scanner + " doesn't match task: " + task);
@@ -195,7 +204,11 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			}
 		}
 		
-		log.info("Found a suitable task for the agent: " + retVal);
+		if(retVal != null) {
+			log.info("Found a suitable task for the agent: " + retVal);
+		} else {
+			log.info("No suitable tasks found for the agent. Returning null.");
+		}
 		
 		return(retVal);
 	}

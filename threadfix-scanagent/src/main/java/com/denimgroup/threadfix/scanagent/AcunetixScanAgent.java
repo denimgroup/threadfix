@@ -35,12 +35,12 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		log.info("Setting up command-line arguments for Acunetix scan");
 		
-		String acunetixExecutable = this.acunetixExecutablePath + File.pathSeparator + "wvs_console.exe";
+		String acunetixExecutable = this.acunetixExecutablePath + File.separator + "wvs_console.exe";
 		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
 		String targetSite = config.getTargetUrlString();
 		log.debug("Site to scan: " + targetSite);
 		
-		String[] args = { acunetixExecutable, "/scan", targetSite, "/exportxml" };
+		String[] args = { acunetixExecutable, "/Scan", targetSite, "/SaveFolder", this.getWorkDir(), "/Save", "/ExportXML" };
 		
 		log.debug("Going to attempt to run Acunetix with exe/args: " + args);
 		
