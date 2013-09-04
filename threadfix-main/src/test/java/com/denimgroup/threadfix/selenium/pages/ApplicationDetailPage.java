@@ -520,6 +520,7 @@ public class ApplicationDetailPage extends BasePage {
 		driver.findElementById("submitDefectForm").findElement(By.id("submitScanModal")).click();
 		sleep(3000);
 		waitForInvisibleElement(driver.findElementById("submitDefectForm"));
+		sleep(3000);
 		return new ApplicationDetailPage(driver);
 	}
 	

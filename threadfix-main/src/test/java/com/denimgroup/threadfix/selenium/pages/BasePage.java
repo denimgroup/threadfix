@@ -56,6 +56,7 @@ public abstract class BasePage {
 		clickUserTab();
 		driver.findElementById("logoutLink").click();
 		sleep(4000);
+		waitForElement(driver.findElementById("login"));
 		return new LoginPage(driver);
 	}
 	

@@ -91,7 +91,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	
+	@Ignore
 	@Test
 	public void mergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -148,7 +148,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	
+	@Ignore
 	@Test
 	public void mergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -211,7 +211,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	
+	@Ignore
 	@Test
 	public void changeMergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -281,7 +281,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	
+	@Ignore
 	@Test
 	public void changeMergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -363,7 +363,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	
+	@Ignore
 	@Test
 	public void changeMergeMultiDiffVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -425,7 +425,6 @@ public class VulnTests extends BaseTest {
 				.submitDefect();
 		assertTrue("defect was not submitted",ad.getAlert().contains("The Defect was submitted to the tracker."));
 		ad.logout();
-		sleep(6000);
 		destroy();
 		
 	}
