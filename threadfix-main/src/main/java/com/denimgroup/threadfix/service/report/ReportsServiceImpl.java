@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -128,6 +129,11 @@ public class ReportsServiceImpl implements ReportsService {
 	
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
 			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+		}
+		
+		if (parameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
+			StringBuffer dataExport = getDataVulnListReport(getListofRowParams(applicationIdList), applicationIdList);
+			return new ReportCheckResultBean(ReportCheckResult.VALID, dataExport, null);
 		}
 		
 		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
@@ -646,4 +652,81 @@ public class ReportsServiceImpl implements ReportsService {
 				
 		return "ajaxSuccessHarness";
 	}
+
+	@Override
+	public String vulnerabilityList(Model model,
+			ReportParameters reportParameters) {
+		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
+		
+		model.addAttribute("listOfLists", getListofRowParams(applicationIdList));
+		model.addAttribute("contentPage", "reports/vulnerabilityList.jsp");
+				
+		return "ajaxSuccessHarness";
+	}
+	
+	private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
+		List<List<String>> rowParamsList = new ArrayList<List<String>>();
+		List<Application> applicationList = new ArrayList<Application>();
+
+		for (int id : applicationIdList) {
+			Application application = applicationDao.retrieveById(id);
+			
+			if (application == null || application.getChannelList() == null 
+					|| application.getVulnerabilities() == null)
+				continue;
+			applicationList.add(application);
+		}
+		
+		SimpleDateFormat formatter=new SimpleDateFormat("dd-MMM-yyyy");
+		
+		for (Application application : applicationList) {
+			for (Vulnerability vuln : application.getVulnerabilities()) {
+				if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+					continue;
+				}
+				String openedDate = formatter.format(vuln.getOpenTime().getTime());
+				// Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
+				rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
+						vuln.getGenericVulnerability().getName(),
+						vuln.getSurfaceLocation().getPath(), 
+						vuln.getSurfaceLocation().getParameter(),
+						vuln.getGenericSeverity().getName(),
+						openedDate,
+						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+			}
+		}
+		
+		return rowParamsList;
+	}
+	
+	private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
+		StringBuffer data = new StringBuffer();
+		data.append("Vulnerability List \n");
+		
+		List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
+		String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
+		data.append("Team: " + teamName +" \n");
+		String appName = ""; 
+		if (applicationIdList.size() == 1) {
+			Application app = applicationDao.retrieveById(applicationIdList.get(0));
+			if (app != null) {
+				appName = app.getName();
+			}
+		} else {
+			appName = "All";
+		}
+		data.append("Application: " + appName +" \n \n");
+		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID \n");
+		for (List<String> row: rowParamsList) {
+			for (int i=0;i<row.size();i++) {
+				String str = "";
+				if (row.get(i) != null) str = row.get(i).replace(",", " ");
+				if (i<row.size()-1)
+					data.append(str + ",");
+				else data.append(str + " \n");
+			}
+		}
+		return data;
+	}
+
 }

@@ -190,7 +190,7 @@
 								<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:center;">
 									<a id="bugLink${ index }"
 											target="_blank" 
-											href="<c:out value="${ vulnerability.defect.defectURL }"/>">
+											<c:if test="${ not empty vulnerability.defect.defectURL }"> href="<c:out value="${ vulnerability.defect.defectURL }"/>" </c:if> >
 										<c:choose>
 											<c:when test="${ openCodes.contains(vulnerability.defect.status) }">
 												<img src="<%=request.getContextPath()%>/images/icn_bug_red_stroke.png" class="transparent_png" alt="Threadfix" />

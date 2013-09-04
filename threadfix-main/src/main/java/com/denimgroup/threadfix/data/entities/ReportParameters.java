@@ -42,7 +42,8 @@ public class ReportParameters implements Serializable {
 		TOP_TEN_APPS("topTenApps.jrxml"),
 		TOP_TWENTY_APPS("topTwentyApps.jrxml"),
 		TOP_TEN_VULNS("topTenVulns.jrxml"),
-		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml");
+		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml"),
+		VULNERABILITY_LIST("vulnerabilityList");
 		
 		private String fileName;
 		
@@ -103,11 +104,18 @@ public class ReportParameters implements Serializable {
 		this.formatId = formatId;
 	}
 	
-	private static final ReportFormat[] REPORTS = { ReportFormat.BAD_FORMAT, ReportFormat.TRENDING,
-		ReportFormat.POINT_IN_TIME, ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE, 
-		ReportFormat.CHANNEL_COMPARISON_BY_VULN_TYPE, ReportFormat.CHANNEL_COMPARISON_SUMMARY,
-		ReportFormat.CHANNEL_COMPARISON_DETAIL, ReportFormat.MONTHLY_PROGRESS_REPORT,
-		ReportFormat.PORTFOLIO_REPORT, ReportFormat.TWELVE_MONTH_SUMMARY, ReportFormat.TOP_TWENTY_APPS };
+	private static final ReportFormat[] REPORTS = { ReportFormat.BAD_FORMAT, 
+		ReportFormat.TRENDING,
+		ReportFormat.POINT_IN_TIME, 
+		ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE, 
+		ReportFormat.CHANNEL_COMPARISON_BY_VULN_TYPE, 
+		ReportFormat.CHANNEL_COMPARISON_SUMMARY,
+		ReportFormat.CHANNEL_COMPARISON_DETAIL, 
+		ReportFormat.MONTHLY_PROGRESS_REPORT,
+		ReportFormat.PORTFOLIO_REPORT, 
+		ReportFormat.TWELVE_MONTH_SUMMARY, 
+		ReportFormat.TOP_TWENTY_APPS,
+		ReportFormat.VULNERABILITY_LIST};
 	
 	// Translate reportId to the appropriate enum
 	public ReportFormat getReportFormat() {
