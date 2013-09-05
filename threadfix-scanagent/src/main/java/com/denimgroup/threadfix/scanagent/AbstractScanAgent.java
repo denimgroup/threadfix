@@ -32,6 +32,9 @@ import com.denimgroup.threadfix.data.entities.TaskConfig;
 
 public abstract class AbstractScanAgent {
 	private String workDir;
+	private ServerConduit serverConduit;
+	//	TODO - The was we handle this is pretty gross. And brittle. Reorganize.
+	private int currentTaskId;
 	
 	public void setWorkDir(String workDir) {
 		this.workDir = workDir;
@@ -39,6 +42,24 @@ public abstract class AbstractScanAgent {
 	
 	public String getWorkDir() {
 		return(this.workDir);
+	}
+	
+	public void setServerConduit(ServerConduit serverConduit) {
+		this.serverConduit = serverConduit;
+	}
+	
+	public void setCurrentTaskId(int currentTaskId) {
+		this.currentTaskId = currentTaskId;
+	}
+	
+	
+	
+	/**
+	 * Allow the 
+	 * @param message
+	 */
+	public void sendStatusUpdate(String message) {
+		this.serverConduit.sendStatusUpdate(this.currentTaskId, message);
 	}
 	
 	public abstract boolean readConfig(Configuration config);

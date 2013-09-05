@@ -57,7 +57,9 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 			
 			String lineRead;
 			while((lineRead = br.readLine()) != null) {
-				log.debug("Acunetix out >>>" + lineRead);
+				String logMessage = "Acunetix out >>>" + lineRead;
+				log.debug(logMessage);
+				this.sendStatusUpdate(logMessage);
 			}
 			
 			int returnCode = p.waitFor();

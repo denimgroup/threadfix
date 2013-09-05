@@ -50,7 +50,7 @@ import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.JsonUtils;
 import com.denimgroup.threadfix.data.entities.Task;
 
-public final class ScanAgentRunner {
+public final class ScanAgentRunner implements ServerConduit {
 
 	public static final String SCAN_AGENT_VERSION = "2.0.0-DEVELOPMENT-1";
 	static Logger log = Logger.getLogger(ScanAgentRunner.class);
@@ -111,6 +111,17 @@ public final class ScanAgentRunner {
 	
 	public ScanAgentRunner() {
 		this.cacheAgentConfig();
+	}
+	
+	/**
+	 * Send a message back to the server for the given task. This allows
+	 * for server-side tracking and debugging - especially for long-running tasks.
+	 */
+	public void sendStatusUpdate(int taskId, String message) {
+		log.debug("Sending server update for taskId: " + taskId + " of: " + message);
+		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
+		String result = tfClient.taskStatusUpdate(String.valueOf(taskId), message);
+		log.debug("Server response from task update was: " + result);
 	}
 	
 	private boolean keepPolling() {
@@ -266,6 +277,8 @@ public final class ScanAgentRunner {
 			
 			String taskType = theTask.getTaskType();
 			AbstractScanAgent theAgent = this.scannerMap.get(taskType);
+			//	TODO - Clean up the gross way we handle these callbacks
+			theAgent.setCurrentTaskId(theTask.getTaskId());
 			taskResult = theAgent.doTask(theTask.getTaskConfig());
 			if(taskResult != null) {
 				log.info("Task appears to have completed successfully: " + theTask);
@@ -316,6 +329,8 @@ public final class ScanAgentRunner {
 					Object obj = Class.forName(scannerClassname).newInstance();
 					if(obj instanceof AbstractScanAgent) {
 						AbstractScanAgent newAgent = (AbstractScanAgent)obj;
+						//	TODO - Clean up the gross way we handle calls back to the server
+						newAgent.setServerConduit(this);
 						
 						log.debug("Instantiating scanner class seems to have worked. Attempting configuration");
 						
