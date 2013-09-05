@@ -112,6 +112,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		ScanQueueTask task = this.scanQueueTaskDao.retrieveById(taskId);
 		if(task != null) {
 			ScanStatus status = new ScanStatus();
+			status.setScanQueueTask(task);
 			status.setTimestamp(new Date());
 			status.setMessage(message);
 			task.addScanStatus(status);
