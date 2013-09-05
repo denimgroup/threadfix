@@ -130,6 +130,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		driver.findElementById("submitRemoteProviderFormButton1").click();
 		sleep(2000);
 		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		sleep(2000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	

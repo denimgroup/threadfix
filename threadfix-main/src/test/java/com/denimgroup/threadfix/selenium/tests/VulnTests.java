@@ -148,7 +148,6 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
 	@Test
 	public void mergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -211,7 +210,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
+
 	@Test
 	public void changeMergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -281,7 +280,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
+
 	@Test
 	public void changeMergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -363,7 +362,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
+
 	@Test
 	public void changeMergeMultiDiffVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -411,7 +410,6 @@ public class VulnTests extends BaseTest {
 		//merge here
 		destroy();
 	}
-	
 	@Test
 	public void submitBlankDefect(){
 		assertTrue("blank defect",build(JIRA));

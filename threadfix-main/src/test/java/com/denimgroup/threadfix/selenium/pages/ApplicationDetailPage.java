@@ -518,7 +518,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage submitDefect(){
 		driver.findElementById("submitDefectForm").findElement(By.id("submitScanModal")).click();
-		sleep(3000);
+		sleep(1000);
 		waitForInvisibleElement(driver.findElementById("submitDefectForm"));
 		sleep(3000);
 		return new ApplicationDetailPage(driver);
