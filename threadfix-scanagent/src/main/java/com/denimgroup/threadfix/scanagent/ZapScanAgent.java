@@ -69,9 +69,13 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		status = startZap();
 		if(status) {
-			log.info("ZAP should be started");
+			String message = "ZAP should be started";
+			log.info(message);
+			sendStatusUpdate(message);
 		} else {
-			log.warn("ZAP does not appear to have started. This will end well...");
+			String message = "ZAP does not appear to have started. This will end well...";
+			log.warn(message);
+			sendStatusUpdate(message);
 		}
 		
 		log.info("Creating ZAP ClientApi");
@@ -89,7 +93,9 @@ public class ZapScanAgent extends AbstractScanAgent {
 				log.debug("Deleted old working directory. Going to attempt to re-create");
 				boolean dirCreate = new File(this.getWorkDir()).mkdirs();
 				if(!dirCreate) {
-					log.warn("Unable to re-create working directory. This will end well...");
+					String message = "Unable to re-create working directory. This will end well...";
+					log.warn(message);
+					sendStatusUpdate(message);
 				}
 				
 				//	Take the config file ZIP data, save it to the filesystem and extract it
@@ -106,9 +112,13 @@ public class ZapScanAgent extends AbstractScanAgent {
 				response = zap.core.loadSession("ZAPTEST");
 				log.debug("Response after attempting set session: " + response.toString(0));
 			} catch (ClientApiException e) {
-				log.error("Problems setting session: " + e.getMessage(), e);
+				String message = "Problems setting session: " + e.getMessage();
+				log.error(message, e);
+				sendStatusUpdate(message);
 			} catch (IOException e) {
-				log.error("Problems unpacking the ZAP session data into the working directory: " + e.getMessage(), e);
+				String message = "Problems unpacking the ZAP session data into the working directory: " + e.getMessage();
+				log.error(message, e);
+				sendStatusUpdate(message);
 			}
 		} else {
 			log.debug("Task configuration had no configuration file data. Will run a default unauthenticated scan.");
@@ -116,12 +126,16 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		status = attemptRunSpider(theConfig, zap);
 		if(status) {
-			log.info("Appears that spider run was successful. Going to attempt a scan.");
+			String message = "Appears that spider run was successful. Going to attempt a scan.";
+			log.info(message);
+			sendStatusUpdate(message);
 			
 			status = attemptRunScan(theConfig, zap);
 			
 			if(status) {
-				log.info("Appears that scan run was successful. Going to attempt to pull results");
+				message = "Appears that scan run was successful. Going to attempt to pull results";
+				log.info(message);
+				sendStatusUpdate(message);
 				
 				String resultsXml = attemptRetrieveResults(zap);
 				try {
@@ -130,15 +144,21 @@ public class ZapScanAgent extends AbstractScanAgent {
 					retVal = new File(resultsFilename);
 					FileUtils.writeStringToFile(retVal, resultsXml);
 				} catch (IOException ioe) {
-					log.error("Unable to write results file: " + ioe.getMessage(), ioe);
+					message = "Unable to write results file: " + ioe.getMessage();
+					log.error(message, ioe);
+					sendStatusUpdate(message);
 					retVal = null;
 				}
 				
 			} else {
-				log.warn("Appears that scan run was unsuccessful. Not goign to pull results");
+				message = "Appears that scan run was unsuccessful. Not going to pull results";
+				log.warn(message);
+				sendStatusUpdate(message);
 			}
 		} else {
-			log.warn("Appears that spider run was unsuccessful. Not going to attempt a scan.");
+			String message = "Appears that spider run was unsuccessful. Not going to attempt a scan.";
+			log.warn(message);
+			sendStatusUpdate(message);
 		}
 		
 		status = stopZap(zap);
