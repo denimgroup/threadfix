@@ -27,8 +27,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
  * <br>If a vuln is closed by a scan, it is removed from all three sets.
  * <br>
  * <br>For each month, this method should yield counts for:
- * <br>All the new vulns that weren't also closed in the same month, 
- * <br>The number of old vulnerabilities from previous months still open at the end of the month, 
+ * <br>All the new vulns that weren't also closed in the same month,
+ * <br>The number of old vulnerabilities from previous months still open at the end of the month,
  * <br>And the number of vulnerabilities that resurfaced and were still open at the end of the month.
  * 
  * @author mcollins
@@ -53,7 +53,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			numMonths = 6;
 		}
 		
-		if (scanLists != null && scanLists.size() > 0) {		
+		if (scanLists != null && scanLists.size() > 0) {
 			for (List<Scan> scanList : scanLists) {
 				Collections.sort(scanList, Scan.getTimeComparator());
 				normalizedScans.add(buildNormalizedScans(scanList));
@@ -84,7 +84,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		
 		YearAndMonth now = new YearAndMonth(Calendar.getInstance());
 
-		addIntermediateScans(channelScanMap, now); 
+		addIntermediateScans(channelScanMap, now);
 		
 		Map<YearAndMonth, List<Integer>> results = collapseScans(channelScanMap, now.pastXMonths(numMonths));
 		
@@ -110,7 +110,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		}
 	}
 	
-	private Map<YearAndMonth, List<Integer>> collapseScans(Map<Integer, Map<YearAndMonth, Scan>> scansHash, 
+	private Map<YearAndMonth, List<Integer>> collapseScans(Map<Integer, Map<YearAndMonth, Scan>> scansHash,
 				List<YearAndMonth> times) {
 		Map<YearAndMonth, Calendar> timeMap = new HashMap<>();
 		
@@ -149,6 +149,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 				scan.setNumberHighVulnerabilities((Long) map.get("high"));
 				scan.setNumberMediumVulnerabilities((Long) map.get("medium"));
 				scan.setNumberLowVulnerabilities((Long) map.get("low"));
+				scan.setNumberInfoVulnerabilities((Long) map.get("info"));
 				
 				dateList.add(yearAndMonth.getMonthName());
 				
@@ -159,6 +160,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 				scan.setNumberHighVulnerabilities(0L);
 				scan.setNumberMediumVulnerabilities(0L);
 				scan.setNumberLowVulnerabilities(0L);
+				scan.setNumberInfoVulnerabilities(0L);
 				dateList.add(yearAndMonth.getMonthName());
 				
 				scanList.add(scan);
@@ -178,7 +180,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		
 		private int year, month;
 		YearAndMonth(int year, int month) { this.year = year; this.month = month; }
-		YearAndMonth(Calendar calendar) { 
+		YearAndMonth(Calendar calendar) {
 			this.year = calendar.get(Calendar.YEAR);
 			this.month = calendar.get(Calendar.MONTH) + 1;
 		}
@@ -186,6 +188,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			return addMonths(1);
 		}
 		
+		@Override
 		public String toString() {
 			return "" + year + "-" + month;
 		}
@@ -194,9 +197,9 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			if (num == 0) { return this; }
 			
 			if (month + num > 12) {
-				return new YearAndMonth(year + ((month + num) / 12), ((month + num) % 12));
+				return new YearAndMonth(year + (month + num) / 12, (month + num) % 12);
 			} else if (month + num < 1) {
-				return new YearAndMonth(year - 1 - ((month + num) / 12), ((month + num) % 12) + 12);
+				return new YearAndMonth(year - 1 - (month + num) / 12, (month + num) % 12 + 12);
 			} else {
 				return new YearAndMonth(year, month + num);
 			}
@@ -221,7 +224,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			
 			int retVal;
 			
-			YearAndMonth other = ((YearAndMonth) o);
+			YearAndMonth other = o;
 			if (other.year > this.year) {
 				retVal = -1;
 			} else if (this.year > other.year) {
@@ -234,9 +237,10 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 				retVal = 0;
 			}
 			
-			return(retVal);
+			return retVal;
 		}
 		
+		@Override
 		public boolean equals(Object o) {
 			if (o != null && o instanceof YearAndMonth) {
 				YearAndMonth object = (YearAndMonth) o;
@@ -246,6 +250,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			}
 		}
 		
+		@Override
 		public int hashCode() {
 			return year * 100 + month;
 		}
@@ -257,26 +262,30 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	
 	@Override
 	public Object getFieldValue(JRField field) {
-		if (field == null)
+		if (field == null) {
 			return null;
+		}
 		String name = field.getName();
-		if (name == null)
+		if (name == null) {
 			return null;
+		}
 
-		if (resultsHash.containsKey(name))
+		if (resultsHash.containsKey(name)) {
 			return resultsHash.get(name);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	@Override
 	public boolean next() {
-		if (normalizedScans != null && normalizedScans.size() > 0 && 
+		if (normalizedScans != null && normalizedScans.size() > 0 &&
 				index < normalizedScans.get(0).size() - 1) {
-			if (index == -1)
+			if (index == -1) {
 				index = 0;
-			else
+			} else {
 				index++;
+			}
 			buildHash();
 			return true;
 		} else {
@@ -287,23 +296,26 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	private void buildHash() {
 		resultsHash.clear();
 
-		long numCritical = 0,numHigh = 0,numMedium = 0,numLow = 0;
+		long numCritical = 0, numHigh = 0, numMedium = 0, numLow = 0, numInfo = 0;
 		for (List<Scan> scanList: normalizedScans) {
 			
 			Scan scan = scanList.get(index);
 			numCritical += scan.getNumberCriticalVulnerabilities();
-			numHigh += scan.getNumberHighVulnerabilities();
-			numMedium += scan.getNumberMediumVulnerabilities();
-			numLow += scan.getNumberLowVulnerabilities();
+			numHigh     += scan.getNumberHighVulnerabilities();
+			numMedium   += scan.getNumberMediumVulnerabilities();
+			numLow      += scan.getNumberLowVulnerabilities();
+			numInfo     += scan.getNumberInfoVulnerabilities();
 		}
 		
 		resultsHash.put("criticalVulns", numCritical);
 		resultsHash.put("highVulns", numHigh);
 		resultsHash.put("mediumVulns", numMedium);
 		resultsHash.put("lowVulns", numLow);
+		resultsHash.put("infoVulns", numInfo);
 
-		if (dateList.get(index) != null)
+		if (dateList.get(index) != null) {
 			resultsHash.put("importTime", dateList.get(index));
+		}
 	}
 	
 }

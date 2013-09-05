@@ -340,16 +340,19 @@ public class HibernateScanDao implements ScanDao {
 
 		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
 				"select new map( scan.id as id, " +
+						selectStart + "1" + vulnIds + "(:scanIds1))" + orMapIds + "(:scanIds12))))) as info, " +
 						selectStart + "2" + vulnIds + "(:scanIds2))" + orMapIds + "(:scanIds22))))) as low, " +
 						selectStart + "3" + vulnIds + "(:scanIds3))" + orMapIds + "(:scanIds32))))) as medium, " +
 						selectStart + "4" + vulnIds + "(:scanIds4))" + orMapIds + "(:scanIds42))))) as high, " +
 						selectStart + "5" + vulnIds + "(:scanIds5))" + orMapIds + "(:scanIds52))))) as critical)" +
 						" from Scan scan where scan.id = :scanId"
 				)
+				.setParameterList("scanIds1", ids)
 				.setParameterList("scanIds2", ids)
 				.setParameterList("scanIds3", ids)
 				.setParameterList("scanIds4", ids)
 				.setParameterList("scanIds5", ids)
+				.setParameterList("scanIds12", ids)
 				.setParameterList("scanIds22", ids)
 				.setParameterList("scanIds32", ids)
 				.setParameterList("scanIds42", ids)

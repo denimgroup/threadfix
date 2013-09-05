@@ -41,7 +41,7 @@ import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "Finding")
-public class Finding extends AuditableEntity {
+public class Finding extends AuditableEntity implements FindingLike {
 
 	private static final long serialVersionUID = 5978786078427181952L;
 	
@@ -76,6 +76,7 @@ public class Finding extends AuditableEntity {
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 
+	@Override
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
 	public Vulnerability getVulnerability() {
