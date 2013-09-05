@@ -26,10 +26,17 @@ package com.denimgroup.threadfix.scanagent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -59,6 +66,7 @@ public final class ScanAgentRunner {
 	private int numTasksAttempted = 0;
 	private int maxTasks;
 	
+	private String agentConfig;
 	
 	/**
 	 * @param args
@@ -101,6 +109,10 @@ public final class ScanAgentRunner {
 		log.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");
 	}
 	
+	public ScanAgentRunner() {
+		this.cacheAgentConfig();
+	}
+	
 	private boolean keepPolling() {
 		boolean retVal;
 		
@@ -135,6 +147,85 @@ public final class ScanAgentRunner {
 	}
 	
 	/**
+	 * Get some data about the local agent configuration to help identify this
+	 * agent to the server. This isn't intended to be a secure unique identifier,
+	 * but is instead intended to provide some debugging support. This is then
+	 * cached so it can be sent along with requests to the ThreadFix server.
+	 */
+	private void cacheAgentConfig() {
+		StringBuilder sb = new StringBuilder();
+		
+		String prefix;
+		
+		//	Grab some OS/user/Java environment properties
+		sb.append(makeSystemPropertyString("os.arch"));
+		sb.append(makeSystemPropertyString("os.name"));
+		sb.append(makeSystemPropertyString("os.version"));
+		sb.append(makeSystemPropertyString("user.name"));
+		sb.append(makeSystemPropertyString("user.dir"));
+		sb.append(makeSystemPropertyString("user.home"));
+		sb.append(makeSystemPropertyString("java.home"));
+		sb.append(makeSystemPropertyString("java.vendor"));
+		sb.append(makeSystemPropertyString("java.version"));
+		
+		//	Pull some info about the network configuration of the scan agent
+		Enumeration<NetworkInterface> nets = null;
+		try {
+			nets = NetworkInterface.getNetworkInterfaces();
+
+	        for (NetworkInterface netint : Collections.list(nets)) {
+	        	String interfaceName = netint.getDisplayName();
+	        	sb.append("NETWORK:");
+	        	sb.append(netint.getDisplayName());
+	        	sb.append("=");
+	        	
+	        	prefix = "";
+	        	for(java.net.InterfaceAddress address : netint.getInterfaceAddresses()) {
+	        		InetAddress inetAddress = address.getAddress();
+	        		sb.append(prefix);
+	        		sb.append(inetAddress.getHostAddress());
+	        		prefix = ",";
+	        	}
+	        	sb.append("\n");
+	        }
+		} catch (SocketException e) {
+			String message = "Problems checking network interfaces when trying to gather agent config: " + e.getMessage();
+			log.warn(message, e);
+			sb.append("\nERROR=");
+			sb.append(message);
+		}
+		
+		this.agentConfig = sb.toString();
+		
+		log.debug("About to dump agent config");
+		log.debug(this.agentConfig);
+	}
+	
+	/**
+	 * Grab a system property and return a string in the format:
+	 * key=value\n
+	 * (note the trailing newline)
+	 * 
+	 * @param propertyName
+	 * @return
+	 */
+	private static String makeSystemPropertyString(String propertyName) {
+		String retVal;
+		
+		retVal = propertyName + "=" + System.getProperty(propertyName) + "\n";
+		
+		return(retVal);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private String getAgentConfig() {
+		return(this.agentConfig);
+	}
+	
+	/**
 	 * TOFIX - Actually pull this from the ThreadFix server
 	 * @return
 	 */
@@ -146,9 +237,8 @@ public final class ScanAgentRunner {
 		log.info("Returning new task");
 		
 		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-		//	TOFIX - Actually pull and send our agent config
 		String scannerList = makeScannerList(this.availableScanners);
-		Object theReturn = tfClient.requestTask(scannerList, "HARD_CODED_AGENT_CONFIG");
+		Object theReturn = tfClient.requestTask(scannerList, this.getAgentConfig());
 		if(theReturn == null) {
 			log.warn("Got a null task back from the ThreadFix server.");
 		} else {

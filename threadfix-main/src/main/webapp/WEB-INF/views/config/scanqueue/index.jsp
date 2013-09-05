@@ -35,7 +35,7 @@
 							</a>
 						</td> 
 						<td><c:out value="${scanQueueTask.application.name}" /></td>
-						<td><c:out value="${scanQueueTask.status}" /></td>
+						<td><c:out value="${scanQueueTask.showStatusString()}" /></td>
 						<td><c:out value="${scanQueueTask.scanner}" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.createTime }" type="both" dateStyle="short" timeStyle="short" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.startTime }" type="both" dateStyle="short" timeStyle="short" /></td>

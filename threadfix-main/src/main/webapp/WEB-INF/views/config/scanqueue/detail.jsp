@@ -26,7 +26,7 @@
 				<c:forEach items="${scanQueueTask.scanStatuses}" var="scanStatus"> 
 					<tr>
 						<td><fmt:formatDate value="${ scanStatus.timestamp }" type="both" dateStyle="short" timeStyle="short" /></td>
-						<td><c:out value="${scanStatus.message}" /></td>					
+						<td><pre><c:out value="${scanStatus.message}" /></pre></td>					
 					</tr>
 				</c:forEach>
 			</tbody>

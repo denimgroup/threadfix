@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -81,11 +82,14 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			myTask.setTimeoutTime(myCal.getTime());
 			myTask.setScanner(scannerType);
 			myTask.setStatus(ScanQueueTask.STATUS_QUEUED);
-			myTask.setScanAgentInfo("Junk Scan Agent Info");
+			//	TODO - See if we really need ScanAgentInfo here because that really only
+			//	matters once an agent "claims" the task to execute.
+			myTask.setScanAgentInfo("<Junk Scan Agent Info>");
 			
 			ScanStatus scanStatus = new ScanStatus();
 			scanStatus.setTimestamp(now);
-			scanStatus.setMessage("Scan queued at");
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+			scanStatus.setMessage("Scan queued at: " + format.format(now));
 			
 			scanStatus.setScanQueueTask(myTask);
 			
@@ -186,7 +190,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					ScanStatus status = new ScanStatus();
 					status.setScanQueueTask(task);
 					status.setTimestamp(new Date());
-					status.setMessage("Assigning task to an agent with agentConfig: " + agentConfig);
+					status.setMessage("Assigning task to an agent with agentConfig:\n" + agentConfig);
 					
 					task.addScanStatus(status);
 					
