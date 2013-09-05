@@ -156,6 +156,13 @@ public class ThreadFixRestClient {
 				new String[] { util.getKey(), 		scanners,		agentConfig });
 		return(result);
 	}
+	
+	public String taskStatusUpdate(String scanQueueTaskId, String message) {
+		String result = util.httpPost(util.getUrl() + "/tasks/taskStatusUpdate",
+				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
+				new String[] { util.getKey(),	scanQueueTaskId,	message });
+		return(result);
+	}
 
 	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
 		String nativeId, String parameter, String longDescription,
