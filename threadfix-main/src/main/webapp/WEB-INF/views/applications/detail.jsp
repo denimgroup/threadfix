@@ -120,6 +120,10 @@
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/hiddenTab" var="hiddenTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
 		<br>
 	
 		<ul class="nav nav-tabs margin-top">
@@ -143,6 +147,15 @@
 						${fn:escapeXml(numClosedVulns) } Closed 
 						<c:if test="${fn:escapeXml(numClosedVulns) == 1}"> Vulnerability</c:if>
 						<c:if test="${fn:escapeXml(numClosedVulns) != 1}"> Vulnerabilities</c:if>
+					</a>
+				</li>
+			</c:if>
+			<c:if test="${ numHiddenVulns != 0 }">
+				<li class="pointer">
+					<a data-toggle="tab" id="hiddenTabLink" onclick="javascript:switchTabs('<c:out value="${ hiddenTabUrl }"/>');return false;">
+						${fn:escapeXml(numHiddenVulns) } Hidden 
+						<c:if test="${fn:escapeXml(numHiddenVulns) == 1}">Vulnerability</c:if>
+						<c:if test="${fn:escapeXml(numHiddenVulns) != 1}">Vulnerabilities</c:if>
 					</a>
 				</li>
 			</c:if>

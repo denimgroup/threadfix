@@ -5,8 +5,14 @@ public class TableSortBean {
 	int page, sort, field;
 	String descriptionFilter, severityFilter, locationFilter, parameterFilter;
 	private String cweFilter;
-	boolean open, falsePositive;
+	boolean open, falsePositive, hidden;
 
+	public boolean isHidden() {
+		return hidden;
+	}
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
 	public boolean isOpen() {
 		return open;
 	}
@@ -70,7 +76,7 @@ public class TableSortBean {
 	
 	// This is currently used to decide whether or not the vulnerabilities should be put into groups or not.
 	public boolean isDefaultBean() {
-		return field == 0 && descriptionFilter.isEmpty() && locationFilter.isEmpty() && 
+		return field == 0 && descriptionFilter.isEmpty() && locationFilter.isEmpty() &&
 				parameterFilter.isEmpty() && severityFilter.isEmpty() && sort == 0;
 	}
 }

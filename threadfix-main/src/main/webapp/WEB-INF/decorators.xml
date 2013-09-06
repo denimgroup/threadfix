@@ -43,6 +43,8 @@
     	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
+    	<pattern>/organizations/*/applications/*/hiddenTab*</pattern>
+    	<pattern>/organizations/*/applications/*/hidden/table*</pattern>
     	<pattern>/organizations/*/applications/*/progress/*</pattern>
     	<pattern>/organizations/*/applications/*/severityFilter/set*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
