@@ -335,8 +335,8 @@ public class HibernateScanDao implements ScanDao {
 		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
 				"(vulnerability.active = true OR vulnerability.foundByScanner = true) AND " +
 				"(vulnerability.genericSeverity.intValue = ";
-		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan.id in ";
-		String orMapIds = " or vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan.id in ";
+		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.vulnerability.hidden = false and finding.scan.id in ";
+		String orMapIds = " or vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.finding.vulnerability.hidden = false and map.scan.id in ";
 
 		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
 				"select new map( scan.id as id, " +

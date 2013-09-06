@@ -620,6 +620,9 @@ public class ReportsServiceImpl implements ReportsService {
 				List<String> tempList = new ArrayList<String>(columnCount);
 				
 				String falsePositive = vuln.getIsFalsePositive() ? "FP" : "OPEN";
+				if (vuln.getHidden()) {
+					falsePositive = "HIDDEN";
+				}
 
 				tempList.addAll(Arrays.asList(vuln.getGenericVulnerability().getName(),
 											  vuln.getSurfaceLocation().getPath(),

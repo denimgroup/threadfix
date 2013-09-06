@@ -138,7 +138,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	private List<Scan> getFinalScans(Map<YearAndMonth, List<Integer>> results) {
 		List<Scan> scanList = new ArrayList<>();
 		
-		for (YearAndMonth yearAndMonth : new TreeSet<YearAndMonth>(results.keySet())) {
+		for (YearAndMonth yearAndMonth : new TreeSet<>(results.keySet())) {
 			
 			List<Integer> result = results.get(yearAndMonth);
 			if (result != null && !result.isEmpty()) {

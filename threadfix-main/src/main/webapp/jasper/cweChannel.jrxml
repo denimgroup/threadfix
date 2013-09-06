@@ -15,7 +15,7 @@
 	<queryString language="hql">
 		<![CDATA[SELECT vulnerability.genericVulnerability.name as description
 				 FROM Finding
-				 WHERE scan.applicationChannel.application.id IN ($P{appId})
+				 WHERE hidden = false and scan.applicationChannel.application.id IN ($P{appId})
 				 GROUP BY vulnerability.genericVulnerability.name,vulnerability.genericVulnerability.id ]]>
 	</queryString>
 	<field name="description" class="java.lang.String"/>

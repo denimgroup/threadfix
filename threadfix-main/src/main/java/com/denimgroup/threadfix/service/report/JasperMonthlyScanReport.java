@@ -29,8 +29,8 @@ import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
  * <br>If a vuln is closed by a scan, it is removed from all three sets.
  * <br>
  * <br>For each month, this method should yield counts for:
- * <br>All the new vulns that weren't also closed in the same month, 
- * <br>The number of old vulnerabilities from previous months still open at the end of the month, 
+ * <br>All the new vulns that weren't also closed in the same month,
+ * <br>The number of old vulnerabilities from previous months still open at the end of the month,
  * <br>And the number of vulnerabilities that resurfaced and were still open at the end of the month.
  * 
  * @author mcollins
@@ -49,11 +49,12 @@ public class JasperMonthlyScanReport implements JRDataSource {
 
 	public JasperMonthlyScanReport(List<Integer> applicationIdList,
 			ScanDao scanDao) {
-		if (scanDao != null && applicationIdList != null)
+		if (scanDao != null && applicationIdList != null) {
 			this.scanList = scanDao
 					.retrieveByApplicationIdList(applicationIdList);
+		}
 		
-		if (this.scanList != null && this.scanList.size() > 0) {			
+		if (this.scanList != null && this.scanList.size() > 0) {
 			Collections.sort(this.scanList, Scan.getTimeComparator());
 	
 			normalizeForMonths();
@@ -114,8 +115,9 @@ public class JasperMonthlyScanReport implements JRDataSource {
 		}
 		
 		for (Finding finding : scan.getFindings()) {
-			if (finding == null || finding.getVulnerability() == null)
+			if (finding == null || finding.getVulnerability() == null || finding.getVulnerability().getHidden()) {
 				continue;
+			}
 
 			newVulns.add(finding.getVulnerability().getId());
 		}
@@ -136,9 +138,11 @@ public class JasperMonthlyScanReport implements JRDataSource {
 			if (scan.getScanCloseVulnerabilityMaps() != null &&
 					!scan.getScanCloseVulnerabilityMaps().isEmpty()) {
 				for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
-					newVulns.remove(map.getVulnerability().getId());
-					oldVulns.remove(map.getVulnerability().getId());
-					reopenedVulns.remove(map.getVulnerability().getId());
+					if (!map.getVulnerability().getHidden()) {
+						newVulns.remove(map.getVulnerability().getId());
+						oldVulns.remove(map.getVulnerability().getId());
+						reopenedVulns.remove(map.getVulnerability().getId());
+					}
 				}
 			}
 			
@@ -146,14 +150,17 @@ public class JasperMonthlyScanReport implements JRDataSource {
 			if (scan.getScanReopenVulnerabilityMaps() != null &&
 					!scan.getScanReopenVulnerabilityMaps().isEmpty()) {
 				for (ScanReopenVulnerabilityMap map : scan.getScanReopenVulnerabilityMaps()) {
-					reopenedVulns.add(map.getVulnerability().getId());
+					if (!map.getVulnerability().getHidden()) {
+						reopenedVulns.add(map.getVulnerability().getId());
+					}
 				}
 			}
 			
 			// if there are any new vulns introduced by the scan, add those to the new vulns.
 			if (scan.getFindings() != null) {
 				for (Finding finding : scan.getFindings()) {
-					if (finding.isFirstFindingForVuln()) {
+					if (finding.isFirstFindingForVuln() && finding.getVulnerability() != null &&
+							!finding.getVulnerability().getHidden()) {
 						newVulns.add(finding.getVulnerability().getId());
 					}
 				}
@@ -242,25 +249,29 @@ public class JasperMonthlyScanReport implements JRDataSource {
 
 	@Override
 	public Object getFieldValue(JRField field) {
-		if (field == null)
+		if (field == null) {
 			return null;
+		}
 		String name = field.getName();
-		if (name == null)
+		if (name == null) {
 			return null;
+		}
 
-		if (resultsHash.containsKey(name))
+		if (resultsHash.containsKey(name)) {
 			return resultsHash.get(name);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	@Override
 	public boolean next() {
 		if (normalizedScans != null && index < normalizedScans.size() - 1) {
-			if (index == -1)
+			if (index == -1) {
 				index = 0;
-			else
+			} else {
 				index++;
+			}
 			buildHash();
 			return true;
 		} else {
@@ -279,11 +290,13 @@ public class JasperMonthlyScanReport implements JRDataSource {
 		resultsHash.put("oldVulns", scan.getNumberOldVulnerabilities());
 
 		if (scan.getApplication() != null
-				&& scan.getApplication().getName() != null)
+				&& scan.getApplication().getName() != null) {
 			resultsHash.put("name", scan.getApplication().getName());
+		}
 
-		if (scan.getImportTime() != null)
+		if (scan.getImportTime() != null) {
 			resultsHash.put("importTime", scan.getImportTime());
+		}
 
 	}
 

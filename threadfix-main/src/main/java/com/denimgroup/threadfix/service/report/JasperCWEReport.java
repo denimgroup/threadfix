@@ -22,8 +22,9 @@ public class JasperCWEReport implements JRDataSource {
 	private List<Map<String, Object>> listOfMaps = null;
 			
 	public JasperCWEReport(List<Integer> applicationIdList, VulnerabilityDao vulnerabilityDao) {
-		if (vulnerabilityDao != null && applicationIdList != null)
+		if (vulnerabilityDao != null && applicationIdList != null) {
 			this.vulnerabilityList = vulnerabilityDao.retrieveByApplicationIdList(applicationIdList);
+		}
 
 		listOfMaps = buildGenericVulnerabilityInformationArray();
 		
@@ -32,14 +33,19 @@ public class JasperCWEReport implements JRDataSource {
 	
 	@Override
 	public Object getFieldValue(JRField field) {
-		if (field == null) return null;
-		String name = field.getName();
-		if (name == null) return null;
-		
-		if (resultsHash != null && resultsHash.containsKey(name))
-			return resultsHash.get(name);
-		else
+		if (field == null) {
 			return null;
+		}
+		String name = field.getName();
+		if (name == null) {
+			return null;
+		}
+		
+		if (resultsHash != null && resultsHash.containsKey(name)) {
+			return resultsHash.get(name);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -59,8 +65,9 @@ public class JasperCWEReport implements JRDataSource {
 	}
 	
 	private List<Map<String, Object>> buildGenericVulnerabilityInformationArray() {
-		if (vulnerabilityList == null || vulnerabilityList.size() == 0)
+		if (vulnerabilityList == null || vulnerabilityList.size() == 0) {
 			return null;
+		}
 		
 		// First we need to marshal the data from vulnerabilities into groups by generic vulnerability
 		Map<String, Map<String, Integer>> statsMap = new HashMap<String, Map<String, Integer>>();
@@ -68,9 +75,13 @@ public class JasperCWEReport implements JRDataSource {
 		Calendar now = Calendar.getInstance();
 		
 		for (Vulnerability vulnerability : vulnerabilityList) {
-			if (vulnerability == null || vulnerability.getGenericVulnerability() == null ||
-					vulnerability.getGenericVulnerability().getName() == null || vulnerability.getIsFalsePositive())
+			if (vulnerability == null
+					|| vulnerability.getGenericVulnerability() == null
+					|| vulnerability.getGenericVulnerability().getName() == null
+					|| vulnerability.getIsFalsePositive()
+					|| vulnerability.getHidden()) {
 				continue;
+			}
 			String key = vulnerability.getGenericVulnerability().getName();
 			
 			// initialize the generic vuln
@@ -98,19 +109,20 @@ public class JasperCWEReport implements JRDataSource {
 		for (String key : statsMap.keySet()) {
 			Integer total = statsMap.get(key).get("numOpen") + statsMap.get(key).get("numClosed");
 			
-			if (sortingHash.get(total) == null)
+			if (sortingHash.get(total) == null) {
 				sortingHash.put(total, new ArrayList<String>());
+			}
 			
 			sortingHash.get(total).add(key);
 		}
 		
 		List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
 				
-		// moving to a SortedSet allows ordered addition by total number of vulnerabilities. 
+		// moving to a SortedSet allows ordered addition by total number of vulnerabilities.
 		SortedSet<Integer> sortedSet = new TreeSet<Integer>();
 		sortedSet.addAll(sortingHash.keySet());
 		
-		// then iterate through the original set of generic vulnerability data 
+		// then iterate through the original set of generic vulnerability data
 		// and calculate the correct figures.
 		for (Integer sortingHashKey : sortedSet) {
 			for (String statsMapKey : sortingHash.get(sortingHashKey)) {
@@ -150,8 +162,9 @@ public class JasperCWEReport implements JRDataSource {
 	}
 
 	private Integer dateDiffInDays(Calendar firstDate, Calendar secondDate) {
-		if (firstDate == null || secondDate == null)
+		if (firstDate == null || secondDate == null) {
 			return 0;
+		}
 		Calendar earlierDate = null, laterDate = null;
 		
 		if (firstDate.compareTo(secondDate) == 0) {

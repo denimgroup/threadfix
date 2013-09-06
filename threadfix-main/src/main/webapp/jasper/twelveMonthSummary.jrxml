@@ -48,7 +48,7 @@
 					<categorySeries>
 						<seriesExpression><![CDATA["Info"]]></seriesExpression>
 						<categoryExpression><![CDATA[$F{importTime}]]></categoryExpression>
-						<valueExpression><![CDATA[$F{infoVulns} != null ? $F{lowVulns} : new Integer(0)]]></valueExpression>
+						<valueExpression><![CDATA[$F{infoVulns} != null ? $F{infoVulns} : new Integer(0)]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
 						<seriesExpression><![CDATA["Low"]]></seriesExpression>
