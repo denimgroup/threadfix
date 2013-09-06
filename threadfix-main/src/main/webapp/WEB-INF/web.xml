@@ -58,7 +58,7 @@
 		<filter-name>ClickjackHeaderFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<!-- <filter>
+	<filter>
 		<filter-name>CSRFPreventionFilter</filter-name>
 		<filter-class>com.denimgroup.threadfix.webapp.filter.CsrfPreventionFilter</filter-class>
 		<init-param>
@@ -141,7 +141,7 @@
 	<filter-mapping>
 		<filter-name>CSRFPreventionFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping>
 	<filter>
 		<filter-name>openSessionFilter</filter-name>
 		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
