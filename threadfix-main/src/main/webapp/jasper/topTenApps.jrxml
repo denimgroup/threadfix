@@ -12,19 +12,21 @@
 		<![CDATA[SELECT 
 			application.name as name,
 			count(vulnerability) as vulnCount,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical,
-			col_5_0_ + col_4_0_ + col_3_0_ + col_2_0_ as col_6_0_
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 1 and vulnerability.application = application) as info,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
+			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical,
+			col_6_0_ + col_5_0_ + col_4_0_ + col_3_0_ + col_2_0_ as col_7_0_
 				 FROM Application application join application.vulnerabilities as vulnerability
 				 where application.id in ($P{appId})
 				 	AND application.active = true
 				 	AND vulnerability.genericSeverity.intValue != 1
 			GROUP BY application.name
-			ORDER BY col_6_0_ desc ]]>
+			ORDER BY col_7_0_ desc ]]>
 	</queryString>
 	<field name="name" class="java.lang.String"/>
+	<field name="info" class="java.lang.Long"/>
 	<field name="low" class="java.lang.Long"/>
 	<field name="medium" class="java.lang.Long"/>
 	<field name="high" class="java.lang.Long"/>
@@ -39,6 +41,11 @@
 					<chartLegend/>
 			  </chart>
 			  <categoryDataset>
+			  	<categorySeries>
+			  		<seriesExpression><![CDATA["Info"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{info}]]></valueExpression>
+			  	</categorySeries>
 			  	<categorySeries>
 			  		<seriesExpression><![CDATA["Low"]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{name}]]></categoryExpression>
@@ -63,9 +70,10 @@
 			  <barPlot>
 			  	<plot orientation="Horizontal">
 					<seriesColor seriesOrder="0" color="#004678"/>
-					<seriesColor seriesOrder="1" color="#BDD84D"/>
-					<seriesColor seriesOrder="2" color="#FDE05E"/>
-					<seriesColor seriesOrder="3" color="#DB6D1D"/>
+					<seriesColor seriesOrder="1" color="#004678"/>
+					<seriesColor seriesOrder="2" color="#BDD84D"/>
+					<seriesColor seriesOrder="3" color="#FDE05E"/>
+					<seriesColor seriesOrder="4" color="#DB6D1D"/>
 			  	</plot>
 				<categoryAxisFormat>
 					<axisFormat>

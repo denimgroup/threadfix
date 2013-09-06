@@ -30,23 +30,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 
 @Service
 @Transactional(readOnly = true)
 public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 
 	private ChannelSeverityDao channelSeverityDao;
+	private ChannelTypeDao channelTypeDao;
 
 	@Autowired
-	public ChannelSeverityServiceImpl(ChannelSeverityDao channelSeverityDao) {
+	public ChannelSeverityServiceImpl(ChannelTypeDao channelTypeDao,
+			ChannelSeverityDao channelSeverityDao) {
 		this.channelSeverityDao = channelSeverityDao;
+		this.channelTypeDao = channelTypeDao;
 	}
 
 	@Override
-	public List<ChannelSeverity> loadByChannel(ChannelType channelType) {
-		return channelSeverityDao.retrieveByChannel(channelType);
+	public List<ChannelSeverity> loadByChannel(String channelTypeName) {
+		return channelSeverityDao.retrieveByChannel(
+				channelTypeDao.retrieveByName(channelTypeName));
 	}
 	
 	@Override

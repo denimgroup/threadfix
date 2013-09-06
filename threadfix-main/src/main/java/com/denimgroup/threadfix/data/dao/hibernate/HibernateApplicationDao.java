@@ -122,7 +122,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 			long result = (Long) sessionFactory.getCurrentSession()
 				.createQuery("select count(*) from Vulnerability vuln " +
 						"where genericSeverity.intValue = :value " +
-						"and application = :app and active = true and isFalsePositive = false")
+						"and application = :app and active = true and hidden = false and isFalsePositive = false")
 				.setInteger("value", i)
 				.setInteger("app", application.getId())
 				.uniqueResult();
@@ -132,7 +132,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 		
 		long result = (Long) sessionFactory.getCurrentSession()
 				.createQuery("select count(*) from Vulnerability vuln " +
-						"where application = :app and active = true and isFalsePositive = false")
+						"where application = :app and active = true and hidden = false and isFalsePositive = false")
 				.setInteger("app", application.getId())
 				.uniqueResult();
 		ints.add((int) result);

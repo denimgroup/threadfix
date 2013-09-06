@@ -29,6 +29,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -44,7 +45,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 @Entity
 @Table(name = "ScanRepeatFindingMap")
-public class ScanRepeatFindingMap extends BaseEntity {
+public class ScanRepeatFindingMap extends BaseEntity implements FindingLike {
 
 	private static final long serialVersionUID = 6597715847823368634L;
 
@@ -92,6 +93,16 @@ public class ScanRepeatFindingMap extends BaseEntity {
 		this.finding = finding;
 	}
 
+	@Override
+	@Transient
+	public Vulnerability getVulnerability() {
+		if (finding != null && finding.getVulnerability() != null) {
+			return finding.getVulnerability();
+		} else {
+			return null;
+		}
+	}
+	
 	@ManyToOne
 	@JoinColumn(name = "scanId")
 	@JsonIgnore
