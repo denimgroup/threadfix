@@ -69,10 +69,10 @@
 						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }"></input>
 					</td>
 					<td>
-						<c:if test="${ vulnerability.active }">
+						<c:if test="${ vulnerability.active and not vulnerability.hidden }">
 							Open
 						</c:if>
-						<c:if test="${ not vulnerability.active }">
+						<c:if test="${ not vulnerability.active and not vulnerability.hidden }">
 							Closed
 						</c:if>
 					</td>

@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 
 public interface ChannelSeverityService {
 	
@@ -35,7 +34,7 @@ public interface ChannelSeverityService {
 	 * @param channelType
 	 * @return
 	 */
-	List<ChannelSeverity> loadByChannel(ChannelType channelType);
+	List<ChannelSeverity> loadByChannel(String channelTypeName);
 	
 	/**
 	 * 

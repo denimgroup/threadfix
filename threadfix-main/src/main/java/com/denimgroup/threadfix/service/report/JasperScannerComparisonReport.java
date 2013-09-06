@@ -112,7 +112,7 @@ public class JasperScannerComparisonReport implements JRDataSource {
 			
 			// we don't want to count invalid vulns
 			//  if it's null or if it's inactive and not a false positive
-			if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive()))
+			if (vuln == null || (!vuln.isActive() && !vuln.getHidden() && !vuln.getIsFalsePositive()))
 				continue;
 			
 			scannersInUse.clear();

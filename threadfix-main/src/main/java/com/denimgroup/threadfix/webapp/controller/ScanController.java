@@ -50,7 +50,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
 public class ScanController {
 	
-	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
+	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
 
 	private ScanService scanService;
 	private ScanDeleteService scanDeleteService;
@@ -76,7 +76,7 @@ public class ScanController {
 	}
 
 	@RequestMapping(value = "/{scanId}", method = RequestMethod.GET)
-	public ModelAndView detailScan(@PathVariable("orgId") Integer orgId, 
+	public ModelAndView detailScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
@@ -90,12 +90,13 @@ public class ScanController {
 			scanService.loadStatistics(scan);
 		}
 		if (scan == null) {
-			if (orgId != null && appId != null)
+			if (orgId != null && appId != null) {
 				return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
-			else if (orgId != null)
+			} else if (orgId != null) {
 				return new ModelAndView("redirect:/organizations/" + orgId);
-			else
+			} else {
 				return new ModelAndView("redirect:/");
+			}
 		}
 		
 		long numFindings = scanService.getFindingCount(scanId);
@@ -109,7 +110,7 @@ public class ScanController {
 	
 	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
-	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId, 
+	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId,
 			HttpServletRequest request) {
@@ -147,7 +148,7 @@ public class ScanController {
 		}
 
 		long numFindings = scanService.getFindingCount(scanId);
-		long numPages = (numFindings / 100);
+		long numPages = numFindings / 100;
 		
 		if (numFindings % 100 == 0) {
 			numPages -= 1;
@@ -187,7 +188,7 @@ public class ScanController {
 		}
 
 		long numFindings = scanService.getUnmappedFindingCount(scanId);
-		long numPages = (numFindings / 100);
+		long numPages = numFindings / 100;
 		
 		if (numFindings % 100 == 0) {
 			numPages -= 1;
