@@ -101,8 +101,6 @@ public final class ScanAgentRunner implements ServerConduit {
 		while(myAgent.keepPolling()) {
 			Task currentTask = myAgent.requestTask();
 			File taskResult = myAgent.doTask(currentTask);
-			
-			//	TOFIX - Send task results back to ThreadFix server
 		}
 		log.info("Reached max number of tasks: " + myAgent.numTasksAttempted + ". Shutting down");
 		
@@ -282,7 +280,12 @@ public final class ScanAgentRunner implements ServerConduit {
 			taskResult = theAgent.doTask(theTask.getTaskConfig());
 			if(taskResult != null) {
 				log.info("Task appears to have completed successfully: " + theTask);
-				log.info("Results from task shoudl be located at: " + taskResult.getAbsolutePath());
+				log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
+				
+				log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
+				ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
+				String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath());
+				log.info("Result of completion attempt was: " + result);
 			} else {
 				log.warn("Task appears not to have completed successfully: " + theTask);
 			}
