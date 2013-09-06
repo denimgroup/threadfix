@@ -23,8 +23,9 @@ public class PermissionServiceImpl implements PermissionService {
 	
 	@Override
 	public boolean isAuthorized(Permission permission, Integer orgId, Integer appId) {
-		if (PermissionUtils.hasGlobalPermission(permission))
+		if (PermissionUtils.hasGlobalPermission(permission)) {
 			return true;
+		}
 		
 		if (orgId == null && appId == null) {
 			return false;
@@ -36,14 +37,14 @@ public class PermissionServiceImpl implements PermissionService {
 		if (auth != null && auth instanceof ThreadFixUserDetails) {
 			customAuth = (ThreadFixUserDetails) auth;
 			
-			if (customAuth.getTeamMap() != null && orgId != null && 
+			if (customAuth.getTeamMap() != null && orgId != null &&
 					customAuth.getTeamMap().containsKey(orgId) &&
 					customAuth.getTeamMap().get(orgId) != null &&
 					customAuth.getTeamMap().get(orgId).contains(permission)) {
 				return true;
 			}
 			
-			if (customAuth.getApplicationMap() != null && appId != null && 
+			if (customAuth.getApplicationMap() != null && appId != null &&
 					customAuth.getApplicationMap().containsKey(appId) &&
 					customAuth.getApplicationMap().get(appId) != null &&
 					customAuth.getApplicationMap().get(appId).contains(permission)) {
@@ -55,15 +56,15 @@ public class PermissionServiceImpl implements PermissionService {
 	}
 	
 	@Override
-	public void addPermissions(ModelAndView modelAndView, Integer orgId, 
+	public void addPermissions(ModelAndView modelAndView, Integer orgId,
 			Integer appId, Permission... permissions) {
-		for (Permission permission : permissions) { 
+		for (Permission permission : permissions) {
 			modelAndView.addObject(permission.getCamelCase(), isAuthorized(permission, orgId, appId));
 		}
 	}
 	
 	@Override
-	public void addPermissions(Model model, Integer orgId, Integer appId, 
+	public void addPermissions(Model model, Integer orgId, Integer appId,
 			Permission... permissions) {
 		for (Permission permission : permissions) {
 			model.addAttribute(permission.getCamelCase(), isAuthorized(permission, orgId, appId));
@@ -72,7 +73,7 @@ public class PermissionServiceImpl implements PermissionService {
 
 	@Override
 	public boolean canSeeRules(Waf waf) {
-		if (waf == null || waf.getApplications() == null || 
+		if (waf == null || waf.getApplications() == null ||
 				waf.getApplications().size() == 0) {
 			return false;
 		}
@@ -83,13 +84,13 @@ public class PermissionServiceImpl implements PermissionService {
 		
 		boolean denied = false;
 		for (Application app : waf.getApplications()) {
-			if (app == null || app.getId() == null || 
+			if (app == null || app.getId() == null ||
 					app.getOrganization() == null ||
 					app.getOrganization().getId() == null)
 			{
 				return false;
 			}
-			else if (!isAuthorized(Permission.CAN_GENERATE_WAF_RULES, 
+			else if (!isAuthorized(Permission.CAN_GENERATE_WAF_RULES,
 							app.getOrganization().getId(), app.getId())) {
 				denied = true;
 			}
@@ -123,7 +124,7 @@ public class PermissionServiceImpl implements PermissionService {
 	public Set<Integer> getAuthenticatedTeamIds() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof ThreadFixUserDetails) {
-			ThreadFixUserDetails customDetails = ((ThreadFixUserDetails) principal);
+			ThreadFixUserDetails customDetails = (ThreadFixUserDetails) principal;
 			
 			if (customDetails.getAuthorities().contains(
 					new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()))) {
@@ -157,7 +158,7 @@ public class PermissionServiceImpl implements PermissionService {
 		
 		Set<Integer> appIds = getAuthenticatedAppIds();
 		if (appIds == null) {
-			// it should be impossible to get here. 
+			// it should be impossible to get here.
 			// if it somehow does happen then the user definitely shouldn't see any apps.
 			return newApps;
 		}
@@ -182,9 +183,9 @@ public class PermissionServiceImpl implements PermissionService {
 				type.setFilteredApplications(new ArrayList<RemoteProviderApplication>());
 				for (RemoteProviderApplication app : type.getRemoteProviderApplications()) {
 					if (app.getApplication() != null && app.getApplication().getId() != null &&
-							app.getApplication().getOrganization() != null && 
+							app.getApplication().getOrganization() != null &&
 							app.getApplication().getOrganization().getId() != null &&
-							isAuthorized(Permission.CAN_UPLOAD_SCANS, 
+							isAuthorized(Permission.CAN_UPLOAD_SCANS,
 									app.getApplication().getOrganization().getId(),
 									app.getApplication().getId())) {
 						type.getFilteredApplications().add(app);

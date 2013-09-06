@@ -14,7 +14,8 @@
 						vulnerability.application.name as name
 				 FROM Vulnerability as vulnerability
 				 WHERE vulnerability.application.id IN ($P{appId}) AND
-				 vulnerability.active = true
+				 vulnerability.active = true AND
+				 vulnerability.hidden = false
 				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
 	</queryString>
 	<field name="severity" class="java.lang.String"/>
@@ -32,6 +33,9 @@
 	<variable name="lowCount" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
 	</variable>
+	<variable name="infoCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
 	<variable name="totalCount" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount}]]></variableExpression>
 	</variable>
@@ -47,6 +51,9 @@
 	<variable name="lowAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
 	</variable>
+	<variable name="infoAgeSum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
+	</variable>
 	<variable name="criticalPercent" class="java.lang.String">
 		<variableExpression><![CDATA["" + ($V{criticalCount} != 0 ? (100 * $V{criticalCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
@@ -58,6 +65,9 @@
 	</variable>
 	<variable name="lowPercent" class="java.lang.String">
 		<variableExpression><![CDATA["" + ($V{lowCount} != 0 ? (100 * $V{lowCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+	</variable>
+	<variable name="infoPercent" class="java.lang.String">
+		<variableExpression><![CDATA["" + ($V{infoCount} != 0 ? (100 * $V{infoCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<background>
 		<band/>
@@ -189,6 +199,17 @@
 				</textElement>
 				<text><![CDATA[Low ]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="110" y="140" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Info ]]></text>
+			</staticText>
 			<textField>
 				<reportElement x="170" y="80" width="45" height="20"/>
 				<box>
@@ -219,6 +240,17 @@
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="140" width="45" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{infoCount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="170" y="60" width="45" height="20"/>
@@ -275,6 +307,17 @@
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{lowCount} != 0 ? $V{lowAgeSum} / $V{lowCount} : new Integer(0)]]></textFieldExpression>
 			</textField>
 			<textField>
+				<reportElement x="215" y="140" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{infoCount} != 0 ? $V{infoAgeSum} / $V{infoCount} : new Integer(0)]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement x="275" y="60" width="75" height="20"/>
 				<box>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
@@ -315,6 +358,17 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{lowPercent}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="275" y="140" width="75" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{infoPercent}]]></textFieldExpression>
+			</textField>
 			<pieChart>
 				<chart isShowLegend="false" customizerClass="com.denimgroup.threadfix.service.report.PointInTimeChartCustomizer">
 					<reportElement x="360" y="10" width="372" height="200"/>
@@ -338,6 +392,10 @@
 					<pieSeries>
 						<keyExpression><![CDATA["Low"]]></keyExpression>
 						<valueExpression><![CDATA[$V{lowCount}]]></valueExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["Info"]]></keyExpression>
+						<valueExpression><![CDATA[$V{infoCount}]]></valueExpression>
 					</pieSeries>
 				</pieDataset>
 				<piePlot labelFormat="{0}">

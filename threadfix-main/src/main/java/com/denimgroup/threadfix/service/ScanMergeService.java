@@ -51,7 +51,7 @@ public interface ScanMergeService {
 	void updateVulnerabilities(Application application);
 
 	/**
-	 * This method does the actual scan processing work. It is usually called from QueueListener or 
+	 * This method does the actual scan processing work. It is usually called from QueueListener or
 	 * one of the RPC methods.
 	 * 
 	 * @param channelId
@@ -61,7 +61,7 @@ public interface ScanMergeService {
 	boolean processScan(Integer channelId, String fileName);
 	
 	/**
-	 * This method does the actual scan processing work. It is usually called from QueueListener or 
+	 * This method does the actual scan processing work. It is usually called from QueueListener or
 	 * one of the RPC methods.
 	 * 
 	 * @param channelId
@@ -108,5 +108,4 @@ public interface ScanMergeService {
 	 * @return
 	 */
 	boolean processManualFindingEdit(Finding finding, Integer applicationId);
-
 }

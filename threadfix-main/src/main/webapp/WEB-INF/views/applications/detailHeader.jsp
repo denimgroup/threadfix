@@ -15,6 +15,13 @@
 				<c:if test="${canManageApplications }">
 					<li><a id="editApplicationModalButton" href="#editApplicationModal" data-toggle="modal">Edit / Delete</a></li>
 				</c:if>
+				<c:if test="${canManageApplications }">
+					<spring:url value="/organizations/{orgId}/applications/{appId}/filters" var="vulnFiltersUrl">
+						<spring:param name="orgId" value="${ application.organization.id }"/>
+						<spring:param name="appId" value="${ application.id }"/>
+					</spring:url>
+					<li><a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">Edit Vulnerability Filters</a></li>
+				</c:if>
 				<c:if test="${!canManageApplications }">
 					<li><a id="viewApplicationModalButton" href="#viewApplicationModal" data-toggle="modal">Details	</a></li>
 				</c:if>
