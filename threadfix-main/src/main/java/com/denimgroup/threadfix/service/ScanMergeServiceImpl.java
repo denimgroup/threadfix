@@ -1920,7 +1920,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	}
 	
-	private void updateScanCounts(Scan scan) {
+	public void updateScanCounts(Scan scan) {
 		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
 		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
 		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
@@ -1934,6 +1934,4 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.warn("ID from the database didn't match the scan ID, counts will not be added to the scan.");
 		}
 	}
-
-
 }
