@@ -79,15 +79,13 @@ public class HttpRestUtils {
 		this.durable = durable;
 	}
 	
-	public String httpPostFile(String request, String fileName, String[] paramNames,
-			String[] paramVals) {
+	public String httpPostFile(String request, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
 		return httpPostFile(request, file, paramNames,
 				paramVals);
 	}
 	
-	public String httpPostFile(String request, File file, String[] paramNames,
-			String[] paramVals) {
+	public String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
 		
 		//	TOFIX - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));

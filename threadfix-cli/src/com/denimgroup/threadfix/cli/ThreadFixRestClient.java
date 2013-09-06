@@ -22,7 +22,6 @@
 //
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
-
 public class ThreadFixRestClient {
 	
 	HttpRestUtils util = new HttpRestUtils();
@@ -157,8 +156,35 @@ public class ThreadFixRestClient {
 		return(result);
 	}
 	
+	/**
+	 * Determine if we want to pass the taskId as a parameter or if we want to REST it up
+	 * @param scanQueueTaskId
+	 * @param message
+	 * @return
+	 */
 	public String taskStatusUpdate(String scanQueueTaskId, String message) {
 		String result = util.httpPost(util.getUrl() + "/tasks/taskStatusUpdate",
+				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
+				new String[] { util.getKey(),	scanQueueTaskId,	message });
+		return(result);
+	}
+	
+	/**
+	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
+	 * @param taskId
+	 * @param filePath
+	 * @return
+	 */
+	public String completeTask(String scanQueueTaskId, String filePath) {
+		String url = util.getUrl() + "/tasks/completeTask";
+		String[] paramNames 	= { "apiKey",		"scanQueueTaskId" };
+		String[] paramValues 	= {  util.getKey(),	scanQueueTaskId };
+		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
+		return result;
+	}
+	
+	public String failTask(String scanQueueTaskId, String message) {
+		String result = util.httpPost(util.getUrl() + "/tasks/failTask",
 				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
 				new String[] { util.getKey(),	scanQueueTaskId,	message });
 		return(result);
