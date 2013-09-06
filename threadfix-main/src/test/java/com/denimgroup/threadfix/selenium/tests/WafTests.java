@@ -323,6 +323,8 @@ public class WafTests extends BaseTest {
 		String orgName = "testCreateOrg2"+getRandomString(8);
 		String appName = "testCreateApp2"+getRandomString(8);
 		String urlText = "http://testur2.com";
+		String rtApp = "Demo Site BE";
+		String whKey = System.getProperty("WHITEHAT_KEY");
 
 		//set up an organization
 		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
@@ -332,29 +334,37 @@ public class WafTests extends BaseTest {
 									.clickOrganizationHeaderLink()
 									.addNewApplication(orgName, appName, urlText, "Low")
 									.saveApplication(orgName);
-		
-		organizationIndexPage.populateAppList(orgName);
-		
-		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
-		
-		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
-			if (mapEntry.getValue() != null){
-				File appScanFile = null;
-
-				if (System.getProperty("scanFileBaseLocation") == null) {
-					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-				} else {
-					appScanFile = new File(mapEntry.getValue());
-				}
-
-				assertTrue("The test file did not exist.", appScanFile.exists());
-			} else {
-				continue;
-			}
-			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
-					 									.setFileInput(mapEntry.getValue())
-					 									.submitScan();
-		}
+		applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
+				.clickConfigureWhiteHat()
+				.setWhiteHatAPI(whKey)
+				.saveWhiteHat()
+				.clickEditMapping(rtApp)
+				.setTeamMapping(rtApp, orgName)
+				.setAppMapping(rtApp, appName)
+				.clickSaveMapping(rtApp)
+				.clickImportScan(rtApp);
+//		organizationIndexPage.populateAppList(orgName);
+//		
+//		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
+//		
+//		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
+//			if (mapEntry.getValue() != null){
+//				File appScanFile = null;
+//
+//				if (System.getProperty("scanFileBaseLocation") == null) {
+//					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+//				} else {
+//					appScanFile = new File(mapEntry.getValue());
+//				}
+//
+//				assertTrue("The test file did not exist.", appScanFile.exists());
+//			} else {
+//				continue;
+//			}
+//			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
+//					 									.setFileInput(mapEntry.getValue())
+//					 									.submitScan();
+//		}
 		
 		
 		//Creating a new Waf
@@ -443,6 +453,8 @@ public class WafTests extends BaseTest {
 		String orgName = "testCreateOrg1"+getRandomString(8);
 		String appName = "testCreateApp1"+getRandomString(8);
 		String urlText = "http://testurl.com";
+		String rtApp = "Demo Site BE";
+		String whKey = System.getProperty("WHITEHAT_KEY");
 
 		//set up an organization
 		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
@@ -454,27 +466,35 @@ public class WafTests extends BaseTest {
 				.addNewApplication(orgName, appName, urlText, "Low")
 				.saveApplication(orgName);
 
-		organizationIndexPage.populateAppList(orgName);
+		applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
+							.clickConfigureWhiteHat()
+							.setWhiteHatAPI(whKey)
+							.saveWhiteHat()
+							.clickEditMapping(rtApp)
+							.setTeamMapping(rtApp, orgName)
+							.setAppMapping(rtApp, appName)
+							.clickSaveMapping(rtApp)
+							.clickImportScan(rtApp);
 		
-		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
-		
-		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
-			if (mapEntry.getValue() != null){
-				File appScanFile = null;
-				if (System.getProperty("scanFileBaseLocation") == null) {
-						appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-				} else {
-					appScanFile = new File(mapEntry.getValue());
-				}
-				assertTrue("The test file did not exist.", appScanFile.exists());
-			} else {
-				continue;
-			}
-
-			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
-						.setFileInput(mapEntry.getValue())
-						.submitScan();
-		}
+//		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
+//		
+//		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
+//			if (mapEntry.getValue() != null){
+//				File appScanFile = null;
+//				if (System.getProperty("scanFileBaseLocation") == null) {
+//						appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+//				} else {
+//					appScanFile = new File(mapEntry.getValue());
+//				}
+//				assertTrue("The test file did not exist.", appScanFile.exists());
+//			} else {
+//				continue;
+//			}
+//
+//			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
+//						.setFileInput(mapEntry.getValue())
+//						.submitScan();
+//		}
 
 		//Creating a new Waf
 

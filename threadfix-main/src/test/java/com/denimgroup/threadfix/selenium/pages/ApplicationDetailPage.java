@@ -720,7 +720,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickMergeDefectSubmit(){
 		driver.findElementsById("mergeDefectButton").get(2).click();
-		sleep(3500);
+		sleep(4000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -772,7 +772,7 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickCloseAppModal(){
 		driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-		sleep(1000);
+		sleep(2500);
 		return new ApplicationDetailPage(driver);
 	}
 	

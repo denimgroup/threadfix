@@ -55,7 +55,7 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 	@Test
 	public void pageBuild(){
 		assertTrue(build);
-		dashboardPage.logout();
+//		dashboardPage.logout();
 	}
 	
 	private  boolean buildElements(){
@@ -131,7 +131,7 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 				.logout();
 		
 
-		dashboardPage = login();
+//		dashboardPage = login();
 		
 		return true;
 	}

@@ -127,6 +127,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 		boolean rlClick = teamdetailPage.isrightViewMoreLinkClickable();
 		boolean lcPresent = teamdetailPage.is6MonthChartPresnt();
 		boolean rcPresent = teamdetailPage.isTop10ChartPresent();
+		teamdetailPage.logout();
 		String lp,lc,rp,rc,lcp,rcp;
 		lp = lc = rp = rc = lcp = rcp = "";
 		if(!llPresent){lp = "Left view more link was not present";}
@@ -138,7 +139,6 @@ public class TeamDetailPageTest extends PageBaseTest {
 		assertTrue(lp + " | "+ lc + " | "+ rp + " | "+ rc + " | "+ lcp + " | "+ rcp,
 				llPresent && llClick && rlPresent && rlClick && lcPresent && rcPresent);
 		
-		teamdetailPage.logout();
 	}
 	
 	@Test
