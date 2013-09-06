@@ -52,6 +52,7 @@ public class ScanQueueTask extends AuditableEntity {
 	public static final int STATUS_COMPLETE_SUCCESSFUL = 3;
 	public static final int STATUS_COMPLETE_DELETED = 4;
 	public static final int STATUS_COMPLETE_TIMEDOUT = 5;
+	public static final int STATUS_COMPLETE_FAILED = 6;
 	
 	private int taskId;
 	private Application application;

@@ -218,6 +218,49 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		return(retVal);
 	}
 	
+	@Override
+	public boolean completeTask(int scanQueueTaskId) {
+		boolean retVal = false;
+		
+		Date now = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+		String message = "Scan completed successfully at: " + format.format(now);
+
+		retVal = changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTask.STATUS_COMPLETE_SUCCESSFUL, message);
+		
+		return(retVal);
+	}
+	
+	@Override
+	public boolean failTask(int scanQueueTaskId, String message) {
+		boolean retVal;
+		
+		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTask.STATUS_COMPLETE_FAILED, message);
+		
+		return(retVal);
+	}
+	
+	private boolean changeTaskStatusWithMessage(int scanQueueTaskId, Date timestamp, int newStatus, String message) {
+		boolean retVal = false;
+		
+		ScanQueueTask task = this.retrieveById(scanQueueTaskId);
+		
+		ScanStatus status = new ScanStatus();
+		status.setScanQueueTask(task);
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+		status.setMessage(message);
+		status.setTimestamp(timestamp);
+		
+		task.setEndTime(timestamp);
+		task.setStatus(newStatus);
+		task.addScanStatus(status);
+		
+		this.scanQueueTaskDao.saveOrUpdate(task);
+		retVal = true;
+		
+		return(retVal);
+	}
+	
 	/**
 	 * Run through all items in the scan queue and clear out any scans
 	 * that have timed out.

@@ -1,16 +1,27 @@
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanQueueService;
+import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/rest/tasks/")
@@ -18,14 +29,25 @@ public class ScanQueueTaskRestController extends RestController {
 	
 	public final static String OPERATION_QUEUE_SCAN = "queueScan";
 	public final static String OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate";
+	public final static String OPERATION_COMPLETE_TASK = "completeTask";
+	public final static String OPERATION_FAIL_TASK = "failTask";
 	
 	private ScanQueueService scanQueueService;
+	private ScanTypeCalculationService scanTypeCalculationService;
+	private ScanService scanService;
+	private ScanMergeService scanMergeService;
 	
 	@Autowired
 	public ScanQueueTaskRestController(APIKeyService apiKeyService,
-			ScanQueueService scanQueueService) {
+			ScanQueueService scanQueueService,
+			ScanTypeCalculationService scanTypeCalculationService,
+			ScanService scanService,
+			ScanMergeService scanMergeService) {
 		this.apiKeyService = apiKeyService;
 		this.scanQueueService = scanQueueService;
+		this.scanTypeCalculationService = scanTypeCalculationService;
+		this.scanService = scanService;
+		this.scanMergeService = scanMergeService;
 	}
 	
 	/**
@@ -95,6 +117,66 @@ public class ScanQueueTaskRestController extends RestController {
 		}
 		
 		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
+		
+		return(retVal);
+	}
+	
+	/**
+	 *
+	 */
+	@RequestMapping(headers="Accept=application/json", value="completeTask", method=RequestMethod.POST)
+	public @ResponseBody Object completeTask(HttpServletRequest request,
+			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
+			@RequestParam("file") MultipartFile file) {
+		
+		log.info("Received REST request to complete scan queue task: " + scanQueueTaskId);
+
+		String result = checkKey(request, OPERATION_COMPLETE_TASK);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
+		Application taskApp = myTask.getApplication();
+		
+		//	TODO - Add some checking so you can't just upload any file as the result of a specific scanner's task
+		//	For now, passing NULL should force the calculation
+		Integer myChannelId = scanTypeCalculationService.calculateScanType(taskApp.getId(), file, null);
+		
+		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
+		
+		ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
+		
+		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+			Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+			//	Scan has been saved. Let's update the ScanQueueTask
+			this.scanQueueService.completeTask(scanQueueTaskId);
+			return(myTask);
+		} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
+			String message = "Task appeared to complete successfully, but results provided were empty.";
+			this.scanQueueService.failTask(scanQueueTaskId, message);
+			return("Task appeared to complete successfully, but results provided were empty.");
+		} else {
+			String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
+			this.scanQueueService.failTask(scanQueueTaskId, message);
+			return message;
+		}
+	}
+	
+	@RequestMapping(headers="Accept=application/json", value="failTask", method=RequestMethod.POST)
+	public @ResponseBody Object failTask(HttpServletRequest request,
+			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
+			@RequestParam("message") String message) {
+		boolean retVal = false;
+		
+		log.info("Received a REST request to fail for the scan " + scanQueueTaskId);
+		
+		String result = checkKey(request, OPERATION_FAIL_TASK);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		retVal = this.scanQueueService.failTask(scanQueueTaskId, "Scan agent failure: " + message);
 		
 		return(retVal);
 	}

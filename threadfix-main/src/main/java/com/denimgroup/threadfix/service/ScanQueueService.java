@@ -39,4 +39,8 @@ public interface ScanQueueService {
 	boolean taskStatusUpdate(int taskId, String message);
 	
 	Object requestTask(String scanners, String agentConfig);
+	
+	boolean completeTask(int scanQueueTaskId);
+	
+	boolean failTask(int scanQueueTaskId, String message);
 }
