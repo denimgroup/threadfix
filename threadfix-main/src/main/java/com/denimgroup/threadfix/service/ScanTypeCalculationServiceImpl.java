@@ -161,6 +161,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
+		addToMap(ChannelType.MANUAL, "Vulnerabilities", "Vulnerability");
 		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
 		addToMap(ChannelType.NTO_SPIDER, "VulnSummary");
 		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
@@ -169,8 +170,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ChannelType.DEPENDENCY_CHECK, "analysis");
 	}
 	
-	private static void addToMap(String name, String... tags) { 
-		map.add(new SimpleEntry<String, String[]>(name, tags)); 
+	private static void addToMap(String name, String... tags) {
+		map.add(new SimpleEntry<String, String[]>(name, tags));
 	}
 	
 	private String getType(List<String> scanTags) {
@@ -207,14 +208,15 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			log.warn("Something went wrong trying to delete the file.");
 			
 			file.deleteOnExit();
-		} 
+		}
 	}
 	
 	public class TagCollector extends DefaultHandler {
 		public List<String> tags = new ArrayList<String>();
 		private int index = 0;
 		
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
     		if (index++ > 10) {
 	    		throw new SAXException("Done.");
 	    	}
@@ -273,7 +275,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	public boolean isDuplicate(ApplicationChannel applicationChannel) {
 		if (applicationChannel.getApplication() == null
 				|| applicationChannel.getChannelType().getId() == null) {
-			return true; 
+			return true;
 		}
 		
 		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
@@ -296,8 +298,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			return null;
 		}
 		
-		if (applicationChannel.getScanCounter() == null)
+		if (applicationChannel.getScanCounter() == null) {
 			applicationChannel.setScanCounter(1);
+		}
 		
 		String inputFileName = "scan-file-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
 
