@@ -10,11 +10,12 @@
                 <xs:element name="Vulnerability" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element type="xs:string" name="ShortDescription"/>
-                            <xs:element type="xs:string" name="LongDescription"/>
+                            <xs:element type="xs:string" name="ShortDescription" maxOccurs="1" minOccurs="0"/>
+                            <xs:element type="xs:string" name="LongDescription" maxOccurs="1" minOccurs="0"/>
                             <xs:element name="Finding">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:element type="xs:string" name="FindingDescription" maxOccurs="1" minOccurs="0"/>
                                         <xs:element name="SurfaceLocation" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:simpleContent>

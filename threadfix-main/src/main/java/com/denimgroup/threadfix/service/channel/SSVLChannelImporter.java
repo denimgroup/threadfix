@@ -83,6 +83,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	public class SSVLChannelImporterSAXParser extends HandlerWithBuilder {
 		
 		private boolean getText = false;
+		private String description = null;
 
 		private List<DataFlowElement> dataFlowElementList = new ArrayList<>();
 		private DataFlowElement lastDataFlowElement = null;
@@ -106,10 +107,11 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				      String qName, Attributes atts)
 	    {
 	    	switch (qName) {
-	    		case "Vulnerabilities" : parseDate(atts);            break;
-	    		case "Vulnerability"   : parseTypeAndSeverity(atts); break;
-	    		case "Finding"         : parseNativeId(atts);        break;
-	    		case "SurfaceLocation" : parseSurfaceLocation(atts); break;
+	    		case "Vulnerabilities"    : parseDate(atts);            break;
+	    		case "Vulnerability"      : parseTypeAndSeverity(atts); break;
+	    		case "Finding"            : parseNativeId(atts);        break;
+	    		case "SurfaceLocation"    : parseSurfaceLocation(atts); break;
+	    		case "FindingDescription" : getText = true;             break;
 	    	}
 	    }
 	    
@@ -135,9 +137,10 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		public void endElement (String uri, String name, String qName)
 	    {
 	    	switch (qName) {
-	    		case "Finding"         : finalizeFinding();         break;
-	    		case "LineText"        : addLineText();             break;
-	    		case "DataFlowElement" : finalizeDataFlowElement(); break;
+	    		case "Finding"            : finalizeFinding();         break;
+	    		case "LineText"           : addLineText();             break;
+	    		case "DataFlowElement"    : finalizeDataFlowElement(); break;
+	    		case "FindingDescription" : addDescription();          break;
 	    	}
 	    }
 
@@ -153,6 +156,11 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				lastDataFlowElement.setLineText(getBuilderText());
 			}
 			
+			getText = false;
+		}
+		
+		private void addDescription() {
+			description = getBuilderText();
 			getText = false;
 		}
 
@@ -175,8 +183,13 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 					dataFlowElementList = new ArrayList<>();
 				}
 				
+				if (description != null) {
+					finding.setLongDescription(description);
+				}
+				
 				add(finding);
 				findingMap = new HashMap<>();
+				description = null;
 			}
 		}
 
@@ -188,7 +201,6 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 	
-	// TODO Create an XSD and use it to validate the XML file here.
 	@Override
 	public ScanCheckResultBean checkFile() {
 		
@@ -208,13 +220,11 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		    System.out.println(xmlFile.getSystemId() + " is valid");
 		    
 		} catch (MalformedURLException e) {
-			log.error("Code contained an incorrect path to the XSD file.");
-		} catch (SAXException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			log.error("Code contained an incorrect path to the XSD file.", e);
+		} catch (SAXException e) {
+			log.warn("SAX Exception encountered, ", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn("IOException encountered, ", e);
 		}
 		
 		if (valid) {
