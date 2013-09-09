@@ -1,0 +1,89 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>
+            This is version 1 of the XSD format for SSVL
+        </xs:documentation>
+    </xs:annotation>
+    <xs:element name="Vulnerabilities">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Vulnerability" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="ShortDescription"/>
+                            <xs:element type="xs:string" name="LongDescription"/>
+                            <xs:element name="Finding">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="SurfaceLocation" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:string" name="url" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="source" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="value" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="DataFlowElement" maxOccurs="unbounded" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="LineText"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="SourceFileName" use="optional"/>
+                                                <xs:attribute type="PositiveNumber" name="LineNumber" use="optional"/>
+                                                <xs:attribute type="PositiveNumber" name="ColumnNumber" use="optional"/>
+                                                <xs:attribute type="PositiveNumber" name="Sequence" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="NativeID" use="optional"/>
+                                    <xs:attribute type="xs:string" name="Source" use="optional"/>
+                                    <xs:attribute type="xs:string" name="IdentifiedTimestamp" use="optional"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="CWE" name="CWE" use="optional"/>
+                        <xs:attribute type="Severities" name="Severity" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="SpecVersion"/>
+            <xs:attribute type="xs:string" name="ApplicationTag"/>
+            <xs:attribute type="xs:string" name="ExportTimestamp"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="CWE">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="2001"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="PositiveNumber">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Severity">
+        <xs:annotation>
+            <xs:documentation>
+                One of Critical, High, Medium, Low, or Info, the ThreadFix severities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Severities">
+        <xs:restriction base="Severity">
+            <xs:enumeration value="Critical" />
+            <xs:enumeration value="High" />
+            <xs:enumeration value="Medium" />
+            <xs:enumeration value="Low" />
+            <xs:enumeration value="Info" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
