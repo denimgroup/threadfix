@@ -214,7 +214,7 @@ public abstract class AbstractVulnFilterController {
 		}
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("contentPage", "filters/newForm.jsp");
+			model.addAttribute("contentPage", "filters/editForm.jsp");
 			model.addAttribute("type", getType(orgId, appId));
 			responsePage = "ajaxFailureHarness";
 			log.warn(FAILURE_MESSAGE);
