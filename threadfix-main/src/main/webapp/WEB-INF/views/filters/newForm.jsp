@@ -61,7 +61,7 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeNewFilterFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitFilterModalCreate" class="modalSubmit btn btn-primary" data-success-div="tableDiv">
+		<a id="submitFilterModalCreate" class="modalSubmit btn btn-primary" data-success-div="tableDiv" data-form-div="newFilterForm">
 			Add Filter
 		</a>
 	</div>

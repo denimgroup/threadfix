@@ -65,6 +65,7 @@ function submitAjaxModalWithSuccessFunction(url, formId, formDiv, successDiv, mo
 				if ($(modalName).size() == 1) {
 					$(modalName).on('hidden', function () {
 						$('.modal-backdrop').remove();
+						$(".hide-after-submit").css("display", "none");
 						$(successDiv).html(text);
 						successFunction();
 					});
@@ -107,6 +108,7 @@ function submitAjaxModal(url, formId, formDiv, successDiv, modalName) {
 				$(formDiv).html(text);
 			} else if ($.trim(text).slice(0,17) === "<body id=\"table\">") {
 				$(modalName).on('hidden', function () {
+					$(".hide-after-submit").css("display", "none");
 					$(successDiv).html(text);
 			    });
 			    $(modalName).modal('hide');

@@ -129,7 +129,7 @@
 	</div>
 </c:forEach>
 
-<div id="newFilterModalDiv" class="modal hide fade" tabindex="-1"
+<div id="newFilterModalDiv" class="modal hide fade wide" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<h4 id="myModalLabel">New Vulnerability Filter</h4>

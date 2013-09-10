@@ -35,8 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -126,7 +124,8 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         this.nonceCacheSize = nonceCacheSize;
     }
     
-    public void doFilter(ServletRequest request, ServletResponse response,
+    @Override
+	public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
         ServletResponse wResponse = response;
@@ -165,7 +164,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             		path = path + req.getPathInfo();
             	}
     			for (String regex : entryPointRegexPatterns) {
-    				if (isRegexMatch(path, regex)) {
+    				if (path.matches(regex)) {
     					skipNonceCheck = true;
     					skipNonceGeneration = true;
     					break;
@@ -174,7 +173,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     			
     			if (!skipNonceGeneration) {
     				for (String regex : protectedRegexPatterns) {
-    					if (isRegexMatch(path, regex)) {
+    					if (path.matches(regex)) {
     						skipNonceGeneration = true;
         					break;
     					}
@@ -197,9 +196,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
             	
             	log.warn("CSRF Filter blocked a request:" +
-          			  " reason: " + nonceStatus + 
-          			 ", address: " + request.getRemoteAddr() + 
-          			 ", path: " + req.getServletPath() + 
+          			  " reason: " + nonceStatus +
+          			 ", address: " + request.getRemoteAddr() +
+          			 ", path: " + req.getServletPath() +
           			 ", time: " + dateFormatter.format(Calendar.getInstance().getTime()));
 
             	res.sendError(HttpServletResponse.SC_NO_CONTENT);
@@ -213,9 +212,10 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
                         CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
             }
             
-            // If it matched one of the regexes, don't generate any new nonces. 
+            // If it matched one of the regexes, don't generate any new nonces.
             // This way links still work with AJAX around.
             if (!skipNonceGeneration) {
+            	log.debug("Generating new nonce. Path: " + req.getServletPath());
 	            String newNonce = generateNonce();
 	            nonceCache.add(newNonce);
 	            wResponse = new CsrfResponseWrapper(res, newNonce);
@@ -255,9 +255,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         
         randomSource.nextBytes(random);
        
-        for (int j = 0; j < random.length; j++) {
-            byte b1 = (byte) ((random[j] & 0xf0) >> 4);
-            byte b2 = (byte) (random[j] & 0x0f);
+        for (byte element : random) {
+            byte b1 = (byte) ((element & 0xf0) >> 4);
+            byte b2 = (byte) (element & 0x0f);
             if (b1 < 10) {
                 buffer.append((char) ('0' + b1));
             } else {
@@ -313,8 +313,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
          * @param nonce The nonce to add
          */
         private String addNonce(String url) {
-            if ((url == null) || (nonce == null))
-                return (url);
+            if (url == null || nonce == null) {
+				return url;
+			}
 
             String path = url;
             
@@ -332,12 +333,15 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     }
     
     private static class LruCache<T> implements Serializable {
-        // Although the internal implementation uses a Map, this cache
+
+    	private static final long serialVersionUID = 2034805024625345966L;
+    	
+		// Although the internal implementation uses a Map, this cache
         // implementation is only concerned with the keys.
         private final Map<T,T> cache;
         
         public LruCache(final int cacheSize) {
-            cache = new LinkedHashMap<T,T>() {  
+            cache = new LinkedHashMap<T,T>() {
                 private static final long serialVersionUID = 1L;
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<T,T> eldest) {
@@ -358,7 +362,8 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         }
     }
 
-    public void init(FilterConfig filterConfig) throws ServletException {
+    @Override
+	public void init(FilterConfig filterConfig) throws ServletException {
 		Enumeration<String> paramNames = filterConfig.getInitParameterNames();
         while (paramNames.hasMoreElements()) {
             String paramName = paramNames.nextElement();
@@ -366,24 +371,14 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	setEntryPoints(filterConfig.getInitParameter("entryPoints"));
             } else if ("nonceCacheSize".equals(paramName)) {
             	String temp = filterConfig.getInitParameter("nonceCacheSize");
-            	if (temp != null && Integer.valueOf(temp) != null)
-	            	setNonceCacheSize(Integer.valueOf(temp));
+            	if (temp != null && Integer.valueOf(temp) != null) {
+					setNonceCacheSize(Integer.valueOf(temp));
+				}
             }
         }
     }
 
 	@Override
 	public void destroy() {
-	}
-	
-	private boolean isRegexMatch(String targetString, String regex) {
-		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
-			return false;
-		}
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(targetString);
-
-		return matcher.find();
 	}
 }
