@@ -141,6 +141,7 @@
 </c:if>
 
 <c:if test="${ numVulns == 0 }">
+	<c:set var="notCloseable" value="true"/>
 	<c:set var="errorMessage" value="No active Vulnerabilities found."/>
 	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 </c:if>
