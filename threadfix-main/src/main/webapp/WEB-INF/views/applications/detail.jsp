@@ -58,43 +58,57 @@
 			    <div class="span6">
 			    	<h4>
 			    		6 Month Vulnerability Burndown
-			    		<spring:url value="/reports/9/{orgId}/{appId}" var="reportsUrl">
-			    			<spring:param name="orgId" value="${ application.organization.id }"/>
-			    			<spring:param name="appId" value="${ application.id }"/>
-			    		</spring:url>
-						<span style="font-size:12px;float:right;">
-				    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
-				    	</span>
+			    		<c:if test="${ numVulns > 0 }">
+				    		<spring:url value="/reports/9/{orgId}/{appId}" var="reportsUrl">
+				    			<spring:param name="orgId" value="${ application.organization.id }"/>
+				    			<spring:param name="appId" value="${ application.id }"/>
+				    		</spring:url>
+							<span style="font-size:12px;float:right;">
+					    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+					    	</span>
+				    	</c:if>
 			    	</h4>
-			    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
-					<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
-						<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
-						<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
-					</form>
-			    	<div id="leftTileReport">
-			    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
-			    	</div>
+			    	<c:if test="${ numVulns > 0 }">
+			    		<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
+						<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
+							<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
+							<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
+						</form>
+				    	<div id="leftTileReport">
+				    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+				    	</div>
+			    	</c:if>
+			    	<c:if test="${ numVulns == 0 }">
+			    		<%@ include file="/WEB-INF/views/reports/emptyReport.jspf" %>
+			    	</c:if>
 			    </div>
 			    
 			     <div class="span6">
 			    	<h4>
 			    		Top 10 Vulnerabilities
-			    		<spring:url value="/reports/3/{orgId}/{appId}" var="reportsUrl">
-			    			<spring:param name="orgId" value="${ application.organization.id }"/>
-			    			<spring:param name="appId" value="${ application.id }"/>
-			    		</spring:url>
-				    	<span style="font-size:12px;float:right;">
-				    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
-			    		</span>
+			    		<c:if test="${ numVulns > 0 }">
+				    		<spring:url value="/reports/3/{orgId}/{appId}" var="reportsUrl">
+				    			<spring:param name="orgId" value="${ application.organization.id }"/>
+				    			<spring:param name="appId" value="${ application.id }"/>
+				    		</spring:url>
+					    	<span style="font-size:12px;float:right;">
+					    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
+				    		</span>
+			    		</c:if>
 			    	</h4>
-			    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
-					<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
-						<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
-						<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
-					</form>
-			    	<div id="rightTileReport">
-			    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
-			    	</div>
+			    	<c:if test="${ numVulns > 0 }">
+			    		<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
+						<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
+							<input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
+							<input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
+						</form>
+				    	<div id="rightTileReport">
+				    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+				    	</div>
+			    	</c:if>
+			    	<c:if test="${ numVulns == 0 }">
+			    		<%@ include file="/WEB-INF/views/reports/emptyReport.jspf" %>
+			    	</c:if>
 			    </div>
 			</div>
 		</div>
