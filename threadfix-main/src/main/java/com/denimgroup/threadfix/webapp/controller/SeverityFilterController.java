@@ -44,7 +44,6 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
-import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
@@ -192,10 +191,10 @@ public class SeverityFilterController {
 	}
 	
 	public String returnSuccess(Model model, int orgId, int appId) {
-		model.addAttribute("vulnerabilityFilter", new VulnerabilityFilter());
+		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
-		model.addAttribute("successMessage", "Severity Filter settings saved successfully.");
+		model.addAttribute("severitySuccessMessage", "Severity Filter settings saved successfully.");
 		model.addAttribute("contentPage", "filters/tab.jsp");
 		return "ajaxSuccessHarness";
 	}
