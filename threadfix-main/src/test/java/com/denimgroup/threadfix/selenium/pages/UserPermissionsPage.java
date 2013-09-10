@@ -14,6 +14,7 @@ public class UserPermissionsPage extends BasePage {
 	public UserPermissionsPage clickAddPermissionsLink(){
 		driver.findElementById("addPermissionButton").click();
 		waitForElement(driver.findElementById("newAccessControlMapForm"));
+		sleep(3000);
 		return new UserPermissionsPage(driver);
 	}
 	
@@ -72,6 +73,7 @@ public class UserPermissionsPage extends BasePage {
 	
 	public UserPermissionsPage clickAddMappingNewPerm(){
 		driver.findElementsById("myModal").get(0).findElement(By.id("submitModalAdd")).click();
+		sleep(3000);
 		return new UserPermissionsPage(driver);
 	}
 	

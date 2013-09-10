@@ -127,12 +127,14 @@ public abstract class BasePage {
 	public UserIndexPage clickManageUsersLink(){
 		clickConfigTab();
 		driver.findElementById("manageUsersLink").click();
+		sleep(3000);
 		return new UserIndexPage(driver);
 	}
 	
 	public RolesIndexPage clickManageRolesLink(){
 		clickConfigTab();
 		driver.findElementById("manageRolesLink").click();
+		sleep(3000);
 		return new RolesIndexPage(driver);
 	}
 	
