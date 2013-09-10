@@ -1,5 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
 
+<c:set var="successMessage" value="${ severitySuccessMessage }"/>
+<div class="hide-after-submit">
+	<%@ include file="/WEB-INF/views/successMessage.jspf"%>
+</div>
+
 <c:choose>
 	<c:when test="${ type == 'Application' }">
 		<spring:url value="/organizations/{orgId}/applications/{appId}/severityFilter/set" var="editFilterUrl">
