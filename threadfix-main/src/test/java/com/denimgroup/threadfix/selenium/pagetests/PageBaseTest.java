@@ -79,14 +79,14 @@ public class PageBaseTest {
 		return params;
 	}
 	
-	@Before
-	public void before() {
-	}
-
-	@After
-	public void after() {
-
-	}
+//	@Before
+//	public void before() {
+//	}
+//
+//	@After
+//	public void after() {
+//
+//	}
 //	@Ignore
 //	@Test
 //	public void blank(){
