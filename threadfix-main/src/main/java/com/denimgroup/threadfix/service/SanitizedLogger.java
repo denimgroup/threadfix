@@ -60,7 +60,7 @@ public class SanitizedLogger {
 	}
 	
 	/**
-	 * Blacklist. Should probably be a whitelist but I'm not 
+	 * Blacklist. Should probably be a whitelist but I'm not
 	 * sure what else needs to be sanitized.
 	 * @param startString
 	 * @return
@@ -76,7 +76,7 @@ public class SanitizedLogger {
 			retVal = StringEscapeUtils.escapeJava(startString);
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 }
