@@ -6,6 +6,40 @@
 </head>
 
 <body>
+
+	<c:choose>
+		<c:when test="${ type == 'Application' }">
+			<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
+				<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+				<spring:param name="appId" value="${severityFilter.application.id}"/>
+			</spring:url>
+			<spring:url value="/organizations/{orgId}" var="orgUrl">
+				<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
+			</spring:url>
+		</c:when>
+		<c:when test="${ type == 'Organization' }">
+			<spring:url value="/organizations/{orgId}" var="orgUrl">
+				<spring:param name="orgId" value="${severityFilter.organization.id}"/>
+			</spring:url>
+		</c:when>
+	</c:choose>
+
+	<c:if test="${ type != 'Global' }">
+		<ul class="breadcrumb">
+		    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+		    
+		    <c:if test="${ type == 'Application' }">
+			    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
+			    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ application.name }"/></a><span class="divider">/</span></li>
+		    </c:if>
+		    <c:if test="${ type == 'Organization' }">
+			    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ organization.name }"/></a> <span class="divider">/</span></li>
+		    </c:if>
+		    
+		    <li class="active">Vulnerability Filters</li>
+		</ul>
+	</c:if>
+
 	<c:choose>
 		<c:when test="${ type == 'Application' }">
 			<h2>Application <c:out value="${ application.name }"/> Vulnerability Filters</h2>
@@ -23,24 +57,6 @@
 	</div>
 	
 	<c:if test="${ type != 'Global' }">
-		
-		<c:choose>
-			<c:when test="${ type == 'Application' }">
-				<spring:url value="/organizations/{orgId}/applications/{appId}" var="backUrl">
-					<spring:param name="orgId" value="${severityFilter.application.organization.id}"/>
-					<spring:param name="appId" value="${severityFilter.application.id}"/>
-				</spring:url>
-			</c:when>
-			<c:when test="${ type == 'Organization' }">
-				<spring:url value="/organizations/{orgId}" var="backUrl">
-					<spring:param name="orgId" value="${severityFilter.organization.id}"/>
-				</spring:url>
-			</c:when>
-		</c:choose>
-		
-		<c:if test="${ not empty backUrl }">
-			<a id="backButton" class="btn" href="${ backUrl }">Back</a>
-		</c:if>
 		
 		<c:if test="${ type == 'Application' }">
 			<spring:url value="/organizations/{orgId}/applications/{appId}/filters/tab" var="appTabUrl">
