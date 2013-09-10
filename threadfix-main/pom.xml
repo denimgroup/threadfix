@@ -210,11 +210,23 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>${springsecurity.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${springsecurity.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${jdbc.groupId}</groupId>
@@ -374,11 +386,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>${standard.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.tuckey</groupId>
 			<artifactId>urlrewritefilter</artifactId>
 			<version>${tuckey.version}</version>
@@ -411,6 +418,12 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
 			<version>2.31.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api-2.5</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -519,7 +532,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.1.4.RELEASE</spring.version>
 		<springsecurity.version>3.0.5.RELEASE</springsecurity.version>
-		<standard.version>1.1.2</standard.version>
 		<tuckey.version>3.1.0</tuckey.version>
 		<validation-api.version>1.0.0.GA</validation-api.version>
 

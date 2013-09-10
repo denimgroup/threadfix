@@ -35,8 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -166,7 +164,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             		path = path + req.getPathInfo();
             	}
     			for (String regex : entryPointRegexPatterns) {
-    				if (isRegexMatch(path, regex)) {
+    				if (path.matches(regex)) {
     					skipNonceCheck = true;
     					skipNonceGeneration = true;
     					break;
@@ -175,7 +173,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     			
     			if (!skipNonceGeneration) {
     				for (String regex : protectedRegexPatterns) {
-    					if (isRegexMatch(path, regex)) {
+    					if (path.matches(regex)) {
     						skipNonceGeneration = true;
         					break;
     					}
@@ -217,6 +215,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             // If it matched one of the regexes, don't generate any new nonces.
             // This way links still work with AJAX around.
             if (!skipNonceGeneration) {
+            	log.debug("Generating new nonce. Path: " + req.getServletPath());
 	            String newNonce = generateNonce();
 	            nonceCache.add(newNonce);
 	            wResponse = new CsrfResponseWrapper(res, newNonce);
@@ -381,16 +380,5 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
 
 	@Override
 	public void destroy() {
-	}
-	
-	private boolean isRegexMatch(String targetString, String regex) {
-		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
-			return false;
-		}
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(targetString);
-
-		return matcher.find();
 	}
 }
