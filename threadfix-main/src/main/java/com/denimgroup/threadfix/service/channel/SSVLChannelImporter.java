@@ -23,13 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -46,6 +58,10 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	
 	private GenericVulnerabilityDao genericVulnerabilityDao;
 	
+	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
+
+	SSVLChannelImporter() {}
+
 	@Autowired
 	public SSVLChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
@@ -67,6 +83,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	public class SSVLChannelImporterSAXParser extends HandlerWithBuilder {
 		
 		private boolean getText = false;
+		private String description = null;
 
 		private List<DataFlowElement> dataFlowElementList = new ArrayList<>();
 		private DataFlowElement lastDataFlowElement = null;
@@ -90,15 +107,16 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				      String qName, Attributes atts)
 	    {
 	    	switch (qName) {
-	    		case "Vulnerabilities" : parseDate(atts);            break;
-	    		case "Vulnerability"   : parseTypeAndSeverity(atts); break;
-	    		case "Finding"         : parseNativeId(atts);        break;
-	    		case "SurfaceLocation" : parseSurfaceLocation(atts); break;
+	    		case "Vulnerabilities"    : parseDate(atts);            break;
+	    		case "Vulnerability"      : parseTypeAndSeverity(atts); break;
+	    		case "Finding"            : parseNativeId(atts);        break;
+	    		case "SurfaceLocation"    : parseSurfaceLocation(atts); break;
+	    		case "FindingDescription" : getText = true;             break;
 	    	}
 	    }
 	    
 	    private void parseDate(Attributes atts) {
-	    	date = getCalendarFromString("dd/MM/yyyy kk:mm:ss aaa X", atts.getValue("ExportTimestamp"));
+	    	date = getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
 	    }
 	    
 	    private void parseTypeAndSeverity(Attributes atts) {
@@ -119,9 +137,10 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		public void endElement (String uri, String name, String qName)
 	    {
 	    	switch (qName) {
-	    		case "Finding"         : finalizeFinding();         break;
-	    		case "LineText"        : addLineText();             break;
-	    		case "DataFlowElement" : finalizeDataFlowElement(); break;
+	    		case "Finding"            : finalizeFinding();         break;
+	    		case "LineText"           : addLineText();             break;
+	    		case "DataFlowElement"    : finalizeDataFlowElement(); break;
+	    		case "FindingDescription" : addDescription();          break;
 	    	}
 	    }
 
@@ -137,6 +156,11 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				lastDataFlowElement.setLineText(getBuilderText());
 			}
 			
+			getText = false;
+		}
+		
+		private void addDescription() {
+			description = getBuilderText();
 			getText = false;
 		}
 
@@ -159,8 +183,13 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 					dataFlowElementList = new ArrayList<>();
 				}
 				
+				if (description != null) {
+					finding.setLongDescription(description);
+				}
+				
 				add(finding);
 				findingMap = new HashMap<>();
+				description = null;
 			}
 		}
 
@@ -172,13 +201,40 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 	
-	// TODO Create an XSD and use it to validate the XML file here.
 	@Override
 	public ScanCheckResultBean checkFile() {
-		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
+		
+		boolean valid = false;
+		
+		try {
+			URL schemaFile = getClass().getClassLoader().getResource("ssvl.xsd");
+			Source xmlFile = new StreamSource(new File(inputFileName));
+			SchemaFactory schemaFactory = SchemaFactory
+			    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = schemaFactory.newSchema(schemaFile);
+			Validator validator = schema.newValidator();
+		    validator.validate(xmlFile);
+		    
+		    valid = true;
+		    
+		    System.out.println(xmlFile.getSystemId() + " is valid");
+		    
+		} catch (MalformedURLException e) {
+			log.error("Code contained an incorrect path to the XSD file.", e);
+		} catch (SAXException e) {
+			log.warn("SAX Exception encountered, ", e);
+		} catch (IOException e) {
+			log.warn("IOException encountered, ", e);
+		}
+		
+		if (valid) {
+			return testSAXInput(new SSVLChannelSAXValidator());
+		} else {
+			return new ScanCheckResultBean(ScanImportStatus.FAILED_XSD);
+		}
 	}
 	
-	public class ArachniSAXValidator extends HandlerWithBuilder {
+	public class SSVLChannelSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean hasVulnerabilitiesTag = false;
@@ -216,7 +272,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    
 	    private void parseDate(Attributes atts) {
 	    	hasVulnerabilitiesTag = true;
-	    	testDate = getCalendarFromString("dd/MM/yyyy kk:mm:ss aaa X", atts.getValue("ExportTimestamp"));
+	    	testDate = getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
 	    }
 	}
 }
