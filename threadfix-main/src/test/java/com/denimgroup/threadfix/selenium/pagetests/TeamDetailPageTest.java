@@ -121,6 +121,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 	@Test
 	public void chartTest(){
 		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
+		sleep(5000);
 		boolean llPresent = teamdetailPage.isleftViewMoreLinkPresent();
 		boolean llClick = teamdetailPage.isleftViewMoreLinkClickable();
 		boolean rlPresent = teamdetailPage.isrightViewMoreLinkPresent();
