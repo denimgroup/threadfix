@@ -219,7 +219,14 @@ public class ReportsController {
 		} else if (reportParameters.getReportFormat() == ReportFormat.PORTFOLIO_REPORT) {
 			return new PortfolioReportController(organizationService).index(
 					model, request, reportParameters.getOrganizationId());
+		} else if (reportParameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
+			if (reportParameters.getFormatId() != 1) {
+				return processExportRequest(model, reportParameters, result, status, request, response);
+			}
+			model.addAttribute("reportId",reportParameters.getReportId());
+			return reportsService.vulnerabilityList(model, reportParameters);
 		}
+		
 		if (reportParameters.getFormatId() != 1) {
 			return processExportRequest(model, reportParameters, result, status, request, response);
 		}

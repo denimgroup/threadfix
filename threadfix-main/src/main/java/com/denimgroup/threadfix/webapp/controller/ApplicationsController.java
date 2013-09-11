@@ -128,17 +128,22 @@ public class ApplicationsController {
 		Object successMessage = ControllerUtils.getSuccessMessage(request);
 		Object error = ControllerUtils.getErrorMessage(request);
 
-		TableSortBean falsePositiveBean = new  TableSortBean();
+		TableSortBean falsePositiveBean = new TableSortBean();
 		falsePositiveBean.setFalsePositive(true);
 		
 		long numVulns = applicationService.getVulnCount(appId, true);
 		long numClosedVulns = applicationService.getVulnCount(appId, false);
 		long falsePositiveCount = applicationService.getCount(appId, falsePositiveBean);
 		
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS, 
+		TableSortBean hiddenBean = new TableSortBean();
+		hiddenBean.setHidden(true);
+		
+		long numHiddenVulns = applicationService.getCount(appId, hiddenBean);
+		
+		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
-				Permission.CAN_MODIFY_VULNERABILITIES, 
-				Permission.CAN_SUBMIT_DEFECTS, 
+				Permission.CAN_MODIFY_VULNERABILITIES,
+				Permission.CAN_SUBMIT_DEFECTS,
 				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
 				Permission.CAN_MANAGE_DEFECT_TRACKERS,
@@ -173,6 +178,7 @@ public class ApplicationsController {
 		model.addAttribute("errorMessage", error);
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
+		model.addAttribute("numHiddenVulns", numHiddenVulns);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
 		model.addAttribute(ScanParametersBean.getScanParametersBean(application));
@@ -213,7 +219,7 @@ public class ApplicationsController {
 			data = dt.getProjectMetadata();
 		}
 		
-		model.addAttribute("defectTrackerName", 
+		model.addAttribute("defectTrackerName",
 				application.getDefectTracker().getDefectTrackerType().getName());
 		model.addAttribute("projectMetadata", data);
 		model.addAttribute(new DefectViewModel());
@@ -310,7 +316,7 @@ public class ApplicationsController {
 		if (application.getDefectTracker() == null ||
 				application.getDefectTracker().getDefectTrackerType() == null) {
 			return "";
-		}		
+		}
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
@@ -321,8 +327,8 @@ public class ApplicationsController {
 			data = dt.getProjectMetadata();
 			defectList = dt.getDefectList();
 		}
-		model.addAttribute("projectMetadata", data);	
-		model.addAttribute("defectList", defectList);	
+		model.addAttribute("projectMetadata", data);
+		model.addAttribute("defectList", defectList);
 		model.addAttribute(new DefectViewModel());
 		model.addAttribute("contentPage", "defects/mergeDefectForm.jsp");
 		

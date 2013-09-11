@@ -10,6 +10,7 @@
 			</c:if>
 			<c:if test="${ canUploadScans }">
 				<th style="text-align:center">Total Vulns</th>
+				<th style="text-align:center">Hidden Vulns</th>
 				<th class="medium"></th>
 			</c:if>
 			<th class="medium"></th>
@@ -29,6 +30,9 @@
 			</td>
 			<td style="text-align:center" id="numTotalVulnerabilities${ status.count }">
 				<c:out value="${ scan.numberTotalVulnerabilities }"/>
+			</td>
+			<td style="text-align:center" id="numHiddenVulnerabilities${ status.count }">
+				<c:out value="${ scan.numberHiddenVulnerabilities }"/>
 			</td>
 			<c:if test="${ canUploadScans }">
 			<td>

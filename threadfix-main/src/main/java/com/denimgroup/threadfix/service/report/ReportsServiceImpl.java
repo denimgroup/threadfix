@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -118,7 +119,7 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 
 	@Override
-	public ReportCheckResultBean generateReport(ReportParameters parameters, 
+	public ReportCheckResultBean generateReport(ReportParameters parameters,
 			HttpServletRequest request) {
 		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
 			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE);
@@ -128,6 +129,11 @@ public class ReportsServiceImpl implements ReportsService {
 	
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
 			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+		}
+		
+		if (parameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
+			StringBuffer dataExport = getDataVulnListReport(getListofRowParams(applicationIdList), applicationIdList);
+			return new ReportCheckResultBean(ReportCheckResult.VALID, dataExport, null);
 		}
 		
 		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
@@ -166,12 +172,13 @@ public class ReportsServiceImpl implements ReportsService {
 
 	@SuppressWarnings("resource")
 	private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList, 
+			Map<String, Object> parameters, List<Integer> applicationIdList,
 			HttpServletRequest request) throws IOException {
 
-		if (reportFormat == null || reportFormat.getFileName() == null || 
-				reportFormat.getFileName().trim().equals(""))
+		if (reportFormat == null || reportFormat.getFileName() == null ||
+				reportFormat.getFileName().trim().equals("")) {
 			return null;
+		}
 
 		File file = new File(path + "jasper/" + reportFormat.getFileName());
 		InputStream inputStream = null;
@@ -297,8 +304,9 @@ public class ReportsServiceImpl implements ReportsService {
 			log.error("Encountered a Jasper exception, the report was probably not exported correctly.",ex);
 		} finally {
 			try {
-				if (inputStream != null)
+				if (inputStream != null) {
 					inputStream.close();
+				}
 			} catch (IOException e) {
 				log.warn("Failed to close an InputStream", e);
 			}
@@ -353,7 +361,7 @@ public class ReportsServiceImpl implements ReportsService {
 			log.info("Unable to fill Jasper Report - no scans were found.");
 			return null;
 		} else {
-			return JasperFillManager.fillReport(jasperReport, parameters, 
+			return JasperFillManager.fillReport(jasperReport, parameters,
 				new JasperXMonthSummaryReport(scanList, scanDao, numMonths));
 		}
 	}
@@ -364,8 +372,9 @@ public class ReportsServiceImpl implements ReportsService {
 		String line = null;
 		StringBuffer buffer = new StringBuffer();
 		try {
-			while ((line = bufferedReader.readLine()) != null)
+			while ((line = bufferedReader.readLine()) != null) {
 				buffer.append(line);
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -381,25 +390,29 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 	
 	private InputStream getInputStream(String string) {
-		if (string != null)
+		if (string != null) {
 			return new ByteArrayInputStream(string.getBytes());
-		else
+		} else {
 			return null;
+		}
 	}
 	
 	private List<ChannelType> getChannelTypesInUse(List<Integer> applicationIdList) {
 		List<ChannelType> channels = channelTypeDao.retrieveAll();
 		List<ChannelType> returnChannels = new ArrayList<ChannelType>();
 		
-		for (ChannelType channel : channels)
-			if (channel.getChannels() != null && channel.getChannels().size() != 0)
-				for (ApplicationChannel applicationChannel : channel.getChannels())
-					if (applicationChannel.getApplication() != null 
+		for (ChannelType channel : channels) {
+			if (channel.getChannels() != null && channel.getChannels().size() != 0) {
+				for (ApplicationChannel applicationChannel : channel.getChannels()) {
+					if (applicationChannel.getApplication() != null
 							&& applicationChannel.getApplication().getId() != null
 							&& applicationIdList.contains(applicationChannel.getApplication().getId())) {
 						returnChannels.add(channel);
 						break;
 					}
+				}
+			}
+		}
 
 		return returnChannels;
 	}
@@ -454,19 +467,19 @@ public class ReportsServiceImpl implements ReportsService {
 		List<ChannelType> channelTypeList = getChannelTypesInUse(applicationIdList);
 		
 		Integer base = 470, increment = 140, count = 0;
-		int amountToAdd = (increment * channelTypeList.size());
+		int amountToAdd = increment * channelTypeList.size();
 		String width = ((Integer) (base + amountToAdd)).toString();
 		
-		string = string.replace("<reportElement x=\"0\" y=\"113\" width=\"772\" height=\"1\"/>", 
+		string = string.replace("<reportElement x=\"0\" y=\"113\" width=\"772\" height=\"1\"/>",
 					"<reportElement x=\"0\" y=\"113\" width=\"" + width + "\" height=\"1\"/>");
 		
-		string = string.replace("<reportElement x=\"346\" y=\"0\" width=\"200\" height=\"40\"/>", 
+		string = string.replace("<reportElement x=\"346\" y=\"0\" width=\"200\" height=\"40\"/>",
 				"<reportElement x=\"0\" y=\"0\" width=\"" + width + "\" height=\"40\"/>");
 		
-		string = string.replace("<reportElement x=\"0\" y=\"40\" width=\"800\" height=\"20\"/>", 
+		string = string.replace("<reportElement x=\"0\" y=\"40\" width=\"800\" height=\"20\"/>",
 				"<reportElement x=\"0\" y=\"40\" width=\"" + width + "\" height=\"20\"/>");
 		
-		string = string.replace("<reportElement x=\"0\" y=\"60\" width=\"800\" height=\"20\"/>", 
+		string = string.replace("<reportElement x=\"0\" y=\"60\" width=\"800\" height=\"20\"/>",
 				"<reportElement x=\"0\" y=\"60\" width=\"" + width + "\" height=\"20\"/>");
 		
 		//<reportElement x="0" y="45" width="800" height="20"/>
@@ -474,12 +487,13 @@ public class ReportsServiceImpl implements ReportsService {
 		string = string.replace("pageWidth=\"792\"", "pageWidth=\"" + width + "\"");
 		
 		for (ChannelType channelType : channelTypeList) {
-			if (channelType == null || channelType.getId() == null)
+			if (channelType == null || channelType.getId() == null) {
 				continue;
+			}
 			String id = channelType.getId().toString();
-			String location = String.valueOf(base + (count*increment));
+			String location = String.valueOf(base + count*increment);
 			
-			String sumLine = ", SUM(CASE WHEN scan.applicationChannel.channelType.id = " 
+			String sumLine = ", SUM(CASE WHEN scan.applicationChannel.channelType.id = "
 				+ id + " AND id NOT IN ( \\$P\\{badFindingIds\\} ) THEN 1 ELSE 0 END) as count_" + id + "\n";
 			string = string.replaceFirst("FROM Finding", sumLine + "FROM Finding");
 			
@@ -557,17 +571,17 @@ public class ReportsServiceImpl implements ReportsService {
 		return applicationIdList;
 	}
 	
-	// TODO rethink some of this - it's a little slow at a few hundred vulns. 
+	// TODO rethink some of this - it's a little slow at a few hundred vulns.
 	// The emphasis on genericism through the design makes it harder to pull channel-specific info from vulns.
 	@Override
-	public String scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {		
+	public String scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {
 		
-		List<List<String>> tableListOfLists = new ArrayList<List<String>>();
-		List<String> headerList = new ArrayList<String>(); // this facilitates headers
-		List<Application> applicationList = new ArrayList<Application>();
+		List<List<String>> tableListOfLists = new ArrayList<>();
+		List<String> headerList = new ArrayList<>(); // this facilitates headers
+		List<Application> applicationList = new ArrayList<>();
 		
 		// this map is used to insert the value into the correct space.
-		Map<Integer, Integer> channelIdToTablePositionMap = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> channelIdToTablePositionMap = new HashMap<>();
 		
 		// positions 0, 1, and 2 are the generic name, path, and parameter of the vulnerability.
 		// 3 is open status
@@ -579,17 +593,19 @@ public class ReportsServiceImpl implements ReportsService {
 		for (int id : applicationIdList) {
 			Application application = applicationDao.retrieveById(id);
 			
-			if (application == null || application.getChannelList() == null 
-					|| application.getVulnerabilities() == null)
+			if (application == null || application.getChannelList() == null
+					|| application.getVulnerabilities() == null) {
 				continue;
+			}
 			applicationList.add(application);
 						
 			for (ApplicationChannel channel : application.getChannelList()) {
 				if (channel == null || channel.getScanCounter() == null
-						|| channel.getChannelType() == null 
+						|| channel.getChannelType() == null
 						|| channel.getChannelType().getId() == null
-						|| channel.getChannelType().getName() == null)
+						|| channel.getChannelType().getName() == null) {
 					continue;
+				}
 				
 				int channelTypeId = channel.getChannelType().getId();
 				
@@ -603,16 +619,19 @@ public class ReportsServiceImpl implements ReportsService {
 		for (Application application : applicationList) {
 			for (Vulnerability vuln : application.getVulnerabilities()) {
 				if (vuln == null || vuln.getFindings() == null
-						|| (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+						|| !vuln.isActive() && !vuln.getHidden() && !vuln.getIsFalsePositive()) {
 					continue;
 				}
 				
 				List<String> tempList = new ArrayList<String>(columnCount);
 				
 				String falsePositive = vuln.getIsFalsePositive() ? "FP" : "OPEN";
+				if (vuln.getHidden()) {
+					falsePositive = "HIDDEN";
+				}
 
 				tempList.addAll(Arrays.asList(vuln.getGenericVulnerability().getName(),
-											  vuln.getSurfaceLocation().getPath(), 
+											  vuln.getSurfaceLocation().getPath(),
 											  vuln.getSurfaceLocation().getParameter(),
 											  falsePositive));
 				
@@ -622,10 +641,10 @@ public class ReportsServiceImpl implements ReportsService {
 				
 				// For each finding, if the path to the channel type ID is not null, put an X in the table
 				for (Finding finding : vuln.getFindings()) {
-					if (finding != null && finding.getScan() != null 
-							&& finding.getScan().getApplicationChannel() != null 
+					if (finding != null && finding.getScan() != null
+							&& finding.getScan().getApplicationChannel() != null
 							&& finding.getScan().getApplicationChannel().getChannelType() != null
-							&& finding.getScan().getApplicationChannel().getChannelType().getId() != null) 
+							&& finding.getScan().getApplicationChannel().getChannelType().getId() != null)
 					{
 						Integer tablePosition = channelIdToTablePositionMap.get(
 								finding.getScan().getApplicationChannel().getChannelType().getId());
@@ -646,4 +665,81 @@ public class ReportsServiceImpl implements ReportsService {
 				
 		return "ajaxSuccessHarness";
 	}
+
+	@Override
+	public String vulnerabilityList(Model model,
+			ReportParameters reportParameters) {
+		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
+		
+		model.addAttribute("listOfLists", getListofRowParams(applicationIdList));
+		model.addAttribute("contentPage", "reports/vulnerabilityList.jsp");
+				
+		return "ajaxSuccessHarness";
+	}
+	
+	private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
+		List<List<String>> rowParamsList = new ArrayList<List<String>>();
+		List<Application> applicationList = new ArrayList<Application>();
+
+		for (int id : applicationIdList) {
+			Application application = applicationDao.retrieveById(id);
+			
+			if (application == null || application.getChannelList() == null 
+					|| application.getVulnerabilities() == null)
+				continue;
+			applicationList.add(application);
+		}
+		
+		SimpleDateFormat formatter=new SimpleDateFormat("dd-MMM-yyyy");
+		
+		for (Application application : applicationList) {
+			for (Vulnerability vuln : application.getVulnerabilities()) {
+				if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+					continue;
+				}
+				String openedDate = formatter.format(vuln.getOpenTime().getTime());
+				// Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
+				rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
+						vuln.getGenericVulnerability().getName(),
+						vuln.getSurfaceLocation().getPath(), 
+						vuln.getSurfaceLocation().getParameter(),
+						vuln.getGenericSeverity().getName(),
+						openedDate,
+						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+			}
+		}
+		
+		return rowParamsList;
+	}
+	
+	private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
+		StringBuffer data = new StringBuffer();
+		data.append("Vulnerability List \n");
+		
+		List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
+		String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
+		data.append("Team: " + teamName +" \n");
+		String appName = ""; 
+		if (applicationIdList.size() == 1) {
+			Application app = applicationDao.retrieveById(applicationIdList.get(0));
+			if (app != null) {
+				appName = app.getName();
+			}
+		} else {
+			appName = "All";
+		}
+		data.append("Application: " + appName +" \n \n");
+		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID \n");
+		for (List<String> row: rowParamsList) {
+			for (int i=0;i<row.size();i++) {
+				String str = "";
+				if (row.get(i) != null) str = row.get(i).replace(",", " ");
+				if (i<row.size()-1)
+					data.append(str + ",");
+				else data.append(str + " \n");
+			}
+		}
+		return data;
+	}
+
 }

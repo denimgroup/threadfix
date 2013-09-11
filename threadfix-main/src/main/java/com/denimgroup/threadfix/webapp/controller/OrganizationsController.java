@@ -158,6 +158,7 @@ public class OrganizationsController {
 			permissionService.addPermissions(mav, orgId, null, 
 					Permission.CAN_MANAGE_APPLICATIONS, 
 					Permission.CAN_MANAGE_TEAMS,
+					Permission.CAN_MODIFY_VULNERABILITIES,
 					Permission.CAN_GENERATE_REPORTS,
 					Permission.CAN_MANAGE_USERS);
 			applicationService.generateVulnerabilityReports(organization);

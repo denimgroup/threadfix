@@ -79,6 +79,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		}
 	}
 	
+	// TODO refactor this 130-line method into a few 30 line methods
 	@Override
 	public Scan parseInput() {
 		if (inputStream == null) {
@@ -116,6 +117,11 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			} catch (JSONException e) {
 				log.info("JSONException raised when trying to create a JSON Object. Probably version 1.", e);
 			}
+		}
+		
+		if (resultingObject == null) {
+			log.error("Unable to retrieve JSONObject from uploaded file. Exiting.");
+			return null;
 		}
 	
 		try {
@@ -211,15 +217,17 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		return scan;
 	}
 
-	private ScanImportStatus getTestStatus() {	    	
-    	if (!correctFormat)
-    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-    	else if (hasDate)
-    		testStatus = checkTestDate();
-    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings)
-    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-    	else if (testStatus == null)
-    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	private ScanImportStatus getTestStatus() {
+    	if (!correctFormat) {
+			testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+		} else if (hasDate) {
+			testStatus = checkTestDate();
+		}
+    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings) {
+			testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+		} else if (testStatus == null) {
+			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+		}
     	
     	return testStatus;
     }
@@ -236,7 +244,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			inputStream = new ByteArrayInputStream(byteArray);
 		} catch (IOException e) {
 			log.error("Problems manipulating input stream and byte array.", e);
-		} 
+		}
 		
 		if (byteArray == null) {
 			return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
@@ -260,7 +268,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 											oneFinding.get("message") != null &&
 											oneFinding.get("confidence") != null &&
 											oneFinding.get("code") != null &&
-											oneFinding.get("warning_type") != null;										
+											oneFinding.get("warning_type") != null;
 						}
 					}
 				}
@@ -293,7 +301,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 											oneFinding.get("code") != null &&
 											oneFinding.get("user_input") != null &&
 											oneFinding.get("line") != null &&
-											oneFinding.get("warning_type") != null;										
+											oneFinding.get("warning_type") != null;
 						}
 					}
 				}

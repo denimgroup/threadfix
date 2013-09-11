@@ -23,13 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 /**
  * @author bbeverly
@@ -40,7 +38,7 @@ public class RealTimeProtectionGeneratorFactory {
 	private WafRuleDao wafRuleDao;
 	private WafRuleDirectiveDao wafRuleDirectiveDao;
 	
-	private final Log log = LogFactory.getLog(RealTimeProtectionGeneratorFactory.class);
+	private final SanitizedLogger log = new SanitizedLogger(this.getClass());
 
 	public RealTimeProtectionGeneratorFactory(WafRuleDao wafRuleDao,
 			WafRuleDirectiveDao wafRuleDirectiveDao) {
@@ -71,8 +69,9 @@ public class RealTimeProtectionGeneratorFactory {
 	 * @return
 	 */
 	public RealTimeProtectionGenerator getTracker(String wafName) {
-		if (wafName == null || wafName.trim().equals(""))
+		if (wafName == null || wafName.trim().equals("")) {
 			return null;
+		}
 
 		if (wafName.equals(WafType.MOD_SECURITY)) {
 			return new ModSecurityWafGenerator(wafRuleDao, wafRuleDirectiveDao);
@@ -87,7 +86,7 @@ public class RealTimeProtectionGeneratorFactory {
 		} else {
 			log.warn("Invalid WAF type name '"
 					+ wafName
-					+ "'. Unable to find suitable RealTimeProtectionGenerator" 
+					+ "'. Unable to find suitable RealTimeProtectionGenerator"
 					+ " implementation class.  Returning null");
 			return null;
 		}

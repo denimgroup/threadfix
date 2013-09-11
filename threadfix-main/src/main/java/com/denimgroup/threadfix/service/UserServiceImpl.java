@@ -347,7 +347,7 @@ public class UserServiceImpl implements UserService {
 	public List<User> getPermissibleUsers(Integer orgId, Integer appId) {	
 		List<User> resultList = null;
 		if (orgId != null && appId == null) resultList = userDao.retrieveOrgPermissibleUsers(orgId);			
-		if (appId != null) resultList = userDao.retrieveAppPermissibleUsers(appId);			
+		if (appId != null && orgId != null) resultList = userDao.retrieveAppPermissibleUsers(orgId, appId);			
 		return resultList;
 	}	
 }

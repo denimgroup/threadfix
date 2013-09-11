@@ -41,7 +41,7 @@ import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "Finding")
-public class Finding extends AuditableEntity {
+public class Finding extends AuditableEntity implements FindingLike {
 
 	private static final long serialVersionUID = 5978786078427181952L;
 	
@@ -60,6 +60,10 @@ public class Finding extends AuditableEntity {
 	
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;
+	
+	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
+	private String displayId;
+	
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
 	private StaticPathInformation staticPathInformation;
@@ -78,7 +82,9 @@ public class Finding extends AuditableEntity {
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 	
 	private String calculatedUrlPath, calculatedFilePath;
+	private Dependency dependency;
 
+	@Override
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "vulnerabilityId")
@@ -119,6 +125,15 @@ public class Finding extends AuditableEntity {
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+	@Column(length = NATIVE_ID_LENGTH)
+	public String getDisplayId() {
+		return displayId;
+	}
+
+	public void setDisplayId(String displayId) {
+		this.displayId = displayId;
 	}
 
 	@ManyToOne
@@ -253,6 +268,16 @@ public class Finding extends AuditableEntity {
 
 	public void setMarkedFalsePositive(boolean isMarkedFalsePositive) {
 		this.isMarkedFalsePositive = isMarkedFalsePositive;
+	}
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "dependencyId")
+	public Dependency getDependency() {
+		return dependency;
+	}
+
+	public void setDependency(Dependency dependency) {
+		this.dependency = dependency;
 	}
 	
 }

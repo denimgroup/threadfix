@@ -55,45 +55,50 @@ public class ChannelImporterFactory {
 		ChannelImporter channelImporter = null;
 		String channelName = applicationChannel.getChannelType().getName();
 
-		switch (channelName) { 
-			case ChannelType.ACUNETIX_WVS: 
+		switch (channelName) {
+			case ChannelType.ACUNETIX_WVS:
 				channelImporter = new AcunetixChannelImporter();          break;
-			case ChannelType.APPSCAN_DYNAMIC: 
+			case ChannelType.APPSCAN_DYNAMIC:
 				channelImporter = new AppScanWebImporter();               break;
-			case ChannelType.APPSCAN_ENTERPRISE: 
+			case ChannelType.APPSCAN_ENTERPRISE:
 				channelImporter = new AppScanEnterpriseChannelImporter(); break;
-			case ChannelType.APPSCAN_SOURCE: 
+			case ChannelType.APPSCAN_SOURCE:
 				channelImporter = new AppScanSourceChannelImporter();     break;
-			case ChannelType.ARACHNI: 
+			case ChannelType.ARACHNI:
 				channelImporter = new ArachniChannelImporter();           break;
-			case ChannelType.BRAKEMAN: 
+			case ChannelType.BRAKEMAN:
 				channelImporter = new BrakemanChannelImporter();          break;
-			case ChannelType.BURPSUITE: 
+			case ChannelType.BURPSUITE:
 				channelImporter = new BurpSuiteChannelImporter();         break;
-			case ChannelType.CAT_NET: 
+			case ChannelType.CAT_NET:
 				channelImporter = new CatNetChannelImporter();            break;
-			case ChannelType.FINDBUGS: 
+			case ChannelType.FINDBUGS:
 				channelImporter = new FindBugsChannelImporter();          break;
-			case ChannelType.FORTIFY: 
+			case ChannelType.FORTIFY:
 				channelImporter = new FortifyChannelImporter();           break;
-			case ChannelType.NESSUS: 
+			case ChannelType.NESSUS:
 				channelImporter = new NessusChannelImporter();            break;
-			case ChannelType.NETSPARKER: 
+			case ChannelType.NETSPARKER:
 				channelImporter = new NetsparkerChannelImporter();        break;
-			case ChannelType.NTO_SPIDER: 
+			case ChannelType.NTO_SPIDER:
 				channelImporter = new NTOSpiderChannelImporter();         break;
-			case ChannelType.SKIPFISH: 
+			case ChannelType.SKIPFISH:
 				channelImporter = new SkipfishChannelImporter();          break;
-			case ChannelType.W3AF: 
+			case ChannelType.W3AF:
 				channelImporter = new W3afChannelImporter();              break;
-			case ChannelType.WEBINSPECT: 
+			case ChannelType.WEBINSPECT:
 				channelImporter = new WebInspectChannelImporter();        break;
-			case ChannelType.ZAPROXY: 
+			case ChannelType.ZAPROXY:
 				channelImporter = new ZaproxyChannelImporter();           break;
+			case ChannelType.DEPENDENCY_CHECK:
+				channelImporter = new DependencyCheckChannelImporter();   break;
+			case ChannelType.MANUAL:
+				channelImporter = new SSVLChannelImporter();              break;
 		}
 		
-		if (channelImporter != null)
+		if (channelImporter != null) {
 			channelImporter.setChannel(applicationChannel);
+		}
 
 		return channelImporter;
 	}

@@ -2,7 +2,9 @@
 
 <c:if test="${ not empty errorMessage }">
 	<div class="alert alert-error">
-		<button class="close" data-dismiss="alert" type="button">×</button>
+		<c:if test="${ empty notCloseable }">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+		</c:if>
 		<c:out value="${ errorMessage }"/>
 	</div>
 </c:if>

@@ -1,19 +1,25 @@
 <decorators defaultdir="/decorators">
     <excludes>
-    	<pattern>/configuration/users/*/access*</pattern>
-    	<pattern>/configuration/users/*/edit*</pattern>
-    	<pattern>/configuration/users/new*</pattern>
-    	<pattern>/configuration/roles/new*</pattern>
-    	<pattern>/configuration/roles/*/edit*</pattern>
-    	<pattern>/configuration/keys/*/edit*</pattern>
-    	<pattern>/configuration/keys/new*</pattern>
-    	<pattern>/configuration/keys/*/delete*</pattern>
+    	<pattern>/configuration/filters/readOnly*</pattern>
+    	<pattern>/configuration/filters/new*</pattern>
+    	<pattern>/configuration/filters/*/edit*</pattern>
+    	<pattern>/configuration/filters/*/delete*</pattern>
+    	<pattern>/configuration/filters/tab*</pattern>
+    	<pattern>/configuration/severityFilter/set*</pattern>
     	<pattern>/configuration/defecttrackers/new*</pattern>
     	<pattern>/configuration/defecttrackers/*/edit*</pattern>
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
+    	<pattern>/configuration/keys/*/edit*</pattern>
+    	<pattern>/configuration/keys/new*</pattern>
+    	<pattern>/configuration/keys/*/delete*</pattern>
     	<pattern>/configuration/remoteproviders/*/configure*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/edit*</pattern>
     	<pattern>/configuration/remoteproviders/*/apps/*/delete/*</pattern>
+    	<pattern>/configuration/roles/new*</pattern>
+    	<pattern>/configuration/roles/*/edit*</pattern>
+    	<pattern>/configuration/users/*/access*</pattern>
+    	<pattern>/configuration/users/*/edit*</pattern>
+    	<pattern>/configuration/users/new*</pattern>
     	<pattern>/dashboard/leftReport*</pattern>
     	<pattern>/dashboard/rightReport*</pattern>
     	<pattern>/jasperimage/*/*</pattern>
@@ -21,6 +27,10 @@
     	<pattern>/organizations/teamTable*</pattern>
     	<pattern>/organizations/modalAdd*</pattern>
     	<pattern>/organizations/*/applications/*/table*</pattern>
+    	<pattern>/organizations/*/applications/*/filters/new*</pattern>
+    	<pattern>/organizations/*/applications/*/filters/*/edit*</pattern>
+    	<pattern>/organizations/*/applications/*/filters/*/delete*</pattern>
+    	<pattern>/organizations/*/applications/*/filters/tab*</pattern>
     	<pattern>/organizations/*/applications/*/defects*</pattern>
     	<pattern>/organizations/*/applications/*/getDefectsFromDefectTracker*</pattern>
     	<pattern>/organizations/*/applications/*/defectSubmission*</pattern>
@@ -33,7 +43,10 @@
     	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
+    	<pattern>/organizations/*/applications/*/hiddenTab*</pattern>
+    	<pattern>/organizations/*/applications/*/hidden/table*</pattern>
     	<pattern>/organizations/*/applications/*/progress/*</pattern>
+    	<pattern>/organizations/*/applications/*/severityFilter/set*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/table*</pattern>
     	<pattern>/organizations/*/applications/*/scans/*/unmappedTable*</pattern>
     	<pattern>/organizations/*/applications/*/scans/new*</pattern>
@@ -45,6 +58,12 @@
     	<pattern>/organizations/*/applications/*/scanTab*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
+    	<pattern>/organizations/*/filters/readOnly*</pattern>
+    	<pattern>/organizations/*/filters/new*</pattern>
+    	<pattern>/organizations/*/filters/*/edit*</pattern>
+    	<pattern>/organizations/*/filters/*/delete*</pattern>
+    	<pattern>/organizations/*/filters/tab*</pattern>
+    	<pattern>/organizations/*/severityFilter/set*</pattern>
     	<pattern>/organizations/*/getReport*</pattern>
     	<pattern>/organizations/*/modalAddApp*</pattern>
     	<pattern>/organizations/*/modalEdit*</pattern>

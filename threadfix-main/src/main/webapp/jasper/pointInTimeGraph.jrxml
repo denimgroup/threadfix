@@ -15,6 +15,7 @@
 				 FROM Vulnerability as vulnerability
 				 WHERE vulnerability.application.id IN ($P{appId}) AND
 				 vulnerability.active = true AND
+				 vulnerability.hidden = false AND
 				 vulnerability.isFalsePositive = false
 				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
 	</queryString>

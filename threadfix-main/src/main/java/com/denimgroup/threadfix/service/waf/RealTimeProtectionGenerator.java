@@ -225,9 +225,9 @@ public abstract class RealTimeProtectionGenerator {
 				": " + applications.size() + " applications.");
 
 		int numVulns = 0;
-		for (Application a : applications) {
-			if (a != null && a.isActive())
-				numVulns += a.getVulnerabilities().size();
+		for (Application application : applications) {
+			if (application != null && application.isActive())
+				numVulns += application.getVulnerabilities().size();
 		}
 		log.info("This will involve " + numVulns + " vulnerabilities.");
 

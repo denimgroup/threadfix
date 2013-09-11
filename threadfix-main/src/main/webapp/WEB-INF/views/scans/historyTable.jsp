@@ -62,6 +62,7 @@
 				<th style="text-align: left" class="first">Team</th>
 				<th>Scanner</th>
 				<th style="width:70px;">Total Vulns</th>
+				<th>Hidden</th>
 				<th>Critical</th>
 				<th>High</th>
 				<th>Medium</th>
@@ -87,20 +88,23 @@
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
 							<spring:param name="appId" value="${ scan.application.id }" />
-						</spring:url> <a href="<c:out value="${ appUrl }"/>"> <c:out
+						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> <c:out
 								value="${ scan.application.name }" />
-					</a></td>
+					</a></div></td>
 					<td id="team${ status.count }"><spring:url
 							value="/organizations/{teamId}" var="teamUrl">
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
-						</spring:url> <a href="<c:out value="${ teamUrl }"/>"> <c:out
+						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>"> <c:out
 								value="${ scan.application.organization.name }" />
-					</a></td>
+					</a></div></td>
 					<td id="channelType${ status.count }"><c:out
 							value="${ scan.applicationChannel.channelType.name }" /></td>
 					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
 						<c:out value="${ scan.numberTotalVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numHiddenVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberHiddenVulnerabilities }" />
 					</td>
 					<td style="text-align: center" id="numCriticalVulnerabilities${ status.count }">
 						<c:out value="${ scan.numberCriticalVulnerabilities }" />

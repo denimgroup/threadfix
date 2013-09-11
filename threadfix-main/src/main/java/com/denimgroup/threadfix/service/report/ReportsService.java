@@ -54,4 +54,7 @@ public interface ReportsService {
 
 	String scannerComparisonByVulnerability(Model model,
 			ReportParameters reportParameters);
+
+	String vulnerabilityList(Model model, ReportParameters reportParameters);
+
 }

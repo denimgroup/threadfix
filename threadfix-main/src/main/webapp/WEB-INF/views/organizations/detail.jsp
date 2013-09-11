@@ -17,7 +17,21 @@
    			<div id="btnDiv1" class="btn-group">
 				<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 				<ul class="dropdown-menu">									
-					<c:if test="${ canManageTeams}"><li><a id="teamModalButton1" href="#teamModal" data-toggle="modal">Edit / Delete</a></li></c:if>
+					<c:if test="${ canManageTeams}">
+						<li>
+							<a id="teamModalButton1" href="#teamModal" data-toggle="modal">Edit / Delete</a>
+						</li>
+					</c:if>
+					<c:if test="${ canModifyVulnerabilities }">
+						<li>
+							<spring:url value="{orgId}/filters" var="filterUrl">
+								<spring:param name="orgId" value="${ organization.id }"/>
+							</spring:url>
+							<a id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
+								Edit Filters
+							</a>
+						</li>
+					</c:if>
 					<c:if test="${ canManageUsers}">				
 						<li><a id="userListModelButton" href="#usersModal" data-toggle="modal">View Permissible Users</a></li>
 					</c:if>

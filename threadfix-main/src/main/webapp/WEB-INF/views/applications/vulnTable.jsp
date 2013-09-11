@@ -72,7 +72,7 @@
 	<table class="table sortable table-hover tf-colors" id="anyid">
 		<thead>
 			<tr>
-				<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+				<c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
 					<th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" onclick="ToggleCheckboxes('anyid',0)"></th>
 				</c:if>			    
 				<th style="width:8px;"></th>
@@ -122,7 +122,7 @@
 						data-caret="caret${ vulnGroup.name }"
 						data-toggle-class="${ rowClass }"
 						data-expanded="0">
-					<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+					<c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
 						<td>
 							<input type="checkbox" class="categoryCheckbox" data-target-class="<c:out value="${ vulnGroup.name }"/>">
 						</td>
@@ -160,7 +160,7 @@
 				</c:if>
 				<tr class="bodyRow pointer <c:out value="${ color }"/> ${ rowClass } ${ hideClass }" data-target-div="vulnInfoDiv${vulnerability.id}"
 						data-caret-div="caret${vulnerability.id }">
-					<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+					<c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
 						<td>
 							<input class="vulnIdCheckbox <c:out value="${ vulnGroup.name }"/>" id="vulnerabilityIds${ index }" type="checkbox" value="${ vulnerability.id }" name="vulnerabilityIds">
 							<input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
@@ -173,15 +173,29 @@
 					<td class="expandableTrigger" id="type${ index }">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
+<<<<<<< HEAD
 					<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.displayPath }"/></td>
 					<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
+=======
+					
+					<c:if test="${ empty vulnerability.originalFinding.dependency }">
+						<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+						<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
+					</c:if>
+					<c:if test="${ not empty vulnerability.originalFinding.dependency }">
+						<td class="expandableTrigger" colspan="2">
+							<c:out value="${ vulnerability.originalFinding.dependency.cve } "/>
+							(<a target="_blank" id="cve${ index }" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ vulnerability.originalFinding.dependency.cve }">View</a>)
+						</td>
+					</c:if>
+>>>>>>> 1.2
 					<c:if test="${ not empty application.defectTracker }">
 						<td >
 							<c:if test="${ not empty vulnerability.defect }">
 								<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:center;">
 									<a id="bugLink${ index }"
 											target="_blank" 
-											href="<c:out value="${ vulnerability.defect.defectURL }"/>">
+											<c:if test="${ not empty vulnerability.defect.defectURL }"> href="<c:out value="${ vulnerability.defect.defectURL }"/>" </c:if> >
 										<c:choose>
 											<c:when test="${ openCodes.contains(vulnerability.defect.status) }">
 												<img src="<%=request.getContextPath()%>/images/icn_bug_red_stroke.png" class="transparent_png" alt="Threadfix" />

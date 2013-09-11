@@ -77,6 +77,9 @@
 					<option data-report-id="8" data-url="<c:out value="${ emptyUrl }"/>">
 						Portfolio Report
 					</option>
+					<option data-report-id="11" data-url="<c:out value="${ emptyUrl }"/>">
+						Vulnerability List
+					</option>
 				</select>
 				
 				<select class="reportTypeSelect" id="comparisonReportSelect" data-tab="comparisonTabLink">

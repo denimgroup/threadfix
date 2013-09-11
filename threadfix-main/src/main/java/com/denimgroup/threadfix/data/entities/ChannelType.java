@@ -48,6 +48,7 @@ public class ChannelType extends BaseEntity {
 	public static final String BRAKEMAN = "Brakeman";
 	public static final String BURPSUITE = "Burp Suite";
 	public static final String CAT_NET = "Microsoft CAT.NET";
+	public static final String DEPENDENCY_CHECK = "Dependency Check";
 	public static final String FINDBUGS = "FindBugs";
 	public static final String FORTIFY = "Fortify 360";
 	public static final String MANUAL = "Manual";

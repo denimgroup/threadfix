@@ -40,7 +40,7 @@ public class MergeConfigurationGenerator {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
-	private static final String baseDirectory = "C:\\test\\scratch\\";
+	private static final String baseDirectory = "/Users/mac/scratch/";
 	
 	private MergeConfigurationGenerator(){}
 	
@@ -49,11 +49,11 @@ public class MergeConfigurationGenerator {
 			return null;
 		}
 		
-		VulnTypeStrategy typeStrategy = 
+		VulnTypeStrategy typeStrategy =
 				VulnTypeStrategy.getVulnTypeStrategy(application.getVulnTypeStrategy());
-		SourceCodeAccessLevel accessLevel = 
+		SourceCodeAccessLevel accessLevel =
 				SourceCodeAccessLevel.getSourceCodeAccessLevel(application.getSourceCodeAccessLevel());
-		FrameworkType frameworkType = 
+		FrameworkType frameworkType =
 				FrameworkType.getFrameworkType(application.getFrameworkType());
 		
 		log.info("Vulnerability type matching strategy from application: " + typeStrategy.displayName);
@@ -112,14 +112,14 @@ public class MergeConfigurationGenerator {
 		return returnType;
 	}
 	
-	// TODO improve this 
+	// TODO improve this
 	private static FrameworkType guessFrameworkType(Scan scan) {
 		FrameworkType type = FrameworkType.NONE;
 		
 		if (scan != null && scan.isStatic() && scan.getFindings() != null &&
 				!scan.getFindings().isEmpty()) {
 			for (Finding finding : scan.getFindings()) {
-				if (finding != null && finding.getStaticPathInformation() != null && 
+				if (finding != null && finding.getStaticPathInformation() != null &&
 						finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
 					type = FrameworkType.SPRING_MVC;
 					break;
@@ -187,7 +187,7 @@ public class MergeConfigurationGenerator {
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
 			returnLevel = SourceCodeAccessLevel.FULL;
 			log.info("Since there is a configured Repository URL, returning " + returnLevel.displayName);
-		} else if (hasStaticScans(application) || (scan != null && scan.isStatic())) {
+		} else if (hasStaticScans(application) || scan != null && scan.isStatic()) {
 			returnLevel = SourceCodeAccessLevel.PARTIAL;
 			log.info("Since there is at least one static scan in the application, returning " + returnLevel.displayName);
 		} else {
@@ -201,7 +201,7 @@ public class MergeConfigurationGenerator {
 	private static boolean hasStaticScans(Application application) {
 		boolean returnValue = false;
 		
-		if (application != null && application.getScans() != null && 
+		if (application != null && application.getScans() != null &&
 				!application.getScans().isEmpty()) {
 			for (Scan scan : application.getScans()) {
 				if (scan.isStatic()) {

@@ -95,7 +95,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE
 	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or

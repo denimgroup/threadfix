@@ -81,7 +81,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private ScanMergeService scanMergeService = null;
 
 	@Autowired
-	public ApplicationServiceImpl(ApplicationDao applicationDao, 
+	public ApplicationServiceImpl(ApplicationDao applicationDao,
 			DefectTrackerDao defectTrackerDao,
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			PermissionService permissionService, WafRuleDao wafRuleDao,
@@ -135,8 +135,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	@Transactional(readOnly = false)
 	public void storeApplication(Application application) {
-		if (application != null)
+		if (application != null) {
 			applicationDao.saveOrUpdate(application);
+		}
 	}
 
 	@Override
@@ -174,10 +175,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private void removeRemoteApplicationLinks(Application application) {
 		if (application.getRemoteProviderApplications() != null &&
 				application.getRemoteProviderApplications().size() > 0) {
-			log.info("Removing remote applications from the application " + application.getName() + 
+			log.info("Removing remote applications from the application " + application.getName() +
 					 " (id=" + application.getId() + ")");
 			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
-				log.info("Removing remote application " + app.getNativeId() + 
+				log.info("Removing remote application " + app.getNativeId() +
 						 " from application " + app.getApplication().getName());
 				app.setApplication(null);
 				app.setLastImportTime(null);
@@ -188,12 +189,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 	
 	@Override
-	public boolean validateApplicationDefectTracker(Application application, 
+	public boolean validateApplicationDefectTracker(Application application,
 			BindingResult result) {
-		if (application == null || result == null)
+		if (application == null || result == null) {
 			return false;
+		}
 		
-		if (application.getDefectTracker() != null && 
+		if (application.getDefectTracker() != null &&
 				(application.getDefectTracker().getId() == null
 				|| application.getDefectTracker().getId() == 0)) {
 			application.setDefectTracker(null);
@@ -203,7 +205,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			DefectTracker defectTracker = defectTrackerDao.retrieveById(
 					application.getDefectTracker().getId());
 			if (defectTracker == null) {
-				result.rejectValue("defectTracker.id", "errors.invalid", 
+				result.rejectValue("defectTracker.id", "errors.invalid",
 						new String [] { "Defect Tracker choice" }, null);
 				application.setUserName(null);
 				application.setPassword(null);
@@ -213,29 +215,31 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.setDefectTracker(defectTracker);
 				AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 				if (dt != null) {
-					if (application.getUserName() == null 
-							|| application.getUserName().isEmpty())
-						result.rejectValue("userName", "errors.required", 
+					if (application.getUserName() == null
+							|| application.getUserName().isEmpty()) {
+						result.rejectValue("userName", "errors.required",
 								new String [] { "User Name" }, null);
-					if (application.getPassword() == null 
-							|| application.getPassword().isEmpty())
-						result.rejectValue("password", "errors.required", 
+					}
+					if (application.getPassword() == null
+							|| application.getPassword().isEmpty()) {
+						result.rejectValue("password", "errors.required",
 								new String [] { "Password" }, null);
+					}
 					
 					if (!result.hasErrors()) {
 						if (!dt.hasValidCredentials()) {
 							if (dt.getLastError() == null) {
-								result.rejectValue("userName", "errors.invalid", 
+								result.rejectValue("userName", "errors.invalid",
 										new String [] { invalidCredentials }, null);
 							} else {
-								result.rejectValue("userName", "errors.detail", 
+								result.rejectValue("userName", "errors.detail",
 										new String [] { dt.getLastError() }, null);
 							}
 							application.setUserName(null);
 							application.setPassword(null);
 							application.setProjectName(null);
 						} else if (!dt.hasValidProjectName()) {
-							result.rejectValue("projectName", "errors.detail", 
+							result.rejectValue("projectName", "errors.detail",
 									new String [] { invalidProjectName }, null);
 							application.setProjectName(null);
 						} else {
@@ -253,21 +257,23 @@ public class ApplicationServiceImpl implements ApplicationService {
 	/**
 	 * 
 	 * @param application
-	 * @return true if the application has a different defect tracker 
+	 * @return true if the application has a different defect tracker
 	 * 			than the database version, false otherwise
 	 */
 	private boolean checkNewDefectTracker(Application application) {
-		if (application == null || application.getId() == null || 
-				application.getDefectTracker() == null || 
-				application.getDefectTracker().getId() == null)
+		if (application == null || application.getId() == null ||
+				application.getDefectTracker() == null ||
+				application.getDefectTracker().getId() == null) {
 			return false;
+		}
 		
 		Application databaseApplication = applicationDao.retrieveById(application.getId());
 		
-		if (databaseApplication == null || databaseApplication.getId() == null || 
-				databaseApplication.getDefectTracker() == null || 
-				databaseApplication.getDefectTracker().getId() == null)
+		if (databaseApplication == null || databaseApplication.getId() == null ||
+				databaseApplication.getDefectTracker() == null ||
+				databaseApplication.getDefectTracker().getId() == null) {
 			return false;
+		}
 		
 		return !application.getDefectTracker().getId().equals(
 				databaseApplication.getDefectTracker().getId());
@@ -275,14 +281,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public boolean checkApplication(Application application) {
-		if (application == null || application.getName() == null 
-				|| application.getName().trim().isEmpty()  
+		if (application == null || application.getName() == null
+				|| application.getName().trim().isEmpty()
 				|| application.getName().length() > Application.NAME_LENGTH) {
 			log.warn("The application's name was invalid.");
 			return false;
 		}
 		
-		if (application.getUrl() != null && 
+		if (application.getUrl() != null &&
 				application.getUrl().length() > Application.URL_LENGTH) {
 			log.warn("The application's url was too long.");
 			return false;
@@ -296,18 +302,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void updateWafRules(Application application, Integer dbApplicationWafId) {
-		if (application == null || application.getId() == null || 
-				dbApplicationWafId == null)
+		if (application == null || application.getId() == null ||
+				dbApplicationWafId == null) {
 			return;
+		}
 
 		// if the new app doesn't have a WAF or the IDs don't match, need to remove the rules
-		if (application.getWaf() == null || 
-				(application.getVulnerabilities() != null &&
+		if (application.getWaf() == null ||
+				application.getVulnerabilities() != null &&
 				 application.getWaf().getId() != null &&
-				 !dbApplicationWafId.equals(application.getWaf().getId()))) {
+				 !dbApplicationWafId.equals(application.getWaf().getId())) {
 			
-			// Database vulns are still in session, also the vulns themselves 
-			// shouldn't have changed since we were only editing the information 
+			// Database vulns are still in session, also the vulns themselves
+			// shouldn't have changed since we were only editing the information
 			// about the Application object and not its vulnerabilities.
 			for (Vulnerability vulnerability : application.getVulnerabilities()) {
 				if (vulnerability != null && vulnerability.getWafRules() != null) {
@@ -337,17 +344,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.getApplicationCriticality().getId() == null ||
 				applicationCriticalityDao.retrieveById(
 						application.getApplicationCriticality().getId()) == null) {
-			result.rejectValue("applicationCriticality.id", "errors.invalid", 
+			result.rejectValue("applicationCriticality.id", "errors.invalid",
 					new String [] { "Criticality" }, null);
 		}
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
 		
 		if (application.getOrganization() != null) {
-			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS, 
+			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			
-			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					application.getOrganization().getId(), application.getId());
 		}
 		
@@ -370,7 +377,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			Waf waf = wafDao.retrieveById(application.getWaf().getId());
 			
 			if (waf == null) {
-				result.rejectValue("waf.id", "errors.invalid", 
+				result.rejectValue("waf.id", "errors.invalid",
 						new String [] { "WAF Choice" }, null);
 			} else {
 				application.setWaf(waf);
@@ -379,10 +386,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		// The password was set to the temp password so that it wouldn't show up on the page.
 		// If the credentials haven't changed, re-decrypt the password to get the original.
-		if (application.getPassword() != null && application.getPassword().equals(Application.TEMP_PASSWORD) && 
-				databaseApplication != null && databaseApplication.getUserName() != null && 
+		if (application.getPassword() != null && application.getPassword().equals(Application.TEMP_PASSWORD) &&
+				databaseApplication != null && databaseApplication.getUserName() != null &&
 				databaseApplication.getUserName().equals(application.getUserName()) &&
-				databaseApplication.getDefectTracker() != null && 
+				databaseApplication.getDefectTracker() != null &&
 				application.getDefectTracker() != null &&
 				databaseApplication.getDefectTracker().getId().equals(
 						application.getDefectTracker().getId())) {
@@ -395,8 +402,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		Integer databaseWafId = null;
-		if (databaseApplication != null && databaseApplication.getWaf() != null)
+		if (databaseApplication != null && databaseApplication.getWaf() != null) {
 			databaseWafId = databaseApplication.getWaf().getId();
+		}
 		
 		// remove any outdated vuln -> waf rule links
 		updateWafRules(loadApplication(application.getId()), databaseWafId);
@@ -406,8 +414,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void validateDefectTracker(Application application, BindingResult result) {
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
 		
-		if (hasNewDefectTracker || (application.getDefectTracker() == null 
-				&& application.getDefectList() != null)) {
+		if (hasNewDefectTracker || application.getDefectTracker() == null
+				&& application.getDefectList() != null) {
 			defectDao.deleteByApplicationId(application.getId());
 			
 			List<Vulnerability> vulns = applicationDao.getVulns(application);
@@ -423,7 +431,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void updateProjectRoot(Application application) {
-		if (application != null && application.getProjectRoot() != null 
+		if (application != null && application.getProjectRoot() != null
 				&& !application.getProjectRoot().trim().equals("")) {
 			Application app = loadApplication(application.getId());
 			
@@ -449,23 +457,24 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.getApplicationCriticality().getId() == null ||
 				applicationCriticalityDao.retrieveById(
 						application.getApplicationCriticality().getId()) == null) {
-			result.rejectValue("applicationCriticality.id", "errors.invalid", 
+			result.rejectValue("applicationCriticality.id", "errors.invalid",
 					new String [] { "Criticality" }, null);
 		}
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
 		
 		if (application.getOrganization() != null) {
-			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS, 
+			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			
-			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					application.getOrganization().getId(), application.getId());
 		}
 		
 		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
-		if (databaseApplication != null)
+		if (databaseApplication != null) {
 			result.rejectValue("name", "errors.nameTaken");
+		}
 		
 		if (!canManageWafs && application.getWaf() != null) {
 			application.setWaf(null);
@@ -475,13 +484,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 			application.setDefectTracker(null);
 		}
 
-		if (application.getWaf() != null && application.getWaf().getId() == 0)
+		if (application.getWaf() != null && application.getWaf().getId() == 0) {
 			application.setWaf(null);
+		}
 		
-		if (application.getWaf() != null && (application.getWaf().getId() == null  
-				|| wafDao.retrieveById(application.getWaf().getId()) == null))
-			result.rejectValue("waf.id", "errors.invalid", 
+		if (application.getWaf() != null && (application.getWaf().getId() == null
+				|| wafDao.retrieveById(application.getWaf().getId()) == null)) {
+			result.rejectValue("waf.id", "errors.invalid",
 					new String [] { "WAF Choice" }, null);
+		}
 
 		validateApplicationDefectTracker(application, result);
 	}
@@ -495,25 +506,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 			
 			String description = null, severity = null, path = null, param = null;
 						
-			if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
+			if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals("")) {
 				description = bean.getDescriptionFilter().trim();
+			}
 			
-			if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
+			if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals("")) {
 				severity = bean.getSeverityFilter().trim();
+			}
 			
-			if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
+			if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals("")) {
 				path = bean.getLocationFilter().trim();
+			}
 			
-			if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
+			if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals("")) {
 				param = bean.getParameterFilter().trim();
+			}
 					
 			Integer cweInteger = getCweId(bean);
 			
 			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, page, sort, field, cweInteger,
-										description, severity, path, param, bean.isOpen(), bean.isFalsePositive());
+										description, severity, path, param, bean.isOpen(),
+										bean.isFalsePositive(), bean.isHidden());
 		} else {
-			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null, 
-					null, true, false);
+			return vulnerabilityDao.retrieveActiveByAppIdAndPage(appId, 1, 0, 0, null, null, null, null,
+					null, true, false, false);
 		}
 	}
 	
@@ -535,22 +551,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public long getCount(Integer appId, TableSortBean bean) {
 		String description = null, severity = null, path = null, param = null;
 		
-		if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals(""))
+		if (bean.getDescriptionFilter() != null && !bean.getDescriptionFilter().trim().equals("")) {
 			description = bean.getDescriptionFilter().trim();
+		}
 		
-		if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals(""))
+		if (bean.getSeverityFilter() != null && !bean.getSeverityFilter().trim().equals("")) {
 			severity = bean.getSeverityFilter().trim();
+		}
 		
-		if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals(""))
+		if (bean.getLocationFilter() != null && !bean.getLocationFilter().trim().equals("")) {
 			path = bean.getLocationFilter().trim();
+		}
 		
-		if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals(""))
+		if (bean.getParameterFilter() != null && !bean.getParameterFilter().trim().equals("")) {
 			param = bean.getParameterFilter().trim();
+		}
 		
 		Integer cweInteger = getCweId(bean);
 		
 		return vulnerabilityDao.getVulnCountWithFilters(appId,description,severity,path,param, cweInteger,
-														bean.isOpen(), bean.isFalsePositive());
+														bean.isOpen(), bean.isFalsePositive(), bean.isHidden());
 	}
 	
 	@Override
@@ -573,7 +593,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public Application decryptCredentials(Application application) {
 		try {
-			if (application != null && application.getEncryptedPassword() != null && 
+			if (application != null && application.getEncryptedPassword() != null &&
 					application.getEncryptedUserName() != null) {
 				application.setPassword(ESAPI.encryptor().decrypt(application.getEncryptedPassword()));
 				application.setUserName(ESAPI.encryptor().decrypt(application.getEncryptedUserName()));

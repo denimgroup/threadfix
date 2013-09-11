@@ -65,18 +65,32 @@
 				<td class="bold">Severity</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
-			<tr>
-				<td class="bold">Path</td>
-				<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
-			</tr>
-			<tr>
-				<td class="bold">Parameter</td>
-				<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
-			</tr>
-			<tr>
-				<td class="bold">Native ID</td>
-				<td class="inputValue"><c:out value="${ finding.nativeId }"/></td>
-			</tr>
+			<c:if test="${ empty finding.dependency }">			
+				<tr>
+					<td class="bold">Path</td>
+					<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
+				</tr>
+				<tr>
+					<td class="bold">Parameter</td>
+					<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+				</tr>
+				<tr>
+					<td class="bold">Native ID</td>
+					<td class="inputValue">
+						<c:if test="${ not empty finding.displayId }"><c:out value="${ finding.displayId }" /></c:if>
+						<c:if test="${ empty finding.displayId }"><c:out value="${ finding.nativeId }" /></c:if>						
+					</td>
+				</tr>
+			</c:if>		
+			<c:if test="${ not empty finding.dependency }">			
+				<tr>
+					<td class="bold">CVE ID</td>
+					<td class="inputValue">
+						<c:out value="${ finding.dependency.cve } "/>
+						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ finding.dependency.cve }">View</a>)
+					</td>	
+				</tr>	
+			</c:if>		
 		</tbody>
 	</table>
 	

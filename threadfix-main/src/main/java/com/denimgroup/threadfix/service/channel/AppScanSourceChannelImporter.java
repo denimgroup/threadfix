@@ -285,6 +285,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	@Override
 	public ScanCheckResultBean checkFile() {
 		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
+		
 		//return testSAXInput(new AppScanSourceSAXValidator());
 	}
 	

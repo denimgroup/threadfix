@@ -82,7 +82,7 @@
 	<c:choose>
 		<c:when test="${ empty findingList }">
 			<tr class="bodyRow">
-				<td colspan="5" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
+				<td colspan="6" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
 			</tr>
 		</c:when>
 		<c:otherwise>

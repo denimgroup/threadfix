@@ -6,7 +6,7 @@
 
 </span>
 <span id="showFilters" style="display:none;padding-left:6px;">
-	<a id="showFiltersLink" href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Filters</a>
+	<a id="showFiltersLink" href="javascript:toggleFilters(true, '#toReplace', '${ tableUrl }');">Show Table Filters</a>
 </span>
 <table class="dataTable">
 	<tbody>

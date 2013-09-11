@@ -59,16 +59,19 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private UserDao userDao = null;
 	private JobStatusService jobStatusService = null;
 	private ScanMerger scanMerger = null;
+	private VulnerabilityFilterService vulnerabilityFilterService = null;
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao,
 			ApplicationChannelDao applicationChannelDao,
 			UserDao userDao,
-			JobStatusService jobStatusService,
-			ScanMerger scanMerger) {
+			ScanMerger scanMerger,
+			VulnerabilityFilterService vulnerabilityFilterService,
+			JobStatusService jobStatusService) {
 		this.scanDao = scanDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.userDao = userDao;
+		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.jobStatusService = jobStatusService;
 		this.scanMerger = scanMerger;
 	}
@@ -97,18 +100,21 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		if (application != null && application.getProjectRoot() != null
 				&& application.getVulnerabilities() != null) {
 			for (Vulnerability vuln : application.getVulnerabilities()) {
-				if (vuln == null || vuln.getFindings() == null)
+				if (vuln == null || vuln.getFindings() == null) {
 					continue;
+				}
 				for (Finding finding : vuln.getFindings()) {
-					if (finding == null)
+					if (finding == null) {
 						continue;
+					}
 					String newPath = "";
 //					StaticFindingPathUtils.getFindingPathWithRoot(finding,
 //							application.getProjectRoot());
 //					if (newPath == null)
 //						continue;
-					if (finding.getSurfaceLocation() != null)
+					if (finding.getSurfaceLocation() != null) {
 						finding.getSurfaceLocation().setPath(newPath);
+					}
 				}
 			}
 		}
@@ -193,7 +199,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		scanMerger.merge(scan, scan.getApplicationChannel(), 
+		scanMerger.merge(scan, scan.getApplicationChannel(),
 				MergeConfigurationGenerator.getDefaultConfiguration());
 	
 		return scan;
@@ -227,7 +233,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		updateJobStatus(statusId, "Parsing findings from " + 
+		updateJobStatus(statusId, "Parsing findings from " +
 				applicationChannel.getChannelType().getName() + " scan file.");
 		log.info("Processing file " + fileName + " on channel "
 				+ applicationChannel.getChannelType().getName() + ".");
@@ -243,8 +249,12 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
-		scanMerger.merge(scan, applicationChannel, 
+		scanMerger.merge(scan, applicationChannel,
 				MergeConfigurationGenerator.generateConfiguration(applicationChannel.getApplication(), scan));
+		
+		vulnerabilityFilterService.updateVulnerabilities(
+				applicationChannel.getApplication().getOrganization().getId(),
+				applicationChannel.getApplication().getId());
 		
 		importer.deleteScanFile();
 		return scan;
@@ -256,7 +266,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	}
 	
-	private void updateScanCounts(Scan scan) {
+	public void updateScanCounts(Scan scan) {
 		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
 		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
 		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
