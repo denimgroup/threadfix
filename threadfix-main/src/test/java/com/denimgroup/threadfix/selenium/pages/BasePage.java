@@ -54,6 +54,8 @@ public abstract class BasePage {
 	/*--------------click functions--------------*/
 	public LoginPage logout() {
 		clickUserTab();
+		waitForElement(driver.findElementById("configurationHeader"));
+//		sleep(2000);
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
 		waitForElement(driver.findElementById("login"));
@@ -92,7 +94,7 @@ public abstract class BasePage {
 	
 	public void clickUserTab(){
 		driver.findElementById("tabUserAnchor").click();
-		sleep(4000);
+//		sleep(4000);
 //		waitForElement(driver.findElementById("configurationHeader"));
 	}
 	

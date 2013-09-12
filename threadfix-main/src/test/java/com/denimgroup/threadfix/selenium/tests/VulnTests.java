@@ -497,6 +497,7 @@ public class VulnTests extends BaseTest {
 							.setAppMapping(rtApp, appName)
 							.clickSaveMapping(rtApp)
 							.clickImportScan(rtApp)
+							.clickOrganizationHeaderLink()
 							.logout();
 		
 		

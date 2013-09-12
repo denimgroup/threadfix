@@ -172,7 +172,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		}
 		
 		driver.findElementById("provider"+ids[0]+"import"+ids[1]).click();
-		sleep(6000);
+		sleep(8000);
 		return new ApplicationDetailPage(driver);
 	}
 	
