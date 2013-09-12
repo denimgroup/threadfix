@@ -59,6 +59,9 @@ public class SeverityFilter extends BaseEntity {
 	private Organization organization = null;
 	
 	public void setFilters(SeverityFilter other) {
+		if (other == null) {
+			setFilters(new SeverityFilter());
+		}
 		this.showInfo = other.showInfo;
 		this.showLow = other.showLow;
 		this.showMedium = other.showMedium;

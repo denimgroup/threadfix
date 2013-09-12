@@ -56,6 +56,7 @@ public class Scan extends BaseEntity {
 	private Integer numberOldVulnerabilities;
 	private Integer numberResurfacedVulnerabilities;
 	private Integer numberTotalVulnerabilities;
+	private Integer numberHiddenVulnerabilities;
 	private Integer numberRepeatResults;
 	private Integer numberRepeatFindings;
 	
@@ -199,10 +200,10 @@ public class Scan extends BaseEntity {
 	}
 	
 	/**
-	 * Keeping track of this information allows us to produce scans without extensive recalculation, 
+	 * Keeping track of this information allows us to produce scans without extensive recalculation,
 	 * because we don't have to track down which application channel we should count a vulnerability for.
 	 * 
-	 * This may lead to a small bug if a vuln is opened in one channel, then found in another and 
+	 * This may lead to a small bug if a vuln is opened in one channel, then found in another and
 	 * subsequently closed there. This needs to be looked into.
 	 * @return
 	 */
@@ -311,12 +312,14 @@ public class Scan extends BaseEntity {
 
 	static public class ScanTimeComparator implements Comparator<Scan> {
 	
+		@Override
 		public int compare(Scan scan1, Scan scan2){
 			Calendar scan1Time = scan1.getImportTime();
 			Calendar scan2Time = scan2.getImportTime();
 			
-			if (scan1Time == null || scan2Time == null) 
+			if (scan1Time == null || scan2Time == null) {
 				return 0;
+			}
 			
 			return scan1Time.compareTo(scan2Time);
 		}
@@ -367,6 +370,20 @@ public class Scan extends BaseEntity {
 			Long numberCriticalVulnerabilities) {
 		this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
 	}
+	
+	@Column
+	public Integer getNumberHiddenVulnerabilities() {
+		if (numberHiddenVulnerabilities == null) {
+			return 0;
+		} else {
+			return numberHiddenVulnerabilities;
+		}
+	}
+
+	public void setNumberHiddenVulnerabilities(
+			Integer numberHiddenVulnerabilities) {
+		this.numberHiddenVulnerabilities = numberHiddenVulnerabilities;
+	}
 
 	@Transient
 	public String getScannerType() {
@@ -374,7 +391,7 @@ public class Scan extends BaseEntity {
 				&& getApplicationChannel().getChannelType().getName() != null) {
 			String scannerName = getApplicationChannel().getChannelType().getName();
 			if (DYNAMIC_TYPES.contains(scannerName)) {
-				return DYNAMIC; 
+				return DYNAMIC;
 			} else if (STATIC_TYPES.contains(scannerName)) {
 				return STATIC;
 			} else if (MIXED_TYPES.contains(scannerName)) {

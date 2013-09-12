@@ -24,6 +24,7 @@
 					<th style="text-align: left" class="first">Team</th>
 					<th>Scanner</th>
 					<th>Total Vulns</th>
+					<th>Hidden</th>
 					<th>Critical</th>
 					<th>High</th>
 					<th>Medium</th>
