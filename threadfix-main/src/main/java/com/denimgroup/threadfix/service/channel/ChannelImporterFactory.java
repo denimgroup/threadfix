@@ -125,7 +125,7 @@ public class ChannelImporterFactory {
 					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.ZAPROXY)){
 			channelImporter = new ZaproxyChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
+					channelVulnerabilityDao, channelSeverityDao, genericVulnerabilityDao);
 		} else if (channelName.equals(ChannelType.APPSCAN_SOURCE)){
 			channelImporter = new AppScanSourceChannelImporter(channelTypeDao,
 					channelVulnerabilityDao, channelSeverityDao);

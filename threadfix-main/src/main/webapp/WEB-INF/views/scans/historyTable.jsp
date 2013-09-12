@@ -62,6 +62,7 @@
 				<th style="text-align: left" class="first">Team</th>
 				<th>Scanner</th>
 				<th style="width:70px;">Total Vulns</th>
+				<th>Hidden</th>
 				<th>Critical</th>
 				<th>High</th>
 				<th>Medium</th>
@@ -101,6 +102,9 @@
 							value="${ scan.applicationChannel.channelType.name }" /></td>
 					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
 						<c:out value="${ scan.numberTotalVulnerabilities }" />
+					</td>
+					<td style="text-align: center" id="numHiddenVulnerabilities${ status.count }">
+						<c:out value="${ scan.numberHiddenVulnerabilities }" />
 					</td>
 					<td style="text-align: center" id="numCriticalVulnerabilities${ status.count }">
 						<c:out value="${ scan.numberCriticalVulnerabilities }" />
