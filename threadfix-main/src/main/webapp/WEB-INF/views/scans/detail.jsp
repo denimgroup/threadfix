@@ -86,7 +86,11 @@
 						</tr>
 						<tr>
 							<td>Duplicate Findings</td>
-							<td class="inputValue"><c:out value="${ totalFindings - vulnData[1] }"/></td>
+							<td class="inputValue"><c:out value="${ totalFindings - vulnData[1] - scan.numberHiddenVulnerabilities }"/></td>
+						</tr>
+						<tr>
+							<td>Hidden Vulnerabilities</td>
+							<td class="inputValue"><c:out value="${ scan.numberHiddenVulnerabilities }"/></td>
 						</tr>
 						<tr>
 							<td style="font-weight:bold">Total Vulnerabilities</td>

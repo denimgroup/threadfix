@@ -37,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -63,8 +64,10 @@ import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
@@ -93,7 +96,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE
 	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
@@ -255,9 +258,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		return constructFinding(findingMap.get(FindingKey.PATH), 
 				findingMap.get(FindingKey.PARAMETER), 
 				findingMap.get(FindingKey.VULN_CODE), 
-				findingMap.get(FindingKey.SEVERITY_CODE)); 
+				findingMap.get(FindingKey.SEVERITY_CODE),
+				findingMap.get(FindingKey.CWE)); 
 	}
-	
+
 	/**
 	 *
 	 * This method can be used to construct a finding out of the 
@@ -269,7 +273,23 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return
 	 */
 	protected Finding constructFinding(String url, String parameter, 
-    		String channelVulnerabilityCode, String channelSeverityCode) {
+			String channelVulnerabilityCode, String channelSeverityCode) {
+		return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, null);
+	}
+	
+	/**
+	 *
+	 * This method can be used to construct a finding out of the 
+	 * important common information that findings have.
+	 * @param url
+	 * @param parameter
+	 * @param channelVulnerabilityCode
+	 * @param channelSeverityCode
+	 * @param cweCode 
+	 * @return
+	 */
+	protected Finding constructFinding(String url, String parameter, 
+    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty())
     		return null;
     	
@@ -310,8 +330,34 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		finding.setSurfaceLocation(location);
 		
 		ChannelVulnerability channelVulnerability = null;
-		if (channelVulnerabilityCode != null)
+		if (channelVulnerabilityCode != null) {
 			channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
+			
+			// Create new Vulnerability Map
+			if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null) 
+					&& cweCode != null && !cweCode.isEmpty()) {
+				
+				GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
+				if (genericVuln != null) {
+					// Create new Channel Vulnerability
+					if (channelVulnerability == null) {
+						channelVulnerability = new ChannelVulnerability();
+						channelVulnerability.setChannelType(this.channelType);
+						channelVulnerability.setCode(channelVulnerabilityCode);
+						channelVulnerability.setName(channelVulnerabilityCode);
+						channelVulnerability.setFindings(Arrays.asList(finding));						
+					}
+					// Create new Vulnerability Map and hook to Channel Vulnerability
+					VulnerabilityMap vulnMap = new VulnerabilityMap();
+					vulnMap.setChannelVulnerability(channelVulnerability);
+					vulnMap.setGenericVulnerability(genericVuln);
+					vulnMap.setMappable(true);
+					channelVulnerability.setVulnerabilityMaps(Arrays.asList(vulnMap));
+					channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
+				}
+			} 
+		}
+		
 		finding.setChannelVulnerability(channelVulnerability);
 		
 		ChannelSeverity channelSeverity = null;

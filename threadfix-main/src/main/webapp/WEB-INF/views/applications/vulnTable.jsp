@@ -91,6 +91,7 @@
 				<c:if test="${ not empty application.defectTracker }">
 					<th>Defect</th>
 				</c:if>
+				<th style="width:25px;"></th>
 				<th style="width:65px;"></th>
 			</tr>
 		</thead>
@@ -134,7 +135,7 @@
 						<c:out value="${ vulnGroup.name }"/>
 						(<c:out value="${ fn:length(vulnGroup.vulnerabilities) }"/>) 
 					</td>
-					<td class="vulnSectionHeader" colspan="4"></td>
+					<td class="vulnSectionHeader" colspan="5"></td>
 					<c:if test="${ not empty application.defectTracker }">
 						<td class="vulnSectionHeader"></td>
 					</c:if>
@@ -187,7 +188,7 @@
 					<c:if test="${ not empty application.defectTracker }">
 						<td >
 							<c:if test="${ not empty vulnerability.defect }">
-								<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:center;">
+								<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:right;">
 									<a id="bugLink${ index }"
 											target="_blank" 
 											<c:if test="${ not empty vulnerability.defect.defectURL }"> href="<c:out value="${ vulnerability.defect.defectURL }"/>" </c:if> >
@@ -207,6 +208,14 @@
 							</c:if>
 						</td>
 					</c:if>
+					<td class="expandableTrigger">
+							<c:if test="${fn:length(vulnerability.findings) > 1 }">
+								<div id="findingIcon${ index }"  class="tooltip-container" data-placement="left" title="<c:out value="${fn:length(vulnerability.findings)}"/> Findings" style="text-align:left;">
+												<img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />
+								</div>
+							</c:if>
+						
+					</td>
 					<td>
 						<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">
 					        <spring:param name="appId" value="${ application.id }" />
@@ -218,9 +227,9 @@
 					</td>
 				</tr>
 				<tr class="bodyRow <c:out value="${ color }"/> expandable ${ rowClass } ${ hideClass }">
-					<c:set var="numColumns" value="7"/>
+					<c:set var="numColumns" value="8"/>
 					<c:if test="${ not empty application.defectTracker }">
-						<c:set var="numColumns" value="8"/>
+						<c:set var="numColumns" value="9"/>
 					</c:if>
 					<td colspan="<c:out value="${ numColumns }"/>">
 						<div id="vulnInfoDiv${vulnerability.id}" class="collapse">

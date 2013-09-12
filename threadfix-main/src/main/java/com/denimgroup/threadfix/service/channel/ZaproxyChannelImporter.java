@@ -35,6 +35,7 @@ import org.xml.sax.SAXException;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
+import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -63,10 +64,12 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	@Autowired
 	public ZaproxyChannelImporter(ChannelTypeDao channelTypeDao,
 			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
+			ChannelSeverityDao channelSeverityDao,
+			GenericVulnerabilityDao genericVulnerabilityDao) {
 		this.channelTypeDao = channelTypeDao;
 		this.channelVulnerabilityDao = channelVulnerabilityDao;
 		this.channelSeverityDao = channelSeverityDao;
+		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		
 		this.channelType = channelTypeDao.retrieveByName(ChannelType.ZAPROXY);
 	}
@@ -96,11 +99,13 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private Boolean getParameter          = false;
 		private Boolean getChannelVulnName    = false;
 		private Boolean getSeverityName       = false;
+		private Boolean getCweId			  = false;		
 	
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
+		private String currentCweId			  = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -130,24 +135,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		getParameter = true;
 	    	} else if ("riskcode".equals(qName)) {
 	    		getSeverityName = true;
-	    	} else if ("otherinfo".equals(qName)) {
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		
-	    		if (finding != null && finding.getChannelVulnerability() == null) {
-	    			
-	    			String channelVulnerabilityCode = getAlternative(currentChannelVulnCode);
-	    			if (channelVulnerabilityCode != null) {
-		    			ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
-		    			finding.setChannelVulnerability(channelVulnerability);
-	    			}
-	    		}
-	    		
-	    		add(finding);
-	    	
-	    		currentParameter       = null;
-	    		currentPath            = null;
-	    		getParameter           = false;
+	    	} else if ("cweid".equals(qName)) {
+	    		getCweId = true;
 	    	}
 	    }
 
@@ -156,9 +145,25 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	if ("report".equals(qName)) {
 	    		getDate = false;
 	    	} else if ("alertitem".equals(qName)) {
+
+	    		Finding finding = constructFinding(currentPath, currentParameter, 
+	    				currentChannelVulnCode, currentSeverityCode, currentCweId);
+	    		if (finding != null && finding.getChannelVulnerability() == null) {
+	    			
+	    			String channelVulnerabilityCode = getAlternative(currentChannelVulnCode);
+	    			if (channelVulnerabilityCode != null) {
+		    			ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
+		    			finding.setChannelVulnerability(channelVulnerability);
+	    			}
+	    		}
+	    		add(finding);
+	    		currentParameter       = null;
+	    		currentPath            = null;
+	    		getParameter           = false;	    		
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
+	    		currentCweId 		   = null;
 	    		
 	    	} else if (getUri) {
 	    		currentPath = getBuilderText();
@@ -184,11 +189,14 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    			date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 	    		}
 	    		getDate = false;
+	    	} else if (getCweId) {
+	    		currentCweId = getBuilderText();
+	    		getCweId = false;
 	    	}
 	    }
 	    
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName) {
+	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName || getCweId) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
