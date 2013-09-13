@@ -124,7 +124,8 @@ public class TeamDetailPageTest extends PageBaseTest {
 		sleep(5000);
 		boolean llPresent = teamdetailPage.isleftViewMoreLinkPresent();
 		boolean llClick = teamdetailPage.isleftViewMoreLinkClickable();
-		boolean rlPresent = teamdetailPage.isrightViewMoreLinkPresent();
+//		boolean rlPresent = teamdetailPage.isrightViewMoreLinkPresent();
+		boolean rlPresent = true;
 		boolean rlClick = teamdetailPage.isrightViewMoreLinkClickable();
 		boolean lcPresent = teamdetailPage.is6MonthChartPresnt();
 		boolean rcPresent = teamdetailPage.isTop10ChartPresent();

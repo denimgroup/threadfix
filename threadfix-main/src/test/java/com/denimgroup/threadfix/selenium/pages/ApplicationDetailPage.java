@@ -713,7 +713,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage selectMergeDefect(String defect){
-		sleep(3000);
+		sleep(20000);
 		new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
 		return new ApplicationDetailPage(driver);
 	}

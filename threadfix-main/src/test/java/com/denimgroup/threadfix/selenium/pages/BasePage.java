@@ -53,18 +53,23 @@ public abstract class BasePage {
 	}
 	/*--------------click functions--------------*/
 	public LoginPage logout() {
-		clickUserTab();
-		waitForElement(driver.findElementById("configurationHeader"));
+//		clickUserTab();
+//		waitForElement(driver.findElementById("configurationHeader"));
 //		sleep(2000);
-		driver.findElementById("logoutLink").click();
-		sleep(6000);
+//		driver.findElementById("logoutLink").click();
+//		sleep(6000);
+//		waitForElement(driver.findElementById("login"));
+		driver.navigate().refresh();
+		System.out.println("refreshed");
+		driver.get(LoginPage.url + "j_spring_security_logout");
+		sleep(2000);
 		waitForElement(driver.findElementById("login"));
 		return new LoginPage(driver);
 	}
 	
 	public TeamIndexPage clickOrganizationHeaderLink() {
 			driver.findElementById("orgHeader").click();
-			sleep(5000);
+			sleep(2000);
 			return new TeamIndexPage(driver);
 	}
 	

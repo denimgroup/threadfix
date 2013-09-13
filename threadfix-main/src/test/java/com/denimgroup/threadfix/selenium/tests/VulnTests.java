@@ -91,7 +91,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
+//	@Ignore
 	@Test
 	public void mergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -226,8 +226,7 @@ public class VulnTests extends BaseTest {
 				.clickMergeDefectSubmit();
 
 		//change merge
-		ad = ad.clickExpandAllVulns()
-				.clickVulnCheckBox(1)
+		ad = ad.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("4")
 				.clickMergeDefectSubmit();
@@ -499,6 +498,7 @@ public class VulnTests extends BaseTest {
 							.clickImportScan(rtApp)
 							.clickOrganizationHeaderLink()
 							.logout();
+
 		
 		
 		return true;
