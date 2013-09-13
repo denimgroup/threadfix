@@ -152,6 +152,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scanDao.saveOrUpdate(scan);
 		
 		updateScanCounts(scan);
+		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return scan;
 	}
@@ -442,6 +443,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		scanDao.saveOrUpdate(scan);
 		
 		updateScanCounts(scan);
+		vulnerabilityFilterService.updateVulnerabilities(scan);
 		
 		return true;
 	}
@@ -520,8 +522,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 
 		cleanFindings(scan);
-		
-		vulnerabilityFilterService.updateVulnerabilities(scan);
 		
 		importer.deleteScanFile();
 		return scan;
