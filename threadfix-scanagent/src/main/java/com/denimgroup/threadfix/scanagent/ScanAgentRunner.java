@@ -97,18 +97,29 @@ public final class ScanAgentRunner implements ServerConduit {
 		myAgent.logConfiguration();
 		
 		//	Main polling loop
-		//	TODO - Determine if we want to move this inside of the ScanAgent class proper
-		while(myAgent.keepPolling()) {
-			Task currentTask = myAgent.requestTask();
-			File taskResult = myAgent.doTask(currentTask);
-		}
-		log.info("Reached max number of tasks: " + myAgent.numTasksAttempted + ". Shutting down");
+		int numTasksRun = myAgent.pollAndRunTasks();
 		
 		log.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");
 	}
 	
 	public ScanAgentRunner() {
 		this.cacheAgentConfig();
+	}
+	
+	public int pollAndRunTasks() {
+
+		while(keepPolling()) {
+			Task currentTask = requestTask();
+			boolean taskResult = doTask(currentTask);
+			try {
+				Thread.sleep(pollIntervalInSeconds * 1000);
+			} catch (InterruptedException e) {
+				log.error("Got an InterruptedException while waiting until we check for our next task: " + e.getMessage(), e);
+			}
+		}
+		log.info("Reached max number of tasks: " + this.numTasksAttempted + ". Shutting down");
+		
+		return(this.numTasksAttempted);
 	}
 	
 	/**
@@ -263,7 +274,8 @@ public final class ScanAgentRunner implements ServerConduit {
 		return(retVal);
 	}
 	
-	private File doTask(Task theTask) {
+	private boolean doTask(Task theTask) {
+		boolean retVal = false;
 		File taskResult = null;
 		
 		this.numTasksAttempted++;
@@ -286,6 +298,8 @@ public final class ScanAgentRunner implements ServerConduit {
 				ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
 				String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath());
 				log.info("Result of completion attempt was: " + result);
+				//	TOFIX - Determine if the result was successful or not. Currently returning true if we get to this point
+				retVal = true;
 			} else {
 				log.warn("Task appears not to have completed successfully: " + theTask);
 			}
@@ -293,7 +307,7 @@ public final class ScanAgentRunner implements ServerConduit {
 			log.info("Finished attempting task: " + theTask);
 		}
 		
-		return(taskResult);
+		return(retVal);
 	}
 	
 	private boolean readConfiguration(Configuration config)
