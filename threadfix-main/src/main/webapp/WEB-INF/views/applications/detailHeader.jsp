@@ -17,7 +17,7 @@
 			<ul class="dropdown-menu">		
 				<c:if test="${canManageApplications }">
 					<li><a id="editApplicationModalButton" href="#editApplicationModal" data-toggle="modal">Edit / Delete</a></li>
-					<li><a id="editScanParametersLink" href="#editScanParametersModal" role="button" class="btn header-button" data-toggle="modal">Edit Scan Settings</a></li>
+					<li><a id="editScanParametersLink" href="#editScanParametersModal" data-toggle="modal">Edit Scan Settings</a></li>
 				</c:if>
 				<c:if test="${canManageApplications }">
 					<spring:url value="/organizations/{orgId}/applications/{appId}/filters" var="vulnFiltersUrl">

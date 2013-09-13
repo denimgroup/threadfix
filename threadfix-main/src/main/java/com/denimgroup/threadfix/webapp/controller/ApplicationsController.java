@@ -181,7 +181,7 @@ public class ApplicationsController {
 		model.addAttribute("numHiddenVulns", numHiddenVulns);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
-		model.addAttribute(ScanParametersBean.getScanParametersBean(application));
+		model.addAttribute("scanParametersBean", ScanParametersBean.getScanParametersBean(application));
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
 		model.addAttribute("typeMatchingStrategies", VulnTypeStrategy.values());

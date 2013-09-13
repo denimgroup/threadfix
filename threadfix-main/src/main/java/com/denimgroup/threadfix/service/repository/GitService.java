@@ -15,7 +15,6 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
@@ -38,12 +37,27 @@ public class GitService {
 		
 		if (fileLocation.exists()) {
 			try {
-				Repository localRepo = new FileRepository(new File(fileLocation.getAbsolutePath() + File.separator + ".git"));
-				Git git = new Git(localRepo);
-				if (localRepo.getRepositoryState() == RepositoryState.SAFE) {
-					git.pull().call();
+				
+				File gitDirectoryFile = new File(fileLocation.getAbsolutePath() + File.separator + ".git");
+				
+				if (!gitDirectoryFile.exists()) {
+					
+					Git newRepo = Git.cloneRepository()
+						.setURI(gitUrl)
+						.setDirectory(fileLocation)
+						.call();
+					
+					return newRepo.getRepository();
+				} else {
+					// for now let's not try to pull
+					Repository localRepo = new FileRepository(gitDirectoryFile);
+					Git git = new Git(localRepo);
+					
+//					if (localRepo.getRepositoryState() == RepositoryState.SAFE) {
+//						git.pull().call();
+//					}
+					return git.getRepository();
 				}
-				return git.getRepository();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (WrongRepositoryStateException e) {

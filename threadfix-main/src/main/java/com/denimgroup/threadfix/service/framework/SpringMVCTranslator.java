@@ -109,7 +109,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 			for (Finding finding : scan.getFindings()) {
 				if (finding != null && finding.getStaticPathInformation() != null &&
 						finding.getStaticPathInformation().guessFrameworkType() == FrameworkType.SPRING_MVC) {
-					String standardizedUrl = 
+					String standardizedUrl =
 							SpringControllerEndpoint.cleanUrlPathStatic(finding.getStaticPathInformation().getValue());
 					
 					// TODO look into whether or not we need to extract information from data flows
@@ -162,13 +162,14 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		String canonicalUrlPath = getUrlPath(finding);
 		if (fullMappings != null && canonicalUrlPath != null) {
 			
-			Set<SpringControllerEndpoint> endpoints = 
+			Set<SpringControllerEndpoint> endpoints =
 					fullMappings.getEndpointsFromUrl(canonicalUrlPath);
 			
 			if (endpoints != null && !endpoints.isEmpty()) {
 				for (SpringControllerEndpoint endpoint : endpoints) {
 					if (httpMethod == null || endpoint.matchesMethod(httpMethod)) {
 						filePath = endpoint.getCleanedFilePath();
+						finding.setEntryPointLineNumber(endpoint.getStartLineNumber());
 						break;
 					}
 				}

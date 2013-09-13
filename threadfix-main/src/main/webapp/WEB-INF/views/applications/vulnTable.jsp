@@ -173,13 +173,8 @@
 					<td class="expandableTrigger" id="type${ index }">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
-<<<<<<< HEAD
-					<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.displayPath }"/></td>
-					<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
-=======
-					
 					<c:if test="${ empty vulnerability.originalFinding.dependency }">
-						<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+						<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.displayPath }"/></td>
 						<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 					</c:if>
 					<c:if test="${ not empty vulnerability.originalFinding.dependency }">
@@ -188,7 +183,6 @@
 							(<a target="_blank" id="cve${ index }" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ vulnerability.originalFinding.dependency.cve }">View</a>)
 						</td>
 					</c:if>
->>>>>>> 1.2
 					<c:if test="${ not empty application.defectTracker }">
 						<td >
 							<c:if test="${ not empty vulnerability.defect }">

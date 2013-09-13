@@ -40,7 +40,7 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 	
 	private String fileRoot;
 	
-	public SpringControllerEndpoint(String filePath, String urlPath, 
+	public SpringControllerEndpoint(String filePath, String urlPath,
 			Collection<String> methods, Collection<String> parameters,
 			int startLineNumber, int endLineNumber) {
 		this.rawFilePath     = filePath;
@@ -77,7 +77,7 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 	}
 
 	public String getCleanedFilePath() {
-		if (cleanedFilePath == null && fileRoot != null && 
+		if (cleanedFilePath == null && fileRoot != null &&
 				rawFilePath != null && rawFilePath.contains(fileRoot)) {
 			cleanedFilePath = rawFilePath.substring(fileRoot.length());
 		}
@@ -118,6 +118,10 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 		}
 	}
 	
+	public int getStartLineNumber() {
+		return startLineNumber;
+	}
+	
 	public boolean matchesLineNumber(int lineNumber) {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
@@ -128,13 +132,13 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 
 	@Override
 	public String toString() {
-		return "[" + getCleanedFilePath() + 
-				":" + startLineNumber + 
-				"-" + endLineNumber + 
-				" -> " + getMethod() + 
-				" " + getCleanedUrlPath() + 
-				" " + getParameters() + 
-				"]"; 
+		return "[" + getCleanedFilePath() +
+				":" + startLineNumber +
+				"-" + endLineNumber +
+				" -> " + getMethod() +
+				" " + getCleanedUrlPath() +
+				" " + getParameters() +
+				"]";
 	}
 
 	public Set<String> getMethod() {

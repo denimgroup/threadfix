@@ -69,6 +69,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private StaticPathInformation staticPathInformation;
 	
 	private int numberMergedResults = 1;
+	private Integer entryPointLineNumber = -1;
 	
 	@Size(max = SOURCE_FILE_LOCATION_LENGTH, message = "{errors.maxlength} " + SOURCE_FILE_LOCATION_LENGTH + ".")
 	private String sourceFileLocation;
@@ -228,11 +229,22 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.numberMergedResults = numMergedResults;
 	}
 	
-	@Column
 	public int getNumberMergedResults() {
 		return numberMergedResults;
 	}
+	
+	@Column
+	public Integer getEntryPointLineNumber() {
+		if (entryPointLineNumber == null) {
+			return -1;
+		}
+		return entryPointLineNumber;
+	}
 
+	public void setEntryPointLineNumber(Integer entryPointLineNumber) {
+		this.entryPointLineNumber = entryPointLineNumber;
+	}
+	
 	@ManyToOne
 	@JoinColumn(name = "userId")
 	public User getUser() {
@@ -279,5 +291,5 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
 	}
-	
+
 }
