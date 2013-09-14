@@ -169,6 +169,14 @@ public class ThreadFixRestClient {
 		return(result);
 	}
 	
+	public String setTaskConfig(String appId, String scannerType, String filePath) {
+		String url = util.getUrl() + "/tasks/setTaskConfig";
+		String[] paramNames 	= { "apiKey",		"appId", 	"scannerType" };
+		String[] paramValues 	= {  util.getKey(),	appId,		scannerType };
+		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
+		return result;
+	}
+	
 	/**
 	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
 	 * @param taskId

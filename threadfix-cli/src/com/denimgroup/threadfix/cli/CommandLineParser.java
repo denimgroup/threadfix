@@ -61,6 +61,14 @@ public class CommandLineParser {
 				.create("q");
 		options.addOption(queueScan);
 		
+		Option setTaskConfig = OptionBuilder.withArgName("applicationId> <scannerName> <file")
+				.withValueSeparator(' ')
+				.hasArgs(3)
+				.withLongOpt("setTaskConfig")
+				.withDescription("Save the scan configuration for the given applicationId with the given scanner type")
+				.create("stc");
+		options.addOption(queueScan);
+		
 		Option createTeam = OptionBuilder.withArgName("name")
 				.hasArg()
 				.withLongOpt("create-team")
@@ -191,6 +199,13 @@ public class CommandLineParser {
 				System.out.println("Queueing a scan.");
 				System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
 				
+			} else if(cmd.hasOption("stc")) {
+				String[] setTaskConfigArgs = cmd.getOptionValues("stc");
+				if(setTaskConfigArgs.length != 3) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Setting task config");
+				System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
 			} else if (cmd.hasOption("u")) {
 				String[] uploadArgs = cmd.getOptionValues("u");
 				// Upload a scan
