@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.service;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,9 +38,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.dao.DocumentDao;
 import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.ScanStatus;
 import com.denimgroup.threadfix.data.entities.Task;
@@ -52,16 +56,19 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 
 	private ApplicationDao applicationDao;
 	private ChannelTypeDao channelTypeDao;
+	private DocumentDao documentDao;
 	private ApplicationChannelDao applicationChannelDao;
 	private ScanQueueTaskDao scanQueueTaskDao;
 	
 	@Autowired
 	public ScanQueueServiceImpl(ApplicationDao applicationDao,
 								ChannelTypeDao channelTypeDao,
+								DocumentDao documentDao,
 								ApplicationChannelDao applicationChannelDao,
 								ScanQueueTaskDao scanQueueTaskDao) {
 		this.applicationDao = applicationDao;
 		this.channelTypeDao = channelTypeDao;
+		this.documentDao = documentDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.scanQueueTaskDao = scanQueueTaskDao;
 	}
@@ -173,14 +180,30 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					retVal = new Task();
 					retVal.setTaskId(task.getId());
 					retVal.setTaskType(task.getScanner());
-					//	TOFIX - Look up the TaskConfig for this particular task instead of lazily
-					//	returning a hacked together version
 					TaskConfig taskConfig = new TaskConfig();
 					taskConfig.setTargetUrlString(task.getApplication().getUrl());
-					taskConfig.setConfigParam("exampleParam1", "exampleValue1");
-					taskConfig.setConfigParam("exampleParam2", "example Value 2 With Spaces");
-					taskConfig.setDataBlob("dataBlob1", new byte[] { 0x00, 0x01, 0x02, 0x03 } );
-					taskConfig.setDataBlob("dataBlob2", new byte[] { -127, -126, -125, -124 } );
+					
+					//	See if there is a configuration file specified for this Application and scanner type
+					int appId = task.getApplication().getId();
+					
+					Document configDoc = this.documentDao.retrieveByAppIdAndFilename(appId, task.getScanner(), ScanQueueTask.SCANAGENT_CONFIG_FILE_EXTENSION);
+					
+					if(configDoc != null) {
+						Blob fileData = configDoc.getFile();
+						//	Note that JDBC Blobs should start their data at index 1 not 0
+						try {
+							taskConfig.setDataBlob("configFile", fileData.getBytes(1, (int)fileData.length()));
+							log.debug("Successfully added configFile data to taskConfig");
+						} catch (SQLException e) {
+							log.warn("Unable to retrieve Blob data because of exception. "
+										+ "Will fight through, but config will not be returned with task. "
+										+ "Message was: " + e.getMessage(), e);
+						}
+					} else {
+						log.debug("No Document (configFile) data found to be associated with app: "
+									+ task.getApplication().getId() + " and scanner: " + task.getScanner());
+					}
+					
 					retVal.setTaskConfig(taskConfig);
 					
 					//	Mark the task as having been assigned
