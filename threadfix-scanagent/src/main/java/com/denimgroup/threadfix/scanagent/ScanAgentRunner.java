@@ -280,31 +280,44 @@ public final class ScanAgentRunner implements ServerConduit {
 		
 		this.numTasksAttempted++;
 		
-		if(theTask == null) {
-			log.warn("Task(" + this.numTasksAttempted + ") was null. Not going to do anything for now.");
-		} else {
-			log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
-			
-			String taskType = theTask.getTaskType();
-			AbstractScanAgent theAgent = this.scannerMap.get(taskType);
-			//	TODO - Clean up the gross way we handle these callbacks
-			theAgent.setCurrentTaskId(theTask.getTaskId());
-			taskResult = theAgent.doTask(theTask.getTaskConfig());
-			if(taskResult != null) {
-				log.info("Task appears to have completed successfully: " + theTask);
-				log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
-				
-				log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
-				ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-				String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath());
-				log.info("Result of completion attempt was: " + result);
-				//	TOFIX - Determine if the result was successful or not. Currently returning true if we get to this point
-				retVal = true;
+		try {			
+			if(theTask == null) {
+				log.warn("Task(" + this.numTasksAttempted + ") was null. Not going to do anything for now.");
 			} else {
-				log.warn("Task appears not to have completed successfully: " + theTask);
+				log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
+				
+				String taskType = theTask.getTaskType();
+				AbstractScanAgent theAgent = this.scannerMap.get(taskType);
+				//	TODO - Clean up the gross way we handle these callbacks
+				theAgent.setCurrentTaskId(theTask.getTaskId());
+				taskResult = theAgent.doTask(theTask.getTaskConfig());
+				if(taskResult != null) {
+					log.info("Task appears to have completed successfully: " + theTask);
+					log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
+					
+					log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
+					ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
+					String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath());
+					log.info("Result of completion attempt was: " + result);
+					//	TOFIX - Determine if the result was successful or not. Currently returning true if we get to this point
+					retVal = true;
+				} else {
+					//	TODO - Look at better ways to get some sort of reason the scan wasn't successful
+					//	The only way we can report back right now is if an uncaught exception occurs which is
+					//	(hopefully) a pretty rare situation.
+					String message = "Task appears not to have completed successfully: " + theTask;
+					ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
+					tfClient.failTask(String.valueOf(theTask.getTaskId()), message);
+					log.warn(message);
+				}
+				
+				log.info("Finished attempting task: " + theTask);
 			}
-			
-			log.info("Finished attempting task: " + theTask);
+		} catch (Exception e) {
+			String message = "Exception thrown while trying to run scan: " + e.getMessage();
+			log.warn(message, e);
+			ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
+			tfClient.failTask(String.valueOf(theTask.getTaskId()), message);
 		}
 		
 		return(retVal);
