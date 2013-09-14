@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.DocumentDao;
+import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.entities.Document;
 
 /**
@@ -59,6 +60,21 @@ public class HibernateDocumentDao implements DocumentDao {
 	@Override
 	public Document retrieveById(Integer docId) {
 		return (Document) sessionFactory.getCurrentSession().get(Document.class, docId);
+	}
+	
+	@Override
+	public Document retrieveByAppIdAndFilename(Integer appId, String filename) {
+		Document retVal;
+		
+		retVal = (Document) sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"from Document document "
+								+ "where document.application.id = :appId and document.name = :name")
+				.setInteger("appId", appId).setString("name", filename)
+				.uniqueResult();
+		
+		return(retVal);
 	}
 
 	@Override
