@@ -33,6 +33,5 @@ public interface DocumentService {
 	String saveFileToApp(Integer appId, MultipartFile file);
 	String saveFileToVuln(Integer vulnId, MultipartFile file);
 	Document loadDocument(Integer docId);
-	Document loadDocumentForAppAndName(Integer appId, String filename);
 	String deleteDocument(Document document);
 }

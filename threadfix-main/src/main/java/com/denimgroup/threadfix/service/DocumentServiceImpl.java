@@ -176,17 +176,6 @@ public class DocumentServiceImpl implements DocumentService {
 	public Document loadDocument(Integer docId) {
 		return documentDao.retrieveById(docId);
 	}
-	
-	/**
-	 * Retrieve a Document with the specified appId and filename.
-	 * 
-	 * @param appId appId for Document to retrieve
-	 * @param filename filename for Document to retrieve
-	 * @return Document object if there is a match, null otherwise
-	 */
-	@Override public Document loadDocumentForAppAndName(Integer appId, String filename) {
-		return documentDao.retrieveByAppIdAndFilename(appId, filename);
-	}
 
 	@Override
 	public String deleteDocument(Document document) {
