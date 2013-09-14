@@ -122,7 +122,11 @@ public class ScanQueueTaskRestController extends RestController {
 	}
 	
 	/**
+	 *	Allows a remote ScanAgent to notify the server that a task has been completed successfully and
+	 *	provide the results from the scanning.
 	 *
+	 *	@param scanQueueTaskId id for the ScanQueueTask
+	 *	@param file result file from the scanning operation
 	 */
 	@RequestMapping(headers="Accept=application/json", value="completeTask", method=RequestMethod.POST)
 	public @ResponseBody Object completeTask(HttpServletRequest request,
@@ -139,30 +143,49 @@ public class ScanQueueTaskRestController extends RestController {
 		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
 		Application taskApp = myTask.getApplication();
 		
-		//	TODO - Add some checking so you can't just upload any file as the result of a specific scanner's task
+		//	TOFIX - Add some checking so you can't just upload any file as the result of a specific scanner's task
 		//	For now, passing NULL should force the calculation
 		Integer myChannelId = scanTypeCalculationService.calculateScanType(taskApp.getId(), file, null);
 		
-		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
-		
-		ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
-		
-		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-			Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
-			//	Scan has been saved. Let's update the ScanQueueTask
-			this.scanQueueService.completeTask(scanQueueTaskId);
-			return(myTask);
-		} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
-			String message = "Task appeared to complete successfully, but results provided were empty.";
-			this.scanQueueService.failTask(scanQueueTaskId, message);
-			return("Task appeared to complete successfully, but results provided were empty.");
-		} else {
-			String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
-			this.scanQueueService.failTask(scanQueueTaskId, message);
-			return message;
+		try {
+			String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
+			
+			ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
+			
+			if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+				Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+				//	Scan has been saved. Let's update the ScanQueueTask
+				this.scanQueueService.completeTask(scanQueueTaskId);
+				log.info("Results from scan queue task: " + myTask.getId() + " saved successfully.");
+				return(myTask);
+			} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
+				String message = "Task appeared to complete successfully, but results provided were empty.";
+				this.scanQueueService.failTask(scanQueueTaskId, message);
+				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
+				return(message);
+			} else {
+				String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
+				this.scanQueueService.failTask(scanQueueTaskId, message);
+				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
+				return message;
+			}
+		} catch (Exception e) {
+			//	Something went wrong trying to save the file. Mark the scan as a failure.
+			String message = "Exception thrown while trying to save scan.";
+			String longMessage = message + " Message was : " + e.getMessage();
+			this.scanQueueService.failTask(scanQueueTaskId, longMessage);
+			log.error(longMessage, e);
+			return(message);
 		}
 	}
 	
+	/**
+	 * Allows a remote ScanAgent to notify the server that a task has failed and provide a reason for the failure.
+	 * 
+	 *	@param scanQueueTaskId id for the ScanQueueTask to fail
+	 *	@param message scanagent-provided reason for the scan failure
+	 *	@return true if the scan failure was accepted and noted, false if some sort of error occurred
+	 */
 	@RequestMapping(headers="Accept=application/json", value="failTask", method=RequestMethod.POST)
 	public @ResponseBody Object failTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
@@ -176,7 +199,11 @@ public class ScanQueueTaskRestController extends RestController {
 			return result;
 		}
 		
-		retVal = this.scanQueueService.failTask(scanQueueTaskId, "Scan agent failure: " + message);
+		String serverMessage = "ScanAgent reported that the scan task: " + scanQueueTaskId
+									+ " had failed client-side for the following reason: " + message;
+		this.scanQueueService.failTask(scanQueueTaskId, serverMessage);
+		log.info(serverMessage);
+		retVal = true;
 		
 		return(retVal);
 	}
