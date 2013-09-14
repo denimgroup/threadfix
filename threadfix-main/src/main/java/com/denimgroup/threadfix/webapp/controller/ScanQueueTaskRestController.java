@@ -17,6 +17,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanQueueService;
 import com.denimgroup.threadfix.service.ScanService;
@@ -32,6 +33,9 @@ public class ScanQueueTaskRestController extends RestController {
 	public final static String OPERATION_COMPLETE_TASK = "completeTask";
 	public final static String OPERATION_FAIL_TASK = "failTask";
 	
+	public final static String SCANAGENT_CONFIG_FILE_EXTENSION = ".scanagtcfg";
+	
+	private DocumentService documentService;
 	private ScanQueueService scanQueueService;
 	private ScanTypeCalculationService scanTypeCalculationService;
 	private ScanService scanService;
@@ -39,11 +43,13 @@ public class ScanQueueTaskRestController extends RestController {
 	
 	@Autowired
 	public ScanQueueTaskRestController(APIKeyService apiKeyService,
+			DocumentService documentService,
 			ScanQueueService scanQueueService,
 			ScanTypeCalculationService scanTypeCalculationService,
 			ScanService scanService,
 			ScanMergeService scanMergeService) {
 		this.apiKeyService = apiKeyService;
+		this.documentService = documentService;
 		this.scanQueueService = scanQueueService;
 		this.scanTypeCalculationService = scanTypeCalculationService;
 		this.scanService = scanService;
@@ -117,6 +123,34 @@ public class ScanQueueTaskRestController extends RestController {
 		}
 		
 		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
+		
+		return(retVal);
+	}
+	
+	@RequestMapping(headers="Accept=application/json", value="setTaskConfig", method=RequestMethod.POST)
+	public @ResponseBody Object setTaskConfig(HttpServletRequest request,
+			@RequestParam("appId") int appId,
+			@RequestParam("scannerType") String scannerType,
+			@RequestParam("file") MultipartFile file) {
+		boolean retVal = false;
+		
+		if(!ScanQueueTask.validateScanner(scannerType)) {
+			log.warn("Bad scanner type of: " + scannerType + " provided. Will not save scan config.");
+		} else {
+			String filename = makeScanAgentConfigFileName(scannerType);
+			String returnedFilename = this.documentService.saveFileToApp(appId, file, filename);
+			log.debug("Filename of: " + filename + " resulted in final filename of: " + returnedFilename);
+			log.info("Scan configuration for scanner: " + scannerType + " saved for appId: " + appId);
+			retVal = true;
+		}
+		
+		return(retVal);
+	}
+	
+	private static String makeScanAgentConfigFileName(String scannerType) {
+		String retVal;
+		
+		retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
 		
 		return(retVal);
 	}
