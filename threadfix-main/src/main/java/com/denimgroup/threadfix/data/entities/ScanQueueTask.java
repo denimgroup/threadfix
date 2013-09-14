@@ -251,12 +251,14 @@ public class ScanQueueTask extends AuditableEntity {
 	 * that scan agent.
 	 * 
 	 * @param scannerType scanner type
-	 * @return filename for storing the scan agent configuration for that scanner
+	 * @return filename for storing the scan agent configuration for that scanner (returns null if an invalid scanner type is passed in)
 	 */
-	private static String makeScanAgentConfigFileName(String scannerType) {
-		String retVal;
+	public static String makeScanAgentConfigFileName(String scannerType) {
+		String retVal = null;
 		
-		retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
+		if(validateScanner(scannerType)) {
+			retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
+		}
 		
 		return(retVal);
 	}

@@ -39,7 +39,7 @@ public interface DocumentDao {
 
 	Document retrieveById(Integer docId);
 	
-	Document retrieveByAppIdAndFilename(Integer appId, String filename);
+	Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension);
 
 	void delete(Document document);
 	

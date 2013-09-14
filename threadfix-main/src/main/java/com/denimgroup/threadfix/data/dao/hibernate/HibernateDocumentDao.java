@@ -62,16 +62,25 @@ public class HibernateDocumentDao implements DocumentDao {
 		return (Document) sessionFactory.getCurrentSession().get(Document.class, docId);
 	}
 	
+	/**
+	 * TOFIX - Clean up the way we're using this because this should currently only be used for
+	 * ScanAgent configuration storage, and that is kind of a misuse of the Document object.
+	 * 
+	 * @param appId
+	 * @param filename
+	 * @param extension
+	 * @return
+	 */
 	@Override
-	public Document retrieveByAppIdAndFilename(Integer appId, String filename) {
+	public Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension) {
 		Document retVal;
 		
 		retVal = (Document) sessionFactory
 				.getCurrentSession()
 				.createQuery(
 						"from Document document "
-								+ "where document.application.id = :appId and document.name = :name")
-				.setInteger("appId", appId).setString("name", filename)
+								+ "where document.application.id = :appId and document.name = :name and document.type = :type")
+				.setInteger("appId", appId).setString("name", filename).setString("type", extension)
 				.uniqueResult();
 		
 		return(retVal);
