@@ -204,6 +204,9 @@ public class ScanQueueTask extends AuditableEntity {
 			case STATUS_COMPLETE_TIMEDOUT:
 				retVal = "COMPLETE_TIMEDOUT";
 				break;
+			case STATUS_COMPLETE_FAILED:
+				retVal = "COMPLETE_FAILED";
+				break;
 			default:
 				retVal = "<UNKNOWN>";
 				break;
