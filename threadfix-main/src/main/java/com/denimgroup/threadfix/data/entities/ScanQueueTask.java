@@ -215,6 +215,35 @@ public class ScanQueueTask extends AuditableEntity {
 		return(retVal);
 	}
 	
+	/**
+	 * Determines if a proposed scanner name is valid. Currently this just checks to make sure that
+	 * all of the characters are alphanumeric and that the length is less than 32.
+	 * 
+	 * TOFIX - This needs to whitelist-check against a list of known "good" scanner names rather
+	 * than just try to avoid riffraff entries.
+	 * 
+	 * @param proposedScanner proposed scanner name to validate
+	 * @return true if the scanner name is valid, false if it is not valid
+	 */
+	public static boolean validateScanner(String proposedScanner) {
+		boolean retVal = false;
+		
+		if (proposedScanner != null && proposedScanner.length() <= 32) {
+			boolean foundBadChar = false;
+			for (int i=0; i < proposedScanner.length(); ++i) {
+				if (!Character.isLetterOrDigit(proposedScanner.charAt(i))) {
+					foundBadChar = true;
+					break;
+				}
+			}
+			if(!foundBadChar) {
+				retVal = true;
+			}
+		}
+		
+		return(retVal);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
