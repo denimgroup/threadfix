@@ -135,7 +135,7 @@ public class ScanQueueTaskRestController extends RestController {
 		if(!ScanQueueTask.validateScanner(scannerType)) {
 			log.warn("Bad scanner type of: " + scannerType + " provided. Will not save scan config.");
 		} else {
-			String filename = makeScanAgentConfigFileName(scannerType);
+			String filename = ScanQueueTask.makeScanAgentConfigFileName(scannerType);
 			String returnedFilename = this.documentService.saveFileToApp(appId, file, filename);
 			log.debug("Filename of: " + filename + " resulted in final filename of: " + returnedFilename);
 			log.info("Scan configuration for scanner: " + scannerType + " saved for appId: " + appId);
