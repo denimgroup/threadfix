@@ -33,8 +33,6 @@ public class ScanQueueTaskRestController extends RestController {
 	public final static String OPERATION_COMPLETE_TASK = "completeTask";
 	public final static String OPERATION_FAIL_TASK = "failTask";
 	
-	public final static String SCANAGENT_CONFIG_FILE_EXTENSION = ".scanagtcfg";
-	
 	private DocumentService documentService;
 	private ScanQueueService scanQueueService;
 	private ScanTypeCalculationService scanTypeCalculationService;
@@ -143,14 +141,6 @@ public class ScanQueueTaskRestController extends RestController {
 			log.info("Scan configuration for scanner: " + scannerType + " saved for appId: " + appId);
 			retVal = true;
 		}
-		
-		return(retVal);
-	}
-	
-	private static String makeScanAgentConfigFileName(String scannerType) {
-		String retVal;
-		
-		retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
 		
 		return(retVal);
 	}

@@ -54,6 +54,8 @@ public class ScanQueueTask extends AuditableEntity {
 	public static final int STATUS_COMPLETE_TIMEDOUT = 5;
 	public static final int STATUS_COMPLETE_FAILED = 6;
 	
+	public final static String SCANAGENT_CONFIG_FILE_EXTENSION = "scanagtcfg";
+	
 	private int taskId;
 	private Application application;
 	private List<ScanStatus> scanStatuses;
@@ -240,6 +242,21 @@ public class ScanQueueTask extends AuditableEntity {
 				retVal = true;
 			}
 		}
+		
+		return(retVal);
+	}
+	
+	/**
+	 * Take a scanner type and return the filename for storing that scanner's configuration for
+	 * that scan agent.
+	 * 
+	 * @param scannerType scanner type
+	 * @return filename for storing the scan agent configuration for that scanner
+	 */
+	private static String makeScanAgentConfigFileName(String scannerType) {
+		String retVal;
+		
+		retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
 		
 		return(retVal);
 	}
