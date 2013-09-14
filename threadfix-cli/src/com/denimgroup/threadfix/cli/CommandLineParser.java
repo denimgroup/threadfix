@@ -67,7 +67,7 @@ public class CommandLineParser {
 				.withLongOpt("setTaskConfig")
 				.withDescription("Save the scan configuration for the given applicationId with the given scanner type")
 				.create("stc");
-		options.addOption(queueScan);
+		options.addOption(setTaskConfig);
 		
 		Option createTeam = OptionBuilder.withArgName("name")
 				.hasArg()
