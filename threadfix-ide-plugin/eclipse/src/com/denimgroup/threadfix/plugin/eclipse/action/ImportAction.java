@@ -66,7 +66,7 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 		
 		Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
 		
-		//VulnerabilityMarkerUtils.clearAllMarkers();
+		VulnerabilityMarkerUtils.clearAllMarkers();
 		
 		VulnerabilityMarkerUtils.addMarkersToFiles(vulnerabilityMarkers, files);
 	}

@@ -67,7 +67,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		for (String appIdentifier : new TreeSet<String>(appIdMap.keySet())) {
 			Button button = new Button(container, SWT.CHECK);
 			button.setText(appIdentifier);
-			if (alreadyChecked.contains(appIdMap.get(button))) {
+			if (alreadyChecked.contains(appIdMap.get(appIdentifier))) {
 				button.setSelection(true);
 			}
 			buttons.add(button);
