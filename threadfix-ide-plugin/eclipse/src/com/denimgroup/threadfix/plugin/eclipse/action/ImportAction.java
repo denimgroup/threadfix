@@ -21,23 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.eclipse;
+package com.denimgroup.threadfix.plugin.eclipse.action;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PartInitException;
 
+import com.denimgroup.threadfix.plugin.eclipse.rest.VulnerabilityMarkerService;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
-import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerService;
+import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
 
 /**
@@ -50,11 +49,6 @@ import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
  */
 public class ImportAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-	/**
-	 * The constructor.
-	 */
-	public ImportAction() {
-	}
 
 	/**
 	 * The action has been activated. The argument of the
@@ -72,56 +66,11 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 		
 		Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
 		
-		addMarkersToFiles(vulnerabilityMarkers, files);
-	}
-	
-	private void addMarkersToFiles(
-			List<VulnerabilityMarker> vulnerabilityMarkers,
-			Map<String, Set<IFile>> files) {
+		//VulnerabilityMarkerUtils.clearAllMarkers();
 		
-		for (VulnerabilityMarker marker : vulnerabilityMarkers) {
-			if (marker.getShortClassName() != null && files.get(marker.getShortClassName()) != null) {
-				// TODO a better package comparison
-				for (IFile file : files.get(marker.getShortClassName())) {
-					add(file, marker);
-				}
-			}
-		}
-		
+		VulnerabilityMarkerUtils.addMarkersToFiles(vulnerabilityMarkers, files);
 	}
 	
-	private void add(IFile file, VulnerabilityMarker marker) {
-		try {
-			if (file != null) {
-				WorkspaceUtils.createMarker(file, marker);
-			}
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Selection in the workbench has been changed. We
-	 * can change the state of the 'real' action here
-	 * if we want, but this can only happen after
-	 * the delegate has been created.
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
-	 */
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
-
-	/**
-	 * We can use this method to dispose of any system
-	 * resources we previously allocated.
-	 * @see IWorkbenchWindowActionDelegate#dispose
-	 */
-	@Override
-	public void dispose() {
-	}
-
 	/**
 	 * We will cache window object in order to
 	 * be able to provide parent shell for the message dialog.
@@ -131,4 +80,11 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
+
+	@Override
+	public void selectionChanged(IAction arg0, ISelection arg1) {}
+
+	@Override
+	public void dispose() {}
+	
 }

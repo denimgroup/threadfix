@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.eclipse;
+package com.denimgroup.threadfix.plugin.eclipse.action;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,8 +10,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
+import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
-import com.denimgroup.threadfix.plugin.eclipse.util.ThreadFixService;
 
 public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;

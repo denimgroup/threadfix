@@ -33,19 +33,12 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.texteditor.MarkerUtilities;
-
 
 public class WorkspaceUtils {
-	
-	public static final String
-		PROBLEM_TYPE = "com.denimgroup.threadfix.plugin.eclipse.threadfixmarker",
-		ECLIPSE_PROBLEM_TYPE = "org.eclipse.core.resources.problemmarker";
 	
 	private WorkspaceUtils() {}
 	
@@ -90,24 +83,4 @@ public class WorkspaceUtils {
 		return fileMap;
 	}
 	
-	public static void createMarker(IResource resource, VulnerabilityMarker marker) throws CoreException {
-		Map<String, Object> attribs = new HashMap<>();
-		
-	    attribs.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
-	    attribs.put(IMarker.LINE_NUMBER, marker.lineNumber);
-	    attribs.put(IMarker.MESSAGE, marker.toString());
-	    
-	    MarkerUtilities.createMarker(resource, attribs, ECLIPSE_PROBLEM_TYPE);
-	}
-	
-	public static void clearMarkers(IResource resource) throws CoreException {
-		for (IMarker marker : getMarkers(resource)) {
-			marker.delete();
-		}
-	}
-	
-	public static IMarker[] getMarkers(IResource target) throws CoreException {
-	    return target.findMarkers(ECLIPSE_PROBLEM_TYPE, true, IResource.DEPTH_INFINITE);
-	}
-
 }

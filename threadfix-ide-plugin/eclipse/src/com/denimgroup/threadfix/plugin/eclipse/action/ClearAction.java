@@ -21,19 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.eclipse;
+package com.denimgroup.threadfix.plugin.eclipse.action;
 
-import java.util.List;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
+import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerUtils;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -61,19 +57,9 @@ public class ClearAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		MessageDialog.openInformation(
 			window.getShell(),
-			"Helloworld",
-			"I'm clearin up yo stuff.");
-		try {
-			List<IFile> files = WorkspaceUtils.getAllFiles();
-			
-			for (IFile file : files) {
-				WorkspaceUtils.clearMarkers(file);
-			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			"Clear",
+			"Clearing all ThreadFix warnings in the workspace.");
+		VulnerabilityMarkerUtils.clearAllMarkers();
 	}
 
 	/**

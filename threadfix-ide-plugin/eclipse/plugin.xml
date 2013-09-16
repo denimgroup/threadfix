@@ -15,22 +15,22 @@
             </separator>
          </menu>
          <action
-               class="com.denimgroup.threadfix.plugin.eclipse.ImportAction"
-               id="com.denimgroup.threadfix.plugin.eclipse.ImportAction"
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
                label="Import ThreadFix Results"
                menubarPath="sampleMenu/sampleGroup"
                tooltip="Pull Vulnerable Spring Endpoint Information From ThreadFix">
          </action>
          <action
-               class="com.denimgroup.threadfix.plugin.eclipse.ClearAction"
-               id="com.denimgroup.threadfix.plugin.eclipse.ClearAction"
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ClearAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ClearAction"
                label="Clear ThreadFix warnings"
                menubarPath="sampleMenu/sampleGroup"
                tooltip="Pull Vulnerable Spring Endpoint Information From ThreadFix">
          </action>
          <action
-               class="com.denimgroup.threadfix.plugin.eclipse.ConfigureAction"
-               id="com.denimgroup.threadfix.plugin.eclipse.ConfigureAction"
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ConfigureAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ConfigureAction"
                label="Configure..."
                menubarPath="sampleMenu/sampleGroup"
                tooltip="Configure ThreadFix URL and API Key">

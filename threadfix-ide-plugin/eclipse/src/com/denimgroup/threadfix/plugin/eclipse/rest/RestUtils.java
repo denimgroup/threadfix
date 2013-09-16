@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.eclipse.util;
+package com.denimgroup.threadfix.plugin.eclipse.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,12 +9,14 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
 
+import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
+
 
 public class RestUtils {
 	
 	private RestUtils(String key, String url) {
 		this.key = key;
-		if (url == null) {
+		if (url == null || url.trim().isEmpty()) {
 			this.url = "http://localhost:8080/threadfix/rest";
 		} else {
 			this.url = url;
