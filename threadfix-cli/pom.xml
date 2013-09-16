@@ -15,6 +15,19 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+		      <artifactId>maven-assembly-plugin</artifactId>
+		      <configuration>
+		        <archive>
+		          <manifest>
+		            <mainClass>com.denimgroup.threadfix.cli.CommandLineParser</mainClass>
+		          </manifest>
+		        </archive>
+		        <descriptorRefs>
+		          <descriptorRef>jar-with-dependencies</descriptorRef>
+		        </descriptorRefs>
+		      </configuration>
+		    </plugin>
 		</plugins>
 	</build>
 	<dependencies>
