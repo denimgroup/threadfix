@@ -1,10 +1,17 @@
 package com.denimgroup.threadfix.plugin.eclipse.dialog;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -14,23 +21,30 @@ import org.eclipse.swt.widgets.Text;
 public class ConfigDialog extends TitleAreaDialog {
 	private Text urlTextInput;
 	private Text apiKeyTextInput;
+	
+	private List<Button> buttons = new ArrayList<Button>();
 
 	private String url;
 	private String apiKey;
-	
-	private final String initialUrl, initialApiKey;
+	private Set<String> appIds = null;
 
-	public ConfigDialog(Shell parentShell, String initialApiKey, String initialUrl) {
+	private final String initialUrl, initialApiKey;
+	private final Map<String, String> appIdMap;
+	private final Set<String> alreadyChecked;
+
+	public ConfigDialog(Shell parentShell, String initialApiKey,
+			String initialUrl, Map<String, String> appIdMap, Set<String> alreadyChecked) {
 		super(parentShell);
 		this.initialApiKey = initialApiKey;
 		this.initialUrl = initialUrl;
+		this.appIdMap = appIdMap;
+		this.alreadyChecked = alreadyChecked;
 	}
 
 	@Override
 	public void create() {
 		super.create();
 		setTitle("ThreadFix Configuration");
-		setMessage("ThreadFix Configuration", IMessageProvider.INFORMATION);
 	}
 
 	@Override
@@ -42,13 +56,25 @@ public class ConfigDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		container.setLayout(layout);
 
-		createFirstName(container);
-		createLastName(container);
+		createUrlText(container);
+		createApiKeyText(container);
+		createApplicationSelection(container);
 
 		return area;
 	}
 
-	private void createFirstName(Composite container) {
+	private void createApplicationSelection(Composite container) {
+		for (String appIdentifier : new TreeSet<String>(appIdMap.keySet())) {
+			Button button = new Button(container, SWT.CHECK);
+			button.setText(appIdentifier);
+			if (alreadyChecked.contains(appIdMap.get(button))) {
+				button.setSelection(true);
+			}
+			buttons.add(button);
+		}
+	}
+
+	private void createUrlText(Composite container) {
 		Label lbtFirstName = new Label(container, SWT.NONE);
 		lbtFirstName.setText("ThreadFix Endpoint URL");
 
@@ -60,7 +86,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		urlTextInput.setText(initialUrl);
 	}
 
-	private void createLastName(Composite container) {
+	private void createApiKeyText(Composite container) {
 		Label lbtLastName = new Label(container, SWT.NONE);
 		lbtLastName.setText("API Key");
 
@@ -71,7 +97,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		apiKeyTextInput.setLayoutData(dataLastName);
 		apiKeyTextInput.setText(initialApiKey);
 	}
-	
+
 	@Override
 	protected boolean isResizable() {
 		return true;
@@ -82,6 +108,19 @@ public class ConfigDialog extends TitleAreaDialog {
 	private void saveInput() {
 		url = urlTextInput.getText();
 		apiKey = apiKeyTextInput.getText();
+		appIds = getAppIdsFromButtons();
+	}
+	
+	private Set<String> getAppIdsFromButtons() {
+		Set<String> returnSet = new HashSet<String>();
+	
+		for (Button button : buttons) {
+			if (button.getSelection()) {
+				returnSet.add(appIdMap.get(button.getText()));
+			}
+		}
+	
+		return returnSet;
 	}
 
 	@Override
@@ -96,5 +135,9 @@ public class ConfigDialog extends TitleAreaDialog {
 
 	public String getApiKey() {
 		return apiKey;
+	}
+	
+	public Set<String> getAppIds() {
+		return appIds;
 	}
 }

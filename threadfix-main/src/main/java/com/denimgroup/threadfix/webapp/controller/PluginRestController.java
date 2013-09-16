@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,7 @@ public class PluginRestController extends RestController {
 	}
 
 	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
-	public @ResponseBody Object applicationDetail(
+	public @ResponseBody Object getMarkers(
 			HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for marker information for application with id = " + appId);
@@ -71,12 +73,48 @@ public class PluginRestController extends RestController {
 		return getMarkerCSV(application);
 	}
 	
+	@RequestMapping(value="/applications", method=RequestMethod.GET)
+	public @ResponseBody Object getApplicationList(HttpServletRequest request) {
+		log.info("Received REST request for application CSV list");
+		
+		String result = checkKey(request, "markers");
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		List<Application> applications = applicationService.loadAllActive();
+		
+		if (applications == null) {
+			log.warn("Couldn't find any active applications.");
+			return "failure";
+		}
+		
+		return getApplicationCSV(applications);
+	}
+	
 	private String getMarkerCSV(Application application) {
 		StringBuilder builder = new StringBuilder();
 		
 		for (Vulnerability vulnerability : application.getVulnerabilities()) {
 			if (vulnerability != null) {
 				builder.append(vulnerability.getMarkerCSVLine()).append("\n");
+			}
+		}
+		
+		return builder.toString();
+	}
+	
+	private String getApplicationCSV(List<Application> applications) {
+		StringBuilder builder = new StringBuilder();
+
+		for (Application application: applications) {
+			if (application != null && application.getOrganization() != null && application.getId() != null) {
+				builder.append(application.getOrganization().getName())
+					.append("/")
+					.append(application.getName())
+					.append(",")
+					.append(application.getId())
+					.append("\n");
 			}
 		}
 		

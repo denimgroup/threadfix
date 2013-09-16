@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 
 public class RestUtils {
 	
-	public RestUtils(String key, String url) {
+	private RestUtils(String key, String url) {
 		this.key = key;
 		if (url == null) {
 			this.url = "http://localhost:8080/threadfix/rest";
@@ -23,9 +23,19 @@ public class RestUtils {
 	
 	private final String key, url;
 	
+	public static RestUtils getFromSettings() {
+		return new RestUtils(SettingsUtils.getApiKey(), SettingsUtils.getUrl());
+	}
+	
 	public String getMarkers(String appId) {
 		String result = httpGet(url + "/code/markers/" + appId +
 				"?apiKey=" + key);
+		
+		return result;
+	}
+
+	public String getApplications() {
+		String result = httpGet(url + "/code/applications/?apiKey=" + key);
 		
 		return result;
 	}
@@ -56,4 +66,5 @@ public class RestUtils {
 		}
 		return "There was an error and the GET request was not finished.";
 	}
+
 }

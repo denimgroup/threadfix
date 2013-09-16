@@ -1,5 +1,8 @@
 package com.denimgroup.threadfix.plugin.eclipse;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -8,6 +11,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
 import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
+import com.denimgroup.threadfix.plugin.eclipse.util.ThreadFixService;
 
 public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
@@ -27,13 +31,17 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		
+		Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
+		Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
+		
 		ConfigDialog dialog = new ConfigDialog(window.getShell(),
-				SettingsUtils.getApiKey(), SettingsUtils.getUrl());
+				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),
+				threadFixApplicationMap, configuredApps);
 
 		dialog.create();
 
 		if (dialog.open() == Window.OK) {
-			SettingsUtils.save(dialog.getUrl(), dialog.getApiKey());
+			SettingsUtils.save(dialog.getUrl(), dialog.getApiKey(), dialog.getAppIds());
 			System.out.println("Saved successfully.");
 		}
 	}

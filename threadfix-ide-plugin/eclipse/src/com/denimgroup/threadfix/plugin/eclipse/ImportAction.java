@@ -36,7 +36,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 
-import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerService;
 import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
@@ -66,11 +65,10 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		MessageDialog.openInformation(
-			window.getShell(), "Helloworld", "I'm opening up yo stuff.");
+			window.getShell(), "ThreadFix Vulnerability Import", "Importing ThreadFix Vulnerabilities.");
 		
-		// TODO make this a dialog so users can put their own endpoint info and key in here.
 		List<VulnerabilityMarker> vulnerabilityMarkers =
-				VulnerabilityMarkerService.getMarkers(SettingsUtils.getApiKey(), SettingsUtils.getUrl(), "2");
+				VulnerabilityMarkerService.getMarkers();
 		
 		Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
 		
