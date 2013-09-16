@@ -36,6 +36,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 
+import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
+import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
+import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerService;
+import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
+
 /**
  * Our sample action implements workbench action delegate.
  * The action proxy will be created by the workbench and
@@ -63,8 +68,9 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 		MessageDialog.openInformation(
 			window.getShell(), "Helloworld", "I'm opening up yo stuff.");
 		
+		// TODO make this a dialog so users can put their own endpoint info and key in here.
 		List<VulnerabilityMarker> vulnerabilityMarkers =
-				VulnerabilityMarkerService.getMarkers("A2T2StJyMBwF8U1vD52AIm8cgLtdxKSkhnvSwjuGZys", null, "7");
+				VulnerabilityMarkerService.getMarkers(SettingsUtils.getApiKey(), SettingsUtils.getUrl(), "2");
 		
 		Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
 		

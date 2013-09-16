@@ -28,6 +28,13 @@
                menubarPath="sampleMenu/sampleGroup"
                tooltip="Pull Vulnerable Spring Endpoint Information From ThreadFix">
          </action>
+         <action
+               class="com.denimgroup.threadfix.plugin.eclipse.ConfigureAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.ConfigureAction"
+               label="Configure..."
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Configure ThreadFix URL and API Key">
+         </action>
       </actionSet>
    </extension>
    

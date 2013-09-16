@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.eclipse;
+package com.denimgroup.threadfix.plugin.eclipse.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
+
 
 public class RestUtils {
 	

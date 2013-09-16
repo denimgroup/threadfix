@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
+
 /**
  * Our sample action implements workbench action delegate.
  * The action proxy will be created by the workbench and

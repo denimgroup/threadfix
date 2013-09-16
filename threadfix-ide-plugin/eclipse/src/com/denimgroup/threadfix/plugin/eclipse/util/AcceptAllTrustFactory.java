@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.eclipse;
+package com.denimgroup.threadfix.plugin.eclipse.util;
 
 import java.io.IOException;
 import java.net.InetAddress;
