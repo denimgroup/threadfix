@@ -111,8 +111,17 @@ public class HSQLDriver {
 	        	System.out.println("NTO 6 mappings not found. Running NTO 6 upgrade script.");
 	        	db.runSQLFile("nto6.sql");
 	        } else {
-	        	System.out.println("NTO 6 mappings are present, not running brakeman.sql.");
+	        	System.out.println("NTO 6 mappings are present, not running nto6.sql.");
 		    }
+	        
+	        // 1.2rc3
+	        if (!channelExists("Dependency Check")) {
+	        	System.out.println("Dependency Check not found. Running 1_2rc3.sql.");
+	        	db.runSQLFile("1_2rc3.sql");
+	        } else {
+	        	System.out.println("Dependency Check is present, not running 1_2rc3.sql.");
+	        }
+	        
         } finally {
         
 	        // Shut it down
@@ -141,7 +150,7 @@ public class HSQLDriver {
 	public static boolean tablesExist(String... tableNames) {
 	    try {
 	    	DatabaseMetaData meta = conn.getMetaData();
-	    	ResultSet res = meta.getTables(null, null, null, 
+	    	ResultSet res = meta.getTables(null, null, null,
 	    			new String[] {"TABLE"});
 	    	
 	    	List<String> strings = new ArrayList<String>();
@@ -189,7 +198,7 @@ public class HSQLDriver {
 		return false;
     }
     
-    public void runSQLFile(String file) {    	
+    public void runSQLFile(String file) {
     	BufferedReader reader = null;
         
         try {
