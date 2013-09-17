@@ -91,6 +91,7 @@
         		protected-regex ^/configuration/keys/new$,
         		protected-regex ^/configuration/keys/[0-9]+/edit$,
         		protected-regex ^/configuration/keys/[0-9]+/delete$,
+        		protected-regex ^/configuration/remoteproviders/[0-9]+/table$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/configure$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/edit$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/delete/[0-9]+$,
