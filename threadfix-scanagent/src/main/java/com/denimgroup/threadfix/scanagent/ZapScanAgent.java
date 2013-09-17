@@ -57,6 +57,10 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private String zapExecutablePath;
 	private long zapStartupWaitTime;
 	
+	/**
+	 * @param theConfig configuration for the scan. A pre-configured session file can
+	 * be passed via the configFile data blob.
+	 */
 	@Override
 	public File doTask(TaskConfig theConfig) {
 		
@@ -84,7 +88,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		//	Determine if we need to set up a session for ZAP or if this is
 		//	just an authenticated scan of the URL
-		byte[] configFileData = theConfig.getDataBlob("configFileData");
+		byte[] configFileData = theConfig.getDataBlob("configFile");
 		if(configFileData != null) {
 			log.debug("Task configuration has configuration file data. Attempting to set session");
 			//	Set up the session for ZAP to use
