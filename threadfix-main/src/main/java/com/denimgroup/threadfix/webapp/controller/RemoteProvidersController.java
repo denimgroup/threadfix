@@ -37,6 +37,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -293,5 +294,50 @@ public class RemoteProvidersController {
 		}
 
 		return "redirect:/configuration/remoteproviders";
+	}
+	
+	@RequestMapping(value="/{id}/table", method = RequestMethod.POST)
+	public String paginate(@PathVariable("id") int rpAppId, @RequestBody TableSortBean bean,
+			Model model) {
+		
+		log.info("Processing request for paginating Remote Application .");
+		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
+		permissionService.filterApps(typeList);
+		for (RemoteProviderType rp : typeList) {
+			if (rp.getId() == rpAppId) {
+				int numApps = rp.getFilteredApplications().size();
+				int lastIndex = (bean.getPage()*100>=numApps) ? numApps : bean.getPage()*100;
+				rp.setFilteredApplications(rp.getFilteredApplications().subList((bean.getPage()-1)*100, lastIndex));
+				
+				model.addAttribute("remoteProvider", rp);
+				
+				long numPages = numApps / 100;
+				if (numApps % 100 == 0) {
+					numPages -= 1;
+				}
+				model.addAttribute("numPages", numPages);
+				model.addAttribute("numApps", numApps);
+				
+				if (bean.getPage() > numPages) {
+					bean.setPage((int) (numPages + 1));
+				}
+				
+				if (bean.getPage() < 1) {
+					bean.setPage(1);
+				}
+				break;
+			}
+		}
+		
+		model.addAttribute("page", bean.getPage());
+		model.addAttribute(Permission.CAN_MANAGE_REMOTE_PROVIDERS.getCamelCase(), true);
+		model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
+		
+		bean.setOpen(true);
+		bean.setFalsePositive(false);
+		bean.setHidden(false);
+		
+		
+		return "config/remoteproviders/rpAppTable";
 	}
 }

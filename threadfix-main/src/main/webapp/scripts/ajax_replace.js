@@ -15,6 +15,7 @@ function modalFocusTimeout() {
 }
 
 var modalRefreshFunctions = [ 
+    addAppSelectFunctions,
 	delay(addModalSubmitEvents),
 	function () { addFormEvents(); },
 	function () { modalFocusTimeout(); }
