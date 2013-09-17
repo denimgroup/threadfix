@@ -61,12 +61,13 @@ public class SeverityFilter extends BaseEntity {
 	public void setFilters(SeverityFilter other) {
 		if (other == null) {
 			setFilters(new SeverityFilter());
+		} else {
+			this.showInfo = other.showInfo;
+			this.showLow = other.showLow;
+			this.showMedium = other.showMedium;
+			this.showHigh = other.showHigh;
+			this.showCritical = other.showCritical;
 		}
-		this.showInfo = other.showInfo;
-		this.showLow = other.showLow;
-		this.showMedium = other.showMedium;
-		this.showHigh = other.showHigh;
-		this.showCritical = other.showCritical;
 	}
 	
 	@Transient

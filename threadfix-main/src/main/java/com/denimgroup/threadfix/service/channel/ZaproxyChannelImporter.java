@@ -87,11 +87,13 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private Boolean getParameter          = false;
 		private Boolean getChannelVulnName    = false;
 		private Boolean getSeverityName       = false;
+		private Boolean getCweId			  = false;
 	
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
+		private String currentCweId			  = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -105,7 +107,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void startElement (String uri, String name,
+	    @Override
+		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
 	    	if ("report".equals(qName)) {
@@ -121,10 +124,20 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		getParameter = true;
 	    	} else if ("riskcode".equals(qName)) {
 	    		getSeverityName = true;
-	    	} else if ("otherinfo".equals(qName)) {
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		
+	    	} else if ("cweid".equals(qName)) {
+	    		getCweId = true;
+	    	}
+	    }
+
+	    @Override
+		public void endElement (String uri, String name, String qName)
+	    {
+	    	if ("report".equals(qName)) {
+	    		getDate = false;
+	    	} else if ("alertitem".equals(qName)) {
+
+	    		Finding finding = constructFinding(currentPath, currentParameter,
+	    				currentChannelVulnCode, currentSeverityCode, currentCweId);
 	    		if (finding != null && finding.getChannelVulnerability() == null) {
 	    			
 	    			String channelVulnerabilityCode = getAlternative(currentChannelVulnCode);
@@ -133,23 +146,14 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		    			finding.setChannelVulnerability(channelVulnerability);
 	    			}
 	    		}
-	    		
 	    		add(finding);
-	    	
 	    		currentParameter       = null;
 	    		currentPath            = null;
 	    		getParameter           = false;
-	    	}
-	    }
-
-	    public void endElement (String uri, String name, String qName)
-	    {
-	    	if ("report".equals(qName)) {
-	    		getDate = false;
-	    	} else if ("alertitem".equals(qName)) {
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
+	    		currentCweId 		   = null;
 	    		
 	    	} else if (getUri) {
 	    		currentPath = getBuilderText();
@@ -160,8 +164,9 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	} else if (getParameter) {
 	    		currentParameter = getBuilderText();
 	    		
-	    		if (currentParameter != null && currentParameter.contains("="))
-	    			currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
+	    		if (currentParameter != null && currentParameter.contains("=")) {
+					currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
+				}
 	    		getParameter = false;
 	    	} else if ("riskcode".equals(qName)) {
 	    		currentSeverityCode = getBuilderText();
@@ -175,11 +180,15 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    			date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 	    		}
 	    		getDate = false;
+	    	} else if (getCweId) {
+	    		currentCweId = getBuilderText();
+	    		getCweId = false;
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
+	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName || getCweId) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
@@ -197,25 +206,29 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private boolean getDate = false;
 		
 	    private void setTestStatus() {
-	    	if (!correctFormat)
-	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
-	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
-	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	    	if (!correctFormat) {
+				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+			} else if (hasDate) {
+				testStatus = checkTestDate();
+			}
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
+				testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+			} else if (testStatus == null) {
+				testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+			}
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void endDocument() {
+	    @Override
+		public void endDocument() {
 	    	setTestStatus();
 	    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 	    		
@@ -261,7 +274,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
 	    	if (getDate) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
