@@ -87,15 +87,11 @@ public class MySQLDriver {
 		        	System.out.println("1.1 tables are present, not running update.sql.");
 		        }
 		        
-		        try {
-			        if (!channelExists("IBM Rational AppScan Enterprise")) {
-			        	System.out.println("IBM Rational AppScan Enterprise channel type not found. Running AppScan SQL file.");
-			        	db.runSQLFile("appscan-enterprise.sql");
-			        } else {
-			        	System.out.println("IBM Rational AppScan Enterprise is present, not running appscan-enterprise.sql.");
-			        }
-		        } catch (SQLException e) {
-		        	System.out.println("Something went wrong trying to run AppScan Enterprise updates.");
+		        if (!channelExists("IBM Rational AppScan Enterprise")) {
+		        	System.out.println("IBM Rational AppScan Enterprise channel type not found. Running AppScan SQL file.");
+		        	db.runSQLFile("appscan-enterprise.sql");
+		        } else {
+		        	System.out.println("IBM Rational AppScan Enterprise is present, not running appscan-enterprise.sql.");
 		        }
 		        
 		        // 1.1 final
@@ -113,6 +109,15 @@ public class MySQLDriver {
 		        } else {
 		        	System.out.println("NTO 6 mappings are present, not running brakeman.sql.");
 			    }
+		        
+		        // 1.2rc3
+		        if (!channelExists("Dependency Check")) {
+		        	System.out.println("Dependency Check not found. Running 1_2rc3.sql.");
+		        	db.runSQLFile("1_2rc3.sql");
+		        } else {
+		        	System.out.println("Dependency Check is present, not running 1_2rc3.sql.");
+		        }
+		        
 	        } finally {
 	        
 		        // Shut it down
@@ -126,23 +131,31 @@ public class MySQLDriver {
 	        }
 	    }
 	    
-	    public static boolean channelExists(String scannerName) throws SQLException {
-			PreparedStatement statement = conn.prepareStatement(
-					"SELECT * FROM ChannelType WHERE name = '" + scannerName + "';");
-			
-			ResultSet set = statement.executeQuery();
-			
-			if (set != null) {
-				return set.next();
-			}
+	    public static boolean channelExists(String scannerName) {
+	    	boolean result = false;
 	    	
-	    	return false;
+	    	try {
+				PreparedStatement statement = conn.prepareStatement(
+						"SELECT * FROM ChannelType WHERE name = '" + scannerName + "';");
+				
+				ResultSet set = statement.executeQuery();
+				
+				if (set != null) {
+					result = set.next();
+				}
+		    	
+		    	
+		    } catch (SQLException e) {
+	        	System.out.println("Something went wrong trying to run AppScan Enterprise updates.");
+	        }
+	    	
+	    	return result;
 	    }
 	    
 	    public static boolean tablesExist(String... tableNames) {
 		    try {
 		    	DatabaseMetaData meta = conn.getMetaData();
-		    	ResultSet res = meta.getTables(null, null, null, 
+		    	ResultSet res = meta.getTables(null, null, null,
 		    			new String[] {"TABLE"});
 		    	
 		    	List<String> strings = new ArrayList<String>();
@@ -166,7 +179,7 @@ public class MySQLDriver {
 	    }
 	    
 	    public static boolean channelVulnExists(String vulnName, String scannerName) {
-	    	ResultSet set = getResults("SELECT * FROM ChannelVulnerability WHERE name = '" + vulnName + 
+	    	ResultSet set = getResults("SELECT * FROM ChannelVulnerability WHERE name = '" + vulnName +
 	    			"' AND channelTypeId = (SELECT id FROM ChannelType WHERE name = '" + scannerName + "');");
 	    	
 	    	try {
@@ -206,8 +219,9 @@ public class MySQLDriver {
 	        try {
 				while (reader.ready()) {
 					String statement = reader.readLine();
-					if (!statement.trim().isEmpty())
+					if (!statement.trim().isEmpty()) {
 						statements.add(statement);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
