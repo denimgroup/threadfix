@@ -50,7 +50,7 @@ public class Document extends AuditableEntity {
 	@Size(max = 10, message = "{errors.maxlength} 10.")
 	private String type;
 	
-	@Size(max = 50, message = "{errors.maxlength} 50.")
+	@Size(max = 255, message = "{errors.maxlength} 255.")
 	private String contentType;
 	
 	private Blob file;
@@ -66,7 +66,7 @@ public class Document extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
-	@JsonIgnore	
+	@JsonIgnore
 	public Vulnerability getVulnerability() {
 		return vulnerability;
 	}
@@ -77,7 +77,7 @@ public class Document extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
-	@JsonIgnore	
+	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}
@@ -95,7 +95,7 @@ public class Document extends AuditableEntity {
 		this.type = type;
 	}
 
-	@Column(length = 50)
+	@Column(length = 255)
 	public String getContentType() {
 		return contentType;
 	}
