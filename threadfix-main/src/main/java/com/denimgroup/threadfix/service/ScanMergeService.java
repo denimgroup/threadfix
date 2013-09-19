@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 /**
@@ -72,17 +71,6 @@ public interface ScanMergeService {
 			String userName);
 	
 	/**
-	 * Given new Finding information, create a Scan or link to the manual scan
-	 * and put the new Finding on it.
-	 * 
-	 * @param finding
-	 * @param applicationId
-	 * @param userName
-	 * @return
-	 */
-	boolean processManualFinding(Finding finding, Integer applicationId);
-	
-	/**
 	 * This method allows skipping the queue by wrapping all the required functionality into
 	 * one method.  A script might time out and cease to function unless it gets its results,
 	 * which is why this bypass is available.
@@ -101,11 +89,4 @@ public interface ScanMergeService {
 	 */
 	Scan processRemoteScan(Scan scan);
 
-	/**
-	 * 
-	 * @param finding
-	 * @param applicationId
-	 * @return
-	 */
-	boolean processManualFindingEdit(Finding finding, Integer applicationId);
 }

@@ -51,9 +51,8 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	private String lineText;
 	private Finding finding;
 	private int sequence;
-
-	public DataFlowElement(){
-	}
+	
+	public DataFlowElement(){}
 	
 	public DataFlowElement(String sourceFileName, int lineNumber, String lineText) {
 		this.sourceFileName = sourceFileName;

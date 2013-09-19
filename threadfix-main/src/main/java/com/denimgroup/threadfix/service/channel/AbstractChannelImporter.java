@@ -52,7 +52,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -115,6 +117,22 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected ChannelSeverityDao channelSeverityDao;
 	protected ChannelTypeDao channelTypeDao;
 	protected GenericVulnerabilityDao genericVulnerabilityDao;
+	
+	/**
+	 * This constructor wires genericVulnerabilityDao, channelTypeDao, channelVulnerabilityDao, and channelSeverityDao.
+	 * It also wires the appropriate channelType object. Subclasses just need to pass the name of the channel.
+	 * @param channelTypeName
+	 */
+	public AbstractChannelImporter(String channelTypeName) {
+		DaoHolder daoHolder = new DaoHolder();
+		
+		this.genericVulnerabilityDao = daoHolder.genericVulnerabilityDao;
+		this.channelTypeDao = daoHolder.channelTypeDao;
+		this.channelVulnerabilityDao = daoHolder.channelVulnerabilityDao;
+		this.channelSeverityDao = daoHolder.channelSeverityDao;
+		
+		this.channelType = daoHolder.channelTypeDao.retrieveByName(channelTypeName);
+	}
 
 	protected String inputFileName;
 	
@@ -128,6 +146,20 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected Calendar testDate = null;
 	
 	protected boolean doSAXExceptionCheck = true;
+	
+	/**
+	 * This class allows us to use autowired beans in the AbstractChannelImporter constructor.
+	 */
+	private static class DaoHolder extends SpringBeanAutowiringSupport {
+		@Autowired
+		public ChannelVulnerabilityDao channelVulnerabilityDao;
+		@Autowired
+		public ChannelSeverityDao channelSeverityDao;
+		@Autowired
+		public ChannelTypeDao channelTypeDao;
+		@Autowired
+		public GenericVulnerabilityDao genericVulnerabilityDao;
+	}
 	
 	@Override
 	public void setChannel(ApplicationChannel applicationChannel) {
@@ -367,63 +399,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			    		
 		return finding;
     }
-
-	/**
-	 * Attempts to guess the URL given a file name. TODO Make this method better
-	 * 
-	 * @param sourceFileName
-	 *            The file name.
-	 * @return the URL
-	 */
-	protected String convertSourceFileNameToUrl(String sourceFileName, String applicationRoot) {
-		if (sourceFileName == null)
-			return null;
-		
-		String editedSourceFileName = sourceFileName;
-
-		if (editedSourceFileName.contains("\\"))
-			editedSourceFileName = editedSourceFileName.replace("\\", "/");
-
-		boolean parsedFlag = false;
-
-		// TODO - Make a better, more generic way of identifying web root
-		// directory names
-		// maybe ask the user for the application root / use it as the
-		// application url
-		String[] prefixVals = { "wwwroot", "web", "cgi-bin", "cgi", ""};
-		if(applicationRoot != null && !applicationRoot.trim().equals("")){
-			prefixVals[4] = applicationRoot.toLowerCase();
-		}
-		String[] suffixVals = { "aspx", "asp", "jsp", "php", "html", "htm", "java", "cs", "config",
-				"js", "cgi", "ascx" };
-
-		for (String val : prefixVals) {
-			if (!editedSourceFileName.toLowerCase().contains(val))
-				continue;
-
-			String temp = getRegexResult(editedSourceFileName.toLowerCase(), "(/" + val + "/.+)");
-			if (temp != null) {
-				editedSourceFileName = temp;
-				parsedFlag = true;
-				break;
-			}
-		}
-
-		for (String val : suffixVals) {
-			if (!editedSourceFileName.contains(val))
-				continue;
-
-			String temp = getRegexResult(editedSourceFileName, "(.+\\." + val + ")");
-			if (temp != null)
-				return temp.toLowerCase();
-		}
-
-		if (parsedFlag) {
-			return editedSourceFileName;
-		} else {
-			return null;
-		}
-	}
 
 	/**
 	 * Utility to prevent declaring a bunch of Matchers and Patterns.

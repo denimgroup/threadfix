@@ -60,7 +60,7 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
-@SessionAttributes("application")
+@SessionAttributes({"application", "scanParametersBean"})
 public class EditApplicationController {
 	
 	public EditApplicationController(){}
@@ -176,7 +176,7 @@ public class EditApplicationController {
 			return "ajaxFailureHarness";
 		} else {
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
+//			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
@@ -287,7 +287,6 @@ public class EditApplicationController {
 			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 			
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			

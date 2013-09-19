@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.webservices.tests;
 
 import org.junit.Test;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;

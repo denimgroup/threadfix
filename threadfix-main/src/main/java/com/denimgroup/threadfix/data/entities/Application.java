@@ -43,6 +43,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -53,12 +57,16 @@ public class Application extends AuditableEntity {
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 	private List<ScanQueueTask> scanQueueTasks;
 
-	public static final int NAME_LENGTH = 60;
-	public static final int URL_LENGTH = 255;
+	public static final int 
+		NAME_LENGTH = 60,
+		URL_LENGTH = 255,
+		ENUM_LENGTH = 50;
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
+	
+	String frameworkType, sourceCodeAccessLevel, vulnTypeStrategy, repositoryUrl;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -69,6 +77,8 @@ public class Application extends AuditableEntity {
 	
 	@Size(max = 255, message = "{errors.maxlength} 255.")
 	private String projectRoot;
+	@Size(max = 255, message = "{errors.maxlength} 255.")
+	private String rootPath;
 
 	private Organization organization;
 	private Waf waf;
@@ -300,6 +310,15 @@ public class Application extends AuditableEntity {
 		this.projectRoot = projectRoot;
 	}
 	
+	@Column(length = 256)
+	public String getRootPath() {
+		return rootPath;
+	}
+
+	public void setRootPath(String rootPath) {
+		this.rootPath = rootPath;
+	}
+	
 	@OneToMany(mappedBy = "application")
 	public List<RemoteProviderApplication> getRemoteProviderApplications() {
 		return remoteProviderApplications;
@@ -421,5 +440,56 @@ public class Application extends AuditableEntity {
 		uploadableChannels = returnList;
 		return returnList;
 	}
+	
+	@Column(length = ENUM_LENGTH)
+	public String getFrameworkType() {
+		return frameworkType;
+	}
 
+	public void setFrameworkType(String frameworkType) {
+		this.frameworkType = frameworkType;
+	}
+
+	@Column(length = ENUM_LENGTH)
+	public String getSourceCodeAccessLevel() {
+		return sourceCodeAccessLevel;
+	}
+
+	public void setSourceCodeAccessLevel(String sourceCodeAccessLevel) {
+		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
+	}
+
+	@Column(length = ENUM_LENGTH)
+	public String getVulnTypeStrategy() {
+		return vulnTypeStrategy;
+	}
+
+	public void setVulnTypeStrategy(String vulnTypeStrategy) {
+		this.vulnTypeStrategy = vulnTypeStrategy;
+	}
+
+	@Column(length = URL_LENGTH)
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+
+	@Transient
+	public FrameworkType getFrameworkTypeEnum() {
+		return FrameworkType.getFrameworkType(frameworkType);
+	}
+	
+	@Transient
+	public SourceCodeAccessLevel getSourceCodeAccessLevelEnum() {
+		return SourceCodeAccessLevel.getSourceCodeAccessLevel(sourceCodeAccessLevel);
+	}
+	
+	@Transient
+	public VulnTypeStrategy getVulnTypeStrategyEnum() {
+		return VulnTypeStrategy.getVulnTypeStrategy(vulnTypeStrategy);
+	}
+	
 }

@@ -28,13 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -56,15 +52,8 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 		tagMap.put("issue_id", FindingKey.NATIVE_ID);
 	}
 
-	@Autowired
-	public AppScanEnterpriseChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		setChannelType(ChannelType.APPSCAN_DYNAMIC);
+	public AppScanEnterpriseChannelImporter() {
+		super(ChannelType.APPSCAN_DYNAMIC);
 	}
 	
 	/**

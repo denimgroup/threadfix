@@ -274,6 +274,14 @@ public class HttpRestUtils {
 		writeProperty("key", key);
 	}
 	
+	public void setMemoryKey(String key) {
+		this.key = key;
+	}
+	
+	public void setMemoryUrl(String url) {
+		this.url = url;
+	}
+	
 	public String getUrl() {
 		if (url == null) {
 			url = getProperty("url");

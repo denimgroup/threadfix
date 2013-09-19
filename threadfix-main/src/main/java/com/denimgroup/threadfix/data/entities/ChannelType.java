@@ -72,6 +72,18 @@ public class ChannelType extends BaseEntity {
 			FORTIFY, 
 			SENTINEL,
 			VERACODE));
+	
+	public static final Set<String> DYNAMIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ ChannelType.ACUNETIX_WVS,
+			ChannelType.APPSCAN_ENTERPRISE, ChannelType.ARACHNI, ChannelType.BURPSUITE, ChannelType.NESSUS,
+			ChannelType.NETSPARKER, ChannelType.NTO_SPIDER, ChannelType.SKIPFISH, ChannelType.W3AF,
+			ChannelType.WEBINSPECT, ChannelType.ZAPROXY, ChannelType.QUALYSGUARD_WAS, ChannelType.APPSCAN_DYNAMIC
+	}));
+	public static final Set<String> STATIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ ChannelType.APPSCAN_SOURCE,
+			ChannelType.FINDBUGS, ChannelType.FORTIFY, ChannelType.VERACODE, ChannelType.CAT_NET,
+			ChannelType.BRAKEMAN
+	}));
+	public static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ChannelType.SENTINEL });
+	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 
 	private List<ApplicationChannel> applicationChannels;
 	private List<ChannelSeverity> channelSeverities;

@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +45,6 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 public class ScanHistoryController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScanHistoryController.class);
-	private static final List<String> DYNAMIC_TYPES = Arrays.asList(new String[]{ ChannelType.ACUNETIX_WVS,
-			ChannelType.APPSCAN_ENTERPRISE, ChannelType.ARACHNI, ChannelType.BURPSUITE, ChannelType.NESSUS,
-			ChannelType.NETSPARKER, ChannelType.NTO_SPIDER, ChannelType.SKIPFISH, ChannelType.W3AF,
-			ChannelType.WEBINSPECT, ChannelType.ZAPROXY, ChannelType.QUALYSGUARD_WAS, ChannelType.APPSCAN_DYNAMIC
-	});
-	private static final List<String> STATIC_TYPES = Arrays.asList(new String[]{ ChannelType.APPSCAN_SOURCE,
-			ChannelType.FINDBUGS, ChannelType.FORTIFY, ChannelType.VERACODE, ChannelType.CAT_NET,
-			ChannelType.BRAKEMAN
-	});
-	private static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ChannelType.SENTINEL });
-	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 
 	private ScanService scanService;
 
@@ -110,12 +98,12 @@ public class ScanHistoryController {
 		for (int i = 0; i < scanList.size(); i++) {
 			Scan scan = scanList.get(i);
 			String type = scan.getApplicationChannel().getChannelType().getName();
-			if (DYNAMIC_TYPES.contains(type)) {
-				types[i] = DYNAMIC;
-			} else if (STATIC_TYPES.contains(type)) {
-				types[i] = STATIC;
-			} else if (MIXED_TYPES.contains(type)) {
-				types[i] = MIXED;
+			if (ChannelType.DYNAMIC_TYPES.contains(type)) {
+				types[i] = ChannelType.DYNAMIC;
+			} else if (ChannelType.STATIC_TYPES.contains(type)) {
+				types[i] = ChannelType.STATIC;
+			} else if (ChannelType.MIXED_TYPES.contains(type)) {
+				types[i] = ChannelType.MIXED;
 			}
 		}
 		return types;

@@ -46,6 +46,9 @@ public class ScanQueueTaskRestController extends RestController {
 			ScanTypeCalculationService scanTypeCalculationService,
 			ScanService scanService,
 			ScanMergeService scanMergeService) {
+		
+		super(apiKeyService);
+		
 		this.apiKeyService = apiKeyService;
 		this.documentService = documentService;
 		this.scanQueueService = scanQueueService;

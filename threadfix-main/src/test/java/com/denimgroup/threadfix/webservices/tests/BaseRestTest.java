@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+
 /**
  * This class provides methods for posting GET and POST requests with optional files,
  * as well as a place to put methods and data that would be useful for all REST testing.
@@ -46,13 +48,20 @@ public abstract class BaseRestTest {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	public static final String GOOD_API_KEY = "U1otLaZxwQLbsHZ2HiifYtbPwbD1H4kcNgedWVIWn0";
-	public static final String BAD_API_KEY  = "U1otLaZxwQLbsHZ2ifYtbPwbD1H4kcNgedWVIWn0";
+	public static final String GOOD_API_KEY       = "mhD3Ek0mK04ejfxA7DTccrNiABXo3PAAzxYQZ25Ac";
+	public static final String BAD_API_KEY        = "U1otLaZxwQLbsHZ2ifYtbPwbD1H4kcNgedWVIWn0";
 	public static final String RESTRICTED_API_KEY = "PsjLL0KUXG8J9hkC2kpvFAGllJFPaZRskomeZiB9wSc";
-	public static final String BASE_URL = "http://localhost:8080/threadfix/rest";
+	public static final String BASE_URL           = "http://localhost:8080/threadfix/rest";
 	public static final String RESTRICTED_URL_NOT_RETURNED = "The restricted URL error was not returned correctly.";
-	public static final String RESTRICTED_URL_RETURNED = "The restricted URL error was returned when it shouldn't have been.";
+	public static final String RESTRICTED_URL_RETURNED     = "The restricted URL error was returned when it shouldn't have been.";
 
+	public static ThreadFixRestClient getGoodClient() {
+		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+		goodClient.setMemoryKey(GOOD_API_KEY);
+		goodClient.setMemoryUrl(BASE_URL);
+		return goodClient;
+	}
+	
 	public String httpPostFile(String request, String fileName, String[] paramNames,
 			String[] paramVals) {
 		File file = new File(fileName);

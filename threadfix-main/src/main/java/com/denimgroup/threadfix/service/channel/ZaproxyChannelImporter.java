@@ -32,10 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -62,16 +58,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	}
 	
 	@Autowired
-	public ZaproxyChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.ZAPROXY);
+	public ZaproxyChannelImporter() {
+		super(ChannelType.ZAPROXY);
 	}
 
 	@Override
@@ -99,7 +87,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private Boolean getParameter          = false;
 		private Boolean getChannelVulnName    = false;
 		private Boolean getSeverityName       = false;
-		private Boolean getCweId			  = false;		
+		private Boolean getCweId			  = false;
 	
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
@@ -119,7 +107,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void startElement (String uri, String name,
+	    @Override
+		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
 	    	if ("report".equals(qName)) {
@@ -140,13 +129,14 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 
-	    public void endElement (String uri, String name, String qName)
+	    @Override
+		public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("report".equals(qName)) {
 	    		getDate = false;
 	    	} else if ("alertitem".equals(qName)) {
 
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
+	    		Finding finding = constructFinding(currentPath, currentParameter,
 	    				currentChannelVulnCode, currentSeverityCode, currentCweId);
 	    		if (finding != null && finding.getChannelVulnerability() == null) {
 	    			
@@ -159,7 +149,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		add(finding);
 	    		currentParameter       = null;
 	    		currentPath            = null;
-	    		getParameter           = false;	    		
+	    		getParameter           = false;
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
@@ -174,8 +164,9 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	} else if (getParameter) {
 	    		currentParameter = getBuilderText();
 	    		
-	    		if (currentParameter != null && currentParameter.contains("="))
-	    			currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
+	    		if (currentParameter != null && currentParameter.contains("=")) {
+					currentParameter = currentParameter.substring(0,currentParameter.indexOf("="));
+				}
 	    		getParameter = false;
 	    	} else if ("riskcode".equals(qName)) {
 	    		currentSeverityCode = getBuilderText();
@@ -195,7 +186,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
 	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName || getCweId) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
@@ -214,26 +206,31 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private boolean getDate = false;
 		
 	    private void setTestStatus() {
-	    	if (!correctFormat)
-	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
-	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
-	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	    	if (!correctFormat) {
+				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+			} else if (hasDate) {
+				testStatus = checkTestDate();
+			}
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
+				testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+			} else if (testStatus == null) {
+				testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+			}
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void endDocument() {
+	    @Override
+		public void endDocument() {
 	    	setTestStatus();
 	    }
 
+	    @Override
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	log.debug("Starting XML element with name:" + name + " and qName: " + qName);
+	    	
 	    	if (getDate) {
 	    		//	TODO - Determine if there is overlap between this code and the handler for OWASPZAPReport tags below.
 	    		//	Looks to be the same code
@@ -287,7 +284,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
 	    	if (getDate) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
