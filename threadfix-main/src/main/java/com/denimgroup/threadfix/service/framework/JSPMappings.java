@@ -41,7 +41,7 @@ public class JSPMappings {
 	
 	@SuppressWarnings("unchecked")
 	public JSPMappings(File rootFile) {
-		if (rootFile != null) {
+		if (rootFile != null && rootFile.exists()) {
 
 			this.rootFile = rootFile;
 			Collection<File> jspFiles = FileUtils.listFiles(
@@ -69,6 +69,31 @@ public class JSPMappings {
 	
 	public Map<Integer, List<String>> getParameterMap(String relativePath) {
 		return parameterMap.get(relativePath);
+	}
+	
+	// TODO simple optimizations to clean up the code and make it more efficient
+	// create a map of parameter name to first line when this class is initialized and do lookups on that
+	// it should be O(n) on the map and then O(1) instead of O(N) every time
+	public Integer getFirstLineNumber(String relativeFilePath, String parameterName) {
+		Map<Integer, List<String>> parameterMap = getParameterMap(relativeFilePath);
+		
+		Integer returnValue = Integer.MAX_VALUE;
+		
+		if (parameterMap != null && parameterName != null) {
+			for (Integer integer : parameterMap.keySet()) {
+				if (integer < returnValue &&
+						parameterMap.get(integer) != null &&
+						parameterMap.get(integer).contains(parameterName)) {
+					returnValue = integer;
+				}
+			}
+		}
+		
+		if (returnValue == Integer.MAX_VALUE) {
+			returnValue = 1; // This way even if no parameter is found a marker can be created for the file
+		}
+		
+		return returnValue;
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {

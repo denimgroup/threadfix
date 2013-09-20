@@ -33,6 +33,8 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 	
 	private final SanitizedLogger log = new SanitizedLogger("JSPTranslator");
 	
+	private final JSPMappings mappings;
+	
 	public JSPTranslator(ScanMergeConfiguration scanMergeConfiguration,
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
@@ -40,6 +42,8 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan, ".jsp");
 		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan);
 		
+		mappings = new JSPMappings(workTree);
+
 		if ((urlPathRoot == null || urlPathRoot.isEmpty()) && filePathRoot != null) {
 			urlPathRoot = filePathRoot;
 		}
@@ -55,11 +59,24 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 	@Override
 	public String getFileName(Finding finding) {
 		switch (scanMergeConfiguration.getSourceCodeAccessLevel()) {
-			case FULL: return getFileNameWithSourceCodeDefault(finding);
+			case FULL: return getFileNameWithSourceCode(finding);
 			default:   return getFileNameDefault(finding);
 		}
 	}
 
+	private String getFileNameWithSourceCode(Finding finding) {
+		String fileName = super.getFileNameWithSourceCodeDefault(finding);
+		
+		if (finding != null && finding.getSurfaceLocation() != null) {
+			finding.setEntryPointLineNumber(
+				mappings.getFirstLineNumber(
+				fileName, finding.getSurfaceLocation().getParameter()));
+		
+		}
+		
+		return fileName;
+	}
+	
 	@Override
 	public String getUrlPath(Finding finding) {
 		return getUrlPathDefault(finding);
