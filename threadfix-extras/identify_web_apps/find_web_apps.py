@@ -4,6 +4,7 @@ import json
 import nmap
 from optparse import OptionParser
 import requests
+from subprocess import call
 
 print("ThreadFix web application detection")
 
@@ -78,7 +79,9 @@ for host in hosts:
 				app_name = '{0}:{1}'.format(host, port)
 			else:
 				app_name = '{0}:{1}'.format(nm[host].hostname(), port)
-			# TODO - Detect HTTP or HTTP on that port
+
+			shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name])
+			print ('webkit2png return code: ' + str(shell_result))
 			app_url = 'http://' + app_name + '/'
 
 			if (options.verbose):
@@ -87,6 +90,10 @@ for host in hosts:
 			# Create the new application in Threadfix
 			payload = { 'apiKey': options.apikey, 'name': app_name, 'url': app_url }
 			r = requests.post(threadfix_rest_url + '/teams/' + str(team_id) + '/applications/new', params=payload)
+			print(r.text)
 			new_app = r.json()
-			app_id = new_app['id']
-			print ('New applicaiton created with id: {0}'.format(app_id))
+			try:
+				app_id = new_app['id']
+				print ('New applicaiton created with id: {0}'.format(app_id))
+			except KeyError:
+				print ('Error when creating application: {0}'.format(new_app['message']))

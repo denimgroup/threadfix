@@ -32,7 +32,7 @@ Options:
 ## References ##
 The following projects/libraries were used to implement functionality in these examples:
 
-* python-nmap - [http://xael.org/norman/python/python-nmap/](http://xael.org/norman/python/python-nmap/)
+* python-nmap - [http://xael.org/norman/python/python-nmap/](http://xael.org/norman/python/python-nmap/) The identify_web_apps.py utility  packages a development version of webkit2png script along with it because we need some functionality ahead of the 0.6 release that was published when the utility was created. The packaged version is commit c4dac8dfd138751b834019891da2a914a9f4f4f4 from the GitHub site [https://github.com/paulhammond/webkit2png/](https://github.com/paulhammond/webkit2png/)
 * webkit2png - [http://www.paulhammond.org/webkit2png/](http://www.paulhammond.org/webkit2png/)
 * python-requests - [http://www.python-requests.org/](http://www.python-requests.org/)
 
