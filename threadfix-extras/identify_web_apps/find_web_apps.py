@@ -3,7 +3,9 @@
 import json
 import nmap
 from optparse import OptionParser
+import os
 import requests
+from requests.exceptions import SSLError
 from subprocess import call
 
 print("ThreadFix web application detection")
@@ -80,20 +82,33 @@ for host in hosts:
 			else:
 				app_name = '{0}:{1}'.format(nm[host].hostname(), port)
 
-			shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name])
-			print ('webkit2png return code: ' + str(shell_result))
-			app_url = 'http://' + app_name + '/'
+			# Try to determine if the web server is running HTTP or HTTPS
+			test_url = 'https://' + app_name + '/'
+
+			try:
+				test_request = requests.get(test_url, verify=False)
+				if (options.verbose):
+					print('\tHTTPS connection successful. Web server is running HTTPS')
+				app_url = 'https://' + app_name + '/'
+			except SSLError as e:
+				# TODO - Make sure of the error type (SSL: UNKNOWN_PROTOCOL)
+				if (options.verbose):
+					print(str(e))
+					print ('\tGot an SSLError. Apparently the web server is not running HTTPS')
+				app_url = 'http://' + app_name + '/'
+
+			shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
+			print ('\twebkit2png return code: ' + str(shell_result))
 
 			if (options.verbose):
-				print('App name will be {0}, app URL will be: {1}'.format(app_name, app_url))
+				print('\tApp name will be {0}, app URL will be: {1}'.format(app_name, app_url))
 
 			# Create the new application in Threadfix
 			payload = { 'apiKey': options.apikey, 'name': app_name, 'url': app_url }
 			r = requests.post(threadfix_rest_url + '/teams/' + str(team_id) + '/applications/new', params=payload)
-			print(r.text)
 			new_app = r.json()
 			try:
 				app_id = new_app['id']
-				print ('New applicaiton created with id: {0}'.format(app_id))
+				print ('\tNew applicaiton created with id: {0}'.format(app_id))
 			except KeyError:
-				print ('Error when creating application: {0}'.format(new_app['message']))
+				print ('\tError when creating application: {0}'.format(new_app['message']))
