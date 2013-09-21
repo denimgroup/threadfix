@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.RestFailureResponse;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -158,7 +159,7 @@ public class OrganizationRestController extends RestController {
 
 		if (org == null) {
 			log.warn("Team lookup failed for ID " + teamName + ".");
-			return LOOKUP_FAILED;
+			return(new RestFailureResponse("No team found with name '" + teamName + "'"));
 		} else {
 			log.info("REST request for Team with ID " + teamName
 					+ " completed successfully.");
