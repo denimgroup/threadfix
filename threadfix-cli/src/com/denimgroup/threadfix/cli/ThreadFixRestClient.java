@@ -102,6 +102,13 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
+	/**
+	 * TOFIX - Actually implement this method.
+	 * 
+	 * @param appId
+	 * @param wafId
+	 * @return
+	 */
 	public String addWaf(String appId, String wafId) {
 		// TODO Auto-generated method stub
 		return null;
