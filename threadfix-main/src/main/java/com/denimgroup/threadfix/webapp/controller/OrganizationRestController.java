@@ -138,8 +138,9 @@ public class OrganizationRestController extends RestController {
 			log.info("Application creation was successful. Returning application.");
 			return application;
 		} else {
+			//	TODO - We could really use some better debug here
 			log.warn("Something was invalid.");
-			return CREATION_FAILED;
+			return(new RestFailureResponse("Problems creating application."));
 		}
 	}
 	
