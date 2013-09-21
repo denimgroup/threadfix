@@ -34,4 +34,5 @@ The following projects/libraries were used to implement functionality in these e
 
 * python-nmap - [http://xael.org/norman/python/python-nmap/](http://xael.org/norman/python/python-nmap/)
 * webkit2png - [http://www.paulhammond.org/webkit2png/](http://www.paulhammond.org/webkit2png/)
+* python-requests - [http://www.python-requests.org/](http://www.python-requests.org/)
 
