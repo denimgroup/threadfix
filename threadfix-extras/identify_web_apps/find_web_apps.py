@@ -155,6 +155,7 @@ for host in hosts:
 					r = requests.post(threadfix_rest_url + '/applications/' + str(app_id) + '/attachFile', params=payload, files=files)
 					if (options.verbose):
 						print('\t' + r.text)
+					clean_screenshot_file()
 				else:
 					print ('\tUnable to get screenshot. Will not upload screenshot for application {0}'.format(app_name))
 					
