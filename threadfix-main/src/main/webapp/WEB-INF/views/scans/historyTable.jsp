@@ -54,21 +54,21 @@
 		</div>
 	</c:if>
 
-	<table class="table">
+	<table class="table" style="table-layout:fixed;">
 		<thead>
 			<tr>
-				<th style="width: 120px" class="long">Scan Date</th>
-				<th style="text-align: left">Application</th>
-				<th style="text-align: left" class="first">Team</th>
-				<th>Scanner</th>
-				<th style="width:70px;">Total Vulns</th>
-				<th>Hidden</th>
-				<th>Critical</th>
-				<th>High</th>
-				<th>Medium</th>
-				<th>Low</th>
-				<th>Info</th>
-				<th style="width:70px"></th>
+				<th style="width: 70px" class="long">Scan Date</th>
+				<th style="text-align: left;width:130px;">Application</th>
+				<th style="text-align: left;width:130px;" class="first">Team</th>
+				<th style="width:90px;">Scanner</th>
+				<th style="width:50px;">Total Vulns</th>
+				<th style="width:40px;">Hidden</th>
+				<th style="width:45px;">Critical</th>
+				<th style="width:30px;">High</th>
+				<th style="width:45px;">Medium</th>
+				<th style="width:25px;">Low</th>
+				<th style="width:35px;">Info</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody id="wafTableBody">
@@ -88,16 +88,18 @@
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
 							<spring:param name="appId" value="${ scan.application.id }" />
-						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> <c:out
-								value="${ scan.application.name }" />
-					</a></div></td>
+							</spring:url> 
+							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> 
+								<c:out	value="${ scan.application.name }" />
+							</a></div></td>
 					<td id="team${ status.count }"><spring:url
 							value="/organizations/{teamId}" var="teamUrl">
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
-						</spring:url> <div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>"> <c:out
-								value="${ scan.application.organization.name }" />
-					</a></div></td>
+							</spring:url> 
+							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>"> 
+								<c:out value="${ scan.application.organization.name }" />
+							</a></div></td>
 					<td id="channelType${ status.count }"><c:out
 							value="${ scan.applicationChannel.channelType.name }" /></td>
 					<td style="text-align: center" id="numTotalVulnerabilities${ status.count }">
