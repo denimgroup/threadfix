@@ -17,8 +17,7 @@ def take_screenshot(url_to_screenshot):
 
 	clean_screenshot_file()
 
-	# shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
-	shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', url_to_screenshot])
+	shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', url_to_screenshot], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
 	if (options.verbose):
 		print ('\twebkit2png return code: ' + str(shell_result))
 
@@ -143,7 +142,7 @@ for host in hosts:
 			new_app = r.json()
 			try:
 				app_id = new_app['id']
-				print ('\tNew applicaiton created with id: {0}'.format(app_id))
+				print ('\tNew application created with id: {0}'.format(app_id))
 
 				# Attach screenshot if we can get one
 				result = take_screenshot(app_url)
