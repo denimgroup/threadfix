@@ -5,13 +5,16 @@
   <version>2.0.0-DEVELOPMENT</version>
   <name>ThreadFix Scan Agent</name>
   <description>Scan agent for the ThreadFix application vulnerability management platform</description>
+  
   <organization>
   	<name>Denim Group, Ltd.</name>
   	<url>http://www.denimgroup.com/</url>
   </organization>
+  
   <issueManagement>
   	<url>https://code.google.com/p/threadfix/issues/list</url>
   </issueManagement>
+  
   <dependencies>
   	<dependency>
   		<groupId>log4j</groupId>
