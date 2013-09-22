@@ -330,6 +330,7 @@ public class Application extends AuditableEntity {
 	}	
 
 	@OneToMany(mappedBy = "application")
+	@JsonIgnore
 	public List<Document> getDocuments() {
 		return documents;
 	}
