@@ -17,6 +17,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanParametersService;
@@ -37,6 +38,7 @@ public class ApplicationRestController extends RestController {
 	public static final String CHANNEL_LOOKUP_FAILED = "Application Channel lookup failed.";
 	
 	private ApplicationService applicationService;
+	private DocumentService documentService;
 	private ScanService scanService;
 	private ScanParametersService scanParametersService;
 	private ScanTypeCalculationService scanTypeCalculationService;
@@ -49,7 +51,8 @@ public class ApplicationRestController extends RestController {
 		LOOKUP = "applicationLookup",
 		NEW = "newApplication",
 		SET_WAF = "setWaf",
-		UPLOAD = "uploadScan";
+		UPLOAD = "uploadScan",
+		ATTACH_FILE = "attachFile";
 
 	// TODO finalize which methods need to be restricted
 	static {
@@ -60,6 +63,7 @@ public class ApplicationRestController extends RestController {
 	@Autowired
 	public ApplicationRestController(APIKeyService apiKeyService, 
 			ApplicationService applicationService,
+			DocumentService documentService,
 			OrganizationService organizationService,
 			ScanService scanService, 
 			ScanMergeService scanMergeService,
@@ -70,6 +74,7 @@ public class ApplicationRestController extends RestController {
 		this.organizationService = organizationService;
 		this.apiKeyService = apiKeyService;
 		this.applicationService = applicationService;
+		this.documentService = documentService;
 		this.scanTypeCalculationService = scanTypeCalculationService;
 		this.scanService = scanService;
 		this.scanMergeService = scanMergeService;
@@ -100,6 +105,34 @@ public class ApplicationRestController extends RestController {
 			return LOOKUP_FAILED;
 		}
 		return application;
+	}
+	
+	/**
+	 * Set scan parameters
+	 * @param request
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="/{appId}/attachFile", method=RequestMethod.POST)
+	public @ResponseBody Object attachFile(HttpServletRequest request,
+			@PathVariable("appId") int appId,
+			@RequestParam("file") MultipartFile file,
+			@RequestParam("filename") String filename) {
+		log.info("Received REST request to attach a file to application with id = " + appId + ".");
+		
+		String result = checkKey(request, ATTACH_FILE);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		if(filename != null) {
+			documentService.saveFileToApp(appId, file, filename);
+		} else {
+			documentService.saveFileToApp(appId, file);
+		}
+		
+		//	TODO - Make this response better.
+		return "OK";
 	}
 	
 	/**
