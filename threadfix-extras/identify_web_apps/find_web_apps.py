@@ -8,6 +8,45 @@ import requests
 from requests.exceptions import SSLError
 from subprocess import call
 
+#####
+# Functions
+#####
+
+def take_screenshot(url_to_screenshot):
+	ret_val = False;
+
+	clean_screenshot_file()
+
+	# shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
+	shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', url_to_screenshot])
+	if (options.verbose):
+		print ('\twebkit2png return code: ' + str(shell_result))
+
+	if (os.path.isfile(screenshot_filename)):
+		ret_val = True
+
+	return ret_val;
+
+
+def clean_screenshot_file():
+	# Try to clean up the screenshot file
+	try:
+		os.remove(screenshot_filename)
+	except:
+		pass
+
+
+#####
+# Constants
+#####
+
+screenshot_filename = 'threadfixscript-full.png'
+
+
+#####
+# Main stuff
+#####
+
 print("ThreadFix web application detection")
 
 # Configure command line argument parsing
@@ -91,16 +130,11 @@ for host in hosts:
 					print('\tHTTPS connection successful. Web server is running HTTPS')
 				app_url = 'https://' + app_name + '/'
 			except SSLError as e:
-				# TODO - Make sure of the error type (SSL: UNKNOWN_PROTOCOL)
 				if (options.verbose):
-					print(str(e))
 					print ('\tGot an SSLError. Apparently the web server is not running HTTPS')
 				app_url = 'http://' + app_name + '/'
 
-			shell_result = call(['webkit2png/webkit2png', '-F', '-o', 'threadfixscript', '--ignore-ssl-check', 'https://' + app_name], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
-			print ('\twebkit2png return code: ' + str(shell_result))
-
-			if (options.verbose):
+			if(options.verbose):
 				print('\tApp name will be {0}, app URL will be: {1}'.format(app_name, app_url))
 
 			# Create the new application in Threadfix
@@ -110,5 +144,21 @@ for host in hosts:
 			try:
 				app_id = new_app['id']
 				print ('\tNew applicaiton created with id: {0}'.format(app_id))
+
+				# Attach screenshot if we can get one
+				result = take_screenshot(app_url)
+
+				if(result):
+					print ('\tGoing to upload screenshot for application {0}'.format(app_name))
+					payload = { 'apiKey': options.apikey, 'filename': 'screenshot.png' }
+					files = { 'file': open(screenshot_filename, 'rb') }
+					r = requests.post(threadfix_rest_url + '/applications/' + str(app_id) + '/attachFile', params=payload, files=files)
+					if (options.verbose):
+						print('\t' + r.text)
+				else:
+					print ('\tUnable to get screenshot. Will not upload screenshot for application {0}'.format(app_name))
+					
 			except KeyError:
 				print ('\tError when creating application: {0}'.format(new_app['message']))
+
+
