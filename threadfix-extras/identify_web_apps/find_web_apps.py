@@ -132,6 +132,9 @@ for host in hosts:
 				if (options.verbose):
 					print ('\tGot an SSLError. Apparently the web server is not running HTTPS')
 				app_url = 'http://' + app_name + '/'
+			except TimeoutError as te:
+				print ('\tGot a timeout trying to connect to webserver. Server may not be up. Will assume HTTP for now.')
+				app_url = 'http://' + app_name + '/'
 
 			if(options.verbose):
 				print('\tApp name will be {0}, app URL will be: {1}'.format(app_name, app_url))
