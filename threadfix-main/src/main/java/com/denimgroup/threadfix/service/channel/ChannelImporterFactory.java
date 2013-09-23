@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.plugin.ScannerPluginManager;
 
 /**
  * 
@@ -87,9 +88,6 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.APPSCAN_DYNAMIC)) {
 			channelImporter = new AppScanWebImporter(channelTypeDao, channelVulnerabilityDao,
 					channelSeverityDao, genericVulnerabilityDao);
-		} else if (channelName.equals(ChannelType.ARACHNI)){
-			channelImporter = new ArachniChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
 		} else if (channelName.equals(ChannelType.BRAKEMAN)){
 			channelImporter = new BrakemanChannelImporter(channelTypeDao,
 					channelVulnerabilityDao, channelSeverityDao);
@@ -138,8 +136,10 @@ public class ChannelImporterFactory {
 		} else if (channelName.equals(ChannelType.MANUAL)){
 			channelImporter = new SSVLChannelImporter(channelTypeDao,
 					channelVulnerabilityDao, channelSeverityDao, genericVulnerabilityDao);
-		} else {
-			return null;
+		}
+		
+		if (channelImporter == null) {
+			channelImporter = ScannerPluginManager.getChannelImporter(applicationChannel);
 		}
 		
 		if (channelImporter != null) {
