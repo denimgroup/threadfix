@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,8 +54,11 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		// TODO update these
 		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
 		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan);
-		scan.setFilePathRoot(filePathRoot);
-		scan.setUrlPathRoot(urlPathRoot);
+		
+		if (scan != null) {
+			scan.setFilePathRoot(filePathRoot);
+			scan.setUrlPathRoot(urlPathRoot);
+		}
 		
 		switch (accessLevel) {
 			case FULL:    buildFullSourceMappings();    break;
@@ -240,6 +244,11 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		}
 		
 		return urlPath;
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		return fullMappings.generateEndpoints();
 	}
 	
 }

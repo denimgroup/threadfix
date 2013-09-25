@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.denimgroup.threadfix.service.framework.filefilter.ClassAnnotationBasedFileFilter;
+
 /**
  * This class can be used with Commons FileUtils to filter for finding Spring Entities.
  *

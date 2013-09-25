@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,10 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.framework.Endpoint;
+import com.denimgroup.threadfix.service.framework.EndpointGenerator;
+import com.denimgroup.threadfix.service.framework.PathUrlTranslatorFactory;
+import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 
 @Controller
 @RequestMapping("/rest/code")
@@ -88,8 +93,51 @@ public class PluginRestController extends RestController {
 			log.warn("Couldn't find any active applications.");
 			return "failure";
 		}
-		
 		return getApplicationCSV(applications);
+	}
+	
+	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
+	public @ResponseBody Object getEndpoints(@PathVariable int appId, 
+			HttpServletRequest request) {
+		log.info("Received REST request for application CSV list");
+		
+		String result = checkKey(request, "markers");
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		
+		if (application == null) {
+			log.warn("Couldn't find the application.");
+			return "failure";
+		}
+		
+		EndpointGenerator generator = PathUrlTranslatorFactory.getTranslator(
+				MergeConfigurationGenerator.generateConfiguration(application, null), 
+				null);
+		
+		if (generator != null) {
+			return getEndpointCSV(generator);
+		} else {
+			return "failure";
+		}
+	}
+	
+	private String getEndpointCSV(EndpointGenerator generator) {
+		StringBuilder builder = new StringBuilder();
+		
+		Collection<Endpoint> endpoints = generator.generateEndpoints();
+		
+		if (endpoints != null && !endpoints.isEmpty()) {
+			for (Endpoint endpoint : endpoints) {
+				if (endpoint != null) {
+					builder.append(endpoint.getCSVLine()).append("\n");
+				}
+			}
+		}
+		
+		return builder.toString();
 	}
 	
 	private String getMarkerCSV(Application application) {

@@ -21,23 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.framework;
+package com.denimgroup.threadfix.service.framework.filefilter;
 
 import java.io.File;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
 
-public class JSPFileFilter implements IOFileFilter {
+public class FileExtensionFileFilter implements IOFileFilter {
+	private final String fileExtension;
 	
-	public static final JSPFileFilter INSTANCE = new JSPFileFilter();
-	private JSPFileFilter(){}
+	public FileExtensionFileFilter(String fileExtension) {
+		this.fileExtension = fileExtension;
+	}
 	
 	@Override
 	public boolean accept(File file) {
-		return file.getName().contains(".jsp");
+		return file.getName().endsWith(fileExtension);
 	}
+
 	@Override
 	public boolean accept(File dir, String name) {
-		return name.contains(".jsp");
+		return name.endsWith(fileExtension);
 	}
 }

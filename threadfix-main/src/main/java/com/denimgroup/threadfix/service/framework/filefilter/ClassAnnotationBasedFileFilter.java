@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.framework;
+package com.denimgroup.threadfix.service.framework.filefilter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

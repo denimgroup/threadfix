@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.io.File;
+import java.util.List;
+
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -39,17 +42,25 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
 		
-		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan, ".jsp");
-		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan);
+		if (scan == null) {
+			filePathRoot = CommonPathFinder.findOrParseProjectRootFromDirectory(
+					scanMergeConfiguration.getWorkTree(), 
+					".jsp");
+		} else {
+			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan, ".jsp");
+		}
+		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan);
 		
-		mappings = new JSPMappings(workTree);
+		mappings = new JSPMappings(new File(filePathRoot));
 
 		if ((urlPathRoot == null || urlPathRoot.isEmpty()) && filePathRoot != null) {
 			urlPathRoot = filePathRoot;
 		}
 		
-		scan.setFilePathRoot(filePathRoot);
-		scan.setUrlPathRoot(urlPathRoot);
+		if (scan != null) {
+			scan.setFilePathRoot(filePathRoot);
+			scan.setUrlPathRoot(urlPathRoot);
+		}
 		
 		log.info("Using JSP URL - Path translator.");
 		log.info("Calculated filesystem root: " + filePathRoot);
@@ -80,6 +91,11 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 	@Override
 	public String getUrlPath(Finding finding) {
 		return getUrlPathDefault(finding);
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		return mappings.generateEndpoints();
 	}
 	
 }

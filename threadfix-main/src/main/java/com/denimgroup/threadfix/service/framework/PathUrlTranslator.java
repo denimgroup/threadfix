@@ -25,9 +25,10 @@ package com.denimgroup.threadfix.service.framework;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 
-public interface PathUrlTranslator {
+public interface PathUrlTranslator extends EndpointGenerator {
 	
 	String getFileName(Finding finding);
 	
 	String getUrlPath(Finding finding);
+	
 }

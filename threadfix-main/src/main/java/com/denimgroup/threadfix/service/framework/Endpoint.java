@@ -23,30 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import com.denimgroup.threadfix.service.framework.filefilter.ClassAnnotationBasedFileFilter;
+public interface Endpoint {
 
-/**
- * This class can be used with Commons FileUtils to filter for finding Spring @Controllers.
- *
- * It actually just finds any file with an uncommented @Controller in it.
- * 
- * @author mcollins
- *
- */
-public class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
+	Set<String> getParameters();
 	
-	private SpringControllerFileFilter(){}
+	String getPath();
 	
-	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
+	String getMethod();
 	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Controller"));
+	String getCSVLine();
 	
-	@Override
-	protected Set<String> getClassAnnotations() {
-		return annotations;
-	}
 }

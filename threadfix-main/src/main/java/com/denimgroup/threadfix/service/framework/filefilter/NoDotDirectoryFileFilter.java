@@ -21,32 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.framework;
+package com.denimgroup.threadfix.service.framework.filefilter;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
 
-import com.denimgroup.threadfix.service.framework.filefilter.ClassAnnotationBasedFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
 
-/**
- * This class can be used with Commons FileUtils to filter for finding Spring @Controllers.
- *
- * It actually just finds any file with an uncommented @Controller in it.
- * 
- * @author mcollins
- *
- */
-public class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
+public class NoDotDirectoryFileFilter implements IOFileFilter {
 	
-	private SpringControllerFileFilter(){}
+	public static IOFileFilter INSTANCE = new NoDotDirectoryFileFilter();
 	
-	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
-	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Controller"));
+	private NoDotDirectoryFileFilter(){}
 	
 	@Override
-	protected Set<String> getClassAnnotations() {
-		return annotations;
+	public boolean accept(File file) {
+		return file.getName().charAt(0) != '.';
+	}
+
+	@Override
+	public boolean accept(File dir, String name) {
+		return name.charAt(0) != '.';
 	}
 }
