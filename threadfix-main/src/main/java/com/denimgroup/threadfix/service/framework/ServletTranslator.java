@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
@@ -97,5 +98,11 @@ public class ServletTranslator extends AbstractPathUrlTranslator {
 	public String getUrlPath(Finding staticFinding) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Endpoint>();
 	}
 }

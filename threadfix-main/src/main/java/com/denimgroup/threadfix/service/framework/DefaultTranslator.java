@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -38,8 +41,11 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 		
 		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan);
 		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan);
-		scan.setFilePathRoot(filePathRoot);
-		scan.setUrlPathRoot(urlPathRoot);
+		
+		if (scan != null) {
+			scan.setFilePathRoot(filePathRoot);
+			scan.setUrlPathRoot(urlPathRoot);
+		}
 		
 		log.info("Using default URL - Path translator.");
 		log.info("Calculated filesystem root: " + filePathRoot);
@@ -57,6 +63,13 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 	@Override
 	public String getUrlPath(Finding finding) {
 		return getUrlPathDefault(finding);
+	}
+
+	// We should decide on whether to keep state here or not
+	// Supporting this in the default case is messy
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		return new ArrayList<Endpoint>();
 	}
 	
 }

@@ -144,7 +144,7 @@ public class MergeConfigurationGenerator {
 		if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
 			return repo.getWorkTree();
 		} else {
-			return null;
+			return applicationDirectory;
 		}
 	}
 	
@@ -153,6 +153,7 @@ public class MergeConfigurationGenerator {
 	// when we add more framework parsers to ThreadFix
 	private static FrameworkType guessFrameworkTypeFromSourceTree(File workTree) {
 		log.info("Attempting to guess Framework Type from source tree.");
+		log.info("File: " + workTree);
 		
 		FrameworkType frameworkType = FrameworkType.NONE;
 		

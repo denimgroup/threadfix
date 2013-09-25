@@ -24,19 +24,26 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 
-public class JSPMappings {
+import com.denimgroup.threadfix.service.framework.filefilter.JSPFileFilter;
+import com.denimgroup.threadfix.service.framework.filefilter.NoDotDirectoryFileFilter;
+
+// TODO figure out HTTP methods perhaps from form analysis
+// for now all will be GET
+public class JSPMappings implements EndpointGenerator {
 	
 	private Map<String, Set<File>> includeMap = new HashMap<>();
 	private Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
+	private List<Endpoint> endpoints = new ArrayList<>();
 	private File rootFile = null;
 	
 	@SuppressWarnings("unchecked")
@@ -45,7 +52,7 @@ public class JSPMappings {
 
 			this.rootFile = rootFile;
 			Collection<File> jspFiles = FileUtils.listFiles(
-					rootFile, JSPFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+					rootFile, JSPFileFilter.INSTANCE, NoDotDirectoryFileFilter.INSTANCE);
 	
 			for (File file : jspFiles) {
 				Set<File> files = JSPIncludeParser.parse(file);
@@ -58,6 +65,14 @@ public class JSPMappings {
 				Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
 				if (parserResults != null) {
 					parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parserResults);
+					Set<String> allParameters = new HashSet<>();
+					for (List<String> parameters : parserResults.values()) {
+						allParameters.addAll(parameters);
+					}
+					endpoints.add(new DefaultEndpoint(
+							FilePathUtils.getRelativePath(file, rootFile), 
+							allParameters, 
+							"GET"));
 				}
 			}
 		}
@@ -98,5 +113,14 @@ public class JSPMappings {
 	
 	public String getRelativePath(String dataFlowLocation) {
 		return FilePathUtils.getRelativePath(dataFlowLocation, rootFile);
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		System.out.println("about to print");
+		for (Endpoint csvString : endpoints) {
+			System.out.println(csvString.getCSVLine());
+		}
+		return endpoints;
 	}
 }

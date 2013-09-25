@@ -23,11 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
-public class SpringControllerEndpoint implements Comparable<SpringControllerEndpoint> {
+public class SpringControllerEndpoint implements Comparable<SpringControllerEndpoint>, EndpointGenerator {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	private static final String requestMappingStart = "RequestMethod.";
@@ -159,6 +163,25 @@ public class SpringControllerEndpoint implements Comparable<SpringControllerEndp
 		}
 		
 		return returnValue;
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		Iterable<String> methodsToGenerate;
+		
+		if (methods == null || methods.isEmpty()) {
+			methodsToGenerate = Arrays.asList("GET");
+		} else {
+			methodsToGenerate = new TreeSet<>(methods);
+		}
+		
+		List<Endpoint> endpoints = new ArrayList<>();
+		
+		for (String method : methodsToGenerate) {
+			endpoints.add(new DefaultEndpoint(cleanedUrlPath, parameters, method));
+		}
+		
+		return endpoints;
 	}
 	
 }

@@ -24,9 +24,11 @@
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -34,7 +36,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-public class SpringControllerMappings {
+public class SpringControllerMappings implements EndpointGenerator {
 	
 	private final Collection<File> controllerFiles;
 	
@@ -110,5 +112,18 @@ public class SpringControllerMappings {
 				controllerToUrlsMap.put(fileNameWithoutRoot, endpoints);
 			}
 		}
+	}
+
+	@Override
+	public List<Endpoint> generateEndpoints() {
+		List<Endpoint> returnEndpoints = new ArrayList<Endpoint>();
+		
+		for (Set<SpringControllerEndpoint> endpointList : urlToControllerMethodsMap.values()) {
+			for (SpringControllerEndpoint endpoint : endpointList) {
+				returnEndpoints.addAll(endpoint.generateEndpoints());
+			}
+		}
+		
+		return returnEndpoints;
 	}
 }

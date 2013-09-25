@@ -72,6 +72,12 @@ public class RestUtils {
         return result;
     }
 
+    public static String getEndpoints() {
+        String result = httpGet(getUrl() + "/code/applications/" + getApplicationId() + "/endpoints?apiKey=" + getKey());
+
+        return result;
+    }
+
     public static String httpGet(String urlStr) {
 
         System.out.println("Requesting " + urlStr);

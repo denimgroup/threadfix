@@ -29,7 +29,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.denimgroup.threadfix.service.SanitizedLogger;
+
 public class DispatcherServletParser {
+	
+	private static final SanitizedLogger log = new SanitizedLogger("DispatcherServletParser");
 	
 	// this is much faster than an implementation using the tokenizer.
 	public static boolean usesSpringMvcAnnotations(File file) {
@@ -53,6 +57,10 @@ public class DispatcherServletParser {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		if (!returnValue) {
+			log.info("mvc:annotation-driven was not found, the annotations are not supported.");
 		}
 		
 		return returnValue;

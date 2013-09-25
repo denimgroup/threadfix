@@ -23,14 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.framework.filefilter.FileExtensionFileFilter;
 
 public class CommonPathFinder {
 	
@@ -52,6 +58,25 @@ public class CommonPathFinder {
 
 	public static final String findOrParseUrlPath(Scan scan) {
 		return parseRoot(getUrlPaths(scan));
+	}
+	
+	public static final String findOrParseProjectRootFromDirectory(File rootFile, String fileExtension) {
+		return parseRoot(getFilePathsFromDirectory(rootFile, fileExtension));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static List<String> getFilePathsFromDirectory(File rootFile, String fileExtension) {
+		Collection<File> files = FileUtils.listFiles(rootFile, 
+				new FileExtensionFileFilter(fileExtension), 
+				TrueFileFilter.INSTANCE);
+		
+		List<String> strings = new ArrayList<>();
+		
+		for (File file : files) {
+			strings.add(file.getAbsolutePath());
+		}
+		
+		return strings;
 	}
 
 	private static List<String> getFilePaths(Scan scan, String fileExtension) {

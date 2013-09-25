@@ -3,16 +3,17 @@ package org.zaproxy.zap.extension.threadfix;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ExtensionAdaptor;
 import org.parosproxy.paros.extension.ExtensionHook;
+import org.zaproxy.zap.spider.Spider;
+import org.zaproxy.zap.spider.SpiderParam;
 
 import javax.swing.*;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 
-    private JMenuItem importAction = null;
+    private JMenuItem importAction = null, endpointsAction = null;
     private ResourceBundle messages = null;
 
     private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
@@ -42,7 +43,7 @@ public class ThreadFixExtension extends ExtensionAdaptor {
      */
     public ThreadFixExtension(String name) {
         super(name);
-       logger.info("1-arg Constructor");
+        logger.info("1-arg Constructor");
     }
 
     /**
@@ -65,58 +66,30 @@ public class ThreadFixExtension extends ExtensionAdaptor {
         if (getView() != null) {
             // Register our top menu item, as long as we're not running as a daemon
             // Use one of the other methods to add to a different menu list
-            extensionHook.getHookMenu().addToolsMenuItem(getMenuExample());
+            extensionHook.getHookMenu().addToolsMenuItem(getImportAction());
+            extensionHook.getHookMenu().addToolsMenuItem(getEndpointsAction());
         }
 
     }
 
-    private JMenuItem getMenuExample() {
+    private JMenuItem getImportAction() {
        logger.info("Getting menu");
         if (importAction == null) {
-            logger.info("Initializing ThreadFix menu item");
-            importAction = new JMenuItem();
-            importAction.setText("ThreadFix");
-
-            importAction.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-
-                logger.info("About to show dialog.");
-
-                ParametersDialog.show(getView());
-
-                logger.info("Got settings. About to show Application selection.");
-
-                ApplicationDialog.show(getView());
-
-                logger.info("Got application id, about to generate XML and use REST call.");
-
-                File file = ReportGenerator.generateXml(getView(), getModel());
-
-                logger.info("File = " + file);
-                logger.info("full path = " + file.getAbsoluteFile());
-
-                logger.info("About to try to upload.");
-                int responseCode = RestUtils.uploadScan(file);
-                if (responseCode == 0) {
-                    getView().showWarningDialog("The response code was 0, indicating that the ThreadFix server " +
-                            "was unreachable. Make sure that the server is running and not blocked by the ZAP " +
-                            "local proxy.");
-                } else if (responseCode == -2) {
-                    getView().showWarningDialog("The parameters were not saved correctly.");
-                } else if (responseCode != 200) {
-                    getView().showWarningDialog("Scan upload failed: the HTTP response code was " + responseCode +
-                            " and not 200.");
-                } else {
-                    getView().showMessageDialog("The scan was uploaded to ThreadFix successfully.");
-                }
-                }
-            });
+            importAction = new ImportAction(getView(), getModel());
         }
         return importAction;
     }
 
-    public String getMessageString (String key) {
+    private JMenuItem getEndpointsAction() {
+       logger.info("Getting menu");
+        if (endpointsAction == null) {
+            Spider spider = new Spider(new SpiderParam(), getModel().getOptionsParam().getConnectionParam(), getModel());
+            endpointsAction = new EndpointsAction(getView(), getModel(), spider);
+        }
+        return endpointsAction;
+    }
+
+    public String getMessageString(String key) {
         return messages.getString(key);
     }
     @Override
