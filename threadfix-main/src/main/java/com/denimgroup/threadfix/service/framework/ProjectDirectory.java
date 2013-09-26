@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -107,6 +108,59 @@ public class ProjectDirectory {
 	// on the other hand I don't really see this being a bottleneck
 	public File findWebXML() {
 		return findFile("web.xml", "WEB-INF", "web.xml");
+	}
+	
+	public List<File> findFiles(String pathWithStars) {
+		List<File> files;
+		
+		if (pathWithStars.contains("*")) {
+			// we have to do a wildcard match
+			files = findFilesWithStar(pathWithStars);
+		} else {
+			// do normal add
+			files = Arrays.asList(findFile(pathWithStars));
+		}
+		
+		return files;
+	}
+	
+	public List<File> findFilesWithStar(String path) {
+		List<File> returnFile = null;
+		String[] pathSegments = breakUpPath(path);
+		
+		if (pathSegments != null && pathSegments.length > 0) {
+			returnFile = findFilesWithStar(pathSegments[pathSegments.length - 1], pathSegments);
+		}
+		
+		return returnFile;
+	}
+	
+	private List<File> findFilesWithStar(String fileName, String... pathSegments) {
+		List<File> returnFile = new ArrayList<>();
+		
+		if (fileName.contains("*")) {
+		
+			List<String> possibleEntries = new ArrayList<String>();
+			String[] beforeAndAfter = fileName.split("\\*");
+			
+			for (String key : fileMap.keySet()) {
+				if (key.startsWith(beforeAndAfter[0]) && key.endsWith(beforeAndAfter[1])) {
+					possibleEntries.add(key);
+				}
+			}
+			
+			for (String key : possibleEntries) {
+				String extension = calculateBestOption(pathSegments, fileMap.get(key));
+				if (extension != null) {
+					File testFile = new File(getDirectoryPath() + extension);
+					if (testFile.exists()) {
+						returnFile.add(testFile);
+					}
+				}
+			}
+		}
+	
+		return returnFile;
 	}
 	
 	/**

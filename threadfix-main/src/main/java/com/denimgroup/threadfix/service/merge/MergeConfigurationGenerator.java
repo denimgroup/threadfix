@@ -151,7 +151,7 @@ public class MergeConfigurationGenerator {
 	// For now this is not very general and only handles Java stuff.
 	// In the interest of moving on I am going to leave it, but this may need to be re-architected
 	// when we add more framework parsers to ThreadFix
-	private static FrameworkType guessFrameworkTypeFromSourceTree(File workTree) {
+	public static FrameworkType guessFrameworkTypeFromSourceTree(File workTree) {
 		log.info("Attempting to guess Framework Type from source tree.");
 		log.info("File: " + workTree);
 		

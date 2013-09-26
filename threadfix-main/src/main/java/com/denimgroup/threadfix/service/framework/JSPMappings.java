@@ -117,10 +117,6 @@ public class JSPMappings implements EndpointGenerator {
 
 	@Override
 	public List<Endpoint> generateEndpoints() {
-		System.out.println("about to print");
-		for (Endpoint csvString : endpoints) {
-			System.out.println(csvString.getCSVLine());
-		}
 		return endpoints;
 	}
 }

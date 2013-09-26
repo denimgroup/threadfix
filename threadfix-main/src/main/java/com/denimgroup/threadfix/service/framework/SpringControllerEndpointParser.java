@@ -236,7 +236,11 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 
 	private void addEndpoint(int endLineNumber) {
 		if (classEndpoint != null) {
-			currentMapping = classEndpoint + currentMapping;
+			if (currentMapping != null) {
+				currentMapping = classEndpoint + currentMapping;
+			} else {
+				currentMapping = classEndpoint;
+			}
 		}
 		
 		// It's ok to add a default method here because we must be past the class-level annotation
