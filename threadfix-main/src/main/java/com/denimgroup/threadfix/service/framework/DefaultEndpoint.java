@@ -40,6 +40,20 @@ public class DefaultEndpoint implements Endpoint {
 	public Set<String> getParameters() {
 		return parameters;
 	}
+	
+	private String getParametersString() {
+		StringBuilder builder = new StringBuilder("[");
+		if (parameters != null) {
+			for (String param : parameters) {
+				builder.append(param).append(" ");
+			}
+		}
+		if (builder.length() > 1) {
+			builder.deleteCharAt(builder.length() - 1);
+		}
+		
+		return builder.append("]").toString();
+	}
 
 	@Override
 	public String getPath() {
@@ -54,7 +68,7 @@ public class DefaultEndpoint implements Endpoint {
 	// TODO decide whether to escape the parameters or leave them like this
 	@Override
 	public String getCSVLine() {
-		return method + "," + path + "," + parameters;
+		return method + "," + path + "," + getParametersString();
 	}
 
 }

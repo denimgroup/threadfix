@@ -178,22 +178,34 @@ public class ServletMappings {
 							"org.springframework.web.servlet.DispatcherServlet")) {
 					// Spring. Let's look for mvc:annotation-driven in the servlet config
 					
-					File configFile = null;
+					List<File> configFiles = new ArrayList<>();
 					
 					if (mapping.getContextConfigLocation() != null) {
-						configFile = projectDirectory.findFile(mapping.getContextConfigLocation());
-					} else {
-						configFile = projectDirectory.findFile(mapping.getServletName() + "-servlet.xml");
+						if (mapping.getContextConfigLocation().trim().contains("\n")) {
+							// There may be multiple configuration files. We have to run through all of them
+							// and look for spring mvc stuff because we don't know which will have the config beforehand.
+							String[] strings = mapping.getContextConfigLocation().split("\n");
+							
+							for (String string : strings) {
+								List<File> files = projectDirectory.findFiles(string.trim());
+								configFiles.addAll(files);
+							}
+						} else {	
+							configFiles.addAll(projectDirectory.findFiles(mapping.getContextConfigLocation().trim()));
+						}
 					}
 					
-					if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
-						log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
-						frameworkType = FrameworkType.SPRING_MVC;
-					} else if (configFile == null) {
-						log.warn("Unable to locate Spring's dispatcher servlet configuration.");
-					} else {
-						log.warn("Dispatcher servlet configuration parsing did not find the " +
-								"Spring MVC configuration.");
+					configFiles.add(projectDirectory.findFile(mapping.getServletName() + "-servlet.xml"));
+					
+					for (File configFile : configFiles) {
+						log.info("Checking config file " + configFile);
+						if (configFile != null && DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
+							log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
+							frameworkType = FrameworkType.SPRING_MVC;
+							break;
+						} else if (configFile == null) {
+							log.info("Unable to locate configuration file.");
+						}
 					}
 				}
 			}
