@@ -1,17 +1,9 @@
 package com.denimgroup.threadfix.plugin.eclipse.dialog;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -22,23 +14,16 @@ public class ConfigDialog extends TitleAreaDialog {
 	private Text urlTextInput;
 	private Text apiKeyTextInput;
 	
-	private List<Button> buttons = new ArrayList<Button>();
-
 	private String url;
 	private String apiKey;
-	private Set<String> appIds = null;
 
 	private final String initialUrl, initialApiKey;
-	private final Map<String, String> appIdMap;
-	private final Set<String> alreadyChecked;
 
 	public ConfigDialog(Shell parentShell, String initialApiKey,
-			String initialUrl, Map<String, String> appIdMap, Set<String> alreadyChecked) {
+			String initialUrl) {
 		super(parentShell);
 		this.initialApiKey = initialApiKey;
 		this.initialUrl = initialUrl;
-		this.appIdMap = appIdMap;
-		this.alreadyChecked = alreadyChecked;
 	}
 
 	@Override
@@ -58,20 +43,8 @@ public class ConfigDialog extends TitleAreaDialog {
 
 		createUrlText(container);
 		createApiKeyText(container);
-		createApplicationSelection(container);
 
 		return area;
-	}
-
-	private void createApplicationSelection(Composite container) {
-		for (String appIdentifier : new TreeSet<String>(appIdMap.keySet())) {
-			Button button = new Button(container, SWT.CHECK);
-			button.setText(appIdentifier);
-			if (alreadyChecked.contains(appIdMap.get(appIdentifier))) {
-				button.setSelection(true);
-			}
-			buttons.add(button);
-		}
 	}
 
 	private void createUrlText(Composite container) {
@@ -108,21 +81,8 @@ public class ConfigDialog extends TitleAreaDialog {
 	private void saveInput() {
 		url = urlTextInput.getText();
 		apiKey = apiKeyTextInput.getText();
-		appIds = getAppIdsFromButtons();
 	}
 	
-	private Set<String> getAppIdsFromButtons() {
-		Set<String> returnSet = new HashSet<String>();
-	
-		for (Button button : buttons) {
-			if (button.getSelection()) {
-				returnSet.add(appIdMap.get(button.getText()));
-			}
-		}
-	
-		return returnSet;
-	}
-
 	@Override
 	protected void okPressed() {
 		saveInput();
@@ -135,9 +95,5 @@ public class ConfigDialog extends TitleAreaDialog {
 
 	public String getApiKey() {
 		return apiKey;
-	}
-	
-	public Set<String> getAppIds() {
-		return appIds;
 	}
 }

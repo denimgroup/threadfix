@@ -16,12 +16,23 @@ public class SettingsUtils {
 		APPLICATIONS = "applications", 
 		PACKAGE_NAME = "com.denimgroup.threadfix.plugin.eclipse";
 	
-	public static void save(String url, String apiKey, Set<String> configuredApplications) {
+	public static void saveThreadFixInfo(String url, String apiKey) {
 		try {
 			IEclipsePreferences prefs = getPreferences();
 			
 			prefs.put(API_KEY, apiKey);
 			prefs.put(URL_KEY, url);
+			
+			prefs.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveApplicationInfo(Set<String> configuredApplications) {
+		try {
+			IEclipsePreferences prefs = getPreferences();
+			
 			prefs.put(APPLICATIONS, setToCSVString(configuredApplications));
 			
 			prefs.flush();
