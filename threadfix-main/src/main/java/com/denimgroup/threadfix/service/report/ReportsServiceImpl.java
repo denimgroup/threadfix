@@ -145,9 +145,8 @@ public class ReportsServiceImpl implements ReportsService {
 		if (applicationIdList == null || applicationIdList.isEmpty()) {
 			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 		}
-		
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("appId", applicationIdList);
 		String path = request.getSession().getServletContext().getRealPath("/");
@@ -252,8 +251,14 @@ public class ReportsServiceImpl implements ReportsService {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
 				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 6);
+				if (jasperPrint == null) {
+					return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+				}
 			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
 				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 12);
+				if (jasperPrint == null) {
+					return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+				}
 			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
@@ -356,8 +361,7 @@ public class ReportsServiceImpl implements ReportsService {
 		for (Integer id : applicationIdList) {
 			scanList.add(applicationDao.retrieveById(id).getScans());
 		}
-		
-		if (scanList == null || scanList.isEmpty()) {
+		if (scanList == null || scanList.get(0).isEmpty()) {
 			log.info("Unable to fill Jasper Report - no scans were found.");
 			return null;
 		} else {
@@ -708,14 +712,13 @@ public class ReportsServiceImpl implements ReportsService {
 						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
 			}
 		}
-		
 		return rowParamsList;
 	}
 	
 	private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
 		StringBuffer data = new StringBuffer();
 		data.append("Vulnerability List \n");
-		
+
 		List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
 		String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
 		data.append("Team: " + teamName +" \n");

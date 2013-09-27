@@ -9,6 +9,7 @@
 		<thead>
 			<tr>
 				<th class="medium first">User</th>
+				<th class="short">Role</th>
 				<th class="short"></th>
 			</tr>
 		</thead>
@@ -17,6 +18,35 @@
 			<tr class="bodyRow">
 				<td id="name${ status.count }">
 					<c:out value="${ user.name }"/>
+				</td>
+				<td id="role${ status.count }">
+					<c:if test="${ user.hasGlobalGroupAccess }">
+						<c:out value="${ user.globalRole.displayName }"/>
+					</c:if>
+					<c:if test="${ not user.hasGlobalGroupAccess }">
+						<c:set var="isDisplayedAppRole" value="false"/>
+						<c:set var="isDisplayedTeamRole" value="false"/>
+						<c:forEach var="mapTeam" items="${ user.accessControlTeamMaps }" varStatus="status">
+							<c:if test="${ mapTeam.organization.id == organization.id && mapTeam.organization.id != application.organization.id && not isDisplayedTeamRole }">
+								<c:set var="isDisplayedTeamRole" value="true"/>
+								<c:if test="${ mapTeam.allApps }"><c:out value="${ mapTeam.role.displayName }"/></c:if>
+								<c:if test="${ not mapTeam.allApps }">
+									Read Access
+								</c:if>
+							</c:if>
+							<c:if test="${ mapTeam.organization.id == application.organization.id }">
+								<c:if test="${ mapTeam.allApps }"><c:out value="${ mapTeam.role.displayName }"/></c:if>
+								<c:if test="${ not mapTeam.allApps }">
+									<c:forEach varStatus="status1" var="appMap" items="${ mapTeam.accessControlApplicationMaps }">
+										<c:if test="${ appMap.application.id == application.id && not isDisplayedAppRole }">
+											<c:set var="isDisplayedAppRole" value="true"/>
+											<c:out value="${ appMap.role.displayName }"/>
+										</c:if>
+									</c:forEach>
+								</c:if>
+							</c:if>
+						</c:forEach>
+					</c:if>
 				</td>
 				<td id="name${ status.count }">
 					<spring:url value="/configuration/users/{userId}/permissions" var="editPermissionsUrl">
