@@ -1,25 +1,16 @@
 package org.zaproxy.zap.extension.threadfix;
 
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.URIException;
-import org.apache.log4j.Logger;
-import org.parosproxy.paros.control.Control;
-import org.parosproxy.paros.extension.ViewDelegate;
-import org.parosproxy.paros.extension.history.ExtensionHistory;
-import org.parosproxy.paros.model.HistoryReference;
-import org.parosproxy.paros.model.Model;
-import org.parosproxy.paros.model.SiteNode;
-import org.parosproxy.paros.network.HttpMalformedHeaderException;
-import org.parosproxy.paros.network.HttpMessage;
-import org.parosproxy.paros.network.HttpSender;
-import org.parosproxy.paros.network.HttpStatusCode;
-import org.zaproxy.zap.extension.ascan.ExtensionActiveScan;
-import org.zaproxy.zap.extension.spider.ExtensionSpider;
-import org.zaproxy.zap.spider.Spider;
-
-import javax.swing.*;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JMenuItem;
+
+import org.apache.log4j.Logger;
+import org.parosproxy.paros.extension.ViewDelegate;
+import org.parosproxy.paros.model.Model;
+import org.zaproxy.zap.spider.Spider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,16 +21,15 @@ import java.sql.SQLException;
  */
 public class EndpointsAction extends JMenuItem {
 
-    private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
+	private static final long serialVersionUID = -3141841416510322529L;
 
-    private Model model;
+	private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
+
+    private AttackThread attackThread = null;
 
     public EndpointsAction(final ViewDelegate view, final Model model, Spider spider) {
         logger.info("Initializing ThreadFix endpoint menu item");
         setText("Import Endpoints from ThreadFix");
-        this.spider = spider;
-        this.model = model;
-        this.extensionSpider = (ExtensionSpider) Control.getSingleton().getExtensionLoader().getExtension(ExtensionSpider.NAME);
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -61,55 +51,17 @@ public class EndpointsAction extends JMenuItem {
 
                 String url = UrlDialog.show(view);
 
-                try {
-                    logger.info("URL = " + url);
-                    URI uri = new URI(url.toString(), true);
-                    logger.info("URI = " + uri);
-
-                    HttpMessage msg = new HttpMessage(uri);
-                    logger.info("Message = " + msg);
-
-                    msg.setHistoryRef(new HistoryReference(model.getSession(), HistoryReference.TYPE_SPIDER, msg));
-
-                    SiteNode node = Model.getSingleton().getSession().getSiteTree().addPath(msg.getHistoryRef());
-
-                    if (node == null) {
-                        logger.info("Node was null.");
-                    } else {
-                        logger.info("Node was " + node);
-                        extensionSpider.startScan(node);
-                        ExtensionActiveScan extActiveScan = (ExtensionActiveScan) Control.getSingleton().getExtensionLoader().getExtension(ExtensionActiveScan.NAME);
-                        extActiveScan.startScan(node);
-                    }
-
-                } catch (HttpMalformedHeaderException e1) {
-                    logger.info("Malformed header.", e1);
-                } catch (URIException e1) {
-                    logger.info("URIException", e1);
-                } catch (SQLException e1) {
-                    logger.info("SQLException", e1);
-                }
-
-                try {
-                    logger.info("About to start extension spider. spider = " + extensionSpider);
-                    SiteNode startNode = Model.getSingleton().getSession().getSiteTree().findNode(new URI(url.toString(), false));
-                    // accessNode(new URL(url));
-
-                    logger.info("Node = " + startNode);
-                    extensionSpider.startScan(startNode);
-
-//                } catch (MalformedURLException e1) {
-//                    logger.info("MalformedURLException", e1);
-                } catch (URIException e1) {
-                    logger.info("URIException", e1);
-                }
-
                 for (String line : csv.split("\n")) {
-                    String path = line.split(",")[1];
-                    addURI(url + path);
+                    if (line != null && line.contains(",")) {
+                        nodes.add(line.split(",")[1]);
+                    }
                 }
 
-
+                try {
+                    attack(new URL(url));
+                } catch (MalformedURLException e1) {
+                    logger.warn("Bad URL format.");
+                }
 
                 int responseCode = 200;
 
@@ -129,99 +81,23 @@ public class EndpointsAction extends JMenuItem {
         });
     }
 
-    private final Spider spider;
-
-    private final ExtensionSpider extensionSpider;
-
-    private void addURI(String url) {
-
-        try {
-            logger.info("URL = " + url);
-            URI uri = new URI(url.toString(), true);
-            logger.info("URI = " + uri);
-
-            HttpMessage msg = new HttpMessage(uri);
-            logger.info("Message = " + msg);
-
-            msg.setHistoryRef(new HistoryReference(model.getSession(), HistoryReference.TYPE_SPIDER, msg));
-
-            SiteNode node = Model.getSingleton().getSession().getSiteTree().addPath(msg.getHistoryRef());
-
-            if (node == null) {
-                logger.info("Node was null.");
-            } else {
-                logger.info("Node was " + node);
-                extensionSpider.startScan(node);
-            }
-
-        } catch (HttpMalformedHeaderException e1) {
-            logger.info("Malformed header.", e1);
-        } catch (URIException e1) {
-            logger.info("URIException", e1);
-        } catch (SQLException e1) {
-            logger.info("SQLException", e1);
-        }
-
-        try {
-            logger.info("About to start extension spider. spider = " + extensionSpider);
-            SiteNode startNode = Model.getSingleton().getSession().getSiteTree().findNode(new URI(url.toString(), false));
-            // accessNode(new URL(url));
-
-            logger.info("Node = " + startNode);
-            extensionSpider.startScan(startNode);
-
-//                } catch (MalformedURLException e1) {
-//                    logger.info("MalformedURLException", e1);
-        } catch (URIException e1) {
-            logger.info("URIException", e1);
-        }
+    public void notifyProgress(AttackThread.Progress progress) {
+        logger.info("Status is " + progress);
     }
 
-    private SiteNode accessNode(URL url) {
-        SiteNode startNode = null;
-        // Request the URL
-        try {
-            HttpMessage msg = new HttpMessage(new URI(url.toString(), true));
-            getHttpSender().sendAndReceive(msg,true);
+    public void attack (URL url) {
+        logger.info("Starting url " + url);
 
-            if (msg.getResponseHeader().getStatusCode() != HttpStatusCode.OK) {
-                return null;
-            }
-
-            if (msg.getResponseHeader().isEmpty()) {
-                return null;
-            }
-
-            ExtensionHistory extHistory = ((ExtensionHistory)Control.getSingleton().getExtensionLoader().getExtension(ExtensionHistory.NAME));
-            extHistory.addHistory(msg, HistoryReference.TYPE_MANUAL);
-
-            Model.getSingleton().getSession().getSiteTree().addPath(msg.getHistoryRef());
-
-            for (int i=0; i < 10; i++) {
-                startNode = Model.getSingleton().getSession().getSiteTree().findNode(new URI(url.toString(), false));
-                if (startNode != null) {
-                    break;
-                }
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    // Ignore
-                }
-            }
-        } catch (Exception e1) {
-            return null;
+        if (attackThread != null && attackThread.isAlive()) {
+            return;
         }
-        return startNode;
+        attackThread = new AttackThread(this);
+        attackThread.setNodes(nodes);
+        attackThread.setURL(url);
+        attackThread.start();
+
     }
 
-    private HttpSender httpSender;
-
-    private HttpSender getHttpSender() {
-        if (httpSender == null) {
-            httpSender = new HttpSender(Model.getSingleton().getOptionsParam().getConnectionParam(), true,
-                    HttpSender.MANUAL_REQUEST_INITIATOR);
-        }
-        return httpSender;
-    }
+    List<String> nodes = new ArrayList<>();
 
 }
