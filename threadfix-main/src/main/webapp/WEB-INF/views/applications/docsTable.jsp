@@ -6,12 +6,11 @@
 			<th class="first"></th>
 			<th>File Name</th>
 			<th>Type</th>
-			<th>Upload Date</th>
-			<th class="centered">Download</th>
+			<th>Download</th>
+			<th>View</th>
 			<c:if test="${ canModifyVulnerabilities }">
-				<th class="centered last">Delete</th>
+				<th class="last">Delete</th>
 			</c:if>
-			<th></th>
 		</tr>
 	</thead>
 	<tbody id="wafTableBody">
@@ -25,35 +24,30 @@
 			<td id="docNum${ status.count }"><c:out value="${ status.count }" /></td>
 			<td id="name${ status.count }"><c:out value="${ document.name }"/></td>
 			<td id="type${ status.count }"><c:out value="${ document.type }"/></td>
-			<td id="uploadDate${ status.count }" >
-				<fmt:formatDate value="${ document.createdDate }" pattern="hh:mm:ss MM/dd/yyyy"/>
-			</td>			
-			<td class="centered"> 
+			<td>
 				<spring:url value="/organizations/{orgId}/applications/{appId}/documents/{docId}/download" var="downloadUrl">
 					<spring:param name="orgId" value="${ vulnerability.application.organization.id }"/>
 					<spring:param name="appId" value="${ vulnerability.application.id }"/>
 					<spring:param name="docId" value="${ document.id }"/>
 				</spring:url>
-                <a class="btn docDownload" data-download-form="downloadForm${ document.id }">Download</a>
-				<form id="downloadForm${ document.id }" method="POST" action="${ fn:escapeXml(downloadUrl) }"></form>				
+				<a  href="<c:out value="${ downloadUrl }"/>">Download</a>
 			</td>			
-			<c:if test="${ canModifyVulnerabilities }">
-			<td class="centered">
-				<spring:url value="/organizations/{orgId}/applications/{appId}/documents/{docId}/delete" var="deleteUrl">
-					<spring:param name="orgId" value="${ vulnerability.application.organization.id }"/>
-					<spring:param name="appId" value="${ vulnerability.application.id }"/>
-					<spring:param name="docId" value="${ document.id }"/>
-				</spring:url>
-                <a class="btn btn-danger docDelete" data-delete-form="deleteForm${ document.id }">Delete</a>
-				<form id="deleteForm${ document.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }"></form>					
-			</td>
 			<td>
 				<spring:url value="/organizations/{orgId}/applications/{appId}/documents/{docId}/view" var="viewUrl">
 					<spring:param name="orgId" value="${ vulnerability.application.organization.id }"/>
 					<spring:param name="appId" value="${ vulnerability.application.id }"/>
 					<spring:param name="docId" value="${ document.id }"/>
 				</spring:url>
-				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View Document</a>
+				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View</a>
+			</td>
+			<c:if test="${ canModifyVulnerabilities }">
+			<td>
+				<spring:url value="/organizations/{orgId}/applications/{appId}/documents/{docId}/delete" var="deleteUrl">
+					<spring:param name="orgId" value="${ vulnerability.application.organization.id }"/>
+					<spring:param name="appId" value="${ vulnerability.application.id }"/>
+					<spring:param name="docId" value="${ document.id }"/>
+				</spring:url>
+				<a onclick='return confirm("Do you really want to delete this document?")' href="<c:out value="${ deleteUrl }"/>">Delete</a>
 			</td>
 			</c:if>
 		</tr>

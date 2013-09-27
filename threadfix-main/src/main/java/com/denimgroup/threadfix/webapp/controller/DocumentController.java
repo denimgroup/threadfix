@@ -89,7 +89,7 @@ public class DocumentController {
 			return mav;
 		} else {
 			ControllerUtils.addSuccessMessage(request, 
-					"The document was successfully added to the application.");
+					"The document was successfully submitted for processing. This page will refresh when it finishes.");
 			ControllerUtils.addItem(request, "checkForRefresh", 1);		
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
@@ -165,7 +165,7 @@ public class DocumentController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/{docId}/download", method = RequestMethod.POST)
+	@RequestMapping(value = "/{docId}/download", method = RequestMethod.GET)
 	public String downloadDocument(Model model,@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
@@ -201,7 +201,7 @@ public class DocumentController {
 	}
 
 	
-	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.GET)
 	public String deleteDocument(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
