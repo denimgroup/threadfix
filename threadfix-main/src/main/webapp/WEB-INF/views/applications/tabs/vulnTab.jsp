@@ -28,7 +28,7 @@
 						style="display:none"
 					</c:if>
 				>
-					<a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">
+					<a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal" data-has-function="">
 						Submit Defect
 					</a>
 				</li>
@@ -50,7 +50,7 @@
 						style="display:none"
 					</c:if>
 				>
-					<a class="submitDefectActionLink" id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal">
+					<a id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal" data-has-function="">
 						Merge Defect
 					</a>
 				</li>
@@ -91,7 +91,7 @@
 						style="display:none"
 					</c:if>
 				>
-					<a class="submitDefectActionLink" id="submitDefectButton" href="#submitDefectModal" data-toggle="modal">
+					<a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal" data-has-function="">
 						Submit Defect
 					</a>
 				</li>
@@ -113,7 +113,7 @@
 						style="display:none"
 					</c:if>
 				>
-					<a class="submitDefectActionLink" id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal">
+					<a id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal" data-has-function="">
 						Merge Defect
 					</a>
 				</li>
