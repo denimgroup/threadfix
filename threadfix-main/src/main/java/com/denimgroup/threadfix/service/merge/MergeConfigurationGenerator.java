@@ -40,7 +40,7 @@ public class MergeConfigurationGenerator {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
-	private static final String baseDirectory = "/Users/mac/scratch/";
+	private static final String baseDirectory = "/Users/mcollins/scratch/";
 	
 	private MergeConfigurationGenerator(){}
 	

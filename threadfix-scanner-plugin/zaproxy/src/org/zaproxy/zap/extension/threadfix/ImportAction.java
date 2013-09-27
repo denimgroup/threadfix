@@ -1,11 +1,12 @@
 package org.zaproxy.zap.extension.threadfix;
 
+import java.io.File;
+
+import javax.swing.JMenuItem;
+
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
-
-import javax.swing.*;
-import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +17,9 @@ import java.io.File;
  */
 public class ImportAction extends JMenuItem {
 
-    private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
+	private static final long serialVersionUID = 7496536214677590654L;
+	
+	private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
 
     public ImportAction(final ViewDelegate view, final Model model) {
         logger.info("Initializing ThreadFix scan export menu item");

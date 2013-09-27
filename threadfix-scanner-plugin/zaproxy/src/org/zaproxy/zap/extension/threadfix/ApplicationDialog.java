@@ -1,12 +1,13 @@
 package org.zaproxy.zap.extension.threadfix;
 
-import org.apache.log4j.Logger;
-import org.parosproxy.paros.extension.ViewDelegate;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import org.apache.log4j.Logger;
+import org.parosproxy.paros.extension.ViewDelegate;
 
 /**
  * Created with IntelliJ IDEA.
