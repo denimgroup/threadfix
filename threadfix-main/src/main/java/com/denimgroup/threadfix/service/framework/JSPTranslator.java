@@ -42,7 +42,7 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
 		
-		if (scan == null) {
+		if (scan == null || !scan.isStatic()) {
 			filePathRoot = CommonPathFinder.findOrParseProjectRootFromDirectory(
 					scanMergeConfiguration.getWorkTree(), 
 					".jsp");
@@ -51,7 +51,11 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		}
 		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan);
 		
-		mappings = new JSPMappings(new File(filePathRoot));
+		if (filePathRoot != null) {
+			mappings = new JSPMappings(new File(filePathRoot));
+		} else {
+			mappings = new JSPMappings(null);
+		}
 
 		if ((urlPathRoot == null || urlPathRoot.isEmpty()) && filePathRoot != null) {
 			urlPathRoot = filePathRoot;
