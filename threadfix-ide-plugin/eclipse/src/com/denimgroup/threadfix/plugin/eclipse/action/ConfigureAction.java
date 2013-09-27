@@ -9,6 +9,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import com.denimgroup.threadfix.plugin.eclipse.dialog.ApplicationDialog;
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
@@ -31,18 +32,34 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		
-		Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
-		Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
-		
+		// Get endpoint info
 		ConfigDialog dialog = new ConfigDialog(window.getShell(),
-				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),
-				threadFixApplicationMap, configuredApps);
+				SettingsUtils.getApiKey(), SettingsUtils.getUrl());
 
 		dialog.create();
 
 		if (dialog.open() == Window.OK) {
-			SettingsUtils.save(dialog.getUrl(), dialog.getApiKey(), dialog.getAppIds());
-			System.out.println("Saved successfully.");
+			SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+			System.out.println("Saved ThreadFix information successfully.");
+			
+			// Get application info
+			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
+			Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
+			
+			ApplicationDialog appDialog = new ApplicationDialog(window.getShell(),
+					threadFixApplicationMap, configuredApps);
+			
+			appDialog.create();
+			
+			if (appDialog.open() == Window.OK) {
+				SettingsUtils.saveApplicationInfo(appDialog.getAppIds());
+				System.out.println("Saved successfully.");
+			} else {
+				System.out.println("Cancel was pressed.");
+			}
+			
+		} else {
+			System.out.println("Cancel was pressed instead ");
 		}
 	}
 
