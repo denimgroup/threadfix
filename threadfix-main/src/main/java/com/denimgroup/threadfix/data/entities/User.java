@@ -53,6 +53,7 @@ public class User extends AuditableEntity {
 	private boolean approved = true;
 	private boolean locked = false;
 	private Boolean isLdapUser = false;
+	private boolean wasLdapUser = false;
 
 	private Boolean hasGlobalGroupAccess = true;
 	private Boolean hasChangedInitialPassword = false;
@@ -244,6 +245,15 @@ public class User extends AuditableEntity {
 	
 	public void setIsThisUser(boolean isThisUser) {
 		this.isThisUser = isThisUser;
+	}
+	
+	@Transient
+	public boolean getWasLdap(){
+		return wasLdapUser;
+	}
+	
+	public void setWasLdapUser(boolean wasLdapUser){
+		this.wasLdapUser = wasLdapUser;
 	}
 
 	private boolean deletable, isThisUser;
