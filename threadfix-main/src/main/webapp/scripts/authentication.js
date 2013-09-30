@@ -108,6 +108,8 @@ showResponse = function(type, text, element) {
 					html = 'Connection successful';
 					$('#projectList').html('');
 					$('#projectList').removeAttr("disabled");
+					$('#jsonLink').css("display","none");
+					$('#submitDTModal').css("display","");
 					
 					var product_array = json.names.split(",");
 					for ( var i = 0; i < product_array.length; i++) {
@@ -130,9 +132,17 @@ showResponse = function(type, text, element) {
 	var responseElement = $("#jsonResult");
 	var responseText = '';
 	if (responseElement.length == 0) {
-		responseText = '<em id="jsonResult">' + html + '</em>';
+		if(html=='Connection successful'){
+			responseText = '<div class="alert alert-success" id="jsonResult">' + html + '</div>';
+		}else{
+			responseText = '<div class="alert alert-error" id="jsonResult">' + html + '</div>';
+		}
 	} else {
-		responseText = '<em id="jsonResult2">' + html + '</em>';
+		if(html=='Connection successful'){
+			responseText = '<div class="alert alert-success" id="jsonResult2">' + html + '</div>';
+		}else{
+			responseText = '<div class="alert alert-error" id="jsonResult2">' + html + '</div>';
+		}
 	}
 	
 	var toReplaceDiv = $("#toReplaceDT");

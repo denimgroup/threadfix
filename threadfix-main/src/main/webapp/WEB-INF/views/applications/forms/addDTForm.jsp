@@ -2,6 +2,7 @@
 
 <div class="modal-header">
 	<h4 id="myModalLabel">Add Defect Tracker</h4>
+	<div class="left-align" id="toReplaceDT"></div>
 </div>
 <div id="addDTFormDiv">
 <spring:url value="/organizations/{orgId}/applications/{appId}/edit/addDTAjax" var="saveUrl">
@@ -70,14 +71,6 @@
 				</td>
 			</tr>
 			<tr class="left-align">
-				<td>
-					<a href="#" id="jsonLink">Test Connection</a>
-				</td>
-				<td>
-					<div id="toReplaceDT"></div>
-				</td>
-			</tr>
-			<tr class="left-align">
 				<td id="projectname">Product Name</td>
 				<td class="inputValue">
 					<form:select style="margin:5px;" id="projectList" path="projectName">
@@ -94,7 +87,9 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal" class="modalSubmit btn btn-primary" 
+		<a class="btn btn-primary" href="#" id="jsonLink">Test Connection</a>
+		<a id="submitDTModal" class="modalSubmit btn btn-primary"
+				style = "display:none"  
 				data-success-div="appDTDiv"
 				data-success-click="editApplicationModal">Add Defect Tracker</a>
 	</div>
