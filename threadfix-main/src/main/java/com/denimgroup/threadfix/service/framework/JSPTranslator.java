@@ -44,7 +44,7 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		
 		if (scan == null || !scan.isStatic()) {
 			filePathRoot = CommonPathFinder.findOrParseProjectRootFromDirectory(
-					scanMergeConfiguration.getWorkTree(), 
+					scanMergeConfiguration.getWorkTree(),
 					".jsp");
 		} else {
 			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan, ".jsp");

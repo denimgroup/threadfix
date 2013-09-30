@@ -40,7 +40,7 @@ public class MergeConfigurationGenerator {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
-	private static final String baseDirectory = "/Users/mcollins/scratch/";
+	private static final String baseDirectory = "scratch/";
 	
 	private MergeConfigurationGenerator(){}
 	
@@ -135,6 +135,7 @@ public class MergeConfigurationGenerator {
 		return type;
 	}
 
+	// TODO make this work for more than Git
 	public static File getWorkTree(Application application) {
 		File applicationDirectory = new File(baseDirectory + application.getId());
 		
