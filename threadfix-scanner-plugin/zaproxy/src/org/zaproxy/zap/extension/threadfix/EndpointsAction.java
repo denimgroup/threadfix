@@ -10,7 +10,6 @@ import javax.swing.JMenuItem;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
-import org.zaproxy.zap.spider.Spider;
 
 public class EndpointsAction extends JMenuItem {
 
@@ -20,9 +19,9 @@ public class EndpointsAction extends JMenuItem {
 
     private AttackThread attackThread = null;
 
-    public EndpointsAction(final ViewDelegate view, final Model model, Spider spider) {
+    public EndpointsAction(final ViewDelegate view, final Model model) {
         logger.info("Initializing ThreadFix endpoint menu item");
-        setText("Import Endpoints from ThreadFix");
+        setText("ThreadFix: Import Endpoints");
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override

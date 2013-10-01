@@ -9,13 +9,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 
-/**
- * Created with IntelliJ IDEA.
- * User: mcollins
- * Date: 9/24/13
- * Time: 10:27 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ApplicationDialog {
 
     private static final Logger logger = Logger.getLogger(ApplicationDialog.class);

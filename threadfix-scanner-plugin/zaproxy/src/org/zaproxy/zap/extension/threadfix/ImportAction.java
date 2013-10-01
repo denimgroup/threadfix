@@ -39,7 +39,7 @@ public class ImportAction extends JMenuItem {
 
     public ImportAction(final ViewDelegate view, final Model model) {
         logger.info("Initializing ThreadFix scan export menu item");
-        setText("Export Scan to ThreadFix");
+        setText("ThreadFix: Export Scan");
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override

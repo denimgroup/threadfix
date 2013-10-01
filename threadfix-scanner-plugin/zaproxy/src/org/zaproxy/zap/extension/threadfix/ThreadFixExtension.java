@@ -1,15 +1,14 @@
 package org.zaproxy.zap.extension.threadfix;
 
-import org.apache.log4j.Logger;
-import org.parosproxy.paros.extension.ExtensionAdaptor;
-import org.parosproxy.paros.extension.ExtensionHook;
-import org.zaproxy.zap.spider.Spider;
-import org.zaproxy.zap.spider.SpiderParam;
-
-import javax.swing.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javax.swing.JMenuItem;
+
+import org.apache.log4j.Logger;
+import org.parosproxy.paros.extension.ExtensionAdaptor;
+import org.parosproxy.paros.extension.ExtensionHook;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 
@@ -54,8 +53,6 @@ public class ThreadFixExtension extends ExtensionAdaptor {
        logger.info("Initialize");
         this.setName("ThreadFix");
         // Load extension specific language files - these are held in the extension jar
-//        messages = ResourceBundle.getBundle(
-//                this.getClass().getPackage().getName() + ".Messages", Constant.getLocale());
     }
 
     @Override
@@ -83,8 +80,7 @@ public class ThreadFixExtension extends ExtensionAdaptor {
     private JMenuItem getEndpointsAction() {
        logger.info("Getting menu");
         if (endpointsAction == null) {
-            Spider spider = new Spider(new SpiderParam(), getModel().getOptionsParam().getConnectionParam(), getModel());
-            endpointsAction = new EndpointsAction(getView(), getModel(), spider);
+            endpointsAction = new EndpointsAction(getView(), getModel());
         }
         return endpointsAction;
     }
