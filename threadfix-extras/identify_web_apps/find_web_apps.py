@@ -55,6 +55,7 @@ parser.add_option('-n', '--network', dest='network', help='Network to scan for w
 parser.add_option('-p', '--ports', dest='ports', help='Ports to check for web servers', default='80,443,8080,8443')
 parser.add_option('-k', '--apikey', dest='apikey', help='API key for ThreadFix server')
 parser.add_option('-s', '--server', dest='server', help='ThreadFix server', default='http://localhost:8080/threadfix/')
+parser.add_option('-S', '--scan', dest='scan', help='Comma-separated list of scanners to queue' )
 parser.add_option('-t', '--team', dest='team', help='ThreadFix team to which apps will be added')
 parser.add_option('-v', '--verbose', dest='verbose', help='Print verbose output')
 
@@ -65,6 +66,8 @@ if (options.verbose):
 	print ('Network: {0}'.format(options.network))
 	print ('Ports: {0}'.format(options.ports))
 	print ('ThreadFix Team Name: {0}'.format(options.team))
+	if (options.scan != ''):
+		print ('Will schedule scans with scanners: {0}'.format(options.scan))
 
 threadfix_rest_url = options.server + '/rest/'
 	
@@ -160,6 +163,18 @@ for host in hosts:
 					clean_screenshot_file()
 				else:
 					print ('\tUnable to get screenshot. Will not upload screenshot for application {0}'.format(app_name))
+
+				# Queue a scan, if requested
+
+				if (options.scan != ''):
+					scanners = options.scan.split(',')
+					for scanner in scanners:
+						if (options.verbose):
+							print('\tQueuing scan for applicationId {0} and scanner {1}'.format(app_id, scanner))
+						payload = { 'apiKey': options.apikey, 'applicationId': app_id, 'scannerType': scanner }
+						r = requests.post(threadfix_rest_url + '/tasks/queueScan', params=payload)
+						if (options.verbose):
+							print('\t' + r.text)
 					
 			except KeyError:
 				print ('\tError when creating application: {0}'.format(new_app['message']))
