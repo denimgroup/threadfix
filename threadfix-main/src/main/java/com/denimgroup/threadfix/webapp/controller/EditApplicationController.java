@@ -212,11 +212,11 @@ public class EditApplicationController {
 				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
 			} else {
 				if (application.getWaf() != null && (application.getWaf().getId() == null ||
-						application.getWaf().getId() == 0)) {
+ 						application.getWaf().getId() == 0)) {
 					databaseApplication.setWaf(null);
 				}
 				
-				if (application.getWaf() != null && application.getWaf().getId() != null) {
+				if (application.getWaf() != null && application.getWaf().getId() != null && application.getWaf().getId() != 0) {
 					Waf waf = wafService.loadWaf(application.getWaf().getId());
 					
 					if (waf == null) {
