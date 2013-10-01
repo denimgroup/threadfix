@@ -13,8 +13,7 @@
 	</c:when>
 	<c:otherwise>
 		<td style="padding:5px;" class="inputValue">
-			<spring:url value="/configuration/defecttrackers/{defectTrackerId}" var="defectTrackerUrl">
-				<spring:param name="defectTrackerId" value="${ application.defectTracker.id }"/>
+			<spring:url value="/configuration/defecttrackers" var="defectTrackerUrl">
 			</spring:url>
 			<a id="defectTrackerText" 
 					<c:if test="${ addedDefectTracker }">

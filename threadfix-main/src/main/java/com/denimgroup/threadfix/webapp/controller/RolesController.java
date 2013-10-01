@@ -73,7 +73,8 @@ public class RolesController {
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String newSubmit(Model model, @Valid @ModelAttribute Role role, 
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status,
+			HttpServletRequest request) {
 		role.setId(null);
 		
 		String resultString = roleService.validateRole(role, result);
@@ -101,9 +102,11 @@ public class RolesController {
 		}
 		
 		model.addAttribute("roleList", roles);
-		model.addAttribute("successMessage", "Role " + role.getDisplayName() + " was created successfully.");
-		model.addAttribute("contentPage", "config/roles/rolesTable.jsp");
-		return "ajaxSuccessHarness";
+		ControllerUtils.addSuccessMessage(request, 
+				"Role " + role.getDisplayName() + " was created successfully.");
+		
+		model.addAttribute("contentPage","/configuration/roles");
+		return "ajaxRedirectHarness";
 	}
 	
 	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)

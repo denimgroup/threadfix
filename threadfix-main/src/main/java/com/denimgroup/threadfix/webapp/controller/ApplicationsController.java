@@ -268,9 +268,7 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return "Authentication failed";
 		}
-		
 		String result = dt.getProductNames();
-		
 		if (result == null || result.equals("Authentication failed")) {
 			return "{ \"message\" : \"Authentication failed\", " +
 					"\"error\" : " + JSONObject.quote(dt.getLastError())  + "}";

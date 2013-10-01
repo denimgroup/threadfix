@@ -99,12 +99,12 @@
 	
 	</c:if>
 			
-			<table class="table table-striped">
+			<table class="table table-striped" style="table-layout:fixed;">
 				<thead>
 					<tr>
-						<th class="long first">Name / ID</th>
+						<th class="medium first">Name / ID</th>
 						<th class="medium">Team</th>
-						<th>Application</th>
+						<th class="medium">Application</th>
 						<c:if test="${ canManageRemoteProviders }">
 							<th class="medium">Edit</th>
 						</c:if>
@@ -114,7 +114,7 @@
 				<tbody>
 				
 					<c:forEach var="remoteProviderApplication" items="${ remoteProvider.filteredApplications }" varStatus="innerStatus">
-						<tr class="bodyRow">
+						<tr>
 							<td id="provider${ remoteProvider.id }appid${ innerStatus.count }">
 								<c:out value="${ remoteProviderApplication.nativeId }"/>
 							</td>
@@ -123,9 +123,9 @@
 									<spring:url value="/organizations/{teamId}" htmlEscape="true" var="teamUrl">
 										<spring:param name="teamId" value="${ remoteProviderApplication.application.organization.id }"/>
 									</spring:url>
-									<a href="${ fn:escapeXml(teamUrl) }">
+									<div style="word-wrap: break-word;max-width:170px;text-align:left;"><a href="${ fn:escapeXml(teamUrl) }">
 										<c:out value="${ remoteProviderApplication.application.organization.name }"/>
-									</a>
+									</a></div>
 								</c:if>
 							</td>
 							<td id="provider${ remoteProvider.id }tfappname${ innerStatus.count }">
@@ -134,9 +134,9 @@
 										<spring:param name="teamId" value="${ remoteProviderApplication.application.organization.id }"/>
 										<spring:param name="appId" value="${ remoteProviderApplication.application.id }"/>
 									</spring:url>
-									<a href="${ fn:escapeXml(applicationUrl) }">
+									<div style="word-wrap: break-word;max-width:170px;text-align:left;"><a href="${ fn:escapeXml(applicationUrl) }">
 										<c:out value="${ remoteProviderApplication.application.name }"/>
-									</a>
+									</a></div>
 								</c:if>
 							</td>
 							<c:if test="${ canManageRemoteProviders }">

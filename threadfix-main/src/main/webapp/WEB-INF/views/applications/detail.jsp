@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/radio_select.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application_page.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan_page.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document_page.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.form.js"></script>
 </head>
 
