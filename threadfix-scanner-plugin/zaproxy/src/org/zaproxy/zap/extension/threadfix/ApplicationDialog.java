@@ -20,24 +20,36 @@ public class ApplicationDialog {
 
     private static final Logger logger = Logger.getLogger(ApplicationDialog.class);
 
-    public static void show(ViewDelegate view) {
+    public static boolean show(ViewDelegate view) {
 
         Map<String, String> applicationMap = getApplicationMap();
+        
+        String resultId = null;
 
         Object[] possibilities = applicationMap.keySet().toArray();
-        ImageIcon icon = new ImageIcon("images/middle.gif");
-        Object idResult = JOptionPane.showInputDialog(
-                view.getMainFrame(),
-                "Pick an Application",
-                "Pick an Application",
-                JOptionPane.PLAIN_MESSAGE,
-                icon,
-                possibilities,
-                "1");
-
-        logger.info("Got application ID: " + applicationMap.get(idResult));
-
-        ThreadFixPropertiesManager.setAppId(applicationMap.get(idResult));
+        
+        if (possibilities.length != 0) {
+	        ImageIcon icon = new ImageIcon("images/middle.gif");
+	        Object idResult = JOptionPane.showInputDialog(
+	                view.getMainFrame(),
+	                "Pick an Application",
+	                "Pick an Application",
+	                JOptionPane.PLAIN_MESSAGE,
+	                icon,
+	                possibilities,
+	                ThreadFixPropertiesManager.getAppId());
+	        
+	        if (idResult != null && !idResult.toString().trim().isEmpty() ) {
+	        	// Got a valid result
+	        	resultId = applicationMap.get(idResult);
+	        	logger.info("Got application ID: " + resultId);
+	        	ThreadFixPropertiesManager.setAppId(resultId);
+	        }
+        } else {
+        	view.showWarningDialog("Failed while trying to get a list of applications from ThreadFix.");
+        }
+        
+        return resultId != null;
     }
 
     public static Map<String, String> getApplicationMap() {
