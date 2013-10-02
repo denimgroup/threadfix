@@ -53,7 +53,7 @@ public class ImportAction extends JMenuItem {
 	
 	                File file = ReportGenerator.generateXml(view, model);
 	                
-	                if (file == null || !file.exists()) {
+	                if (file != null && file.exists()) {
 	                	logger.info("About to try to upload.");
 		                int responseCode = RestUtils.uploadScan(file);
 		                if (responseCode == 0) {
