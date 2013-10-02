@@ -32,63 +32,41 @@
 			<tr>
 				<td style="padding:5px;">CWE</td>
 				<td style="padding:5px;" class="inputValue">
-					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_cwe" var="ajaxCweUrl">
-						<spring:param name="orgId" value="${ application.organization.id }" />
-						<spring:param name="appId" value="${ application.id }" />
-					</spring:url>
-					<input type="hidden" id="url1" value="${ fn:escapeXml(ajaxCweUrl)}"/>
-					<form:input style="width:350px;" path="channelVulnerability.code" id="txtSearch" name="txtSearch" alt="Search Criteria" 
-							onkeyup="searchCweSuggest(event);" autocomplete="off"  
-							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="255"/>
-					<div id="search_cwe_suggest" class="search_suggest" style="visibility: hidden"></div>
+					<c:set var="autocompleteJson" value='["'/>
+					<c:set var="quote" value='"'/>					
+					<c:forEach items="${ manualChannelVulnerabilities }" var="channelVulnerability">
+						<c:set var="autocompleteJson" 
+						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(channelVulnerability.name, '\\\\', '&#92;') } (CWE ${ channelVulnerability.genericVulnerability.id})"/>		
+					</c:forEach>
+					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
+					<form:input style="width:350px"
+							class="addAutocomplete" 
+							path="channelVulnerability.code" 
+							data-provide="typeahead"
+							data-source ="${ autocompleteJson }"
+							id="txtSearch" name="txtSearch"/>
 				</td>
 				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
 					<form:errors path="channelVulnerability.code" cssClass="errors" />
-				</td>
+				</td>				
 			</tr>
-			<c:if test="${ not empty staticChannelVulnerabilityList }">
-				<tr class="static">
-					<td style="padding:5px;" valign="top">Recently Found</td>
-					<td style="padding:5px;" class="inputValue">
-						<select style="width:350px;" size="5" onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" id="cv_static_select">
-							<c:forEach var="cv" items="${ staticChannelVulnerabilityList }">
-								<option value="${ cv }">
-									<c:out value="${ cv }"></c:out>
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-				</tr>
-			</c:if>
-			<c:if test="${ not empty dynamicChannelVulnerabilityList }">
-				<tr class="dynamic">
-					<td style="padding:5px;" valign="top">Recently Found</td>
-					<td style="padding:5px;" class="inputValue">
-						<select style="width:350px;" onclick="$('#txtSearch').val(this.options[this.selectedIndex].value);" size="5" id="cv_dynamic_select">
-							<c:forEach var="cv" items="${ dynamicChannelVulnerabilityList }">
-								<option value="${ cv }">
-									<c:out value="${ cv }"></c:out>
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-				</tr>
-			</c:if>
 			<tr class="dynamic">
 				<td style="padding:5px;">URL</td>
 				<td style="padding:5px;" class="inputValue">
-					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_url" var="ajaxUrl">
-						<spring:param name="orgId" value="${ application.organization.id }" />
-						<spring:param name="appId" value="${ application.id }" />
-					</spring:url>
-					<input type="hidden" id="url2" value="${ fn:escapeXml(ajaxUrl)}"/>
-					<form:input style="width:350px;" path="surfaceLocation.path" id="urlDynamicSearch" name="urlDynamicSearch" alt="Search Criteria" 
-							onkeyup="searchUrlDynamicSuggest(event);" autocomplete="off"  
-							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="255"/>
-					<div id="search_url_dynamic_suggest" class="search_suggest" style="visibility: hidden"></div>
-				</td>
+					<c:set var="autocompleteJson" value='["'/>
+					<c:set var="quote" value='"'/>					
+					<c:forEach items="${ urlManualList }" var="url">
+						<c:set var="autocompleteJson" 
+						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(url, '\\\\', '&#92;') }"/>		
+					</c:forEach>
+					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
+					<form:input style="width:350px"
+							class="addAutocomplete" 
+							path="surfaceLocation.path" 
+							data-provide="typeahead"
+							data-source ="${ autocompleteJson }"
+							id="urlDynamicSearch" name="urlDynamicSearch"/>
+				</td>			
 				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
 					<form:errors path="surfaceLocation.path" cssClass="errors" />
 				</td>
@@ -96,49 +74,24 @@
 			<tr class="static">
 				<td style="padding:5px;">Source File</td>
 				<td style="padding:5px;" class="inputValue">
-					<spring:url value="/organizations/{orgId}/applications/{appId}/scans/new/ajax_url" var="ajaxUrl">
-						<spring:param name="orgId" value="${ application.organization.id }" />
-						<spring:param name="appId" value="${ application.id }" />
-					</spring:url>
-					<input type="hidden" id="url2" value="${ fn:escapeXml(ajaxUrl)}"/>
-					<form:input style="width:350px;" path="dataFlowElements[0].sourceFileName" id="urlStaticSearch" name="urlSearch" alt="Search Criteria" 
-							onkeyup="searchUrlStaticSuggest(event);" autocomplete="off"  
-							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="255"/>
-					<div id="search_url_static_suggest" class="search_suggest" style="visibility: hidden"></div>
-				</td>
+					<c:set var="autocompleteJson" value='["'/>
+					<c:set var="quote" value='"'/>					
+					<c:forEach items="${ urlManualList }" var="source">
+						<c:set var="autocompleteJson" 
+						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(source, '\\\\', '&#92;') }"/>		
+					</c:forEach>
+					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
+					<form:input style="width:350px"
+							class="addAutocomplete" 
+							path="dataFlowElements[0].sourceFileName" 
+							data-provide="typeahead"
+							data-source ="${ autocompleteJson }"
+							id="urlStaticSearch" name="urlStaticSearch"/>
+				</td>				
 				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="surfaceLocation.path" cssClass="errors" />
+					<form:errors path="dataFlowElements[0].sourceFileName" cssClass="errors" />
 				</td>
 			</tr>
-			<c:if test="${ not empty dynamicPathList }">
-				<tr class="dynamic">
-					<td style="padding:5px;" valign="top">Recently Found</td>
-					<td style="padding:5px;" class="inputValue">
-						<select style="width:350px;" size="5" onclick="$('#urlDynamicSearch').val(this.options[this.selectedIndex].value);" id="url_dynamic_select">
-							<c:forEach var="path" items="${ dynamicPathList}">
-								<option value="${ path }">
-									<c:out value="${ path }"/>
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-				</tr>
-			</c:if>
-			<c:if test="${ not empty staticPathList }">
-				<tr class="static">
-					<td style="padding:5px;" valign="top">Recently Found</td>
-					<td style="padding:5px;" class="inputValue">
-						<select style="width:350px;" size="5" onclick="$('#urlStaticSearch').val(this.options[this.selectedIndex].value);" id="url_static_select">
-							<c:forEach var="path" items="${ staticPathList}">
-								<option value="${ path }">
-									<c:out value="${ path }"/>
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-				</tr>
-			</c:if>
 			<tr class="static">
 				<td style="padding:5px;">Line Number</td>
 				<td style="padding:5px;" class="inputValue">
@@ -167,6 +120,7 @@
 						<form:options items="${ manualSeverities }" itemValue="id" itemLabel="code" />
 					</form:select>
 				</td>
+				<td/>
 			</tr>
 			<tr>
 				<td style="padding:5px;">Description</td>

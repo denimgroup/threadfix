@@ -4,7 +4,8 @@
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<h4 style="text-align:left;" id="myModalLabel">
-			<span style="max-width:400px; display:inline-block; float:left" class="ellipsis"><c:out value="${ application.name } "/> Document Upload</span>
+			<span style="max-width:400px; display:inline-block; float:left" class="ellipsis"><c:out value="${ application.name } "/></span>
+			&nbsp;Document Upload
 		</h4>
 	</div>
 	<div id="docFormDiv${ application.id }">

@@ -220,4 +220,36 @@ public class HibernateFindingDao implements FindingDao {
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> retrieveManualUrls(Integer appId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Integer channelTypeId = (Integer) currentSession.createQuery(
+				"select id from ChannelType where name = 'Manual'")
+				.uniqueResult();
+		if (channelTypeId == null)
+			return null;
+		Integer applicationChannelId = (Integer) (currentSession
+				.createQuery(
+						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
+				.setInteger("appId", appId)
+				.setInteger("channelTypeId", channelTypeId).uniqueResult());
+		if (applicationChannelId == null)
+			return null;
+		Integer scanId = (Integer) currentSession
+				.createQuery(
+						"select id from Scan where applicationId = :appId and applicationChannelId = :applicationChannelId")
+				.setInteger("appId", appId)
+				.setInteger("applicationChannelId", applicationChannelId)
+				.uniqueResult();
+		if (scanId == null)
+			return null;
+		return currentSession
+				.createSQLQuery(
+						"select distinct(path) from SurfaceLocation where id in "
+								+ "(select surfaceLocationId from Finding where scanId = :scanId) "
+								+ "order by path")
+				.setInteger("scanId", scanId).list();
+	}
 }
