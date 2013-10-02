@@ -1,16 +1,22 @@
 package org.zaproxy.zap.extension.threadfix;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class ParametersDialog {
 
     private static final Logger logger = Logger.getLogger(ParametersDialog.class);
 
-    public static void show(ViewDelegate view) {
+    public static boolean show(ViewDelegate view) {
         logger.info("Attempting to show dialog.");
         JTextField urlField = new JTextField(40);
         urlField.setText(ThreadFixPropertiesManager.getUrl());
@@ -55,8 +61,10 @@ public class ParametersDialog {
         if (result == JOptionPane.OK_OPTION) {
             ThreadFixPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
             logger.info("Got properties and saved.");
+            return true;
         } else {
             logger.info("Cancel pressed.");
+            return false;
         }
     }
 

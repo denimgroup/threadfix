@@ -1,10 +1,16 @@
 package org.zaproxy.zap.extension.threadfix;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class UrlDialog {
 
@@ -13,7 +19,7 @@ public class UrlDialog {
     public static String show(ViewDelegate view) {
         logger.info("Attempting to show dialog.");
         JTextField urlField = new JTextField(40);
-        urlField.setText(ThreadFixPropertiesManager.getUrl());
+        urlField.setText("http://");
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -40,7 +46,7 @@ public class UrlDialog {
 
         int result = JOptionPane.showConfirmDialog(view.getMainFrame(),
                 myPanel,
-                "Please enter the ThreadFix URL",
+                "Please enter the target URL",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
@@ -49,7 +55,7 @@ public class UrlDialog {
             return urlField.getText();
         } else {
             logger.info("Cancel pressed.");
-            return "http://localhost";
+            return null;
         }
     }
 

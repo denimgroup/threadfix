@@ -70,13 +70,6 @@ public class AttackThread extends Thread {
 
             logger.info("Starting at url : " + urlString);
 
-    		/*
-    		if (! urlString.endsWith("/")) {
-    			// TODO very hacky!
-    			// If it doesnt end with a slash, add one 
-    			startNode = this.accessNode(new URL(urlString + "/"));
-    		}
-    		*/
             if (startNode == null) {
                 startNode = this.accessNode(this.url);
             }
@@ -93,19 +86,7 @@ public class AttackThread extends Thread {
             }
 
             spider(startNode);
-
-            sleep(2000);
-
-//            spider(startNode);
-//
-//            sleep(2000);
-/*
-
-	        if (startNode.isLeaf() && !((SiteNode)startNode.getParent()).isRoot()) {
-	        	// Go one level up
-	        	startNode = (SiteNode)startNode.getParent();
-	        }
-*/
+            
             ExtensionActiveScan extAscan = (ExtensionActiveScan) Control.getSingleton().getExtensionLoader().getExtension(ExtensionActiveScan.NAME);
             if (extAscan == null) {
                 logger.error("No active scanner");
@@ -113,26 +94,7 @@ public class AttackThread extends Thread {
                 return;
             } else {
                 extension.notifyProgress(Progress.ASCAN);
-                extAscan.startScan(startNode);
-            }
-
-            try {
-                // Wait for the active scanner to complete
-                while (extAscan.isScanning(startNode)) {
-                    sleep (500);
-                    if (this.stopAttack) {
-                        extAscan.stopScan(startNode);
-                    }
-                }
-            } catch (InterruptedException e) {
-                // Ignore
-            }
-            if (stopAttack) {
-                logger.debug("Attack stopped manually");
-                extension.notifyProgress(Progress.STOPPED);
-            } else {
-                logger.debug("Attack completed");
-                extension.notifyProgress(Progress.COMPLETE);
+                extAscan.onHttpRequestSend(startNode.getHistoryReference().getHttpMessage());
             }
 
         } catch (Exception e) {
@@ -228,7 +190,7 @@ public class AttackThread extends Thread {
                 return null;
             }
 
-            ExtensionHistory extHistory = ((ExtensionHistory)Control.getSingleton().getExtensionLoader().getExtension(ExtensionHistory.NAME));
+            ExtensionHistory extHistory = (ExtensionHistory)Control.getSingleton().getExtensionLoader().getExtension(ExtensionHistory.NAME);
             extHistory.addHistory(msg, HistoryReference.TYPE_MANUAL);
 
             Model.getSingleton().getSession().getSiteTree().addPath(msg.getHistoryRef());

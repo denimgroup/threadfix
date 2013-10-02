@@ -48,7 +48,7 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final static SanitizedLogger log = new SanitizedLogger(AbstractPathUrlTranslator.class);
 	
 	/**
-	 * @param scan 
+	 * @param scan
 	 * @param mappings
 	 * @param workTree
 	 */
@@ -120,14 +120,14 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 			if (finding.getIsStatic()) {
 				location = finding.getSourceFileLocation();
 				if ((location == null || location.isEmpty()) &&
-					(finding.getDataFlowElements() != null && 
+					finding.getDataFlowElements() != null &&
 							!finding.getDataFlowElements().isEmpty() &&
-							finding.getDataFlowElements().get(0) != null)) {
+							finding.getDataFlowElements().get(0) != null) {
 					location = finding.getDataFlowElements().get(0).getSourceFileName();
 				}
 				
 			} else {
-				if (finding.getSurfaceLocation() != null && 
+				if (finding.getSurfaceLocation() != null &&
 						finding.getSurfaceLocation().getPath() != null) {
 					location = finding.getSurfaceLocation().getPath();
 				}
@@ -178,7 +178,12 @@ public abstract class AbstractPathUrlTranslator implements PathUrlTranslator {
 	protected final String getFileNameWithSourceCodeDefault(Finding finding) {
 		File resultFile = getFileWithSourceCodeDefault(finding);
 		
-		return FilePathUtils.getRelativePath(resultFile, projectDirectory.getDirectoryPath());
+		String projectDirectoryPath = filePathRoot;
+		if (projectDirectoryPath == null && projectDirectory != null) {
+			projectDirectoryPath = projectDirectory.getDirectoryPath();
+		}
+		
+		return FilePathUtils.getRelativePath(resultFile, projectDirectoryPath);
 	}
 	
 	protected final File getFileWithSourceCodeDefault(Finding finding) {

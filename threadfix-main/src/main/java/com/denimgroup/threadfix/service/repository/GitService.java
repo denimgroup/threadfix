@@ -32,6 +32,7 @@ import org.eclipse.jgit.api.errors.DetachedHeadException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidConfigurationException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -101,6 +102,8 @@ public class GitService {
 				e.printStackTrace();
 			} catch (GitAPIException e) {
 				e.printStackTrace();
+			} catch (JGitInternalException e) {
+				e.printStackTrace();
 			}
 		} else {
 			try {
@@ -113,6 +116,8 @@ public class GitService {
 					return result.getRepository();
 				}
 			} catch (GitAPIException e) {
+				e.printStackTrace();
+			} catch (JGitInternalException e) {
 				e.printStackTrace();
 			}
 		}
