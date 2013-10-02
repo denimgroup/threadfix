@@ -97,4 +97,6 @@ public interface FindingDao {
 	 */
 	Object retrieveUnmappedFindingsByScanIdAndPage(Integer scanId, int page);
 
+	List<String> retrieveManualUrls(Integer appId);
+
 }

@@ -154,4 +154,6 @@ public interface FindingService {
 	 */
 	void validateManualFinding(Finding finding, BindingResult result);
 
+	List<String> getAllManualUrls(Integer appId);
+
 }
