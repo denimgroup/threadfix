@@ -38,11 +38,55 @@
       </actionSet>
    </extension>
    
-    <extension id="threadfixmarker" point="org.eclipse.core.resources.markers"/>
-	<extension id="threadfixproblem" point="org.eclipse.core.resources.markers">
-	   <super type="org.eclipse.core.resources.problemmarker"/>
-	   <super type="com.denimgroup.threadfix.plugin.eclipse.threadfixmarker"/>
-	   <persistent value="true"/>
+   <extension point="org.eclipse.core.resources.markers" 
+   		id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"
+   		name="ThreadFix Vulnerability Marker">
+     <super type="org.eclipse.core.resources.problemmarker"/>         
+     <persistent value="true"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors.annotationTypes">
+     <type
+        super="org.eclipse.ui.workbench.texteditor.warning"
+        markerType="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"
+        name="com.denimgroup.threadfix.plugin.eclipse.vulnAnnotation"
+        markerSeverity="1"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+     <specification
+     	colorPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.colorPreferenceKey"
+     	colorPreferenceValue="0,0,0"
+     	textPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.textPreferenceKey"
+     	overviewRulerPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.overviewRulerPreferenceKey"
+        annotationType="com.denimgroup.threadfix.plugin.eclipse.vulnAnnotation"
+        icon="icons/icon.jpg"
+        label="ThreadFix Vulnerability Annotations"
+        verticalRulerPreferenceKey="myMarkerIndicationInVerticalRuler"
+        verticalRulerPreferenceValue="true"/>
+  </extension>
+  
+	<extension point="org.eclipse.ui.views">
+		<view
+	    	class="com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView"
+	        icon="icons/icon.jpg"
+	        id="com.denimgroup.threadfix.plugin.eclipse.vulnerabilitiesView"
+	        name="ThreadFix Vulnerabilities">
+	    </view>
+	</extension>
+	
+	<extension point="org.eclipse.ui.ide.markerSupport">
+	    <markerContentGenerator
+	   		 	id="com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator" 
+	    		name="My Marker Generator">
+		    <markerTypeReference id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.severityAndDescriptionField"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.locationField"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.markerType"/>
+			<markerFieldReference id="org.eclipse.ui.ide.priorityField"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.resourceField"/>
+	    	<markerFieldReference id="org.eclipse.ui.ide.descriptionField"/>
+	    </markerContentGenerator>
 	</extension>
 
 </plugin>
