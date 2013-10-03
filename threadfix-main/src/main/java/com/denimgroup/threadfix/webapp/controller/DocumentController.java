@@ -153,7 +153,7 @@ public class DocumentController {
 		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
 			contentType = "text/plain";
 		}
-		
+		response.addHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType(contentType);
 		InputStream in = document.getFile().getBinaryStream();
 		ServletOutputStream out = response.getOutputStream();

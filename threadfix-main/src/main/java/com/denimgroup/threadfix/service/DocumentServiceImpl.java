@@ -111,6 +111,7 @@ public class DocumentServiceImpl implements DocumentService {
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
 		doc.setContentType(file.getContentType());
+
 		try {
 			Blob blob = new SerialBlob(file.getBytes());
 			doc.setFile(blob);
