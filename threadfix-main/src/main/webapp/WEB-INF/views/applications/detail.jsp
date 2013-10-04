@@ -51,8 +51,6 @@
 		</c:if>
 	</div>
 	
-	<c:if test="${ not empty application.scans }">
-	
 	<c:if test="${ canGenerateReports }">
 		<div class="container-fluid">
 			<div class="row-fluid">
@@ -140,9 +138,14 @@
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
 		<br>
-	
+		<c:if test="${ not empty application.scans }">
+			<c:set var="activeVuln" value="active" />
+		</c:if>
+		<c:if test="${ empty application.scans }">
+			<c:set var="activeDoc" value="active" />
+		</c:if>	
 		<ul class="nav nav-tabs margin-top">
-			<li class="active pointer">
+			<li class="pointer ${ activeVuln }">
 				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">
 					${ fn:escapeXml(numVulns) } 
 					<c:if test="${ numVulns == 1 }">Vulnerability</c:if>
@@ -183,7 +186,7 @@
 					</a>
 				</li>
 			</c:if>
-			<li class="pointer">
+			<li class="pointer ${ activeDoc }">
 				<a data-toggle="tab" id="docsTabLink" onclick="javascript:switchTabs('<c:out value="${docsTabUrl }"/>');return false;">
 					${ fn:length(application.documents) } 
 					<c:if test="${ fn:length(application.documents) == 1 }">Document</c:if>
@@ -193,10 +196,13 @@
 		</ul>
 		
 	    <div id="tabsDiv">
-			<%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
+	    	<c:if test="${ not empty application.scans }">
+				<%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
+			</c:if>
+	    	<c:if test="${ empty application.scans }">
+				<%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
+			</c:if>			
 		</div>
-	
-	</c:if>
 	
 	<div id="addWaf" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
