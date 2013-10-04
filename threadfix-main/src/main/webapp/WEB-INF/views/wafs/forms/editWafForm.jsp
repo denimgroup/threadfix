@@ -22,6 +22,9 @@
 		</span>
 	</h4>
 </div>
+<spring:url value="/wafs/{wafId}/edit/ajax" var="updateUrl">
+	<spring:param name="wafId" value="${ waf.id }"/>
+</spring:url>
 <form:form id="wafForm${ waf.id }" style="margin-bottom:0px;" modelAttribute="waf" method="post" action="${ fn:escapeXml(updateUrl) }">
 	<div class="modal-body">
 		<table>
