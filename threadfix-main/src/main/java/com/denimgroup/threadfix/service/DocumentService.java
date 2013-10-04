@@ -33,4 +33,5 @@ public interface DocumentService {
 	String saveFileToVuln(Integer vulnId, MultipartFile file);
 	Document loadDocument(Integer docId);
 	String deleteDocument(Document document);
+	ContentTypeService getContentTypeService();
 }
