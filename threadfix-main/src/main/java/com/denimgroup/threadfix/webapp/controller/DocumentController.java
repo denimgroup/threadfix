@@ -89,7 +89,7 @@ public class DocumentController {
 		}else {
 			ControllerUtils.addSuccessMessage(request, 
 					"The document was successfully added to the application.");
-			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
 			return mav;		
@@ -115,7 +115,7 @@ public class DocumentController {
 			mav.addObject("contentPage","applications/forms/uploadDocVulnForm.jsp");
 			return mav;
 		}else {
-			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnId);
 			return mav;		
