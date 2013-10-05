@@ -77,8 +77,7 @@ public class DocumentController {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
 			return new ModelAndView("403");
-		}
-				
+		}				
 		String fileName = documentService.saveFileToApp(appId, file);
 		
 		if (fileName == null || fileName.equals("")) {
@@ -87,10 +86,10 @@ public class DocumentController {
 			mav.addObject("message","Unable to save the document to the application.");
 			mav.addObject("contentPage","applications/forms/uploadDocForm.jsp");
 			return mav;
-		} else {
+		}else {
 			ControllerUtils.addSuccessMessage(request, 
-					"The document was successfully submitted for processing. This page will refresh when it finishes.");
-			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+					"The document was successfully added to the application.");
+//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
 			return mav;		
@@ -107,17 +106,16 @@ public class DocumentController {
 		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
 			return new ModelAndView("403");
 		}
-
 		String fileName = documentService.saveFileToVuln(vulnId, file);
-
+		System.out.println(file.getContentType());
 		if (fileName == null || fileName.equals("")) {
 			log.warn("Saving the document have failed. Returning to document upload page.");
 			ModelAndView mav = new ModelAndView("ajaxFailureHarness");
 			mav.addObject("message","Unable to save the document to the vulnerability.");
 			mav.addObject("contentPage","applications/forms/uploadDocVulnForm.jsp");
 			return mav;
-		} else {
-			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+		}else {
+//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnId);
 			return mav;		
@@ -150,11 +148,15 @@ public class DocumentController {
 		}
 		
 		String contentType = document.getContentType();
-		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
-			contentType = "text/plain";
+//		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
+//			contentType = "text/plain";
+//		}
+		response.setContentType(contentType);
+		if(contentType.equals(documentService.getContentTypeService().getDefaultType()) || contentType == null){
+			response.addHeader("Content-Disposition", "attachment; filename=\""+document.getName()+"."+document.getType()+"\"");
+			response.setContentType("application/octet-stream");
 		}
 		response.addHeader("X-Content-Type-Options", "nosniff");
-		response.setContentType(contentType);
 		InputStream in = document.getFile().getBinaryStream();
 		ServletOutputStream out = response.getOutputStream();
 		IOUtils.copy(in, out);
@@ -165,7 +167,7 @@ public class DocumentController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/{docId}/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/{docId}/download", method = RequestMethod.POST)
 	public String downloadDocument(Model model,@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
@@ -201,7 +203,7 @@ public class DocumentController {
 	}
 
 	
-	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.GET)
+	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.POST)
 	public String deleteDocument(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
@@ -229,6 +231,7 @@ public class DocumentController {
 		
 		return urlReturn;
 	}
+	
 
 	
 }

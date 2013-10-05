@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -47,6 +48,13 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
+	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<String, String>();
+	static {
+		SEVERITY_MAP.put("deformation", "Information");
+		SEVERITY_MAP.put("eddium", "Medium");
+		SEVERITY_MAP.put(" igh", "High");
+		SEVERITY_MAP.put("inw", "Low");
+	}
 
 	public BurpSuiteChannelImporter() {
 		super(ChannelType.BURPSUITE);
@@ -105,6 +113,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private String currentHostText        = null;
 		private String currentBackupParameter = null;
 		private String currentSerialNumber    = null;
+
 		
 		private void add(Finding finding) {
 			if (finding != null) {
@@ -198,6 +207,9 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    			currentParameter = "";
 	    		}
 	    		
+	    		if (SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
+	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
+	    		}
 	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		
