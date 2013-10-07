@@ -175,6 +175,7 @@ public class EditApplicationController {
 			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
 			return "ajaxFailureHarness";
 		} else {
+			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
 			applicationService.updateProjectRoot(application);
 			
@@ -188,7 +189,6 @@ public class EditApplicationController {
 			model.addAttribute("application", application);
 			model.addAttribute("finding", new Finding());
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
-			
 			ControllerUtils.addSuccessMessage(request,
 					"The application was edited successfully.");
 			

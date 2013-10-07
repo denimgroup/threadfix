@@ -1,5 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
-
+<spring:url value="/organizations/{orgId}" var="orgUrl">
+	<spring:param name="orgId" value="${ application.organization.id }"/>
+</spring:url>
 <ul class="breadcrumb">
     <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>

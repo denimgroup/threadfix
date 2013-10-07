@@ -14,9 +14,7 @@
 </head>
 
 <body id="apps">
-	<spring:url value="/organizations/{orgId}" var="orgUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-	</spring:url>
+
 	<spring:url value="{appId}/edit" var="editUrl">
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
