@@ -25,7 +25,7 @@ public class ApplicationDialog extends TitleAreaDialog {
 	private final Map<String, String> appIdMap;
 	private final Set<String> alreadyChecked;
 
-	public ApplicationDialog(Shell parentShell, Map<String, String> appIdMap, 
+	public ApplicationDialog(Shell parentShell, Map<String, String> appIdMap,
 			Set<String> alreadyChecked) {
 		super(parentShell);
 		this.appIdMap = appIdMap;

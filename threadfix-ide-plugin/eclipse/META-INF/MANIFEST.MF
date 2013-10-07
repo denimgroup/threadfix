@@ -26,4 +26,5 @@ Import-Package: org.eclipse.core.commands.common,
  org.eclipse.ui.views.markers,
  org.osgi.service.prefs;version="1.1.1"
 Require-Bundle: org.apache.commons.httpclient;bundle-version="3.1.0",
- org.apache.commons.io;bundle-version="2.0.1"
+ org.apache.commons.io;bundle-version="2.0.1",
+ org.eclipse.ui.ide;bundle-version="3.9.0"

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.marker;
 
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.markers.MarkerField;
 import org.eclipse.ui.views.markers.MarkerItem;
 
@@ -30,11 +31,19 @@ public class ParameterField extends MarkerField {
 	
 	@Override
 	public String getColumnHeaderText() {
+		System.out.println("Getting column header");
 		return "Parameter";
+	}
+	
+	@Override
+	public int getDefaultColumnWidth(final Control control) {
+		System.out.println("Getting column width");
+	    return 400;
 	}
 
 	@Override
 	public String getValue(MarkerItem markerItem) {
+		System.out.println("Getting value for " + markerItem);
 		return markerItem.getAttributeValue("parameter", "");
 	}
 

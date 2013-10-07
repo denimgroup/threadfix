@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.marker;
 
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.markers.MarkerField;
 import org.eclipse.ui.views.markers.MarkerItem;
 
@@ -31,6 +32,11 @@ public class CWEField extends MarkerField {
 	@Override
 	public String getColumnHeaderText() {
 		return "CWE";
+	}
+	
+	@Override
+	public int getDefaultColumnWidth(final Control control) {
+	    return 400;
 	}
 
 	@Override
