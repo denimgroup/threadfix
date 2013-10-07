@@ -27,22 +27,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.markers.MarkerField;
 import org.eclipse.ui.views.markers.MarkerItem;
 
-public class CWEField extends MarkerField {
-	
-	@Override
-	public String getColumnHeaderText() {
-		return "CWE";
-	}
+public class CWENameField extends MarkerField {
 	
 	@Override
 	public int getDefaultColumnWidth(final Control control) {
-	    return 30;
+	    return 400;
 	}
 
 	@Override
 	public String getValue(MarkerItem item) {
-		if (item != null && item.getAttributeValue("cwe", null) != null) {
-			return item.getAttributeValue("cwe", null);
+		if (item != null && item.getAttributeValue("cweName", null) != null) {
+			return item.getAttributeValue("cweName", null);
 		}
 		return "";
 	}

@@ -38,7 +38,7 @@ public class ParameterField extends MarkerField {
 	@Override
 	public int getDefaultColumnWidth(final Control control) {
 		System.out.println("Getting column width");
-	    return 400;
+	    return 60;
 	}
 
 	@Override
