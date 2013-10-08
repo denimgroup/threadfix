@@ -7,4 +7,4 @@ cp threadfix-source/threadfix-upgrade/mysql-upgrade/src/resources/fabfile.py thr
 
 /Applications/Ez7z.app/Contents/Resources/7za a threadfix_1_2_vm_upgrade.zip threadfix_1_2_vm_upgrade
 
-cp threadfix_1_2rc3_vm_upgrade.zip /Volumes/Documents/ThreadFix
+cp threadfix_1_2_vm_upgrade.zip /Volumes/Documents/ThreadFix
