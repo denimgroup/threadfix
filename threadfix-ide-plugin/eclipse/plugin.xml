@@ -41,7 +41,7 @@
    <extension point="org.eclipse.core.resources.markers" 
    		id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"
    		name="ThreadFix Vulnerability Marker">
-     <super type="org.eclipse.core.resources.problemmarker"/>         
+     <super type="org.eclipse.core.resources.textmarker"/>         
      <persistent value="true"/>
   </extension>
 
@@ -80,13 +80,27 @@
 	   		 	id="com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator" 
 	    		name="My Marker Generator">
 		    <markerTypeReference id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"/>
-		    <markerFieldReference id="org.eclipse.ui.ide.severityAndDescriptionField"/>
-		    <markerFieldReference id="org.eclipse.ui.ide.locationField"/>
-		    <markerFieldReference id="org.eclipse.ui.ide.markerType"/>
-			<markerFieldReference id="org.eclipse.ui.ide.priorityField"/>
 		    <markerFieldReference id="org.eclipse.ui.ide.resourceField"/>
-	    	<markerFieldReference id="org.eclipse.ui.ide.descriptionField"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.locationField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField" />
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"/>
 	    </markerContentGenerator>
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWEField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"
+			name="CWE ID">
+		</markerField> 
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWENameField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"
+			name="CWE Name">
+		</markerField> 
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.ParameterField"
+			id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField"
+			name="Parameter">
+		</markerField> 
 	</extension>
 
 </plugin>
