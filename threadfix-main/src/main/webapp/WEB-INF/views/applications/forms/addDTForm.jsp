@@ -71,9 +71,9 @@
 				</td>
 			</tr>
 			<tr class="left-align">
-				<td id="projectname">Product Name</td>
+				<td id="projectname" style="display:none">Product Name</td>
 				<td class="inputValue">
-					<form:select style="margin:5px;" id="projectList" path="projectName">
+					<form:select style="margin:5px; display:none;" id="projectList" path="projectName">
 						<c:if test="${ not empty application.projectName }">
 							<option value="${ application.projectName }"><c:out value="${ application.projectName }"/></option>
 						</c:if>

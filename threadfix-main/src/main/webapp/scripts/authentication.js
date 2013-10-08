@@ -110,6 +110,8 @@ showResponse = function(type, text, element) {
 					$('#projectList').removeAttr("disabled");
 					$('#jsonLink').css("display","none");
 					$('#submitDTModal').css("display","");
+					$('#projectList').css("display","");
+					$('#projectname').css("display","");
 					
 					var product_array = json.names.split(",");
 					for ( var i = 0; i < product_array.length; i++) {
