@@ -45,6 +45,7 @@
 					</td>
 				</tr>
 			</c:if>
+			
 			<tr>
 				<td>Title:</td>
 				<td colspan="5" class="inputValue">
@@ -61,7 +62,11 @@
 	</table>
 	</div>
 	<div class="modal-footer">
+		<c:if test="${ empty projectMetadata }">
+			<a><img src="<%=request.getContextPath()%>/images/loading.gif" class="transparent_png" alt="Threadfix" /></a>
+		</c:if>	
 		<button id="closeSubmitDefectModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button onclick="javascript:submitDefect('#submitDefectForm', '#submitDefectFormDiv', '#teamTable', '#submitDefectFormModal');return false;" id="submitScanModal" class="btn btn-primary">Add Defect</button>
+		<button onclick="javascript:submitDefect('#submitDefectForm', '#submitDefectFormDiv', '#teamTable', '#submitDefectFormModal');return false;" id="submitScanModal" class="btn btn-primary"
+				<c:if test="${ empty projectMetadata }"> disabled="disabled"</c:if>>Add Defect</button>
 	</div>
 </form:form>

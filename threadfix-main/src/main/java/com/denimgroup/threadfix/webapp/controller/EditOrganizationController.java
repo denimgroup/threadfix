@@ -96,6 +96,7 @@ public class EditOrganizationController {
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
+				organization.setName(null);
 				Organization dbOrg = organizationService.loadOrganization(orgId);
 				model.addAttribute("originalName", dbOrg.getName());
 				return "ajaxFailureHarness";
