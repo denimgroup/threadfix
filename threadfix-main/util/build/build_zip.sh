@@ -6,6 +6,9 @@ mvn package
 
 cd ~/Documents/Build
 
+cp threadfix-source/threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix-backup.script
+cp threadfix-source/threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix.script
+
 cp -r ThreadFixBase ThreadFix
 
 cp threadfix-source/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war ThreadFix/tomcat/webapps/threadfix.war
