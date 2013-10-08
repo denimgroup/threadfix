@@ -9,6 +9,11 @@ $(document).ready(
 			$("#password").attr("disabled", "disabled");
 			$('#projectList').html('');
 			$("#projectList").attr("disabled", "disabled");
+			$('#jsonLink').css("display","none");
+			$('#submitDTModal').css("display","");
+		}else{
+			$('#jsonLink').css("display","");
+			$('#submitDTModal').css("display","none");
 		}
 		
 		if (element2.length === 0) {
@@ -28,10 +33,14 @@ $(document).ready(
 						$("#username").attr("disabled", "disabled");
 						$("#password").attr("disabled", "disabled");
 						$("#projectList").attr("disabled", "disabled");
+						$('#jsonLink').css("display","none");
+						$('#submitDTModal').css("display","");
 					} else {
 						$("#username").removeAttr("disabled");
 						$("#password").removeAttr("disabled");
 						$("#projectname").html("Product Name:");
+						$('#jsonLink').css("display","");
+						$('#submitDTModal').css("display","none");
 					}
 				});
 	});
