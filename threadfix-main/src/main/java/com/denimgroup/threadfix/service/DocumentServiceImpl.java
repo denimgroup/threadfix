@@ -53,6 +53,7 @@ public class DocumentServiceImpl implements DocumentService {
 	private ApplicationDao applicationDao;
 	private VulnerabilityDao vulnerabilityDao;
 	private DocumentDao documentDao;
+	private ContentTypeServiceImpl contentTypeService = new ContentTypeServiceImpl();
 	
 	@Autowired
 	public DocumentServiceImpl(DocumentDao documentDao,
@@ -77,12 +78,22 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
+		if (!contentTypeService.isValidUpload(file.getContentType())){
+			log.warn("Invalid filetype for upload: "+file.getContentType());
+			return null;
+		}
+		
 		Document doc = new Document();
 		String fileFullName = file.getOriginalFilename();
 		doc.setApplication(application);
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
-		doc.setContentType(file.getContentType());
+		if(!doc.getType().equals("json")){
+			doc.setContentType(contentTypeService.translateContentType(file.getContentType()));	
+		}else{
+			doc.setContentType(contentTypeService.translateContentType("json"));
+		}
+
 		try {
 			Blob blob = new SerialBlob(file.getBytes());
 			doc.setFile(blob);
@@ -110,6 +121,11 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
+		if (!contentTypeService.isValidUpload(file.getContentType())){
+			log.warn("Invalid filetype for upload: "+file.getContentType());
+			return null;
+		}
+		
 		Vulnerability vulnerability = vulnerabilityDao.retrieveById(vulnId);
 		
 		if (vulnerability == null) {
@@ -122,7 +138,7 @@ public class DocumentServiceImpl implements DocumentService {
 		doc.setVulnerability(vulnerability);
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
-		doc.setContentType(file.getContentType());
+		doc.setContentType(contentTypeService.translateContentType(file.getContentType()));
 		try {
 			Blob blob = new SerialBlob(file.getBytes());
 			doc.setFile(blob);
@@ -171,6 +187,10 @@ public class DocumentServiceImpl implements DocumentService {
 		
 		return null;
 		
+	}
+	@Override
+	public ContentTypeService getContentTypeService(){
+		return contentTypeService;
 	}
 	
 	private String getFileName(String fullName) {

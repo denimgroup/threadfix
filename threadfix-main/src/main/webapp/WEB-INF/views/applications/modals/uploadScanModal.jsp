@@ -5,7 +5,7 @@
 	<div class="modal-header">
 		<h4 style="text-align:left;" id="myModalLabel">
 			<span style="max-width:400px; display:inline-block; float:left" class="ellipsis"><c:out value="${ application.name }"/></span>
-			Scan Upload
+			 &nbsp;Scan Upload
 		</h4>
 	</div>
 	<div id="scanFormDiv${ application.id }">

@@ -147,7 +147,8 @@ function submitAjaxScan(url, formId, formDiv, errorDiv) {
 	        processData: false,
 			success : function(text) {
 				if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">" ||
-						$.trim(text).slice(0,5) === "<form") {
+						$.trim(text).slice(0,5) === "<form" ||
+						$.trim(text).slice(0,5) === "<FORM") {
 					$(formDiv).html(text);
 				} else {
 					try {

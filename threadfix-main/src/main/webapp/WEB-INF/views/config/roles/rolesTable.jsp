@@ -14,12 +14,12 @@
 	</thead>
 	<tbody>
 		<c:if test="${ empty roleList }">
-			<tr class="bodyRow">
+			<tr>
 				<td colspan="6" style="text-align:center;">No roles found.</td>
 			</tr>
 		</c:if>
 		<c:forEach var="editRole" items="${ roleList }" varStatus="status">
-			<tr class="bodyRow roleRow">
+			<tr class=" roleRow">
 				<td id="role${ status.count }">
 					<c:out value="${ editRole.displayName }"/>
 				</td>

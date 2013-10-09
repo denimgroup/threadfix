@@ -36,9 +36,9 @@
 				<tr>
 					<td class="no-color">Team</td>
 					<td class="no-color">
-						<form:select path="application.organization.id" id="orgSelect${ outerStatus.count }-${ innerStatus.count }"
+						<form:select path="application.organization.id" id="orgSelect${ remoteProvider.id }-${ innerStatus.count }"
 								class="selectFiller"
-								data-select-target="appSelect${ outerStatus.count }-${ innerStatus.count }"
+								data-select-target="appSelect${ remoteProvider.id }-${ innerStatus.count }"
 								data-selected-value="${ remoteProviderApplication.application.id }">
 							<c:set var="optionsBase" value="[{\"id\":\"do-not-use\", \"name\":\"\"}"/>
 							<option value="-1">Pick a Team</option>
@@ -69,7 +69,7 @@
 				<tr>
 					<td class="no-color" style="padding-right:10px">Application</td>
 					<td class="no-color">
-						<form:select path="application.id" id="appSelect${ outerStatus.count }-${ innerStatus.count }">
+						<form:select path="application.id" id="appSelect${ remoteProvider.id }-${ innerStatus.count }">
 							<option value="-1"></option>
 							
 						</form:select>

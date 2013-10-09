@@ -175,6 +175,7 @@ public class EditApplicationController {
 			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
 			return "ajaxFailureHarness";
 		} else {
+			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
 			applicationService.updateProjectRoot(application);
 			
@@ -182,13 +183,18 @@ public class EditApplicationController {
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 			
-			permissionService.addPermissions(model, orgId, appId,
-					Permission.CAN_MANAGE_APPLICATIONS );
+			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
+					Permission.CAN_UPLOAD_SCANS,
+					Permission.CAN_MODIFY_VULNERABILITIES,
+					Permission.CAN_SUBMIT_DEFECTS,
+					Permission.CAN_VIEW_JOB_STATUSES,
+					Permission.CAN_GENERATE_REPORTS,
+					Permission.CAN_MANAGE_DEFECT_TRACKERS,
+					Permission.CAN_MANAGE_USERS);
 			
 			model.addAttribute("application", application);
 			model.addAttribute("finding", new Finding());
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
-			
 			ControllerUtils.addSuccessMessage(request,
 					"The application was edited successfully.");
 			
@@ -212,11 +218,11 @@ public class EditApplicationController {
 				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
 			} else {
 				if (application.getWaf() != null && (application.getWaf().getId() == null ||
-						application.getWaf().getId() == 0)) {
+ 						application.getWaf().getId() == 0)) {
 					databaseApplication.setWaf(null);
 				}
 				
-				if (application.getWaf() != null && application.getWaf().getId() != null) {
+				if (application.getWaf() != null && application.getWaf().getId() != null && application.getWaf().getId() != 0) {
 					Waf waf = wafService.loadWaf(application.getWaf().getId());
 					
 					if (waf == null) {
