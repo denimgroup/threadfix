@@ -8,6 +8,7 @@ cd ~/Documents/Build
 
 cp threadfix-source/threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix-backup.script
 cp threadfix-source/threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix.script
+cp threadfix-source/threadfix-main/util/zip/* ThreadFixBase
 
 cp -r ThreadFixBase ThreadFix
 
