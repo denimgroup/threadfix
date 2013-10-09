@@ -95,7 +95,7 @@ if [ "` ls -a | grep .esapi_key`" = "" ];
 then
     echo "Changing ESAPI master key"
 
-    sudo unzip -n -qq /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/esapi-2.0.2-SNAPSHOT.jar -d /home/vagrant
+    sudo unzip -n -qq /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/esapi-2.1.0-SNAPSHOT.jar -d /home/vagrant
     sudo unzip -n -qq /var/lib/tomcat7/webapps/threadfix/WEB-INF/lib/log4j-1.2.16.jar -d /home/vagrant
 
     sudo cp /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/ESAPI.properties /home/vagrant/ESAPI.properties
