@@ -13,7 +13,7 @@
        					   http://www.springframework.org/schema/mvc
         				   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 				           http://www.springframework.org/schema/security
-				           http://www.springframework.org/schema/security/spring-security-3.0.xsd ">
+				           http://www.springframework.org/schema/security/spring-security-3.1.xsd ">
 
 	<security:global-method-security pre-post-annotations="enabled"/>
 

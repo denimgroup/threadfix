@@ -4,9 +4,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-				           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+				           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 				           http://www.springframework.org/schema/security
-				           http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+				           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<bean id="CustomUserDetailService" class="com.denimgroup.threadfix.service.CustomUserDetailService"/>
 	<bean id="ThreadFixPasswordEncoder" class="com.denimgroup.threadfix.service.ThreadFixPasswordEncoder"/>
@@ -47,6 +47,10 @@
 		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
 	
+	<bean id="customAuthenticationProvider" class="com.denimgroup.threadfix.service.LdapAuthenticator">
+	    <!-- <property name="userDetailsService" ref="CustomUserDetailService" /> -->
+	</bean>
+	
     <security:authentication-manager>
 	    <security:authentication-provider user-service-ref="CustomUserDetailService">
 	    	<security:password-encoder ref="ThreadFixPasswordEncoder">
@@ -54,7 +58,10 @@
 	    	</security:password-encoder>
 	    </security:authentication-provider>
 	    
-	    <!-- <security:ldap-authentication-provider 
+	    <security:authentication-provider ref="customAuthenticationProvider"/>
+	    <!-- 
+	    
+	    <security:ldap-authentication-provider 
 	    	server-ref="ldapServer" 
 	    	user-search-base="OU=Company Name"
 	    	user-search-filter="(sAMAccountName={0})"

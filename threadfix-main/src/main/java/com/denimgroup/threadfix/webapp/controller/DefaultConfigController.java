@@ -39,7 +39,8 @@ public class DefaultConfigController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled" });
+		dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
+				"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials" });
 	}
 	
 	@ModelAttribute

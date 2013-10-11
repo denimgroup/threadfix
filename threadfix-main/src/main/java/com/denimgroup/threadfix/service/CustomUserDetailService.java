@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +42,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
 
 /**
  * @author cleclair
@@ -60,6 +62,8 @@ public class CustomUserDetailService implements UserDetailsService {
 			return null;
 		}
 		
+		AuthenticationManager test;
+		
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		
 		Map<Integer, Set<Permission>> orgMap = null;
@@ -67,31 +71,41 @@ public class CustomUserDetailService implements UserDetailsService {
 		
 		Integer id = user.getId();
 		
+		// For now
+		grantedAuthorities.add(new GrantedAuthorityImpl(Role.USER));
+		
 		// Transfer the set of permissions that the user has to GrantedAuthority objects
 		if (id != null) {
-			Set<Permission> permissions = userService.getGlobalPermissions(id);
-		
-			for (Permission permission : permissions) {
-				grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
-			}
 			
-			// For now
-			grantedAuthorities.add(new GrantedAuthorityImpl(Role.USER));
+			if (PermissionServiceDelegateFactory.isEnterprise()) {
 			
-			if (user.getHasGlobalGroupAccess()) {
-				grantedAuthorities.add(new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
-			}
+				Set<Permission> permissions = userService.getGlobalPermissions(id);
 			
-			orgMap = userService.getOrganizationPermissions(id);
-			appMap = userService.getApplicationPermissions(id);
-			
-			if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
-				grantedAuthorities.add(new GrantedAuthorityImpl(Permission.CAN_GENERATE_REPORTS.getText()));
+				for (Permission permission : permissions) {
+					grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+				}
+				
+				if (user.getHasGlobalGroupAccess()) {
+					grantedAuthorities.add(new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+				}
+				
+				orgMap = userService.getOrganizationPermissions(id);
+				appMap = userService.getApplicationPermissions(id);
+				
+				if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
+					grantedAuthorities.add(new GrantedAuthorityImpl(Permission.CAN_GENERATE_REPORTS.getText()));
+				}
+			} else {
+				for (Permission permission : Permission.values()) {
+					if (permission != Permission.CAN_MANAGE_ROLES) {
+						grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+					}
+				}
 			}
 		}
 		
 		ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
-				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(), 
+				user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(),
 				user.isHasChangedInitialPassword(), user.getIsLdapUser(),
 				user.getId(), orgMap, appMap);
 		
