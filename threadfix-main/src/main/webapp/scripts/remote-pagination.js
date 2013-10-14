@@ -52,22 +52,32 @@ function refillElementSort(elementId, endPoint, page, field, login)
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
 		data += ', "descriptionFilter" : ' + JSON.stringify($.trim($("#descriptionFilterInput").val()));
+	} else {
+		data += ', "descriptionFilter" : ""';
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
 		data += ', "severityFilter" : ' + JSON.stringify($.trim($("#severityFilterInput").val()));
+	} else {
+		data += ', "severityFilter" : ""';
 	}
 	
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
 		data += ', "locationFilter" : ' + JSON.stringify($.trim($("#locationFilterInput").val()));
+	} else {
+		data += ', "locationFilter" : ""';
 	}
 		
 	if (typeof($("#descriptionFilterInput").val()) != 'undefined') {
 		data += ', "parameterFilter" : ' + JSON.stringify($.trim($("#parameterFilterInput").val()));
+	} else {
+		data += ', "parameterFilter" : ""';
 	}
 	
 	if (typeof($("#cweFilterInput").val()) != 'undefined') {
 		data += ', "cweFilter" : ' + JSON.stringify($.trim($("#cweFilterInput").val()));
+	} else {
+		data += ', "cweFilter" : ""';
 	}
 	
 	data += "}";

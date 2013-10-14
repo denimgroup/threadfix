@@ -72,7 +72,7 @@
 				<th class="first">Severity</th>
 				<th>Vulnerability Type</th>
 				<th>Path</th>
-				<th>Parameter</th>
+				<th style="min-width:90px;">Parameter</th>
 				<th>Number Merged Results</th>
 				<th style="width:80px"></th>
 			</tr>
@@ -109,12 +109,16 @@
 				<td>
 					<c:out value="${ finding.channelVulnerability.name }"/>
 				</td>
-				<td id="mappedPath${ status.count }">
-					<c:out value="${ finding.surfaceLocation.path }"/>
-				</td>
-				<td id="mappedParameter${ status.count }">
-					<c:out value="${ finding.surfaceLocation.parameter }"/>
-				</td>
+				<c:if test="${ empty finding.dependency }">
+					<td id="mappedPath${ status.count }"><c:out value="${ finding.surfaceLocation.path }"/></td>
+					<td id="mappedParameter${ status.count }"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+				</c:if>
+				<c:if test="${ not empty finding.dependency }">
+					<td colspan="2">
+						<c:out value="${ finding.dependency.cve } "/>
+						(<a target="_blank" id="cve${ index }" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ finding.dependency.cve }">View</a>)
+					</td>
+				</c:if>
 				<td>
 					<c:out value="${ finding.numberMergedResults }"/>
 				</td>

@@ -339,6 +339,7 @@ public class UserServiceImpl implements UserService {
 		user.setModifiedDate(returnUser.getModifiedDate());
 		user.setSalt(returnUser.getSalt());
 		user.setPassword(returnUser.getPassword());
+		user.setWasLdapUser(returnUser.getIsLdapUser());
 		
 		return user;
 	}

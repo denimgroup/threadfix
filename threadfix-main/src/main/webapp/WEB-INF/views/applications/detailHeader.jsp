@@ -1,5 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
-
+<spring:url value="/organizations/{orgId}" var="orgUrl">
+	<spring:param name="orgId" value="${ application.organization.id }"/>
+</spring:url>
 <ul class="breadcrumb">
     <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
@@ -7,10 +9,7 @@
 </ul>
 <div>
 <h2 style="padding-bottom:5px;line-height:1">
-	<span id="nameText" style="max-width:400px; display:inline-block" class="ellipsis">
-		<c:out value="${ application.name }"/>
-	</span>
-
+	<span id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
 <c:if test="${ not empty canManageApplications }">
 	<div id="btnDiv1" class="btn-group">
 		<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>

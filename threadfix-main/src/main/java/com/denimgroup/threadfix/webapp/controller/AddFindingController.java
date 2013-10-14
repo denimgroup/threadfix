@@ -126,6 +126,8 @@ public class AddFindingController {
 		model.addAttribute("contentPage", "applications/forms/manualFindingForm.jsp");
 		model.addAttribute("application", applicationService.loadApplication(appId));
 		model.addAttribute("manualSeverities", findingService.getManualSeverities());
+		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
+		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
 		return "ajaxFailureHarness";
 	}
 
@@ -228,5 +230,6 @@ public class AddFindingController {
 		}
 		return buffer.toString();
 	}
+
 
 }

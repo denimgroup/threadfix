@@ -52,7 +52,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Generate Reports</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canGenerateReports }">checked="checked"</c:if>
@@ -68,7 +68,7 @@
 							name="canGenerateReports" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Generate WAF Rules</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canGenerateWafRules }">checked="checked"</c:if>
@@ -84,7 +84,7 @@
 							name="canGenerateWafRules" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage API Keys</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageApiKeys }">checked="checked"</c:if>
@@ -100,7 +100,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Applications</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageApplications }">checked="checked"</c:if>
@@ -116,7 +116,7 @@
 							name="canManageApplications" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Defect Trackers</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageDefectTrackers }">checked="checked"</c:if>
@@ -132,7 +132,7 @@
 							name="canManageDefectTrackers" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Remote Providers</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageRemoteProviders }">checked="checked"</c:if>
@@ -148,7 +148,7 @@
 							name="canManageRemoteProviders" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Roles</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageRoles }">checked="checked"</c:if>
@@ -162,7 +162,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Teams</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageTeams }">checked="checked"</c:if>
@@ -176,7 +176,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage Users</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageUsers }">checked="checked"</c:if>
@@ -190,7 +190,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Manage WAFs</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canManageWafs }">checked="checked"</c:if>
@@ -204,7 +204,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Modify Vulnerabilities</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canModifyVulnerabilities }">checked="checked"</c:if>
@@ -220,7 +220,7 @@
 							name="canModifyVulnerabilities" cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Submit Defects</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canSubmitDefects }">checked="checked"</c:if>
@@ -236,7 +236,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">Upload Scans</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canUploadScans }">checked="checked"</c:if>
@@ -250,7 +250,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">View Error Logs</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canViewErrorLogs }">checked="checked"</c:if>
@@ -266,7 +266,7 @@
 							cssClass="errors" />
 					</td>
 				</tr>
-				<tr class="bodyRow">
+				<tr>
 					<td class="no-color">View Job Statuses</td>
 					<td class="no-color inputValue" style="text-align: center;">
 						<input type="radio" <c:if test="${ editRole.canViewJobStatuses }">checked="checked"</c:if>

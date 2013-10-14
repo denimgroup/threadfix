@@ -86,7 +86,7 @@
 			                       <spring:param name="appId" value="${ scan.application.id }"/>
 				                </spring:url>
 								<td class="no-left-border" id="application${ status.count }">
-									<div style="max-width:240px;" class="ellipsis">
+									<div style="width:240px;" class="ellipsis">
 										<a style="text-decoration:underline;" id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
 											<c:out value="${ scan.applicationChannel.application.name }"/>
 										</a>

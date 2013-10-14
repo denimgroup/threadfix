@@ -74,8 +74,15 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			String dateString = scanInfo.getString("timestamp");
 			return getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy",dateString);
 		} catch (JSONException e) {
-			log.warn("JSON input was probably version 1.", e);
-			return null;
+			try {
+				JSONObject jsonObject = new JSONObject(jsonString);
+				JSONObject scanInfo = jsonObject.getJSONObject("scan_info");
+				String dateString = scanInfo.getString("start_time");
+				return getCalendarFromString("yyyy-MM-dd hh:mm:ss Z",dateString);	
+			} catch (JSONException f){
+				log.warn("JSON input was probably version 1.", f);
+				return null;
+			}
 		}
 	}
 	

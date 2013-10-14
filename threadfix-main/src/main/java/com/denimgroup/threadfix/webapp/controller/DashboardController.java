@@ -113,7 +113,6 @@ public class DashboardController {
 		if (request.getParameter("appId") != null) {
 			appId = safeParseInt(request.getParameter("appId"));
 		}
-		
 		ReportParameters parameters = new ReportParameters();
 		parameters.setApplicationId(appId);
 		parameters.setOrganizationId(orgId);

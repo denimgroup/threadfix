@@ -161,21 +161,23 @@ var showSubmitLinks = function () {
 	if ($("#submitDefectForm").attr("data-has-metadata")) {
 		$(".submitDefectActionLink").css("display","");
 		$(".missingDefectTrackerMessage").css("display","none");
-	} else if ($("#editDefectTrackerButton").length != 0) {
+	} else if ($("#editDefectTrackerButton").length != 0 && !$("#submitDefectButton").attr("data-has-function")) {
 		reloadDefectSubmissionDiv();
+		$("#submitDefectButton").attr("data-has-function","1");
 	}
 	
 	if ($("#mergeDefectForm").attr("data-has-metadata")) {
 		$(".submitDefectActionLink").css("display","");
 		$(".missingDefectTrackerMessage").css("display","none");
-	} else if ($("#editDefectTrackerButton").length != 0) {
+	} else if ($("#editDefectTrackerButton").length != 0 && !$("#mergeDefectButton").attr("data-has-function")) {
 		reloadDefectMergeDiv();
+		$("#mergeDefectButton").attr("data-has-function","1");
 	}
 	
 	setTimeout(function () {
 		if ($("#editDefectTrackerButton").length != 0) {
-			reloadDefectSubmissionDiv();
-			reloadDefectMergeDiv();
+//			reloadDefectSubmissionDiv();
+//			reloadDefectMergeDiv();
 		}
 	}, 1100);
 };

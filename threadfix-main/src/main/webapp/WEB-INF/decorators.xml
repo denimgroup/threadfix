@@ -72,6 +72,7 @@
     	<pattern>/wafs/new/ajax*</pattern>
     	<pattern>/wafs/new/ajax/appPage*</pattern>
     	<pattern>/wafs/*/edit/ajax*</pattern>
+    	<pattern>/configuration/remoteproviders/*/table*</pattern>
     </excludes>
     <decorator name="default" page="default.jsp">
         <pattern>/*</pattern>

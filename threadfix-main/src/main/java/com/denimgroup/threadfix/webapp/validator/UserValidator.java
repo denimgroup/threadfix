@@ -26,12 +26,14 @@ package com.denimgroup.threadfix.webapp.validator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.RoleService;
 
 public class UserValidator implements Validator {
 	
 	private RoleService roleService = null;
+	private UserDao userDao = null;
 	
 	public UserValidator(RoleService roleService) {
 		this.roleService = roleService;
@@ -67,7 +69,13 @@ public class UserValidator implements Validator {
 					errors.rejectValue("password", "errors.required", new String[] { "Password" }, "");
 				}
 			}
-	
+
+			if(errors.getFieldError("password") == null && 
+					user.getWasLdap() && 
+					user.getUnencryptedPassword().length() < 12){
+				errors.rejectValue("password", null, "Password has a minimum length of 12.");
+			}
+			
 			if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null && 
 					user.getUnencryptedPassword().length() < 12 &&
 					user.getUnencryptedPassword().length() != 0) {
