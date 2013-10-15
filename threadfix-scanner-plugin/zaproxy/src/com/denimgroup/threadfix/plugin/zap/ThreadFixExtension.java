@@ -1,4 +1,4 @@
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,6 +9,9 @@ import javax.swing.JMenuItem;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ExtensionAdaptor;
 import org.parosproxy.paros.extension.ExtensionHook;
+
+import com.denimgroup.threadfix.plugin.zap.action.EndpointsAction;
+import com.denimgroup.threadfix.plugin.zap.action.ImportAction;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 

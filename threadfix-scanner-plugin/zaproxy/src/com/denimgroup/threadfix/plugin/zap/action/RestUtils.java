@@ -1,4 +1,4 @@
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap.action;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,8 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
+import com.denimgroup.threadfix.plugin.zap.ThreadFixPropertiesManager;
 
 /**
  * Created by mac on 9/23/13.

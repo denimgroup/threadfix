@@ -1,4 +1,4 @@
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap.dialog;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,6 +11,8 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
+
+import com.denimgroup.threadfix.plugin.zap.ThreadFixPropertiesManager;
 
 public class ParametersDialog {
 
