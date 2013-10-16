@@ -4,7 +4,7 @@ from fabric.contrib.console import confirm
 import datetime, re
 
 source_code_loc='https://code.google.com/p/threadfix'
-local_working_folder_loc = '/home/vagrant/threadfix_1_2rc2_vm_upgrade' #where fabfile is running from
+local_working_folder_loc = '/home/vagrant/threadfix_1_2_vm_upgrade' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
 local_path = 'threadfix/threadfix-main/src/main/resources' #path to .deploy files
 mysql_user = 'threadfix'
@@ -22,9 +22,9 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone %s -b 1.2rc3' % source_code_loc)
+        result = local('git clone %s -b 1.2final' % source_code_loc)
         with lcd("threadfix"):
-            result2 = local('git checkout tags/1.2rc3')
+            result2 = local('git checkout tags/1.2final-tag')
     if (result.failed or result2.failed) and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 

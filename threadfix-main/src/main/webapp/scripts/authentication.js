@@ -9,6 +9,11 @@ $(document).ready(
 			$("#password").attr("disabled", "disabled");
 			$('#projectList').html('');
 			$("#projectList").attr("disabled", "disabled");
+			$('#jsonLink').css("display","none");
+			$('#submitDTModal').css("display","");
+		}else{
+			$('#jsonLink').css("display","");
+			$('#submitDTModal').css("display","none");
 		}
 		
 		if (element2.length === 0) {
@@ -28,10 +33,14 @@ $(document).ready(
 						$("#username").attr("disabled", "disabled");
 						$("#password").attr("disabled", "disabled");
 						$("#projectList").attr("disabled", "disabled");
+						$('#jsonLink').css("display","none");
+						$('#submitDTModal').css("display","");
 					} else {
 						$("#username").removeAttr("disabled");
 						$("#password").removeAttr("disabled");
 						$("#projectname").html("Product Name:");
+						$('#jsonLink').css("display","");
+						$('#submitDTModal').css("display","none");
 					}
 				});
 	});
@@ -110,6 +119,8 @@ showResponse = function(type, text, element) {
 					$('#projectList').removeAttr("disabled");
 					$('#jsonLink').css("display","none");
 					$('#submitDTModal').css("display","");
+					$('#projectList').css("display","");
+					$('#projectname').css("display","");
 					
 					var product_array = json.names.split(",");
 					for ( var i = 0; i < product_array.length; i++) {

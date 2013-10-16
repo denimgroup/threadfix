@@ -47,8 +47,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
@@ -60,6 +62,7 @@ public class AddDefectTrackerController {
 
 	private DefectTrackerService defectTrackerService;
 	private ApplicationService applicationService;
+	private PermissionService permissionService;
 	
 	public AddDefectTrackerController(){}
 	
@@ -67,9 +70,11 @@ public class AddDefectTrackerController {
 
 	@Autowired
 	public AddDefectTrackerController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService) {
+			DefectTrackerService defectTrackerService, PermissionService permissionService) {
 		this.defectTrackerService = defectTrackerService;
 		this.applicationService = applicationService;
+		this.permissionService = permissionService;
+	
 	}
 
 	@InitBinder
@@ -167,7 +172,7 @@ public class AddDefectTrackerController {
 				model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
 				model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 				model.addAttribute("defectTracker", new DefectTracker());
-				
+				permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 				return "ajaxSuccessHarness";
 			}
 		}

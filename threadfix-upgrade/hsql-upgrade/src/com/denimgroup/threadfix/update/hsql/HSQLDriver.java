@@ -122,6 +122,14 @@ public class HSQLDriver {
 	        	System.out.println("Dependency Check is present, not running 1_2rc3.sql.");
 	        }
 	        
+	        // 1.2final
+	        if (!channelVulnExists("Business Logic Errors", "Veracode")) {
+	        	System.out.println("1.2 Final vulnerabilities not found, running rc3-final.sql");
+	        	db.runSQLFile("rc3-final.sql");
+	        } else {
+	        	System.out.println("1.2 Final vulnerabilities were found, not running rc3-final.sql.");
+		    }
+	        
         } finally {
         
 	        // Shut it down
