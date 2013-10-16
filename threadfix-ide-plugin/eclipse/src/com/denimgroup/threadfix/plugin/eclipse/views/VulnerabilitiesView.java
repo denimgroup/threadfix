@@ -43,6 +43,5 @@ public class VulnerabilitiesView extends MarkerSupportView {
 	
 	public VulnerabilitiesView() {
 		super(MARKER_GENERATOR_ID);
-		
 	}
 }
