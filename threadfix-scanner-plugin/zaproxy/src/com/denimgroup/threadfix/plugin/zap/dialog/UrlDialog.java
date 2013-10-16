@@ -1,4 +1,4 @@
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap.dialog;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

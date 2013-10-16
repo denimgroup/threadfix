@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap.action;
 
 import java.io.File;
 
@@ -30,6 +30,8 @@ import javax.swing.JMenuItem;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
+
+import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
 
 public class ImportAction extends JMenuItem {
 

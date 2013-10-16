@@ -1,4 +1,4 @@
-package org.zaproxy.zap.extension.threadfix;
+package com.denimgroup.threadfix.plugin.zap.dialog;
 
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
