@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.zap;
+package org.zaproxy.zap.extension.threadfix;
 
 import java.net.MalformedURLException;
 import java.net.URL;

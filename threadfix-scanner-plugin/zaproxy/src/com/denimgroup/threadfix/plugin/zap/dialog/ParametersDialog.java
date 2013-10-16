@@ -11,8 +11,7 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
-
-import com.denimgroup.threadfix.plugin.zap.ThreadFixPropertiesManager;
+import org.zaproxy.zap.extension.threadfix.ThreadFixPropertiesManager;
 
 public class ParametersDialog {
 

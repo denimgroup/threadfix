@@ -28,12 +28,8 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.zaproxy.zap.extension.threadfix.ThreadFixPropertiesManager;
 
-import com.denimgroup.threadfix.plugin.zap.ThreadFixPropertiesManager;
-
-/**
- * Created by mac on 9/23/13.
- */
 public class RestUtils {
 
     private static Logger logger = Logger.getLogger(ReportGenerator.class);
@@ -156,9 +152,12 @@ public class RestUtils {
      *
      */
     public static class AcceptAllTrustManager implements X509TrustManager {
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-        public X509Certificate[] getAcceptedIssuers() { return null; }
+        @Override
+		public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+        @Override
+		public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+        @Override
+		public X509Certificate[] getAcceptedIssuers() { return null; }
     }
 
     public static class AcceptAllTrustFactory implements ProtocolSocketFactory {
@@ -189,11 +188,13 @@ public class RestUtils {
             return this.sslContext;
         }
 
-        public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) throws IOException {
+        @Override
+		public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) throws IOException {
             return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
         }
 
-        public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, final HttpConnectionParams params) throws IOException {
+        @Override
+		public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, final HttpConnectionParams params) throws IOException {
             if(params == null) {
                 throw new IllegalArgumentException("Parameters may not be null");
             }
@@ -215,7 +216,8 @@ public class RestUtils {
             }
         }
 
-        public Socket createSocket(String host, int port) throws IOException {
+        @Override
+		public Socket createSocket(String host, int port) throws IOException {
             return getSSLContext().getSocketFactory().createSocket(host, port);
         }
 
