@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.plugin.eclipse.rest.VulnerabilityMarkerService;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
+import com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -69,6 +70,8 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 		VulnerabilityMarkerUtils.clearAllMarkers();
 		
 		VulnerabilityMarkerUtils.addMarkersToFiles(vulnerabilityMarkers, files);
+		
+		VulnerabilitiesView.showView();
 	}
 	
 	/**
