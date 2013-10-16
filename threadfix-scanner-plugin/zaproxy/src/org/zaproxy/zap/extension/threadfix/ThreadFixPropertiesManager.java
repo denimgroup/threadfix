@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.zap;
+package org.zaproxy.zap.extension.threadfix;
 
 import org.apache.log4j.Logger;
 
