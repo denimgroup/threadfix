@@ -48,7 +48,19 @@ public class EndpointsAction extends JMenuItem {
 	
 		                for (String line : csv.split("\n")) {
 		                    if (line != null && line.contains(",")) {
-		                        nodes.add(line.split(",")[1]);
+		                    	String endPoint = line.split(",")[1];
+		                    	if(endPoint.startsWith("/")){
+		                    		endPoint = endPoint.substring(1);
+		                    	}
+		                        nodes.add(endPoint);
+		                        String params = line.split(",")[2];
+		                        if(!params.equals("[]")){
+		                        	params = params.substring(1,params.length()-1);
+		                        	for(String p : params.split(" ")){
+		                        		nodes.add(endPoint+"?"+p+"=true");
+		                        	}
+		                        	
+		                        }
 		                    }
 		                }
 		                
@@ -56,6 +68,9 @@ public class EndpointsAction extends JMenuItem {
 		
 		                if (url != null) { // cancel not pressed
 			                try {
+			                	if(!url.substring(url.length()-1).equals("/")){
+			                		url = url+"/";
+			                	}
 			                    attack(new URL(url));
 			                    completed = true;
 			                } catch (MalformedURLException e1) {

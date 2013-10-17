@@ -167,7 +167,9 @@ public class JSPParameterParser implements EventBasedTokenizer {
 			break;
 		case NO_VARIABLE:
 			if (stringValue != null) {
-				parameterToLineNumbersMap.put(stringValue, new ArrayList<Integer>());
+				if (!parameterToLineNumbersMap.containsKey(stringValue)) {
+					parameterToLineNumbersMap.put(stringValue, new ArrayList<Integer>());
+				}
 				parameterToLineNumbersMap.get(stringValue).add(lineNumber);
 				state = State.START;
 			}
