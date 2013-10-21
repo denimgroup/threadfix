@@ -6,6 +6,33 @@
   <name>ThreadFix Scan Agent</name>
   <description>Scan agent for the ThreadFix application vulnerability management platform</description>
   
+  <build>
+	<sourceDirectory>src</sourceDirectory>
+	<plugins>
+		<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>1.7</source>
+				<target>1.7</target>
+			</configuration>
+		</plugin>
+		<plugin>
+	      <artifactId>maven-assembly-plugin</artifactId>
+	      <configuration>
+	        <archive>
+	          <manifest>
+	            <mainClass>com.denimgroup.threadfix.scanagent.ScanAgentRunner</mainClass>
+	          </manifest>
+	        </archive>
+	        <descriptorRefs>
+	          <descriptorRef>jar-with-dependencies</descriptorRef>
+	        </descriptorRefs>
+	      </configuration>
+	    </plugin>
+	</plugins>
+  </build>
+ 
   <organization>
   	<name>Denim Group, Ltd.</name>
   	<url>http://www.denimgroup.com/</url>
