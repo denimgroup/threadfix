@@ -84,52 +84,59 @@ public class FindingServiceImpl implements FindingService {
 	
 	@Override
 	public void validateManualFinding(Finding finding, BindingResult result) {
+		
+		
 		if (finding == null || ((finding.getChannelVulnerability() == null) || 
 				(finding.getChannelVulnerability().getCode() == null) ||
 				(finding.getChannelVulnerability().getCode().isEmpty()))) {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
-		} else if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
+		} else {
+			String code = finding.getChannelVulnerability().getCode();
+			finding.getChannelVulnerability().setCode(code.substring(0, code.indexOf("(CWE")).trim());
 			
-			boolean wasNumeric = false;
-			
-			// Try to parse an ID from the string and use that
-			ChannelVulnerability newChannelVuln = null;
-			try {
-				Integer requestedId = Integer.valueOf(finding.getChannelVulnerability().getCode());
-				
-				if (requestedId != null) {
-					wasNumeric = true;
-					String cweName = null;
-					ChannelType manualType = null;
-					GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
-					if (genericVulnerability != null) {
-						cweName = genericVulnerability.getName();
-						if (cweName != null) {
-							manualType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
-							if (manualType != null) {
-								newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
+			if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
+
+				boolean wasNumeric = false;
+
+				// Try to parse an ID from the string and use that
+				ChannelVulnerability newChannelVuln = null;
+				try {
+					Integer requestedId = Integer.valueOf(finding.getChannelVulnerability().getCode());
+
+					if (requestedId != null) {
+						wasNumeric = true;
+						String cweName = null;
+						ChannelType manualType = null;
+						GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
+						if (genericVulnerability != null) {
+							cweName = genericVulnerability.getName();
+							if (cweName != null) {
+								manualType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+								if (manualType != null) {
+									newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
+								}
 							}
 						}
+
+						if (newChannelVuln != null) {
+							// id lookup success, set the name to the actual name instead of the id.
+							finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
+						}
 					}
-					
-					if (newChannelVuln != null) {
-						// id lookup success, set the name to the actual name instead of the id.
-						finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
-					}
+
+				} catch (NumberFormatException e) {
+					log.info("The code passed in was not a valid manual name and was not a number.");
 				}
-				
-			} catch (NumberFormatException e) {
-				log.info("The code passed in was not a valid manual name and was not a number.");
-			}
-			
-			if (newChannelVuln == null) {
-				// ID lookup failed
-				if (wasNumeric) {
-					result.rejectValue("channelVulnerability.code", null, null, "The supplied ID was invalid." +
-							" Please enter a valid CWE name or ID from http://cwe.mitre.org/");
-				} else {
-					result.rejectValue("channelVulnerability.code", null, null, "The supplied name was invalid. " +
-							"Please enter a valid CWE name or ID (example: 79) from http://cwe.mitre.org/");
+
+				if (newChannelVuln == null) {
+					// ID lookup failed
+					if (wasNumeric) {
+						result.rejectValue("channelVulnerability.code", null, null, "The supplied ID was invalid." +
+								" Please enter a valid CWE name or ID from http://cwe.mitre.org/");
+					} else {
+						result.rejectValue("channelVulnerability.code", null, null, "The supplied name was invalid. " +
+								"Please enter a valid CWE name or ID (example: 79) from http://cwe.mitre.org/");
+					}
 				}
 			}
 		}
@@ -420,5 +427,10 @@ public class FindingServiceImpl implements FindingService {
 	public List<ChannelSeverity> getManualSeverities() {
 		ChannelType channelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
 		return channelSeverityDao.retrieveByChannel(channelType);
+	}
+
+	@Override
+	public List<String> getAllManualUrls(Integer appId) {
+		return findingDao.retrieveManualUrls(appId);
 	}
 }

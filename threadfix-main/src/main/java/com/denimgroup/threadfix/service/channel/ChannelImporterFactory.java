@@ -23,13 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 
@@ -39,29 +34,9 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
  *
  */
 public class ChannelImporterFactory {
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	
-	/**
-	 * @param channelTypeDao
-	 * @param channelVulnerabilityDao
-	 * @param channelSeverityDao
-	 * @param genericVulnerabilityDao
-	 * @param vulnerabilityMapLogDao
-	 */
-	@Autowired
-	public ChannelImporterFactory(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-	}
-
+	private ChannelImporterFactory(){}
+	
 	/**
 	 * Returns a ChannelImporter implementation based on the channel name
 	 * 
@@ -69,7 +44,7 @@ public class ChannelImporterFactory {
 	 * @return
 	 */
 	@Transactional
-	public ChannelImporter getChannelImporter(ApplicationChannel applicationChannel) {
+	public static ChannelImporter getChannelImporter(ApplicationChannel applicationChannel) {
 
 		if (applicationChannel == null || applicationChannel.getChannelType() == null
 				|| applicationChannel.getChannelType().getName() == null
@@ -80,66 +55,45 @@ public class ChannelImporterFactory {
 		ChannelImporter channelImporter = null;
 		String channelName = applicationChannel.getChannelType().getName();
 
-
-		if (channelName.equals(ChannelType.ACUNETIX_WVS)){
-			channelImporter = new AcunetixChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.APPSCAN_DYNAMIC)) {
-			channelImporter = new AppScanWebImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, genericVulnerabilityDao);
-		} else if (channelName.equals(ChannelType.ARACHNI)){
-			channelImporter = new ArachniChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.BRAKEMAN)){
-			channelImporter = new BrakemanChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.BURPSUITE)) {
-			channelImporter = new BurpSuiteChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.CAT_NET)) {
-			channelImporter = new CatNetChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.FINDBUGS)){
-			channelImporter = new FindBugsChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.FORTIFY)) {
-			channelImporter = new FortifyChannelImporter(channelTypeDao, channelVulnerabilityDao,
-					channelSeverityDao, genericVulnerabilityDao);
-		} else if (channelName.equals(ChannelType.NESSUS)){
-			channelImporter = new NessusChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.NTO_SPIDER)){
-			channelImporter = new NTOSpiderChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.NETSPARKER)) {
-			channelImporter = new NetsparkerChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.SKIPFISH)) {
-			channelImporter = new SkipfishChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.W3AF)) {
-			channelImporter = new W3afChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.WEBINSPECT)) {
-			channelImporter = new WebInspectChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.ZAPROXY)){
-			channelImporter = new ZaproxyChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao, genericVulnerabilityDao);
-		} else if (channelName.equals(ChannelType.APPSCAN_SOURCE)){
-			channelImporter = new AppScanSourceChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.APPSCAN_ENTERPRISE)){
-			channelImporter = new AppScanEnterpriseChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.DEPENDENCY_CHECK)){
-			channelImporter = new DependencyCheckChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao);
-		} else if (channelName.equals(ChannelType.MANUAL)){
-			channelImporter = new SSVLChannelImporter(channelTypeDao,
-					channelVulnerabilityDao, channelSeverityDao, genericVulnerabilityDao);
-		} else {
-			return null;
+		switch (channelName) {
+			case ChannelType.ACUNETIX_WVS:
+				channelImporter = new AcunetixChannelImporter();          break;
+			case ChannelType.APPSCAN_DYNAMIC:
+				channelImporter = new AppScanWebImporter();               break;
+			case ChannelType.APPSCAN_ENTERPRISE:
+				channelImporter = new AppScanEnterpriseChannelImporter(); break;
+			case ChannelType.APPSCAN_SOURCE:
+				channelImporter = new AppScanSourceChannelImporter();     break;
+			case ChannelType.ARACHNI:
+				channelImporter = new ArachniChannelImporter();           break;
+			case ChannelType.BRAKEMAN:
+				channelImporter = new BrakemanChannelImporter();          break;
+			case ChannelType.BURPSUITE:
+				channelImporter = new BurpSuiteChannelImporter();         break;
+			case ChannelType.CAT_NET:
+				channelImporter = new CatNetChannelImporter();            break;
+			case ChannelType.FINDBUGS:
+				channelImporter = new FindBugsChannelImporter();          break;
+			case ChannelType.FORTIFY:
+				channelImporter = new FortifyChannelImporter();           break;
+			case ChannelType.NESSUS:
+				channelImporter = new NessusChannelImporter();            break;
+			case ChannelType.NETSPARKER:
+				channelImporter = new NetsparkerChannelImporter();        break;
+			case ChannelType.NTO_SPIDER:
+				channelImporter = new NTOSpiderChannelImporter();         break;
+			case ChannelType.SKIPFISH:
+				channelImporter = new SkipfishChannelImporter();          break;
+			case ChannelType.W3AF:
+				channelImporter = new W3afChannelImporter();              break;
+			case ChannelType.WEBINSPECT:
+				channelImporter = new WebInspectChannelImporter();        break;
+			case ChannelType.ZAPROXY:
+				channelImporter = new ZaproxyChannelImporter();           break;
+			case ChannelType.DEPENDENCY_CHECK:
+				channelImporter = new DependencyCheckChannelImporter();   break;
+			case ChannelType.MANUAL:
+				channelImporter = new SSVLChannelImporter();              break;
 		}
 		
 		if (channelImporter != null) {

@@ -108,5 +108,8 @@ public class GenericSeverity extends BaseEntity {
 		this.intValue = intValue;
 	}
 	
-	public String toString() { return name; }
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

@@ -9,9 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Dependency;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -28,14 +25,8 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	}
 
 	@Autowired
-	public DependencyCheckChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		setChannelType(ChannelType.MANUAL);
+	public DependencyCheckChannelImporter() {
+		super(ChannelType.MANUAL);
 	}
 	
 	@Override
@@ -65,7 +56,8 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void startElement (String uri, String name,
+	    @Override
+		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
 	    	if ("reportDate".equals(qName)) {
@@ -78,11 +70,12 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void endElement (String uri, String name, String qName)
+	    @Override
+		public void endElement (String uri, String name, String qName)
 	    {
 	    	if ("vulnerability".equals(qName)) {
 	    		updateVulnCode(findingMap);
-	    		Finding finding = constructFinding(findingMap); 
+	    		Finding finding = constructFinding(findingMap);
 	    		Dependency dependency = new Dependency();
 	    		dependency.setCve(findingMap.get(FindingKey.CVE));
 	    		finding.setDependency(dependency);
@@ -96,19 +89,20 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
-	    	} 
+	    	}
 	    	
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString); 
+	    			date = getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
 	    		}
 	    		getDate = false;
-	    	} 
+	    	}
 	    }
 
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
 	    	if (getDate || itemKey != null) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
@@ -140,25 +134,29 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 		private boolean getDate = false;
 		
 	    private void setTestStatus() {
-	    	if (!correctFormat)
-	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
-	    		testStatus = checkTestDate();
-	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
-	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	    	if (!correctFormat) {
+				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+			} else if (hasDate) {
+				testStatus = checkTestDate();
+			}
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
+				testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+			} else if (testStatus == null) {
+				testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+			}
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 	    
-	    public void endDocument() {
+	    @Override
+		public void endDocument() {
 	    	setTestStatus();
 	    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if ("analysis".equals(qName)) {
 	    		correctFormat = true;
 	    	}
@@ -174,7 +172,8 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void endElement(String uri, String name, String qName) {
+	    @Override
+		public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 
@@ -187,7 +186,8 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 	    
-	    public void characters (char ch[], int start, int length) {
+	    @Override
+		public void characters (char ch[], int start, int length) {
 	    	if (getDate) {
 	    		addTextToBuilder(ch, start, length);
 	    	}

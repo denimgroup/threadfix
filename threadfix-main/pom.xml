@@ -1,10 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.denimgroup</groupId>
+
+	<parent>
+        <groupId>com.denimgroup.threadfix</groupId>
+        <artifactId>master-pom</artifactId>
+        <version>2.0M1-SNAPSHOT</version>
+    </parent>
+
 	<artifactId>threadfix</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>threadfix</name>
 	<description>ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with vulnerability trending reports that show progress over time, giving them justification for their efforts.
 
@@ -82,6 +87,42 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<filters>
 		</filters>
 		<plugins>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-jar-plugin</artifactId>
+	            <version>2.4</version>
+	            <executions>
+	                <execution>
+	                    <id>make-a-jar</id>
+	                    <phase>compile</phase>
+	                    <goals>
+	                        <goal>jar</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	        </plugin>       
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-install-plugin</artifactId>
+	            <version>2.4</version>
+	            <executions>
+	                <execution>
+	                    <phase>install</phase>
+	                    <goals>
+	                        <goal>install-file</goal>
+	                    </goals>
+	                    <configuration>
+	                        <packaging>jar</packaging>
+	                        <artifactId>${project.artifactId}</artifactId>
+	                        <groupId>${project.groupId}</groupId>
+	                        <version>${project.version}</version>
+	                        <file>
+	                            ${project.build.directory}/${project.artifactId}-${project.version}.jar
+	                        </file>
+	                    </configuration>
+	                </execution>
+	            </executions>
+	        </plugin> 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -445,6 +486,16 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<artifactId>cglib</artifactId>
 			<version>${cglib.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>${jgit.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-cli</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>
@@ -522,6 +573,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<itext.version>2.1.7</itext.version>
 		<jasperreports.version>4.5.0</jasperreports.version>
 		<javassist.version>3.12.0.GA</javassist.version>
+		<jgit.version>2.3.1.201302201838-r</jgit.version>
 		<jstl.version>1.2</jstl.version>
 		<jta.version>1.1</jta.version>
 		<log4j.version>1.2.16</log4j.version>
@@ -538,8 +590,8 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<!-- Testing dependency versions -->
 		<easymock.version>3.0</easymock.version>
 		<hsqldb.version>1.8.0.10</hsqldb.version>
-		<mysql.version>5.1.10</mysql.version>
 		<junit.version>4.11</junit.version>
+		<mysql.version>5.1.26</mysql.version>
 		<selenium-client.version>1.0.2</selenium-client.version>
 
 		<!-- Plugin versions -->
@@ -556,4 +608,5 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 	<issueManagement>
 		<system>https://code.google.com/p/threadfix/issues/list</system>
 	</issueManagement>
+	
 </project>

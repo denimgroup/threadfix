@@ -66,8 +66,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 	
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
+	private StaticPathInformation staticPathInformation;
 	
 	private int numberMergedResults = 1;
+	private Integer entryPointLineNumber = -1;
 	
 	@Size(max = SOURCE_FILE_LOCATION_LENGTH, message = "{errors.maxlength} " + SOURCE_FILE_LOCATION_LENGTH + ".")
 	private String sourceFileLocation;
@@ -80,10 +82,12 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
 	
+	private String calculatedUrlPath, calculatedFilePath;
 	private Dependency dependency;
 
 	@Override
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "vulnerabilityId")
 	public Vulnerability getVulnerability() {
 		return vulnerability;
@@ -152,7 +156,17 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setSurfaceLocation(SurfaceLocation surfaceLocation) {
 		this.surfaceLocation = surfaceLocation;
 	}
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "staticPathInformationId")
+	public StaticPathInformation getStaticPathInformation() {
+		return staticPathInformation;
+	}
 
+	public void setStaticPathInformation(StaticPathInformation staticPathInformation) {
+		this.staticPathInformation = staticPathInformation;
+	}
+	
 	@OneToMany(mappedBy = "finding")
 	@Cascade( { org.hibernate.annotations.CascadeType.ALL } )
 	@OrderBy("sequence DESC")
@@ -193,15 +207,44 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 	
 	@Column
+	public String getCalculatedUrlPath() {
+		return calculatedUrlPath;
+	}
+
+	public void setCalculatedUrlPath(String calculatedUrlPath) {
+		this.calculatedUrlPath = calculatedUrlPath;
+	}
+
+	@Column
+	public String getCalculatedFilePath() {
+		return calculatedFilePath;
+	}
+
+	public void setCalculatedFilePath(String calculatedFilePath) {
+		this.calculatedFilePath = calculatedFilePath;
+	}
+	
+	@Column
 	public void setNumberMergedResults(int numMergedResults) {
 		this.numberMergedResults = numMergedResults;
 	}
 	
-	@Column
 	public int getNumberMergedResults() {
 		return numberMergedResults;
 	}
+	
+	@Column
+	public Integer getEntryPointLineNumber() {
+		if (entryPointLineNumber == null) {
+			return -1;
+		}
+		return entryPointLineNumber;
+	}
 
+	public void setEntryPointLineNumber(Integer entryPointLineNumber) {
+		this.entryPointLineNumber = entryPointLineNumber;
+	}
+	
 	@ManyToOne
 	@JoinColumn(name = "userId")
 	public User getUser() {
@@ -248,5 +291,5 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
 	}
-	
+
 }

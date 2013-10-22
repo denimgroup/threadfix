@@ -37,7 +37,7 @@
 		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
 	</variable>
 	<variable name="totalCount" class="java.lang.Integer">
-		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount}]]></variableExpression>
+		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount} + $V{infoCount}]]></variableExpression>
 	</variable>
 	<variable name="highAgeSum" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
@@ -191,7 +191,6 @@
 			<staticText>
 				<reportElement x="110" y="120" width="60" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -233,7 +232,6 @@
 			<textField>
 				<reportElement x="170" y="120" width="45" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -265,7 +263,6 @@
 			<textField>
 				<reportElement x="215" y="80" width="60" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -276,7 +273,6 @@
 			<textField>
 				<reportElement x="215" y="60" width="60" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -287,7 +283,6 @@
 			<textField>
 				<reportElement x="215" y="100" width="60" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -298,7 +293,6 @@
 			<textField>
 				<reportElement x="215" y="120" width="60" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -350,7 +344,6 @@
 			<textField>
 				<reportElement x="275" y="120" width="75" height="20"/>
 				<box>
-					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
 					<rightPen lineWidth="0.75" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">

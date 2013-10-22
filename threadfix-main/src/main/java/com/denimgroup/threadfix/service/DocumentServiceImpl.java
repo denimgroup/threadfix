@@ -53,6 +53,7 @@ public class DocumentServiceImpl implements DocumentService {
 	private ApplicationDao applicationDao;
 	private VulnerabilityDao vulnerabilityDao;
 	private DocumentDao documentDao;
+	private ContentTypeServiceImpl contentTypeService = new ContentTypeServiceImpl();
 	
 	@Autowired
 	public DocumentServiceImpl(DocumentDao documentDao,
@@ -63,8 +64,30 @@ public class DocumentServiceImpl implements DocumentService {
 		this.vulnerabilityDao = vulnerabilityDao;
 	}
 
+	/**
+	 * Save a file associated with an app and use the default filename from the MultipartFile
+	 * 
+	 * @param appId ID for the app to attach the file to
+	 * @param file file to associate with app
+	 * @return filename that was saved
+	 */
 	@Override
 	public String saveFileToApp(Integer appId, MultipartFile file) {
+		String retVal = saveFileToApp(appId, file, null);
+		return(retVal);
+	}
+	
+	
+	/**
+	 * Save a file associated with an app with a given filename
+	 * 
+	 * @param appId ID for the app to attach the file to
+	 * @param file file to associate with app
+	 * @param overrideFilename filename to use for the file (versus the default filename in the MultipartFile)
+	 * @return filename that was saved
+	 */
+	@Override
+	public String saveFileToApp(Integer appId, MultipartFile file, String overrideFilename) {
 		if (appId == null || file == null) {
 			log.warn("The document upload file failed to save, it had null input.");
 			return null;
@@ -77,19 +100,36 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
+		if (!contentTypeService.isValidUpload(file.getContentType())){
+			log.warn("Invalid filetype for upload: "+file.getContentType());
+			return null;
+		}
+		
 		Document doc = new Document();
-		String fileFullName = file.getOriginalFilename();
+		String fileFullName;
+		
+		if(overrideFilename != null) {
+			fileFullName = overrideFilename;
+		} else {
+			fileFullName = file.getOriginalFilename();
+		}
 		doc.setApplication(application);
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
-		doc.setContentType(file.getContentType());
+		if(!doc.getType().equals("json")){
+			doc.setContentType(contentTypeService.translateContentType(file.getContentType()));	
+		}else{
+			doc.setContentType(contentTypeService.translateContentType("json"));
+		}
+
 		try {
 			Blob blob = new SerialBlob(file.getBytes());
 			doc.setFile(blob);
 
 			List<Document> appDocs = application.getDocuments();
-			if (appDocs == null) 
+			if (appDocs == null) {
 				appDocs = new ArrayList<Document>();
+			}
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);
@@ -110,6 +150,11 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
+		if (!contentTypeService.isValidUpload(file.getContentType())){
+			log.warn("Invalid filetype for upload: "+file.getContentType());
+			return null;
+		}
+		
 		Vulnerability vulnerability = vulnerabilityDao.retrieveById(vulnId);
 		
 		if (vulnerability == null) {
@@ -122,7 +167,7 @@ public class DocumentServiceImpl implements DocumentService {
 		doc.setVulnerability(vulnerability);
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
-		doc.setContentType(file.getContentType());
+		doc.setContentType(contentTypeService.translateContentType(file.getContentType()));
 		try {
 			Blob blob = new SerialBlob(file.getBytes());
 			doc.setFile(blob);
@@ -171,6 +216,10 @@ public class DocumentServiceImpl implements DocumentService {
 		
 		return null;
 		
+	}
+	@Override
+	public ContentTypeService getContentTypeService(){
+		return contentTypeService;
 	}
 	
 	private String getFileName(String fullName) {

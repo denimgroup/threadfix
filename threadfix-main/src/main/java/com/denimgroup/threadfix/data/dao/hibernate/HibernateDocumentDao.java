@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.DocumentDao;
+import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.entities.Document;
 
 /**
@@ -59,6 +60,30 @@ public class HibernateDocumentDao implements DocumentDao {
 	@Override
 	public Document retrieveById(Integer docId) {
 		return (Document) sessionFactory.getCurrentSession().get(Document.class, docId);
+	}
+	
+	/**
+	 * TOFIX - Clean up the way we're using this because this should currently only be used for
+	 * ScanAgent configuration storage, and that is kind of a misuse of the Document object.
+	 * 
+	 * @param appId
+	 * @param filename
+	 * @param extension
+	 * @return
+	 */
+	@Override
+	public Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension) {
+		Document retVal;
+		
+		retVal = (Document) sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"from Document document "
+								+ "where document.application.id = :appId and document.name = :name and document.type = :type")
+				.setInteger("appId", appId).setString("name", filename).setString("type", extension)
+				.uniqueResult();
+		
+		return(retVal);
 	}
 
 	@Override

@@ -38,9 +38,6 @@ import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -59,9 +56,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
-	private ChannelTypeDao channelTypeDao = null;
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
 	private ScanMergeService scanMergeService = null;
 	private ApplicationDao applicationDao = null;
@@ -69,17 +63,12 @@ public class RemoteProviderApplicationServiceImpl implements
 	private QueueSender queueSender = null;
 	
 	@Autowired
-	public RemoteProviderApplicationServiceImpl(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
+	public RemoteProviderApplicationServiceImpl(
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ScanMergeService scanMergeService,
 			ApplicationDao applicationDao,
 			QueueSender queueSender,
 			ApplicationChannelDao applicationChannelDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.scanMergeService = scanMergeService;
 		this.applicationDao = applicationDao;
@@ -105,8 +94,8 @@ public class RemoteProviderApplicationServiceImpl implements
 	@Override
 	public void updateApplications(RemoteProviderType remoteProviderType) {
 
-		List<RemoteProviderApplication> newApps = getRemoteProviderFactory()
-				.fetchApplications(remoteProviderType);
+		List<RemoteProviderApplication> newApps =
+				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		// We can't use remoteProviderType.getRemoteProviderApplications() 
 		// because the old session is closed
@@ -154,7 +143,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		}
 		
 		List<RemoteProviderApplication> newApps = 
-				getRemoteProviderFactory().fetchApplications(remoteProviderType);
+				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		if (newApps == null || newApps.size() == 0) {
 			return null;
@@ -213,7 +202,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (remoteProviderApplication == null)
 			return ResponseCode.ERROR_OTHER;
 		
-		List<Scan> resultScans = getRemoteProviderFactory().fetchScans(remoteProviderApplication);
+		List<Scan> resultScans = RemoteProviderFactory.fetchScans(remoteProviderApplication);
 		
 		ResponseCode success = ResponseCode.ERROR_OTHER;
 		if (resultScans != null && resultScans.size() > 0) {
@@ -285,11 +274,6 @@ public class RemoteProviderApplicationServiceImpl implements
 		return success;
 	}
 	
-	private RemoteProviderFactory getRemoteProviderFactory() {
-		return new RemoteProviderFactory(channelTypeDao, 
-				channelVulnerabilityDao, channelSeverityDao);
-	}
-
 	@Override
 	public String processApp(BindingResult result, 
 			RemoteProviderApplication remoteProviderApplication, Application application) {
@@ -406,8 +390,10 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (rpAppList != null && !rpAppList.isEmpty()) {
 			
 			for (RemoteProviderApplication rpa: rpAppList) {
-				if (rpa.getRemoteProviderType().getId() == remoteProviderApplication.getRemoteProviderType().getId()) {
-					if (rpa.getApplicationChannel().getScanList() != null && !rpa.getApplicationChannel().getScanList().isEmpty()) 
+				if (rpa.getRemoteProviderType().getId().equals(
+						remoteProviderApplication.getRemoteProviderType().getId())) {
+					if (rpa.getApplicationChannel().getScanList() != null && 
+							!rpa.getApplicationChannel().getScanList().isEmpty()) 
 						returnStr = "But this application has Scans associated with the Remote Provider Application!";
 				}
 			}

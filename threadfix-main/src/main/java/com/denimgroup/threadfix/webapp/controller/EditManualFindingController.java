@@ -22,9 +22,9 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.ScanMergeService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/manual/{findingId}")
@@ -35,15 +35,15 @@ public class EditManualFindingController {
 	
 	private FindingService findingService = null;
 	private PermissionService permissionService = null;
-	private ScanMergeService scanMergeService = null;
+	private ManualFindingService manualFindingService = null;
 	
 	@Autowired
 	public EditManualFindingController(PermissionService permissionService, 
 			FindingService findingService,
-			ScanMergeService scanMergeService) {
+			ManualFindingService manualFindingService) {
 		this.findingService = findingService;
 		this.permissionService = permissionService;
-		this.scanMergeService = scanMergeService;
+		this.manualFindingService = manualFindingService;
 	}
 	
 	public boolean isManual(Finding finding) {
@@ -120,7 +120,7 @@ public class EditManualFindingController {
 		} else {
 
 			finding.setIsStatic(true);
-			boolean mergeResult = scanMergeService.processManualFindingEdit(finding, appId);
+			boolean mergeResult = manualFindingService.processManualFindingEdit(finding, appId);
 			
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");
@@ -167,7 +167,7 @@ public class EditManualFindingController {
 				}
 			}
 			
-			boolean mergeResult = scanMergeService.processManualFindingEdit(finding, appId);
+			boolean mergeResult = manualFindingService.processManualFindingEdit(finding, appId);
 			
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");

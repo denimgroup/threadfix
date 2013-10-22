@@ -64,20 +64,30 @@ public class HttpRestUtils {
 	
 	public final String API_KEY_ERROR = "Authentication failed, check your API Key.";
 	
+	//	TODO - Clean up this durable/not stuff
+	private boolean durable = true;
+	
 	private String url = null;
 	private String key = null;
 	private Properties properties;
 	
-	public String httpPostFile(String request, String fileName, String[] paramNames,
-			String[] paramVals) {
+	public boolean getDurable() {
+		return(this.durable);
+	}
+	
+	public void setDurable(boolean durable) {
+		this.durable = durable;
+	}
+	
+	public String httpPostFile(String request, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
 		return httpPostFile(request, file, paramNames,
 				paramVals);
 	}
 	
-	public String httpPostFile(String request, File file, String[] paramNames,
-			String[] paramVals) {
+	public String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
 		
+		//	TOFIX - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
 		PostMethod filePost = new PostMethod(request);
@@ -99,13 +109,15 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				System.err.println("Request for '" + request + "' status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
 				return IOUtils.toString(responseStream);
+			} else {
+				System.err.println("Response stream was null");
 			}
 
 		} catch (FileNotFoundException e1) {
@@ -121,6 +133,8 @@ public class HttpRestUtils {
 
 	public String httpPost(String request, String[] paramNames,
 			String[] paramVals) {
+		
+		String retVal;
 		
 		Protocol.registerProtocol("https", new Protocol("https", new HttpRestUtils().new AcceptAllTrustFactory(), 443));
 
@@ -138,13 +152,14 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(post);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				System.err.println("Request for '" + request + "' status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
-				return IOUtils.toString(responseStream);
+				retVal = IOUtils.toString(responseStream);
+				return(retVal);
 			}
 
 		} catch (FileNotFoundException e1) {
@@ -249,6 +264,7 @@ public class HttpRestUtils {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
+	//	TODO - Move these from the HttpRestUtils class to somethine cli-specific
 	// These methods help persist the URL and API Key so they don't have to be entered each time.
 	public void setUrl(String url) {
 		writeProperty("url", url);
@@ -258,11 +274,21 @@ public class HttpRestUtils {
 		writeProperty("key", key);
 	}
 	
+	public void setMemoryKey(String key) {
+		this.key = key;
+	}
+	
+	public void setMemoryUrl(String url) {
+		this.url = url;
+	}
+	
 	public String getUrl() {
 		if (url == null) {
 			url = getProperty("url");
 			if (url == null) {
+				System.out.println("Please set your server URL with the command '--set url {url}'");
 				url = "http://localhost:8080/threadfix/rest";
+				System.out.println("Using default of: " + url);
 			}
 		}
 		
@@ -273,7 +299,7 @@ public class HttpRestUtils {
 		if (key == null) {
 			key = getProperty("key");
 			if (key == null) {
-				System.out.println("Please set your API key with the command 's k {key}'");
+				System.err.println("Please set your API key with the command '--set key {key}'");
 			}
 		}
 		
@@ -299,45 +325,58 @@ public class HttpRestUtils {
 	}
 	
 	private void readProperties() {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream("threadfix.properties");
-			if (properties == null) {
-				properties = new Properties();
-			}
-			properties.load(in);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		if (properties == null) {
+			properties = new Properties();
+		}
+		if(durable) {
+			FileInputStream in = null;
+			File propertiesFile = new File("threadfix.properties");
 			try {
-				if (in != null) {
-					in.close();
+				in = new FileInputStream(propertiesFile);
+				if (properties == null) {
+					properties = new Properties();
 				}
-			} catch(IOException e) {
+				properties.load(in);
+			} catch (FileNotFoundException e) {
+				try {
+					System.out.println("Cannot find ThreadFix properties file: " + propertiesFile.getCanonicalPath());
+				} catch(IOException ioe) {
+					System.out.println("Cannot find ThreadFix properties file 'threadfix.properties' IOException encountered while trying.");
+					ioe.printStackTrace();
+				}
+			} catch (IOException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					if (in != null) {
+						in.close();
+					}
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 	
 	private void writeProperties() {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream("threadfix.properties");
-			properties.store(out, "Writing.");
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		if(durable) {
+			FileOutputStream out = null;
 			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch(IOException e) {
+				out = new FileOutputStream("threadfix.properties");
+				properties.store(out, "Writing.");
+				out.close();
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (out != null) {
+						out.close();
+					}
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

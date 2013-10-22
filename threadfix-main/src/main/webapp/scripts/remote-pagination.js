@@ -12,6 +12,10 @@ function refillElementDropDownPage(elementId, endPoint, login) {
 	refillElement(elementId, endPoint, $("#pageInput").val(), login);
 }
 
+function refillElementDropDownPageRemoteProvider(elementId, endPoint, login, inputId) {
+	refillElement(elementId, endPoint, $(inputId).val(), login);
+}
+
 function refillElementSort(elementId, endPoint, page, field, login)
 {
 	sort = 1;

@@ -52,6 +52,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -62,13 +63,17 @@ import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
-@SessionAttributes({"defectTracker", "application", "waf", "defectViewModel"})
+@SessionAttributes({"defectTracker", "application", "waf", "defectViewModel", "scanParametersBean"})
 public class ApplicationsController {
 	
 	public ApplicationsController(){}
@@ -83,6 +88,7 @@ public class ApplicationsController {
 	private PermissionService permissionService;
 	private OrganizationService organizationService;
 	private UserService userService;
+	private ChannelVulnerabilityService channelVulnerabilityService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -92,7 +98,8 @@ public class ApplicationsController {
 			DefectTrackerService defectTrackerService,
 			PermissionService permissionService,
 			OrganizationService organizationService,
-			UserService userService) {
+			UserService userService,
+			ChannelVulnerabilityService channelVulnerabilityService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
@@ -101,6 +108,7 @@ public class ApplicationsController {
 		this.applicationCriticalityService = applicationCriticalityService;
 		this.organizationService = organizationService;
 		this.userService = userService;
+		this.channelVulnerabilityService = channelVulnerabilityService;
 	}
 
 	@InitBinder
@@ -154,11 +162,8 @@ public class ApplicationsController {
 		model.addAttribute("numScansBeforeUpload", numScansBeforeUpload);
 		model.addAttribute("checkForRefresh", checkForRefresh);
 		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
-		model.addAttribute("dynamicPathList", findingService.getRecentDynamicPaths(appId));
-		model.addAttribute("staticPathList", findingService.getRecentStaticPaths(appId));
-		model.addAttribute("dynamicChannelVulnerabilityList", findingService.getRecentDynamicVulnTypes(appId));
-		model.addAttribute("staticChannelVulnerabilityList", findingService.getRecentStaticVulnTypes(appId));
 		model.addAttribute("manualSeverities", findingService.getManualSeverities());
+		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);
 		model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
 		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
@@ -177,11 +182,15 @@ public class ApplicationsController {
 		model.addAttribute("numHiddenVulns", numHiddenVulns);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
+		model.addAttribute("scanParametersBean", ScanParametersBean.getScanParametersBean(application));
+		model.addAttribute("applicationTypes", FrameworkType.values());
+		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
+		model.addAttribute("typeMatchingStrategies", VulnTypeStrategy.values());
 		model.addAttribute("teamList", organizationService.loadAllActive());
 		if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
-		
+		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
 		return "applications/detail";
 	}
 	
@@ -260,9 +269,7 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return "Authentication failed";
 		}
-		
 		String result = dt.getProductNames();
-		
 		if (result == null || result.equals("Authentication failed")) {
 			return "{ \"message\" : \"Authentication failed\", " +
 					"\"error\" : " + JSONObject.quote(dt.getLastError())  + "}";
@@ -328,4 +335,5 @@ public class ApplicationsController {
 		
 		return "ajaxSuccessHarness";
 	}
+
 }

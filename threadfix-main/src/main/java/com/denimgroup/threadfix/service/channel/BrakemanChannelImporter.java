@@ -12,11 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -67,15 +63,8 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		CONFIDENCE_MAP.put("Weak", 0);
 	}
 
-	@Autowired
-	public BrakemanChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.BRAKEMAN);
+	public BrakemanChannelImporter() {
+		super(ChannelType.BRAKEMAN);
 	}
 	
 	public Calendar getDate(String jsonString) {
@@ -85,8 +74,15 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			String dateString = scanInfo.getString("timestamp");
 			return getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy",dateString);
 		} catch (JSONException e) {
-			log.warn("JSON input was probably version 1.", e);
-			return null;
+			try {
+				JSONObject jsonObject = new JSONObject(jsonString);
+				JSONObject scanInfo = jsonObject.getJSONObject("scan_info");
+				String dateString = scanInfo.getString("start_time");
+				return getCalendarFromString("yyyy-MM-dd hh:mm:ss Z",dateString);	
+			} catch (JSONException f){
+				log.warn("JSON input was probably version 1.", f);
+				return null;
+			}
 		}
 	}
 	

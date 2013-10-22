@@ -33,11 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
@@ -58,32 +54,21 @@ public class ScanServiceImpl implements ScanService {
 	private final SanitizedLogger log = new SanitizedLogger("ScanService");
 	
 	private ScanDao scanDao = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
-	private GenericVulnerabilityDao genericVulnerabilityDao = null;
 	private EmptyScanDao emptyScanDao = null;
 	private QueueSender queueSender = null;
 	private PermissionService permissionService = null;
 
 	@Autowired
-	public ScanServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
+	public ScanServiceImpl(ScanDao scanDao,
 			ApplicationChannelDao applicationChannelDao,
 			EmptyScanDao emptyScanDao,
 			PermissionService permissionService,
 			QueueSender queueSender) {
 		this.scanDao = scanDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.emptyScanDao = emptyScanDao;
 		this.queueSender = queueSender;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
 		this.permissionService = permissionService;
 	}
 
@@ -133,11 +118,7 @@ public class ScanServiceImpl implements ScanService {
 			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
 		}
 		
-		ChannelImporterFactory factory = new ChannelImporterFactory(
-				channelTypeDao, channelVulnerabilityDao, channelSeverityDao,
-				genericVulnerabilityDao);
-		
-		ChannelImporter importer = factory.getChannelImporter(channel);
+		ChannelImporter importer = ChannelImporterFactory.getChannelImporter(channel);
 		
 		if (importer == null) {
 			log.warn("No importer could be loaded for the ApplicationChannel.");

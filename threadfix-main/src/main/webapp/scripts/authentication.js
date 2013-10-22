@@ -9,6 +9,11 @@ $(document).ready(
 			$("#password").attr("disabled", "disabled");
 			$('#projectList').html('');
 			$("#projectList").attr("disabled", "disabled");
+			$('#jsonLink').css("display","none");
+			$('#submitDTModal').css("display","");
+		}else{
+			$('#jsonLink').css("display","");
+			$('#submitDTModal').css("display","none");
 		}
 		
 		if (element2.length === 0) {
@@ -28,10 +33,14 @@ $(document).ready(
 						$("#username").attr("disabled", "disabled");
 						$("#password").attr("disabled", "disabled");
 						$("#projectList").attr("disabled", "disabled");
+						$('#jsonLink').css("display","none");
+						$('#submitDTModal').css("display","");
 					} else {
 						$("#username").removeAttr("disabled");
 						$("#password").removeAttr("disabled");
 						$("#projectname").html("Product Name:");
+						$('#jsonLink').css("display","");
+						$('#submitDTModal').css("display","none");
 					}
 				});
 	});
@@ -108,6 +117,10 @@ showResponse = function(type, text, element) {
 					html = 'Connection successful';
 					$('#projectList').html('');
 					$('#projectList').removeAttr("disabled");
+					$('#jsonLink').css("display","none");
+					$('#submitDTModal').css("display","");
+					$('#projectList').css("display","");
+					$('#projectname').css("display","");
 					
 					var product_array = json.names.split(",");
 					for ( var i = 0; i < product_array.length; i++) {
@@ -130,9 +143,17 @@ showResponse = function(type, text, element) {
 	var responseElement = $("#jsonResult");
 	var responseText = '';
 	if (responseElement.length == 0) {
-		responseText = '<em id="jsonResult">' + html + '</em>';
+		if(html=='Connection successful'){
+			responseText = '<div class="alert alert-success" id="jsonResult">' + html + '</div>';
+		}else{
+			responseText = '<div class="alert alert-error" id="jsonResult">' + html + '</div>';
+		}
 	} else {
-		responseText = '<em id="jsonResult2">' + html + '</em>';
+		if(html=='Connection successful'){
+			responseText = '<div class="alert alert-success" id="jsonResult2">' + html + '</div>';
+		}else{
+			responseText = '<div class="alert alert-error" id="jsonResult2">' + html + '</div>';
+		}
 	}
 	
 	var toReplaceDiv = $("#toReplaceDT");

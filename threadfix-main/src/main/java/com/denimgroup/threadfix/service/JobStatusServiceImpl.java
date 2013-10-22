@@ -99,13 +99,15 @@ public class JobStatusServiceImpl implements JobStatusService {
 		if (jobStatus == null) {
 			return;
 		}
+		
+		if (!jobStatus.getHasStartedProcessing()) {
+			jobStatus.setHasStartedProcessing(true);
+		}
 
 		jobStatus.setStatus(status);
 		jobStatus.setModifiedDate(new Date());
 
 		storeJobStatus(jobStatus);
-		
-		jobStatusDao.evict(jobStatus);
 	}
 
 	@Override

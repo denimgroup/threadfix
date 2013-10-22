@@ -22,15 +22,44 @@
 //
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
-
 public class ThreadFixRestClient {
 	
 	HttpRestUtils util = new HttpRestUtils();
+	
+	/**
+	 * Default constructor that will read configuration from a local .properties file
+	 */
+	public ThreadFixRestClient() {
+		
+	}
+	
+	/**
+	 * Custom constructor for when you want to programmatically specify the ThreadFix URL and API key
+	 * 
+	 * @param url URL for the ThreadFix server
+	 * @param apiKey API key to use when accessing the ThreadFix server
+	 */
+	public ThreadFixRestClient(String url, String apiKey) {
+		util.setDurable(false);
+		util.setKey(apiKey);
+		util.setUrl(url);
+	}
 	
 	public String createApplication(String teamId, String name, String url) {
 		String result = util.httpPost(util.getUrl() + "/teams/" + teamId + "/applications/new",
 				new String[] {"apiKey",      "name", "url"},
 				new String[] { util.getKey(), name,   url});
+		
+		return result;
+	}
+	
+	public String setParameters(String appId, String vulnTypeStrategy, 
+			String sourceCodeAccessLevel, String frameworkType, String repositoryUrl) {
+		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/setParameters",
+				new String[] {"apiKey",      
+					"vulnTypeStrategy", "sourceCodeAccessLevel", "frameworkType", "repositoryUrl"},
+				new String[] { util.getKey(), 
+					 vulnTypeStrategy,   sourceCodeAccessLevel,   frameworkType,   repositoryUrl});
 		
 		return result;
 	}
@@ -73,20 +102,32 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
+	/**
+	 * TOFIX - Actually implement this method.
+	 * 
+	 * @param appId
+	 * @param wafId
+	 * @return
+	 */
+	public String addWaf(String appId, String wafId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public String getAllTeams() {
 		String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
 		return result;
 	}
 	
 	public String searchForApplicationById(String id) {
-		String result = util.httpGet(util.getUrl() + "/teams/0/applications/" + id +
+		String result = util.httpGet(util.getUrl() + "/applications/" + id +
 				"?apiKey=" + util.getKey());
 		
 		return result;
 	}
 
 	public String searchForApplicationByName(String name, String teamName) {
-		String result = util.httpGet(util.getUrl() + "/teams/"+teamName+"/applications/lookup" +
+		String result = util.httpGet(util.getUrl() + "/teams/" + teamName + "/applications/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
@@ -115,19 +156,83 @@ public class ThreadFixRestClient {
 	public void setUrl(String url) {
 		util.setUrl(url);
 	}
-
+	
+	public void setMemoryKey(String key) {
+		util.setMemoryKey(key);
+	}
+	
+	public void setMemoryUrl(String url) {
+		util.setMemoryUrl(url);
+	}
+	
 	public String uploadScan(String applicationId, String filePath) {
-		String result = util.httpPostFile(util.getUrl() + "/teams/0/applications/" + applicationId + "/upload", 
+		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload", 
 				filePath,
 				new String[] { "apiKey"       },
 				new String[] {  util.getKey() });
 		return result;
 	}
+	
+	public String queueScan(String applicationId, String scannerType) {
+		String result = util.httpPost(util.getUrl() + "/tasks/queueScan",
+				new String[] { "apiKey",       "applicationId",		"scannerType" },
+				new String[] {  util.getKey(), applicationId, scannerType });
+		return(result);
+	}
+	
+	public String requestTask(String scanners, String agentConfig) {
+		String result = util.httpPost(util.getUrl() + "/tasks/requestTask",
+				new String[] { "apiKey",			"scanners",		"agentConfig" },
+				new String[] { util.getKey(), 		scanners,		agentConfig });
+		return(result);
+	}
+	
+	/**
+	 * Determine if we want to pass the taskId as a parameter or if we want to REST it up
+	 * @param scanQueueTaskId
+	 * @param message
+	 * @return
+	 */
+	public String taskStatusUpdate(String scanQueueTaskId, String message) {
+		String result = util.httpPost(util.getUrl() + "/tasks/taskStatusUpdate",
+				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
+				new String[] { util.getKey(),	scanQueueTaskId,	message });
+		return(result);
+	}
+	
+	public String setTaskConfig(String appId, String scannerType, String filePath) {
+		String url = util.getUrl() + "/tasks/setTaskConfig";
+		String[] paramNames 	= { "apiKey",		"appId", 	"scannerType" };
+		String[] paramValues 	= {  util.getKey(),	appId,		scannerType };
+		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
+		return result;
+	}
+	
+	/**
+	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
+	 * @param taskId
+	 * @param filePath
+	 * @return
+	 */
+	public String completeTask(String scanQueueTaskId, String filePath) {
+		String url = util.getUrl() + "/tasks/completeTask";
+		String[] paramNames 	= { "apiKey",		"scanQueueTaskId" };
+		String[] paramValues 	= {  util.getKey(),	scanQueueTaskId };
+		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
+		return result;
+	}
+	
+	public String failTask(String scanQueueTaskId, String message) {
+		String result = util.httpPost(util.getUrl() + "/tasks/failTask",
+				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
+				new String[] { util.getKey(),	scanQueueTaskId,	message });
+		return(result);
+	}
 
 	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
-		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
 					"/addFinding", 
 				new String[] { "apiKey", "vulnType", "severity", 
 								"nativeId", "parameter", "longDescription",
@@ -141,7 +246,7 @@ public class ThreadFixRestClient {
 	public String addStaticFinding(String applicationId, String vulnType, String severity, 
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
-		String result = util.httpPost(util.getUrl() + "/teams/0/applications/" + applicationId +
+		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
 				"/addFinding", 
 				new String[] { "apiKey", "vulnType", "severity", 
 								"nativeId", "parameter", "longDescription",

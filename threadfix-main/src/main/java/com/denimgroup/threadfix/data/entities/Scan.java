@@ -39,6 +39,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -94,6 +95,11 @@ public class Scan extends BaseEntity {
 	private static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ChannelType.SENTINEL });
 	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 	
+	@Size(max = 255, message = "{errors.maxlength} 255.")
+	private String filePathRoot;
+	@Size(max = 255, message = "{errors.maxlength} 255.")
+	private String urlPathRoot;
+	
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "applicationChannelId")
 	@JsonIgnore
@@ -143,6 +149,24 @@ public class Scan extends BaseEntity {
 
 	public void setFindings(List<Finding> findings) {
 		this.findings = findings;
+	}
+	
+	@Column(length = 256)
+	public String getFilePathRoot() {
+		return filePathRoot;
+	}
+
+	public void setFilePathRoot(String filePathRoot) {
+		this.filePathRoot = filePathRoot;
+	}
+
+	@Column(length = 256)
+	public String getUrlPathRoot() {
+		return urlPathRoot;
+	}
+
+	public void setUrlPathRoot(String urlPathRoot) {
+		this.urlPathRoot = urlPathRoot;
 	}
 	
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
@@ -400,5 +424,10 @@ public class Scan extends BaseEntity {
 		}
 
 		return null;
+	}
+	
+	@Transient
+	public boolean isStatic() {
+		return STATIC.equals(getScannerType());
 	}
 }

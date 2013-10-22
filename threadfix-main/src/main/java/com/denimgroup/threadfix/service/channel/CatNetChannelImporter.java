@@ -32,9 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -77,27 +74,9 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 		SEVERITIES_MAP.put("ACESEC08", "High");		
 	}
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param channelTypeDao
-	 *            Spring dependency.
-	 * @param channelVulnerabilityDao
-	 *            Spring dependency.
-	 * @param channelSeverityDao
-	 *            Spring dependency.
-	 * @param vulnerabilityMapLogDao
-	 *            Spring dependency.
-	 */
 	@Autowired
-	public CatNetChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao){
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-
-		setChannelType(ChannelType.CAT_NET);
+	public CatNetChannelImporter() {
+		super(ChannelType.CAT_NET);
 
 		paramMap = new HashMap<String, Integer>();
 	}
@@ -249,8 +228,10 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentDataFlowFile    = atts.getValue("file");
 	    		if (currentSourceFileLocation == null)
 	    			currentSourceFileLocation = atts.getValue("file");
-	    		currentUrlText = convertSourceFileNameToUrl(currentSourceFileLocation, 
-	    				applicationChannel.getApplication().getProjectRoot());
+	    		
+	    		// Since we'll calculate a better path later in the path calculation phase,
+	    		// we don't have to worry about it here.
+	    		currentUrlText = currentSourceFileLocation;
 	    	} else if ("StartTimeStamp".equals(qName)) {
 	    		getDate = true;
 	    	}

@@ -14,7 +14,15 @@ SET lib=
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
 set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:PermSize=256m -XX:MaxPermSize=256m
-set JAVA_HOME=%PWD%\java
+if DEFINED JAVA_HOME (
+	"%JAVA_HOME%"\bin\java -version:1.7 -version > nul 2>&1
+	if NOT %ERRORLEVEL% == 0 (
+		echo Local JAVA_HOME is not Java 7, switching to threadfix JAVA_HOME
+		set JAVA_HOME=%PWD%\java
+	)
+) else (
+	set JAVA_HOME=%PWD%\java
+)
 
 if not exist tomcat\keystore echo Generating keystore
 if not exist tomcat\keystore java\bin\keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore tomcat\keystore -storepass changeit

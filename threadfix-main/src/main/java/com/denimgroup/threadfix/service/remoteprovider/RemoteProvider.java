@@ -44,6 +44,10 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
 	
+	public RemoteProvider(String channelTypeName) {
+		super(channelTypeName);
+	}
+
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	
 	protected RemoteProviderType remoteProviderType;

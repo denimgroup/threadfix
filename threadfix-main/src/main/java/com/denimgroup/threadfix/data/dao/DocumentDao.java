@@ -38,6 +38,8 @@ public interface DocumentDao {
 	void saveOrUpdate(Document document);
 
 	Document retrieveById(Integer docId);
+	
+	Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension);
 
 	void delete(Document document);
 	
