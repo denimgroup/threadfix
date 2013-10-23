@@ -31,20 +31,17 @@ public class ParameterField extends MarkerField {
 	
 	@Override
 	public String getColumnHeaderText() {
-		System.out.println("Getting column header");
 		return "Parameter";
 	}
 	
 	@Override
 	public int getDefaultColumnWidth(final Control control) {
-		System.out.println("Getting column width");
 	    return 60;
 	}
 
 	@Override
 	public String getValue(MarkerItem markerItem) {
-		System.out.println("Getting value for " + markerItem);
 		return markerItem.getAttributeValue("parameter", "");
 	}
-
+	
 }

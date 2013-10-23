@@ -15,6 +15,13 @@
             </separator>
          </menu>
          <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               label="Show View"
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Configure ThreadFix URL and API Key">
+         </action>
+         <action
                class="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
                id="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
                label="Import ThreadFix Results"

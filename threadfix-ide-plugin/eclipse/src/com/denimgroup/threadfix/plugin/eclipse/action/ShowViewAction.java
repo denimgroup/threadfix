@@ -21,27 +21,42 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.eclipse.views;
+package com.denimgroup.threadfix.plugin.eclipse.action;
 
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.markers.MarkerSupportView;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class VulnerabilitiesView extends MarkerSupportView {
-	
-	public static final String
-		PLUGIN_ID = "com.denimgroup.threadfix.plugin.eclipse.vulnerabilitiesView",
-		MARKER_GENERATOR_ID = "com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator";
-	
-	public static void showView() {
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(PLUGIN_ID);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
+import com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;
+
+public class ShowViewAction implements IWorkbenchWindowActionDelegate {
+
+	/**
+	 * The action has been activated. The argument of the
+	 * method represents the 'real' action sitting
+	 * in the workbench UI.
+	 * @see IWorkbenchWindowActionDelegate#run
+	 */
+	@Override
+	public void run(IAction action) {
+		
+		VulnerabilitiesView.showView();
 	}
 	
-	public VulnerabilitiesView() {
-		super(MARKER_GENERATOR_ID);
+	/**
+	 * We will cache window object in order to
+	 * be able to provide parent shell for the message dialog.
+	 * @see IWorkbenchWindowActionDelegate#init
+	 */
+	@Override
+	public void init(IWorkbenchWindow window) {
 	}
+
+	@Override
+	public void selectionChanged(IAction arg0, ISelection arg1) {}
+
+	@Override
+	public void dispose() {}
+	
 }

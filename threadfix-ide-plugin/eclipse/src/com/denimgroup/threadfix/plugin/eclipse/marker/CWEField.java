@@ -41,10 +41,7 @@ public class CWEField extends MarkerField {
 
 	@Override
 	public String getValue(MarkerItem item) {
-		if (item != null && item.getAttributeValue("cwe", null) != null) {
-			return item.getAttributeValue("cwe", null);
-		}
-		return "";
+		return item.getAttributeValue("cwe", "");
 	}
-
+	
 }
