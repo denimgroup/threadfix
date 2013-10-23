@@ -23,11 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BeanFieldSet {
+public class BeanFieldSet implements Iterable<BeanField> {
 
 	private Map<String, BeanField> fieldMap = new HashMap<>();
 	private Set<BeanField> fieldSet = null;
@@ -51,10 +55,38 @@ public class BeanFieldSet {
 		return getField(paramName) != null;
 	}
 	
-	public void addAll(BeanFieldSet beanFieldSet) {
+	public BeanFieldSet add(BeanField beanField) {
+		this.fieldSet.add(beanField);
+		return this;
+	}
+	
+	public BeanFieldSet addAll(BeanFieldSet beanFieldSet) {
 		this.fieldSet.addAll(beanFieldSet.fieldSet);
 		for (BeanField field : beanFieldSet.fieldSet) {
 			fieldMap.put(field.getParameterKey(), field);
 		}
+		return this;
+	}
+	
+	public Collection<String> getPossibleParameters() {
+		List<String> strings = new ArrayList<String>();
+		for (BeanField field : fieldSet) {
+			strings.add(field.getParameterKey());
+		}
+		return strings;
+	}
+	
+	@Override
+	public String toString() {
+		if (fieldSet == null) {
+			return "empty";
+		} else {
+			return fieldSet.toString();
+		}
+	}
+
+	@Override
+	public Iterator<BeanField> iterator() {
+		return fieldSet.iterator();
 	}
 }
