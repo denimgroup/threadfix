@@ -38,15 +38,16 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
 	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;
 	private boolean inClass = false;
-	private String classEndpoint = null, currentMapping = null, 
-			rootFilePath = null, lastValue = null, currentModelObject = null;
-	private List<String> 
+	private String classEndpoint = null, currentMapping = null,
+			rootFilePath = null, lastValue = null, secondToLastValue = null;
+	private BeanField currentModelObject = null;
+	private List<String>
 		classMethods  = new ArrayList<>(),
 		methodMethods = new ArrayList<>(),
 		currentParameters = new ArrayList<>();
 		
-	private static final String 
-		VALUE = "value", 
+	private static final String
+		VALUE = "value",
 		METHOD = "method",
 		REQUEST_PARAM = "RequestParam",
 		PATH_VARIABLE = "PathVariable",
@@ -57,6 +58,8 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private Phase phase = Phase.ANNOTATION;
 	private AnnotationState annotationState = AnnotationState.START;
 	private SignatureState signatureState = SignatureState.START;
+	
+	private SpringEntityMappings entityMappings = null;
 	
 	private enum Phase {
 		ANNOTATION, SIGNATURE, METHOD
@@ -70,14 +73,15 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		START, ARROBA, REQUEST_PARAM;
 	}
 	
-	public static Set<SpringControllerEndpoint> parse(File file) {
-		SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath());
+	public static Set<SpringControllerEndpoint> parse(File file, SpringEntityMappings entityMappings) {
+		SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.endpoints;
 	}
 	
-	private SpringControllerEndpointParser(String rootFilePath) {
+	private SpringControllerEndpointParser(String rootFilePath, SpringEntityMappings entityMappings) {
 		this.rootFilePath = rootFilePath;
+		this.entityMappings = entityMappings;
 	}
 	
 	@Override
@@ -107,11 +111,11 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 				if (type == ARROBA) {
 					setState(SignatureState.ARROBA);
 				} else if (stringValue != null && stringValue.equals(BINDING_RESULT)) {
-					currentModelObject = lastValue;
+					currentModelObject = new BeanField(secondToLastValue, lastValue); // should be type and variable name
 				}
 				break;
 			case ARROBA:
-				if (stringValue != null && 
+				if (stringValue != null &&
 						(stringValue.equals(REQUEST_PARAM) || stringValue.equals(PATH_VARIABLE))) {
 					setState(SignatureState.REQUEST_PARAM);
 				} else {
@@ -136,6 +140,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 				break;
 		}
 		if (stringValue != null) {
+			secondToLastValue = lastValue;
 			lastValue = stringValue;
 		}
 	}
@@ -156,7 +161,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 
 	private void parseAnnotation(int type, int lineNumber, String stringValue) {
 		switch(annotationState) {
-			case START: 
+			case START:
 				if (type == ARROBA) {
 					annotationState = AnnotationState.ARROBA;
 				} else if (stringValue != null && stringValue.equals(CLASS)) {
@@ -253,11 +258,14 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
 		}
 		
 		if (currentModelObject != null) {
-			currentParameters.add(currentModelObject);
+			
+			BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(currentModelObject.getType());
+			
+			currentParameters.addAll(fields.getPossibleParameters());
 			currentModelObject = null;
 		}
 		
-		endpoints.add(new SpringControllerEndpoint(rootFilePath, currentMapping, 
+		endpoints.add(new SpringControllerEndpoint(rootFilePath, currentMapping,
 				methodMethods, currentParameters,
 				startLineNumber, endLineNumber));
 		currentMapping = null;

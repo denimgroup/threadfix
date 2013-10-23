@@ -43,6 +43,7 @@ public class BeanField {
 		String propertyName = methodCall;
 		
 		if (methodCall.startsWith("get")) {
+			// transform from bean accessor to parameter name
 			propertyName = methodCall.substring(3);
 			propertyName = propertyName.substring(0,1).toLowerCase() + propertyName.substring(1);
 		}

@@ -32,7 +32,17 @@ import org.junit.Test;
 
 public class SpringControllerMappingsTests {
 	
-	// This code validates that all the right controllers got in there and 
+	@Test
+	public void printEndpoints() {
+		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
+		SpringControllerMappings mappings = new SpringControllerMappings(file);
+		
+		for (Endpoint endpoint: mappings.generateEndpoints()) {
+			System.out.println(endpoint);
+		}
+	}
+	
+	// This code validates that all the right controllers got in there and
 	// that they have the correct number of associated endpoints.
 	@Test
 	public void testPetClinicControllerToUrls() {
@@ -54,14 +64,14 @@ public class SpringControllerMappingsTests {
 		}
 		
 		// validate that they have the right number of entries
-		for (int i = 0; i < controllerIndexAndEndpointCount.length; i ++) {
+		for (int[] element : controllerIndexAndEndpointCount) {
 			assertTrue(mappings.getEndpointsFromController(
-					controllersPrefix + controllerNames[controllerIndexAndEndpointCount[i][0]]).size() == 
-					controllerIndexAndEndpointCount[i][1]);
+					controllersPrefix + controllerNames[element[0]]).size() ==
+					element[1]);
 		}
 	}
 	
-	// This code validates that the URL -> Controller mapping is working correctly 
+	// This code validates that the URL -> Controller mapping is working correctly
 	// that they have the correct number of associated endpoints.
 	@Test
 	public void testPetClinicUrlToControllers() {
@@ -98,7 +108,7 @@ public class SpringControllerMappingsTests {
 		}
 		
 		for (String[] doubleEndpoint : doubleEndpoints) {
-			assertTrue(doubleEndpoint + " should have had two endpoints, but had " + 
+			assertTrue(doubleEndpoint + " should have had two endpoints, but had " +
 					mappings.getEndpointsFromUrl(doubleEndpoint[0]).size(),
 					mappings.getEndpointsFromUrl(doubleEndpoint[0]).size() == 2);
 
@@ -113,6 +123,22 @@ public class SpringControllerMappingsTests {
 		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
 		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
 		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
+	}
+	
+	@Test
+	public void testParameters() {
+		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
+		SpringControllerMappings mappings = new SpringControllerMappings(file);
+		
+		String[][] paramSets = {
+			{ "/owners", "lastName" },
+		};
+		
+		for (String[] singleEndpoint : paramSets) {
+			assertTrue(singleEndpoint[0] + " should have had the parameter " + singleEndpoint[1] + ", but only had " +
+					mappings.getEndpointsFromUrl(singleEndpoint[0]).iterator().next().getParameters(),
+					mappings.getEndpointsFromUrl(singleEndpoint[0]).iterator().next().getParameters().contains(singleEndpoint[1]));
+		}
 	}
 	
 	@Test

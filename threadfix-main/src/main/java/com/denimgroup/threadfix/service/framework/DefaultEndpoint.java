@@ -75,5 +75,10 @@ public class DefaultEndpoint implements Endpoint {
 	public String getCSVLine() {
 		return method + "," + path + "," + getParametersString();
 	}
+	
+	@Override
+	public String toString() {
+		return getCSVLine();
+	}
 
 }

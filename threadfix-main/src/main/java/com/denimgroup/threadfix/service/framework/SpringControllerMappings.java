@@ -49,7 +49,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 	public SpringControllerMappings(File rootDirectory) {
 		this.rootDirectory = rootDirectory;
 		if (rootDirectory != null && rootDirectory.exists()) {
-			controllerFiles = FileUtils.listFiles(rootDirectory, 
+			controllerFiles = FileUtils.listFiles(rootDirectory,
 					SpringControllerFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		
 			urlToControllerMethodsMap = new HashMap<>();
@@ -82,14 +82,16 @@ public class SpringControllerMappings implements EndpointGenerator {
 	}
 	
 	private void generateMaps() {
-		if (controllerFiles == null || 
-				urlToControllerMethodsMap == null || 
+		if (controllerFiles == null ||
+				urlToControllerMethodsMap == null ||
 				controllerToUrlsMap == null) {
 			return;
 		}
 		
+		SpringEntityMappings mappings = new SpringEntityMappings(rootDirectory);
+		
 		for (File file: controllerFiles) {
-			if (file != null && file.exists() && file.isFile() && file.getAbsolutePath() != null && 
+			if (file != null && file.exists() && file.isFile() && file.getAbsolutePath() != null &&
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
 				
 				String fileNameWithoutRoot = FilePathUtils.getRelativePath(file, rootDirectory);
@@ -98,7 +100,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 					fileNameWithoutRoot = "/" + fileNameWithoutRoot;
 				}
 				
-				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(file);
+				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(file, mappings);
 				
 				for (SpringControllerEndpoint endpoint : endpoints) {
 					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
