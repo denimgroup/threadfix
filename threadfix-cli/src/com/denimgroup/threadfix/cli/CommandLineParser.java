@@ -74,6 +74,14 @@ public class CommandLineParser {
 				.create("q");
 		options.addOption(queueScan);
 		
+		Option addAppUrl = OptionBuilder.withArgName("applicationId> <appUrl")
+				.withValueSeparator(' ')
+				.hasArgs(2)
+				.withLongOpt("addAppUrl")
+				.withDescription("Add URL for the given applicationId")
+				.create("au");
+		options.addOption(addAppUrl);
+		
 		Option setTaskConfig = OptionBuilder.withArgName("applicationId> <scannerName> <file")
 				.withValueSeparator(' ')
 				.hasArgs(3)
@@ -279,6 +287,14 @@ public class CommandLineParser {
 				}
 				System.out.println("Queueing a scan.");
 				System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
+
+			} else if (cmd.hasOption("au")) {
+				String[] addUrlArgs = cmd.getOptionValues("au");
+				if (addUrlArgs.length != 2) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Adding url to applicationId " + addUrlArgs[0]);
+				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));				
 				
 			} else if(cmd.hasOption("stc")) {
 				String[] setTaskConfigArgs = cmd.getOptionValues("stc");

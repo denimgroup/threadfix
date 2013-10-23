@@ -47,12 +47,32 @@ public class ScanQueueTask extends AuditableEntity {
 
 	private static final long serialVersionUID = 886166865576713403L;
 	
-	public static final int STATUS_QUEUED = 1;
-	public static final int STATUS_ASSIGNED = 2;
-	public static final int STATUS_COMPLETE_SUCCESSFUL = 3;
-	public static final int STATUS_COMPLETE_DELETED = 4;
-	public static final int STATUS_COMPLETE_TIMEDOUT = 5;
-	public static final int STATUS_COMPLETE_FAILED = 6;
+	public enum ScanQueueTaskStatus {
+		STATUS_QUEUED(1,"QUEUED"),
+		STATUS_ASSIGNED(2, "ASSIGNED"),
+		STATUS_COMPLETE_SUCCESSFUL(3, "COMPLETE_SUCCESSFUL"),
+		STATUS_COMPLETE_DELETED(4, "COMPLETE_DELETED"),
+		STATUS_COMPLETE_TIMEDOUT(5, "COMPLETE_TIMEDOUT"),
+		STATUS_COMPLETE_FAILED(6, "COMPLETE_FAILED"),
+		STATUS_UNKNOWN(7, "UNKNOWN");
+		
+		private int value;
+		private String description;
+		
+		public int getValue() { 
+			return this.value; 
+		}
+		
+		public String getDescription() {
+			return this.description;
+		}
+		
+		private ScanQueueTaskStatus(int value, String description) { 
+			this.value = value;
+			this.description = description;
+		}
+	}
+	
 	
 	public final static String SCANAGENT_CONFIG_FILE_EXTENSION = "scanagtcfg";
 	
@@ -72,6 +92,7 @@ public class ScanQueueTask extends AuditableEntity {
 	//	TODO - Make an enumeration for the various status options
 	private int status;
 	private String scanAgentInfo;
+	private String secureKey;
 
 	@Column
 	public int taskId() {
@@ -179,7 +200,15 @@ public class ScanQueueTask extends AuditableEntity {
 	public void setScanAgentInfo(String scanAgentInfo) {
 		this.scanAgentInfo = scanAgentInfo;
 	}
-	
+	@Column(length = 50)
+	public String getSecureKey() {
+		return secureKey;
+	}
+
+	public void setSecureKey(String secureKey) {
+		this.secureKey = secureKey;
+	}
+
 	public void addScanStatus(ScanStatus status) {
 		if(this.scanStatuses == null) {
 			this.scanStatuses = new ArrayList<ScanStatus>();
@@ -188,33 +217,15 @@ public class ScanQueueTask extends AuditableEntity {
 	}
 	
 	public String showStatusString() {
-		String retVal;
 		
-		switch(this.status) {
-			case STATUS_QUEUED:
-				retVal = "QUEUED";
-				break;
-			case STATUS_ASSIGNED:
-				retVal = "ASSIGNED";
-				break;
-			case STATUS_COMPLETE_SUCCESSFUL:
-				retVal = "COMPLETE_SUCCESSFUL";
-				break;
-			case STATUS_COMPLETE_DELETED:
-				retVal = "COMPLETE_DELETED";
-				break;
-			case STATUS_COMPLETE_TIMEDOUT:
-				retVal = "COMPLETE_TIMEDOUT";
-				break;
-			case STATUS_COMPLETE_FAILED:
-				retVal = "COMPLETE_FAILED";
-				break;
-			default:
-				retVal = "<UNKNOWN>";
-				break;
+		for (ScanQueueTaskStatus status : ScanQueueTaskStatus.values()) {
+			if (status.getValue() == this.status)
+				return status.getDescription();
 		}
 		
-		return(retVal);
+		return ScanQueueTaskStatus.STATUS_UNKNOWN.getDescription();
+		
+		
 	}
 	
 	/**
@@ -277,4 +288,13 @@ public class ScanQueueTask extends AuditableEntity {
 		
 		return(sb.toString());
 	}
+	
+//	public String[] getTaskStatusList() {
+//		int noOfStatuses = ScanQueueTaskStatus.values().length;
+//		String[] statusList = new String[noOfStatuses];
+//		for (int i=0; i<noOfStatuses; i++)
+//			statusList[i] = ScanQueueTaskStatus.values()[i].getDescription();
+//			
+//		return statusList;
+//	}
 }

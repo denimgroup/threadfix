@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -10,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
-import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
 
 @Repository
 public class HibernateScanQueueTaskDao implements ScanQueueTaskDao{
@@ -32,7 +31,8 @@ public class HibernateScanQueueTaskDao implements ScanQueueTaskDao{
 	@Override
 	public List<ScanQueueTask> retrieveAll() {
 		return (sessionFactory.getCurrentSession().createCriteria(ScanQueueTask.class)
-													.addOrder(Order.asc("createdDate")).list());
+				.add(Restrictions.eq("active", true))
+				.addOrder(Order.asc("createdDate")).list());
 	}
 	
 	@Override
@@ -43,10 +43,18 @@ public class HibernateScanQueueTaskDao implements ScanQueueTaskDao{
 		return(retVal);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ScanQueueTask> retrieveAvailable() {
 		return(sessionFactory.getCurrentSession().createCriteria(ScanQueueTask.class)
-							.add(Restrictions.eq("status",  ScanQueueTask.STATUS_QUEUED))
-							.addOrder(Order.asc("createdDate")).list());
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("status",  ScanQueueTaskStatus.STATUS_QUEUED.getValue()))
+				.addOrder(Order.asc("createdDate")).list());
+	}
+
+	@Override
+	public void delete(ScanQueueTask task) {
+		sessionFactory.getCurrentSession().delete(task);
+		
 	}
 }

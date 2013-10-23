@@ -1,12 +1,9 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +29,9 @@ public class ScanQueueTaskRestController extends RestController {
 	public final static String OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate";
 	public final static String OPERATION_COMPLETE_TASK = "completeTask";
 	public final static String OPERATION_FAIL_TASK = "failTask";
+	public final static String TASK_KEY_SUCCESS = "Secure task key was accepted.";
+	public final static String TASK_KEY_NOT_FOUND_ERROR = "No secure task key found error.";
+	public final static String TASK_KEY_ERROR = "Secure task key was not recognized.";
 	
 	private DocumentService documentService;
 	private ScanQueueService scanQueueService;
@@ -105,7 +105,8 @@ public class ScanQueueTaskRestController extends RestController {
 			return result;
 		}
 		
-		retVal = this.scanQueueService.requestTask(scanners, agentConfig);
+		String secureTaskKey = this.apiKeyService.generateNewSecureRandomKey();
+		retVal = this.scanQueueService.requestTask(scanners, agentConfig, secureTaskKey);
 		
 		return(retVal);
 	}
@@ -167,6 +168,11 @@ public class ScanQueueTaskRestController extends RestController {
 			return result;
 		}
 		
+		result = checkTaskKey(request, scanQueueTaskId);
+		if (!result.equals(TASK_KEY_SUCCESS)) {
+			return result;
+		}
+				
 		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
 		Application taskApp = myTask.getApplication();
 		
@@ -226,6 +232,11 @@ public class ScanQueueTaskRestController extends RestController {
 			return result;
 		}
 		
+		result = checkTaskKey(request, scanQueueTaskId);
+		if (!result.equals(TASK_KEY_SUCCESS)) {
+			return result;
+		}
+		
 		String serverMessage = "ScanAgent reported that the scan task: " + scanQueueTaskId
 									+ " had failed client-side for the following reason: " + message;
 		this.scanQueueService.failTask(scanQueueTaskId, serverMessage);
@@ -233,5 +244,25 @@ public class ScanQueueTaskRestController extends RestController {
 		retVal = true;
 		
 		return(retVal);
+	}
+	
+	private String checkTaskKey(HttpServletRequest request, int scanQueueTaskId){
+		String taskKey = request.getParameter("secureTaskKey");
+
+		if (taskKey == null) {
+			log.warn("Request to " + request.getPathInfo()
+					+ " did not contain an Task Key.");
+			return TASK_KEY_NOT_FOUND_ERROR;
+		}
+		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
+		
+		if (myTask.getSecureKey() == null || !myTask.getSecureKey().equals(taskKey)) {
+			log.warn("Task key " + taskKey + " is not correct");
+			return TASK_KEY_ERROR;
+		}
+
+		log.info("Task key was verified ");
+		return TASK_KEY_SUCCESS;
+			
 	}
 }

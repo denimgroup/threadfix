@@ -49,6 +49,7 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
@@ -79,6 +80,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private DefectDao defectDao = null;
 	private PermissionService permissionService = null;
 	private ScanMergeService scanMergeService = null;
+	private ScanQueueService scanQueueService;
 
 	@Autowired
 	public ApplicationServiceImpl(ApplicationDao applicationDao,
@@ -89,7 +91,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
 			ApplicationCriticalityDao applicationCriticalityDao,
 			DefectDao defectDao,
-			ScanMergeService scanMergeService) {
+			ScanMergeService scanMergeService,
+			ScanQueueService scanQueueService) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
 		this.accessControlMapService = accessControlMapService;
@@ -101,6 +104,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		this.applicationCriticalityDao = applicationCriticalityDao;
 		this.defectDao = defectDao;
 		this.scanMergeService = scanMergeService;
+		this.scanQueueService = scanQueueService;
 	}
 
 	@Override
@@ -152,6 +156,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 			for (AccessControlApplicationMap map : application.getAccessControlApplicationMaps()) {
 				accessControlMapService.deactivate(map);
 			}
+		}
+		
+		if (application.getScanQueueTasks() != null) {
+			for (ScanQueueTask task : application.getScanQueueTasks())
+				scanQueueService.deactivateTask(task);
+				
 		}
 		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {

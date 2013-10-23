@@ -12,4 +12,6 @@ public interface ScanQueueTaskDao {
 	ScanQueueTask retrieveById(int scanQueueTaskId);
 	
 	List<ScanQueueTask> retrieveAvailable();
+
+	void delete(ScanQueueTask task);
 }

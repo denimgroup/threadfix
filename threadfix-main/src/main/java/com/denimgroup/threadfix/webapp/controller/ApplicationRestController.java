@@ -52,7 +52,8 @@ public class ApplicationRestController extends RestController {
 		NEW = "newApplication",
 		SET_WAF = "setWaf",
 		UPLOAD = "uploadScan",
-		ATTACH_FILE = "attachFile";
+		ATTACH_FILE = "attachFile",
+		SET_URL = "setUrl";
 
 	// TODO finalize which methods need to be restricted
 	static {
@@ -305,6 +306,37 @@ public class ApplicationRestController extends RestController {
 			
 			application.setWaf(waf);
 			applicationService.updateWafRules(application, oldWafId);
+			applicationService.storeApplication(application);
+			return application;
+		}
+	}
+	
+	
+	/**
+	 * Set the URL for the application.
+	 * @param request
+	 * @param appId
+	 * @param wafId
+	 * @return
+	 */
+	@RequestMapping(headers="Accept=application/json", value="/{appId}/addUrl", method=RequestMethod.POST)
+	public @ResponseBody Object setUrl(HttpServletRequest request,
+			@PathVariable("appId") int appId) {
+		
+		String url = request.getParameter("url");
+
+		String result = checkKey(request, SET_URL);
+		if (!result.equals(API_KEY_SUCCESS)) {
+			return result;
+		}
+		
+		Application application = applicationService.loadApplication(appId);
+		
+		if (application == null) {
+			log.warn("Invalid Application ID.");
+			return SET_WAF_FAILED;
+		} else {
+			application.setUrl(url);
 			applicationService.storeApplication(application);
 			return application;
 		}
