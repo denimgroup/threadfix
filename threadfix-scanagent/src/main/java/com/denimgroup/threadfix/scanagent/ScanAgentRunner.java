@@ -25,19 +25,20 @@
 package com.denimgroup.threadfix.scanagent;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -45,14 +46,16 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import com.denimgroup.threadfix.scanagent.util.JsonUtils;
-import com.denimgroup.threadfix.data.entities.Task;
 
 public final class ScanAgentRunner implements ServerConduit {
 
 	public static final String SCAN_AGENT_VERSION = "2.0.0-DEVELOPMENT-1";
+	
 	static Logger log = Logger.getLogger(ScanAgentRunner.class);
 	
 	private String threadFixServerUrl;
@@ -60,46 +63,154 @@ public final class ScanAgentRunner implements ServerConduit {
 	private int pollIntervalInSeconds;
 	private OperatingSystem operatingSystem;
 	private List<Scanner> availableScanners;
-	private Map<String,AbstractScanAgent> scannerMap;
 	private String baseWorkDir;
 	
 	private int numTasksAttempted = 0;
 	private int maxTasks;
 	
 	private String agentConfig;
+
+	@SuppressWarnings("static-access")
+	public static final Options getOptions() {
+		Options options = new Options();
+		
+		options.addOption(new Option("help", "Print this message" ));
+		options.addOption(new Option("printScannerOptions", "Prints available scanner type options"));
+		
+		Option runScanQueueTask = OptionBuilder.withLongOpt("runScanQueueTask")
+				.withDescription("Request all scan queue tasks from ThreadFix server and execute them")
+				.create("r");
+		options.addOption(runScanQueueTask);
+		
+		Option set = OptionBuilder.withArgName("property> <value")
+				.withValueSeparator(' ')
+				.hasArgs(2)
+				.withLongOpt("set")
+				.withDescription("Set the url (ThreadFix base url), key (ThreadFix API key) or workdir (working directory) properties")
+				.create("s");
+		options.addOption(set); 
+		
+		Option configureScan = OptionBuilder.withArgName("scannerType> <version> <scanHomeDirectory> <optional host> <optional port")
+				.withValueSeparator(' ')
+				.hasArgs(5)
+				.withLongOpt("configureScan")
+				.withDescription("Configure scan information")
+				.create("cs");
+		options.addOption(configureScan);				
+		
+		return options;
+	}	
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+			Options options = getOptions();
+			
+			PosixParser parser = new PosixParser();
+			try {
+				CommandLine cmd = parser.parse( options, args);
+				PropertiesConfiguration config = new PropertiesConfiguration("scanagent.properties");
+				config.setAutoSave(true);
+
+				if (cmd.hasOption("help")) {
+					HelpFormatter formatter = new HelpFormatter();
+					formatter.printHelp("java -jar scanagent.jar", options );
+					
+				} else if (cmd.hasOption("s")) {
+					
+					String[] setArgs = cmd.getOptionValues("s");
+					if (setArgs == null || setArgs.length != 2) {
+						throw new ParseException("Bad arguments for set.");
+					}
+					
+					if ("url".equals(setArgs[0])) {
+						println("Setting URL to " + setArgs[1]);
+						ConfigurationUtils.saveUrlConfig(setArgs[1], config);
+					} else if ("key".equals(setArgs[0])) {
+						println("Setting API Key to " + setArgs[1]);
+						ConfigurationUtils.saveKeyConfig(setArgs[1], config);
+					} else if ("workdir".equals(setArgs[0])) {	
+						println("Setting working directory to " + setArgs[1]);
+						if (!ConfigurationUtils.isDirectory(setArgs[1]))
+							throw new ParseException("Directory is invalid!");	
+						ConfigurationUtils.saveWorkDirectory(setArgs[1], config);						
+					} else {
+						throw new ParseException("First argument to set must be url, key or workdir");
+					}
+					
+				} else if (cmd.hasOption("cs")) {
+					String[] scanArgs = cmd.getOptionValues("cs");
+					if (scanArgs.length != 3 && scanArgs.length != 5) {
+						throw new ParseException("Wrong number of arguments.");
+					}
+					if (ConfigurationUtils.checkHomeParam(scanArgs)) {
+						Scanner scan = parseScanner(scanArgs);
+						println("Saving " + scan);
+						ConfigurationUtils.saveScannerType(scan, config);
+					} else {
+						throw new ParseException("Scanner home directory is invalid!");
+					}
+
+				} else if (cmd.hasOption("r")) {
+					runScanQueue(config);
+					
+				} else {
+					throw new ParseException("No arguments found.");
+				}
+				
+			} catch (ParseException e) {
+				if (e.getMessage() != null) {
+					println(e.getMessage());
+				}
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("java -jar scanagent.jar", options);
+			} catch (ConfigurationException e) {
+				log.error("Problems reading configuration: " + e.getMessage(), e);
+			}		 
+	}
+
+	private static Scanner parseScanner(String[] scanArgs) throws ParseException {
+		Scanner scan = new Scanner();
+		scan.setName(scanArgs[0]);
+		scan.setVersion(scanArgs[1]);
+		scan.setHomeDir(scanArgs[2]);
+		if (scanArgs.length==5) {
+			try {
+				int port = Integer.valueOf(scanArgs[4]);
+				scan.setHost(scanArgs[3]);
+				scan.setPort(port);
+			} catch (NumberFormatException e) {
+				throw new ParseException("Port argument must be number");
+			}
+		}
+		return scan;
+	}
+
+
+	private static void println(String string) {
+		System.out.println(string);
+	}	
+	
+	public static void runScanQueue(Configuration config) {
 		
-		boolean status;
-		
-		System.out.println("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
+		log.info("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
 		BasicConfigurator.configure();
 		log.debug("Logging configured and running");
 		log.info("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
-
+		
 		ScanAgentRunner myAgent = new ScanAgentRunner();
-		
-		try {
-			Configuration config = new PropertiesConfiguration("scanagent.properties");
-			status = myAgent.readConfiguration(config);
-			if(!status) {
-				log.warn("Issues detected while reading configuration");
-			}
-		} catch (ConfigurationException e) {
-			log.error("Problems reading configuration: " + e.getMessage(), e);
-		}
-		
+		myAgent.readConfiguration(config);
 		log.info("Scan agent configured");
-		
+
 		myAgent.logConfiguration();
 		
 		//	Main polling loop
 		int numTasksRun = myAgent.pollAndRunTasks();
 		
-		log.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");
+		log.info("Numbef of tasks run: " + numTasksRun);
+		log.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");		
 	}
 	
 	public ScanAgentRunner() {
@@ -110,7 +221,7 @@ public final class ScanAgentRunner implements ServerConduit {
 
 		while(keepPolling()) {
 			Task currentTask = requestTask();
-			boolean taskResult = doTask(currentTask);
+			doTask(currentTask);
 			try {
 				Thread.sleep(pollIntervalInSeconds * 1000);
 			} catch (InterruptedException e) {
@@ -194,7 +305,7 @@ public final class ScanAgentRunner implements ServerConduit {
 			nets = NetworkInterface.getNetworkInterfaces();
 
 	        for (NetworkInterface netint : Collections.list(nets)) {
-	        	String interfaceName = netint.getDisplayName();
+//	        	String interfaceName = netint.getDisplayName();
 	        	sb.append("NETWORK:");
 	        	sb.append(netint.getDisplayName());
 	        	sb.append("=");
@@ -230,11 +341,7 @@ public final class ScanAgentRunner implements ServerConduit {
 	 * @return
 	 */
 	private static String makeSystemPropertyString(String propertyName) {
-		String retVal;
-		
-		retVal = propertyName + "=" + System.getProperty(propertyName) + "\n";
-		
-		return(retVal);
+		return propertyName + "=" + System.getProperty(propertyName) + "\n";
 	}
 	
 	/**
@@ -267,7 +374,11 @@ public final class ScanAgentRunner implements ServerConduit {
 				log.warn("Got an empty string back in lieu of a task from the ThreadFix server.");
 			} else {
 				log.debug("Here's what we got back from the ThreadFix server: '" + sReturn + "'");
-				retVal = JsonUtils.convertJsonStringToTask(sReturn);
+				try {
+					retVal = JsonUtils.convertJsonStringToTask(sReturn);
+				} catch (Exception e) {
+					log.warn("Was unable to convert from Json string to Task.");
+				}
 			}
 		}
 
@@ -277,6 +388,7 @@ public final class ScanAgentRunner implements ServerConduit {
 	private boolean doTask(Task theTask) {
 		boolean retVal = false;
 		File taskResult = null;
+		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
 		
 		this.numTasksAttempted++;
 		
@@ -287,7 +399,7 @@ public final class ScanAgentRunner implements ServerConduit {
 				log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
 				
 				String taskType = theTask.getTaskType();
-				AbstractScanAgent theAgent = this.scannerMap.get(taskType);
+				AbstractScanAgent theAgent = ScanAgentFactory.getScanAgent(getScanner(taskType), this.baseWorkDir, this);
 				//	TODO - Clean up the gross way we handle these callbacks
 				theAgent.setCurrentTaskId(theTask.getTaskId());
 				taskResult = theAgent.doTask(theTask.getTaskConfig());
@@ -296,8 +408,8 @@ public final class ScanAgentRunner implements ServerConduit {
 					log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
 					
 					log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
-					ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-					String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath());
+					
+					String result = tfClient.completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath(), theTask.getSecureTaskKey());
 					log.info("Result of completion attempt was: " + result);
 					//	TOFIX - Determine if the result was successful or not. Currently returning true if we get to this point
 					retVal = true;
@@ -306,8 +418,7 @@ public final class ScanAgentRunner implements ServerConduit {
 					//	The only way we can report back right now is if an uncaught exception occurs which is
 					//	(hopefully) a pretty rare situation.
 					String message = "Task appears not to have completed successfully: " + theTask;
-					ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-					tfClient.failTask(String.valueOf(theTask.getTaskId()), message);
+					tfClient.failTask(String.valueOf(theTask.getTaskId()), message, theTask.getSecureTaskKey());
 					log.warn(message);
 				}
 				
@@ -316,103 +427,31 @@ public final class ScanAgentRunner implements ServerConduit {
 		} catch (Exception e) {
 			String message = "Exception thrown while trying to run scan: " + e.getMessage();
 			log.warn(message, e);
-			ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
-			tfClient.failTask(String.valueOf(theTask.getTaskId()), message);
+			tfClient.failTask(String.valueOf(theTask.getTaskId()), message, theTask.getSecureTaskKey());
 		}
 		
 		return(retVal);
 	}
-	
-	private boolean readConfiguration(Configuration config)
-	{
-		boolean retVal = false;
-		
+
+	private void readConfiguration(Configuration config) {
+
 		this.threadFixServerUrl = config.getString("scanagent.threadFixServerUrl");
 		log.debug("scanagent.threadFixServerUrl=" + this.threadFixServerUrl);
-		
-		this.threadFixApiKey = config.getString("scanagent.threadFixApiKey");
-		
+
+		this.threadFixApiKey = config.getString("scanagent.threadFixApiKey");;
+		this.baseWorkDir = config.getString("scanagent.baseWorkDir");;
+
 		this.pollIntervalInSeconds = config.getInt("scanagent.pollInterval");
 		log.debug("scanagent.pollInterval=" + this.pollIntervalInSeconds);
-		
+
 		this.maxTasks = config.getInt("scanagent.maxTasks");
 		log.debug("scanagent.maxTasks=" + this.maxTasks);
-		
-		//	TODO - Auto-detect the operating system and version
-		this.operatingSystem = new OperatingSystem("osx", "10.8.2");
-		this.baseWorkDir = config.getString("scanagent.baseWorkDir");
-		
-		this.availableScanners = new ArrayList<Scanner>();
-		
-		String scannerList = config.getString("scanagent.scanners");
-		if(scannerList == null) {
-			log.warn("Missing 'scanagent.scanners' property - No scanners will be configured");
-		} else {
-			log.debug("List of scanners: " + scannerList);
-			String[] scanners = scannerList.split(",");
-			this.scannerMap = new HashMap<String,AbstractScanAgent>();
-			for(String scannerName : scanners) {
-				String scannerVersion = config.getString(scannerName + ".version");
-				String scannerClassname = config.getString(scannerName + ".className");
-				try {
-					log.debug("Attempting to load new instance of class " + scannerClassname);
-					Object obj = Class.forName(scannerClassname).newInstance();
-					if(obj instanceof AbstractScanAgent) {
-						AbstractScanAgent newAgent = (AbstractScanAgent)obj;
-						//	TODO - Clean up the gross way we handle calls back to the server
-						newAgent.setServerConduit(this);
-						
-						log.debug("Instantiating scanner class seems to have worked. Attempting configuration");
-						
-						String agentWorkDir = this.baseWorkDir + File.separator + scannerName + File.separator;
-						File dirCheck = new File(agentWorkDir);
-						if(dirCheck.exists()) {
-							if(!dirCheck.isDirectory()) {
-								log.warn("Agent work directory: " + agentWorkDir + " exists, but is not a directory");
-							} else {
-								log.debug("Agent work directory: " + agentWorkDir + " exists and is a directory. Good.");
-							}
-						} else {
-							log.warn("Agent work directory: " + agentWorkDir + " does not exist. Attempting to create.");
-							boolean result = dirCheck.mkdirs();
-							if(!result) {
-								log.error("Unable to create agent work directory: " + agentWorkDir + ". This will likely lead to errors.");
-							} else {
-								log.info("Agent work directory: " + agentWorkDir + " successfully created.");
-							}
-						}
-						log.debug("Agent work directory will be: " + agentWorkDir);
-						newAgent.setWorkDir(agentWorkDir);
-						
-						boolean configStatus = newAgent.readConfig(config);
-						if(configStatus) {
-							log.debug("Configuration successful");
-						} else {
-							log.warn("Configuration apprears to have run into problems");
-						}
-						
-						this.scannerMap.put(scannerName, newAgent);
-						this.availableScanners.add(new Scanner(scannerName, scannerVersion));
-						log.info("Added scanner of type " + scannerName + " and implementing class "
-									+ scannerClassname + " to the available scanners");
-						
-					} else {
-						log.warn("Class: " + scannerClassname + "does not appear to be a subclass of com.denimgroup.threadfix.scanagent.AbstractScanAgent");
-					}
-				} catch (InstantiationException | IllegalAccessException
-						| ClassNotFoundException e) {
-					log.error("Unable to load class: " + scannerClassname + " for scanner " + scannerName, e);
-				}
-				
-				
-			}
-			
-			retVal = true;
-		}
-		
-		return(retVal);
+
+		this.operatingSystem = new OperatingSystem(System.getProperty("os.name"), System.getProperty("os.version"));
+
+		this.availableScanners = ConfigurationUtils.readAllScanner(config);
 	}
-	
+
 	private void logConfiguration() {
 		log.info("GenericScanAgent configuration:");
 		if(operatingSystem != null) {
@@ -434,5 +473,13 @@ public final class ScanAgentRunner implements ServerConduit {
 		} else {
 			log.info("No scanners configured (NULL)");
 		}
+	}
+	
+	private Scanner getScanner(String scannerName){
+		for (Scanner scan: availableScanners) {
+			if (scan.getName().equalsIgnoreCase(scannerName))
+				return scan;
+		}
+		return new Scanner();
 	}
 }

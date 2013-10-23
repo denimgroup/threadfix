@@ -14,23 +14,22 @@ public class JsonUtils {
 	 * 
 	 * @param jsonText
 	 * @return
+	 * @throws Exception 
 	 * @throws RuntimeException
 	 */
-	public static Task convertJsonStringToTask(String jsonText) throws RuntimeException {
+	public static Task convertJsonStringToTask(String jsonText) throws Exception {
 		Task retVal = null;
 		
-		try {
-			retVal = new ObjectMapper().readValue(jsonText, Task.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+			try {
+				retVal = new ObjectMapper().readValue(jsonText, Task.class);
+			} catch (JsonParseException e) {
+				throw e;
+			} catch (JsonMappingException e) {
+				throw e;
+			} catch (IOException e) {
+				throw e;
+			}
 		
 		return retVal;
 	}

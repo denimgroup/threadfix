@@ -34,6 +34,8 @@ import java.net.Proxy;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.zaproxy.clientapi.core.ApiResponse;
@@ -43,6 +45,7 @@ import org.zaproxy.clientapi.core.ClientApi;
 import org.zaproxy.clientapi.core.ClientApiException;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
@@ -56,122 +59,139 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private int zapPort;
 	private String zapExecutablePath;
 	private long zapStartupWaitTime;
+	private Process process;
 	
 	/**
 	 * @param theConfig configuration for the scan. A pre-configured session file can
 	 * be passed via the configFile data blob.
 	 */
+	private static ZapScanAgent instance = null;
+	private ZapScanAgent() {
+	}
+	public static ZapScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
+		if(instance == null) {
+			instance = new ZapScanAgent();
+			try {
+				instance.readConfig(new PropertiesConfiguration("scanagent.properties"));
+			} catch (ConfigurationException e) {
+				log.error("Problems reading configuration: " + e.getMessage(), e);
+			}
+		}
+		instance.setWorkDir(workDir);
+		instance.setServerConduit(serverConduit);
+		instance.setZapExecutablePath(scanner.getHomeDir());
+		instance.setZapHost(scanner.getHost());
+		instance.setZapPort(scanner.getPort());
+		return instance;
+	}
+	
 	@Override
 	public File doTask(TaskConfig theConfig) {
 		
 		File retVal = null;
-		
+
 		log.info("Attempting to do ZAP task with config: " + theConfig);
 		log.info("Target URL is " + theConfig.getTargetUrlString());
-		
-		boolean status;
-		
-		status = startZap();
-		if(status) {
-			String message = "ZAP should be started";
-			log.info(message);
-			sendStatusUpdate(message);
-		} else {
-			String message = "ZAP does not appear to have started. This will end well...";
-			log.warn(message);
-			sendStatusUpdate(message);
-		}
-		
-		log.info("Creating ZAP ClientApi");
 		ClientApi zap = new ClientApi(zapHost, zapPort);
-		log.info("ZAP ClientApi created");
-		
-		//	Determine if we need to set up a session for ZAP or if this is
-		//	just an authenticated scan of the URL
-		byte[] configFileData = theConfig.getDataBlob("configFile");
-		if(configFileData != null) {
-			log.debug("Task configuration has configuration file data. Attempting to set session");
-			//	Set up the session for ZAP to use
-			try {
-				FileUtils.deleteDirectory(new File(this.getWorkDir()));
-				log.debug("Deleted old working directory. Going to attempt to re-create");
-				boolean dirCreate = new File(this.getWorkDir()).mkdirs();
-				if(!dirCreate) {
-					String message = "Unable to re-create working directory. This will end well...";
-					log.warn(message);
-					sendStatusUpdate(message);
-				}
-				
-				//	Take the config file ZIP data, save it to the filesystem and extract it
-				//	TODO - Look at streaming this from memory. Should be faster than saving/reloading
-				String zippedSessionFilename = this.getWorkDir() + File.separator + "ZAPSESSION.zip";
-				FileUtils.writeByteArrayToFile(new File(zippedSessionFilename), configFileData);
-				ZipFileUtils.unzipFile(zippedSessionFilename, this.getWorkDir());
-				
-				//	Now point ZAP toward the unpacked session file
-				ApiResponse response;
-				log.debug("Setting ZAP home directory to: " + this.getWorkDir());
-				response = zap.core.setHomeDirectory(this.getWorkDir());
-				log.debug("Loading session");
-				response = zap.core.loadSession("ZAPTEST");
-				log.debug("Response after attempting set session: " + response.toString(0));
-			} catch (ClientApiException e) {
-				String message = "Problems setting session: " + e.getMessage();
-				log.error(message, e);
-				sendStatusUpdate(message);
-			} catch (IOException e) {
-				String message = "Problems unpacking the ZAP session data into the working directory: " + e.getMessage();
-				log.error(message, e);
-				sendStatusUpdate(message);
-			}
-		} else {
-			log.debug("Task configuration had no configuration file data. Will run a default unauthenticated scan.");
-		}
-		
-		status = attemptRunSpider(theConfig, zap);
-		if(status) {
-			String message = "Appears that spider run was successful. Going to attempt a scan.";
-			log.info(message);
-			sendStatusUpdate(message);
-			
-			status = attemptRunScan(theConfig, zap);
-			
+		boolean status;
+		try {
+			status = startZap();
 			if(status) {
-				message = "Appears that scan run was successful. Going to attempt to pull results";
+				String message = "ZAP should be started";
 				log.info(message);
 				sendStatusUpdate(message);
-				
-				String resultsXml = attemptRetrieveResults(zap);
-				try {
-					String resultsFilename = this.getWorkDir() + File.separator + "ZAPRESULTS.xml";
-					log.debug("Writing results to file: " + resultsFilename);
-					retVal = new File(resultsFilename);
-					FileUtils.writeStringToFile(retVal, resultsXml);
-				} catch (IOException ioe) {
-					message = "Unable to write results file: " + ioe.getMessage();
-					log.error(message, ioe);
-					sendStatusUpdate(message);
-					retVal = null;
-				}
-				
 			} else {
-				message = "Appears that scan run was unsuccessful. Not going to pull results";
+				String message = "ZAP does not appear to have started. This will end well...";
 				log.warn(message);
 				sendStatusUpdate(message);
 			}
-		} else {
-			String message = "Appears that spider run was unsuccessful. Not going to attempt a scan.";
-			log.warn(message);
-			sendStatusUpdate(message);
+
+			log.info("Creating ZAP ClientApi");
+
+			log.info("ZAP ClientApi created");
+
+			//	Determine if we need to set up a session for ZAP or if this is
+			//	just an authenticated scan of the URL
+			byte[] configFileData = theConfig.getDataBlob("configFile");
+			if(configFileData != null) {
+				log.debug("Task configuration has configuration file data. Attempting to set session");
+				//	Set up the session for ZAP to use
+				try {
+					FileUtils.deleteDirectory(new File(this.getWorkDir()));
+					log.debug("Deleted old working directory. Going to attempt to re-create");
+					boolean dirCreate = new File(this.getWorkDir()).mkdirs();
+					if(!dirCreate) {
+						String message = "Unable to re-create working directory. This will end well...";
+						log.warn(message);
+						sendStatusUpdate(message);
+					}
+
+					//	Take the config file ZIP data, save it to the filesystem and extract it
+					//	TODO - Look at streaming this from memory. Should be faster than saving/reloading
+					String zippedSessionFilename = this.getWorkDir() + File.separator + "ZAPSESSION.zip";
+					FileUtils.writeByteArrayToFile(new File(zippedSessionFilename), configFileData);
+					ZipFileUtils.unzipFile(zippedSessionFilename, this.getWorkDir());
+
+					//	Now point ZAP toward the unpacked session file
+					ApiResponse response;
+					log.debug("Setting ZAP home directory to: " + this.getWorkDir());
+					response = zap.core.setHomeDirectory(this.getWorkDir());
+					log.debug("Loading session");
+					response = zap.core.loadSession("ZAPTEST");
+					log.debug("Response after attempting set session: " + response.toString(0));
+				} catch (ClientApiException e) {
+					String message = "Problems setting session: " + e.getMessage();
+					log.error(message, e);
+					sendStatusUpdate(message);
+				} catch (IOException e) {
+					String message = "Problems unpacking the ZAP session data into the working directory: " + e.getMessage();
+					log.error(message, e);
+					sendStatusUpdate(message);
+				}
+			} else {
+				log.debug("Task configuration had no configuration file data. Will run a default unauthenticated scan.");
+			}
+
+			status = attemptRunSpider(theConfig, zap);
+			if(status) {
+				String message = "Appears that spider run was successful. Going to attempt a scan.";
+				log.info(message);
+				sendStatusUpdate(message);
+
+				status = attemptRunScan(theConfig, zap);
+
+				if(status) {
+					message = "Appears that scan run was successful. Going to attempt to pull results";
+					log.info(message);
+					sendStatusUpdate(message);
+
+					String resultsXml = attemptRetrieveResults(zap);
+					try {
+						String resultsFilename = this.getWorkDir() + File.separator + "ZAPRESULTS.xml";
+						log.debug("Writing results to file: " + resultsFilename);
+						retVal = new File(resultsFilename);
+						FileUtils.writeStringToFile(retVal, resultsXml);
+					} catch (IOException ioe) {
+						message = "Unable to write results file: " + ioe.getMessage();
+						log.error(message, ioe);
+						sendStatusUpdate(message);
+						retVal = null;
+					}
+
+				} else {
+					message = "Appears that scan run was unsuccessful. Not going to pull results";
+					log.warn(message);
+					sendStatusUpdate(message);
+				}
+			} else {
+				String message = "Appears that spider run was unsuccessful. Not going to attempt a scan.";
+				log.warn(message);
+				sendStatusUpdate(message);
+			}
 		}
-		
-		status = stopZap(zap);
-		if(status) {
-			log.info("ZAP appears to have shut down");
-		} else {
-			log.warn("Problems closing down ZAP");
+		finally {
+			stopZap();
 		}
-		
 		log.info("Finished attempting to do ZAP task with config: " + theConfig);
 		return(retVal);
 	}
@@ -184,10 +204,6 @@ public class ZapScanAgent extends AbstractScanAgent {
 		this.maxScanWaitInSeconds = config.getInt("zap.maxScanWaitInSeconds");
 		this.spiderPollWaitInSeconds = config.getInt("zap.spiderPollWaitInSeconds");
 		this.scanPollWaitInSeconds = config.getInt("zap.scanPollWaitInSeconds");
-		this.zapHost = config.getString("zap.zapHost");
-		this.zapPort = config.getInt("zap.zapPort");
-		log.debug("ZAP host: " + this.zapHost + ", ZAP port: " + this.zapPort);
-		this.zapExecutablePath = config.getString("zap.zapExecutablePath");
 		//	TODO rename this to reflect that it is in seconds (also requires change to .properties file)
 		this.zapStartupWaitTime = config.getInt("zap.zapStartupWaitTime");
 		
@@ -199,10 +215,9 @@ public class ZapScanAgent extends AbstractScanAgent {
 	
 	private boolean startZap() {
 		boolean retVal = false;
-		
 		log.info("Attempting to start ZAP instance");
 		
-		String[] args = { zapExecutablePath + "zap.sh", "-daemon" };
+		String[] args = { zapExecutablePath + getZapRunnerFile(), "-daemon" };
 		
 		log.debug("Going to attempt to run ZAP executable at: " + args[0]);
 		
@@ -210,7 +225,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 		pb.directory(new File(zapExecutablePath));
 		
 		try {
-			pb.start();
+			setProcess(pb.start());
+			
 			log.info("ZAP started successfully. Waiting " + (this.zapStartupWaitTime) + "s for ZAP to come online");
 			Thread.sleep(this.zapStartupWaitTime * 1000);
 			retVal = true;
@@ -223,30 +239,20 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return(retVal);
 	}
 	
-	private boolean stopZap(ClientApi zap) {
-		boolean retVal = false;
-		ApiResponse result;
-		
+	private void stopZap() {
 		log.info("Attempting to shut down ZAP instance");
-		
-		try {
-			result = zap.core.shutdown();
-			if(didCallSucceed(result)) {
-				log.info("ZAP shutdown appears to have been successful");
-				retVal = true;
-			} else if(didCallFail(result)) {
-				log.info("ZAP shutdown request appears to have failed");
-			} else {
-				log.warn("Got unexpected result from ZAP shutdown request");
-			}
-			
-		} catch (ClientApiException e) {
-			log.error("Problems telling ZAP to shut down: " + e.getMessage(), e);
-		}
+		if (getProcess() != null) 
+			getProcess().destroy();
 		
 		log.info("Finished trying to shut down ZAP instance");
 	
-		return(retVal);
+	}
+	
+	private String getZapRunnerFile() {
+		if (System.getProperty("os.name").contains("Windows"))
+			return "zap.bat";
+		else return "zap.sh";
+					
 	}
 	
 	/**
@@ -495,4 +501,29 @@ public class ZapScanAgent extends AbstractScanAgent {
 		}
 		return(retVal);
 	}
+	public String getZapHost() {
+		return zapHost;
+	}
+	public void setZapHost(String zapHost) {
+		this.zapHost = zapHost;
+	}
+	public int getZapPort() {
+		return zapPort;
+	}
+	public void setZapPort(int zapPort) {
+		this.zapPort = zapPort;
+	}
+	public String getZapExecutablePath() {
+		return zapExecutablePath;
+	}
+	public void setZapExecutablePath(String zapExecutablePath) {
+		this.zapExecutablePath = zapExecutablePath;
+	}
+	public Process getProcess() {
+		return process;
+	}
+	public void setProcess(Process process) {
+		this.process = process;
+	}
+	
 }
