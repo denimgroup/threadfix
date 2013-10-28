@@ -38,7 +38,9 @@ public class RestUtils {
 
 	public String getApplications() {
 		String result = httpGet(url + "/code/applications/?apiKey=" + key);
-		
+		if(result.contains("html")){
+			return "Authentication failed,check rest url";
+		}
 		return result;
 	}
 	
@@ -53,7 +55,7 @@ public class RestUtils {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+				System.out.println("Status was not 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();

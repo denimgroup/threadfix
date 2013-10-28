@@ -31,10 +31,10 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		
+		boolean cancelled = false;
 		// Get endpoint info
 		ConfigDialog dialog = new ConfigDialog(window.getShell(),
-				SettingsUtils.getApiKey(), SettingsUtils.getUrl());
+				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),false);
 
 		dialog.create();
 
@@ -44,20 +44,37 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 			
 			// Get application info
 			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
-			Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
-			
-			ApplicationDialog appDialog = new ApplicationDialog(window.getShell(),
-					threadFixApplicationMap, configuredApps);
-			
-			appDialog.create();
-			
-			if (appDialog.open() == Window.OK) {
-				SettingsUtils.saveApplicationInfo(appDialog.getAppIds());
-				System.out.println("Saved successfully.");
-			} else {
-				System.out.println("Cancel was pressed.");
+			while(threadFixApplicationMap.get("Authentication failed")!=null){
+				dialog = new ConfigDialog(window.getShell(),
+						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
+
+				dialog.create();
+				if (dialog.open() == Window.OK) {
+					SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+					System.out.println("Saved ThreadFix information successfully.");
+					threadFixApplicationMap = ThreadFixService.getApplications();
+				} else {
+					System.out.println("Cancel was pressed.");
+					cancelled = true;
+					break;
+				}
 			}
-			
+			if(!cancelled){
+				Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
+				
+				ApplicationDialog appDialog = new ApplicationDialog(window.getShell(),
+						threadFixApplicationMap, configuredApps);
+				
+				appDialog.create();
+				
+				if (appDialog.open() == Window.OK) {
+					SettingsUtils.saveApplicationInfo(appDialog.getAppIds());
+					System.out.println("Saved successfully.");
+				} else {
+					System.out.println("Cancel was pressed.");
+				}
+			}
+				
 		} else {
 			System.out.println("Cancel was pressed instead ");
 		}
