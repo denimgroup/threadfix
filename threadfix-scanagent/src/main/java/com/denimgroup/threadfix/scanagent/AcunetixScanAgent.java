@@ -9,21 +9,35 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 
 public class AcunetixScanAgent extends AbstractScanAgent {
 	
 	static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
 	private String acunetixExecutablePath;
 
+	private static AcunetixScanAgent instance = null;
+	private AcunetixScanAgent() {
+	}
+	public static AcunetixScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
+		if(instance == null) {
+			instance = new AcunetixScanAgent();
+		}
+		instance.setWorkDir(workDir);
+		instance.setServerConduit(serverConduit);
+		instance.setAcunetixExecutablePath(scanner.getHomeDir());
+		return instance;
+	}
+	
 	@Override
 	public boolean readConfig(Configuration config) {
 		boolean retVal = false;
 		
-		this.acunetixExecutablePath = config.getString("acunetix.executablePath");
-		log.debug("Acunetix executable located at path: " + this.acunetixExecutablePath);
-		
-		//	TODO - Perform some input validation on the supplied properties so this retVal means something
-		retVal = true;
+//		this.acunetixExecutablePath = config.getString("acunetix.executablePath");
+//		log.debug("Acunetix executable located at path: " + this.acunetixExecutablePath);
+//		
+//		//	TODO - Perform some input validation on the supplied properties so this retVal means something
+//		retVal = true;
 		
 		return(retVal);
 	}
@@ -76,6 +90,12 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		}
 		
 		return(retVal);
+	}
+	public String getAcunetixExecutablePath() {
+		return acunetixExecutablePath;
+	}
+	public void setAcunetixExecutablePath(String acunetixExecutablePath) {
+		this.acunetixExecutablePath = acunetixExecutablePath;
 	}
 
 }

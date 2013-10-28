@@ -21,57 +21,38 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.scanagent;
 
-import java.util.List;
-
-import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 
 /**
- * @author mcollins
  * 
+ * @author stran
+ *
  */
-public interface APIKeyService {
-
-	/**
-	 * @return
-	 */
-	List<APIKey> loadAll();
-
-	/**
-	 * @param apiKeyId
-	 * @return
-	 */
-	APIKey loadAPIKey(int apiKeyId);
+public class ScanAgentFactory {
+	
+	private ScanAgentFactory(){}
 	
 	/**
-	 * Load the API key from the database
-	 * @param key
-	 * @return
-	 */
-	APIKey loadAPIKey(String key);
-
-	/**
-	 * @param apiKey
-	 */
-	void storeAPIKey(APIKey apiKey);
-
-	/**
-	 * @param organizationId
-	 */
-	void deactivateApiKey(APIKey apiKey);
-
-	/**
-	 * Create a new securely random API Key and package it in the APIKey object with the note.
-	 * @param note
-	 * @return
-	 */
-	APIKey createAPIKey(String note, boolean restricted);
-	
-	/**
+	 * Returns a Scan Agent implementation based on the scanner type name
 	 * 
+	 * @param scanner
+	 * @param workDir
+	 * @param serverConduit
 	 * @return
 	 */
-	String generateNewSecureRandomKey();
+	public static AbstractScanAgent getScanAgent(Scanner scanner, String workDir, ServerConduit serverConduit) {
+
+		AbstractScanAgent agent = null;
+
+		if (ScannerType.ACUNETIX_WVS.getFullName().equalsIgnoreCase(scanner.getName()))
+			agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit); 
+		else if (ScannerType.ZAPROXY.getFullName().equalsIgnoreCase(scanner.getName()))
+			agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
+
+		return agent;
+	}
 	
 }

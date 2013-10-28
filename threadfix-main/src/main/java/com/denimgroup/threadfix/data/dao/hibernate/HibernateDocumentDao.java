@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.denimgroup.threadfix.data.dao.DocumentDao;
-import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.entities.Document;
 
 /**

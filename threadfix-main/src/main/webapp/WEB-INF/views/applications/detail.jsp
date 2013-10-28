@@ -135,6 +135,10 @@
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
+		<spring:url value="/organizations/{orgId}/applications/{appId}/scanQueueTab" var="scanQueueTabUrl">
+			<spring:param name="orgId" value="${ application.organization.id }"/>
+			<spring:param name="appId" value="${ application.id }"/>
+		</spring:url>
 		<br>
 		<c:if test="${ not empty application.scans }">
 			<c:set var="activeVuln" value="active" />
@@ -189,6 +193,13 @@
 					${ fn:length(application.documents) } 
 					<c:if test="${ fn:length(application.documents) == 1 }">Document</c:if>
 					<c:if test="${ fn:length(application.documents) != 1 }">Documents</c:if>
+				</a>
+			</li>
+			<li class="pointer">
+				<a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
+					${ fn:length(application.scanQueueTasks) }
+					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Queue</c:if>
+					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scans Queue</c:if>
 				</a>
 			</li>
 		</ul>

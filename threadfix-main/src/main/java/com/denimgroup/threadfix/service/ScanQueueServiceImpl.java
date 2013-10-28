@@ -44,6 +44,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
 import com.denimgroup.threadfix.data.entities.ScanStatus;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
@@ -55,19 +56,19 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	protected final SanitizedLogger log = new SanitizedLogger(ScanQueueServiceImpl.class);
 
 	private ApplicationDao applicationDao;
-	private ChannelTypeDao channelTypeDao;
+//	private ChannelTypeDao channelTypeDao;
 	private DocumentDao documentDao;
 	private ApplicationChannelDao applicationChannelDao;
 	private ScanQueueTaskDao scanQueueTaskDao;
 	
 	@Autowired
 	public ScanQueueServiceImpl(ApplicationDao applicationDao,
-								ChannelTypeDao channelTypeDao,
+//								ChannelTypeDao channelTypeDao,
 								DocumentDao documentDao,
 								ApplicationChannelDao applicationChannelDao,
 								ScanQueueTaskDao scanQueueTaskDao) {
 		this.applicationDao = applicationDao;
-		this.channelTypeDao = channelTypeDao;
+//		this.channelTypeDao = channelTypeDao;
 		this.documentDao = documentDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.scanQueueTaskDao = scanQueueTaskDao;
@@ -88,7 +89,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			myCal.add(Calendar.HOUR, 12);
 			myTask.setTimeoutTime(myCal.getTime());
 			myTask.setScanner(scannerType);
-			myTask.setStatus(ScanQueueTask.STATUS_QUEUED);
+			myTask.setStatus(ScanQueueTaskStatus.STATUS_QUEUED.getValue());
 			//	TODO - See if we really need ScanAgentInfo here because that really only
 			//	matters once an agent "claims" the task to execute.
 			myTask.setScanAgentInfo("<Junk Scan Agent Info>");
@@ -146,7 +147,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	}
 	
 	@Override
-	public Object requestTask(String scanners, String agentConfig) {
+	public Object requestTask(String scanners, String agentConfig, String secureTaskKey) {
 		Task retVal = null;
 		
 		if(scanners == null) {
@@ -181,6 +182,13 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					retVal.setTaskId(task.getId());
 					retVal.setTaskType(task.getScanner());
 					TaskConfig taskConfig = new TaskConfig();
+					
+					if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
+						String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
+						log.warn(msg);
+						return msg;
+					}
+					
 					taskConfig.setTargetUrlString(task.getApplication().getUrl());
 					
 					//	See if there is a configuration file specified for this Application and scanner type
@@ -205,11 +213,12 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					}
 					
 					retVal.setTaskConfig(taskConfig);
+					retVal.setSecureTaskKey(secureTaskKey);
 					
 					//	Mark the task as having been assigned
 					//	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
 					task.setStartTime(new Date());
-					task.setStatus(ScanQueueTask.STATUS_ASSIGNED);
+					task.setStatus(ScanQueueTaskStatus.STATUS_ASSIGNED.getValue());
 					
 					ScanStatus status = new ScanStatus();
 					status.setScanQueueTask(task);
@@ -217,6 +226,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					status.setMessage("Assigning task to an agent with agentConfig:\n" + agentConfig);
 					
 					task.addScanStatus(status);
+					task.setSecureKey(secureTaskKey);
 					
 					this.scanQueueTaskDao.saveOrUpdate(task);
 					log.info("Scanner: " + scanner + " matched the task and the task has been assigned: " + task);
@@ -249,7 +259,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
 		String message = "Scan completed successfully at: " + format.format(now);
 
-		retVal = changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTask.STATUS_COMPLETE_SUCCESSFUL, message);
+		retVal = changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTaskStatus.STATUS_COMPLETE_SUCCESSFUL.getValue(), message);
 		
 		return(retVal);
 	}
@@ -258,7 +268,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	public boolean failTask(int scanQueueTaskId, String message) {
 		boolean retVal;
 		
-		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTask.STATUS_COMPLETE_FAILED, message);
+		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTaskStatus.STATUS_COMPLETE_FAILED.getValue(), message);
 		
 		return(retVal);
 	}
@@ -270,7 +280,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		
 		ScanStatus status = new ScanStatus();
 		status.setScanQueueTask(task);
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+//		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
 		status.setMessage(message);
 		status.setTimestamp(timestamp);
 		
@@ -331,6 +341,32 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		}
 		*/
 		return(null);
+	}
+
+	@Override
+	public ScanQueueTask loadTaskById(int taskId) {
+		return scanQueueTaskDao.retrieveById(taskId);
+	}
+
+	@Override
+	public String deactivateTask(ScanQueueTask task) {
+		task.setActive(false);
+		task.setEndTime(new Date());
+		scanQueueTaskDao.saveOrUpdate(task);
+		return null;
+	}
+
+	@Override
+	public String deleteTask(ScanQueueTask task) {
+		Application application = applicationDao.retrieveById(task.getApplication().getId());
+		if (application == null)
+			return "Task couldn't be deleted. Something happened...";
+		
+		application.getScanQueueTasks().remove(task);
+		task.setApplication(null);
+		scanQueueTaskDao.delete(task);
+		applicationDao.saveOrUpdate(application);
+		return null;
 	}
 
 }

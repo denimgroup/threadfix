@@ -49,6 +49,7 @@ public final class ZipFileUtils {
 	 * @param zipFilename Location of the ZIP file to unpack
 	 * @param targetPath Base path where the ZIP file shoudl be unpacked
 	 */
+	@SuppressWarnings({ "unchecked", "resource" })
 	public static void unzipFile(String zipFilename, String targetPath)
 	throws java.io.IOException {
 		
