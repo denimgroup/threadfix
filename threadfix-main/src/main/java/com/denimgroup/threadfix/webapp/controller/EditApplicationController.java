@@ -56,6 +56,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
@@ -117,7 +118,7 @@ public class EditApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName",
 				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-				"uniqueId", "organization.id"});
+				"uniqueId", "organization.id", "frameworkType", "repositoryUrl"});
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -194,6 +195,7 @@ public class EditApplicationController {
 			
 			model.addAttribute("application", application);
 			model.addAttribute("finding", new Finding());
+			model.addAttribute("applicationTypes", FrameworkType.values());
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
 			ControllerUtils.addSuccessMessage(request,
 					"The application was edited successfully.");

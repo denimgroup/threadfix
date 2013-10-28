@@ -62,6 +62,20 @@
 					<form:errors path="applicationCriticality.id" cssClass="errors" />
 				</td>
 			</tr>
+			<tr>
+				<td class="right-align" style="padding:5px;">Application Type</td>
+				<td class="left-align"  style="padding:5px;">
+					<form:select path="frameworkType" 
+						items="${ applicationTypes }"
+						itemLabel="displayName"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="right-align" style="padding:5px;">Source Code URL:</td>
+				<td class="left-align"  style="padding:5px;">
+					<form:input maxlength="250" path="repositoryUrl"/>
+				</td>
+			</tr>						
 			<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
 				<spring:param name="orgId" value="${ application.organization.id }" />
 			</spring:url>
