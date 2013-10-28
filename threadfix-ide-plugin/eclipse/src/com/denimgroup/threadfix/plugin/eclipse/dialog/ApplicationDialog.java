@@ -23,15 +23,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 public class ApplicationDialog extends TitleAreaDialog {
 	
-	private List<Button> buttons = new ArrayList<Button>();
+//	private List<Button> buttons = new ArrayList<Button>();
+	private List<TreeItem> treeNodes = new ArrayList<TreeItem>();
 
 	private Set<String> appIds = null;
 
 	private final Map<String, String> appIdMap;
-	private final Map<String, List<String>> appTeamMap;
+	private final Map<String, List<List<String>>> appTeamMap;
 	private final Set<String> alreadyChecked;
 
 	public ApplicationDialog(Shell parentShell, Map<String, String> appIdMap,
@@ -69,6 +73,8 @@ public class ApplicationDialog extends TitleAreaDialog {
 //		Shell shell = new Shell(display); 
 //		shell.setLayout(new FillLayout());
 		Composite container = new Composite(area, SWT.BORDER);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+		container.setBounds(0, 4, 255, 254);
 		container.setLayout(new FillLayout());
 
 		createApplicationSelectionTree(container);
@@ -90,26 +96,36 @@ public class ApplicationDialog extends TitleAreaDialog {
 		for(String Team : appTeamMap.keySet()){
 			TreeItem teamItem = new TreeItem (tree, 0);
 			teamItem.setText (Team);
-			for(String app : appTeamMap.get(Team)){
+			for(List<String> app : appTeamMap.get(Team)){
 				TreeItem appItem = new TreeItem(teamItem,0);
-				appItem.setText(app);
+				appItem.setText(app.get(0));
+				appItem.setData(app.get(0),app.get(1));
+				if (alreadyChecked.contains(app.get(1)) && !appItem.getChecked()) {
+					appItem.setChecked(true);
+					treeNodes.add(appItem);
+				}
 			}
 		}
 	}
 	
-	private Map<String,List<String>> organizeAppsByTeam(){
-		Map<String,List<String>> teamMap = new HashMap<>();
+	private Map<String,List<List<String>>> organizeAppsByTeam(){
+		Map<String,List<List<String>>> teamMap = new HashMap<>();
 		for(String teamApp : appIdMap.keySet()){
 			String[] comps = teamApp.split("/");
-			List<String> temp = teamMap.get(comps[0]);
-			if(temp!=null){
-				temp.add(comps[1]);
+			if(comps.length==2){
+				List<List<String>> temp = teamMap.get(comps[0]);
+				List<String> sub = new ArrayList<>();
+				sub.add(comps[1]);
+				sub.add(appIdMap.get(teamApp));
+				if(temp!=null){
+					temp.add(sub);
 				
-			}else{
-				temp = new ArrayList<>();
-				temp.add(comps[1]);
+				}else{
+					temp = new ArrayList<>();
+					temp.add(sub);
+				}
+				teamMap.put(comps[0], temp);
 			}
-			teamMap.put(comps[0], temp);		
 		}
 		return teamMap;
 	}
@@ -133,18 +149,29 @@ public class ApplicationDialog extends TitleAreaDialog {
 	// We need to save the values of the Text fields into Strings because the UI
 	// gets disposed and the Text fields are not accessible any more.
 	private void saveInput() {
-		appIds = getAppIdsFromButtons();
+		appIds = getAppIdsFromTreeNodes();
 	}
 	
-	private Set<String> getAppIdsFromButtons() {
-		Set<String> returnSet = new HashSet<String>();
+//	private Set<String> getAppIdsFromButtons() {
+//		Set<String> returnSet = new HashSet<String>();
+//	
+//		for (Button button : buttons) {
+//			if (button.getSelection()) {
+//				returnSet.add(appIdMap.get(button.getText()));
+//			}
+//		}
+//	
+//		return returnSet;
+//	}
 	
-		for (Button button : buttons) {
-			if (button.getSelection()) {
-				returnSet.add(appIdMap.get(button.getText()));
+	private Set<String> getAppIdsFromTreeNodes(){
+		Set<String> returnSet = new HashSet<String>();
+		for(TreeItem node : treeNodes){
+			if (node.getChecked()){
+				returnSet.add((String) node.getData(node.getText()));
 			}
 		}
-	
+		
 		return returnSet;
 	}
 
@@ -158,7 +185,7 @@ public class ApplicationDialog extends TitleAreaDialog {
 		return appIds;
 	}
 	
-	static void checkPath(TreeItem item, boolean checked, boolean grayed) {
+	private void checkPath(TreeItem item, boolean checked, boolean grayed) {
 	    if (item == null) return;
 	    if (grayed) {
 	        checked = true;
@@ -169,6 +196,7 @@ public class ApplicationDialog extends TitleAreaDialog {
 	            TreeItem child = items[index];
 	            if (child.getGrayed() || checked != child.getChecked()) {
 	                checked = grayed = true;
+	                treeNodes.add(child);
 	                break;
 	            }
 	            index++;
@@ -179,9 +207,10 @@ public class ApplicationDialog extends TitleAreaDialog {
 	    checkPath(item.getParentItem(), checked, grayed);
 	}
 
-	static void checkItems(TreeItem item, boolean checked) {
+	private void checkItems(TreeItem item, boolean checked) {
 	    item.setGrayed(false);
 	    item.setChecked(checked);
+	    treeNodes.add(item);
 	    TreeItem[] items = item.getItems();
 	    for (int i = 0; i < items.length; i++) {
 	        checkItems(items[i], checked);

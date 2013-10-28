@@ -92,6 +92,7 @@
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField" />
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"/>
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.defectIdField"/>
 	    </markerContentGenerator>
 	    <markerField
 			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWEField"
@@ -107,6 +108,11 @@
 			class="com.denimgroup.threadfix.plugin.eclipse.marker.ParameterField"
 			id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField"
 			name="Parameter">
+		</markerField>
+		<markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.DefectIdField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.defectIdField"
+			name="Defect Id">
 		</markerField> 
 	</extension>
 

@@ -63,6 +63,11 @@ private final Collection<File> modelFiles;
 		return getPossibleParametersForModelType(beanField.getType());
 	}
 	
+	/**
+	 * This method uses recursion to walk the tree of possible parameters that the spring
+	 * controller will accept and bind to the model object. This information should be
+	 * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
+	 */
 	public BeanFieldSet getPossibleParametersForModelType(String className) {
 		BeanFieldSet fields = fieldMap.get(className);
 		

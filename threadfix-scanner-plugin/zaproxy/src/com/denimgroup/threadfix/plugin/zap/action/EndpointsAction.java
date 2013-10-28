@@ -19,7 +19,7 @@ public class EndpointsAction extends JMenuItem {
 	private static final long serialVersionUID = -3141841416510322529L;
 
 	private static final Logger logger = Logger.getLogger(EndpointsAction.class);
-	public static final String GENERIC_INT_SEGMENT = "{id}";
+	public static final String GENERIC_INT_SEGMENT = "\\{id\\}";
 
     private AttackThread attackThread = null;
 
@@ -60,6 +60,7 @@ public class EndpointsAction extends JMenuItem {
 		                    		params = params.substring(1,params.length()-1);
 		                    		for(String p : params.split(" ")){
 		                    			nodes.add(endPoint+"?"+p+"=true");
+//		                    			nodes.add(endPoint+"?"+p+"=1");
 		                    		}
 		                    	}
 		                    }
