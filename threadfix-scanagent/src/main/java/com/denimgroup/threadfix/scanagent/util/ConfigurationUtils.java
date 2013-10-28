@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -12,9 +13,6 @@ import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 
 public class ConfigurationUtils {
 	private static Logger log = Logger.getLogger(ConfigurationUtils.class);
-//	public static final String WORKING_DIR = System.getProperty("user.dir") + "/";
-////	public static final String WORKING_FILE_NAME = "configTemp.properties";
-//	public static final String WORKING_FILE_NAME = "scanagent.properties";
 	
 	public static void saveUrlConfig(String url, Configuration config) {
 		log.info("Start saving url");
@@ -105,22 +103,122 @@ public class ConfigurationUtils {
 		return true;
 	}
 
-	public static boolean checkHomeParam(String[] args) {
+	public static boolean checkHomeParam(String scannerType, String home) {
 
 		String osName = System.getProperty("os.name");
 		
-		if (args[0].equalsIgnoreCase(ScannerType.ZAPROXY.getShortName()) || args[0].equalsIgnoreCase(ScannerType.ZAPROXY.getFullName())) {
+		if (scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getShortName()) || scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getFullName())) {
 			if (osName.contains("Windows")) {
-				File zapExeFile = new File(args[2] + "/zap.bat");
+				File zapExeFile = new File(home + "/zap.bat");
 				if (!zapExeFile.exists() || !zapExeFile.isFile())
 					return false;
 			} else {
-				File zapExeFile = new File(args[2] + "/zap.sh");
+				File zapExeFile = new File(home + "/zap.sh");
 				if (!zapExeFile.exists() || !zapExeFile.isFile())
 					return false;
 			}
 		}
 		return true;
+	}
+
+	public static void configScannerType(String scannerType,
+			PropertiesConfiguration config) {
+		System.out.println("Start configuration for " + scannerType);
+		Scanner scan = new Scanner();
+		scan.setName(scannerType);
+		java.util.Scanner in = null;
+		try {
+			in = new java.util.Scanner(System.in);
+			// Input scanner home
+			boolean isValidHomeDir = false;
+			while (!isValidHomeDir) {
+				System.out.print("Input " + scannerType + " home directory (is where executable file ^^example zap.sh or zap.bat for ZAP^^ is located): ");
+				String home = in.nextLine();
+				if (checkHomeParam(scannerType, home)) {
+					isValidHomeDir = true;
+					String separator = System.getProperty("file.separator");
+					if (!home.endsWith(separator)) {
+						 home = home + separator;
+					}
+					scan.setHomeDir(home);
+				} else {
+					System.out.println(scannerType + " home directory is invalid!");
+				}
+			}
+			
+			// Input scanner version
+			System.out.print("Input " + scannerType + " version: ");
+			scan.setVersion(in.nextLine());
+			
+			// Input host and port			
+			System.out.print("Do you want to input host and port for " + scannerType + "(y/n)? ");
+			
+			String isContinue = in.nextLine();
+			if (isContinue.equalsIgnoreCase("y")) {
+				System.out.print("Input " + scannerType + " host: ");
+				scan.setHost(in.nextLine());
+				
+				boolean isValidPort = false;
+				while (!isValidPort) {
+					System.out.print("Input " + scannerType + " port: ");
+					
+					// Show more detail for zap
+					if (scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getShortName()) 
+							|| scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getFullName()))
+							System.out.print("(is port in Option/Local proxy)");
+					try {
+						int port = Integer.parseInt(in.nextLine());
+						scan.setPort(port);
+						isValidPort = true;
+					}
+					catch (NumberFormatException ex) {
+						System.out.println("Not a valid port. Please input integer.");
+					}
+				}
+			} else {
+				System.out.println("That's fine. System will set the dedault values for them (localhost and 8008).");
+				scan.setHost("localhost");
+				scan.setPort(8008);
+			}
+			saveScannerType(scan, config);
+			
+		} finally {
+			if (in != null)
+				in.close();
+		}
+		System.out.println("Ended configuration for " + scannerType + ". Congratulations!");
+	}
+
+	public static void configSystemInfo(PropertiesConfiguration config) {
+		System.out.println("Start configuration for required information.");
+		java.util.Scanner in = null;
+		try {
+			in = new java.util.Scanner(System.in);
+			// Input Threadfix base Url
+			System.out.print("Input ThreadFix base Url: ");
+			saveUrlConfig(in.nextLine(), config);
+			
+			// Input ThreadFix API key
+			System.out.print("Input ThreadFix API key: ");
+			saveKeyConfig(in.nextLine(), config);
+			
+			// Input working directory
+			boolean isValidDir = false;
+			while (!isValidDir) {
+				System.out.print("Input working directory (is where to export scan result files): ");
+				String workdir = in.nextLine();
+				if (isDirectory(workdir)) {
+					saveWorkDirectory(workdir, config);
+					isValidDir = true;
+				} else {
+					System.out.println("Directory is invalid.");
+				}
+			}
+		} finally {
+			if (in != null)
+				in.close();
+		}
+		System.out.println("Ended configuration. Congratulations!");
 	}
 
 }

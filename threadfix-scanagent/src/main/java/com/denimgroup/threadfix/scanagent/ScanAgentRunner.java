@@ -79,20 +79,21 @@ public final class ScanAgentRunner implements ServerConduit {
 		
 		Option runScanQueueTask = OptionBuilder.withLongOpt("runScanQueueTask")
 				.withDescription("Request all scan queue tasks from ThreadFix server and execute them")
+				.withLongOpt("run")
 				.create("r");
 		options.addOption(runScanQueueTask);
 		
 		Option set = OptionBuilder.withArgName("property> <value")
-				.withValueSeparator(' ')
-				.hasArgs(2)
+//				.withValueSeparator(' ')
+//				.hasArgs(2)
 				.withLongOpt("set")
-				.withDescription("Set the url (ThreadFix base url), key (ThreadFix API key) or workdir (working directory) properties")
+				.withDescription("Set the ThreadFix base url, ThreadFix API key or Working directory properties")
 				.create("s");
 		options.addOption(set); 
 		
-		Option configureScan = OptionBuilder.withArgName("scannerType> <version> <scanHomeDirectory> <optional host> <optional port")
+		Option configureScan = OptionBuilder.withArgName("scannerType")
 				.withValueSeparator(' ')
-				.hasArgs(5)
+				.hasArgs(1)
 				.withLongOpt("configureScan")
 				.withDescription("Configure scan information")
 				.create("cs");
@@ -120,42 +121,21 @@ public final class ScanAgentRunner implements ServerConduit {
 					
 				} else if (cmd.hasOption("s")) {
 					
-					String[] setArgs = cmd.getOptionValues("s");
-					if (setArgs == null || setArgs.length != 2) {
-						throw new ParseException("Bad arguments for set.");
-					}
-					
-					if ("url".equals(setArgs[0])) {
-						println("Setting URL to " + setArgs[1]);
-						ConfigurationUtils.saveUrlConfig(setArgs[1], config);
-					} else if ("key".equals(setArgs[0])) {
-						println("Setting API Key to " + setArgs[1]);
-						ConfigurationUtils.saveKeyConfig(setArgs[1], config);
-					} else if ("workdir".equals(setArgs[0])) {	
-						println("Setting working directory to " + setArgs[1]);
-						if (!ConfigurationUtils.isDirectory(setArgs[1]))
-							throw new ParseException("Directory is invalid!");	
-						ConfigurationUtils.saveWorkDirectory(setArgs[1], config);						
-					} else {
-						throw new ParseException("First argument to set must be url, key or workdir");
-					}
+					ConfigurationUtils.configSystemInfo(config);
 					
 				} else if (cmd.hasOption("cs")) {
 					String[] scanArgs = cmd.getOptionValues("cs");
-					if (scanArgs.length != 3 && scanArgs.length != 5) {
+					if (scanArgs.length != 1) {
 						throw new ParseException("Wrong number of arguments.");
 					}
-					if (ConfigurationUtils.checkHomeParam(scanArgs)) {
-						Scanner scan = parseScanner(scanArgs);
-						println("Saving " + scan);
-						ConfigurationUtils.saveScannerType(scan, config);
-					} else {
-						throw new ParseException("Scanner home directory is invalid!");
+					if (isValidScannerType(scanArgs[0])) {
+						ConfigurationUtils.configScannerType(scanArgs[0], config);
 					}
 
 				} else if (cmd.hasOption("r")) {
-					runScanQueue(config);
-					
+					if (checkRequiredConfiguration(config))
+						runScanQueue(config);
+
 				} else {
 					throw new ParseException("No arguments found.");
 				}
@@ -171,23 +151,21 @@ public final class ScanAgentRunner implements ServerConduit {
 			}		 
 	}
 
-	private static Scanner parseScanner(String[] scanArgs) throws ParseException {
-		Scanner scan = new Scanner();
-		scan.setName(scanArgs[0]);
-		scan.setVersion(scanArgs[1]);
-		scan.setHomeDir(scanArgs[2]);
-		if (scanArgs.length==5) {
-			try {
-				int port = Integer.valueOf(scanArgs[4]);
-				scan.setHost(scanArgs[3]);
-				scan.setPort(port);
-			} catch (NumberFormatException e) {
-				throw new ParseException("Port argument must be number");
-			}
+	private static boolean checkRequiredConfiguration(
+			PropertiesConfiguration config) {
+		if (config.getString("scanagent.baseWorkDir","").isEmpty()) {
+			System.out.println("Not found required configuration (ThreadFix URL, API Key or Working directory). " +
+					"Please run '-s' to set up all of these information.");
+			return false;
 		}
-		return scan;
+			
+		return true;
 	}
 
+	private static boolean isValidScannerType(String scanner) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	private static void println(String string) {
 		System.out.println(string);
@@ -203,11 +181,12 @@ public final class ScanAgentRunner implements ServerConduit {
 		ScanAgentRunner myAgent = new ScanAgentRunner();
 		myAgent.readConfiguration(config);
 		log.info("Scan agent configured");
-
-		myAgent.logConfiguration();
 		
-		//	Main polling loop
-		int numTasksRun = myAgent.pollAndRunTasks();
+		int numTasksRun = 0;
+		
+		if (myAgent.checkAndLogConfiguration())
+			//	Main polling loop
+			numTasksRun = myAgent.pollAndRunTasks();
 		
 		log.info("Numbef of tasks run: " + numTasksRun);
 		log.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");		
@@ -365,6 +344,8 @@ public final class ScanAgentRunner implements ServerConduit {
 		
 		ThreadFixRestClient tfClient = new ThreadFixRestClient(this.threadFixServerUrl, this.threadFixApiKey);
 		String scannerList = makeScannerList(this.availableScanners);
+		if (scannerList == null || scannerList.isEmpty()) 
+			return retVal;
 		Object theReturn = tfClient.requestTask(scannerList, this.getAgentConfig());
 		if(theReturn == null) {
 			log.warn("Got a null task back from the ThreadFix server.");
@@ -452,7 +433,7 @@ public final class ScanAgentRunner implements ServerConduit {
 		this.availableScanners = ConfigurationUtils.readAllScanner(config);
 	}
 
-	private void logConfiguration() {
+	private boolean checkAndLogConfiguration() {
 		log.info("GenericScanAgent configuration:");
 		if(operatingSystem != null) {
 			log.info(this.operatingSystem);
@@ -463,6 +444,7 @@ public final class ScanAgentRunner implements ServerConduit {
 		if(availableScanners != null) {
 			if(availableScanners.size() == 0) {
 				log.info("No scanners configured");
+				return false;
 			} else {
 				log.info("Scanners:");
 				for(Scanner s : availableScanners) {
@@ -472,7 +454,9 @@ public final class ScanAgentRunner implements ServerConduit {
 			}
 		} else {
 			log.info("No scanners configured (NULL)");
+			return false;
 		}
+		return true;
 	}
 	
 	private Scanner getScanner(String scannerName){

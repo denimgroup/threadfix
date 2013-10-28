@@ -38,7 +38,9 @@ public class ScanAgentFactory {
 	/**
 	 * Returns a Scan Agent implementation based on the scanner type name
 	 * 
-	 * @param applicationChannel
+	 * @param scanner
+	 * @param workDir
+	 * @param serverConduit
 	 * @return
 	 */
 	public static AbstractScanAgent getScanAgent(Scanner scanner, String workDir, ServerConduit serverConduit) {

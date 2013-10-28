@@ -56,19 +56,19 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	protected final SanitizedLogger log = new SanitizedLogger(ScanQueueServiceImpl.class);
 
 	private ApplicationDao applicationDao;
-	private ChannelTypeDao channelTypeDao;
+//	private ChannelTypeDao channelTypeDao;
 	private DocumentDao documentDao;
 	private ApplicationChannelDao applicationChannelDao;
 	private ScanQueueTaskDao scanQueueTaskDao;
 	
 	@Autowired
 	public ScanQueueServiceImpl(ApplicationDao applicationDao,
-								ChannelTypeDao channelTypeDao,
+//								ChannelTypeDao channelTypeDao,
 								DocumentDao documentDao,
 								ApplicationChannelDao applicationChannelDao,
 								ScanQueueTaskDao scanQueueTaskDao) {
 		this.applicationDao = applicationDao;
-		this.channelTypeDao = channelTypeDao;
+//		this.channelTypeDao = channelTypeDao;
 		this.documentDao = documentDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.scanQueueTaskDao = scanQueueTaskDao;
@@ -184,7 +184,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					TaskConfig taskConfig = new TaskConfig();
 					
 					if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
-						String msg = "URL for application " + task.getApplication().getId() + "needs to be set.";
+						String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
 						log.warn(msg);
 						return msg;
 					}
@@ -280,7 +280,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		
 		ScanStatus status = new ScanStatus();
 		status.setScanQueueTask(task);
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+//		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
 		status.setMessage(message);
 		status.setTimestamp(timestamp);
 		
