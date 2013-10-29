@@ -1,9 +1,8 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.permissions;
 
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,62 +11,59 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
+import com.denimgroup.threadfix.service.PermissionService;
 
-@Service
-public class PermissionServiceImpl implements PermissionService {
-	
-	PermissionService delegate = null;
-	
-	public PermissionServiceImpl() {
-		delegate = PermissionServiceDelegateFactory.getDelegate();
-	}
+public class DefaultPermissionServiceDelegate implements PermissionService {
 
 	@Override
 	public boolean isAuthorized(Permission permission, Integer orgId,
 			Integer appId) {
-		return delegate.isAuthorized(permission, orgId, appId);
+		return true;
 	}
 
 	@Override
 	public void addPermissions(Model model, Integer orgId, Integer appId,
 			Permission... permissions) {
-		delegate.addPermissions(model, orgId, appId, permissions);
+		for (Permission permission : permissions) {
+			model.addAttribute(permission.getCamelCase(), true);
+		}
 	}
 
 	@Override
 	public void addPermissions(ModelAndView modelAndView, Integer orgId,
 			Integer appId, Permission... permissions) {
-		delegate.addPermissions(modelAndView, orgId, appId, permissions);
+		for (Permission permission : permissions) {
+			modelAndView.addObject(permission.getCamelCase(), true);
+		}
 	}
 
 	@Override
 	public boolean canSeeRules(Waf waf) {
-		return delegate.canSeeRules(waf);
+		return true;
 	}
 
 	@Override
 	public Set<Integer> getAuthenticatedAppIds() {
-		return delegate.getAuthenticatedAppIds();
+		return null; // means all apps
 	}
 
 	@Override
 	public Set<Integer> getAuthenticatedTeamIds() {
-		return delegate.getAuthenticatedTeamIds();
+		return null; // means all apps
 	}
 
 	@Override
 	public List<Application> filterApps(Organization organization) {
-		return delegate.filterApps(organization);
+		return organization.getActiveApplications();
 	}
 
 	@Override
 	public void filterApps(List<RemoteProviderType> providers) {
-		delegate.filterApps(providers);
 	}
 	
 	@Override
 	public boolean isEnterprise() {
-		return delegate.isEnterprise();
+		return false;
 	}
+
 }
