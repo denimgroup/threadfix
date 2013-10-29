@@ -46,6 +46,7 @@ import org.zaproxy.clientapi.core.ClientApiException;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
@@ -293,7 +294,6 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		try {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, 8008));
 			retVal = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/");
 			if(retVal != null) {
 				log.debug("Length of response file from ZAP is: " + retVal.length());
@@ -593,8 +593,8 @@ class ZapScanStarter {
 	
 	private static String getZapRunnerFile() {
 		if (System.getProperty("os.name").contains("Windows"))
-			return "zap.bat";
-		else return "zap.sh";
+			return ConfigurationUtils.ZAP_FILES[0];
+		else return ConfigurationUtils.ZAP_FILES[1];
 					
 	}
 

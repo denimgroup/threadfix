@@ -14,6 +14,9 @@ import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 public class ConfigurationUtils {
 	private static Logger log = Logger.getLogger(ConfigurationUtils.class);
 	
+	public static String[] ZAP_FILES = new String[]{"zap.bat", "zap.sh"};
+	public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
+	
 	public static void saveUrlConfig(String url, Configuration config) {
 		log.info("Start saving url");
 		writeToFile(new String[]{"scanagent.threadFixServerUrl"}, new String[]{url}, config);
@@ -36,15 +39,11 @@ public class ConfigurationUtils {
 		log.info("Start saving scanner type");
 		String[] names = new String[5];
 		String[] values = new String[5];
-		String name = "";
-		for (ScannerType type : ScannerType.values()) {
-			if (scan.getName().equalsIgnoreCase(type.getShortName()) || scan.getName().equalsIgnoreCase(type.getFullName())) {
-				name = type.getShortName();
-				names[0] = type.getShortName() + ".scanName";
-				values[0] = type.getFullName();
-				break;
-			}
-		}
+
+		ScannerType type = ScannerType.getScannerType(scan.getName());
+		String name = type.getShortName();
+		names[0] = type.getShortName() + ".scanName";
+		values[0] = type.getFullName();
 		names[1] = name + ".scanVersion";
 		names[2] = name + ".scanExecutablePath";
 		names[3] = name + ".scanHost";
@@ -60,9 +59,10 @@ public class ConfigurationUtils {
 	public static List<Scanner> readAllScanner(Configuration config) {
 		log.info("Start reading all scanner type");
 		List<Scanner> scanners = new ArrayList<Scanner>();
-		Scanner scan = new Scanner();
+		
 		try {
 			for (ScannerType type : ScannerType.values()) {
+				Scanner scan = new Scanner();
 				String scanName = config.getString(type.getShortName() + ".scanName");
 				if (scanName != null && !scanName.isEmpty()) {
 					scan.setName(scanName);
@@ -103,68 +103,77 @@ public class ConfigurationUtils {
 		return true;
 	}
 
-	public static boolean checkHomeParam(String scannerType, String home) {
+	public static boolean checkHomeParam(ScannerType scannerType, String home) {
 
 		String osName = System.getProperty("os.name");
-		
-		if (scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getShortName()) || scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getFullName())) {
+
+		if (scannerType == ScannerType.ZAPROXY) {
 			if (osName.contains("Windows")) {
-				File zapExeFile = new File(home + "/zap.bat");
+				File zapExeFile = new File(home + ZAP_FILES[0]);
 				if (!zapExeFile.exists() || !zapExeFile.isFile())
 					return false;
 			} else {
-				File zapExeFile = new File(home + "/zap.sh");
+				File zapExeFile = new File(home + ZAP_FILES[1]);
 				if (!zapExeFile.exists() || !zapExeFile.isFile())
 					return false;
 			}
+		} else if (scannerType == ScannerType.ACUNETIX_WVS) {
+			File acuExeFile = new File(home + ACUNETIX_FILES[0]);
+			if (!acuExeFile.exists() || !acuExeFile.isFile())
+				return false; 
 		}
 		return true;
 	}
 
-	public static void configScannerType(String scannerType,
+	public static void configScannerType(ScannerType scannerType,
 			PropertiesConfiguration config) {
-		System.out.println("Start configuration for " + scannerType);
+		
+		if (scannerType == null) {
+			System.out.println("Wrong scanner type.");
+			return;
+		}
+		
+		System.out.println("Start configuration for " + scannerType.getFullName());
 		Scanner scan = new Scanner();
-		scan.setName(scannerType);
+		scan.setName(scannerType.getFullName());
 		java.util.Scanner in = null;
 		try {
 			in = new java.util.Scanner(System.in);
 			// Input scanner home
 			boolean isValidHomeDir = false;
 			while (!isValidHomeDir) {
-				System.out.print("Input " + scannerType + " home directory (is where executable file ^^example zap.sh or zap.bat for ZAP^^ is located): ");
+				System.out.print("Input " + scannerType.getFullName() + " home directory (is where " + getExeFile(scannerType) +" located): ");
 				String home = in.nextLine();
+				String separator = System.getProperty("file.separator");
+				if (!home.endsWith(separator)) {
+					 home = home + separator;
+				}
 				if (checkHomeParam(scannerType, home)) {
 					isValidHomeDir = true;
-					String separator = System.getProperty("file.separator");
-					if (!home.endsWith(separator)) {
-						 home = home + separator;
-					}
 					scan.setHomeDir(home);
 				} else {
-					System.out.println(scannerType + " home directory is invalid!");
+					System.out.println(scannerType.getFullName() + " home directory is invalid!");
 				}
 			}
 			
 			// Input scanner version
-			System.out.print("Input " + scannerType + " version: ");
+			System.out.print("Input " + scannerType.getFullName() + " version: ");
 			scan.setVersion(in.nextLine());
 			
 			// Input host and port			
-			System.out.print("Do you want to input host and port for " + scannerType + "(y/n)? ");
+			System.out.print("Do you want to input host and port for " + scannerType.getFullName() + "(y/n)? ");
 			
 			String isContinue = in.nextLine();
 			if (isContinue.equalsIgnoreCase("y")) {
-				System.out.print("Input " + scannerType + " host: ");
+				System.out.print("Input " + scannerType.getFullName() + " host: ");
 				scan.setHost(in.nextLine());
 				
 				boolean isValidPort = false;
 				while (!isValidPort) {
-					System.out.print("Input " + scannerType + " port: ");
+					System.out.print("Input " + scannerType.getFullName() + " port: ");
 					
 					// Show more detail for zap
-					if (scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getShortName()) 
-							|| scannerType.equalsIgnoreCase(ScannerType.ZAPROXY.getFullName()))
+					if (scannerType == ScannerType.ZAPROXY)
 							System.out.print("(is port in Option/Local proxy)");
 					try {
 						int port = Integer.parseInt(in.nextLine());
@@ -176,9 +185,11 @@ public class ConfigurationUtils {
 					}
 				}
 			} else {
-				System.out.println("That's fine. System will set the dedault values for them (localhost and 8008).");
-				scan.setHost("localhost");
-				scan.setPort(8008);
+				if (scannerType == ScannerType.ZAPROXY) {
+					System.out.println("That's fine. System will set the dedault values for them (localhost and 8008).");
+					scan.setHost("localhost");
+					scan.setPort(8008);
+				}
 			}
 			saveScannerType(scan, config);
 			
@@ -186,7 +197,7 @@ public class ConfigurationUtils {
 			if (in != null)
 				in.close();
 		}
-		System.out.println("Ended configuration for " + scannerType + ". Congratulations!");
+		System.out.println("Ended configuration for " + scannerType.getFullName() + ". Congratulations!");
 	}
 
 	public static void configSystemInfo(PropertiesConfiguration config) {
@@ -219,6 +230,15 @@ public class ConfigurationUtils {
 				in.close();
 		}
 		System.out.println("Ended configuration. Congratulations!");
+	}
+	
+	private static String getExeFile(ScannerType scanner) {
+		String exeName = null;
+		if (scanner == ScannerType.ZAPROXY) 
+			exeName = ZAP_FILES[0] + "/" + ZAP_FILES[1];
+		else if (scanner == ScannerType.ACUNETIX_WVS)
+			exeName = ACUNETIX_FILES[0];
+		return exeName;
 	}
 
 }
