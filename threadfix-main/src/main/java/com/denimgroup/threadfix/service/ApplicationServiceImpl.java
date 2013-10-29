@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -347,6 +348,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 			return;
 		}
+		
+		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
+			File file = new File(application.getRepositoryFolder().trim());
+			if (!file.exists() || !file.isDirectory()) {
+				result.rejectValue("repositoryFolder", null, null, "Invalid directory");
+				return;
+			}
+		}		
 						
 		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(), application.getOrganization().getId()));
 
@@ -484,6 +493,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
 		if (databaseApplication != null) {
 			result.rejectValue("name", "errors.nameTaken");
+			return;
+		}
+		
+		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
+			File file = new File(application.getRepositoryFolder().trim());
+			if (!file.exists() || !file.isDirectory()) {
+				result.rejectValue("repositoryFolder", null, null, "Invalid directory");
+				return;
+			}
 		}
 		
 		if (!canManageWafs && application.getWaf() != null) {

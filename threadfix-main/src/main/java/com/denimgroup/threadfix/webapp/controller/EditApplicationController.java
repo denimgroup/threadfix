@@ -118,7 +118,7 @@ public class EditApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName",
 				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-				"uniqueId", "organization.id", "frameworkType", "repositoryUrl"});
+				"uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder"});
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

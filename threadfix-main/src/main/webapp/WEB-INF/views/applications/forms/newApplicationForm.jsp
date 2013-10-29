@@ -57,6 +57,13 @@
 					<form:input maxlength="250" path="repositoryUrl"/>
 				</td>
 			</tr>			
+			<tr>
+				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
+				<td class="left-align"  style="padding:5px;">
+					<form:input maxlength="250" path="repositoryFolder"/>
+					<form:errors path="repositoryFolder" cssClass="errors" />
+				</td>
+			</tr>
 		</table>
 	</div>
 	<div class="modal-footer">

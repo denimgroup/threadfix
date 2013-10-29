@@ -66,7 +66,7 @@ public class Application extends AuditableEntity {
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
 	
-	String frameworkType, sourceCodeAccessLevel, vulnTypeStrategy, repositoryUrl;
+	String frameworkType, sourceCodeAccessLevel, vulnTypeStrategy, repositoryUrl, repositoryFolder;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -476,6 +476,15 @@ public class Application extends AuditableEntity {
 
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	@Column(length = URL_LENGTH)
+	public String getRepositoryFolder() {
+		return repositoryFolder;
+	}
+
+	public void setRepositoryFolder(String repositoryFolder) {
+		this.repositoryFolder = repositoryFolder;
 	}
 
 	@Transient

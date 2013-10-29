@@ -135,17 +135,28 @@ public class MergeConfigurationGenerator {
 		return type;
 	}
 
-	// TODO make this work for more than Git
 	public static File getWorkTree(Application application) {
+		
 		File applicationDirectory = new File(baseDirectory + application.getId());
-		
-		Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
-		
-		if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
-			return repo.getWorkTree();
-		} else {
-			return applicationDirectory;
+
+		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
+			Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
+
+			if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
+				return repo.getWorkTree();
+			} else {
+				return applicationDirectory;
+			}
+		} else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
+			File file = new File(application.getRepositoryFolder().trim());
+			if (!file.exists() || !file.isDirectory()) {
+				return applicationDirectory;
+			} else {
+				return file;
+			}
 		}
+
+		return applicationDirectory;
 	}
 	
 	// For now this is not very general and only handles Java stuff.
@@ -189,6 +200,9 @@ public class MergeConfigurationGenerator {
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
 			returnLevel = SourceCodeAccessLevel.FULL;
 			log.info("Since there is a configured Repository URL, returning " + returnLevel.displayName);
+		} else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
+			returnLevel = SourceCodeAccessLevel.FULL;
+			log.info("Since there is a configured Repository Folder, returning " + returnLevel.displayName);
 		} else if (hasStaticScans(application) || scan != null && scan.isStatic()) {
 			returnLevel = SourceCodeAccessLevel.PARTIAL;
 			log.info("Since there is at least one static scan in the application, returning " + returnLevel.displayName);
