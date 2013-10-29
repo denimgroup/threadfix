@@ -37,11 +37,6 @@ public class DefaultEndpoint implements Endpoint {
 	}
 	
 	@Override
-	public String toString() {
-		return getCSVLine();
-	}
-	
-	@Override
 	public Set<String> getParameters() {
 		return parameters;
 	}
