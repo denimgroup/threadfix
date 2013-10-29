@@ -347,8 +347,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		try {
 			log.info("Attempting to start scan");
 			
-			//	TODO - Need better info about what strings are expected for the second and third arguments
-			response = zap.ascan.scan(theConfig.getTargetUrlString(), "true", "true");
+			response = zap.ascan.scan(theConfig.getTargetUrlString(), "true", "false");
 			log.info("Call to start scan returned successfull. Checking to see if scan actually started");
 			
 			if(didCallSucceed(response)) {
