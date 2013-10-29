@@ -36,4 +36,15 @@ public enum ScannerType {
 		this.fullName = fullName;
 	}
 	
+	public static ScannerType getScannerType(String keyword) {
+		ScannerType type = null;
+		for (ScannerType t: values()) {
+			if (keyword.equalsIgnoreCase(t.getShortName()) 
+					|| keyword.equalsIgnoreCase(t.getFullName())) {
+				type = t;
+				break;
+			}
+		}
+		return type;
+	}
 }
