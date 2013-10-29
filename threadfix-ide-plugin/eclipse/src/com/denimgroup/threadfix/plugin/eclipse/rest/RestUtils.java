@@ -38,7 +38,7 @@ public class RestUtils {
 
 	public String getApplications() {
 		String result = httpGet(url + "/code/applications/?apiKey=" + key);
-		if(result.contains("html")){
+		if(result.contains("<html lang=\"en\">")){
 			return "Authentication failed,check rest url";
 		}
 		return result;
