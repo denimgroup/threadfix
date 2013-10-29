@@ -46,6 +46,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
@@ -128,8 +129,9 @@ public final class ScanAgentRunner implements ServerConduit {
 					if (scanArgs.length != 1) {
 						throw new ParseException("Wrong number of arguments.");
 					}
-					if (isValidScannerType(scanArgs[0])) {
-						ConfigurationUtils.configScannerType(scanArgs[0], config);
+					ScannerType scannerType = isValidScannerType(scanArgs[0]);
+					if (scannerType != null) {
+						ConfigurationUtils.configScannerType(scannerType, config);
 					}
 
 				} else if (cmd.hasOption("r")) {
@@ -162,9 +164,8 @@ public final class ScanAgentRunner implements ServerConduit {
 		return true;
 	}
 
-	private static boolean isValidScannerType(String scanner) {
-		// TODO Auto-generated method stub
-		return true;
+	private static ScannerType isValidScannerType(String scanner) {
+		return ScannerType.getScannerType(scanner);
 	}
 
 	private static void println(String string) {

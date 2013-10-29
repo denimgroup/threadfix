@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 
 public class AcunetixScanAgent extends AbstractScanAgent {
 	
@@ -49,7 +50,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		log.info("Setting up command-line arguments for Acunetix scan");
 		
-		String acunetixExecutable = this.acunetixExecutablePath + File.separator + "wvs_console.exe";
+		String acunetixExecutable = this.acunetixExecutablePath + File.separator + ConfigurationUtils.ACUNETIX_FILES[0];
 		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
 		String targetSite = config.getTargetUrlString();
 		log.debug("Site to scan: " + targetSite);
@@ -64,7 +65,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		try {
 			Process p = pb.start();
-			log.info("Acunetix started successfully.");
+			log.info("Acunetix started successfully. Begin scanning, this will take sometimes...");
 			
 			InputStreamReader isr = new InputStreamReader(p.getInputStream());
 			BufferedReader br = new BufferedReader(isr);

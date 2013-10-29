@@ -46,11 +46,21 @@ public class ScanAgentFactory {
 	public static AbstractScanAgent getScanAgent(Scanner scanner, String workDir, ServerConduit serverConduit) {
 
 		AbstractScanAgent agent = null;
-
-		if (ScannerType.ACUNETIX_WVS.getFullName().equalsIgnoreCase(scanner.getName()))
-			agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit); 
-		else if (ScannerType.ZAPROXY.getFullName().equalsIgnoreCase(scanner.getName()))
-			agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
+		
+		switch (ScannerType.getScannerType(scanner.getName())) {
+			case ACUNETIX_WVS: 
+				agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit);
+				break;
+			case ZAPROXY:
+				agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
+				break;
+			default: break;
+		}
+		
+//		if (ScannerType.ACUNETIX_WVS.getFullName().equalsIgnoreCase(scanner.getName()))
+//			agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit); 
+//		else if (ScannerType.ZAPROXY.getFullName().equalsIgnoreCase(scanner.getName()))
+//			agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
 
 		return agent;
 	}
