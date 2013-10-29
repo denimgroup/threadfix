@@ -121,7 +121,7 @@ public class ReportsServiceImpl implements ReportsService {
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters,
 			HttpServletRequest request) {
-		if (true){//parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
+		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
 			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE);
 		}
 		

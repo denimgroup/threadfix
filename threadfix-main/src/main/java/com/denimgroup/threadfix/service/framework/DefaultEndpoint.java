@@ -35,7 +35,7 @@ public class DefaultEndpoint implements Endpoint {
 		this.path = path;
 		this.parameters = parameters;
 	}
-	
+
 	@Override
 	public Set<String> getParameters() {
 		return parameters;
