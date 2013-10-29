@@ -148,7 +148,6 @@ public class PluginRestController extends RestController {
 				builder.append(vulnerability.getMarkerCSVLine()).append("\n");
 			}
 		}
-		
 		return builder.toString();
 	}
 	
