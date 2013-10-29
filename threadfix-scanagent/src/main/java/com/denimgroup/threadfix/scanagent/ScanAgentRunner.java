@@ -132,12 +132,20 @@ public final class ScanAgentRunner implements ServerConduit {
 					ScannerType scannerType = isValidScannerType(scanArgs[0]);
 					if (scannerType != null) {
 						ConfigurationUtils.configScannerType(scannerType, config);
+					} else {
+						println("Not correct scanner. See -printScannerOptions for details.");
 					}
 
 				} else if (cmd.hasOption("r")) {
 					if (checkRequiredConfiguration(config))
 						runScanQueue(config);
 
+				} else if (cmd.hasOption("printScannerOptions")) {
+					println("Available scanner type options:");
+					for (ScannerType type : ScannerType.values()) {
+						println("\t" + type.getShortName() + " (or " + type.getFullName() + ")");
+					}
+					
 				} else {
 					throw new ParseException("No arguments found.");
 				}
