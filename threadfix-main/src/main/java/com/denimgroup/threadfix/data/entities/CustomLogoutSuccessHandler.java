@@ -43,8 +43,12 @@ public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 	public void onLogoutSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication) throws IOException,
 			ServletException {
-		String userName = authentication.getName();
-		log.info("User " + userName + " logged out successfully at " + new Date());
+		if(authentication != null) {
+			String userName = authentication.getName();
+			log.info("User " + userName + " logged out successfully at " + new Date());
+		} else {
+			log.warn("Logout was attempted by a user who was not logged in.");
+		}
 		super.onLogoutSuccess(request, response, authentication);
 	}
 
