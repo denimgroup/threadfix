@@ -38,9 +38,16 @@ public interface ScanQueueService {
 	
 	boolean taskStatusUpdate(int taskId, String message);
 	
-	Object requestTask(String scanners, String agentConfig);
+	Object requestTask(String scanners, String agentConfig, String secureTaskKey);
 	
 	boolean completeTask(int scanQueueTaskId);
 	
 	boolean failTask(int scanQueueTaskId, String message);
+
+	ScanQueueTask loadTaskById(int taskId);
+
+	String deactivateTask(ScanQueueTask task);
+
+	String deleteTask(ScanQueueTask task);
+
 }

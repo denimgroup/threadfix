@@ -110,6 +110,7 @@
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmission$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/docsTab$,
+		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanQueueTab$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/documents/upload$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/documents/vulnerabilities/[0-9]+/upload$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/documents/[0-9]+/download$,
@@ -151,6 +152,8 @@
         		protected-regex ^/wafs/new/ajax/appPage$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/getDefectsFromDefectTracker$,
+        		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/scanQueueTask/[0-9]+/delete$,
+        		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/addScanQueueTask$,
         	</param-value>
 		</init-param>
 	</filter>

@@ -33,8 +33,16 @@
 							</spring:url>
 							<a href='<c:out value="${detailUrl}" />'><c:out value="${scanQueueTask.id}" />
 							</a>
-						</td> 
-						<td><c:out value="${scanQueueTask.application.name}" /></td>
+						</td>
+						<td id="application${ status.count }">
+							<spring:url	value="/organizations/{teamId}/applications/{appId}" var="appUrl">
+								<spring:param name="teamId"	value="${ scanQueueTask.application.organization.id }" />
+								<spring:param name="appId" value="${ scanQueueTask.application.id }" />
+							</spring:url> 
+							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> 
+								<c:out	value="${ scanQueueTask.application.name }" />
+							</a></div>
+						</td>						
 						<td><c:out value="${scanQueueTask.showStatusString()}" /></td>
 						<td><c:out value="${scanQueueTask.scanner}" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.createTime }" type="both" dateStyle="short" timeStyle="short" /></td>

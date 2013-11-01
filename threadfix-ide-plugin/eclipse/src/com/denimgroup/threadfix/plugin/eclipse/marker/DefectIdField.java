@@ -21,57 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.eclipse.marker;
 
-import java.util.List;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.markers.MarkerField;
+import org.eclipse.ui.views.markers.MarkerItem;
 
-import com.denimgroup.threadfix.data.entities.APIKey;
-
-/**
- * @author mcollins
- * 
- */
-public interface APIKeyService {
-
-	/**
-	 * @return
-	 */
-	List<APIKey> loadAll();
-
-	/**
-	 * @param apiKeyId
-	 * @return
-	 */
-	APIKey loadAPIKey(int apiKeyId);
+public class DefectIdField extends MarkerField {
+	@Override
+	public String getColumnHeaderText() {
+		return "Defect Id";
+	}
 	
-	/**
-	 * Load the API key from the database
-	 * @param key
-	 * @return
-	 */
-	APIKey loadAPIKey(String key);
+	@Override
+	public int getDefaultColumnWidth(final Control control) {
+	    return 400;
+	}
 
-	/**
-	 * @param apiKey
-	 */
-	void storeAPIKey(APIKey apiKey);
+	@Override
+	public String getValue(MarkerItem item) {
+		return item.getAttributeValue("defectId", "");
+	}
 
-	/**
-	 * @param organizationId
-	 */
-	void deactivateApiKey(APIKey apiKey);
-
-	/**
-	 * Create a new securely random API Key and package it in the APIKey object with the note.
-	 * @param note
-	 * @return
-	 */
-	APIKey createAPIKey(String note, boolean restricted);
-	
-	/**
-	 * 
-	 * @return
-	 */
-	String generateNewSecureRandomKey();
-	
 }

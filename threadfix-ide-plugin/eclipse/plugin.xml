@@ -15,6 +15,13 @@
             </separator>
          </menu>
          <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               label="Show View"
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Configure ThreadFix URL and API Key">
+         </action>
+         <action
                class="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
                id="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
                label="Import ThreadFix Results"
@@ -85,6 +92,7 @@
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField" />
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"/>
 		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.defectUrlField"/>
 	    </markerContentGenerator>
 	    <markerField
 			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWEField"
@@ -100,6 +108,11 @@
 			class="com.denimgroup.threadfix.plugin.eclipse.marker.ParameterField"
 			id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField"
 			name="Parameter">
+		</markerField>
+		<markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.DefectUrlField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.defectUrlField"
+			name="Defect Url">
 		</markerField> 
 	</extension>
 

@@ -179,6 +179,13 @@ public class ThreadFixRestClient {
 				new String[] {  util.getKey(), applicationId, scannerType });
 		return(result);
 	}
+
+	public String addAppUrl(String appId, String url) {
+		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/addUrl", 
+				new String[] { "apiKey",       "url" },
+				new String[] {  util.getKey(),  url});
+		return result;
+	}	
 	
 	public String requestTask(String scanners, String agentConfig) {
 		String result = util.httpPost(util.getUrl() + "/tasks/requestTask",
@@ -212,20 +219,21 @@ public class ThreadFixRestClient {
 	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
 	 * @param taskId
 	 * @param filePath
+	 * @param secureTaskKey 
 	 * @return
 	 */
-	public String completeTask(String scanQueueTaskId, String filePath) {
+	public String completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
 		String url = util.getUrl() + "/tasks/completeTask";
-		String[] paramNames 	= { "apiKey",		"scanQueueTaskId" };
-		String[] paramValues 	= {  util.getKey(),	scanQueueTaskId };
+		String[] paramNames 	= { "apiKey",		"scanQueueTaskId", "secureTaskKey" };
+		String[] paramValues 	= {  util.getKey(),	scanQueueTaskId,   secureTaskKey };
 		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
 		return result;
 	}
 	
-	public String failTask(String scanQueueTaskId, String message) {
+	public String failTask(String scanQueueTaskId, String message, String secureTaskKey) {
 		String result = util.httpPost(util.getUrl() + "/tasks/failTask",
-				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
-				new String[] { util.getKey(),	scanQueueTaskId,	message });
+				new String[] { "apiKey",		"scanQueueTaskId",	"message", "secureTaskKey" },
+				new String[] { util.getKey(),	scanQueueTaskId,	message,    secureTaskKey });
 		return(result);
 	}
 
@@ -256,4 +264,5 @@ public class ThreadFixRestClient {
 								filePath, column, lineText, lineNumber });
 		return result;
 	}
+
 }

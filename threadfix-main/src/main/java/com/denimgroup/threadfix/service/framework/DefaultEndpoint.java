@@ -35,12 +35,7 @@ public class DefaultEndpoint implements Endpoint {
 		this.path = path;
 		this.parameters = parameters;
 	}
-	
-	@Override
-	public String toString() {
-		return getCSVLine();
-	}
-	
+
 	@Override
 	public Set<String> getParameters() {
 		return parameters;
@@ -74,6 +69,11 @@ public class DefaultEndpoint implements Endpoint {
 	@Override
 	public String getCSVLine() {
 		return method + "," + path + "," + getParametersString();
+	}
+	
+	@Override
+	public String toString() {
+		return getCSVLine();
 	}
 
 }

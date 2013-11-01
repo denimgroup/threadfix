@@ -31,13 +31,18 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
+import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.rest.VulnerabilityMarkerService;
+import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
+import com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -58,17 +63,45 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		MessageDialog.openInformation(
-			window.getShell(), "ThreadFix Vulnerability Import", "Importing ThreadFix Vulnerabilities.");
-		
-		List<VulnerabilityMarker> vulnerabilityMarkers =
-				VulnerabilityMarkerService.getMarkers();
-		
-		Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
-		
-		VulnerabilityMarkerUtils.clearAllMarkers();
-		
-		VulnerabilityMarkerUtils.addMarkersToFiles(vulnerabilityMarkers, files);
+		boolean cancelled = false;
+		ConfigDialog dialog = new ConfigDialog(window.getShell(),
+				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),false);
+
+		dialog.create();
+
+		if (dialog.open() == Window.OK) {
+			SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
+			while(threadFixApplicationMap.get("Authentication failed")!=null){
+				dialog = new ConfigDialog(window.getShell(),
+						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
+
+				dialog.create();
+				if (dialog.open() == Window.OK) {
+					SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+					System.out.println("Saved ThreadFix information successfully.");
+					threadFixApplicationMap = ThreadFixService.getApplications();
+				} else {
+					System.out.println("Cancel was pressed.");
+					cancelled = true;
+					break;
+				}
+			}
+			if(!cancelled){
+				MessageDialog.openInformation(
+						window.getShell(), "ThreadFix Vulnerability Import", "Importing ThreadFix Vulnerabilities.");
+				List<VulnerabilityMarker> vulnerabilityMarkers =
+						VulnerabilityMarkerService.getMarkers();
+				
+				Map<String, Set<IFile>> files = WorkspaceUtils.getFileMap();
+				
+				VulnerabilityMarkerUtils.clearAllMarkers();
+				
+				VulnerabilityMarkerUtils.addMarkersToFiles(vulnerabilityMarkers, files);
+				
+				VulnerabilitiesView.showView();
+			}
+		}
 	}
 	
 	/**

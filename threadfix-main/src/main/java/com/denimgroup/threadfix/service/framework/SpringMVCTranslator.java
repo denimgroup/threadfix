@@ -39,6 +39,9 @@ import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
 public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 	
 	private SpringControllerMappings fullMappings = null;
+	
+	public static final String JSESSIONID = ";jsessionid=";
+	
 	/**
 	 * This map is canonical url path -> canonical file path
 	 */
@@ -202,6 +205,10 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 					}
 				}
 			}
+		}
+		
+		if (urlPath.contains(JSESSIONID)) {
+			urlPath = urlPath.substring(0, urlPath.indexOf(JSESSIONID));
 		}
 
 		return urlPath;

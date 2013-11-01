@@ -1,3 +1,26 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.framework;
 
 import java.io.File;
@@ -21,8 +44,8 @@ private final Collection<File> modelFiles;
 	
 	@SuppressWarnings("unchecked")
 	public SpringEntityMappings(File rootDirectory) {
-		if (rootDirectory != null && rootDirectory.exists()) {
-			modelFiles = FileUtils.listFiles(rootDirectory, 
+		if (rootDirectory != null && rootDirectory.exists() && rootDirectory.isDirectory()) {
+			modelFiles = FileUtils.listFiles(rootDirectory,
 					SpringEntityFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		
 			fieldMap = new HashMap<>();
@@ -36,14 +59,60 @@ private final Collection<File> modelFiles;
 		}
 	}
 	
-	public BeanFieldSet getFieldsForModel(String className) {
+	public BeanFieldSet getPossibleParametersForModelType(BeanField beanField) {
+		return getPossibleParametersForModelType(beanField.getType());
+	}
+	
+	/**
+	 * This method uses recursion to walk the tree of possible parameters that the spring
+	 * controller will accept and bind to the model object. This information should be
+	 * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
+	 */
+	public BeanFieldSet getPossibleParametersForModelType(String className) {
 		BeanFieldSet fields = fieldMap.get(className);
 		
 		if (fields == null) {
 			fields = new BeanFieldSet(new HashSet<BeanField>());
 		}
 		
-		return fields;
+		Set<String> alreadyVisited = new HashSet<String>();
+		alreadyVisited.add(className);
+		
+		BeanFieldSet fieldsToAdd = new BeanFieldSet(new HashSet<BeanField>());
+		
+		for (BeanField field : fields) {
+			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
+				alreadyVisited.add(field.getType());
+				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
+			}
+		}
+		
+		return fields.addAll(fieldsToAdd);
+	}
+	
+	private BeanFieldSet spiderFields(String prefix, String className, Set<String> alreadyVisited) {
+		BeanFieldSet fields = fieldMap.get(className);
+		
+		if (fields == null) {
+			fields = new BeanFieldSet(new HashSet<BeanField>());
+		}
+		
+		BeanFieldSet
+			fieldsToAdd = new BeanFieldSet(new HashSet<BeanField>()),
+			fieldsWithPrefixes = new BeanFieldSet(new HashSet<BeanField>());
+		
+		for (BeanField field : fields) {
+			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
+				alreadyVisited.add(field.getType());
+				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
+			}
+		}
+		
+		for (BeanField field : fieldsToAdd.addAll(fields)) {
+			fieldsWithPrefixes.add(new BeanField(field.getType(), prefix + field.getParameterKey()));
+		}
+		
+		return fieldsWithPrefixes;
 	}
 	
 	public List<BeanField> getFieldsFromMethodCalls(String methodCalls, BeanField initialField) {
@@ -151,6 +220,11 @@ private final Collection<File> modelFiles;
 		}
 		
 		return propertyName;
+	}
+	
+	@Override
+	public String toString() {
+		return fieldMap.toString();
 	}
 	
 }

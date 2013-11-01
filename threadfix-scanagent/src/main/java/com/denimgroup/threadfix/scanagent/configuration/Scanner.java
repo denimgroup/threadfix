@@ -28,10 +28,18 @@ public class Scanner {
 
 	private String name;
 	private String version;
+	private String homeDir;
+	private String host;
+	private int port;
 	
-	public Scanner(String name, String version) {
+	public Scanner() {}
+	
+	public Scanner(String name, String version, String homeDir, String host, int port) {
 		this.name = name;
 		this.version = version;
+		this.homeDir = homeDir;
+		this.host = host;
+		this.port = port;
 	}
 	
 	public String getName() {
@@ -42,9 +50,41 @@ public class Scanner {
 		return(version);
 	}
 	
+	public String getHomeDir() {
+		return homeDir;
+	}
+
+	public void setHomeDir(String homeDir) {
+		this.homeDir = homeDir;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
 	@Override
 	public String toString() {
-		String retVal = "Scanner { name=" + name + ", version=" + version + " }";
-		return(retVal);
+		return "Scanner { name = " + name + ", version = " + version + ", home directory = " 
+						+ homeDir + ", host = " + host + ", port = " + port + " }";
 	}
 }

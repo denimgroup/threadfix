@@ -31,6 +31,7 @@ public class Task {
 	private String taskType;
 	private TaskConfig taskConfig;
 	private int taskId;
+	private String secureTaskKey;
 	
 	public Task() {
 		
@@ -66,6 +67,14 @@ public class Task {
 		this.taskConfig = taskConfig;
 	}
 	
+	public String getSecureTaskKey() {
+		return secureTaskKey;
+	}
+
+	public void setSecureTaskKey(String secureTaskKey) {
+		this.secureTaskKey = secureTaskKey;
+	}
+
 	public String toString() {
 		String retVal = "Task { taskType=" + this.taskType + ", taskConfig=" + taskConfig + "}";
 		return(retVal);

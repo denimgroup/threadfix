@@ -16,20 +16,26 @@ public class ConfigDialog extends TitleAreaDialog {
 	
 	private String url;
 	private String apiKey;
+	private boolean invalid;
 
 	private final String initialUrl, initialApiKey;
 
 	public ConfigDialog(Shell parentShell, String initialApiKey,
-			String initialUrl) {
+			String initialUrl,boolean invalid) {
 		super(parentShell);
 		this.initialApiKey = initialApiKey;
 		this.initialUrl = initialUrl;
+		this.invalid = invalid;
 	}
 
 	@Override
 	public void create() {
 		super.create();
-		setTitle("ThreadFix Configuration");
+		if(invalid){
+			setTitle("ThreadFix Configuration: Incorrect Credentials");
+		}else{
+			setTitle("ThreadFix Configuration");
+		}
 	}
 
 	@Override
@@ -57,6 +63,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		urlTextInput = new Text(container, SWT.BORDER);
 		urlTextInput.setLayoutData(dataFirstName);
 		urlTextInput.setText(initialUrl);
+
 	}
 
 	private void createApiKeyText(Composite container) {

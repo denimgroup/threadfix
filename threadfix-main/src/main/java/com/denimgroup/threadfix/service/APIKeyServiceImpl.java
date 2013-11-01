@@ -100,7 +100,7 @@ public class APIKeyServiceImpl implements APIKeyService {
 		return key;
 	}
 	
-	private String generateNewSecureRandomKey() {
+	public String generateNewSecureRandomKey() {
 		try {
 			SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 

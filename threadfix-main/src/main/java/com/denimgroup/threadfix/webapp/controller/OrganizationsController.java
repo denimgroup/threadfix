@@ -56,6 +56,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
@@ -165,6 +166,7 @@ public class OrganizationsController {
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			mav.addObject("application", new Application());
+			mav.addObject("applicationTypes", FrameworkType.values());
 			mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
 			if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
 				mav.addObject("users", userService.getPermissibleUsers(orgId, null));

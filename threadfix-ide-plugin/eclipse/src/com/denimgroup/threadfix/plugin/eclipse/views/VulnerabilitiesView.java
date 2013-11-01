@@ -23,10 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.views;
 
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.MarkerSupportView;
 
 public class VulnerabilitiesView extends MarkerSupportView {
+	
+	public static final String
+		PLUGIN_ID = "com.denimgroup.threadfix.plugin.eclipse.vulnerabilitiesView",
+		MARKER_GENERATOR_ID = "com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator";
+	
+	public static void showView() {
+		try {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(PLUGIN_ID);
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public VulnerabilitiesView() {
-		super("com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator");
+		super(MARKER_GENERATOR_ID);
 	}
 }

@@ -21,57 +21,42 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.eclipse.action;
 
-import java.util.List;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;
 
-/**
- * @author mcollins
- * 
- */
-public interface APIKeyService {
-
-	/**
-	 * @return
-	 */
-	List<APIKey> loadAll();
+public class ShowViewAction implements IWorkbenchWindowActionDelegate {
 
 	/**
-	 * @param apiKeyId
-	 * @return
+	 * The action has been activated. The argument of the
+	 * method represents the 'real' action sitting
+	 * in the workbench UI.
+	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	APIKey loadAPIKey(int apiKeyId);
+	@Override
+	public void run(IAction action) {
+		
+		VulnerabilitiesView.showView();
+	}
 	
 	/**
-	 * Load the API key from the database
-	 * @param key
-	 * @return
+	 * We will cache window object in order to
+	 * be able to provide parent shell for the message dialog.
+	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	APIKey loadAPIKey(String key);
+	@Override
+	public void init(IWorkbenchWindow window) {
+	}
 
-	/**
-	 * @param apiKey
-	 */
-	void storeAPIKey(APIKey apiKey);
+	@Override
+	public void selectionChanged(IAction arg0, ISelection arg1) {}
 
-	/**
-	 * @param organizationId
-	 */
-	void deactivateApiKey(APIKey apiKey);
-
-	/**
-	 * Create a new securely random API Key and package it in the APIKey object with the note.
-	 * @param note
-	 * @return
-	 */
-	APIKey createAPIKey(String note, boolean restricted);
-	
-	/**
-	 * 
-	 * @return
-	 */
-	String generateNewSecureRandomKey();
+	@Override
+	public void dispose() {}
 	
 }
