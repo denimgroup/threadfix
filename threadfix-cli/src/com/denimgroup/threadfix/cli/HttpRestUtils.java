@@ -72,7 +72,7 @@ public class HttpRestUtils {
 	private Properties properties;
 	
 	public boolean getDurable() {
-		return(this.durable);
+		return this.durable;
 	}
 	
 	public void setDurable(boolean durable) {
@@ -87,7 +87,7 @@ public class HttpRestUtils {
 	
 	public String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
 		
-		//	TOFIX - Revisit how we handle certificate errors here
+		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
 		PostMethod filePost = new PostMethod(request);
@@ -159,7 +159,7 @@ public class HttpRestUtils {
 			
 			if (responseStream != null) {
 				retVal = IOUtils.toString(responseStream);
-				return(retVal);
+				return retVal;
 			}
 
 		} catch (FileNotFoundException e1) {
@@ -387,9 +387,12 @@ public class HttpRestUtils {
 	 *
 	 */
 	public class AcceptAllTrustManager implements X509TrustManager {
-	    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-	    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-	    public X509Certificate[] getAcceptedIssuers() { return null; }
+	    @Override
+		public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+	    @Override
+		public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+	    @Override
+		public X509Certificate[] getAcceptedIssuers() { return null; }
 	}
 
 	public class AcceptAllTrustFactory implements ProtocolSocketFactory {
@@ -420,11 +423,13 @@ public class HttpRestUtils {
 	        return this.sslContext;
 	    }
 
-	    public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) throws IOException {
+	    @Override
+		public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) throws IOException {
 	        return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
 	    }
 
-	    public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, final HttpConnectionParams params) throws IOException {
+	    @Override
+		public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, final HttpConnectionParams params) throws IOException {
 	        if(params == null) {
 	            throw new IllegalArgumentException("Parameters may not be null");
 	        }
@@ -446,7 +451,8 @@ public class HttpRestUtils {
 	        }
 	    }
 
-	    public Socket createSocket(String host, int port) throws IOException {
+	    @Override
+		public Socket createSocket(String host, int port) throws IOException {
 	        return getSSLContext().getSocketFactory().createSocket(host, port);
 	    }
 

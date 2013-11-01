@@ -26,14 +26,12 @@ package com.denimgroup.threadfix.webapp.validator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.RoleService;
 
 public class UserValidator implements Validator {
 	
 	private RoleService roleService = null;
-	private UserDao userDao = null;
 	
 	public UserValidator(RoleService roleService) {
 		this.roleService = roleService;
@@ -50,15 +48,15 @@ public class UserValidator implements Validator {
 		
 		if (!user.getHasGlobalGroupAccess() || user.getGlobalRole() == null ||
 				user.getGlobalRole().getId() == null || user.getGlobalRole().getId() == null ||
-				user.getGlobalRole().getId() == 0 || 
+				user.getGlobalRole().getId() == 0 ||
 				roleService == null ||
 				roleService.loadRole(user.getGlobalRole().getId()) == null) {
 			user.setGlobalRole(null);
 		}
 
-		if (isEmptyOrWhitespace(user.getName()))
+		if (isEmptyOrWhitespace(user.getName())) {
 			errors.rejectValue("name", "errors.required", new String[] { "Name" }, null);
-		else if (user.getName() != null && user.getName().length() > 25) {
+		} else if (user.getName() != null && user.getName().length() > 25) {
 			errors.rejectValue("name", null, "Name has a maximum length of 25.");
 		}
 
@@ -70,13 +68,13 @@ public class UserValidator implements Validator {
 				}
 			}
 
-			if(errors.getFieldError("password") == null && 
-					user.getWasLdap() && 
+			if(errors.getFieldError("password") == null &&
+					user.getWasLdap() &&
 					user.getUnencryptedPassword().length() < 12){
 				errors.rejectValue("password", null, "Password has a minimum length of 12.");
 			}
 			
-			if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null && 
+			if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null &&
 					user.getUnencryptedPassword().length() < 12 &&
 					user.getUnencryptedPassword().length() != 0) {
 				errors.rejectValue("password", null, "Password has a minimum length of 12.");
@@ -99,6 +97,6 @@ public class UserValidator implements Validator {
 	}
 
 	private boolean isEmptyOrWhitespace(String value) {
-		return (value == null) || (value.trim().equals(""));
+		return value == null || value.trim().equals("");
 	}
 }

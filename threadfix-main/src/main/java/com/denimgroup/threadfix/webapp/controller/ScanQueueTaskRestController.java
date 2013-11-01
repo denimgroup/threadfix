@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.DocumentService;
@@ -81,11 +80,11 @@ public class ScanQueueTaskRestController extends RestController {
 
 		retVal = scanQueueService.queueScan(applicationId, scannerType);
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	/**
-	 * TOFIX - Add scanner versions and OS/version to the incoming parameters
+	 * TODO - Add scanner versions and OS/version to the incoming parameters
 	 * 
 	 * @param request
 	 * @param scanners comma-separated list of scanners available from the agent
@@ -108,7 +107,7 @@ public class ScanQueueTaskRestController extends RestController {
 		String secureTaskKey = this.apiKeyService.generateNewSecureRandomKey();
 		retVal = this.scanQueueService.requestTask(scanners, agentConfig, secureTaskKey);
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
@@ -126,7 +125,7 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="setTaskConfig", method=RequestMethod.POST)
@@ -146,7 +145,7 @@ public class ScanQueueTaskRestController extends RestController {
 			retVal = true;
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	/**
@@ -176,7 +175,7 @@ public class ScanQueueTaskRestController extends RestController {
 		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
 		Application taskApp = myTask.getApplication();
 		
-		//	TOFIX - Add some checking so you can't just upload any file as the result of a specific scanner's task
+		//	TODO - Add some checking so you can't just upload any file as the result of a specific scanner's task
 		//	For now, passing NULL should force the calculation
 		Integer myChannelId = scanTypeCalculationService.calculateScanType(taskApp.getId(), file, null);
 		
@@ -186,16 +185,16 @@ public class ScanQueueTaskRestController extends RestController {
 			ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 			
 			if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-				Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+				scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 				//	Scan has been saved. Let's update the ScanQueueTask
 				this.scanQueueService.completeTask(scanQueueTaskId);
 				log.info("Results from scan queue task: " + myTask.getId() + " saved successfully.");
-				return(myTask);
+				return myTask;
 			} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
 				String message = "Task appeared to complete successfully, but results provided were empty.";
 				this.scanQueueService.failTask(scanQueueTaskId, message);
 				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
-				return(message);
+				return message;
 			} else {
 				String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
 				this.scanQueueService.failTask(scanQueueTaskId, message);
@@ -208,7 +207,7 @@ public class ScanQueueTaskRestController extends RestController {
 			String longMessage = message + " Message was : " + e.getMessage();
 			this.scanQueueService.failTask(scanQueueTaskId, longMessage);
 			log.error(longMessage, e);
-			return(message);
+			return message;
 		}
 	}
 	
@@ -243,7 +242,7 @@ public class ScanQueueTaskRestController extends RestController {
 		log.info(serverMessage);
 		retVal = true;
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	private String checkTaskKey(HttpServletRequest request, int scanQueueTaskId){
