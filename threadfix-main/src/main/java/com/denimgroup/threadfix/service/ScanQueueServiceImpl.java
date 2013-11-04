@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.DocumentDao;
 import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
 import com.denimgroup.threadfix.data.entities.Application;
@@ -85,7 +84,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			Date now = new Date();
 			myTask.setCreateTime(now);
 			Calendar myCal = Calendar.getInstance();
-			//	TOFIX - Actually calculate the max finish time
+			//	TODO - Actually calculate the max finish time
 			myCal.add(Calendar.HOUR, 12);
 			myTask.setTimeoutTime(myCal.getTime());
 			myTask.setScanner(scannerType);
@@ -111,9 +110,10 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			log.warn("Invalid applicationId of " + applicationId + " provided. No scan queued");
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
+	@Override
 	public boolean taskStatusUpdate(int taskId, String message) {
 		boolean retVal = false;
 		
@@ -128,7 +128,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			retVal = true;
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
@@ -137,13 +137,13 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		
 		retVal = scanQueueTaskDao.retrieveAll();
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
 	public ScanQueueTask retrieveById(int scanQueueTaskId) {
 		ScanQueueTask retVal = scanQueueTaskDao.retrieveById(scanQueueTaskId);
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
@@ -152,10 +152,10 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		
 		if(scanners == null) {
 			log.warn("Attempting to request a task with a null list of scanners. Aborting.");
-			return(null);
+			return null;
 		} else if(scanners.length() == 0) {
 			log.warn("Attempting to request a task with an empty list of scanners. Aborting.");
-			return(null);
+			return null;
 		} else {
 			log.info("Requesting a task for one of these scanners: " + scanners);
 		}
@@ -248,7 +248,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			log.info("No suitable tasks found for the agent. Returning null.");
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
@@ -261,7 +261,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 
 		retVal = changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTaskStatus.STATUS_COMPLETE_SUCCESSFUL.getValue(), message);
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
@@ -270,7 +270,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		
 		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTaskStatus.STATUS_COMPLETE_FAILED.getValue(), message);
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	private boolean changeTaskStatusWithMessage(int scanQueueTaskId, Date timestamp, int newStatus, String message) {
@@ -291,18 +291,18 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		this.scanQueueTaskDao.saveOrUpdate(task);
 		retVal = true;
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	/**
 	 * Run through all items in the scan queue and clear out any scans
 	 * that have timed out.
 	 * 
-	 * TOFIX - Implement me!
-	 */
-	private void cleanScanQueue() {
+	 * private void cleanScanQueue() {
 		//	TOFIX - Implement me!
-	}
+	   }
+	 */
+	
 	
 	/**
 	 * TODO - Refactor because this was copied from ScanServiceImpl
@@ -311,7 +311,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	public boolean isDuplicate(ApplicationChannel applicationChannel) {
 		if (applicationChannel.getApplication() == null
 				|| applicationChannel.getChannelType().getId() == null) {
-			return true; 
+			return true;
 		}
 		
 		ApplicationChannel dbAppChannel = applicationChannelDao.retrieveByAppIdAndChannelId(
@@ -320,10 +320,11 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		return dbAppChannel != null && !applicationChannel.getId().equals(dbAppChannel.getId());
 	}
 	
-	private ApplicationChannel retrieveAppropriateApplicationChannel() {
-		//	TOFIX - Implement me!
+	/* TODO - Implement me!
+	 * private ApplicationChannel retrieveAppropriateApplicationChannel() {
 		
-		/*
+		
+		
 		if (channel != null) {
 			return channel.getId();
 		} else {
@@ -339,9 +340,10 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 				return channel.getId();
 			}
 		}
-		*/
+		
 		return(null);
 	}
+	*/
 
 	@Override
 	public ScanQueueTask loadTaskById(int taskId) {
@@ -359,8 +361,9 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	@Override
 	public String deleteTask(ScanQueueTask task) {
 		Application application = applicationDao.retrieveById(task.getApplication().getId());
-		if (application == null)
+		if (application == null) {
 			return "Task couldn't be deleted. Something happened...";
+		}
 		
 		application.getScanQueueTasks().remove(task);
 		task.setApplication(null);

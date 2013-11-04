@@ -49,7 +49,6 @@ public class ScanQueueTaskController {
 	
 	private ScanQueueService scanQueueService;
 	private PermissionService permissionService;
-	private ApplicationService applicationService;
 	
 	@Autowired
 	public ScanQueueTaskController(ScanQueueService scanQueueService,
@@ -57,7 +56,6 @@ public class ScanQueueTaskController {
 			ApplicationService applicationService) {
 		this.scanQueueService = scanQueueService;
 		this.permissionService = permissionService;
-		this.applicationService = applicationService;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -74,12 +72,12 @@ public class ScanQueueTaskController {
 		
 		model.addAttribute("scanQueueTask", scanQueueService.retrieveById(scanQueueTaskId));
 		
-		return("config/scanqueue/detail");
+		return "config/scanqueue/detail";
 	}
 	
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/addScanQueueTask", method = RequestMethod.POST)
 	public String addScanQueueTask(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
-			@RequestParam("scanQueueType") String scanQueueType, 
+			@RequestParam("scanQueueType") String scanQueueType,
 			HttpServletRequest request, Model model) {
 		
 		log.info("Start adding scan task to application " + appId);
@@ -89,13 +87,13 @@ public class ScanQueueTaskController {
 		int ret = scanQueueService.queueScan(appId, scanQueueType);
 		
 		if (ret < 0) {
-			ControllerUtils.addErrorMessage(request,  
+			ControllerUtils.addErrorMessage(request,
 					"There was something wrong when we tried adding task...");
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-			return "ajaxFailureHarness";			
+			return "ajaxFailureHarness";
 		}
 		
-		ControllerUtils.addSuccessMessage(request, 
+		ControllerUtils.addSuccessMessage(request,
 				"Task ID " + ret + " was successfully added to the application.");
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		log.info("Ended adding scan task to application " + appId);
@@ -103,7 +101,7 @@ public class ScanQueueTaskController {
 	}
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scanQueueTask/{taskId}/delete", method = RequestMethod.POST)
-	public String deleteScanQueueTask(@PathVariable("appId") int appId, 
+	public String deleteScanQueueTask(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("taskId") int taskId,
 			HttpServletRequest request, Model model) {
@@ -114,18 +112,19 @@ public class ScanQueueTaskController {
 		}
 		ScanQueueTask task = scanQueueService.loadTaskById(taskId);
 		if (task == null) {
-			ControllerUtils.addSuccessMessage(request, 
+			ControllerUtils.addSuccessMessage(request,
 					"The task was successfully added to the application.");
 			model.addAttribute("commentError", "The task submitted was invalid");
 			model.addAttribute("contentPage", "applications/tabs/scanQueueTab.jsp");
-			return "ajaxFailureHarness";			
+			return "ajaxFailureHarness";
 		}
 		String ret = scanQueueService.deleteTask(task);
 		if (ret != null) {
 			ControllerUtils.addErrorMessage(request, ret);
-		} else 
-			ControllerUtils.addSuccessMessage(request, 
+		} else {
+			ControllerUtils.addSuccessMessage(request,
 					"Task ID " + taskId + " was successfully deleted");
+		}
 		log.info("Ended deleting scan task from application " + appId);
 		
 		return "redirect:/organizations/" + orgId + "/applications/" + appId;

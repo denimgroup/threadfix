@@ -1,3 +1,26 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.dialog;
 
 import java.util.ArrayList;
@@ -6,30 +29,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
 
 public class ApplicationDialog extends TitleAreaDialog {
 	
-//	private List<Button> buttons = new ArrayList<Button>();
 	private List<TreeItem> treeNodes = new ArrayList<TreeItem>();
 
 	private Set<String> appIds = null;
@@ -52,26 +66,9 @@ public class ApplicationDialog extends TitleAreaDialog {
 		setTitle("Pick Applications");
 	}
 
-//	@Override
-//	protected Control createDialogArea(Composite parent) {
-//		Composite area = (Composite) super.createDialogArea(parent);
-//		Composite container = new Composite(area, SWT.NONE);
-//		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-//		GridLayout layout = new GridLayout(1, false);
-//		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		container.setLayout(layout);
-//
-//		createApplicationSelection(container);
-//
-//		return area;
-//	}
-	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
-//		Display display = new Display();
-//		Shell shell = new Shell(display); 
-//		shell.setLayout(new FillLayout());
 		Composite container = new Composite(area, SWT.BORDER);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		container.setBounds(0, 4, 255, 254);
@@ -84,7 +81,8 @@ public class ApplicationDialog extends TitleAreaDialog {
 	private void  createApplicationSelectionTree(Composite container){
 		Tree tree = new Tree (container, SWT.BORDER | SWT.CHECK);
 	    tree.addListener(SWT.Selection, new Listener() {
-	        public void handleEvent(Event event) {
+	        @Override
+			public void handleEvent(Event event) {
 	            if (event.detail == SWT.CHECK) {
 	                TreeItem item = (TreeItem) event.item;
 	                boolean checked = item.getChecked();
@@ -130,17 +128,6 @@ public class ApplicationDialog extends TitleAreaDialog {
 		return teamMap;
 	}
 
-//	private void createApplicationSelection(Composite container) {
-//		for (String appIdentifier : new TreeSet<String>(appIdMap.keySet())) {
-//			Button button = new Button(container, SWT.CHECK);
-//			button.setText(appIdentifier);
-//			if (alreadyChecked.contains(appIdMap.get(appIdentifier))) {
-//				button.setSelection(true);
-//			}
-//			buttons.add(button);
-//		}
-//	}
-
 	@Override
 	protected boolean isResizable() {
 		return true;
@@ -151,18 +138,6 @@ public class ApplicationDialog extends TitleAreaDialog {
 	private void saveInput() {
 		appIds = getAppIdsFromTreeNodes();
 	}
-	
-//	private Set<String> getAppIdsFromButtons() {
-//		Set<String> returnSet = new HashSet<String>();
-//	
-//		for (Button button : buttons) {
-//			if (button.getSelection()) {
-//				returnSet.add(appIdMap.get(button.getText()));
-//			}
-//		}
-//	
-//		return returnSet;
-//	}
 	
 	private Set<String> getAppIdsFromTreeNodes(){
 		Set<String> returnSet = new HashSet<String>();
@@ -186,7 +161,9 @@ public class ApplicationDialog extends TitleAreaDialog {
 	}
 	
 	private void checkPath(TreeItem item, boolean checked, boolean grayed) {
-	    if (item == null) return;
+	    if (item == null) {
+			return;
+		}
 	    if (grayed) {
 	        checked = true;
 	    } else {
@@ -212,8 +189,8 @@ public class ApplicationDialog extends TitleAreaDialog {
 	    item.setChecked(checked);
 	    treeNodes.add(item);
 	    TreeItem[] items = item.getItems();
-	    for (int i = 0; i < items.length; i++) {
-	        checkItems(items[i], checked);
+	    for (TreeItem item2 : items) {
+	        checkItems(item2, checked);
 	    }
 	}
 }
