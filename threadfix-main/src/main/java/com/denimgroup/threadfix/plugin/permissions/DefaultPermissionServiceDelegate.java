@@ -12,9 +12,12 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 public class DefaultPermissionServiceDelegate implements PermissionService {
-
+	
+	protected SanitizedLogger log = null;
+	
 	@Override
 	public boolean isAuthorized(Permission permission, Integer orgId,
 			Integer appId) {
@@ -64,6 +67,11 @@ public class DefaultPermissionServiceDelegate implements PermissionService {
 	@Override
 	public boolean isEnterprise() {
 		return false;
+	}
+	
+	@Override
+	public void setLogger(SanitizedLogger log){
+		this.log  = log;
 	}
 
 }

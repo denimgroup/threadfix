@@ -4,12 +4,12 @@ package com.denimgroup.threadfix.plugin.ldap;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.denimgroup.threadfix.data.entities.CustomUserMapper;
-import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.LdapService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
 public class DefaultLdapServiceDelegate implements LdapService {
 
+	protected SanitizedLogger log = null;
 	
 	public DefaultLdapServiceDelegate(){
 		
@@ -29,6 +29,11 @@ public class DefaultLdapServiceDelegate implements LdapService {
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return false;
+	}
+	
+	@Override
+	public void setLogger(SanitizedLogger log){
+		this.log = log;
 	}
 	
 	

@@ -1,7 +1,6 @@
 package com.denimgroup.threadfix.plugin.ldap;
 
 import com.denimgroup.threadfix.plugin.PluginLoader;
-import com.denimgroup.threadfix.plugin.permissions.DefaultPermissionServiceDelegate;
 import com.denimgroup.threadfix.service.LdapService;
 
 public class LdapServiceDelegateFactory {

@@ -1,6 +1,5 @@
 package com.denimgroup.threadfix.service;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
@@ -16,6 +15,8 @@ public class LdapAuthenticator implements LdapService {
 	@Autowired
 	DefaultConfigService defaultConfigService;
 	
+	protected final SanitizedLogger log = new SanitizedLogger(LdapService.class);
+	
 	private LdapService delegate = null;
 	
 	public LdapAuthenticator(){
@@ -24,19 +25,27 @@ public class LdapAuthenticator implements LdapService {
 
 	@Override
 	public Authentication authenticate(Authentication authentication){
-		Log.info("Enterprise: "+LdapServiceDelegateFactory.isEnterprise());
+		setLogger(log);
 		return delegate.authenticate(authentication);
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
+		setLogger(log);
 		return delegate.supports(authentication);
 	}
 
 	@Override
 	public boolean innerAuthenticate(String username, String password) {
+		setLogger(log);
 		return delegate.innerAuthenticate(username, password);
 	}
+	
+	@Override
+	public void setLogger(SanitizedLogger log){
+		delegate.setLogger(log);
+	}
+	
 
 
 }

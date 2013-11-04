@@ -76,4 +76,6 @@ public interface PermissionService extends Plugin {
 	 */
 	void filterApps(List<RemoteProviderType> providers);
 	
+	void setLogger(SanitizedLogger log);
+	
 }

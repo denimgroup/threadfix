@@ -16,6 +16,9 @@ public class PluginLoader {
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		
 		try {
+			if(PluginLoader.class.getClassLoader().getResource("enterprise.jar")==null){
+				return null;
+			}
 			pm.addPluginsFrom(PluginLoader.class.getClassLoader().getResource("enterprise.jar").toURI());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -25,6 +28,9 @@ public class PluginLoader {
 	}
 	
 	public static <T extends Plugin> T getMostRecentPlugin(Class<T> targetClass) {
+		if(INSTANCE == null){
+			return null;
+		}
 		Collection<T> plugins = INSTANCE.getPlugins(targetClass);
 		
 		T returnPlugin = null;

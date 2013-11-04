@@ -30,9 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,7 +62,6 @@ public class CustomUserDetailService implements UserDetailsService {
 			return null;
 		}
 		
-		AuthenticationManager test;
 		
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		
@@ -73,7 +71,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		Integer id = user.getId();
 		
 		// For now
-		grantedAuthorities.add(new GrantedAuthorityImpl(Role.USER));
+		grantedAuthorities.add(new SimpleGrantedAuthority(Role.USER));
 		
 		// Transfer the set of permissions that the user has to GrantedAuthority objects
 		if (id != null) {
@@ -83,29 +81,29 @@ public class CustomUserDetailService implements UserDetailsService {
 				Set<Permission> permissions = userService.getGlobalPermissions(id);
 			
 				for (Permission permission : permissions) {
-					grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+					grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
 				}
 				
 				if (user.getHasGlobalGroupAccess()) {
-					grantedAuthorities.add(new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+					grantedAuthorities.add(new SimpleGrantedAuthority(Permission.READ_ACCESS.getText()));
 				}
 				
 				orgMap = userService.getOrganizationPermissions(id);
 				appMap = userService.getApplicationPermissions(id);
 				
 				if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
-					grantedAuthorities.add(new GrantedAuthorityImpl(Permission.CAN_GENERATE_REPORTS.getText()));
+					grantedAuthorities.add(new SimpleGrantedAuthority(Permission.CAN_GENERATE_REPORTS.getText()));
 				}
 			}else if(LdapServiceDelegateFactory.isEnterprise()){
 				for (Permission permission : Permission.values()) {
 					if (permission != Permission.CAN_MANAGE_ROLES) {
-						grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+						grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
 					}
 				}
 			}else {
 				for (Permission permission : Permission.values()) {
 					if (permission != Permission.CAN_MANAGE_ROLES && permission != Permission.ENTERPRISE) {
-						grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+						grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
 					}
 				}
 			}
