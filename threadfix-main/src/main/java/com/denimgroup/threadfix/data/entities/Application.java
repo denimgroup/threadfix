@@ -43,9 +43,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 @Entity
 @Table(name = "Application")
@@ -66,7 +65,7 @@ public class Application extends AuditableEntity {
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
 	
-	String frameworkType, sourceCodeAccessLevel, vulnTypeStrategy, repositoryUrl, repositoryFolder;
+	String frameworkType, sourceCodeAccessLevel, repositoryUrl, repositoryFolder;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -460,15 +459,6 @@ public class Application extends AuditableEntity {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
 	}
 
-	@Column(length = ENUM_LENGTH)
-	public String getVulnTypeStrategy() {
-		return vulnTypeStrategy;
-	}
-
-	public void setVulnTypeStrategy(String vulnTypeStrategy) {
-		this.vulnTypeStrategy = vulnTypeStrategy;
-	}
-
 	@Column(length = URL_LENGTH)
 	public String getRepositoryUrl() {
 		return repositoryUrl;
@@ -495,11 +485,6 @@ public class Application extends AuditableEntity {
 	@Transient
 	public SourceCodeAccessLevel getSourceCodeAccessLevelEnum() {
 		return SourceCodeAccessLevel.getSourceCodeAccessLevel(sourceCodeAccessLevel);
-	}
-	
-	@Transient
-	public VulnTypeStrategy getVulnTypeStrategyEnum() {
-		return VulnTypeStrategy.getVulnTypeStrategy(vulnTypeStrategy);
 	}
 	
 }

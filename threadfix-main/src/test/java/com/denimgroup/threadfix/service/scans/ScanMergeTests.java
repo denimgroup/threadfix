@@ -13,9 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.cli.ThreadFixRestClient;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.webservices.tests.BaseRestTest;
 
 public class ScanMergeTests extends BaseRestTest {
@@ -31,6 +30,7 @@ public class ScanMergeTests extends BaseRestTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testBodgeItMerge() throws IOException, JSONException {
 		testApplicationWithVariations(FrameworkType.JSP, WebApplication.BODGEIT);
 	}
@@ -58,9 +58,7 @@ public class ScanMergeTests extends BaseRestTest {
 			// we pass in the type because we don't want to do a spring mvc run on a jsp app, for instance.
 			for (FrameworkType type : new FrameworkType[] { FrameworkType.NONE, FrameworkType.DETECT, frameworkType }) {
 				for (SourceCodeAccessLevel sourceCodeAccessLevel : SourceCodeAccessLevel.values()) {
-					for (VulnTypeStrategy strategy : VulnTypeStrategy.values()) {
-						testApplication(application, type, sourceCodeAccessLevel, strategy, csvWriter, textWriter);
-					}
+					testApplication(application, type, sourceCodeAccessLevel, csvWriter, textWriter);
 				}
 			}
 		} finally {
@@ -77,10 +75,9 @@ public class ScanMergeTests extends BaseRestTest {
 	private void testApplication(WebApplication application, 
 			FrameworkType frameworkType,
 			SourceCodeAccessLevel sourceCodeAccessLevel, 
-			VulnTypeStrategy vulnTypeStrategy,
 			Writer csvWriter, Writer textWriter) throws JSONException, IOException {
 		
-		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel, vulnTypeStrategy);
+		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel);
 
 		String jsonToLookAt = GOOD_CLIENT.searchForApplicationById(appId.toString());
 		
@@ -94,10 +91,10 @@ public class ScanMergeTests extends BaseRestTest {
 		
 		TestResult result = TestResult.compareResults(csvResults, jsonResults);
 		
-		csvWriter.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy);
+		csvWriter.write(frameworkType + "," + sourceCodeAccessLevel);
 		csvWriter.write(result.getCsvLine() + "\n");
 		
-		textWriter.write(frameworkType + "," + sourceCodeAccessLevel + "," + vulnTypeStrategy + "\n");
+		textWriter.write(frameworkType + "," + sourceCodeAccessLevel + "\n");
 		textWriter.write(result.toString());
 		
 		if (result.hasMissing()) {
@@ -108,11 +105,11 @@ public class ScanMergeTests extends BaseRestTest {
 	}
 	
 	private Integer setupApplication(WebApplication application, FrameworkType frameworkType,
-			SourceCodeAccessLevel sourceCodeAccessLevel, VulnTypeStrategy vulnTypeStrategy) {
+			SourceCodeAccessLevel sourceCodeAccessLevel) {
 		debug("Creating new application and uploading scans.");
 		
 		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(
-				application.getName() + "-" + frameworkType + "-" + sourceCodeAccessLevel + "-" + vulnTypeStrategy
+				application.getName() + "-" + frameworkType + "-" + sourceCodeAccessLevel
 				)));
 		Integer appId  = getId(getJSONObject(GOOD_CLIENT.createApplication(
 			teamId.toString(), 
@@ -120,7 +117,6 @@ public class ScanMergeTests extends BaseRestTest {
 			null)));
 		
 		GOOD_CLIENT.setParameters(appId.toString(), 
-				vulnTypeStrategy.toString(), 
 				sourceCodeAccessLevel.toString(), 
 				frameworkType.toString(), 
 				application.getUrl());

@@ -496,6 +496,11 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
             <artifactId>threadfix-cli</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-ham</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>
