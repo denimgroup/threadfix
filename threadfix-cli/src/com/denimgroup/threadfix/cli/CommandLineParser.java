@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -34,6 +38,15 @@ import org.apache.commons.cli.PosixParser;
 public class CommandLineParser {
 	
 	public static ThreadFixRestClient client = new ThreadFixRestClient();
+	
+	public static final Map<String, String[]> scanOptions = new HashMap<>();
+		
+	static {
+		scanOptions.put("Vulnerability Type Matching", new String[]{ "Exact", "Trees", "Software Fault Pattern" });
+		scanOptions.put("Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" });
+		scanOptions.put("Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC" });
+		scanOptions.put("Repository URL", new String[]{ "Arbitrary Git URL" });
+	}
 	
 	@SuppressWarnings("static-access")
 	public static final Options getOptions() {
@@ -52,6 +65,40 @@ public class CommandLineParser {
 				.withDescription("Set either the url (ThreadFix base url) or key (ThreadFix API key) properties")
 				.create("s");
 		options.addOption(set);
+		
+		Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
+				.withValueSeparator(' ')
+				.hasArgs(2)
+				.withLongOpt("queueScan")
+				.withDescription("Queue a scan for the given applicationId with the given scanner type")
+				.create("q");
+		options.addOption(queueScan);
+		
+		Option addAppUrl = OptionBuilder.withArgName("applicationId> <appUrl")
+				.withValueSeparator(' ')
+				.hasArgs(2)
+				.withLongOpt("addAppUrl")
+				.withDescription("Add URL for the given applicationId")
+				.create("au");
+		options.addOption(addAppUrl);
+		
+		Option setTaskConfig = OptionBuilder.withArgName("applicationId> <scannerName> <file")
+				.withValueSeparator(' ')
+				.hasArgs(3)
+				.withLongOpt("setTaskConfig")
+				.withDescription("Save the scan configuration for the given applicationId with the given scanner type")
+				.create("stc");
+		options.addOption(setTaskConfig);
+		
+		Option setParameters = OptionBuilder.withArgName("appId> <vulnTypeStrategy> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl")
+				.withValueSeparator(' ')
+				.hasArgs(5)
+				.withLongOpt("setParameters")
+				.withDescription("Set scan parameters. Available parameters can be found with --printScanOptions")
+				.create("sp");
+		options.addOption(setParameters);
+		
+		options.addOption(new Option("printScanOptions", "Prints available scan options"));
 		
 		Option createTeam = OptionBuilder.withArgName("name")
 				.hasArg()
@@ -138,10 +185,10 @@ public class CommandLineParser {
 				}
 				
 				if ("url".equals(setArgs[0])) {
-					System.out.println("Setting URL to " + setArgs[1]);
+					println("Setting URL to " + setArgs[1]);
 					client.setUrl(setArgs[1]);
 				} else if ("key".equals(setArgs[0])) {
-					System.out.println("Setting API Key to " + setArgs[1]);
+					println("Setting API Key to " + setArgs[1]);
 					client.setKey(setArgs[1]);
 				} else {
 					throw new ParseException("First argument to set must be url or key");
@@ -152,38 +199,119 @@ public class CommandLineParser {
 				if (createArgs.length != 1) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				System.out.println("Creating a Team with the name " + createArgs[0] + ".");
-				System.out.println(client.createTeam(createArgs[0]));
+				println("Creating a Team with the name " + createArgs[0] + ".");
+				println(client.createTeam(createArgs[0]));
 			
 			} else if (cmd.hasOption("cw")) {
 				String[] createArgs = cmd.getOptionValues("cw");
 				if (createArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				System.out.println("Creating a Waf with the name " + createArgs[0] + ".");
-				System.out.println(client.createWaf(createArgs[0], createArgs[1]));
+				println("Creating a Waf with the name " + createArgs[0] + ".");
+				println(client.createWaf(createArgs[0], createArgs[1]));
 				
 			} else if (cmd.hasOption("ca")) {
 				String[] createArgs = cmd.getOptionValues("ca");
 				if (createArgs.length != 3) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				System.out.println("Creating an Application with the name " + createArgs[1] + ".");
-				System.out.println(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
+				println("Creating an Application with the name " + createArgs[1] + ".");
+				println(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
 
-			} else if (cmd.hasOption("teams")) {
-				System.out.println("Getting all teams.");
-				System.out.println(client.getAllTeams());
+			} else if (cmd.hasOption("printScanOptions")) {
+				for (Entry<String, String[]> entry : scanOptions.entrySet()) {
+					println("Options for " + entry.getKey());
+					for (String option : entry.getValue()) {
+						println("\t" + option);
+					}
+				}
 				
+			} else if (cmd.hasOption("sp")) {
+				String[] parameterArgs = cmd.getOptionValues("sp");
+				if (! (parameterArgs.length == 4 || parameterArgs.length == 5)) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				
+				// appId> <vulnTypeStrategy> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
+				
+				String 
+					appId = parameterArgs[0],
+					vulnTypeStrategy = parameterArgs[1],
+					sourceCodeAccessLevel = parameterArgs[2],
+					frameworkType = parameterArgs[3],
+					repositoryUrl = null;
+				
+				if (parameterArgs.length == 5) {
+					repositoryUrl = parameterArgs[4];
+				}
+				
+				if (!appId.matches("^[0-9]+$")) {
+					throw new ParseException("Application ID must be an integer value");
+				}
+				
+				if (!containsCaseIgnore(scanOptions.get("Vulnerability Type Matching"), vulnTypeStrategy)) {
+					vulnTypeStrategy = "EXACT";
+				} else {
+					vulnTypeStrategy = upperCaseAndUnderscore(vulnTypeStrategy);
+				}
+				
+				if (!containsCaseIgnore(scanOptions.get("Source Code Access Level"), sourceCodeAccessLevel)) {
+					sourceCodeAccessLevel = "DETECT";
+				} else {
+					sourceCodeAccessLevel = upperCaseAndUnderscore(sourceCodeAccessLevel);
+				}
+				
+				if (!containsCaseIgnore(scanOptions.get("Framework Type"), frameworkType)) {
+					frameworkType = "DETECT";
+				} else {
+					frameworkType = upperCaseAndUnderscore(frameworkType);
+				}
+				
+				println("Setting parameters for application " + appId + " to " +
+						"VulnerabilityTypeMatching: " + vulnTypeStrategy + ", " +
+						"Source Code Access Level: " + sourceCodeAccessLevel + ", " +
+						"Framework Type: " + frameworkType);
+				
+				// TODO return a success message instead of the (mostly irrelevant) application information.
+				println(client.setParameters(appId, vulnTypeStrategy, 
+						sourceCodeAccessLevel, frameworkType, repositoryUrl));
+				
+			} else if (cmd.hasOption("teams")) {
+				println("Getting all teams.");
+				println(client.getAllTeams());
+				
+			} else if (cmd.hasOption("q")) {
+				String[] queueArgs = cmd.getOptionValues("q");
+				if (queueArgs.length != 2) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Queueing a scan.");
+				System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
+
+			} else if (cmd.hasOption("au")) {
+				String[] addUrlArgs = cmd.getOptionValues("au");
+				if (addUrlArgs.length != 2) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Adding url to applicationId " + addUrlArgs[0]);
+				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));				
+				
+			} else if(cmd.hasOption("stc")) {
+				String[] setTaskConfigArgs = cmd.getOptionValues("stc");
+				if(setTaskConfigArgs.length != 3) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				System.out.println("Setting task config");
+				System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
 			} else if (cmd.hasOption("u")) {
 				String[] uploadArgs = cmd.getOptionValues("u");
 				// Upload a scan
 				if (uploadArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				System.out.println("Uploading " + uploadArgs[1] + 
+				println("Uploading " + uploadArgs[1] + 
 						" to Application " + uploadArgs[0] + ".");
-				System.out.println(client.uploadScan(uploadArgs[0], uploadArgs[1]));
+				println(client.uploadScan(uploadArgs[0], uploadArgs[1]));
 
 			} else if (cmd.hasOption("st")) {
 				String[] searchArgs = cmd.getOptionValues("st");
@@ -191,13 +319,13 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				if ("id".equals(searchArgs[0])) {
-					System.out.println("Searching for team with the id " + searchArgs[1] + ".");
-					System.out.println(client.searchForTeamById(searchArgs[1]));
+					println("Searching for team with the id " + searchArgs[1] + ".");
+					println(client.searchForTeamById(searchArgs[1]));
 				} else if ("name".equals(searchArgs[0])) {
-					System.out.println("Searching for team with the name " + searchArgs[1] + ".");
-					System.out.println(client.searchForTeamByName(searchArgs[1]));
+					println("Searching for team with the name " + searchArgs[1] + ".");
+					println(client.searchForTeamByName(searchArgs[1]));
 				} else {
-					System.out.println("Unknown property argument. Try either id or name.");
+					println("Unknown property argument. Try either id or name.");
 					return;
 				}
 				
@@ -207,11 +335,11 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				if ("id".equals(searchArgs[0])) {
-					System.out.println("Searching for WAF with the id " + searchArgs[1] + ".");
-					System.out.println(client.searchForWafById(searchArgs[1]));
+					println("Searching for WAF with the id " + searchArgs[1] + ".");
+					println(client.searchForWafById(searchArgs[1]));
 				} else if ("name".equals(searchArgs[0])) {
-					System.out.println("Searching for WAF with the name " + searchArgs[1] + ".");
-					System.out.println(client.searchForWafByName(searchArgs[1]));
+					println("Searching for WAF with the name " + searchArgs[1] + ".");
+					println(client.searchForWafByName(searchArgs[1]));
 				} else {
 					throw new ParseException("Unknown property argument. Try either id or name.");
 				}
@@ -233,17 +361,17 @@ public class CommandLineParser {
 					System.out.println("Searching for application with the name " + searchArgs[1] + " of team " + searchArgs[2]);
 					System.out.println(client.searchForApplicationByName(searchArgs[1], searchArgs[2]));
 				} else {
-					System.out.println("Unknown property argument. Try either id or name.");
+					println("Unknown property argument. Try either id or name.");
 					return;
 				}
 			
 			} else if (cmd.hasOption("r")) {
 				String[] ruleArgs = cmd.getOptionValues("r");
 				if (ruleArgs.length != 1) {
-					System.out.println("Wrong number of arguments.'");
+					println("Wrong number of arguments.'");
 				}
-				System.out.println("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
-				System.out.println(client.getRules(ruleArgs[0]));
+				println("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
+				println(client.getRules(ruleArgs[0]));
 				
 			} else {
 				throw new ParseException("No arguments found.");
@@ -251,10 +379,31 @@ public class CommandLineParser {
 		
 		} catch (ParseException e) {
 			if (e.getMessage() != null) {
-				System.out.println(e.getMessage());
+				println(e.getMessage());
 			}
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("java -jar tfcli.jar", options);
 		}
+	}
+	
+	private static void println(String string) {
+		System.out.println(string);
+	}
+	
+	private static boolean containsCaseIgnore(String[] items, String potential) {
+		boolean result = false;
+		
+		for (String item : items) {
+			if (item.equalsIgnoreCase(potential)) {
+				result = true;
+				break;
+			}
+		}
+		
+		return result;
+	}
+	
+	private static String upperCaseAndUnderscore(String input) {
+		return input.replace(' ', '_').toUpperCase();
 	}
 }

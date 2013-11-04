@@ -23,14 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -44,14 +40,8 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
-	@Autowired
-	public NetsparkerChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.NETSPARKER);
+	public NetsparkerChannelImporter() {
+		super(ChannelType.NETSPARKER);
 	}
 
 	/*

@@ -25,12 +25,6 @@
 	<bean class="com.denimgroup.threadfix.data.entities.CustomUserMapper" id="ldapToCustomConfigBean"/>
 	<bean class="com.denimgroup.threadfix.data.entities.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
 		
-	<!-- <security:ldap-server id="ldapServer" 
-		manager-dn="{manager dn}" 
-		manager-password="{manager password}" 
-		url="{ your URL }"
-		  /> -->
-	
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -48,27 +42,16 @@
 	</security:http>
 	
 	<bean id="customAuthenticationProvider" class="com.denimgroup.threadfix.service.LdapAuthenticator">
-	    <!-- <property name="userDetailsService" ref="CustomUserDetailService" /> -->
 	</bean>
 	
     <security:authentication-manager>
+	    <security:authentication-provider ref="customAuthenticationProvider"/>	
 	    <security:authentication-provider user-service-ref="CustomUserDetailService">
 	    	<security:password-encoder ref="ThreadFixPasswordEncoder">
 	    		<security:salt-source ref="saltSource" />
 	    	</security:password-encoder>
 	    </security:authentication-provider>
 	    
-	    <security:authentication-provider ref="customAuthenticationProvider"/>
-	    <!-- 
-	    
-	    <security:ldap-authentication-provider 
-	    	server-ref="ldapServer" 
-	    	user-search-base="OU=Company Name"
-	    	user-search-filter="(sAMAccountName={0})"
-	    	group-role-attribute="cn"
-	    	user-context-mapper-ref="ldapToCustomConfigBean"
-	    	/> -->	
-
     </security:authentication-manager>
 
 </beans>

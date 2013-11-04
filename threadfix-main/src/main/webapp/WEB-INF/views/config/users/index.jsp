@@ -26,7 +26,9 @@
 			<tr>
 				<th class="medium first">User</th>
 				<th class="short">Edit / Delete</th>
+				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 				<th class="short">Edit Permissions</th>
+				</security:authorize>
 			</tr>
 		</thead>
 		<tbody id="userTableBody">
@@ -48,12 +50,14 @@
 						<%@ include file="/WEB-INF/views/config/users/editUserForm.jsp" %>
 					</div>
 				</td>
+				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 				<td id="name${ status.count }">
 					<spring:url value="/configuration/users/{userId}/permissions" var="editPermissionsUrl">
 						<spring:param name="userId" value="${ user.id }"/>
 					</spring:url>
 					<a id="editPermissions${ status.count }" class="btn" href="${ fn:escapeXml(editPermissionsUrl) }">Edit Permissions</a>
 				</td>
+				</security:authorize>
 			</tr>
 		</c:forEach>
 		</tbody>

@@ -75,6 +75,9 @@
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
 						    </li>
 					    </security:authorize>
+					    <li class="normalLinks">
+						    	<a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Queue</a>
+						</li>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
@@ -94,10 +97,12 @@
 								<a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
 							</li>
 							</security:authorize>
+							<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
 					 		<li class="normalLinks">
 								<a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
 							</li>
+							</security:authorize>
 							</security:authorize>
 							<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
 					 		<li class="normalLinks">
@@ -109,7 +114,7 @@
 								<a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
 							</li>
 							</security:authorize>
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+							<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 							<li class="normalLinks">
 								<a id="configureDefaultsLink" href="<spring:url value="/configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
 							</li>

@@ -42,11 +42,7 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
@@ -94,27 +90,8 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	
 	private Calendar date;
 		
-	/**
-	 * Constructor.
-	 * 
-	 * @param channelTypeDao
-	 *            Spring dependency.
-	 * @param channelVulnerabilityDao
-	 *            Spring dependency.
-	 * @param channelSeverityDao
-	 *            Spring dependency.
-	 * @param vulnerabilityMapLogDao
-	 *            Spring dependency.
-	 */
-	@Autowired
-	public SkipfishChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-
-		setChannelType(ChannelType.SKIPFISH);
+	public SkipfishChannelImporter() {
+		super(ChannelType.SKIPFISH);
 	}
 
 	/*

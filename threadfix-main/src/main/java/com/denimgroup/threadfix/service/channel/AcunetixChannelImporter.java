@@ -23,13 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.channel;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -41,19 +37,12 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class AcunetixChannelImporter extends AbstractChannelImporter {
 	
+	public AcunetixChannelImporter() {
+		super(ChannelType.ACUNETIX_WVS);
+	}
+
 	String detailsPattern = "input <b><font color=\"dark\">([^<]+)</font>";
 	String pathPattern = "(.*) \\([a-z0-9]{25,50}\\)";
-
-	@Autowired
-	public AcunetixChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.ACUNETIX_WVS);
-	}
 
 	@Override
 	public Scan parseInput() {

@@ -68,4 +68,10 @@ public interface APIKeyService {
 	 */
 	APIKey createAPIKey(String note, boolean restricted);
 	
+	/**
+	 * 
+	 * @return
+	 */
+	String generateNewSecureRandomKey();
+	
 }

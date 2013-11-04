@@ -12,6 +12,7 @@
 	<spring:url value="" var="emptyUrl"></spring:url>
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
 		<table class="dataTable">
+			<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
 			<tr>
 				<td>Global Group enabled for new users?</td>
 				<td class="inputValue" style="text-align: left;">
@@ -27,6 +28,8 @@
 					<form:errors id="globalGroupEnabledErrors" path="globalGroupEnabled" cssClass="errors" />
 				</td>
 			</tr>
+			</security:authorize>
+			<c:if test="${ ldap_plugin }">
 			<tr>
 				<td class="no-color">LDAP Search Base</td>
 				<td class="no-color">
@@ -63,6 +66,7 @@
 					<form:errors path="activeDirectoryURL" cssClass="errors" />
 				</td>
 			</tr>
+			</c:if>
 		</table>
 		<br/>
 		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Update Defaults</button>

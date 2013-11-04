@@ -64,8 +64,30 @@ public class DocumentServiceImpl implements DocumentService {
 		this.vulnerabilityDao = vulnerabilityDao;
 	}
 
+	/**
+	 * Save a file associated with an app and use the default filename from the MultipartFile
+	 * 
+	 * @param appId ID for the app to attach the file to
+	 * @param file file to associate with app
+	 * @return filename that was saved
+	 */
 	@Override
 	public String saveFileToApp(Integer appId, MultipartFile file) {
+		String retVal = saveFileToApp(appId, file, null);
+		return(retVal);
+	}
+	
+	
+	/**
+	 * Save a file associated with an app with a given filename
+	 * 
+	 * @param appId ID for the app to attach the file to
+	 * @param file file to associate with app
+	 * @param overrideFilename filename to use for the file (versus the default filename in the MultipartFile)
+	 * @return filename that was saved
+	 */
+	@Override
+	public String saveFileToApp(Integer appId, MultipartFile file, String overrideFilename) {
 		if (appId == null || file == null) {
 			log.warn("The document upload file failed to save, it had null input.");
 			return null;
@@ -84,7 +106,13 @@ public class DocumentServiceImpl implements DocumentService {
 		}
 		
 		Document doc = new Document();
-		String fileFullName = file.getOriginalFilename();
+		String fileFullName;
+		
+		if(overrideFilename != null) {
+			fileFullName = overrideFilename;
+		} else {
+			fileFullName = file.getOriginalFilename();
+		}
 		doc.setApplication(application);
 		doc.setName(getFileName(fileFullName));
 		doc.setType(getFileType(fileFullName));
@@ -99,8 +127,9 @@ public class DocumentServiceImpl implements DocumentService {
 			doc.setFile(blob);
 
 			List<Document> appDocs = application.getDocuments();
-			if (appDocs == null) 
+			if (appDocs == null) {
 				appDocs = new ArrayList<Document>();
+			}
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);

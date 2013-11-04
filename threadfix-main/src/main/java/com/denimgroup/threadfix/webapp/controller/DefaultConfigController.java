@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -39,8 +40,12 @@ public class DefaultConfigController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
-				"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials" });
+		if(LdapServiceDelegateFactory.isEnterprise()){
+			dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
+					"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials" });			
+		}else{
+			dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled" });	
+		}
 	}
 	
 	@ModelAttribute
@@ -50,6 +55,7 @@ public class DefaultConfigController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model, HttpServletRequest request) {
+		model.addAttribute("ldap_plugin",LdapServiceDelegateFactory.isEnterprise());
 		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		return "config/defaults";

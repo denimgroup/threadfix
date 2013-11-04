@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.example.helloworld.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="ThreadFix">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ShowViewAction"
+               label="Show View"
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Configure ThreadFix URL and API Key">
+         </action>
+         <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ImportAction"
+               label="Import ThreadFix Results"
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Pull Vulnerable Spring Endpoint Information From ThreadFix">
+         </action>
+         <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ClearAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ClearAction"
+               label="Clear ThreadFix warnings"
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Pull Vulnerable Spring Endpoint Information From ThreadFix">
+         </action>
+         <action
+               class="com.denimgroup.threadfix.plugin.eclipse.action.ConfigureAction"
+               id="com.denimgroup.threadfix.plugin.eclipse.action.ConfigureAction"
+               label="Configure..."
+               menubarPath="sampleMenu/sampleGroup"
+               tooltip="Configure ThreadFix URL and API Key">
+         </action>
+      </actionSet>
+   </extension>
+   
+   <extension point="org.eclipse.core.resources.markers" 
+   		id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"
+   		name="ThreadFix Vulnerability Marker">
+     <super type="org.eclipse.core.resources.textmarker"/>         
+     <persistent value="true"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors.annotationTypes">
+     <type
+        super="org.eclipse.ui.workbench.texteditor.warning"
+        markerType="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"
+        name="com.denimgroup.threadfix.plugin.eclipse.vulnAnnotation"
+        markerSeverity="1"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+     <specification
+     	colorPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.colorPreferenceKey"
+     	colorPreferenceValue="0,0,0"
+     	textPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.textPreferenceKey"
+     	overviewRulerPreferenceKey="com.denimgroup.threadfix.plugin.eclipse.overviewRulerPreferenceKey"
+        annotationType="com.denimgroup.threadfix.plugin.eclipse.vulnAnnotation"
+        icon="icons/icon.jpg"
+        label="ThreadFix Vulnerability Annotations"
+        verticalRulerPreferenceKey="myMarkerIndicationInVerticalRuler"
+        verticalRulerPreferenceValue="true"/>
+  </extension>
+  
+	<extension point="org.eclipse.ui.views">
+		<view
+	    	class="com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView"
+	        icon="icons/icon.jpg"
+	        id="com.denimgroup.threadfix.plugin.eclipse.vulnerabilitiesView"
+	        name="ThreadFix Vulnerabilities">
+	    </view>
+	</extension>
+	
+	<extension point="org.eclipse.ui.ide.markerSupport">
+	    <markerContentGenerator
+	   		 	id="com.denimgroup.threadfix.plugin.eclipse.views.myCustomMarkerGenerator" 
+	    		name="My Marker Generator">
+		    <markerTypeReference id="com.denimgroup.threadfix.plugin.eclipse.vulnMarker"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.resourceField"/>
+		    <markerFieldReference id="org.eclipse.ui.ide.locationField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField" />
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"/>
+		    <markerFieldReference id="com.denimgroup.threadfix.plugin.eclipse-marker.defectUrlField"/>
+	    </markerContentGenerator>
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWEField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.cweIdField"
+			name="CWE ID">
+		</markerField> 
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.CWENameField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.cweNameField"
+			name="CWE Name">
+		</markerField> 
+	    <markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.ParameterField"
+			id="com.denimgroup.threadfix.plugin.eclipse.marker.paramsField"
+			name="Parameter">
+		</markerField>
+		<markerField
+			class="com.denimgroup.threadfix.plugin.eclipse.marker.DefectUrlField"
+			id="com.denimgroup.threadfix.plugin.eclipse-marker.defectUrlField"
+			name="Defect Url">
+		</markerField> 
+	</extension>
+
+</plugin>

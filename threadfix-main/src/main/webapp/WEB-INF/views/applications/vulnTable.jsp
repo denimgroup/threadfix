@@ -174,9 +174,8 @@
 					<td class="expandableTrigger" id="type${ index }">
 						<c:out value="${ vulnerability.genericVulnerability.name }"/>
 					</td>
-					
 					<c:if test="${ empty vulnerability.originalFinding.dependency }">
-						<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.surfaceLocation.path }"/></td>
+						<td class="expandableTrigger" id="path${ index }"><c:out value="${ vulnerability.displayPath }"/></td>
 						<td class="expandableTrigger" id="parameter${ index }"><c:out value="${ vulnerability.surfaceLocation.parameter }"/></td>
 					</c:if>
 					<c:if test="${ not empty vulnerability.originalFinding.dependency }">

@@ -44,6 +44,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
@@ -57,6 +59,10 @@ public class AddUserController {
 
 	private UserService userService = null;
 	private RoleService roleService = null;
+	private boolean ldapPluginInstalled = false;
+	
+	@Autowired
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddUserController.class);
 
@@ -65,14 +71,26 @@ public class AddUserController {
 			UserService userService, RoleService roleService) {
 		this.roleService = roleService;
 		this.userService = userService;
+		ldapPluginInstalled = LdapServiceDelegateFactory.isEnterprise();
 	}
 	
 	public AddUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-				"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
+		if(ldapPluginInstalled && permissionService.isEnterprise()){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
+		}else if(ldapPluginInstalled){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "isLdapUser");
+		}else if(permissionService.isEnterprise()){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess");
+		}else{
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess");
+		}
 	}
 
 	@ModelAttribute

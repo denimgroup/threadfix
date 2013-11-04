@@ -24,7 +24,7 @@ def clone_code():
     with settings(warn_only=True):
         result = local('git clone %s -b 1.2final' % source_code_loc)
         with lcd("threadfix"):
-            result2 = local('git checkout tags/1.2final')
+            result2 = local('git checkout tags/1.2final-tag')
     if (result.failed or result2.failed) and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 

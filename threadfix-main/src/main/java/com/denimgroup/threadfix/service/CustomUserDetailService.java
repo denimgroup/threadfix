@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
 import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
 
 /**
@@ -95,9 +96,15 @@ public class CustomUserDetailService implements UserDetailsService {
 				if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
 					grantedAuthorities.add(new GrantedAuthorityImpl(Permission.CAN_GENERATE_REPORTS.getText()));
 				}
-			} else {
+			}else if(LdapServiceDelegateFactory.isEnterprise()){
 				for (Permission permission : Permission.values()) {
 					if (permission != Permission.CAN_MANAGE_ROLES) {
+						grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
+					}
+				}
+			}else {
+				for (Permission permission : Permission.values()) {
+					if (permission != Permission.CAN_MANAGE_ROLES && permission != Permission.ENTERPRISE) {
 						grantedAuthorities.add(new GrantedAuthorityImpl(permission.getText()));
 					}
 				}

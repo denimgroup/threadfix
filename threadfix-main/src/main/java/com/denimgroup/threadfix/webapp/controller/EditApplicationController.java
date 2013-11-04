@@ -56,11 +56,12 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.merge.FrameworkType;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
-@SessionAttributes("application")
+@SessionAttributes({"application", "scanParametersBean"})
 public class EditApplicationController {
 	
 	public EditApplicationController(){}
@@ -117,7 +118,7 @@ public class EditApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "userName",
 				"password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-				"uniqueId", "organization.id"});
+				"uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder"});
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -177,7 +178,7 @@ public class EditApplicationController {
 		} else {
 			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
+//			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
@@ -194,6 +195,7 @@ public class EditApplicationController {
 			
 			model.addAttribute("application", application);
 			model.addAttribute("finding", new Finding());
+			model.addAttribute("applicationTypes", FrameworkType.values());
 			model.addAttribute("contentPage", "applications/detailHeader.jsp");
 			ControllerUtils.addSuccessMessage(request,
 					"The application was edited successfully.");
@@ -293,7 +295,6 @@ public class EditApplicationController {
 			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 			
 			applicationService.storeApplication(application);
-			applicationService.updateProjectRoot(application);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			

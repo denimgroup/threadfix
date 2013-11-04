@@ -30,20 +30,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.StaticPathInformation;
 import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
@@ -112,31 +108,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		SPECIAL_REGEX_MAP.put("getHeader", "getHeader\\(\"([a-zA-Z0-9\\._]+)\"\\)");
 	}
 	
-	/**
-	 * Constructor.
-	 * 
-	 * @param channelTypeDao
-	 *            Spring dependency.
-	 * @param channelVulnerabilityDao
-	 *            Spring dependency.
-	 * @param channelSeverityDao
-	 *            Spring dependency.
-	 * @param genericVulnerabilityDao
-	 *            Spring dependency.
-	 * @param vulnerabilityMapLogDao
-	 *            Spring dependency.
-	 */
-	@Autowired
-	public FortifyChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, 
-			ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-
-		setChannelType(ChannelType.FORTIFY);
+	public FortifyChannelImporter() {
+		super(ChannelType.FORTIFY);
 		doSAXExceptionCheck = false;
 	}
 
@@ -207,17 +180,18 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		// maybe bad idea? Complicated data structure.
 		// the String key is the native ID and the Maps in the List 
 		// have the information for DataFlowElements
-		Map<String, List<DataFlowElementMap>> nativeIdDataFlowElementsMap = new
-			HashMap<String, List<DataFlowElementMap>>();
+		Map<String, List<DataFlowElementMap>> nativeIdDataFlowElementsMap = new HashMap<>();
+		Map<String, StaticPathInformation> staticPathInformationMap = new HashMap<>();
 		
-		List<Map<String,String>> rawFindingList = new ArrayList<Map<String,String>>();
+		List<Map<String,String>> rawFindingList = new ArrayList<>();
 		
-		List<DataFlowElementMap> dataFlowElementMaps = new ArrayList<DataFlowElementMap>();
+		List<DataFlowElementMap> dataFlowElementMaps = new ArrayList<>();
 		DataFlowElementMap currentMap = null;
+		StaticPathInformation currentStaticPathInformation = null;
 		
-		Map<String, DataFlowElementMap> nodeSnippetMap = new HashMap<String,DataFlowElementMap>();
+		Map<String, DataFlowElementMap> nodeSnippetMap = new HashMap<>();
 		
-		Map<String, Map<String, Float>> ruleMap = new HashMap<String, Map<String, Float>>();
+		Map<String, Map<String, Float>> ruleMap = new HashMap<>();
 		String currentRuleID = null;
 		
 		String currentChannelType = null;
@@ -240,6 +214,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		boolean getChannelType = false;
 		boolean getChannelSubtype = false;
 		boolean getSeverity = false;
+		boolean getStaticPathInformationUrl = false;
 		boolean getNativeId = false;
 		boolean getAction = false;
 		boolean getImpact = false, getProbability = false, getAccuracy = false;
@@ -263,6 +238,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	findingMap.put("nativeId", currentNativeId);
 	    	findingMap.put("confidence", currentConfidence);
 	    	findingMap.put("classID", currentClassID);
+	    	staticPathInformationMap.put(currentNativeId, currentStaticPathInformation);
 	    	nativeIdDataFlowElementsMap.put(currentNativeId, dataFlowElementMaps);
 	    	
 	    	rawFindingList.add(findingMap);
@@ -273,6 +249,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			currentNativeId = null;
 			currentConfidence = null;
 			currentClassID = null;
+			currentStaticPathInformation = null;
 			dataFlowElementMaps = new ArrayList<DataFlowElementMap>();
 			currentMap = null;
 	    }
@@ -288,6 +265,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		
 	    		List<DataFlowElement> dataFlowElements = parseDataFlowElements(dataFlowElementMaps);
 	    		
+	    		StaticPathInformation staticPathInformation = staticPathInformationMap.get(nativeId);
+	    		
 	    		String severity = getSeverityName(getFloatOrNull(findingMap.get("confidence")),
 	    				ruleMap.get(findingMap.get("classID")));
 	    			    		
@@ -302,6 +281,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		finding.setDataFlowElements(dataFlowElements);
 	    		finding.setIsStatic(true);
 	    		finding.setSourceFileLocation(currentPath);
+	    		finding.setStaticPathInformation(staticPathInformation);
 	    		
 	    		saxFindingList.add(finding);
 	    		
@@ -600,14 +580,22 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    		getChannelSubtype = true;
 		    	} else if ("InstanceSeverity".equals(qName)) {
 		    		getSeverity = true;
+		    	} else if (currentStaticPathInformation != null && "URL".equals(qName)) {
+		    		getStaticPathInformationUrl = true;
 		    	} else if ("InstanceID".equals(qName)) {
 		    		getNativeId = true;
 		    	} else if ("ClassID".equals(qName)) {
 		    		getClassID = true;
 		    	} else if ("Confidence".equals(qName)) {
 		    		getConfidence = true;
-		    	} else if (!skipToNextVuln && "Entry".equals(qName) || "Configuration".equals(qName)) {
-		    		currentMap = new DataFlowElementMap();
+		    	} else if (!skipToNextVuln && "Entry".equals(qName)) {
+		    		if (atts.getValue("name") != null && atts.getValue("type") != null) {
+		    			currentStaticPathInformation = new StaticPathInformation();
+		    			currentStaticPathInformation.setName(atts.getValue("name"));
+		    			currentStaticPathInformation.setType(atts.getValue("type"));
+		    		} else {
+		    			currentMap = new DataFlowElementMap();
+		    		}
 		    	} else if (currentMap != null && "NodeRef".equals(qName)) {
 		    		currentMap.node = atts.getValue("id");
 		    	} else if (currentMap != null && "SourceLocation".equals(qName)) {
@@ -676,6 +664,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	} else if (getFact) {
 	    		currentMap.fact = getBuilderText();
 	    		getFact = false;
+	    	} else if (getStaticPathInformationUrl) {
+	    		currentStaticPathInformation.setValue(getBuilderText());
+	    		getStaticPathInformationUrl = false;
 	    	} else if (getSnippetText){
 	    		String fullText = getBuilderText();
 	    		
@@ -709,7 +700,6 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		getConfidence = false;
 	    	}
 	    	
-	    	
 	    	if (!doneWithVulnerabilities) {
 		    	if ("Vulnerability".equals(qName)) {
 		    		addToList();
@@ -720,7 +710,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    			dataFlowElementMaps.add(currentMap);
 		    			currentMap = null;
 		    		}
-		    	} else if ("Trace".equals(qName)) {
+		    	} else if ("ExternalEntries".equals(qName)) {
 		    		skipToNextVuln = true;
 		    		currentMap = null;
 		    	}
@@ -737,7 +727,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if (getChannelType || getSeverity || getNativeId || getClassID || getFact 
 	    			|| getSnippetText || getChannelSubtype || getAction || getImpact ||
-	    			getProbability || getAccuracy || getConfidence) {
+	    			getProbability || getAccuracy || getConfidence || getStaticPathInformationUrl) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }

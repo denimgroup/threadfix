@@ -56,6 +56,7 @@
     	<pattern>/organizations/*/applications/*/documents/*/view*</pattern>
     	<pattern>/organizations/*/applications/*/documents/*/download*</pattern>
     	<pattern>/organizations/*/applications/*/scanTab*</pattern>
+    	<pattern>/organizations/*/applications/*/scanQueueTab*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/organizations/*/filters/readOnly*</pattern>
@@ -73,6 +74,8 @@
     	<pattern>/wafs/new/ajax/appPage*</pattern>
     	<pattern>/wafs/*/edit/ajax*</pattern>
     	<pattern>/configuration/remoteproviders/*/table*</pattern>
+    	<pattern>/configuration/scanqueue/organizations/*/applications/*/scanQueueTask/*/delete*</pattern>
+    	<pattern>/configuration/scanqueue/organizations/*/applications/*/addScanQueueTask*</pattern>
     </excludes>
     <decorator name="default" page="default.jsp">
         <pattern>/*</pattern>

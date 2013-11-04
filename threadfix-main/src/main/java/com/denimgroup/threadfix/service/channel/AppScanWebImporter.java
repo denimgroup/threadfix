@@ -28,14 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
@@ -53,30 +48,12 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class AppScanWebImporter extends AbstractChannelImporter {
 
-	/**
-	 * Constructor with Spring dependencies injected.
-	 * 
-	 * @param channelTypeDao
-	 * @param channelVulnerabilityDao
-	 * @param channelSeverityDao
-	 * @param genericVulnerabilityDao
-	 * @param vulnerabilityMapLogDao
-	 */
-	@Autowired
-	public AppScanWebImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao, ChannelSeverityDao channelSeverityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao) {
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-
-		setChannelType(ChannelType.APPSCAN_DYNAMIC);
+	public AppScanWebImporter() {
+		super(ChannelType.APPSCAN_DYNAMIC);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * com.denimgroup.threadfix.service.channel.ChannelImporter#parseInput()
 	 */
@@ -94,6 +71,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 		private String currentParam = null;
 		private String currentIssueTypeId = null;
 		private String requestText = null;
+		private String currentHttpMethod = null;
 		
 		private final Map<String, ChannelSeverity> severityMap;
 		private final Map<String, String> genericVulnMap;
@@ -153,11 +131,11 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 			if (channelVuln == null || genericVuln == null)
 				return;
 
-			VulnerabilityMap vm = new VulnerabilityMap();
-			vm.setChannelVulnerability(channelVuln);
-			vm.setGenericVulnerability(genericVuln);
+			VulnerabilityMap vulnerabilityMap = new VulnerabilityMap();
+			vulnerabilityMap.setChannelVulnerability(channelVuln);
+			vulnerabilityMap.setGenericVulnerability(genericVuln);
 			List<VulnerabilityMap> vulnerabilityMapList = new ArrayList<VulnerabilityMap>();
-			vulnerabilityMapList.add(vm);
+			vulnerabilityMapList.add(vulnerabilityMap);
 			channelVuln.setVulnerabilityMaps(vulnerabilityMapList);
 			genericVuln.setVulnerabilityMaps(vulnerabilityMapList);
 		}
@@ -171,28 +149,25 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		hosts.add(atts.getValue(0));
 	    	
 	    	if (issueTypes) {
-	    		// ISSUETYPE
-	    		if ("IssueType".equals(qName))
-	    			currentIssueTypeId = atts.getValue(0);
-	    		else if ("Severity".equals(qName))
-	    			grabSeverity = true;
-	    		else if ("link".equals(qName))
-	    			grabCWE = true;
-	    		else if ("Issues".equals(qName))
-	    			issueTypes = false;
-	    		else if ("name".equals(qName))
-	    			grabIssueTypeName = true;
+	    		
+	    		switch (qName) {
+	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
+	    			case "Issue"     : issueTypes = false;                    break;
+	    			case "Severity"  : grabSeverity = true;                   break;
+	    			case "link"      : grabCWE = true;                        break;
+	    			case "name"      : grabIssueTypeName = true;              break;
+	    		}
 	    			    	
 	    	} else {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
 		    	}
-		    	else if ("Entity".equals(qName) && atts.getValue(1) != null && atts.getValue(1).trim().equals("Parameter"))
-		    		currentParam = atts.getValue(0);
+		    	else if ("Entity".equals(qName))
+		    		currentParam = atts.getValue("Name");
 		    	else if ("Url".equals(qName))
 		    		grabUrlText = true;
-		    	else if (date == null && "OriginalHttpTraffic".equals(qName)) {
+		    	else if ("OriginalHttpTraffic".equals(qName)) {
 		    		requestText = "";
 		    		grabDate = true;
 		    	}
@@ -248,6 +223,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    			location.setPath(currentUrl);
 	    		
 	    		location.setParameter(currentParam);
+	    		location.setHttpMethod(currentHttpMethod);
 	    		
 	    		finding.setSurfaceLocation(location);
 	    		finding.setChannelVulnerability(currentChannelVuln);
@@ -261,14 +237,32 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		currentChannelVuln = null;
 	    		currentUrl = null;
 	    		currentParam = null;
+	    		currentHttpMethod = null;
 	    		
-	    	} else if (date == null && "OriginalHttpTraffic".equals(qName)) {
-	    		date = attemptToParseDateFromHTTPResponse(requestText);
+	    	} else if ("OriginalHttpTraffic".equals(qName)) {
+	    		if (date == null) {
+	    			date = attemptToParseDateFromHTTPResponse(requestText);
+	    		}
+	    		currentHttpMethod = parseHttpMethodFromHttpResponse(requestText);
 	    		grabDate = false;
 	    	}
 	    }
 
-	    public void characters (char ch[], int start, int length) {
+	    private String parseHttpMethodFromHttpResponse(String requestText) {
+	    	String returnHttpMethod = null;
+	    	
+			if (requestText != null) {
+				for (String httpMethod : SurfaceLocation.REQUEST_METHODS) {
+					if (requestText.startsWith(httpMethod)) {
+						returnHttpMethod = httpMethod;
+					}
+				}
+			}
+			
+			return returnHttpMethod;
+		}
+
+		public void characters (char ch[], int start, int length) {
 	    	if (grabUrlText || grabSeverity || grabCWE || grabIssueTypeName || grabDate) {
 	    		addTextToBuilder(ch, start, length);
 	    	}

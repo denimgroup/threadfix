@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -34,7 +33,6 @@ import javax.jms.TextMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -103,7 +101,6 @@ public class QueueListener implements MessageListener {
 	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
 	 */
 	@Override
-	@Transactional
 	public void onMessage(Message message) {
 		try {
 			
@@ -158,7 +155,7 @@ public class QueueListener implements MessageListener {
 
 	private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
 		log.info("Remote Provider Bulk Import job received");
-		updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
+		jobStatusService.updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
 		
 		RemoteProviderType type = remoteProviderTypeService.load(remoteProviderTypeId);
 		
@@ -174,7 +171,7 @@ public class QueueListener implements MessageListener {
 				closeJobStatus(jobStatusId, "No applications found, Remote Provider import failed.");
 			} else {
 				
-				updateJobStatus(jobStatusId, "Starting scan import for " + applications.size() + " applications.");
+				jobStatusService.updateJobStatus(jobStatusId, "Starting scan import for " + applications.size() + " applications.");
 				
 				for (RemoteProviderApplication application : applications) {
 					if (application != null && application.getApplicationChannel() != null) {
@@ -241,7 +238,7 @@ public class QueueListener implements MessageListener {
 			String component, String version, String severity, String priority,
 			String status, Integer jobStatusId) {
 
-		updateJobStatus(jobStatusId, "Submitting defect.");
+		jobStatusService.updateJobStatus(jobStatusId, "Submitting defect.");
 		
 		@SuppressWarnings("unchecked")
 		List<Vulnerability> vulnerabilities = vulnerabilityService
@@ -278,7 +275,7 @@ public class QueueListener implements MessageListener {
 		// TODO Move the jobStatus updating to the importer to improve messages
 		// once the messages persist
 		
-		updateJobStatus(jobStatusId, "Job received");
+		jobStatusService.updateJobStatus(jobStatusId, "Job received");
 		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
@@ -292,7 +289,7 @@ public class QueueListener implements MessageListener {
 					" (filename " + fileName + ").");
 		}
 		
-		updateJobStatus(jobStatusId, "Processing Scan from file.");
+		jobStatusService.updateJobStatus(jobStatusId, "Processing Scan from file.");
 		
 		boolean finished = false, closed = false;
 		
@@ -337,7 +334,7 @@ public class QueueListener implements MessageListener {
 			return;
 		}
 
-		updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
+		jobStatusService.updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
 		defectService.updateVulnsFromDefectTracker(app);
 		closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
 	}
@@ -345,29 +342,6 @@ public class QueueListener implements MessageListener {
 	/**
 	 * @param status
 	 */
-	@Transactional
-	private void updateJobStatus(Integer id, String status) {
-		
-		JobStatus jobStatus = jobStatusService.loadJobStatus(id);
-		
-		if (jobStatus == null) {
-			return;
-		}
-		
-		if (!jobStatus.getHasStartedProcessing()) {
-			jobStatus.setHasStartedProcessing(true);
-		}
-
-		jobStatus.setStatus(status);
-		jobStatus.setModifiedDate(new Date());
-
-		jobStatusService.storeJobStatus(jobStatus);
-	}
-
-	/**
-	 * @param status
-	 */
-	@Transactional
 	private void closeJobStatus(Integer id, String status) {
 		JobStatus jobStatus = jobStatusService.loadJobStatus(id);
 		

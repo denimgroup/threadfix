@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.ManualFindingService;
 
 @Controller
-@RequestMapping("/rest/teams/{teamId}/applications/{appId}/addFinding")
+@RequestMapping("/rest/applications/{appId}/addFinding")
 public class AddFindingRestController extends RestController {
 	
 	public static final String CREATION_FAILED = "New Finding creation failed.";
@@ -27,17 +27,17 @@ public class AddFindingRestController extends RestController {
 			"set to a valid CWE vulnerability name.";
 	public static final String PASSED_CHECK = "The request passed the check for Finding parameters.";
 
-	private ScanMergeService scanMergeService;
+	private ManualFindingService manualFindingService;
 	private FindingService findingService;
 	
 	private final static String NEW = "newFinding";
 
 	@Autowired
 	public AddFindingRestController(APIKeyService apiKeyService, 
-			ScanMergeService scanMergeService,
+			ManualFindingService manualFindingService,
 			FindingService findingService) {
-		this.apiKeyService = apiKeyService;
-		this.scanMergeService = scanMergeService;
+		super(apiKeyService);
+		this.manualFindingService = manualFindingService;
 		this.findingService = findingService;
 	}
 	
@@ -49,9 +49,8 @@ public class AddFindingRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.POST)
-	public @ResponseBody Object newApplication(HttpServletRequest request,
-			@PathVariable("appId") int appId,
-			@PathVariable("teamId") int teamId) {
+	public @ResponseBody Object createFinding(HttpServletRequest request,
+			@PathVariable("appId") int appId) {
 		log.info("Received REST request for a new Finding.");
 
 		String result = checkKey(request, NEW);
@@ -67,7 +66,7 @@ public class AddFindingRestController extends RestController {
 		}
 		
 		Finding finding = findingService.parseFindingFromRequest(request);
-		boolean mergeResult = scanMergeService.processManualFinding(finding, appId);
+		boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 		
 		if (mergeResult) {
 			return finding;

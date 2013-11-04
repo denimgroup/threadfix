@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,7 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
@@ -79,6 +81,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private DefectDao defectDao = null;
 	private PermissionService permissionService = null;
 	private ScanMergeService scanMergeService = null;
+	private ScanQueueService scanQueueService;
 
 	@Autowired
 	public ApplicationServiceImpl(ApplicationDao applicationDao,
@@ -89,7 +92,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
 			ApplicationCriticalityDao applicationCriticalityDao,
 			DefectDao defectDao,
-			ScanMergeService scanMergeService) {
+			ScanMergeService scanMergeService,
+			ScanQueueService scanQueueService) {
 		this.applicationDao = applicationDao;
 		this.defectTrackerDao = defectTrackerDao;
 		this.accessControlMapService = accessControlMapService;
@@ -101,6 +105,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		this.applicationCriticalityDao = applicationCriticalityDao;
 		this.defectDao = defectDao;
 		this.scanMergeService = scanMergeService;
+		this.scanQueueService = scanQueueService;
 	}
 
 	@Override
@@ -152,6 +157,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 			for (AccessControlApplicationMap map : application.getAccessControlApplicationMaps()) {
 				accessControlMapService.deactivate(map);
 			}
+		}
+		
+		if (application.getScanQueueTasks() != null) {
+			for (ScanQueueTask task : application.getScanQueueTasks())
+				scanQueueService.deactivateTask(task);
+				
 		}
 		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
@@ -284,15 +295,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (application == null || application.getName() == null
 				|| application.getName().trim().isEmpty()
 				|| application.getName().length() > Application.NAME_LENGTH) {
+			log.warn("The application's name was invalid.");
 			return false;
 		}
 		
 		if (application.getUrl() != null &&
 				application.getUrl().length() > Application.URL_LENGTH) {
+			log.warn("The application's url was too long.");
 			return false;
 		}
 		
-		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
+		Application databaseApplication = loadApplication(application.getName().trim(), 
+				application.getOrganization().getId());
+
 		return databaseApplication == null;
 	}
 	
@@ -333,6 +348,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 			return;
 		}
+		
+		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
+			File file = new File(application.getRepositoryFolder().trim());
+			if (!file.exists() || !file.isDirectory()) {
+				result.rejectValue("repositoryFolder", null, null, "Invalid directory");
+				return;
+			}
+		}		
 						
 		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(), application.getOrganization().getId()));
 
@@ -470,6 +493,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
 		if (databaseApplication != null) {
 			result.rejectValue("name", "errors.nameTaken");
+			return;
+		}
+		
+		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
+			File file = new File(application.getRepositoryFolder().trim());
+			if (!file.exists() || !file.isDirectory()) {
+				result.rejectValue("repositoryFolder", null, null, "Invalid directory");
+				return;
+			}
 		}
 		
 		if (!canManageWafs && application.getWaf() != null) {

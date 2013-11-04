@@ -27,14 +27,10 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -47,15 +43,8 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 public class FindBugsChannelImporter extends AbstractChannelImporter {
 
-	@Autowired
-	public FindBugsChannelImporter(ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		
-		this.channelType = channelTypeDao.retrieveByName(ChannelType.FINDBUGS);
+	public FindBugsChannelImporter() {
+		super(ChannelType.FINDBUGS);
 	}
 
 	@Override
