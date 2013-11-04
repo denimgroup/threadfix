@@ -234,7 +234,7 @@ public class CommandLineParser {
 				
 				// appId> <vulnTypeStrategy> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
 				
-				String 
+				String
 					appId = parameterArgs[0],
 					vulnTypeStrategy = parameterArgs[1],
 					sourceCodeAccessLevel = parameterArgs[2],
@@ -273,7 +273,7 @@ public class CommandLineParser {
 						"Framework Type: " + frameworkType);
 				
 				// TODO return a success message instead of the (mostly irrelevant) application information.
-				println(client.setParameters(appId, vulnTypeStrategy, 
+				println(client.setParameters(appId,
 						sourceCodeAccessLevel, frameworkType, repositoryUrl));
 				
 			} else if (cmd.hasOption("teams")) {
@@ -294,7 +294,7 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				System.out.println("Adding url to applicationId " + addUrlArgs[0]);
-				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));				
+				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));
 				
 			} else if(cmd.hasOption("stc")) {
 				String[] setTaskConfigArgs = cmd.getOptionValues("stc");
@@ -309,7 +309,7 @@ public class CommandLineParser {
 				if (uploadArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				println("Uploading " + uploadArgs[1] + 
+				println("Uploading " + uploadArgs[1] +
 						" to Application " + uploadArgs[0] + ".");
 				println(client.uploadScan(uploadArgs[0], uploadArgs[1]));
 
@@ -345,7 +345,7 @@ public class CommandLineParser {
 				}
 			
 			} else if (cmd.hasOption("sa")) {
-				String[] searchArgs = cmd.getOptionValues("sa");				
+				String[] searchArgs = cmd.getOptionValues("sa");
 				if ("id".equals(searchArgs[0])) {
 					if (searchArgs.length != 2) {
 						System.out.println("Wrong number of arguments.");

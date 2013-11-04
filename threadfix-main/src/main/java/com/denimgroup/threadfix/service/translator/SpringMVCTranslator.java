@@ -108,6 +108,13 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		if (workTree != null && workTree.exists()) {
 			log.info("Building mappings from full source.");
 			fullMappings = new SpringControllerMappings(workTree);
+			
+			if (fullMappings != null) {
+				log.info("Got mappings.");
+				log.info("Mappings contained " + fullMappings.generateEndpoints().size() + " mappings.");
+			} else {
+				log.warn("No mappings.");
+			}
 		} else {
 			log.error("Attempted to build mappings from nonexistent source. " +
 					"Please configure a repository URL correctly.");
@@ -211,7 +218,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 			}
 		}
 		
-		if (urlPath.contains(JSESSIONID)) {
+		if (urlPath != null && urlPath.contains(JSESSIONID)) {
 			urlPath = urlPath.substring(0, urlPath.indexOf(JSESSIONID));
 		}
 

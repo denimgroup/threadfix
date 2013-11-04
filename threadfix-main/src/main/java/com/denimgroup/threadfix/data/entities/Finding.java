@@ -308,6 +308,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 			if (getSurfaceLocation().getPath() != null) {
 				builder.setDynamicPath(getSurfaceLocation().getPath());
 			}
+			
+			if (getSurfaceLocation().getParameter() != null) {
+				builder.setParameter(getSurfaceLocation().getParameter());
+			}
 		}
 		
 		if (dataFlowElements != null && !dataFlowElements.isEmpty()) {

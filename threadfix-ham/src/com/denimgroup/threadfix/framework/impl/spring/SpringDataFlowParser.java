@@ -63,6 +63,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	 * @param dataFlowElements
 	 * @return
 	 */
+	@Override
 	public String parse(EndpointQuery query) {
 		
 		String parameter = null;
@@ -82,7 +83,7 @@ public class SpringDataFlowParser implements ParameterParser {
 			}
 		}
 		
-		if (parameter == null && query != null && query.getCodePoints() != null) {
+		if (parameter == null && query != null) {
 			parameter = query.getParameter();
 		}
 		
