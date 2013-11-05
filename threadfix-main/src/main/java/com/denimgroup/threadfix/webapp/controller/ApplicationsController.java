@@ -50,6 +50,8 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
@@ -63,9 +65,6 @@ import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
@@ -185,7 +184,6 @@ public class ApplicationsController {
 		model.addAttribute("scanParametersBean", ScanParametersBean.getScanParametersBean(application));
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
-		model.addAttribute("typeMatchingStrategies", VulnTypeStrategy.values());
 		model.addAttribute("teamList", organizationService.loadAllActive());
 		if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));

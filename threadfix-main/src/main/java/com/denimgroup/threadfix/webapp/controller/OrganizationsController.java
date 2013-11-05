@@ -49,6 +49,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
@@ -56,7 +57,6 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 

@@ -91,9 +91,8 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 				MergeConfigurationGenerator.generateConfiguration(application, scan), scan);
 		
 		VulnerabilityCache 
-			oldGuesser = new VulnerabilityCache(
-				application.getVulnTypeStrategyEnum(), vulns),
-			newGuesser = new VulnerabilityCache(application.getVulnTypeStrategyEnum());
+			oldGuesser = new VulnerabilityCache(vulns),
+			newGuesser = new VulnerabilityCache();
 
 		ScanStatisticsUpdater scanStatisticsUpdater = new ScanStatisticsUpdater(scan, scanDao, 
 				jobStatusService, statusId);

@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 
 public class ScanParametersBean {
 
-	String applicationType, sourceCodeAccessLevel, typeMatchingStrategy, sourceCodeUrl;
+	String applicationType, sourceCodeAccessLevel, sourceCodeUrl;
 	
 	public String getApplicationType() {
 		return applicationType;
@@ -45,14 +45,6 @@ public class ScanParametersBean {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
 	}
 
-	public String getTypeMatchingStrategy() {
-		return typeMatchingStrategy;
-	}
-
-	public void setTypeMatchingStrategy(String typeMatchingStrategy) {
-		this.typeMatchingStrategy = typeMatchingStrategy;
-	}
-
 	public String getSourceCodeUrl() {
 		return sourceCodeUrl;
 	}
@@ -67,7 +59,6 @@ public class ScanParametersBean {
 		if (app != null) {
 			returnBean.setApplicationType(app.getFrameworkTypeEnum().toString());
 			returnBean.setSourceCodeAccessLevel(app.getSourceCodeAccessLevelEnum().toString());
-			returnBean.setTypeMatchingStrategy(app.getVulnTypeStrategyEnum().toString());
 			returnBean.setSourceCodeUrl(app.getRepositoryUrl());
 		}
 	

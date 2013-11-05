@@ -37,12 +37,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.framework.Endpoint;
-import com.denimgroup.threadfix.service.framework.EndpointGenerator;
-import com.denimgroup.threadfix.service.framework.PathUrlTranslatorFactory;
 import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
+import com.denimgroup.threadfix.service.translator.PathUrlTranslatorFactory;
 
 @Controller
 @RequestMapping("/rest/code")

@@ -33,9 +33,11 @@ import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.denimgroup.threadfix.framework.beans.CodePoint;
+
 @Entity
 @Table(name = "DataFlowElement")
-public class DataFlowElement extends BaseEntity implements Comparable<DataFlowElement> {
+public class DataFlowElement extends BaseEntity implements Comparable<DataFlowElement>, CodePoint {
 
 	private static final long serialVersionUID = 1709906845656363680L;
 
