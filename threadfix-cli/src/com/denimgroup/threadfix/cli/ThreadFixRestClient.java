@@ -53,13 +53,10 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
-	public String setParameters(String appId,
-			String sourceCodeAccessLevel, String frameworkType, String repositoryUrl) {
+	public String setParameters(String appId, String frameworkType, String repositoryUrl) {
 		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/setParameters",
-				new String[] {"apiKey",
-					"sourceCodeAccessLevel", "frameworkType", "repositoryUrl"},
-				new String[] { util.getKey(),
-					 sourceCodeAccessLevel,   frameworkType,   repositoryUrl});
+				new String[] {"apiKey",      "frameworkType", "repositoryUrl"},
+				new String[] { util.getKey(), frameworkType,   repositoryUrl});
 		
 		return result;
 	}

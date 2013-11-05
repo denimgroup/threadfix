@@ -40,18 +40,14 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public class FindingMatcher {
 	
-	private final String 
+	private final String
 		urlPathRoot,
 		filePathRoot,
 		projectRoot;
 	
 	private String lowerCaseFilePathRoot = null;
 	
-	private final ScanMergeConfiguration scanMergeConfiguration;
-	
 	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
-		
-		this.scanMergeConfiguration = scanMergeConfiguration;
 		
 		if (scan != null) {
 			urlPathRoot = scan.getUrlPathRoot();
@@ -73,26 +69,29 @@ public class FindingMatcher {
 	
 	/**
 	 * This method chooses the correct static / dynamic matching algorithm and applies it to
-	 * the supplied finding and each finding in the vulnerability. 
+	 * the supplied finding and each finding in the vulnerability.
 	 * 
 	 */
 	public boolean doesMatch(Finding finding, Vulnerability vuln) {
-		if (finding == null || vuln == null)
+		if (finding == null || vuln == null) {
 			return false;
+		}
 
 		// iterate through the findings of the vulnerability and try to match
 		// them to the finding
 		for (Finding vulnFinding : vuln.getFindings()) {
 			if (!finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()     && dynamicToDynamicMatch(finding, vulnFinding))
+				if (!vulnFinding.getIsStatic()       && dynamicToDynamicMatch(finding, vulnFinding)) {
 					return true;
-				else if (vulnFinding.getIsStatic() && dynamicToStaticMatch(finding, vulnFinding))
+				} else if (vulnFinding.getIsStatic() && dynamicToStaticMatch(finding, vulnFinding)) {
 					return true;
+				}
 			} else {
-				if (!vulnFinding.getIsStatic()     && dynamicToStaticMatch(vulnFinding, finding))
+				if (!vulnFinding.getIsStatic()       && dynamicToStaticMatch(vulnFinding, finding)) {
 					return true;
-				else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding))
+				} else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding)) {
 					return true;
+				}
 			}
 		}
 
@@ -107,7 +106,7 @@ public class FindingMatcher {
 	}
 
 	private boolean dynamicToStaticMatch(Finding dynamicFinding, Finding staticFinding) {
-		return dynamicFinding != null && staticFinding != null && 
+		return dynamicFinding != null && staticFinding != null &&
 				genericVulnsMatch(dynamicFinding, staticFinding) &&
 				compareStaticAndDynamicPaths(dynamicFinding, staticFinding) &&
 				compareSurfaceLocationParameter(dynamicFinding, staticFinding);
@@ -125,11 +124,11 @@ public class FindingMatcher {
 		
 		boolean dynamicMatch = false, staticMatch = false;
 		
-		dynamicMatch = comparePaths(staticFinding.getCalculatedUrlPath(), 
+		dynamicMatch = comparePaths(staticFinding.getCalculatedUrlPath(),
 				dynamicFinding.getCalculatedUrlPath());
 		
 		if (!dynamicMatch) {
-			staticMatch = sourceFileNameCompare(dynamicFinding.getCalculatedFilePath(), 
+			staticMatch = sourceFileNameCompare(dynamicFinding.getCalculatedFilePath(),
 					staticFinding.getCalculatedFilePath());
 		}
 		
@@ -189,7 +188,7 @@ public class FindingMatcher {
 				newFinding.getSurfaceLocation() != null) {
 			
 			if (oldFinding.getSurfaceLocation().getParameter() != null &&
-				newFinding.getSurfaceLocation().getParameter() != null && 
+				newFinding.getSurfaceLocation().getParameter() != null &&
 				oldFinding.getSurfaceLocation().getParameter().equals(
 						newFinding.getSurfaceLocation().getParameter())) {
 				match = true;
@@ -211,7 +210,7 @@ public class FindingMatcher {
 				!oldFinding.getDataFlowElements().isEmpty() &&
 				!newFinding.getDataFlowElements().isEmpty()) {
 			
-			List<DataFlowElement> 
+			List<DataFlowElement>
 				oldDataFlowElements = oldFinding.getDataFlowElements(),
 				newDataFlowElements = newFinding.getDataFlowElements();
 			
@@ -268,7 +267,7 @@ public class FindingMatcher {
 			// if we don't have a project root, or it isn't in one of the paths,
 			// return normal comparison of the cleaned strings.
 			else if (lowerCaseFilePathRoot == null || lowerCaseFilePathRoot.trim().equals("")
-					|| !path1.contains(lowerCaseFilePathRoot.toLowerCase()) 
+					|| !path1.contains(lowerCaseFilePathRoot.toLowerCase())
 					|| !path2.contains(lowerCaseFilePathRoot.toLowerCase())) {
 				returnValue = path1.equals(path2);
 			}
@@ -287,15 +286,18 @@ public class FindingMatcher {
 	// we want to compare strings that have been lowercased, have had
 	// their leading / removed, and have / or \ all pointing the same way.
 	private String cleanPathString(String inputString) {
-		if (inputString == null || inputString.trim().equals(""))
+		if (inputString == null || inputString.trim().equals("")) {
 			return null;
+		}
 		String outputString = inputString.toLowerCase();
 
-		if (outputString.contains("\\"))
+		if (outputString.contains("\\")) {
 			outputString = outputString.replace("\\", "/");
+		}
 
-		if (outputString.charAt(0) == '/')
+		if (outputString.charAt(0) == '/') {
 			outputString = outputString.substring(1);
+		}
 
 		return outputString;
 	}
@@ -303,7 +305,7 @@ public class FindingMatcher {
 	private boolean genericVulnsMatch(Finding newFinding, Finding oldFinding) {
 		boolean match = false;
 		
-		GenericVulnerability 
+		GenericVulnerability
 			newGenericVulnerability = getGenericVulnerability(newFinding),
 			oldGenericVulnerability = getGenericVulnerability(oldFinding);
 		

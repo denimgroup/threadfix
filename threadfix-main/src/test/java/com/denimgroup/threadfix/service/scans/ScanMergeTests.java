@@ -72,12 +72,12 @@ public class ScanMergeTests extends BaseRestTest {
 		}
 	}
 	
-	private void testApplication(WebApplication application, 
+	private void testApplication(WebApplication application,
 			FrameworkType frameworkType,
-			SourceCodeAccessLevel sourceCodeAccessLevel, 
+			SourceCodeAccessLevel sourceCodeAccessLevel,
 			Writer csvWriter, Writer textWriter) throws JSONException, IOException {
 		
-		Integer appId = setupApplication(application, frameworkType, sourceCodeAccessLevel);
+		Integer appId = setupApplication(application, frameworkType);
 
 		String jsonToLookAt = GOOD_CLIENT.searchForApplicationById(appId.toString());
 		
@@ -104,26 +104,24 @@ public class ScanMergeTests extends BaseRestTest {
 		}
 	}
 	
-	private Integer setupApplication(WebApplication application, FrameworkType frameworkType,
-			SourceCodeAccessLevel sourceCodeAccessLevel) {
+	private Integer setupApplication(WebApplication application, FrameworkType frameworkType) {
 		debug("Creating new application and uploading scans.");
 		
 		Integer teamId = getId(getJSONObject(GOOD_CLIENT.createTeam(
-				application.getName() + "-" + frameworkType + "-" + sourceCodeAccessLevel
+				application.getName() + "-" + frameworkType
 				)));
 		Integer appId  = getId(getJSONObject(GOOD_CLIENT.createApplication(
-			teamId.toString(), 
-			application.getName() + getRandomString(10), 
+			teamId.toString(),
+			application.getName() + getRandomString(10),
 			null)));
 		
-		GOOD_CLIENT.setParameters(appId.toString(), 
-				sourceCodeAccessLevel.toString(), 
-				frameworkType.toString(), 
+		GOOD_CLIENT.setParameters(appId.toString(),
+				frameworkType.toString(),
 				application.getUrl());
 
 		uploadScans(appId, application.getFPRPath(), application.getAppscanXMLPath());
 
-		debug("Application is at " + BASE_URL.replaceAll("/rest","") + 
+		debug("Application is at " + BASE_URL.replaceAll("/rest","") +
 				"/organizations/" + teamId + "/applications/" + appId);
 		
 		return appId;
