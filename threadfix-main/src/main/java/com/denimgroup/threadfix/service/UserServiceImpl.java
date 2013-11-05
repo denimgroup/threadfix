@@ -43,6 +43,7 @@ import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -156,6 +157,9 @@ public class UserServiceImpl implements UserService {
 		User user = loadUser(userId);
 		
 		if (user != null && user.getHasGlobalGroupAccess() && user.getGlobalRole() != null) {
+			if(PermissionServiceDelegateFactory.isEnterprise()){
+				user.getGlobalRole().setEnterprise(true);
+			}
 			returnList.addAll(user.getGlobalRole().getPermissions());
 		}
 		

@@ -3,6 +3,8 @@ package com.denimgroup.threadfix.service;
 import java.util.List;
 import java.util.Set;
 
+import net.xeoh.plugins.base.Plugin;
+
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,7 +14,9 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Waf;
 
-public interface PermissionService {
+public interface PermissionService extends Plugin {
+	
+	boolean isEnterprise();
 
 	/**
 	 * 
@@ -71,5 +75,7 @@ public interface PermissionService {
 	 * @param providers
 	 */
 	void filterApps(List<RemoteProviderType> providers);
+	
+	void setLogger(SanitizedLogger log);
 	
 }

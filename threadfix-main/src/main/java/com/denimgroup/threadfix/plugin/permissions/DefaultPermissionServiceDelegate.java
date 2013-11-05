@@ -1,9 +1,8 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.permissions;
 
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,78 +11,67 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
+import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 
-@Service
-public class PermissionServiceImpl implements PermissionService {
+public class DefaultPermissionServiceDelegate implements PermissionService {
 	
-	PermissionService delegate = null;
-	protected final SanitizedLogger log = new SanitizedLogger(PermissionService.class);
+	protected SanitizedLogger log = null;
 	
-	public PermissionServiceImpl() {
-		delegate = PermissionServiceDelegateFactory.getDelegate();
-		setLogger(log);
-	}
-
 	@Override
 	public boolean isAuthorized(Permission permission, Integer orgId,
 			Integer appId) {
-		setLogger(log);
-		return delegate.isAuthorized(permission, orgId, appId);
+		return true;
 	}
 
 	@Override
 	public void addPermissions(Model model, Integer orgId, Integer appId,
 			Permission... permissions) {
-		setLogger(log);
-		delegate.addPermissions(model, orgId, appId, permissions);
+		for (Permission permission : permissions) {
+			model.addAttribute(permission.getCamelCase(), true);
+		}
 	}
 
 	@Override
 	public void addPermissions(ModelAndView modelAndView, Integer orgId,
 			Integer appId, Permission... permissions) {
-		setLogger(log);
-		delegate.addPermissions(modelAndView, orgId, appId, permissions);
+		for (Permission permission : permissions) {
+			modelAndView.addObject(permission.getCamelCase(), true);
+		}
 	}
 
 	@Override
 	public boolean canSeeRules(Waf waf) {
-		setLogger(log);
-		return delegate.canSeeRules(waf);
+		return true;
 	}
 
 	@Override
 	public Set<Integer> getAuthenticatedAppIds() {
-		setLogger(log);
-		return delegate.getAuthenticatedAppIds();
+		return null; // means all apps
 	}
 
 	@Override
 	public Set<Integer> getAuthenticatedTeamIds() {
-		setLogger(log);
-		return delegate.getAuthenticatedTeamIds();
+		return null; // means all apps
 	}
 
 	@Override
 	public List<Application> filterApps(Organization organization) {
-		setLogger(log);
-		return delegate.filterApps(organization);
+		return organization.getActiveApplications();
 	}
 
 	@Override
 	public void filterApps(List<RemoteProviderType> providers) {
-		setLogger(log);
-		delegate.filterApps(providers);
 	}
 	
 	@Override
 	public boolean isEnterprise() {
-		setLogger(log);
-		return delegate.isEnterprise();
+		return false;
 	}
 	
 	@Override
 	public void setLogger(SanitizedLogger log){
-		delegate.setLogger(log);
+		this.log  = log;
 	}
+
 }

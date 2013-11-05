@@ -29,7 +29,7 @@
 				<c:if test="${!canManageApplications }">
 					<li><a id="viewApplicationModalButton" href="#viewApplicationModal" data-toggle="modal">Details	</a></li>
 				</c:if>
-				<c:if test="${ canManageUsers}">				
+				<c:if test="${ canManageUsers && enterprise}">				
 					<li><a id="userListModelButton" href="#usersModal" data-toggle="modal">View Permissible Users</a></li>
 				</c:if>
 				<c:if test="${ canUploadScans }">

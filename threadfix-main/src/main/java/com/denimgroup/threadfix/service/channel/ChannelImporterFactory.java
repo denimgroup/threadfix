@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.plugin.ScannerPluginManager;
 
 /**
  * 

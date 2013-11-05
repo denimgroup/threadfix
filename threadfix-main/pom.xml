@@ -193,6 +193,16 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<version>11.0.0</version>
 		</dependency>
 		<dependency>
+			<groupId>net.xeoh.plugins.base</groupId>
+			<artifactId>jspf.core</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+	    <dependency>
+	        <groupId>org.springframework.ldap</groupId>
+	        <artifactId>spring-ldap-core-tiger</artifactId>
+	        <version>1.3.2.RELEASE</version>
+	    </dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
 			<version>${spring.version}</version>
@@ -583,7 +593,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.1.4.RELEASE</spring.version>
-		<springsecurity.version>3.0.5.RELEASE</springsecurity.version>
+		<springsecurity.version>3.1.4.RELEASE</springsecurity.version>
 		<tuckey.version>3.1.0</tuckey.version>
 		<validation-api.version>1.0.0.GA</validation-api.version>
 

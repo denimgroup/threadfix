@@ -26,6 +26,7 @@
 				<form:password class="password${ status.count }" id="passwordConfirmInput${ status.count }" path="passwordConfirm" />
 			</td>
 		</tr>
+		<c:if test="${ ldap_plugin }">
 		<tr>
 			<td class="no-color">LDAP user</td>
 			<td class="no-color" style="text-align: left;">
@@ -36,6 +37,8 @@
 					data-value="${user.isLdapUser}" />
 			</td>
 		</tr>
+		</c:if>
+		<security:authorize ifAllGranted="ROLE_ENTERPRISE">
 		<tr>
 			<td class="no-color">Global Access</td>
 			<td class="no-color" style="text-align: left;">
@@ -68,6 +71,7 @@
 				<form:errors id="hasGlobalGroupAccessErrors${ status.count }" path="hasGlobalGroupAccess" cssClass="errors" />
 			</td>
 		</tr>
+		</security:authorize>
 	</table>
 
 </form:form>

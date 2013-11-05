@@ -1,7 +1,7 @@
 package com.denimgroup.threadfix.service;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -20,13 +20,13 @@ public final class PermissionUtils {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		return authentication != null && authentication
-				.getAuthorities().contains(new GrantedAuthorityImpl(permission.getText()));
+				.getAuthorities().contains(new SimpleGrantedAuthority(permission.getText()));
 	}
 
 	public static boolean hasGlobalReadAccess() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		return authentication != null && authentication.getAuthorities().contains(
-						new GrantedAuthorityImpl(Permission.READ_ACCESS.getText()));
+						new SimpleGrantedAuthority(Permission.READ_ACCESS.getText()));
 	}
 }
