@@ -43,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -52,8 +51,6 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 public class SSVLChannelImporter extends AbstractChannelImporter {
-	
-	private GenericVulnerabilityDao genericVulnerabilityDao;
 	
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
 
