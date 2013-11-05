@@ -1,3 +1,26 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.scanagent.util;
 
 import java.io.File;
@@ -72,11 +95,11 @@ public class ConfigurationUtils {
 					scan.setPort(Integer.valueOf(config.getString(type.getShortName() + ".scanPort")));
 					scanners.add(scan);
 				}
-			}			
+			}
 		} catch (Exception e) {
 			log.error("Problems reading configuration: " + e.getMessage(), e);
 			return scanners;
-		} 
+		}
 		
 		log.info("Number of scanners available: " + scanners.size());
 		return scanners;
@@ -84,13 +107,17 @@ public class ConfigurationUtils {
 	
 	private static void writeToFile(String[] names, String[] values, Configuration config) {
 		
-		if (names.length != values.length) return;
+		if (names.length != values.length) {
+			return;
+		}
 		
 		for (int i=0;i<names.length;i++) {
 			String name = names[i];
-			if (config.getString(name,"").isEmpty())
+			if (config.getString(name,"").isEmpty()) {
 				config.addProperty(name, values[i]);
-			else config.setProperty(name, values[i]);
+			} else {
+				config.setProperty(name, values[i]);
+			}
 		}
 		
 	
@@ -98,8 +125,9 @@ public class ConfigurationUtils {
 	
 	public static boolean isDirectory(String path) {
 		File file = new File(path);
-		if (!file.exists() || !file.isDirectory())
+		if (!file.exists() || !file.isDirectory()) {
 			return false;
+		}
 		return true;
 	}
 
@@ -110,17 +138,20 @@ public class ConfigurationUtils {
 		if (scannerType == ScannerType.ZAPROXY) {
 			if (osName.contains("Windows")) {
 				File zapExeFile = new File(home + ZAP_FILES[0]);
-				if (!zapExeFile.exists() || !zapExeFile.isFile())
+				if (!zapExeFile.exists() || !zapExeFile.isFile()) {
 					return false;
+				}
 			} else {
 				File zapExeFile = new File(home + ZAP_FILES[1]);
-				if (!zapExeFile.exists() || !zapExeFile.isFile())
+				if (!zapExeFile.exists() || !zapExeFile.isFile()) {
 					return false;
+				}
 			}
 		} else if (scannerType == ScannerType.ACUNETIX_WVS) {
 			File acuExeFile = new File(home + ACUNETIX_FILES[0]);
-			if (!acuExeFile.exists() || !acuExeFile.isFile())
-				return false; 
+			if (!acuExeFile.exists() || !acuExeFile.isFile()) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -160,7 +191,7 @@ public class ConfigurationUtils {
 			System.out.print("Input " + scannerType.getFullName() + " version: ");
 			scan.setVersion(in.nextLine());
 			
-			// Input host and port			
+			// Input host and port
 			System.out.print("Do you want to input host and port for " + scannerType.getFullName() + "(y/n)? ");
 			
 			String isContinue = in.nextLine();
@@ -173,8 +204,9 @@ public class ConfigurationUtils {
 					System.out.print("Input " + scannerType.getFullName() + " port: ");
 					
 					// Show more detail for zap
-					if (scannerType == ScannerType.ZAPROXY)
-							System.out.print("(is port in Option/Local proxy)");
+					if (scannerType == ScannerType.ZAPROXY) {
+						System.out.print("(is port in Option/Local proxy)");
+					}
 					try {
 						int port = Integer.parseInt(in.nextLine());
 						scan.setPort(port);
@@ -194,8 +226,9 @@ public class ConfigurationUtils {
 			saveScannerType(scan, config);
 			
 		} finally {
-			if (in != null)
+			if (in != null) {
 				in.close();
+			}
 		}
 		System.out.println("Ended configuration for " + scannerType.getFullName() + ". Congratulations!");
 	}
@@ -226,18 +259,20 @@ public class ConfigurationUtils {
 				}
 			}
 		} finally {
-			if (in != null)
+			if (in != null) {
 				in.close();
+			}
 		}
 		System.out.println("Ended configuration. Congratulations!");
 	}
 	
 	private static String getExeFile(ScannerType scanner) {
 		String exeName = null;
-		if (scanner == ScannerType.ZAPROXY) 
+		if (scanner == ScannerType.ZAPROXY) {
 			exeName = ZAP_FILES[0] + "/" + ZAP_FILES[1];
-		else if (scanner == ScannerType.ACUNETIX_WVS)
+		} else if (scanner == ScannerType.ACUNETIX_WVS) {
 			exeName = ACUNETIX_FILES[0];
+		}
 		return exeName;
 	}
 

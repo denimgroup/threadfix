@@ -62,7 +62,7 @@ public class HibernateDocumentDao implements DocumentDao {
 	}
 	
 	/**
-	 * TOFIX - Clean up the way we're using this because this should currently only be used for
+	 * TODO - Clean up the way we're using this because this should currently only be used for
 	 * ScanAgent configuration storage, and that is kind of a misuse of the Document object.
 	 * 
 	 * @param appId
@@ -82,7 +82,7 @@ public class HibernateDocumentDao implements DocumentDao {
 				.setInteger("appId", appId).setString("name", filename).setString("type", extension)
 				.uniqueResult();
 		
-		return(retVal);
+		return retVal;
 	}
 
 	@Override

@@ -53,12 +53,12 @@ public class ThreadFixRestClient {
 		return result;
 	}
 	
-	public String setParameters(String appId, String vulnTypeStrategy, 
+	public String setParameters(String appId, String vulnTypeStrategy,
 			String sourceCodeAccessLevel, String frameworkType, String repositoryUrl) {
 		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/setParameters",
-				new String[] {"apiKey",      
+				new String[] {"apiKey",
 					"vulnTypeStrategy", "sourceCodeAccessLevel", "frameworkType", "repositoryUrl"},
-				new String[] { util.getKey(), 
+				new String[] { util.getKey(),
 					 vulnTypeStrategy,   sourceCodeAccessLevel,   frameworkType,   repositoryUrl});
 		
 		return result;
@@ -103,7 +103,7 @@ public class ThreadFixRestClient {
 	}
 	
 	/**
-	 * TOFIX - Actually implement this method.
+	 * TODO - Actually implement this method.
 	 * 
 	 * @param appId
 	 * @param wafId
@@ -166,7 +166,7 @@ public class ThreadFixRestClient {
 	}
 	
 	public String uploadScan(String applicationId, String filePath) {
-		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload", 
+		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload",
 				filePath,
 				new String[] { "apiKey"       },
 				new String[] {  util.getKey() });
@@ -177,21 +177,21 @@ public class ThreadFixRestClient {
 		String result = util.httpPost(util.getUrl() + "/tasks/queueScan",
 				new String[] { "apiKey",       "applicationId",		"scannerType" },
 				new String[] {  util.getKey(), applicationId, scannerType });
-		return(result);
+		return result;
 	}
 
 	public String addAppUrl(String appId, String url) {
-		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/addUrl", 
+		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/addUrl",
 				new String[] { "apiKey",       "url" },
 				new String[] {  util.getKey(),  url});
 		return result;
-	}	
+	}
 	
 	public String requestTask(String scanners, String agentConfig) {
 		String result = util.httpPost(util.getUrl() + "/tasks/requestTask",
 				new String[] { "apiKey",			"scanners",		"agentConfig" },
 				new String[] { util.getKey(), 		scanners,		agentConfig });
-		return(result);
+		return result;
 	}
 	
 	/**
@@ -204,7 +204,7 @@ public class ThreadFixRestClient {
 		String result = util.httpPost(util.getUrl() + "/tasks/taskStatusUpdate",
 				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
 				new String[] { util.getKey(),	scanQueueTaskId,	message });
-		return(result);
+		return result;
 	}
 	
 	public String setTaskConfig(String appId, String scannerType, String filePath) {
@@ -219,7 +219,7 @@ public class ThreadFixRestClient {
 	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
 	 * @param taskId
 	 * @param filePath
-	 * @param secureTaskKey 
+	 * @param secureTaskKey
 	 * @return
 	 */
 	public String completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
@@ -234,32 +234,32 @@ public class ThreadFixRestClient {
 		String result = util.httpPost(util.getUrl() + "/tasks/failTask",
 				new String[] { "apiKey",		"scanQueueTaskId",	"message", "secureTaskKey" },
 				new String[] { util.getKey(),	scanQueueTaskId,	message,    secureTaskKey });
-		return(result);
+		return result;
 	}
 
-	public String addDynamicFinding(String applicationId, String vulnType, String severity, 
+	public String addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
 		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
-					"/addFinding", 
-				new String[] { "apiKey", "vulnType", "severity", 
+					"/addFinding",
+				new String[] { "apiKey", "vulnType", "severity",
 								"nativeId", "parameter", "longDescription",
 								"fullUrl", "path" },
-				new String[] {  util.getKey(), vulnType, severity, 
+				new String[] {  util.getKey(), vulnType, severity,
 								nativeId, parameter, longDescription,
 								fullUrl, path });
 		return result;
 	}
 	
-	public String addStaticFinding(String applicationId, String vulnType, String severity, 
+	public String addStaticFinding(String applicationId, String vulnType, String severity,
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
 		String result = util.httpPost(util.getUrl() + "/applications/" + applicationId +
-				"/addFinding", 
-				new String[] { "apiKey", "vulnType", "severity", 
+				"/addFinding",
+				new String[] { "apiKey", "vulnType", "severity",
 								"nativeId", "parameter", "longDescription",
 								"filePath", "column", "lineText", "lineNumber"},
-				new String[] {  util.getKey(), vulnType, severity, 
+				new String[] {  util.getKey(), vulnType, severity,
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber });
 		return result;

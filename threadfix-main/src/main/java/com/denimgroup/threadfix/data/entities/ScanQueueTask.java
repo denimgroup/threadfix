@@ -59,15 +59,15 @@ public class ScanQueueTask extends AuditableEntity {
 		private int value;
 		private String description;
 		
-		public int getValue() { 
-			return this.value; 
+		public int getValue() {
+			return this.value;
 		}
 		
 		public String getDescription() {
 			return this.description;
 		}
 		
-		private ScanQueueTaskStatus(int value, String description) { 
+		private ScanQueueTaskStatus(int value, String description) {
 			this.value = value;
 			this.description = description;
 		}
@@ -96,7 +96,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Column
 	public int taskId() {
-		return(this.taskId);
+		return this.taskId;
 	}
 	
 	public void taskId(int taskId) {
@@ -105,7 +105,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	@OneToMany(mappedBy = "scanQueueTask", cascade = CascadeType.ALL)
 	public List<ScanStatus> getScanStatuses() {
-		return(this.scanStatuses);
+		return this.scanStatuses;
 	}
 	
 	public void setScanStatuses(List<ScanStatus> scanStatuses) {
@@ -116,7 +116,7 @@ public class ScanQueueTask extends AuditableEntity {
 	@JoinColumn(name = "applicationId")
 	@JsonIgnore
 	public Application getApplication() {
-		return(this.application);
+		return this.application;
 	}
 	
 	public void setApplication(Application application) {
@@ -125,7 +125,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	@Column(nullable=false)
 	public String getScanner() {
-		return(this.scanner);
+		return this.scanner;
 	}
 	
 	public void setScanner(String scanner) {
@@ -134,7 +134,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	@Column
 	public String getVersion() {
-		return(this.version);
+		return this.version;
 	}
 	
 	public void setVersion(String version) {
@@ -184,7 +184,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Column(nullable=false)
 	public int getStatus() {
-		return(this.status);
+		return this.status;
 	}
 	
 	public void setStatus(int status) {
@@ -194,7 +194,7 @@ public class ScanQueueTask extends AuditableEntity {
 	@Column
 	@Type(type="text")
 	public String getScanAgentInfo() {
-		return(this.scanAgentInfo);
+		return this.scanAgentInfo;
 	}
 	
 	public void setScanAgentInfo(String scanAgentInfo) {
@@ -219,8 +219,9 @@ public class ScanQueueTask extends AuditableEntity {
 	public String showStatusString() {
 		
 		for (ScanQueueTaskStatus status : ScanQueueTaskStatus.values()) {
-			if (status.getValue() == this.status)
+			if (status.getValue() == this.status) {
 				return status.getDescription();
+			}
 		}
 		
 		return ScanQueueTaskStatus.STATUS_UNKNOWN.getDescription();
@@ -232,7 +233,7 @@ public class ScanQueueTask extends AuditableEntity {
 	 * Determines if a proposed scanner name is valid. Currently this just checks to make sure that
 	 * all of the characters are alphanumeric and that the length is less than 32.
 	 * 
-	 * TOFIX - This needs to whitelist-check against a list of known "good" scanner names rather
+	 * TODO - This needs to whitelist-check against a list of known "good" scanner names rather
 	 * than just try to avoid riffraff entries.
 	 * 
 	 * @param proposedScanner proposed scanner name to validate
@@ -254,7 +255,7 @@ public class ScanQueueTask extends AuditableEntity {
 			}
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	/**
@@ -271,7 +272,7 @@ public class ScanQueueTask extends AuditableEntity {
 			retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
 		}
 		
-		return(retVal);
+		return retVal;
 	}
 	
 	@Override
@@ -286,7 +287,7 @@ public class ScanQueueTask extends AuditableEntity {
 		sb.append(this.showStatusString());
 		sb.append("}");
 		
-		return(sb.toString());
+		return sb.toString();
 	}
 	
 //	public String[] getTaskStatusList() {
@@ -294,7 +295,7 @@ public class ScanQueueTask extends AuditableEntity {
 //		String[] statusList = new String[noOfStatuses];
 //		for (int i=0; i<noOfStatuses; i++)
 //			statusList[i] = ScanQueueTaskStatus.values()[i].getDescription();
-//			
+//
 //		return statusList;
 //	}
 }
