@@ -37,14 +37,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="right-align" style="padding:5px;">Type Matching Strategy</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:select path="typeMatchingStrategy" 
-						items="${ typeMatchingStrategies }"
-						itemLabel="displayName"/>
-				</td>
-			</tr>
-			<tr>
 				<td class="right-align" style="padding:5px;">Source Code URL:</td>
 				<td class="left-align"  style="padding:5px;">
 					<form:input maxlength="250" path="sourceCodeUrl"/>

@@ -43,6 +43,8 @@ import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.denimgroup.threadfix.framework.beans.PartialMapping;
+
 @Entity
 @Table(name = "Scan")
 public class Scan extends BaseEntity {
@@ -429,5 +431,17 @@ public class Scan extends BaseEntity {
 	@Transient
 	public boolean isStatic() {
 		return STATIC.equals(getScannerType());
+	}
+	
+	public List<PartialMapping> toPartialMappingList() {
+		List<PartialMapping> results = new ArrayList<>();
+		
+		if (getFindings() != null) {
+			for (Finding finding : getFindings()) {
+				results.add(finding.toPartialMapping());
+			}
+		}
+		
+		return results;
 	}
 }
