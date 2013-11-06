@@ -52,7 +52,7 @@ public class DefectServiceImpl implements DefectService {
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 	
 	@Autowired
-	public DefectServiceImpl(DefectDao defectDao, 
+	public DefectServiceImpl(DefectDao defectDao,
 			VulnerabilityDao vulnerabilityDao,
 			ApplicationService applicationService) {
 		this.defectDao = defectDao;
@@ -83,10 +83,10 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Defect createDefect(List<Vulnerability> allVulns, String summary, 
-			String preamble, String component, String version, 
+	public Defect createDefect(List<Vulnerability> allVulns, String summary,
+			String preamble, String component, String version,
 			String severity, String priority, String status) {
-		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null || 
+		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null ||
 				allVulns.get(0).getApplication() == null) {
 			log.warn("Null input, exiting.");
 			return null;
@@ -127,9 +127,11 @@ public class DefectServiceImpl implements DefectService {
 
 		List<Vulnerability> vulnsWithoutDefects = new ArrayList<Vulnerability>();
 
-		for (Vulnerability vulnerability : allVulns)
-			if (vulnerability.getDefect() == null)
+		for (Vulnerability vulnerability : allVulns) {
+			if (vulnerability.getDefect() == null) {
 				vulnsWithoutDefects.add(vulnerability);
+			}
+		}
 
 		if (vulnsWithoutDefects.size() == 0) {
 			log.warn("All the vulnerabilities already had defects, exiting.");
@@ -139,15 +141,17 @@ public class DefectServiceImpl implements DefectService {
 		String defectTrackerName = null;
 		if (application != null && application.getDefectTracker() != null
 				&& application.getDefectTracker().getDefectTrackerType() != null
-				&& application.getDefectTracker().getDefectTrackerType().getName() != null)
+				&& application.getDefectTracker().getDefectTrackerType().getName() != null) {
 			defectTrackerName = application.getDefectTracker().getDefectTrackerType().getName();
+		}
 		
-		if (defectTrackerName != null)
+		if (defectTrackerName != null) {
 			log.info("About to submit a defect to " + defectTrackerName + ".");
-		else
+		} else {
 			log.info("About to submit a defect to the defect tracker.");
+		}
 		
-		String defectId = dt.createDefect(vulnsWithoutDefects, 
+		String defectId = dt.createDefect(vulnsWithoutDefects,
 				new DefectMetadata(editedSummary, editedPreamble,
 				component, version, severity, priority, status));
 
@@ -168,17 +172,19 @@ public class DefectServiceImpl implements DefectService {
 				vulnerabilityDao.saveOrUpdate(vulnerability);
 			}
 			
-			if (defectTrackerName != null)
+			if (defectTrackerName != null) {
 				log.info("Successfully submitted defect to " + defectTrackerName + ".");
-			else
+			} else {
 				log.info("Successfully submitted defect.");
+			}
 			return defect;
 		}
 		
-		if (defectTrackerName != null)
+		if (defectTrackerName != null) {
 			log.warn("There was an error submitting the defect to " + defectTrackerName + ".");
-		else
+		} else {
 			log.warn("There was an error submitting the defect.");
+		}
 		return null;
 	}
 
@@ -200,12 +206,14 @@ public class DefectServiceImpl implements DefectService {
 		String allVulnsAlreadyInSystem = "All the vulnerabilities were already in the system.";
 		String defaultTrackerError = "There was an error connecting with the tracking system.";
 
-		if (vulns == null || vulns.size() == 0)
+		if (vulns == null || vulns.size() == 0) {
 			return noVulnsError;
+		}
 
 		Vulnerability vuln = vulns.get(0);
-		if (vuln == null || vuln.getApplication() == null)
+		if (vuln == null || vuln.getApplication() == null) {
 			return noDefectTrackerError;
+		}
 
 		Application application = vuln.getApplication();
 		
@@ -214,17 +222,21 @@ public class DefectServiceImpl implements DefectService {
 		}
 		
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		if (dt == null)
+		if (dt == null) {
 			return noDefectTrackerError;
+		}
 
 		List<Vulnerability> vulnList = new ArrayList<Vulnerability>();
 		
-		for (Vulnerability vulnerability : vulns)
-			if (vulnerability.getDefect() == null)
+		for (Vulnerability vulnerability : vulns) {
+			if (vulnerability.getDefect() == null) {
 				vulnList.add(vulnerability);
+			}
+		}
 
-		if (vulnList.size() == 0)
+		if (vulnList.size() == 0) {
 			return allVulnsAlreadyInSystem;
+		}
 
 		String trackerError = dt.getTrackerError();
 
@@ -237,12 +249,15 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void updateVulnsFromDefectTracker(Application application) {
+	public boolean updateVulnsFromDefectTracker(Integer appId) {
+		
+		Application application = applicationService.loadApplication(appId);
+		
 		int numUpdated = 0;
 		
 		if (application == null) {
 			log.warn("Application wasn't found, exiting.");
-			return;
+			return false;
 		}
 		
 		if (application != null) {
@@ -252,14 +267,14 @@ public class DefectServiceImpl implements DefectService {
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker, exiting.");
-			return;
+			return false;
 		}
 		
-		if (application.getDefectList() == null || 
+		if (application.getDefectList() == null ||
 				application.getDefectList().size() == 0) {
 			log.warn("No Defects found, updating information is " +
 					"only useful after creating Defects. Exiting.");
-			return;
+			return false;
 		}
 
 		Map<Defect, Boolean> defectMap = dt.getMultipleDefectStatus(
@@ -267,7 +282,7 @@ public class DefectServiceImpl implements DefectService {
 		if (defectMap == null) {
 			log.warn("There was an error retrieving information from the " +
 					"Defect Tracker, exiting.");
-			return;
+			return false;
 		}
 
 		log.info("About to update vulnerability information from the defect tracker.");
@@ -278,7 +293,7 @@ public class DefectServiceImpl implements DefectService {
 				for (Vulnerability vuln : defect.getVulnerabilities()) {
 					Boolean defectOpenStatus = defectMap.get(defect);
 
-					if (vuln.isActive() && defectOpenStatus != null && 
+					if (vuln.isActive() && defectOpenStatus != null &&
 							!defectOpenStatus.booleanValue()) {
 						if (vuln.getDefectClosedTime() == null) {
 							vuln.setDefectClosedTime(Calendar.getInstance());
@@ -296,6 +311,8 @@ public class DefectServiceImpl implements DefectService {
 		} else {
 			log.info("Updated information for " + numUpdated + " vulnerabilities.");
 		}
+		
+		return true;
 	}
 
 	@Override
@@ -313,7 +330,7 @@ public class DefectServiceImpl implements DefectService {
 	@Override
 	public boolean mergeDefect(List<Vulnerability> vulnerabilities, String id) {
 		
-		if (vulnerabilities == null || vulnerabilities.size() == 0 || vulnerabilities.get(0) == null || 
+		if (vulnerabilities == null || vulnerabilities.size() == 0 || vulnerabilities.get(0) == null ||
 				vulnerabilities.get(0).getApplication() == null) {
 			log.warn("Null input, exiting.");
 			return false;
@@ -331,7 +348,7 @@ public class DefectServiceImpl implements DefectService {
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker.");
 			return false;
-		}		
+		}
 		Defect defect = new Defect();
 		defect.setNativeId(id);
 		defect.setDefectURL(dt.getBugURL(

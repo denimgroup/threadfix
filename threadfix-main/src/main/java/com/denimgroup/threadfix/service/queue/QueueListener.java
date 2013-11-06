@@ -33,6 +33,7 @@ import javax.jms.TextMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
@@ -81,7 +82,7 @@ public class QueueListener implements MessageListener {
 	@Autowired
 	public QueueListener(ScanMergeService scanMergeService, JobStatusService jobStatusService,
 			ApplicationService applicationService, DefectService defectService,
-			VulnerabilityService vulnerabilityService, 
+			VulnerabilityService vulnerabilityService,
 			ApplicationChannelService applicationChannelService,
 			RemoteProviderApplicationService remoteProviderApplicationService,
 			RemoteProviderTypeService remoteProviderTypeService) {
@@ -122,7 +123,7 @@ public class QueueListener implements MessageListener {
 				String type = map.getString("type");
 				
 				switch (type) {
-					case QueueConstants.NORMAL_SCAN_TYPE : 
+					case QueueConstants.NORMAL_SCAN_TYPE :
 						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
 								map.getInt("jobStatusId"), map.getString("userName"));
 						break;
@@ -201,7 +202,7 @@ public class QueueListener implements MessageListener {
 		
 		for (Application application : apps) {
 			if (application != null && application.getDefectTracker() != null) {
-				defectService.updateVulnsFromDefectTracker(application);
+				defectService.updateVulnsFromDefectTracker(application.getId());
 			}
 		}
 		
@@ -250,7 +251,7 @@ public class QueueListener implements MessageListener {
 		}
 
 		Vulnerability vuln = vulnerabilities.get(0);
-		Defect defect = defectService.createDefect(vulnerabilities, summary, 
+		Defect defect = defectService.createDefect(vulnerabilities, summary,
 				preamble, component, version, severity, priority, status);
 
 		if (defect == null) {
@@ -279,12 +280,12 @@ public class QueueListener implements MessageListener {
 		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
-		boolean fullLog = (userName != null && appChannel != null && appChannel.getApplication() != null
+		boolean fullLog = userName != null && appChannel != null && appChannel.getApplication() != null
 				&& appChannel.getApplication().getName() != null && appChannel.getChannelType() != null
-				&& appChannel.getChannelType().getName() != null);
+				&& appChannel.getChannelType().getName() != null;
 			
 		if (fullLog) {
-			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() + 
+			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() +
 					" scan to the Application " + appChannel.getApplication().getName() +
 					" (filename " + fileName + ").");
 		}
@@ -303,14 +304,14 @@ public class QueueListener implements MessageListener {
 			if (finished) {
 				closeJobStatus(jobStatusId, "Scan completed.");
 				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
 						+ userName + " on Application " + appChannel.getApplication().getName()
 						+ " (filename " + fileName + ") completed successfully.");
 				}
 			} else if (!closed) {
 				closeJobStatus(jobStatusId, "Scan encountered an error.");
 				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
 						+ userName + " on Application " + appChannel.getApplication().getName()
 						+ " (filename " + fileName + ") did not complete successfully.");
 				}
@@ -322,21 +323,21 @@ public class QueueListener implements MessageListener {
 	 * @param appId
 	 * @param jobStatusId
 	 */
+	@Transactional(readOnly=false)
 	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId) {
 		if (appId == null) {
-			closeJobStatus(jobStatusId, "Defect Tracker update failed.");
-			return;
-		}
-
-		Application app = applicationService.loadApplication(appId);
-		if (app == null) {
-			closeJobStatus(jobStatusId, "No application found, request failed.");
+			closeJobStatus(jobStatusId, "Defect Tracker update failed because it received a null application ID");
 			return;
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
-		defectService.updateVulnsFromDefectTracker(app);
-		closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
+		boolean result = defectService.updateVulnsFromDefectTracker(appId);
+		
+		if (result) {
+			closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
+		} else {
+			closeJobStatus(jobStatusId, "Vulnerability update failed.");
+		}
 	}
 
 	/**

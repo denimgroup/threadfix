@@ -26,10 +26,10 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.framework.DefaultTranslator;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
 import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
+import com.denimgroup.threadfix.service.translator.DefaultTranslator;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {

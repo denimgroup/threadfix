@@ -161,10 +161,6 @@ public class ApplicationRestController extends RestController {
 		
 		ScanParametersBean bean = new ScanParametersBean();
 		
-		if (request.getParameter("vulnTypeStrategy") != null) {
-			bean.setTypeMatchingStrategy(request.getParameter("vulnTypeStrategy"));
-		}
-		
 		if (request.getParameter("sourceCodeAccessLevel") != null) {
 			bean.setSourceCodeAccessLevel(request.getParameter("sourceCodeAccessLevel"));
 		}

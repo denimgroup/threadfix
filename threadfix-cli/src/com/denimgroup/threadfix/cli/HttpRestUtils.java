@@ -331,7 +331,12 @@ public class HttpRestUtils {
 		if(durable) {
 			FileInputStream in = null;
 			File propertiesFile = new File("threadfix.properties");
+			
 			try {
+				if (!propertiesFile.exists()) {
+					propertiesFile.createNewFile();
+				}
+				
 				in = new FileInputStream(propertiesFile);
 				if (properties == null) {
 					properties = new Properties();

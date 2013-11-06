@@ -44,7 +44,9 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
 import com.denimgroup.threadfix.service.AccessControlMapService;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
@@ -60,6 +62,10 @@ public class EditUserController {
 	private UserService userService = null;
 	private RoleService roleService = null;
 	private AccessControlMapService accessControlMapService = null;
+	private boolean ldapPluginInstalled = false;
+	
+	@Autowired
+	private PermissionService permissionService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
@@ -69,14 +75,26 @@ public class EditUserController {
 		this.userService = userService;
 		this.roleService = roleService;
 		this.accessControlMapService = accessControlMapService;
+		ldapPluginInstalled = LdapServiceDelegateFactory.isEnterprise();
 	}
 	
 	public EditUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-				"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
+		if(ldapPluginInstalled && permissionService.isEnterprise()){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
+		}else if(ldapPluginInstalled){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "isLdapUser");
+		}else if(permissionService.isEnterprise()){
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess");
+		}else{
+			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+					"passwordConfirm", "hasGlobalGroupAccess");
+		}
 	}
 
 	@ModelAttribute

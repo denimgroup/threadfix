@@ -42,7 +42,6 @@ public class CommandLineParser {
 	public static final Map<String, String[]> scanOptions = new HashMap<>();
 		
 	static {
-		scanOptions.put("Vulnerability Type Matching", new String[]{ "Exact", "Trees", "Software Fault Pattern" });
 		scanOptions.put("Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" });
 		scanOptions.put("Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC" });
 		scanOptions.put("Repository URL", new String[]{ "Arbitrary Git URL" });
@@ -90,9 +89,9 @@ public class CommandLineParser {
 				.create("stc");
 		options.addOption(setTaskConfig);
 		
-		Option setParameters = OptionBuilder.withArgName("appId> <vulnTypeStrategy> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl")
+		Option setParameters = OptionBuilder.withArgName("appId> <frameworkType> <repositoryUrl")
 				.withValueSeparator(' ')
-				.hasArgs(5)
+				.hasArgs(3)
 				.withLongOpt("setParameters")
 				.withDescription("Set scan parameters. Available parameters can be found with --printScanOptions")
 				.create("sp");
@@ -228,37 +227,23 @@ public class CommandLineParser {
 				
 			} else if (cmd.hasOption("sp")) {
 				String[] parameterArgs = cmd.getOptionValues("sp");
-				if (! (parameterArgs.length == 4 || parameterArgs.length == 5)) {
+				if (! (parameterArgs.length == 2 || parameterArgs.length == 3)) {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				
-				// appId> <vulnTypeStrategy> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
+				// appId> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
 				
-				String 
+				String
 					appId = parameterArgs[0],
-					vulnTypeStrategy = parameterArgs[1],
-					sourceCodeAccessLevel = parameterArgs[2],
-					frameworkType = parameterArgs[3],
+					frameworkType = parameterArgs[1],
 					repositoryUrl = null;
 				
-				if (parameterArgs.length == 5) {
-					repositoryUrl = parameterArgs[4];
+				if (parameterArgs.length == 3) {
+					repositoryUrl = parameterArgs[2];
 				}
 				
 				if (!appId.matches("^[0-9]+$")) {
 					throw new ParseException("Application ID must be an integer value");
-				}
-				
-				if (!containsCaseIgnore(scanOptions.get("Vulnerability Type Matching"), vulnTypeStrategy)) {
-					vulnTypeStrategy = "EXACT";
-				} else {
-					vulnTypeStrategy = upperCaseAndUnderscore(vulnTypeStrategy);
-				}
-				
-				if (!containsCaseIgnore(scanOptions.get("Source Code Access Level"), sourceCodeAccessLevel)) {
-					sourceCodeAccessLevel = "DETECT";
-				} else {
-					sourceCodeAccessLevel = upperCaseAndUnderscore(sourceCodeAccessLevel);
 				}
 				
 				if (!containsCaseIgnore(scanOptions.get("Framework Type"), frameworkType)) {
@@ -268,13 +253,10 @@ public class CommandLineParser {
 				}
 				
 				println("Setting parameters for application " + appId + " to " +
-						"VulnerabilityTypeMatching: " + vulnTypeStrategy + ", " +
-						"Source Code Access Level: " + sourceCodeAccessLevel + ", " +
 						"Framework Type: " + frameworkType);
 				
 				// TODO return a success message instead of the (mostly irrelevant) application information.
-				println(client.setParameters(appId, vulnTypeStrategy, 
-						sourceCodeAccessLevel, frameworkType, repositoryUrl));
+				println(client.setParameters(appId, frameworkType, repositoryUrl));
 				
 			} else if (cmd.hasOption("teams")) {
 				println("Getting all teams.");
@@ -294,7 +276,7 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				System.out.println("Adding url to applicationId " + addUrlArgs[0]);
-				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));				
+				System.out.println(client.addAppUrl(addUrlArgs[0], addUrlArgs[1]));
 				
 			} else if(cmd.hasOption("stc")) {
 				String[] setTaskConfigArgs = cmd.getOptionValues("stc");
@@ -309,7 +291,7 @@ public class CommandLineParser {
 				if (uploadArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				println("Uploading " + uploadArgs[1] + 
+				println("Uploading " + uploadArgs[1] +
 						" to Application " + uploadArgs[0] + ".");
 				println(client.uploadScan(uploadArgs[0], uploadArgs[1]));
 
@@ -345,7 +327,7 @@ public class CommandLineParser {
 				}
 			
 			} else if (cmd.hasOption("sa")) {
-				String[] searchArgs = cmd.getOptionValues("sa");				
+				String[] searchArgs = cmd.getOptionValues("sa");
 				if ("id".equals(searchArgs[0])) {
 					if (searchArgs.length != 2) {
 						System.out.println("Wrong number of arguments.");

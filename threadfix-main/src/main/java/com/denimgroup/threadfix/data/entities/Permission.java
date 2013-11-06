@@ -16,6 +16,7 @@ public enum Permission {
 	CAN_UPLOAD_SCANS("ROLE_CAN_UPLOAD_SCANS","canUploadScans"),
 	CAN_VIEW_ERROR_LOGS("ROLE_CAN_VIEW_ERROR_LOGS","canViewErrorLogs"),
 	CAN_VIEW_JOB_STATUSES("ROLE_CAN_VIEW_JOB_STATUSES","canViewJobStatuses"),
+	ENTERPRISE("ROLE_ENTERPRISE","enterprise"),
 	READ_ACCESS("ROLE_READ_ACCESS","readAccess");
 
 	private String text, camelCase;

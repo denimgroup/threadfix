@@ -32,7 +32,7 @@
 							</a>
 						</li>
 					</c:if>
-					<c:if test="${ canManageUsers}">				
+					<c:if test="${ canManageUsers && enterprise}">				
 						<li><a id="userListModelButton" href="#usersModal" data-toggle="modal">View Permissible Users</a></li>
 					</c:if>
 				</ul>
