@@ -22,7 +22,6 @@
 	
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
-	<bean class="com.denimgroup.threadfix.data.entities.CustomUserMapper" id="ldapToCustomConfigBean"/>
 	<bean class="com.denimgroup.threadfix.data.entities.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
 		
 	<!-- Configure Spring Security -->
@@ -45,7 +44,9 @@
 	</bean>
 	
     <security:authentication-manager>
+    
 	    <security:authentication-provider ref="customAuthenticationProvider"/>	
+	    
 	    <security:authentication-provider user-service-ref="CustomUserDetailService">
 	    	<security:password-encoder ref="ThreadFixPasswordEncoder">
 	    		<security:salt-source ref="saltSource" />
