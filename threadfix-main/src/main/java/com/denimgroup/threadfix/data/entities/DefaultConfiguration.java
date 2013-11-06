@@ -1,5 +1,7 @@
 package com.denimgroup.threadfix.data.entities;
 
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,6 +16,8 @@ public class DefaultConfiguration extends BaseEntity {
 	private Integer defaultRoleId = null;
 	
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
+	
+	private Calendar lastScannerMappingsUpdate;
 	
 	@Column
 	public Integer getDefaultRoleId() {
@@ -81,6 +85,15 @@ public class DefaultConfiguration extends BaseEntity {
 		} else {
 			return activeDirectoryBase;
 		}
+	}
+
+	@Column
+	public Calendar getLastScannerMappingsUpdate() {
+		return lastScannerMappingsUpdate;
+	}
+
+	public void setLastScannerMappingsUpdate(Calendar lastScannerMappingsUpdate) {
+		this.lastScannerMappingsUpdate = lastScannerMappingsUpdate;
 	}
 	
 }

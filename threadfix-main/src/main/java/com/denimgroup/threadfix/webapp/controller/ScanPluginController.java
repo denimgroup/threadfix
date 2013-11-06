@@ -52,19 +52,31 @@ public class ScanPluginController {
 		this.channelVulnerabilityService = channelVulnerabilityService;
 	}
 	
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index(Model model, HttpServletRequest request) {
+		
+		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
+		
+		return "scanplugin/channelVulnUpdate";
+	}
 
 	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
+	public String doUpdate(Model model, HttpServletRequest request) {
 		log.info("Start updating Channel Vulnerabilities");
-		List<String[]> channelVulnUpdateResults = new ArrayList<String[]>();;
+		List<String[]> channelVulnUpdateResults = new ArrayList<String[]>();
+		
 		try {
-			channelVulnUpdateResults = channelVulnerabilityService.updateChannelVulnerability();
+			channelVulnUpdateResults = channelVulnerabilityService.updateChannelVulnerabilities();
 		} catch (URISyntaxException e) {
 			model.addAttribute("errorMessage", "There was error when reading files.");
 		}
 		catch (IOException e) {
 			model.addAttribute("errorMessage", "There was error when updating Channel Vulnerability.");
 		}
+		
+		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
+		
+		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
 		
 		model.addAttribute("resultList", channelVulnUpdateResults);
 		log.info("Ended updating Channel Vulnerabilities");
