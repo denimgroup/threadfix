@@ -15,6 +15,8 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DocumentService;
@@ -22,9 +24,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanParametersService;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.ScanTypeCalculationService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 @Controller

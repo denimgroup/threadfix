@@ -89,6 +89,9 @@
 					    <li class="normalLinks">
 					    	<a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
 					    </li>
+					    <li class="normalLinks">
+					    	<a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/updateChannelVuln" htmlEscape="true"/>">Update Channel Vulnerabilities</a>
+					    </li>						
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
 				

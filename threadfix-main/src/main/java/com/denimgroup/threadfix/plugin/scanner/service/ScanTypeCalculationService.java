@@ -21,32 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.scanner.service;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
+import net.xeoh.plugins.base.Plugin;
 
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
+import org.springframework.web.multipart.MultipartFile;
 
-public interface ChannelVulnerabilityService {
+public interface ScanTypeCalculationService extends Plugin {
+
+	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
 	
-	/**
-	 * Load suggestions based on a prefix.
-	 * 
-	 * @param prefix
-	 * @return
-	 */
-	List<ChannelVulnerability> loadSuggested(String prefix);
+//	String getScannerType(MultipartFile file);
 
-	/**
-	 * 
-	 * @param code
-	 * @return
-	 */
-	boolean isValidManualName(String code);
+	String saveFile(Integer channelId, MultipartFile file);
 
-	List<ChannelVulnerability> loadAllManual();
-	
-	List<String[]> updateChannelVulnerability() throws IOException, URISyntaxException;
 }

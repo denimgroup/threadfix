@@ -199,7 +199,7 @@ public class OrganizationsController {
 	@RequestMapping("/teamTable")
 	public String teamTable(Model model, HttpServletRequest request) {
 		addModelObjects(model);
-//		model.addAttribute("applicationTypes", FrameworkType.values());
+		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("contentPage", "organizations/indexTeamTable.jsp");
 		model.addAttribute("showTeamModal", ControllerUtils.getItem(request, "showTeamModal"));

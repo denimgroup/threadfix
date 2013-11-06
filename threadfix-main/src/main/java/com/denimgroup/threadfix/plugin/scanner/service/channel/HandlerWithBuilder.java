@@ -21,32 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.plugin.scanner.service.channel;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
+import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
+public abstract class HandlerWithBuilder extends DefaultHandler {
+	private StringBuilder builder = new StringBuilder();
 
-public interface ChannelVulnerabilityService {
+	protected void addTextToBuilder(char ch[], int start, int length) {
+		builder.append(ch, start, length);
+	}
 	
-	/**
-	 * Load suggestions based on a prefix.
-	 * 
-	 * @param prefix
-	 * @return
-	 */
-	List<ChannelVulnerability> loadSuggested(String prefix);
-
-	/**
-	 * 
-	 * @param code
-	 * @return
-	 */
-	boolean isValidManualName(String code);
-
-	List<ChannelVulnerability> loadAllManual();
-	
-	List<String[]> updateChannelVulnerability() throws IOException, URISyntaxException;
+	protected String getBuilderText() {
+    	String toReturn = builder.toString();
+    	builder.setLength(0);
+    	return toReturn;
+    }
 }

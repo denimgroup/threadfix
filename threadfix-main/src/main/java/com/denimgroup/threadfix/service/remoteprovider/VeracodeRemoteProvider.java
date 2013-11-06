@@ -48,6 +48,11 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
+	@Override
+	public String getType() {
+		return ChannelType.VERACODE;
+	}
+	
 	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
 	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 

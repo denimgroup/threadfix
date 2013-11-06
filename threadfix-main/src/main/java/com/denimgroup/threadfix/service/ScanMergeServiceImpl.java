@@ -40,8 +40,8 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.channel.ChannelImporter;
-import com.denimgroup.threadfix.service.channel.ChannelImporterFactory;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporterFactory;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
 import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
@@ -241,6 +241,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				+ applicationChannel.getChannelType().getName() + ".");
 	
 		importer.setFileName(fileName);
+		
 		Scan scan = importer.parseInput();
 		
 		if (scan == null) {

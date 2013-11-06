@@ -12,13 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanQueueService;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/rest/tasks/")
