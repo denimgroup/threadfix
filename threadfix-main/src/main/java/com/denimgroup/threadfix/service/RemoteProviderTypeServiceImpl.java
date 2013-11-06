@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.owasp.esapi.ESAPI;
@@ -34,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
 
 @Service
 @Transactional(readOnly = false)
@@ -41,15 +47,164 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	
 	private final SanitizedLogger log = new SanitizedLogger(RemoteProviderTypeServiceImpl.class);
 	
+	private RemoteProviderTypeDao remoteProviderTypeDao;
+	private RemoteProviderApplicationService remoteProviderApplicationService;
+	private ScanMergeService scanMergeService;
+	
 	@Autowired
 	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,
-			RemoteProviderApplicationService remoteProviderApplicationService) {
+			RemoteProviderApplicationService remoteProviderApplicationService,
+			ScanMergeService scanMergeService) {
 		this.remoteProviderTypeDao = remoteProviderTypeDao;
+		this.scanMergeService = scanMergeService;
 		this.remoteProviderApplicationService = remoteProviderApplicationService;
 	}
 	
-	private RemoteProviderTypeDao remoteProviderTypeDao;
-	private RemoteProviderApplicationService remoteProviderApplicationService;
+	@Override
+	@Transactional
+	public ResponseCode importScansForApplications(Integer remoteProviderTypeId) {
+		
+		RemoteProviderType type = load(remoteProviderTypeId);
+		
+		if (type == null) {
+			log.error("Type was null, Remote Provider import failed.");
+			return ResponseCode.BAD_ID;
+		} else {
+			
+			decryptCredentials(type);
+			
+			List<RemoteProviderApplication> applications = type.getRemoteProviderApplications();
+			
+			if (applications == null || applications.isEmpty()) {
+				log.error("No applications found, Remote Provider import failed.");
+				return ResponseCode.NO_APPS;
+			} else {
+				
+				log.info("Starting scan import for " + applications.size() + " applications.");
+				
+				for (RemoteProviderApplication application : applications) {
+					if (application != null && application.getApplicationChannel() != null) {
+						ResponseCode success = importScansForApplication(application);
+						
+						if (!success.equals(ResponseCode.SUCCESS)) {
+							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
+						} else {
+							log.info("Remote Provider import was successful for application " + application.getNativeId());
+						}
+					}
+				}
+				
+				return ResponseCode.SUCCESS;
+			}
+		}
+		
+	}
+	
+	@Transactional(readOnly=false)
+	@Override
+	public ResponseCode updateAll() {
+		log.info("Importing scans for all Remote Provider Applications.");
+		List<RemoteProviderApplication> apps = remoteProviderApplicationService.loadAllWithMappings();
+		
+		if (apps == null || apps.size() == 0) {
+			log.info("No apps with mappings found. Exiting.");
+			return ResponseCode.NO_APPS;
+		}
+		
+		for (RemoteProviderApplication remoteProviderApplication : apps) {
+			if (remoteProviderApplication == null || remoteProviderApplication.getRemoteProviderType() == null) {
+				continue;
+			}
+			decryptCredentials(remoteProviderApplication.getRemoteProviderType());
+			importScansForApplication(remoteProviderApplication);
+		}
+		
+		log.info("Completed requests for scan imports.");
+		
+		return ResponseCode.SUCCESS;
+	}
+	
+	@Override
+	public ResponseCode importScansForApplication(RemoteProviderApplication remoteProviderApplication) {
+		
+		if (remoteProviderApplication == null) {
+			return ResponseCode.ERROR_OTHER;
+		}
+		
+		List<Scan> resultScans = RemoteProviderFactory.fetchScans(remoteProviderApplication);
+		
+		ResponseCode success = ResponseCode.ERROR_OTHER;
+		if (resultScans != null && resultScans.size() > 0) {
+			Collections.sort(resultScans, new Comparator<Scan>() {
+				@Override
+				public int compare(Scan scan1, Scan scan2){
+					Calendar scan1Time = scan1.getImportTime();
+					Calendar scan2Time = scan2.getImportTime();
+					
+					if (scan1Time == null || scan2Time == null) {
+						return 0;
+					}
+					
+					return scan1Time.compareTo(scan2Time);
+				}
+			});
+			
+			int noOfScanNotFound = 0;
+			int noOfNoNewScans = 0;
+			for (Scan resultScan : resultScans) {
+				if (resultScan == null || resultScan.getFindings() == null
+						|| resultScan.getFindings().size() == 0) {
+					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
+					noOfScanNotFound++;
+					
+				} else if (remoteProviderApplication.getLastImportTime() != null &&
+							(resultScan.getImportTime() == null ||
+							!remoteProviderApplication.getLastImportTime().before(
+									resultScan.getImportTime()))) {
+					log.warn("Remote Scan was not newer than the last imported scan " +
+							"for this RemoteProviderApplication.");
+					noOfNoNewScans++;
+					
+				} else {
+					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
+					
+					remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+					
+					remoteProviderApplicationService.store(remoteProviderApplication);
+					
+					if (resultScan.getApplicationChannel() == null) {
+						if (remoteProviderApplication.getApplicationChannel() != null) {
+							resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+						} else {
+							log.error("Didn't have enough application channel information.");
+						}
+					}
+					
+					if (resultScan.getApplicationChannel() != null) {
+						if (resultScan.getApplicationChannel().getScanList() == null) {
+							resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
+						}
+						
+						if (!resultScan.getApplicationChannel().getScanList().contains(resultScan)) {
+							resultScan.getApplicationChannel().getScanList().add(resultScan);
+						}
+					
+						scanMergeService.processRemoteScan(resultScan);
+						success = ResponseCode.SUCCESS;
+					}
+				}
+			}
+			
+			if (!success.equals(ResponseCode.SUCCESS)) {
+				if (noOfNoNewScans > 0) {
+					success = ResponseCode.ERROR_NO_NEW_SCANS;
+				} else if (noOfScanNotFound > 0) {
+					success = ResponseCode.ERROR_NO_SCANS_FOUND;
+				}
+			}
+		}
+		return success;
+	}
 
 	@Override
 	public List<RemoteProviderType> loadAll() {
@@ -83,7 +238,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		try {
 			if (type != null && type.getHasApiKey() && type.getApiKey() != null) {
 				type.setEncryptedApiKey(ESAPI.encryptor().encrypt(type.getApiKey()));
-			} else if (type != null && type.getHasUserNamePassword() && 
+			} else if (type != null && type.getHasUserNamePassword() &&
 					type.getUsername() != null && type.getPassword() != null) {
 				type.setEncryptedUsername(ESAPI.encryptor().encrypt(type.getUsername()));
 				type.setEncryptedPassword(ESAPI.encryptor().encrypt(type.getPassword()));
@@ -96,7 +251,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	}
 	
 	/**
-	 * Move the unencrypted credentials in the transient fields into the 
+	 * Move the unencrypted credentials in the transient fields into the
 	 * encrypted fields that will be saved.
 	 * @param type
 	 * @return
@@ -106,7 +261,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		try {
 			if (type != null && type.getHasApiKey() && type.getEncryptedApiKey() != null) {
 				type.setApiKey(ESAPI.encryptor().decrypt(type.getEncryptedApiKey()));
-			} else if (type != null && type.getHasUserNamePassword() && 
+			} else if (type != null && type.getHasUserNamePassword() &&
 					type.getEncryptedUsername() != null && type.getEncryptedPassword() != null) {
 				type.setUsername(ESAPI.encryptor().decrypt(type.getEncryptedUsername()));
 				type.setPassword(ESAPI.encryptor().decrypt(type.getEncryptedPassword()));
@@ -124,7 +279,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	}
 	
 	@Override
-	public ResponseCode checkConfiguration(String username, String password, String apiKey, 
+	public ResponseCode checkConfiguration(String username, String password, String apiKey,
 			int typeId) {
 		
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
@@ -138,8 +293,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		// TODO test this
 		// If the username hasn't changed but the password has, update the apps instead of deleting them.
 		
-		if (databaseRemoteProviderType.getHasUserNamePassword() && 
-				username != null && password != null && 
+		if (databaseRemoteProviderType.getHasUserNamePassword() &&
+				username != null && password != null &&
 				username.equals(databaseRemoteProviderType.getUsername()) &&
 				!password.equals(USE_OLD_PASSWORD) &&
 				!password.equals(databaseRemoteProviderType.getPassword())) {
@@ -151,13 +306,13 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			store(databaseRemoteProviderType);
 			return ResponseCode.SUCCESS;
 			
-		} else if ((databaseRemoteProviderType.getHasApiKey() && 
+		} else if (databaseRemoteProviderType.getHasApiKey() &&
 				apiKey != null && !apiKey.startsWith(USE_OLD_PASSWORD) &&
-				!apiKey.equals(databaseRemoteProviderType.getApiKey()))
+				!apiKey.equals(databaseRemoteProviderType.getApiKey())
 				||
-				((databaseRemoteProviderType.getHasUserNamePassword() && 
+				databaseRemoteProviderType.getHasUserNamePassword() &&
 				username != null &&
-				!username.equals(databaseRemoteProviderType.getUsername())))) {
+				!username.equals(databaseRemoteProviderType.getUsername())) {
 			
 			databaseRemoteProviderType.setApiKey(apiKey);
 			databaseRemoteProviderType.setUsername(username);
@@ -177,7 +332,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
 				databaseRemoteProviderType.setRemoteProviderApplications(apps);
 				
-				for (RemoteProviderApplication remoteProviderApplication : 
+				for (RemoteProviderApplication remoteProviderApplication :
 						databaseRemoteProviderType.getRemoteProviderApplications()) {
 					remoteProviderApplicationService.store(remoteProviderApplication);
 				}

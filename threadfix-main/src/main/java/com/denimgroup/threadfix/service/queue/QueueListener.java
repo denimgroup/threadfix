@@ -40,7 +40,6 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -101,6 +100,7 @@ public class QueueListener implements MessageListener {
 	 * 
 	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
 	 */
+	@Transactional(readOnly=false)
 	@Override
 	public void onMessage(Message message) {
 		try {
@@ -158,37 +158,20 @@ public class QueueListener implements MessageListener {
 		log.info("Remote Provider Bulk Import job received");
 		jobStatusService.updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
 		
-		RemoteProviderType type = remoteProviderTypeService.load(remoteProviderTypeId);
+		ResponseCode response = remoteProviderTypeService.importScansForApplications(remoteProviderTypeId);
 		
-		if (type == null) {
-			log.error("Type was null, Remote Provider import failed.");
-			closeJobStatus(jobStatusId, "Type was null, Remote Provider import failed.");
-		} else {
-			
-			List<RemoteProviderApplication> applications = type.getRemoteProviderApplications();
-			
-			if (applications == null || applications.isEmpty()) {
-				log.error("No applications found, Remote Provider import failed.");
-				closeJobStatus(jobStatusId, "No applications found, Remote Provider import failed.");
-			} else {
-				
-				jobStatusService.updateJobStatus(jobStatusId, "Starting scan import for " + applications.size() + " applications.");
-				
-				for (RemoteProviderApplication application : applications) {
-					if (application != null && application.getApplicationChannel() != null) {
-						ResponseCode success = remoteProviderApplicationService.importScansForApplication(application);
-						
-						if (!success.equals(ResponseCode.SUCCESS)) {
-							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
-						} else {
-							log.info("Remote Provider import was successful for application " + application.getNativeId());
-						}
-					}
-				}
-				
-				closeJobStatus(jobStatusId, "Finished updating " + applications.size() + " applications.");
-			}
+		String message;
+		
+		switch (response) {
+			case BAD_ID:   message = "Remote Provider Bulk Import job failed because no remote provider type was found."; break;
+			case NO_APPS:  message = "Remote Provider Bulk Import job failed because no apps were found";                 break;
+			case SUCCESS:  message = "Remote Provider Bulk Import job completed.";                                        break;
+			default:       message = "Remote Provider Bulk Import encountered an unknown error";
 		}
+		
+		log.info(message);
+		
+		jobStatusService.updateJobStatus(jobStatusId, message);
 	}
 
 	private void syncTrackers() {
@@ -223,7 +206,7 @@ public class QueueListener implements MessageListener {
 				continue;
 			}
 			remoteProviderTypeService.decryptCredentials(remoteProviderApplication.getRemoteProviderType());
-			remoteProviderApplicationService.importScansForApplication(remoteProviderApplication);
+			remoteProviderTypeService.importScansForApplications(remoteProviderApplication.getId());
 		}
 		
 		log.info("Completed requests for scan imports.");

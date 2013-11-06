@@ -79,7 +79,7 @@ public class RemoteProvidersController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "apiKey", "username", 
+		dataBinder.setAllowedFields(new String[] { "apiKey", "username",
 				"password", "application.id", "application.organization.id", "isEuropean" });
 	}
 	
@@ -110,7 +110,7 @@ public class RemoteProvidersController {
 	private String mask(String input) {
 		if (input != null) {
 			if (input.length() > 5) {
-				String replaced = input.replace(input.substring(0,input.length() - 4), 
+				String replaced = input.replace(input.substring(0,input.length() - 4),
 						RemoteProviderTypeService.API_KEY_PREFIX);
 				return replaced;
 			} else {
@@ -129,7 +129,7 @@ public class RemoteProvidersController {
 		remoteProviderApplicationService.updateApplications(remoteProviderType);
 		remoteProviderTypeService.store(remoteProviderType);
 		
-		ControllerUtils.addSuccessMessage(request, "ThreadFix updated applications from " + 
+		ControllerUtils.addSuccessMessage(request, "ThreadFix updated applications from " +
 				remoteProviderType + ".");
 		
 		return "redirect:/configuration/remoteproviders/";
@@ -142,20 +142,20 @@ public class RemoteProvidersController {
 		
 		remoteProviderApplicationService.addBulkImportToQueue(remoteProviderType);
 		
-		ControllerUtils.addSuccessMessage(request, "ThreadFix is importing scans from " + remoteProviderType + 
+		ControllerUtils.addSuccessMessage(request, "ThreadFix is importing scans from " + remoteProviderType +
 			" in the background. It may take a few minutes to finish the process.");
 		
 		return "redirect:/configuration/remoteproviders/";
 	}
 	
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
-	public String importScan(@PathVariable("typeId") int typeId, 
+	public String importScan(@PathVariable("typeId") int typeId,
 			HttpServletRequest request, @PathVariable("appId") int appId) {
 		
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
 		if (remoteProviderApplication == null || remoteProviderApplication.getApplication() == null) {
-			request.getSession().setAttribute("errorMessage", 
+			request.getSession().setAttribute("errorMessage",
 					"The scan request failed because it could not find the requested application.");
 
 			return "redirect:/configuration/remoteproviders/";
@@ -164,8 +164,8 @@ public class RemoteProvidersController {
 		if (remoteProviderApplication.getApplication().getId() == null ||
 				remoteProviderApplication.getApplication().getOrganization() == null ||
 				remoteProviderApplication.getApplication().getOrganization().getId() == null ||
-				!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, 
-						remoteProviderApplication.getApplication().getOrganization().getId(), 
+				!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS,
+						remoteProviderApplication.getApplication().getOrganization().getId(),
 						remoteProviderApplication.getApplication().getId())) {
 			return "403";
 		}
@@ -173,20 +173,22 @@ public class RemoteProvidersController {
 		remoteProviderTypeService.decryptCredentials(
 				remoteProviderApplication.getRemoteProviderType());
 		
-		ResponseCode response = remoteProviderApplicationService.importScansForApplication(remoteProviderApplication);
+		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
-			return "redirect:/organizations/" + 
-						remoteProviderApplication.getApplication().getOrganization().getId() + 
+			return "redirect:/organizations/" +
+						remoteProviderApplication.getApplication().getOrganization().getId() +
 						"/applications/" +
 						remoteProviderApplication.getApplication().getId();
 		} else {
 			String errorMsg = null;
-			if (response.equals(ResponseCode.ERROR_NO_SCANS_FOUND))
+			if (response.equals(ResponseCode.ERROR_NO_SCANS_FOUND)) {
 				errorMsg = "No scans were found for this Remote Provider.";
-			else if (response.equals(ResponseCode.ERROR_NO_NEW_SCANS))
+			} else if (response.equals(ResponseCode.ERROR_NO_NEW_SCANS)) {
 				errorMsg = "Application already imported scans from this Remote Provider, no newer scans were found. You have to delete old scans before adding new ones.";
-			else errorMsg = "Error when trying to import scans.";
+			} else {
+				errorMsg = "Error when trying to import scans.";
+			}
 			
 			request.getSession().setAttribute("errorMessage", errorMsg);
 			return "redirect:/configuration/remoteproviders/";
@@ -196,15 +198,15 @@ public class RemoteProvidersController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.POST)
 	public String configureAppSubmit(@PathVariable("typeId") int typeId, @PathVariable("appId") int appId,
-			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication, 
+			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication,
 			BindingResult result, SessionStatus status,
 			Model model, HttpServletRequest request) {
 		if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
 			return "config/remoteproviders/edit";
 		} else {
 			
-			RemoteProviderApplication dbRemoteProviderApplication = 
-					remoteProviderApplicationService.load(appId);	
+			RemoteProviderApplication dbRemoteProviderApplication =
+					remoteProviderApplicationService.load(appId);
 			
 			if (dbRemoteProviderApplication != null) {
 				remoteProviderApplication.setId(appId);
@@ -238,8 +240,8 @@ public class RemoteProvidersController {
 			return "config/remoteproviders/edit";
 		} else {
 						
-			RemoteProviderApplication dbRemoteProviderApplication = 
-					remoteProviderApplicationService.load(rpAppId);		
+			RemoteProviderApplication dbRemoteProviderApplication =
+					remoteProviderApplicationService.load(rpAppId);
 			
 			String errMsg = remoteProviderApplicationService.deleteMapping(result, dbRemoteProviderApplication, appId);
 
@@ -247,7 +249,7 @@ public class RemoteProvidersController {
 			model.addAttribute("contentPage", "/configuration/remoteproviders");
 			return "ajaxRedirectHarness";
 		}
-	}	
+	}
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
@@ -256,7 +258,7 @@ public class RemoteProvidersController {
 		
 		ResponseCode test = remoteProviderTypeService.checkConfiguration(
 				request.getParameter("username"),
-				request.getParameter("password"), 
+				request.getParameter("password"),
 				request.getParameter("apiKey"), typeId);
 		
 		if (test.equals(ResponseCode.BAD_ID)) {
@@ -305,8 +307,15 @@ public class RemoteProvidersController {
 		permissionService.filterApps(typeList);
 		for (RemoteProviderType rp : typeList) {
 			if (rp.getId() == rpAppId) {
-				int numApps = rp.getFilteredApplications().size();
-				int lastIndex = (bean.getPage()*100>=numApps) ? numApps : bean.getPage()*100;
+				int numApps = 0;
+				
+				if (rp.getFilteredApplications() != null) {
+					numApps = rp.getFilteredApplications().size();
+				} else {
+					
+				}
+				
+				int lastIndex = bean.getPage()*100>=numApps ? numApps : bean.getPage()*100;
 				rp.setFilteredApplications(rp.getFilteredApplications().subList((bean.getPage()-1)*100, lastIndex));
 				
 				model.addAttribute("remoteProvider", rp);

@@ -62,6 +62,9 @@ public class DefaultPermissionServiceDelegate implements PermissionService {
 
 	@Override
 	public void filterApps(List<RemoteProviderType> providers) {
+        for (RemoteProviderType type : providers) {
+            type.setFilteredApplications(type.getRemoteProviderApplications());
+        }
 	}
 	
 	@Override

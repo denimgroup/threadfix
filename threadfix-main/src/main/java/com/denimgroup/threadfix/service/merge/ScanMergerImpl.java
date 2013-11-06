@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -36,11 +37,17 @@ public class ScanMergerImpl implements ScanMerger {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergerImpl");
 	
-	private ChannelMerger channelMerger = new ChannelMerger();
+	private ChannelMerger channelMerger = null;
 	@Autowired private ApplicationMerger applicationMerger;
 	@Autowired private ScanDao scanDao;
+	@Autowired private VulnerabilityDao vulnerabilityDao;
 	
+	@Override
 	public void merge(Scan scan, ApplicationChannel applicationChannel, ScanMergeConfiguration configuration) {
+		if (channelMerger == null) {
+			channelMerger = new ChannelMerger(vulnerabilityDao);
+		}
+		
 		if (scan.getFindings() != null && applicationChannel != null
 				&& applicationChannel.getChannelType() != null
 				&& applicationChannel.getChannelType().getName() != null) {
