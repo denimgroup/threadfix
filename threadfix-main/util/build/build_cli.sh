@@ -1,5 +1,7 @@
-cd threadfix-source/threadfix-cli
+cd threadfix-cli
 mvn clean compile assembly:single
-cd ~/Documents/Build
+cd ../Build
 
-cp threadfix-source/threadfix-cli/target/ThreadFixCLI-0.0.1-SNAPSHOT-jar-with-dependencies.jar ThreadFixBase/command-line-interface/tfcli.jar
+cp ../threadfix-cli/target/threadfix-cli-2.0M1-SNAPSHOT-jar-with-dependencies.jar ThreadFixBase/command-line-interface/tfcli.jar
+
+cd ..

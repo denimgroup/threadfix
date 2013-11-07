@@ -1,1 +1,2 @@
-/Applications/Ez7z.app/Contents/Resources/7za a ThreadFix_1_2.zip ThreadFix
+cd Build
+zip  -q ThreadFix_2_0M1.zip -r ThreadFix
