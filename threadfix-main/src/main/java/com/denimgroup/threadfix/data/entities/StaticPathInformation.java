@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import com.denimgroup.threadfix.service.merge.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 @Entity
 @Table(name = "StaticPathInformation")

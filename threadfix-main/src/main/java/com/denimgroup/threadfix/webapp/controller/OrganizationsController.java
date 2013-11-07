@@ -49,6 +49,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
@@ -56,7 +57,6 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
@@ -89,8 +89,8 @@ public class OrganizationsController {
 	
 	@Autowired
 	public OrganizationsController(OrganizationService organizationService,
-			ChannelTypeService channelTypeService, PermissionService permissionService, 
-			ReportsService reportsService, ApplicationService applicationService, 
+			ChannelTypeService channelTypeService, PermissionService permissionService,
+			ReportsService reportsService, ApplicationService applicationService,
 			ApplicationCriticalityService applicationCriticalityService,
 			UserService userService) {
 		this.organizationService = organizationService;
@@ -149,15 +149,15 @@ public class OrganizationsController {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null) && 
+		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null) &&
 				(apps == null || apps.size() == 0)) {
 			
 			return new ModelAndView("403");
 			
 		} else {
 			ModelAndView mav = new ModelAndView("organizations/detail");
-			permissionService.addPermissions(mav, orgId, null, 
-					Permission.CAN_MANAGE_APPLICATIONS, 
+			permissionService.addPermissions(mav, orgId, null,
+					Permission.CAN_MANAGE_APPLICATIONS,
 					Permission.CAN_MANAGE_TEAMS,
 					Permission.CAN_MODIFY_VULNERABILITIES,
 					Permission.CAN_GENERATE_REPORTS,
@@ -210,8 +210,9 @@ public class OrganizationsController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status,
 			HttpServletRequest request) {
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null))
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return "403";
+		}
 			
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization == null || !organization.isActive()) {
@@ -223,7 +224,7 @@ public class OrganizationsController {
 			String teamName = organization.getName();
 			organizationService.deactivateOrganization(organization);
 			log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
-			ControllerUtils.addSuccessMessage(request, 
+			ControllerUtils.addSuccessMessage(request,
 					"Team " + teamName + " has been deleted successfully.");
 			return "redirect:/organizations";
 		}
@@ -233,8 +234,9 @@ public class OrganizationsController {
 	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null))
+		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
+		}
 		
 		Organization team = organizationService.loadOrganization(orgId);
 		
@@ -283,7 +285,7 @@ public class OrganizationsController {
 		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {
-			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
 			
 			model.addAttribute("org",org);
@@ -306,8 +308,8 @@ public class OrganizationsController {
 					", the ID " + application.getId() +
 					", and the Organization " + application.getOrganization().getName());
 			
-			ControllerUtils.addSuccessMessage(request, 
-					"Application " + application.getName() + " was successfully created in team " + 
+			ControllerUtils.addSuccessMessage(request,
+					"Application " + application.getName() + " was successfully created in team " +
 					application.getOrganization().getName() + ".");
 			
 			return "Success";

@@ -26,7 +26,10 @@ package com.denimgroup.threadfix.service.merge;
 import java.io.File;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.service.framework.ServletMappings;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.ServletMappings;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 /**
  * This class is used to hold information about what types of algorithms to use in a vulnerability merge.
@@ -34,22 +37,20 @@ import com.denimgroup.threadfix.service.framework.ServletMappings;
  * @author mcollins
  *
  */
-public class ScanMergeConfiguration {
+public class ScanMergeConfiguration extends ProjectConfig {
 	
-	private VulnTypeStrategy typeStrategy;
 	private SourceCodeAccessLevel sourceCodeAccessLevel;
 	private FrameworkType frameworkType;
 	private Application application;
 	private final File workTree;
 	private final ServletMappings servletMappings;
 	
-	public ScanMergeConfiguration(VulnTypeStrategy typeStrategy, 
-			SourceCodeAccessLevel sourceCodeAccessLevel,
+	public ScanMergeConfiguration(SourceCodeAccessLevel sourceCodeAccessLevel,
 			FrameworkType frameworkType,
 			File workTree,
 			Application application,
 			ServletMappings servletMappings) {
-		this.typeStrategy  = typeStrategy;
+		super(frameworkType, sourceCodeAccessLevel, workTree, "/" + getApplicationRoot(application));
 		this.frameworkType = frameworkType;
 		this.sourceCodeAccessLevel  = sourceCodeAccessLevel;
 		this.workTree = workTree;
@@ -62,6 +63,10 @@ public class ScanMergeConfiguration {
 	}
 	
 	public String getApplicationRoot() {
+		return getApplicationRoot(application);
+	}
+	
+	private static String getApplicationRoot(Application application) {
 		if (application != null) {
 			return application.getProjectRoot();
 		} else {
@@ -75,10 +80,6 @@ public class ScanMergeConfiguration {
 
 	public ServletMappings getServletMappings() {
 		return servletMappings;
-	}
-
-	public VulnTypeStrategy getTypeStrategy() {
-		return typeStrategy;
 	}
 
 	public SourceCodeAccessLevel getSourceCodeAccessLevel() {

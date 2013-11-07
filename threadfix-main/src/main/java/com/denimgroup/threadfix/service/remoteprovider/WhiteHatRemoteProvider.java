@@ -48,11 +48,15 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.HandlerWithBuilder;
 import com.denimgroup.threadfix.service.ScanUtils;
-import com.denimgroup.threadfix.service.channel.HandlerWithBuilder;
 
 public class WhiteHatRemoteProvider extends RemoteProvider {
-	
+
+	@Override
+	public String getType() {
+		return ChannelType.SENTINEL;
+	}
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
 	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
 	private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_site=";
@@ -420,5 +424,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		
 	}
+
 	
 }

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
 public interface RemoteProviderTypeService {
@@ -38,6 +39,24 @@ public interface RemoteProviderTypeService {
 		ERROR_NO_NEW_SCANS,
 		ERROR_OTHER;
 	}
+	
+	/**
+	 * 
+	 * @param appId
+	 */
+	ResponseCode importScansForApplications(Integer remoteProviderTypeId);
+	
+	/**
+	 * 
+	 * @param appId
+	 */
+	ResponseCode importScansForApplication(RemoteProviderApplication remoteProviderApplication);
+
+	/**
+	 * 
+	 * @return
+	 */
+	ResponseCode updateAll();
 
 	/**
 	 * 
@@ -70,7 +89,7 @@ public interface RemoteProviderTypeService {
 	 * This is to tidy up the controller layer.
 	 * @param remoteProviderType
 	 */
-	ResponseCode checkConfiguration(String username, String password, String apiKey, 
+	ResponseCode checkConfiguration(String username, String password, String apiKey,
 			int typeId);
 	
 	/**

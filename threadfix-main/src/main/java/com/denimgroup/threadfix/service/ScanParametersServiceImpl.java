@@ -29,9 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 @Service
@@ -67,12 +66,9 @@ public class ScanParametersServiceImpl implements ScanParametersService {
 					FrameworkType.getFrameworkType(scanParametersBean.getApplicationType());
 			SourceCodeAccessLevel accessLevel = 
 					SourceCodeAccessLevel.getSourceCodeAccessLevel(scanParametersBean.getSourceCodeAccessLevel());
-			VulnTypeStrategy typeStrategy =
-					VulnTypeStrategy.getVulnTypeStrategy(scanParametersBean.getTypeMatchingStrategy());
 			
 			application.setFrameworkType(frameworkType.toString());
 			application.setSourceCodeAccessLevel(accessLevel.toString());
-			application.setVulnTypeStrategy(typeStrategy.toString());
 			
 			if (scanParametersBean.getSourceCodeUrl() != null && 
 					scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {

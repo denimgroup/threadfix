@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +44,6 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
 
@@ -57,7 +55,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
 	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
-	private ScanMergeService scanMergeService = null;
 	private ApplicationDao applicationDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
 	private QueueSender queueSender = null;
@@ -65,12 +62,10 @@ public class RemoteProviderApplicationServiceImpl implements
 	@Autowired
 	public RemoteProviderApplicationServiceImpl(
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
-			ScanMergeService scanMergeService,
 			ApplicationDao applicationDao,
 			QueueSender queueSender,
 			ApplicationChannelDao applicationChannelDao) {
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
-		this.scanMergeService = scanMergeService;
 		this.applicationDao = applicationDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.queueSender = queueSender;
@@ -97,7 +92,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		List<RemoteProviderApplication> newApps =
 				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
-		// We can't use remoteProviderType.getRemoteProviderApplications() 
+		// We can't use remoteProviderType.getRemoteProviderApplications()
 		// because the old session is closed
 		List<RemoteProviderApplication> appsForType = loadAllWithTypeId(
 														remoteProviderType.getId());
@@ -114,8 +109,8 @@ public class RemoteProviderApplicationServiceImpl implements
 					}
 					
 					if (app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
-						log.warn("A Remote Provider application came out of the database with more than " 
-									+ RemoteProviderApplication.NATIVE_ID_LENGTH 
+						log.warn("A Remote Provider application came out of the database with more than "
+									+ RemoteProviderApplication.NATIVE_ID_LENGTH
 									+ " characters in it. This shouldn't be possible.");
 						appIds.add(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
 					} else {
@@ -142,7 +137,7 @@ public class RemoteProviderApplicationServiceImpl implements
 			return null;
 		}
 		
-		List<RemoteProviderApplication> newApps = 
+		List<RemoteProviderApplication> newApps =
 				RemoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		if (newApps == null || newApps.size() == 0) {
@@ -152,7 +147,8 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (newApps != null && newApps.size() > 1) {
 			Collections.sort(newApps,
 				new Comparator<RemoteProviderApplication>() {
-					public int compare(RemoteProviderApplication f1, 
+					@Override
+					public int compare(RemoteProviderApplication f1,
 							RemoteProviderApplication f2)
 		            {
 		                return f1.getNativeId().compareTo(f2.getNativeId());
@@ -165,10 +161,10 @@ public class RemoteProviderApplicationServiceImpl implements
 				continue;
 			}
 			
-			if (app.getNativeId() != null && 
+			if (app.getNativeId() != null &&
 					app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
-				log.warn("A Remote Provider application was parsed that has more than " 
-							+ RemoteProviderApplication.NATIVE_ID_LENGTH 
+				log.warn("A Remote Provider application was parsed that has more than "
+							+ RemoteProviderApplication.NATIVE_ID_LENGTH
 							+ " characters in it. The name is being trimmed but this"
 							+ " should not prevent use of the application");
 				app.setNativeId(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
@@ -188,7 +184,7 @@ public class RemoteProviderApplicationServiceImpl implements
 					" (id=" + remoteProviderType.getId() + ")");
 			for (RemoteProviderApplication app : remoteProviderType
 					.getRemoteProviderApplications()) {
-				log.info("Deleting Remote Application " + app.getNativeId() + 
+				log.info("Deleting Remote Application " + app.getNativeId() +
 						" (id = " + app.getId() + ", type id=" + remoteProviderType.getId() + ")");
 				remoteProviderApplicationDao.delete(app);
 			}
@@ -196,86 +192,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	@Transactional
-	public ResponseCode importScansForApplication(
-			RemoteProviderApplication remoteProviderApplication) {
-		if (remoteProviderApplication == null)
-			return ResponseCode.ERROR_OTHER;
-		
-		List<Scan> resultScans = RemoteProviderFactory.fetchScans(remoteProviderApplication);
-		
-		ResponseCode success = ResponseCode.ERROR_OTHER;
-		if (resultScans != null && resultScans.size() > 0) {
-			Collections.sort(resultScans, new Comparator<Scan>() {
-				public int compare(Scan scan1, Scan scan2){
-					Calendar scan1Time = scan1.getImportTime();
-					Calendar scan2Time = scan2.getImportTime();
-					
-					if (scan1Time == null || scan2Time == null) 
-						return 0;
-					
-					return scan1Time.compareTo(scan2Time);
-				}
-			});
-			
-			int noOfScanNotFound = 0;
-			int noOfNoNewScans = 0;
-			for (Scan resultScan : resultScans) {
-				if (resultScan == null || resultScan.getFindings() == null 
-						|| resultScan.getFindings().size() == 0) {
-					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
-					noOfScanNotFound++;
-					
-				} else if (remoteProviderApplication.getLastImportTime() != null && 
-							(resultScan.getImportTime() == null ||
-							!remoteProviderApplication.getLastImportTime().before(
-									resultScan.getImportTime()))) {
-					log.warn("Remote Scan was not newer than the last imported scan " +
-							"for this RemoteProviderApplication.");
-					noOfNoNewScans++;
-					
-				} else {
-					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
-					
-					remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
-					
-					remoteProviderApplicationDao.saveOrUpdate(remoteProviderApplication);
-					
-					if (resultScan.getApplicationChannel() == null) {
-						if (remoteProviderApplication.getApplicationChannel() != null) {
-							resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-						} else {
-							log.error("Didn't have enough application channel information.");
-						}
-					}
-					
-					if (resultScan.getApplicationChannel() != null) {
-						if (resultScan.getApplicationChannel().getScanList() == null) {
-							resultScan.getApplicationChannel().setScanList(new ArrayList<Scan>());
-						}
-						
-						if (!resultScan.getApplicationChannel().getScanList().contains(resultScan)) {
-							resultScan.getApplicationChannel().getScanList().add(resultScan);
-						}
-					
-						scanMergeService.processRemoteScan(resultScan);
-						success = ResponseCode.SUCCESS;
-					}
-				}
-			}
-			
-			if (!success.equals(ResponseCode.SUCCESS)) {
-				if (noOfNoNewScans > 0)
-					success = ResponseCode.ERROR_NO_NEW_SCANS;
-				else if (noOfScanNotFound > 0)
-					success = ResponseCode.ERROR_NO_SCANS_FOUND;
-			}
-		}
-		return success;
-	}
-	
-	@Override
-	public String processApp(BindingResult result, 
+	public String processApp(BindingResult result,
 			RemoteProviderApplication remoteProviderApplication, Application application) {
 
 		application = applicationDao.retrieveById(application.getId());
@@ -294,7 +211,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (application.getRemoteProviderApplications() == null) {
 			application.setRemoteProviderApplications(
 					new ArrayList<RemoteProviderApplication>());
-		} 
+		}
 		
 		if (!application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
 			application.getRemoteProviderApplications().add(remoteProviderApplication);
@@ -318,7 +235,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		for (ApplicationChannel applicationChannel : application.getChannelList()) {
 			if (applicationChannel.getChannelType().getName().equals(type.getName())) {
 				remoteProviderApplication.setApplicationChannel(applicationChannel);
-				if (applicationChannel.getScanList() != null && 
+				if (applicationChannel.getScanList() != null &&
 						applicationChannel.getScanList().size() > 0) {
 					List<Scan> scans = applicationChannel.getScanList();
 					Collections.sort(scans,Scan.getTimeComparator());
@@ -334,7 +251,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (remoteProviderApplication.getApplicationChannel() == null) {
 			ApplicationChannel channel = new ApplicationChannel();
 			channel.setApplication(application);
-			if (remoteProviderApplication.getRemoteProviderType() != null && 
+			if (remoteProviderApplication.getRemoteProviderType() != null &&
 				  remoteProviderApplication.getRemoteProviderType().getChannelType() != null) {
 				channel.setChannelType(remoteProviderApplication.
 						getRemoteProviderType().getChannelType());
@@ -392,9 +309,10 @@ public class RemoteProviderApplicationServiceImpl implements
 			for (RemoteProviderApplication rpa: rpAppList) {
 				if (rpa.getRemoteProviderType().getId().equals(
 						remoteProviderApplication.getRemoteProviderType().getId())) {
-					if (rpa.getApplicationChannel().getScanList() != null && 
-							!rpa.getApplicationChannel().getScanList().isEmpty()) 
+					if (rpa.getApplicationChannel().getScanList() != null &&
+							!rpa.getApplicationChannel().getScanList().isEmpty()) {
 						returnStr = "But this application has Scans associated with the Remote Provider Application!";
+					}
 				}
 			}
 			
@@ -403,7 +321,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		if (application.getRemoteProviderApplications() == null) {
 			application.setRemoteProviderApplications(
 					new ArrayList<RemoteProviderApplication>());
-		} 
+		}
 
 		if (application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
 			application.getRemoteProviderApplications().remove(remoteProviderApplication);

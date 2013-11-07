@@ -67,7 +67,7 @@
         		,/,/index.jsp,/login.jsp,/organizations,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
-        		/configuration/defaults,/configuration/filters,/configuration/scanqueue,
+        		/configuration/defaults,/configuration/filters,/configuration/scanqueue,/scanplugin/index,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/jasper/*,/rest/*,
         		regex ^/rest/,
         		regex ^/jasperimage/[0-9a-zA-Z]+/[0-9a-zA-Z_]+$,

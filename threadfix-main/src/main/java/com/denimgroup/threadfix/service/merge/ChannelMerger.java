@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
@@ -46,7 +45,11 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ChannelMerger.class);
 	
-	@Autowired private VulnerabilityDao vulnerabilityDao;
+	private VulnerabilityDao vulnerabilityDao;
+	
+	public ChannelMerger(VulnerabilityDao vulnerabilityDao) {
+		this.vulnerabilityDao = vulnerabilityDao;
+	}
 	
 	/**
 	 * This is the first round of scan merge that only considers scans from the same scanner
@@ -61,8 +64,9 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 			return;
 		}
 
-		if (scan.getFindings() == null)
+		if (scan.getFindings() == null) {
 			scan.setFindings(new ArrayList<Finding>());
+		}
 
 		List<Finding> oldFindings = new ArrayList<>();
 		List<Finding> newFindings = new ArrayList<>();
@@ -93,12 +97,15 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 				+ scanHash.keySet().size() + " findings.");
 
 		if (applicationChannel != null
-				&& applicationChannel.getScanList() != null)
-			for (Scan oldScan : applicationChannel.getScanList())
+				&& applicationChannel.getScanList() != null) {
+			for (Scan oldScan : applicationChannel.getScanList()) {
 				if (oldScan != null && oldScan.getId() != null
 						&& oldScan.getFindings() != null
-						&& oldScan.getFindings().size() != 0)
+						&& oldScan.getFindings().size() != 0) {
 					oldFindings.addAll(oldScan.getFindings());
+				}
+			}
+		}
 
 		for (Finding finding : oldFindings) {
 			if (finding != null && finding.getNativeId() != null
@@ -176,12 +183,13 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 			if (!scanHash.containsKey(nativeId)
 					&& oldNativeIdVulnHash.get(nativeId) != null
 					&& oldNativeIdVulnHash.get(nativeId).isActive()) {
-				if (scan.getImportTime() != null)
+				if (scan.getImportTime() != null) {
 					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
 							scan.getImportTime());
-				else
+				} else {
 					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
 							Calendar.getInstance());
+				}
 				vulnerabilityDao.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
 				closed += 1;
 			}

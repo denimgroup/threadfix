@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -34,13 +35,16 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 public class RolesController {
 
 	private final SanitizedLogger log = new SanitizedLogger(RolesController.class);
-
+	
 	private RoleService roleService;
+	@Autowired
+	private PermissionService permissionService;
 	
 	@Autowired
 	public RolesController(RoleService roleService) {
 		this.roleService = roleService;
 	}
+	
 	
 	public RolesController(){}
 	
@@ -51,7 +55,9 @@ public class RolesController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
+		if(permissionService.isEnterprise()){
+			dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)

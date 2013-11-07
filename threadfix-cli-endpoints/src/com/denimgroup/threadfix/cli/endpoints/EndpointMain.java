@@ -1,16 +1,12 @@
 package com.denimgroup.threadfix.cli.endpoints;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
-import com.denimgroup.threadfix.service.framework.Endpoint;
-import com.denimgroup.threadfix.service.framework.PathUrlTranslator;
-import com.denimgroup.threadfix.service.framework.PathUrlTranslatorFactory;
-import com.denimgroup.threadfix.service.merge.FrameworkType;
-import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
-import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
-import com.denimgroup.threadfix.service.merge.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.merge.VulnTypeStrategy;
+import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.engine.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.EndpointDatabaseFactory;
 
 public class EndpointMain {
 	
@@ -32,35 +28,18 @@ public class EndpointMain {
 	
 	private static void listEndpoints(File rootFile) {
 		
-		FrameworkType type = MergeConfigurationGenerator.guessFrameworkTypeFromSourceTree(rootFile);
+		EndpointDatabase database = EndpointDatabaseFactory.getDatabaseNoCleaner(rootFile);
+
+		List<Endpoint> endpoints = database.generateEndpoints();
 		
-		if (type == FrameworkType.NONE) {
-			System.out.println("No framework found. Make sure that the file is the root " +
-					"of a JSP or Spring MVC project and try again.");
+		Collections.sort(endpoints);
+		
+		if (endpoints.isEmpty()) {
+			System.out.println("No endpoints were found.");
 		} else {
-		
-			System.out.println("Type was " + type);
-		
-			ScanMergeConfiguration configuration = new ScanMergeConfiguration(
-					VulnTypeStrategy.EXACT,
-					SourceCodeAccessLevel.FULL,
-					type,
-					rootFile,
-					null, 
-					null);
-			
-			PathUrlTranslator translator = PathUrlTranslatorFactory.getTranslator(configuration, null);
-			
-			List<Endpoint> endpoints = translator.generateEndpoints();
-			
-			if (endpoints.isEmpty()) {
-				System.out.println("No endpoints were found.");
-			} else {
-				for (Endpoint endpoint : endpoints) {
-					System.out.println(endpoint.getCSVLine());
-				}
+			for (Endpoint endpoint : endpoints) {
+				System.out.println(endpoint.getCSVLine());
 			}
 		}
 	}
-
 }

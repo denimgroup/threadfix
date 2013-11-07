@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
@@ -83,7 +82,7 @@ public interface DefectService {
 	 * 
 	 * @param application
 	 */
-	void updateVulnsFromDefectTracker(Application application);
+	boolean updateVulnsFromDefectTracker(Integer applicationId);
 	
 	/**
 	 * 

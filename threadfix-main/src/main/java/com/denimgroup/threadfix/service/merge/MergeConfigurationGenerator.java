@@ -30,10 +30,11 @@ import org.eclipse.jgit.lib.Repository;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.ServletMappings;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.framework.ProjectDirectory;
-import com.denimgroup.threadfix.service.framework.ServletMappings;
-import com.denimgroup.threadfix.service.framework.WebXMLParser;
 import com.denimgroup.threadfix.service.repository.GitService;
 
 public class MergeConfigurationGenerator {
@@ -49,16 +50,13 @@ public class MergeConfigurationGenerator {
 			return null;
 		}
 		
-		VulnTypeStrategy typeStrategy =
-				VulnTypeStrategy.getVulnTypeStrategy(application.getVulnTypeStrategy());
 		SourceCodeAccessLevel accessLevel =
 				SourceCodeAccessLevel.getSourceCodeAccessLevel(application.getSourceCodeAccessLevel());
 		FrameworkType frameworkType =
 				FrameworkType.getFrameworkType(application.getFrameworkType());
 		
-		log.info("Vulnerability type matching strategy from application: " + typeStrategy.displayName);
-		log.info("Source Code Access Level from application: " + accessLevel.displayName);
-		log.info("Framework Type from application: " + frameworkType.displayName);
+		log.info("Source Code Access Level from application: " + accessLevel.getDisplayName());
+		log.info("Framework Type from application: " + frameworkType.getDisplayName());
 		
 		File workTree = null; // optional
 		ServletMappings servletMappings = null; //optional
@@ -87,7 +85,7 @@ public class MergeConfigurationGenerator {
 			}
 		}
 		
-		return new ScanMergeConfiguration(typeStrategy, accessLevel, frameworkType,
+		return new ScanMergeConfiguration(accessLevel, frameworkType,
 				workTree, application, servletMappings);
 	}
 	
@@ -107,7 +105,7 @@ public class MergeConfigurationGenerator {
 			}
 		}
 		
-		log.info("The data flow Framework Type detection returned: " + returnType.displayName);
+		log.info("The data flow Framework Type detection returned: " + returnType.getDisplayName());
 		
 		return returnType;
 	}
@@ -166,29 +164,16 @@ public class MergeConfigurationGenerator {
 		log.info("Attempting to guess Framework Type from source tree.");
 		log.info("File: " + workTree);
 		
-		FrameworkType frameworkType = FrameworkType.NONE;
+		FrameworkType frameworkType = FrameworkCalculator.getType(workTree);
 		
-		if (workTree != null) {
-			ProjectDirectory projectDirectory = new ProjectDirectory(workTree);
-			
-			File webXML = projectDirectory.findWebXML();
-			if (webXML != null && webXML.exists()) {
-				ServletMappings mappings = WebXMLParser.getServletMappings(webXML, projectDirectory);
-				
-				if (mappings != null) {
-					frameworkType = mappings.guessApplicationType();
-				}
-			}
-		}
-		
-		log.info("Source tree framework type detection returned: " + frameworkType.displayName);
+		log.info("Source tree framework type detection returned: " + frameworkType.getDisplayName());
 		
 		return frameworkType;
 	}
 
 	public static ScanMergeConfiguration getDefaultConfiguration() {
 		return new ScanMergeConfiguration(
-				VulnTypeStrategy.EXACT, SourceCodeAccessLevel.DETECT, FrameworkType.DETECT,
+				SourceCodeAccessLevel.DETECT, FrameworkType.DETECT,
 				null, null, null);
 	}
 	
@@ -199,16 +184,16 @@ public class MergeConfigurationGenerator {
 		
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
 			returnLevel = SourceCodeAccessLevel.FULL;
-			log.info("Since there is a configured Repository URL, returning " + returnLevel.displayName);
+			log.info("Since there is a configured Repository URL, returning " + returnLevel.getDisplayName());
 		} else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
 			returnLevel = SourceCodeAccessLevel.FULL;
-			log.info("Since there is a configured Repository Folder, returning " + returnLevel.displayName);
+			log.info("Since there is a configured Repository Folder, returning " + returnLevel.getDisplayName());
 		} else if (hasStaticScans(application) || scan != null && scan.isStatic()) {
 			returnLevel = SourceCodeAccessLevel.PARTIAL;
-			log.info("Since there is at least one static scan in the application, returning " + returnLevel.displayName);
+			log.info("Since there is at least one static scan in the application, returning " + returnLevel.getDisplayName());
 		} else {
 			returnLevel = SourceCodeAccessLevel.NONE;
-			log.info("Since there was no repository url and there were no static scans, returning " + returnLevel.displayName);
+			log.info("Since there was no repository url and there were no static scans, returning " + returnLevel.getDisplayName());
 		}
 		
 		return returnLevel;

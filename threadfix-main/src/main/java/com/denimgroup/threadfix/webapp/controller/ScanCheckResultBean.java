@@ -2,7 +2,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.Calendar;
 
-import com.denimgroup.threadfix.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 
 public class ScanCheckResultBean {
 

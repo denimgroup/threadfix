@@ -45,7 +45,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.channel.HandlerWithBuilder;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.HandlerWithBuilder;
 
 /**
  * TODO use POST data to pre-filter web requests
@@ -53,6 +53,11 @@ import com.denimgroup.threadfix.service.channel.HandlerWithBuilder;
  *
  */
 public class QualysRemoteProvider extends RemoteProvider {
+	
+	@Override
+	public String getType() {
+		return ChannelType.QUALYSGUARD_WAS;
+	}
 	
 	private String username = null;
 	private String password = null;

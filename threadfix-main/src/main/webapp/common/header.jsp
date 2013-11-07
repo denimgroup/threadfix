@@ -89,6 +89,9 @@
 					    <li class="normalLinks">
 					    	<a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
 					    </li>
+					    <li class="normalLinks">
+					    	<a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
+					    </li>						
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
 				
@@ -97,10 +100,12 @@
 								<a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
 							</li>
 							</security:authorize>
+							<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
 					 		<li class="normalLinks">
 								<a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
 							</li>
+							</security:authorize>
 							</security:authorize>
 							<security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
 					 		<li class="normalLinks">
@@ -112,7 +117,7 @@
 								<a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
 							</li>
 							</security:authorize>
-							<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+							<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 							<li class="normalLinks">
 								<a id="configureDefaultsLink" href="<spring:url value="/configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
 							</li>

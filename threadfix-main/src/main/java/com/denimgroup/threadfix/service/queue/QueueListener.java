@@ -33,13 +33,13 @@ import javax.jms.TextMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.JobStatus;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -81,7 +81,7 @@ public class QueueListener implements MessageListener {
 	@Autowired
 	public QueueListener(ScanMergeService scanMergeService, JobStatusService jobStatusService,
 			ApplicationService applicationService, DefectService defectService,
-			VulnerabilityService vulnerabilityService, 
+			VulnerabilityService vulnerabilityService,
 			ApplicationChannelService applicationChannelService,
 			RemoteProviderApplicationService remoteProviderApplicationService,
 			RemoteProviderTypeService remoteProviderTypeService) {
@@ -100,6 +100,7 @@ public class QueueListener implements MessageListener {
 	 * 
 	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
 	 */
+	@Transactional(readOnly=false)
 	@Override
 	public void onMessage(Message message) {
 		try {
@@ -122,7 +123,7 @@ public class QueueListener implements MessageListener {
 				String type = map.getString("type");
 				
 				switch (type) {
-					case QueueConstants.NORMAL_SCAN_TYPE : 
+					case QueueConstants.NORMAL_SCAN_TYPE :
 						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
 								map.getInt("jobStatusId"), map.getString("userName"));
 						break;
@@ -157,37 +158,20 @@ public class QueueListener implements MessageListener {
 		log.info("Remote Provider Bulk Import job received");
 		jobStatusService.updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
 		
-		RemoteProviderType type = remoteProviderTypeService.load(remoteProviderTypeId);
+		ResponseCode response = remoteProviderTypeService.importScansForApplications(remoteProviderTypeId);
 		
-		if (type == null) {
-			log.error("Type was null, Remote Provider import failed.");
-			closeJobStatus(jobStatusId, "Type was null, Remote Provider import failed.");
-		} else {
-			
-			List<RemoteProviderApplication> applications = type.getRemoteProviderApplications();
-			
-			if (applications == null || applications.isEmpty()) {
-				log.error("No applications found, Remote Provider import failed.");
-				closeJobStatus(jobStatusId, "No applications found, Remote Provider import failed.");
-			} else {
-				
-				jobStatusService.updateJobStatus(jobStatusId, "Starting scan import for " + applications.size() + " applications.");
-				
-				for (RemoteProviderApplication application : applications) {
-					if (application != null && application.getApplicationChannel() != null) {
-						ResponseCode success = remoteProviderApplicationService.importScansForApplication(application);
-						
-						if (!success.equals(ResponseCode.SUCCESS)) {
-							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
-						} else {
-							log.info("Remote Provider import was successful for application " + application.getNativeId());
-						}
-					}
-				}
-				
-				closeJobStatus(jobStatusId, "Finished updating " + applications.size() + " applications.");
-			}
+		String message;
+		
+		switch (response) {
+			case BAD_ID:   message = "Remote Provider Bulk Import job failed because no remote provider type was found."; break;
+			case NO_APPS:  message = "Remote Provider Bulk Import job failed because no apps were found";                 break;
+			case SUCCESS:  message = "Remote Provider Bulk Import job completed.";                                        break;
+			default:       message = "Remote Provider Bulk Import encountered an unknown error";
 		}
+		
+		log.info(message);
+		
+		jobStatusService.updateJobStatus(jobStatusId, message);
 	}
 
 	private void syncTrackers() {
@@ -201,7 +185,7 @@ public class QueueListener implements MessageListener {
 		
 		for (Application application : apps) {
 			if (application != null && application.getDefectTracker() != null) {
-				defectService.updateVulnsFromDefectTracker(application);
+				defectService.updateVulnsFromDefectTracker(application.getId());
 			}
 		}
 		
@@ -222,7 +206,7 @@ public class QueueListener implements MessageListener {
 				continue;
 			}
 			remoteProviderTypeService.decryptCredentials(remoteProviderApplication.getRemoteProviderType());
-			remoteProviderApplicationService.importScansForApplication(remoteProviderApplication);
+			remoteProviderTypeService.importScansForApplications(remoteProviderApplication.getId());
 		}
 		
 		log.info("Completed requests for scan imports.");
@@ -250,7 +234,7 @@ public class QueueListener implements MessageListener {
 		}
 
 		Vulnerability vuln = vulnerabilities.get(0);
-		Defect defect = defectService.createDefect(vulnerabilities, summary, 
+		Defect defect = defectService.createDefect(vulnerabilities, summary,
 				preamble, component, version, severity, priority, status);
 
 		if (defect == null) {
@@ -279,12 +263,12 @@ public class QueueListener implements MessageListener {
 		
 		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
 		
-		boolean fullLog = (userName != null && appChannel != null && appChannel.getApplication() != null
+		boolean fullLog = userName != null && appChannel != null && appChannel.getApplication() != null
 				&& appChannel.getApplication().getName() != null && appChannel.getChannelType() != null
-				&& appChannel.getChannelType().getName() != null);
+				&& appChannel.getChannelType().getName() != null;
 			
 		if (fullLog) {
-			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() + 
+			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() +
 					" scan to the Application " + appChannel.getApplication().getName() +
 					" (filename " + fileName + ").");
 		}
@@ -303,14 +287,14 @@ public class QueueListener implements MessageListener {
 			if (finished) {
 				closeJobStatus(jobStatusId, "Scan completed.");
 				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
 						+ userName + " on Application " + appChannel.getApplication().getName()
 						+ " (filename " + fileName + ") completed successfully.");
 				}
 			} else if (!closed) {
 				closeJobStatus(jobStatusId, "Scan encountered an error.");
 				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User " 
+					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
 						+ userName + " on Application " + appChannel.getApplication().getName()
 						+ " (filename " + fileName + ") did not complete successfully.");
 				}
@@ -322,21 +306,21 @@ public class QueueListener implements MessageListener {
 	 * @param appId
 	 * @param jobStatusId
 	 */
+	@Transactional(readOnly=false)
 	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId) {
 		if (appId == null) {
-			closeJobStatus(jobStatusId, "Defect Tracker update failed.");
-			return;
-		}
-
-		Application app = applicationService.loadApplication(appId);
-		if (app == null) {
-			closeJobStatus(jobStatusId, "No application found, request failed.");
+			closeJobStatus(jobStatusId, "Defect Tracker update failed because it received a null application ID");
 			return;
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
-		defectService.updateVulnsFromDefectTracker(app);
-		closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
+		boolean result = defectService.updateVulnsFromDefectTracker(appId);
+		
+		if (result) {
+			closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
+		} else {
+			closeJobStatus(jobStatusId, "Vulnerability update failed.");
+		}
 	}
 
 	/**

@@ -39,6 +39,11 @@ import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
+import com.denimgroup.threadfix.framework.beans.PartialMapping;
+import com.denimgroup.threadfix.framework.engine.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+
 @Entity
 @Table(name = "Finding")
 public class Finding extends AuditableEntity implements FindingLike {
@@ -290,6 +295,57 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
+	}
+
+	public EndpointQuery toEndpointQuery() {
+		EndpointQueryBuilder builder = EndpointQueryBuilder.start();
+		
+		if (getSurfaceLocation() != null) {
+			if (getSurfaceLocation().getHttpMethod() != null) {
+				builder.setHttpMethod(getSurfaceLocation().getHttpMethod());
+			}
+			
+			if (getSurfaceLocation().getPath() != null) {
+				builder.setDynamicPath(getSurfaceLocation().getPath());
+			}
+			
+			if (getSurfaceLocation().getParameter() != null) {
+				builder.setParameter(getSurfaceLocation().getParameter());
+			}
+		}
+		
+		if (dataFlowElements != null && !dataFlowElements.isEmpty()) {
+			builder.setCodePoints(dataFlowElements);
+		}
+		
+		return builder.generateQuery();
+	}
+	
+	public PartialMapping toPartialMapping() {
+		return new PartialMapping() {
+
+			@Override
+			public String getStaticPath() {
+				return sourceFileLocation;
+			}
+
+			@Override
+			public String getDynamicPath() {
+				if (staticPathInformation != null) {
+					return staticPathInformation.getValue();
+				} else if (getSurfaceLocation() != null && getSurfaceLocation().getPath() != null){
+					return getSurfaceLocation().getPath();
+				} else {
+					return null;
+				}
+			}
+
+			@Override
+			public FrameworkType guessFrameworkType() {
+				return null;
+			}
+			
+		};
 	}
 
 }

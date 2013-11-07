@@ -38,14 +38,14 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.service.ApplicationChannelService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.service.channel.ScanImportStatus;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")

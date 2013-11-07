@@ -44,6 +44,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -97,7 +98,7 @@ public class UsersController {
 			user.setIsDeletable(userService.canDelete(user));
 			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
 		}
-		
+		model.addAttribute("ldap_plugin",LdapServiceDelegateFactory.isEnterprise());
 		model.addAttribute("users", users);
 		
 		User user = new User();
