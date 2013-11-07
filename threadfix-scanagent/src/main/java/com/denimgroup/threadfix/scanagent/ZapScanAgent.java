@@ -570,7 +570,7 @@ class ZapScanStarter {
 		if (args == null || args.length ==0) {
 			return;
 		}
-		String[] arg= { args[0] + getZapRunnerFile() };
+		String[] arg= { args[0] + getZapRunnerFile(), "-daemon" };
 
 		ProcessBuilder pb = new ProcessBuilder(arg);
 		pb.directory(new File(args[0]));

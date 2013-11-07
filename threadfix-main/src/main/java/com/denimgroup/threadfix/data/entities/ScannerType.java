@@ -47,4 +47,14 @@ public enum ScannerType {
 		}
 		return type;
 	}
+	
+	public static String getShortName(String keyword) {
+		for (ScannerType t: values()) {
+			if (keyword.equalsIgnoreCase(t.getShortName()) 
+					|| keyword.equalsIgnoreCase(t.getFullName())) {
+				return t.getShortName();
+			}
+		}
+		return null;
+	}
 }
