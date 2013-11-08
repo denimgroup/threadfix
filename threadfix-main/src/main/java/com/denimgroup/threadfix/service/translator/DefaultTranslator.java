@@ -41,10 +41,9 @@ public class DefaultTranslator extends AbstractPathUrlTranslator {
 			Scan scan) {
 		super(scanMergeConfiguration, scan);
 		
-		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList());
-		urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
-		
 		if (scan != null) {
+			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList());
+			urlPathRoot = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
 			scan.setFilePathRoot(filePathRoot);
 			scan.setUrlPathRoot(urlPathRoot);
 		}

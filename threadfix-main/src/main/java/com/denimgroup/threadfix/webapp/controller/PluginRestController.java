@@ -38,11 +38,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
+import com.denimgroup.threadfix.service.translator.PathUrlTranslatorFactory;
 
 @Controller
 @RequestMapping("/rest/code")
@@ -114,7 +114,7 @@ public class PluginRestController extends RestController {
 		}
 		
 		EndpointGenerator generator =
-				EndpointDatabaseFactory.getDatabaseNoCleaner(MergeConfigurationGenerator.getWorkTree(application));
+				PathUrlTranslatorFactory.getTranslator(MergeConfigurationGenerator.generateConfiguration(application, null), null);
 		
 		if (generator != null) {
 			return getEndpointCSV(generator);
