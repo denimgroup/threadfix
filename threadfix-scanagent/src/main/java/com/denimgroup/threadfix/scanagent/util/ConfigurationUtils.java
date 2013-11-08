@@ -119,8 +119,6 @@ public class ConfigurationUtils {
 				config.setProperty(name, values[i]);
 			}
 		}
-		
-	
 	}
 	
 	public static boolean isDirectory(String path) {
@@ -191,22 +189,33 @@ public class ConfigurationUtils {
 			System.out.print("Input " + scannerType.getFullName() + " version: ");
 			scan.setVersion(in.nextLine());
 			
-			// Input host and port
-			System.out.print("Do you want to input host and port for " + scannerType.getFullName() + "(y/n)? ");
+			inputMoreScanInfo(config, scannerType, scan, in);
+		
+			saveScannerType(scan, config);
 			
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+		System.out.println("Ended configuration for " + scannerType.getFullName() + ". Congratulations!");
+		System.out.println("Run '-r' to execute scan queue task from Threadfix server.");
+	}
+
+	private static void inputMoreScanInfo(PropertiesConfiguration config,
+			ScannerType scannerType, Scanner scan, java.util.Scanner in) {
+
+		// Input host and port for ZAP
+		if (scannerType == ScannerType.ZAPROXY) {
+			System.out.print("Do you want to input host and port for " + scannerType.getFullName() + "(y/n)? ");
 			String isContinue = in.nextLine();
 			if (isContinue.equalsIgnoreCase("y")) {
 				System.out.print("Input " + scannerType.getFullName() + " host: ");
 				scan.setHost(in.nextLine());
-				
+
 				boolean isValidPort = false;
 				while (!isValidPort) {
-					System.out.print("Input " + scannerType.getFullName() + " port: ");
-					
-					// Show more detail for zap
-					if (scannerType == ScannerType.ZAPROXY) {
-						System.out.print("(is port in Option/Local proxy)");
-					}
+					System.out.print("Input " + scannerType.getFullName() + " port: (is port in Option/Local proxy)");
 					try {
 						int port = Integer.parseInt(in.nextLine());
 						scan.setPort(port);
@@ -217,20 +226,27 @@ public class ConfigurationUtils {
 					}
 				}
 			} else {
-				if (scannerType == ScannerType.ZAPROXY) {
-					System.out.println("That's fine. System will set the dedault values for them (localhost and 8008).");
-					scan.setHost("localhost");
-					scan.setPort(8008);
-				}
-			}
-			saveScannerType(scan, config);
-			
-		} finally {
-			if (in != null) {
-				in.close();
+				System.out.println("That's fine. System will set the dedault values for them (localhost and 8008).");
+				scan.setHost("localhost");
+				scan.setPort(8008);
 			}
 		}
-		System.out.println("Ended configuration for " + scannerType.getFullName() + ". Congratulations!");
+		
+		// Input login sequence directory for ACUNETIX
+		if (scannerType == ScannerType.ACUNETIX_WVS) {
+			String loginSeqDir = null;
+			boolean isValidDir = false;
+			while (!isValidDir) {
+				System.out.println("Input directory where " + scannerType.getFullName() + " " + scan.getVersion() + " " +
+						"saves login sequence files: (Suggestion: C:/Users/Public/Documents/Acunetix WVS " + scan.getVersion() + "/LoginSequences)");
+				loginSeqDir = in.nextLine();
+				isValidDir = isDirectory(loginSeqDir);
+				if (!isValidDir) 
+					System.out.println("Unable to find this directory.");
+			}
+			writeToFile(new String[]{scannerType.getShortName()+".loginSeqDir"}, new String[]{loginSeqDir}, config);
+		}
+
 	}
 
 	public static void configSystemInfo(PropertiesConfiguration config) {
@@ -264,6 +280,8 @@ public class ConfigurationUtils {
 			}
 		}
 		System.out.println("Ended configuration. Congratulations!");
+		System.out.println("Run '-cs <ScannerName>' to config Scanner or '-r' to execute scan queue task from Threadfix server" +
+				" if you already set up Scanner");
 	}
 	
 	private static String getExeFile(ScannerType scanner) {
