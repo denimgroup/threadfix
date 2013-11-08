@@ -27,7 +27,7 @@
 		      <configuration>
 		        <archive>
 		          <manifest>
-		            <mainClass>com.denimgroup.threadfix.cli.enpoints.EndpointMain</mainClass>
+		            <mainClass>com.denimgroup.threadfix.cli.endpoints.EndpointMain</mainClass>
 		          </manifest>
 		        </archive>
 		        <descriptorRefs>
