@@ -21,24 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.full;
 
-import java.util.Set;
+import java.util.List;
 
-public interface Endpoint extends Comparable<Endpoint> {
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 
-	Set<String> getParameters();
+public interface EndpointQuery {
+
+	String getDynamicPath();
 	
-	Set<String> getHttpMethods();
+	String getStaticPath();
 	
-	String getUrlPath();
+	String getParameter();
 	
-	String getFilePath();
+	String getHttpMethod();
 	
-	String getCSVLine();
+	List<CodePoint> getCodePoints();
 	
-	int getStartingLineNumber();
-	
-	boolean matchesLineNumber(int lineNumber);
+	InformationSourceType getInformationSourceType();
 	
 }

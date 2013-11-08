@@ -21,18 +21,16 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
-
-import java.util.Set;
+package com.denimgroup.threadfix.framework.engine.partial;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
-public interface EndpointDatabase extends EndpointGenerator {
+public interface PartialMapping {
 	
-	Endpoint findBestMatch(EndpointQuery query);
+	String getStaticPath();
 	
-	Set<Endpoint> findAllMatches(EndpointQuery query);
+	String getDynamicPath();
 	
-	FrameworkType getFrameworkType();
+	FrameworkType guessFrameworkType();
 	
 }

@@ -1,8 +1,8 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.full;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 
 public class EndpointQueryBuilder {

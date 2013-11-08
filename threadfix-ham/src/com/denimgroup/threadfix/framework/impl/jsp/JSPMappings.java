@@ -35,9 +35,9 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-import com.denimgroup.threadfix.framework.beans.DefaultEndpoint;
-import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
+import com.denimgroup.threadfix.framework.engine.DefaultEndpoint;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 

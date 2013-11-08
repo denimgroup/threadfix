@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.beans.ParameterParser;
-import com.denimgroup.threadfix.framework.engine.ParameterParserFactory;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.service.translator.PathUrlTranslator;
 import com.denimgroup.threadfix.service.translator.PathUrlTranslatorFactory;
 

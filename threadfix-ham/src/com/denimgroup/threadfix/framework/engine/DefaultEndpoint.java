@@ -21,11 +21,9 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.beans;
+package com.denimgroup.threadfix.framework.engine;
 
 import java.util.Set;
-
-import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 
 public class DefaultEndpoint extends AbstractEndpoint {
 	

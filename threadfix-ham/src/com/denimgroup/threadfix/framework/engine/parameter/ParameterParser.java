@@ -21,35 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.beans;
+package com.denimgroup.threadfix.framework.engine.parameter;
 
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 
-public class DefaultCodePoint implements CodePoint {
+public interface ParameterParser {
 	
-	private final String lineText, sourceFileName;
-	private final int lineNumber;
-	
-	public DefaultCodePoint(String sourceFileName, int lineNumber, String lineText) {
-		this.lineText = lineText;
-		this.sourceFileName = sourceFileName;
-		this.lineNumber = lineNumber;
-	}
+	/**
+	 * Return the parameter based on the data flow elements
+	 */
+	String parse(EndpointQuery query);
 
-	@Override
-	public String getLineText() {
-		return lineText;
-	}
-
-	@Override
-	public int getLineNumber() {
-		return lineNumber;
-	}
-
-	@Override
-	public String getSourceFileName() {
-		return sourceFileName;
-	}
-
-	
-	
 }

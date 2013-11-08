@@ -26,9 +26,10 @@ package com.denimgroup.threadfix.framework.impl.jsp;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.beans.ParameterParser;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 
@@ -40,9 +41,14 @@ public class JSPDataFlowParser implements ParameterParser {
 	private static final Pattern REQUEST_GET_PARAM_STRING_ASSIGN =
 			Pattern.compile("^String [^=]+= .*request\\.getParameter\\(\"([^\"]+)\"\\)");
 	
-	public JSPDataFlowParser(JSPMappings jspMappings, SourceCodeAccessLevel sourceCodeAccessLevel) {
-		this.jspMappings = jspMappings;
-		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
+	public JSPDataFlowParser(ProjectConfig projectConfig) {
+		this.sourceCodeAccessLevel = projectConfig.getSourceCodeAccessLevel();
+		
+		if (projectConfig.getRootFile() != null) {
+			jspMappings = new JSPMappings(projectConfig.getRootFile());
+		} else {
+			jspMappings = null;
+		}
 	}
 
 	@Override

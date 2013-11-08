@@ -37,7 +37,7 @@ import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFil
  * @author mcollins
  *
  */
-public class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
+class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
 	
 	private SpringControllerFileFilter(){}
 	

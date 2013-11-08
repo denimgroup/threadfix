@@ -21,14 +21,35 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.beans;
+package com.denimgroup.threadfix.framework.engine;
 
-public interface CodePoint {
+
+public class DefaultCodePoint implements CodePoint {
 	
-	public String getLineText();
+	private final String lineText, sourceFileName;
+	private final int lineNumber;
+	
+	public DefaultCodePoint(String sourceFileName, int lineNumber, String lineText) {
+		this.lineText = lineText;
+		this.sourceFileName = sourceFileName;
+		this.lineNumber = lineNumber;
+	}
 
-	public int getLineNumber();
+	@Override
+	public String getLineText() {
+		return lineText;
+	}
 
-	public String getSourceFileName();
+	@Override
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	@Override
+	public String getSourceFileName() {
+		return sourceFileName;
+	}
+
+	
 	
 }

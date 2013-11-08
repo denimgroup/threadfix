@@ -23,23 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
-import java.util.List;
+public interface CodePoint {
+	
+	public String getLineText();
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.enums.InformationSourceType;
+	public int getLineNumber();
 
-public interface EndpointQuery {
-
-	String getDynamicPath();
-	
-	String getStaticPath();
-	
-	String getParameter();
-	
-	String getHttpMethod();
-	
-	List<CodePoint> getCodePoints();
-	
-	InformationSourceType getInformationSourceType();
+	public String getSourceFileName();
 	
 }

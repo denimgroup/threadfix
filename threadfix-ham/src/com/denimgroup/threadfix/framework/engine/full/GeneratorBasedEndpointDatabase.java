@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.full;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +30,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.beans.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
-public class GeneratorBasedEndpointDatabase implements EndpointDatabase {
+class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
 	private final List<Endpoint> endpoints;
 	private final PathCleaner pathCleaner;
@@ -160,6 +160,7 @@ public class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		return frameworkType;
 	}
 
+	@Override
 	public String toString() {
 		return frameworkType.toString() + " EndpointDatabase with " + endpoints.size() + " total records.";
 	}

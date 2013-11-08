@@ -28,10 +28,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.framework.beans.BeanField;
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.beans.ParameterParser;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.BeanField;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 
 public class SpringDataFlowParser implements ParameterParser {
@@ -47,7 +48,11 @@ public class SpringDataFlowParser implements ParameterParser {
 	
 	private final SpringEntityMappings mappings;
 	
-	public SpringDataFlowParser(SpringEntityMappings mappings) {
+	public SpringDataFlowParser(ProjectConfig projectConfig) {
+		SpringEntityMappings mappings = null;
+		if (projectConfig.getRootFile() != null) {
+			mappings = new SpringEntityMappings(projectConfig.getRootFile());
+		}
 		this.mappings = mappings;
 	}
 	

@@ -29,23 +29,19 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointDatabase;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
-import com.denimgroup.threadfix.framework.engine.EndpointQueryBuilder;
-import com.denimgroup.threadfix.framework.engine.GeneratorBasedEndpointDatabase;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.enums.InformationSourceType;
-import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
-import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 
 public class GeneratorBasedEndpointDatabaseTests {
 	
-	public EndpointDatabase getSpringEndpointDatabase() {
+	private EndpointDatabase getSpringEndpointDatabase() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringControllerMappings mappings = new SpringControllerMappings(file);
 		
-		return new GeneratorBasedEndpointDatabase(mappings, SpringPathCleaner.INSTANCE, FrameworkType.SPRING_MVC);
+		return EndpointDatabaseFactory.getDatabase(file);
 	}
 	
 	@Test
@@ -97,7 +93,7 @@ public class GeneratorBasedEndpointDatabaseTests {
 		EndpointDatabase db = getSpringEndpointDatabase();
 		
 		for (String[] httpMethodTest : httpMethodTests) {
-			EndpointQuery query = 
+			EndpointQuery query =
 					EndpointQueryBuilder.start()
 						.setDynamicPath(httpMethodTest[0])
 						.setHttpMethod(httpMethodTest[1])
@@ -114,7 +110,7 @@ public class GeneratorBasedEndpointDatabaseTests {
 				
 				//String currentQuery = httpMethodTest[0] + ": " + httpMethodTest[1];
 				
-				assertTrue("Got an endpoint, but was not expecting one with " + currentQuery, 
+				assertTrue("Got an endpoint, but was not expecting one with " + currentQuery,
 						httpMethodTest[2] != null);
 				
 				Integer value = Integer.valueOf(httpMethodTest[2]);

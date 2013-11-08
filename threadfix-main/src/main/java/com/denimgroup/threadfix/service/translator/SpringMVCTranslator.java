@@ -32,7 +32,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerEndpoint;

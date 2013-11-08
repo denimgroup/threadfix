@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.jsp;
 
 import static org.junit.Assert.assertTrue;
 
@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPIncludeParser;
 
 // TODO add more tests
@@ -41,14 +42,14 @@ public class JSPIncludeParserTests {
 	static Map<String, Set<String>> samples = new HashMap<>();
 	static String[][] sampleStrings = {
 		{ // this tests the <%@ include file="include.jsp"%> style
-			TestConstants.WAVSEP_SOURCE_LOCATION + "\\trunk\\WebContent\\active\\LFI-Detection-Evaluation-GET-404Error\\Case49-LFI-ContextStream-FilenameContext-UnixTraversalValidation-OSPath-DefaultFullInput-SlashPathReq-Read.jsp",
-			TestConstants.WAVSEP_SOURCE_LOCATION + "\\trunk\\WebContent\\active\\LFI-Detection-Evaluation-GET-404Error\\inclusion-logic.jsp",
-			TestConstants.WAVSEP_SOURCE_LOCATION + "\\trunk\\WebContent\\active\\LFI-Detection-Evaluation-GET-404Error\\include.jsp"
+			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/Case49-LFI-ContextStream-FilenameContext-UnixTraversalValidation-OSPath-DefaultFullInput-SlashPathReq-Read.jsp",
+			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/inclusion-logic.jsp",
+			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/include.jsp"
 		},
 		{ // This tests the <jsp:include page="/header.jsp"/> style
-			TestConstants.BODGEIT_SOURCE_LOCATION + "\\root\\basket.jsp",
-			TestConstants.BODGEIT_SOURCE_LOCATION + "\\root\\header.jsp",
-			TestConstants.BODGEIT_SOURCE_LOCATION + "\\root\\footer.jsp",
+			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/basket.jsp",
+			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/header.jsp",
+			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/footer.jsp",
 		}
 	};
 	

@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.spring;
 
 import static org.junit.Assert.assertTrue;
 
@@ -30,7 +30,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.beans.BeanField;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.BeanField;
 import com.denimgroup.threadfix.framework.impl.spring.SpringEntityParser;
 
 public class SpringEntityParserTests {

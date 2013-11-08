@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 
-public class JSPIncludeParser implements EventBasedTokenizer {
+class JSPIncludeParser implements EventBasedTokenizer {
 	
 	private State currentState = State.START;
 	private Set<File> returnFiles = new HashSet<File>();
@@ -122,7 +122,7 @@ public class JSPIncludeParser implements EventBasedTokenizer {
 	}
 	
 	private static File getRelativeFile(String sval, File inputFile) {
-		List<String> 
+		List<String>
 			inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(inputFile.getParent()))),
 			svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));
 		

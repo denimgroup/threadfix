@@ -21,13 +21,11 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.parameter;
 
-import com.denimgroup.threadfix.framework.beans.ParameterParser;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringEntityMappings;
 
 public class ParameterParserFactory {
 	
@@ -37,20 +35,10 @@ public class ParameterParserFactory {
 		if (projectConfig.getFrameworkType()!= null) {
 			switch (projectConfig.getFrameworkType()) {
 				case SPRING_MVC:
-					SpringEntityMappings mappings = null;
-					if (projectConfig.getRootFile() != null) {
-						mappings = new SpringEntityMappings(projectConfig.getRootFile());
-					}
-					parser = new SpringDataFlowParser(mappings);
-					
+					parser = new SpringDataFlowParser(projectConfig);
 					break;
 				case JSP:
-					JSPMappings jspMappings = null;
-					if (projectConfig.getRootFile() != null) {
-						jspMappings = new JSPMappings(projectConfig.getRootFile());
-					}
-					parser = new JSPDataFlowParser(jspMappings, projectConfig.getSourceCodeAccessLevel());
-					
+					parser = new JSPDataFlowParser(projectConfig);
 					break;
 				default:
 			}

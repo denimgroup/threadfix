@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.framework;
 public class TestConstants {
 	private TestConstants(){}
 	
-	private static final String testRoot = "/Users/mcollins/scratch/samples/";
+	private static final String testRoot = "/Users/mac/scratch/projects/";
     private static final String[] extensions =
     	{ "petclinic", "wavsep", "bodgeit" };
 	

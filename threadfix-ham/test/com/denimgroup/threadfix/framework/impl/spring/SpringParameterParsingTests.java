@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.spring;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,23 +32,28 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.beans.DefaultCodePoint;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
-import com.denimgroup.threadfix.framework.engine.EndpointQueryBuilder;
-import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringEntityMappings;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 public class SpringParameterParsingTests {
 	
+	static ProjectConfig
+		defaultConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.FULL,
+			new File(TestConstants.PETCLINIC_SOURCE_LOCATION), null),
+		noSourceConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.NONE,
+				null, null);
+	
 	// These are immutable so it's ok to use the same one for all the tests
-	static SpringDataFlowParser parser = new SpringDataFlowParser(
-			new SpringEntityMappings(
-			new File(TestConstants.PETCLINIC_SOURCE_LOCATION)));
+	static SpringDataFlowParser parser = new SpringDataFlowParser(defaultConfig);
 	
 	static SpringDataFlowParser[] allParsers = { parser,
-			new SpringDataFlowParser(null),
-			new SpringDataFlowParser(new SpringEntityMappings(null)) };
+			new SpringDataFlowParser(noSourceConfig) };
 	
 	@Test
 	public void testBasicModelParsing() {

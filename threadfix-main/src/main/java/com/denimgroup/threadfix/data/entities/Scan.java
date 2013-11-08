@@ -43,7 +43,7 @@ import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 
 @Entity
 @Table(name = "Scan")

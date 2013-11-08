@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.beans;
+package com.denimgroup.threadfix.framework.engine.cleaner;
 
 public interface PathCleaner {
 	

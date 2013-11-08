@@ -32,20 +32,25 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.beans.DefaultCodePoint;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
-import com.denimgroup.threadfix.framework.engine.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 
 public class JSPParameterParserTests {
+	
+	ProjectConfig
+		fullSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.FULL,
+				new File(TestConstants.BODGEIT_SOURCE_LOCATION), "/"),
+		noSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.NONE, null, null);
 
 	JSPDataFlowParser
-		fullSourceParser = new JSPDataFlowParser(new JSPMappings(
-			new File(TestConstants.BODGEIT_SOURCE_LOCATION)), SourceCodeAccessLevel.FULL),
-		noSourceParser = new JSPDataFlowParser(null, SourceCodeAccessLevel.PARTIAL);
+		fullSourceParser = new JSPDataFlowParser(fullSourceConfig),
+		noSourceParser = new JSPDataFlowParser(noSourceConfig);
 	
 	// These are from the PetClinic Fortify results
 	private static List<? extends CodePoint> basicModelElements = Arrays.asList(
@@ -90,13 +95,12 @@ public class JSPParameterParserTests {
 			assertTrue("Parameter was not null and should have been.", parser.parse(emptyDataFlowFinding) == null);
 		}
 		
-		JSPMappings[] mappings = { null,
-				new JSPMappings(null),
-				new JSPMappings(new File(TestConstants.BODGEIT_SOURCE_LOCATION)) };
+		File[] rootFiles = { null, new File(TestConstants.BODGEIT_SOURCE_LOCATION) };
 
-		for (JSPMappings mapping : mappings) {
+		for (File file : rootFiles) {
 			for (SourceCodeAccessLevel accessLevel : SourceCodeAccessLevel.values()) {
-				JSPDataFlowParser parser = new JSPDataFlowParser(mapping, accessLevel);
+				ProjectConfig config = new ProjectConfig(FrameworkType.JSP, accessLevel, file, null);
+				JSPDataFlowParser parser = new JSPDataFlowParser(config);
 				assertTrue("Parameter was not null and should have been.",
 						parser.parse(null) == null);
 				assertTrue("Parameter was not null and should have been.",

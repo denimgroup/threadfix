@@ -1,15 +1,16 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.cleaner;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
-import com.denimgroup.threadfix.framework.beans.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 
 public class PathCleanerFactory {
 	
 	private PathCleanerFactory(){}
+	
+	// TODO add an option for manual roots
 	
 	public static PathCleaner getPathCleaner(FrameworkType frameworkType, List<PartialMapping> partialMappings) {
 		PathCleaner returnCleaner = null;
@@ -21,6 +22,10 @@ public class PathCleanerFactory {
 		}
 		
 		return returnCleaner;
+	}
+	
+	public static PathCleaner getEmptyPathCleaner() {
+		return new DefaultPathCleaner("", "");
 	}
 
 }

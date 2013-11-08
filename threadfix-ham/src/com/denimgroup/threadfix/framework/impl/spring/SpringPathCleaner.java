@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
-import com.denimgroup.threadfix.framework.beans.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
 public class SpringPathCleaner implements PathCleaner {
@@ -53,7 +53,8 @@ public class SpringPathCleaner implements PathCleaner {
 	public String cleanStaticPath(String filePath) {
 		String relativeFilePath = filePath;
 		
-		if (filePath != null && staticRoot != null && filePath.startsWith(staticRoot)) {
+		if (staticRoot != null && relativeFilePath != null &&
+				filePath.startsWith(staticRoot)) {
 			relativeFilePath = filePath.substring(staticRoot.length());
 		}
 		
@@ -65,7 +66,9 @@ public class SpringPathCleaner implements PathCleaner {
 		
 		String relativeUrlPath = urlPath;
 		
-		if (urlPath != null && dynamicRoot != null && urlPath.startsWith(dynamicRoot)) {
+		if (urlPath != null && dynamicRoot != null &&
+				relativeUrlPath != null &&
+				urlPath.startsWith(dynamicRoot)) {
 			relativeUrlPath = urlPath.substring(dynamicRoot.length());
 		}
 		
@@ -75,7 +78,10 @@ public class SpringPathCleaner implements PathCleaner {
 			String escaped = relativeUrlPath
 					.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
 					.replaceAll("\\.html", "")
-					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT);
+					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT)
+					.replaceAll("/\\*/", "/" + GENERIC_INT_SEGMENT + "/")
+					.replaceAll("/$", "")
+					.replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
 			
 			if (escaped.contains(JSESSIONID)) {
 				escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
@@ -93,6 +99,11 @@ public class SpringPathCleaner implements PathCleaner {
 	@Override
 	public String getStaticRoot() {
 		return staticRoot;
+	}
+	
+	@Override
+	public String toString() {
+		return "Spring PathCleaner with dynamic root = " + dynamicRoot + ", static root = " + staticRoot;
 	}
 
 }

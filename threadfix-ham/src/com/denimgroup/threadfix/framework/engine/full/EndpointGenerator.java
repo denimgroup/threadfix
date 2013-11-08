@@ -1,8 +1,6 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.full;
 
 import java.util.List;
-
-
 
 public interface EndpointGenerator {
 

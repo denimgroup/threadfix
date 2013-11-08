@@ -1,12 +1,11 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.cleaner;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
-import com.denimgroup.threadfix.framework.beans.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
-public class DefaultPathCleaner implements PathCleaner {
+class DefaultPathCleaner implements PathCleaner {
 	
 	private final String staticRoot, dynamicRoot;
 	
@@ -24,7 +23,7 @@ public class DefaultPathCleaner implements PathCleaner {
 	public String cleanStaticPath(String filePath) {
 		String cleanedPath = filePath;
 		
-		if (staticRoot != null && cleanedPath.startsWith(staticRoot)) {
+		if (staticRoot != null && cleanedPath != null && cleanedPath.startsWith(staticRoot)) {
 			cleanedPath = cleanedPath.substring(staticRoot.length());
 		}
 		
@@ -35,7 +34,7 @@ public class DefaultPathCleaner implements PathCleaner {
 	public String cleanDynamicPath(String urlPath) {
 		String cleanedPath = urlPath;
 		
-		if (dynamicRoot != null && cleanedPath.startsWith(dynamicRoot)) {
+		if (dynamicRoot != null && cleanedPath != null && cleanedPath.startsWith(dynamicRoot)) {
 			cleanedPath = cleanedPath.substring(dynamicRoot.length());
 		}
 		

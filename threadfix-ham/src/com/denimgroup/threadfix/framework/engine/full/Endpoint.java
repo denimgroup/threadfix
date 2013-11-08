@@ -21,15 +21,24 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.beans;
+package com.denimgroup.threadfix.framework.engine.full;
 
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
+import java.util.Set;
 
-public interface ParameterParser {
+public interface Endpoint extends Comparable<Endpoint> {
+
+	Set<String> getParameters();
 	
-	/**
-	 * Return the parameter based on the data flow elements
-	 */
-	String parse(EndpointQuery query);
-
+	Set<String> getHttpMethods();
+	
+	String getUrlPath();
+	
+	String getFilePath();
+	
+	String getCSVLine();
+	
+	int getStartingLineNumber();
+	
+	boolean matchesLineNumber(int lineNumber);
+	
 }

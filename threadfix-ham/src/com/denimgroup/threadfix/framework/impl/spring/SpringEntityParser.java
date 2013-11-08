@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.beans.BeanField;
+import com.denimgroup.threadfix.framework.engine.BeanField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 

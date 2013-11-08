@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.spring;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +29,8 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 
 public class SpringControllerMappingsTests {
