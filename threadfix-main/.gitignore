@@ -48,4 +48,4 @@ local.properties
 .idea/
 out/
 
-/bin
+target/

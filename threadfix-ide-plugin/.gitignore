@@ -47,5 +47,3 @@ local.properties
 *.iws
 .idea/
 out/
-
-/bin
