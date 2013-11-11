@@ -28,7 +28,15 @@ public abstract class AbstractEndpoint implements Endpoint {
 	// TODO finalize this
 	@Override
 	public String getCSVLine() {
-		return getHttpMethods() + "," + getUrlPath() + "," + getParameters();
+		return getToStringNoCommas(getHttpMethods()) + "," + getUrlPath() + "," + getToStringNoCommas(getParameters());
+	}
+	
+	private String getToStringNoCommas(Object object) {
+		if (object == null) {
+			return "";
+		} else {
+			return object.toString().replaceAll(",", "");
+		}
 	}
 	
 	@Override

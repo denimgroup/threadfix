@@ -97,7 +97,6 @@ public class ZapScanAgent extends AbstractScanAgent {
 		boolean status;
 		try {
 			status = startZap();
-//			status = true;
 			if(status) {
 				String message = "ZAP should be started";
 				log.info(message);
@@ -234,12 +233,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	            String.valueOf(zapStartupWaitTime/2));
 	    processBuilder.directory(new File(System.getProperty("java.home")));
 	    
-//		String[] args = { zapExecutablePath + getZapRunnerFile(), "-daemon", "-port " + this.zapPort};
-		
 		log.info("Going to attempt creating new JVM to start ZAP.");
-		
-//		ProcessBuilder pb = new ProcessBuilder(args);
-//		pb.directory(new File(zapExecutablePath));
 		
 		try {
 			setProcess(processBuilder.start());
@@ -249,7 +243,6 @@ public class ZapScanAgent extends AbstractScanAgent {
 			retVal = true;
 		} catch (IOException e) {
 			log.error("Problems starting new JVM instance. Please check java environment variables.");
-//			log.error("Problems starting ZAP instance: " + e.getMessage(), e);
 			
 		} catch (InterruptedException ie) {
 			log.error("Problems waiting for JVM instance to start up: " + ie.getMessage(), ie);

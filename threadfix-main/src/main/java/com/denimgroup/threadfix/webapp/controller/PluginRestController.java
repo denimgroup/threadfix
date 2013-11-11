@@ -97,7 +97,7 @@ public class PluginRestController extends RestController {
 	}
 	
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
-	public @ResponseBody Object getEndpoints(@PathVariable int appId, 
+	public @ResponseBody Object getEndpoints(@PathVariable int appId,
 			HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
@@ -113,9 +113,8 @@ public class PluginRestController extends RestController {
 			return "failure";
 		}
 		
-		EndpointGenerator generator = PathUrlTranslatorFactory.getTranslator(
-				MergeConfigurationGenerator.generateConfiguration(application, null), 
-				null);
+		EndpointGenerator generator =
+				PathUrlTranslatorFactory.getTranslator(MergeConfigurationGenerator.generateConfiguration(application, null), null);
 		
 		if (generator != null) {
 			return getEndpointCSV(generator);

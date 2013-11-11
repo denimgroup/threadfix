@@ -59,10 +59,9 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		SourceCodeAccessLevel accessLevel = scanMergeConfiguration.getSourceCodeAccessLevel();
 		
 		// TODO update these
-		filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList());
-		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
-		
 		if (scan != null) {
+			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList());
+			urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
 			scan.setFilePathRoot(filePathRoot);
 			scan.setUrlPathRoot(urlPathRoot);
 		}

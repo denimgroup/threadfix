@@ -49,10 +49,14 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 			filePathRoot = CommonPathFinder.findOrParseProjectRootFromDirectory(
 					scanMergeConfiguration.getWorkTree(),
 					".jsp");
-		} else {
-			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList(), ".jsp");
 		}
-		urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
+		
+		if (scan != null) {
+			filePathRoot = CommonPathFinder.findOrParseProjectRoot(scan.toPartialMappingList(), ".jsp");
+			urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
+			scan.setFilePathRoot(filePathRoot);
+			scan.setUrlPathRoot(urlPathRoot);
+		}
 		
 		if (filePathRoot != null) {
 			mappings = new JSPMappings(new File(filePathRoot));
@@ -62,11 +66,6 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 
 		if ((urlPathRoot == null || urlPathRoot.isEmpty()) && filePathRoot != null) {
 			urlPathRoot = filePathRoot;
-		}
-		
-		if (scan != null) {
-			scan.setFilePathRoot(filePathRoot);
-			scan.setUrlPathRoot(urlPathRoot);
 		}
 		
 		log.info("Using JSP URL - Path translator.");

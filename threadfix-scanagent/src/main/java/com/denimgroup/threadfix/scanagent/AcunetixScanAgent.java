@@ -27,10 +27,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
@@ -39,6 +44,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	
 	static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
 	private String acunetixExecutablePath;
+	private String loginSeqDir;
 
 	private static AcunetixScanAgent instance = null;
 	private AcunetixScanAgent() {
@@ -46,6 +52,11 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	public static AcunetixScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
 		if(instance == null) {
 			instance = new AcunetixScanAgent();
+		}
+		try {
+			instance.readConfig(new PropertiesConfiguration("scanagent.properties"));
+		} catch (ConfigurationException e) {
+			log.error("Problems reading configuration: " + e.getMessage(), e);
 		}
 		instance.setWorkDir(workDir);
 		instance.setServerConduit(serverConduit);
@@ -56,13 +67,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	@Override
 	public boolean readConfig(Configuration config) {
 		boolean retVal = false;
-		
-//		this.acunetixExecutablePath = config.getString("acunetix.executablePath");
-//		log.debug("Acunetix executable located at path: " + this.acunetixExecutablePath);
-//
-//		//	TODO - Perform some input validation on the supplied properties so this retVal means something
-//		retVal = true;
-		
+		this.loginSeqDir = config.getString(ScannerType.ACUNETIX_WVS.getShortName() + ".loginSeqDir");
 		return retVal;
 	}
 
@@ -71,17 +76,10 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		File retVal = null;
 		
-		log.info("Setting up command-line arguments for Acunetix scan");
+		String[] args = setupArgs(config);
 		
-		String acunetixExecutable = this.acunetixExecutablePath + File.separator + ConfigurationUtils.ACUNETIX_FILES[0];
-		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
-		String targetSite = config.getTargetUrlString();
-		log.debug("Site to scan: " + targetSite);
-		
-		String[] args = { acunetixExecutable, "/Scan", targetSite, "/SaveFolder", this.getWorkDir(), "/Save", "/ExportXML" };
-		
-		log.debug("Going to attempt to run Acunetix with exe/args: " + args);
-		
+		log.debug("Going to attempt to run Acunetix with exe/args: " + Arrays.toString(args));
+
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(this.getWorkDir()));
 		pb.redirectErrorStream(true);
@@ -115,11 +113,49 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		return retVal;
 	}
+	
+	private String[] setupArgs(TaskConfig config) {
+		log.info("Setting up command-line arguments for Acunetix scan");
+		
+		String acunetixExecutable = this.acunetixExecutablePath + ConfigurationUtils.ACUNETIX_FILES[0];
+		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
+		String targetSite = config.getTargetUrlString();
+		log.debug("Site to scan: " + targetSite);
+		
+		byte[] configFileBytes = config.getDataBlob("configFile");
+		
+		String[] args = null; 
+		
+		if (configFileBytes != null) {
+			String configFileName = this.getLoginSeqDir() + File.separator + "acunetixConfig.loginseq";
+
+			try {
+				FileUtils.writeByteArrayToFile(new File(configFileName), configFileBytes);
+				args = new String[] { acunetixExecutable, "/Scan", targetSite, "/SaveFolder", 
+						this.getWorkDir(), "/Save", "/ExportXML", "/LoginSeq", "acunetixConfig" };
+			} catch (IOException e1) {
+				log.warn("Unable to save acunetix config file to working dir");
+				e1.printStackTrace();
+			}
+		}
+
+		if (args == null)	
+			args = new String[] { acunetixExecutable, "/Scan", targetSite, "/SaveFolder", this.getWorkDir(), "/Save", "/ExportXML" };
+		
+		return args;
+	}
 	public String getAcunetixExecutablePath() {
 		return acunetixExecutablePath;
 	}
+	
 	public void setAcunetixExecutablePath(String acunetixExecutablePath) {
 		this.acunetixExecutablePath = acunetixExecutablePath;
+	}
+	public String getLoginSeqDir() {
+		return loginSeqDir;
+	}
+	public void setLoginSeqDir(String loginSeqDir) {
+		this.loginSeqDir = loginSeqDir;
 	}
 
 }

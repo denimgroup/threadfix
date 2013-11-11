@@ -3,10 +3,9 @@ threadfix-scanagent/threadfix.log
 bin
 *.DS_Store
 
-
 .classpath
 .settings
 .idea/
-
-
-
+*.DS_Store
+threadfix-enterprise
+Build

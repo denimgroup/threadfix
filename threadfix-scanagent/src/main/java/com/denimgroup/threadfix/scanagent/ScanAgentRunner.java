@@ -84,10 +84,7 @@ public final class ScanAgentRunner implements ServerConduit {
 				.create("r");
 		options.addOption(runScanQueueTask);
 		
-		Option set = OptionBuilder.withArgName("property> <value")
-//				.withValueSeparator(' ')
-//				.hasArgs(2)
-				.withLongOpt("set")
+		Option set = OptionBuilder.withLongOpt("set")
 				.withDescription("Set the ThreadFix base url, ThreadFix API key or Working directory properties")
 				.create("s");
 		options.addOption(set); 
@@ -164,11 +161,10 @@ public final class ScanAgentRunner implements ServerConduit {
 	private static boolean checkRequiredConfiguration(
 			PropertiesConfiguration config) {
 		if (config.getString("scanagent.baseWorkDir","").isEmpty()) {
-			System.out.println("Not found required configuration (ThreadFix URL, API Key or Working directory). " +
+			System.out.println("Not found enough server configuration (ThreadFix URL, API Key or Working directory). " +
 					"Please run '-s' to set up all of these information.");
 			return false;
 		}
-			
 		return true;
 	}
 

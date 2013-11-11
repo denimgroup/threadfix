@@ -34,16 +34,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,7 +73,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  * This class has a lot of methods that reduce code duplication and make writing
  * new importers much easier. The convenience methods are SAX-based.
  * To quickly write a new SAX importer, subclass DefaultHandler and pass a new instance
- * to parseSAXInput(). You can easily create Findings using constructFinding(). 
+ * to parseSAXInput(). You can easily create Findings using constructFinding().
  * If you add your findings to the saxFindingList and the date inside the
  * date field from this class everything will parse correctly.
  * 
@@ -278,24 +273,25 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	}
 	
 	/*
-	 * This method can be used to construct a finding out of the 
+	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
 	 */
 	
 	protected Finding constructFinding(Map<FindingKey, String> findingMap) {
-		if (findingMap == null || findingMap.size() == 0)
+		if (findingMap == null || findingMap.size() == 0) {
 			return null;
+		}
 		
-		return constructFinding(findingMap.get(FindingKey.PATH), 
-				findingMap.get(FindingKey.PARAMETER), 
-				findingMap.get(FindingKey.VULN_CODE), 
+		return constructFinding(findingMap.get(FindingKey.PATH),
+				findingMap.get(FindingKey.PARAMETER),
+				findingMap.get(FindingKey.VULN_CODE),
 				findingMap.get(FindingKey.SEVERITY_CODE),
-				findingMap.get(FindingKey.CWE)); 
+				findingMap.get(FindingKey.CWE));
 	}
 
 	/**
 	 *
-	 * This method can be used to construct a finding out of the 
+	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
 	 * @param url
 	 * @param parameter
@@ -303,31 +299,32 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param channelSeverityCode
 	 * @return
 	 */
-	protected Finding constructFinding(String url, String parameter, 
+	protected Finding constructFinding(String url, String parameter,
 			String channelVulnerabilityCode, String channelSeverityCode) {
 		return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, null);
 	}
 	
 	/**
 	 *
-	 * This method can be used to construct a finding out of the 
+	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
 	 * @param url
 	 * @param parameter
 	 * @param channelVulnerabilityCode
 	 * @param channelSeverityCode
-	 * @param cweCode 
+	 * @param cweCode
 	 * @return
 	 */
-	protected Finding constructFinding(String url, String parameter, 
+	protected Finding constructFinding(String url, String parameter,
     		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
-    	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty())
-    		return null;
+    	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
+			return null;
+		}
     	
     	Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
 		
-		if (url != null && !url.isEmpty())
+		if (url != null && !url.isEmpty()) {
 			try {
 				location.setUrl(new URL(url));
 			} catch (MalformedURLException e) {
@@ -344,19 +341,25 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	    			location.setPath(url);
 	    		}
 			}
+		}
 		
-		if (parameter != null && !parameter.isEmpty())
+		if (parameter != null && !parameter.isEmpty()) {
 			location.setParameter(parameter);
+		}
 		
 		// We need to ensure that validation succeeds and that none of the Strings are too long.
-		if (location.getHost() != null && location.getHost().length() > SurfaceLocation.HOST_LENGTH)
+		if (location.getHost() != null && location.getHost().length() > SurfaceLocation.HOST_LENGTH) {
 			location.setHost(location.getHost().substring(0, SurfaceLocation.HOST_LENGTH - 1));
-		if (location.getParameter() != null && location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH)
+		}
+		if (location.getParameter() != null && location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH) {
 			location.setParameter(location.getParameter().substring(0, SurfaceLocation.PARAMETER_LENGTH - 1));
-		if (location.getPath() != null && location.getPath().length() > SurfaceLocation.PATH_LENGTH)
+		}
+		if (location.getPath() != null && location.getPath().length() > SurfaceLocation.PATH_LENGTH) {
 			location.setPath(location.getPath().substring(0, SurfaceLocation.PATH_LENGTH - 1));
-		if (location.getQuery() != null && location.getQuery().length() > SurfaceLocation.QUERY_LENGTH)
+		}
+		if (location.getQuery() != null && location.getQuery().length() > SurfaceLocation.QUERY_LENGTH) {
 			location.setQuery(location.getQuery().substring(0, SurfaceLocation.QUERY_LENGTH - 1));
+		}
 		
 		finding.setSurfaceLocation(location);
 		
@@ -365,7 +368,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 			
 			// Create new Vulnerability Map
-			if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null) 
+			if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null)
 					&& cweCode != null && !cweCode.isEmpty()) {
 				
 				GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
@@ -376,7 +379,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 						channelVulnerability.setChannelType(this.channelType);
 						channelVulnerability.setCode(channelVulnerabilityCode);
 						channelVulnerability.setName(channelVulnerabilityCode);
-						channelVulnerability.setFindings(Arrays.asList(finding));						
+						channelVulnerability.setFindings(Arrays.asList(finding));
 					}
 					// Create new Vulnerability Map and hook to Channel Vulnerability
 					VulnerabilityMap vulnMap = new VulnerabilityMap();
@@ -399,8 +402,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		finding.setChannelVulnerability(channelVulnerability);
 		
 		ChannelSeverity channelSeverity = null;
-		if (channelSeverityCode != null)
+		if (channelSeverityCode != null) {
 			channelSeverity = getChannelSeverity(channelSeverityCode);
+		}
 		finding.setChannelSeverity(channelSeverity);
 			    		
 		return finding;
@@ -422,10 +426,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(targetString);
 
-		if (matcher.find())
+		if (matcher.find()) {
 			return matcher.group(1);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -449,11 +454,13 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return the correct severity from the DB.
 	 */
 	protected ChannelSeverity getChannelSeverity(String code) {
-		if (channelType == null || code == null || channelSeverityDao == null)
+		if (channelType == null || code == null || channelSeverityDao == null) {
 			return null;
+		}
 
-		if (channelSeverityMap == null)
+		if (channelSeverityMap == null) {
 			initializeMaps();
+		}
 
 		ChannelSeverity severity = channelSeverityMap.get(code);
 		if (severity == null) {
@@ -475,23 +482,27 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 */
 
 	protected ChannelVulnerability getChannelVulnerability(String code) {
-		if (channelType == null || code == null || channelVulnerabilityDao == null)
+		if (channelType == null || code == null || channelVulnerabilityDao == null) {
 			return null;
+		}
 		
-		if (channelVulnerabilityMap == null)
+		if (channelVulnerabilityMap == null) {
 			initializeMaps();
+		}
 
-		if (channelVulnerabilityMap == null)
+		if (channelVulnerabilityMap == null) {
 			return null;
+		}
 
 		if (channelVulnerabilityMap.containsKey(code)) {
 			return channelVulnerabilityMap.get(code);
 		} else {
 			ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByCode(channelType, code);
 			if (vuln == null) {
-				if (channelType != null)
+				if (channelType != null) {
 					log.warn("A " + channelType.getName() + " channel vulnerability with code "
 						+ StringEscapeUtils.escapeHtml(code) + " was requested but not found.");
+				}
 				return null;
 			} else {
 				if (channelVulnerabilityDao.hasMappings(vuln.getId())) {
@@ -505,38 +516,21 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		}
 	}
 
+	// TODO remove
 	// return the parsed date object, or the null if parsing fails.
-	protected Calendar getCalendarFromString(String formatString, String dateString) {
-		if (formatString == null || formatString.trim().equals("") ||
-				dateString == null || dateString.trim().equals("") )
-			return null;
-
-		Date date = null;
-		try {
-			date = new SimpleDateFormat(formatString, Locale.US).parse(dateString);
-		} catch (ParseException e) {
-			log.warn("Parsing of date from '" + dateString + "' failed.", e);
-		}
-
-		if (date != null) {
-			log.debug("Successfully parsed date: " + date + ".");
-			Calendar scanTime = new GregorianCalendar();
-			scanTime.setTime(date);
-			return scanTime;
-		}
-		
-		log.warn("There was an error parsing the date, check the format and regex.");
-		return null;
+	public Calendar getCalendarFromString(String formatString, String dateString) {
+		return DateUtils.getCalendarFromString(formatString, dateString);
 	}
 	
 	/*
 	 * These methods help you deal with zip files. unpackZipStream() parses your inputStream
-	 * and stores it in zipFile, and then you can access file from it with the correct path 
+	 * and stores it in zipFile, and then you can access file from it with the correct path
 	 * using this method.
 	 */
 	protected InputStream getFileFromZip(String fileName) {
-		if (zipFile == null || fileName == null || fileName.trim().equals(""))
+		if (zipFile == null || fileName == null || fileName.trim().equals("")) {
 			return null;
+		}
 		
 		InputStream inputStream = null;
 
@@ -553,8 +547,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	}
 	
 	protected ZipFile unpackZipStream() {
-		if (this.inputStream == null)
+		if (this.inputStream == null) {
 			return null;
+		}
 
 		log.debug("Attempting to unpack the zip stream.");
 	
@@ -573,8 +568,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			byte buf[] = new byte[1024];
 			int len = 0;
 
-			while ((len = inputStream.read(buf)) > 0)
+			while ((len = inputStream.read(buf)) > 0) {
 				out.write(buf, 0, len);
+			}
 			
 			zipFile = new ZipFile(diskZipFile);
 			
@@ -604,12 +600,14 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return
 	 */
 	protected String getNativeId(Finding finding) {
-		if (finding == null || finding.getSurfaceLocation() == null)
+		if (finding == null || finding.getSurfaceLocation() == null) {
 			return null;
+		}
 
 		String vulnName = null;
-		if (finding.getChannelVulnerability() != null)
+		if (finding.getChannelVulnerability() != null) {
 			vulnName = finding.getChannelVulnerability().getName();
+		}
 
 		String nativeId = hashFindingInfo(vulnName, finding.getSurfaceLocation().getPath(), finding
 				.getSurfaceLocation().getParameter());
@@ -621,7 +619,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * This method wraps a lot of functionality that was previously seen in multiple importers
 	 * into one method to reduce duplication. It sets up the relationship between the subclassed
 	 * handler and the main importer, cleans and wraps the file in an InputSource, and parses it.
-	 * It relies on the fact that there is a common instance variable named saxFindingList that 
+	 * It relies on the fact that there is a common instance variable named saxFindingList that
 	 * the handlers are putting their Findings in, and the variable date that the parsers are putting
 	 * the date in.
 	 * @param handler
@@ -630,8 +628,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected Scan parseSAXInput(DefaultHandler handler) {
 		log.debug("Starting SAX Parsing.");
 		
-		if (inputStream == null)
+		if (inputStream == null) {
 			return null;
+		}
 		
 		saxFindingList = new ArrayList<Finding>();
 				
@@ -641,20 +640,22 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		scan.setFindings(saxFindingList);
 		scan.setApplicationChannel(applicationChannel);
 		
-		if ((date != null) && (date.getTime() != null)) {
+		if (date != null && date.getTime() != null) {
 			log.debug("SAX Parser found the scan date: " + date.getTime().toString());
 			scan.setImportTime(date);
 		} else {
 			log.warn("SAX Parser did not find the date.");
 		}
 
-		if (scan.getFindings() != null && scan.getFindings().size() != 0)
+		if (scan.getFindings() != null && scan.getFindings().size() != 0) {
 			log.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
-		else
+		} else {
 			log.warn("SAX Parsing did not find any Findings.");
+		}
 		
-		if (inputFileName != null) 
+		if (inputFileName != null) {
 			deleteScanFile();
+		}
 				
 		return scan;
 	}
@@ -663,7 +664,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * This method wraps a lot of functionality that was previously seen in multiple importers
 	 * into one method to reduce duplication. It sets up the relationship between the subclassed
 	 * handler and the main importer, cleans and wraps the file in an InputSource, and parses it.
-	 * It relies on the fact that there is a common instance variable named saxFindingList that 
+	 * It relies on the fact that there is a common instance variable named saxFindingList that
 	 * the handlers are putting their Findings in, and the variable date that the parsers are putting
 	 * the date in.
 	 * @param handler
@@ -706,8 +707,9 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return
 	 */
 	protected ScanImportStatus checkTestDate() {
-		if (applicationChannel == null || testDate == null)
+		if (applicationChannel == null || testDate == null) {
 			return ScanImportStatus.OTHER_ERROR;
+		}
 		
 		List<Scan> scanList = applicationChannel.getScanList();
 		
@@ -715,10 +717,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			for (Scan scan : scanList) {
 				if (scan != null && scan.getImportTime() != null) {
 					int result = scan.getImportTime().compareTo(testDate);
-					if (result == 0)
+					if (result == 0) {
 						return ScanImportStatus.DUPLICATE_ERROR;
-					else if (result > 0)
+					} else if (result > 0) {
 						return ScanImportStatus.OLD_SCAN_ERROR;
+					}
 				}
 			}
 		}
@@ -728,21 +731,23 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 
 	/**
 	 * 
-	 * HTTP traffic all follows a pattern, so if you can see an HTTP response then you 
+	 * HTTP traffic all follows a pattern, so if you can see an HTTP response then you
 	 * can parse out the date the request was made. This method does that.
 	 * @param httpTrafficString
 	 * @return
 	 */
 	protected Calendar attemptToParseDateFromHTTPResponse(String httpTrafficString) {
-		if (httpTrafficString == null)
+		if (httpTrafficString == null) {
 			return null;
+		}
 		
 		String dateString = getRegexResult(httpTrafficString, "Date: ([^\n]+)");
 		
-		if (dateString != null && !dateString.isEmpty())
+		if (dateString != null && !dateString.isEmpty()) {
 			return getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
-		else
+		} else {
 			return null;
+		}
 	}
 
 }
