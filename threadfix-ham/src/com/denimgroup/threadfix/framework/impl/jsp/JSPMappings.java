@@ -46,7 +46,7 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 public class JSPMappings implements EndpointGenerator {
 	
 	private final Map<String, Set<File>> includeMap = new HashMap<>();
-	private final Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
+	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
 	private final List<Endpoint> endpoints = new ArrayList<>();
 	private final File projectRoot, jspRoot;
 	
@@ -87,57 +87,34 @@ public class JSPMappings implements EndpointGenerator {
 	}
 	
 	public Endpoint getEndpoint(File file) {
-		Endpoint endpoint = null;
+		JSPEndpoint endpoint = null;
 		
 		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
 		if (parserResults != null) {
-			parameterMap.put(FilePathUtils.getRelativePath(file, projectRoot), parserResults);
-			Set<String> allParameters = new HashSet<>();
-			for (List<String> parameters : parserResults.values()) {
-				allParameters.addAll(parameters);
-			}
+			String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
+			
 			endpoint = new JSPEndpoint(
-					FilePathUtils.getRelativePath(file, projectRoot),
+					staticPath,
 					FilePathUtils.getRelativePath(file, jspRoot),
-					allParameters,
-					new HashSet<String>(Arrays.asList("GET", "POST"))
+					new HashSet<String>(Arrays.asList("GET", "POST")),
+					parserResults
 					);
+			
+			jspEndpointMap.put(staticPath, endpoint);
 		}
 		
 		return endpoint;
 	}
 	
-	public Set<File> getIncludedFiles(String relativePath) {
-		return includeMap.get(relativePath);
-	}
-	
-	public Map<Integer, List<String>> getParameterMap(String relativePath) {
-		return parameterMap.get(relativePath);
-	}
-	
-	// TODO simple optimizations to clean up the code and make it more efficient
-	// create a map of parameter name to first line when this class is initialized and do lookups on that
-	// it should be O(n) on the map and then O(1) instead of O(N) every time
-	public Integer getFirstLineNumber(String relativeFilePath, String parameterName) {
-		Map<Integer, List<String>> parameterMap = getParameterMap(relativeFilePath);
+	public JSPEndpoint getEndpoint(String staticPath) {
 		
-		Integer returnValue = Integer.MAX_VALUE;
+		String key = staticPath; // TODO determine whether we need to clean or not
 		
-		if (parameterMap != null && parameterName != null) {
-			for (Integer integer : parameterMap.keySet()) {
-				if (integer < returnValue &&
-						parameterMap.get(integer) != null &&
-						parameterMap.get(integer).contains(parameterName)) {
-					returnValue = integer;
-				}
-			}
+		if (key != null && !key.startsWith("/")) {
+			key = "/" + key;
 		}
 		
-		if (returnValue == Integer.MAX_VALUE) {
-			returnValue = 1; // This way even if no parameter is found a marker can be created for the file
-		}
-		
-		return returnValue;
+		return jspEndpointMap.get(key);
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {

@@ -85,9 +85,9 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		String fileName = super.getFileNameWithSourceCodeDefault(finding);
 		
 		if (finding != null && finding.getSurfaceLocation() != null) {
-			finding.setEntryPointLineNumber(
-				mappings.getFirstLineNumber(
-				fileName, finding.getSurfaceLocation().getParameter()));
+//			finding.setEntryPointLineNumber(
+//				mappings.getFirstLineNumber(
+//						fileName, finding.getSurfaceLocation().getParameter()));
 		
 		}
 		

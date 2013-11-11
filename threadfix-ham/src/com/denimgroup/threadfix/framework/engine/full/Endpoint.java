@@ -39,6 +39,8 @@ public interface Endpoint extends Comparable<Endpoint> {
 	
 	int getStartingLineNumber();
 	
+	int getLineNumberForParameter(String parameter);
+	
 	boolean matchesLineNumber(int lineNumber);
 	
 }

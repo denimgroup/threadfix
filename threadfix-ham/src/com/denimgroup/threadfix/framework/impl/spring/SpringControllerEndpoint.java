@@ -164,4 +164,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public int getStartingLineNumber() {
 		return startLineNumber;
 	}
+
+	@Override
+	public int getLineNumberForParameter(String parameter) {
+		return startLineNumber;
+	}
 }
