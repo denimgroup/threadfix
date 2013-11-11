@@ -29,7 +29,7 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 
-class SpringControllerEndpoint extends AbstractEndpoint {
+public class SpringControllerEndpoint extends AbstractEndpoint {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	private static final String requestMappingStart = "RequestMethod.";
