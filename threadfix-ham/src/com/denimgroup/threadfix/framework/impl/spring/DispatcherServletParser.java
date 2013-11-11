@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -52,8 +51,6 @@ public class DispatcherServletParser {
 					
 					line = reader.readLine();
 				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

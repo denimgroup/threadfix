@@ -35,26 +35,35 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-import com.denimgroup.threadfix.framework.engine.DefaultEndpoint;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
+import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
 // TODO figure out HTTP methods perhaps from form analysis
 // for now all will be GET
 public class JSPMappings implements EndpointGenerator {
 	
-	private Map<String, Set<File>> includeMap = new HashMap<>();
-	private Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
-	private List<Endpoint> endpoints = new ArrayList<>();
-	private File rootFile = null;
+	private final Map<String, Set<File>> includeMap = new HashMap<>();
+	private final Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
+	private final List<Endpoint> endpoints = new ArrayList<>();
+	private final File projectRoot, jspRoot;
 	
 	@SuppressWarnings("unchecked")
 	public JSPMappings(File rootFile) {
 		if (rootFile != null && rootFile.exists()) {
 
-			this.rootFile = rootFile;
+			this.projectRoot = rootFile;
+			
+			String jspRootString = CommonPathFinder.findOrParseProjectRootFromDirectory(rootFile, "jsp");
+			
+			if (jspRootString == null) {
+				jspRoot = projectRoot;
+			} else {
+				jspRoot = new File(jspRootString);
+			}
+			
 			Collection<File> jspFiles = FileUtils.listFiles(
 					rootFile, JSPFileFilter.INSTANCE, NoDotDirectoryFileFilter.INSTANCE);
 	
@@ -66,20 +75,36 @@ public class JSPMappings implements EndpointGenerator {
 			}
 			
 			for (File file : jspFiles) {
-				Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
-				if (parserResults != null) {
-					parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parserResults);
-					Set<String> allParameters = new HashSet<>();
-					for (List<String> parameters : parserResults.values()) {
-						allParameters.addAll(parameters);
-					}
-					endpoints.add(new DefaultEndpoint(
-							FilePathUtils.getRelativePath(file, rootFile), 
-							allParameters, 
-							new HashSet<String>(Arrays.asList("GET", "POST"))));
+				Endpoint endpoint = getEndpoint(file);
+				if (endpoint != null) {
+					endpoints.add(endpoint);
 				}
 			}
+		} else {
+			projectRoot = null;
+			jspRoot = null;
 		}
+	}
+	
+	public Endpoint getEndpoint(File file) {
+		Endpoint endpoint = null;
+		
+		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
+		if (parserResults != null) {
+			parameterMap.put(FilePathUtils.getRelativePath(file, projectRoot), parserResults);
+			Set<String> allParameters = new HashSet<>();
+			for (List<String> parameters : parserResults.values()) {
+				allParameters.addAll(parameters);
+			}
+			endpoint = new JSPEndpoint(
+					FilePathUtils.getRelativePath(file, projectRoot),
+					FilePathUtils.getRelativePath(file, jspRoot),
+					allParameters,
+					new HashSet<String>(Arrays.asList("GET", "POST"))
+					);
+		}
+		
+		return endpoint;
 	}
 	
 	public Set<File> getIncludedFiles(String relativePath) {
@@ -116,7 +141,7 @@ public class JSPMappings implements EndpointGenerator {
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {
-		return FilePathUtils.getRelativePath(dataFlowLocation, rootFile);
+		return FilePathUtils.getRelativePath(dataFlowLocation, projectRoot);
 	}
 
 	@Override

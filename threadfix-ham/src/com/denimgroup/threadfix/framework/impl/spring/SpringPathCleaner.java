@@ -44,9 +44,9 @@ public class SpringPathCleaner implements PathCleaner {
 	}
 	
 	// no scan
-	public SpringPathCleaner() {
-		staticRoot  = "???";
-		dynamicRoot = "???";
+	public SpringPathCleaner(String dynamicRoot, String staticRoot) {
+		this.staticRoot  = staticRoot;
+		this.dynamicRoot = dynamicRoot;
 	}
 	
 	@Override

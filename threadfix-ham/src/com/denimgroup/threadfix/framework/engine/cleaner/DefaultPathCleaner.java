@@ -50,5 +50,10 @@ class DefaultPathCleaner implements PathCleaner {
 	public String getStaticRoot() {
 		return staticRoot;
 	}
+	
+	@Override
+	public String toString() {
+		return "[PathCleaner dynamicRoot=" + dynamicRoot + ", staticRoot=" + staticRoot + "]";
+	}
 
 }

@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.framework.engine.full;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
@@ -17,21 +18,22 @@ public class EndpointDatabaseFactory {
 	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
 	public static EndpointDatabase getDatabase(File rootFile) {
-		log.info("Attempting to calculate framework type based on project contents.");
-		
+		FrameworkType type = FrameworkCalculator.getType(rootFile);
+		return getDatabase(rootFile, type);
+	}
+	
+	public static EndpointDatabase getDatabase(File rootFile, List<PartialMapping> partialMappings) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		
-		log.info("Calculated framework : " + type + ".");
-		
-		return getDatabase(rootFile, type);
+		return getDatabase(rootFile, type, partialMappings);
 	}
 
 	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType) {
-		log.info("Attempting to retrieve path cleaner based on project contents.");
-		
-		PathCleaner cleaner = PathCleanerFactory.getPathCleaner(frameworkType, new ArrayList<PartialMapping>());
-		
-		log.info("Got PathCleaner : " + cleaner + ".");
+		return getDatabase(rootFile, frameworkType, new ArrayList<PartialMapping>());
+	}
+	
+	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType, List<PartialMapping> partialMappings) {
+		PathCleaner cleaner = PathCleanerFactory.getPathCleaner(frameworkType, partialMappings);
 		
 		return getDatabase(rootFile, frameworkType, cleaner);
 	}
@@ -44,6 +46,8 @@ public class EndpointDatabaseFactory {
 			case SPRING_MVC: generator = new SpringControllerMappings(rootFile); break;
 			default:
 		}
+		
+		log.info("Returning database with generator: " + generator);
 		
 		return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
 	}

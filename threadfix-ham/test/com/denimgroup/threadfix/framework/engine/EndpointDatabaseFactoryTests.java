@@ -23,55 +23,31 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
-import java.util.Set;
+import static org.junit.Assert.assertTrue;
 
-public class DefaultEndpoint extends AbstractEndpoint {
-	
-	private final String path;
-	private final Set<String> parameters, methods;
-	
-	private int startLineNumber = -1, endLineNumber = -1;
-	
-	private String filePath = null;
-	
-	public DefaultEndpoint(String path, Set<String> parameters, Set<String> methods) {
-		this.methods = methods;
-		this.path = path;
-		this.parameters = parameters;
-	}
+import java.io.File;
 
-	@Override
-	public Set<String> getParameters() {
-		return parameters;
-	}
+import org.junit.Test;
+
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
+
+public class EndpointDatabaseFactoryTests {
 	
-	@Override
-	public String getUrlPath() {
-		return path;
-	}
-
-	@Override
-	public Set<String> getHttpMethods() {
-		return methods;
-	}
-
-	@Override
-	public boolean matchesLineNumber(int lineNumber) {
-		return lineNumber < endLineNumber && lineNumber > startLineNumber;
-	}
-
-	@Override
-	public String getFilePath() {
-		return filePath;
+	int petclinicStaticCount = 5, petclinicDynamicCount = 11;
+	
+	@Test
+	public void testRootOnly() {
+		EndpointDatabase testDatabase = EndpointDatabaseFactory.getDatabase(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
+		
+		assertTrue(testDatabase.getFrameworkType() == FrameworkType.SPRING_MVC);
+		assertTrue(testDatabase.generateEndpoints().size() ==
+				new SpringControllerMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION)).generateEndpoints().size());
 	}
 	
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
-	@Override
-	public int getStartingLineNumber() {
-		return startLineNumber;
-	}
+	// TODO write more stuff here
 
 }

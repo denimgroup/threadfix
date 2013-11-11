@@ -91,9 +91,10 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 			map.get(value).add(endpoint);
 		}
 	}
-
+	
 	@Override
 	public Endpoint findBestMatch(EndpointQuery query) {
+		
 		Endpoint returnEndpoint = null;
 		
 		Set<Endpoint> endpoints = findAllMatches(query);
@@ -113,11 +114,13 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 			List<Set<Endpoint>> resultSets = new ArrayList<>();
 			
 			if (query.getDynamicPath() != null) {
-				resultSets.add(getValueOrNull(pathCleaner.cleanDynamicPath(query.getDynamicPath()), dynamicMap));
+				String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
+				resultSets.add(getValueOrNull(cleaned, dynamicMap));
 			}
 			
 			if (query.getStaticPath() != null) {
-				resultSets.add(getValueOrNull(pathCleaner.cleanStaticPath(query.getStaticPath()), staticMap));
+				String cleaned = pathCleaner.cleanStaticPath(query.getStaticPath());
+				resultSets.add(getValueOrNull(cleaned, staticMap));
 			}
 			
 			if (query.getHttpMethod() != null) {
