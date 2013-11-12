@@ -35,9 +35,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -50,7 +50,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.BURPSUITE;
+		return ScannerType.BURPSUITE.getFullName();
 	}
 	
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
@@ -65,7 +65,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	}
 
 	public BurpSuiteChannelImporter() {
-		super(ChannelType.BURPSUITE);
+		super(ScannerType.BURPSUITE.getFullName());
 		
 		doSAXExceptionCheck = false;
 	}

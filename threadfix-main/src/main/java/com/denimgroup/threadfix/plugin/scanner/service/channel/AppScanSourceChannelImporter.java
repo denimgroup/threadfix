@@ -39,10 +39,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -54,7 +54,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.APPSCAN_SOURCE;
+		return ScannerType.APPSCAN_SOURCE.getFullName();
 	}
 	
 	private static final Map<String, String> REGEX_MAP = new HashMap<String,String>();
@@ -77,7 +77,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	}
 
 	public AppScanSourceChannelImporter() {
-		super(ChannelType.APPSCAN_SOURCE);
+		super(ScannerType.APPSCAN_SOURCE.getFullName());
 	}
 
 	@Override

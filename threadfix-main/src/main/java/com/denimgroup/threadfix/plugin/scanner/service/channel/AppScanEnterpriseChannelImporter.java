@@ -33,10 +33,10 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -48,7 +48,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	
 	@Override
 	public String getType() {
-		return ChannelType.APPSCAN_ENTERPRISE;
+		return ScannerType.APPSCAN_ENTERPRISE.getFullName();
 	}
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
@@ -61,7 +61,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	}
 
 	public AppScanEnterpriseChannelImporter() {
-		super(ChannelType.APPSCAN_DYNAMIC);
+		super(ScannerType.APPSCAN_DYNAMIC.getFullName());
 	}
 	
 	/**

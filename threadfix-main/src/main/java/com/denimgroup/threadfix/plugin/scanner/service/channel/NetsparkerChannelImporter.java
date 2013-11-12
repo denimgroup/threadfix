@@ -30,9 +30,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -44,7 +44,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	public NetsparkerChannelImporter() {
-		super(ChannelType.NETSPARKER);
+		super(ScannerType.NETSPARKER.getFullName());
 	}
 
 	/*
@@ -194,6 +194,6 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.NETSPARKER;
+		return ScannerType.NETSPARKER.getFullName();
 	}
 }

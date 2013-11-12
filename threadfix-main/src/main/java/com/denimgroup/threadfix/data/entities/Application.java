@@ -423,10 +423,10 @@ public class Application extends AuditableEntity {
 			return new ArrayList<ApplicationChannel>();
 		
 		Set<String> doNotIncludeSet = new HashSet<String>();
-		doNotIncludeSet.add(ChannelType.MANUAL);
-		doNotIncludeSet.add(ChannelType.SENTINEL);
-		doNotIncludeSet.add(ChannelType.VERACODE);
-		doNotIncludeSet.add(ChannelType.QUALYSGUARD_WAS);
+		doNotIncludeSet.add(ScannerType.MANUAL.getFullName());
+		doNotIncludeSet.add(ScannerType.SENTINEL.getFullName());
+		doNotIncludeSet.add(ScannerType.VERACODE.getFullName());
+		doNotIncludeSet.add(ScannerType.QUALYSGUARD_WAS.getFullName());
 		
 		List<ApplicationChannel> returnList = new ArrayList<ApplicationChannel>();
 	

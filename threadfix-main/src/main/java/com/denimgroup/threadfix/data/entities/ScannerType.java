@@ -18,7 +18,11 @@ public enum ScannerType {
 	WEBINSPECT("webinspect", "WebInspect"),
 	ZAPROXY("zap", "OWASP Zed Attack Proxy"),
 	APPSCAN_SOURCE("appscansource", "IBM Rational AppScan Source Edition"),
-	APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise");
+	APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise"),
+	QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS"),
+	SENTINEL("whitehat", "WhiteHat Sentinel"),
+	VERACODE("veracode", "Veracode"),
+	MANUAL("manual", "Manual");
 
 	private String fullName;
 	private String shortName;

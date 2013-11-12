@@ -34,10 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Dependency;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 @PluginImplementation
@@ -52,7 +52,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 
 	@Autowired
 	public DependencyCheckChannelImporter() {
-		super(ChannelType.MANUAL);
+		super(ScannerType.MANUAL.getFullName());
 	}
 	
 	@Override
@@ -222,6 +222,6 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.DEPENDENCY_CHECK;
+		return ScannerType.DEPENDENCY_CHECK.getFullName();
 	}
 }

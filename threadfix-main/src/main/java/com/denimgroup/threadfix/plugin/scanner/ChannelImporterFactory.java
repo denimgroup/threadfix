@@ -21,14 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner;
 
 import java.util.Collection;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.plugin.scanner.ScannerPluginLoader;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class ChannelImporterFactory {
 			return null;
 		}
 		
-		Collection<? extends ChannelImporter> importers = ScannerPluginLoader.getPlugins();
+		Collection<? extends ChannelImporter> importers = ScannerPluginLoader.getScannerPlugins();
 		ChannelImporter channelImporter = null;
 		String channelName = applicationChannel.getChannelType().getName();
 		for (ChannelImporter importer: importers) {

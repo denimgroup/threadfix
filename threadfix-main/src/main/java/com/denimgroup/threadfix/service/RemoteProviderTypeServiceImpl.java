@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.remoteprovider.RemoteProviderFactory;
+import com.denimgroup.threadfix.plugin.scanner.RemoteProviderFactory;
 
 @Service
 @Transactional(readOnly = false)

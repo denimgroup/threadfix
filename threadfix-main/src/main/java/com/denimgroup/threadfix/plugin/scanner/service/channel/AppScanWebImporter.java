@@ -34,11 +34,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
@@ -53,11 +53,11 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.APPSCAN_DYNAMIC;
+		return ScannerType.APPSCAN_DYNAMIC.getFullName();
 	}
 	
 	public AppScanWebImporter() {
-		super(ChannelType.APPSCAN_DYNAMIC);
+		super(ScannerType.APPSCAN_DYNAMIC.getFullName());
 	}
 
 	/*

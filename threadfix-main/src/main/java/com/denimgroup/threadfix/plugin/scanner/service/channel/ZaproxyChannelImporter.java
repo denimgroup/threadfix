@@ -34,10 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -62,7 +62,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	
 	@Autowired
 	public ZaproxyChannelImporter() {
-		super(ChannelType.ZAPROXY);
+		super(ScannerType.ZAPROXY.getFullName());
 	}
 
 	@Override
@@ -297,6 +297,6 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.ZAPROXY;
+		return ScannerType.ZAPROXY.getFullName();
 	}
 }

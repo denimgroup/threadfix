@@ -45,11 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 @PluginImplementation
@@ -59,7 +59,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 	@Autowired
 	public SSVLChannelImporter() {
-		super(ChannelType.MANUAL);
+		super(ScannerType.MANUAL.getFullName());
 	}
 	
 	@Override
@@ -265,6 +265,6 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.MANUAL;
+		return ScannerType.MANUAL.getFullName();
 	}
 }
