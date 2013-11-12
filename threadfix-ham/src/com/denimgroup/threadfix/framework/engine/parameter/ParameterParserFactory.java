@@ -32,16 +32,14 @@ public class ParameterParserFactory {
 	public static ParameterParser getParameterParser(ProjectConfig projectConfig) {
 		ParameterParser parser = null;
 		
-		if (projectConfig.getFrameworkType()!= null) {
-			switch (projectConfig.getFrameworkType()) {
-				case SPRING_MVC:
-					parser = new SpringDataFlowParser(projectConfig);
-					break;
-				case JSP:
-					parser = new JSPDataFlowParser(projectConfig);
-					break;
-				default:
-			}
+		switch (projectConfig.getFrameworkType()) {
+			case SPRING_MVC:
+				parser = new SpringDataFlowParser(projectConfig);
+				break;
+			case JSP:
+				parser = new JSPDataFlowParser(projectConfig);
+				break;
+			default:
 		}
 		
 		return parser;

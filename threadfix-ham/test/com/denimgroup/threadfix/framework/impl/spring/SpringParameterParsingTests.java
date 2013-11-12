@@ -38,6 +38,8 @@ import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
@@ -51,14 +53,17 @@ public class SpringParameterParsingTests {
 	
 	// These are immutable so it's ok to use the same one for all the tests
 	static SpringDataFlowParser parser = new SpringDataFlowParser(defaultConfig);
+	static ParameterParser factoryParser = ParameterParserFactory.getParameterParser(defaultConfig);
 	
-	static SpringDataFlowParser[] allParsers = { parser,
-			new SpringDataFlowParser(noSourceConfig) };
+	static ParameterParser[] allParsers = {
+		factoryParser,
+		parser,
+		new SpringDataFlowParser(noSourceConfig) };
 	
 	@Test
 	public void testBasicModelParsing() {
 		
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			// These are from the PetClinic Fortify results
 			List<? extends CodePoint> basicModelElements = Arrays.asList(
 				new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -85,7 +90,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testRequestParamParsing1() {
 		
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DefaultCodePoint> chainedRequestParamElements1 = Arrays.asList(
 				new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -110,7 +115,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testRequestParamParsing2() {
 		
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DefaultCodePoint> chainedRequestParamElements2 = Arrays.asList(
 				new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -134,7 +139,7 @@ public class SpringParameterParsingTests {
 	
 	@Test
 	public void testPathVariableParsing1() {
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DefaultCodePoint> chainedPathVariableElements1 = Arrays.asList(
 				new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -158,7 +163,7 @@ public class SpringParameterParsingTests {
 	
 	@Test
 	public void testPathVariableParsing2() {
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			// These are doctored to test other methods of passing Spring parameters
 			List<DefaultCodePoint> pathVariableElements2 = Arrays.asList(
 				new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
@@ -233,7 +238,7 @@ public class SpringParameterParsingTests {
 	@Test
 	public void testNullInput() {
 		
-		for (SpringDataFlowParser parser : allParsers) {
+		for (ParameterParser parser : allParsers) {
 			String result = parser.parse(null);
 			assertTrue(result == null);
 			
