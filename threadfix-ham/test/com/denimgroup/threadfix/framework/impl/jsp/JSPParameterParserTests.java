@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.jsp;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,6 +32,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
