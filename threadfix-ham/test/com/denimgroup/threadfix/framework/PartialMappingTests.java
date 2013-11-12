@@ -2,9 +2,6 @@ package com.denimgroup.threadfix.framework;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
@@ -46,21 +43,12 @@ public class PartialMappingTests {
 		{ "/petclinic/owners/33416/pets/new", JPA_REPO },
 	};
 	
-	List<PartialMapping> getMappings(String[][] strings) {
-		List<PartialMapping> mappings = new ArrayList<>();
-		
-		for (String[] stringArray : strings) {
-			mappings.add(new DefaultPartialMapping(stringArray[0], stringArray[1]));
-		}
-		
-		return mappings;
-	}
-	
 	@Test
 	public void testBasicPartialMappingsForAppScan() {
-		PartialMappingDatabase test = PartialMappingsDatabaseFactory.getPartialMappingsDatabase(getMappings(petClinicAppScanData), FrameworkType.SPRING_MVC);
+		PartialMappingDatabase test = PartialMappingsDatabaseFactory.getPartialMappingsDatabase(
+				TestUtils.getMappings(petClinicAppScanData), FrameworkType.SPRING_MVC);
 		
-		test.addMappings(getMappings(petClinicFortifyData));
+		test.addMappings(TestUtils.getMappings(petClinicFortifyData));
 		
 		for (String[] stringArray : springMvcQueries) {
 			

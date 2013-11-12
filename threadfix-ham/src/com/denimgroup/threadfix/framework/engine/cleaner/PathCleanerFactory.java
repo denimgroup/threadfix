@@ -23,9 +23,5 @@ public class PathCleanerFactory {
 		
 		return returnCleaner;
 	}
-	
-	public static PathCleaner getEmptyPathCleaner() {
-		return new DefaultPathCleaner("", "");
-	}
 
 }

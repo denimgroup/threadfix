@@ -30,6 +30,7 @@ import java.io.File;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 
 public class JSPMappingsTests {
 	String[] pages = { "/root/about.jsp",
@@ -86,6 +87,19 @@ public class JSPMappingsTests {
 			assertTrue("Line number for " + test[0] + ": " + test[1]
 					+ " should have been " + test[2] + ", but was " + result,
 					Integer.valueOf(test[2]) == result);
+		}
+	}
+	
+	@Test
+	public void testEndpointCSVCommas() {
+		JSPMappings mappings = new JSPMappings(new File(
+				TestConstants.BODGEIT_SOURCE_LOCATION));
+		
+		for (Endpoint endpoint : mappings.generateEndpoints()) {
+			String csv = endpoint.getCSVLine();
+			String toString = endpoint.toString();
+			assertTrue("CSV was not equal to toString", csv.equals(toString));
+			assertTrue("length of csv sections != 3", csv.split(",").length == 3);
 		}
 	}
 }
