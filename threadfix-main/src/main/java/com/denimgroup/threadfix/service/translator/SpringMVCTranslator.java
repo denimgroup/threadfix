@@ -32,17 +32,21 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerEndpoint;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
+import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 	
 	private SpringControllerMappings fullMappings = null;
+	
+	private final PathCleaner cleaner;
 	
 	public static final String JSESSIONID = ";jsessionid=";
 	
@@ -64,6 +68,9 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 			urlPathRoot  = CommonPathFinder.findOrParseUrlPath(scan.toPartialMappingList());
 			scan.setFilePathRoot(filePathRoot);
 			scan.setUrlPathRoot(urlPathRoot);
+			cleaner = new SpringPathCleaner(urlPathRoot, filePathRoot);
+		} else {
+			cleaner = new SpringPathCleaner("","");
 		}
 		
 		switch (accessLevel) {
@@ -184,9 +191,9 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 			
 			if (endpoints != null && !endpoints.isEmpty()) {
 				for (SpringControllerEndpoint endpoint : endpoints) {
-					if (httpMethod == null || endpoint.matchesMethod(httpMethod)) {
+					if (httpMethod == null || matchesMethod(endpoint, httpMethod)) {
 						filePath = endpoint.getCleanedFilePath();
-						finding.setEntryPointLineNumber(endpoint.getStartLineNumber());
+						finding.setEntryPointLineNumber(endpoint.getStartingLineNumber());
 						break;
 					}
 				}
@@ -194,6 +201,12 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 		}
 		
 		return filePath;
+	}
+	
+	public boolean matchesMethod(Endpoint endpoint, String method) {
+		return method != null && endpoint != null &&
+				endpoint.getHttpMethods() != null &&
+				endpoint.getHttpMethods().contains(method.toUpperCase());
 	}
 
 	@Override
@@ -209,7 +222,7 @@ public class SpringMVCTranslator extends AbstractPathUrlTranslator {
 				}
 			} else {
 				if (finding.getSurfaceLocation() != null) {
-					urlPath = SpringControllerEndpoint.cleanUrlPathDynamic(finding.getSurfaceLocation().getPath());
+					urlPath = cleaner.cleanDynamicPath(finding.getSurfaceLocation().getPath());
 					if (urlPath != null && urlPathRoot != null && urlPath.contains(urlPathRoot)) {
 						urlPath = urlPath.replace(urlPathRoot, "");
 					}

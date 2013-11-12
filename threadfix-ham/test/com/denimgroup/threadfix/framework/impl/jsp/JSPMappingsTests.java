@@ -32,54 +32,60 @@ import org.junit.Test;
 import com.denimgroup.threadfix.framework.TestConstants;
 
 public class JSPMappingsTests {
-    String[] pages = {
-        "/root/about.jsp",
-        "/root/admin.jsp",
-        "/root/advanced.jsp",
-        "/root/basket.jsp",
-        "/root/contact.jsp",
-        "/root/footer.jsp",
-        "/root/header.jsp",
-        "/root/home.jsp",
-        "/root/init.jsp",
-        "/root/login.jsp",
-        "/root/logout.jsp",
-        "/root/password.jsp",
-        "/root/product.jsp",
-        "/root/register.jsp",
-        "/root/score.jsp",
-        "/root/search.jsp",
-    };
-    @Test
-    public void testSize() {
-        JSPMappings mappings = new JSPMappings(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
-        assertTrue("Size was " + mappings.generateEndpoints().size() + " but should have been " + 13,
-                mappings.generateEndpoints().size() == 16);
-    }
-    @Test
-    public void testKeys() {
-        JSPMappings mappings = new JSPMappings(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
-        for (String page : pages) {
-            assertTrue("Endpoint for " + page + " shouldn't have been null but was.",
-                    mappings.getEndpoint(page) != null);
-        }
-    }
-    String[][] tests = {
-        { "/root/advanced.jsp", "debug", "54" },
-        { "/root/advanced.jsp", "q", "58" },
-        { "/root/basket.jsp", "debug", "89" },
-        { "/root/basket.jsp", "update", "173" },
-        { "/root/basket.jsp", "productid", "174" },
-        { "/root/basket.jsp", "quantity", "178" },
-    };
-    @Test
-    public void testParameters() {
-        JSPMappings mappings = new JSPMappings(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
-        for (String[] test : tests) {
-            JSPEndpoint endpoint = mappings.getEndpoint(test[0]);
-            int result = endpoint.getLineNumberForParameter(test[1]);
-            assertTrue("Line number for " + test[0] + ": " + test[1] + " should have been " + test[2] + ", but was " + result,
-                    Integer.valueOf(test[2]) == result);
-        }
-    }
+	String[] pages = { "/root/about.jsp",
+			"/root/admin.jsp",
+			"/root/advanced.jsp",
+			"/root/basket.jsp",
+			"/root/contact.jsp",
+			"/root/footer.jsp",
+			"/root/header.jsp",
+			"/root/home.jsp",
+			"/root/init.jsp",
+			"/root/login.jsp",
+			"/root/logout.jsp",
+			"/root/password.jsp",
+			"/root/product.jsp",
+			"/root/register.jsp",
+			"/root/score.jsp",
+			"/root/search.jsp", };
+
+	@Test
+	public void testSize() {
+		JSPMappings mappings = new JSPMappings(new File(
+				TestConstants.BODGEIT_SOURCE_LOCATION));
+		assertTrue("Size was " + mappings.generateEndpoints().size()
+				+ " but should have been " + 13, mappings.generateEndpoints()
+				.size() == 16);
+	}
+
+	@Test
+	public void testKeys() {
+		JSPMappings mappings = new JSPMappings(new File(
+				TestConstants.BODGEIT_SOURCE_LOCATION));
+		for (String page : pages) {
+			assertTrue("Endpoint for " + page
+					+ " shouldn't have been null but was.",
+					mappings.getEndpoint(page) != null);
+		}
+	}
+
+	String[][] tests = { { "/root/advanced.jsp", "debug", "54" },
+			{ "/root/advanced.jsp", "q", "58" },
+			{ "/root/basket.jsp", "debug", "89" },
+			{ "/root/basket.jsp", "update", "173" },
+			{ "/root/basket.jsp", "productid", "174" },
+			{ "/root/basket.jsp", "quantity", "178" }, };
+
+	@Test
+	public void testParameters() {
+		JSPMappings mappings = new JSPMappings(new File(
+				TestConstants.BODGEIT_SOURCE_LOCATION));
+		for (String[] test : tests) {
+			JSPEndpoint endpoint = mappings.getEndpoint(test[0]);
+			int result = endpoint.getLineNumberForParameter(test[1]);
+			assertTrue("Line number for " + test[0] + ": " + test[1]
+					+ " should have been " + test[2] + ", but was " + result,
+					Integer.valueOf(test[2]) == result);
+		}
+	}
 }
