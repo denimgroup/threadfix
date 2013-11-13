@@ -30,8 +30,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -53,11 +51,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		if(instance == null) {
 			instance = new AcunetixScanAgent();
 		}
-		try {
-			instance.readConfig(new PropertiesConfiguration("scanagent.properties"));
-		} catch (ConfigurationException e) {
-			log.error("Problems reading configuration: " + e.getMessage(), e);
-		}
+		instance.readConfig(ConfigurationUtils.getPropertiesFile());
 		instance.setWorkDir(workDir);
 		instance.setServerConduit(serverConduit);
 		instance.setAcunetixExecutablePath(scanner.getHomeDir());
