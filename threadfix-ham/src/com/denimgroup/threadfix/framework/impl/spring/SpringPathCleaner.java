@@ -75,7 +75,13 @@ public class SpringPathCleaner implements PathCleaner {
 		if (relativeUrlPath == null) {
 			return null;
 		} else {
-			String escaped = relativeUrlPath
+			String escaped = relativeUrlPath;
+			
+			if (escaped.contains(JSESSIONID)) {
+				escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
+			}
+			
+			escaped = escaped
 					.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
 					.replaceAll("\\.html", "")
 					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT)
@@ -83,9 +89,7 @@ public class SpringPathCleaner implements PathCleaner {
 					.replaceAll("/$", "")
 					.replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
 			
-			if (escaped.contains(JSESSIONID)) {
-				escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
-			}
+			
 			
 			return escaped;
 		}
