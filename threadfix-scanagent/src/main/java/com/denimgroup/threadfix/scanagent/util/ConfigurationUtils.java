@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
@@ -79,6 +80,11 @@ public class ConfigurationUtils {
 		log.info("Ended saving scanner type");
 	}
 	
+	/**
+	 * Read all the scanner has been set up in scanagent properties file
+	 * @param config
+	 * @return
+	 */
 	public static List<Scanner> readAllScanner(Configuration config) {
 		log.info("Start reading all scanner type");
 		List<Scanner> scanners = new ArrayList<Scanner>();
@@ -153,7 +159,12 @@ public class ConfigurationUtils {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * This method config the information for Scanner
+	 * @param scannerType
+	 * @param config
+	 */
 	public static void configScannerType(ScannerType scannerType,
 			PropertiesConfiguration config) {
 		
@@ -292,6 +303,18 @@ public class ConfigurationUtils {
 			exeName = ACUNETIX_FILES[0];
 		}
 		return exeName;
+	}
+	
+	public static PropertiesConfiguration getPropertiesFile() {
+		try {
+//			return new PropertiesConfiguration(ZapScanAgent.class.getClassLoader()
+//					.getResource("scanagent.properties").toString());
+			return new PropertiesConfiguration("scanagent.properties");
+			
+		} catch (ConfigurationException e) {
+			log.error("Problems reading configuration: " + e.getMessage(), e);
+		}
+		return null;
 	}
 
 }

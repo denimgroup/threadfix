@@ -40,7 +40,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -110,7 +109,9 @@ public final class ScanAgentRunner implements ServerConduit {
 			PosixParser parser = new PosixParser();
 			try {
 				CommandLine cmd = parser.parse( options, args);
-				PropertiesConfiguration config = new PropertiesConfiguration("scanagent.properties");
+				PropertiesConfiguration config = ConfigurationUtils.getPropertiesFile();
+				if (config == null)
+					return;
 				config.setAutoSave(true);
 
 				if (cmd.hasOption("help")) {
@@ -153,9 +154,7 @@ public final class ScanAgentRunner implements ServerConduit {
 				}
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("java -jar scanagent.jar", options);
-			} catch (ConfigurationException e) {
-				log.error("Problems reading configuration: " + e.getMessage(), e);
-			}		 
+			} 		 
 	}
 
 	private static boolean checkRequiredConfiguration(
