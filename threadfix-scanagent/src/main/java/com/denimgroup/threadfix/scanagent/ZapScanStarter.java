@@ -3,8 +3,6 @@ package com.denimgroup.threadfix.scanagent;
 import java.io.File;
 import java.io.IOException;
 
-import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
-
 /**
  * This class will be running in another JVM to start ZAP 
  * @author stran
@@ -38,8 +36,8 @@ public class ZapScanStarter {
 	
 	private static String getZapRunnerFile() {
 		if (System.getProperty("os.name").contains("Windows"))
-			return ConfigurationUtils.ZAP_FILES[0];
-		else return ConfigurationUtils.ZAP_FILES[1];
+			return "zap.bat";
+		else return "zap.sh";
 					
 	}
 }
