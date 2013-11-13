@@ -21,27 +21,19 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine.parameter;
+package com.denimgroup.threadfix.framework;
 
-import com.denimgroup.threadfix.framework.engine.ProjectConfig;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
+import java.io.File;
 
-public class ParameterParserFactory {
-	
-	public static ParameterParser getParameterParser(ProjectConfig projectConfig) {
-		ParameterParser parser = null;
-		
-		switch (projectConfig.getFrameworkType()) {
-			case SPRING_MVC:
-				parser = new SpringDataFlowParser(projectConfig);
-				break;
-			case JSP:
-				parser = new JSPDataFlowParser(projectConfig);
-				break;
-			default:
-		}
-		
-		return parser;
+public class ResourceManager {
+
+	public static File getFile(String name) {
+		//URL url = ResourceManager.class.getClassLoader().getResource(name);
+		return new File("target/test-classes/" + name);//url.toString());
 	}
+	
+	public static File getSpringFile(String name) {
+		return getFile("code/spring/" + name);
+	}
+	
 }

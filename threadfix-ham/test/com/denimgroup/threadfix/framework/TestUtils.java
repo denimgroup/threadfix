@@ -21,27 +21,24 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine.parameter;
+package com.denimgroup.threadfix.framework;
 
-import com.denimgroup.threadfix.framework.engine.ProjectConfig;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ParameterParserFactory {
-	
-	public static ParameterParser getParameterParser(ProjectConfig projectConfig) {
-		ParameterParser parser = null;
+import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+
+public class TestUtils {
+
+	public static List<PartialMapping> getMappings(String[][] strings) {
+		List<PartialMapping> mappings = new ArrayList<>();
 		
-		switch (projectConfig.getFrameworkType()) {
-			case SPRING_MVC:
-				parser = new SpringDataFlowParser(projectConfig);
-				break;
-			case JSP:
-				parser = new JSPDataFlowParser(projectConfig);
-				break;
-			default:
+		for (String[] stringArray : strings) {
+			mappings.add(new DefaultPartialMapping(stringArray[0], stringArray[1]));
 		}
 		
-		return parser;
+		return mappings;
 	}
+	
 }

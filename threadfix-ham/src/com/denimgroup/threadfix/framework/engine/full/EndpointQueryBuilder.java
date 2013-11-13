@@ -29,6 +29,11 @@ public class EndpointQueryBuilder {
 
 	public EndpointQueryBuilder setParameter(String parameter) {
 		this.parameter = parameter;
+		
+		if (parameter == null) {
+			this.parameter = "null";
+		}
+		
 		return this;
 	}
 
@@ -102,6 +107,7 @@ public class EndpointQueryBuilder {
 			return informationSourceType;
 		}
 		
+		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
 			

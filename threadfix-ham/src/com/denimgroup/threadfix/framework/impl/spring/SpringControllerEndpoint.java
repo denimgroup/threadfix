@@ -63,15 +63,12 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 				returnSet.add(method);
 			}
 		}
+		
+		if (returnSet.isEmpty()) {
+			returnSet.add("GET");
+		}
+		
 		return returnSet;
-	}
-	
-	public String getRawFilePath() {
-		return rawFilePath;
-	}
-
-	public String getRawUrlPath() {
-		return rawUrlPath;
 	}
 	
 	@Override
@@ -110,30 +107,11 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		}
 	}
 	
-	public static String cleanUrlPathDynamic(String rawUrlPath) {
-		if (rawUrlPath == null) {
-			return null;
-		} else {
-			return rawUrlPath
-					.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
-					.replaceAll("\\.html", "")
-					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT);
-		}
-	}
-	
-	public int getStartLineNumber() {
-		return startLineNumber;
-	}
-	
 	@Override
 	public boolean matchesLineNumber(int lineNumber) {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
 	
-	public boolean matchesMethod(String method) {
-		return method != null && methods != null && methods.contains(method.toUpperCase());
-	}
-
 	@Override
 	public String toString() {
 		return "[" + getCleanedFilePath() +

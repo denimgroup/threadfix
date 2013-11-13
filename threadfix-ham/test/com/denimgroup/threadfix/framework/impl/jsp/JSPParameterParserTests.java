@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.jsp;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,11 +32,14 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
@@ -48,7 +51,8 @@ public class JSPParameterParserTests {
 				new File(TestConstants.BODGEIT_SOURCE_LOCATION), "/"),
 		noSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.NONE, null, null);
 
-	JSPDataFlowParser
+	ParameterParser
+		factoryParser = ParameterParserFactory.getParameterParser(fullSourceConfig),
 		fullSourceParser = new JSPDataFlowParser(fullSourceConfig),
 		noSourceParser = new JSPDataFlowParser(noSourceConfig);
 	
@@ -89,7 +93,9 @@ public class JSPParameterParserTests {
 		EndpointQuery emptyDataFlowFinding = EndpointQueryBuilder.start().setCodePoints(new ArrayList<CodePoint>()).generateQuery();
 		EndpointQuery nonEmptyDataFlowFinding = EndpointQueryBuilder.start().setCodePoints(basicModelElements).generateQuery();
 		
-		for (JSPDataFlowParser parser : new JSPDataFlowParser[] {fullSourceParser, noSourceParser}) {
+		for (ParameterParser parser : new ParameterParser[] {
+				factoryParser, fullSourceParser, noSourceParser
+				}) {
 			assertTrue("Parameter was not null and should have been.", parser.parse(null) == null);
 			assertTrue("Parameter was not null and should have been.", parser.parse(EndpointQueryBuilder.start().generateQuery()) == null);
 			assertTrue("Parameter was not null and should have been.", parser.parse(emptyDataFlowFinding) == null);

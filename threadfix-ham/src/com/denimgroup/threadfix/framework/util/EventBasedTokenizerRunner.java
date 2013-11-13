@@ -59,10 +59,7 @@ public class EventBasedTokenizerRunner {
 	public static void run(File file, EventBasedTokenizer eventTokenizer) {
 
 		if (file != null && file.exists() && file.isFile()) {
-			Reader reader = null;
-			
-			try {
-				reader = new FileReader(file);
+			try (Reader reader = new FileReader(file)) {
 			
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
 				tokenizer.slashSlashComments(true);
@@ -79,14 +76,6 @@ public class EventBasedTokenizerRunner {
 				log.error("Encountered FileNotFoundException while looking for file", e);
 			} catch (IOException e) {
 				log.warn("Encountered IOException while tokenizing file.", e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						log.error("IOException encountered while trying to close the FileReader.");
-					}
-				}
 			}
 		}
 	}

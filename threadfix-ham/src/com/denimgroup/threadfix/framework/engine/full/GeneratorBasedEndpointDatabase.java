@@ -43,6 +43,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	private final Map<String, Set<Endpoint>>
 		dynamicMap = new HashMap<>(),
 		staticMap  = new HashMap<>(),
+		parameterMap = new HashMap<>(),
 		httpMethodMap = new HashMap<>();
 	
 	protected final static SanitizedLogger log = new SanitizedLogger(GeneratorBasedEndpointDatabase.class);
@@ -74,8 +75,17 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 			for (String method : endpoint.getHttpMethods()) {
 				addToMap(httpMethodMap, method, endpoint);
 				
+				// If non-standard methods are used, add post because that's what scanners might have
 				if (!"POST".equals(method) && !"GET".equals(method)) {
 					addToMap(httpMethodMap, "POST", endpoint);
+				}
+			}
+			
+			if (endpoint.getParameters() == null || endpoint.getParameters().isEmpty()) {
+				addToMap(parameterMap, "null", endpoint);
+			} else {
+				for (String parameter : endpoint.getParameters()) {
+					addToMap(parameterMap, parameter, endpoint);
 				}
 			}
 		}
@@ -125,6 +135,10 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 			
 			if (query.getHttpMethod() != null) {
 				resultSets.add(getValueOrNull(query.getHttpMethod(), httpMethodMap));
+			}
+			
+			if (query.getParameter() != null) {
+				resultSets.add(getValueOrNull(query.getParameter(), parameterMap));
 			}
 			
 			if (resultSets.size() > 0) {
