@@ -1,3 +1,5 @@
+target/
+
 # Java #
 
 *.class
@@ -48,4 +50,7 @@ local.properties
 .idea/
 out/
 
-/bin
+.project
+.classpath
+
+

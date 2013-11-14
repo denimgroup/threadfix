@@ -37,6 +37,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
@@ -290,12 +291,10 @@ public class ScanQueueTask extends AuditableEntity {
 		return sb.toString();
 	}
 	
-//	public String[] getTaskStatusList() {
-//		int noOfStatuses = ScanQueueTaskStatus.values().length;
-//		String[] statusList = new String[noOfStatuses];
-//		for (int i=0; i<noOfStatuses; i++)
-//			statusList[i] = ScanQueueTaskStatus.values()[i].getDescription();
-//
-//		return statusList;
-//	}
+	@Transient
+	public String getScannerShortName() {
+		return ScannerType.getShortName(getScanner());
+	}
+	
+
 }

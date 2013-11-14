@@ -1,1 +1,1 @@
-cp threadfix-source/threadfix-main/util/build/* .
+cp threadfix/threadfix-main/util/build/* .

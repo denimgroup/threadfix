@@ -55,6 +55,10 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	
 	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
 	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
+	
+	private static final String
+		DATE_FORMAT_WITH_T = "yyyy-MM-dd'T'HH:mm:ss",
+		DATE_FORMAT_WITHOUT_T = "yyyy-MM-dd kk:mm:ss";
 
 	private String password = null;
 	private String username = null;
@@ -65,7 +69,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
-		if (remoteProviderApplication == null || 
+		if (remoteProviderApplication == null ||
 				remoteProviderApplication.getApplicationChannel() == null) {
 			log.error("Veracode getScan() called with invalid parameters. Returning null");
 			return null;
@@ -204,7 +208,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		
 		public List<RemoteProviderApplication> list = new ArrayList<RemoteProviderApplication>();
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if (qName.equals("application")) {
 	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(atts.getValue("app_name"));
@@ -222,21 +227,23 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		private String currentAppName = null;
 		private String currentBuildId = null;
 		
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if (qName.equals("application")) {
 	    		currentAppName = atts.getValue("app_name");
 	    		map.put(currentAppName, new ArrayList<String>());
 	    	} else if (currentAppName != null && qName.equals("build")) {
 	    		currentBuildId = atts.getValue("build_id");
 	    		map.get(currentAppName).add(currentBuildId);
-	    	} else if (currentAppName != null && currentBuildId != null 
+	    	} else if (currentAppName != null && currentBuildId != null
 	    			&& qName.equals("analysis_unit")) {
 	    		
 	    		String dateString = atts.getValue("published_date");
-	    		if (dateString != null && dateString.length() > 5)
-	    			dateString = dateString.substring(0,dateString.length() - 5);
+	    		if (dateString != null && dateString.length() > 5) {
+					dateString = dateString.substring(0,dateString.length() - 5);
+				}
 	    		
-	    		Calendar calendar = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss", dateString);
+	    		Calendar calendar = getCalendarFromString(DATE_FORMAT_WITH_T, dateString);
 	    		dateMap.put(currentBuildId, calendar);
 	    	}
 	    }
@@ -253,11 +260,13 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) {
+	    @Override
+		public void startElement (String uri, String name, String qName, Attributes atts) {
 	    	if ("detailedreport".equals(qName)) {
-	    		date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", atts.getValue("last_update_time"));
-	    		if (date == null)
-	    			date = getCalendarFromString("yyyy-MM-dd kk:mm:ss", atts.getValue("generation_date"));
+	    		date = getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("last_update_time"));
+	    		if (date == null) {
+					date = getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("generation_date"));
+				}
 	    	}
 	    	
 	    	if ("dynamicflaws".equals(qName)) {
@@ -266,14 +275,16 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    	
 	    	// TODO look through more Veracode scans and see if the inputvector component is the parameter.
 	    	if ("flaw".equals(qName)) {
-	    		if ("Fixed".equals(atts.getValue("remediation_status")))
-	    			return;
+	    		if ("Fixed".equals(atts.getValue("remediation_status"))) {
+					return;
+				}
 	    		
 	    		String url = null;
-	    		if (atts.getValue("url") != null)
-	    			url = atts.getValue("url");
-	    		else if (atts.getValue("location") != null)
-	    			url = atts.getValue("location");
+	    		if (atts.getValue("url") != null) {
+					url = atts.getValue("url");
+				} else if (atts.getValue("location") != null) {
+					url = atts.getValue("location");
+				}
 
 	    		Finding finding = constructFinding(url,
 	    										   atts.getValue("vuln_parameter"),
@@ -282,7 +293,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    		if (finding != null) {
 	    			finding.setNativeId(atts.getValue("issueid"));
 	    			
-	    			// TODO revise this method of deciding whether the finding is static.	    			
+	    			// TODO revise this method of deciding whether the finding is static.
     				finding.setIsStatic(inStaticFlaws);
     				if (atts.getValue("sourcefile") != null && atts.getValue("sourcefilepath") != null) {
     					String sourceFileLocation = atts.getValue("sourcefilepath") + atts.getValue("sourcefile");
@@ -323,7 +334,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    }
 	    
 	    @Override
-	    public void endElement (String uri, String localName, String qName) throws SAXException {	    	
+	    public void endElement (String uri, String localName, String qName) throws SAXException {
 	    	if (qName.equals("dynamicflaws")) {
 	    		if ("dynamicflaws".equals(qName)) {
 		    		inStaticFlaws = true;

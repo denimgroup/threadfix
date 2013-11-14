@@ -40,7 +40,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -84,10 +83,7 @@ public final class ScanAgentRunner implements ServerConduit {
 				.create("r");
 		options.addOption(runScanQueueTask);
 		
-		Option set = OptionBuilder.withArgName("property> <value")
-//				.withValueSeparator(' ')
-//				.hasArgs(2)
-				.withLongOpt("set")
+		Option set = OptionBuilder.withLongOpt("set")
 				.withDescription("Set the ThreadFix base url, ThreadFix API key or Working directory properties")
 				.create("s");
 		options.addOption(set); 
@@ -113,7 +109,9 @@ public final class ScanAgentRunner implements ServerConduit {
 			PosixParser parser = new PosixParser();
 			try {
 				CommandLine cmd = parser.parse( options, args);
-				PropertiesConfiguration config = new PropertiesConfiguration("scanagent.properties");
+				PropertiesConfiguration config = ConfigurationUtils.getPropertiesFile();
+				if (config == null)
+					return;
 				config.setAutoSave(true);
 
 				if (cmd.hasOption("help")) {
@@ -156,19 +154,16 @@ public final class ScanAgentRunner implements ServerConduit {
 				}
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("java -jar scanagent.jar", options);
-			} catch (ConfigurationException e) {
-				log.error("Problems reading configuration: " + e.getMessage(), e);
-			}		 
+			} 		 
 	}
 
 	private static boolean checkRequiredConfiguration(
 			PropertiesConfiguration config) {
 		if (config.getString("scanagent.baseWorkDir","").isEmpty()) {
-			System.out.println("Not found required configuration (ThreadFix URL, API Key or Working directory). " +
+			System.out.println("Not found enough server configuration (ThreadFix URL, API Key or Working directory). " +
 					"Please run '-s' to set up all of these information.");
 			return false;
 		}
-			
 		return true;
 	}
 

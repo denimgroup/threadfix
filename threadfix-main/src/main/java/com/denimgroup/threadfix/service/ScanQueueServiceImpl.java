@@ -194,7 +194,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 					//	See if there is a configuration file specified for this Application and scanner type
 					int appId = task.getApplication().getId();
 					
-					Document configDoc = this.documentDao.retrieveByAppIdAndFilename(appId, task.getScanner(), ScanQueueTask.SCANAGENT_CONFIG_FILE_EXTENSION);
+					Document configDoc = this.documentDao.retrieveByAppIdAndFilename(appId, task.getScannerShortName(), ScanQueueTask.SCANAGENT_CONFIG_FILE_EXTENSION);
 					
 					if(configDoc != null) {
 						Blob fileData = configDoc.getFile();

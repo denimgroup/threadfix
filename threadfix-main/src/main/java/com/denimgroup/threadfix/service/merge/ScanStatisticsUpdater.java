@@ -47,7 +47,7 @@ public class ScanStatisticsUpdater {
 	private Set<Vulnerability> alreadySeenVulns = new HashSet<>();
 	private ScanDao scanDao;
 	private JobStatusService jobStatusService;
-	private int numMergedInsideScan = 0, initialOld = 0, numUnableToParseVuln = 0;;
+	private int numMergedInsideScan = 0, initialOld = 0, numUnableToParseVuln = 0;
 	private Integer statusId;
 	
 	private long interval = 0, count = 0, soFar = 0;
@@ -65,6 +65,9 @@ public class ScanStatisticsUpdater {
 		log.info("Starting Application-wide merge process with "
 				+ scan.getFindings().size() + " findings.");
 		
+		if (scan.getNumberOldVulnerabilities() == null) {
+			scan.setNumberOldVulnerabilities(0);
+		}
 		initialOld = scan.getNumberOldVulnerabilities();
 		
 		interval = scan.getFindings().size() / 10;
