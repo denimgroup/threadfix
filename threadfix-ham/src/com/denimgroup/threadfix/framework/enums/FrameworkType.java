@@ -33,7 +33,7 @@ public enum FrameworkType {
 		this.displayName = displayName;
 	}
 	
-	String displayName;
+	private String displayName;
 	public String getDisplayName() { return displayName; }
 	
 	@NotNull

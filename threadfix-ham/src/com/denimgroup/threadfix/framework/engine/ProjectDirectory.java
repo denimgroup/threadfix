@@ -53,7 +53,7 @@ public class ProjectDirectory {
 	}
 	
 	@NotNull
-    public String getDirectoryPath() {
+    private String getDirectoryPath() {
 		return directory.getAbsolutePath();
 	}
 
@@ -134,10 +134,10 @@ public class ProjectDirectory {
 
     @NotNull
     private List<File> findFilesWithStar(@NotNull String path) {
-		List<File> returnFile = null;
+		List<File> returnFile = new ArrayList<>();
 		String[] pathSegments = breakUpPath(path);
 		
-		if (pathSegments != null && pathSegments.length > 0) {
+		if (pathSegments.length > 0) {
 			returnFile = findFilesWithStar(pathSegments[pathSegments.length - 1], pathSegments);
 		}
 		
@@ -150,7 +150,7 @@ public class ProjectDirectory {
 		
 		if (fileName.contains("*")) {
 		
-			List<String> possibleEntries = new ArrayList<String>();
+			List<String> possibleEntries = new ArrayList<>();
 			
 			String[] segments = fileName.split("\\*");
 			if (fileName.endsWith("*")) {
@@ -223,7 +223,7 @@ public class ProjectDirectory {
 		File returnFile = null;
 		String[] pathSegments = breakUpPath(path);
 		
-		if (pathSegments != null && pathSegments.length > 0) {
+		if (pathSegments.length > 0) {
 			returnFile = findFile(pathSegments[pathSegments.length - 1], pathSegments);
 		}
 		
@@ -252,7 +252,7 @@ public class ProjectDirectory {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
-		if (pathSegments != null && pathSegments.length > 0) {
+		if (pathSegments.length > 0) {
 			returnString = findFilePath(pathSegments[pathSegments.length - 1], pathSegments);
 			
 			if (returnString != null) {
@@ -272,7 +272,7 @@ public class ProjectDirectory {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
-		if (pathSegments != null && pathSegments.length > 0) {
+		if (pathSegments.length > 0) {
 			returnString = findFilePath(pathSegments[pathSegments.length - 1], pathSegments);
 			
 			if (returnString != null) {

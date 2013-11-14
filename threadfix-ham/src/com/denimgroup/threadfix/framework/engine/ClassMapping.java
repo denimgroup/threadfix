@@ -34,7 +34,7 @@ public class ClassMapping {
     @Nullable
     private final String contextConfigLocation;
 	
-	public static final String CLASSPATH_START = "classpath:";
+	private static final String CLASSPATH_START = "classpath:";
 	
 	public ClassMapping(@NotNull String servletName, @NotNull String classWithPackage, @Nullable String contextConfigLocation) {
 

@@ -41,7 +41,7 @@ class JSPIncludeParser implements EventBasedTokenizer {
 	@NotNull
     private State currentState = State.START;
 	@NotNull
-    private Set<File> returnFiles = new HashSet<File>();
+    private Set<File> returnFiles = new HashSet<>();
 	private File inputFile;
 	
 	private enum State {

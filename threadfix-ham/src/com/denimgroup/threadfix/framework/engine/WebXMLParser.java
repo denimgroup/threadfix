@@ -54,7 +54,7 @@ public class WebXMLParser {
     public static ServletMappings getServletMappings(@NotNull File file,
 			ProjectDirectory projectDirectory) {
 		ServletParser parser = new WebXMLParser.ServletParser();
-		
+
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
@@ -118,7 +118,9 @@ public class WebXMLParser {
 				case URL_PATTERN:   urlPattern   = getBuilderText(); break;
 				case SERVLET_CLASS: servletClass = getBuilderText(); break;
 				case SERVLET_MAPPING:
-					mappings.add(new UrlPatternMapping(servletName, urlPattern));
+                    if (servletName != null && urlPattern != null) {
+					    mappings.add(new UrlPatternMapping(servletName, urlPattern));
+                    }
 					break;
 				case SERVLET:
 					if (servletName != null && servletClass != null) {

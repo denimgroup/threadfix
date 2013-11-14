@@ -46,8 +46,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;
 	private boolean inClass = false;
 	@Nullable
-    private String classEndpoint = null, currentMapping = null,
-			rootFilePath = null, lastValue = null, secondToLastValue = null;
+    private String classEndpoint = null, currentMapping = null, lastValue = null,
+            secondToLastValue = null;
+
+    @NotNull
+    private final String rootFilePath;
 	@Nullable
     private BeanField currentModelObject = null;
 	@NotNull
@@ -71,30 +74,30 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private AnnotationState annotationState = AnnotationState.START;
 	private SignatureState signatureState = SignatureState.START;
 	
-	@Nullable
-    private SpringEntityMappings entityMappings = null;
+	@NotNull
+    private SpringEntityMappings entityMappings;
 	
 	private enum Phase {
 		ANNOTATION, SIGNATURE, METHOD
 	}
 	
 	private enum AnnotationState {
-		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END;
+		START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END
 	}
 	
 	private enum SignatureState {
-		START, ARROBA, REQUEST_PARAM;
+		START, ARROBA, REQUEST_PARAM
 	}
 	
 	@NotNull
-    public static Set<SpringControllerEndpoint> parse(@NotNull File file, SpringEntityMappings entityMappings) {
+    public static Set<SpringControllerEndpoint> parse(@NotNull File file, @NotNull SpringEntityMappings entityMappings) {
 		SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.endpoints;
 	}
 	
-	private SpringControllerEndpointParser(@Nullable String rootFilePath,
-                                           @Nullable SpringEntityMappings entityMappings) {
+	private SpringControllerEndpointParser(@NotNull String rootFilePath,
+                                           @NotNull SpringEntityMappings entityMappings) {
 		this.rootFilePath = rootFilePath;
 		this.entityMappings = entityMappings;
 	}
@@ -103,8 +106,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (phase) {
 			case ANNOTATION: parseAnnotation(type, lineNumber, stringValue); break;
-			case SIGNATURE:  parseSignature(type, lineNumber, stringValue);  break;
-			case METHOD:     parseMethod(type, lineNumber, stringValue);     break;
+			case SIGNATURE:  parseSignature(type, stringValue);  break;
+			case METHOD:     parseMethod(type, lineNumber);     break;
 		}
 	}
 	
@@ -112,7 +115,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		signatureState = state;
 	}
 	
-	private void parseSignature(int type, int lineNumber, @Nullable String stringValue) {
+	private void parseSignature(int type, @Nullable String stringValue) {
 		
 		if (lastSymbol == CLOSE_PAREN && type == OPEN_CURLY) {
 			curlyBraceCount = 1;
@@ -125,7 +128,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 			case START:
 				if (type == ARROBA) {
 					setState(SignatureState.ARROBA);
-				} else if (stringValue != null && stringValue.equals(BINDING_RESULT)) {
+				} else if (stringValue != null && stringValue.equals(BINDING_RESULT) &&
+                        secondToLastValue != null && lastValue != null) {
 					currentModelObject = new BeanField(secondToLastValue, lastValue); // should be type and variable name
 				}
 				break;
@@ -146,7 +150,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 					currentParameters.add(lastValue);
 					lastValue = null;
 					setState(SignatureState.START);
-				} else if (type == CLOSE_PAREN) {
+				} else { // type must be CLOSE_PAREN
 					if (lastValue != null) {
 						currentParameters.add(lastValue);
 						lastValue = null;
@@ -160,7 +164,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		}
 	}
 
-	private void parseMethod(int type, int lineNumber, String stringValue) {
+	private void parseMethod(int type, int lineNumber) {
 		if (type == OPEN_CURLY) {
 			curlyBraceCount += 1;
 		} else if (type == CLOSE_CURLY) {

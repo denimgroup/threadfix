@@ -43,7 +43,7 @@ import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 public class PetClinicEndpointDatabaseTests {
 	
 	@Nullable
-    private EndpointDatabase getSpringEndpointDatabase() {
+    private EndpointDatabase getSpringEndpointDatabaseDynamic() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		
 		return EndpointDatabaseFactory.getDatabase(file, FrameworkType.SPRING_MVC, new SpringPathCleaner("/petclinic", null));
@@ -52,7 +52,7 @@ public class PetClinicEndpointDatabaseTests {
 	@Test
 	public void testPetClinicDynamicToStaticPathQueries() {
 		
-		EndpointDatabase db = getSpringEndpointDatabase();
+		EndpointDatabase db = getSpringEndpointDatabaseDynamic();
 		
 		for (String[] pair : dynamicToStaticTests) {
 			String result = getStaticPath(db, pair[0]);
@@ -117,10 +117,18 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/owners", "GET", "84" },
 			{ "/petclinic/owners", "POST", null },
 	};
-	
+
+
+    @Nullable
+    private EndpointDatabase getSpringEndpointDatabaseStatic() {
+        File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
+
+        return EndpointDatabaseFactory.getDatabase(file, FrameworkType.SPRING_MVC, new SpringPathCleaner("/petclinic", null));
+    }
+
 	@Test
 	public void testHttpMethodRecognition() {
-		EndpointDatabase db = getSpringEndpointDatabase();
+		EndpointDatabase db = getSpringEndpointDatabaseStatic();
 		
 		for (String[] httpMethodTest : httpMethodTests) {
 			EndpointQuery query =
@@ -224,7 +232,7 @@ public class PetClinicEndpointDatabaseTests {
 	// TODO add parameter stuff
 	@Test
 	public void testParameterRecognition() {
-		EndpointDatabase db = getSpringEndpointDatabase();
+		EndpointDatabase db = getSpringEndpointDatabaseStatic();
 		
 		for (String[] httpMethodTest : parameterTests) {
 			EndpointQuery query =

@@ -55,7 +55,7 @@ public class ServletMappings {
 	@NotNull
     private UrlPatternMapping defaultServlet = new UrlPatternMapping(DEFAULT_SERVLET,"/");
 
-    @Nullable
+    @NotNull
     private UrlPatternMapping contextRootServlet = defaultServlet;
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -216,15 +216,12 @@ public class ServletMappings {
 	// TODO make sure the path coming in does not have the application context root included
 
     /**
-     * Return the servlet name, or null if none is found
-     * @param path
-     * @return
+     * @return the servlet name, or null if none is found
      */
     @NotNull
 	private String findServletName(@NotNull String path) {
 		
-		if (path.equals("") || path.equals("/") &&
-                contextRootServlet != null) {
+		if (path.equals("") || path.equals("/")) {
 			// Use context root servlet
             return contextRootServlet.getServletName();
 		}

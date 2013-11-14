@@ -77,7 +77,7 @@ public class BeanFieldSet implements Iterable<BeanField> {
 	
 	@NotNull
     public Collection<String> getPossibleParameters() {
-		List<String> strings = new ArrayList<String>();
+		List<String> strings = new ArrayList<>();
 		for (BeanField field : fieldSet) {
 			strings.add(field.getParameterKey());
 		}

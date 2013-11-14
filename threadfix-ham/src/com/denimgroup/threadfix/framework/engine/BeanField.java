@@ -76,6 +76,6 @@ public class BeanField {
 	
 	@Override
 	public boolean equals(@Nullable Object object) {
-		return object != null && object.hashCode() == hashCode();
+		return object instanceof BeanField && object.hashCode() == hashCode();
 	}
 }

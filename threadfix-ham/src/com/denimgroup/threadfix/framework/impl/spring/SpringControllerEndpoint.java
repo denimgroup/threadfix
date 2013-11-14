@@ -147,7 +147,12 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	@NotNull
     @Override
 	public String getUrlPath() {
-		return getCleanedUrlPath();
+		String path = getCleanedUrlPath();
+        if (path != null) {
+            return path;
+        } else {
+            return "";
+        }
 	}
 
 	@NotNull

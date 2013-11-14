@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
@@ -143,26 +144,28 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         }
 
         if (resultSets.size() > 0) {
-            Set<Endpoint> union = null;
+            boolean assignedInitial = false;
 
             for (Set<Endpoint> endpoints : resultSets) {
-                if (union == null) {
-                    union = endpoints;
+                if (endpoints != null) {
+
+                    if (!assignedInitial) {
+                        resultingSet = endpoints;
+                        assignedInitial = true;
+                    }
+
+                    resultingSet.retainAll(endpoints);
                 }
-
-                union.retainAll(endpoints);
             }
-
-            resultingSet = union;
         }
 
 		return resultingSet;
 	}
 	
 	@NotNull
-    private Set<Endpoint> getValueOrEmptySet(@NotNull String key,
+    private Set<Endpoint> getValueOrEmptySet(@Nullable String key,
                                              @NotNull Map<String, Set<Endpoint>> map) {
-		if (map.containsKey(key) && map.get(key) != null) {
+		if (key != null && map.containsKey(key) && map.get(key) != null) {
 			return new HashSet<>(map.get(key));
 		} else {
 			return new HashSet<>();

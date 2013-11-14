@@ -90,17 +90,15 @@ public class JSPMappings implements EndpointGenerator {
 	}
 	
 	@Nullable
-    public Endpoint getEndpoint(File file) {
-		JSPEndpoint endpoint = null;
-		
+    Endpoint getEndpoint(File file) {
 		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
 
         String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
 
-        endpoint = new JSPEndpoint(
+        JSPEndpoint endpoint = new JSPEndpoint(
                 getOr(staticPath, ""),
                 getOr(FilePathUtils.getRelativePath(file, jspRoot), ""),
-                new HashSet<String>(Arrays.asList("GET", "POST")),
+                new HashSet<>(Arrays.asList("GET", "POST")),
                 parserResults
                 );
 
@@ -110,7 +108,7 @@ public class JSPMappings implements EndpointGenerator {
 	}
 
     @NotNull
-    public String getOr(@Nullable String input, @NotNull String or) {
+    private String getOr(@Nullable String input, @NotNull String or) {
         if (input == null) {
             return or;
         } else {

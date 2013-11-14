@@ -55,8 +55,12 @@ public class EndpointDatabaseFactory {
 		}
 		
 		log.info("Returning database with generator: " + generator);
-		
-		return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
+
+		if (generator == null) {
+            return null;
+        } else {
+		    return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
+        }
 	}
 	
 }

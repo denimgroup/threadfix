@@ -72,7 +72,7 @@ class SpringEntityMappings {
 			fields = new BeanFieldSet(new HashSet<BeanField>());
 		}
 		
-		Set<String> alreadyVisited = new HashSet<String>();
+		Set<String> alreadyVisited = new HashSet<>();
 		alreadyVisited.add(className);
 		
 		BeanFieldSet fieldsToAdd = new BeanFieldSet(new HashSet<BeanField>());

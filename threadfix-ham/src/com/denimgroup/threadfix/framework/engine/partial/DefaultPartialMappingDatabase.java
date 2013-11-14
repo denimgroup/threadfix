@@ -57,8 +57,8 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	private void addToMap(@NotNull Iterable<PartialMapping> partialMappings) {
 		for (PartialMapping partialMapping : partialMappings) {
 			if (isComplete(partialMapping)) {
-				addToMap(dynamicMap, pathCleaner.cleanDynamicPath(partialMapping.getDynamicPath()), partialMapping);
-				addToMap(staticMap, pathCleaner.cleanStaticPath(partialMapping.getStaticPath()), partialMapping);
+				addToMap(dynamicMap, cleanDynamicPath(partialMapping.getDynamicPath()), partialMapping);
+				addToMap(staticMap, cleanStaticPath(partialMapping.getStaticPath()), partialMapping);
 			}
 		}
 	}
@@ -76,9 +76,10 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	
 	@Nullable
     private PartialMapping clean(@NotNull PartialMapping input) {
+
 		return new DefaultPartialMapping(
-				pathCleaner.cleanStaticPath(input.getStaticPath()),
-				pathCleaner.cleanDynamicPath(input.getDynamicPath())
+				cleanStaticPath(input.getStaticPath()),
+				cleanDynamicPath(input.getDynamicPath())
 				);
 	}
 	
@@ -104,17 +105,35 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	@Override
     @NotNull
 	public List<PartialMapping> findAllMatches(@Nullable PartialMapping query) {
-		List<PartialMapping> maybeMappings = new ArrayList<PartialMapping>();
+		List<PartialMapping> maybeMappings = new ArrayList<>();
 		if (query != null) {
-			maybeMappings = getMappingsIfPresent(dynamicMap, pathCleaner.cleanDynamicPath(query.getDynamicPath()));
+			maybeMappings = getMappingsIfPresent(dynamicMap, cleanDynamicPath(query.getDynamicPath()));
 			
 			if (maybeMappings.isEmpty()) {
-				maybeMappings = getMappingsIfPresent(staticMap, pathCleaner.cleanDynamicPath(query.getDynamicPath()));
+				maybeMappings = getMappingsIfPresent(staticMap, cleanStaticPath(query.getStaticPath()));
 			}
 		}
 		
 		return maybeMappings;
 	}
+
+    @Nullable
+    private String cleanStaticPath(@Nullable String input) {
+        if (input != null) {
+            return pathCleaner.cleanStaticPath(input);
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private String cleanDynamicPath(@Nullable String input) {
+        if (input != null) {
+            return pathCleaner.cleanDynamicPath(input);
+        } else {
+            return null;
+        }
+    }
 
     @NotNull
 	private List<PartialMapping> getMappingsIfPresent(@NotNull Map<String, List<PartialMapping>> map, @Nullable String key) {
