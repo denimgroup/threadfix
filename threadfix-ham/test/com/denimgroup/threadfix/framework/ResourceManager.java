@@ -23,16 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 public class ResourceManager {
 
-	public static File getFile(String name) {
+	@NotNull
+    public static File getFile(String name) {
 		//URL url = ResourceManager.class.getClassLoader().getResource(name);
 		return new File("target/test-classes/" + name);//url.toString());
 	}
 	
-	public static File getSpringFile(String name) {
+	@NotNull
+    public static File getSpringFile(String name) {
 		return getFile("code/spring/" + name);
 	}
 	

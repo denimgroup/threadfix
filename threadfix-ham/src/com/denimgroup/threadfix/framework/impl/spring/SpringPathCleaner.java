@@ -28,12 +28,15 @@ import java.util.List;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringPathCleaner implements PathCleaner {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	public static final String JSESSIONID = ";jsessionid=";
-	public static final SpringPathCleaner INSTANCE = new SpringPathCleaner(null);
+	@Nullable
+    public static final SpringPathCleaner INSTANCE = new SpringPathCleaner(null);
 	
 	private final String dynamicRoot, staticRoot;
 	
@@ -50,11 +53,10 @@ public class SpringPathCleaner implements PathCleaner {
 	}
 	
 	@Override
-	public String cleanStaticPath(String filePath) {
+	public String cleanStaticPath(@NotNull String filePath) {
 		String relativeFilePath = filePath;
 		
-		if (staticRoot != null && relativeFilePath != null &&
-				filePath.startsWith(staticRoot)) {
+		if (staticRoot != null && filePath.startsWith(staticRoot)) {
 			relativeFilePath = filePath.substring(staticRoot.length());
 		}
 		
@@ -62,37 +64,32 @@ public class SpringPathCleaner implements PathCleaner {
 	}
 
 	@Override
-	public String cleanDynamicPath(String urlPath) {
+	public String cleanDynamicPath(@NotNull String urlPath) {
 		
 		String relativeUrlPath = urlPath;
 		
-		if (urlPath != null && dynamicRoot != null &&
-				relativeUrlPath != null &&
+		if (dynamicRoot != null &&
 				urlPath.startsWith(dynamicRoot)) {
 			relativeUrlPath = urlPath.substring(dynamicRoot.length());
 		}
 		
-		if (relativeUrlPath == null) {
-			return null;
-		} else {
-			String escaped = relativeUrlPath;
-			
-			if (escaped.contains(JSESSIONID)) {
-				escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
-			}
-			
-			escaped = escaped
-					.replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
-					.replaceAll("\\.html", "")
-					.replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT)
-					.replaceAll("/\\*/", "/" + GENERIC_INT_SEGMENT + "/")
-					.replaceAll("/$", "")
-					.replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
-			
-			
-			
-			return escaped;
-		}
+        String escaped = relativeUrlPath;
+
+        if (escaped.contains(JSESSIONID)) {
+            escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
+        }
+
+        escaped = escaped
+                .replaceAll("/[0-9]+/", "/" + GENERIC_INT_SEGMENT + "/")
+                .replaceAll("\\.html", "")
+                .replaceAll("/[0-9]+$", "/" + GENERIC_INT_SEGMENT)
+                .replaceAll("/\\*/", "/" + GENERIC_INT_SEGMENT + "/")
+                .replaceAll("/$", "")
+                .replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
+
+
+
+        return escaped;
 	}
 
 	@Override
@@ -105,7 +102,8 @@ public class SpringPathCleaner implements PathCleaner {
 		return staticRoot;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return "Spring PathCleaner with dynamic root = " + dynamicRoot + ", static root = " + staticRoot;
 	}

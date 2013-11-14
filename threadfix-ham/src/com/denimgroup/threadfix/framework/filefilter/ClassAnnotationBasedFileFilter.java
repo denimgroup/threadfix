@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.framework.filefilter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,6 +33,8 @@ import java.util.Set;
 import org.apache.commons.io.filefilter.IOFileFilter;
 
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class checks for annotations given by getClassAnnotations before the class
@@ -45,10 +46,11 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 	
 	private final SanitizedLogger log = new SanitizedLogger("AnnotationBasedFileFilter");
 	
-	protected abstract Set<String> getClassAnnotations();
+	@NotNull
+    protected abstract Set<String> getClassAnnotations();
 	
 	@Override
-	public boolean accept(File file) {
+	public boolean accept(@Nullable File file) {
 		boolean returnValue = false;
 		boolean hasArroba = false;
 		
@@ -70,9 +72,6 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 					
 					hasArroba = tokenizer.ttype == '@';
 				}
-			} catch (FileNotFoundException e) {
-				// shouldn't happen, we check to make sure it exists
-				log.error("Encountered FileNotFoundException while looking for @Controllers", e);
 			} catch (IOException e) {
 				log.warn("Encountered IOException while tokenizing file.", e);
 			}
@@ -85,7 +84,7 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 	 * This should just proxy to the other method
 	 */
 	@Override
-	public boolean accept(File file, String name) {
+	public boolean accept(@NotNull File file, String name) {
 		return accept(new File(file.getAbsolutePath() + File.pathSeparator + name));
 	}
 }

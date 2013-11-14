@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class can be used with Commons FileUtils to filter for finding Spring Entities.
@@ -45,7 +46,8 @@ class SpringEntityFileFilter extends ClassAnnotationBasedFileFilter {
 	
 	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Entity", "MappedSuperclass"));
 	
-	@Override
+	@NotNull
+    @Override
 	protected Set<String> getClassAnnotations() {
 		return annotations;
 	}

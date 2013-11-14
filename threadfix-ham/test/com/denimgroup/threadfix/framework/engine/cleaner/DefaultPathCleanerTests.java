@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestUtils;
@@ -48,7 +49,8 @@ public class DefaultPathCleanerTests {
 				staticRoot.equals(cleaner.getStaticRoot()));
 	}
 	
-	String[][] base = {
+	@NotNull
+    String[][] base = {
 		{ "/root/about.jsp", "/bodgeit/about.jsp" },
 		{ "/root/admin.jsp", "/bodgeit/admin.jsp" },
 		{ "/root/advanced.jsp", "/bodgeit/advanced.jsp"  },
@@ -101,19 +103,24 @@ public class DefaultPathCleanerTests {
 					dynamicResult.equals(staticResult));
 		}
 	}
-	
+
+    @Test(expected=NullPointerException.class)
+    public void testGiveStaticNullArgument() {
+        String staticRoot = "/root", dynamicRoot = "/bodgeit";
+        PathCleaner cleaner = new DefaultPathCleaner(staticRoot, dynamicRoot);
+        cleaner.cleanStaticPath(null);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testGiveDynamicNullArgument() {
+        String staticRoot = "/root", dynamicRoot = "/bodgeit";
+        PathCleaner cleaner = new DefaultPathCleaner(staticRoot, dynamicRoot);
+        cleaner.cleanDynamicPath(null);
+    }
+
 	@Test
 	public void nullCleaningTests() {
-		String staticRoot = "/root", dynamicRoot = "/bodgeit";
-		
-		PathCleaner cleaner = new DefaultPathCleaner(staticRoot, dynamicRoot);
-		
-		assertTrue("Got " + cleaner.cleanStaticPath(null) + " instead of null.",
-				cleaner.cleanStaticPath(null) == null);
-		assertTrue("Got " + cleaner.cleanDynamicPath(null) + " instead of null.",
-				cleaner.cleanDynamicPath(null) == null);
-		
-		cleaner = new DefaultPathCleaner(null, null);
+		PathCleaner cleaner = new DefaultPathCleaner(null, null);
 		
 		assertTrue(cleaner.toString() != null);
 		

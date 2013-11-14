@@ -23,14 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
-public interface PathCleaner {
-	
-	String cleanStaticPath(String filePath);
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-	String cleanDynamicPath(String urlPath);
-	
+public interface PathCleaner {
+
+    @Nullable
+	String cleanStaticPath(@NotNull String filePath);
+
+    @Nullable
+	String cleanDynamicPath(@NotNull String urlPath);
+
+    @Nullable
 	String getDynamicRoot();
-	
+
+    @Nullable
 	String getStaticRoot();
 	
 }

@@ -1,5 +1,7 @@
 package com.denimgroup.threadfix.framework.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,7 +11,8 @@ public class RegexUtils {
 	
 	private RegexUtils(){}
 	
-	public static String getRegexResult(String targetString, String regex) {
+	@Nullable
+    public static String getRegexResult(@Nullable String targetString, @Nullable String regex) {
 		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
 			return null;
 		}
@@ -25,7 +28,8 @@ public class RegexUtils {
 	 * @param pattern
 	 * @return
 	 */
-	public static String getRegexResult(String targetString, Pattern pattern) {
+	@Nullable
+    public static String getRegexResult(@Nullable String targetString, @Nullable Pattern pattern) {
 		if (targetString == null || targetString.isEmpty() || pattern == null) {
 			return null;
 		}
@@ -44,7 +48,8 @@ public class RegexUtils {
 	 * @param pattern
 	 * @return
 	 */
-	public static List<String> getRegexResults(String targetString, Pattern pattern) {
+	@Nullable
+    public static List<String> getRegexResults(@Nullable String targetString, @Nullable Pattern pattern) {
 		if (targetString == null || targetString.isEmpty() || pattern == null) {
 			return null;
 		}

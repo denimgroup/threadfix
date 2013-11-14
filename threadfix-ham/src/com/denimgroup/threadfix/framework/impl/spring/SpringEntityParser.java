@@ -30,13 +30,18 @@ import java.util.Set;
 import com.denimgroup.threadfix.framework.engine.BeanField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringEntityParser implements EventBasedTokenizer {
 
-	private Set<BeanField> fieldMappings = new HashSet<>();
-	private String className = null, superClass = null, currentParamType = null;
+	@NotNull
+    private Set<BeanField> fieldMappings = new HashSet<>();
+	@Nullable
+    private String className = null, superClass = null, currentParamType = null;
 	
-	public static SpringEntityParser parse(File file) {
+	@NotNull
+    public static SpringEntityParser parse(@NotNull File file) {
 		SpringEntityParser parser = new SpringEntityParser();
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser;
@@ -45,10 +50,11 @@ public class SpringEntityParser implements EventBasedTokenizer {
 	enum State {
 		START, CLASS, EXTENDS, PUBLIC, PARAM_TYPE
 	}
-	private State state = State.START;
+	@NotNull
+    private State state = State.START;
 	
 	@Override
-	public void processToken(int type, int lineNumber, String stringValue) {
+	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch(state) {
 		case START:
 			if ("extends".equals(stringValue)) {
@@ -82,7 +88,7 @@ public class SpringEntityParser implements EventBasedTokenizer {
 			}
 			break;
 		case PARAM_TYPE:
-			if (stringValue != null && stringValue.startsWith("get")) {
+			if (currentParamType != null && stringValue != null && stringValue.startsWith("get")) {
 				fieldMappings.add(new BeanField(currentParamType, stringValue));
 			}
 			state = State.START;
@@ -90,15 +96,18 @@ public class SpringEntityParser implements EventBasedTokenizer {
 		}
 	}
 
-	public Set<BeanField> getFieldMappings() {
+	@NotNull
+    public Set<BeanField> getFieldMappings() {
 		return fieldMappings;
 	}
 
-	public String getClassName() {
+	@Nullable
+    public String getClassName() {
 		return className;
 	}
 
-	public String getSuperClass() {
+	@Nullable
+    public String getSuperClass() {
 		return superClass;
 	}
 }

@@ -28,10 +28,12 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+import org.jetbrains.annotations.NotNull;
 
 public class TestUtils {
 
-	public static List<PartialMapping> getMappings(String[][] strings) {
+	@NotNull
+    public static List<PartialMapping> getMappings(@NotNull String[][] strings) {
 		List<PartialMapping> mappings = new ArrayList<>();
 		
 		for (String[] stringArray : strings) {

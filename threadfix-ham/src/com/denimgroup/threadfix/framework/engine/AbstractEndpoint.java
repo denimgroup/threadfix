@@ -1,20 +1,20 @@
 package com.denimgroup.threadfix.framework.engine;
 
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public abstract class AbstractEndpoint implements Endpoint {
 	
 	@Override
-	public int compareTo(Endpoint otherEndpoint) {
+	public int compareTo(@Nullable Endpoint otherEndpoint) {
 		int returnValue = 0;
 		
 		if (otherEndpoint != null) {
 			
-			if (this.getFilePath() != null && otherEndpoint.getFilePath() != null) {
-				returnValue -= 2 * otherEndpoint.getFilePath().compareTo(getFilePath());
-			}
-			
+            returnValue -= 2 * otherEndpoint.getFilePath().compareTo(getFilePath());
+
 			if (getStartingLineNumber() < otherEndpoint.getStartingLineNumber()) {
 				returnValue -= 1;
 			} else {
@@ -26,20 +26,18 @@ public abstract class AbstractEndpoint implements Endpoint {
 	}
 	
 	// TODO finalize this
-	@Override
+	@NotNull
+    @Override
 	public String getCSVLine() {
 		return getToStringNoCommas(getHttpMethods()) + "," + getUrlPath() + "," + getToStringNoCommas(getParameters());
 	}
 	
-	private String getToStringNoCommas(Object object) {
-		if (object == null) {
-			return "";
-		} else {
-			return object.toString().replaceAll(",", "");
-		}
+	private String getToStringNoCommas(@NotNull Object object) {
+        return object.toString().replaceAll(",", "");
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return getCSVLine();
 	}

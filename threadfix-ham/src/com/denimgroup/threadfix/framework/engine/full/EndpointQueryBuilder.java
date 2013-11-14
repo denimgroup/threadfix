@@ -4,30 +4,41 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.enums.InformationSourceType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EndpointQueryBuilder {
 	
-	private String dynamicPath, staticPath, parameter, httpMethod;
-	private List<? extends CodePoint> codePoints;
-	private InformationSourceType informationSourceType;
+	@Nullable
+    private String dynamicPath, staticPath, parameter, httpMethod;
+
+    @Nullable
+    private List<? extends CodePoint> codePoints;
+
+    @Nullable
+    private InformationSourceType informationSourceType;
 	
 	private EndpointQueryBuilder() {}
 	
-	public static EndpointQueryBuilder start() {
+	@NotNull
+    public static EndpointQueryBuilder start() {
 		return new EndpointQueryBuilder();
 	}
 	
-	public EndpointQueryBuilder setDynamicPath(String dynamicPath) {
+	@NotNull
+    public EndpointQueryBuilder setDynamicPath(@Nullable String dynamicPath) {
 		this.dynamicPath = dynamicPath;
 		return this;
 	}
 
-	public EndpointQueryBuilder setStaticPath(String staticPath) {
+	@NotNull
+    public EndpointQueryBuilder setStaticPath(@Nullable String staticPath) {
 		this.staticPath = staticPath;
 		return this;
 	}
 
-	public EndpointQueryBuilder setParameter(String parameter) {
+	@NotNull
+    public EndpointQueryBuilder setParameter(@Nullable String parameter) {
 		this.parameter = parameter;
 		
 		if (parameter == null) {
@@ -37,38 +48,47 @@ public class EndpointQueryBuilder {
 		return this;
 	}
 
-	public EndpointQueryBuilder setHttpMethod(String httpMethod) {
+	@NotNull
+    public EndpointQueryBuilder setHttpMethod(@Nullable String httpMethod) {
 		this.httpMethod = httpMethod;
 		return this;
 	}
 
-	public EndpointQueryBuilder setCodePoints(List<? extends CodePoint> basicModelElements) {
+	@NotNull
+    public EndpointQueryBuilder setCodePoints(@Nullable List<? extends CodePoint> basicModelElements) {
 		this.codePoints = basicModelElements;
 		return this;
 	}
 
-	public EndpointQueryBuilder setInformationSourceType(
-			InformationSourceType informationSourceType) {
+	@NotNull
+    public EndpointQueryBuilder setInformationSourceType(
+            @NotNull InformationSourceType informationSourceType) {
 		this.informationSourceType = informationSourceType;
 		return this;
 	}
 
-	public EndpointQuery generateQuery() {
+	@NotNull
+    public EndpointQuery generateQuery() {
 		return new DefaultEndpointQuery(dynamicPath, staticPath, parameter,
 				httpMethod, codePoints, informationSourceType);
 	}
 
 	private static class DefaultEndpointQuery implements EndpointQuery {
-		
+
+        @Nullable
 		private final String dynamicPath, staticPath, parameter, httpMethod;
-		private final List<CodePoint> codePoints;
+
+		@Nullable
+        private final List<CodePoint> codePoints;
+
+        @Nullable
 		private final InformationSourceType informationSourceType;
 
 		@SuppressWarnings("unchecked")
-		public DefaultEndpointQuery(String dynamicPath, String staticPath,
-				String parameter, String httpMethod,
-				List<? extends CodePoint> codePoints,
-				InformationSourceType informationSourceType) {
+		public DefaultEndpointQuery(@Nullable String dynamicPath, @Nullable String staticPath,
+                                    @Nullable String parameter, @Nullable String httpMethod,
+                                    @Nullable List<? extends CodePoint> codePoints,
+                                    @Nullable InformationSourceType informationSourceType) {
 			this.dynamicPath = dynamicPath;
 			this.staticPath = staticPath;
 			this.parameter = parameter;
@@ -78,36 +98,43 @@ public class EndpointQueryBuilder {
 		}
 
 		@Override
+        @Nullable
 		public String getDynamicPath() {
 			return dynamicPath;
 		}
 
 		@Override
+        @Nullable
 		public String getStaticPath() {
 			return staticPath;
 		}
 
 		@Override
+        @Nullable
 		public String getParameter() {
 			return parameter;
 		}
 
 		@Override
+        @Nullable
 		public String getHttpMethod() {
 			return httpMethod;
 		}
 
 		@Override
+        @Nullable
 		public List<CodePoint> getCodePoints() {
 			return codePoints;
 		}
 
 		@Override
+        @Nullable
 		public InformationSourceType getInformationSourceType() {
 			return informationSourceType;
 		}
 		
-		@Override
+		@NotNull
+        @Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
 			

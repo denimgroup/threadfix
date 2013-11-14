@@ -28,6 +28,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.ResourceManager;
@@ -36,7 +38,8 @@ import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 
 public class SpringControllerEndpointParserTests {
 	
-	String[][] expected = {
+	@NotNull
+    String[][] expected = {
 			{"/owners/new", "GET",  "44", "49" },
 			{"/owners/new", "POST", "51", "60" },
 			{"/owners/find", "GET", "62", "66" },
@@ -47,7 +50,8 @@ public class SpringControllerEndpointParserTests {
 			{"/owners/multiple/methods", "GET", "125", "130"},
 			{"/owners/multiple/methods", "POST", "125", "130"},
 	};
-	
+
+    @Ignore
 	@Test
 	public void testClassAnnotation() {
 		SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));

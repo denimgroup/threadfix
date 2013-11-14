@@ -24,44 +24,39 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import com.denimgroup.threadfix.framework.engine.BeanField;
 import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class SpringEntityMappings {
 
-	private final Collection<File> modelFiles;
+	@NotNull
+    private final Collection<File> modelFiles;
 	
-	private final Map<String, BeanFieldSet> fieldMap;
+	@NotNull
+    private final Map<String, BeanFieldSet> fieldMap;
 	
 	@SuppressWarnings("unchecked")
-	public SpringEntityMappings(File rootDirectory) {
-		if (rootDirectory != null && rootDirectory.exists() && rootDirectory.isDirectory()) {
+	public SpringEntityMappings(@NotNull File rootDirectory) {
+        fieldMap = new HashMap<>();
+
+		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 			modelFiles = FileUtils.listFiles(rootDirectory,
 					SpringEntityFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		
-			fieldMap = new HashMap<>();
-			
-			if (modelFiles != null) {
-				generateMap();
-			}
+            generateMap();
 		} else {
-			modelFiles = null;
-			fieldMap = new HashMap<>();
+			modelFiles = Collections.emptyList();
 		}
 	}
 	
-	public BeanFieldSet getPossibleParametersForModelType(BeanField beanField) {
+	public BeanFieldSet getPossibleParametersForModelType(@NotNull BeanField beanField) {
 		return getPossibleParametersForModelType(beanField.getType());
 	}
 	
@@ -92,7 +87,8 @@ class SpringEntityMappings {
 		return fields.addAll(fieldsToAdd);
 	}
 	
-	private BeanFieldSet spiderFields(String prefix, String className, Set<String> alreadyVisited) {
+	@NotNull
+    private BeanFieldSet spiderFields(String prefix, String className, @NotNull Set<String> alreadyVisited) {
 		BeanFieldSet fields = fieldMap.get(className);
 		
 		if (fields == null) {
@@ -117,7 +113,8 @@ class SpringEntityMappings {
 		return fieldsWithPrefixes;
 	}
 	
-	public List<BeanField> getFieldsFromMethodCalls(String methodCalls, BeanField initialField) {
+	@NotNull
+    public List<BeanField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable BeanField initialField) {
 		List<BeanField> fields = new ArrayList<>();
 		
 	
@@ -158,10 +155,6 @@ class SpringEntityMappings {
 	}
 
 	private void generateMap() {
-		if (modelFiles == null) {
-			return;
-		}
-		
 		Map<String, String> superClassMap = new HashMap<>();
 		
 		addModelsToSuperClassAndFieldMaps(superClassMap);
@@ -169,7 +162,7 @@ class SpringEntityMappings {
 		addSuperClassFieldsToModels(superClassMap);
 	}
 	
-	private void addSuperClassFieldsToModels(Map<String, String> superClassMap) {
+	private void addSuperClassFieldsToModels(@NotNull Map<String, String> superClassMap) {
 		Set<String> done = new HashSet<>();
 		
 		for (String key : fieldMap.keySet()) {
@@ -194,13 +187,13 @@ class SpringEntityMappings {
 		}
 	}
 
-	private void addModelsToSuperClassAndFieldMaps(Map<String, String> superClassMap) {
+	private void addModelsToSuperClassAndFieldMaps(@NotNull Map<String, String> superClassMap) {
 		for (File file: modelFiles) {
 			if (file != null && file.exists() && file.isFile()) {
 				
 				SpringEntityParser entityParser = SpringEntityParser.parse(file);
 				
-				if (entityParser.getClassName() != null && entityParser.getFieldMappings() != null) {
+				if (entityParser.getClassName() != null) {
 					
 					if (entityParser.getSuperClass() != null) {
 						superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
@@ -212,7 +205,8 @@ class SpringEntityMappings {
 		}
 	}
 	
-	private String getParameterFromBeanAccessor(String methodCall) {
+	@Nullable
+    private String getParameterFromBeanAccessor(@NotNull String methodCall) {
 		
 		String propertyName = null;
 		

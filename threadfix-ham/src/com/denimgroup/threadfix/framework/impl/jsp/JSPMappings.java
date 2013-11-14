@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
@@ -48,11 +50,12 @@ public class JSPMappings implements EndpointGenerator {
 	private final Map<String, Set<File>> includeMap = new HashMap<>();
 	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
 	private final List<Endpoint> endpoints = new ArrayList<>();
-	private final File projectRoot, jspRoot;
+	@Nullable
+    private final File projectRoot, jspRoot;
 	
 	@SuppressWarnings("unchecked")
-	public JSPMappings(File rootFile) {
-		if (rootFile != null && rootFile.exists()) {
+	public JSPMappings(@NotNull File rootFile) {
+		if (rootFile.exists()) {
 
 			this.projectRoot = rootFile;
 			
@@ -69,7 +72,7 @@ public class JSPMappings implements EndpointGenerator {
 	
 			for (File file : jspFiles) {
 				Set<File> files = JSPIncludeParser.parse(file);
-				if (files != null && !files.isEmpty()) {
+				if (!files.isEmpty()) {
 					includeMap.put(FilePathUtils.getRelativePath(file, rootFile), files);
 				}
 			}
@@ -86,25 +89,34 @@ public class JSPMappings implements EndpointGenerator {
 		}
 	}
 	
-	public Endpoint getEndpoint(File file) {
+	@Nullable
+    public Endpoint getEndpoint(File file) {
 		JSPEndpoint endpoint = null;
 		
 		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
-		if (parserResults != null) {
-			String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
-			
-			endpoint = new JSPEndpoint(
-					staticPath,
-					FilePathUtils.getRelativePath(file, jspRoot),
-					new HashSet<String>(Arrays.asList("GET", "POST")),
-					parserResults
-					);
-			
-			jspEndpointMap.put(staticPath, endpoint);
-		}
-		
+
+        String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
+
+        endpoint = new JSPEndpoint(
+                getOr(staticPath, ""),
+                getOr(FilePathUtils.getRelativePath(file, jspRoot), ""),
+                new HashSet<String>(Arrays.asList("GET", "POST")),
+                parserResults
+                );
+
+        jspEndpointMap.put(staticPath, endpoint);
+
 		return endpoint;
 	}
+
+    @NotNull
+    public String getOr(@Nullable String input, @NotNull String or) {
+        if (input == null) {
+            return or;
+        } else {
+            return input;
+        }
+    }
 	
 	public JSPEndpoint getEndpoint(String staticPath) {
 		
@@ -121,7 +133,8 @@ public class JSPMappings implements EndpointGenerator {
 		return FilePathUtils.getRelativePath(dataFlowLocation, projectRoot);
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public List<Endpoint> generateEndpoints() {
 		return endpoints;
 	}

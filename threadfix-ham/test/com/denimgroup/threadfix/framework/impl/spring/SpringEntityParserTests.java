@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -36,10 +37,12 @@ import com.denimgroup.threadfix.framework.impl.spring.SpringEntityParser;
 
 public class SpringEntityParserTests {
 	
-	File testFile = new File(TestConstants.PETCLINIC_SOURCE_LOCATION +
+	@NotNull
+    File testFile = new File(TestConstants.PETCLINIC_SOURCE_LOCATION +
 			TestConstants.SPRING_MODELS_PREFIX + TestConstants.SPRING_OWNER_MODEL);
 
-	SpringEntityParser parser = SpringEntityParser.parse(testFile);
+	@NotNull
+    SpringEntityParser parser = SpringEntityParser.parse(testFile);
 	
 	@Test
 	public void testBasicFieldEquivalence() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
+import org.jetbrains.annotations.NotNull;
 
 class DefaultPathCleaner implements PathCleaner {
 	
@@ -20,10 +21,10 @@ class DefaultPathCleaner implements PathCleaner {
 	}
 
 	@Override
-	public String cleanStaticPath(String filePath) {
+	public String cleanStaticPath(@NotNull String filePath) {
 		String cleanedPath = filePath;
 		
-		if (staticRoot != null && cleanedPath != null && cleanedPath.startsWith(staticRoot)) {
+		if (staticRoot != null && cleanedPath.startsWith(staticRoot)) {
 			cleanedPath = cleanedPath.substring(staticRoot.length());
 		}
 		
@@ -31,10 +32,10 @@ class DefaultPathCleaner implements PathCleaner {
 	}
 
 	@Override
-	public String cleanDynamicPath(String urlPath) {
+	public String cleanDynamicPath(@NotNull String urlPath) {
 		String cleanedPath = urlPath;
 		
-		if (dynamicRoot != null && cleanedPath != null && cleanedPath.startsWith(dynamicRoot)) {
+		if (dynamicRoot != null && cleanedPath.startsWith(dynamicRoot)) {
 			cleanedPath = cleanedPath.substring(dynamicRoot.length());
 		}
 		
@@ -51,7 +52,8 @@ class DefaultPathCleaner implements PathCleaner {
 		return staticRoot;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return "[PathCleaner dynamicRoot=" + dynamicRoot + ", staticRoot=" + staticRoot + "]";
 	}

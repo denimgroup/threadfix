@@ -31,12 +31,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+
 public class BeanFieldSet implements Iterable<BeanField> {
 
-	private Map<String, BeanField> fieldMap = new HashMap<>();
-	private Set<BeanField> fieldSet = null;
+	@NotNull
+    private Map<String, BeanField> fieldMap = new HashMap<>();
+
+	@NotNull
+    private final Set<BeanField> fieldSet;
 	
-	public BeanFieldSet(Set<BeanField> fields) {
+	public BeanFieldSet(@NotNull Set<BeanField> fields) {
 		fieldSet = fields;
 		for (BeanField field : fields) {
 			fieldMap.put(field.getParameterKey(), field);
@@ -55,12 +60,14 @@ public class BeanFieldSet implements Iterable<BeanField> {
 		return getField(paramName) != null;
 	}
 	
-	public BeanFieldSet add(BeanField beanField) {
+	@NotNull
+    public BeanFieldSet add(BeanField beanField) {
 		this.fieldSet.add(beanField);
 		return this;
 	}
 	
-	public BeanFieldSet addAll(BeanFieldSet beanFieldSet) {
+	@NotNull
+    public BeanFieldSet addAll(@NotNull BeanFieldSet beanFieldSet) {
 		this.fieldSet.addAll(beanFieldSet.fieldSet);
 		for (BeanField field : beanFieldSet.fieldSet) {
 			fieldMap.put(field.getParameterKey(), field);
@@ -68,7 +75,8 @@ public class BeanFieldSet implements Iterable<BeanField> {
 		return this;
 	}
 	
-	public Collection<String> getPossibleParameters() {
+	@NotNull
+    public Collection<String> getPossibleParameters() {
 		List<String> strings = new ArrayList<String>();
 		for (BeanField field : fieldSet) {
 			strings.add(field.getParameterKey());
@@ -78,14 +86,11 @@ public class BeanFieldSet implements Iterable<BeanField> {
 	
 	@Override
 	public String toString() {
-		if (fieldSet == null) {
-			return "empty";
-		} else {
-			return fieldSet.toString();
-		}
+        return fieldSet.toString();
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public Iterator<BeanField> iterator() {
 		return fieldSet.iterator();
 	}

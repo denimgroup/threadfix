@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.framework.engine.CodePoint;
@@ -31,16 +32,21 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class JSPDataFlowParser implements ParameterParser {
 	
-	private final JSPMappings jspMappings;
+	@Nullable
+    private final JSPMappings jspMappings;
+
+    @NotNull
 	private final SourceCodeAccessLevel sourceCodeAccessLevel;
 	
 	private static final Pattern REQUEST_GET_PARAM_STRING_ASSIGN =
 			Pattern.compile("^String [^=]+= .*request\\.getParameter\\(\"([^\"]+)\"\\)");
 	
-	public JSPDataFlowParser(ProjectConfig projectConfig) {
+	public JSPDataFlowParser(@NotNull ProjectConfig projectConfig) {
 		this.sourceCodeAccessLevel = projectConfig.getSourceCodeAccessLevel();
 		
 		if (projectConfig.getRootFile() != null) {
@@ -51,10 +57,10 @@ public class JSPDataFlowParser implements ParameterParser {
 	}
 
 	@Override
-	public String parse(EndpointQuery query) {
+	public String parse(@NotNull EndpointQuery query) {
 		String parameter = null;
 		
-		if (query != null && query.getCodePoints() != null) {
+		if (query.getCodePoints() != null) {
 			if (sourceCodeAccessLevel != SourceCodeAccessLevel.FULL) {
 				parameter = parseWithSource(query);
 			} else {
@@ -62,30 +68,36 @@ public class JSPDataFlowParser implements ParameterParser {
 			}
 		}
 		
-		if (parameter == null && query != null) {
+		if (parameter == null) {
 			parameter = query.getParameter();
 		}
 		
 		return parameter;
 	}
 	
-	private String parseNoSource(EndpointQuery query) {
+	@Nullable
+    private String parseNoSource(@NotNull EndpointQuery query) {
 		String parameter = null;
-		
-		for (CodePoint element : query.getCodePoints()) {
-			if (element != null && element.getLineText() != null) {
-				String test = RegexUtils.getRegexResult(element.getLineText(),
-						REQUEST_GET_PARAM_STRING_ASSIGN);
-				if (test != null) {
-					parameter = test;
-				}
-			}
-		}
+
+        List<CodePoint> codePoints = query.getCodePoints();
+
+        if (codePoints != null) {
+            for (CodePoint element : query.getCodePoints()) {
+                if (element != null && element.getLineText() != null) {
+                    String test = RegexUtils.getRegexResult(element.getLineText(),
+                            REQUEST_GET_PARAM_STRING_ASSIGN);
+                    if (test != null) {
+                        parameter = test;
+                    }
+                }
+            }
+        }
 	
 		return parameter;
 	}
 	
-	private String parseWithSource(EndpointQuery query) {
+	@Nullable
+    private String parseWithSource(@NotNull EndpointQuery query) {
 		String test = null;
 		
 		if (jspMappings == null) {

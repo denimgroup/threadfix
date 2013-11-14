@@ -134,34 +134,9 @@ public class SpringEntityMappingsTests {
 		assertTrue(fields.size() == 1);
 		assertTrue(fields.get(0).equals(new BeanField("Owner", "owner")));
 	}
-	
-	@Test
-	public void testNullInput() {
-		SpringEntityMappings mappings = new SpringEntityMappings(null);
-		
-		List<BeanField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
-				new BeanField("Pet", "pet"));
-		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
-		assertTrue(fields.size() == 1);
-		
-		fields = mappings.getFieldsFromMethodCalls(".getOwner()",
-				new BeanField("Pet", "pet"));
-		assertTrue(fields.size() == 1);
-		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
-		
-		fields = mappings.getFieldsFromMethodCalls(".getLastName()",
-				new BeanField("Owner", "owner"));
-		assertTrue(fields.size() == 1);
-		assertTrue(fields.get(0).equals(new BeanField("Owner", "owner")));
-		
-		fields = mappings.getFieldsFromMethodCalls(".getLastName()", null);
-		assertTrue(fields.size() == 0);
-		
-		fields = mappings.getFieldsFromMethodCalls(null, new BeanField("Owner", "owner"));
-		assertTrue(fields.size() == 0);
-		
-		fields = mappings.getFieldsFromMethodCalls(null, null);
-		assertTrue(fields.size() == 0);
-	}
-	
+
+    @Test(expected= NullPointerException.class)
+    public void testNullConstructorArgument() {
+        new SpringEntityMappings(null);
+    }
 }

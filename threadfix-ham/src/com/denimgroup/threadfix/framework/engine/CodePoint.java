@@ -23,12 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface CodePoint {
-	
+
+    @Nullable
 	public String getLineText();
 
 	public int getLineNumber();
 
+    @Nullable
 	public String getSourceFileName();
 	
 }

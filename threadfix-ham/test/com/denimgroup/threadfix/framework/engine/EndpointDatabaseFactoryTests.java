@@ -42,7 +42,8 @@ public class EndpointDatabaseFactoryTests {
 	@Test
 	public void testRootOnly() {
 		EndpointDatabase testDatabase = EndpointDatabaseFactory.getDatabase(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
-		
+
+        assertTrue(testDatabase != null);
 		assertTrue(testDatabase.getFrameworkType() == FrameworkType.SPRING_MVC);
 		assertTrue(testDatabase.generateEndpoints().size() ==
 				new SpringControllerMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION)).generateEndpoints().size());

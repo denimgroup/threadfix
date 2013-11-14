@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.jetbrains.annotations.NotNull;
 
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
@@ -42,43 +44,44 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
-	private final Collection<File> controllerFiles;
+	@NotNull
+    private final Collection<File> controllerFiles;
 	
-	private final Map<String, Set<SpringControllerEndpoint>> urlToControllerMethodsMap;
-	private final Map<String, Set<SpringControllerEndpoint>> controllerToUrlsMap;
+	@NotNull
+    private final Map<String, Set<SpringControllerEndpoint>>
+            urlToControllerMethodsMap, controllerToUrlsMap;
 	
-	private final File rootDirectory;
+	@NotNull
+    private final File rootDirectory;
 	
 	@SuppressWarnings("unchecked")
-	public SpringControllerMappings(File rootDirectory) {
+	public SpringControllerMappings(@NotNull File rootDirectory) {
 		this.rootDirectory = rootDirectory;
-		if (rootDirectory != null && rootDirectory.exists()) {
+
+        urlToControllerMethodsMap = new HashMap<>();
+        controllerToUrlsMap = new HashMap<>();
+
+		if (rootDirectory.exists()) {
 			controllerFiles = FileUtils.listFiles(rootDirectory,
 					SpringControllerFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-		
-			urlToControllerMethodsMap = new HashMap<>();
-			controllerToUrlsMap = new HashMap<>();
-			
-			if (controllerFiles != null) {
-				generateMaps();
-			}
+		    generateMaps();
 		} else {
-			controllerFiles = null;
-			urlToControllerMethodsMap = null;
-			controllerToUrlsMap = null;
+			controllerFiles = Collections.emptyList();
 		}
 	}
-	
+
+    @NotNull
 	public Set<SpringControllerEndpoint> getEndpointsFromController(String controllerPath) {
-		if (controllerToUrlsMap != null && controllerToUrlsMap.containsKey(controllerPath)) {
+		if (controllerToUrlsMap.containsKey(controllerPath)) {
 			return controllerToUrlsMap.get(controllerPath);
 		} else {
 			return new HashSet<>();
 		}
 	}
-	
+
+    @NotNull
 	public Set<SpringControllerEndpoint> getEndpointsFromUrl(String controllerPath) {
-		if (urlToControllerMethodsMap != null && urlToControllerMethodsMap.containsKey(controllerPath)) {
+		if (urlToControllerMethodsMap.containsKey(controllerPath)) {
 			return urlToControllerMethodsMap.get(controllerPath);
 		} else {
 			return new HashSet<>();
@@ -86,21 +89,15 @@ public class SpringControllerMappings implements EndpointGenerator {
 	}
 	
 	private void generateMaps() {
-		if (controllerFiles == null ||
-				urlToControllerMethodsMap == null ||
-				controllerToUrlsMap == null) {
-			return;
-		}
-		
 		SpringEntityMappings mappings = new SpringEntityMappings(rootDirectory);
 		
 		for (File file: controllerFiles) {
-			if (file != null && file.exists() && file.isFile() && file.getAbsolutePath() != null &&
+			if (file != null && file.exists() && file.isFile() &&
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
 				
 				String fileNameWithoutRoot = FilePathUtils.getRelativePath(file, rootDirectory);
 				
-				if (fileNameWithoutRoot.indexOf("/") != 0) {
+				if (fileNameWithoutRoot != null && fileNameWithoutRoot.indexOf("/") != 0) {
 					fileNameWithoutRoot = "/" + fileNameWithoutRoot;
 				}
 				
@@ -120,9 +117,10 @@ public class SpringControllerMappings implements EndpointGenerator {
 		}
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public List<Endpoint> generateEndpoints() {
-		List<Endpoint> returnEndpoints = new ArrayList<Endpoint>();
+		List<Endpoint> returnEndpoints = new ArrayList<>();
 		
 		for (Set<SpringControllerEndpoint> endpointList : urlToControllerMethodsMap.values()) {
 			for (SpringControllerEndpoint endpoint : endpointList) {
@@ -133,7 +131,8 @@ public class SpringControllerMappings implements EndpointGenerator {
 		return returnEndpoints;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		

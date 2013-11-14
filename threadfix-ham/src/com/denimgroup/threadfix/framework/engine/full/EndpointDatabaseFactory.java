@@ -12,33 +12,40 @@ import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EndpointDatabaseFactory {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
 	
-	public static EndpointDatabase getDatabase(File rootFile) {
+	@Nullable
+    public static EndpointDatabase getDatabase(File rootFile) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		return getDatabase(rootFile, type);
 	}
 	
-	public static EndpointDatabase getDatabase(File rootFile, List<PartialMapping> partialMappings) {
+	@Nullable
+    public static EndpointDatabase getDatabase(File rootFile, List<PartialMapping> partialMappings) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		
 		return getDatabase(rootFile, type, partialMappings);
 	}
 
-	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType) {
+	@Nullable
+    public static EndpointDatabase getDatabase(File rootFile, @NotNull FrameworkType frameworkType) {
 		return getDatabase(rootFile, frameworkType, new ArrayList<PartialMapping>());
 	}
 	
-	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType, List<PartialMapping> partialMappings) {
+	@Nullable
+    public static EndpointDatabase getDatabase(File rootFile, @NotNull FrameworkType frameworkType, List<PartialMapping> partialMappings) {
 		PathCleaner cleaner = PathCleanerFactory.getPathCleaner(frameworkType, partialMappings);
 		
 		return getDatabase(rootFile, frameworkType, cleaner);
 	}
 	
-	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType, PathCleaner cleaner) {
+	@Nullable
+    public static EndpointDatabase getDatabase(File rootFile, @NotNull FrameworkType frameworkType, PathCleaner cleaner) {
 		EndpointGenerator generator = null;
 		
 		switch (frameworkType) {

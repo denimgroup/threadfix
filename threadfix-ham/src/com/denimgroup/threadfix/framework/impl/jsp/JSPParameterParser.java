@@ -32,6 +32,8 @@ import java.util.Map;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -43,17 +45,22 @@ import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 public class JSPParameterParser implements EventBasedTokenizer {
 	
 //	private Map<Integer, String> lineNumberToParameterMap = new HashMap<>();
-	private Map<String, List<Integer>> parameterToLineNumbersMap = new HashMap<>();
-	private Map<String, String> 
+	@NotNull
+    private Map<String, List<Integer>> parameterToLineNumbersMap = new HashMap<>();
+	@NotNull
+    private Map<String, String>
 		variableToParametersMap = new HashMap<>(),
 		stringsTable = new HashMap<>();
 	
 	private static final String REQUEST_GET_PARAMETER = "request.getParameter", STRING = "String";
 	
-	private State state = State.START;
-	private PageState pageState = PageState.START;
+	@NotNull
+    private State state = State.START;
+	@NotNull
+    private PageState pageState = PageState.START;
 	
-	private String varName = null;
+	@Nullable
+    private String varName = null;
 	
 	private JSPParameterParser() {}
 	
@@ -65,13 +72,15 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		START, OPEN_ANGLE_BRACKET, IN_JSP, PERCENTAGE
 	}
 	
-	public static Map<Integer, List<String>> parse(File file) {
+	@NotNull
+    public static Map<Integer, List<String>> parse(File file) {
 		JSPParameterParser parser = new JSPParameterParser();
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.buildParametersMap();
 	}
 	
-	private Map<Integer, List<String>> buildParametersMap() {
+	@NotNull
+    private Map<Integer, List<String>> buildParametersMap() {
 		Map<Integer, List<String>> lineNumToParamMap = new HashMap<>();
 		
 		for (String key : parameterToLineNumbersMap.keySet()) {
@@ -122,7 +131,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		
 	}
 	
-	public void parseParameters(int type, int lineNumber, String stringValue) {
+	public void parseParameters(int type, int lineNumber, @Nullable String stringValue) {
 		switch (state) {
 		case START:
 			if (stringValue != null && stringValue.equals(REQUEST_GET_PARAMETER)) {
@@ -201,7 +210,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		return type == COMMA || type == SEMICOLON;
 	}
 	
-	private void checkForParam(String string, int lineNumber) {
+	private void checkForParam(@Nullable String string, int lineNumber) {
 		if (string != null &&
 				variableToParametersMap.get(string) != null &&
 				parameterToLineNumbersMap.get(variableToParametersMap.get(string)) != null) {

@@ -27,13 +27,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 
 public class ProjectDirectoryTests {
 	
-	ProjectDirectory
+	@NotNull
+    ProjectDirectory
 		springDirectory = new ProjectDirectory(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
 	
 	@Test

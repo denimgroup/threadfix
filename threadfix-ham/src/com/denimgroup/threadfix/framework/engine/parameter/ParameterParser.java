@@ -24,12 +24,15 @@
 package com.denimgroup.threadfix.framework.engine.parameter;
 
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ParameterParser {
 	
 	/**
 	 * Return the parameter based on the data flow elements
 	 */
-	String parse(EndpointQuery query);
+    @Nullable
+	String parse(@NotNull EndpointQuery query);
 
 }

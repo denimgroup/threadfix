@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import static org.junit.Assert.assertTrue;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -32,7 +33,8 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 
 public class SpringPathCleanerTests {
 	
-	String[][] petClinicAppScanData = {
+	@NotNull
+    String[][] petClinicAppScanData = {
 		{ "/petclinic", ""},
 		{ "/petclinic/owners", "/owners" },
 		{ "/petclinic/owners/2/pets/new", "/owners/{id}/pets/new" },
@@ -64,7 +66,8 @@ public class SpringPathCleanerTests {
 		}
 	}
 
-	String[][] petClinicFortifyData = {
+	@NotNull
+    String[][] petClinicFortifyData = {
 		{ TestConstants.PETCLINIC_SOURCE_LOCATION + "/src/main/java/test/Controller.java", "/src/main/java/test/Controller.java"},
 		{ TestConstants.PETCLINIC_SOURCE_LOCATION + "/pom.xml", "/pom.xml"},
 	};
@@ -88,22 +91,14 @@ public class SpringPathCleanerTests {
 					result.equals(test[1]));
 		}
 	}
-	
-	@Test
-	public void nullTests() {
-		PathCleaner[] cleaners = {
-				new SpringPathCleaner("/petclinic", ""),
-				new SpringPathCleaner(null),
-				new SpringPathCleaner(null, null),
-				new SpringPathCleaner("", null),
-				new SpringPathCleaner(null, "")
-		};
-		
-		for (PathCleaner cleaner : cleaners) {
-			assertTrue("Died on null.", cleaner.cleanDynamicPath(null) == null);
-			assertTrue("Died on null.", cleaner.cleanStaticPath(null) == null);
-		}
-		
-	}
-	
+
+    @Test(expected= NullPointerException.class)
+    public void nullTests() {
+        new SpringPathCleaner("/petclinic", "").cleanDynamicPath(null);
+    }
+
+    @Test(expected= NullPointerException.class)
+    public void nullTests2() {
+        new SpringPathCleaner("/petclinic", "").cleanStaticPath(null);
+    }
 }

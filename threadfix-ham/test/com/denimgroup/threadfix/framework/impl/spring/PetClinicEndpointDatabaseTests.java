@@ -27,6 +27,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -40,7 +42,8 @@ import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 
 public class PetClinicEndpointDatabaseTests {
 	
-	private EndpointDatabase getSpringEndpointDatabase() {
+	@Nullable
+    private EndpointDatabase getSpringEndpointDatabase() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		
 		return EndpointDatabaseFactory.getDatabase(file, FrameworkType.SPRING_MVC, new SpringPathCleaner("/petclinic", null));
@@ -57,7 +60,8 @@ public class PetClinicEndpointDatabaseTests {
 		}
 	}
 	
-	String[][] dynamicToStaticTests = new String[][] {
+	@NotNull
+    String[][] dynamicToStaticTests = new String[][] {
 			{ "/petclinic/owners", "/src/main/java/org/springframework/samples/petclinic/web/OwnerController.java" },
 			{ "/petclinic/owners.html", "/src/main/java/org/springframework/samples/petclinic/web/OwnerController.java" },
 			{ "/petclinic/owners/{id}", "/src/main/java/org/springframework/samples/petclinic/web/OwnerController.java" },
@@ -81,7 +85,8 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/owners/36/pets/new", "/src/main/java/org/springframework/samples/petclinic/web/PetController.java" },
 	};
 	
-	private String getStaticPath(EndpointDatabase db, String dynamicPath) {
+	@NotNull
+    private String getStaticPath(@NotNull EndpointDatabase db, String dynamicPath) {
 		EndpointQuery query = EndpointQueryBuilder.start()
 				.setInformationSourceType(InformationSourceType.DYNAMIC)
 				.setDynamicPath(dynamicPath)
@@ -90,7 +95,8 @@ public class PetClinicEndpointDatabaseTests {
 		return db.findBestMatch(query).getFilePath();
 	}
 	
-	String[][] httpMethodTests = new String[][] {
+	@NotNull
+    String[][] httpMethodTests = new String[][] {
 			{ "/petclinic/owners/new", "GET", "60" },
 			{ "/petclinic/owners/new", "POST", "67" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "GET", "85" },
@@ -145,7 +151,8 @@ public class PetClinicEndpointDatabaseTests {
 		}
 	}
 	
-	String[][] parameterTests = new String[][] {
+	@NotNull
+    String[][] parameterTests = new String[][] {
 			{ "/petclinic/owners/new", null, "60" },
 			{ "/petclinic/owners/new", "any-other-param", null },
 			{ "/petclinic/owners/new", "lastName", "67" },

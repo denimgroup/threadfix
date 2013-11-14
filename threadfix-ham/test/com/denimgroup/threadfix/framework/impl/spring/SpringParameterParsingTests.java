@@ -26,10 +26,11 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -45,17 +46,21 @@ import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 public class SpringParameterParsingTests {
 	
-	static ProjectConfig
+	@NotNull
+    static ProjectConfig
 		defaultConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.FULL,
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION), null),
 		noSourceConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.NONE,
 				null, null);
 	
 	// These are immutable so it's ok to use the same one for all the tests
-	static SpringDataFlowParser parser = new SpringDataFlowParser(defaultConfig);
-	static ParameterParser factoryParser = ParameterParserFactory.getParameterParser(defaultConfig);
+	@NotNull
+    static SpringDataFlowParser parser = new SpringDataFlowParser(defaultConfig);
+	@Nullable
+    static ParameterParser factoryParser = ParameterParserFactory.getParameterParser(defaultConfig);
 	
-	static ParameterParser[] allParsers = {
+	@NotNull
+    static ParameterParser[] allParsers = {
 		factoryParser,
 		parser,
 		new SpringDataFlowParser(noSourceConfig) };
@@ -235,32 +240,8 @@ public class SpringParameterParsingTests {
 		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
 
-	@Test
-	public void testNullInput() {
-		
-		for (ParameterParser parser : allParsers) {
-			String result = parser.parse(null);
-			assertTrue(result == null);
-			
-			EndpointQuery query = EndpointQueryBuilder.start().generateQuery();
-			
-			result = parser.parse(query);
-			assertTrue(result == null);
-	
-			List<DefaultCodePoint> elements = new ArrayList<DefaultCodePoint>();
-			
-			query = EndpointQueryBuilder.start().setCodePoints(elements).generateQuery();
-			result = parser.parse(query);
-			assertTrue(result == null);
-			
-			query.getCodePoints().add(null);
-			query.getCodePoints().add(null);
-			query.getCodePoints().add(null);
-			query.getCodePoints().add(null);
-			
-			result = parser.parse(query);
-			assertTrue(result == null);
-		}
-	}
-
+    @Test(expected= NullPointerException.class)
+    public void testNullConstructorArg() {
+        parser.parse(null);
+    }
 }

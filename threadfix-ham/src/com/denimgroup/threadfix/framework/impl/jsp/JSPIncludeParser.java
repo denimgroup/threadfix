@@ -33,11 +33,15 @@ import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class JSPIncludeParser implements EventBasedTokenizer {
 	
-	private State currentState = State.START;
-	private Set<File> returnFiles = new HashSet<File>();
+	@NotNull
+    private State currentState = State.START;
+	@NotNull
+    private Set<File> returnFiles = new HashSet<File>();
 	private File inputFile;
 	
 	private enum State {
@@ -46,18 +50,19 @@ class JSPIncludeParser implements EventBasedTokenizer {
 	
 	private static final Pattern slashPattern = Pattern.compile("[\\\\/]");
 
-	private JSPIncludeParser(File file) {
+	private JSPIncludeParser(@NotNull File file) {
 		this.inputFile = file;
 	}
 	
-	public static Set<File> parse(File file) {
+	@NotNull
+    public static Set<File> parse(@NotNull File file) {
 		JSPIncludeParser parser = new JSPIncludeParser(file);
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.returnFiles;
 	}
 
 	@Override
-	public void processToken(int type, int lineNumber, String stringValue) {
+	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch (currentState) {
 			case START:
 				if (stringValue != null && stringValue.equals("jsp:include")) {
@@ -121,7 +126,8 @@ class JSPIncludeParser implements EventBasedTokenizer {
 		}
 	}
 	
-	private static File getRelativeFile(String sval, File inputFile) {
+	@NotNull
+    private static File getRelativeFile(String sval, @NotNull File inputFile) {
 		List<String>
 			inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(inputFile.getParent()))),
 			svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));

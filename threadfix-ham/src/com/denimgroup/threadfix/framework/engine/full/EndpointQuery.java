@@ -27,19 +27,26 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.enums.InformationSourceType;
+import org.jetbrains.annotations.Nullable;
 
 public interface EndpointQuery {
 
+    @Nullable
 	String getDynamicPath();
-	
+
+    @Nullable
 	String getStaticPath();
-	
+
+    @Nullable
 	String getParameter();
-	
+
+    @Nullable
 	String getHttpMethod();
-	
+
+    @Nullable
 	List<CodePoint> getCodePoints();
-	
+
+    @Nullable
 	InformationSourceType getInformationSourceType();
 	
 }

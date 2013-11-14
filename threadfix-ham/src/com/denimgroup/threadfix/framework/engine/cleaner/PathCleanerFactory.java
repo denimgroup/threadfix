@@ -5,6 +5,7 @@ import java.util.List;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
+import org.jetbrains.annotations.Nullable;
 
 public class PathCleanerFactory {
 	
@@ -12,7 +13,8 @@ public class PathCleanerFactory {
 	
 	// TODO add an option for manual roots
 	
-	public static PathCleaner getPathCleaner(FrameworkType frameworkType, List<PartialMapping> partialMappings) {
+	@Nullable
+    public static PathCleaner getPathCleaner(FrameworkType frameworkType, List<PartialMapping> partialMappings) {
 		PathCleaner returnCleaner = null;
 		
 		if (frameworkType == FrameworkType.SPRING_MVC) {

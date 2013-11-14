@@ -23,32 +23,30 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
+import org.jetbrains.annotations.NotNull;
+
 public class UrlPatternMapping {
 
+    @NotNull
 	private String servletName, urlPattern;
 
-	public UrlPatternMapping(String servletName, String urlPattern) {
-		if (servletName == null) {
-			throw new IllegalArgumentException("Servlet Name cannot be null.");
-		}
-
-		if (urlPattern == null) {
-			throw new IllegalArgumentException("URL Pattern cannot be null.");
-		}
-
+	public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern) {
 		this.servletName = servletName.trim();
 		this.urlPattern = urlPattern.trim();
 	}
 
+    @NotNull
 	public String getServletName() {
 		return servletName;
 	}
 
+    @NotNull
 	public String getUrlPattern() {
 		return urlPattern;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return getServletName() + " -> " + getUrlPattern();
 	}

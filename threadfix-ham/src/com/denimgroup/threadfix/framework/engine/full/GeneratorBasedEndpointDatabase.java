@@ -33,11 +33,17 @@ import java.util.Set;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
-	private final List<Endpoint> endpoints;
+	@NotNull
+    private final List<Endpoint> endpoints;
+
+    @NotNull
 	private final PathCleaner pathCleaner;
+
+    @NotNull
 	private final FrameworkType frameworkType;
 	
 	private final Map<String, Set<Endpoint>>
@@ -48,18 +54,14 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
 	protected final static SanitizedLogger log = new SanitizedLogger(GeneratorBasedEndpointDatabase.class);
 
-	public GeneratorBasedEndpointDatabase(EndpointGenerator endpointGenerator,
-			PathCleaner pathCleaner,
-			FrameworkType frameworkType) {
+	public GeneratorBasedEndpointDatabase(@NotNull EndpointGenerator endpointGenerator,
+                                          @NotNull PathCleaner pathCleaner,
+                                          @NotNull FrameworkType frameworkType) {
 		
 		log.info("Using generic EndpointGenerator-based translator.");
 		
-		if (endpointGenerator != null) {
-			endpoints = endpointGenerator.generateEndpoints();
-		} else {
-			endpoints = new ArrayList<Endpoint>();
-		}
-		
+        endpoints = endpointGenerator.generateEndpoints();
+
 		this.frameworkType = frameworkType;
 		this.pathCleaner = pathCleaner;
 		
@@ -81,7 +83,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 				}
 			}
 			
-			if (endpoint.getParameters() == null || endpoint.getParameters().isEmpty()) {
+			if (endpoint.getParameters().isEmpty()) {
 				addToMap(parameterMap, "null", endpoint);
 			} else {
 				for (String parameter : endpoint.getParameters()) {
@@ -92,18 +94,17 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		log.info("Done building mappings. Static keys: " + staticMap.size() + ", dynamic keys: " + dynamicMap.size());
 	}
 	
-	private void addToMap(Map<String, Set<Endpoint>> map, String value, Endpoint endpoint) {
-		if (endpoint != null && value != null) {
-			if (!map.containsKey(value)) {
-				map.put(value, new HashSet<Endpoint>());
-			}
-			
-			map.get(value).add(endpoint);
-		}
+	private void addToMap(@NotNull Map<String, Set<Endpoint>> map,
+                          @NotNull String value, @NotNull Endpoint endpoint) {
+        if (!map.containsKey(value)) {
+            map.put(value, new HashSet<Endpoint>());
+        }
+
+        map.get(value).add(endpoint);
 	}
 	
 	@Override
-	public Endpoint findBestMatch(EndpointQuery query) {
+	public Endpoint findBestMatch(@NotNull EndpointQuery query) {
 		
 		Endpoint returnEndpoint = null;
 		
@@ -116,50 +117,51 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		return returnEndpoint;
 	}
 
-	@Override
-	public Set<Endpoint> findAllMatches(EndpointQuery query) {
+	@NotNull
+    @Override
+	public Set<Endpoint> findAllMatches(@NotNull EndpointQuery query) {
 		Set<Endpoint> resultingSet = new HashSet<>();
 		
-		if (query != null) {
-			List<Set<Endpoint>> resultSets = new ArrayList<>();
-			
-			if (query.getDynamicPath() != null) {
-				String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
-				resultSets.add(getValueOrNull(cleaned, dynamicMap));
-			}
-			
-			if (query.getStaticPath() != null) {
-				String cleaned = pathCleaner.cleanStaticPath(query.getStaticPath());
-				resultSets.add(getValueOrNull(cleaned, staticMap));
-			}
-			
-			if (query.getHttpMethod() != null) {
-				resultSets.add(getValueOrNull(query.getHttpMethod(), httpMethodMap));
-			}
-			
-			if (query.getParameter() != null) {
-				resultSets.add(getValueOrNull(query.getParameter(), parameterMap));
-			}
-			
-			if (resultSets.size() > 0) {
-				Set<Endpoint> union = null;
-				
-				for (Set<Endpoint> endpoints : resultSets) {
-					if (union == null) {
-						union = endpoints;
-					}
-					
-					union.retainAll(endpoints);
-				}
-				
-				resultingSet = union;
-			}
-		}
+        List<Set<Endpoint>> resultSets = new ArrayList<>();
+
+        if (query.getDynamicPath() != null) {
+            String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
+            resultSets.add(getValueOrEmptySet(cleaned, dynamicMap));
+        }
+
+        if (query.getStaticPath() != null) {
+            String cleaned = pathCleaner.cleanStaticPath(query.getStaticPath());
+            resultSets.add(getValueOrEmptySet(cleaned, staticMap));
+        }
+
+        if (query.getHttpMethod() != null) {
+            resultSets.add(getValueOrEmptySet(query.getHttpMethod(), httpMethodMap));
+        }
+
+        if (query.getParameter() != null) {
+            resultSets.add(getValueOrEmptySet(query.getParameter(), parameterMap));
+        }
+
+        if (resultSets.size() > 0) {
+            Set<Endpoint> union = null;
+
+            for (Set<Endpoint> endpoints : resultSets) {
+                if (union == null) {
+                    union = endpoints;
+                }
+
+                union.retainAll(endpoints);
+            }
+
+            resultingSet = union;
+        }
 
 		return resultingSet;
 	}
 	
-	private Set<Endpoint> getValueOrNull(String key, Map<String, Set<Endpoint>> map) {
+	@NotNull
+    private Set<Endpoint> getValueOrEmptySet(@NotNull String key,
+                                             @NotNull Map<String, Set<Endpoint>> map) {
 		if (map.containsKey(key) && map.get(key) != null) {
 			return new HashSet<>(map.get(key));
 		} else {
@@ -167,17 +169,20 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		}
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public List<Endpoint> generateEndpoints() {
 		return endpoints;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public FrameworkType getFrameworkType() {
 		return frameworkType;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return frameworkType.toString() + " EndpointDatabase with " + endpoints.size() + " total records.";
 	}

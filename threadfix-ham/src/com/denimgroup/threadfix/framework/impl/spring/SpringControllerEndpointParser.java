@@ -33,19 +33,25 @@ import com.denimgroup.threadfix.framework.engine.BeanField;
 import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
 class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
-	private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
+	@NotNull
+    private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
 	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;
 	private boolean inClass = false;
-	private String classEndpoint = null, currentMapping = null,
+	@Nullable
+    private String classEndpoint = null, currentMapping = null,
 			rootFilePath = null, lastValue = null, secondToLastValue = null;
-	private BeanField currentModelObject = null;
-	private List<String>
+	@Nullable
+    private BeanField currentModelObject = null;
+	@NotNull
+    private List<String>
 		classMethods  = new ArrayList<>(),
 		methodMethods = new ArrayList<>(),
 		currentParameters = new ArrayList<>();
@@ -59,11 +65,14 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		CLASS = "class",
 		BINDING_RESULT = "BindingResult";
 		
-	private Phase phase = Phase.ANNOTATION;
-	private AnnotationState annotationState = AnnotationState.START;
+	@NotNull
+    private Phase phase = Phase.ANNOTATION;
+	@NotNull
+    private AnnotationState annotationState = AnnotationState.START;
 	private SignatureState signatureState = SignatureState.START;
 	
-	private SpringEntityMappings entityMappings = null;
+	@Nullable
+    private SpringEntityMappings entityMappings = null;
 	
 	private enum Phase {
 		ANNOTATION, SIGNATURE, METHOD
@@ -77,13 +86,15 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		START, ARROBA, REQUEST_PARAM;
 	}
 	
-	public static Set<SpringControllerEndpoint> parse(File file, SpringEntityMappings entityMappings) {
+	@NotNull
+    public static Set<SpringControllerEndpoint> parse(@NotNull File file, SpringEntityMappings entityMappings) {
 		SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser.endpoints;
 	}
 	
-	private SpringControllerEndpointParser(String rootFilePath, SpringEntityMappings entityMappings) {
+	private SpringControllerEndpointParser(@Nullable String rootFilePath,
+                                           @Nullable SpringEntityMappings entityMappings) {
 		this.rootFilePath = rootFilePath;
 		this.entityMappings = entityMappings;
 	}
@@ -101,7 +112,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		signatureState = state;
 	}
 	
-	private void parseSignature(int type, int lineNumber, String stringValue) {
+	private void parseSignature(int type, int lineNumber, @Nullable String stringValue) {
 		
 		if (lastSymbol == CLOSE_PAREN && type == OPEN_CURLY) {
 			curlyBraceCount = 1;
@@ -163,7 +174,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		}
 	}
 
-	private void parseAnnotation(int type, int lineNumber, String stringValue) {
+	private void parseAnnotation(int type, int lineNumber, @Nullable String stringValue) {
 		switch(annotationState) {
 			case START:
 				if (type == ARROBA) {

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework;
 
 import static org.junit.Assert.assertTrue;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
@@ -33,7 +34,8 @@ import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 public class EnumTests {
 	
-	private String upperAndUnderscore(String input) {
+	@NotNull
+    private String upperAndUnderscore(@NotNull String input) {
 		return input.toUpperCase().replace(' ', '_');
 	}
 

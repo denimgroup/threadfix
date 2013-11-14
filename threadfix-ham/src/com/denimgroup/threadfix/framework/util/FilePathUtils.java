@@ -23,13 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 
 public class FilePathUtils {
 
 	private FilePathUtils(){}
 	
-	public static String getRelativePath(File projectFile, File rootFile) {
+	@Nullable
+    public static String getRelativePath(@Nullable File projectFile, @Nullable File rootFile) {
 		String returnPath = null;
 		
 		if (projectFile != null && rootFile != null) {
@@ -39,7 +42,8 @@ public class FilePathUtils {
 		return returnPath;
 	}
 	
-	public static String getRelativePath(String projectFileString, File projectRootFile) {
+	@Nullable
+    public static String getRelativePath(@Nullable String projectFileString, @Nullable File projectRootFile) {
 		String returnPath = null;
 		
 		if (projectFileString != null && projectRootFile != null) {
@@ -49,7 +53,8 @@ public class FilePathUtils {
 		return returnPath;
 	}
 	
-	public static String getRelativePath(File projectFile, String projectRoot) {
+	@Nullable
+    public static String getRelativePath(@Nullable File projectFile, @Nullable String projectRoot) {
 		String returnPath = null;
 		
 		if (projectFile != null && projectRoot != null) {
@@ -59,7 +64,8 @@ public class FilePathUtils {
 		return returnPath;
 	}
 	
-	public static String getRelativePath(String string, String projectRoot) {
+	@Nullable
+    public static String getRelativePath(@Nullable String string, @Nullable String projectRoot) {
 		String returnPath = null;
 		
 		if (string != null && projectRoot != null && 

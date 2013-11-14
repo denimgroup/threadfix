@@ -29,17 +29,21 @@ import java.util.List;
 import java.util.Map;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class DefaultPartialMappingDatabase implements PartialMappingDatabase {
-	
+
+    @NotNull
 	private final PathCleaner pathCleaner;
 	
-	private Map<String, List<PartialMapping>>
+	@NotNull
+    private Map<String, List<PartialMapping>>
 		dynamicMap = new HashMap<>(),
 		staticMap  = new HashMap<>();
 	
-	public DefaultPartialMappingDatabase(Iterable<PartialMapping> partialMappings,
-			PathCleaner pathCleaner) {
+	public DefaultPartialMappingDatabase(@Nullable Iterable<PartialMapping> partialMappings,
+                                         @NotNull PathCleaner pathCleaner) {
 		
 		this.pathCleaner = pathCleaner;
 		
@@ -50,7 +54,7 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 		}
 	}
 	
-	private void addToMap(Iterable<PartialMapping> partialMappings) {
+	private void addToMap(@NotNull Iterable<PartialMapping> partialMappings) {
 		for (PartialMapping partialMapping : partialMappings) {
 			if (isComplete(partialMapping)) {
 				addToMap(dynamicMap, pathCleaner.cleanDynamicPath(partialMapping.getDynamicPath()), partialMapping);
@@ -59,7 +63,8 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 		}
 	}
 	
-	private void addToMap(Map<String, List<PartialMapping>> map, String key, PartialMapping mapping) {
+	private void addToMap(@NotNull Map<String, List<PartialMapping>> map,
+                          @Nullable String key, @NotNull PartialMapping mapping) {
 		if (key != null) {
 			if (!map.containsKey(key)) {
 				map.put(key, new ArrayList<PartialMapping>());
@@ -69,20 +74,21 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 		}
 	}
 	
-	private PartialMapping clean(PartialMapping input) {
+	@Nullable
+    private PartialMapping clean(@NotNull PartialMapping input) {
 		return new DefaultPartialMapping(
 				pathCleaner.cleanStaticPath(input.getStaticPath()),
 				pathCleaner.cleanDynamicPath(input.getDynamicPath())
 				);
 	}
 	
-	private boolean isComplete(PartialMapping mapping) {
+	private boolean isComplete(@Nullable PartialMapping mapping) {
 		return mapping != null &&
 				mapping.getDynamicPath() != null &&
 				mapping.getStaticPath() != null;
 	}
 
-	@Override
+    @Override
 	public PartialMapping findBestMatch(PartialMapping query) {
 		PartialMapping returnMapping = null;
 		
@@ -96,7 +102,8 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	}
 
 	@Override
-	public List<PartialMapping> findAllMatches(PartialMapping query) {
+    @NotNull
+	public List<PartialMapping> findAllMatches(@Nullable PartialMapping query) {
 		List<PartialMapping> maybeMappings = new ArrayList<PartialMapping>();
 		if (query != null) {
 			maybeMappings = getMappingsIfPresent(dynamicMap, pathCleaner.cleanDynamicPath(query.getDynamicPath()));
@@ -108,8 +115,9 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 		
 		return maybeMappings;
 	}
-	
-	private List<PartialMapping> getMappingsIfPresent(Map<String, List<PartialMapping>> map, String key) {
+
+    @NotNull
+	private List<PartialMapping> getMappingsIfPresent(@NotNull Map<String, List<PartialMapping>> map, @Nullable String key) {
 		List<PartialMapping> mappings = new ArrayList<>();
 		
 		if (key != null && map.get(key) != null){
@@ -120,7 +128,7 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	}
 
 	@Override
-	public void addMappings(Iterable<PartialMapping> queries) {
+	public void addMappings(@NotNull Iterable<PartialMapping> queries) {
 		addToMap(queries);
 	}
 	

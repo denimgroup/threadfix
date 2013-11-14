@@ -23,23 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class BeanField {
 	
-	public BeanField(String fieldType, String methodName) {
-		if (fieldType == null) {
-			this.fieldType = "empty";
-		} else {
-			this.fieldType = fieldType;
-		}
-		
-		if (methodName == null) {
-			this.parameterKey = "empty";
-		} else {
-			this.parameterKey = getParameterKey(methodName);
-		}
+	public BeanField(@NotNull String fieldType, @NotNull String methodName) {
+		this.fieldType = fieldType;
+        this.parameterKey = getParameterKey(methodName);
 	}
 	
-	private String getParameterKey(String methodCall) {
+	@NotNull
+    private String getParameterKey(@NotNull String methodCall) {
 		String propertyName = methodCall;
 		
 		if (methodCall.startsWith("get")) {
@@ -51,13 +46,16 @@ public class BeanField {
 		return propertyName;
 	}
 
-	private final String fieldType, parameterKey;
+	@NotNull
+    private final String fieldType, parameterKey;
 
-	public String getType() {
+	@NotNull
+    public String getType() {
 		return fieldType;
 	}
 
-	public String getParameterKey() {
+	@NotNull
+    public String getParameterKey() {
 		return parameterKey;
 	}
 	
@@ -65,7 +63,8 @@ public class BeanField {
 		return "Integer".equals(fieldType) || "String".equals(fieldType) || "int".equals(fieldType);
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return parameterKey + ":" + fieldType;
 	}
@@ -76,7 +75,7 @@ public class BeanField {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(@Nullable Object object) {
 		return object != null && object.hashCode() == hashCode();
 	}
 }

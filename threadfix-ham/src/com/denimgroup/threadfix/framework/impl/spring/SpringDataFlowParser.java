@@ -34,6 +34,8 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringDataFlowParser implements ParameterParser {
 	
@@ -46,9 +48,10 @@ public class SpringDataFlowParser implements ParameterParser {
 		REQUEST_PARAM_WITH_PARAM = Pattern.compile("@RequestParam\\(\"([a-zA-Z0-9]+)\"\\)"),
 		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam [^ ]+ ([^,\\)]+)");
 	
-	private final SpringEntityMappings mappings;
+	@Nullable
+    private final SpringEntityMappings mappings;
 	
-	public SpringDataFlowParser(ProjectConfig projectConfig) {
+	public SpringDataFlowParser(@NotNull ProjectConfig projectConfig) {
 		SpringEntityMappings mappings = null;
 		if (projectConfig.getRootFile() != null) {
 			mappings = new SpringEntityMappings(projectConfig.getRootFile());
@@ -65,15 +68,13 @@ public class SpringDataFlowParser implements ParameterParser {
 	 * 
 	 *  TODO handle owner.pet.name and similar cases
 	 * 
-	 * @param dataFlowElements
-	 * @return
 	 */
 	@Override
-	public String parse(EndpointQuery query) {
+	public String parse(@NotNull EndpointQuery query) {
 		
 		String parameter = null;
 		
-		if (query != null && query.getCodePoints() != null &&
+		if (query.getCodePoints() != null &&
 				!query.getCodePoints().isEmpty()) {
 			
 			List<String> lines = getLines(query.getCodePoints());
@@ -88,14 +89,15 @@ public class SpringDataFlowParser implements ParameterParser {
 			}
 		}
 		
-		if (parameter == null && query != null) {
+		if (parameter == null) {
 			parameter = query.getParameter();
 		}
 		
 		return parameter;
 	}
 	
-	private List<String> getLines(List<CodePoint> codePoints) {
+	@NotNull
+    private List<String> getLines(@NotNull List<CodePoint> codePoints) {
 		List<String> returnList = new ArrayList<>(codePoints.size());
 		
 		for (CodePoint element : codePoints) {
@@ -108,7 +110,8 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 
 	// TODO move to a system that supports more than one variable
-	private String attemptPathVariableParsing(List<String> lines) {
+	@Nullable
+    private String attemptPathVariableParsing(@Nullable List<String> lines) {
 		
 		String parameter = null;
 		
@@ -137,7 +140,8 @@ public class SpringDataFlowParser implements ParameterParser {
 		return parameter;
 	}
 
-	private String attemptModelParsingNoMappings(List<String> lines) {
+	@Nullable
+    private String attemptModelParsingNoMappings(@Nullable List<String> lines) {
 		
 		String parameter = null;
 		
@@ -160,43 +164,46 @@ public class SpringDataFlowParser implements ParameterParser {
 		return parameter;
 	}
 	
-	private String attemptModelParsingWithMappings(List<String> lines) {
+	@Nullable
+    private String attemptModelParsingWithMappings(@NotNull List<String> lines) {
 		String result = null;
 		
-		if (lines != null && !lines.isEmpty()) {
+		if (!lines.isEmpty()) {
 			String modelObject = getModelObject(lines.get(0));
 			String initialType = getModelObjectType(lines.get(0));
+
+            if (modelObject != null && initialType != null) {
 			
-			BeanField beanField = new BeanField(initialType, modelObject);
-			
-			List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
+                BeanField beanField = new BeanField(initialType, modelObject);
+
+                List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
 					
-			if (modelObject != null) {
-				for (String elementText : lines) {
-					if (elementText != null) {
-						List<BeanField> beanFields = getParameterWithEntityData(elementText,
-								fieldChain.get(fieldChain.size() - 1));
-						
-						if (beanFields != null && beanFields.size() > 1) {
-							beanFields.remove(0);
-							fieldChain.addAll(beanFields);
-							beanField = fieldChain.get(fieldChain.size() - 1);
-						}
-						
-						if (beanField.isPrimitiveType()) {
-							break;
-						}
-					}
-				}
-			}
-	
-			result = buildStringFromFieldChain(fieldChain);
+                for (String elementText : lines) {
+                    if (elementText != null) {
+                        List<BeanField> beanFields = getParameterWithEntityData(elementText,
+                                fieldChain.get(fieldChain.size() - 1));
+
+                        if (beanFields.size() > 1) {
+                            beanFields.remove(0);
+                            fieldChain.addAll(beanFields);
+                            beanField = fieldChain.get(fieldChain.size() - 1);
+                        }
+
+                        if (beanField.isPrimitiveType()) {
+                            break;
+                        }
+                    }
+                }
+
+                result = buildStringFromFieldChain(fieldChain);
+            }
 		}
 		
 		return result;
 	}
 	
-	private String buildStringFromFieldChain(List<BeanField> fieldChain) {
+	@NotNull
+    private String buildStringFromFieldChain(@NotNull List<BeanField> fieldChain) {
 		StringBuilder parameterChainBuilder = new StringBuilder();
 		
 		if (fieldChain.size() > 1) {
@@ -209,29 +216,33 @@ public class SpringDataFlowParser implements ParameterParser {
 		
 		return parameterChainBuilder.toString();
 	}
-	
+
+    @Nullable
 	private String getModelObject(String elementText) {
 		return RegexUtils.getRegexResult(elementText, ENTITY_OBJECT_PATTERN);
 	}
-	
+
+    @Nullable
 	private String getModelObjectType(String elementText) {
 		return RegexUtils.getRegexResult(elementText, ENTITY_TYPE_PATTERN);
 	}
-	
-	private List<BeanField> getParameterWithEntityData(String line, BeanField beanField) {
+
+    @NotNull
+	private List<BeanField> getParameterWithEntityData(String line, @NotNull BeanField beanField) {
 		List<String> methodCalls = RegexUtils.getRegexResults(line,
 				Pattern.compile(beanField.getParameterKey() + "(\\.get[^\\(]+\\(\\))+"));
 		
 		List<BeanField> returnField = new ArrayList<>();
 		
-		if (methodCalls != null && !methodCalls.isEmpty()) {
+		if (mappings != null && methodCalls != null && !methodCalls.isEmpty()) {
 			returnField = mappings.getFieldsFromMethodCalls(methodCalls.get(0), beanField);
 		}
 		
 		return returnField;
 	}
 
-	private String getParameter(String line, String modelObject) {
+	@Nullable
+    private String getParameter(String line, @NotNull String modelObject) {
 		String methodCall = RegexUtils.getRegexResult(line, "(" + modelObject + "\\.[a-zA-Z0-9]+)");
 		
 		String parameterName = null;
@@ -243,8 +254,9 @@ public class SpringDataFlowParser implements ParameterParser {
 		return parameterName;
 	}
 
-	private String getParameterFromBeanAccessor(String modelObject,
-			String methodCall) {
+	@Nullable
+    private String getParameterFromBeanAccessor(@NotNull String modelObject,
+			@NotNull String methodCall) {
 		
 		String propertyName = null;
 		

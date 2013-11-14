@@ -26,10 +26,13 @@ package com.denimgroup.threadfix.framework.engine.parameter;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
 import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ParameterParserFactory {
 	
-	public static ParameterParser getParameterParser(ProjectConfig projectConfig) {
+	@Nullable
+    public static ParameterParser getParameterParser(@NotNull ProjectConfig projectConfig) {
 		ParameterParser parser = null;
 		
 		switch (projectConfig.getFrameworkType()) {

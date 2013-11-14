@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -42,22 +43,24 @@ import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
 
 public class JSPParameterParserTests {
 	
-	ProjectConfig
+	@NotNull
+    ProjectConfig
 		fullSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.FULL,
 				new File(TestConstants.BODGEIT_SOURCE_LOCATION), "/"),
 		noSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.NONE, null, null);
 
-	ParameterParser
+	@NotNull
+    ParameterParser
 		factoryParser = ParameterParserFactory.getParameterParser(fullSourceConfig),
 		fullSourceParser = new JSPDataFlowParser(fullSourceConfig),
 		noSourceParser = new JSPDataFlowParser(noSourceConfig);
 	
 	// These are from the PetClinic Fortify results
-	private static List<? extends CodePoint> basicModelElements = Arrays.asList(
+	@NotNull
+    private static List<? extends CodePoint> basicModelElements = Arrays.asList(
 		new DefaultCodePoint("root/register.jsp",32,
 				"String username = (String) request.getParameter(\"username\");"),
 		new DefaultCodePoint("root/register.jsp",32,
@@ -87,6 +90,11 @@ public class JSPParameterParserTests {
 		String result = fullSourceParser.parse(query);
 		assertTrue("Parameter was " + result + " instead of username", "username".equals(result));
 	}
+
+    @Test(expected= NullPointerException.class)
+    public void testNullArgument() {
+        factoryParser.parse(null);
+    }
 	
 	@Test
 	public void testNullInput() {
@@ -96,7 +104,6 @@ public class JSPParameterParserTests {
 		for (ParameterParser parser : new ParameterParser[] {
 				factoryParser, fullSourceParser, noSourceParser
 				}) {
-			assertTrue("Parameter was not null and should have been.", parser.parse(null) == null);
 			assertTrue("Parameter was not null and should have been.", parser.parse(EndpointQueryBuilder.start().generateQuery()) == null);
 			assertTrue("Parameter was not null and should have been.", parser.parse(emptyDataFlowFinding) == null);
 		}
@@ -106,9 +113,7 @@ public class JSPParameterParserTests {
 		for (File file : rootFiles) {
 			for (SourceCodeAccessLevel accessLevel : SourceCodeAccessLevel.values()) {
 				ProjectConfig config = new ProjectConfig(FrameworkType.JSP, accessLevel, file, null);
-				JSPDataFlowParser parser = new JSPDataFlowParser(config);
-				assertTrue("Parameter was not null and should have been.",
-						parser.parse(null) == null);
+                JSPDataFlowParser parser = new JSPDataFlowParser(config);
 				assertTrue("Parameter was not null and should have been.",
 						parser.parse(EndpointQueryBuilder.start().generateQuery()) == null);
 				assertTrue("Parameter was not null and should have been.",
@@ -119,5 +124,13 @@ public class JSPParameterParserTests {
 		}
 		
 	}
+
+    @Test(expected=NullPointerException.class)
+    public void testParserNullInput() {
+        ProjectConfig config = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.DETECT,
+                new File(TestConstants.BODGEIT_SOURCE_LOCATION), null);
+        JSPDataFlowParser parser = new JSPDataFlowParser(config);
+        parser.parse(null);
+    }
 	
 }

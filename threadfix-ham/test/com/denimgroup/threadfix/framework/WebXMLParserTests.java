@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
@@ -19,11 +20,14 @@ import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class WebXMLParserTests {
 
+    @Nullable
     ServletMappings vulnClinic = WebXMLParser.getServletMappings(new File(PETCLINIC_WEB_XML),
     		new ProjectDirectory(new File(PETCLINIC_SOURCE_LOCATION)));
-	ServletMappings wavsep = WebXMLParser.getServletMappings(new File(WAVSEP_WEB_XML),
+	@Nullable
+    ServletMappings wavsep = WebXMLParser.getServletMappings(new File(WAVSEP_WEB_XML),
     		new ProjectDirectory(new File(WAVSEP_SOURCE_LOCATION)));
-	ServletMappings bodgeIt = WebXMLParser.getServletMappings(new File(BODGEIT_WEB_XML),
+	@Nullable
+    ServletMappings bodgeIt = WebXMLParser.getServletMappings(new File(BODGEIT_WEB_XML),
     		new ProjectDirectory(new File(BODGEIT_SOURCE_LOCATION)));
 	
     ////////////////////////////////////////////////////////////////
@@ -66,17 +70,22 @@ public class WebXMLParserTests {
     	assertTrue(wavsep.guessApplicationType() == FrameworkType.JSP);
     	assertTrue(bodgeIt.guessApplicationType() == FrameworkType.JSP);
     }
-    
+
+    @Test(expected=NullPointerException.class)
+    public void testNullInput() {
+        new ProjectDirectory(null).findWebXML();
+    }
+
+    // This one is IllegalArgumentException because they wrote that into the SAXParser implementation
+    @Test(expected=IllegalArgumentException.class)
+    public void testNullInputWebXMLParser() {
+        WebXMLParser.getServletMappings(null, null);
+    }
+
     @Test
     public void testBadInput() {
-    	assertTrue(new ProjectDirectory(null).findWebXML() == null);
-    	ServletMappings nullInputMappings = WebXMLParser.getServletMappings(null, null);
-    	assertTrue(nullInputMappings != null);
-    	assertTrue(nullInputMappings.getClassMappings() == null);
-    	assertTrue(nullInputMappings.getServletMappings() == null);
-    	
     	File doesntExist = new File("This/path/doesnt/exist");
-    	
+
     	assertTrue(new ProjectDirectory(doesntExist).findWebXML() == null);
     	
     	

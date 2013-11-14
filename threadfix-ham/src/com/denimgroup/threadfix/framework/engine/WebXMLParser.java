@@ -35,24 +35,24 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
-
 public class WebXMLParser {
-	
-	private WebXMLParser() {
+
+    private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
+
+    private WebXMLParser() {
 		// intentionally inaccessible
 	}
 	
-	public static ServletMappings getServletMappings(File file,
+	@Nullable
+    public static ServletMappings getServletMappings(@NotNull File file,
 			ProjectDirectory projectDirectory) {
-		if (file == null || !file.exists()) {
-			return new ServletMappings(null,null,null);
-		}
-		
 		ServletParser parser = new WebXMLParser.ServletParser();
 		
 		try {
@@ -60,12 +60,8 @@ public class WebXMLParser {
 			SAXParser saxParser = factory.newSAXParser();
 
 			saxParser.parse(file, parser);
-		} catch (SAXException e) {
-			
-		} catch (IOException e) {
-
-		} catch (ParserConfigurationException e) {
-
+		} catch (@NotNull IOException | SAXException | ParserConfigurationException e) {
+			log.warn("Encountered exception while parsing mappings.", e);
 		}
 		
 		return new ServletMappings(parser.mappings, parser.servlets, projectDirectory);
@@ -75,11 +71,15 @@ public class WebXMLParser {
 	// but is only accessible to this class.
 	private static class ServletParser extends DefaultHandler {
 		
-		List<ClassMapping> servlets = new ArrayList<>();
-		List<UrlPatternMapping> mappings = new ArrayList<>();
+		@NotNull
+        List<ClassMapping> servlets = new ArrayList<>();
+		@NotNull
+        List<UrlPatternMapping> mappings = new ArrayList<>();
 		
-		String servletName = null, urlPattern = null, servletClass = null, contextConfigLocation = null;
-		StringBuilder builder = new StringBuilder();
+		@Nullable
+        String servletName = null, urlPattern = null, servletClass = null, contextConfigLocation = null;
+		@NotNull
+        StringBuilder builder = new StringBuilder();
 		
 		boolean getContextConfigLocation = false,
 				grabText = false;
@@ -94,7 +94,8 @@ public class WebXMLParser {
 			PARAM_VALUE = "param-value",
 			CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
 	
-		private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
+		@NotNull
+        private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
 			new String[] { SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
 					PARAM_NAME, PARAM_VALUE }));
 		
@@ -110,7 +111,7 @@ public class WebXMLParser {
 
 		@Override
 		public void endElement(String uri, String localName,
-				String qName) throws SAXException {
+				@NotNull String qName) throws SAXException {
 			
 			switch (qName) {
 				case SERVLET_NAME:  servletName  = getBuilderText(); break;
@@ -147,7 +148,8 @@ public class WebXMLParser {
 			}
 		}
 		
-		private String getBuilderText() {
+		@NotNull
+        private String getBuilderText() {
 			String returnValue = builder.toString();
 			builder.setLength(0);
 			grabText = false;

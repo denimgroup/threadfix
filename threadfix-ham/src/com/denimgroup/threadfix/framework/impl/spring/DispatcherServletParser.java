@@ -29,16 +29,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
 
 public class DispatcherServletParser {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("DispatcherServletParser");
 	
 	// this is much faster than an implementation using the tokenizer.
-	public static boolean usesSpringMvcAnnotations(File file) {
+	public static boolean usesSpringMvcAnnotations(@NotNull File file) {
 		boolean returnValue = false;
 		
-		if (file != null && file.exists()) {
+		if (file.exists()) {
 
 			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 			

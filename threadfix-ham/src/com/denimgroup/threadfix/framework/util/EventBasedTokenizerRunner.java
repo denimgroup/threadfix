@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -56,7 +59,7 @@ public class EventBasedTokenizerRunner {
 	 * @param file
 	 * @param eventTokenizer
 	 */
-	public static void run(File file, EventBasedTokenizer eventTokenizer) {
+	public static void run(@Nullable File file, @NotNull EventBasedTokenizer eventTokenizer) {
 
 		if (file != null && file.exists() && file.isFile()) {
 			try (Reader reader = new FileReader(file)) {

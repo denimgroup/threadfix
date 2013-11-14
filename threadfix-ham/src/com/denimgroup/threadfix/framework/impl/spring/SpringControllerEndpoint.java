@@ -28,22 +28,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringControllerEndpoint extends AbstractEndpoint {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	private static final String requestMappingStart = "RequestMethod.";
 	
-	private final String rawFilePath, rawUrlPath;
-	private final Set<String> methods, parameters;
+	@NotNull
+    private final String rawFilePath, rawUrlPath;
+	@NotNull
+    private final Set<String> methods, parameters;
 	private final int startLineNumber, endLineNumber;
 	
-	private String cleanedFilePath = null, cleanedUrlPath = null;
+	@Nullable
+    private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
 	
-	public SpringControllerEndpoint(String filePath, String urlPath,
-			Collection<String> methods, Collection<String> parameters,
+	public SpringControllerEndpoint(@NotNull String filePath, @NotNull String urlPath,
+            @NotNull Collection<String> methods, @NotNull Collection<String> parameters,
 			int startLineNumber, int endLineNumber) {
 		this.rawFilePath     = filePath;
 		this.rawUrlPath      = urlPath;
@@ -53,8 +58,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		this.parameters = new HashSet<>(parameters);
 		this.methods    = getCleanedSet(methods);
 	}
-	
-	private Set<String> getCleanedSet(Collection<String> methods) {
+
+    @NotNull
+	private Set<String> getCleanedSet(@NotNull Collection<String> methods) {
 		Set<String> returnSet = new HashSet<>();
 		for (String method : methods) {
 			if (method.startsWith(requestMappingStart)) {
@@ -71,16 +77,22 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		return returnSet;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public Set<String> getParameters() {
 		return parameters;
 	}
 
-	public String getCleanedFilePath() {
+    @NotNull
+    public String getCleanedFilePath() {
 		if (cleanedFilePath == null && fileRoot != null &&
-				rawFilePath != null && rawFilePath.contains(fileRoot)) {
+				rawFilePath.contains(fileRoot)) {
 			cleanedFilePath = rawFilePath.substring(fileRoot.length());
 		}
+
+        if (cleanedFilePath == null) {
+            return rawFilePath;
+        }
 		
 		return cleanedFilePath;
 	}
@@ -89,7 +101,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		this.fileRoot = fileRoot;
 	}
 
-	public String getCleanedUrlPath() {
+	@Nullable
+    public String getCleanedUrlPath() {
 		if (cleanedUrlPath == null) {
 			cleanedUrlPath = cleanUrlPathStatic(rawUrlPath);
 		}
@@ -97,7 +110,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		return cleanedUrlPath;
 	}
 	
-	public static String cleanUrlPathStatic(String rawUrlPath) {
+	@Nullable
+    public static String cleanUrlPathStatic(@Nullable String rawUrlPath) {
 		if (rawUrlPath == null) {
 			return null;
 		} else {
@@ -112,7 +126,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return "[" + getCleanedFilePath() +
 				":" + startLineNumber +
@@ -123,17 +138,20 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 				"]";
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public Set<String> getHttpMethods() {
 		return methods;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String getUrlPath() {
 		return getCleanedUrlPath();
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String getFilePath() {
 		return getCleanedFilePath();
 	}

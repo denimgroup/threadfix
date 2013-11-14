@@ -26,13 +26,18 @@ package com.denimgroup.threadfix.framework.engine.full;
 import java.util.Set;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface EndpointDatabase extends EndpointGenerator {
-	
+
+    @Nullable
 	Endpoint findBestMatch(EndpointQuery query);
-	
+
+    @NotNull
 	Set<Endpoint> findAllMatches(EndpointQuery query);
-	
+
+    @NotNull
 	FrameworkType getFrameworkType();
 	
 }

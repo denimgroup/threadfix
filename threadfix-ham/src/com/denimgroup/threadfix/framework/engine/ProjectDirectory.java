@@ -34,59 +34,68 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 // TODO make more error resistant
 public class ProjectDirectory {
 	
 	private File directory;
 	
-	private final Map<String, Set<String>> fileMap;
+	@NotNull
+    private final Map<String, Set<String>> fileMap;
 	
 	private final SanitizedLogger log = new SanitizedLogger("ProjectDirectory");
 	
-	public ProjectDirectory(File directory) {
+	public ProjectDirectory(@NotNull File directory) {
 		this.directory = directory;
 		fileMap = buildMaps(directory);
 	}
 	
-	public String getDirectoryPath() {
+	@NotNull
+    public String getDirectoryPath() {
 		return directory.getAbsolutePath();
 	}
-	
-	private Map<String, Set<String>> buildMaps(File startingFile) {
+
+    @NotNull
+    private Map<String, Set<String>> buildMaps(@NotNull File startingFile) {
 		Map<String, Set<String>> returnMap = new HashMap<>();
 		
-		if (startingFile != null && startingFile.isDirectory()) {
+		if (startingFile.isDirectory()) {
 			recurseMap(startingFile, returnMap);
 		}
 		
 		return returnMap;
 	}
 	
-	private void recurseMap(File currentDirectory, Map<String, Set<String>> map) {
-		if (currentDirectory == null || !currentDirectory.isDirectory() || !currentDirectory.exists()) {
+	private void recurseMap(@NotNull File currentDirectory, @NotNull Map<String, Set<String>> map) {
+		if (!currentDirectory.isDirectory() || !currentDirectory.exists()) {
 			return;
 		}
+
+        File[] files = currentDirectory.listFiles();
 		
     	List<File> directories = new ArrayList<>();
-    	
-    	for (File file : currentDirectory.listFiles()) {
-    		// we want to skip all files / directories that start with .
-    		if (file != null && file.getName().charAt(0) != '.') {
-	    		if (file.isFile()) {
-	    			addToMap(map, file);
-	    		} else if (file.isDirectory()) {
-	    			directories.add(file);
-	    		}
-    		}
-    	}
+
+        if (files != null) {
+            for (File file : files) {
+                // we want to skip all files / directories that start with .
+                if (file != null && file.getName().charAt(0) != '.') {
+                    if (file.isFile()) {
+                        addToMap(map, file);
+                    } else if (file.isDirectory()) {
+                        directories.add(file);
+                    }
+                }
+            }
+        }
     	
     	for (File directory : directories) {
     		recurseMap(directory, map);
     	}
 	}
 	
-	private void addToMap(Map<String, Set<String>> map, File file) {
+	private void addToMap(@NotNull Map<String, Set<String>> map, @NotNull File file) {
 		if (!map.containsKey(file.getName())) {
 			map.put(file.getName(), new HashSet<String>());
 		}
@@ -103,11 +112,13 @@ public class ProjectDirectory {
 	// TODO we may be able to get better results with some more advanced logic here
 	// maybe skip directories like "test", look in specific paths or at least check guesses
 	// on the other hand I don't really see this being a bottleneck
-	public File findWebXML() {
+	@Nullable
+    public File findWebXML() {
 		return findFile("web.xml", "WEB-INF", "web.xml");
 	}
-	
-	public List<File> findFiles(String pathWithStars) {
+
+    @NotNull
+	public List<File> findFiles(@NotNull String pathWithStars) {
 		List<File> files;
 		
 		if (pathWithStars.contains("*")) {
@@ -120,8 +131,9 @@ public class ProjectDirectory {
 		
 		return files;
 	}
-	
-	private List<File> findFilesWithStar(String path) {
+
+    @NotNull
+    private List<File> findFilesWithStar(@NotNull String path) {
 		List<File> returnFile = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -131,8 +143,9 @@ public class ProjectDirectory {
 		
 		return returnFile;
 	}
-	
-	private List<File> findFilesWithStar(String fileName, String... pathSegments) {
+
+    @NotNull
+    private List<File> findFilesWithStar(@NotNull String fileName, @NotNull String... pathSegments) {
 		List<File> returnFile = new ArrayList<>();
 		
 		if (fileName.contains("*")) {
@@ -166,7 +179,7 @@ public class ProjectDirectory {
 		return returnFile;
 	}
 	
-	private boolean matches(String item, String[] segments) {
+	private boolean matches(@NotNull String item, @NotNull String[] segments) {
 		int size = segments.length;
 		
 		boolean result = false;
@@ -205,7 +218,8 @@ public class ProjectDirectory {
 	 * @param path
 	 * @return
 	 */
-	public File findFile(String path) {
+    @Nullable
+	public File findFile(@NotNull String path) {
 		File returnFile = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -215,8 +229,9 @@ public class ProjectDirectory {
 		
 		return returnFile;
 	}
-	
-	private File findFile(String fileName, String... pathSegments) {
+
+    @Nullable
+    private File findFile(@NotNull String fileName, @NotNull String... pathSegments) {
 		File returnFile = null;
 		
 		if (fileMap.containsKey(fileName) && !fileMap.get(fileName).isEmpty()) {
@@ -231,8 +246,9 @@ public class ProjectDirectory {
 		
 		return returnFile;
 	}
-	
-	public String findCanonicalFilePath(String path, String root) {
+
+    @Nullable
+	public String findCanonicalFilePath(@NotNull String path, @NotNull String root) {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -244,14 +260,15 @@ public class ProjectDirectory {
 			}
 		}
 		
-		if (returnString != null && root != null && returnString.startsWith(root)) {
+		if (returnString != null && returnString.startsWith(root)) {
 			returnString = returnString.substring(root.length());
 		}
 		
 		return returnString;
 	}
-	
-	public String findCanonicalFilePath(String path) {
+
+    @Nullable
+    public String findCanonicalFilePath(@NotNull String path) {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -270,7 +287,8 @@ public class ProjectDirectory {
 		return returnString;
 	}
 	
-	private String findFilePath(String name, String... pathSegments) {
+	@Nullable
+    private String findFilePath(String name, @NotNull String... pathSegments) {
 		String returnPath = null;
 		
 		if (fileMap.containsKey(name) && !fileMap.get(name).isEmpty()) {
@@ -281,7 +299,8 @@ public class ProjectDirectory {
 	}
 
 	// score all the items in the set of choices against the given path segments
-	private String calculateBestOption(String[] pathSegments, Set<String> choices) {
+	@Nullable
+    private String calculateBestOption(@NotNull String[] pathSegments, @NotNull Set<String> choices) {
 		String returnOption = null;
 		
 		int highestScore = -1;
@@ -301,9 +320,10 @@ public class ProjectDirectory {
 		
 		return returnOption;
 	}
-	
+
 	// split along / or \ or just return the whole path
-	private String[] breakUpPath(String choice) {
+    @NotNull
+	private String[] breakUpPath(@NotNull String choice) {
 		String[] results;
 		
 		if (choice.indexOf('/') != -1) {
@@ -318,11 +338,10 @@ public class ProjectDirectory {
 	}
 	
 	// calculates the length of the common end elements
-	private int calculateScore(String[] option, String[] path) {
+	private int calculateScore(@NotNull String[] option, @NotNull String[] path) {
 		int score = 0;
 		
-		if (option != null && option.length != 0 &&
-				path != null && path.length != 0) {
+		if (option.length != 0 && path.length != 0) {
 			int optionIndex = option.length - 1, pathIndex = path.length - 1;
 			
 			while (optionIndex >= 0 && pathIndex >= 0) {

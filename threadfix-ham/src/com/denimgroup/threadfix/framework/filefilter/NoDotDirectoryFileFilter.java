@@ -26,20 +26,22 @@ package com.denimgroup.threadfix.framework.filefilter;
 import java.io.File;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.jetbrains.annotations.NotNull;
 
 public class NoDotDirectoryFileFilter implements IOFileFilter {
 	
-	public static IOFileFilter INSTANCE = new NoDotDirectoryFileFilter();
+	@NotNull
+    public static IOFileFilter INSTANCE = new NoDotDirectoryFileFilter();
 	
 	private NoDotDirectoryFileFilter(){}
 	
 	@Override
-	public boolean accept(File file) {
+	public boolean accept(@NotNull File file) {
 		return file.getName().charAt(0) != '.';
 	}
 
 	@Override
-	public boolean accept(File dir, String name) {
+	public boolean accept(File dir, @NotNull String name) {
 		return name.charAt(0) != '.';
 	}
 }

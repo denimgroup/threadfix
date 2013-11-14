@@ -29,6 +29,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -44,7 +46,8 @@ import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 
 public class JspEndpointDatabaseTests {
 
-	private EndpointDatabase getBodgeItDatabase() {
+	@Nullable
+    private EndpointDatabase getBodgeItDatabase() {
 		File file = new File(TestConstants.BODGEIT_SOURCE_LOCATION);
 		
 		List<PartialMapping> partialMappings = new ArrayList<>();
@@ -75,9 +78,11 @@ public class JspEndpointDatabaseTests {
 		}
 	}
 	
-	String dynamicRoot = "/bodgeit/", staticRoot = "/root/";
+	@NotNull
+    String dynamicRoot = "/bodgeit/", staticRoot = "/root/";
 	
-	String[] pages = {
+	@NotNull
+    String[] pages = {
 		"about.jsp",
 		"admin.jsp",
 		"advanced.jsp",
@@ -96,7 +101,8 @@ public class JspEndpointDatabaseTests {
 		"search.jsp",
 	};
 	
-	private String getStaticPath(EndpointDatabase db, String dynamicPath) {
+	@NotNull
+    private String getStaticPath(@NotNull EndpointDatabase db, String dynamicPath) {
 		EndpointQuery query = EndpointQueryBuilder.start()
 				.setInformationSourceType(InformationSourceType.DYNAMIC)
 				.setDynamicPath(dynamicPath)

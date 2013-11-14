@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.util;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This method provides a single point of access to the loggers to ease sanitization efforts.
@@ -88,7 +89,7 @@ public class SanitizedLogger {
 	 * @param startString
 	 * @return
 	 */
-	private String sanitize(String startString) {
+	private String sanitize(@Nullable String startString) {
 		String retVal;
 		
 		if(startString == null) {

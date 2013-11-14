@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.framework.engine;
 
 import java.io.File;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
@@ -10,15 +12,16 @@ public class FrameworkCalculator {
 	
 	private FrameworkCalculator(){}
 	
-	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
+	private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
 	
-	public static FrameworkType getType(File rootFile) {
+	@NotNull
+    public static FrameworkType getType(@NotNull File rootFile) {
 		log.info("Attempting to guess Framework Type from source tree.");
 		log.info("File: " + rootFile);
 		
 		FrameworkType frameworkType = FrameworkType.NONE;
 		
-		if (rootFile != null && rootFile.exists() && rootFile.isDirectory()) {
+		if (rootFile.exists() && rootFile.isDirectory()) {
 			ProjectDirectory projectDirectory = new ProjectDirectory(rootFile);
 			
 			File webXML = projectDirectory.findWebXML();

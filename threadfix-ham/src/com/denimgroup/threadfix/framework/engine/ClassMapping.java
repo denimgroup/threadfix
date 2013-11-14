@@ -23,25 +23,24 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class ClassMapping {
 
-	private final String servletName, classWithPackage, contextConfigLocation;
+	@NotNull
+    private final String servletName, classWithPackage;
+
+    @Nullable
+    private final String contextConfigLocation;
 	
 	public static final String CLASSPATH_START = "classpath:";
 	
-	public ClassMapping(String servletName, String classWithPackage, String contextConfigLocation) {
-		if (servletName == null) {
-			throw new IllegalArgumentException("Servlet Name cannot be null.");
-		}
-		
-		if (classWithPackage == null) {
-			throw new IllegalArgumentException("Class cannot be null.");
-		}
-		
+	public ClassMapping(@NotNull String servletName, @NotNull String classWithPackage, @Nullable String contextConfigLocation) {
+
 		this.servletName = servletName.trim();
 		this.classWithPackage = classWithPackage.trim();
-		
-		
+
 		if (contextConfigLocation != null && contextConfigLocation.startsWith(CLASSPATH_START)) {
 			this.contextConfigLocation = contextConfigLocation.substring(CLASSPATH_START.length());
 		} else {
@@ -49,19 +48,23 @@ public class ClassMapping {
 		}
 	}
 	
-	public String getServletName() {
+	@NotNull
+    public String getServletName() {
 		return servletName;
 	}
 	
-	public String getClassWithPackage() {
+	@NotNull
+    public String getClassWithPackage() {
 		return classWithPackage;
 	}
 	
-	public String getContextConfigLocation() {
+	@Nullable
+    public String getContextConfigLocation() {
 		return contextConfigLocation;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return getServletName() + " -> " + getClassWithPackage();
 	}

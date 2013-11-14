@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -39,8 +40,10 @@ import com.denimgroup.threadfix.framework.impl.jsp.JSPIncludeParser;
 // TODO add more tests
 public class JSPIncludeParserTests {
 	
-	static Map<String, Set<String>> samples = new HashMap<>();
-	static String[][] sampleStrings = {
+	@NotNull
+    static Map<String, Set<String>> samples = new HashMap<>();
+	@NotNull
+    static String[][] sampleStrings = {
 		{ // this tests the <%@ include file="include.jsp"%> style
 			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/Case49-LFI-ContextStream-FilenameContext-UnixTraversalValidation-OSPath-DefaultFullInput-SlashPathReq-Read.jsp",
 			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/inclusion-logic.jsp",
@@ -59,7 +62,7 @@ public class JSPIncludeParserTests {
 		}
 	}
 	
-	private static void add(String[] stuff) {
+	private static void add(@NotNull String[] stuff) {
 		Set<String> strings = new HashSet<>();
 		for (int i = 1; i < stuff.length; i++) {
 			strings.add(stuff[i]);
@@ -85,12 +88,7 @@ public class JSPIncludeParserTests {
 		assertTrue("failure.", JSPIncludeParser.parse(new File(TestConstants.FAKE_FILE)).isEmpty());
 	}
 
-	@Test
-	public void testNullInput() {
-		assertTrue("failure.", JSPIncludeParser.parse(null).isEmpty());
-	}
-	
-	private void compare(Set<String> results, Set<String> expected) {
+	private void compare(@NotNull Set<String> results, @NotNull Set<String> expected) {
 		Set<String> resultsCopy = new HashSet<>(results);
 		Set<String> expectedCopy = new HashSet<>(expected);
 		

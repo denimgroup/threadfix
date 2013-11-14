@@ -35,6 +35,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommonPathFinder {
 	
@@ -46,23 +48,28 @@ public class CommonPathFinder {
 	
 	private CommonPathFinder(){}
 
-	public static final String findOrParseProjectRoot(List<PartialMapping> partialMappings) {
+	@Nullable
+    public static String findOrParseProjectRoot(List<PartialMapping> partialMappings) {
 		return findOrParseProjectRoot(partialMappings, null);
 	}
 	
-	public static final String findOrParseProjectRoot(List<PartialMapping> partialMappings, String fileExtension) {
+	@Nullable
+    public static String findOrParseProjectRoot(List<PartialMapping> partialMappings, String fileExtension) {
 		return parseRoot(getFilePaths(partialMappings, fileExtension));
 	}
 
-	public static final String findOrParseUrlPath(List<PartialMapping> partialMappings) {
+	@Nullable
+    public static String findOrParseUrlPath(List<PartialMapping> partialMappings) {
 		return parseRoot(getUrlPaths(partialMappings));
 	}
 	
-	public static final String findOrParseProjectRootFromDirectory(File rootFile, String fileExtension) {
+	@Nullable
+    public static String findOrParseProjectRootFromDirectory(File rootFile, String fileExtension) {
 		return parseRoot(getFilePathsFromDirectory(rootFile, fileExtension));
 	}
 	
-	@SuppressWarnings("unchecked")
+	@NotNull
+    @SuppressWarnings("unchecked")
 	private static List<String> getFilePathsFromDirectory(File rootFile, String fileExtension) {
 		Collection<File> files = FileUtils.listFiles(rootFile,
 				new FileExtensionFileFilter(fileExtension),
@@ -77,7 +84,8 @@ public class CommonPathFinder {
 		return strings;
 	}
 
-	private static List<String> getFilePaths(List<PartialMapping> partialMappings, String fileExtension) {
+	@Nullable
+    private static List<String> getFilePaths(@Nullable List<PartialMapping> partialMappings, String fileExtension) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
 			return null;
 		}
@@ -93,7 +101,8 @@ public class CommonPathFinder {
 		return returnString;
 	}
 
-	private static List<String> getUrlPaths(List<PartialMapping> partialMappings) {
+	@NotNull
+    private static List<String> getUrlPaths(@Nullable List<PartialMapping> partialMappings) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -109,7 +118,8 @@ public class CommonPathFinder {
 		return returnStrings;
 	}
 
-	private static String parseRoot(List<String> items) {
+	@Nullable
+    private static String parseRoot(@Nullable List<String> items) {
 		if (items == null || items.isEmpty()) {
 			return null;
 		}
@@ -149,7 +159,7 @@ public class CommonPathFinder {
 			
 			for (String string : commonParts) {
 				if (string != null && !string.equals("")) {
-					builder.append(splitChar + string);
+					builder.append(splitChar).append(string);
 				}
 			}
 			
@@ -163,7 +173,8 @@ public class CommonPathFinder {
 		return response;
 	}
 
-	private static String[] getCommonParts(String[] soFar, String[] newParts) {
+	@Nullable
+    private static String[] getCommonParts(@Nullable String[] soFar, @NotNull String[] newParts) {
 		
 		String[] returnParts = newParts;
 		

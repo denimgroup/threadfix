@@ -148,21 +148,14 @@ public class SpringControllerMappingsTests {
 	public void testFakeFileInput() {
 		File file = new File(TestConstants.FAKE_FILE);
 		SpringControllerMappings mappings = new SpringControllerMappings(file);
-		assertTrue(mappings != null);
 		assertTrue(mappings.getEndpointsFromController("").isEmpty());
 		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
 		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
 		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
 	}
-	
-	@Test
-	public void testNullInput() {
-		SpringControllerMappings mappings = new SpringControllerMappings(null);
-		assertTrue(mappings != null);
-		assertTrue(mappings.getEndpointsFromController("").isEmpty());
-		assertTrue(mappings.getEndpointsFromController(null).isEmpty());
-		assertTrue(mappings.getEndpointsFromUrl("").isEmpty());
-		assertTrue(mappings.getEndpointsFromUrl(null).isEmpty());
-	}
-	
+
+    @Test(expected= NullPointerException.class)
+    public void testNullConstructorArgument() {
+        new SpringControllerMappings(null);
+    }
 }

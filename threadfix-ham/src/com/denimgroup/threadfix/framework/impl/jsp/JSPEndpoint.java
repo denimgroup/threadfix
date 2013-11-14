@@ -31,33 +31,41 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class JSPEndpoint extends AbstractEndpoint {
-	
+class JSPEndpoint extends AbstractEndpoint {
+
+    @NotNull
 	private final String dynamicPath, staticPath;
+
+    @NotNull
 	private final Set<String> parameters = new HashSet<>(), methods;
-	private final Map<String, Integer> paramToLineMap;
-	private final Map<Integer, List<String>> parameterMap;
+
+	@NotNull
+    private final Map<String, Integer> paramToLineMap;
+
+	@NotNull
+    private final Map<Integer, List<String>> parameterMap;
 	
-	public JSPEndpoint(String staticPath,
-			String dynamicPath,
-			Set<String> methods,
-			Map<Integer, List<String>> parameterMap) {
+	public JSPEndpoint(@NotNull String staticPath,
+                       @NotNull String dynamicPath,
+                       @NotNull Set<String> methods,
+			           @NotNull Map<Integer, List<String>> parameterMap) {
 		this.methods = methods;
 		this.staticPath = staticPath;
 		this.dynamicPath = dynamicPath;
 		this.parameterMap = parameterMap;
 		
-		if (parameterMap != null) {
-			for (List<String> value : parameterMap.values()) {
-				parameters.addAll(value);
-			}
-		}
-		
+        for (List<String> value : parameterMap.values()) {
+            parameters.addAll(value);
+        }
+
 		this.paramToLineMap = getParamToLineMap(parameterMap);
 	}
 
-	private Map<String, Integer> getParamToLineMap(
+	@NotNull
+    private Map<String, Integer> getParamToLineMap(
 			Map<Integer, List<String>> parameterMap) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		
@@ -68,20 +76,18 @@ public class JSPEndpoint extends AbstractEndpoint {
 		return paramMap;
 	}
 	
-	private Integer getFirstLineNumber(String parameterName,
-			Map<Integer, List<String>> parameterMap) {
+	private Integer getFirstLineNumber(@NotNull String parameterName,
+			@NotNull Map<Integer, List<String>> parameterMap) {
 		Integer returnValue = Integer.MAX_VALUE;
 		
-		if (parameterMap != null && parameterName != null) {
-			for (Integer integer : parameterMap.keySet()) {
-				if (integer < returnValue &&
-						parameterMap.get(integer) != null &&
-						parameterMap.get(integer).contains(parameterName)) {
-					returnValue = integer;
-				}
-			}
-		}
-		
+        for (Integer integer : parameterMap.keySet()) {
+            if (integer < returnValue &&
+                    parameterMap.get(integer) != null &&
+                    parameterMap.get(integer).contains(parameterName)) {
+                returnValue = integer;
+            }
+        }
+
 		if (returnValue == Integer.MAX_VALUE) {
 			returnValue = 1; // This way even if no parameter is found a marker can be created for the file
 		}
@@ -90,7 +96,8 @@ public class JSPEndpoint extends AbstractEndpoint {
 	}
 	
 	// TODO improve
-	String getParameterName(Iterable<CodePoint> codePoints) {
+    @Nullable
+    String getParameterName(@NotNull Iterable<CodePoint> codePoints) {
 		String parameter = null;
 		
 		for (CodePoint codePoint : codePoints) {
@@ -105,17 +112,20 @@ public class JSPEndpoint extends AbstractEndpoint {
 		return parameter;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public Set<String> getParameters() {
 		return parameters;
 	}
 	
-	@Override
+	@NotNull
+    @Override
 	public String getUrlPath() {
 		return dynamicPath;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public Set<String> getHttpMethods() {
 		return methods;
 	}
@@ -125,7 +135,8 @@ public class JSPEndpoint extends AbstractEndpoint {
 		return true; // JSPs aren't controller-based, so the whole page is the endpoint
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String getFilePath() {
 		return staticPath;
 	}
