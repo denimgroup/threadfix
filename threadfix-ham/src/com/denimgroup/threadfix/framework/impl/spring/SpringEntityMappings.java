@@ -23,16 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.io.File;
-import java.util.*;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import com.denimgroup.threadfix.framework.engine.BeanField;
-import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.*;
 
 class SpringEntityMappings {
 

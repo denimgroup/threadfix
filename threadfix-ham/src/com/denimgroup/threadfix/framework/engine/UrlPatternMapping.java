@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.framework.engine;
 
 import org.jetbrains.annotations.NotNull;
 
-public class UrlPatternMapping {
+class UrlPatternMapping {
 
     @NotNull
 	private String servletName, urlPattern;

@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.engine;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,11 +11,6 @@ import java.util.Map.Entry;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.engine.ClassMapping;
-import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.engine.ServletMappings;
-import com.denimgroup.threadfix.framework.engine.UrlPatternMapping;
 
 public class ServletMappingTests {
     

@@ -21,12 +21,12 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.impl.spring;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BeanField {
+class BeanField {
 	
 	public BeanField(@NotNull String fieldType, @NotNull String methodName) {
 		this.fieldType = fieldType;

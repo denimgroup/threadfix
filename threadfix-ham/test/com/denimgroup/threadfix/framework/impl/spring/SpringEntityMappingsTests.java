@@ -31,9 +31,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.BeanField;
-import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
-import com.denimgroup.threadfix.framework.impl.spring.SpringEntityMappings;
 
 
 public class SpringEntityMappingsTests {

@@ -32,8 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.BeanField;
-import com.denimgroup.threadfix.framework.impl.spring.SpringEntityParser;
 
 public class SpringEntityParserTests {
 	

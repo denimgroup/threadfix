@@ -21,19 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+package com.denimgroup.threadfix.framework.impl.spring;
 
 import org.jetbrains.annotations.NotNull;
 
-public class BeanFieldSet implements Iterable<BeanField> {
+import java.util.*;
+
+class BeanFieldSet implements Iterable<BeanField> {
 
 	@NotNull
     private Map<String, BeanField> fieldMap = new HashMap<>();

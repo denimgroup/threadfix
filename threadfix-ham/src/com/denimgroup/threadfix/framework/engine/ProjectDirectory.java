@@ -32,10 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.util.FilePathUtils;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO make more error resistant
 public class ProjectDirectory {
@@ -53,7 +54,7 @@ public class ProjectDirectory {
 	}
 	
 	@NotNull
-    private String getDirectoryPath() {
+	public String getDirectoryPath() {
 		return directory.getAbsolutePath();
 	}
 
@@ -215,8 +216,6 @@ public class ProjectDirectory {
 	/**
 	 * Find the file on the file system given a static or dynamic file path.
 	 * This will find the file on the file system with the same name and longest common
-	 * @param path
-	 * @return
 	 */
     @Nullable
 	public File findFile(@NotNull String path) {

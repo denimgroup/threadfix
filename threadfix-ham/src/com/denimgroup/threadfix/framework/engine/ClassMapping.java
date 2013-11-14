@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.framework.engine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ClassMapping {
+class ClassMapping {
 
 	@NotNull
     private final String servletName, classWithPackage;

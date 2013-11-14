@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.engine;
 
 import static com.denimgroup.threadfix.framework.TestConstants.BODGEIT_SOURCE_LOCATION;
 import static com.denimgroup.threadfix.framework.TestConstants.BODGEIT_WEB_XML;
