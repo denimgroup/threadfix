@@ -31,7 +31,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginPage extends BasePage {
 
-	public static String url = "http://satthreadfix.denimgroup.com:8080/threadfix/";
+	public static String url = "http://localhost:8080/threadfix/";
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);

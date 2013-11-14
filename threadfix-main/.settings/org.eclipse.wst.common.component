@@ -4,10 +4,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="threadfix-cli-2.0M1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ThreadFixCLI/ThreadFixCLI">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="threadfix-ham-2.0M1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/threadfix-ham/threadfix-ham">
+        <dependent-module archiveName="threadfix-cli-2.0M1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/threadfix-cli/threadfix-cli">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path"/>
