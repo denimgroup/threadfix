@@ -43,6 +43,7 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 
 @Entity
 @Table(name = "Finding")
@@ -312,6 +313,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 			if (getSurfaceLocation().getParameter() != null) {
 				builder.setParameter(getSurfaceLocation().getParameter());
 			}
+		}
+		
+		if (isStatic) {
+			builder.setInformationSourceType(InformationSourceType.STATIC);
+		} else {
+			builder.setInformationSourceType(InformationSourceType.DYNAMIC);
+		}
+		
+		if (sourceFileLocation != null) {
+			builder.setStaticPath(sourceFileLocation);
 		}
 		
 		if (dataFlowElements != null && !dataFlowElements.isEmpty()) {

@@ -201,8 +201,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		scanMerger.merge(scan, scan.getApplicationChannel(),
-				MergeConfigurationGenerator.getDefaultConfiguration());
+		scanMerger.merge(scan, scan.getApplicationChannel());
 	
 		return scan;
 	}
@@ -252,8 +251,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
-		scanMerger.merge(scan, applicationChannel,
-				MergeConfigurationGenerator.generateConfiguration(applicationChannel.getApplication(), scan));
+		scanMerger.merge(scan, applicationChannel);
 		
 		vulnerabilityFilterService.updateVulnerabilities(
 				applicationChannel.getApplication().getOrganization().getId(),

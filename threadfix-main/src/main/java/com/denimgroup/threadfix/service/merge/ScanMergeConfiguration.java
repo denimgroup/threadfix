@@ -82,10 +82,12 @@ public class ScanMergeConfiguration extends ProjectConfig {
 		return servletMappings;
 	}
 
+	@Override
 	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
 		return sourceCodeAccessLevel;
 	}
 
+	@Override
 	public FrameworkType getFrameworkType() {
 		return frameworkType;
 	}
