@@ -28,9 +28,12 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
 class NoSourceFindingProcessor implements FindingProcessor {
+
+    protected final SanitizedLogger log = new SanitizedLogger(NoSourceFindingProcessor.class);
 	
 	private final PathCleaner cleaner;
 	
@@ -42,6 +45,8 @@ class NoSourceFindingProcessor implements FindingProcessor {
 			Scan scan) {
 		this.cleaner = PathCleanerFactory.getPathCleaner(frameworkType,
 				scan.toPartialMappingList());
+
+        log.info("NoSourceFindingProcessor with cleaner = " + cleaner);
 	}
 
 	@Override

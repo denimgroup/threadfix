@@ -39,6 +39,8 @@ import org.jetbrains.annotations.Nullable;
 
 class FullSourceFindingProcessor implements FindingProcessor {
 
+    private static final SanitizedLogger log = new SanitizedLogger("FullSourceFindingProcessor");
+
     @Nullable
 	private final EndpointDatabase database;
 
@@ -59,7 +61,6 @@ class FullSourceFindingProcessor implements FindingProcessor {
 		
 		parameterParser = ParameterParserFactory.getParameterParser(config);
 
-        SanitizedLogger log = new SanitizedLogger("FullSourceFindingProcessor");
 		log.info("Initialized with EndpointDatabase = " + database);
 		log.info("Initialized with PathCleaner = " + cleaner);
 		log.info("Initialized with ParameterParser = " + parameterParser);

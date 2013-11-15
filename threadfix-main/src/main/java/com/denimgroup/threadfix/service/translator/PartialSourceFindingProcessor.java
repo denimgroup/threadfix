@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.translator;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
+import com.denimgroup.threadfix.service.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
 import com.denimgroup.threadfix.data.entities.Application;
@@ -39,6 +40,8 @@ import com.denimgroup.threadfix.framework.engine.partial.PartialMappingsDatabase
 import org.jetbrains.annotations.Nullable;
 
 class PartialSourceFindingProcessor implements FindingProcessor {
+
+    protected final SanitizedLogger log = new SanitizedLogger(PartialSourceFindingProcessor.class);
 
     @Nullable
 	private final PartialMappingDatabase database;
@@ -60,6 +63,10 @@ class PartialSourceFindingProcessor implements FindingProcessor {
 				scan.toPartialMappingList(), projectConfig.getFrameworkType());
 		
 		parameterParser = ParameterParserFactory.getParameterParser(projectConfig);
+
+        log.info("Initialized with EndpointDatabase = " + database);
+        log.info("Initialized with PathCleaner = " + cleaner);
+        log.info("Initialized with ParameterParser = " + parameterParser);
 	}
 
 	public void train(@NotNull Application application) {
