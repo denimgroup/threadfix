@@ -32,7 +32,7 @@ public class ResourceManager {
 	@NotNull
     public static File getFile(String name) {
 		//URL url = ResourceManager.class.getClassLoader().getResource(name);
-		return new File("target/test-classes/" + name);//url.toString());
+		return new File("threadfix-ham/target/test-classes/" + name);//url.toString());
 	}
 	
 	@NotNull

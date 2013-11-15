@@ -11,6 +11,7 @@
 	<artifactId>threadfix-ham</artifactId>
 	<name>threadfix-ham</name>
 	<build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>

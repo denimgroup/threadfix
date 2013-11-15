@@ -74,7 +74,8 @@ class FindingProcessorFactory {
 		
 		if (application.getSourceCodeAccessLevelEnum() != SourceCodeAccessLevel.DETECT) {
 			accessLevel = application.getSourceCodeAccessLevelEnum();
-		} else if (application.getRepositoryUrl() != null || application.getRepositoryFolder() != null) {
+		} else if (!nullOrEmpty(application.getRepositoryUrl()) ||
+                !nullOrEmpty(application.getRepositoryFolder())) {
 			accessLevel = SourceCodeAccessLevel.FULL;
 		} else if (scan.isStatic() || hasStaticScan(application)) {
 			accessLevel = SourceCodeAccessLevel.PARTIAL;
@@ -82,6 +83,10 @@ class FindingProcessorFactory {
 		
 		return accessLevel;
 	}
+
+    private static boolean nullOrEmpty(String input) {
+        return input == null || input.trim().isEmpty();
+    }
 
 	private static boolean hasStaticScan(Application application) {
 		boolean hasStatic = false;

@@ -6,10 +6,11 @@ import org.jetbrains.annotations.NotNull;
 
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
+import org.jetbrains.annotations.Nullable;
 
-class DefaultPathCleaner implements PathCleaner {
-	
-	private final String staticRoot, dynamicRoot;
+public class DefaultPathCleaner implements PathCleaner {
+
+	protected final String staticRoot, dynamicRoot;
 	
 	public DefaultPathCleaner(String staticRoot, String dynamicRoot) {
 		this.staticRoot  = staticRoot;
@@ -29,7 +30,7 @@ class DefaultPathCleaner implements PathCleaner {
 			cleanedPath = cleanedPath.substring(staticRoot.length());
 		}
 		
-		if (cleanedPath.indexOf("\\") != -1) {
+		if (cleanedPath.contains("\\")) {
 			if (cleanedPath.indexOf("\\") != 0) {
 				cleanedPath = "\\" + cleanedPath;
 			}
@@ -48,8 +49,8 @@ class DefaultPathCleaner implements PathCleaner {
 			cleanedPath = cleanedPath.substring(dynamicRoot.length());
 		}
 		
-		if (cleanedPath.indexOf("\\") != -1) {
-			cleanedPath.replace('\\', '/');
+		if (cleanedPath.contains("\\")) {
+            cleanedPath = cleanedPath.replace('\\', '/');
 		}
 		
 		if (cleanedPath.indexOf("/") != 0) {
@@ -59,7 +60,13 @@ class DefaultPathCleaner implements PathCleaner {
 		return cleanedPath;
 	}
 
-	@Override
+    @Nullable
+    @Override
+    public String getDynamicPathFromStaticPath(@NotNull String filePath) {
+        return filePath;
+    }
+
+    @Override
 	public String getDynamicRoot() {
 		return dynamicRoot;
 	}

@@ -219,22 +219,26 @@ public class ReportsServiceImpl implements ReportsService {
 
 		StringBuffer report = new StringBuffer();
 		JRExporter exporter = null;
-		
-		if(format.equals("CSV")) {
-			exporter = new JRCsvExporter();
-			log.info("Starting CSV report generation.");
-		} else if(format.equals("PDF")) {
-			exporter = new JRPdfExporter();
-			log.info("Starting PDF report generation.");
-		} else {
-			exporter = new JRHtmlExporter();
-			log.info("Starting HTML report generation.");
-			
-			if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
-				parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
-			}
-			
-		}
+
+        switch (format) {
+            case "CSV":
+                exporter = new JRCsvExporter();
+                log.info("Starting CSV report generation.");
+                break;
+            case "PDF":
+                exporter = new JRPdfExporter();
+                log.info("Starting PDF report generation.");
+                break;
+            default:
+                exporter = new JRHtmlExporter();
+                log.info("Starting HTML report generation.");
+
+                if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
+                    parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+                }
+
+                break;
+        }
 
 		if (sessionFactory != null) {
 			parameters.put("HIBERNATE_SESSION", sessionFactory.getCurrentSession());

@@ -92,7 +92,13 @@ public class SpringPathCleaner implements PathCleaner {
         return escaped;
 	}
 
-	@Override
+    @Nullable
+    @Override
+    public String getDynamicPathFromStaticPath(@NotNull String filePath) {
+        return filePath;
+    }
+
+    @Override
 	public String getDynamicRoot() {
 		return dynamicRoot;
 	}

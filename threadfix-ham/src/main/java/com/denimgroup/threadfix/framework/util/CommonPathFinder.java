@@ -55,7 +55,7 @@ public class CommonPathFinder {
 	
 	@Nullable
     public static String findOrParseProjectRoot(List<PartialMapping> partialMappings, String fileExtension) {
-		return parseRoot(getFilePaths(partialMappings));
+		return parseRoot(getFilePaths(partialMappings, fileExtension));
 	}
 
 	@Nullable
@@ -85,20 +85,24 @@ public class CommonPathFinder {
 	}
 
 	@Nullable
-    private static List<String> getFilePaths(@Nullable List<PartialMapping> partialMappings) {
+    private static List<String> getFilePaths(@Nullable List<PartialMapping> partialMappings,
+                                             @Nullable String extension) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
 			return null;
 		}
 
-		List<String> returnString = new ArrayList<>();
+		List<String> returnStrings = new ArrayList<>();
 
 		for (PartialMapping partialMapping : partialMappings) {
 			if (partialMapping != null && partialMapping.getStaticPath() != null) {
-				returnString.add(partialMapping.getStaticPath());
-			}
+                if (extension == null ||
+                        partialMapping.getStaticPath().endsWith(extension)) {
+                    returnStrings.add(partialMapping.getStaticPath());
+                }
+            }
 		}
 
-		return returnString;
+		return returnStrings;
 	}
 
 	@NotNull

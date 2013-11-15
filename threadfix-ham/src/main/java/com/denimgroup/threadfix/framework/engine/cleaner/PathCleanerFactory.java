@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +20,8 @@ public class PathCleanerFactory {
 		
 		if (frameworkType == FrameworkType.SPRING_MVC) {
 			returnCleaner = new SpringPathCleaner(partialMappings);
+        } else if (frameworkType == FrameworkType.JSP) {
+            returnCleaner = new JSPPathCleaner(partialMappings);
 		} else {
 			returnCleaner = new DefaultPathCleaner(partialMappings);
 		}

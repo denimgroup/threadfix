@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import org.jetbrains.annotations.NotNull;
 
 class NoSourceFindingProcessor implements FindingProcessor {
 	
@@ -44,19 +45,23 @@ class NoSourceFindingProcessor implements FindingProcessor {
 	}
 
 	@Override
-	public void process(Finding finding) {
-		if (finding != null) {
-			if (finding.getSurfaceLocation() != null &&
-					finding.getSurfaceLocation().getPath() != null) {
-				finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(
-						finding.getSurfaceLocation().getPath()));
-			}
-			
-			if (finding.getSourceFileLocation() != null) {
-				finding.setCalculatedFilePath(cleaner.cleanStaticPath(
-						finding.getSourceFileLocation()));
-			}
-		}
+	public void process(@NotNull Finding finding) {
+        if (finding.getSurfaceLocation() != null &&
+                finding.getSurfaceLocation().getPath() != null) {
+            finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(
+                    finding.getSurfaceLocation().getPath()));
+        }
+
+        if (finding.getSourceFileLocation() != null) {
+            finding.setCalculatedFilePath(cleaner.cleanStaticPath(
+                    finding.getSourceFileLocation()));
+        }
+
+        if (finding.getCalculatedUrlPath() == null ||
+                finding.getCalculatedUrlPath().equals(finding.getCalculatedFilePath())) {
+            finding.setCalculatedUrlPath(cleaner.getDynamicPathFromStaticPath(
+                    finding.getCalculatedFilePath()));
+        }
 	}
 
 }

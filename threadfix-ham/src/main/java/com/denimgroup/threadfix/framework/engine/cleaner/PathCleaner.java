@@ -34,6 +34,14 @@ public interface PathCleaner {
     @Nullable
 	String cleanDynamicPath(@NotNull String urlPath);
 
+    /**
+     * Optional method. Classes wishing to skip this method should return filePath.
+     * @param filePath
+     * @return dynamic URL
+     */
+    @Nullable
+    String getDynamicPathFromStaticPath(@NotNull String filePath);
+
     @Nullable
 	String getDynamicRoot();
 
