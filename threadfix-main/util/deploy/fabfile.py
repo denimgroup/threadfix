@@ -44,7 +44,7 @@ def exchange_files():
 @runs_once
 def build_war():
     with lcd('%s/threadfix' % local_working_folder_loc):
-        res = local('mvn package')
+        res = local('mvn clean install')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
