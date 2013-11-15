@@ -21,13 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.service.translator;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
+import org.jetbrains.annotations.NotNull;
 
-public interface ScanMerger {
-	
-	void merge(Scan scan, ApplicationChannel channel);
+import com.denimgroup.threadfix.data.entities.Finding;
+
+public interface FindingProcessor {
+
+	public void process(@NotNull Finding finding);
 	
 }

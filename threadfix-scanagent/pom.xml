@@ -13,7 +13,7 @@
   <description>Scan agent for the ThreadFix application vulnerability management platform</description>
   
   <build>
-	<sourceDirectory>src</sourceDirectory>
+	<sourceDirectory>src/main/java</sourceDirectory>
 	<plugins>
 		<plugin>
 			<artifactId>maven-compiler-plugin</artifactId>

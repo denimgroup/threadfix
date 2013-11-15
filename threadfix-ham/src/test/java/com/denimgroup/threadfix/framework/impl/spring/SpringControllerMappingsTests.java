@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
-import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 
 public class SpringControllerMappingsTests {
 	

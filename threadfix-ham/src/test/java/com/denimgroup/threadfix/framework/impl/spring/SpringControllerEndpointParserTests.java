@@ -51,7 +51,6 @@ public class SpringControllerEndpointParserTests {
 			{"/owners/multiple/methods", "POST", "125", "130"},
 	};
 
-    @Ignore
 	@Test
 	public void testClassAnnotation() {
 		SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));

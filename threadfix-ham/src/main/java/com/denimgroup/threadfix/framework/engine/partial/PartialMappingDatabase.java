@@ -1,13 +1,13 @@
 package com.denimgroup.threadfix.framework.engine.partial;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public interface PartialMappingDatabase {
 
-	void addMappings(Iterable<PartialMapping> mappings);
+	void addMappings(@NotNull Iterable<PartialMapping> mappings);
 
     @Nullable
 	PartialMapping findBestMatch(PartialMapping mapping);

@@ -11,7 +11,7 @@
 	<artifactId>threadfix-ham</artifactId>
 	<name>threadfix-ham</name>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

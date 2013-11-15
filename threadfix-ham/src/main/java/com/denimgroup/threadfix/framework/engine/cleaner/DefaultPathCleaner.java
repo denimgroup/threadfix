@@ -2,9 +2,10 @@ package com.denimgroup.threadfix.framework.engine.cleaner;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
-import org.jetbrains.annotations.NotNull;
 
 class DefaultPathCleaner implements PathCleaner {
 	
@@ -28,6 +29,14 @@ class DefaultPathCleaner implements PathCleaner {
 			cleanedPath = cleanedPath.substring(staticRoot.length());
 		}
 		
+		if (cleanedPath.indexOf("\\") != -1) {
+			if (cleanedPath.indexOf("\\") != 0) {
+				cleanedPath = "\\" + cleanedPath;
+			}
+		} else if (cleanedPath.indexOf("/") != 0) {
+			cleanedPath = "/" + cleanedPath;
+		}
+		
 		return cleanedPath;
 	}
 
@@ -37,6 +46,14 @@ class DefaultPathCleaner implements PathCleaner {
 		
 		if (dynamicRoot != null && cleanedPath.startsWith(dynamicRoot)) {
 			cleanedPath = cleanedPath.substring(dynamicRoot.length());
+		}
+		
+		if (cleanedPath.indexOf("\\") != -1) {
+			cleanedPath.replace('\\', '/');
+		}
+		
+		if (cleanedPath.indexOf("/") != 0) {
+			cleanedPath = "/" + cleanedPath;
 		}
 		
 		return cleanedPath;

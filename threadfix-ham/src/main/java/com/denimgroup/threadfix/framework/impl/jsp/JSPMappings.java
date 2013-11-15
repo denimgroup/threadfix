@@ -42,10 +42,13 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO figure out HTTP methods perhaps from form analysis
 // for now all will be GET
 public class JSPMappings implements EndpointGenerator {
+	
+	private final SanitizedLogger log = new SanitizedLogger("JSPMappings");
 	
 	private final Map<String, Set<File>> includeMap = new HashMap<>();
 	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
@@ -61,6 +64,8 @@ public class JSPMappings implements EndpointGenerator {
 			
 			String jspRootString = CommonPathFinder.findOrParseProjectRootFromDirectory(rootFile, "jsp");
 			
+			log.info("Calculated JSP root to be: " + jspRootString);
+			
 			if (jspRootString == null) {
 				jspRoot = projectRoot;
 			} else {
@@ -69,6 +74,8 @@ public class JSPMappings implements EndpointGenerator {
 			
 			Collection<File> jspFiles = FileUtils.listFiles(
 					rootFile, JSPFileFilter.INSTANCE, NoDotDirectoryFileFilter.INSTANCE);
+			
+			log.info("Found " + jspFiles.size() + " JSP files.");
 	
 			for (File file : jspFiles) {
 				Set<File> files = JSPIncludeParser.parse(file);

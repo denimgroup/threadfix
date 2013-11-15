@@ -30,11 +30,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.enums.InformationSourceType;
+import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
@@ -124,13 +126,16 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		Set<Endpoint> resultingSet = new HashSet<>();
 		
         List<Set<Endpoint>> resultSets = new ArrayList<>();
+        
+        boolean useStatic = query.getStaticPath() != null &&
+        		query.getInformationSourceType() == InformationSourceType.STATIC;
 
-        if (query.getDynamicPath() != null) {
+        if (!useStatic && query.getDynamicPath() != null) {
             String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
             resultSets.add(getValueOrEmptySet(cleaned, dynamicMap));
         }
 
-        if (query.getStaticPath() != null) {
+        if (useStatic && query.getStaticPath() != null) {
             String cleaned = pathCleaner.cleanStaticPath(query.getStaticPath());
             resultSets.add(getValueOrEmptySet(cleaned, staticMap));
         }

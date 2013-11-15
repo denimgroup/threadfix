@@ -21,19 +21,38 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.service.translator;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
-import com.denimgroup.threadfix.service.translator.PathUrlTranslator;
-import com.denimgroup.threadfix.service.translator.PathUrlTranslatorFactory;
+import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
 // TODO convert to use EndpointDatabase and get rid of the PathUrlTranslator
 public class PathGuesser {
 	
 	private PathGuesser(){}
+	
+	public static void generateGuesses2(Application application, Scan scan) {
+		if (scan == null || scan.getFindings() == null || scan.getFindings().isEmpty()) {
+			return;
+		}
+		
+		FindingProcessor processor = FindingProcessorFactory.getProcessor(application, scan);
+		
+		calculateLocations2(scan, processor);
+	}
+
+	private static void calculateLocations2(Scan scan, FindingProcessor processor) {
+		
+		for (Finding finding : scan.getFindings()) {
+			if (finding != null) {
+				processor.process(finding);
+			}
+		}
+	}
 	
 	public static void generateGuesses(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
 		if (scan == null || scan.getFindings() == null || scan.getFindings().isEmpty()) {
@@ -47,7 +66,7 @@ public class PathGuesser {
 		calculateLocations(scan, translator, parser);
 	}
 
-	private static void calculateLocations(Scan scan, PathUrlTranslator translator, 
+	private static void calculateLocations(Scan scan, PathUrlTranslator translator,
 			ParameterParser parser) {
 		
 		for (Finding finding : scan.getFindings()) {

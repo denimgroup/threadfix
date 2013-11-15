@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
