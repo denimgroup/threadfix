@@ -20,9 +20,9 @@ public class RemoteProviderType extends BaseEntity  {
 	
 	private static final long serialVersionUID = -4542241524388720916L;
 	
-	public static final String SENTINEL = ChannelType.SENTINEL;
-	public static final String VERACODE = ChannelType.VERACODE;
-	public static final String QUALYSGUARD_WAS = ChannelType.QUALYSGUARD_WAS;
+	public static final String SENTINEL = ScannerType.SENTINEL.getFullName();
+	public static final String VERACODE = ScannerType.VERACODE.getFullName();
+	public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
 
 	public static final int NAME_LENGTH = 60;
 	public static final int API_KEY_LENGTH = 1024;

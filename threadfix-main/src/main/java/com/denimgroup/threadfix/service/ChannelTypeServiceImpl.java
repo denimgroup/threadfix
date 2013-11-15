@@ -36,6 +36,7 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 
 @Service
 @Transactional(readOnly = true)
@@ -78,10 +79,10 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 			return null;
 		
 		Set<String> doNotIncludeList = new HashSet<String>();
-		doNotIncludeList.add(ChannelType.SENTINEL);
-		doNotIncludeList.add(ChannelType.VERACODE);
-		doNotIncludeList.add(ChannelType.QUALYSGUARD_WAS);
-		doNotIncludeList.add(ChannelType.MANUAL);
+		doNotIncludeList.add(ScannerType.SENTINEL.getFullName());
+		doNotIncludeList.add(ScannerType.VERACODE.getFullName());
+		doNotIncludeList.add(ScannerType.QUALYSGUARD_WAS.getFullName());
+		doNotIncludeList.add(ScannerType.MANUAL.getFullName());
 		
 		if (application != null && application.getChannelList() != null && 
 				application.getChannelList().size() != 0) {

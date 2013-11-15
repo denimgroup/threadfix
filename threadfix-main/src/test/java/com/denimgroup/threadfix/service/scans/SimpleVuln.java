@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 
 class SimpleVuln {
 	private String path, parameter, genericVuln, genericVulnId, notes, appscanId;
@@ -78,10 +78,10 @@ class SimpleVuln {
 			String channelName = finding.getJSONObject("channelVulnerability")
 				.getJSONObject("channelType")
 				.getString("name");
-			switch (channelName) {
-				case ChannelType.APPSCAN_DYNAMIC: appscanIdsToMatch.add(finding.getString("nativeId")); break;
-				case ChannelType.FORTIFY: fortifyNativeIds.add(finding.getString("nativeId")); break;
-			}
+			if (channelName.equals(ScannerType.APPSCAN_DYNAMIC.getFullName()))
+				appscanIdsToMatch.add(finding.getString("nativeId"));
+			else if (channelName.equals(ScannerType.FORTIFY.getFullName()))
+				fortifyNativeIds.add(finding.getString("nativeId")); 
 		}
 	}
 	

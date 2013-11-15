@@ -35,26 +35,35 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-import com.denimgroup.threadfix.framework.beans.DefaultEndpoint;
-import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
+import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
 // TODO figure out HTTP methods perhaps from form analysis
 // for now all will be GET
 public class JSPMappings implements EndpointGenerator {
 	
-	private Map<String, Set<File>> includeMap = new HashMap<>();
-	private Map<String, Map<Integer, List<String>>> parameterMap = new HashMap<>();
-	private List<Endpoint> endpoints = new ArrayList<>();
-	private File rootFile = null;
+	private final Map<String, Set<File>> includeMap = new HashMap<>();
+	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
+	private final List<Endpoint> endpoints = new ArrayList<>();
+	private final File projectRoot, jspRoot;
 	
 	@SuppressWarnings("unchecked")
 	public JSPMappings(File rootFile) {
 		if (rootFile != null && rootFile.exists()) {
 
-			this.rootFile = rootFile;
+			this.projectRoot = rootFile;
+			
+			String jspRootString = CommonPathFinder.findOrParseProjectRootFromDirectory(rootFile, "jsp");
+			
+			if (jspRootString == null) {
+				jspRoot = projectRoot;
+			} else {
+				jspRoot = new File(jspRootString);
+			}
+			
 			Collection<File> jspFiles = FileUtils.listFiles(
 					rootFile, JSPFileFilter.INSTANCE, NoDotDirectoryFileFilter.INSTANCE);
 	
@@ -66,57 +75,50 @@ public class JSPMappings implements EndpointGenerator {
 			}
 			
 			for (File file : jspFiles) {
-				Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
-				if (parserResults != null) {
-					parameterMap.put(FilePathUtils.getRelativePath(file, rootFile), parserResults);
-					Set<String> allParameters = new HashSet<>();
-					for (List<String> parameters : parserResults.values()) {
-						allParameters.addAll(parameters);
-					}
-					endpoints.add(new DefaultEndpoint(
-							FilePathUtils.getRelativePath(file, rootFile), 
-							allParameters, 
-							new HashSet<String>(Arrays.asList("GET", "POST"))));
+				Endpoint endpoint = getEndpoint(file);
+				if (endpoint != null) {
+					endpoints.add(endpoint);
 				}
 			}
+		} else {
+			projectRoot = null;
+			jspRoot = null;
 		}
 	}
 	
-	public Set<File> getIncludedFiles(String relativePath) {
-		return includeMap.get(relativePath);
-	}
-	
-	public Map<Integer, List<String>> getParameterMap(String relativePath) {
-		return parameterMap.get(relativePath);
-	}
-	
-	// TODO simple optimizations to clean up the code and make it more efficient
-	// create a map of parameter name to first line when this class is initialized and do lookups on that
-	// it should be O(n) on the map and then O(1) instead of O(N) every time
-	public Integer getFirstLineNumber(String relativeFilePath, String parameterName) {
-		Map<Integer, List<String>> parameterMap = getParameterMap(relativeFilePath);
+	public Endpoint getEndpoint(File file) {
+		JSPEndpoint endpoint = null;
 		
-		Integer returnValue = Integer.MAX_VALUE;
-		
-		if (parameterMap != null && parameterName != null) {
-			for (Integer integer : parameterMap.keySet()) {
-				if (integer < returnValue &&
-						parameterMap.get(integer) != null &&
-						parameterMap.get(integer).contains(parameterName)) {
-					returnValue = integer;
-				}
-			}
+		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
+		if (parserResults != null) {
+			String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
+			
+			endpoint = new JSPEndpoint(
+					staticPath,
+					FilePathUtils.getRelativePath(file, jspRoot),
+					new HashSet<String>(Arrays.asList("GET", "POST")),
+					parserResults
+					);
+			
+			jspEndpointMap.put(staticPath, endpoint);
 		}
 		
-		if (returnValue == Integer.MAX_VALUE) {
-			returnValue = 1; // This way even if no parameter is found a marker can be created for the file
+		return endpoint;
+	}
+	
+	public JSPEndpoint getEndpoint(String staticPath) {
+		
+		String key = staticPath; // TODO determine whether we need to clean or not
+		
+		if (key != null && !key.startsWith("/")) {
+			key = "/" + key;
 		}
 		
-		return returnValue;
+		return jspEndpointMap.get(key);
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {
-		return FilePathUtils.getRelativePath(dataFlowLocation, rootFile);
+		return FilePathUtils.getRelativePath(dataFlowLocation, projectRoot);
 	}
 
 	@Override

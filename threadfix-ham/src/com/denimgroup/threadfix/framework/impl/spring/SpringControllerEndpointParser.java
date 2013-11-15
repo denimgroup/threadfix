@@ -29,16 +29,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.denimgroup.threadfix.framework.beans.BeanField;
-import com.denimgroup.threadfix.framework.beans.BeanFieldSet;
+import com.denimgroup.threadfix.framework.engine.BeanField;
+import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-
 
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
-public class SpringControllerEndpointParser implements EventBasedTokenizer {
+class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
 	private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
 	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;

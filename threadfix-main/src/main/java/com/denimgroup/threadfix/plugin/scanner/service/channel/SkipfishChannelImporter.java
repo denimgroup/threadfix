@@ -46,10 +46,10 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
@@ -94,7 +94,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	private Calendar date;
 		
 	public SkipfishChannelImporter() {
-		super(ChannelType.SKIPFISH);
+		super(ScannerType.SKIPFISH.getFullName());
 	}
 
 	/*
@@ -540,6 +540,6 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.SKIPFISH;
+		return ScannerType.SKIPFISH.getFullName();
 	}
 }

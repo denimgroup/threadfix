@@ -37,10 +37,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.StaticPathInformation;
 import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
@@ -112,7 +112,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	}
 	
 	public FortifyChannelImporter() {
-		super(ChannelType.FORTIFY);
+		super(ScannerType.FORTIFY.getFullName());
 		doSAXExceptionCheck = false;
 	}
 
@@ -886,6 +886,6 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.FORTIFY;
+		return ScannerType.FORTIFY.getFullName();
 	}
 }

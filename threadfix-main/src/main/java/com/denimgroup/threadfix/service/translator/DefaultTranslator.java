@@ -28,7 +28,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;

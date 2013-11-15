@@ -53,6 +53,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.plugin.scanner.DaoHolder;
 import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanUtils;
@@ -96,7 +97,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			returnString = figureOutZip("tempFile");
 		} else if (file.getOriginalFilename().endsWith("json")){
 			//probably brakeman
-			returnString = ChannelType.BRAKEMAN;
+			returnString = ScannerType.BRAKEMAN.getFullName();
 		} else {
 			returnString = figureOutXml("tempFile");
 		}
@@ -116,14 +117,14 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			zipFile = new ZipFile(fileName);
 			
 			if (zipFile.getEntry("audit.fvdl") != null) {
-				result = ChannelType.FORTIFY;
+				result = ScannerType.FORTIFY.getFullName();
 			} else {
 				for (Enumeration<?> entries = zipFile.entries(); entries.hasMoreElements();) {
 					Object entry = entries.nextElement();
 					if (entry != null && entry instanceof ZipEntry) {
 						String name = ((ZipEntry) entry).getName();
 						if (name != null && name.endsWith("issue_index.js")) {
-							result = ChannelType.SKIPFISH;
+							result = ScannerType.SKIPFISH.getFullName();
 							break;
 						}
 					}
@@ -164,24 +165,24 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	
 	private static final Set<Entry<String, String[]>> map = new HashSet<>();
 	static {
-		addToMap(ChannelType.APPSCAN_DYNAMIC, "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
-		addToMap(ChannelType.ARACHNI, "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
-		addToMap(ChannelType.BURPSUITE, "issues", "issue", "serialNumber", "type", "name", "host", "path");
-		addToMap(ChannelType.NETSPARKER, "netsparker", "target", "url", "scantime", "vulnerability", "url", "type", "severity");
-		addToMap(ChannelType.CAT_NET, "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
-		addToMap(ChannelType.W3AF, "w3afrun");
-		addToMap(ChannelType.NESSUS, "NessusClientData_v2");
-		addToMap(ChannelType.WEBINSPECT, "Sessions", "Session", "URL", "Scheme", "Host", "Port");
-		addToMap(ChannelType.ACUNETIX_WVS,  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
-		addToMap(ChannelType.FINDBUGS, "BugCollection", "Project", "BugInstance", "Class");
-		addToMap(ChannelType.APPSCAN_SOURCE, "AssessmentRun", "AssessmentStats" );
-		addToMap(ChannelType.MANUAL, "Vulnerabilities", "Vulnerability");
-		addToMap(ChannelType.NTO_SPIDER, "VULNS", "VULNLIST");
-		addToMap(ChannelType.NTO_SPIDER, "VulnSummary");
-		addToMap(ChannelType.APPSCAN_ENTERPRISE, "report", "control", "row");
-		addToMap(ChannelType.ZAPROXY, "report", "alertitem");
-		addToMap(ChannelType.ZAPROXY, "OWASPZAPReport", "site", "alerts");
-		addToMap(ChannelType.DEPENDENCY_CHECK, "analysis");
+		addToMap(ScannerType.APPSCAN_DYNAMIC.getFullName(), "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
+		addToMap(ScannerType.ARACHNI.getFullName(), "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
+		addToMap(ScannerType.BURPSUITE.getFullName(), "issues", "issue", "serialNumber", "type", "name", "host", "path");
+		addToMap(ScannerType.NETSPARKER.getFullName(), "netsparker", "target", "url", "scantime", "vulnerability", "url", "type", "severity");
+		addToMap(ScannerType.CAT_NET.getFullName(), "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
+		addToMap(ScannerType.W3AF.getFullName(), "w3afrun");
+		addToMap(ScannerType.NESSUS.getFullName(), "NessusClientData_v2");
+		addToMap(ScannerType.WEBINSPECT.getFullName(), "Sessions", "Session", "URL", "Scheme", "Host", "Port");
+		addToMap(ScannerType.ACUNETIX_WVS.getFullName(),  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
+		addToMap(ScannerType.FINDBUGS.getFullName(), "BugCollection", "Project", "BugInstance", "Class");
+		addToMap(ScannerType.APPSCAN_SOURCE.getFullName(), "AssessmentRun", "AssessmentStats" );
+		addToMap(ScannerType.MANUAL.getFullName(), "Vulnerabilities", "Vulnerability");
+		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VULNS", "VULNLIST");
+		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VulnSummary");
+		addToMap(ScannerType.APPSCAN_ENTERPRISE.getFullName(), "report", "control", "row");
+		addToMap(ScannerType.ZAPROXY.getFullName(), "report", "alertitem");
+		addToMap(ScannerType.ZAPROXY.getFullName(), "OWASPZAPReport", "site", "alerts");
+		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
 	}
 	
 	private static void addToMap(String name, String... tags) {

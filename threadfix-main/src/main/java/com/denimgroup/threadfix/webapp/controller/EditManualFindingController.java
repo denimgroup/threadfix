@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.PermissionService;
@@ -51,7 +51,7 @@ public class EditManualFindingController {
 				finding.getScan().getApplicationChannel() == null ||
 				finding.getScan().getApplicationChannel().getChannelType() == null ||
 				finding.getScan().getApplicationChannel().getChannelType().getName() == null ||
-				finding.getScan().getApplicationChannel().getChannelType().getName().equals(ChannelType.MANUAL));
+				finding.getScan().getApplicationChannel().getChannelType().getName().equals(ScannerType.MANUAL.getFullName()));
 	}
 	
 	public boolean isAuthorizedForFinding(Finding finding) {

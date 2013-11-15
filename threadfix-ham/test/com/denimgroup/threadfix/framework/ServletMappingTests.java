@@ -114,13 +114,20 @@ public class ServletMappingTests {
     	for (Entry<String, String> entry : tests) {
     		List<String> result = mappings.getURLPatternsForClass(entry.getKey());
     		boolean passed = result != null && result.get(0) != null && result.get(0).equals(entry.getValue());
-    		if (!passed) {
-    			System.out.println("Test failed for " + entry.getKey() + " -> " + entry.getValue());
-    			System.out.println("Resulting value was " + result.get(0));
-    		}
-    		assertTrue(passed);
+    		assertTrue("Test failed for " + entry.getKey() + " -> " + entry.getValue() +
+    				"\nResulting value was " + result.get(0), passed);
     	}
     }
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testUrlPatternMappingNullArgs() {
+		new UrlPatternMapping(null, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testClassMappingNullArgs() {
+		new ClassMapping(null, null, null);
+	}
     
     // TODO improve this test
 	@Test
@@ -131,20 +138,6 @@ public class ServletMappingTests {
     	ServletMappings emptyAndEmpty = new ServletMappings(new ArrayList<UrlPatternMapping>(), new ArrayList<ClassMapping>(), null);
     	
     	ServletMappings[] mappingsArray = { nullAndNull, somethingAndNull, nullAndSomething, emptyAndEmpty };
-    	
-    	try {
-    		new UrlPatternMapping(null, null);
-    		assertTrue(false);
-    	} catch (IllegalArgumentException e) {
-    		
-    	}
-    	
-    	try {
-    		new ClassMapping(null, null, null);
-    		assertTrue(false);
-    	} catch (IllegalArgumentException e) {
-    		
-    	}
     	
     	String[] tests = {
     			"/fruit/summer/index.html",

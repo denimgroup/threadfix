@@ -1,5 +1,7 @@
 package com.denimgroup.threadfix.framework.engine;
 
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+
 
 public abstract class AbstractEndpoint implements Endpoint {
 	

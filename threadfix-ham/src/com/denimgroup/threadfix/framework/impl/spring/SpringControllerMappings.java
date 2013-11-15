@@ -36,8 +36,8 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
 public class SpringControllerMappings implements EndpointGenerator {

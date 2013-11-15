@@ -28,9 +28,9 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -50,7 +50,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	private String bestPractices = "Best Practices";
 		
 	public WebInspectChannelImporter() {
-		super(ChannelType.WEBINSPECT);
+		super(ScannerType.WEBINSPECT.getFullName());
 	}
 
 	/*
@@ -290,6 +290,6 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.WEBINSPECT;
+		return ScannerType.WEBINSPECT.getFullName();
 	}
 }

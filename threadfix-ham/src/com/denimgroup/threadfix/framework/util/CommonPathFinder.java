@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 
 public class CommonPathFinder {

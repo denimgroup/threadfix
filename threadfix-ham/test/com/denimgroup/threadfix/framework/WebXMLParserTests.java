@@ -30,6 +30,7 @@ public class WebXMLParserTests {
     ///////////////////////////// Tests ////////////////////////////
     ////////////////////////////////////////////////////////////////
     
+	@Test
     public void testFindWebXML() {
     	String[]
     			sourceLocations = { PETCLINIC_SOURCE_LOCATION, WAVSEP_SOURCE_LOCATION, BODGEIT_SOURCE_LOCATION },

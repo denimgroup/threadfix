@@ -24,6 +24,7 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
@@ -114,7 +115,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			return false;
 		}
 		
-		ChannelType manualChannelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+		ChannelType manualChannelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
 
 		Scan scan = getManualScan(applicationId);
 		if (scan == null || scan.getApplicationChannel() == null
@@ -187,7 +188,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 
 		ApplicationChannel applicationChannel = null;
 		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ChannelType.MANUAL);
+				.retrieveByName(ScannerType.MANUAL.getFullName());
 		if (manualChannel != null)
 			applicationChannel = applicationChannelDao
 					.retrieveByAppIdAndChannelId(applicationId,
@@ -249,7 +250,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		ApplicationChannel applicationChannel = new ApplicationChannel();
 		applicationChannel.setApplication(application);
 		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ChannelType.MANUAL);
+				.retrieveByName(ScannerType.MANUAL.getFullName());
 		applicationChannel.setChannelType(manualChannel);
 
 		if (application.getChannelList() == null)

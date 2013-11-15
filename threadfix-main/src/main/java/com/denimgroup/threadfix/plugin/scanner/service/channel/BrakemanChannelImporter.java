@@ -15,10 +15,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -32,7 +32,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.BRAKEMAN;
+		return ScannerType.BRAKEMAN.getFullName();
 	}
 	
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
@@ -72,7 +72,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	}
 
 	public BrakemanChannelImporter() {
-		super(ChannelType.BRAKEMAN);
+		super(ScannerType.BRAKEMAN.getFullName());
 	}
 	
 	public Calendar getDate(String jsonString) {

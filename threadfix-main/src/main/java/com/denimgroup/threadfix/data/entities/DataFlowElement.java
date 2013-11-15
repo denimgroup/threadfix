@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
 
 @Entity
 @Table(name = "DataFlowElement")

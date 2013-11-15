@@ -33,9 +33,9 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -51,7 +51,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 	public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
 	
 	public W3afChannelImporter() {
-		super(ChannelType.W3AF);
+		super(ScannerType.W3AF.getFullName());
 	}
 
 	/*
@@ -216,6 +216,6 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.W3AF;
+		return ScannerType.W3AF.getFullName();
 	}
 }

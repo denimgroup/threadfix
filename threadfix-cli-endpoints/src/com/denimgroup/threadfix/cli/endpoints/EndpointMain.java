@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.engine.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointDatabase;
-import com.denimgroup.threadfix.framework.engine.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 
 public class EndpointMain {
 	
@@ -28,7 +28,7 @@ public class EndpointMain {
 	
 	private static void listEndpoints(File rootFile) {
 		
-		EndpointDatabase database = EndpointDatabaseFactory.getDatabaseNoCleaner(rootFile);
+		EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
 
 		List<Endpoint> endpoints = database.generateEndpoints();
 		

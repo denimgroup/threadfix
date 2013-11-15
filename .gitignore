@@ -1,6 +1,8 @@
 target
 threadfix-scanagent/threadfix.log
 bin
+*.DS_Store
+
 .classpath
 .settings
 .idea/

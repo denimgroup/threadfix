@@ -41,48 +41,38 @@ public class ChannelType extends BaseEntity {
 
 	private static final long serialVersionUID = 1665587716223810215L;
 	
-	// Types of channels
-	public static final String ACUNETIX_WVS = "Acunetix WVS";
-	public static final String APPSCAN_DYNAMIC = "IBM Rational AppScan";
-	public static final String ARACHNI = "Arachni";
-	public static final String BRAKEMAN = "Brakeman";
-	public static final String BURPSUITE = "Burp Suite";
-	public static final String CAT_NET = "Microsoft CAT.NET";
-	public static final String DEPENDENCY_CHECK = "Dependency Check";
-	public static final String FINDBUGS = "FindBugs";
-	public static final String FORTIFY = "Fortify 360";
-	public static final String MANUAL = "Manual";
-	public static final String NESSUS = "Nessus";
-	public static final String NTO_SPIDER = "NTO Spider";
-	public static final String NETSPARKER = "Mavituna Security Netsparker";
-	public static final String QUALYSGUARD_WAS = "QualysGuard WAS";
-	public static final String SENTINEL = "WhiteHat Sentinel";
-	public static final String SKIPFISH = "Skipfish";
-	public static final String VERACODE = "Veracode";
-	public static final String W3AF = "w3af";
-	public static final String WEBINSPECT = "WebInspect";
-	public static final String ZAPROXY = "OWASP Zed Attack Proxy";
-	public static final String APPSCAN_SOURCE = "IBM Rational AppScan Source Edition";
-	public static final String APPSCAN_ENTERPRISE = "IBM Rational AppScan Enterprise";
-	
 	// This set is used to hold the channel types that should include their native IDs in the vuln description.
 	// Any useful native IDs should be included here, but not ones that we generate ourselves.
 	public final static Set<String> NATIVE_ID_SCANNERS = new HashSet<>(Arrays.asList(
-			CAT_NET,
-			FORTIFY, 
-			SENTINEL,
-			VERACODE));
+			ScannerType.CAT_NET.getFullName(),
+			ScannerType.FORTIFY.getFullName(), 
+			ScannerType.SENTINEL.getFullName(),
+			ScannerType.VERACODE.getFullName()));
 	
-	public static final Set<String> DYNAMIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ ChannelType.ACUNETIX_WVS,
-			ChannelType.APPSCAN_ENTERPRISE, ChannelType.ARACHNI, ChannelType.BURPSUITE, ChannelType.NESSUS,
-			ChannelType.NETSPARKER, ChannelType.NTO_SPIDER, ChannelType.SKIPFISH, ChannelType.W3AF,
-			ChannelType.WEBINSPECT, ChannelType.ZAPROXY, ChannelType.QUALYSGUARD_WAS, ChannelType.APPSCAN_DYNAMIC
-	}));
-	public static final Set<String> STATIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ ChannelType.APPSCAN_SOURCE,
-			ChannelType.FINDBUGS, ChannelType.FORTIFY, ChannelType.VERACODE, ChannelType.CAT_NET,
-			ChannelType.BRAKEMAN
-	}));
-	public static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ChannelType.SENTINEL });
+	public static final Set<String> DYNAMIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ 
+			ScannerType.ACUNETIX_WVS.getFullName(),
+			ScannerType.APPSCAN_ENTERPRISE.getFullName(), 
+			ScannerType.ARACHNI.getFullName(), 
+			ScannerType.BURPSUITE.getFullName(), 
+			ScannerType.NESSUS.getFullName(),
+			ScannerType.NETSPARKER.getFullName(), 
+			ScannerType.NTO_SPIDER.getFullName(), 
+			ScannerType.SKIPFISH.getFullName(), 
+			ScannerType.W3AF.getFullName(),
+			ScannerType.WEBINSPECT.getFullName(), 
+			ScannerType.ZAPROXY.getFullName(), 
+			ScannerType.QUALYSGUARD_WAS.getFullName(), 
+			ScannerType.APPSCAN_DYNAMIC.getFullName() }));
+	
+	public static final Set<String> STATIC_TYPES = new HashSet<>(Arrays.asList(new String[]{ 
+			ScannerType.APPSCAN_SOURCE.getFullName(),
+			ScannerType.FINDBUGS.getFullName(), 
+			ScannerType.FORTIFY.getFullName(), 
+			ScannerType.VERACODE.getFullName(), 
+			ScannerType.CAT_NET.getFullName(),
+			ScannerType.BRAKEMAN.getFullName() }));
+	
+	public static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ScannerType.SENTINEL.getFullName() });
 	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 
 	private List<ApplicationChannel> applicationChannels;

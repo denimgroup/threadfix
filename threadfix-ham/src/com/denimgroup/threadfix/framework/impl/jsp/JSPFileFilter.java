@@ -27,7 +27,7 @@ import java.io.File;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
 
-public class JSPFileFilter implements IOFileFilter {
+class JSPFileFilter implements IOFileFilter {
 	
 	public static final JSPFileFilter INSTANCE = new JSPFileFilter();
 	private JSPFileFilter(){}

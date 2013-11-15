@@ -1,0 +1,55 @@
+package com.denimgroup.threadfix.framework.engine.full;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
+import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
+import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+
+public class EndpointDatabaseFactory {
+	
+	private static final SanitizedLogger log = new SanitizedLogger("MergeConfigurationGenerator");
+	
+	public static EndpointDatabase getDatabase(File rootFile) {
+		FrameworkType type = FrameworkCalculator.getType(rootFile);
+		return getDatabase(rootFile, type);
+	}
+	
+	public static EndpointDatabase getDatabase(File rootFile, List<PartialMapping> partialMappings) {
+		FrameworkType type = FrameworkCalculator.getType(rootFile);
+		
+		return getDatabase(rootFile, type, partialMappings);
+	}
+
+	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType) {
+		return getDatabase(rootFile, frameworkType, new ArrayList<PartialMapping>());
+	}
+	
+	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType, List<PartialMapping> partialMappings) {
+		PathCleaner cleaner = PathCleanerFactory.getPathCleaner(frameworkType, partialMappings);
+		
+		return getDatabase(rootFile, frameworkType, cleaner);
+	}
+	
+	public static EndpointDatabase getDatabase(File rootFile, FrameworkType frameworkType, PathCleaner cleaner) {
+		EndpointGenerator generator = null;
+		
+		switch (frameworkType) {
+			case JSP:        generator = new JSPMappings(rootFile);              break;
+			case SPRING_MVC: generator = new SpringControllerMappings(rootFile); break;
+			default:
+		}
+		
+		log.info("Returning database with generator: " + generator);
+		
+		return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
+	}
+	
+}

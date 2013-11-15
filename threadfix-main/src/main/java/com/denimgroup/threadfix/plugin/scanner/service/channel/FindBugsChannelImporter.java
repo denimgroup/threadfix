@@ -33,10 +33,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -47,7 +47,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	public FindBugsChannelImporter() {
-		super(ChannelType.FINDBUGS);
+		super(ScannerType.FINDBUGS.getFullName());
 	}
 
 	@Override
@@ -246,6 +246,6 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.FINDBUGS;
+		return ScannerType.FINDBUGS.getFullName();
 	}
 }

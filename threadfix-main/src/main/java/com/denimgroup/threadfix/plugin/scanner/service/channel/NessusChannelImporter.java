@@ -38,9 +38,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
@@ -78,7 +78,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	@Autowired
 	public NessusChannelImporter() {
-		super(ChannelType.NESSUS);
+		super(ScannerType.NESSUS.getFullName());
 	}
 
 	@Override
@@ -345,6 +345,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public String getType() {
-		return ChannelType.NESSUS;
+		return ScannerType.NESSUS.getFullName();
 	}
 }

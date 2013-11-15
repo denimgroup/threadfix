@@ -53,10 +53,6 @@ public class ProjectDirectory {
 		return directory.getAbsolutePath();
 	}
 	
-	public File getDirectory() {
-		return directory;
-	}
-	
 	private Map<String, Set<String>> buildMaps(File startingFile) {
 		Map<String, Set<String>> returnMap = new HashMap<>();
 		
@@ -125,7 +121,7 @@ public class ProjectDirectory {
 		return files;
 	}
 	
-	public List<File> findFilesWithStar(String path) {
+	private List<File> findFilesWithStar(String path) {
 		List<File> returnFile = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -142,10 +138,16 @@ public class ProjectDirectory {
 		if (fileName.contains("*")) {
 		
 			List<String> possibleEntries = new ArrayList<String>();
-			String[] beforeAndAfter = fileName.split("\\*");
+			
+			String[] segments = fileName.split("\\*");
+			if (fileName.endsWith("*")) {
+				List<String> list = new ArrayList<>(Arrays.asList(segments));
+				list.add("");
+				segments = list.toArray(new String[list.size()]);
+			}
 			
 			for (String key : fileMap.keySet()) {
-				if (key.startsWith(beforeAndAfter[0]) && key.endsWith(beforeAndAfter[1])) {
+				if (matches(key, segments)) {
 					possibleEntries.add(key);
 				}
 			}
@@ -162,6 +164,39 @@ public class ProjectDirectory {
 		}
 	
 		return returnFile;
+	}
+	
+	private boolean matches(String item, String[] segments) {
+		int size = segments.length;
+		
+		boolean result = false;
+		
+		if (size >= 2) {
+			boolean first = item.startsWith(segments[0]);
+			boolean last = item.endsWith(segments[size - 1]);
+			
+			if (first && last) {
+				String progress = item;
+				int misses = 0;
+				
+				for (String string : segments) {
+					int index = progress.indexOf(string);
+					if (index != -1) {
+						progress = progress.substring(index);
+					} else {
+						misses = 1;
+						break;
+					}
+				}
+				
+				result = misses == 0;
+			}
+		} else if (size == 1) {
+			result = item.equals(segments[0]);
+		}
+		
+		
+		return result;
 	}
 	
 	/**

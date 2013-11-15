@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.service.translator;
 
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.framework.engine.EndpointGenerator;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 
 public interface PathUrlTranslator extends EndpointGenerator {
 	

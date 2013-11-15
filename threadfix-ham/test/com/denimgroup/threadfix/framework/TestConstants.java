@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.framework;
 public class TestConstants {
 	private TestConstants(){}
 	
-	private static final String testRoot = "/Users/mcollins/scratch/samples/";
+	private static final String testRoot = "/Users/mac/scratch/projects/";
     private static final String[] extensions =
     	{ "petclinic", "wavsep", "bodgeit" };
 	
@@ -36,9 +36,10 @@ public class TestConstants {
 		PETCLINIC_SOURCE_LOCATION = testRoot + extensions[0],
 		WAVSEP_SOURCE_LOCATION = testRoot + extensions[1],
 		BODGEIT_SOURCE_LOCATION = testRoot + extensions[2],
+		BODGEIT_JSP_ROOT = BODGEIT_SOURCE_LOCATION + "/root",
 		PETCLINIC_WEB_XML = PETCLINIC_SOURCE_LOCATION + "/src/main/webapp/WEB-INF/web.xml",
 		WAVSEP_WEB_XML = WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/WEB-INF/web.xml",
-		BODGEIT_WEB_XML = BODGEIT_SOURCE_LOCATION + "/root/WEB-INF/web.xml",
+		BODGEIT_WEB_XML = BODGEIT_JSP_ROOT + "/WEB-INF/web.xml",
 		FAKE_FILE = "",
 		SPRING_CONTROLLERS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/web/",
 		SPRING_CRASH_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "CrashController.java",
@@ -47,6 +48,7 @@ public class TestConstants {
 		SPRING_VET_CONTROLLER   = SPRING_CONTROLLERS_PREFIX + "VetController.java",
 		SPRING_VISIT_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "VisitController.java",
 		SPRING_MODELS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/model/",
-		SPRING_OWNER_MODEL = "Owner.java"
+		SPRING_OWNER_MODEL = "Owner.java",
+		SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING = "ControllerWithClassAnnotation.java.txt"
 		;
 }

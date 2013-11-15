@@ -28,7 +28,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.service.SanitizedLogger;
@@ -85,9 +85,9 @@ public class JSPTranslator extends AbstractPathUrlTranslator {
 		String fileName = super.getFileNameWithSourceCodeDefault(finding);
 		
 		if (finding != null && finding.getSurfaceLocation() != null) {
-			finding.setEntryPointLineNumber(
-				mappings.getFirstLineNumber(
-				fileName, finding.getSurfaceLocation().getParameter()));
+//			finding.setEntryPointLineNumber(
+//				mappings.getFirstLineNumber(
+//						fileName, finding.getSurfaceLocation().getParameter()));
 		
 		}
 		

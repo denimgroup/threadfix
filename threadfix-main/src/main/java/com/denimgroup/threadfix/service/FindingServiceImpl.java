@@ -50,6 +50,7 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
@@ -111,7 +112,7 @@ public class FindingServiceImpl implements FindingService {
 						if (genericVulnerability != null) {
 							cweName = genericVulnerability.getName();
 							if (cweName != null) {
-								manualType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+								manualType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
 								if (manualType != null) {
 									newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
 								}
@@ -268,7 +269,7 @@ public class FindingServiceImpl implements FindingService {
 		if (vulnType != null) {
 			channelVulnerability = channelVulnerabilityDao
 				.retrieveByCode(
-						channelTypeDao.retrieveByName(ChannelType.MANUAL),
+						channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
 						vulnType);
 		}
 		
@@ -425,7 +426,7 @@ public class FindingServiceImpl implements FindingService {
 	
 	@Override
 	public List<ChannelSeverity> getManualSeverities() {
-		ChannelType channelType = channelTypeDao.retrieveByName(ChannelType.MANUAL);
+		ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
 		return channelSeverityDao.retrieveByChannel(channelType);
 	}
 

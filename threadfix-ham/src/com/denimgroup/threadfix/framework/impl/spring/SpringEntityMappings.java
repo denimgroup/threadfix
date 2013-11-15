@@ -35,13 +35,12 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import com.denimgroup.threadfix.framework.beans.BeanField;
-import com.denimgroup.threadfix.framework.beans.BeanFieldSet;
+import com.denimgroup.threadfix.framework.engine.BeanField;
+import com.denimgroup.threadfix.framework.engine.BeanFieldSet;
 
+class SpringEntityMappings {
 
-public class SpringEntityMappings {
-
-private final Collection<File> modelFiles;
+	private final Collection<File> modelFiles;
 	
 	private final Map<String, BeanFieldSet> fieldMap;
 	

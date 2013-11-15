@@ -26,12 +26,12 @@ public class ScannerPluginLoader {
 		return new PluginManagerUtil(pm);
 	}
 	
-	public static Collection<? extends ChannelImporter> getPlugins() {
+	public static Collection<? extends ChannelImporter> getScannerPlugins() {
 		return INSTANCE.getPlugins(ChannelImporter.class);
 	}
 	
 	public static ScanTypeCalculationService getScanTypeCalculationServiceImpl() {
 		return INSTANCE.getPlugin(ScanTypeCalculationService.class);
 	}
-
+	
 }

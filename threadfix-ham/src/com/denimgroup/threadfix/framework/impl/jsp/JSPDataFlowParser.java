@@ -23,12 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.framework.beans.CodePoint;
-import com.denimgroup.threadfix.framework.beans.ParameterParser;
-import com.denimgroup.threadfix.framework.engine.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 
@@ -40,9 +40,14 @@ public class JSPDataFlowParser implements ParameterParser {
 	private static final Pattern REQUEST_GET_PARAM_STRING_ASSIGN =
 			Pattern.compile("^String [^=]+= .*request\\.getParameter\\(\"([^\"]+)\"\\)");
 	
-	public JSPDataFlowParser(JSPMappings jspMappings, SourceCodeAccessLevel sourceCodeAccessLevel) {
-		this.jspMappings = jspMappings;
-		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
+	public JSPDataFlowParser(ProjectConfig projectConfig) {
+		this.sourceCodeAccessLevel = projectConfig.getSourceCodeAccessLevel();
+		
+		if (projectConfig.getRootFile() != null) {
+			jspMappings = new JSPMappings(projectConfig.getRootFile());
+		} else {
+			jspMappings = null;
+		}
 	}
 
 	@Override
@@ -83,29 +88,29 @@ public class JSPDataFlowParser implements ParameterParser {
 	private String parseWithSource(EndpointQuery query) {
 		String test = null;
 		
-		boolean missingMappings = false;
-		
 		if (jspMappings == null) {
 			test = parseNoSource(query);
 		} else {
-			for (CodePoint codePoint : query.getCodePoints()) {
-				if (jspMappings.getParameterMap(codePoint.getSourceFileName()) != null) {
-					List<String> possibleParameters = jspMappings
-							.getParameterMap(codePoint.getSourceFileName())
-							.get(codePoint.getLineNumber());
-					if (possibleParameters != null && possibleParameters.size() == 1) {
-						test = possibleParameters.get(0);
-						break;
-					}
-				} else {
-					missingMappings = true;
+			
+			String staticInformation = query.getStaticPath();
+			
+			if (staticInformation == null && query.getCodePoints() != null &&
+					query.getCodePoints().size() > 1) {
+				staticInformation = query.getCodePoints().get(0).getSourceFileName();
+			}
+			
+			if (staticInformation != null &&
+					jspMappings.getEndpoint(staticInformation) != null) {
+				JSPEndpoint endpoint = jspMappings.getEndpoint(staticInformation);
+				if (endpoint != null) {
+					test = endpoint.getParameterName(query.getCodePoints());
 				}
 			}
-		}
-		
-		// if we're missing some mappings and didn't get a result, do the dumb regex parsing
-		if (missingMappings && test == null) {
-			test = parseNoSource(query);
+			
+			// if we didn't get a result, do the dumb regex parsing
+			if (test == null) {
+				test = parseNoSource(query);
+			}
 		}
 		
 		return test;

@@ -43,7 +43,7 @@ import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.denimgroup.threadfix.framework.beans.PartialMapping;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 
 @Entity
 @Table(name = "Scan")
@@ -85,16 +85,29 @@ public class Scan extends BaseEntity {
 	private Integer totalNumberFindingsMergedInScan = null;
 	
 	// These are for determining what type of scanner was used
-	private static final List<String> DYNAMIC_TYPES = Arrays.asList(new String[]{ ChannelType.ACUNETIX_WVS,
-			ChannelType.APPSCAN_ENTERPRISE, ChannelType.ARACHNI, ChannelType.BURPSUITE, ChannelType.NESSUS,
-			ChannelType.NETSPARKER, ChannelType.NTO_SPIDER, ChannelType.SKIPFISH, ChannelType.W3AF,
-			ChannelType.WEBINSPECT, ChannelType.ZAPROXY, ChannelType.QUALYSGUARD_WAS, ChannelType.APPSCAN_DYNAMIC
-	});
-	private static final List<String> STATIC_TYPES = Arrays.asList(new String[]{ ChannelType.APPSCAN_SOURCE,
-			ChannelType.FINDBUGS, ChannelType.FORTIFY, ChannelType.VERACODE, ChannelType.CAT_NET,
-			ChannelType.BRAKEMAN
-	});
-	private static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ChannelType.SENTINEL });
+	private static final List<String> DYNAMIC_TYPES = Arrays.asList(new String[]{ 
+			ScannerType.ACUNETIX_WVS.getFullName(),
+			ScannerType.APPSCAN_ENTERPRISE.getFullName(), 
+			ScannerType.ARACHNI.getFullName(), 
+			ScannerType.BURPSUITE.getFullName(), 
+			ScannerType.NESSUS.getFullName(),
+			ScannerType.NETSPARKER.getFullName(), 
+			ScannerType.NTO_SPIDER.getFullName(), 
+			ScannerType.SKIPFISH.getFullName(), 
+			ScannerType.W3AF.getFullName(),
+			ScannerType.WEBINSPECT.getFullName(), 
+			ScannerType.ZAPROXY.getFullName(), 
+			ScannerType.QUALYSGUARD_WAS.getFullName(), 
+			ScannerType.APPSCAN_DYNAMIC.getFullName()	});
+	
+	private static final List<String> STATIC_TYPES = Arrays.asList(new String[]{ 
+			ScannerType.APPSCAN_SOURCE.getFullName(),
+			ScannerType.FINDBUGS.getFullName(), 
+			ScannerType.FORTIFY.getFullName(), 
+			ScannerType.VERACODE.getFullName(), 
+			ScannerType.CAT_NET.getFullName(),
+			ScannerType.BRAKEMAN.getFullName()	});
+	private static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ScannerType.SENTINEL.getFullName() });
 	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 	
 	@Size(max = 255, message = "{errors.maxlength} 255.")
