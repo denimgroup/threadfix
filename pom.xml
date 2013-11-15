@@ -30,6 +30,5 @@
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
         <module>threadfix-main</module>
-        <module>threadfix-scanagent</module>
     </modules>
  </project>

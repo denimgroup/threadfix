@@ -13,7 +13,7 @@
   <description>Scan agent for the ThreadFix application vulnerability management platform</description>
   
   <build>
-	<sourceDirectory>src</sourceDirectory>
+	<sourceDirectory>src/main/java</sourceDirectory>
 	<plugins>
 		<plugin>
 			<artifactId>maven-compiler-plugin</artifactId>
@@ -79,6 +79,11 @@
   </issueManagement>
   
   <dependencies>
+      <dependency>
+          <groupId>org.jetbrains.annotations</groupId>
+          <artifactId>annotations</artifactId>
+          <version>13</version>
+      </dependency>
   	<dependency>
 		<groupId>org.zaproxy.clientapi.core</groupId>
 		<artifactId>zap-api</artifactId>

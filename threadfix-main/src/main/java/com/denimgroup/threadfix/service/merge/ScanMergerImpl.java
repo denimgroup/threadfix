@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.translator.PathGuesser;
 
 @Service
 public class ScanMergerImpl implements ScanMerger {
@@ -43,7 +44,7 @@ public class ScanMergerImpl implements ScanMerger {
 	@Autowired private VulnerabilityDao vulnerabilityDao;
 	
 	@Override
-	public void merge(Scan scan, ApplicationChannel applicationChannel, ScanMergeConfiguration configuration) {
+	public void merge(Scan scan, ApplicationChannel applicationChannel) {
 		if (channelMerger == null) {
 			channelMerger = new ChannelMerger(vulnerabilityDao);
 		}
@@ -63,7 +64,7 @@ public class ScanMergerImpl implements ScanMerger {
 			return;
 		}
 	
-		PathGuesser.generateGuesses(configuration, scan);
+		PathGuesser.generateGuesses2(applicationChannel.getApplication(), scan);
 		channelMerger.channelMerge(scan, applicationChannel);
 		applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
 	
