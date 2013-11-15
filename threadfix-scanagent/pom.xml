@@ -79,6 +79,11 @@
   </issueManagement>
   
   <dependencies>
+      <dependency>
+          <groupId>org.jetbrains.annotations</groupId>
+          <artifactId>annotations</artifactId>
+          <version>13</version>
+      </dependency>
   	<dependency>
 		<groupId>org.zaproxy.clientapi.core</groupId>
 		<artifactId>zap-api</artifactId>
