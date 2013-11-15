@@ -20,9 +20,9 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone %s -b 1.2final' % source_code_loc)
+        result = local('git clone %s -b qa' % source_code_loc)
         with lcd("threadfix"):
-            result2 = local('git checkout tags/1.2final')
+            result2 = local('git checkout tags/qa')
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
@@ -42,10 +42,10 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
+    with lcd('%s/threadfix' % local_working_folder_loc):
         local('update-java-alternatives -s java-1.7.0-openjdk-i386')
         local('sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-i386 /usr/lib/jvm/default-java')
-        res = local('mvn package -DskipTests -P mysql')
+        res = local('mvn clean install -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
