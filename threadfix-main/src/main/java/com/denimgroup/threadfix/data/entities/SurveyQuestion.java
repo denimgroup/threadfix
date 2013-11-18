@@ -46,7 +46,7 @@ public class SurveyQuestion extends BaseEntity {
 	private String question;
 	private SurveyObjective surveyObjective;
 
-	private List<SurveyAssertion> assertions = new ArrayList<SurveyAssertion>();
+	private List<SurveyAssertion> assertions = new ArrayList<>();
 
 	@Override
 	public void setId(Integer id) {

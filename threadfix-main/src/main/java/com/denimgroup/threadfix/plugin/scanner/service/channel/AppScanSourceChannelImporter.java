@@ -57,7 +57,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 		return ScannerType.APPSCAN_SOURCE.getFullName();
 	}
 	
-	private static final Map<String, String> REGEX_MAP = new HashMap<String,String>();
+	private static final Map<String, String> REGEX_MAP = new HashMap<>();
 	static {
 		REGEX_MAP.put("System.Data.Common.DbDataReader.get_Item", 
 				"System\\.Data\\.Common\\.DbDataReader\\.get_Item " +
@@ -99,15 +99,15 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	public class AppScanSourceSAXParser extends DefaultHandler {
 		
-		private Map<String, String> stringValueMap = new HashMap<String, String>();
+		private Map<String, String> stringValueMap = new HashMap<>();
 		// String.id -> String.value
-		private Map<String, String> fileMap = new HashMap<String, String>();
+		private Map<String, String> fileMap = new HashMap<>();
 		// File.id -> File.value
-		private Map<String, Map<String,String>> siteMap = new HashMap<String, Map<String,String>>();
+		private Map<String, Map<String,String>> siteMap = new HashMap<>();
 		// Site.id -> ("fileId" -> File.id, "line" -> File.ln, "column" -> Site.col, "methodId" -> Site.method)
-		private Map<String, Map<String, String>> findingDataMap = new HashMap<String,Map<String,String>>();
+		private Map<String, Map<String, String>> findingDataMap = new HashMap<>();
 		// FindingData.id -> ("vulnType" -> FindingData.vtype, "siteId" -> FindingData.site_id, "sev" -> FindingData.sev)
-		private Map<String, Map<String, String>> taintMap = new HashMap<String,Map<String,String>>();
+		private Map<String, Map<String, String>> taintMap = new HashMap<>();
 		// Taint.id -> ("argName" -> Taint.arg_name, "siteId" -> Taint.site_id, "arg" -> Taint.arg)
 
 		/*
@@ -159,7 +159,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	} else if ("File".equals(qName)) {
 	    		fileMap.put(atts.getValue("id"), atts.getValue("value"));
 	    	} else if ("Site".equals(qName)) {
-	    		Map<String, String> map = new HashMap<String,String>();
+	    		Map<String, String> map = new HashMap<>();
 	    		map.put("fileId", atts.getValue("file_id"));
 	    		map.put("line", atts.getValue("ln"));
 	    		map.put("column", atts.getValue("col"));
@@ -168,13 +168,13 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		map.put("caller", atts.getValue("caller"));
 	    		siteMap.put(atts.getValue("id"), map);
 	    	} else if ("FindingData".equals(qName)) {
-	    		Map<String, String> map = new HashMap<String,String>();
+	    		Map<String, String> map = new HashMap<>();
 	    		map.put("vulnType", atts.getValue("vtype"));
 	    		map.put("siteId", atts.getValue("site_id"));
 	    		map.put("severity", atts.getValue("sev"));
 	    		findingDataMap.put(atts.getValue("id"), map);
 	    	} else if ("Taint".equals(qName)) {
-	    		Map<String, String> map = new HashMap<String,String>();
+	    		Map<String, String> map = new HashMap<>();
 	    		map.put("argName", atts.getValue("arg_name"));
 	    		map.put("arg", atts.getValue("arg"));
 	    		map.put("siteId", atts.getValue("site_id"));
@@ -253,7 +253,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	
 	    	String[] strings = trace.split("(,|\\.+,|\\.+)");
 	    	
-	    	List<DataFlowElement> returnList = new ArrayList<DataFlowElement>();
+	    	List<DataFlowElement> returnList = new ArrayList<>();
 	    	int count = 1;
 	    	for (String string : strings) {
 	    		Map<String, String> singleTaintMap = taintMap.get(string);

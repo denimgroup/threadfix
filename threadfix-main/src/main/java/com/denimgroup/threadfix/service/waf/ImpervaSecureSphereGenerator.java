@@ -47,7 +47,7 @@ import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 	
 	// TODO look through CVEs in sm_schema_report_vulns.xsd
-	private static final Map<String, String> VULN_TYPE_MAP = new HashMap<String, String>();
+	private static final Map<String, String> VULN_TYPE_MAP = new HashMap<>();
 	static {
 		VULN_TYPE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY, "cross-site-request-forgery");
 		VULN_TYPE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "cross-site-scripting");
@@ -59,7 +59,7 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 		VULN_TYPE_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, "remote-command-execution-env");
 	}
 	
-	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
+	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put(GenericSeverity.CRITICAL, "high");
 		SEVERITIES_MAP.put(GenericSeverity.HIGH, "high");
@@ -171,7 +171,7 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 			return builder.toString();
 		}
 		
-		Map<String, List<WafRule>> hostRuleMap = new HashMap<String, List<WafRule>>();
+		Map<String, List<WafRule>> hostRuleMap = new HashMap<>();
 		
 		for (WafRule rule : rules) {
 			String key = null;

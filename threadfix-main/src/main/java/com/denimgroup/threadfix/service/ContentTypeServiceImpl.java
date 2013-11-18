@@ -13,9 +13,9 @@ public class ContentTypeServiceImpl implements ContentTypeService {
 	private static final Map<String, String> blackList;
 	private static final Map<String, String> transList;
 	static{
-		whiteList = new HashMap<String,String>();
-		blackList = new HashMap<String,String>();
-		transList = new HashMap<String,String>();
+		whiteList = new HashMap<>();
+		blackList = new HashMap<>();
+		transList = new HashMap<>();
 		
 		/*-----WHITE LIST-----*/
 		whiteList.put("text/plain", "text/plain");

@@ -125,7 +125,7 @@ public class DefectServiceImpl implements DefectService {
 			}
 		}
 
-		List<Vulnerability> vulnsWithoutDefects = new ArrayList<Vulnerability>();
+		List<Vulnerability> vulnsWithoutDefects = new ArrayList<>();
 
 		for (Vulnerability vulnerability : allVulns) {
 			if (vulnerability.getDefect() == null) {
@@ -226,7 +226,7 @@ public class DefectServiceImpl implements DefectService {
 			return noDefectTrackerError;
 		}
 
-		List<Vulnerability> vulnList = new ArrayList<Vulnerability>();
+		List<Vulnerability> vulnList = new ArrayList<>();
 		
 		for (Vulnerability vulnerability : vulns) {
 			if (vulnerability.getDefect() == null) {

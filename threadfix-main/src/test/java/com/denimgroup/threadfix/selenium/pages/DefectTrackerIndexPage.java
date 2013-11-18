@@ -37,9 +37,9 @@ public class DefectTrackerIndexPage extends BasePage {
 	private WebElement urlInput;
 	private Select defectTrackerTypeSelect;
 	private WebElement addDefectTrackerButton;
-	private List<WebElement> editButtons = new ArrayList<WebElement>();
+	private List<WebElement> editButtons = new ArrayList<>();
 //	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
-	private List<WebElement> names = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<>();
 
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
 	public static String JIRA_URL = "https://threadfix.atlassian.net/";

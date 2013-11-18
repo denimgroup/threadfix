@@ -55,7 +55,7 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 	public static final String PAYLOAD_FORMAT_STRING_INJECTION = "\\x25";
 	public static final String PAYLOAD_EVAL_INJECTION = "[\\x3B\\x7C\\x26\\x3E\\x60]";
 
-	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<>();
 	static {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION);

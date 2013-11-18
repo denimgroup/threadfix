@@ -36,8 +36,8 @@ public class UserIndexPage extends BasePage {
 	private WebElement addUserLink;
 	
 //	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
-	private List<WebElement> names = new ArrayList<WebElement>();
-	private List<WebElement> editLinks = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<>();
+	private List<WebElement> editLinks = new ArrayList<>();
 
 	public int getNumRows() {
 		return driver.findElementsByClassName("bodyRow").size();

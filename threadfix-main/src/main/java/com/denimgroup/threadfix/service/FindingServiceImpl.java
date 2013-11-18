@@ -334,7 +334,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> cvList = new ArrayList<String>();
+		List<String> cvList = new ArrayList<>();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getChannelVulnerability() == null || 
 					finding.getChannelVulnerability().getCode() == null)
@@ -355,7 +355,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> cvList = new ArrayList<String>();
+		List<String> cvList = new ArrayList<>();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getChannelVulnerability() == null || 
 					finding.getChannelVulnerability().getCode() == null)
@@ -376,7 +376,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> pathList = new ArrayList<String>();
+		List<String> pathList = new ArrayList<>();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getSurfaceLocation() == null || 
 					finding.getSurfaceLocation().getPath() == null)
@@ -397,7 +397,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> pathList = new ArrayList<String>();
+		List<String> pathList = new ArrayList<>();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getSurfaceLocation() == null || 
 					finding.getSurfaceLocation().getPath() == null)
@@ -409,8 +409,8 @@ public class FindingServiceImpl implements FindingService {
 	
 	private List<String> removeDuplicates(List<String> stringList) {
 		if (stringList == null)
-			return new ArrayList<String>();
-		List<String> distinctStringList = new ArrayList<String>();
+			return new ArrayList<>();
+		List<String> distinctStringList = new ArrayList<>();
 		for (int i = 0; i < stringList.size(); i++) {
 			int j = 0;
 			for (; j < i; j++) {

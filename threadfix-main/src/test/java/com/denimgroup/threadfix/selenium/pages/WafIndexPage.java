@@ -35,7 +35,7 @@ import org.openqa.selenium.support.ui.Select;
 public class WafIndexPage extends BasePage {
 
 	private WebElement addWafLink;
-	private List<WebElement> names = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<>();
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);

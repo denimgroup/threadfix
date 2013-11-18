@@ -78,7 +78,7 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	public static final String POSIX_FORMAT_STRING_INJECTION = "[%]";
 	public static final String POSIX_EVAL_INJECTION = "[;]";
 
-	protected static final Map<String, String> POSIX_PAYLOAD_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> POSIX_PAYLOAD_MAP = new HashMap<>();
 	static {
 		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, POSIX_XSS);
 		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, POSIX_SQL_INJECTION);

@@ -95,7 +95,7 @@ public abstract class BaseTest {
 	
 	@Parameterized.Parameters
 	public static Collection<String[]> drivers() {
-		Collection<String[]> params = new ArrayList<String[]>();
+		Collection<String[]> params = new ArrayList<>();
 		String  ff = System.getProperty("FIREFOX");
 		String  chrome = System.getProperty("CHROME");
 		String  ie = System.getProperty("IE");
@@ -145,11 +145,11 @@ public abstract class BaseTest {
 	protected <T> Set<Set<T>> powerSet(T[] items) {
 		int count = 1 << items.length;
 		
-		Set<Set<T>> setOfSets = new HashSet<Set<T>>();
+		Set<Set<T>> setOfSets = new HashSet<>();
 		
 		for (int i = 0; i < count; i++) {
 			
-			Set<T> set = new HashSet<T>();
+			Set<T> set = new HashSet<>();
 			int j = 0;
 			for (T item : items) {
 				if ((i >> j++) % 2 == 1)

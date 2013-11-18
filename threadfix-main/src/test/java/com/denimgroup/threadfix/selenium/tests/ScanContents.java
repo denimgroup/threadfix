@@ -10,7 +10,7 @@ public class ScanContents extends BaseTest{
 		// TODO Auto-generated constructor stub
 	}
 
-	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<String, String>();
+	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<>();
 	static {
 		SCAN_FILE_MAP.put("Microsoft CAT.NET", getScanFilePath("Static","CAT.NET","catnet_RiskE.xml") );
 		SCAN_FILE_MAP.put("FindBugs", getScanFilePath("Static","FindBugs","findbugs-normal.xml") );
@@ -442,7 +442,7 @@ public class ScanContents extends BaseTest{
 			{DIRECTORY_LISTING,"Info","/demo/DirectoryIndexing/",""},
 		};
 	
-	public final static Map<String, String[][]> SCAN_RESULT_MAP = new HashMap<String, String[][]>();
+	public final static Map<String, String[][]> SCAN_RESULT_MAP = new HashMap<>();
 	static {
 		SCAN_RESULT_MAP.put("Microsoft CAT.NET", catnetResults);
 		SCAN_RESULT_MAP.put("FindBugs", findBugsResults);

@@ -64,14 +64,14 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	private static final List<String> SSL_VULNS = 
 			Arrays.asList(new String[]{"26928", "60108", "57620", "53360", "42873", "35291"});
 	
-	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<String,String>();
+	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<>();
 	static {
 		PATH_PARSE_MAP.put("26194", PAGE_COLON_REGEX);
 		PATH_PARSE_MAP.put("11411", URL_COLON_REGEX);
 		PATH_PARSE_MAP.put("40984", SIMPLE_HTTP_REGEX);
 	}
 	
-	private static final Map<String,String> PARAM_PARSE_MAP = new HashMap<String,String>();
+	private static final Map<String,String> PARAM_PARSE_MAP = new HashMap<>();
 	static {
 		PARAM_PARSE_MAP.put("26194", INPUT_NAME_COLON_PARAM_REGEX);
 	}

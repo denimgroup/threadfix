@@ -66,7 +66,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	/**
 	 * This map is used to skip a lot of if/then statements when selecting a set of attack signatures.
 	 */
-	private static Map<String, String[]> vulnTypeSignatureMap = new HashMap<String, String[]>();
+	private static Map<String, String[]> vulnTypeSignatureMap = new HashMap<>();
 	static {
 		vulnTypeSignatureMap.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, BigIPStrings.SIGS_XSS);
 		vulnTypeSignatureMap.put(GenericVulnerability.CWE_PATH_TRAVERSAL, BigIPStrings.SIGS_PATH_TRAVERSAL);
@@ -76,7 +76,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		vulnTypeSignatureMap.put(GenericVulnerability.CWE_FILE_UPLOAD, BigIPStrings.SIGS_FILE_UPLOAD);
 	}
 	
-	private static Map<String, String> vulnTypeSigSetMap = new HashMap<String, String>();
+	private static Map<String, String> vulnTypeSigSetMap = new HashMap<>();
 	static {
 		vulnTypeSigSetMap.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "299999994");
 		vulnTypeSigSetMap.put(GenericVulnerability.CWE_PATH_TRAVERSAL, "299999990");
@@ -198,7 +198,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		 String directive = null;
 		 
 		 StringBuilder csrfStrings =  new StringBuilder();
-		 List<String> csrfStringList = new ArrayList<String>();
+		 List<String> csrfStringList = new ArrayList<>();
 		 
 		 StringBuilder ruleTextBuilder = new StringBuilder();
 		 
@@ -206,8 +206,8 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		 // Second keys are parameters
 		 // Set<String> values are the signatures
 		 Map<String, Map<String, Set<String>>> ruleMap = 
-			 new HashMap<String, Map<String,Set<String>>>();
-		 Map<String, String> dateMap = new HashMap<String, String>();
+			 new HashMap<>();
+		 Map<String, String> dateMap = new HashMap<>();
 		 
 		 boolean directoryTraversalsOn = false;
 		 boolean responseScrubbingOn = false;
@@ -241,7 +241,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 					 }
 					 dateMap.put(path, date);
 					 
-					 Map<String, Set<String>> entry = new HashMap<String,Set<String>>();
+					 Map<String, Set<String>> entry = new HashMap<>();
 					 ruleMap.put(path, entry);
 				 }
 				 
@@ -370,7 +370,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		
 		// using a set ensures that we don't include the same signature set 
 		// more than one time. 
-		Set<String> signatureSet =  new TreeSet<String>();
+		Set<String> signatureSet =  new TreeSet<>();
 				 
 		for (WafRule rule : rules) {
 			if (rule != null && rule.getVulnerability() != null &&

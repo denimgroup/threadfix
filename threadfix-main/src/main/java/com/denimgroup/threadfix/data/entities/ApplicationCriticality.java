@@ -48,7 +48,7 @@ public class ApplicationCriticality extends BaseEntity {
 	public static final String HIGH = "High";
 	public static final String CRITICAL = "Critical";
 	
-	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<String, Integer>();
+	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<>();
 	static {
 		NUMERIC_MAP.put(LOW, 0);
 		NUMERIC_MAP.put(MEDIUM, 1);

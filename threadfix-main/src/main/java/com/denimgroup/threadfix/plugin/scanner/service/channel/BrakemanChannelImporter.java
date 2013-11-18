@@ -38,7 +38,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<String, Integer>();
+	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put("Cross Site Scripting", 3);
 		SEVERITIES_MAP.put("Response Splitting", 2);
@@ -64,7 +64,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	}
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> CONFIDENCE_MAP = new HashMap<String, Integer>();
+	private static final Map<String, Integer> CONFIDENCE_MAP = new HashMap<>();
 	static {
 		CONFIDENCE_MAP.put("High", 2);
 		CONFIDENCE_MAP.put("Medium", 1);

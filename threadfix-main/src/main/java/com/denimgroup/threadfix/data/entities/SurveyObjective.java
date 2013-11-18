@@ -49,7 +49,7 @@ public class SurveyObjective extends BaseEntity {
 	private String description;
 	private SurveyPractice surveyPractice;
 
-	private List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
+	private List<SurveyQuestion> questions = new ArrayList<>();
 
 	@Override
 	public void setId(Integer id) {

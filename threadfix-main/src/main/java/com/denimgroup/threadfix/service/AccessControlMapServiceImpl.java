@@ -81,7 +81,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					map.getAccessControlApplicationMaps().size() == 0) {
 				return "You must select at least one application.";
 			}
-			List<AccessControlApplicationMap> maps = new ArrayList<AccessControlApplicationMap>();
+			List<AccessControlApplicationMap> maps = new ArrayList<>();
 			for (AccessControlApplicationMap appMap : map.getAccessControlApplicationMaps()) {
 				if (appMap.getApplication() == null || appMap.getApplication().getId() == null) {
 					maps.add(appMap);
@@ -184,7 +184,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			return null;
 		}
 		
-		Map<Integer,Integer> intMap = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> intMap = new HashMap<>();
 		
 		for (String stringMap : stringMaps) {
 			String[] matches = stringMap.split("-");
@@ -224,7 +224,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	public List<AccessControlTeamMap> loadAllMapsForUser(Integer id) {
 		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(id);
 		
-		List<AccessControlTeamMap> mapsToRemove = new ArrayList<AccessControlTeamMap>();
+		List<AccessControlTeamMap> mapsToRemove = new ArrayList<>();
 		
 		outer: for (AccessControlTeamMap map : maps) {
 			if (map.getAllApps()) {

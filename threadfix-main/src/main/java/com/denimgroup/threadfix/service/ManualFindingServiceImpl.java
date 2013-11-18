@@ -221,7 +221,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		Scan scan = new Scan();
 		scan.setApplication(application);
 
-		List<Finding> findingList = new ArrayList<Finding>();
+		List<Finding> findingList = new ArrayList<>();
 		scan.setFindings(findingList);
 
 		scan.setNumberNewVulnerabilities(0);

@@ -100,7 +100,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			log.warn("Retrieved build IDs " + buildIds + " for application " + appName);
 		}
 		
-		List<Scan> scans = new ArrayList<Scan>();
+		List<Scan> scans = new ArrayList<>();
 		
 		for (String buildId : buildIds) {
 			if (buildId == null || buildId.trim().equals("")) {
@@ -209,7 +209,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	public class VeracodeApplicationBuildsParser extends DefaultHandler {
 		
-		public List<RemoteProviderApplication> list = new ArrayList<RemoteProviderApplication>();
+		public List<RemoteProviderApplication> list = new ArrayList<>();
 
 	    @Override
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
@@ -224,8 +224,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	
 	public class VeracodeApplicationIdMapParser extends DefaultHandler {
 		
-		public Map<String, List<String>> map = new HashMap<String, List<String>>();
-		public Map<String, Calendar> dateMap = new HashMap<String, Calendar>();
+		public Map<String, List<String>> map = new HashMap<>();
+		public Map<String, Calendar> dateMap = new HashMap<>();
 		
 		private String currentAppName = null;
 		private String currentBuildId = null;

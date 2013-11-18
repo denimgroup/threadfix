@@ -52,7 +52,7 @@ public class GenericSeverity extends BaseEntity {
 	/**
 	 * This field is helpful when you need to compare severities numerically.
 	 */
-	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<String, Integer>();
+	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<>();
 	static {
 		NUMERIC_MAP.put(INFO, 1);
 		NUMERIC_MAP.put(LOW, 2);

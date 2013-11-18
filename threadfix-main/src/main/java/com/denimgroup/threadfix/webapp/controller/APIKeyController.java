@@ -65,7 +65,7 @@ public class APIKeyController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "note" } );
+		dataBinder.setAllowedFields("note");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)

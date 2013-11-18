@@ -213,8 +213,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * 
 	 */
 	protected void initializeMaps() {
-		channelSeverityMap = new HashMap<String, ChannelSeverity>();
-		channelVulnerabilityMap = new HashMap<String, ChannelVulnerability>();
+		channelSeverityMap = new HashMap<>();
+		channelVulnerabilityMap = new HashMap<>();
 	}
 
 	/**
@@ -611,7 +611,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return null;
 		}
 		
-		saxFindingList = new ArrayList<Finding>();
+		saxFindingList = new ArrayList<>();
 				
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		

@@ -61,7 +61,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	// their corresponding regular expressions.
 	// Since we had so many that were the same except for the numbers, we have
 	// stripped the numbers out.
-	private static final Map<String, String> ENTRY_POINT_REGEX_MAP = new HashMap<String, String>();
+	private static final Map<String, String> ENTRY_POINT_REGEX_MAP = new HashMap<>();
 	static {
 		ENTRY_POINT_REGEX_MAP.put("stack := stack.{System.Web.UI.WebControls.TextBox}get_Text()",
 				"[ +=(]([a-zA-Z0-9_]+)\\.Text");
@@ -71,7 +71,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 				"Request\\[\\\"?([a-zA-Z0-9_]+)\\\"?\\]");
 	}
 	
-	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
+	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put("ACESEC01", "Critical");
 		SEVERITIES_MAP.put("ACESEC02", "High");
@@ -87,7 +87,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	public CatNetChannelImporter() {
 		super(ScannerType.CAT_NET.getFullName());
 
-		paramMap = new HashMap<String, Integer>();
+		paramMap = new HashMap<>();
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 		
 		private Integer currentSequenceNumber = 0;
 						
-		private List<DataFlowElement> dataFlowElements = new ArrayList<DataFlowElement>();
+		private List<DataFlowElement> dataFlowElements = new ArrayList<>();
 	    
 		/**
 		 * Given a string and an entry point, return the next pertinent parameter.
@@ -158,7 +158,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 			Integer index = null;
 			if (key != null && stringList != null && stringList.size() > 0) {
 				if (paramMap == null) {
-					paramMap = new HashMap<String, Integer>();
+					paramMap = new HashMap<>();
 				}
 				// if it has the key, use the next item
 				if (paramMap.containsKey(key)) {
@@ -199,7 +199,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 				editedLineText = editedLineText.substring(lineText.indexOf('='));
 			}
 
-			List<String> retVals = new ArrayList<String>();
+			List<String> retVals = new ArrayList<>();
 			String regexResult = null;
 
 			while (true) {
@@ -312,7 +312,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentEntryPoint = null;
 	    		currentUrlText = null;
 	    		currentNativeId = null;
-	    		dataFlowElements = new ArrayList<DataFlowElement>();
+	    		dataFlowElements = new ArrayList<>();
 	    	}
 	    }
 

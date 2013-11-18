@@ -42,7 +42,7 @@ public abstract class RestController {
 	 * <br/><br/>
 	 * TODO move to a configuration file. All in code right now.
 	 */
-	protected static Set<String> restrictedMethods = new HashSet<String>();
+	protected static Set<String> restrictedMethods = new HashSet<>();
 
 	/**
 	 * This method checks that the key is valid and has permission to use 

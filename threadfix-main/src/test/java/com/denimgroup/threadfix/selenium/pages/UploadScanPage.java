@@ -56,7 +56,7 @@ public class UploadScanPage extends BasePage {
 	
 	public List<String> getChannelSelectContents(){
 		List<WebElement> loc = channelSelect.getOptions();
-		List<String> businesses = new ArrayList<String>();
+		List<String> businesses = new ArrayList<>();
 		for(WebElement el : loc){
 			businesses.add(el.getText());
 		}

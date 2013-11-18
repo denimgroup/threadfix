@@ -100,7 +100,7 @@ public class RemoteProviderApplicationServiceImpl implements
 														remoteProviderType.getId());
 		
 		if (newApps != null && newApps.size() != 0) {
-			Set<String> appIds = new TreeSet<String>();
+			Set<String> appIds = new TreeSet<>();
 			if (appsForType.size() > 0) {
 				for (RemoteProviderApplication app : appsForType) {
 					if (app == null || app.getNativeId() == null) {

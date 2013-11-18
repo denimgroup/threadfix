@@ -89,7 +89,7 @@ public class PortfolioReportController {
 		if (org == null) {
 			teams = organizationService.loadAllActive();
 		} else {
-			teams = new ArrayList<Organization>();
+			teams = new ArrayList<>();
 			teams.add(org);
 		}
 		

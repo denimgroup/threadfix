@@ -222,7 +222,7 @@ public class Role extends AuditableEntity {
 
 	@Transient
 	public Set<Permission> getPermissions() {
-		Set<Permission> permissions = new HashSet<Permission>();
+		Set<Permission> permissions = new HashSet<>();
 	
 		if (getCanGenerateReports())
 			permissions.add(Permission.CAN_GENERATE_REPORTS);

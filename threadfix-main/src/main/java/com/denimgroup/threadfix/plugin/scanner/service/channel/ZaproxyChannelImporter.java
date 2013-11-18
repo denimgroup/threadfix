@@ -51,7 +51,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	
 	private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
 	private static void addToSet(String[] array, String key) {
-		alternativesMap.add(new SimpleEntry<String[], String>(array,  key));
+		alternativesMap.add(new SimpleEntry<>(array,  key));
 	}
 	static {
 		addToSet(new String[] {"sql", "injection"},  SQL_INJECTION);

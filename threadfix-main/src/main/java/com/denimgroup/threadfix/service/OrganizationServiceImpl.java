@@ -135,9 +135,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 		Set<Integer> teamIds = null;
 		
 		if (ids == null || ids.isEmpty()) {
-			teamIds = new HashSet<Integer>();
+			teamIds = new HashSet<>();
 		} else {
-			teamIds = new HashSet<Integer>(ids);
+			teamIds = new HashSet<>(ids);
 		}
 		
 		// Also add in the teams that only have app permissions
@@ -154,7 +154,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 		}
 		
 		if (teamIds.size() == 0) {
-			return new ArrayList<Organization>();
+			return new ArrayList<>();
 		}
 		
 		return organizationDao.retrieveAllActiveFilter(teamIds);

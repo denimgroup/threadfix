@@ -334,7 +334,7 @@ public class Scan extends BaseEntity {
 	@Transient
 	@JsonIgnore
 	public List<Integer> getReportList() {
-		List<Integer> integerList = new ArrayList<Integer>();
+		List<Integer> integerList = new ArrayList<>();
 		integerList.add(getId());
 		integerList.add(getNumberTotalVulnerabilities());
 		integerList.add(getNumberNewVulnerabilities());

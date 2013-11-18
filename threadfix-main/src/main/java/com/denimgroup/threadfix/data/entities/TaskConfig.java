@@ -40,14 +40,14 @@ public class TaskConfig {
 	private Map<String,String> configParams;
 	
 	public TaskConfig() {
-		this.dataBlobs = new HashMap<String,byte[]>();
-		this.configParams = new HashMap<String,String>();
+		this.dataBlobs = new HashMap<>();
+		this.configParams = new HashMap<>();
 	}
 	
 	public TaskConfig(URL targetUrl) {
 		this.targetUrl = targetUrl;
-		this.dataBlobs = new HashMap<String,byte[]>();
-		this.configParams = new HashMap<String,String>();
+		this.dataBlobs = new HashMap<>();
+		this.configParams = new HashMap<>();
 	}
 	
 	public void setDataBlob(String key, byte[] value) {
