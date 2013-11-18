@@ -51,6 +51,7 @@ import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import com.denimgroup.threadfix.scanagent.util.JsonUtils;
+import org.jetbrains.annotations.NotNull;
 
 public final class ScanAgentRunner implements ServerConduit {
 
@@ -158,7 +159,7 @@ public final class ScanAgentRunner implements ServerConduit {
 	}
 
 	private static boolean checkRequiredConfiguration(
-			PropertiesConfiguration config) {
+			@NotNull PropertiesConfiguration config) {
 		if (config.getString("scanagent.baseWorkDir","").isEmpty()) {
 			System.out.println("Not found enough server configuration (ThreadFix URL, API Key or Working directory). " +
 					"Please run '-s' to set up all of these information.");
@@ -167,7 +168,7 @@ public final class ScanAgentRunner implements ServerConduit {
 		return true;
 	}
 
-	private static ScannerType isValidScannerType(String scanner) {
+	private static ScannerType isValidScannerType(@NotNull String scanner) {
 		return ScannerType.getScannerType(scanner);
 	}
 
@@ -175,7 +176,7 @@ public final class ScanAgentRunner implements ServerConduit {
 		System.out.println(string);
 	}	
 	
-	public static void runScanQueue(Configuration config) {
+	public static void runScanQueue(@NotNull Configuration config) {
 		
 		log.info("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
 		BasicConfigurator.configure();
@@ -323,7 +324,7 @@ public final class ScanAgentRunner implements ServerConduit {
 	 * @param propertyName
 	 * @return
 	 */
-	private static String makeSystemPropertyString(String propertyName) {
+	private static String makeSystemPropertyString(@NotNull String propertyName) {
 		return propertyName + "=" + System.getProperty(propertyName) + "\n";
 	}
 	
@@ -418,7 +419,7 @@ public final class ScanAgentRunner implements ServerConduit {
 		return(retVal);
 	}
 
-	private void readConfiguration(Configuration config) {
+	private void readConfiguration(@NotNull Configuration config) {
 
 		this.threadFixServerUrl = config.getString("scanagent.threadFixServerUrl");
 		log.debug("scanagent.threadFixServerUrl=" + this.threadFixServerUrl);

@@ -36,6 +36,7 @@ import java.net.URL;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.zaproxy.clientapi.core.ApiResponse;
 import org.zaproxy.clientapi.core.ApiResponseElement;
 import org.zaproxy.clientapi.core.ApiResponseList;
@@ -49,15 +50,17 @@ import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
 	static final Logger log = Logger.getLogger(ZapScanAgent.class);
-		
-	private int maxSpiderWaitInSeconds;
-	private int maxScanWaitInSeconds;
-	private int spiderPollWaitInSeconds;
-	private int scanPollWaitInSeconds;
-	private String zapHost;
-	private int zapPort;
-	private String zapExecutablePath;
-	private long zapStartupWaitTime;
+
+    private int maxSpiderWaitInSeconds;
+    private int maxScanWaitInSeconds;
+    private int spiderPollWaitInSeconds;
+    private int scanPollWaitInSeconds;
+    @NotNull
+    private String zapHost;
+    private int zapPort;
+    @NotNull
+    private String zapExecutablePath;
+    private long zapStartupWaitTime;
 	private Process process;
 	
 	/**
@@ -67,7 +70,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private static ZapScanAgent instance = null;
 	private ZapScanAgent() {
 	}
-	public static ZapScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
+	public static ZapScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
 		if(instance == null) {
 			instance = new ZapScanAgent();
 		}
@@ -80,8 +83,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return instance;
 	}
 	
-	@Override
-	public File doTask(TaskConfig theConfig) {
+    @Override
+	public File doTask(@NotNull TaskConfig theConfig) {
 
 		File retVal = null;
 
@@ -194,7 +197,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	}
 
 	@Override
-	public boolean readConfig(Configuration config) {
+	public boolean readConfig(@NotNull Configuration config) {
 		boolean retVal = false;
 		
 		this.maxSpiderWaitInSeconds = config.getInt("zap.maxSpiderWaitInSeconds");
@@ -255,7 +258,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return retVal;
 	}
 	
-	private void stopZap(ClientApi zap) {
+	private void stopZap(@NotNull ClientApi zap) {
 		log.info("Attempting to shut down ZAP instance");
 		ApiResponse result;
 		
@@ -279,7 +282,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param zap
 	 * @return
 	 */
-	private String attemptRetrieveResults(ClientApi zap) {
+	private String attemptRetrieveResults(@NotNull ClientApi zap) {
 		String retVal = null;
 		
 		try {
@@ -312,7 +315,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @return
 	 * @throws Exception
 	 */
-    private static String openUrlViaProxy (Proxy proxy, String apiurl) throws Exception {
+    private static String openUrlViaProxy (@NotNull Proxy proxy, @NotNull String apiurl) throws Exception {
     	StringBuilder response = new StringBuilder();
         URL url = new URL(apiurl);
         HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
@@ -330,7 +333,7 @@ public class ZapScanAgent extends AbstractScanAgent {
         return response.toString();
 }
 	
-	private boolean attemptRunScan(TaskConfig theConfig, ClientApi zap) {
+	private boolean attemptRunScan(@NotNull TaskConfig theConfig, @NotNull ClientApi zap) {
 		boolean retVal = false;
 		ApiResponse response;
 		
@@ -398,7 +401,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return(retVal);
 	}
 
-	private boolean attemptRunSpider(TaskConfig theConfig, ClientApi zap) {
+	private boolean attemptRunSpider(@NotNull TaskConfig theConfig, @NotNull ClientApi zap) {
 		
 		boolean retVal = false;
 		ApiResponse response;
@@ -521,10 +524,11 @@ public class ZapScanAgent extends AbstractScanAgent {
 		}
 		return(retVal);
 	}
-	public String getZapHost() {
+	@NotNull
+    public String getZapHost() {
 		return zapHost;
 	}
-	public void setZapHost(String zapHost) {
+	public void setZapHost(@NotNull String zapHost) {
 		this.zapHost = zapHost;
 	}
 	public int getZapPort() {
@@ -533,10 +537,11 @@ public class ZapScanAgent extends AbstractScanAgent {
 	public void setZapPort(int zapPort) {
 		this.zapPort = zapPort;
 	}
-	public String getZapExecutablePath() {
+	@NotNull
+    public String getZapExecutablePath() {
 		return zapExecutablePath;
 	}
-	public void setZapExecutablePath(String zapExecutablePath) {
+	public void setZapExecutablePath(@NotNull String zapExecutablePath) {
 		this.zapExecutablePath = zapExecutablePath;
 	}
 	public Process getProcess() {

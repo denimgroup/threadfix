@@ -24,17 +24,24 @@
 
 package com.denimgroup.threadfix.scanagent.configuration;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class Scanner {
 
+    @NotNull
 	private String name;
-	private String version;
-	private String homeDir;
-	private String host;
-	private int port;
+	@Nullable
+    private String version;
+	@NotNull
+    private String homeDir;
+    @Nullable
+    private String host;
+    private int port;
 	
 	public Scanner() {}
 	
-	public Scanner(String name, String version, String homeDir, String host, int port) {
+	public Scanner(@NotNull String name, @Nullable String version, @NotNull String homeDir, @Nullable String host, int port) {
 		this.name = name;
 		this.version = version;
 		this.homeDir = homeDir;
@@ -50,19 +57,21 @@ public class Scanner {
 		return(version);
 	}
 	
-	public String getHomeDir() {
+	@NotNull
+    public String getHomeDir() {
 		return homeDir;
 	}
 
-	public void setHomeDir(String homeDir) {
+	public void setHomeDir(@NotNull String homeDir) {
 		this.homeDir = homeDir;
 	}
 
-	public String getHost() {
+	@Nullable
+    public String getHost() {
 		return host;
 	}
 
-	public void setHost(String host) {
+	public void setHost(@Nullable String host) {
 		this.host = host;
 	}
 
@@ -74,11 +83,11 @@ public class Scanner {
 		this.port = port;
 	}
 
-	public void setName(String name) {
+	public void setName(@NotNull String name) {
 		this.name = name;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(@Nullable String version) {
 		this.version = version;
 	}
 

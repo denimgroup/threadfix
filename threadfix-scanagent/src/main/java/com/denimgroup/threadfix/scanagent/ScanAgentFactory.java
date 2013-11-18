@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.scanagent;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class ScanAgentFactory {
 	 * @param serverConduit
 	 * @return
 	 */
-	public static AbstractScanAgent getScanAgent(Scanner scanner, String workDir, ServerConduit serverConduit) {
+	public static AbstractScanAgent getScanAgent(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
 
 		AbstractScanAgent agent = null;
 		
