@@ -469,7 +469,7 @@ public class HibernateScanDao implements ScanDao {
 		} else if (useAppIds) {
 			criteria
 				.add(Restrictions.in("app.id", appIds));
-		} else if (useTeamIds) {
+		} else {
 			criteria.createAlias("app.organization", "team")
 				.add(Restrictions.in("team.id", teamIds))
 				.add(Restrictions.eq("team.active", true));

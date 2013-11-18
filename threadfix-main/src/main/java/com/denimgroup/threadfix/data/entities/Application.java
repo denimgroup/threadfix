@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +40,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.service.repository.GitService;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.eclipse.jgit.lib.Repository;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -375,7 +379,7 @@ public class Application extends AuditableEntity {
 	public List<Finding> getFindingList() {
 		if (findingList != null)
 			return findingList;
-		List<Finding> findings = new ArrayList<Finding>();
+		List<Finding> findings = new ArrayList<>();
 		for (Vulnerability vuln : getVulnerabilities()) {
 			for (Finding finding : vuln.getFindings()) {
 				if (finding != null) {
@@ -390,7 +394,7 @@ public class Application extends AuditableEntity {
 	@Transient
 	@JsonIgnore
 	public List<Vulnerability> getActiveVulnerabilities() {
-		List<Vulnerability> result = new ArrayList<Vulnerability>();
+		List<Vulnerability> result = new ArrayList<>();
 		for(Vulnerability vuln : vulnerabilities) {
 			if(vuln.isActive() && !vuln.getHidden() && !vuln.getIsFalsePositive()){
 				result.add(vuln);
@@ -402,7 +406,7 @@ public class Application extends AuditableEntity {
 	@Transient
 	@JsonIgnore
 	public List<Vulnerability> getClosedVulnerabilities() {
-		List<Vulnerability> result = new ArrayList<Vulnerability>();
+		List<Vulnerability> result = new ArrayList<>();
 		for(Vulnerability vuln : vulnerabilities) {
 			if(!vuln.isActive()){
 				result.add(vuln);
@@ -420,15 +424,15 @@ public class Application extends AuditableEntity {
 		
 		List<ApplicationChannel> normalList = getChannelList();
 		if (normalList == null || normalList.size() == 0)
-			return new ArrayList<ApplicationChannel>();
+			return new ArrayList<>();
 		
-		Set<String> doNotIncludeSet = new HashSet<String>();
+		Set<String> doNotIncludeSet = new HashSet<>();
 		doNotIncludeSet.add(ScannerType.MANUAL.getFullName());
 		doNotIncludeSet.add(ScannerType.SENTINEL.getFullName());
 		doNotIncludeSet.add(ScannerType.VERACODE.getFullName());
 		doNotIncludeSet.add(ScannerType.QUALYSGUARD_WAS.getFullName());
 		
-		List<ApplicationChannel> returnList = new ArrayList<ApplicationChannel>();
+		List<ApplicationChannel> returnList = new ArrayList<>();
 	
 		for (ApplicationChannel channel : normalList) {
 			if (channel != null && channel.getChannelType() != null 
@@ -486,5 +490,42 @@ public class Application extends AuditableEntity {
 	public SourceCodeAccessLevel getSourceCodeAccessLevelEnum() {
 		return SourceCodeAccessLevel.getSourceCodeAccessLevel(sourceCodeAccessLevel);
 	}
+
+    // TODO move this somewhere central
+    private static final String baseDirectory = "scratch/";
+
+    @Transient
+    public ProjectConfig getProjectConfig() {
+        return new ProjectConfig(getFrameworkTypeEnum(),
+                getSourceCodeAccessLevelEnum(),
+                getWorkTree(),
+                getProjectRoot()
+                );
+    }
+
+    @Transient
+    public File getWorkTree() {
+
+        File applicationDirectory = new File(baseDirectory + getId());
+
+        if (getRepositoryUrl() != null && !getRepositoryUrl().trim().isEmpty()) {
+            Repository repo = GitService.cloneGitTreeToDirectory(getRepositoryUrl(), applicationDirectory);
+
+            if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
+                return repo.getWorkTree();
+            } else {
+                return applicationDirectory;
+            }
+        } else if (getRepositoryFolder() != null && !getRepositoryFolder().trim().isEmpty()) {
+            File file = new File(getRepositoryFolder().trim());
+            if (!file.exists() || !file.isDirectory()) {
+                return applicationDirectory;
+            } else {
+                return file;
+            }
+        }
+
+        return applicationDirectory;
+    }
 	
 }

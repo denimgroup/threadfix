@@ -114,8 +114,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	if (pluginOutputString == null)
 	    		return;
 	    	
-	    	String stringResult = pluginOutputString.toString();
-	    	if (stringResult == null || stringResult.trim().isEmpty())
+	    	String stringResult = pluginOutputString;
+	    	if (stringResult.trim().isEmpty())
 	    		return;
 	    	
 	    	if (PATH_PARSE_MAP.containsKey(currentChannelVulnCode)) {

@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
 		
 		Set<Permission> permissions = getGlobalPermissions(user.getId());
 
-		if (canDelete && permissions.contains(Permission.CAN_MANAGE_USERS) && 
+		if (permissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!userDao.canRemovePermissionFromUser(user.getId(), "canManageUsers")) {
 			canDelete = false;
 		}
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		
-		if (canSetRoles && oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
+		if (oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!newPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!userDao.canRemovePermissionFromUser(userId, "canManageUsers")) {
 			canSetRoles = false;

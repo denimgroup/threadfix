@@ -273,18 +273,18 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		
 	    		try {
 	    			lineNum = Integer.valueOf(currentDataFlowLineNum);
+
+                    DataFlowElement newElement = new DataFlowElement(currentDataFlowFile,
+                            lineNum, currentDataFlowLineText, currentSequenceNumber);
+
+                    if (dataFlowElements != null)
+                        dataFlowElements.add(newElement);
+                    else {
+                        dataFlowElements = new ArrayList<>();
+                        dataFlowElements.add(newElement);
+                    }
 	    		} catch (NumberFormatException e) {
 	    			log.error("CAT.NET file contained a non-numeric value in its line number field.", e);
-	    		}
-	    		
-	    		DataFlowElement newElement = new DataFlowElement(currentDataFlowFile, 
-	    				lineNum, currentDataFlowLineText, currentSequenceNumber);
-
-	    		if (dataFlowElements != null)
-	    			dataFlowElements.add(newElement);
-	    		else {
-	    			dataFlowElements = new ArrayList<DataFlowElement>();
-	    			dataFlowElements.add(newElement);
 	    		}
 	    		
 	    		currentSequenceNumber += 1;

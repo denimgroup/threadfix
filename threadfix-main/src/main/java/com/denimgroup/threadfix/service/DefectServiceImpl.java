@@ -260,10 +260,8 @@ public class DefectServiceImpl implements DefectService {
 			return false;
 		}
 		
-		if (application != null) {
-			applicationService.decryptCredentials(application);
-		}
-		
+        applicationService.decryptCredentials(application);
+
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker, exiting.");
@@ -340,9 +338,11 @@ public class DefectServiceImpl implements DefectService {
 
 		Application application = vuln.getApplication();
 
-		if (application != null) {
-			applicationService.decryptCredentials(application);
-		}
+        if (application == null) {
+            return false;
+        }
+
+        applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
@@ -354,7 +354,7 @@ public class DefectServiceImpl implements DefectService {
 		defect.setDefectURL(dt.getBugURL(
 				application.getDefectTracker().getUrl(), id));
 		defect.setApplication(application);
-		List<Defect> defectList = new ArrayList<Defect>();
+		List<Defect> defectList = new ArrayList<>();
 		defectList.add(defect);
 		dt.getMultipleDefectStatus(defectList);
 		defectDao.saveOrUpdate(defect);

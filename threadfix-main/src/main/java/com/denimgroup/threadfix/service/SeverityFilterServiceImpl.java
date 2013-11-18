@@ -84,7 +84,7 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 				returnFilter = globalFilter;
 			}
 			
-		} else if (teamId != -1 && appId != -1) {
+		} else if (teamId != -1) {
 			SeverityFilter targetFilter = loadFilter(teamId, -1);
 			
 			if (targetFilter != null && targetFilter.getEnabled()) {

@@ -91,7 +91,7 @@ public class ReportsController {
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
-		List<Organization> returnList = new ArrayList<Organization>();
+		List<Organization> returnList = new ArrayList<>();
 
 		for (Organization org : organizationList) {
 			List<Application> validApps = permissionService.filterApps(org);
@@ -115,16 +115,14 @@ public class ReportsController {
 	}
 	
 	@RequestMapping(value="/{reportId}", method = RequestMethod.GET)
-	public String toReport(@PathVariable("reportId") int reportId,
-			Model model, HttpServletRequest request) {
+	public String toReport(@PathVariable("reportId") int reportId, HttpServletRequest request) {
 		ControllerUtils.addItem(request, "reportId", reportId);
 		return "redirect:/reports";
 	}
 	
 	@RequestMapping(value="/{reportId}/{teamId}", method = RequestMethod.GET)
 	public String toReport(@PathVariable("reportId") int reportId,
-			@PathVariable("teamId") int teamId,
-			Model model, HttpServletRequest request) {
+			@PathVariable("teamId") int teamId, HttpServletRequest request) {
 		ControllerUtils.addItem(request, "reportId", reportId);
 		ControllerUtils.addItem(request, "teamId", teamId);
 		return "redirect:/reports";
@@ -134,7 +132,7 @@ public class ReportsController {
 	public String toReport(@PathVariable("reportId") int reportId,
 			@PathVariable("teamId") int teamId,
 			@PathVariable("appId") int appId,
-			Model model, HttpServletRequest request) {
+			HttpServletRequest request) {
 		ControllerUtils.addItem(request, "reportId", reportId);
 		ControllerUtils.addItem(request, "teamId", teamId);
 		ControllerUtils.addItem(request, "appId", appId);
@@ -143,13 +141,13 @@ public class ReportsController {
 	
 	@RequestMapping(value="/ajax/export", method = RequestMethod.POST)
 	public String processExportRequest(Model model, @ModelAttribute ReportParameters reportParameters,
-			BindingResult result, SessionStatus status, HttpServletRequest request, 
+			BindingResult result, SessionStatus status, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
 				request);
 		
-		ReportCheckResult reportCheckResult = null;
+		ReportCheckResult reportCheckResult;
 		
 		if (reportCheckResultBean != null) {
 			reportCheckResult = reportCheckResultBean.getReportCheckResult();
@@ -160,7 +158,7 @@ public class ReportsController {
 		if (reportCheckResult == ReportCheckResult.VALID) {
 			boolean isPdf = reportParameters.getFormatId() == 3;
 			
-			String fileName = "report";
+			String fileName;
 			InputStream in = null;
 			
 			if (isPdf) {
@@ -175,9 +173,7 @@ public class ReportsController {
 				StringBuffer report = reportCheckResultBean.getReport();
 				if (report != null) {
 					String pageString = report.toString();
-					if (pageString != null) {
-						in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
-					}
+                    in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));
 				}
 			}
 			

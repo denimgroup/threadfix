@@ -153,7 +153,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			}
 		}
 		
-		if (teamIds == null || teamIds.size() == 0) {
+		if (teamIds.size() == 0) {
 			return new ArrayList<Organization>();
 		}
 		

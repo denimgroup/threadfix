@@ -11,8 +11,8 @@ public class TeamsIndexPageOLD extends BasePage{
 	private WebElement addTeamModalButton;
 	private WebElement teamTable;
 	private WebElement addAppModalButton;
-	private List<WebElement> appLink = new ArrayList<WebElement>();
-	private List<WebElement> appUploadLink = new ArrayList<WebElement>();
+	private List<WebElement> appLink = new ArrayList<>();
+	private List<WebElement> appUploadLink = new ArrayList<>();
 	
 	public TeamsIndexPageOLD(WebDriver webdriver) {
 		super(webdriver);

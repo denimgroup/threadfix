@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
 	public boolean canDelete(Role role) {
 		boolean canDelete = true;
 		
-		if (canDelete && role.getCanManageUsers() && 
+		if (role.getCanManageUsers() &&
 			!userDao.canRemovePermissionFromRole(role.getId(), "canManageUsers")) {
 			canDelete = false;
 		}

@@ -152,7 +152,7 @@ public class DocumentController {
 //			contentType = "text/plain";
 //		}
 		response.setContentType(contentType);
-		if(contentType.equals(documentService.getContentTypeService().getDefaultType()) || contentType == null){
+		if(contentType.equals(documentService.getContentTypeService().getDefaultType())){
 			response.addHeader("Content-Disposition", "attachment; filename=\""+document.getName()+"."+document.getType()+"\"");
 			response.setContentType("application/octet-stream");
 		}

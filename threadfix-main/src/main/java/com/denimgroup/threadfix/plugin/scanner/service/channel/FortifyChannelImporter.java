@@ -208,7 +208,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		
 		String nodeId = null;
 		
-		Map<String, String> snippetMap = new HashMap<String,String>();
+		Map<String, String> snippetMap = new HashMap<>();
 		String snippetId = null;
 		int lineCount = 0;
 		boolean getSnippetText = false;
@@ -486,7 +486,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			}
 			int number = getNumber(strippedNumbers);
 			
-			if (functionName != null && argument != null) {
+			if (argument != null) {
 				
 				if (SPECIAL_REGEX_MAP.containsKey(functionName)) {
 					parameter = getRegexResult(line,SPECIAL_REGEX_MAP.get(functionName));

@@ -97,8 +97,8 @@ public class WafsController {
 			throw new ResourceNotFoundException();
 		}
 		
-		boolean canSeeRules = false;
-		
+		boolean canSeeRules;
+
 		if (waf.getApplications() != null && !waf.getApplications().isEmpty()) {
 			canSeeRules = permissionService.canSeeRules(waf);
 		} else {
@@ -124,17 +124,22 @@ public class WafsController {
 			if (globalAccess) {
 				mav.addObject("apps", waf.getApplications());
 			} else {
-				List<Application> apps = new ArrayList<Application>();
+				List<Application> apps = new ArrayList<>();
 				
 				Set<Integer> authenticatedAppIds = permissionService.getAuthenticatedAppIds();
 				Set<Integer> authenticatedTeamIds = permissionService.getAuthenticatedTeamIds();
 				for (Application app : waf.getApplications()) {
-					if ((authenticatedAppIds != null && app != null && 
-							app.getId() != null && 
-							authenticatedAppIds.contains(app.getId())) ||
-							(authenticatedTeamIds != null && app.getOrganization() != null && 
-							app.getOrganization().getId() != null &&
-							authenticatedTeamIds.contains(app.getOrganization().getId()))) {
+
+                    boolean authenticatedAppId = authenticatedAppIds != null && app != null &&
+                            app.getId() != null &&
+                            authenticatedAppIds.contains(app.getId());
+
+                    boolean authenticatedTeamId = authenticatedTeamIds != null && app != null &&
+                            app.getOrganization() != null &&
+                            app.getOrganization().getId() != null &&
+                            authenticatedTeamIds.contains(app.getOrganization().getId());
+
+					if (authenticatedAppId || authenticatedTeamId) {
 						apps.add(app);
 					}
 				}

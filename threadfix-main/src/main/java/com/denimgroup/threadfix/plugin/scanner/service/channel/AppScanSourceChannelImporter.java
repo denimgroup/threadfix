@@ -220,7 +220,8 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
     		String line = finding.getDataFlowElements().get(0).getLineText();
     		
     		for (Entry<String, String> entry : REGEX_MAP.entrySet()) {
-    			if (entry != null && entry.getKey() != null && 
+    			if (entry != null && entry.getKey() != null &&
+                        line != null &&
     					line.contains(entry.getKey())) {
     				String possibleParameter = getRegexResult(line, entry.getValue());
     				if (possibleParameter != null) {

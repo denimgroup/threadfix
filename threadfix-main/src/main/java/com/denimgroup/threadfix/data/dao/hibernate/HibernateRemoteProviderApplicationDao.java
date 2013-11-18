@@ -29,6 +29,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,6 +53,7 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 		sessionFactory.getCurrentSession().delete(app);
 	}
 
+    @NotNull
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RemoteProviderApplication> retrieveAllWithTypeId(int id) {

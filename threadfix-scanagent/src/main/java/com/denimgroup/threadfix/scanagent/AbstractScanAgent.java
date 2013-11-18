@@ -29,6 +29,7 @@ import java.io.File;
 import org.apache.commons.configuration.Configuration;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractScanAgent {
 	private String workDir;
@@ -44,7 +45,7 @@ public abstract class AbstractScanAgent {
 		return(this.workDir);
 	}
 	
-	public void setServerConduit(ServerConduit serverConduit) {
+	public void setServerConduit(@NotNull ServerConduit serverConduit) {
 		this.serverConduit = serverConduit;
 	}
 	

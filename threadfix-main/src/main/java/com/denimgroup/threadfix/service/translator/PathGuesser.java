@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
 
-// TODO convert to use EndpointDatabase and get rid of the PathUrlTranslator
 public class PathGuesser {
 	
 	private PathGuesser(){}
@@ -50,32 +49,6 @@ public class PathGuesser {
 		for (Finding finding : scan.getFindings()) {
 			if (finding != null) {
 				processor.process(finding);
-			}
-		}
-	}
-	
-	public static void generateGuesses(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
-		if (scan == null || scan.getFindings() == null || scan.getFindings().isEmpty()) {
-			return;
-		}
-		
-		ParameterParser parser = ParameterParserFactory.getParameterParser(scanMergeConfiguration);
-		
-		PathUrlTranslator translator = PathUrlTranslatorFactory.getTranslator(scanMergeConfiguration, scan);
-		
-		calculateLocations(scan, translator, parser);
-	}
-
-	private static void calculateLocations(Scan scan, PathUrlTranslator translator,
-			ParameterParser parser) {
-		
-		for (Finding finding : scan.getFindings()) {
-			if (finding != null) {
-				finding.setCalculatedFilePath(translator.getFileName(finding));
-				finding.setCalculatedUrlPath(translator.getUrlPath(finding));
-				if (parser != null && finding.getSurfaceLocation() != null) {
-					finding.getSurfaceLocation().setParameter(parser.parse(finding.toEndpointQuery()));
-				}
 			}
 		}
 	}

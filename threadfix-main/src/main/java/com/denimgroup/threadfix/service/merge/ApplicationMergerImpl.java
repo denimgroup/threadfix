@@ -58,9 +58,6 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 
 	/**
 	 * This method is in here to allow passing an application id when the application isn't already in the session.
-	 * @param scan
-	 * @param applicationId
-	 * @param statusId
 	 */
 	public void applicationMerge(Scan scan, int applicationId, Integer statusId) {
 		applicationMerge(scan, applicationDao.retrieveById(applicationId), statusId);
@@ -68,10 +65,6 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 
 	/**
 	 * This method does the actual vulnerability merging across the app.
-	 * 
-	 * @param scan
-	 * @param application
-	 * @param statusId
 	 */
 	public void applicationMerge(Scan scan, Application application, Integer statusId) {
 		if (application == null || application.getVulnerabilities() == null || scan == null || scan.getFindings() == null) {
@@ -83,12 +76,9 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 		
 		long totalCount = 0;
 		
-		List<Vulnerability> 
-			vulns    = application.getVulnerabilities(),
-			newVulns = new ArrayList<Vulnerability>();
+		List<Vulnerability> vulns = application.getVulnerabilities();
 		
-		FindingMatcher matcher = new FindingMatcher(
-				MergeConfigurationGenerator.generateConfiguration(application, scan), scan);
+		FindingMatcher matcher = new FindingMatcher(scan);
 		
 		VulnerabilityCache 
 			oldGuesser = new VulnerabilityCache(vulns),
@@ -133,7 +123,6 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 				scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
 				if (newVuln != null) {
 					newGuesser.add(newVuln);
-					newVulns.add(newVuln);
 				}
 			}
 		}

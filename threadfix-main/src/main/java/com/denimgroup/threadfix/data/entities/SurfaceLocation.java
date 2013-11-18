@@ -185,7 +185,7 @@ public class SurfaceLocation extends BaseEntity {
 					url = new URL(protocol, host, tempPort, path + '?' + query);
 				} else if (path != null && host != null) {
 					url = new URL("http", host, tempPort, path);
-				} else if (path != null && host == null) {
+				} else if (path != null) {
 					url = new URL("http", "localhost", tempPort, path);
 				} else {
 					return null;

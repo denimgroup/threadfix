@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.defects;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -109,23 +110,26 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 					"The TFS integration will fail.");
 		}
 
-		if (folderName != null && prefix != null && suffix != null
-				&& names != null) {
-			try {							
-				URI testUri = TFSDefectTracker.class.getClassLoader()
-						.getResource(folderName).toURI();				
-				String base = testUri.getPath()
-						.replaceFirst("file:", "");
-				try {
-					for (String library : names) {
-						System.load(base + prefix + library + suffix);
-					}
+		if (folderName != null && names != null) {
+			try {
 
-					staticLog.info("Successfully loaded native libraries for "
-							+ osName + ".");
-				} catch (UnsatisfiedLinkError e) {
-					staticLog.error("Unable to locate one of the libraries.", e);
-				}
+                URL url = TFSDefectTracker.class.getClassLoader()
+                        .getResource(folderName);
+
+                if (url != null) {
+                    String base = url.toURI().getPath()
+                            .replaceFirst("file:", "");
+                    try {
+                        for (String library : names) {
+                            System.load(base + prefix + library + suffix);
+                        }
+
+                        staticLog.info("Successfully loaded native libraries for "
+                                + osName + ".");
+                    } catch (UnsatisfiedLinkError e) {
+                        staticLog.error("Unable to locate one of the libraries.", e);
+                    }
+                }
 			} catch (URISyntaxException e) {
 				staticLog.error("Unable to convert the path String to a URI.", e);
 			}								
@@ -169,7 +173,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			log.warn("Unable to create defect.");
 			return null;
 		}
-		Project project = null;
+		Project project;
 		
 		try {
 			project = workItemClient.getProjects().get(getProjectName());
@@ -213,9 +217,9 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList) {
-		Map<Defect, Boolean> returnMap = new HashMap<Defect, Boolean>();
-		Map<String, String> stringStatusMap = new HashMap<String, String>();
-		Map<String, Boolean> openStatusMap = new HashMap<String, Boolean>();
+		Map<Defect, Boolean> returnMap = new HashMap<>();
+		Map<String, String> stringStatusMap = new HashMap<>();
+		Map<String, Boolean> openStatusMap = new HashMap<>();
 
 		WorkItemClient workItemClient = getClient();
 		
@@ -226,7 +230,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 		StringBuilder builder = new StringBuilder();
 		for (Defect defect : defectList) {
-			builder.append(defect.getNativeId() + ",");
+			builder.append(defect.getNativeId()).append(",");
 		}
 
 		String ids = builder.substring(0, builder.length() - 1);
@@ -273,17 +277,16 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		}
 
 		ProjectCollection collection = null;
-		if (workItemClient != null) {
-			try {
-				collection = workItemClient.getProjects();
-			} catch (UnauthorizedException | TFSUnauthorizedException e) {
-				log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
-				setLastError("Invalid username / password combination");
-				return null;
-			} finally {
-				workItemClient.close();
-			}
-		}
+
+        try {
+            collection = workItemClient.getProjects();
+        } catch (UnauthorizedException | TFSUnauthorizedException e) {
+            log.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+            setLastError("Invalid username / password combination");
+            return null;
+        } finally {
+            workItemClient.close();
+        }
 
 		if (collection == null || collection.size() == 0) {
 			log.warn("Collection of projects was null or empty.");
@@ -293,7 +296,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		StringBuilder builder = new StringBuilder();
 
 		for (Project project : collection) {
-			builder.append(project.getName() + ",");
+			builder.append(project.getName()).append(",");
 		}
 
 		return builder.subSequence(0, builder.length() - 2).toString();
@@ -329,9 +332,9 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	public ProjectMetadata getProjectMetadata() {
 		log.info("Collecting project metadata");
 
-		List<String> statuses = new ArrayList<String>();
-		List<String> priorities = new ArrayList<String>();
-		List<String> emptyList = new ArrayList<String>();
+		List<String> statuses = new ArrayList<>();
+		List<String> priorities = new ArrayList<>();
+		List<String> emptyList = new ArrayList<>();
 		emptyList.add("-");
 
 		statuses.add("New");
@@ -375,9 +378,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		} catch (UnauthorizedException e) {
 			return false;
 		} finally {
-			if (workItemClient != null) {
-				workItemClient.close();
-			}
+            workItemClient.close();
 		}
 	}
 
@@ -414,7 +415,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	public boolean hasValidUrl() {
 		Credentials credentials = new UsernamePasswordCredentials("", "");
 
-		URI uri = null;
+		URI uri;
 		try {
 			uri = new URI(getUrl());
 		} catch (URISyntaxException e) {
@@ -444,7 +445,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 	@Override
 	public List<Defect> getDefectList() {
 		
-		List<Defect> defects = new ArrayList<Defect>();		
+		List<Defect> defects = new ArrayList<>();
 
 		WorkItemClient workItemClient = getClient();
 		

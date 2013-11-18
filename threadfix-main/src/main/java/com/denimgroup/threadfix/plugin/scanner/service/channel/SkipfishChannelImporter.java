@@ -107,8 +107,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	public Scan parseInput() {
 		InputStream samplesFileStream = getSampleFileInputStream();
 		
-		List<?> map = null;
-		map = getArrayFromSamplesFile(samplesFileStream);
+		List<?> map = getArrayFromSamplesFile(samplesFileStream);
 		
 		try {
 			samplesFileStream.close();
@@ -143,7 +142,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 			return null;
 		
 		folderName = findFolderName(zipFile);
-		InputStream samplesFileStream = null;
+		InputStream samplesFileStream;
 
 		if (folderName != null)
 			samplesFileStream = getFileFromZip(folderName + "/samples.js");
@@ -163,7 +162,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 				new DataInputStream(sampleFileInputStream)));
 
 		String issuesString = "[";
-		String tempString = null;
+		String tempString;
 		boolean write = false;
 		try {
 			StringBuffer buffer = new StringBuffer();
@@ -185,20 +184,16 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		try {
 			Object value =  mapper.readValue(issuesString, ArrayList.class);
 			
-			if (value instanceof ArrayList<?>)
+			if (value != null)
 				result = (ArrayList<?>) value;
 				
 			reader.close();
 			
-		} catch (JsonParseException e1) {
-			e1.printStackTrace();
-		} catch (JsonMappingException e1) {
-			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
-		return result;
+        return result;
 	}
 
 	// For each category, find the channel vuln and severity and pass the other work off to another method.
@@ -206,7 +201,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (map == null)
 			return null;
 
-		List<Finding> findings = new ArrayList<Finding>();
+		List<Finding> findings = new ArrayList<>();
 
 		for (Object mapElement : map) {
 			if (mapElement instanceof HashMap<?, ?>) {
@@ -241,7 +236,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (samples == null || samples.size() == 0)
 			return null;
 
-		List<Finding> returnList = new ArrayList<Finding>();
+		List<Finding> returnList = new ArrayList<>();
 
 		for (Object sample : samples) {
 			if (sample == null || !(sample instanceof LinkedHashMap))
@@ -255,7 +250,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 			if (channelVulnerability != null && channelVulnerability.getCode() != null && channelVulnerability.getCode().equals(INTERESTING_FILE_CODE)) {
 				Object extra = findingMap.get("extra");
 				if (extra != null && extra instanceof String && 
-						((String) extra).equals(DIRECTORY_LISTING)) {
+						extra.equals(DIRECTORY_LISTING)) {
 					ChannelVulnerability temp = getChannelVulnerability(INTERESTING_FILE_CODE + " " + DIRECTORY_LISTING);
 					if (temp != null)
 						finding.setChannelVulnerability(temp);
@@ -292,9 +287,9 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
 				if (path == null)
 					path = (String) url;
-				for (int index = 0; index < SKIPFISH_PAYLOADS.length; index ++)
-					if (path.contains(SKIPFISH_PAYLOADS[index]))
-						path = path.substring(0, path.indexOf(SKIPFISH_PAYLOADS[index]));
+                for (String SKIPFISH_PAYLOAD : SKIPFISH_PAYLOADS)
+                    if (path.contains(SKIPFISH_PAYLOAD))
+                        path = path.substring(0, path.indexOf(SKIPFISH_PAYLOAD));
 				
 				finding.getSurfaceLocation().setParameter(param);
 				

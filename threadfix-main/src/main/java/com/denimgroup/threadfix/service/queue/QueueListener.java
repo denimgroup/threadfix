@@ -275,7 +275,7 @@ public class QueueListener implements MessageListener {
 		
 		jobStatusService.updateJobStatus(jobStatusId, "Processing Scan from file.");
 		
-		boolean finished = false, closed = false;
+		boolean finished = false;
 		
 		try {
 			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
@@ -291,7 +291,7 @@ public class QueueListener implements MessageListener {
 						+ userName + " on Application " + appChannel.getApplication().getName()
 						+ " (filename " + fileName + ") completed successfully.");
 				}
-			} else if (!closed) {
+			} else {
 				closeJobStatus(jobStatusId, "Scan encountered an error.");
 				if (fullLog) {
 					log.info("The " + appChannel.getChannelType().getName() + " scan from User "

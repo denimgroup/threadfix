@@ -406,7 +406,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (result != null) {
 			try {
 				JSONObject resultObject = new JSONObject(result);
-				if (resultObject != null && resultObject.getJSONObject("fields") != null 
+				if (resultObject.getJSONObject("fields") != null
 						&& resultObject.getJSONObject("fields").getJSONObject("status") != null
 						&& resultObject.getJSONObject("fields").getJSONObject("status").getString("name") != null) {
 					

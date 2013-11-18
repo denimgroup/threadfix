@@ -1,6 +1,8 @@
 package com.denimgroup.threadfix.plugin;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 import net.xeoh.plugins.base.Plugin;
@@ -19,7 +21,12 @@ public class PluginLoader {
 			if(PluginLoader.class.getClassLoader().getResource("enterprise.jar")==null){
 				return null;
 			}
-			pm.addPluginsFrom(PluginLoader.class.getClassLoader().getResource("enterprise.jar").toURI());
+
+            URL url = PluginLoader.class.getClassLoader().getResource("enterprise.jar");
+
+            if (url != null) {
+                pm.addPluginsFrom(url.toURI());
+            }
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

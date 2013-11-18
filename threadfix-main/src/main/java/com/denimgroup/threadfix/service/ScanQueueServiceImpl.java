@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,19 +56,16 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	protected final SanitizedLogger log = new SanitizedLogger(ScanQueueServiceImpl.class);
 
 	private ApplicationDao applicationDao;
-//	private ChannelTypeDao channelTypeDao;
 	private DocumentDao documentDao;
 	private ApplicationChannelDao applicationChannelDao;
 	private ScanQueueTaskDao scanQueueTaskDao;
 	
 	@Autowired
 	public ScanQueueServiceImpl(ApplicationDao applicationDao,
-//								ChannelTypeDao channelTypeDao,
 								DocumentDao documentDao,
 								ApplicationChannelDao applicationChannelDao,
 								ScanQueueTaskDao scanQueueTaskDao) {
 		this.applicationDao = applicationDao;
-//		this.channelTypeDao = channelTypeDao;
 		this.documentDao = documentDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.scanQueueTaskDao = scanQueueTaskDao;
@@ -142,8 +140,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	
 	@Override
 	public ScanQueueTask retrieveById(int scanQueueTaskId) {
-		ScanQueueTask retVal = scanQueueTaskDao.retrieveById(scanQueueTaskId);
-		return retVal;
+		return scanQueueTaskDao.retrieveById(scanQueueTaskId);
 	}
 	
 	@Override
@@ -170,77 +167,77 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 			log.info("Length of list of available tasks was 0. No tasks in queue.");
 		} else {
 			log.info("Looking through " + availableTasks.size() + " possible tasks to find a match.");
-		}
-		
-		for(ScanQueueTask task : availableTasks) {
-			log.info("Examining task: " + task + " to see if we can run it");
-			for(String scanner : scannerArray) {
-				if(scanner.equals(task.getScanner())) {
-					log.info("Found a task for available scanner: " + scanner + ": " + task);
-					
-					retVal = new Task();
-					retVal.setTaskId(task.getId());
-					retVal.setTaskType(task.getScanner());
-					TaskConfig taskConfig = new TaskConfig();
-					
-					if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
-						String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
-						log.warn(msg);
-						return msg;
-					}
-					
-					taskConfig.setTargetUrlString(task.getApplication().getUrl());
-					
-					//	See if there is a configuration file specified for this Application and scanner type
-					int appId = task.getApplication().getId();
-					
-					Document configDoc = this.documentDao.retrieveByAppIdAndFilename(appId, task.getScannerShortName(), ScanQueueTask.SCANAGENT_CONFIG_FILE_EXTENSION);
-					
-					if(configDoc != null) {
-						Blob fileData = configDoc.getFile();
-						//	Note that JDBC Blobs should start their data at index 1 not 0
-						try {
-							taskConfig.setDataBlob("configFile", fileData.getBytes(1, (int)fileData.length()));
-							log.debug("Successfully added configFile data to taskConfig");
-						} catch (SQLException e) {
-							log.warn("Unable to retrieve Blob data because of exception. "
-										+ "Will fight through, but config will not be returned with task. "
-										+ "Message was: " + e.getMessage(), e);
-						}
-					} else {
-						log.debug("No Document (configFile) data found to be associated with app: "
-									+ task.getApplication().getId() + " and scanner: " + task.getScanner());
-					}
-					
-					retVal.setTaskConfig(taskConfig);
-					retVal.setSecureTaskKey(secureTaskKey);
-					
-					//	Mark the task as having been assigned
-					//	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
-					task.setStartTime(new Date());
-					task.setStatus(ScanQueueTaskStatus.STATUS_ASSIGNED.getValue());
-					
-					ScanStatus status = new ScanStatus();
-					status.setScanQueueTask(task);
-					status.setTimestamp(new Date());
-					status.setMessage("Assigning task to an agent with agentConfig:\n" + agentConfig);
-					
-					task.addScanStatus(status);
-					task.setSecureKey(secureTaskKey);
-					
-					this.scanQueueTaskDao.saveOrUpdate(task);
-					log.info("Scanner: " + scanner + " matched the task and the task has been assigned: " + task);
-					break;
-				} else {
-					log.debug("Scanner: " + scanner + " doesn't match task: " + task);
-				}
-			}
-			
-			//	If an available scanner matches this task, pick it and move on
-			if(retVal != null) {
-				break;
-			}
-		}
+
+            for(ScanQueueTask task : availableTasks) {
+                log.info("Examining task: " + task + " to see if we can run it");
+                for(String scanner : scannerArray) {
+                    if(scanner.equals(task.getScanner())) {
+                        log.info("Found a task for available scanner: " + scanner + ": " + task);
+
+                        retVal = new Task();
+                        retVal.setTaskId(task.getId());
+                        retVal.setTaskType(task.getScanner());
+                        TaskConfig taskConfig = new TaskConfig();
+
+                        if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
+                            String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
+                            log.warn(msg);
+                            return msg;
+                        }
+
+                        taskConfig.setTargetUrlString(task.getApplication().getUrl());
+
+                        //	See if there is a configuration file specified for this Application and scanner type
+                        int appId = task.getApplication().getId();
+
+                        Document configDoc = this.documentDao.retrieveByAppIdAndFilename(appId, task.getScannerShortName(), ScanQueueTask.SCANAGENT_CONFIG_FILE_EXTENSION);
+
+                        if(configDoc != null) {
+                            Blob fileData = configDoc.getFile();
+                            //	Note that JDBC Blobs should start their data at index 1 not 0
+                            try {
+                                taskConfig.setDataBlob("configFile", fileData.getBytes(1, (int)fileData.length()));
+                                log.debug("Successfully added configFile data to taskConfig");
+                            } catch (SQLException e) {
+                                log.warn("Unable to retrieve Blob data because of exception. "
+                                            + "Will fight through, but config will not be returned with task. "
+                                            + "Message was: " + e.getMessage(), e);
+                            }
+                        } else {
+                            log.debug("No Document (configFile) data found to be associated with app: "
+                                        + task.getApplication().getId() + " and scanner: " + task.getScanner());
+                        }
+
+                        retVal.setTaskConfig(taskConfig);
+                        retVal.setSecureTaskKey(secureTaskKey);
+
+                        //	Mark the task as having been assigned
+                        //	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
+                        task.setStartTime(new Date());
+                        task.setStatus(ScanQueueTaskStatus.STATUS_ASSIGNED.getValue());
+
+                        ScanStatus status = new ScanStatus();
+                        status.setScanQueueTask(task);
+                        status.setTimestamp(new Date());
+                        status.setMessage("Assigning task to an agent with agentConfig:\n" + agentConfig);
+
+                        task.addScanStatus(status);
+                        task.setSecureKey(secureTaskKey);
+
+                        this.scanQueueTaskDao.saveOrUpdate(task);
+                        log.info("Scanner: " + scanner + " matched the task and the task has been assigned: " + task);
+                        break;
+                    } else {
+                        log.debug("Scanner: " + scanner + " doesn't match task: " + task);
+                    }
+                }
+
+                //	If an available scanner matches this task, pick it and move on
+                if(retVal != null) {
+                    break;
+                }
+            }
+        }
 		
 		if(retVal != null) {
 			log.info("Found a suitable task for the agent: " + retVal);
@@ -253,28 +250,26 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	
 	@Override
 	public boolean completeTask(int scanQueueTaskId) {
-		boolean retVal = false;
-		
+
 		Date now = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
 		String message = "Scan completed successfully at: " + format.format(now);
 
-		retVal = changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTaskStatus.STATUS_COMPLETE_SUCCESSFUL.getValue(), message);
-		
-		return retVal;
+		return changeTaskStatusWithMessage(scanQueueTaskId, now, ScanQueueTaskStatus.STATUS_COMPLETE_SUCCESSFUL, message);
 	}
 	
 	@Override
 	public boolean failTask(int scanQueueTaskId, String message) {
 		boolean retVal;
 		
-		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTaskStatus.STATUS_COMPLETE_FAILED.getValue(), message);
+		retVal = changeTaskStatusWithMessage(scanQueueTaskId, new Date(), ScanQueueTaskStatus.STATUS_COMPLETE_FAILED, message);
 		
 		return retVal;
 	}
 	
-	private boolean changeTaskStatusWithMessage(int scanQueueTaskId, Date timestamp, int newStatus, String message) {
-		boolean retVal = false;
+	private boolean changeTaskStatusWithMessage(int scanQueueTaskId, Date timestamp,
+                                                @NotNull ScanQueueTaskStatus newStatus, String message) {
+		boolean retVal;
 		
 		ScanQueueTask task = this.retrieveById(scanQueueTaskId);
 		
@@ -285,7 +280,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		status.setTimestamp(timestamp);
 		
 		task.setEndTime(timestamp);
-		task.setStatus(newStatus);
+		task.setStatus(newStatus.getValue());
 		task.addScanStatus(status);
 		
 		this.scanQueueTaskDao.saveOrUpdate(task);

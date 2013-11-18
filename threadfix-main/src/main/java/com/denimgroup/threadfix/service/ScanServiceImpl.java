@@ -137,7 +137,7 @@ public class ScanServiceImpl implements ScanService {
 		
 		Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());
 		
-		if (scanQueueDate != null && result.getTestDate() != null && 
+		if (scanQueueDate != null && result != null && result.getTestDate() != null &&
 				!result.getTestDate().after(scanQueueDate)) {
 			log.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
 			return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());

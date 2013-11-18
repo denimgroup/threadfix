@@ -755,13 +755,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.isFoundByScanner()) {
 				vuln.setCloseTime(newCloseTime);
 				
-				if (!vuln.isActive() && newCloseTime == null ||
-						newCloseTime.before(newOpenTime)) {
+				if (!vuln.isActive() || newCloseTime.before(newOpenTime)) {
 					vuln.openVulnerability(newOpenTime);
 				}
 				
-				if (vuln.isActive() && newCloseTime == null ||
-						newCloseTime.after(newOpenTime)) {
+				if (vuln.isActive() || newCloseTime.after(newOpenTime)) {
 					vuln.closeVulnerability(null, newCloseTime);
 				}
 			}
