@@ -33,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 public final class ZipFileUtils {
 	/**
@@ -50,7 +51,7 @@ public final class ZipFileUtils {
 	 * @param targetPath Base path where the ZIP file shoudl be unpacked
 	 */
 	@SuppressWarnings({ "unchecked", "resource" })
-	public static void unzipFile(String zipFilename, String targetPath)
+	public static void unzipFile(@NotNull String zipFilename, @NotNull String targetPath)
 	throws java.io.IOException {
 		
 		ZipFile zipFile = new ZipFile(zipFilename);

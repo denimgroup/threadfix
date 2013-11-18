@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.Task;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 
 public class JsonUtils {
 
@@ -39,7 +40,7 @@ public class JsonUtils {
 	 * @throws Exception
 	 * @throws RuntimeException
 	 */
-	public static Task convertJsonStringToTask(String jsonText) throws Exception {
+	public static Task convertJsonStringToTask(@NotNull String jsonText) throws Exception {
 		Task retVal = null;
 		
 		try {

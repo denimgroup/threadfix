@@ -34,10 +34,9 @@ import java.net.Proxy;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.zaproxy.clientapi.core.ApiResponse;
 import org.zaproxy.clientapi.core.ApiResponseElement;
 import org.zaproxy.clientapi.core.ApiResponseList;
@@ -51,15 +50,17 @@ import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
 	static final Logger log = Logger.getLogger(ZapScanAgent.class);
-		
-	private int maxSpiderWaitInSeconds;
-	private int maxScanWaitInSeconds;
-	private int spiderPollWaitInSeconds;
-	private int scanPollWaitInSeconds;
-	private String zapHost;
-	private int zapPort;
-	private String zapExecutablePath;
-	private long zapStartupWaitTime;
+
+    private int maxSpiderWaitInSeconds;
+    private int maxScanWaitInSeconds;
+    private int spiderPollWaitInSeconds;
+    private int scanPollWaitInSeconds;
+    @NotNull
+    private String zapHost;
+    private int zapPort;
+    @NotNull
+    private String zapExecutablePath;
+    private long zapStartupWaitTime;
 	private Process process;
 	
 	/**
@@ -69,15 +70,11 @@ public class ZapScanAgent extends AbstractScanAgent {
 	private static ZapScanAgent instance = null;
 	private ZapScanAgent() {
 	}
-	public static ZapScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
+	public static ZapScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
 		if(instance == null) {
 			instance = new ZapScanAgent();
-			try {
-				instance.readConfig(new PropertiesConfiguration("scanagent.properties"));
-			} catch (ConfigurationException e) {
-				log.error("Problems reading configuration: " + e.getMessage(), e);
-			}
 		}
+		instance.readConfig(ConfigurationUtils.getPropertiesFile());
 		instance.setWorkDir(workDir);
 		instance.setServerConduit(serverConduit);
 		instance.setZapExecutablePath(scanner.getHomeDir());
@@ -86,8 +83,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return instance;
 	}
 	
-	@Override
-	public File doTask(TaskConfig theConfig) {
+    @Override
+	public File doTask(@NotNull TaskConfig theConfig) {
 
 		File retVal = null;
 
@@ -200,7 +197,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	}
 
 	@Override
-	public boolean readConfig(Configuration config) {
+	public boolean readConfig(@NotNull Configuration config) {
 		boolean retVal = false;
 		
 		this.maxSpiderWaitInSeconds = config.getInt("zap.maxSpiderWaitInSeconds");
@@ -221,19 +218,28 @@ public class ZapScanAgent extends AbstractScanAgent {
 		log.info("Attempting to start ZAP instance");
 		
 	    String separator = System.getProperty("file.separator");
-	    String classpath = System.getProperty("java.class.path");
 	    String path = System.getProperty("java.home")
 	            + separator + "bin" + separator + "java";
 	    
+//	    String starter;
+//	    System.out.println("starter init: ");
+//		try {
+//			System.out.println("scanagent.properties: " + ZapScanAgent.class.getClassLoader().getResource("scanagent.properties").toURI());
+//			System.out.println("zapStarter.jar: " + ZapScanAgent.class.getClassLoader().getResource("zapStarter.jar"));
+//			File file = new File(ZapScanAgent.class.getClassLoader().getResource("zapStarter.jar").toString());
+//			starter = file.getAbsolutePath();
+//		} catch (URISyntaxException e1) {
+//			log.error("Problems reading jar file: " + e1.getMessage(), e1);
+//			return false;
+//		}
+//		System.out.println("starter: " + starter);
 	    ProcessBuilder processBuilder = 
-	            new ProcessBuilder(path, "-cp", 
-	            classpath, 
-	            ZapScanStarter.class.getCanonicalName(),
+	            new ProcessBuilder(path, "-jar", 
+	            		"zapStarter.jar",
 	            zapExecutablePath,
-	            String.valueOf(zapStartupWaitTime/2));
-	    processBuilder.directory(new File(System.getProperty("java.home")));
-	    
-		log.info("Going to attempt creating new JVM to start ZAP.");
+	            String.valueOf(zapStartupWaitTime/2));	    
+
+	    log.info("Going to attempt creating new JVM to start ZAP.");
 		
 		try {
 			setProcess(processBuilder.start());
@@ -252,7 +258,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return retVal;
 	}
 	
-	private void stopZap(ClientApi zap) {
+	private void stopZap(@NotNull ClientApi zap) {
 		log.info("Attempting to shut down ZAP instance");
 		ApiResponse result;
 		
@@ -268,21 +274,15 @@ public class ZapScanAgent extends AbstractScanAgent {
 		} catch (ClientApiException e) {
 			log.error("Problems telling ZAP to shut down: " + e.getMessage(), e);
 		} 
-		
-//		if (getProcess() != null) 
-//			getProcess().destroy();
-		
 		log.info("Finished shutting down ZAP instance");
-	
 	}
-	
 
 	
 	/**
 	 * @param zap
 	 * @return
 	 */
-	private String attemptRetrieveResults(ClientApi zap) {
+	private String attemptRetrieveResults(@NotNull ClientApi zap) {
 		String retVal = null;
 		
 		try {
@@ -315,7 +315,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @return
 	 * @throws Exception
 	 */
-    private static String openUrlViaProxy (Proxy proxy, String apiurl) throws Exception {
+    private static String openUrlViaProxy (@NotNull Proxy proxy, @NotNull String apiurl) throws Exception {
     	StringBuilder response = new StringBuilder();
         URL url = new URL(apiurl);
         HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
@@ -333,7 +333,7 @@ public class ZapScanAgent extends AbstractScanAgent {
         return response.toString();
 }
 	
-	private boolean attemptRunScan(TaskConfig theConfig, ClientApi zap) {
+	private boolean attemptRunScan(@NotNull TaskConfig theConfig, @NotNull ClientApi zap) {
 		boolean retVal = false;
 		ApiResponse response;
 		
@@ -401,7 +401,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		return(retVal);
 	}
 
-	private boolean attemptRunSpider(TaskConfig theConfig, ClientApi zap) {
+	private boolean attemptRunSpider(@NotNull TaskConfig theConfig, @NotNull ClientApi zap) {
 		
 		boolean retVal = false;
 		ApiResponse response;
@@ -524,10 +524,11 @@ public class ZapScanAgent extends AbstractScanAgent {
 		}
 		return(retVal);
 	}
-	public String getZapHost() {
+	@NotNull
+    public String getZapHost() {
 		return zapHost;
 	}
-	public void setZapHost(String zapHost) {
+	public void setZapHost(@NotNull String zapHost) {
 		this.zapHost = zapHost;
 	}
 	public int getZapPort() {
@@ -536,10 +537,11 @@ public class ZapScanAgent extends AbstractScanAgent {
 	public void setZapPort(int zapPort) {
 		this.zapPort = zapPort;
 	}
-	public String getZapExecutablePath() {
+	@NotNull
+    public String getZapExecutablePath() {
 		return zapExecutablePath;
 	}
-	public void setZapExecutablePath(String zapExecutablePath) {
+	public void setZapExecutablePath(@NotNull String zapExecutablePath) {
 		this.zapExecutablePath = zapExecutablePath;
 	}
 	public Process getProcess() {
@@ -549,45 +551,4 @@ public class ZapScanAgent extends AbstractScanAgent {
 		this.process = process;
 	}
 	
-}
-
-/**
- * This class will be running in another JVM to start ZAP 
- * @author stran
- *
- */
-class ZapScanStarter {
-	
-	public static void main(String[] args) {
-		System.out.println("Start ZAP");
-		if (args == null || args.length ==0) {
-			return;
-		}
-		String[] arg= { args[0] + getZapRunnerFile(), "-daemon" };
-
-		ProcessBuilder pb = new ProcessBuilder(arg);
-		pb.directory(new File(args[0]));
-
-		try {
-			pb.start();
-			Thread.sleep(Long.valueOf(args[1]) * 1000);
-
-		} catch (IOException e) {
-			System.out.println("Problems starting ZAP instance. Please check zap home directory again and use '-cs zap' to config zap information.");
-
-		} catch (InterruptedException ie) {
-			System.out.println("Problems waiting for ZAP instance to start up: " + ie.getMessage());
-		} catch (Exception e) {
-			System.out.println("Cannot start zap: " + e.getMessage());
-		}
-		System.out.println("Ended starting ZAP");
-	}
-	
-	private static String getZapRunnerFile() {
-		if (System.getProperty("os.name").contains("Windows"))
-			return ConfigurationUtils.ZAP_FILES[0];
-		else return ConfigurationUtils.ZAP_FILES[1];
-					
-	}
-
 }

@@ -28,11 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import org.jetbrains.annotations.NotNull;
+import sun.net.ftp.FtpReplyCode;
 
 public class ConfigurationUtils {
 	private static Logger log = Logger.getLogger(ConfigurationUtils.class);
@@ -40,26 +43,26 @@ public class ConfigurationUtils {
 	public static String[] ZAP_FILES = new String[]{"zap.bat", "zap.sh"};
 	public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
 	
-	public static void saveUrlConfig(String url, Configuration config) {
-		log.info("Start saving url");
+	public static void saveUrlConfig(@NotNull String url, @NotNull Configuration config) {
+//		log.info("Start saving url");
 		writeToFile(new String[]{"scanagent.threadFixServerUrl"}, new String[]{url}, config);
-		log.info("Ended saving url");
+//		log.info("Ended saving url");
 	}
 	
-	public static void saveKeyConfig(String key, Configuration config) {
-		log.info("Start saving key");
+	public static void saveKeyConfig(@NotNull String key, @NotNull Configuration config) {
+//		log.info("Start saving key");
 		writeToFile(new String[]{"scanagent.threadFixApiKey"}, new String[]{key}, config);
-		log.info("Ended saving key");
+//		log.info("Ended saving key");
 	}
 	
-	public static void saveWorkDirectory(String workdir, Configuration config) {
-		log.info("Start saving working directory");
+	public static void saveWorkDirectory(@NotNull String workdir, @NotNull Configuration config) {
+//		log.info("Start saving working directory");
 		writeToFile(new String[]{"scanagent.baseWorkDir"}, new String[]{workdir}, config);
-		log.info("Ended saving working directory");
+//		log.info("Ended saving working directory");
 	}
 	
-	public static void saveScannerType(Scanner scan, Configuration config) {
-		log.info("Start saving scanner type");
+	public static void saveScannerType(@NotNull Scanner scan, @NotNull Configuration config) {
+//		log.info("Start saving scanner type");
 		String[] names = new String[5];
 		String[] values = new String[5];
 
@@ -76,10 +79,15 @@ public class ConfigurationUtils {
 		values[3] = scan.getHost();
 		values[4] = String.valueOf(scan.getPort());
 		writeToFile(names, values, config);
-		log.info("Ended saving scanner type");
+//		log.info("Ended saving scanner type");
 	}
 	
-	public static List<Scanner> readAllScanner(Configuration config) {
+	/**
+	 * Read all the scanner has been set up in scanagent properties file
+	 * @param config
+	 * @return
+	 */
+	public static List<Scanner> readAllScanner(@NotNull Configuration config) {
 		log.info("Start reading all scanner type");
 		List<Scanner> scanners = new ArrayList<Scanner>();
 		
@@ -105,7 +113,7 @@ public class ConfigurationUtils {
 		return scanners;
 	}
 	
-	private static void writeToFile(String[] names, String[] values, Configuration config) {
+	private static void writeToFile(@NotNull String[] names, @NotNull String[] values, @NotNull Configuration config) {
 		
 		if (names.length != values.length) {
 			return;
@@ -129,7 +137,7 @@ public class ConfigurationUtils {
 		return true;
 	}
 
-	public static boolean checkHomeParam(ScannerType scannerType, String home) {
+	public static boolean checkHomeParam(@NotNull ScannerType scannerType, @NotNull String home) {
 
 		String osName = System.getProperty("os.name");
 
@@ -153,15 +161,15 @@ public class ConfigurationUtils {
 		}
 		return true;
 	}
+	
+	/**
+	 * This method config the information for Scanner
+	 * @param scannerType
+	 * @param config
+	 */
+	public static void configScannerType(@NotNull ScannerType scannerType,
+                                         @NotNull PropertiesConfiguration config) {
 
-	public static void configScannerType(ScannerType scannerType,
-			PropertiesConfiguration config) {
-		
-		if (scannerType == null) {
-			System.out.println("Wrong scanner type.");
-			return;
-		}
-		
 		System.out.println("Start configuration for " + scannerType.getFullName());
 		Scanner scan = new Scanner();
 		scan.setName(scannerType.getFullName());
@@ -202,8 +210,10 @@ public class ConfigurationUtils {
 		System.out.println("Run '-r' to execute scan queue task from Threadfix server.");
 	}
 
-	private static void inputMoreScanInfo(PropertiesConfiguration config,
-			ScannerType scannerType, Scanner scan, java.util.Scanner in) {
+	private static void inputMoreScanInfo(@NotNull PropertiesConfiguration config,
+                                          @NotNull ScannerType scannerType,
+                                          @NotNull Scanner scan,
+                                          @NotNull java.util.Scanner in) {
 
 		// Input host and port for ZAP
 		if (scannerType == ScannerType.ZAPROXY) {
@@ -249,8 +259,8 @@ public class ConfigurationUtils {
 
 	}
 
-	public static void configSystemInfo(PropertiesConfiguration config) {
-		System.out.println("Start configuration for required information.");
+	public static void configSystemInfo(@NotNull PropertiesConfiguration config) {
+		System.out.println("Start configuration for server information.");
 		java.util.Scanner in = null;
 		try {
 			in = new java.util.Scanner(System.in);
@@ -284,7 +294,7 @@ public class ConfigurationUtils {
 				" if you already set up Scanner");
 	}
 	
-	private static String getExeFile(ScannerType scanner) {
+	private static String getExeFile(@NotNull ScannerType scanner) {
 		String exeName = null;
 		if (scanner == ScannerType.ZAPROXY) {
 			exeName = ZAP_FILES[0] + "/" + ZAP_FILES[1];
@@ -292,6 +302,18 @@ public class ConfigurationUtils {
 			exeName = ACUNETIX_FILES[0];
 		}
 		return exeName;
+	}
+	
+	public static PropertiesConfiguration getPropertiesFile() {
+		try {
+//			return new PropertiesConfiguration(ZapScanAgent.class.getClassLoader()
+//					.getResource("scanagent.properties").toString());
+			return new PropertiesConfiguration("scanagent.properties");
+
+		} catch (ConfigurationException e) {
+			log.error("Problems reading configuration: " + e.getMessage(), e);
+		}
+		return null;
 	}
 
 }
