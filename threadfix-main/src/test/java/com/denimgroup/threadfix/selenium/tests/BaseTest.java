@@ -64,15 +64,18 @@ public abstract class BaseTest {
 			String[] f = {"firefox"};
 			params.add(f);
 		}
-		if(chrome != null && chrome.equals("true")){
+        if(chrome != null && chrome.equals("true")){
 			String[] c = {"chrome"};
 			params.add(c);
 		}
-		
-		if(ie != null && ie.equals("true")){
+        if(ie != null && ie.equals("true")){
 			String[] e = {"IE"};
 			params.add(e);
 		}
+        if(chrome == null && ff == null && ie == null){
+            String[] f = {"firefox"};
+            params.add(f);
+        }
 		return params;
 	}
 	

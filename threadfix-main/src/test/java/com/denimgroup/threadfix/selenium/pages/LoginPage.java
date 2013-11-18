@@ -24,10 +24,13 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 
 public class LoginPage extends BasePage {
 
@@ -110,17 +113,22 @@ public class LoginPage extends BasePage {
 	/*----------------set functions----------------*/
 	public LoginPage setUsername(String user) {
 		driver.findElementById("username").sendKeys(user);
-		return this;
+        //sleep(1000);
+        return this;
 	}
 	
 	public LoginPage setPassword(String password) {
 		driver.findElementById("password").sendKeys(password);
-		return this;
+        //sleep(1000);
+        return this;
 	}
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-		driver.findElementById("login").click();
+        //sleep(3000);
+        driver.findElementById("login").click();
+        driver.findElementById("login").click();
+        //driver.findElementById("password").sendKeys(Keys.ENTER);
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}
