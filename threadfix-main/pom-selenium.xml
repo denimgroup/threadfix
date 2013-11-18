@@ -50,11 +50,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		</repository>
 	</repositories>
 
-	<organization>
-		<name>Denim Group, Ltd.</name>
-		<url>http://www.denimgroup.com/</url>
-	</organization>
-
 	<developers>
 		<developer>
 			<id>manderson</id>
