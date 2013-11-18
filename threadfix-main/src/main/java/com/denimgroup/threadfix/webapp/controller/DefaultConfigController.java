@@ -40,11 +40,11 @@ public class DefaultConfigController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		if(LdapServiceDelegateFactory.isEnterprise()){
-			dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
-					"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials" });			
-		}else{
-			dataBinder.setAllowedFields(new String [] { "defaultRoleId", "globalGroupEnabled" });	
+		if (LdapServiceDelegateFactory.isEnterprise()){
+			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
+                    "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials");
+		} else {
+			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled");
 		}
 	}
 	

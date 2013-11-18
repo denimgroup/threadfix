@@ -84,7 +84,7 @@ public class EditDefectTrackerController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTrackerType.id" });
+		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id");
 	}
 
 	@ModelAttribute
@@ -111,7 +111,7 @@ public class EditDefectTrackerController {
 			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
 			SessionStatus status, Model model) {
 		
-		DefectTracker databaseDefectTracker = null;
+		DefectTracker databaseDefectTracker;
 		
 		if (defectTracker == null || defectTracker.getName() == null || 
 				defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
@@ -164,7 +164,7 @@ public class EditDefectTrackerController {
 			defectTracker.setId(defectTrackerId);
 		}
 		
-		DefectTracker databaseDefectTracker = null;
+		DefectTracker databaseDefectTracker;
 		
 		if (defectTracker == null || defectTracker.getName() == null || 
 				defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {

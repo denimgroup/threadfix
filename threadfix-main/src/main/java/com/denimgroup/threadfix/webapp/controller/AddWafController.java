@@ -87,7 +87,7 @@ public class AddWafController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "wafType.id", "applicationId" });
+		dataBinder.setAllowedFields("name", "wafType.id", "applicationId");
 	}
 
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
@@ -99,7 +99,7 @@ public class AddWafController {
 		
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
-		if (validationResult != "SUCCESS") {
+		if (!validationResult.equals("SUCCESS")) {
 			return validationResult;
 		}
 		
@@ -134,7 +134,7 @@ public class AddWafController {
 
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
-		if (validationResult != "SUCCESS") {
+		if (!validationResult.equals("SUCCESS")) {
 			return validationResult;
 		}
 		

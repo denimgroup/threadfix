@@ -197,7 +197,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		
 	    		if (atts.getValue("trace") == null) {
 	    			DataFlowElement element = new DataFlowElement(currentPath, lineNumber, null);
-	    			finding.setDataFlowElements(Arrays.asList(new DataFlowElement[] {element}));
+	    			finding.setDataFlowElements(Arrays.asList(element));
 	    		} else {
 	    			finding.setDataFlowElements(getDataFlowElements(atts.getValue("trace")));
 	    		}

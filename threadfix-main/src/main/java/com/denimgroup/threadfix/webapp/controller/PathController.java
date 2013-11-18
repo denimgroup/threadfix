@@ -75,7 +75,7 @@ public class PathController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "projectRoot" });
+		dataBinder.setAllowedFields("projectRoot");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

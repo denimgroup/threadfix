@@ -84,7 +84,7 @@ public class AddDefectTrackerController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTrackerType.id" });
+		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id");
 	}
 
 	@ModelAttribute

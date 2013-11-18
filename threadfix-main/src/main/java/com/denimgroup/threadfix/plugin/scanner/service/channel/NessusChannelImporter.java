@@ -62,7 +62,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	private static final String INPUT_NAME_COLON_PARAM_REGEX = "Input name : ([^\n]*)\n";
 	
 	private static final List<String> SSL_VULNS = 
-			Arrays.asList(new String[]{"26928", "60108", "57620", "53360", "42873", "35291"});
+			Arrays.asList("26928", "60108", "57620", "53360", "42873", "35291");
 	
 	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<>();
 	static {

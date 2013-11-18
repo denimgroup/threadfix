@@ -215,7 +215,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 									}
 								}
 							}
-							finding.setDataFlowElements(Arrays.asList(new DataFlowElement[] {element}));
+							finding.setDataFlowElements(Arrays.asList(element));
 						}
 						
 						scan.getFindings().add(finding);

@@ -45,7 +45,7 @@ public class ChangePasswordController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "currentPassword", "unencryptedPassword", "passwordConfirm" });
+		dataBinder.setAllowedFields("currentPassword", "unencryptedPassword", "passwordConfirm");
 	}
 
 	@ModelAttribute

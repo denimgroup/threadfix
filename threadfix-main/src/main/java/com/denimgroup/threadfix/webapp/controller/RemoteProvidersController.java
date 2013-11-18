@@ -79,8 +79,8 @@ public class RemoteProvidersController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "apiKey", "username",
-				"password", "application.id", "application.organization.id", "isEuropean" });
+		dataBinder.setAllowedFields("apiKey", "username",
+                "password", "application.id", "application.organization.id", "isEuropean");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)

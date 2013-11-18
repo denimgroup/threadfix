@@ -72,8 +72,8 @@ public class AddApplicationController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name", "url", "defectTracker.id", "uniqueId",
-				"userName", "password", "waf.id", "projectName", "applicationCriticality.id" });
+		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
+                "userName", "password", "waf.id", "projectName", "applicationCriticality.id");
 	}
 	
 	@Autowired
