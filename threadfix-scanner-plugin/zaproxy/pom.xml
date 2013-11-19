@@ -63,7 +63,7 @@
             <enabled>true</enabled>
             <checksumPolicy>ignore</checksumPolicy>
         </snapshots>
-        <url>file://${project.basedir}\lib</url>
+        <url>file://${project.basedir}/lib</url>
     </repository>
     <repository>
         <id>lib2</id>
@@ -76,7 +76,7 @@
             <enabled>true</enabled>
             <checksumPolicy>ignore</checksumPolicy>
         </snapshots>
-        <url>file://${project.basedir}\..\..\lib</url>
+        <url>file://${project.basedir}/../../lib</url>
     </repository>
     <repository>
         <id>jboss-public-repository-group</id>
