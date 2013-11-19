@@ -26,7 +26,12 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -228,38 +233,66 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/oups", "any", null },
 			{ "/petclinic/oups", null, "33" },
 	};
-	
-	// TODO add parameter stuff
-	@Test
-	public void testParameterRecognition() {
-		EndpointDatabase db = getSpringEndpointDatabaseStatic();
-		
-		for (String[] httpMethodTest : parameterTests) {
-			EndpointQuery query =
-					EndpointQueryBuilder.start()
-						.setDynamicPath(httpMethodTest[0])
-						.setParameter(httpMethodTest[1])
-						.generateQuery();
-			
-			Endpoint result = db.findBestMatch(query);
-			
-			String currentQuery = httpMethodTest[0] + ": " + httpMethodTest[1];
-			
-			if (result == null) {
-				assertTrue("No result was found, but line " + httpMethodTest[2] + " was expected for " + currentQuery,
-						httpMethodTest[2] == null);
-			} else {
-				assertTrue("Got an endpoint, but was not expecting one with " + currentQuery,
-						httpMethodTest[2] != null);
-				
-				Integer value = Integer.valueOf(httpMethodTest[2]);
-				
-				assertTrue("Got " + result.getStartingLineNumber() + " but was expecting " + value + " with " + currentQuery,
-						value.equals(result.getStartingLineNumber()));
-			}
-		}
-	}
-	
+
+    // TODO add parameter stuff
+    @Test
+    public void testParameterRecognition() {
+        EndpointDatabase db = getSpringEndpointDatabaseStatic();
+
+        for (String[] httpMethodTest : parameterTests) {
+            EndpointQuery query =
+                    EndpointQueryBuilder.start()
+                            .setDynamicPath(httpMethodTest[0])
+                            .setParameter(httpMethodTest[1])
+                            .generateQuery();
+
+            Endpoint result = db.findBestMatch(query);
+
+            String currentQuery = httpMethodTest[0] + ": " + httpMethodTest[1];
+
+            if (result == null) {
+                assertTrue("No result was found, but line " + httpMethodTest[2] + " was expected for " + currentQuery,
+                        httpMethodTest[2] == null);
+            } else {
+                assertTrue("Got an endpoint, but was not expecting one with " + currentQuery,
+                        httpMethodTest[2] != null);
+
+                Integer value = Integer.valueOf(httpMethodTest[2]);
+
+                assertTrue("Got " + result.getStartingLineNumber() + " but was expecting " + value + " with " + currentQuery,
+                        value.equals(result.getStartingLineNumber()));
+            }
+        }
+    }
+
+    List<? extends CodePoint> basicModelElements = Arrays.asList(
+            new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+                    "public String processFindForm(Owner owner, BindingResult result, Model model) {"),
+            new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+                    "Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
+            new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+                    "Collection<Owner> results = this.clinicService.findOwnerByLastName(owner.getLastName());"),
+            new DefaultCodePoint("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+                    "return ownerRepository.findByLastName(lastName);"),
+            new DefaultCodePoint("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+                    "\"SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like '\" + lastName + \"%'\",")
+    );
+
+    // TODO add parameter stuff
+    @Test
+    public void testCodePoints() {
+        EndpointDatabase db = getSpringEndpointDatabaseStatic();
+
+        EndpointQuery query = EndpointQueryBuilder.start()
+                .setCodePoints(basicModelElements)
+                .setStaticPath("java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java")
+                .generateQuery();
+
+        Endpoint result = db.findBestMatch(query);
+
+        assertTrue("Result was null!", result != null);
+    }
+
 	
 	
 }
