@@ -39,6 +39,7 @@ public class RoleTests extends BaseTest {
 	/**
 	 * Also tests delete
 	 */
+    @Ignore
 	@Test
 	public void testCreateRoleBasic() {
 		// needs to be alphabetically before "Admin" preset role
@@ -57,7 +58,7 @@ public class RoleTests extends BaseTest {
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(name));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name));
 	}
-	
+	@Ignore
 	@Test
 	public void testEditRole() {
 		String name1 = "1" + getRandomString(15);
@@ -87,7 +88,7 @@ public class RoleTests extends BaseTest {
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name2));
 
 	}
-
+    @Ignore
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
@@ -131,6 +132,8 @@ public class RoleTests extends BaseTest {
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(normalName));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));
 	}
+
+    @Ignore
 	@Test
 	public void addApplicationOnly(){
 		String roleName = "appOnly" + getRandomString(10);
@@ -178,7 +181,9 @@ public class RoleTests extends BaseTest {
 		
 		assertTrue("new role user was not able to add an application",add);
 	}
-	
+
+
+    @Ignore
 	@Test
 	public void testSetPermissions() {
 		String name = "testName" + getRandomString(10);
