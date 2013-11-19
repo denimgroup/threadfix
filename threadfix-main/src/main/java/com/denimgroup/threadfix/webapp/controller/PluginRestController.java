@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,8 +42,6 @@ import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
-import com.denimgroup.threadfix.service.translator.PathUrlTranslatorFactory;
 
 @Controller
 @RequestMapping("/rest/code")
@@ -114,7 +113,7 @@ public class PluginRestController extends RestController {
 		}
 		
 		EndpointGenerator generator =
-				PathUrlTranslatorFactory.getTranslator(MergeConfigurationGenerator.generateConfiguration(application, null), null);
+				EndpointDatabaseFactory.getDatabase(application.getProjectConfig());
 		
 		if (generator != null) {
 			return getEndpointCSV(generator);
@@ -128,12 +127,10 @@ public class PluginRestController extends RestController {
 		
 		Collection<Endpoint> endpoints = generator.generateEndpoints();
 		
-		if (endpoints != null && !endpoints.isEmpty()) {
-			for (Endpoint endpoint : endpoints) {
-				if (endpoint != null) {
-					builder.append(endpoint.getCSVLine()).append("\n");
-				}
-			}
+        for (Endpoint endpoint : endpoints) {
+            if (endpoint != null) {
+                builder.append(endpoint.getCSVLine()).append("\n");
+            }
 		}
 		
 		return builder.toString();

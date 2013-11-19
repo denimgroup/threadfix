@@ -18,10 +18,10 @@ import com.denimgroup.threadfix.data.entities.Scan;
  *
  */
 public class JasperScanReport implements JRDataSource {
-	private List<Scan> scanList = new ArrayList<Scan>();
+	private List<Scan> scanList = new ArrayList<>();
 	private int index = 0;
-	private Map<String, Object> resultsHash = new HashMap<String, Object>();
-	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<Integer, Integer>();
+	private Map<String, Object> resultsHash = new HashMap<>();
+	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<>();
 	
 	public JasperScanReport(List<Integer> applicationIdList, ScanDao scanDao) {
 		if (scanDao != null && applicationIdList != null)

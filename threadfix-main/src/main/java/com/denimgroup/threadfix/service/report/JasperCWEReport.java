@@ -15,9 +15,9 @@ import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 public class JasperCWEReport implements JRDataSource {
-	private List<Vulnerability> vulnerabilityList = new ArrayList<Vulnerability>();
+	private List<Vulnerability> vulnerabilityList = new ArrayList<>();
 	private int index = 0;
-	private Map<String, Object> resultsHash = new HashMap<String, Object>();
+	private Map<String, Object> resultsHash = new HashMap<>();
 	
 	private List<Map<String, Object>> listOfMaps = null;
 			
@@ -70,7 +70,7 @@ public class JasperCWEReport implements JRDataSource {
 		}
 		
 		// First we need to marshal the data from vulnerabilities into groups by generic vulnerability
-		Map<String, Map<String, Integer>> statsMap = new HashMap<String, Map<String, Integer>>();
+		Map<String, Map<String, Integer>> statsMap = new HashMap<>();
 		
 		Calendar now = Calendar.getInstance();
 		
@@ -104,7 +104,7 @@ public class JasperCWEReport implements JRDataSource {
 		}
 		
 		// Then, to sort, we need a grouping of total vulns with all the associated vuln names
-		Map<Integer, List<String>> sortingHash = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> sortingHash = new HashMap<>();
 		
 		for (String key : statsMap.keySet()) {
 			Integer total = statsMap.get(key).get("numOpen") + statsMap.get(key).get("numClosed");
@@ -116,10 +116,10 @@ public class JasperCWEReport implements JRDataSource {
 			sortingHash.get(total).add(key);
 		}
 		
-		List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> returnList = new ArrayList<>();
 				
 		// moving to a SortedSet allows ordered addition by total number of vulnerabilities.
-		SortedSet<Integer> sortedSet = new TreeSet<Integer>();
+		SortedSet<Integer> sortedSet = new TreeSet<>();
 		sortedSet.addAll(sortingHash.keySet());
 		
 		// then iterate through the original set of generic vulnerability data
@@ -127,7 +127,7 @@ public class JasperCWEReport implements JRDataSource {
 		for (Integer sortingHashKey : sortedSet) {
 			for (String statsMapKey : sortingHash.get(sortingHashKey)) {
 				
-				Map<String, Object> genericVulnEntry = new HashMap<String,Object>();
+				Map<String, Object> genericVulnEntry = new HashMap<>();
 				genericVulnEntry.put("description", statsMapKey);
 				genericVulnEntry.put("total", Long.valueOf(sortingHashKey));
 				

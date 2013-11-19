@@ -329,7 +329,7 @@ public class HibernateScanDao implements ScanDao {
 	@Override
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
 		if (ids == null || ids.isEmpty()) {
-			return new HashMap<String, Object>();
+			return new HashMap<>();
 		}
 		
 		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
@@ -373,7 +373,7 @@ public class HibernateScanDao implements ScanDao {
 		Criteria result = addFiltering(baseCriteria, authenticatedTeamIds, authenticatedAppIds);
 		
 		if (result == null) {
-			return new ArrayList<Scan>();
+			return new ArrayList<>();
 		} else {
 			return baseCriteria.list();
 		}
@@ -411,7 +411,7 @@ public class HibernateScanDao implements ScanDao {
 		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
 		
 		if (filteredCriteria == null) {
-			return new ArrayList<Scan>();
+			return new ArrayList<>();
 		} else {
 			return criteria.list();
 		}
@@ -469,7 +469,7 @@ public class HibernateScanDao implements ScanDao {
 		} else if (useAppIds) {
 			criteria
 				.add(Restrictions.in("app.id", appIds));
-		} else if (useTeamIds) {
+		} else {
 			criteria.createAlias("app.organization", "team")
 				.add(Restrictions.in("team.id", teamIds))
 				.add(Restrictions.eq("team.active", true));

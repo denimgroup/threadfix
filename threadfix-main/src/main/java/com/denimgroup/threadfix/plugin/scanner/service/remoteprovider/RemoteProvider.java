@@ -98,9 +98,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
+                inputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

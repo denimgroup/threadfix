@@ -65,7 +65,7 @@ public class EditWafController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "name", "wafType.id" });
+		dataBinder.setAllowedFields("name", "wafType.id");
 	}
 	
 	@Autowired

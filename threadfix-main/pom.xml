@@ -36,54 +36,7 @@
 			</snapshots>
 			<url>file://${project.basedir}/lib</url>
 		</repository>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
 	</repositories>
-
-	<licenses>
-		<license>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<id>manderson</id>
-			<name>Michael Anderson</name>
-			<email>michael@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>bbeverly</id>
-			<name>Bryan Beverly</name>
-			<email>bryan@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>mcollins</id>
-			<name>Mac Collins</name>
-			<email>mcollins@denimgroup.com</email>
-		</developer>
-		<developer>
-			<id>dcornell</id>
-			<name>Dan Cornell</name>
-			<email>dan@denimgroup.com</email>
-		</developer>
-	</developers>
-
-	<organization>
-		<name>Denim Group, Ltd.</name>
-		<url>http://www.denimgroup.com/</url>
-	</organization>
 
 	<build>
 		<filters>
@@ -128,11 +81,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler.version}</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -187,27 +135,27 @@
         <dependency>
             <groupId>org.jetbrains.annotations</groupId>
             <artifactId>annotations</artifactId>
-            <version>13</version>
+            <version>${jetbrains-annotations.version}</version>
         </dependency>
 		<dependency>
 			<groupId>org.owasp.esapi</groupId>
 			<artifactId>esapi</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
+			<version>${esapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.tfs.sdk</groupId>
 			<artifactId>com.microsoft.tfs.sdk</artifactId>
-			<version>11.0.0</version>
+			<version>${tfs-library.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.xeoh.plugins.base</groupId>
 			<artifactId>jspf.core</artifactId>
-			<version>1.0.2</version>
+			<version>${jspf.version}</version>
 		</dependency>
 	    <dependency>
 	        <groupId>org.springframework.ldap</groupId>
 	        <artifactId>spring-ldap-core-tiger</artifactId>
-	        <version>1.3.2.RELEASE</version>
+	        <version>${spring-ldap.version}</version>
 	    </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -469,13 +417,21 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
+<<<<<<< HEAD
 			<version>2.37.0</version>
+=======
+			<version>${selenium.version}</version>
+>>>>>>> f144fb222c4e34cd03d3275ead0e249d58b2a745
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
+<<<<<<< HEAD
 			<version>2.37.0</version>
+=======
+			<version>${selenium.version}</version>
+>>>>>>> f144fb222c4e34cd03d3275ead0e249d58b2a745
 			<exclusions>
 				<exclusion>
 					<artifactId>servlet-api-2.5</artifactId>
@@ -496,7 +452,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20090211</version>
+			<version>${json.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -570,6 +526,7 @@
 		</profile>
 	</profiles>
 
+<<<<<<< HEAD
 	<properties>
 		<db.name>stonemill</db.name>
 
@@ -631,4 +588,6 @@
 		<system>https://code.google.com/p/threadfix/issues/list</system>
 	</issueManagement>
 	
+=======
+>>>>>>> f144fb222c4e34cd03d3275ead0e249d58b2a745
 </project>

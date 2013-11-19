@@ -124,9 +124,6 @@ public class WafRestController extends RestController {
 	
 	/**
 	 * Returns the current set of rules from the WAF, generating new ones if none are present.
-	 * @param request
-	 * @param wafId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/rules", method=RequestMethod.GET)
 	public @ResponseBody Object getRules(HttpServletRequest request,
@@ -172,7 +169,7 @@ public class WafRestController extends RestController {
 			return CREATION_FAILED;
 		}
 		
-		if (name != null && !name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {
+		if (!name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {
 			
 			Waf waf = new Waf();
 			

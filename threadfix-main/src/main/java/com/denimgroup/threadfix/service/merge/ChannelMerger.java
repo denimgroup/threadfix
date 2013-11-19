@@ -73,7 +73,7 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 		Map<String, Finding> scanHash = new HashMap<>();
 		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
 		Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
-		Set<Integer> alreadySeenVulnIds = new TreeSet<Integer>();
+		Set<Integer> alreadySeenVulnIds = new TreeSet<>();
 		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
 
 		log.info("Starting Application Channel-wide merging process with "

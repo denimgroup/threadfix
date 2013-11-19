@@ -48,7 +48,7 @@ public class SurveySection extends BaseEntity {
 	private String color = "#000000";
 	private String lightColor = "#CCCCCC";
 
-	private List<SurveyPractice> practices = new ArrayList<SurveyPractice>();
+	private List<SurveyPractice> practices = new ArrayList<>();
 
 	@Override
 	public void setId(Integer id) {

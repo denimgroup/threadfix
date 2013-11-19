@@ -31,7 +31,7 @@ import org.openqa.selenium.WebElement;
 
 public class ApiKeysIndexPage extends BasePage {
 
-	private List<WebElement> notes = new ArrayList<WebElement>();
+	private List<WebElement> notes = new ArrayList<>();
 	//private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
 	private WebElement createNewKeyLink;
 

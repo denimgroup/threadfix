@@ -64,8 +64,12 @@ public class DateUtils {
 				log.warn("There was an error parsing the date, check the format and regex.");
 			}
 		}
-		
-		log.info("Got " + new SimpleDateFormat(formatString, Locale.US).format(result.getTime()));
+
+        if (result != null) {
+		    log.info("Got " + new SimpleDateFormat(formatString, Locale.US).format(result.getTime()));
+        } else {
+            log.info("Got null instead of a date.");
+        }
 		
 		return result;
 	}

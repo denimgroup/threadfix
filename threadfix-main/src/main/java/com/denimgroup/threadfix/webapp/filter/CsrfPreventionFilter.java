@@ -71,10 +71,10 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     
     private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
 
-    private final Set<String> entryPoints = new HashSet<String>();
-    private final List<String> entryPointStartPatterns = new ArrayList<String>();
-    private final List<String> entryPointRegexPatterns = new ArrayList<String>();
-    private final List<String> protectedRegexPatterns = new ArrayList<String>();
+    private final Set<String> entryPoints = new HashSet<>();
+    private final List<String> entryPointStartPatterns = new ArrayList<>();
+    private final List<String> entryPointRegexPatterns = new ArrayList<>();
+    private final List<String> protectedRegexPatterns = new ArrayList<>();
     
     private int nonceCacheSize = 5;
 
@@ -207,7 +207,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         
             // generate a new cache if one is not found.
             if (nonceCache == null) {
-                nonceCache = new LruCache<String>(nonceCacheSize);
+                nonceCache = new LruCache<>(nonceCacheSize);
                 req.getSession().setAttribute(
                         CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
             }

@@ -129,7 +129,7 @@ public class UploadScanController {
 			return index(orgId, appId, SCANNER_TYPE_ERROR, null);
 		}
 		
-		ScanCheckResultBean returnValue = null;
+		ScanCheckResultBean returnValue;
 		
 		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
 		
@@ -172,7 +172,7 @@ public class UploadScanController {
 					&& app.getOrganization().getId() != null) {
 				ChannelType channelType = null;
 				
-				if (returnValue.getScanCheckResult() != null && 
+				if (returnValue != null && returnValue.getScanCheckResult() != null &&
 						(returnValue.getScanCheckResult().equals(ScanImportStatus.BADLY_FORMED_XML) ||
 						returnValue.getScanCheckResult().equals(ScanImportStatus.WRONG_FORMAT_ERROR) ||
 						returnValue.getScanCheckResult().equals(ScanImportStatus.OTHER_ERROR))) {

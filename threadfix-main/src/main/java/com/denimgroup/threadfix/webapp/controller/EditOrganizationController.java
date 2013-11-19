@@ -68,7 +68,7 @@ public class EditOrganizationController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name" });
+		dataBinder.setAllowedFields("name");
 	}
 
 	@InitBinder

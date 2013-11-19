@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.plugin.scanner;
 
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 import net.xeoh.plugins.base.PluginManager;
@@ -18,8 +19,12 @@ public class ScannerPluginLoader {
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 
 		try {
-			pm.addPluginsFrom(ScannerPluginLoader.class.getClassLoader()
-					.getResource("scanners.jar").toURI());
+            URL url = ScannerPluginLoader.class.getClassLoader()
+                    .getResource("scanners.jar");
+
+            if (url != null) {
+			    pm.addPluginsFrom(url.toURI());
+            }
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

@@ -15,12 +15,8 @@
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source />
-					<target />
-				</configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
 			<plugin>
 		      <artifactId>maven-assembly-plugin</artifactId>
@@ -34,6 +30,14 @@
 		          <descriptorRef>jar-with-dependencies</descriptorRef>
 		        </descriptorRefs>
 		      </configuration>
+              <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+              </executions>
 		    </plugin>
 		</plugins>
 	</build>
@@ -65,12 +69,5 @@
 			<version>${log4j.version}</version>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<persistence.version>1.0</persistence.version>
-		<commons.io.version>1.4</commons.io.version>
-		<commons.lang.version>3.1</commons.lang.version>
-		<log4j.version>1.2.16</log4j.version>
-	</properties>
 
 </project>

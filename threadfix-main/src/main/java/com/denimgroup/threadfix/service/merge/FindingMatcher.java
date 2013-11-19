@@ -40,30 +40,19 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public class FindingMatcher {
 	
-	private final String
-		urlPathRoot,
-		filePathRoot,
-		projectRoot;
-	
+	private final String urlPathRoot;
+
 	private String lowerCaseFilePathRoot = null;
 	
-	public FindingMatcher(ScanMergeConfiguration scanMergeConfiguration, Scan scan) {
-		
+	public FindingMatcher(Scan scan) {
 		if (scan != null) {
 			urlPathRoot = scan.getUrlPathRoot();
-			filePathRoot = scan.getFilePathRoot();
+            lowerCaseFilePathRoot = scan.getFilePathRoot();
+            if (lowerCaseFilePathRoot != null) {
+                lowerCaseFilePathRoot = lowerCaseFilePathRoot.toLowerCase();
+            }
 		} else {
-			filePathRoot = urlPathRoot = null;
-		}
-		
-		if (scanMergeConfiguration.getApplicationRoot() == null) {
-			projectRoot = filePathRoot;
-		} else {
-			projectRoot = scanMergeConfiguration.getApplicationRoot();
-		}
-		
-		if (projectRoot != null) {
-			lowerCaseFilePathRoot = projectRoot.toLowerCase();
+			urlPathRoot = null;
 		}
 	}
 	
@@ -122,7 +111,7 @@ public class FindingMatcher {
 	private boolean compareStaticAndDynamicPaths(Finding dynamicFinding,
 			Finding staticFinding) {
 		
-		boolean dynamicMatch = false, staticMatch = false;
+		boolean dynamicMatch, staticMatch = false;
 		
 		dynamicMatch = comparePaths(staticFinding.getCalculatedUrlPath(),
 				dynamicFinding.getCalculatedUrlPath());

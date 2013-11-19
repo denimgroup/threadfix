@@ -50,8 +50,8 @@ public class SurveyResult extends AuditableEntity {
 	private Survey survey;
 	private String user;
 
-	private List<SurveyRanking> rankings = new ArrayList<SurveyRanking>();
-	private List<SurveyAnswer> answers = new ArrayList<SurveyAnswer>();
+	private List<SurveyRanking> rankings = new ArrayList<>();
+	private List<SurveyAnswer> answers = new ArrayList<>();
 
 	private Map<Integer, SurveyRanking> practiceRankings;
 	private Map<Integer, SurveyAnswer> questionAnswers;
@@ -123,7 +123,7 @@ public class SurveyResult extends AuditableEntity {
 	@Transient
 	public Map<Integer, SurveyRanking> getPracticeRankings() {
 		if (practiceRankings == null) {
-			practiceRankings = new HashMap<Integer, SurveyRanking>();
+			practiceRankings = new HashMap<>();
 
 			for (SurveyRanking ranking : getSurveyRankings()) {
 				practiceRankings.put(ranking.getSurveyPractice().getId(), ranking);
@@ -136,7 +136,7 @@ public class SurveyResult extends AuditableEntity {
 	@Transient
 	public Map<Integer, SurveyAnswer> getAssertionAnswers() {
 		if (assertionAnswers == null) {
-			assertionAnswers = new HashMap<Integer, SurveyAnswer>();
+			assertionAnswers = new HashMap<>();
 
 			for (SurveyAnswer answer : getSurveyAnswers()) {
 				if (answer.getSurveyAssertion() != null && answer.getSurveyAssertion().getId() != 0) {
@@ -151,7 +151,7 @@ public class SurveyResult extends AuditableEntity {
 	@Transient
 	public Map<Integer, SurveyAnswer> getQuestionAnswers() {
 		if (questionAnswers == null) {
-			questionAnswers = new HashMap<Integer, SurveyAnswer>();
+			questionAnswers = new HashMap<>();
 
 			for (SurveyAnswer answer : getSurveyAnswers()) {
 				if (answer.getSurveyQuestion() != null && answer.getSurveyQuestion().getId() != 0) {

@@ -56,7 +56,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
-	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<String, String>();
+	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<>();
 	static {
 		SEVERITY_MAP.put("deformation", "Information");
 		SEVERITY_MAP.put("eddium", "Medium");

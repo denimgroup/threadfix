@@ -69,7 +69,7 @@ public class AddOrganizationController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String[] { "name" });
+		dataBinder.setAllowedFields("name");
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)

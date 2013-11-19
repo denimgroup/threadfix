@@ -41,7 +41,7 @@ GROUP BY
  * 
  */
 public class JasperScannerComparisonReport implements JRDataSource {
-	private List<Vulnerability> vulnerabilityList = new ArrayList<Vulnerability>();
+	private List<Vulnerability> vulnerabilityList = new ArrayList<>();
 	private int index = 0, total = 0;
 	
 	private Map<String, Integer> scannerVulnCountMap = null;
@@ -101,10 +101,10 @@ public class JasperScannerComparisonReport implements JRDataSource {
 		if (vulnerabilityList == null || vulnerabilityList.size() == 0)
 			return;
 		
-		scannerFPCountMap = new HashMap<String, Integer>();
-		scannerVulnCountMap = new HashMap<String, Integer>();
+		scannerFPCountMap = new HashMap<>();
+		scannerVulnCountMap = new HashMap<>();
 		
-		Set<String> scannersInUse = new TreeSet<String>();
+		Set<String> scannersInUse = new TreeSet<>();
 		
 		// For each vuln, go through its findings and add the scanner names to a set.
 		// Then iterate through the set and increment each present scanner's vuln count.
@@ -144,7 +144,7 @@ public class JasperScannerComparisonReport implements JRDataSource {
 			}
 		}
 		
-		scannerNames = new ArrayList<String>(scannerVulnCountMap.keySet());
+		scannerNames = new ArrayList<>(scannerVulnCountMap.keySet());
 		
 		// Sort in descending order by number of vulns found.
 		Collections.sort(scannerNames, new Comparator<String>() {

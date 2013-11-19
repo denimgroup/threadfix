@@ -145,9 +145,7 @@ public class FindingsController {
 			return merge(findingId, scanId, model, orgId, appId);
 		}
 		
-		Vulnerability vulnerability = null;
-		if (id != null)
-			vulnerability = vulnerabilityService.loadVulnerability(id);
+		Vulnerability vulnerability = vulnerabilityService.loadVulnerability(id);
 		
 		if (finding != null && vulnerability != null) {
 			

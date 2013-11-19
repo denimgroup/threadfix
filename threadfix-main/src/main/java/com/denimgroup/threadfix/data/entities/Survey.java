@@ -41,8 +41,8 @@ public class Survey extends AuditableEntity {
 
 	private String name = "";
 
-	private List<SurveySection> sections = new ArrayList<SurveySection>();
-	private List<SurveyLevel> levels = new ArrayList<SurveyLevel>();
+	private List<SurveySection> sections = new ArrayList<>();
+	private List<SurveyLevel> levels = new ArrayList<>();
 
 	@Override
 	public void setId(Integer id) {

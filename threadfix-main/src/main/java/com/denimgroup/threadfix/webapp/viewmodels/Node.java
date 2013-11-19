@@ -33,7 +33,7 @@ public class Node {
 
 	public Node(String data) {
 		this.data = data;
-		childNode = new ArrayList<Node>();
+		childNode = new ArrayList<>();
 	}
 
 	public String getData() {

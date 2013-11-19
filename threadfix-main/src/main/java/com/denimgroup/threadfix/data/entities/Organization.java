@@ -90,7 +90,7 @@ public class Organization extends AuditableEntity {
 	@JsonIgnore
 	public List<Application> getActiveApplications() {
 		if (activeApps == null) {
-			activeApps = new ArrayList<Application>();
+			activeApps = new ArrayList<>();
 			for (Application application : this.applications) {
 				if (application.isActive())
 					activeApps.add(application);
@@ -136,7 +136,7 @@ public class Organization extends AuditableEntity {
 			}
 		}
 
-		List<Integer> retVal = new ArrayList<Integer>();
+		List<Integer> retVal = new ArrayList<>();
 		for (int i = 0; i < calculations.length; i++) {
 			retVal.add(Integer.valueOf(calculations[i]));
 		}

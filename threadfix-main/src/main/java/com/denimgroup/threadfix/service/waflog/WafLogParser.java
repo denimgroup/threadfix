@@ -88,7 +88,7 @@ public abstract class WafLogParser {
 		if (bufferedReader == null)
 			return null;
 
-		List<SecurityEvent> events = new ArrayList<SecurityEvent>();
+		List<SecurityEvent> events = new ArrayList<>();
 
 		String line = null;
 

@@ -45,7 +45,7 @@ import org.openqa.selenium.support.ui.Select;
 
 public class TeamIndexPage extends BasePage {
 
-	private List<WebElement> apps = new ArrayList<WebElement>();
+	private List<WebElement> apps = new ArrayList<>();
 	public int modalNum;
 	public String appModalId;
 
@@ -73,7 +73,7 @@ public class TeamIndexPage extends BasePage {
 
 	public int getIndex(String teamName) {
 		int i = -1;
-		List<WebElement> names = new ArrayList<WebElement>();
+		List<WebElement> names = new ArrayList<>();
 		for (int j = 1; j <= getNumTeamRows(); j++) {
 			names.add(driver.findElementById("teamName" + j));
 		}
@@ -84,7 +84,7 @@ public class TeamIndexPage extends BasePage {
 				return i;
 			}
 		}
-		names = new ArrayList<WebElement>();
+		names = new ArrayList<>();
 		for (int j = 1; j <= getNumTeamRows(); j++) {
 			names.add(driver.findElementById("teamName" + j));
 		}
@@ -149,7 +149,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public void populateAppList(String teamName){
-		apps = new ArrayList<WebElement>();
+		apps = new ArrayList<>();
 		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found.")) {
 				for (int j = 0; j < getNumAppRows(teamName); j++) {

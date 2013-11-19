@@ -116,7 +116,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 			return null;
 		}
 		
-		List<Integer> ints = new ArrayList<Integer>();
+		List<Integer> ints = new ArrayList<>();
 		
 		for (int i = 1; i < 6; i++) {
 			long result = (Long) sessionFactory.getCurrentSession()

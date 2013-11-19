@@ -37,15 +37,15 @@ import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
  *
  */
 public class JasperMonthlyScanReport implements JRDataSource {
-	private List<Scan> scanList = new ArrayList<Scan>();
+	private List<Scan> scanList = new ArrayList<>();
 	private int index = 0;
-	private Map<String, Object> resultsHash = new HashMap<String, Object>();
+	private Map<String, Object> resultsHash = new HashMap<>();
 
-	private List<Scan> normalizedScans = new ArrayList<Scan>();
+	private List<Scan> normalizedScans = new ArrayList<>();
 	
-	Set<Integer> newVulns = new HashSet<Integer>(),
-			 	 oldVulns = new HashSet<Integer>(),
-			 	 reopenedVulns = new HashSet<Integer>();
+	Set<Integer> newVulns = new HashSet<>(),
+			 	 oldVulns = new HashSet<>(),
+			 	 reopenedVulns = new HashSet<>();
 
 	public JasperMonthlyScanReport(List<Integer> applicationIdList,
 			ScanDao scanDao) {
@@ -181,7 +181,7 @@ public class JasperMonthlyScanReport implements JRDataSource {
 	private void insertEmptyScans(List<Scan> scanList) {
 
 		Scan previousScan = null;
-		List<Scan> scansToInsert = new ArrayList<Scan>();
+		List<Scan> scansToInsert = new ArrayList<>();
 
 		for (Scan scan : scanList) {
 			if (previousScan == null) {
@@ -204,7 +204,7 @@ public class JasperMonthlyScanReport implements JRDataSource {
 
 	// skipping null checks for now
 	private List<Scan> getScansBetween(Scan firstScan, Scan secondScan) {
-		List<Scan> betweenScans = new ArrayList<Scan>();
+		List<Scan> betweenScans = new ArrayList<>();
 
 		Scan tempScan = firstScan;
 

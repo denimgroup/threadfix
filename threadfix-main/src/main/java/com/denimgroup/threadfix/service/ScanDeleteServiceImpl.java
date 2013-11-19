@@ -175,14 +175,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	private void updateVulnStatusWithNextScan(Scan scan, Scan nextScan) {
 		
 		List<ScanCloseVulnerabilityMap> closeMapsToDelete = 
-			new ArrayList<ScanCloseVulnerabilityMap>();
+			new ArrayList<>();
 		List<ScanReopenVulnerabilityMap> reopenMapsToDelete = 
-			new ArrayList<ScanReopenVulnerabilityMap>();
+			new ArrayList<>();
 		
 		List<ScanCloseVulnerabilityMap> closeMapsToRemove = 
-			new ArrayList<ScanCloseVulnerabilityMap>();
+			new ArrayList<>();
 		List<ScanReopenVulnerabilityMap> reopenMapsToRemove = 
-			new ArrayList<ScanReopenVulnerabilityMap>();
+			new ArrayList<>();
 
 		// First check to see if any closed vulns were reopened
 		if (scan.getScanCloseVulnerabilityMaps() != null) {
@@ -341,7 +341,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		
 		if (scan.getScanRepeatFindingMaps() != null
 				&& scan.getScanRepeatFindingMaps().size() > 0) {
-				List<ScanRepeatFindingMap> mapsToRemove = new ArrayList<ScanRepeatFindingMap>();
+				List<ScanRepeatFindingMap> mapsToRemove = new ArrayList<>();
 				
 				for (ScanRepeatFindingMap map : scan.getScanRepeatFindingMaps()) {
 					if (map != null && map.getFinding() != null 
@@ -448,10 +448,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			}
 			
 			List<ScanCloseVulnerabilityMap> closeMapsToDelete = 
-				new ArrayList<ScanCloseVulnerabilityMap>();
+				new ArrayList<>();
 			List<ScanReopenVulnerabilityMap> reopenMapsToDelete = 
-				new ArrayList<ScanReopenVulnerabilityMap>();
-			List<Vulnerability> vulnsToUpdate = new ArrayList<Vulnerability>();
+				new ArrayList<>();
+			List<Vulnerability> vulnsToUpdate = new ArrayList<>();
 			
 			if (scan.getScanCloseVulnerabilityMaps() != null) {
 				for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
@@ -547,8 +547,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 * @param scan
 	 */
 	private void deleteOrphanVulnerabilities(Application app, Scan scan) {
-		List<Finding> findingsToRemove = new ArrayList<Finding>();
-		List<Vulnerability> vulnsToRemove = new ArrayList<Vulnerability>();
+		List<Finding> findingsToRemove = new ArrayList<>();
+		List<Vulnerability> vulnsToRemove = new ArrayList<>();
 		
 		// Cycle through vulns and update
 		if (app.getVulnerabilities() == null || app.getVulnerabilities().size() == 0) {
@@ -701,9 +701,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		List<ScanCloseVulnerabilityMap> closeMapsToRemove = 
-			new ArrayList<ScanCloseVulnerabilityMap>();
+			new ArrayList<>();
 		List<ScanReopenVulnerabilityMap> reopenMapsToRemove = 
-			new ArrayList<ScanReopenVulnerabilityMap>();
+			new ArrayList<>();
 	
 		// This ugly block should give the vuln the close date of the last scan close map
 		// that it has.
@@ -755,13 +755,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.isFoundByScanner()) {
 				vuln.setCloseTime(newCloseTime);
 				
-				if (!vuln.isActive() && newCloseTime == null ||
-						newCloseTime.before(newOpenTime)) {
+				if (!vuln.isActive() || newCloseTime.before(newOpenTime)) {
 					vuln.openVulnerability(newOpenTime);
 				}
 				
-				if (vuln.isActive() && newCloseTime == null ||
-						newCloseTime.after(newOpenTime)) {
+				if (vuln.isActive() || newCloseTime.after(newOpenTime)) {
 					vuln.closeVulnerability(null, newCloseTime);
 				}
 			}

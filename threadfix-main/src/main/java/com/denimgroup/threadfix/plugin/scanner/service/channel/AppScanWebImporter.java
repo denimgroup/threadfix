@@ -95,10 +95,10 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    public AppScanSAXParser () {
 	    	super();
 	    	
-	    	hosts = new ArrayList<String>();
-	    	severityMap = new HashMap<String, ChannelSeverity>();
-	    	genericVulnMap = new HashMap<String, String>();
-	    	channelVulnNameMap = new HashMap<String, String>();
+	    	hosts = new ArrayList<>();
+	    	severityMap = new HashMap<>();
+	    	genericVulnMap = new HashMap<>();
+	    	channelVulnNameMap = new HashMap<>();
 	    }
 	    
 	    private void addChannelVulnsAndMappingsToDatabase() {
@@ -142,7 +142,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 			VulnerabilityMap vulnerabilityMap = new VulnerabilityMap();
 			vulnerabilityMap.setChannelVulnerability(channelVuln);
 			vulnerabilityMap.setGenericVulnerability(genericVuln);
-			List<VulnerabilityMap> vulnerabilityMapList = new ArrayList<VulnerabilityMap>();
+			List<VulnerabilityMap> vulnerabilityMapList = new ArrayList<>();
 			vulnerabilityMapList.add(vulnerabilityMap);
 			channelVuln.setVulnerabilityMaps(vulnerabilityMapList);
 			genericVuln.setVulnerabilityMaps(vulnerabilityMapList);

@@ -53,8 +53,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 	// TODO run through more files and determine whether this method is still valuable
 	// or whether we can use only the 'action' parameter and the column parsing.
-	private static final Map<String, String> FACT_REGEX_MAP = new HashMap<String, String>();
-	private static final Map<String, String> SPECIAL_REGEX_MAP = new HashMap<String, String>();
+	private static final Map<String, String> FACT_REGEX_MAP = new HashMap<>();
+	private static final Map<String, String> SPECIAL_REGEX_MAP = new HashMap<>();
 	static {
 		FACT_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_Item",
 				"Request\\[\"([a-zA-Z0-9_]+)\"\\]");
@@ -208,7 +208,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		
 		String nodeId = null;
 		
-		Map<String, String> snippetMap = new HashMap<String,String>();
+		Map<String, String> snippetMap = new HashMap<>();
 		String snippetId = null;
 		int lineCount = 0;
 		boolean getSnippetText = false;
@@ -228,7 +228,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		boolean doneWithVulnerabilities = false;
 		
 	    public void addToList() {
-	    	Map<String,String> findingMap = new HashMap<String, String>();
+	    	Map<String,String> findingMap = new HashMap<>();
 	    	
 	    	if (currentChannelType != null && currentChannelSubtype != null && 
 	    			!currentChannelSubtype.trim().equals("")) {
@@ -253,7 +253,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			currentConfidence = null;
 			currentClassID = null;
 			currentStaticPathInformation = null;
-			dataFlowElementMaps = new ArrayList<DataFlowElementMap>();
+			dataFlowElementMaps = new ArrayList<>();
 			currentMap = null;
 	    }
 	    
@@ -329,7 +329,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	String lastNode = null;
 	    	
 	    	
-	    	List<DataFlowElement> dataFlowElements = new ArrayList<DataFlowElement>();
+	    	List<DataFlowElement> dataFlowElements = new ArrayList<>();
 	    	
 	    	for (DataFlowElementMap dataFlowElementMap : dataFlowElementMaps) {
 	    		
@@ -486,7 +486,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			}
 			int number = getNumber(strippedNumbers);
 			
-			if (functionName != null && argument != null) {
+			if (argument != null) {
 				
 				if (SPECIAL_REGEX_MAP.containsKey(functionName)) {
 					parameter = getRegexResult(line,SPECIAL_REGEX_MAP.get(functionName));

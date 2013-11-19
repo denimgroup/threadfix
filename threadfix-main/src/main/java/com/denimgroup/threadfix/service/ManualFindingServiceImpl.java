@@ -28,9 +28,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
-import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
-import com.denimgroup.threadfix.service.translator.DefaultTranslator;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
@@ -152,8 +150,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		if (!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
 		} else {
-			String path = new DefaultTranslator(MergeConfigurationGenerator.generateConfiguration(
-					scan.getApplication(), scan), scan).getUrlPath(finding);
+			String path = finding.getSurfaceLocation().getPath();
 			if (path != null
 					&& scan.getApplication().getProjectRoot() != null
 					&& scan.getApplication().getProjectRoot().toLowerCase() != null
@@ -224,7 +221,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		Scan scan = new Scan();
 		scan.setApplication(application);
 
-		List<Finding> findingList = new ArrayList<Finding>();
+		List<Finding> findingList = new ArrayList<>();
 		scan.setFindings(findingList);
 
 		scan.setNumberNewVulnerabilities(0);

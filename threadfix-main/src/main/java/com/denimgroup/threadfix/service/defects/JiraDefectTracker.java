@@ -156,7 +156,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	private List<String> getNamesFromList(String path) {
 		String result = RestUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		
 		if (result != null) {
 			JSONArray returnArray = RestUtils.getJSONArray(result);
@@ -182,7 +182,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		JSONArray returnArray = RestUtils.getJSONArray(result);
 		
-		Map<String,String> nameFieldMap = new HashMap<String,String>();
+		Map<String,String> nameFieldMap = new HashMap<>();
 		
 		for (int i = 0; i < returnArray.length(); i++) {
 			try {
@@ -298,18 +298,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getProjectId() == null)
 			setProjectId(getProjectIdByName());
 		List<String> components = getNamesFromList("project/" + projectId + "/components");
-		List<String> blankList = Arrays.asList(new String[] {"-"});
-		List<String> statusList = Arrays.asList(new String[] {"Open"});
+		List<String> blankList = Arrays.asList("-");
+		List<String> statusList = Arrays.asList("Open");
 		List<String> priorities = getNamesFromList("priority");
 		
 		if (components == null || components.isEmpty()) {
 			components = Arrays.asList("-");
 		}
 		
-		ProjectMetadata data = new ProjectMetadata(components, blankList, 
+		return new ProjectMetadata(components, blankList,
 				blankList, statusList, priorities);
-		
-		return data;
 	}
 
 	@Override
@@ -374,7 +372,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	@Override
 	public Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList) {
 		
-		Map<Defect,Boolean> returnMap = new HashMap<Defect,Boolean>();
+		Map<Defect,Boolean> returnMap = new HashMap<>();
 		
 		if (defectList != null && defectList.size() != 0) {
 			log.info("Updating JIRA defect status for " + defectList.size() + " defects.");
@@ -406,7 +404,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (result != null) {
 			try {
 				JSONObject resultObject = new JSONObject(result);
-				if (resultObject != null && resultObject.getJSONObject("fields") != null 
+				if (resultObject.getJSONObject("fields") != null
 						&& resultObject.getJSONObject("fields").getJSONObject("status") != null
 						&& resultObject.getJSONObject("fields").getJSONObject("status").getString("name") != null) {
 					
@@ -464,7 +462,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			
 		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
 		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword());
-		List<Defect> defectList = new ArrayList<Defect>();
+		List<Defect> defectList = new ArrayList<>();
 		try {
 		String str = RestUtils.getJSONObject(result).getString("issues");
 		

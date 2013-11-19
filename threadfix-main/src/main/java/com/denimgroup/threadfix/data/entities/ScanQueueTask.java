@@ -212,7 +212,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	public void addScanStatus(ScanStatus status) {
 		if(this.scanStatuses == null) {
-			this.scanStatuses = new ArrayList<ScanStatus>();
+			this.scanStatuses = new ArrayList<>();
 		}
 		this.scanStatuses.add(status);
 	}

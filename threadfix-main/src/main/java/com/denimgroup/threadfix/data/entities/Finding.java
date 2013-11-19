@@ -44,6 +44,7 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.InformationSourceType;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "Finding")
@@ -351,9 +352,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 				}
 			}
 
+            @NotNull
 			@Override
 			public FrameworkType guessFrameworkType() {
-				return null;
+				return FrameworkType.NONE;
 			}
 			
 		};

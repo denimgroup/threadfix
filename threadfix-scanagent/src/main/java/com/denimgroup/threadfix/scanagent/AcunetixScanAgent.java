@@ -37,17 +37,19 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class AcunetixScanAgent extends AbstractScanAgent {
 	
 	static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
-	private String acunetixExecutablePath;
+	@NotNull
+    private String acunetixExecutablePath;
 	private String loginSeqDir;
-
+    @NotNull
 	private static AcunetixScanAgent instance = null;
 	private AcunetixScanAgent() {
 	}
-	public static AcunetixScanAgent getInstance(Scanner scanner, String workDir, ServerConduit serverConduit) {
+	public static AcunetixScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
 		if(instance == null) {
 			instance = new AcunetixScanAgent();
 		}
@@ -59,14 +61,14 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	}
 	
 	@Override
-	public boolean readConfig(Configuration config) {
+	public boolean readConfig(@NotNull Configuration config) {
 		boolean retVal = false;
 		this.loginSeqDir = config.getString(ScannerType.ACUNETIX_WVS.getShortName() + ".loginSeqDir");
 		return retVal;
 	}
 
-	@Override
-	public File doTask(TaskConfig config) {
+    @Override
+	public File doTask(@NotNull TaskConfig config) {
 		
 		File retVal = null;
 		
@@ -108,7 +110,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		return retVal;
 	}
 	
-	private String[] setupArgs(TaskConfig config) {
+	private String[] setupArgs(@NotNull TaskConfig config) {
 		log.info("Setting up command-line arguments for Acunetix scan");
 		
 		String acunetixExecutable = this.acunetixExecutablePath + ConfigurationUtils.ACUNETIX_FILES[0];
@@ -138,11 +140,12 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		return args;
 	}
-	public String getAcunetixExecutablePath() {
+	@NotNull
+    public String getAcunetixExecutablePath() {
 		return acunetixExecutablePath;
 	}
 	
-	public void setAcunetixExecutablePath(String acunetixExecutablePath) {
+	public void setAcunetixExecutablePath(@NotNull String acunetixExecutablePath) {
 		this.acunetixExecutablePath = acunetixExecutablePath;
 	}
 	public String getLoginSeqDir() {

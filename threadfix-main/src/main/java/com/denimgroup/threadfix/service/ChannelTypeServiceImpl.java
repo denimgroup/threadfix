@@ -74,11 +74,11 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 	
 	@Override
 	public List<ChannelType> getChannelTypeOptions(Application application) {
-		List<ChannelType> channelTypeList = channelTypeDao.retrieveAll(), editedList = new ArrayList<ChannelType>();
+		List<ChannelType> channelTypeList = channelTypeDao.retrieveAll(), editedList = new ArrayList<>();
 		if (channelTypeList == null)
 			return null;
 		
-		Set<String> doNotIncludeList = new HashSet<String>();
+		Set<String> doNotIncludeList = new HashSet<>();
 		doNotIncludeList.add(ScannerType.SENTINEL.getFullName());
 		doNotIncludeList.add(ScannerType.VERACODE.getFullName());
 		doNotIncludeList.add(ScannerType.QUALYSGUARD_WAS.getFullName());

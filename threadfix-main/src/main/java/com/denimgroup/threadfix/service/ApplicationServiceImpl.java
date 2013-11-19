@@ -121,7 +121,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		if (authenticatedTeamIds == null || authenticatedTeamIds.size() == 0) {
-			return new ArrayList<Application>();
+			return new ArrayList<>();
 		}
 		
 		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);

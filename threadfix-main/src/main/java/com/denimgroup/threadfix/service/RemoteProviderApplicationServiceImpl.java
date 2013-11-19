@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +78,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
+    @NotNull
 	public List<RemoteProviderApplication> loadAllWithTypeId(int id) {
 		return remoteProviderApplicationDao.retrieveAllWithTypeId(id);
 	}
@@ -97,12 +99,9 @@ public class RemoteProviderApplicationServiceImpl implements
 		List<RemoteProviderApplication> appsForType = loadAllWithTypeId(
 														remoteProviderType.getId());
 		
-		if (newApps == null || newApps.size() == 0) {
-			return;
-		} else {
-			
-			Set<String> appIds = new TreeSet<String>();
-			if (appsForType != null && appsForType.size() > 0) {
+		if (newApps != null && newApps.size() != 0) {
+			Set<String> appIds = new TreeSet<>();
+			if (appsForType.size() > 0) {
 				for (RemoteProviderApplication app : appsForType) {
 					if (app == null || app.getNativeId() == null) {
 						continue;
@@ -144,7 +143,7 @@ public class RemoteProviderApplicationServiceImpl implements
 			return null;
 		}
 		
-		if (newApps != null && newApps.size() > 1) {
+		if (newApps.size() > 1) {
 			Collections.sort(newApps,
 				new Comparator<RemoteProviderApplication>() {
 					@Override
@@ -203,7 +202,7 @@ public class RemoteProviderApplicationServiceImpl implements
 
 		List<RemoteProviderApplication> rpApps = application.getRemoteProviderApplications();
 		for (RemoteProviderApplication rpa: rpApps ) {
-			if (rpa.getRemoteProviderType().getId() == remoteProviderApplication.getRemoteProviderType().getId()) {
+			if (rpa.getRemoteProviderType().getId().equals(remoteProviderApplication.getRemoteProviderType().getId())) {
 				return "Application already have Mapping for this Remote Provider Type. Please choose another application.";
 			}
 		}

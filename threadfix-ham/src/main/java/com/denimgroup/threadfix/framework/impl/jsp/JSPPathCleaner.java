@@ -33,13 +33,20 @@ public class JSPPathCleaner extends DefaultPathCleaner {
                 cleanedPath = cleanedPath.replace('\\', '/');
             }
 
-            if (!cleanedPath.startsWith(jspRoot) &&
+            String localRoot = jspRoot;
+
+            if (!cleanedPath.startsWith(localRoot) &&
                     cleanedPath.indexOf("/") != 0) {
                 cleanedPath = "/" + cleanedPath;
             }
 
-            if (cleanedPath.startsWith(jspRoot)) {
-                cleanedPath = cleanedPath.substring(jspRoot.length());
+            if (!cleanedPath.startsWith(localRoot) &&
+                    localRoot.indexOf("/") != 0) {
+                localRoot = "/" + localRoot;
+            }
+
+            if (cleanedPath.startsWith(localRoot)) {
+                cleanedPath = cleanedPath.substring(localRoot.length());
             }
         }
 

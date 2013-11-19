@@ -135,7 +135,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 * @return
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
-		List<Scan> resultList = new ArrayList<Scan>();
+		List<Scan> resultList = new ArrayList<>();
 		for (Scan s: scans) 
 			resultList.add(s);
 		for (int i=0;i<scans.size()-1;i++) {
@@ -214,14 +214,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		if (inputStream == null)
 			return null;
 		
-		List<Scan> scanList = new ArrayList<Scan>();
+		List<Scan> scanList = new ArrayList<>();
 		
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		Collections.sort(scanDateList);
 		
 		for (Calendar d : scanDateList) {
 			date = d;
-			saxFindingList = new ArrayList<Finding>();
+			saxFindingList = new ArrayList<>();
 			for (Finding finding : findingDateStatusMap.keySet()) {
 				List<DateStatus> dateInfo = findingDateStatusMap.get(finding);
 				Collections.sort(dateInfo);
@@ -272,13 +272,13 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	public class WhiteHatSitesParser extends HandlerWithBuilder {
 		
-		public Map<String, String> map = new HashMap<String,String>();
+		public Map<String, String> map = new HashMap<>();
 		
 		private String currentId = null;
 		private boolean grabLabel;
 		
 		public List<RemoteProviderApplication> getApplications() {
-			List<RemoteProviderApplication> apps = new ArrayList<RemoteProviderApplication>();
+			List<RemoteProviderApplication> apps = new ArrayList<>();
 			for (String label : map.keySet()) {
 				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(label);
@@ -346,8 +346,8 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    
 	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = new ArrayList<Calendar>();
-	    		findingDateStatusMap = new HashMap<Finding, List<DateStatus>>();
+	    		scanDateList = new ArrayList<>();
+	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
 	    		map.clear();

@@ -47,6 +47,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -117,7 +118,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * It also wires the appropriate channelType object. Subclasses just need to pass the name of the channel.
 	 * @param channelTypeName
 	 */
-	public AbstractChannelImporter(String channelTypeName) {
+	public AbstractChannelImporter(@NotNull String channelTypeName) {
 		DaoHolder daoHolder = new DaoHolder();
 		
 		this.genericVulnerabilityDao = daoHolder.genericVulnerabilityDao;
@@ -140,20 +141,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected Calendar testDate = null;
 	
 	protected boolean doSAXExceptionCheck = true;
-	
-//	/**
-//	 * This class allows us to use autowired beans in the AbstractChannelImporter constructor.
-//	 */
-//	private static class DaoHolder extends SpringBeanAutowiringSupport {
-//		@Autowired
-//		public ChannelVulnerabilityDao channelVulnerabilityDao;
-//		@Autowired
-//		public ChannelSeverityDao channelSeverityDao;
-//		@Autowired
-//		public ChannelTypeDao channelTypeDao;
-//		@Autowired
-//		public GenericVulnerabilityDao genericVulnerabilityDao;
-//	}
 	
 	@Override
 	public void setChannel(ApplicationChannel applicationChannel) {
@@ -226,8 +213,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * 
 	 */
 	protected void initializeMaps() {
-		channelSeverityMap = new HashMap<String, ChannelSeverity>();
-		channelVulnerabilityMap = new HashMap<String, ChannelVulnerability>();
+		channelSeverityMap = new HashMap<>();
+		channelVulnerabilityMap = new HashMap<>();
 	}
 
 	/**
@@ -363,43 +350,40 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		
 		finding.setSurfaceLocation(location);
 		
-		ChannelVulnerability channelVulnerability = null;
-		if (channelVulnerabilityCode != null) {
-			channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
-			
-			// Create new Vulnerability Map
-			if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null)
-					&& cweCode != null && !cweCode.isEmpty()) {
-				
-				GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
-				if (genericVuln != null) {
-					// Create new Channel Vulnerability
-					if (channelVulnerability == null) {
-						channelVulnerability = new ChannelVulnerability();
-						channelVulnerability.setChannelType(this.channelType);
-						channelVulnerability.setCode(channelVulnerabilityCode);
-						channelVulnerability.setName(channelVulnerabilityCode);
-						channelVulnerability.setFindings(Arrays.asList(finding));
-					}
-					// Create new Vulnerability Map and hook to Channel Vulnerability
-					VulnerabilityMap vulnMap = new VulnerabilityMap();
-					vulnMap.setChannelVulnerability(channelVulnerability);
-					vulnMap.setGenericVulnerability(genericVuln);
-					vulnMap.setMappable(true);
-					channelVulnerability.setVulnerabilityMaps(Arrays.asList(vulnMap));
-					channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
-				}
-			} else if (channelVulnerability == null) {
-				channelVulnerability = new ChannelVulnerability();
-				channelVulnerability.setChannelType(this.channelType);
-				channelVulnerability.setCode(channelVulnerabilityCode);
-				channelVulnerability.setName(channelVulnerabilityCode);
-				channelVulnerability.setFindings(Arrays.asList(finding));
-				channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
-			}
-		}
-		
-		finding.setChannelVulnerability(channelVulnerability);
+		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
+
+        // Create new Vulnerability Map
+        if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null)
+                && cweCode != null && !cweCode.isEmpty()) {
+
+            GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
+            if (genericVuln != null) {
+                // Create new Channel Vulnerability
+                if (channelVulnerability == null) {
+                    channelVulnerability = new ChannelVulnerability();
+                    channelVulnerability.setChannelType(this.channelType);
+                    channelVulnerability.setCode(channelVulnerabilityCode);
+                    channelVulnerability.setName(channelVulnerabilityCode);
+                    channelVulnerability.setFindings(Arrays.asList(finding));
+                }
+                // Create new Vulnerability Map and hook to Channel Vulnerability
+                VulnerabilityMap vulnMap = new VulnerabilityMap();
+                vulnMap.setChannelVulnerability(channelVulnerability);
+                vulnMap.setGenericVulnerability(genericVuln);
+                vulnMap.setMappable(true);
+                channelVulnerability.setVulnerabilityMaps(Arrays.asList(vulnMap));
+                channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
+            }
+        } else if (channelVulnerability == null) {
+            channelVulnerability = new ChannelVulnerability();
+            channelVulnerability.setChannelType(this.channelType);
+            channelVulnerability.setCode(channelVulnerabilityCode);
+            channelVulnerability.setName(channelVulnerabilityCode);
+            channelVulnerability.setFindings(Arrays.asList(finding));
+            channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
+        }
+
+        finding.setChannelVulnerability(channelVulnerability);
 		
 		ChannelSeverity channelSeverity = null;
 		if (channelSeverityCode != null) {
@@ -555,11 +539,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	
 		diskZipFile = new File("temp-zip-file");
 
-		if (diskZipFile == null) {
-			log.warn("The attempt to unpack the zip stream returned null.");
-			return null;
-		}
-		
 		ZipFile zipFile = null;
 		FileOutputStream out = null;
 		try {
@@ -632,7 +611,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			return null;
 		}
 		
-		saxFindingList = new ArrayList<Finding>();
+		saxFindingList = new ArrayList<>();
 				
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		

@@ -63,7 +63,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		}
 		
 		
-		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 		
 		Map<Integer, Set<Permission>> orgMap = null;
 		Map<Integer, Set<Permission>> appMap = null;

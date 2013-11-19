@@ -63,7 +63,7 @@ public class ScanPluginController {
 	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
 	public String doUpdate(Model model, HttpServletRequest request) {
 		log.info("Start updating Channel Vulnerabilities");
-		List<String[]> channelVulnUpdateResults = new ArrayList<String[]>();
+		List<String[]> channelVulnUpdateResults = new ArrayList<>();
 		
 		try {
 			channelVulnUpdateResults = channelVulnerabilityService.updateChannelVulnerabilities();

@@ -29,14 +29,17 @@ import java.io.File;
 import org.apache.commons.configuration.Configuration;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractScanAgent {
-	private String workDir;
-	private ServerConduit serverConduit;
+	@NotNull
+    private String workDir;
+    @NotNull
+    private ServerConduit serverConduit;
 	//	TODO - The was we handle this is pretty gross. And brittle. Reorganize.
 	private int currentTaskId;
 	
-	public void setWorkDir(String workDir) {
+	public void setWorkDir(@NotNull String workDir) {
 		this.workDir = workDir;
 	}
 	
@@ -44,7 +47,7 @@ public abstract class AbstractScanAgent {
 		return(this.workDir);
 	}
 	
-	public void setServerConduit(ServerConduit serverConduit) {
+	public void setServerConduit(@NotNull ServerConduit serverConduit) {
 		this.serverConduit = serverConduit;
 	}
 	
@@ -62,6 +65,6 @@ public abstract class AbstractScanAgent {
 		this.serverConduit.sendStatusUpdate(this.currentTaskId, message);
 	}
 	
-	public abstract boolean readConfig(Configuration config);
-	public abstract File doTask(TaskConfig config);
+	public abstract boolean readConfig(@NotNull Configuration config);
+    public abstract File doTask(@NotNull TaskConfig config);
 }

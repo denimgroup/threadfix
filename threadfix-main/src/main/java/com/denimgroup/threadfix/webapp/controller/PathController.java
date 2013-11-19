@@ -75,7 +75,7 @@ public class PathController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields(new String [] { "projectRoot" });
+		dataBinder.setAllowedFields("projectRoot");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -94,7 +94,7 @@ public class PathController {
 			throw new ResourceNotFoundException();
 		}
 		
-		List<String> pathList = new ArrayList<String>();
+		List<String> pathList = new ArrayList<>();
 		for (Vulnerability vuln : application.getVulnerabilities()) {
 			if (vuln != null && vuln.getFindings() != null) {
 				for (Finding finding : vuln.getFindings()) {
@@ -139,7 +139,7 @@ public class PathController {
 	}
 
 	private List<String> removeDuplicates(List<String> pathList) {
-		List<String> distinctPath = new ArrayList<String>();
+		List<String> distinctPath = new ArrayList<>();
 		for (int i = 0; i < pathList.size(); i++) {
 			int j = 0;
 			for (; j < i; j++) {

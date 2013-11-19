@@ -227,7 +227,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	}
 	
 	public class TagCollector extends DefaultHandler {
-		public List<String> tags = new ArrayList<String>();
+		public List<String> tags = new ArrayList<>();
 		private int index = 0;
 		
 	    @Override

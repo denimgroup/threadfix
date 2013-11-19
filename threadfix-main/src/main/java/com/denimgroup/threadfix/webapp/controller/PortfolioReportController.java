@@ -89,7 +89,7 @@ public class PortfolioReportController {
 		if (org == null) {
 			teams = organizationService.loadAllActive();
 		} else {
-			teams = new ArrayList<Organization>();
+			teams = new ArrayList<>();
 			teams.add(org);
 		}
 		
@@ -107,10 +107,10 @@ public class PortfolioReportController {
 		Integer numberApplications = 0, numberScans = 0, numberApplicationsNeverScanned = 0;
 
 		// Generate the big table
-		List<List<String>> tableContents = new ArrayList<List<String>>();
+		List<List<String>> tableContents = new ArrayList<>();
 		List<String> blankRow = null;
 		
-		List<Boolean> oldArray = new ArrayList<Boolean>();
+		List<Boolean> oldArray = new ArrayList<>();
 		
 		// each time through generate a team row for the Team and 
 		for (Organization team : teams) {
@@ -119,10 +119,10 @@ public class PortfolioReportController {
 			}			
 			
 			List<String> teamRow = null;
-			List<List<String>> appRows = new ArrayList<List<String>>();
+			List<List<String>> appRows = new ArrayList<>();
 			
 			if (team.getActiveApplications() == null || team.getApplications().isEmpty()) {
-				teamRow = Arrays.asList(new String[] { "Team: " + team.getName(), "0", "Never" });
+				teamRow = Arrays.asList("Team: " + team.getName(), "0", "Never");
 				oldArray.add(true);
 			} else {
 				Integer totalScans = 0, lowerBound = null, upperBound = 0;
@@ -145,7 +145,7 @@ public class PortfolioReportController {
 					
 					if (app.getScans() == null || app.getScans().isEmpty()) {
 						numberApplicationsNeverScanned += 1;
-						appRows.add(Arrays.asList(new String[] {app.getName(), criticality, "0", "Never"}));
+						appRows.add(Arrays.asList(app.getName(), criticality, "0", "Never"));
 						oldArray.add(false);
 					} else {
 						totalScans += app.getScans().size();
@@ -157,25 +157,25 @@ public class PortfolioReportController {
 						if (upperBound == null || daysSinceLatestScan > upperBound) {
 							upperBound = daysSinceLatestScan;
 						}
-						appRows.add(Arrays.asList(new String[] {
+						appRows.add(Arrays.asList(
 								app.getName(), 
 								criticality, 
 								String.valueOf(app.getScans().size()), 
 								daysSinceLatestScan.toString()
-							}));
+							));
 						oldArray.add(daysSinceLatestScan > 365);
 					}
 				}
 				
 				if (totalScans == 0 || lowerBound == null || upperBound == null) {
-					teamRow = Arrays.asList(new String[] { "Team: " + team.getName(),"", "0", "Never" });
+					teamRow = Arrays.asList("Team: " + team.getName(),"", "0", "Never" );
 				} else {
 					if (lowerBound.equals(upperBound)) {
-						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
-								lowerBound.toString()});
+						teamRow = Arrays.asList("Team: " + team.getName(),"", totalScans.toString(),
+								lowerBound.toString());
 					} else {
-						teamRow = Arrays.asList(new String[] {"Team: " + team.getName(),"", totalScans.toString(), 
-								lowerBound.toString() + "-" + upperBound.toString()});
+						teamRow = Arrays.asList("Team: " + team.getName(),"", totalScans.toString(),
+								lowerBound.toString() + "-" + upperBound.toString());
 					}
 				}
 				

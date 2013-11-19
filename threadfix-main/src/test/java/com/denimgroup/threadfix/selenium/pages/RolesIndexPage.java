@@ -11,8 +11,8 @@ public class RolesIndexPage extends BasePage {
 
 	private WebElement createNewRoleLink;
 	
-	private List<WebElement> names = new ArrayList<WebElement>();
-	private List<WebElement> editLinks = new ArrayList<WebElement>();
+	private List<WebElement> names = new ArrayList<>();
+	private List<WebElement> editLinks = new ArrayList<>();
 //	private List<WebElement> deleteButtons = new ArrayList<WebElement>();
 
 	public RolesIndexPage(WebDriver webdriver) {

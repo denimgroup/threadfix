@@ -65,7 +65,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	private String username = null;
 	private String password = null;
 	
-	private static final Map<String, String> SEVERITIES_MAP = new HashMap<String, String>();
+	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put("150000", "5");
 		SEVERITIES_MAP.put("150001", "5");
@@ -171,7 +171,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			return null;
 		}
 		
-		List<Scan> scanList = new ArrayList<Scan>();
+		List<Scan> scanList = new ArrayList<>();
 		
 		for (String scanId : scanIds) {
 			inputStream = httpGet(getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId);
@@ -249,7 +249,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		
-		List<String> scanIds = new ArrayList<String>();
+		List<String> scanIds = new ArrayList<>();
 
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
@@ -375,7 +375,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 	private class QualysAppsParser extends HandlerWithBuilder {
 		
-		public List<RemoteProviderApplication> list = new ArrayList<RemoteProviderApplication>();
+		public List<RemoteProviderApplication> list = new ArrayList<>();
 		
 		private boolean getName = false;
 
@@ -407,7 +407,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 	private class QualysScansForAppParser extends HandlerWithBuilder {
 		
-		public List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		public List<Map<String,String>> list = new ArrayList<>();
 		
 		private boolean inWebApp = false;
 		private boolean getName = false;
@@ -458,7 +458,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		    }
 	    	
 	    	if (qName.equals("WasScan")) {
-	    		Map<String, String> map = new HashMap<String, String>();
+	    		Map<String, String> map = new HashMap<>();
 	    		map.put("id", currentId);
 	    		map.put("status", currentStatus);
 	    		map.put("date", currentDate);

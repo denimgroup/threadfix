@@ -72,7 +72,7 @@ public class ChannelType extends BaseEntity {
 			ScannerType.CAT_NET.getFullName(),
 			ScannerType.BRAKEMAN.getFullName() }));
 	
-	public static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ScannerType.SENTINEL.getFullName() });
+	public static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
 	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 
 	private List<ApplicationChannel> applicationChannels;

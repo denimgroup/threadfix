@@ -136,7 +136,7 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		 
 	    		 if ("SOURCE_LINE_GENERATED_AT".equals(atts.getValue("role"))) {
 	    			 getDataFlowElements = true;
-	    			 dataFlowElements = new LinkedList<DataFlowElement>();
+	    			 dataFlowElements = new LinkedList<>();
 	    			 dataFlowElements.add(getDataFlowElement(atts,0));
 	    			 dataFlowPosition = 1;
 	    		 }

@@ -35,7 +35,7 @@ public class PathTree {
 	public PathTree(Node root) {
 		this.root = root;
 		depth = 0;
-		printout = new ArrayList<List<String>>();
+		printout = new ArrayList<>();
 	}
 
 	public Node getRoot() {
@@ -73,7 +73,7 @@ public class PathTree {
 		editedPath = editedPath.trim();
 		editedPath = editedPath.replaceAll("^[\\\\|/]", "");
 		editedPath = editedPath.replaceAll("[\\\\|/]$", "");
-		List<String> pathList = new ArrayList<String>();
+		List<String> pathList = new ArrayList<>();
 		String[] pathArray = editedPath.split("[\\\\|/]");
 		Node node = root;
 		for (int i = 0; i < pathArray.length; i++) {

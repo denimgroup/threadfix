@@ -128,7 +128,7 @@ public class DocumentServiceImpl implements DocumentService {
 
 			List<Document> appDocs = application.getDocuments();
 			if (appDocs == null) {
-				appDocs = new ArrayList<Document>();
+				appDocs = new ArrayList<>();
 			}
 			appDocs.add(doc);
 			
@@ -174,7 +174,7 @@ public class DocumentServiceImpl implements DocumentService {
 
 			List<Document> appDocs = vulnerability.getDocuments();
 			if (appDocs == null) 
-				appDocs = new ArrayList<Document>();
+				appDocs = new ArrayList<>();
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);

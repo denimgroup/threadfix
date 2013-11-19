@@ -85,29 +85,29 @@ public class Scan extends BaseEntity {
 	private Integer totalNumberFindingsMergedInScan = null;
 	
 	// These are for determining what type of scanner was used
-	private static final List<String> DYNAMIC_TYPES = Arrays.asList(new String[]{ 
-			ScannerType.ACUNETIX_WVS.getFullName(),
-			ScannerType.APPSCAN_ENTERPRISE.getFullName(), 
-			ScannerType.ARACHNI.getFullName(), 
-			ScannerType.BURPSUITE.getFullName(), 
-			ScannerType.NESSUS.getFullName(),
-			ScannerType.NETSPARKER.getFullName(), 
-			ScannerType.NTO_SPIDER.getFullName(), 
-			ScannerType.SKIPFISH.getFullName(), 
-			ScannerType.W3AF.getFullName(),
-			ScannerType.WEBINSPECT.getFullName(), 
-			ScannerType.ZAPROXY.getFullName(), 
-			ScannerType.QUALYSGUARD_WAS.getFullName(), 
-			ScannerType.APPSCAN_DYNAMIC.getFullName()	});
+	private static final List<String> DYNAMIC_TYPES = Arrays.asList(
+            ScannerType.ACUNETIX_WVS.getFullName(),
+            ScannerType.APPSCAN_ENTERPRISE.getFullName(),
+            ScannerType.ARACHNI.getFullName(),
+            ScannerType.BURPSUITE.getFullName(),
+            ScannerType.NESSUS.getFullName(),
+            ScannerType.NETSPARKER.getFullName(),
+            ScannerType.NTO_SPIDER.getFullName(),
+            ScannerType.SKIPFISH.getFullName(),
+            ScannerType.W3AF.getFullName(),
+            ScannerType.WEBINSPECT.getFullName(),
+            ScannerType.ZAPROXY.getFullName(),
+            ScannerType.QUALYSGUARD_WAS.getFullName(),
+            ScannerType.APPSCAN_DYNAMIC.getFullName());
 	
-	private static final List<String> STATIC_TYPES = Arrays.asList(new String[]{ 
-			ScannerType.APPSCAN_SOURCE.getFullName(),
-			ScannerType.FINDBUGS.getFullName(), 
-			ScannerType.FORTIFY.getFullName(), 
-			ScannerType.VERACODE.getFullName(), 
-			ScannerType.CAT_NET.getFullName(),
-			ScannerType.BRAKEMAN.getFullName()	});
-	private static final List<String> MIXED_TYPES = Arrays.asList(new String[]{ ScannerType.SENTINEL.getFullName() });
+	private static final List<String> STATIC_TYPES = Arrays.asList(
+            ScannerType.APPSCAN_SOURCE.getFullName(),
+            ScannerType.FINDBUGS.getFullName(),
+            ScannerType.FORTIFY.getFullName(),
+            ScannerType.VERACODE.getFullName(),
+            ScannerType.CAT_NET.getFullName(),
+            ScannerType.BRAKEMAN.getFullName());
+	private static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
 	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 	
 	@Size(max = 255, message = "{errors.maxlength} 255.")
@@ -334,7 +334,7 @@ public class Scan extends BaseEntity {
 	@Transient
 	@JsonIgnore
 	public List<Integer> getReportList() {
-		List<Integer> integerList = new ArrayList<Integer>();
+		List<Integer> integerList = new ArrayList<>();
 		integerList.add(getId());
 		integerList.add(getNumberTotalVulnerabilities());
 		integerList.add(getNumberNewVulnerabilities());

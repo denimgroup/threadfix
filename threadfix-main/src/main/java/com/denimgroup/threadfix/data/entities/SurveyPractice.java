@@ -52,7 +52,7 @@ public class SurveyPractice extends BaseEntity {
 	private SurveySection surveySection;
 	private SurveyRanking surveyRanking;
 
-	private List<SurveyObjective> objectives = new ArrayList<SurveyObjective>();
+	private List<SurveyObjective> objectives = new ArrayList<>();
 
 	@Override
 	public void setId(Integer id) {
@@ -105,7 +105,7 @@ public class SurveyPractice extends BaseEntity {
 
 	@Transient
 	public Map<Integer, SurveyObjective> getObjectivesMap() {
-		HashMap<Integer, SurveyObjective> map = new HashMap<Integer, SurveyObjective>();
+		HashMap<Integer, SurveyObjective> map = new HashMap<>();
 
 		for (SurveyObjective objective : getSurveyObjectives()) {
 			map.put(objective.getLevelNumber(), objective);

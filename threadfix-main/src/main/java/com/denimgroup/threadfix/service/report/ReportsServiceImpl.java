@@ -103,7 +103,6 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	/**
 	 * @param sessionFactory
-	 * @param organizationService
 	 */
 	@Autowired
 	public ReportsServiceImpl(SessionFactory sessionFactory, ChannelTypeDao channelTypeDao,
@@ -147,7 +146,7 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("appId", applicationIdList);
 		String path = request.getSession().getServletContext().getRealPath("/");
 		
@@ -180,7 +179,7 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 
 		File file = new File(path + "jasper/" + reportFormat.getFileName());
-		InputStream inputStream = null;
+		InputStream inputStream;
 		
 		if (parameters != null) {
 			List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
@@ -218,7 +217,7 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 
 		StringBuffer report = new StringBuffer();
-		JRExporter exporter = null;
+		JRExporter exporter;
 
         switch (format) {
             case "CSV":
@@ -249,7 +248,7 @@ public class ReportsServiceImpl implements ReportsService {
 			JasperReport jasperReport = JasperCompileManager
 					.compileReport(jasperDesign);
 
-			JasperPrint jasperPrint = null;
+			JasperPrint jasperPrint;
 			
 			if (reportFormat == ReportFormat.TRENDING) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
@@ -330,8 +329,6 @@ public class ReportsServiceImpl implements ReportsService {
 	 * This method determines how the image map is stored. Down the road we may want
 	 * to look at ways to use this to cache images for quick retrieval later.
 	 * 
-	 * @param fileName
-	 * @param applicationIdList
 	 * @return a key for the images map
 	 */
 	private String getMapKey(String fileName, List<Integer> applicationIdList) {
@@ -371,7 +368,7 @@ public class ReportsServiceImpl implements ReportsService {
 				break;
 			}
 		}
-		if (scanList == null || scanList.isEmpty() || !containsVulns ) {
+		if (scanList.isEmpty() || !containsVulns ) {
 			log.info("Unable to fill Jasper Report - no scans were found.");
 			return null;
 		} else {
@@ -383,8 +380,8 @@ public class ReportsServiceImpl implements ReportsService {
 	private String getString(InputStream inputStream) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		
-		String line = null;
-		StringBuffer buffer = new StringBuffer();
+		String line;
+		StringBuilder buffer = new StringBuilder();
 		try {
 			while ((line = bufferedReader.readLine()) != null) {
 				buffer.append(line);
@@ -413,7 +410,7 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private List<ChannelType> getChannelTypesInUse(List<Integer> applicationIdList) {
 		List<ChannelType> channels = channelTypeDao.retrieveAll();
-		List<ChannelType> returnChannels = new ArrayList<ChannelType>();
+		List<ChannelType> returnChannels = new ArrayList<>();
 		
 		for (ChannelType channel : channels) {
 			if (channel.getChannels() != null && channel.getChannels().size() != 0) {
@@ -434,8 +431,8 @@ public class ReportsServiceImpl implements ReportsService {
 	// We don't want to count multiple findings that merged to one vuln from the same channel
 	// it skews the numbers.
 	private Set<Integer> getFindingsToSkip(List<Integer> applicationIdList) {
-		Set<Integer> findingIdsToSkip = new HashSet<Integer>();
-		Set<Integer> vulnSeenChannels = new HashSet<Integer>();
+		Set<Integer> findingIdsToSkip = new HashSet<>();
+		Set<Integer> vulnSeenChannels = new HashSet<>();
 		
 		// MySQL doesn't work if there are no elements here.
 		findingIdsToSkip.add(0);
@@ -541,17 +538,17 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 	
 	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
-		List<Integer> applicationIdList = new ArrayList<Integer>();
+		List<Integer> applicationIdList = new ArrayList<>();
 		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
 
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = null;
+				List<Application> appList;
 				
 				if (PermissionUtils.hasGlobalReadAccess()) {
 					appList = applicationDao.retrieveAllActive();
 				} else if (teamIds == null || teamIds.size() == 0) {
-					appList = new ArrayList<Application>();
+					appList = new ArrayList<>();
 				} else {
 					appList = applicationDao.retrieveAllActiveFilter(teamIds);
 				}
@@ -637,7 +634,7 @@ public class ReportsServiceImpl implements ReportsService {
 					continue;
 				}
 				
-				List<String> tempList = new ArrayList<String>(columnCount);
+				List<String> tempList = new ArrayList<>(columnCount);
 				
 				String falsePositive = vuln.getIsFalsePositive() ? "FP" : "OPEN";
 				if (vuln.getHidden()) {
@@ -692,8 +689,8 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 	
 	private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
-		List<List<String>> rowParamsList = new ArrayList<List<String>>();
-		List<Application> applicationList = new ArrayList<Application>();
+		List<List<String>> rowParamsList = new ArrayList<>();
+		List<Application> applicationList = new ArrayList<>();
 
 		for (int id : applicationIdList) {
 			Application application = applicationDao.retrieveById(id);
@@ -731,7 +728,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 		List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
 		String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
-		data.append("Team: " + teamName +" \n");
+		data.append("Team: ").append(teamName).append(" \n");
 		String appName = ""; 
 		if (applicationIdList.size() == 1) {
 			Application app = applicationDao.retrieveById(applicationIdList.get(0));
@@ -741,15 +738,15 @@ public class ReportsServiceImpl implements ReportsService {
 		} else {
 			appName = "All";
 		}
-		data.append("Application: " + appName +" \n \n");
+		data.append("Application: ").append(appName).append(" \n \n");
 		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID \n");
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
 				if (row.get(i) != null) str = row.get(i).replace(",", " ");
 				if (i<row.size()-1)
-					data.append(str + ",");
-				else data.append(str + " \n");
+					data.append(str).append(",");
+				else data.append(str).append(" \n");
 			}
 		}
 		return data;

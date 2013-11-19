@@ -121,18 +121,16 @@ public class OrganizationRestController extends RestController {
 		}
 		
 		Application application = new Application();
-		if (name != null) {
-			application.setOrganization(organization);
-			application.setName(name.trim());
-			if (url != null) {
-				application.setUrl(url.trim());
-			}
-			// TODO include this as a parameter
-			application.setApplicationCriticality(
-					applicationCriticalityService.loadApplicationCriticality(
-							ApplicationCriticality.LOW));
-		}
-		
+        application.setOrganization(organization);
+        application.setName(name.trim());
+        if (url != null) {
+            application.setUrl(url.trim());
+        }
+        // TODO include this as a parameter
+        application.setApplicationCriticality(
+                applicationCriticalityService.loadApplicationCriticality(
+                        ApplicationCriticality.LOW));
+
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application);
 			log.info("Application creation was successful. Returning application.");

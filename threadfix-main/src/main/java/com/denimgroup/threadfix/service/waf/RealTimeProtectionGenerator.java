@@ -86,7 +86,7 @@ public abstract class RealTimeProtectionGenerator {
 	// These maps allow you to easily add new types of vulnerabilities if they :
 	// 1. Follow one of the patterns
 	// 2. Have a known payload
-	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<>();
 	static {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION);
@@ -101,7 +101,7 @@ public abstract class RealTimeProtectionGenerator {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION);
 	}
 	
-	protected static final Map<String, String> MESSAGE_MAP = new HashMap<String, String>();
+	protected static final Map<String, String> MESSAGE_MAP = new HashMap<>();
 	static {
 		MESSAGE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "Cross-site Scripting attempt");
 		MESSAGE_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, "SQL Injection attempt");
@@ -212,13 +212,13 @@ public abstract class RealTimeProtectionGenerator {
 	 */
 	public List<WafRule> generateRules(Waf waf, WafRuleDirective directive) {
 		if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0)
-			return new ArrayList<WafRule>();
+			return new ArrayList<>();
 	
 		List<Application> applications = waf.getApplications();
 		
 		if (applications == null) {
 			log.warn("No Applications found, no rules could be generated.");
-			return new ArrayList<WafRule>();
+			return new ArrayList<>();
 		}
 
 		log.info("About to generate rules for the WAF " + StringEscapeUtils.escapeHtml(waf.getName()) + 
@@ -231,7 +231,7 @@ public abstract class RealTimeProtectionGenerator {
 		}
 		log.info("This will involve " + numVulns + " vulnerabilities.");
 
-		List<WafRule> allRules = new ArrayList<WafRule>();
+		List<WafRule> allRules = new ArrayList<>();
 
 		for (Application app : applications) {
 			if (app == null || !app.isActive())
@@ -266,7 +266,7 @@ public abstract class RealTimeProtectionGenerator {
 		log.info("Generating rules for "
 				+ application.getVulnerabilities().size() + " vulnerabilities");
 
-		List<WafRule> rules = new ArrayList<WafRule>();
+		List<WafRule> rules = new ArrayList<>();
 
 		for (Vulnerability vuln : application.getVulnerabilities()) {
 			if (vuln == null || vuln.getIsFalsePositive())

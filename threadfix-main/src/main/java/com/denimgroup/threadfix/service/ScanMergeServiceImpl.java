@@ -43,7 +43,6 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.plugin.scanner.ChannelImporterFactory;
 import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
-import com.denimgroup.threadfix.service.merge.MergeConfigurationGenerator;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
 
 // TODO figure out this Transactional stuff
@@ -126,9 +125,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	public void updateVulnerabilities(Application application) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
 		
-		FindingMatcher matcher = new FindingMatcher(
-				MergeConfigurationGenerator.generateConfiguration(application, null),
-				null);
+		FindingMatcher matcher = new FindingMatcher(null);
 
 		if (vulnerabilities != null) {
 			for (int i = 0; i < vulnerabilities.size(); i++) {

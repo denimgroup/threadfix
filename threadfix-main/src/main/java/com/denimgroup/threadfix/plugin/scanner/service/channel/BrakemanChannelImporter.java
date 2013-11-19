@@ -38,7 +38,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<String, Integer>();
+	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put("Cross Site Scripting", 3);
 		SEVERITIES_MAP.put("Response Splitting", 2);
@@ -64,7 +64,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	}
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> CONFIDENCE_MAP = new HashMap<String, Integer>();
+	private static final Map<String, Integer> CONFIDENCE_MAP = new HashMap<>();
 	static {
 		CONFIDENCE_MAP.put("High", 2);
 		CONFIDENCE_MAP.put("Medium", 1);
@@ -215,7 +215,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 									}
 								}
 							}
-							finding.setDataFlowElements(Arrays.asList(new DataFlowElement[] {element}));
+							finding.setDataFlowElements(Arrays.asList(element));
 						}
 						
 						scan.getFindings().add(finding);
@@ -271,22 +271,20 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		if (jsonString.trim().startsWith("[")) {
 			try {
 				JSONArray array = new JSONArray(jsonString);
-				if (array != null) {
-					done = true;
-					log.info("Scan is using the old JSON output format.");
-					if (array.length() > 0) {
-						hasFindings = true;
-						JSONObject oneFinding = array.getJSONObject(0);
-						if (oneFinding != null) {
-							correctFormat = oneFinding.get("location") != null &&
-											oneFinding.get("file") != null &&
-											oneFinding.get("message") != null &&
-											oneFinding.get("confidence") != null &&
-											oneFinding.get("code") != null &&
-											oneFinding.get("warning_type") != null;
-						}
-					}
-				}
+                done = true;
+                log.info("Scan is using the old JSON output format.");
+                if (array.length() > 0) {
+                    hasFindings = true;
+                    JSONObject oneFinding = array.getJSONObject(0);
+                    if (oneFinding != null) {
+                        correctFormat = oneFinding.get("location") != null &&
+                                        oneFinding.get("file") != null &&
+                                        oneFinding.get("message") != null &&
+                                        oneFinding.get("confidence") != null &&
+                                        oneFinding.get("code") != null &&
+                                        oneFinding.get("warning_type") != null;
+                    }
+                }
 			} catch (JSONException e) {
 				log.warn("Encountered JSONException.", e);
 			}
@@ -297,28 +295,26 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		if (!done && jsonString.trim().startsWith("{")) {
 			try {
 				JSONObject object = new JSONObject(jsonString);
-				if (object != null) {
-					log.info("Scan is using the new JSON output format.");
-					
-					testDate = getDate(jsonString);
-					hasDate = testDate != null;
-					
-					JSONArray array = object.getJSONArray("warnings");
-					
-					if (array.length() > 0) {
-						hasFindings = true;
-						JSONObject oneFinding = array.getJSONObject(0);
-						if (oneFinding != null) {
-							correctFormat = oneFinding.get("location") != null &&
-											oneFinding.get("file") != null &&
-											oneFinding.get("message") != null &&
-											oneFinding.get("confidence") != null &&
-											oneFinding.get("code") != null &&
-											oneFinding.get("user_input") != null &&
-											oneFinding.get("line") != null &&
-											oneFinding.get("warning_type") != null;
-						}
-					}
+                log.info("Scan is using the new JSON output format.");
+
+                testDate = getDate(jsonString);
+                hasDate = testDate != null;
+
+                JSONArray array = object.getJSONArray("warnings");
+
+                if (array.length() > 0) {
+                    hasFindings = true;
+                    JSONObject oneFinding = array.getJSONObject(0);
+                    if (oneFinding != null) {
+                        correctFormat = oneFinding.get("location") != null &&
+                                        oneFinding.get("file") != null &&
+                                        oneFinding.get("message") != null &&
+                                        oneFinding.get("confidence") != null &&
+                                        oneFinding.get("code") != null &&
+                                        oneFinding.get("user_input") != null &&
+                                        oneFinding.get("line") != null &&
+                                        oneFinding.get("warning_type") != null;
+                    }
 				}
 			} catch (JSONException e) {
 				log.warn("Encountered JSONException.", e);

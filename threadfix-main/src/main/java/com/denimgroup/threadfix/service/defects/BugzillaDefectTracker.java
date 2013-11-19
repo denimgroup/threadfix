@@ -45,13 +45,13 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public class BugzillaDefectTracker extends AbstractDefectTracker {
 		
-	private static Map<String, String> versionMap = new HashMap<String,String>();
+	private static Map<String, String> versionMap = new HashMap<>();
 	
-	private List<String> statuses = new ArrayList<String>();
-	private List<String> components = new ArrayList<String>();
-	private List<String> severities = new ArrayList<String>();
-	private List<String> versions = new ArrayList<String>();
-	private List<String> priorities = new ArrayList<String>();
+	private List<String> statuses = new ArrayList<>();
+	private List<String> components = new ArrayList<>();
+	private List<String> severities = new ArrayList<>();
+	private List<String> versions = new ArrayList<>();
+	private List<String> priorities = new ArrayList<>();
 
 	@Override
 	public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
@@ -92,7 +92,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return null;
 			}
 
-			Map<String, String> bugMap = new HashMap<String, String>();
+			Map<String, String> bugMap = new HashMap<>();
 			bugMap.put("product", projectName);
 			bugMap.put("component", metadata.getComponent());
 			bugMap.put("summary", metadata.getDescription());
@@ -142,7 +142,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	@Override
 	public Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList) {
 
-		Map<String, Defect> idDefectMap = new HashMap<String, Defect>();
+		Map<String, Defect> idDefectMap = new HashMap<>();
 		
 		for (Defect defect : defectList) {
 			if (defect != null && defect.getNativeId() != null) {
@@ -150,13 +150,13 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			}
 		}
 		
-		Map<String, Object[]> queryMap = new HashMap<String, Object[]>();
+		Map<String, Object[]> queryMap = new HashMap<>();
 		queryMap.put("ids", idDefectMap.keySet().toArray(
 				new Object[idDefectMap.keySet().size()]));
 
 		Object queryResult = executeMethod("Bug.get", new Object[] { queryMap });
 		
-		Map<Defect, Boolean> returnList = new HashMap<Defect, Boolean>();
+		Map<Defect, Boolean> returnList = new HashMap<>();
 
 		if (queryResult instanceof HashMap) {
 			Map<String,Object[]> returnedData = (HashMap<String, Object[]>) queryResult;
@@ -229,7 +229,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			return;
 		}
 		
-		Map<String, String> bugMap = new HashMap<String, String>();
+		Map<String, String> bugMap = new HashMap<>();
 		bugMap.put("field", "bug_severity");
 		Object[] bugArray = new Object[] { bugMap };
 		Object createResult = executeMethod("Bug.legal_values", bugArray);
@@ -251,13 +251,13 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		
 		projectId = getProjectIdByName();
 		
-		Map<String, String> queryMap = new HashMap<String, String>();
+		Map<String, String> queryMap = new HashMap<>();
 		queryMap.put("field", "version");
 		queryMap.put("product_id", projectId);
 		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
 		versions.addAll(getValues(createResult));
 		
-		queryMap = new HashMap<String, String>();
+		queryMap = new HashMap<>();
 		queryMap.put("field", "component");
 		queryMap.put("product_id", projectId);
 		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
@@ -272,7 +272,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	 * @return
 	 */
 	private List<String> getValues(Object rpcResponse) {
-		List<String> responseList = new ArrayList<String>();
+		List<String> responseList = new ArrayList<>();
 		if (rpcResponse != null && rpcResponse instanceof HashMap) {
 			Map<?, ?> returnedData = (HashMap<?, ?>) rpcResponse;
 			Object componentsObject = returnedData.get("values");
@@ -321,7 +321,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	 */
 	private String login(XmlRpcClient client) {
 
-		Map<String, String> loginMap = new HashMap<String, String>();
+		Map<String, String> loginMap = new HashMap<>();
 		loginMap.put("login", this.username);
 		loginMap.put("password", this.password);
 		loginMap.put("rememberlogin", "Bugzilla_remember");
@@ -427,7 +427,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 			StringBuffer buffer = new StringBuffer();
 			
-			Map<String,Object[]> params = new HashMap<String, Object[]>();
+			Map<String,Object[]> params = new HashMap<>();
 			params.put("ids", ids);
 
 			Map<String,Object[]> productMap = (HashMap<String, Object[]>) client.execute(
@@ -494,7 +494,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 					"Product.get_enterable_products", new Object[] {});
 			Object[] ids = productsMap.get("ids");
 
-			Map<String,Object[]> params = new HashMap<String, Object[]>();
+			Map<String,Object[]> params = new HashMap<>();
 			params.put("ids", ids);
 
 			Map<String, Object[]> productMap = (HashMap<String, Object[]>) client.execute(
@@ -532,7 +532,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		}
 		
 		// get Product info
-		Map<String, Object[]> bugMap = new HashMap<String, Object[]>();
+		Map<String, Object[]> bugMap = new HashMap<>();
 		Object[] names = new Object[] { projectName };
 		bugMap.put("names", names);
 		Object[] bugArray = new Object[] { bugMap };
@@ -612,7 +612,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		log.info("Checking Bugzilla URL.");
 		XmlRpcClient client = initializeClient();
 		
-		Map<String, String> loginMap = new HashMap<String, String>();
+		Map<String, String> loginMap = new HashMap<>();
 		loginMap.put("login", " ");
 		loginMap.put("password", " ");
 		loginMap.put("rememberlogin", "Bugzilla_remember");
@@ -683,8 +683,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			return null;
 		}		
 		
-		List<Defect> returnList = new ArrayList<Defect>();
-		Map<String, String> queryMap = new HashMap<String, String>();
+		List<Defect> returnList = new ArrayList<>();
+		Map<String, String> queryMap = new HashMap<>();
 		queryMap.put("product", projectName);
 
 		Object queryResult = executeMethod("Bug.search", new Object[] { queryMap });

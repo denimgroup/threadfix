@@ -52,8 +52,10 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 		} else {
 			addToMap(partialMappings);
 		}
+
+
 	}
-	
+
 	private void addToMap(@NotNull Iterable<PartialMapping> partialMappings) {
 		for (PartialMapping partialMapping : partialMappings) {
 			if (isComplete(partialMapping)) {
@@ -86,7 +88,8 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	private boolean isComplete(@Nullable PartialMapping mapping) {
 		return mapping != null &&
 				mapping.getDynamicPath() != null &&
-				mapping.getStaticPath() != null;
+				mapping.getStaticPath() != null &&
+                !mapping.getDynamicPath().equals(mapping.getStaticPath());
 	}
 
     @Override

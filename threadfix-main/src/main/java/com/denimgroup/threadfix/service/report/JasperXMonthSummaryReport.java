@@ -38,7 +38,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	private List<List<Scan>> normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
 	private int index = 0, numMonths = 0;
-	private Map<String, Object> resultsHash = new HashMap<String, Object>();
+	private Map<String, Object> resultsHash = new HashMap<>();
 	
 	private ScanDao scanDao = null;
 	

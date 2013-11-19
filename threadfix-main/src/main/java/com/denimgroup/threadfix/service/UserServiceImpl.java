@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public Set<Permission> getGlobalPermissions(Integer userId) {
-		Set<Permission> returnList = new HashSet<Permission>();
+		Set<Permission> returnList = new HashSet<>();
 
 		// for now
 		User user = loadUser(userId);
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
 		
 		Set<Permission> permissions = getGlobalPermissions(user.getId());
 
-		if (canDelete && permissions.contains(Permission.CAN_MANAGE_USERS) && 
+		if (permissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!userDao.canRemovePermissionFromUser(user.getId(), "canManageUsers")) {
 			canDelete = false;
 		}
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
 		boolean canSetRoles = true;
 		
 		Set<Permission> oldPermissions = getGlobalPermissions(userId);
-		Set<Permission> newPermissions = new HashSet<Permission>();
+		Set<Permission> newPermissions = new HashSet<>();
 		
 		if (objectIds != null) {
 			for (Integer integer : objectIds) {
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		
-		if (canSetRoles && oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
+		if (oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!newPermissions.contains(Permission.CAN_MANAGE_USERS) &&
 				!userDao.canRemovePermissionFromUser(userId, "canManageUsers")) {
 			canSetRoles = false;
@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
 	public Map<Integer, Set<Permission>> getApplicationPermissions(
 			Integer userId) {
 		
-		Map<Integer, Set<Permission>> applicationPermissions = new HashMap<Integer,Set<Permission>>();
+		Map<Integer, Set<Permission>> applicationPermissions = new HashMap<>();
 		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
 		
 		if (maps != null) {
@@ -251,7 +251,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(readOnly = true)
 	public Map<Integer, Set<Permission>> getOrganizationPermissions(
 			Integer userId) {
-		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<Integer,Set<Permission>>();
+		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<>();
 		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
 		
 		if (maps != null) {

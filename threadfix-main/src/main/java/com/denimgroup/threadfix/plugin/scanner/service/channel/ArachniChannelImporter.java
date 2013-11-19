@@ -60,7 +60,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	
 	// Since the severity mappings are static and not included in the XML output,
 	// these have been reverse engineered from the code
-	private static Map<String, String> severityMap = new HashMap<String, String>();
+	private static Map<String, String> severityMap = new HashMap<>();
 	static {
 		severityMap.put("Allowed HTTP methods", "INFORMATIONAL");
 		severityMap.put("A backdoor file exists on the server.", "HIGH");

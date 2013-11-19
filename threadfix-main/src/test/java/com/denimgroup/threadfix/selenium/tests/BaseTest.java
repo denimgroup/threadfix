@@ -116,8 +116,8 @@ public abstract class BaseTest {
 			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 			driver = new InternetExplorerDriver(capabilities); 
 		}
-//		driver = new FirefoxDriver();
 	}
+
 	
 	@Before
 	public void init() {
@@ -156,11 +156,11 @@ public abstract class BaseTest {
 	protected <T> Set<Set<T>> powerSet(T[] items) {
 		int count = 1 << items.length;
 		
-		Set<Set<T>> setOfSets = new HashSet<Set<T>>();
+		Set<Set<T>> setOfSets = new HashSet<>();
 		
 		for (int i = 0; i < count; i++) {
 			
-			Set<T> set = new HashSet<T>();
+			Set<T> set = new HashSet<>();
 			int j = 0;
 			for (T item : items) {
 				if ((i >> j++) % 2 == 1)

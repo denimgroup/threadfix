@@ -317,7 +317,7 @@ public class ApplicationsController {
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		List<Defect> defectList = new ArrayList<Defect>();
+		List<Defect> defectList = new ArrayList<>();
 		
 		ProjectMetadata data = null;
 		if (dt != null) {

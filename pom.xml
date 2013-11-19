@@ -11,12 +11,87 @@
     <name>ThreadFix</name>
     <description>ThreadFix master pom.xml</description>
 
+    <licenses>
+        <license>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>bbeverly</id>
+            <name>Bryan Beverly</name>
+            <email>bryan@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>dcornell</id>
+            <name>Dan Cornell</name>
+            <email>dan@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>jtomsett</id>
+            <name>James Tomsett</name>
+            <email>jtomsett@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>manderson</id>
+            <name>Michael Anderson</name>
+            <email>michael@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>mcollins</id>
+            <name>Mac Collins</name>
+            <email>mcollins@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>stran</id>
+            <name>Sinh Tran</name>
+            <email>stran@denimgroup.com</email>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Denim Group, Ltd.</name>
+        <url>http://www.denimgroup.com/</url>
+    </organization>
+
+    <!-- Add local repository at /lib so that projects can share jetbrains annotations -->
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler.version}</version>
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
@@ -30,5 +105,78 @@
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
         <module>threadfix-main</module>
+<<<<<<< HEAD
+=======
+        <module>threadfix-cli-endpoints</module>
+        <module>threadfix-scanagent</module>
+>>>>>>> f144fb222c4e34cd03d3275ead0e249d58b2a745
     </modules>
+
+    <properties>
+        <db.name>stonemill</db.name>
+
+        <!-- Framework dependency versions -->
+        <apache.activemq.version>5.4.2</apache.activemq.version>
+        <apache.poi.version>3.8</apache.poi.version>
+        <apache.httpclient.version>4.2.3</apache.httpclient.version>
+        <apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
+        <apache.xbean.version>3.5</apache.xbean.version>
+        <codehaus.jackson.version>1.6.2</codehaus.jackson.version>
+        <cglib.version>2.2.2</cglib.version>
+        <commons.beanutils.version>1.8.3</commons.beanutils.version>
+        <commons.collections.version>3.2.1</commons.collections.version>
+        <commons.digester.version>1.8.1</commons.digester.version>
+        <commons.fileupload.version>1.2.2</commons.fileupload.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <commons.io.version>1.4</commons.io.version>
+        <commons.lang.version>3.1</commons.lang.version>
+        <commons.validator.version>1.3.1</commons.validator.version>
+        <esapi.version>2.1.0-SNAPSHOT</esapi.version>
+        <hibernate.version>3.5.4-Final</hibernate.version>
+        <hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
+        <hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
+        <itext.version>2.1.7</itext.version>
+        <jasperreports.version>4.5.0</jasperreports.version>
+        <javassist.version>3.12.0.GA</javassist.version>
+        <jetbrains-annotations.version>13</jetbrains-annotations.version>
+        <jgit.version>2.3.1.201302201838-r</jgit.version>
+        <json.version>20090211</json.version>
+        <jspf.version>1.0.2</jspf.version>
+        <jstl.version>1.2</jstl.version>
+        <jta.version>1.1</jta.version>
+        <log4j.version>1.2.16</log4j.version>
+        <persistence.version>1.0</persistence.version>
+        <quartz.version>1.8.6</quartz.version>
+        <selenium.version>2.31.0</selenium.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
+        <sitemesh.version>2.4.2</sitemesh.version>
+        <slf4j.version>1.6.1</slf4j.version>
+        <spring.version>3.1.4.RELEASE</spring.version>
+        <spring-ldap.version>1.3.2.RELEASE</spring-ldap.version>
+        <springsecurity.version>3.1.4.RELEASE</springsecurity.version>
+        <tfs-library.version>11.0.0</tfs-library.version>
+        <tuckey.version>3.1.0</tuckey.version>
+        <validation-api.version>1.0.0.GA</validation-api.version>
+
+        <!-- Testing dependency versions -->
+        <easymock.version>3.0</easymock.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
+        <mysql.version>5.1.26</mysql.version>
+        <junit.version>4.8.1</junit.version>
+        <selenium-client.version>1.0.2</selenium-client.version>
+
+        <!-- Plugin versions -->
+        <cargo.version>1.0.3</cargo.version>
+        <emma.version>1.0-alpha-2</emma.version>
+        <maven-compiler.version>2.3.2</maven-compiler.version>
+        <maven-surefire.version>2.6</maven-surefire.version>
+    </properties>
+
+    <url>http://www.denimgroup.com/threadfix/</url>
+    <scm>
+        <url>https://code.google.com/p/threadfix/</url>
+    </scm>
+    <issueManagement>
+        <system>https://code.google.com/p/threadfix/issues/list</system>
+    </issueManagement>
  </project>
