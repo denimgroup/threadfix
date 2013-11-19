@@ -20,10 +20,8 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone %s -b qa' % source_code_loc)
-        with lcd("threadfix"):
-            result2 = local('git checkout tags/qa')
-    if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
+        result = local('git clone %s' % source_code_loc)
+      if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
 # exchanges the debug versions for the deploy versions
