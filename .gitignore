@@ -9,3 +9,4 @@ bin
 *.DS_Store
 threadfix-enterprise
 Build
+*.iml

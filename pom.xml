@@ -105,11 +105,9 @@
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
         <module>threadfix-main</module>
-<<<<<<< HEAD
-=======
         <module>threadfix-cli-endpoints</module>
         <module>threadfix-scanagent</module>
->>>>>>> f144fb222c4e34cd03d3275ead0e249d58b2a745
+        <module>threadfix-scanner-plugin/zaproxy</module>
     </modules>
 
     <properties>
