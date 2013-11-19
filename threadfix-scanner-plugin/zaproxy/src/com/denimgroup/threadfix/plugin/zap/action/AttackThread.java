@@ -37,7 +37,6 @@ import org.zaproxy.zap.extension.ascan.ExtensionActiveScan;
 import org.zaproxy.zap.extension.spider.ExtensionSpider;
 
 public class AttackThread extends Thread {
-
     public enum Progress { NOT_STARTED, SPIDER, ASCAN, FAILED, COMPLETE, STOPPED }
 
     private EndpointsAction extension;
