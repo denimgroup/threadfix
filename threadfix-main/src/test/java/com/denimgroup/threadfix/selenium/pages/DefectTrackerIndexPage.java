@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -44,7 +45,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
 	public static String JIRA_URL = "https://threadfix.atlassian.net/";
 
-	public DefectTrackerIndexPage(WebDriver webdriver) {
+	public DefectTrackerIndexPage(@NotNull WebDriver webdriver) {
 		super(webdriver);
 		//nameInput = driver.findElementById("nameInput");
 		//urlInput = driver.findElementById("urlInput");
