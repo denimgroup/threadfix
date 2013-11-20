@@ -53,8 +53,8 @@ public abstract class BaseTest {
 	
 	private WebDriver driver;
 	
-//	@Parameters
-	@Parameters(name="Browser: {0}")
+	@Parameters
+	//@Parameters(name="Browser: {0}")
 	public static Collection<String[]> drivers() {
 		Collection<String[]> params = new ArrayList<String[]>();
 		String  ff = System.getProperty("FIREFOX");
