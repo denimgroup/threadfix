@@ -137,6 +137,9 @@
 							</includes>
 							<excludes>
 								<exclude>**/*Rest*.java</exclude>
+								<exclude>**/service/repository/*.java</exclude>
+								<exclude>**/service/scans/*.java</exclude>
+								<exclude>**/plugin/scanner/*.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>
