@@ -519,55 +519,6 @@
 	</profiles>
 	<properties>
 		<db.name>stonemill</db.name>
-
-		<!-- Framework dependency versions -->
-		<apache.activemq.version>5.4.2</apache.activemq.version>
-		<apache.poi.version>3.8</apache.poi.version>
-		<apache.httpclient.version>4.2.3</apache.httpclient.version>
-		<apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
-		<apache.xbean.version>3.5</apache.xbean.version>
-		<codehaus.jackson.version>1.6.2</codehaus.jackson.version>
-		<cglib.version>2.2.2</cglib.version>
-		<commons.beanutils.version>1.8.3</commons.beanutils.version>
-		<commons.collections.version>3.2.1</commons.collections.version>
-		<commons.digester.version>1.8.1</commons.digester.version>
-		<commons.fileupload.version>1.2.2</commons.fileupload.version>
-		<commons.httpclient.version>3.1</commons.httpclient.version>
-		<commons.io.version>1.4</commons.io.version>
-		<commons.lang.version>3.1</commons.lang.version>
-		<commons.validator.version>1.3.1</commons.validator.version>
-		<hibernate.version>3.5.4-Final</hibernate.version>
-		<hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
-		<hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
-		<itext.version>2.1.7</itext.version>
-		<jasperreports.version>4.5.0</jasperreports.version>
-		<javassist.version>3.12.0.GA</javassist.version>
-		<jgit.version>2.3.1.201302201838-r</jgit.version>
-		<jstl.version>1.2</jstl.version>
-		<jta.version>1.1</jta.version>
-		<log4j.version>1.2.16</log4j.version>
-		<persistence.version>1.0</persistence.version>
-		<quartz.version>1.8.6</quartz.version>
-		<servlet-api.version>3.0.1</servlet-api.version>
-		<sitemesh.version>2.4.2</sitemesh.version>
-		<slf4j.version>1.6.1</slf4j.version>
-		<spring.version>3.1.4.RELEASE</spring.version>
-		<springsecurity.version>3.1.4.RELEASE</springsecurity.version>
-		<tuckey.version>3.1.0</tuckey.version>
-		<validation-api.version>1.0.0.GA</validation-api.version>
-
-		<!-- Testing dependency versions -->
-		<easymock.version>3.0</easymock.version>
-		<hsqldb.version>1.8.0.10</hsqldb.version>
-		<junit.version>4.11</junit.version>
-		<mysql.version>5.1.26</mysql.version>
-		<selenium-client.version>1.0.2</selenium-client.version>
-
-		<!-- Plugin versions -->
-		<cargo.version>1.0.3</cargo.version>
-		<emma.version>1.0-alpha-2</emma.version>
-		<maven-compiler.version>2.3.2</maven-compiler.version>
-		<maven-surefire.version>2.6</maven-surefire.version>
 	</properties>
 
 	<url>http://www.denimgroup.com/threadfix/</url>
