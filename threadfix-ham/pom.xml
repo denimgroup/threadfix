@@ -17,6 +17,24 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                    <systemProperties>
+                        <property>
+                            <name>url</name>
+                            <value>${fileName}</value>
+                        </property>
+                        <property>
+                            <name>scanFileBaseLocation</name>
+                            <value>${fileName}</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 	
