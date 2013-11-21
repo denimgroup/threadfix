@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.webservices.tests.BaseRestTest;

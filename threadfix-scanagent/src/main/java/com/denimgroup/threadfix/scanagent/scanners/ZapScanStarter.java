@@ -1,4 +1,7 @@
-package com.denimgroup.threadfix.scanagent;
+package com.denimgroup.threadfix.scanagent.scanners;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +12,7 @@ import java.io.IOException;
  *
  */
 public class ZapScanStarter {
-	public static void main(String[] args) {
+	public static void main(@Nullable String[] args) {
 		System.out.println("Start ZAP");
 		if (args == null || args.length ==0) {
 			return;
@@ -34,7 +37,8 @@ public class ZapScanStarter {
 		System.out.println("Ended starting ZAP");
 	}
 	
-	private static String getZapRunnerFile() {
+	@NotNull
+    private static String getZapRunnerFile() {
 		if (System.getProperty("os.name").contains("Windows"))
 			return "zap.bat";
 		else return "zap.sh";

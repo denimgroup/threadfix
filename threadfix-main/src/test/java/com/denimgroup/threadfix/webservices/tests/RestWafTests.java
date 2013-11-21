@@ -6,12 +6,13 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;
 import com.denimgroup.threadfix.webapp.controller.RestController;
@@ -360,11 +361,11 @@ public class RestWafTests extends BaseRestTest {
 	 */
 	@Test
 	public void testRestrictedMethods() {
-		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+        ThreadFixRestClient goodClient = new ThreadFixRestClientImpl();
 		goodClient.setKey(GOOD_API_KEY);
 		goodClient.setUrl(BASE_URL);
-		
-		ThreadFixRestClient restrictedClient = new ThreadFixRestClient();
+
+        ThreadFixRestClient restrictedClient = new ThreadFixRestClientImpl();
 		restrictedClient.setKey(RESTRICTED_API_KEY);
 		restrictedClient.setUrl(BASE_URL);
 		

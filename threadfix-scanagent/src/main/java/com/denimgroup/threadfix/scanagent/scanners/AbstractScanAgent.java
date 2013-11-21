@@ -22,49 +22,62 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.scanagent;
+package com.denimgroup.threadfix.scanagent.scanners;
 
 import java.io.File;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import org.apache.commons.configuration.Configuration;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractScanAgent {
-	@NotNull
-    private String workDir;
+
+    private static Logger log = Logger.getLogger(AbstractScanAgent.class);
     @NotNull
-    private ServerConduit serverConduit;
-	//	TODO - The was we handle this is pretty gross. And brittle. Reorganize.
+    private String workDir;
 	private int currentTaskId;
+    @NotNull
+    private ThreadFixRestClient tfClient;
 	
 	public void setWorkDir(@NotNull String workDir) {
 		this.workDir = workDir;
 	}
 	
-	public String getWorkDir() {
+	@NotNull
+    public String getWorkDir() {
 		return(this.workDir);
-	}
-	
-	public void setServerConduit(@NotNull ServerConduit serverConduit) {
-		this.serverConduit = serverConduit;
 	}
 	
 	public void setCurrentTaskId(int currentTaskId) {
 		this.currentTaskId = currentTaskId;
 	}
-	
-	
-	
-	/**
-	 * Allow the 
-	 * @param message
-	 */
+
+    @NotNull
+    public ThreadFixRestClient getTfClient() {
+        return tfClient;
+    }
+
+    public void setTfClient(@NotNull ThreadFixRestClient tfClient) {
+        this.tfClient = tfClient;
+    }
+
+    /**
+     * Send a message back to the server for the given task. This allows
+     * for server-side tracking and debugging - especially for long-running tasks.
+     */
 	public void sendStatusUpdate(String message) {
-		this.serverConduit.sendStatusUpdate(this.currentTaskId, message);
+//		this.scanAgentRunner.sendStatusUpdate(this.currentTaskId, message);
+
+        log.debug("Sending server update for taskId: " + this.currentTaskId + " of: " + message);
+        String result = getTfClient().taskStatusUpdate(String.valueOf(this.currentTaskId), message);
+        log.debug("Server response from task update was: " + result);
 	}
 	
 	public abstract boolean readConfig(@NotNull Configuration config);
+    @Nullable
     public abstract File doTask(@NotNull TaskConfig config);
 }

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class JsonUtils {
 
@@ -40,14 +41,13 @@ public class JsonUtils {
 	 * @throws Exception
 	 * @throws RuntimeException
 	 */
-	public static Task convertJsonStringToTask(@NotNull String jsonText) throws Exception {
+	@Nullable
+    public static Task convertJsonStringToTask(@NotNull String jsonText) throws Exception {
 		Task retVal = null;
 		
 		try {
 			retVal = new ObjectMapper().readValue(jsonText, Task.class);
 		} catch (JsonParseException e) {
-			throw e;
-		} catch (JsonMappingException e) {
 			throw e;
 		} catch (IOException e) {
 			throw e;

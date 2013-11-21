@@ -37,7 +37,7 @@ import org.apache.commons.cli.PosixParser;
 
 public class CommandLineParser {
 	
-	public static ThreadFixRestClient client = new ThreadFixRestClient();
+	public static ThreadFixRestClient client = new ThreadFixRestClientImpl();
 	
 	public static final Map<String, String[]> scanOptions = new HashMap<>();
 		

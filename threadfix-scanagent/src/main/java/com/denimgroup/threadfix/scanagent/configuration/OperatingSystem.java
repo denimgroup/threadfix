@@ -37,16 +37,9 @@ public class OperatingSystem {
 		this.name = name;
 		this.version = version;
 	}
-	
-	public String getName() {
-		return(name);
-	}
-	
-	public String getVersion() {
-		return(version);
-	}
-	
-	@Override
+
+	@NotNull
+    @Override
 	public String toString() {
 		String retVal = "OperatingSystem { name=" + name + ", version=" + version + " }";
 		return(retVal);

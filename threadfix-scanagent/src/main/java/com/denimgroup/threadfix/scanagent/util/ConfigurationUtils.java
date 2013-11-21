@@ -35,13 +35,15 @@ import org.apache.log4j.Logger;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import org.jetbrains.annotations.NotNull;
-import sun.net.ftp.FtpReplyCode;
+import org.jetbrains.annotations.Nullable;
 
 public class ConfigurationUtils {
 	private static Logger log = Logger.getLogger(ConfigurationUtils.class);
 	
-	public static String[] ZAP_FILES = new String[]{"zap.bat", "zap.sh"};
-	public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
+	@NotNull
+    public static String[] ZAP_FILES = new String[]{"zap.bat", "zap.sh"};
+	@NotNull
+    public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
 	
 	public static void saveUrlConfig(@NotNull String url, @NotNull Configuration config) {
 //		log.info("Start saving url");
@@ -87,9 +89,10 @@ public class ConfigurationUtils {
 	 * @param config
 	 * @return
 	 */
-	public static List<Scanner> readAllScanner(@NotNull Configuration config) {
+	@NotNull
+    public static List<Scanner> readAllScanner(@NotNull Configuration config) {
 		log.info("Start reading all scanner type");
-		List<Scanner> scanners = new ArrayList<Scanner>();
+		List<Scanner> scanners = new ArrayList<>();
 		
 		try {
 			for (ScannerType type : ScannerType.values()) {
@@ -294,7 +297,8 @@ public class ConfigurationUtils {
 				" if you already set up Scanner");
 	}
 	
-	private static String getExeFile(@NotNull ScannerType scanner) {
+	@Nullable
+    private static String getExeFile(@NotNull ScannerType scanner) {
 		String exeName = null;
 		if (scanner == ScannerType.ZAPROXY) {
 			exeName = ZAP_FILES[0] + "/" + ZAP_FILES[1];
@@ -304,12 +308,12 @@ public class ConfigurationUtils {
 		return exeName;
 	}
 	
-	public static PropertiesConfiguration getPropertiesFile() {
+	@Nullable
+    public static PropertiesConfiguration getPropertiesFile() {
 		try {
-//			return new PropertiesConfiguration(ZapScanAgent.class.getClassLoader()
-//					.getResource("scanagent.properties").toString());
-			return new PropertiesConfiguration("scanagent.properties");
-
+            PropertiesConfiguration config =  new PropertiesConfiguration("scanagent.properties");
+            config.setAutoSave(true);
+            return config;
 		} catch (ConfigurationException e) {
 			log.error("Problems reading configuration: " + e.getMessage(), e);
 		}

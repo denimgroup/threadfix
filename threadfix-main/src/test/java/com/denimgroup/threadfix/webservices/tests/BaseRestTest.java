@@ -17,6 +17,8 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -36,8 +38,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
-
 /**
  * This class provides methods for posting GET and POST requests with optional files,
  * as well as a place to put methods and data that would be useful for all REST testing.
@@ -56,7 +56,7 @@ public abstract class BaseRestTest {
 	public static final String RESTRICTED_URL_RETURNED     = "The restricted URL error was returned when it shouldn't have been.";
 
 	public static ThreadFixRestClient getGoodClient() {
-		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+        ThreadFixRestClient goodClient = new ThreadFixRestClientImpl();
 		goodClient.setMemoryKey(GOOD_API_KEY);
 		goodClient.setMemoryUrl(BASE_URL);
 		return goodClient;

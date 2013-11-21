@@ -21,11 +21,12 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.scanagent;
+package com.denimgroup.threadfix.scanagent.scanners;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 
@@ -41,27 +42,27 @@ public class ScanAgentFactory {
 	 * 
 	 * @param scanner
 	 * @param workDir
-	 * @param serverConduit
 	 * @return
 	 */
-	public static AbstractScanAgent getScanAgent(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
+	@Nullable
+    public static AbstractScanAgent getScanAgent(@NotNull Scanner scanner, @NotNull String workDir) {
 
 		AbstractScanAgent agent = null;
 		
 		switch (ScannerType.getScannerType(scanner.getName())) {
 			case ACUNETIX_WVS: 
-				agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit);
+				agent = AcunetixScanAgent.getInstance(scanner, workDir);
 				break;
 			case ZAPROXY:
-				agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
+				agent = ZapScanAgent.getInstance(scanner, workDir);
 				break;
 			default: break;
 		}
 		
 //		if (ScannerType.ACUNETIX_WVS.getFullName().equalsIgnoreCase(scanner.getName()))
-//			agent = AcunetixScanAgent.getInstance(scanner, workDir, serverConduit); 
+//			agent = AcunetixScanAgent.getInstance(scanner, workDir, scanAgentRunner);
 //		else if (ScannerType.ZAPROXY.getFullName().equalsIgnoreCase(scanner.getName()))
-//			agent = ZapScanAgent.getInstance(scanner, workDir, serverConduit);
+//			agent = ZapScanAgent.getInstance(scanner, workDir, scanAgentRunner);
 
 		return agent;
 	}
