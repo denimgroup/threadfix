@@ -45,6 +45,10 @@ public class LoginPage extends BasePage {
 		}
 		
 		webdriver.get(url);
+
+        System.out.println("Retrieving " + url);
+        System.out.println("Got " + webdriver.getPageSource());
+
 		if(webdriver instanceof InternetExplorerDriver){
 			driver.get("javascript:document.getElementById('overridelink').click();");
 		}
