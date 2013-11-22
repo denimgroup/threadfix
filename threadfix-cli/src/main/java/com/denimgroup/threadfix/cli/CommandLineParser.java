@@ -37,9 +37,9 @@ import org.apache.commons.cli.PosixParser;
 
 public class CommandLineParser {
 	
-	public static ThreadFixRestClient client = new ThreadFixRestClientImpl();
+	private static ThreadFixRestClient client = new ThreadFixRestClientImpl();
 	
-	public static final Map<String, String[]> scanOptions = new HashMap<>();
+	private static final Map<String, String[]> scanOptions = new HashMap<>();
 		
 	static {
 		scanOptions.put("Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" });

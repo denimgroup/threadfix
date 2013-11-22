@@ -80,8 +80,9 @@ public class HibernateDocumentDao implements DocumentDao {
 						"from Document document "
 								+ "where document.application.id = :appId and document.name = :name and document.type = :type")
 				.setInteger("appId", appId).setString("name", filename).setString("type", extension)
+                .setMaxResults(1)
 				.uniqueResult();
-		
+
 		return retVal;
 	}
 

@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.cli;
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	
-	HttpRestUtils util = new HttpRestUtils();
+	private HttpRestUtils util = new HttpRestUtils();
 	
 	/**
 	 * Default constructor that will read configuration from a local .properties file
@@ -124,7 +124,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 
 	public String searchForApplicationByName(String name, String teamName) {
-		String result = util.httpGet(util.getUrl() + "/teams/" + teamName + "/applications/lookup" +
+		String result = util.httpGet(util.getUrl() + "/applications/" + teamName + "/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
