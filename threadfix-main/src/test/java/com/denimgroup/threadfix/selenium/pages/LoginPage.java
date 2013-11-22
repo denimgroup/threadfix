@@ -46,13 +46,17 @@ public class LoginPage extends BasePage {
 		
 		webdriver.get(url);
 
-        System.out.println("Retrieving " + url);
-        System.out.println("Got " + webdriver.getPageSource());
+        if (!webdriver.getPageSource().contains("id=\"username\"")) {
+            System.out.println("Something went wrong.");
+            System.out.println("Retrieving " + url);
+            System.out.println("Got " + webdriver.getPageSource());
+
+            System.out.println("Going to attempt to add the cert.");
+        }
 
 		if(webdriver instanceof InternetExplorerDriver){
 			driver.get("javascript:document.getElementById('overridelink').click();");
 		}
-		//rememberCheckbox = driver.findElementById("checkbox");
 	}
 	
 	/*----------------perform functions----------------*/
@@ -117,22 +121,17 @@ public class LoginPage extends BasePage {
 	/*----------------set functions----------------*/
 	public LoginPage setUsername(String user) {
 		driver.findElementById("username").sendKeys(user);
-        //sleep(1000);
         return this;
 	}
 	
 	public LoginPage setPassword(String password) {
 		driver.findElementById("password").sendKeys(password);
-        //sleep(1000);
         return this;
 	}
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-        //sleep(3000);
         driver.findElementById("login").click();
-        driver.findElementById("login").click();
-        //driver.findElementById("password").sendKeys(Keys.ENTER);
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}
