@@ -40,11 +40,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 @RunWith(Parameterized.class)
 public abstract class BaseTest {
@@ -56,7 +58,7 @@ public abstract class BaseTest {
 	@Parameters
 	//@Parameters(name="Browser: {0}")
 	public static Collection<String[]> drivers() {
-		Collection<String[]> params = new ArrayList<String[]>();
+		Collection<String[]> params = new ArrayList<>();
 		String  ff = System.getProperty("FIREFOX");
 		String  chrome = System.getProperty("CHROME");
 		String  ie = System.getProperty("IE");
@@ -92,21 +94,17 @@ public abstract class BaseTest {
 			}
 			System.setProperty("webdriver.chrome.driver",location);
 			driver = new ChromeDriver();
-//		    service = new ChromeDriverService.Builder()
-//		    							.usingDriverExecutable(new File(location))
-//		    							.usingAnyFreePort()
-//		    							.withLogFile(new File(log))
-//		    							.build();
-//		    try {
-//				service.start();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		    driver = new RemoteWebDriver(service.getUrl(),DesiredCapabilities.chrome());
 		}
 		
 		if(browser.equals("firefox")){
-			driver = new FirefoxDriver();
+
+            DesiredCapabilities capability = new DesiredCapabilities();
+            capability.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
+            FirefoxProfile profile = new FirefoxProfile();
+            capability.setCapability(FirefoxDriver.PROFILE, profile);
+            capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+
+            driver = new FirefoxDriver(capability);
 		}
 		
 		if(browser.equals("IE")){
