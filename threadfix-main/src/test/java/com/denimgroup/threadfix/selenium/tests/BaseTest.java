@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -81,7 +83,7 @@ public abstract class BaseTest {
 		return params;
 	}
 	
-	public BaseTest(String browser){
+	public BaseTest(String browser) {
 		if(browser.equals("chrome")){
 			String location = BaseTest.class.getClassLoader().getResource("Drivers").getPath();
 //			String log = "";
@@ -103,6 +105,8 @@ public abstract class BaseTest {
             FirefoxProfile profile = new FirefoxProfile();
             capability.setCapability(FirefoxDriver.PROFILE, profile);
             capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+
+            profile.setAcceptUntrustedCertificates(true);
 
             driver = new FirefoxDriver(capability);
 		}
