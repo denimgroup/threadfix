@@ -436,7 +436,7 @@ public class DefectTrackerTests extends BaseTest {
 
 	// Certificate Problems
 	@Test
-	@Ignore
+    @Ignore
 	public void TFSCreate() {
 		String newDefectTrackerName = "testEditDefectTracker"
 				+ getRandomString(10);
@@ -679,8 +679,9 @@ public class DefectTrackerTests extends BaseTest {
 										.logout();
 	}
 
-	@Ignore
+
 	@Test
+    @Ignore
 	public void testAttachToAppTFSTracker() {
 		assertFalse("TFS_PASSWORD is not assigned from system properties",
 				TFS_PASSWORD == null);

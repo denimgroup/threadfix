@@ -129,10 +129,9 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-        //sleep(3000);
+        WebElement pswd = driver.findElementById("password");
         driver.findElementById("login").click();
-        driver.findElementById("login").click();
-        //driver.findElementById("password").sendKeys(Keys.ENTER);
+        pswd.sendKeys(Keys.ENTER);
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}

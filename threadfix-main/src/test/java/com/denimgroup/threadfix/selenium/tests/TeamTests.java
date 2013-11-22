@@ -281,7 +281,9 @@ public class TeamTests extends BaseTest {
 		
 		assertTrue("app was not switched properly", !oneBool && twoBool);
 	}
-	
+
+    //Ignore because all users are permissible
+    @Ignore
 	@Test
 	public void viewBasicPermissableUsers(){
 		String teamName = getRandomString(8);
@@ -351,7 +353,9 @@ public class TeamTests extends BaseTest {
 //								.logout();
 //		assertTrue("user was not in the permissable user list",present);
 //	}
-	
+
+    //There are no more roles for users
+    @Ignore
 	@Test
 	public void addAppAllUserView(){
 		String teamName = getRandomString(8);
@@ -397,7 +401,9 @@ public class TeamTests extends BaseTest {
 								.logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
-	
+
+    //No more permissions for users
+    @Ignore
 	@Test
 	public void addUserNoPermUserView(){
 		String teamName = getRandomString(8);
