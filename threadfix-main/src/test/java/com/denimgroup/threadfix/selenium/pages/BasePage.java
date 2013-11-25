@@ -53,17 +53,21 @@ public abstract class BasePage {
 	}
 	/*--------------click functions--------------*/
 	public LoginPage logout() {
-//		clickUserTab();
-//		waitForElement(driver.findElementById("configurationHeader"));
-//		sleep(2000);
-//		driver.findElementById("logoutLink").click();
-//		sleep(6000);
-//		waitForElement(driver.findElementById("login"));
+		clickUserTab();
+		waitForElement(driver.findElementById("configurationHeader"));
+		sleep(2000);
+		driver.findElementById("logoutLink").click();
+		sleep(6000);
+		waitForElement(driver.findElementById("login"));
+        /*
+        sleep(3000);
 		driver.navigate().refresh();
+        sleep(15000);
 		System.out.println("refreshed");
 		driver.get(LoginPage.url + "j_spring_security_logout");
-		sleep(2000);
+		//sleep(2000);
 		waitForElement(driver.findElementById("login"));
+		*/
 		return new LoginPage(driver);
 	}
 	

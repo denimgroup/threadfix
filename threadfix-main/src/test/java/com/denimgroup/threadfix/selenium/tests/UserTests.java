@@ -363,7 +363,7 @@ public class UserTests extends BaseTest {
 				changePasswordPage.getErrorText("password")
 				.contains("Password has a minimum length of 12."));
 
-		changePasswordPage.logout();
+        changePasswordPage.logout();
 	}
 
 	@Test
@@ -416,7 +416,9 @@ public class UserTests extends BaseTest {
 		
 		userIndexPage.clickCancel("user");
 	}
-	
+
+    //No Ldap users currently
+    @Ignore
 	@Test
 	public void createLdapUser(){
 		String baseUserName = "testLdapUser";
@@ -450,7 +452,9 @@ public class UserTests extends BaseTest {
 		
 		
 	}
-	
+
+    //No user roles currently
+    @Ignore
 	@Test
 	public void changeUserRoleTest(){
 		String baseUserName = "testChangeRoleUser";
