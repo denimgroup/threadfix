@@ -53,7 +53,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 @RunWith(Parameterized.class)
 public abstract class BaseTest {
 	
-	protected final Log log = LogFactory.getLog(this.getClass());
+//	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	private WebDriver driver;
 	
@@ -135,7 +135,7 @@ public abstract class BaseTest {
 	}
 	
 	public WebDriver getDriver(){
-		log.debug("Getting Driver");
+//		log.debug("Getting Driver");
 		return driver;
 	}
 	

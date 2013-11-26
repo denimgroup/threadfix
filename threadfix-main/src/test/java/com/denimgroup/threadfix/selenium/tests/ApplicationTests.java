@@ -27,6 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -337,9 +338,9 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteButton()
 										.logout();
 	}
-	
+
 	@Test
-	public void testAddWafAtApplicationCreationTimeAndDelete() {
+	public void testAddWafAtApplicationCreationTimeAndDelete() {              //left off
 		String wafName = "appCreateTimeWaf1";
 		String type = "Snort";
 		String orgName = "appCreateTimeWafOrg2";
@@ -482,7 +483,7 @@ public class ApplicationTests extends BaseTest {
 		
 		assertTrue("Application name was too long",boo);
 	}
-	
+
 	@Test
 	public void sameAppNameMultipleTeams(){
 		String appName = getRandomString(10);
@@ -556,7 +557,7 @@ public class ApplicationTests extends BaseTest {
 								.logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
-	
+
 	@Test
 	public void addAppOnlyUserView(){
 		String teamName = getRandomString(8);
