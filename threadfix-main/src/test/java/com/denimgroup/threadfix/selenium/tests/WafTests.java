@@ -241,7 +241,7 @@ public class WafTests extends BaseTest {
 		// Test empty and whitespace input
 		wafIndexPage = wafIndexPage.setNewNameInput(emptyString);
 		wafIndexPage = wafIndexPage.clickCreateWafInvalid();
-		log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
+//		log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		wafIndexPage = wafIndexPage.setNewNameInput(whiteSpaceString);

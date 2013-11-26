@@ -152,6 +152,7 @@ public class TeamIndexPage extends BasePage {
 		apps = new ArrayList<>();
 		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found.")) {
+            sleep(2000);
 				for (int j = 0; j < getNumAppRows(teamName); j++) {
 					apps.add(
 							driver.findElementById(("applicationLink" + (getIndex(teamName) + 1))
