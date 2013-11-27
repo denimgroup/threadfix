@@ -131,9 +131,10 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-        WebElement pswd = driver.findElementById("password");
+        //Working for Jenkins to get test working for now
+        //WebElement passwordField = driver.findElementById("password");
         driver.findElementById("login").click();
-        pswd.sendKeys(Keys.ENTER);
+        //passwordField.sendKeys(Keys.ENTER);
         //driver.findElementById("login").click();
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
