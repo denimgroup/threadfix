@@ -44,7 +44,7 @@ public class DashboardTests extends BaseTest{
 				.setFileInput(ScanContents.SCAN_FILE_MAP.get("FindBugs"))
 				.submitScan()
 				.clickDashboardLink();
-		
+
 		assertTrue("6 month vuln graph is not displayed",dashboardPage.is6MonthGraphPresent());
 		assertTrue("Top 10 graph is not displayed",dashboardPage.isTop10GraphPresent());
 		
@@ -61,14 +61,6 @@ public class DashboardTests extends BaseTest{
 //														.click6MonthViewMore();
 //		
 //		reportIndexPage.getCurrentReport();
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}
 }
