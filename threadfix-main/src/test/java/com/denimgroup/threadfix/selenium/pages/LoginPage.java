@@ -131,11 +131,13 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-        //Working for Jenkins to get test working for now
-        //WebElement passwordField = driver.findElementById("password");
+        WebElement passwordField = driver.findElementById("password");
+
         driver.findElementById("login").click();
-        //passwordField.sendKeys(Keys.ENTER);
-        //driver.findElementById("login").click();
+        if (!isElementPresent("tab-dashboard")) {
+            passwordField.sendKeys(Keys.ENTER);
+        }
+
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}

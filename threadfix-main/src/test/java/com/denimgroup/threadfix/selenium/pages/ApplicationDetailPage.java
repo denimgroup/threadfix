@@ -488,10 +488,11 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage setFileInput(String file) {
 		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+        //driver.findElementById("fileInput"+modalNumber()).click();
 //		String f = "fileInput"+modalNumber();
 //		JavascriptExecutor js = (JavascriptExecutor) driver;
 //		js.executeScript("javascript:document.getElementById('"+f+"').value='"+file+"'");
-		sleep(2000);
+		sleep(20000);
 		return new ApplicationDetailPage(driver);
 	}
 	
