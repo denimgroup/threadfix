@@ -15,11 +15,11 @@
 		<c:out value="${ organization.name }"/>
 		<c:if test="${ canManageTeams || canManageUsers }">
    			<div id="btnDiv1" class="btn-group">
-				<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
+				<button id="actionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
 				<ul class="dropdown-menu">									
 					<c:if test="${ canManageTeams}">
 						<li>
-							<a id="teamModalButton1" href="#teamModal" data-toggle="modal">Edit / Delete</a>
+							<a id="teamModalButton" href="#teamModal" data-toggle="modal">Edit / Delete</a>
 						</li>
 					</c:if>
 					<c:if test="${ canModifyVulnerabilities }">

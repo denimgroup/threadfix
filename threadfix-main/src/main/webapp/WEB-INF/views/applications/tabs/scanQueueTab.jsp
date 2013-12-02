@@ -5,7 +5,7 @@
 	<table class="table">
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th id="scanQueueTable">ID</th>
 					<th>Status</th>
 					<th>Scanner</th>
 					<th>Created Time</th>
@@ -17,8 +17,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${application.scanQueueTasks}" var="scanQueueTask"> 
-					<tr>
+				<c:forEach items="${application.scanQueueTasks}" var="scanQueueTask" varStatus="status">
+					<tr class="bodyRow">
 						<td>
 							<spring:url value="/configuration/scanqueue/{scanQueueTaskId}/detail" var="detailUrl">
 								<spring:param name="scanQueueTaskId" value="${ scanQueueTask.id }" />
@@ -27,7 +27,7 @@
 							</a>
 						</td> 
 						<td><c:out value="${scanQueueTask.showStatusString()}" /></td>
-						<td><c:out value="${scanQueueTask.scanner}" /></td>
+						<td id="scannerType${ status.count }"><c:out value="${scanQueueTask.scanner}" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.createTime }" type="both" dateStyle="short" timeStyle="short" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.startTime }" type="both" dateStyle="short" timeStyle="short" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.endTime }" type="both" dateStyle="short" timeStyle="short" /></td>	

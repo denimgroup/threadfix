@@ -28,7 +28,7 @@
 	</c:if>
 	<c:forEach var="document" items="${ application.documents }" varStatus="status">
 		<tr class="bodyRow">
-			<td id="name${ status.count }"><c:out value="${ document.name }"/></td>
+			<td id="docName${ status.count }"><c:out value="${ document.name }"/></td>
 			<td id="type${ status.count }" ><c:out value="${ document.type }"/></td>
 			<td id="uploadDate${ status.count }" >
 				<fmt:formatDate value="${ document.createdDate }" type="both" dateStyle="short" timeStyle="short"/>

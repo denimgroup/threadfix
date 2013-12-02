@@ -25,8 +25,8 @@
 	</select>
 	</div>
 	<div class="modal-footer">
-		<button id="closeCommentForm${ vulnerability.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="closeScanQueueForm${ application.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button class="modalSubmit btn btn-primary" data-success-div="scanQueueDiv${ application.id }" 
-				id="addCommentButton${ vulnerability.id }" type="button">Submit</button>
+				id="addScanQueueButton${ application.id }" type="button">Submit</button>
 	</div>
 </form>	

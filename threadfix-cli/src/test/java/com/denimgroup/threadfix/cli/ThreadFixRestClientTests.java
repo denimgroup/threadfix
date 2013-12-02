@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,14 +37,14 @@ public class ThreadFixRestClientTests extends TestCase {
      *      + There's WAF_ID with WAF_NAME in TF, and rules are generated
      *      + There's TASK_ID
      *      + There's config file ACUNETIX_CONFIG_FILE
-     *      + There's no appFromRest in TEAM_ID
-     *      + There's no teamFromRest in teams
      */
 
     @Test
     public void testCreateApplication() {
         ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String appRet = client.createApplication(String.valueOf(TEAM_ID), "appFromRest", "http://www.test.com");
+        Random randomGenerator = new Random();
+        String appRet = client.createApplication(String.valueOf(TEAM_ID), "appFromRest" + randomGenerator.nextInt(100),
+                "http://www.test.com");
 
         assertNotNull(UtilTest.getJSONObject(appRet));
     }
@@ -59,7 +60,8 @@ public class ThreadFixRestClientTests extends TestCase {
     @Test
     public void testCreateTeam() {
         ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String teamRet = client.createTeam("teamFromRest");
+        Random randomGenerator = new Random();
+        String teamRet = client.createTeam("teamFromRest" + randomGenerator.nextInt(100));
 
         assertNotNull(UtilTest.getJSONObject(teamRet));
     }

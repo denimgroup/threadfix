@@ -54,7 +54,8 @@ public class TeamDetailPage extends BasePage {
 	
 	
 	public TeamDetailPage clickEditOrganizationLink() {
-		driver.findElementById("teamModalButton").click();
+        driver.findElementById("actionButton").click();
+        driver.findElementById("teamModalButton").click();
 		waitForElement(driver.findElementById("teamModal"));
 		return new TeamDetailPage(driver);
 	}

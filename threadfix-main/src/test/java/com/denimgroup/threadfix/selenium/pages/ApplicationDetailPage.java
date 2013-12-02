@@ -639,5 +639,107 @@ public class ApplicationDetailPage extends BasePage {
 	public boolean isScanCountCorrect(int cnt){
 		return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
 	}
-	
+
+    public ApplicationDetailPage clickScansQueueTab() {
+        driver.findElementById("scanQueueTabLink").click();
+        sleep(1000);
+        waitForElement(driver.findElementById("scanQueueTable"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public int scanQueueCount(){
+        WebElement scanQueueTab;
+        try{
+            scanQueueTab = driver.findElementById("scanQueueTabLink");
+        }catch(NoSuchElementException e){
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public ApplicationDetailPage clickAddNewScanQueueLink() {
+        driver.findElementById("addScanQueueLink"+modalNumber()).click();
+        waitForElement(driver.findElementById("addScanQueue"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDocFileInput(String file) {
+        driver.findElementById("docInput"+modalNumber()).sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage submitScanQueue() {
+        driver.findElementById("addScanQueueButton"+modalNumber()).click();
+        sleep(1000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public boolean isScanQueuePresent(String scanner){
+        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+        for(int i = 1; i <= rowCnt; i++){
+            if(driver.findElementById("scannerType"+i).getText().trim().equals(scanner)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ApplicationDetailPage clickDocumentTab() {
+        driver.findElementById("docsTabLink").click();
+        sleep(1000);
+        waitForElement(driver.findElementById("uploadDocModalLink"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public int docsCount(){
+        WebElement scanQueueTab;
+        try{
+            scanQueueTab = driver.findElementById("docsTabLink");
+        }catch(NoSuchElementException e){
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public ApplicationDetailPage clickUploadDocLink() {
+        driver.findElementById("uploadDocModalLink"+modalNumber()).click();
+        waitForElement(driver.findElementById("uploadDoc"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setScanQueueType(String scanQueueType) {
+        new Select(driver.findElementById("scanQueueType"))
+                .selectByVisibleText(scanQueueType);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage submitDoc() {
+        driver.findElementById("submitDocModal"+modalNumber()).click();
+        sleep(3000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public boolean isDocPresent(String docName){
+        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+        for(int i = 1; i <= rowCnt; i++){
+            if(driver.findElementById("docName"+i).getText().trim().equals(docName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
