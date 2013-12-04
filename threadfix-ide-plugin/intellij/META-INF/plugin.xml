@@ -1,0 +1,55 @@
+<idea-plugin version="2">
+  <id>com.denimgroup.threadfix.plugins.intellij</id>
+  <name>ThreadFix IntelliJ plugin</name>
+  <version>1.0</version>
+  <vendor email="dan@denimgroup.com" url="http://www.denimgroup.com">Denim Group</vendor>
+
+  <description><![CDATA[
+    Provides a ThreadFix interface for IntelliJ, allowing developers to pull vulnerability information into their IDEs.
+  ]]></description>
+
+  <change-notes><![CDATA[
+      First version.
+      ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="107.105"/>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+      <!-- Add your actions here -->
+      <action id="ThreadFix.ImportAction" class="com.denimgroup.threadfix.plugins.intellij.action.ImportAction"
+              text="Import Markers" description="Import markers from ThreadFix"/>
+
+      <action id="ThreadFix.ClearAction" class="com.denimgroup.threadfix.plugins.intellij.action.ClearAction"
+              text="Clear Markers" description="Clears ThreadFix Markers"/>
+
+      <group id="ThreadFix.Plugins" text="ThreadFix" description="Contains ThreadFix actions">
+          <reference ref="ThreadFix.ImportAction"/>
+          <reference ref="ThreadFix.ClearAction"/>
+
+          <!--adds this group to the main menu-->
+          <add-to-group group-id="MainMenu" anchor="last"/>
+          <!--adds this group to the main toolbar before the Help action-->
+          <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
+      </group>
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+</idea-plugin>
