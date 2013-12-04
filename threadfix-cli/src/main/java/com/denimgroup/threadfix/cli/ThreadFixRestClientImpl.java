@@ -22,14 +22,14 @@
 //
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
-public class ThreadFixRestClient {
+public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	
-	HttpRestUtils util = new HttpRestUtils();
+	private HttpRestUtils util = new HttpRestUtils();
 	
 	/**
 	 * Default constructor that will read configuration from a local .properties file
 	 */
-	public ThreadFixRestClient() {
+	public ThreadFixRestClientImpl() {
 		
 	}
 	
@@ -39,7 +39,7 @@ public class ThreadFixRestClient {
 	 * @param url URL for the ThreadFix server
 	 * @param apiKey API key to use when accessing the ThreadFix server
 	 */
-	public ThreadFixRestClient(String url, String apiKey) {
+	public ThreadFixRestClientImpl(String url, String apiKey) {
 		util.setDurable(false);
 		util.setKey(apiKey);
 		util.setUrl(url);
@@ -124,7 +124,7 @@ public class ThreadFixRestClient {
 	}
 
 	public String searchForApplicationByName(String name, String teamName) {
-		String result = util.httpGet(util.getUrl() + "/teams/" + teamName + "/applications/lookup" +
+		String result = util.httpGet(util.getUrl() + "/applications/" + teamName + "/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
@@ -214,7 +214,6 @@ public class ThreadFixRestClient {
 	
 	/**
 	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
-	 * @param taskId
 	 * @param filePath
 	 * @param secureTaskKey
 	 * @return

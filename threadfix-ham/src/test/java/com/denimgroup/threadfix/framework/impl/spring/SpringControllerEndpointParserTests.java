@@ -40,15 +40,15 @@ public class SpringControllerEndpointParserTests {
 	
 	@NotNull
     String[][] expected = {
-			{"/owners/new", "GET",  "44", "49" },
-			{"/owners/new", "POST", "51", "60" },
-			{"/owners/find", "GET", "62", "66" },
-			{"/owners",      "GET", "68", "92" },
-			{"/owners/{id}/edit", "GET", "94", "99"},
-			{"/owners/{id}/edit", "PUT", "101", "110"},
-			{"/owners/{id}", "POST", "118", "123"}, // with no explicit method, it refers to the class annotation
-			{"/owners/multiple/methods", "GET", "125", "130"},
-			{"/owners/multiple/methods", "POST", "125", "130"},
+			{"/owners/new", "GET",  "45", "49" },
+			{"/owners/new", "POST", "52", "60" },
+			{"/owners/find", "GET", "63", "66" },
+			{"/owners",      "GET", "69", "92" },
+			{"/owners/{id}/edit", "GET", "95", "99"},
+			{"/owners/{id}/edit", "PUT", "102", "110"},
+			{"/owners/{id}", "POST", "119", "123"}, // with no explicit method, it refers to the class annotation
+			{"/owners/multiple/methods", "GET", "126", "130"},
+			{"/owners/multiple/methods", "POST", "126", "130"},
 	};
 
 	@Test
@@ -64,7 +64,7 @@ public class SpringControllerEndpointParserTests {
 		assertTrue("File didn't exist at " + file.getAbsolutePath(), file.exists());
 		
 		for (String[] test : expected) {
-			boolean foundMatch = false;
+			boolean matches = false;
 			
 			int start = Integer.valueOf(test[2]);
 			int end   = Integer.valueOf(test[3]);
@@ -72,20 +72,25 @@ public class SpringControllerEndpointParserTests {
 			for (Endpoint endpoint : endpoints) {
 				if (endpoint.getUrlPath().equals(test[0])) {
 					if (endpoint.getHttpMethods().contains(test[1])) {
-						for (int i = start ; i < end; i ++) {
+                        matches = true;
+
+						for (int i = start; i < end; i ++) {
 							if (!endpoint.matchesLineNumber(i)) {
-								continue;
+                                System.out.println("Broke on " + i);
+                                matches = false;
+                                break;
 							}
 						}
-						
-						foundMatch = true;
-						break;
+
+                        if (!matches) {
+						    break;
+                        }
 					}
 				}
 			}
 			
 			assertTrue(" Unable to match for " + test[0] + "," + test[1] + "," +
-							test[2] + "," + test[3], foundMatch);
+							test[2] + "," + test[3], matches);
 			
 		}
 		

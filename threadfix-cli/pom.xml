@@ -11,7 +11,7 @@
 	<artifactId>threadfix-cli</artifactId>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -70,7 +70,18 @@
 			<artifactId>json</artifactId>
 			<version>${org.json.version}</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.9</version>
+        </dependency>
+    </dependencies>
 	<properties>
 		<commons.httpclient.version>3.1</commons.httpclient.version>
 		<commons.io.version>1.4</commons.io.version>

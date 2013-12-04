@@ -5,7 +5,7 @@
 
     <groupId>com.denimgroup.threadfix</groupId>
     <artifactId>master-pom</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>2.0M1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ThreadFix</name>
@@ -67,7 +67,7 @@
                 <enabled>true</enabled>
                 <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
-            <url>file://${project.basedir}/../lib</url>
+            <url>file://${project.basedir}/lib</url>
         </repository>
         <repository>
             <id>jboss-public-repository-group</id>
@@ -97,24 +97,6 @@
                         <target>1.7</target>
                     </configuration>
                 </plugin>
-                <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire.version}</version>
-                <configuration>
-                    <skip>false</skip>
-                    <systemProperties>
-                        <property>
-                            <name>url</name>
-                            <value>${fileName}</value>
-                        </property>
-                        <property>
-                            <name>scanFileBaseLocation</name>
-                            <value>${fileName}</value>
-                        </property>
-                    </systemProperties>
-                </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -123,6 +105,9 @@
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
         <module>threadfix-main</module>
+        <module>threadfix-cli-endpoints</module>
+        <module>threadfix-scanagent</module>
+        <module>threadfix-scanner-plugin/zaproxy</module>
     </modules>
 
     <properties>
@@ -132,50 +117,74 @@
         <apache.activemq.version>5.4.2</apache.activemq.version>
         <apache.poi.version>3.8</apache.poi.version>
         <apache.httpclient.version>4.2.3</apache.httpclient.version>
+        <apache.httpcore.version>4.1.2</apache.httpcore.version>
         <apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
         <apache.xbean.version>3.5</apache.xbean.version>
+        <bouncycastle.bcmail.version>1.46</bouncycastle.bcmail.version>
+        <bouncycastle.bcprov.version>1.46</bouncycastle.bcprov.version>
+        <browserlauncher2.version>1.3</browserlauncher2.version>
         <codehaus.jackson.version>1.6.2</codehaus.jackson.version>
         <cglib.version>2.2.2</cglib.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
+        <commons.codec.version>1.4</commons.codec.version>
         <commons.collections.version>3.2.1</commons.collections.version>
+        <commons.configuration.version>1.9</commons.configuration.version>
         <commons.digester.version>1.8.1</commons.digester.version>
         <commons.fileupload.version>1.2.2</commons.fileupload.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <commons.io.version>1.4</commons.io.version>
         <commons.lang.version>3.1</commons.lang.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
         <commons.validator.version>1.3.1</commons.validator.version>
+        <diffutils.version>1.2.1</diffutils.version>
         <esapi.version>2.1.0-SNAPSHOT</esapi.version>
+        <ezmorph.version>1.0.6</ezmorph.version>
         <hibernate.version>3.5.4-Final</hibernate.version>
         <hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
         <hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
         <itext.version>2.1.7</itext.version>
         <jasperreports.version>4.5.0</jasperreports.version>
+        <java-getopt.version>1.0.13</java-getopt.version>
         <javassist.version>3.12.0.GA</javassist.version>
+        <jdom.version>2.0.2</jdom.version>
+        <jericho.version>3.1</jericho.version>
         <jetbrains-annotations.version>13</jetbrains-annotations.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
+        <jgoodies-looks.version>2.4.0</jgoodies-looks.version>
+        <jh.version>2.0</jh.version>
+        <json-lib.version>2.4</json-lib.version>
         <json.version>20090211</json.version>
         <jspf.version>1.0.2</jspf.version>
         <jstl.version>1.2</jstl.version>
         <jta.version>1.1</jta.version>
+        <lablib-checkboxtree.version>3.2</lablib-checkboxtree.version>
         <log4j.version>1.2.16</log4j.version>
+        <owasp.jbrofuzz-encoder.version>2.5.1</owasp.jbrofuzz-encoder.version>
+        <owasp.jbrofuzz-parent.version>2.5.1</owasp.jbrofuzz-parent.version>
         <persistence.version>1.0</persistence.version>
         <quartz.version>1.8.6</quartz.version>
-        <selenium.version>2.37.0</selenium.version>
+        <rsyntaxtextarea.version>2.5.0</rsyntaxtextarea.version>
+        <selenium.version>2.31.0</selenium.version>
         <servlet-api.version>3.0.1</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <slf4j.version>1.6.1</slf4j.version>
         <spring.version>3.1.4.RELEASE</spring.version>
         <spring-ldap.version>1.3.2.RELEASE</spring-ldap.version>
         <springsecurity.version>3.1.4.RELEASE</springsecurity.version>
+        <swing-common.version>1.6.4</swing-common.version>
+        <swing-layout.version>1.0.3</swing-layout.version>
         <tfs-library.version>11.0.0</tfs-library.version>
         <tuckey.version>3.1.0</tuckey.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
+        <xom.version>1.2.6</xom.version>
+        <zap.version>2.2.2</zap.version>
+        <zaphelp.version>2.2.2</zaphelp.version>
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <mysql.version>5.1.26</mysql.version>
-        <junit.version>4.8.1</junit.version>
+        <junit.version>4.8.2</junit.version>
         <selenium-client.version>1.0.2</selenium-client.version>
 
         <!-- Plugin versions -->

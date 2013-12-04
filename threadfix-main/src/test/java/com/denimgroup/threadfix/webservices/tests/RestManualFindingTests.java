@@ -1,8 +1,9 @@
 package com.denimgroup.threadfix.webservices.tests;
 
+import com.denimgroup.threadfix.cli.ThreadFixRestClient;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
@@ -15,7 +16,7 @@ public class RestManualFindingTests extends BaseRestTest {
 	 */
 	@Test
 	public void testManualFinding() {
-		ThreadFixRestClient goodClient = new ThreadFixRestClient();
+        ThreadFixRestClient goodClient = new ThreadFixRestClientImpl();
 		goodClient.setKey(GOOD_API_KEY);
 		goodClient.setUrl(BASE_URL);
 		

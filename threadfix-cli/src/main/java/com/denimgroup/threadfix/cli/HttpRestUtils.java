@@ -85,7 +85,7 @@ public class HttpRestUtils {
 				paramVals);
 	}
 	
-	public String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
+	private String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
 		
 		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
@@ -264,7 +264,7 @@ public class HttpRestUtils {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 	
-	//	TODO - Move these from the HttpRestUtils class to somethine cli-specific
+	//	TODO - Move these from the HttpRestUtils class to something cli-specific
 	// These methods help persist the URL and API Key so they don't have to be entered each time.
 	public void setUrl(String url) {
 		writeProperty("url", url);

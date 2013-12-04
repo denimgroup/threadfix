@@ -28,12 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -55,7 +53,6 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickAddDefectTrackerButton() {
 		driver.findElementById("addDefectTrackerButton").click();
-		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -72,7 +69,6 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickEditDefectTrackerButton() {
 		driver.findElementById("editDefectTrackerButton").click();
-		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -84,13 +80,12 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickTestConnection() {
 		driver.findElementById("jsonLink").click();
-		sleep(5000);
-//		waitForElement(driver.findElementById("jsonResult"));
+		waitForElement(driver.findElementById("jsonResult"));
+		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 
 	public ApplicationDetailPage selectProduct(String product) {
-		sleep(4000);
 		new Select(driver.findElementById("projectList"))
 				.selectByVisibleText(product);
 		return new ApplicationDetailPage(driver);
@@ -104,7 +99,6 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickSubmitTrackerButton() {
 		driver.findElementById("submitDTModal").click();
-		sleep(4000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -145,7 +139,7 @@ public class ApplicationDetailPage extends BasePage {
 				.selectProduct(productname)
 				.clickSubmitTrackerButton();
 //		    waitForElement(driver.findElementById("defectTrackerText"));
-			sleep(6000);
+			sleep(1000);
 		    return new ApplicationDetailPage(driver);
 		/*
 		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
@@ -229,34 +223,8 @@ public class ApplicationDetailPage extends BasePage {
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickActionButton(){
-		driver.findElementById("actionButton1").click();
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickViewPermUsers(){
-		clickActionButton();
-		driver.findElementById("userListModelButton").click();
-		waitForElement(driver.findElementById("usersModal"));
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public int getNumPermUsers(){
-		return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
-	}
-	
-	public boolean isUserPresentPerm(String user){
-		for(int i = 1; i <= getNumPermUsers();i++){
-			if (driver.findElementById("name"+i).getText().contains(user)){
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public ApplicationDetailPage clickEditDeleteBtn() {
-		clickActionButton();
 		driver.findElementById("editApplicationModalButton").click();
 		waitForElement(driver.findElementById("editApplicationModal"));
 		return new ApplicationDetailPage(driver);
@@ -306,10 +274,6 @@ public class ApplicationDetailPage extends BasePage {
 
 	public String getNameText() {
 		return driver.findElementById("nameText").getText();
-	}
-	
-	public int getNameWidth(){
-		return driver.findElementById("nameText").getSize().getWidth();
 	}
 
 	public String getUrlText() {
@@ -455,7 +419,6 @@ public class ApplicationDetailPage extends BasePage {
 		}catch(StaleElementReferenceException e){
 			
 		}
-		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 
@@ -488,40 +451,26 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage setFileInput(String file) {
 		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
-        //driver.findElementById("fileInput"+modalNumber()).click();
-//		String f = "fileInput"+modalNumber();
-//		JavascriptExecutor js = (JavascriptExecutor) driver;
-//		js.executeScript("javascript:document.getElementById('"+f+"').value='"+file+"'");
-		sleep(20000);
 		return new ApplicationDetailPage(driver);
 	}
 	
 	public ApplicationDetailPage submitScan(){
-//		int scanCnt = scanCount();
-//		int timer = 0;
+		int scanCnt = scanCount();
+		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
 		sleep(2000);
 		waitForScanUpload(0);
 //		waitForElement(driver.findElementById("scanTabLink"));
-//		while(scanCnt != scanCnt+1){
-//			scanCnt = scanCount();
-//			sleep(100);
-//			if(timer>=100){
-//				break;
-//			}
-//			timer++;
-//			
-//		}
-		sleep(7000);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage submitDefect(){
-		driver.findElementById("submitDefectForm").findElement(By.id("submitScanModal")).click();
-		sleep(1000);
-		waitForInvisibleElement(driver.findElementById("submitDefectForm"));
-		sleep(3000);
+		while(scanCnt != scanCnt+1){
+			scanCnt = scanCount();
+			sleep(100);
+			if(timer>=100){
+				break;
+			}
+			timer++;
+			
+		}
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -541,12 +490,12 @@ public class ApplicationDetailPage extends BasePage {
 	public int scanCount(){
 		WebElement scanTab;
 		try{
-			driver.findElementById("scanTabLink").isDisplayed();
+			scanTab = driver.findElementById("scanTabLink");
 		}catch(NoSuchElementException e){
 			return 0;
 		}
 		
-		String scanText = driver.findElementById("scanTabLink").getText().trim();
+		String scanText = scanTab.getText().trim();
 		Pattern pattern = Pattern.compile("^\\s*(\\d+)");
 		Matcher matcher = pattern.matcher(scanText);
 		if(matcher.find()){
@@ -595,16 +544,11 @@ public class ApplicationDetailPage extends BasePage {
 		}
 		return s.contains("Scan file has already been uploaded.");
 	}
-	public String getAlert(){
-		return driver.findElementByClassName("alert-success").getText();
-	}
 	
 
 	public ApplicationDetailPage clickUploadScanLink() {
-		clickActionButton();
 		driver.findElementById("uploadScanModalLink").click();
-		sleep(4000);
-//		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -683,85 +627,10 @@ public class ApplicationDetailPage extends BasePage {
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
 		driver.findElementById("expandAllVulns").click();
-		sleep(4000);
+		sleep(3000);
 //		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
-	
-	public ApplicationDetailPage clickVulnCheckBox(int num){
-		driver.findElementsByClassName("vulnIdCheckbox").get(num).click();
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickDefectActionBtn(){
-		driver.findElementsById("actionButton1").get(1).click();
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickSubmitDefectLink(){
-		clickDefectActionBtn();
-		driver.findElementById("submitDefectButton").click();
-		sleep(2000);
-		waitForElement(driver.findElementById("submitDefectForm"));
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickMergeDefectLink(){
-		clickDefectActionBtn();
-		driver.findElementById("mergeDefectButton").click();
-		sleep(3000);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage selectMergeDefect(String defect){
-		sleep(20000);
-		new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickMergeDefectSubmit(){
-		driver.findElementsById("mergeDefectButton").get(2).click();
-		sleep(4000);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	
-	public ApplicationDetailPage clickMarkClosedLink(){
-		clickDefectActionBtn();
-		driver.findElementById("markClosedButton").click();
-		sleep(1000);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage clickMarkFalsePositiveLink(){
-		clickDefectActionBtn();
-		driver.findElementById("markFalsePositiveButton").click();
-		sleep(1000);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public ApplicationDetailPage addCommentToFirstVuln(String comment){
-		clickExpandAllVulns();
-		expandFirstVuln();
-		driver.findElementsByLinkText("Add Comment").get(0).click();
-		sleep(1000);
-		driver.findElementsById("commentInputBox").get(0).clear();
-		driver.findElementsById("commentInputBox").get(0).sendKeys(comment);
-		for(int i = 0; i< driver.findElementsByClassName("modal").size(); i++){
-			if(driver.findElementsByClassName("modal").get(i).getAttribute("id").contains("commentModal")){
-				driver.findElementsByClassName("modal").get(i).findElement(By.linkText("Add Comment")).click();
-			}
-		}
-		sleep(3000);
-		return new ApplicationDetailPage(driver);
-		
-	}
-	
-	public ApplicationDetailPage expandFirstVuln(){
-		driver.findElementsByClassName("expandableTrigger").get(1).click();
-		return new ApplicationDetailPage(driver);
-	}
-	
 	
 	public boolean isScanPresent(String scan){
 		return driver.findElementById("wafTableBody").getText().contains(scan);
@@ -770,20 +639,107 @@ public class ApplicationDetailPage extends BasePage {
 	public boolean isScanCountCorrect(int cnt){
 		return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
 	}
-	
-	public ApplicationDetailPage clickCloseAppModal(){
-		driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-		sleep(2500);
-		return new ApplicationDetailPage(driver);
-	}
-	
-	public int getNumOfSubmitedDefects(){
-		return driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
-	}
 
-	public ApplicationDetailPage setTeam(String team) {
-		new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
-		return new ApplicationDetailPage(driver);
-	}
-	
+    public ApplicationDetailPage clickScansQueueTab() {
+        driver.findElementById("scanQueueTabLink").click();
+        sleep(1000);
+        waitForElement(driver.findElementById("scanQueueTable"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public int scanQueueCount(){
+        WebElement scanQueueTab;
+        try{
+            scanQueueTab = driver.findElementById("scanQueueTabLink");
+        }catch(NoSuchElementException e){
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public ApplicationDetailPage clickAddNewScanQueueLink() {
+        driver.findElementById("addScanQueueLink"+modalNumber()).click();
+        waitForElement(driver.findElementById("addScanQueue"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDocFileInput(String file) {
+        driver.findElementById("docInput"+modalNumber()).sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage submitScanQueue() {
+        driver.findElementById("addScanQueueButton"+modalNumber()).click();
+        sleep(1000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public boolean isScanQueuePresent(String scanner){
+        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+        for(int i = 1; i <= rowCnt; i++){
+            if(driver.findElementById("scannerType"+i).getText().trim().equals(scanner)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ApplicationDetailPage clickDocumentTab() {
+        driver.findElementById("docsTabLink").click();
+        sleep(1000);
+        waitForElement(driver.findElementById("uploadDocModalLink"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public int docsCount(){
+        WebElement scanQueueTab;
+        try{
+            scanQueueTab = driver.findElementById("docsTabLink");
+        }catch(NoSuchElementException e){
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public ApplicationDetailPage clickUploadDocLink() {
+        driver.findElementById("uploadDocModalLink"+modalNumber()).click();
+        waitForElement(driver.findElementById("uploadDoc"+modalNumber()));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setScanQueueType(String scanQueueType) {
+        new Select(driver.findElementById("scanQueueType"))
+                .selectByVisibleText(scanQueueType);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage submitDoc() {
+        driver.findElementById("submitDocModal"+modalNumber()).click();
+        sleep(3000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public boolean isDocPresent(String docName){
+        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+        for(int i = 1; i <= rowCnt; i++){
+            if(driver.findElementById("docName"+i).getText().trim().equals(docName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

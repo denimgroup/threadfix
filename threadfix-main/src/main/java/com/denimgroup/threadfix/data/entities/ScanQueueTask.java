@@ -241,22 +241,25 @@ public class ScanQueueTask extends AuditableEntity {
 	 * @return true if the scanner name is valid, false if it is not valid
 	 */
 	public static boolean validateScanner(String proposedScanner) {
-		boolean retVal = false;
-		
-		if (proposedScanner != null && proposedScanner.length() <= 32) {
-			boolean foundBadChar = false;
-			for (int i=0; i < proposedScanner.length(); ++i) {
-				if (!Character.isLetterOrDigit(proposedScanner.charAt(i))) {
-					foundBadChar = true;
-					break;
-				}
-			}
-			if(!foundBadChar) {
-				retVal = true;
-			}
-		}
-		
-		return retVal;
+//		boolean retVal = false;
+
+        return (ScannerType.getScannerType(proposedScanner) != null);
+
+
+//		if (proposedScanner != null && proposedScanner.length() <= 32) {
+//			boolean foundBadChar = false;
+//			for (int i=0; i < proposedScanner.length(); ++i) {
+//				if (!Character.isLetterOrDigit(proposedScanner.charAt(i))) {
+//					foundBadChar = true;
+//					break;
+//				}
+//			}
+//			if(!foundBadChar) {
+//				retVal = true;
+//			}
+//		}
+//
+//		return retVal;
 	}
 	
 	/**
@@ -270,7 +273,8 @@ public class ScanQueueTask extends AuditableEntity {
 		String retVal = null;
 		
 		if(validateScanner(scannerType)) {
-			retVal = scannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
+            String sScannerType = ScannerType.getScannerType(scannerType).getShortName();
+			retVal = sScannerType + "." + SCANAGENT_CONFIG_FILE_EXTENSION;
 		}
 		
 		return retVal;

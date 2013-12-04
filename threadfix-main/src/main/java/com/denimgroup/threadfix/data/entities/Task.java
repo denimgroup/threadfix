@@ -25,19 +25,21 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import org.jetbrains.annotations.NotNull;
 
 public class Task {
-	
+
+    @NotNull
 	private String taskType;
 	private TaskConfig taskConfig;
-	private int taskId;
+    private int taskId;
 	private String secureTaskKey;
 	
 	public Task() {
 		
 	}
 	
-	public Task(int taskId, String taskType, TaskConfig taskConfig) {
+	public Task(int taskId, @NotNull String taskType, TaskConfig taskConfig) {
 		this.taskId = taskId;
 		this.taskType = taskType;
 		this.taskConfig = taskConfig;
@@ -55,7 +57,7 @@ public class Task {
 		return(this.taskType);
 	}
 	
-	public void setTaskType(String taskType) {
+	public void setTaskType(@NotNull String taskType) {
 		this.taskType = taskType;
 	}
 	

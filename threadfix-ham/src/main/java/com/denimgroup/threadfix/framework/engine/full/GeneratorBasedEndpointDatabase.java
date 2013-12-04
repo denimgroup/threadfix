@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.denimgroup.threadfix.framework.engine.CodePoint;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -164,8 +165,42 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             }
         }
 
+        if (resultingSet.isEmpty() && query.getCodePoints() != null) {
+            resultingSet = getFromCodePoints(query.getCodePoints());
+        }
+
 		return resultingSet;
 	}
+
+    @NotNull
+    private Set<Endpoint> getFromCodePoints(@NotNull List<CodePoint> codePoints) {
+        Set<Endpoint> results = new HashSet<>();
+
+        top: for (CodePoint codePoint : codePoints) {
+            if (codePoint != null && codePoint.getSourceFileName() != null) {
+                String sourceFileKey = null;
+
+                for (String key : staticMap.keySet()) {
+                    if (key.endsWith(codePoint.getSourceFileName())) {
+                        sourceFileKey = key;
+                    }
+                }
+
+                if (sourceFileKey != null) {
+                    Set<Endpoint> innerResult = getValueOrEmptySet(sourceFileKey, staticMap);
+
+                    for (Endpoint endpoint : innerResult) {
+                        if (endpoint != null && endpoint.matchesLineNumber(codePoint.getLineNumber())) {
+                            results.add(endpoint);
+                            break top;
+                        }
+                    }
+                }
+            }
+        }
+
+        return results;
+    }
 	
 	@NotNull
     private Set<Endpoint> getValueOrEmptySet(@Nullable String key,

@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.scanagent;
+package com.denimgroup.threadfix.scanagent.scanners;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +37,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.zaproxy.clientapi.core.ApiResponse;
 import org.zaproxy.clientapi.core.ApiResponseElement;
 import org.zaproxy.clientapi.core.ApiResponseList;
@@ -49,7 +50,7 @@ import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
-	static final Logger log = Logger.getLogger(ZapScanAgent.class);
+	private static final Logger log = Logger.getLogger(ZapScanAgent.class);
 
     private int maxSpiderWaitInSeconds;
     private int maxScanWaitInSeconds;
@@ -67,22 +68,24 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param theConfig configuration for the scan. A pre-configured session file can
 	 * be passed via the configFile data blob.
 	 */
-	private static ZapScanAgent instance = null;
+	@Nullable
+    private static ZapScanAgent instance = null;
 	private ZapScanAgent() {
 	}
-	public static ZapScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
+	@Nullable
+    public static ZapScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir) {
 		if(instance == null) {
 			instance = new ZapScanAgent();
 		}
 		instance.readConfig(ConfigurationUtils.getPropertiesFile());
 		instance.setWorkDir(workDir);
-		instance.setServerConduit(serverConduit);
 		instance.setZapExecutablePath(scanner.getHomeDir());
 		instance.setZapHost(scanner.getHost());
 		instance.setZapPort(scanner.getPort());
 		return instance;
 	}
 	
+    @Nullable
     @Override
 	public File doTask(@NotNull TaskConfig theConfig) {
 
@@ -158,7 +161,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 						log.info(message);
 						sendStatusUpdate(message);
 
-						String resultsXml = attemptRetrieveResults(zap);
+						String resultsXml = attemptRetrieveResults();
 						if (resultsXml == null || resultsXml.isEmpty())
 							return null;
 						try {
@@ -279,15 +282,15 @@ public class ZapScanAgent extends AbstractScanAgent {
 
 	
 	/**
-	 * @param zap
 	 * @return
 	 */
-	private String attemptRetrieveResults(@NotNull ClientApi zap) {
+	@Nullable
+    private String attemptRetrieveResults() {
 		String retVal = null;
 		
 		try {
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-			retVal = openUrlViaProxy(proxy, "http://zap/OTHER/core/other/xmlreport/");
+			retVal = openUrlViaProxy(proxy);
 			if(retVal != null) {
 				log.debug("Length of response file from ZAP is: " + retVal.length());
 			} else {
@@ -311,13 +314,13 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * TODO - Clean up the massive Exception being thrown
 	 * 
 	 * @param proxy
-	 * @param apiurl
 	 * @return
 	 * @throws Exception
 	 */
-    private static String openUrlViaProxy (@NotNull Proxy proxy, @NotNull String apiurl) throws Exception {
+    @NotNull
+    private static String openUrlViaProxy (@NotNull Proxy proxy) throws Exception {
     	StringBuilder response = new StringBuilder();
-        URL url = new URL(apiurl);
+        URL url = new URL("http://zap/OTHER/core/other/xmlreport/");
         HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
         uc.connect();
         
@@ -478,7 +481,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param response
 	 * @return
 	 */
-	private static boolean didCallSucceed(ApiResponse response) {
+	private static boolean didCallSucceed(@Nullable ApiResponse response) {
 		boolean retVal = false;
 		if(response != null && "OK".equals(extractResponseString(response))) {
 			retVal = true;
@@ -491,7 +494,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param response
 	 * @return
 	 */
-	private static boolean didCallFail(ApiResponse response) {
+	private static boolean didCallFail(@Nullable ApiResponse response) {
 		boolean retVal = false;
 		if(response != null && "FAIL".equals(extractResponseString(response))) {
 			retVal = true;
@@ -504,7 +507,8 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param response
 	 * @return
 	 */
-	private static String extractResponseString(ApiResponse response) {
+	@Nullable
+    private static String extractResponseString(@Nullable ApiResponse response) {
 		String retVal = null;
 		if(response != null && response instanceof ApiResponseElement) {
 			retVal = ((ApiResponseElement)response).getValue();
@@ -517,35 +521,21 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * @param response
 	 * @return
 	 */
-	private static int extractResponseCount(ApiResponse response) {
+	private static int extractResponseCount(@Nullable ApiResponse response) {
 		int retVal = -1;
 		if(response != null && response instanceof ApiResponseList) {
 			retVal = ((ApiResponseList)response).getItems().size();
 		}
 		return(retVal);
 	}
-	@NotNull
-    public String getZapHost() {
-		return zapHost;
-	}
 	public void setZapHost(@NotNull String zapHost) {
 		this.zapHost = zapHost;
-	}
-	public int getZapPort() {
-		return zapPort;
 	}
 	public void setZapPort(int zapPort) {
 		this.zapPort = zapPort;
 	}
-	@NotNull
-    public String getZapExecutablePath() {
-		return zapExecutablePath;
-	}
 	public void setZapExecutablePath(@NotNull String zapExecutablePath) {
 		this.zapExecutablePath = zapExecutablePath;
-	}
-	public Process getProcess() {
-		return process;
 	}
 	public void setProcess(Process process) {
 		this.process = process;

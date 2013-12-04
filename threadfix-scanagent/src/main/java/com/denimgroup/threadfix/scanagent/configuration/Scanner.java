@@ -49,11 +49,13 @@ public class Scanner {
 		this.port = port;
 	}
 	
-	public String getName() {
+	@NotNull
+    public String getName() {
 		return(name);
 	}
 	
-	public String getVersion() {
+	@Nullable
+    public String getVersion() {
 		return(version);
 	}
 	
@@ -91,7 +93,8 @@ public class Scanner {
 		this.version = version;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public String toString() {
 		return "Scanner { name = " + name + ", version = " + version + ", home directory = " 
 						+ homeDir + ", host = " + host + ", port = " + port + " }";

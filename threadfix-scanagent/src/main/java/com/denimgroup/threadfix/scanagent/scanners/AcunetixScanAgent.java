@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.scanagent;
+package com.denimgroup.threadfix.scanagent.scanners;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,24 +38,25 @@ import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AcunetixScanAgent extends AbstractScanAgent {
 	
-	static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
+	private static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
 	@NotNull
     private String acunetixExecutablePath;
 	private String loginSeqDir;
-    @NotNull
+    @Nullable
 	private static AcunetixScanAgent instance = null;
 	private AcunetixScanAgent() {
 	}
-	public static AcunetixScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir, @NotNull ServerConduit serverConduit) {
+	@Nullable
+    public static AcunetixScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir) {
 		if(instance == null) {
 			instance = new AcunetixScanAgent();
 		}
 		instance.readConfig(ConfigurationUtils.getPropertiesFile());
 		instance.setWorkDir(workDir);
-		instance.setServerConduit(serverConduit);
 		instance.setAcunetixExecutablePath(scanner.getHomeDir());
 		return instance;
 	}
@@ -67,6 +68,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		return retVal;
 	}
 
+    @Nullable
     @Override
 	public File doTask(@NotNull TaskConfig config) {
 		
@@ -110,7 +112,8 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		return retVal;
 	}
 	
-	private String[] setupArgs(@NotNull TaskConfig config) {
+	@Nullable
+    private String[] setupArgs(@NotNull TaskConfig config) {
 		log.info("Setting up command-line arguments for Acunetix scan");
 		
 		String acunetixExecutable = this.acunetixExecutablePath + ConfigurationUtils.ACUNETIX_FILES[0];
@@ -140,19 +143,12 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		return args;
 	}
-	@NotNull
-    public String getAcunetixExecutablePath() {
-		return acunetixExecutablePath;
-	}
-	
+
 	public void setAcunetixExecutablePath(@NotNull String acunetixExecutablePath) {
 		this.acunetixExecutablePath = acunetixExecutablePath;
 	}
 	public String getLoginSeqDir() {
 		return loginSeqDir;
-	}
-	public void setLoginSeqDir(String loginSeqDir) {
-		this.loginSeqDir = loginSeqDir;
 	}
 
 }
