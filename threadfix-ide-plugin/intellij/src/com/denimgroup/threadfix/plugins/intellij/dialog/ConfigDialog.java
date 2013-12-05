@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.Messages;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +24,8 @@ public class ConfigDialog {
 
     public static boolean show(AnActionEvent e) {
 
-        String url = getUrl(e), apiKey = null, apps = null;
+        String url = getUrl(e), apiKey = null;
+        Set<String> apps = null;
 
         if (url != null) {
             apiKey = getApiKey(e);
@@ -32,7 +34,7 @@ public class ConfigDialog {
                 PropertiesManager.setApiKey(apiKey);
                 PropertiesManager.setUrl(url);
 
-                apps = getApplications(e);
+                apps = ApplicationsDialog.getApplications(e);
 
                 PropertiesManager.setApplicationKey(apps);
             }
@@ -65,18 +67,6 @@ public class ConfigDialog {
         return Messages.showInputDialog(project,
                 "What is your ThreadFix API Key?",
                 "ThreadFix API Key",
-                Messages.getInformationIcon(),
-                configuredApiKey,
-                null);
-    }
-
-    private static String getApplications(AnActionEvent e) {
-        String configuredApiKey = PropertiesManager.getApplicationKey();
-
-        Project project = e.getData(PlatformDataKeys.PROJECT);
-        return Messages.showInputDialog(project,
-                "Which ThreadFix apps would you like to import data from?",
-                "ThreadFix Applications",
                 Messages.getInformationIcon(),
                 configuredApiKey,
                 null);

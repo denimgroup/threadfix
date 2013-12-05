@@ -40,7 +40,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 
-public class AcceptAllTrustFactory implements ProtocolSocketFactory {
+class AcceptAllTrustFactory implements ProtocolSocketFactory {
 
 	private SSLContext sslContext = null;
 

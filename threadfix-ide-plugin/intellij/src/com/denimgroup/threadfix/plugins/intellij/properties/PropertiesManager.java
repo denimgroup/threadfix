@@ -2,6 +2,10 @@ package com.denimgroup.threadfix.plugins.intellij.properties;
 
 import com.intellij.ide.util.PropertiesComponent;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created with IntelliJ IDEA.
  * User: mac
@@ -27,8 +31,8 @@ public class PropertiesManager {
         return readFromProperties(API_KEY);
     }
 
-    public static String getApplicationKey() {
-        return readFromProperties(APPLICATION_KEY);
+    public static Set<String> getApplicationIds() {
+        return toSet(readFromProperties(APPLICATION_KEY));
     }
 
 
@@ -44,11 +48,30 @@ public class PropertiesManager {
         writeToProperties(API_KEY, apiKey);
     }
 
-    public static void setApplicationKey(String applicationKey) {
-        writeToProperties(APPLICATION_KEY, applicationKey);
+    public static void setApplicationKey(Set<String> applicationIds) {
+        writeToProperties(APPLICATION_KEY, toString(applicationIds));
     }
 
+    private static String toString(Set<String> input) {
+        StringBuilder builder = new StringBuilder();
 
+        for (String string : input) {
+            builder.append(string).append(",");
+        }
 
+        if (builder.length() > 0) {
+            // kill last comma
+            builder.setLength(builder.length() - 1);
+        }
 
+        return builder.toString();
+    }
+
+    private static Set<String> toSet(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return new HashSet<String>();
+        } else {
+            return new HashSet<String>(Arrays.asList(input.split(",")));
+        }
+    }
 }

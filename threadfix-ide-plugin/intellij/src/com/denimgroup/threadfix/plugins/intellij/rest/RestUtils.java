@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.rest;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class RestUtils {
@@ -65,7 +65,7 @@ public class RestUtils {
 		return result;
 	}
 	
-	public String httpGet(String urlStr) {
+	String httpGet(String urlStr) {
 		
 		System.out.println("Requesting " + urlStr);
 		

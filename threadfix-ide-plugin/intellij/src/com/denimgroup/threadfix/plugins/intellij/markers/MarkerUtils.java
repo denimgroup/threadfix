@@ -59,7 +59,7 @@ public class MarkerUtils {
 
     private static void removeAll(Collection<VirtualFile> files, Project project) {
         for (VirtualFile virtualFile : files) {
-            MarkupModel model = getMarkupModelIfPresent(virtualFile, project);
+            MarkupModel model = getMarkupModel(virtualFile, project, false);
 
             if (model != null) {
                 removeThreadFixRenderers(model);
@@ -69,15 +69,7 @@ public class MarkerUtils {
 
     private static MarkupModel getMarkupModel(Map<String, Set<VirtualFile>> map, String shortClassName,
                                               Project project) {
-        return getMarkupModel(map.get(shortClassName).iterator().next(), project);
-    }
-
-    private static MarkupModel getMarkupModel(VirtualFile virtualFile, Project project) {
-        return getMarkupModel(virtualFile, project, true);
-    }
-
-    private static MarkupModel getMarkupModelIfPresent(VirtualFile virtualFile, Project project) {
-        return getMarkupModel(virtualFile, project, false);
+        return getMarkupModel(map.get(shortClassName).iterator().next(), project, true);
     }
 
     private static MarkupModel getMarkupModel(VirtualFile virtualFile, Project project, boolean create) {

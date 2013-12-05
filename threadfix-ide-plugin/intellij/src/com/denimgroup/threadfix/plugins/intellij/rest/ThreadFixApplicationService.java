@@ -23,24 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.rest;
 
-import com.denimgroup.threadfix.plugins.intellij.rest.RestUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class ThreadFixApplicationService {
 
-	public static Map<String, String> getApplications() {
+	public static ApplicationsMap getApplications() {
 		String csvString = getApplicationCSV();
 		
-		Map<String, String> map = new HashMap<String, String>();
+        ApplicationsMap map = new ApplicationsMap();
 		
 		String[] lines = csvString.split("\n");
 		
 		for (String line : lines) {
 			String[] components = line.split(",");
 			if (components.length == 2) {
-				map.put(components[0], components[1]);
+                String[] teamAppArray = components[0].split("/");
+                if (teamAppArray.length == 2) {
+                    map.addApp(teamAppArray[0], teamAppArray[1], components[1]);
+                }
 			}
 		}
 		
