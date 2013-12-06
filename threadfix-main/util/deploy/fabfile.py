@@ -55,9 +55,9 @@ def deploy_war():
     server_target_loc = server_base_loc + '/' +  str(folder_name)
     with cd(server_base_loc):
         run('mkdir %s' % str(folder_name))
-    put('%s/threadfix/target/threadfix-0.0.1-SNAPSHOT.war' % local_working_folder_loc, server_target_loc)
+    put('%s/threadfix/target/threadfix-2.0M1-SNAPSHOT.war' % local_working_folder_loc, server_target_loc)
     with cd(server_target_loc):        
-        run('unzip -q threadfix-0.0.1-SNAPSHOT.war -d threadfix') #unzip the WAR file
+        run('unzip -q threadfix-2.0M1-SNAPSHOT.war -d threadfix') #unzip the WAR file
     run('sudo service tomcat6 stop')   #stop tomcat
     run('mv -f %s/threadfix/WEB-INF/classes/threadfix-backup.script /var/lib/tomcat6/database/threadfix.script' % server_target_loc)
     run('rm -f /var/lib/tomcat6/database/threadfix.log') 
