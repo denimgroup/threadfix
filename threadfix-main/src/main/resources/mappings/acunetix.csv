@@ -1,3 +1,6 @@
+type.info,,,
+Acunetix WVS
+type.vulnerabilities,,,
 Slow HTTP Denial of Service Attack,Slow HTTP Denial of Service Attack,400
 Possible sensitive directories,Possible sensitive directories,538
 Password type input with auto-complete enabled,Password type input with auto-complete enabled,524

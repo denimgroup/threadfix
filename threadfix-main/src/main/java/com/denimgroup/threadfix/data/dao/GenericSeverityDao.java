@@ -34,5 +34,7 @@ public interface GenericSeverityDao {
 	GenericSeverity retrieveByName(String name);
 	
 	GenericSeverity retrieveById(int id);
+
+    GenericSeverity retrieveByIntValue(int iValue);
 	
 }

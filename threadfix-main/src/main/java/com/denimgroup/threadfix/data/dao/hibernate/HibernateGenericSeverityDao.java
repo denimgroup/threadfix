@@ -63,4 +63,10 @@ public class HibernateGenericSeverityDao implements GenericSeverityDao {
 	private Criteria getBaseCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(GenericSeverity.class);
 	}
+
+    @Override
+    public GenericSeverity retrieveByIntValue(int iValue) {
+        return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("intValue", iValue))
+                .setMaxResults(1).uniqueResult();
+    }
 }

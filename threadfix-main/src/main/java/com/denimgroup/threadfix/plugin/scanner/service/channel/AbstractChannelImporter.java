@@ -226,7 +226,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 *            The URL location of the vulnerability.
 	 * @param param
 	 *            The vulnerable parameter (optional)
-	 * @throws NoSuchAlgorithmException
+	 * @throws java.security.NoSuchAlgorithmException
 	 *             Thrown if the MD5 algorithm cannot be found.
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
@@ -438,7 +438,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return the correct severity from the DB.
 	 */
 	protected ChannelSeverity getChannelSeverity(String code) {
-		if (channelType == null || code == null || channelSeverityDao == null) {
+        // Will need to reload channelType again if this channelType is new
+        if (channelType == null)
+            channelType = channelTypeDao.retrieveByName(getType());
+        if (channelType == null || code == null || channelSeverityDao == null) {
 			return null;
 		}
 
@@ -466,7 +469,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 */
 
 	protected ChannelVulnerability getChannelVulnerability(String code) {
-		if (channelType == null || code == null || channelVulnerabilityDao == null) {
+        // Will need to reload channelType again if this channelType is new
+        if (channelType == null)
+            channelType = channelTypeDao.retrieveByName(getType());
+        if (channelType == null || code == null || channelVulnerabilityDao == null) {
 			return null;
 		}
 		
