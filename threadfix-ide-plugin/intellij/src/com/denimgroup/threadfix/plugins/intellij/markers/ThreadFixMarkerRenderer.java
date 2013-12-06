@@ -2,7 +2,7 @@ package com.denimgroup.threadfix.plugins.intellij.markers;
 
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.util.IconUtil;
+import com.intellij.openapi.util.IconLoader;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,10 +35,11 @@ public class ThreadFixMarkerRenderer extends GutterIconRenderer {
         text.append('\n').append(marker.toString());
     }
 
+    // TODO change to a transparent png
     @NotNull
     @Override
     public Icon getIcon() {
-        return IconUtil.getRemoveIcon();  // TODO add our icon
+        return IconLoader.getIcon("/icons/icon.jpg");
     }
 
     @Override
