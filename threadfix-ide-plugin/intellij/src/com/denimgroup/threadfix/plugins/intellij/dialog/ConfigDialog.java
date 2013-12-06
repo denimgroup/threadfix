@@ -34,7 +34,7 @@ public class ConfigDialog {
                 PropertiesManager.setApiKey(apiKey);
                 PropertiesManager.setUrl(url);
 
-                apps = ApplicationsDialog.getApplications(e);
+                apps = ApplicationsDialog.getApplications();
 
                 PropertiesManager.setApplicationKey(apps);
             }

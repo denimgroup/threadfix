@@ -1,11 +1,13 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
+import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
 import com.denimgroup.threadfix.plugins.intellij.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugins.intellij.rest.ThreadFixApplicationService;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.ui.CheckedTreeNode;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,15 +18,23 @@ import java.util.*;
  */
 public class ApplicationsDialog {
 
-    public static Set<String> getApplications(AnActionEvent e) {
-        ApplicationsMap applicationsMap = ThreadFixApplicationService.getApplications();
+    final ApplicationsMap applicationsMap;
+    final Set<String> currentIds;
 
-        CheckBoxTreeWrapper.Result result = CheckBoxTreeWrapper.run(createRootNode(applicationsMap));
-
-        return result.checkedKeys;
+    private ApplicationsDialog(){
+        this.applicationsMap = ThreadFixApplicationService.getApplications();
+        this.currentIds = PropertiesManager.getApplicationIds();
     }
 
-    private static CheckedTreeNode createRootNode(ApplicationsMap applicationsMap) {
+    public static Set<String> getApplications() {
+        return new ApplicationsDialog().run().checkedKeys;
+    }
+
+    public CheckBoxTreeWrapper.Result run() {
+        return CheckBoxTreeWrapper.run(createRootNode());
+    }
+
+    private CheckedTreeNode createRootNode() {
         CheckedTreeNode rootNode = new ThreadFixAppNode("root", "rootnode");
 
         Map<String, CheckedTreeNode> teamNodesMap = new HashMap<String, CheckedTreeNode>();
@@ -32,23 +42,30 @@ public class ApplicationsDialog {
         for (String team : applicationsMap.getTeams()) {
             teamNodesMap.put(team, constructNode(rootNode, team));
 
+            boolean allChecked = true;
             for (String app : applicationsMap.getApps(team)) {
                 String id = applicationsMap.getId(team, app);
                 constructNode(teamNodesMap.get(team), app, id);
+                if (!currentIds.contains(id)) {
+                    allChecked = false;
+                }
             }
+
+            teamNodesMap.get(team).setChecked(allChecked);
         }
 
         return rootNode;
     }
 
-    private static CheckedTreeNode constructNode(CheckedTreeNode parent, String key) {
+    private CheckedTreeNode constructNode(CheckedTreeNode parent, String key) {
         CheckedTreeNode node = new ThreadFixAppNode(key, null);
         parent.add(node);
         return node;
     }
 
-    private static CheckedTreeNode constructNode(CheckedTreeNode parent, String key, String id) {
+    private CheckedTreeNode constructNode(CheckedTreeNode parent, String key, String id) {
         ThreadFixAppNode node = new ThreadFixAppNode(key, id);
+        node.setChecked(currentIds.contains(id));
         parent.add(node);
         return node;
     }

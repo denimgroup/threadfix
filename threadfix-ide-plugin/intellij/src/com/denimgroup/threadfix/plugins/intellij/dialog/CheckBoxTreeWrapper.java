@@ -85,8 +85,10 @@ class CheckBoxTreeWrapper {
             }
         });
 
-        buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.add(okButton);
+
+        topPanel.getRootPane().setDefaultButton(okButton);
 
         buttonPanel.setSize(new Dimension(600, 100));
 
@@ -99,8 +101,6 @@ class CheckBoxTreeWrapper {
         final Set<String> returnSet =  new HashSet<String>();
 
         if (treeRoot instanceof CheckedTreeNode) {
-            final CheckedTreeNode node = (CheckedTreeNode) treeRoot;
-
             new Object() {
                 public void collect(CheckedTreeNode node) {
                     if (node.isLeaf() && node.isChecked() && node instanceof ThreadFixAppNode) {
