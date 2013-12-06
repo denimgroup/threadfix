@@ -4,6 +4,9 @@ import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.MarkupModel;
@@ -16,7 +19,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.awt.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -84,11 +90,24 @@ public class MarkerUtils {
         return returnModel;
     }
 
+    private static Color getHighlighterColor() {
+        EditorColorsManager manager = EditorColorsManager.getInstance();
+        if (manager != null) {
+            EditorColorsScheme globalScheme = manager.getGlobalScheme();
+
+            return globalScheme.getColor(EditorColors.SELECTION_FOREGROUND_COLOR);
+        } else {
+            return JBColor.getHSBColor(.0f, .37f, .99f);
+        }
+    }
+
     private static void addRenderers(@NotNull VulnerabilityMarker marker, @NotNull MarkupModel documentMarkupModel) {
 
         TextAttributes attributes = new TextAttributes();
 
-        attributes.setBackgroundColor(JBColor.getHSBColor(.0f, .37f, .99f));
+        Color color = getHighlighterColor();
+
+        attributes.setBackgroundColor(color);
 
         RangeHighlighter newHighlighter = documentMarkupModel.addLineHighlighter(marker.lineNumber, 500, attributes);
 
