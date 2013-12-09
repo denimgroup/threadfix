@@ -297,17 +297,16 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		Finding finding = constructFinding(currentUrlText, 
 	    				getNextParam(currentCodeLine, currentEntryPoint), 
 	    				currentChannelVulnCode, SEVERITIES_MAP.get(currentChannelVulnCode));
-	    		
-	    		finding.setNativeId(currentNativeId);
-	    		finding.setDataFlowElements(dataFlowElements);
-	    		finding.setSourceFileLocation(currentSourceFileLocation);
-	    		
-	    		finding.setIsStatic(true);
-	    		
-	    		saxFindingList.add(finding);
-	    		
-	    		currentSourceFileLocation = null;
-	    		currentSequenceNumber = 0;
+
+                if (finding != null) {
+                    finding.setNativeId(currentNativeId);
+                    finding.setDataFlowElements(dataFlowElements);
+                    finding.setSourceFileLocation(currentSourceFileLocation);
+                    finding.setIsStatic(true);
+                    saxFindingList.add(finding);
+                }
+                currentSourceFileLocation = null;
+                currentSequenceNumber = 0;
 	    		currentCodeLine = null;
 	    		currentEntryPoint = null;
 	    		currentUrlText = null;
