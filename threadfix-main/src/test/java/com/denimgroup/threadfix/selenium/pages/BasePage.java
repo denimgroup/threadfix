@@ -345,11 +345,11 @@ public abstract class BasePage {
 	
 	/*--------------helper functions--------------*/
 	public void sleep(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(num);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void waitForElementPresence(String element, int number) {

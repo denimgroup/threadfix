@@ -82,7 +82,7 @@ public class ScanTests extends BaseTest {
 		
 		return ScanTests.class.getClassLoader().getResource(string).toString();
 	}
-	@Test
+	//@Test
 	public void longTeamAppNameDisplayTest(){
 		String teamName = getRandomString(1024);
 		String appName = getRandomString(1024);
@@ -206,7 +206,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void ibmAppscanScan() {
 		String key = "IBM Rational AppScan";

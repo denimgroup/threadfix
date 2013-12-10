@@ -13,7 +13,7 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 public class TeamDetailPageTest extends PageBaseTest {
 	
 	private DashboardPage dashboardPage;
-	private TeamDetailPage teamdetailPage; 
+	private TeamDetailPage teamdetailPage;
 	private boolean build;
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
@@ -153,7 +153,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 		if(!addAppPresent){ap = "Add App button was not present";}
 		if(!addAppClick){ap = "Add App button was not clickable";}
 		
-		assertTrue(ap + " | "+ ac,addAppPresent && addAppClick);
+		assertTrue(ap + " | " + ac, addAppPresent && addAppClick);
 		
 		teamdetailPage.logout();
 	}

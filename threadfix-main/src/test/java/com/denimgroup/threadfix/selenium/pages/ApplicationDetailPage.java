@@ -486,7 +486,8 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage setFileInput(String file) {
-		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
+		WebElement test = driver.findElementById("fileInput"+modalNumber());
+        test.sendKeys(file);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -495,7 +496,7 @@ public class ApplicationDetailPage extends BasePage {
 //		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
 //		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
-		sleep(2000);
+		sleep(5000);
 		waitForScanUpload(0);
 //		waitForElement(driver.findElementById("scanTabLink"));
 //		while(scanCnt != scanCnt+1){
