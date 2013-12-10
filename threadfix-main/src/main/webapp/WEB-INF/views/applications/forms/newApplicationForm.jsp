@@ -54,7 +54,8 @@
 			<tr>
 				<td class="right-align" style="padding:5px;">Source Code URL:</td>
 				<td class="left-align"  style="padding:5px;">
-					<form:input maxlength="250" path="repositoryUrl"/>
+					<form:input id="repositoryUrl" maxlength="250" path="repositoryUrl"/>
+                    <form:errors path="repositoryUrl" cssClass="errors" />
 				</td>
 			</tr>			
 			<tr>
