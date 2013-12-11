@@ -60,8 +60,8 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test 
 	public void testCreateBasicApplication() {
-		String teamName = "testCreateApplicationOrgw" + getRandomString(3);
-		String appName = "testCreateApplicationAppw" + getRandomString(3);
+		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
+		String appName = "testCreateBasicApplicationApp" + getRandomString(3);
 		String urlText = "http://testurl.com";
 		
 		teamIndexPage = loginPage.login("user", "password")
@@ -95,7 +95,7 @@ public class ApplicationTests extends BaseTest {
 	
 	@Test 
 	public void testCreateBasicApplicationValidation() {
-		String orgName = "testCreateApplicationOrg2a";
+        String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
 		String appName = null;
 		String urlText = "htnotaurl.com";
 		
@@ -117,20 +117,20 @@ public class ApplicationTests extends BaseTest {
 		teamIndexPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
-										.setTeamName(orgName)
+										.setTeamName(teamName)
 										.addNewTeam()
-										.expandTeamRowByName(orgName)
-										.addNewApplication(orgName, emptyString, emptyString, "Low")
-										.saveApplicationInvalid(orgName);
+										.expandTeamRowByName(teamName)
+										.addNewApplication(teamName, emptyString, emptyString, "Low")
+										.saveApplicationInvalid(teamName);
 		
 		assertTrue("The correct error did not appear for the name field.", 
 				teamIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal(orgName)
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgName)
-									.addNewApplication(orgName, whiteSpace, whiteSpace, "Low")
-									.saveApplicationInvalid(orgName);
+									.expandTeamRowByName(teamName)
+									.addNewApplication(teamName, whiteSpace, whiteSpace, "Low")
+									.saveApplicationInvalid(teamName);
 		
 		
 		assertTrue("The correct error did not appear for the name field.", 
@@ -139,25 +139,25 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 		
 		// Test URL format
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal(orgName)
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(orgName)
-									.addNewApplication(orgName, "dummyApp", urlText, "Low")
-									.saveApplicationInvalid(orgName);
+									.expandTeamRowByName(teamName)
+									.addNewApplication(teamName, "dummyApp", urlText, "Low")
+									.saveApplicationInvalid(teamName);
 		
 		assertTrue("The correct error did not appear for the url field.", 
 				teamIndexPage.getUrlErrorMessage().contains("Not a valid URL"));
 
 		// Test browser field length limits
 		applicationDetailPage = teamIndexPage
-				.clickCloseAddAppModal(orgName)
+				.clickCloseAddAppModal(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(orgName)
-				.addNewApplication(orgName, longInputName, longInputUrl, "Low")
-				.saveApplication(orgName)
+				.expandTeamRowByName(teamName)
+				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
+				.saveApplication(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(orgName)
-				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",orgName);
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",teamName);
 
 		
 		assertTrue("The length limit was incorrect for name.", 
@@ -169,17 +169,17 @@ public class ApplicationTests extends BaseTest {
 		
 		// Test name duplication check
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-												.expandTeamRowByName(orgName)
-												.addNewApplication(orgName, appName, "http://dummyurl", "Low")
-												.saveApplicationInvalid(orgName);
+												.expandTeamRowByName(teamName)
+												.addNewApplication(teamName, appName, "http://dummyurl", "Low")
+												.saveApplicationInvalid(teamName);
 		
 		assertTrue("The duplicate message didn't appear correctly.", 
 				teamIndexPage.getNameErrorMessage().contains("That name is already taken."));
 
 		//cleanup
-		loginPage = teamIndexPage.clickCloseAddAppModal(orgName)
+		loginPage = teamIndexPage.clickCloseAddAppModal(teamName)
 										.clickOrganizationHeaderLink()
-										.clickViewTeamLink(orgName)
+										.clickViewTeamLink(teamName)
 										.clickDeleteButton()
 										.logout();
 	}
@@ -238,7 +238,7 @@ public class ApplicationTests extends BaseTest {
  
 	@Test 
 	public void testEditBasicApplicationValidation() {
-		String orgName = "testCreateApplicationOrg312";
+        String teamName = "testEditBasicApplicationValidationTeam" + getRandomString(3);
 		String appName2 = "testApp23";
 		String appName = "testApp17";
 		String validUrlText = "http://test.com";
@@ -264,23 +264,21 @@ public class ApplicationTests extends BaseTest {
 		applicationDetailPage = loginPage.login("user", "password")
 										.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
-										.setTeamName(orgName)
+										.setTeamName(teamName)
 										.addNewTeam()
-										.expandTeamRowByName(orgName)
-										.addNewApplication(orgName, appName2, validUrlText, "Low")
-										.saveApplication(orgName)
+										.expandTeamRowByName(teamName)
+										.addNewApplication(teamName, appName2, validUrlText, "Low")
+										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(orgName)
-										.addNewApplication(orgName, appName, validUrlText, "Low")
-										.saveApplication(orgName)
+										.expandTeamRowByName(teamName)
+										.addNewApplication(teamName, appName, validUrlText, "Low")
+										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(orgName)
-										.clickViewAppLink(appName,orgName)
+										.expandTeamRowByName(teamName)
+										.clickViewAppLink(appName,teamName)
 										.clickEditDeleteBtn()
 										.clickUpdateApplicationButton();
-		
-		
-		
+
 		assertTrue("The name was not preserved correctly.", 
 				appName.equals(applicationDetailPage.getNameText()));
 //		assertTrue("The URL was not preserved correctly.", 
@@ -310,13 +308,17 @@ public class ApplicationTests extends BaseTest {
 												 .setUrlInput(urlText)
 				 								 .clickUpdateApplicationButtonInvalid();
 
-		assertTrue("The correct error did not appear for the url field.", 
+		assertTrue("The correct error did not appear for the url field.",
 				applicationDetailPage.getUrlError().equals("Not a valid URL"));
 
 		// Test name duplication check
 		applicationDetailPage = applicationDetailPage.setNameInput(appName2)
 												 .setUrlInput("")
 												 .clickUpdateApplicationButtonInvalid();
+
+        applicationDetailPage = applicationDetailPage.setNameInput(appName2)
+                .setUrlInput("")
+                .clickUpdateApplicationButtonInvalid();
 
 		assertTrue("The duplicate message didn't appear correctly.", 
 				applicationDetailPage.getNameError().equals("That name is already taken."));
@@ -414,6 +416,7 @@ public class ApplicationTests extends BaseTest {
 										 .clickAddWafLink()
 										 .createNewWaf(wafName1, type1)
 										 .clickCreateWaf()
+                                         .clickWafsHeaderLink()
 										 .clickAddWafLink()
 										 .createNewWaf(wafName2, type2)
 										 .clickCreateWaf()
@@ -529,7 +532,9 @@ public class ApplicationTests extends BaseTest {
 		
 		
 	}
-	
+
+    //Test is ignored because it is testing features that do not exist in this version(2.0M2)
+    @Ignore
 	@Test
 	public void viewBasicPermissableUsers(){
 		String teamName = getRandomString(8);
@@ -558,6 +563,8 @@ public class ApplicationTests extends BaseTest {
 		assertTrue("user was not in the permissable user list",present);
 	}
 
+    //Test is ignored because it is testing features that do not exist in this version(2.0M2)
+    @Ignore
 	@Test
 	public void addAppOnlyUserView(){
 		String teamName = getRandomString(8);
@@ -611,7 +618,9 @@ public class ApplicationTests extends BaseTest {
 								.logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
-	
+
+    //Test is ignored because it is testing features that do not exist in this version(2.0M2)
+    @Ignore
 	@Test
 	public void addAppAllUserView(){
 		String teamName = getRandomString(8);
@@ -664,7 +673,9 @@ public class ApplicationTests extends BaseTest {
 								.logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
-	
+
+    //Test is ignored because it is testing features that do not exist in this version(2.0M2)
+    @Ignore
 	@Test
 	public void addUserNoPermUserView(){
 		String teamName = getRandomString(8);

@@ -263,6 +263,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
     public int getNameWidth(){
+        System.out.println("NameWidth: " + driver.findElementById("nameText").getSize().getWidth());
         return driver.findElementById("nameText").getSize().getWidth();
     }
 
@@ -600,7 +601,7 @@ public class ApplicationDetailPage extends BasePage {
         clickActionButton();
 		driver.findElementById("uploadScanModalLink").click();
         sleep(4000);
-//		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
+		waitForElement(driver.findElementById("uploadScan"+modalNumber()));
 		return new ApplicationDetailPage(driver);
 	}
 	

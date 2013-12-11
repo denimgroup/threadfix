@@ -150,6 +150,7 @@ public class TeamIndexPage extends BasePage {
 	
 	public void populateAppList(String teamName){
 		apps = new ArrayList<>();
+        sleep(5000);
 		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
 				.getText().contains("No applications found.")) {
             sleep(2000);

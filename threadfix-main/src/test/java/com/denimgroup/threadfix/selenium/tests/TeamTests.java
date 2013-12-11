@@ -142,6 +142,7 @@ public class TeamTests extends BaseTest {
 									.clickDeleteButton()
 									.logout();
 	}
+
 	@Test
 	public void testEditOrganization(){
 		String newOrgName = "testEditOrganization";
@@ -282,7 +283,7 @@ public class TeamTests extends BaseTest {
 		assertTrue("app was not switched properly", !oneBool && twoBool);
 	}
 
-    //Ignore because all users are permissible
+    //Ignore because this feature is not available in this version(2.0M2)
     @Ignore
 	@Test
 	public void viewBasicPermissableUsers(){
@@ -304,57 +305,59 @@ public class TeamTests extends BaseTest {
 								.logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
-	
-//	@Test
-//	public void addAppOnlyUserView(){
-//		String teamName = getRandomString(8);
-//		String appName = getRandomString(8);
-//		String userName = getRandomString(8);
-//		String password = getRandomString(12);
-//		String role = getRandomString(8);
-//		teamDetailPage = loginPage.login("user", "password")
-//				.clickOrganizationHeaderLink()
-//				.clickAddTeamButton()
-//				.setTeamName(teamName)
-//				.addNewTeam()
-//				.clickManageRolesLink()
-//				.clickCreateRole()
-//				.setRoleName(role,null)
-//				.setPermissionValue("canManageTeams",true,null)
-//				.clickSaveRole(null)
-//				.clickManageUsersLink()
-//				.clickAddUserLink()
-//				.enterName(userName,null)
-//				.enterPassword(password,null)
-//				.enterConfirmPassword(password,null)
-//				.clickGlobalAccess(null)
-//				.clickAddNewUserBtn()
-//				.clickEditPermissions(userName)
-//				.clickAddPermissionsLink()
-//				.setTeamNewPerm(teamName)
-//				.clickAllAppsNewPerm()
-//				.selectAppNewPerm(appName)
-//				.selectAppRoleNewPerm(appName, role)
-//				.clickAddMappingNewPerm()
-//				.clickOrganizationHeaderLink()
-//				.clickViewTeamLink(teamName)
-//				.clickUserPermLink();
-//		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-//		boolean present = teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName);
-//		
-//		teamDetailPage.clickOrganizationHeaderLink()
-//								.clickViewTeamLink(teamName)
-//								.clickDeleteButton()
-//								.clickManageRolesLink()
-//								.clickDeleteButton(role)
-//								.clickManageUsersLink()
-//								.clickDeleteButton(userName)
-//								.logout();
-//		assertTrue("user was not in the permissable user list",present);
-//	}
 
-    //There are no more roles for users
+    //Ignore because this feature is not available in this version(2.0M2)
+    @Ignore
+	@Test
+	public void addAppOnlyUserView(){
+		String teamName = getRandomString(8);
+		String appName = getRandomString(8);
+		String userName = getRandomString(8);
+		String password = getRandomString(12);
+		String role = getRandomString(8);
+		teamDetailPage = loginPage.login("user", "password")
+				.clickOrganizationHeaderLink()
+				.clickAddTeamButton()
+				.setTeamName(teamName)
+				.addNewTeam()
+				.clickManageRolesLink()
+				.clickCreateRole()
+				.setRoleName(role,null)
+				.setPermissionValue("canManageTeams",true,null)
+				.clickSaveRole(null)
+				.clickManageUsersLink()
+				.clickAddUserLink()
+				.enterName(userName,null)
+				.enterPassword(password,null)
+				.enterConfirmPassword(password,null)
+				.clickGlobalAccess(null)
+				.clickAddNewUserBtn()
+				.clickEditPermissions(userName)
+				.clickAddPermissionsLink()
+				.setTeamNewPerm(teamName)
+				.clickAllAppsNewPerm()
+				.selectAppNewPerm(appName)
+				.selectAppRoleNewPerm(appName, role)
+				.clickAddMappingNewPerm()
+				.clickOrganizationHeaderLink()
+				.clickViewTeamLink(teamName)
+				.clickUserPermLink();
+
+//		int cnt = applicationDetailPage.getNumPermUsers();
+		boolean present = teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName);
+
+		teamDetailPage.clickOrganizationHeaderLink()
+								.clickViewTeamLink(teamName)
+								.clickDeleteButton()
+								.clickManageRolesLink()
+								.clickDeleteButton(role)
+								.clickManageUsersLink()
+								.clickDeleteButton(userName)
+								.logout();
+		assertTrue("user was not in the permissable user list",present);
+	}
+
+    //Ignore because this feature is not available in this version(2.0M2)
     @Ignore
 	@Test
 	public void addAppAllUserView(){
@@ -402,7 +405,7 @@ public class TeamTests extends BaseTest {
 		assertTrue("user was not in the permissable user list",present);
 	}
 
-    //No more permissions for users
+    //Ignore because this feature is not available in this version(2.0M2)
     @Ignore
 	@Test
 	public void addUserNoPermUserView(){
