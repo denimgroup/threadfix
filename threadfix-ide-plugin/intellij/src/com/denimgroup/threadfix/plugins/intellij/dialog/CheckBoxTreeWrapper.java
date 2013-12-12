@@ -51,7 +51,7 @@ class CheckBoxTreeWrapper {
 
     private static class AppRenderer extends CheckboxTree.CheckboxTreeCellRenderer {
         private AppRenderer() {
-            super(true, false);
+            super(true, true);
         }
 
         @Override

@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.plugins.intellij.markers;
 
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFactory;
+import com.denimgroup.threadfix.plugins.intellij.toolwindow.VulnerabilitiesTableModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Document;
@@ -47,7 +48,7 @@ public class MarkerUtils {
             removeAll(fileSet, project);
         }
 
-        ThreadFixWindowFactory.VulnerabilitiesTableModel tableModel = ThreadFixWindowFactory.getTableModel();
+        VulnerabilitiesTableModel tableModel = ThreadFixWindowFactory.getTableModel();
         tableModel.clear();
         tableModel.initVirtualFiles(markers.size());
         tableModel.setProject(project);

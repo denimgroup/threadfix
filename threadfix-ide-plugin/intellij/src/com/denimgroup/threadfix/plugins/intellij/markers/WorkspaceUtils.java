@@ -9,6 +9,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.vfs.VcsFileSystem;
+import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
@@ -36,10 +37,8 @@ public class WorkspaceUtils {
         if (file.isValid()) {
             FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, lineNumber), true);
         } else {
-            System.out.println("Weird, VirtualFile.isValid() returned false.");
+            System.out.println("VirtualFile.isValid() returned false. Possibly trying to open a deleted file.");
         }
-
-        // TODO file.
     }
 
     public static Map<String, Set<VirtualFile>> getAllFilesAsMap(Project project) {
@@ -73,7 +72,7 @@ public class WorkspaceUtils {
         // IntelliJ warns about file.getChildren because of symlinks, but we check for symlinks.
         // This is the same protection afforded by their proposed VfsUtilCore solution.
         if (file.isDirectory() && !file.getName().startsWith(".") &&
-                !file.isSymLink() && file.getChildren() != null) {
+                !file.is(VFileProperty.SYMLINK) && file.getChildren() != null) {
             for (VirtualFile childFile : file.getChildren()) {
                 visitChildrenRecursively(childFile, collector);
             }
