@@ -59,6 +59,7 @@ class CheckBoxTreeWrapper {
             if (value instanceof ThreadFixAppNode) {
                 final ThreadFixAppNode node = (ThreadFixAppNode)value;
                 getTextRenderer().append(node.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+
             }
         }
     }

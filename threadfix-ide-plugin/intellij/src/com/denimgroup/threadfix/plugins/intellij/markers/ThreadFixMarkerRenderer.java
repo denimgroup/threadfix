@@ -39,7 +39,7 @@ public class ThreadFixMarkerRenderer extends GutterIconRenderer {
     @NotNull
     @Override
     public Icon getIcon() {
-        return IconLoader.getIcon("/icons/DG_logo_mark_sm.png");
+        return IconLoader.getIcon("/icons/DG_logo_mark_13x13.png");
     }
 
     @Override

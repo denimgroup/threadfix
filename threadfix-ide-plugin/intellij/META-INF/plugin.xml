@@ -38,18 +38,32 @@
       <action id="ThreadFix.ClearAction" class="com.denimgroup.threadfix.plugins.intellij.action.ClearAction"
               text="Clear Markers" description="Clears ThreadFix Markers"/>
 
+      <action id="ThreadFix.ShowAction" class="com.denimgroup.threadfix.plugins.intellij.action.ShowAction"
+              text="Show ThreadFix Tool Window" description="Displays the ThreadFix Tool Window"/>
+
       <group id="ThreadFix.Plugins" text="ThreadFix" description="Contains ThreadFix actions">
           <reference ref="ThreadFix.ImportAction"/>
           <reference ref="ThreadFix.ClearAction"/>
+          <reference ref="ThreadFix.ShowAction"/>
 
           <!--adds this group to the main menu-->
           <add-to-group group-id="MainMenu" anchor="last"/>
           <!--adds this group to the main toolbar before the Help action-->
           <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
       </group>
+
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+
+      <toolWindow id="ThreadFix"
+                  icon="/icons/DG_logo_mark_13x13.png"
+                  anchor="bottom"
+                  conditionClass="com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixShowCondition"
+                  factoryClass="com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFactory">
+
+      </toolWindow>
+
     <!-- Add your extensions here -->
   </extensions>
 </idea-plugin>

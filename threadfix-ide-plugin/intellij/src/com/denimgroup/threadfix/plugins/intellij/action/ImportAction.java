@@ -26,6 +26,8 @@ public class ImportAction extends AnAction {
 
             MarkerUtils.createMarkers(markers, e);
 
+            new ShowAction().actionPerformed(e);
+
         } else {
             System.out.println("Cancel pressed.");
         }
