@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -112,7 +113,12 @@ public class EditDefectTrackerController {
 			SessionStatus status, Model model) {
 		
 		DefectTracker databaseDefectTracker;
-		
+
+        if (result.hasErrors()) {
+            model.addAttribute("contentPage", "config/defecttrackers/forms/editDTForm.jsp");
+            return "ajaxFailureHarness";
+        }
+
 		if (defectTracker == null || defectTracker.getName() == null || 
 				defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
@@ -158,12 +164,16 @@ public class EditDefectTrackerController {
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
 	public String processSubmitAjax(@PathVariable("defectTrackerId") int defectTrackerId,
 			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
-			SessionStatus status, Model model) {
-		
-		if (defectTracker != null) {
-			defectTracker.setId(defectTrackerId);
-		}
-		
+			SessionStatus status, Model model, HttpServletRequest request) {
+
+        if (defectTracker != null) {
+            defectTracker.setId(defectTrackerId);
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("contentPage", "config/defecttrackers/forms/editDTForm.jsp");
+            return "ajaxFailureHarness";
+        }
+
 		DefectTracker databaseDefectTracker;
 		
 		if (defectTracker == null || defectTracker.getName() == null || 
@@ -202,8 +212,8 @@ public class EditDefectTrackerController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			if (defectTracker != null) {
 				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
-				model.addAttribute("successMessage", 
-						"Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
+                ControllerUtils.addSuccessMessage(request,
+                        "Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
 			}
 			
 			model.addAttribute(defectTrackerService.loadAllDefectTrackers());
@@ -212,8 +222,8 @@ public class EditDefectTrackerController {
 			model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 
 			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
-			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");
-			return "ajaxSuccessHarness";
+            model.addAttribute("contentPage", "/configuration/defecttrackers");
+            return "ajaxRedirectHarness";
 		}
 	}
 }
