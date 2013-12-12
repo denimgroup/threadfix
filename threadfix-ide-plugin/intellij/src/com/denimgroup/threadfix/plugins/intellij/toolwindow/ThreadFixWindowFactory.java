@@ -1,7 +1,11 @@
 package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 
+import com.denimgroup.threadfix.plugins.intellij.markers.WorkspaceUtils;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
@@ -42,6 +46,9 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
 
     private void createUIComponents() {
         vulnsTable = new JBTable(getTableModel());
+
+        final VulnerabilitiesTableModel model = getTableModel();
+
         vulnsTable.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -49,11 +56,13 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
                 if (e.getClickCount() == 2 && !e.isConsumed()) {
                     System.out.println("DID IT!!!");
 
-                    final JTable target = (JTable)e.getSource();
+                    final JTable target = (JTable) e.getSource();
                     final int row    = target.getSelectedRow();
                     final int column = target.getSelectedColumn();
 
                     System.out.println("Got (" + row + ", " + column + ")");
+
+                    model.doAction(row, column);
 
                     e.consume();
                 }
@@ -86,6 +95,39 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
 
         static String[][] initialObjects = new String[][] { VulnerabilityMarker.getHeaders() };
         static String[] headers = VulnerabilityMarker.getHeaders();
+        private VirtualFile[] files;
+
+        private Project project = null;
+
+        public void setProject(Project project) {
+            this.project = project;
+        }
+
+        // TODO make clickable urls and stuff like that
+        public void doAction(int cellRow, int cellColumn) {
+
+            VirtualFile file = getVirtualFileAt(cellRow);
+
+            Document document = FileDocumentManager.getInstance().getDocument(file);
+
+            int lineNumber = Integer.valueOf(getValueAt(cellRow, VulnerabilityMarker.LINE_NUMBER_INDEX).toString());
+
+            int offset = document.getLineStartOffset(lineNumber);
+
+            WorkspaceUtils.openFile(project, file, offset);
+        }
+
+        public VirtualFile getVirtualFileAt(int row) {
+            return files[row];
+        }
+
+        public void setVirtualFileAt(int row, VirtualFile file) {
+            files[row] = file;
+        }
+
+        public void initVirtualFiles(int size) {
+            files = new VirtualFile[size];
+        }
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {

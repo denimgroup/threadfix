@@ -47,7 +47,10 @@ public class MarkerUtils {
             removeAll(fileSet, project);
         }
 
-        ThreadFixWindowFactory.getTableModel().clear();
+        ThreadFixWindowFactory.VulnerabilitiesTableModel tableModel = ThreadFixWindowFactory.getTableModel();
+        tableModel.clear();
+        tableModel.initVirtualFiles(markers.size());
+        tableModel.setProject(project);
 
         for (VulnerabilityMarker marker : markers) {
 
@@ -56,7 +59,10 @@ public class MarkerUtils {
 
                 addRenderers(marker, model);
 
-                ThreadFixWindowFactory.getTableModel().addRow(marker.toStringArray());
+                // TODO clean up
+                tableModel.setVirtualFileAt(tableModel.getRowCount(),
+                        map.get(marker.getShortClassName()).iterator().next());
+                tableModel.addRow(marker.toStringArray());
             }
         }
     }

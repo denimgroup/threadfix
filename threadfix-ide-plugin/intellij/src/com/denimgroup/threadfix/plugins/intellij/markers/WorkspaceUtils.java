@@ -1,9 +1,23 @@
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorProvider;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.vfs.VcsFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -16,6 +30,17 @@ import java.util.*;
 public class WorkspaceUtils {
 
     private WorkspaceUtils(){}
+
+    public static void openFile(Project project, VirtualFile file, int lineNumber) {
+
+        if (file.isValid()) {
+            FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, lineNumber), true);
+        } else {
+            System.out.println("Weird, VirtualFile.isValid() returned false.");
+        }
+
+        // TODO file.
+    }
 
     public static Map<String, Set<VirtualFile>> getAllFilesAsMap(Project project) {
         Map<String, Set<VirtualFile>> map = new HashMap<String, Set<VirtualFile>>();
