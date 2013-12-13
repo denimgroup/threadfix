@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -45,10 +47,22 @@ public class WorkspaceUtils {
 
     public static void openFile(Project project, VirtualFile file, int lineNumber) {
 
-        if (file.isValid()) {
-            FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, lineNumber), true);
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+
+        if (document != null) {
+            int offset = document.getLineStartOffset(lineNumber);
+
+            if (offset < 0) {
+                offset = 0;
+            }
+
+            if (file.isValid()) {
+                FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, offset), true);
+            } else {
+                System.out.println("VirtualFile.isValid() returned false. Possibly trying to open a deleted file.");
+            }
         } else {
-            System.out.println("VirtualFile.isValid() returned false. Possibly trying to open a deleted file.");
+            System.out.println("Unable to retrieve a Document for the VirtualFile " + file.getName() + ".");
         }
     }
 

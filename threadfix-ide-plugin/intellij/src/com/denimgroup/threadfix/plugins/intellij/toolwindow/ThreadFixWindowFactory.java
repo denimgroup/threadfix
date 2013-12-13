@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 
+import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -31,12 +32,15 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 
 public class ThreadFixWindowFactory implements ToolWindowFactory {
 
     private ToolWindow myToolWindow = null;
     private JPanel myToolWindowContent;
     private JTable vulnsTable;
+
+    private static final int PREFERRED_ID_COL_LENGTH = 90;
 
     private static VulnerabilitiesTableModel tableModel = null;
 
@@ -59,5 +63,20 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
     private void createUIComponents() {
         vulnsTable = new JBTable(getTableModel());
         vulnsTable.addMouseListener(new FileOpenerMouseListener(getTableModel()));
+
+       // vulnsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        setIdColumnLength(VulnerabilityMarker.CWE_ID_INDEX);
+        setIdColumnLength(VulnerabilityMarker.LINE_NUMBER_INDEX);
+
+        getTableModel().fireTableDataChanged();
+
+        //vulnsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    }
+
+    private void setIdColumnLength(int index) {
+        TableColumn column = vulnsTable.getColumnModel().getColumn(index);
+        column.setMaxWidth(PREFERRED_ID_COL_LENGTH);
+        column.setMinWidth(PREFERRED_ID_COL_LENGTH);
     }
 }
