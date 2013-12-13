@@ -66,4 +66,11 @@
 
     <!-- Add your extensions here -->
   </extensions>
+    <module-components>
+
+        <component>
+            <implementation-class>com.denimgroup.threadfix.plugins.intellij.action.TestModuleComponent
+            </implementation-class>
+        </component>
+    </module-components>
 </idea-plugin>

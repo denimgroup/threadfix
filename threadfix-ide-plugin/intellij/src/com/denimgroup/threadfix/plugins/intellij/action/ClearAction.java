@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.plugins.intellij.action;
 
 import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
+import com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFactory;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
@@ -39,5 +40,7 @@ public class ClearAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         System.out.println(Constants.CLEAR_MARKERS_MESSAGE);
         MarkerUtils.removeMarkers(e);
+
+        ThreadFixWindowFactory.getTableModel().clear();
     }
 }

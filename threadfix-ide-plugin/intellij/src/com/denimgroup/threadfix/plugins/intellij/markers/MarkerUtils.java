@@ -52,9 +52,11 @@ public class MarkerUtils {
 
     private MarkerUtils(){}
 
-    public static void createMarkers(Collection<VulnerabilityMarker> markers, AnActionEvent event) {
-        Project project = event.getData(PlatformDataKeys.PROJECT);
+    public static void createMarkers(Collection<VulnerabilityMarker> markers, Project project) {
+        createMarkers(markers, project, true);
+    }
 
+    public static void createMarkers(Collection<VulnerabilityMarker> markers, Project project, boolean addRenderer) {
         Map<String, Set<VirtualFile>> map = WorkspaceUtils.getAllFilesAsMap(project);
 
         for (Set<VirtualFile> fileSet : map.values()) {
@@ -69,14 +71,26 @@ public class MarkerUtils {
         for (VulnerabilityMarker marker : markers) {
 
             if (map.containsKey(marker.getShortClassName())) {
-                MarkupModel model = getMarkupModel(map, marker.getShortClassName(), project);
-
-                addRenderers(marker, model);
+                if (addRenderer) {
+                    MarkupModel model = getMarkupModel(map, marker.getShortClassName(), project);
+                    addRenderers(marker, model);
+                }
 
                 // TODO clean up
                 tableModel.setVirtualFileAt(tableModel.getRowCount(),
                         map.get(marker.getShortClassName()).iterator().next());
                 tableModel.addRow(marker.toStringArray());
+            }
+        }
+    }
+
+    public static void addMarkersToFile(Project project, VirtualFile file,
+                                        Iterable<VulnerabilityMarker> markers) {
+        MarkupModel model = getMarkupModel(file, project, true);
+
+        for (VulnerabilityMarker marker : markers) {
+            if (marker.getShortClassName().equals(file.getName())) {
+                addRenderers(marker, model);
             }
         }
     }

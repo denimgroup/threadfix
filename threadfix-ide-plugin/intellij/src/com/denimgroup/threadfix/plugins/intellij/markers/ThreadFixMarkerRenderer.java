@@ -63,7 +63,10 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
     @NotNull
     @Override
     public Icon getIcon() {
-        return IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);
+
+        Icon icon = IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);
+
+        return icon;
     }
 
     @Override

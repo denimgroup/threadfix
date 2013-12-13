@@ -38,12 +38,21 @@ import java.util.Set;
  */
 public class PropertiesManager {
 
-    private static final String URL_KEY = "url", API_KEY = "key", APPLICATION_KEY = "appKey", COMMA = ",";
+    private static final String
+            URL_KEY = "url",
+            API_KEY = "key",
+            APPLICATION_KEY = "appKey",
+            LAST_RESPONSE_KEY = "lastResponse",
+            COMMA = ",";
 
     private PropertiesManager(){}
 
     private static String readFromProperties(String key) {
         return PropertiesComponent.getInstance().getValue(key);
+    }
+
+    public static String getLastResponse() {
+        return readFromProperties(LAST_RESPONSE_KEY);
     }
 
     public static String getUrl() {
@@ -58,7 +67,6 @@ public class PropertiesManager {
         return toSet(readFromProperties(APPLICATION_KEY));
     }
 
-
     private static void writeToProperties(String key, String value) {
         PropertiesComponent.getInstance().setValue(key, value);
     }
@@ -69,6 +77,10 @@ public class PropertiesManager {
 
     public static void setApiKey(String apiKey) {
         writeToProperties(API_KEY, apiKey);
+    }
+
+    public static void setLastResponse(String lastResponse) {
+        writeToProperties(LAST_RESPONSE_KEY, lastResponse);
     }
 
     public static void setApplicationKey(Set<String> applicationIds) {

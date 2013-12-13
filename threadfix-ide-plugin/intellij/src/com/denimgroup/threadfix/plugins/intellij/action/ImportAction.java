@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarkerService;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ImportAction extends AnAction {
 
             List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getMarkers();
 
-            MarkerUtils.createMarkers(markers, e);
+            MarkerUtils.createMarkers(markers, e.getData(PlatformDataKeys.PROJECT));
 
             new ShowAction().actionPerformed(e);
 

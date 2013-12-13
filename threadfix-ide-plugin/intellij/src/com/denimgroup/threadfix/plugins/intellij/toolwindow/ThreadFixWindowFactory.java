@@ -64,14 +64,10 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
         vulnsTable = new JBTable(getTableModel());
         vulnsTable.addMouseListener(new FileOpenerMouseListener(getTableModel()));
 
-       // vulnsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
         setIdColumnLength(VulnerabilityMarker.CWE_ID_INDEX);
         setIdColumnLength(VulnerabilityMarker.LINE_NUMBER_INDEX);
 
         getTableModel().fireTableDataChanged();
-
-        //vulnsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     }
 
     private void setIdColumnLength(int index) {
