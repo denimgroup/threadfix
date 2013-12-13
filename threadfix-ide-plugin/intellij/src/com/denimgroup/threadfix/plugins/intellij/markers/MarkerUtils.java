@@ -16,7 +16,6 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +33,6 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class MarkerUtils {
-
-    public static final Key<VulnerabilityMarker> KEY = Key.create("com.denimgroup.threadfix.VulnerabilityMarker");
 
     private MarkerUtils(){}
 

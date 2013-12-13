@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class PropertiesManager {
 
-    private static String URL = "url", API_KEY = "key", APPLICATION_KEY = "appKey";
+    private static final String URL_KEY = "url", API_KEY = "key", APPLICATION_KEY = "appKey", COMMA = ",";
 
     private PropertiesManager(){}
 
@@ -24,7 +24,7 @@ public class PropertiesManager {
     }
 
     public static String getUrl() {
-        return readFromProperties(URL);
+        return readFromProperties(URL_KEY);
     }
 
     public static String getApiKey(){
@@ -41,7 +41,7 @@ public class PropertiesManager {
     }
 
     public static void setUrl(String url) {
-        writeToProperties(URL, url);
+        writeToProperties(URL_KEY, url);
     }
 
     public static void setApiKey(String apiKey) {
@@ -56,7 +56,7 @@ public class PropertiesManager {
         StringBuilder builder = new StringBuilder();
 
         for (String string : input) {
-            builder.append(string).append(",");
+            builder.append(string).append(COMMA);
         }
 
         if (builder.length() > 0) {
@@ -71,7 +71,7 @@ public class PropertiesManager {
         if (input == null || input.trim().isEmpty()) {
             return new HashSet<String>();
         } else {
-            return new HashSet<String>(Arrays.asList(input.split(",")));
+            return new HashSet<String>(Arrays.asList(input.split(COMMA)));
         }
     }
 }

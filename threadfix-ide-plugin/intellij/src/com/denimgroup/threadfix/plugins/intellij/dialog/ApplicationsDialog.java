@@ -16,10 +16,10 @@ import java.util.Set;
  * Time: 9:35 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ApplicationsDialog {
+class ApplicationsDialog {
 
-    final ApplicationsMap applicationsMap;
-    final Set<String> currentIds;
+    private final ApplicationsMap applicationsMap;
+    private final Set<String> currentIds;
 
     private ApplicationsDialog(){
         this.applicationsMap = ThreadFixApplicationService.getApplications();
@@ -30,12 +30,12 @@ public class ApplicationsDialog {
         return new ApplicationsDialog().run().checkedKeys;
     }
 
-    public CheckBoxTreeWrapper.Result run() {
+    CheckBoxTreeWrapper.Result run() {
         return CheckBoxTreeWrapper.run(createRootNode());
     }
 
     private CheckedTreeNode createRootNode() {
-        CheckedTreeNode rootNode = new ThreadFixAppNode("root", "rootnode");
+        CheckedTreeNode rootNode = new ThreadFixAppNode("", "");
 
         Map<String, CheckedTreeNode> teamNodesMap = new HashMap<String, CheckedTreeNode>();
 

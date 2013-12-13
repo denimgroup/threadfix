@@ -4,12 +4,9 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-/**
- * Created by mac on 12/12/13.
- */
-public class FileOpenerMouseListener implements MouseListener {
+class FileOpenerMouseListener implements MouseListener {
 
-    final VulnerabilitiesTableModel model;
+    private final VulnerabilitiesTableModel model;
 
     public FileOpenerMouseListener(VulnerabilitiesTableModel tableModel) {
         this.model = tableModel;

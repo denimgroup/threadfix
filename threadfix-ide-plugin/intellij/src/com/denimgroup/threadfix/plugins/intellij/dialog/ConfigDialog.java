@@ -1,6 +1,9 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
+import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
+import com.denimgroup.threadfix.plugins.intellij.rest.RestResponse;
+import com.denimgroup.threadfix.plugins.intellij.rest.RestUtils;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
@@ -24,13 +27,13 @@ public class ConfigDialog {
 
     public static boolean show(AnActionEvent e) {
 
-        String url = getUrl(e), apiKey = null;
+        String url = getValidUrl(e), apiKey = null;
         Set<String> apps = null;
 
         if (url != null) {
-            apiKey = getApiKey(e);
+            apiKey = getValidApiKey(e, url);
 
-            if (isValid(url, apiKey)) {
+            if (apiKey != null) {
                 PropertiesManager.setApiKey(apiKey);
                 PropertiesManager.setUrl(url);
 
@@ -43,32 +46,56 @@ public class ConfigDialog {
         return url != null && apiKey != null && apps != null;
     }
 
-    private static String getUrl(AnActionEvent e) {
-
+    private static String getValidUrl(AnActionEvent e) {
         String configuredUrl = PropertiesManager.getUrl();
 
         if (configuredUrl == null) {
-            configuredUrl = "http://localhost:8080/threadfix/rest";
+            configuredUrl = Constants.DEFAULT_URL;
         }
 
+        String url = getUrl(e, Constants.URL_CONFIG_MESSAGE_1, configuredUrl);
+
+        while (url != null && !isValidUrl(url)) {
+            url = getUrl(e, Constants.URL_CONFIG_MESSAGE_2, url);
+        }
+
+        return url;
+    }
+
+    private static String getUrl(AnActionEvent e, String text, String url) {
         Project project = e.getData(PlatformDataKeys.PROJECT);
         return Messages.showInputDialog(project,
-                "What is your ThreadFix URL?",
-                "ThreadFix URL",
+                text,
+                Constants.URL_CONFIG_TITLE,
                 Messages.getInformationIcon(),
-                configuredUrl,
+                url,
                 UrlValidator.INSTANCE);
     }
 
-    private static String getApiKey(AnActionEvent e) {
-        String configuredApiKey = PropertiesManager.getApiKey();
+    private static boolean isValidUrl(String url) {
+        RestResponse response = RestUtils.test(url);
+        return response.status == 200 && response.text.trim().startsWith(Constants.AUTHENTICATION_FAIL_STRING);
+    }
 
+    private static String getValidApiKey(AnActionEvent e, String url) {
+        String propertiesKey = PropertiesManager.getApiKey();
+
+        String keyInput = getApiKey(e, Constants.API_KEY_MESSAGE_1, propertiesKey);
+
+        while (keyInput != null && !isValid(url, keyInput)) {
+            keyInput = getApiKey(e, Constants.API_KEY_MESSAGE_2, keyInput);
+        }
+
+        return keyInput;
+    }
+
+    private static String getApiKey(AnActionEvent e, String message, String key) {
         Project project = e.getData(PlatformDataKeys.PROJECT);
         return Messages.showInputDialog(project,
-                "What is your ThreadFix API Key?",
-                "ThreadFix API Key",
+                message,
+                Constants.API_KEY_TITLE,
                 Messages.getInformationIcon(),
-                configuredApiKey,
+                key,
                 null);
     }
 
@@ -83,7 +110,7 @@ public class ConfigDialog {
             try {
                 URL url = new URL(s);
                 return url.getHost() != null && !url.getHost().isEmpty() &&
-                        url.getPath() != null && !url.getPath().isEmpty();
+                        url.getPath() != null && url.getPath().endsWith(Constants.REST_URL_EXTENSION_STRING);
             } catch (MalformedURLException e) {
                 return false;
             }
@@ -96,8 +123,7 @@ public class ConfigDialog {
     }
 
     private static boolean isValid(String url, String apiKey) {
-        // TODO check with the REST interface
-        return url != null && !url.isEmpty() && apiKey != null && !apiKey.isEmpty();
+        RestResponse response = RestUtils.test(url, apiKey);
+        return response.status == 200 && response.text.startsWith(Constants.REST_FAILURE_STRING);
     }
-
 }

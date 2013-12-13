@@ -23,11 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.rest;
 
+import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class RestUtils {
 	private RestUtils(String key, String url) {
 		this.key = key;
 		if (url == null || url.trim().isEmpty()) {
-			this.url = "http://localhost:8080/threadfix/rest";
+			this.url = Constants.DEFAULT_URL;
 		} else {
 			this.url = url;
 		}
@@ -51,21 +53,46 @@ public class RestUtils {
 	public static RestUtils getFromSettings() {
 		return new RestUtils(PropertiesManager.getApiKey(), PropertiesManager.getUrl());
 	}
-	
+
+    @Nullable
 	public String getMarkers(String appId) {
-		return httpGet(url + "/code/markers/" + appId +
-				"?apiKey=" + key);
+
+        RestResponse response = httpGet(url +
+                Constants.MARKERS_URL_SEGMENT + appId +
+                Constants.API_KEY_QUERY_START + key);
+
+        if (response.status == 200) {
+            return response.text;
+        } else {
+            return null;
+        }
 	}
 
+    @Nullable
 	public String getApplications() {
-		String result = httpGet(url + "/code/applications/?apiKey=" + key);
-		if(result.contains("<html lang=\"en\">")){
-			return "Authentication failed,check rest url";
-		}
-		return result;
+		RestResponse response = httpGet(url +
+                Constants.APPLICATIONS_URL_SEGMENT +
+                Constants.API_KEY_QUERY_START + key);
+		if(response.status != 200 || response.text.contains("<html lang=\"en\">")){
+			return null;
+		} else {
+		    return response.text;
+        }
 	}
+
+    // the UI validation should ensure that the /rest part of the returned url is valid.
+    public static RestResponse test(String url) {
+        return test(url, "test");
+    }
+
+    // the UI validation should ensure that the /rest part of the returned url is valid.
+    public static RestResponse test(String url, String key) {
+        return httpGet(url +
+                Constants.MARKERS_URL_SEGMENT + "0" +
+                Constants.API_KEY_QUERY_START + key);
+    }
 	
-	String httpGet(String urlStr) {
+	private static RestResponse httpGet(String urlStr) {
 		
 		System.out.println("Requesting " + urlStr);
 		
@@ -76,23 +103,24 @@ public class RestUtils {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				System.out.println("Status was not 200.");
+				System.out.println("Status was " + status + ", was expecting 200.");
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();
 			
 			if (responseStream != null) {
-				return getString(responseStream);
+				return new RestResponse(getString(responseStream), status);
 			}
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "There was an error and the GET request was not finished.";
+
+		return new RestResponse("", -1);
 	}
 
-    private String getString(InputStream stream) {
+    private static String getString(InputStream stream) {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = null;
         try {

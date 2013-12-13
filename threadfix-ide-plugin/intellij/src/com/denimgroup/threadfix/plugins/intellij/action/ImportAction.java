@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.plugins.intellij.action;
 
 import com.denimgroup.threadfix.plugins.intellij.dialog.ConfigDialog;
 import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
+import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarkerService;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -20,7 +21,7 @@ public class ImportAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 
         if (ConfigDialog.show(e)) {
-            System.out.println("Importing markers.");
+            System.out.println(Constants.IMPORT_MARKERS_MESSAGE);
 
             List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getMarkers();
 
@@ -29,7 +30,7 @@ public class ImportAction extends AnAction {
             new ShowAction().actionPerformed(e);
 
         } else {
-            System.out.println("Cancel pressed.");
+            System.out.println(Constants.CANCEL_PRESSED_MESSAGE);
         }
     }
 

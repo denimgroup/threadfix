@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * Time: 11:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ThreadFixAppNode extends CheckedTreeNode {
+class ThreadFixAppNode extends CheckedTreeNode {
 
     @NotNull
     public String getName() {
@@ -23,7 +23,7 @@ public class ThreadFixAppNode extends CheckedTreeNode {
         return id;
     }
 
-    private String name, id;
+    private final String name, id;
 
     public ThreadFixAppNode(@NotNull String name, @Nullable String id) {
         this.name = name;

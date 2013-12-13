@@ -14,8 +14,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VulnerabilitiesTableModel extends DefaultTableModel {
 
-    static String[][] initialObjects = new String[][] { VulnerabilityMarker.getHeaders() };
-    static String[] headers = VulnerabilityMarker.getHeaders();
+    private static final String[][] initialObjects = new String[][] { VulnerabilityMarker.getHeaders() };
+    private static final String[] headers = VulnerabilityMarker.getHeaders();
     private VirtualFile[] files;
 
     private Project project = null;
@@ -55,7 +55,7 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
         WorkspaceUtils.openFile(project, file, offset);
     }
 
-    public VirtualFile getVirtualFileAt(int row) {
+    VirtualFile getVirtualFileAt(int row) {
         return files[row];
     }
 

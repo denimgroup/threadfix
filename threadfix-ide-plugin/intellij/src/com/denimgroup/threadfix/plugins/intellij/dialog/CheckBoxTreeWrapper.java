@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
+import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.SimpleTextAttributes;
@@ -33,7 +34,7 @@ class CheckBoxTreeWrapper {
 
     private CheckBoxTreeWrapper(CheckedTreeNode rootNode) {
         topPanel = new JDialog();
-        topPanel.setTitle("Pick ThreadFix Applications");
+        topPanel.setTitle(Constants.APPLICATION_SELECTION_TITLE);
 
         tree = new CheckboxTree(new AppRenderer(), rootNode);
         JScrollPane jScrollPane = new JBScrollPane(tree);
@@ -126,29 +127,6 @@ class CheckBoxTreeWrapper {
         topPanel.setModal(true);
         topPanel.setVisible(true);
         return result;
-    }
-
-    public static void main(String[] args) {
-        Result result = run(createRootNode());
-
-        System.out.println(result.checkedKeys);
-
-    }
-
-    private static CheckedTreeNode createRootNode() {
-        ThreadFixAppNode rootNode = new ThreadFixAppNode("foo", "test");
-
-        for (String key : new String[] {"a", "b", "c"}) {
-            ThreadFixAppNode checkedTreeNode = new ThreadFixAppNode(key, key);
-
-            rootNode.add(checkedTreeNode);
-
-            for (String inner : new String[] {"test1", "test2", "test3"}) {
-                checkedTreeNode.add(new ThreadFixAppNode(inner, inner));
-            }
-        }
-
-        return rootNode;
     }
 
     public static Result run(CheckedTreeNode rootNode) {

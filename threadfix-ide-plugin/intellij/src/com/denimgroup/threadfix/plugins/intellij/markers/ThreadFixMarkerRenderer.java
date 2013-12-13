@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
+import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.IconLoader;
@@ -12,7 +13,7 @@ import javax.swing.*;
  * User: mac
  * TODO flesh out and add real icon
  */
-public class ThreadFixMarkerRenderer extends GutterIconRenderer {
+class ThreadFixMarkerRenderer extends GutterIconRenderer {
 
     private final StringBuilder text;
     private final int lineNumber;
@@ -39,17 +40,17 @@ public class ThreadFixMarkerRenderer extends GutterIconRenderer {
     @NotNull
     @Override
     public Icon getIcon() {
-        return IconLoader.getIcon("/icons/DG_logo_mark_13x13.png");
+        return IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);
     }
 
     @Override
     public boolean equals(Object o) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
 }
