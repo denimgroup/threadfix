@@ -293,7 +293,7 @@ public class ScanAgentRunner {
 
         this.operatingSystem = new OperatingSystem(System.getProperty("os.name"), System.getProperty("os.version"));
 
-        this.availableScanners = ConfigurationUtils.readAllScanner(config);
+        this.availableScanners = ConfigurationUtils.readAllScanner();
     }
 
     private boolean checkAndLogConfiguration() {
