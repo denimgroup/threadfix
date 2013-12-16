@@ -357,7 +357,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	public String deleteTask(ScanQueueTask task) {
 		Application application = applicationDao.retrieveById(task.getApplication().getId());
 		if (application == null) {
-			return "Task couldn't be deleted. Something happened...";
+			return "Task couldn't be deleted. Unable to find application for this task.";
 		}
 		
 		application.getScanQueueTasks().remove(task);
