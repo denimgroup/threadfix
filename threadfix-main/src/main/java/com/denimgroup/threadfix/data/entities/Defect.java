@@ -48,8 +48,8 @@ public class Defect extends AuditableEntity {
 	public static final int URL_LENGTH = 255;
 	
 	// TODO make this smarter
-	public final static Set<String> OPEN_CODES   = new HashSet<>(Arrays.asList(new String[] { "Active", "Open", "New" }));
-	public final static Set<String> CLOSED_CODES = new HashSet<>(Arrays.asList(new String[] { "Closed", "Resolved" }));
+	public final static Set<String> OPEN_CODES   = new HashSet<>(Arrays.asList(new String[] { "Active", "Open", "New", "CONFIRMED", "IN_PROGRESS" }));
+	public final static Set<String> CLOSED_CODES = new HashSet<>(Arrays.asList(new String[] { "Closed", "Resolved", "RESOLVED", "VERIFIED" }));
 
 	public enum TrackerType {
 		BUGZILLA, JIRA

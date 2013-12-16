@@ -75,19 +75,19 @@ public class ConfigurationUtilsTests extends TestCase {
 
     @Test
     public void testSaveUrlConfig() {
-        ConfigurationUtils.saveUrlConfig(FAKE_URL, config);
+        ConfigurationUtils.saveUrlConfig(FAKE_URL);
         Assert.assertEquals(FAKE_URL, config.getString("scanagent.threadFixServerUrl"));
     }
 
     @Test
     public void testSaveKeyConfig() {
-        ConfigurationUtils.saveKeyConfig(FAKE_API_KEY, config);
+        ConfigurationUtils.saveKeyConfig(FAKE_API_KEY);
         Assert.assertEquals(FAKE_API_KEY, config.getString("scanagent.threadFixApiKey"));
     }
 
     @Test
     public void testSaveWorkDirectory() {
-        ConfigurationUtils.saveWorkDirectory(FAKE_WORK_DIR, config);
+        ConfigurationUtils.saveWorkDirectory(FAKE_WORK_DIR);
         Assert.assertEquals(FAKE_WORK_DIR, config.getString("scanagent.baseWorkDir"));
     }
 
@@ -99,7 +99,7 @@ public class ConfigurationUtilsTests extends TestCase {
         String scanHost = "google.com";
         int scanPort = 8010;
         Scanner scan = new Scanner(scanName,scanVersion, scanDir, scanHost, scanPort);
-        ConfigurationUtils.saveScannerType(scan, config);
+        ConfigurationUtils.saveScannerType(scan);
         Assert.assertEquals(scanName, config.getString("zap.scanName"));
         Assert.assertEquals(scanVersion, config.getString("zap.scanVersion"));
         Assert.assertEquals(scanDir, config.getString("zap.scanExecutablePath"));
@@ -110,7 +110,7 @@ public class ConfigurationUtilsTests extends TestCase {
 
     @Test
     public void testReadAllScanner() {
-        List<Scanner> scans = ConfigurationUtils.readAllScanner(config);
+        List<Scanner> scans = ConfigurationUtils.readAllScanner();
         assertEquals(1, scans.size());
         assertEquals("OWASP Zed Attack Proxy", scans.get(0).getName());
     }

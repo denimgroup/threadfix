@@ -1,0 +1,23 @@
+type.info,,
+Arachni,,
+type.vulnerabilities,,
+Code injection (php://input wrapper),Code injection (php://input wrapper),94
+File Inclusion,File Inclusion,98
+Remote File Inclusion,Remote File Inclusion,94
+Session fixation,Session fixation,384
+Source code disclosure,Source code disclosure,540
+Blind SQL Injection (differential analysis),Blind SQL Injection (differential analysis),89
+Cross-Site Scripting in event tag of HTML element,Cross-Site Scripting in event tag of HTML element,79
+Cross-Site Scripting in HTML 'script' tag,Cross-Site Scripting in HTML 'script' tag,79
+Cross-Site Scripting (XSS) in HTML tag,Cross-Site Scripting (XSS) in HTML tag,79
+A backdoor file exists on the server,A backdoor file exists on the server,200
+Backup file,Backup file,530
+Common directory,Common directory,538
+Common sensitive file,Common sensitive file,200
+Directory listing,Directory listing,548
+Misconfiguration in LIMIT directive of .htaccess file,Misconfiguration in LIMIT directive of .htaccess file,650
+Publicly writable directory,Publicly writable directory,650
+Interesting response,Interesting response,204
+Exposed localstart.asp page,Exposed localstart.asp page,200
+Access restriction bypass via X-Forwarded-For,Access restriction bypass via X-Forwarded-For,285
+HTTP TRACE,HTTP TRACE,693

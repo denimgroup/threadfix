@@ -26,7 +26,7 @@
 <spring:url value="/configuration/roles/{roleId}/edit" var="saveEditUrl">
 	<spring:param name="roleId" value="${ editRole.id }"/>
 </spring:url>
-<form:form id="roleEditForm${ status.count }" modelAttribute="editRole" method="post"
+<form:form id="roleEditForm${ status.count }" modelAttribute="role" method="post"
 		action="${fn:escapeXml(saveEditUrl) }">
 	<div class="modal-body">
 		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>

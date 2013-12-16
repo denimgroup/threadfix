@@ -289,7 +289,7 @@ public class OrganizationsController {
 					Permission.CAN_MANAGE_WAFS);
 			
 			model.addAttribute("org",org);
-			
+            model.addAttribute("applicationTypes", FrameworkType.values());
 			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
 					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
 			

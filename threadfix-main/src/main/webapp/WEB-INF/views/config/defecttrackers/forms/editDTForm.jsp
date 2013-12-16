@@ -3,7 +3,7 @@
 <spring:url value="/configuration/defecttrackers/{dtId}/edit/ajax" var="editUrl">
 	<spring:param name="dtId" value="${ defectTracker.id }"></spring:param>
 </spring:url>
-<form:form id="editDefectTrackerForm${ defectTracker.id }" modelAttribute="editDefectTracker" 
+<form:form id="editDefectTrackerForm${ defectTracker.id }" modelAttribute="defectTracker"
 		method="post" action="${ fn:escapeXml(editUrl) }">
 	<div class="modal-body">
 		<table class="dataTable">
@@ -59,7 +59,7 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeDTModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitDTModal${ defectTracker.id }" class="modalSubmit btn btn-primary" data-success-div="defectTableDiv">
+		<a id="submitDTModal${ defectTracker.id }" class="btn btn-primary" onclick="javascript:editDTAndRefresh('<c:out value="${editUrl }"/>', '<c:out value="${defectTracker.id }"/>');return false;">
 			Update Defect Tracker
 		</a>
 	</div>

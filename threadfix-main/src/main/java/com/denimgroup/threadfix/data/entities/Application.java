@@ -69,7 +69,11 @@ public class Application extends AuditableEntity {
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
 	
-	String frameworkType, sourceCodeAccessLevel, repositoryUrl, repositoryFolder;
+	String frameworkType, sourceCodeAccessLevel, repositoryFolder;
+
+    @URL(message = "{errors.url}")
+    @Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
+    private  String repositoryUrl;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -132,7 +136,7 @@ public class Application extends AuditableEntity {
 		this.name = name;
 	}
 
-	@Column(length = 255)
+	@Column(length = URL_LENGTH)
 	public String getUrl() {
 		return url;
 	}

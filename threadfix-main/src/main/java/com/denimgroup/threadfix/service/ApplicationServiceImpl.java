@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Transactional(readOnly = false)
 	public void storeApplication(Application application) {
 		if (application != null) {
+            // Set default for Application Type is Detect
+            if (application.getFrameworkType().equals(FrameworkType.NONE.toString()))
+                application.setFrameworkType(FrameworkType.DETECT.toString());
 			applicationDao.saveOrUpdate(application);
 		}
 	}

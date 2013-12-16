@@ -148,11 +148,10 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    	if (inSecurityBug && "BugInstance".equals(qName)) {
 	    		Finding finding = constructFinding(currentPath, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
-	    		
-	    		finding.setDataFlowElements(dataFlowElements);
-	    		
-	    		add(finding);
-	    		
+                if (finding != null) {
+                    finding.setDataFlowElements(dataFlowElements);
+                    add(finding);
+                }
 	    		inSecurityBug = false;
 	    		currentPath = null;
 	    		currentParameter = null;

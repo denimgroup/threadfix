@@ -140,10 +140,11 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("row".equals(qName)) {
 	    		Finding finding = constructFinding(findingMap);
-	    		
-	    		finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
-	    		
-	    		add(finding);
+
+                if (finding != null) {
+                    finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
+                    add(finding);
+                }
 	    		findingMap = null;
 	    		inFinding = false;
 	    	} else if (inFinding && itemKey != null) {

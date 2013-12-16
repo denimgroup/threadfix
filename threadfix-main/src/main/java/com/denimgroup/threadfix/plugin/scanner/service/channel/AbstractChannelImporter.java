@@ -48,6 +48,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -263,7 +264,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
 	 */
-	
+    @Nullable
 	protected Finding constructFinding(Map<FindingKey, String> findingMap) {
 		if (findingMap == null || findingMap.size() == 0) {
 			return null;
@@ -286,6 +287,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param channelSeverityCode
 	 * @return
 	 */
+    @Nullable
 	protected Finding constructFinding(String url, String parameter,
 			String channelVulnerabilityCode, String channelSeverityCode) {
 		return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, null);
@@ -302,6 +304,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param cweCode
 	 * @return
 	 */
+    @Nullable
 	protected Finding constructFinding(String url, String parameter,
     		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {

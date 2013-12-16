@@ -44,26 +44,28 @@ public class ConfigurationUtils {
     public static String[] ZAP_FILES = new String[]{"zap.bat", "zap.sh"};
 	@NotNull
     public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
+    @NotNull
+    public static String[] APP_SCAN_FILES = new String[]{"AppScanCMD.exe"};
 	
-	public static void saveUrlConfig(@NotNull String url, @NotNull Configuration config) {
+	public static void saveUrlConfig(@NotNull String url) {
 //		log.info("Start saving url");
-		writeToFile(new String[]{"scanagent.threadFixServerUrl"}, new String[]{url}, config);
+		writeToFile(new String[]{"scanagent.threadFixServerUrl"}, new String[]{url});
 //		log.info("Ended saving url");
 	}
 	
-	public static void saveKeyConfig(@NotNull String key, @NotNull Configuration config) {
+	public static void saveKeyConfig(@NotNull String key) {
 //		log.info("Start saving key");
-		writeToFile(new String[]{"scanagent.threadFixApiKey"}, new String[]{key}, config);
+		writeToFile(new String[]{"scanagent.threadFixApiKey"}, new String[]{key});
 //		log.info("Ended saving key");
 	}
 	
-	public static void saveWorkDirectory(@NotNull String workdir, @NotNull Configuration config) {
+	public static void saveWorkDirectory(@NotNull String workdir) {
 //		log.info("Start saving working directory");
-		writeToFile(new String[]{"scanagent.baseWorkDir"}, new String[]{workdir}, config);
+		writeToFile(new String[]{"scanagent.baseWorkDir"}, new String[]{workdir});
 //		log.info("Ended saving working directory");
 	}
 	
-	public static void saveScannerType(@NotNull Scanner scan, @NotNull Configuration config) {
+	public static void saveScannerType(@NotNull Scanner scan) {
 //		log.info("Start saving scanner type");
 		String[] names = new String[5];
 		String[] values = new String[5];
@@ -80,20 +82,19 @@ public class ConfigurationUtils {
 		values[2] = scan.getHomeDir();
 		values[3] = scan.getHost();
 		values[4] = String.valueOf(scan.getPort());
-		writeToFile(names, values, config);
+		writeToFile(names, values);
 //		log.info("Ended saving scanner type");
 	}
 	
 	/**
 	 * Read all the scanner has been set up in scanagent properties file
-	 * @param config
 	 * @return
 	 */
 	@NotNull
-    public static List<Scanner> readAllScanner(@NotNull Configuration config) {
+    public static List<Scanner> readAllScanner() {
 		log.info("Start reading all scanner type");
 		List<Scanner> scanners = new ArrayList<>();
-		
+        Configuration config = getPropertiesFile();
 		try {
 			for (ScannerType type : ScannerType.values()) {
 				Scanner scan = new Scanner();
@@ -116,12 +117,12 @@ public class ConfigurationUtils {
 		return scanners;
 	}
 	
-	private static void writeToFile(@NotNull String[] names, @NotNull String[] values, @NotNull Configuration config) {
+	private static void writeToFile(@NotNull String[] names, @NotNull String[] values) {
 		
 		if (names.length != values.length) {
 			return;
 		}
-		
+        Configuration config = getPropertiesFile();
 		for (int i=0;i<names.length;i++) {
 			String name = names[i];
 			if (config.getString(name,"").isEmpty()) {
@@ -161,17 +162,20 @@ public class ConfigurationUtils {
 			if (!acuExeFile.exists() || !acuExeFile.isFile()) {
 				return false;
 			}
-		}
+		} else if (scannerType == ScannerType.APPSCAN_DYNAMIC) {
+            File acuExeFile = new File(home + APP_SCAN_FILES[0]);
+            if (!acuExeFile.exists() || !acuExeFile.isFile()) {
+                return false;
+            }
+        }
 		return true;
 	}
 	
 	/**
 	 * This method config the information for Scanner
 	 * @param scannerType
-	 * @param config
 	 */
-	public static void configScannerType(@NotNull ScannerType scannerType,
-                                         @NotNull PropertiesConfiguration config) {
+	public static void configScannerType(@NotNull ScannerType scannerType) {
 
 		System.out.println("Start configuration for " + scannerType.getFullName());
 		Scanner scan = new Scanner();
@@ -200,9 +204,9 @@ public class ConfigurationUtils {
 			System.out.print("Input " + scannerType.getFullName() + " version: ");
 			scan.setVersion(in.nextLine());
 			
-			inputMoreScanInfo(config, scannerType, scan, in);
+			inputMoreScanInfo(scannerType, scan, in);
 		
-			saveScannerType(scan, config);
+			saveScannerType(scan);
 			
 		} finally {
 			if (in != null) {
@@ -213,8 +217,7 @@ public class ConfigurationUtils {
 		System.out.println("Run '-r' to execute scan queue task from Threadfix server.");
 	}
 
-	private static void inputMoreScanInfo(@NotNull PropertiesConfiguration config,
-                                          @NotNull ScannerType scannerType,
+	private static void inputMoreScanInfo(@NotNull ScannerType scannerType,
                                           @NotNull Scanner scan,
                                           @NotNull java.util.Scanner in) {
 
@@ -257,23 +260,23 @@ public class ConfigurationUtils {
 				if (!isValidDir) 
 					System.out.println("Unable to find this directory.");
 			}
-			writeToFile(new String[]{scannerType.getShortName()+".loginSeqDir"}, new String[]{loginSeqDir}, config);
+			writeToFile(new String[]{scannerType.getShortName()+".loginSeqDir"}, new String[]{loginSeqDir});
 		}
 
 	}
 
-	public static void configSystemInfo(@NotNull PropertiesConfiguration config) {
+	public static void configSystemInfo() {
 		System.out.println("Start configuration for server information.");
 		java.util.Scanner in = null;
 		try {
 			in = new java.util.Scanner(System.in);
 			// Input Threadfix base Url
 			System.out.print("Input ThreadFix base Url: ");
-			saveUrlConfig(in.nextLine(), config);
+			saveUrlConfig(in.nextLine());
 			
 			// Input ThreadFix API key
 			System.out.print("Input ThreadFix API key: ");
-			saveKeyConfig(in.nextLine(), config);
+			saveKeyConfig(in.nextLine());
 			
 			// Input working directory
 			boolean isValidDir = false;
@@ -281,7 +284,7 @@ public class ConfigurationUtils {
 				System.out.print("Input working directory (is where to export scan result files): ");
 				String workdir = in.nextLine();
 				if (isDirectory(workdir)) {
-					saveWorkDirectory(workdir, config);
+					saveWorkDirectory(workdir);
 					isValidDir = true;
 				} else {
 					System.out.println("Directory is invalid.");
@@ -304,7 +307,9 @@ public class ConfigurationUtils {
 			exeName = ZAP_FILES[0] + "/" + ZAP_FILES[1];
 		} else if (scanner == ScannerType.ACUNETIX_WVS) {
 			exeName = ACUNETIX_FILES[0];
-		}
+		} else if (scanner == ScannerType.APPSCAN_DYNAMIC) {
+            exeName = APP_SCAN_FILES[0];
+        }
 		return exeName;
 	}
 	

@@ -279,16 +279,15 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	   
 	    		Finding finding = constructFinding(currentPath, currentParameter,
 	    				findingMap.get("channelType"), severity);
-	    			    		
-	    		finding.setNativeId(nativeId);
-	    		finding.setDataFlowElements(dataFlowElements);
-	    		finding.setIsStatic(true);
-	    		finding.setSourceFileLocation(currentPath);
-	    		finding.setStaticPathInformation(staticPathInformation);
-	    		
-	    		saxFindingList.add(finding);
-	    		
-	    		// re-initialize everything
+                if (finding != null) {
+                    finding.setNativeId(nativeId);
+                    finding.setDataFlowElements(dataFlowElements);
+                    finding.setIsStatic(true);
+                    finding.setSourceFileLocation(currentPath);
+                    finding.setStaticPathInformation(staticPathInformation);
+                    saxFindingList.add(finding);
+                }
+                // re-initialize everything
 	    		currentPath = null;
 	    		currentParameter = null;
 				currentChannelType = null;

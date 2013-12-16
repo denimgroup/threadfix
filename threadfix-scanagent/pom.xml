@@ -75,7 +75,7 @@
   </organization>
   
   <issueManagement>
-  	<url>https://code.google.com/p/threadfix/issues/list</url>
+  	<url>https://github.com/denimgroup/threadfix/issues</url>
   </issueManagement>
   
   <dependencies>

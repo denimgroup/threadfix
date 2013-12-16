@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
 import com.denimgroup.threadfix.data.dao.RoleDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
 
 @Service
@@ -53,15 +49,21 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao = null;
 	private RoleDao roleDao = null;
 	private AccessControlMapDao accessControlMapDao = null;
+    private DefaultConfigService defaultConfigService = null;
+    private RoleService roleService = null;
 
 	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
 
 	@Autowired
 	public UserServiceImpl(AccessControlMapDao accessControlMapDao,
+                           DefaultConfigService defaultConfigurationService,
+                           RoleService roleService,
 			UserDao userDao, RoleDao roleDao) {
 		this.userDao = userDao;
 		this.roleDao = roleDao;
 		this.accessControlMapDao = accessControlMapDao;
+        this.defaultConfigService = defaultConfigurationService;
+        this.roleService = roleService;
 	}
 
 	/**
@@ -117,8 +119,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = false)
 	public void createUser(User user) {
-		encryptPassword(user);
-		userDao.saveOrUpdate(user);
+		User newUser = getDefaultUser(user);
+        encryptPassword(newUser);
+		userDao.saveOrUpdate(newUser);
 	}
 
 	private void encryptPassword(User user) {
@@ -354,5 +357,20 @@ public class UserServiceImpl implements UserService {
 		if (orgId != null && appId == null) resultList = userDao.retrieveOrgPermissibleUsers(orgId);			
 		if (appId != null && orgId != null) resultList = userDao.retrieveAppPermissibleUsers(orgId, appId);			
 		return resultList;
-	}	
+	}
+
+    private User getDefaultUser(User modelUser) {
+        User user = new User();
+        DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
+        if (defaultsModel != null) {
+            user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
+            if (user.getHasGlobalGroupAccess()) {
+                user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
+            }
+        }
+        user.setName(modelUser.getName());
+        user.setUnencryptedPassword(modelUser.getUnencryptedPassword());
+        user.setPasswordConfirm(modelUser.getPasswordConfirm());
+        return user;
+    }
 }
