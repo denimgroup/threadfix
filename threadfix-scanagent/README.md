@@ -36,7 +36,7 @@ ThreadFix and scan agents can be deployed in a number of configurations:
 
 TODO
 
-# Installation and Configuratino #
+# Installation and Configuration #
 
 ## Installation ##
 
@@ -54,7 +54,7 @@ Configuration for ThreadFix scan agents is handled in the scanagent.properties p
 If you have questions or feedback on ThreadFix, please reach out via:
 
  * [ThreadFix Google Group](https://groups.google.com/forum/?fromgroups#!forum/threadfix) - For general discussion about ThreadFix and questions/comments about scripting ThreadFix and interactions with different tools.
- * [ThreadFix Google Code Issue Tracker](https://code.google.com/p/threadfix/issues/list) - For bugs or features requests for ThreadFix scan agents or the ThreadFix server and API.
+ * [GitHub Issue Tracker](https://github.com/denimgroup/threadfix/issues) - For bugs or features requests for ThreadFix scan agents or the ThreadFix server and API.
 
 # References #
 
