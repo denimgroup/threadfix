@@ -12,7 +12,6 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.ibm.icu.impl.Assert;
 
 public class VulnTests extends BaseTest {
 	public VulnTests(String browser) {
@@ -73,7 +72,7 @@ public class VulnTests extends BaseTest {
 		//nav to app detail page
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 											.clickOrganizationHeaderLink()
-											.expandTeamRowByName(teamName)
+											.expandTeamRowByIndex(teamName)
 											.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -97,7 +96,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(BUG));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -128,7 +127,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("Jira",build(JIRA));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -153,7 +152,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(BUG));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -186,7 +185,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("Jira",build(JIRA));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -216,7 +215,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(BUG));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -252,7 +251,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("Jira",build(JIRA));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -285,7 +284,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(BUG));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -326,7 +325,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("Jira",build(JIRA));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -367,7 +366,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("bug",build(BUG));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName);
 		//submit merge
 		ad = ad.clickExpandAllVulns()
@@ -414,7 +413,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("blank defect",build(JIRA));
 		ApplicationDetailPage ad = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName)
 				.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
@@ -467,7 +466,7 @@ public class VulnTests extends BaseTest {
 				.addNewTeam();
 		
 		//add app
-		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
+		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)
 					.addNewApplication(teamName, appName, "", "Low")
 					.saveApplication(teamName);
 		
@@ -481,7 +480,7 @@ public class VulnTests extends BaseTest {
 		
 		//attach defect Tracker
 		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-																			.expandTeamRowByName(teamName)
+																			.expandTeamRowByIndex(teamName)
 																			.clickViewAppLink(appName, teamName)
 																			.addDefectTracker(dtName, uName, pWord, pName);
 		//import scan

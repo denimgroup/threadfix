@@ -128,7 +128,7 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	
 	@Test
 	public void uploadScanBtnTest(){
-		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByName(teamName);
+		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByIndex(teamName);
 		boolean click = ti.isUploadScanClickable(teamName, appName);
 //		boolean present = ti.isUploadScanPresent(teamName, appName);
 		boolean present = click;
@@ -147,7 +147,7 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	
 	@Test
 	public void appLinkTest(){
-		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByName(teamName);
+		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByIndex(teamName);
 		boolean click = ti.isAppLinkClickable(appName);
 		boolean present = ti.isAppLinkPresent(appName);
 		String c = "";
@@ -304,7 +304,7 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 										.setTeamName(teamName)
 										.addNewTeam();
 		//add app
-		ti = ti	.expandTeamRowByName(teamName)
+		ti = ti	.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName);
 		

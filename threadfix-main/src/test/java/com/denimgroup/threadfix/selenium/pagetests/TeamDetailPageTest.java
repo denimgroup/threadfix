@@ -199,7 +199,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 										.setTeamName(teamName)
 										.addNewTeam();
 		//add app
-		ti = ti	.expandTeamRowByName(teamName)
+		ti = ti	.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName);
 		

@@ -91,7 +91,7 @@ public class DocumentTests extends BaseTest {
 				 				.clickAddTeamButton()
 								.setTeamName(teamName)
 								.addNewTeam()
-								.expandTeamRowByName(teamName)
+								.expandTeamRowByIndex(teamName)
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
 		

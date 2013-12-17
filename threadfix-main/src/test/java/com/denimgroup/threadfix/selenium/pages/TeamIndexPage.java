@@ -26,7 +26,9 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +48,9 @@ import org.openqa.selenium.support.ui.Select;
 public class TeamIndexPage extends BasePage {
 
 	private List<WebElement> apps = new ArrayList<>();
-	public int modalNum;
+
+
+    public int modalNum;
 	public String appModalId;
 
 	public TeamIndexPage(WebDriver webdriver) {
@@ -63,41 +67,31 @@ public class TeamIndexPage extends BasePage {
 		return 0;
 	}
 
-	public int getNumAppRows(String teamName) {
-		if (!(driver.findElementById("teamAppTableDiv" + (getIndex(teamName) + 1))
+
+	public int getNumAppRows(Integer index) {
+		if (!(driver.findElementById("teamAppTableDiv" + (index + 1))
 				.getText().contains("No applications found."))) {
-			return driver.findElementById("teamAppTable" + (getIndex(teamName) + 1)).findElements(By.className("app-row")).size();
+			return driver.findElementById("teamAppTable" + (index + 1)).findElements(By.className("app-row")).size();
 		}
 		return 0;
 	}
 
-	public int getIndex(String teamName) {
-		int i = -1;
-		List<WebElement> names = new ArrayList<>();
-		for (int j = 1; j <= getNumTeamRows(); j++) {
-			names.add(driver.findElementById("teamName" + j));
-		}
-		for (WebElement name : names) {
-			i++;
-			String text = name.getText().trim();
-			if (text.equals(teamName.trim())) {
-				return i;
-			}
-		}
-		names = new ArrayList<>();
-		for (int j = 1; j <= getNumTeamRows(); j++) {
-			names.add(driver.findElementById("teamName" + j));
-		}
-		for (WebElement name : names) {
-			i++;
-			String text = name.getText().trim();
-			if (text.equals(teamName.trim())) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
+    public Map<String, Integer> getTeamToIndexMap() {
+        System.out.println("Map!");
+        Map<String, Integer> teamIndexMap = new HashMap<>();
+
+        for (int j = 1; j <= getNumTeamRows(); j++) {
+            WebElement element = driver.findElementById("teamName" + j);
+            teamIndexMap.put(element.getText(), j);
+        }
+
+        return teamIndexMap;
+    }
+
+    public int getIndex(String teamName) {
+        return getTeamToIndexMap().get(teamName);
+    }
+
 	public int getAppIndex(String appName){
 		int i = -1;
 		for(WebElement app : apps){
@@ -137,59 +131,92 @@ public class TeamIndexPage extends BasePage {
 		return setPage();
 	}
 
-	public TeamIndexPage expandTeamRowByName(String name) {
-		driver.findElementById("teamName" + (getIndex(name) + 1)).click();
-		try{
-			populateAppList(name);
-		}catch(NoSuchElementException e){
-			
-		}
+    public TeamIndexPage expandTeamRowByIndex(String teamName) {
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        return expandTeamRowByIndex(teamIndexMap.get(teamName));
+    }
 
+	public TeamIndexPage expandTeamRowByIndex(Integer teamIndex) {
+		//driver.findElementById("teamName" + (teamIndex + 1)).click();
+        driver.findElementById("teamName" + (teamIndex)).click();
+		try{
+			populateAppList(teamIndex);
+		}catch(NoSuchElementException e){
+		    //e.printStackTrace();
+		}
 		return setPage();
 	}
-	
-	public void populateAppList(String teamName){
+
+    public void populateAppList(String teamName) {
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        populateAppList(teamIndexMap.get(teamName));
+    }
+
+	public void populateAppList(Integer index){
 		apps = new ArrayList<>();
         sleep(5000);
-		if (!driver.findElementById("teamAppTable" + (getIndex(teamName) + 1))
+		if (!driver.findElementById("teamAppTable" + (index + 1))
 				.getText().contains("No applications found.")) {
             sleep(2000);
-				for (int j = 0; j < getNumAppRows(teamName); j++) {
+				for (int j = 0; j < getNumAppRows(index + 1 ); j++) {
 					apps.add(
-							driver.findElementById(("applicationLink" + (getIndex(teamName) + 1))
+							driver.findElementById(("applicationLink" + (index + 1))
 									+ "-" + (j + 1)));
 				}
 		}
 	}
 
-	public boolean teamAddedToTable(String name) {
-		return getIndex(name) != -1;
+    public boolean teamAddedToTable(String teamName) {
+        //return getIndex(name) != -1;
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        return teamAddedToTable(teamIndexMap.get(teamName));
+    }
+
+	public boolean teamAddedToTable(Integer index) {
+		if (driver.findElementById("teamName" + index) == null) {
+            return false;
+        }
+        return true;
 	}
 
-	public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
-		populateAppList(teamName);
+    public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        return clickViewAppLink(appName, teamIndexMap.get(teamName));
+    }
+
+	public ApplicationDetailPage clickViewAppLink(String appName, Integer index) {
+		populateAppList(index);
 		apps.get(getAppIndex(appName)).click();
 		sleep(2000);
 		return new ApplicationDetailPage(driver);
 	}
 
-	public TeamIndexPage clickAddNewApplication(String teamName) {
-		appModalId = getAppModalId(teamName);
-		driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).click();
-		sleep(6000);
+    @Deprecated
+    public TeamIndexPage clickAddNewApplication(String teamName) {
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        return clickAddNewApplication(teamIndexMap.get(teamName));
+    }
+
+	public TeamIndexPage clickAddNewApplication(Integer index) {
+		appModalId = getAppModalId(index);
+		driver.findElementById("addApplicationModalButton" + index).click();
+        sleep(6000);
 		waitForElement(driver.findElementById(appModalId));
 		return setPage();
 	}
-	
-	public String getAppModalId(String teamName){
-		String s = driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("href");
-		Pattern pattern = Pattern.compile("#(myAppModal[0-9]+)$");
-		Matcher matcher = pattern.matcher(s);
-		if(matcher.find()){
-			return  matcher.group(1);
-		}
-		return "";
-	}
+
+    @Deprecated
+    public String getAppModalId(String teamName) {
+        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
+        return getAppModalId(teamIndexMap.get(teamName));
+    }
+
+    public String getAppModalId(Integer index) {
+        String appModalIdHref = driver.findElementById("addApplicationModalButton" + index).getAttribute("href");
+        String appModalId = "";
+        return appModalId;
+    }
+
 
 	public TeamIndexPage setApplicationName(String appName, String teamName) {
 		driver.findElementsById("nameInput").get(getIndex(teamName)).clear();
@@ -229,7 +256,8 @@ public class TeamIndexPage extends BasePage {
 		sleep(1000);
 		return new TeamIndexPage(driver);
 	}
-	
+
+
 	public TeamIndexPage clickCloseAddAppModal(String teamName){
 		driver.findElementById(getAppModalId(teamName)).findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
 		sleep(1000);

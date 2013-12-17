@@ -73,7 +73,7 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 										.setTeamName(teamName)
 										.addNewTeam();
 		//add app
-		ti = ti	.expandTeamRowByName(teamName)
+		ti = ti	.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName);
 		
@@ -123,7 +123,7 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 				.createNewWaf(wafName, wafType)
 				.clickCreateWaf()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickEditDeleteBtn()
 				.clickAddWaf()

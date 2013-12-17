@@ -43,7 +43,7 @@ import com.denimgroup.threadfix.selenium.pages.ScanIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
+
 //@RunWith (MultiThreadedRunner.class)
 public class ScanTests extends BaseTest {
 	
@@ -95,7 +95,7 @@ public class ScanTests extends BaseTest {
  				.clickAddTeamButton()
 				.setTeamName(teamName)
 				.addNewTeam()
-				.expandTeamRowByName(teamName.substring(0, 60))
+				.expandTeamRowByIndex(teamName.substring(0, 60))
 				.addNewApplication(teamName.substring(0, 60), appName, "http://" + appName.substring(0, 20), "Low")
 				.saveApplication(teamName.substring(0, 60))
 				.clickRemoteProvidersLink()
@@ -135,7 +135,7 @@ public class ScanTests extends BaseTest {
 				 				.clickAddTeamButton()
 								.setTeamName(teamName)
 								.addNewTeam()
-								.expandTeamRowByName(teamName)
+								.expandTeamRowByIndex(teamName)
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
 		

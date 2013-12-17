@@ -32,10 +32,11 @@ import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+
+import java.util.Map;
 
 public class TeamTests extends BaseTest {
 	
@@ -174,6 +175,7 @@ public class TeamTests extends BaseTest {
 	
 		loginPage = teamIndexPage.logout();
 	}
+
 	//selenium issue
 	@Ignore
 	@Test
@@ -245,34 +247,39 @@ public class TeamTests extends BaseTest {
 		String team1 = getRandomString(8);
 		String team2 = getRandomString(8);
 		String appName = getRandomString(8);
-		TeamDetailPage adp = loginPage.login("user", "password").clickOrganizationHeaderLink()
+
+		TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
 								.clickAddTeamButton()
 								.setTeamName(team1)
 								.addNewTeam()
 								.clickAddTeamButton()
 								.setTeamName(team2)
-								.addNewTeam()
-								.expandTeamRowByName(team1)
+								.addNewTeam();
+
+        Map<String, Integer> indexMap = teamIndexPage.getTeamToIndexMap();
+
+        TeamDetailPage teamDetailPage = teamIndexPage
+								.expandTeamRowByIndex(indexMap.get(team1))
 								.addNewApplication(team1, appName, "", "Low")
 								.saveApplication(team1)
 								.clickOrganizationHeaderLink()
-								.expandTeamRowByName(team1)
-								.clickViewAppLink(appName, team1)
+								.expandTeamRowByIndex(indexMap.get(team1))
+								.clickViewAppLink(appName,indexMap.get(team1))
 								.clickEditDeleteBtn()
 								.setTeam(team2)
 								.clickUpdateApplicationButton()
 								.clickOrganizationHeaderLink()
 								.clickViewTeamLink(team1);
 		
-		Boolean oneBool = adp.isAppPresent(appName);
-		
-		adp = adp.clickOrganizationHeaderLink()
+		Boolean oneBool = teamDetailPage.isAppPresent(appName);
+
+        teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
 				.clickViewTeamLink(team2);
 		
-		Boolean twoBool = adp.isAppPresent(appName);
-		
+		Boolean twoBool = teamDetailPage.isAppPresent(appName);
 
-		adp.clickOrganizationHeaderLink()
+
+        teamDetailPage.clickOrganizationHeaderLink()
 					.clickViewTeamLink(team1)
 					.clickDeleteButton()
 					.clickOrganizationHeaderLink()

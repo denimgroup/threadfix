@@ -98,7 +98,7 @@ public class ReportTests extends BaseTest {
 //
 //		// Delete organization and Logout
 ////		loginPage = reportsIndexPage.clickOrganizationHeaderLink()
-////								.expandTeamRowByName(teamName)
+////								.expandTeamRowByIndex(teamName)
 ////								.clickViewTeamLink()
 ////								.clickDeleteButton()
 ////								.logout();

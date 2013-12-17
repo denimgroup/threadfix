@@ -97,7 +97,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		present.put(PAGE_LIST[i], ad.isDashboardMenuLinkPresent());
 		clickable.put(PAGE_LIST[i++], ad.isDashboardMenuLinkClickable());
@@ -217,7 +217,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isApplicationMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ad.isApplicationMenuLinkPresent());
@@ -339,7 +339,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isScansMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ad.isScansMenuLinkPresent());
@@ -459,7 +459,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isReportsMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ad.isReportsMenuLinkPresent());
@@ -611,7 +611,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isUsersMenuLinkClickable());
 		present.put(PAGE_LIST[i], ad.isUsersMenuLinkPresent());
@@ -954,7 +954,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isConfigMenuLinkClickable());
 		present.put(PAGE_LIST[i], ad.isConfigMenuLinkPresent());
@@ -1414,7 +1414,7 @@ public class HeaderPageTest extends PageBaseTest {
 		
 		//Application Detail
 		ApplicationDetailPage ad = td.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.clickViewAppLink(appName, teamName);
 		clickable.put(PAGE_LIST[i], ad.isLogoPresent());
 		present.put(PAGE_LIST[i++], ad.isLogoPresent());
@@ -1526,7 +1526,7 @@ public class HeaderPageTest extends PageBaseTest {
 										.setTeamName(teamName)
 										.addNewTeam();
 		//add app
-		ti = ti	.expandTeamRowByName(teamName)
+		ti = ti	.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName);
 		
@@ -1547,7 +1547,7 @@ public class HeaderPageTest extends PageBaseTest {
 				.createNewWaf(wafName, wafType)
 				.clickCreateWaf()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickEditDeleteBtn()
 				.clickAddWaf()

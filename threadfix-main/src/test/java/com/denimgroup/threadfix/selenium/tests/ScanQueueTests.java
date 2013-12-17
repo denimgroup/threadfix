@@ -28,9 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -70,7 +68,7 @@ public class ScanQueueTests extends BaseTest {
 				 				.clickAddTeamButton()
 								.setTeamName(teamName)
 								.addNewTeam()
-								.expandTeamRowByName(teamName)
+								.expandTeamRowByIndex(teamName)
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
 		

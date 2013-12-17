@@ -161,11 +161,11 @@ public class RoleTests extends BaseTest {
 															.logout()
 															.login(user, pw)
 															.clickOrganizationHeaderLink()
-															.expandTeamRowByName(teamName)
+															.expandTeamRowByIndex(teamName)
 															.addNewApplication(teamName, appName, "", "Low")
 															.saveApplication(teamName)
 															.clickOrganizationHeaderLink()
-															.expandTeamRowByName(teamName)
+															.expandTeamRowByIndex(teamName)
 															.clickViewAppLink(appName, teamName);
 		
 		Boolean add  = applicationDetailPage.getNameText().contains(appName);

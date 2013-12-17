@@ -26,11 +26,9 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.junit.After;
@@ -381,7 +379,7 @@ public class WafTests extends BaseTest {
 
 		//Add waf to application
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-				 .expandTeamRowByName(orgName)
+				 .expandTeamRowByIndex(orgName)
 				 .clickViewAppLink(appName,orgName)
 				 .clickEditDeleteBtn()
 				 .clickAddWaf()
@@ -462,7 +460,7 @@ public class WafTests extends BaseTest {
 				.setTeamName(orgName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(orgName)
+				.expandTeamRowByIndex(orgName)
 				.addNewApplication(orgName, appName, urlText, "Low")
 				.saveApplication(orgName);
 
@@ -511,7 +509,7 @@ public class WafTests extends BaseTest {
 
 		//Add waf to application
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-				 .expandTeamRowByName(orgName)
+				 .expandTeamRowByIndex(orgName)
 				 .clickViewAppLink(appName,orgName)
 				 .clickEditDeleteBtn()
 				 .clickAddWaf()

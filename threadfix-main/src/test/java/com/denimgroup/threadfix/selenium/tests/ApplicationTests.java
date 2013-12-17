@@ -69,11 +69,11 @@ public class ApplicationTests extends BaseTest {
 				.clickAddTeamButton()
 				.setTeamName(teamName)
 				.addNewTeam()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
 				.saveApplication(teamName);		
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-											.expandTeamRowByName(teamName)
+											.expandTeamRowByIndex(teamName)
 											.clickViewAppLink(appName, teamName);
 
 		
@@ -85,7 +85,7 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.teamAddedToTable(teamName));
 		
 		//cleanup
-		loginPage = teamIndexPage.expandTeamRowByName(teamName)
+		loginPage = teamIndexPage.expandTeamRowByIndex(teamName)
 										.clickViewAppLink(appName, teamName)
 										.clickDeleteLink()
 										.clickDeleteButton()
@@ -119,7 +119,7 @@ public class ApplicationTests extends BaseTest {
 										.clickAddTeamButton()
 										.setTeamName(teamName)
 										.addNewTeam()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.addNewApplication(teamName, emptyString, emptyString, "Low")
 										.saveApplicationInvalid(teamName);
 		
@@ -128,7 +128,7 @@ public class ApplicationTests extends BaseTest {
 		
 		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.addNewApplication(teamName, whiteSpace, whiteSpace, "Low")
 									.saveApplicationInvalid(teamName);
 		
@@ -141,7 +141,7 @@ public class ApplicationTests extends BaseTest {
 		// Test URL format
 		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
 									.clickOrganizationHeaderLink()
-									.expandTeamRowByName(teamName)
+									.expandTeamRowByIndex(teamName)
 									.addNewApplication(teamName, "dummyApp", urlText, "Low")
 									.saveApplicationInvalid(teamName);
 		
@@ -152,11 +152,11 @@ public class ApplicationTests extends BaseTest {
 		applicationDetailPage = teamIndexPage
 				.clickCloseAddAppModal(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
 				.saveApplication(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",teamName);
 
 		
@@ -169,7 +169,7 @@ public class ApplicationTests extends BaseTest {
 		
 		// Test name duplication check
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-												.expandTeamRowByName(teamName)
+												.expandTeamRowByIndex(teamName)
 												.addNewApplication(teamName, appName, "http://dummyurl", "Low")
 												.saveApplicationInvalid(teamName);
 		
@@ -197,13 +197,13 @@ public class ApplicationTests extends BaseTest {
 				.clickAddTeamButton()
 				.setTeamName(orgName)
 				.addNewTeam()
-				.expandTeamRowByName(orgName)
+				.expandTeamRowByIndex(orgName)
 				.addNewApplication(orgName, appName1, urlText1, "Low")
 				.saveApplication(orgName);
 	
 		
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-													.expandTeamRowByName(orgName)
+													.expandTeamRowByIndex(orgName)
 													.clickViewAppLink(appName1, orgName);
 
 		assertTrue("The name was not preserved correctly.", 
@@ -224,7 +224,7 @@ public class ApplicationTests extends BaseTest {
 		
 		// ensure that the application is present in the organization's app table.
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-													.expandTeamRowByName(orgName);
+													.expandTeamRowByIndex(orgName);
 		
 		assertTrue("The application does not appear in the organization page.", 
 				teamIndexPage.isAppPresent(appName2));
@@ -266,15 +266,15 @@ public class ApplicationTests extends BaseTest {
 										.clickAddTeamButton()
 										.setTeamName(teamName)
 										.addNewTeam()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.addNewApplication(teamName, appName2, validUrlText, "Low")
 										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.addNewApplication(teamName, appName, validUrlText, "Low")
 										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.clickViewAppLink(appName,teamName)
 										.clickEditDeleteBtn()
 										.clickUpdateApplicationButton();
@@ -359,11 +359,11 @@ public class ApplicationTests extends BaseTest {
 										.clickAddTeamButton()
 										.setTeamName(orgName)
 										.addNewTeam()
-										.expandTeamRowByName(orgName)
+										.expandTeamRowByIndex(orgName)
 										.addNewApplication(orgName, appName, appUrl, "Low")
 										.saveApplication(orgName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(orgName)
+										.expandTeamRowByIndex(orgName)
 										.clickViewAppLink(appName,orgName)
 										.clickEditDeleteBtn()
 										.clickAddWaf()
@@ -424,23 +424,23 @@ public class ApplicationTests extends BaseTest {
 										 .clickAddTeamButton()
 										 .setTeamName(orgName)
 										 .addNewTeam()
-										 .expandTeamRowByName(orgName)
+										 .expandTeamRowByIndex(orgName)
 										 .addNewApplication(orgName, appName, appUrl, "Low")
 										 .saveApplication(orgName)
 										 .clickOrganizationHeaderLink()
-										 .expandTeamRowByName(orgName)
+										 .expandTeamRowByIndex(orgName)
 										 .clickViewAppLink(appName,orgName)
 										 .clickEditDeleteBtn()
 										 .clickAddWaf()
 										 .addWaf(wafName1)
 										 .clickOrganizationHeaderLink()
-										 .expandTeamRowByName(orgName)
+										 .expandTeamRowByIndex(orgName)
 										 .clickViewAppLink(appName,orgName)
 										 .clickEditDeleteBtn()
 										 .clickEditWaf()
 										 .addWaf(wafName2)
 										 .clickOrganizationHeaderLink()
-										 .expandTeamRowByName(orgName)
+										 .expandTeamRowByIndex(orgName)
 										 .clickViewAppLink(appName,orgName)
 										 .clickEditDeleteBtn();
 								
@@ -467,15 +467,15 @@ public class ApplicationTests extends BaseTest {
 										.clickAddTeamButton()
 										.setTeamName(teamName)
 										.addNewTeam()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.addNewApplication(teamName, appName, "", "Low")
 										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.addNewApplication(teamName, appName, "", "Low")
 										.saveApplication(teamName)
 										.clickOrganizationHeaderLink()
-										.expandTeamRowByName(teamName)
+										.expandTeamRowByIndex(teamName)
 										.clickViewAppLink(appName,teamName);
 		Boolean boo = applicationDetailPage.getNameWidth()<=400;
 		
@@ -501,20 +501,20 @@ public class ApplicationTests extends BaseTest {
 				.clickAddTeamButton()
 				.setTeamName(teamName2)
 				.addNewTeam()
-				.expandTeamRowByName(teamName1)
+				.expandTeamRowByIndex(teamName1)
 				.addNewApplication(teamName1, appName, "", "Low")
 				.saveApplication(teamName1)
-				.expandTeamRowByName(teamName2)
+				.expandTeamRowByIndex(teamName2)
 				.addNewApplication(teamName2, appName, "", "Low")
 				.saveApplication(teamName2)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName1)
+				.expandTeamRowByIndex(teamName1)
 				.clickViewAppLink(appName,teamName1);
 		
 		Boolean one  = applicationDetailPage.getNameText().contains(appName);
 		
 		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-													.expandTeamRowByName(teamName2)
+													.expandTeamRowByIndex(teamName2)
 													.clickViewAppLink(appName,teamName2);
 		
 		Boolean two  = applicationDetailPage.getNameText().contains(appName);
@@ -545,11 +545,11 @@ public class ApplicationTests extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -578,7 +578,7 @@ public class ApplicationTests extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
 				.clickManageRolesLink()
@@ -601,7 +601,7 @@ public class ApplicationTests extends BaseTest {
 				.selectAppRoleNewPerm(appName, role)
 				.clickAddMappingNewPerm()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -634,7 +634,7 @@ public class ApplicationTests extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickAddNewApplication(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
@@ -656,7 +656,7 @@ public class ApplicationTests extends BaseTest {
 				.setRoleNewPerm(role)
 				.clickAddMappingNewPerm()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -688,7 +688,7 @@ public class ApplicationTests extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickAddTeamButton()
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
@@ -700,7 +700,7 @@ public class ApplicationTests extends BaseTest {
 				.clickGlobalAccess(null)
 				.clickAddNewUserBtn()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		

@@ -263,7 +263,6 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
     public int getNameWidth(){
-        System.out.println("NameWidth: " + driver.findElementById("nameText").getSize().getWidth());
         return driver.findElementById("nameText").getSize().getWidth();
     }
 
@@ -454,7 +453,7 @@ public class ApplicationDetailPage extends BasePage {
 			driver.findElementById("submitAppModal").click();
 			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
 		}catch(StaleElementReferenceException e){
-			
+			e.printStackTrace();
 		}
 		return new ApplicationDetailPage(driver);
 	}

@@ -36,7 +36,7 @@ public class DashboardTests extends BaseTest{
 				.clickAddTeamButton()
 				.setTeamName(teamName)
 				.addNewTeam()
-				.expandTeamRowByName(teamName)
+				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
 				.saveApplication(teamName)
 				.clickViewAppLink(appName, teamName)
