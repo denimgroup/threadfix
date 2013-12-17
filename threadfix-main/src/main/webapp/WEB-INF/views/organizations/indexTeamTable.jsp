@@ -57,7 +57,7 @@
 			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
 			<td class="expandableTrigger"></td>
 			<td> 
-				<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" 
+				<a id="addApplicationModalButton${ status.count }" href="#myAppModal${ organization.id }"
 						role="button" class="btn" data-toggle="modal">
 					Add Application
 				</a>
@@ -65,7 +65,7 @@
 				<spring:url value="/organizations/{orgId}" var="organizationUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
 				</spring:url>
-				<a style="text-decoration:none" id="organizationLink${ organization.id }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
+				<a style="text-decoration:none" id="organizationLink${ status.count }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
 			</td>
 		</tr>
 		<tr class="grey-background">

@@ -1,7 +1,9 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,23 +66,21 @@ public class ScanQueueTaskRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="queueScan", method=RequestMethod.POST)
-	public @ResponseBody Object queueScan(HttpServletRequest request,
+	public @ResponseBody RestResponse queueScan(HttpServletRequest request,
 			@RequestParam("applicationId") int applicationId,
 			@RequestParam("scannerType") String scannerType) {
-		
-		int retVal = -1;
-		
+
 		log.info("Received REST request for a queueing a new " + scannerType
 					+ " scan for applicationId " + applicationId);
 
 		String result = checkKey(request, OPERATION_QUEUE_SCAN);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 
-		retVal = scanQueueService.queueScan(applicationId, scannerType);
+		ScanQueueTask task = scanQueueService.queueScan(applicationId, scannerType);
 		
-		return retVal;
+		return RestResponse.success(task);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class ScanQueueTaskRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="requestTask", method=RequestMethod.POST)
-	public @ResponseBody Object requestTask(HttpServletRequest request,
+	public @ResponseBody RestResponse requestTask(HttpServletRequest request,
 			@RequestParam("scanners") String scanners,
 			@RequestParam("agentConfig") String agentConfig) {
 		Object retVal = null;
@@ -101,17 +101,19 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		String secureTaskKey = this.apiKeyService.generateNewSecureRandomKey();
+
+        // TODO refactor
 		retVal = this.scanQueueService.requestTask(scanners, agentConfig, secureTaskKey);
 		
-		return retVal;
+		return RestResponse.success(retVal);
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
-	public @ResponseBody Object taskStatusUpdate(HttpServletRequest request,
+	public @ResponseBody RestResponse taskStatusUpdate(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
 		boolean retVal = false;
@@ -120,32 +122,31 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
 		
-		return retVal;
+		return RestResponse.success(retVal);
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="setTaskConfig", method=RequestMethod.POST)
-	public @ResponseBody Object setTaskConfig(HttpServletRequest request,
+	public @ResponseBody RestResponse setTaskConfig(HttpServletRequest request,
 			@RequestParam("appId") int appId,
 			@RequestParam("scannerType") String scannerType,
 			@RequestParam("file") MultipartFile file) {
-		boolean retVal = false;
-		
 		if(!ScanQueueTask.validateScanner(scannerType)) {
-			log.warn("Bad scanner type of: " + scannerType + " provided. Will not save scan config.");
+            String message = "Bad scanner type of: " + scannerType + " provided. Will not save scan config.";
+			log.warn(message);
+            return RestResponse.failure(message);
 		} else {
 			String filename = ScanQueueTask.makeScanAgentConfigFileName(scannerType);
 			String returnedFilename = this.documentService.saveFileToApp(appId, file, filename);
 			log.debug("Filename of: " + filename + " resulted in final filename of: " + returnedFilename);
-			log.info("Scan configuration for scanner: " + scannerType + " saved for appId: " + appId);
-			retVal = true;
+            String message = "Scan configuration for scanner: " + scannerType + " saved for appId: " + appId;
+			log.info(message);
+			return RestResponse.success(message);
 		}
-		
-		return retVal;
 	}
 	
 	/**
@@ -156,7 +157,7 @@ public class ScanQueueTaskRestController extends RestController {
 	 *	@param file result file from the scanning operation
 	 */
 	@RequestMapping(headers="Accept=application/json", value="completeTask", method=RequestMethod.POST)
-	public @ResponseBody Object completeTask(HttpServletRequest request,
+	public @ResponseBody RestResponse completeTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("file") MultipartFile file) {
 		
@@ -164,12 +165,12 @@ public class ScanQueueTaskRestController extends RestController {
 
 		String result = checkKey(request, OPERATION_COMPLETE_TASK);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		result = checkTaskKey(request, scanQueueTaskId);
 		if (!result.equals(TASK_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 				
 		ScanQueueTask myTask = this.scanQueueService.retrieveById(scanQueueTaskId);
@@ -189,17 +190,17 @@ public class ScanQueueTaskRestController extends RestController {
 				//	Scan has been saved. Let's update the ScanQueueTask
 				this.scanQueueService.completeTask(scanQueueTaskId);
 				log.info("Results from scan queue task: " + myTask.getId() + " saved successfully.");
-				return myTask;
+				return RestResponse.success(myTask);
 			} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
 				String message = "Task appeared to complete successfully, but results provided were empty.";
 				this.scanQueueService.failTask(scanQueueTaskId, message);
 				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
-				return message;
+				return RestResponse.failure(message);
 			} else {
 				String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
 				this.scanQueueService.failTask(scanQueueTaskId, message);
 				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
-				return message;
+				return RestResponse.failure(message);
 			}
 		} catch (Exception e) {
 			//	Something went wrong trying to save the file. Mark the scan as a failure.
@@ -207,7 +208,7 @@ public class ScanQueueTaskRestController extends RestController {
 			String longMessage = message + " Message was : " + e.getMessage();
 			this.scanQueueService.failTask(scanQueueTaskId, longMessage);
 			log.error(longMessage, e);
-			return message;
+			return RestResponse.failure(message);
 		}
 	}
 	
@@ -219,30 +220,28 @@ public class ScanQueueTaskRestController extends RestController {
 	 *	@return true if the scan failure was accepted and noted, false if some sort of error occurred
 	 */
 	@RequestMapping(headers="Accept=application/json", value="failTask", method=RequestMethod.POST)
-	public @ResponseBody Object failTask(HttpServletRequest request,
+	public @ResponseBody RestResponse failTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
-		boolean retVal = false;
-		
+
 		log.info("Received a REST request to fail for the scan " + scanQueueTaskId);
 		
 		String result = checkKey(request, OPERATION_FAIL_TASK);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		result = checkTaskKey(request, scanQueueTaskId);
 		if (!result.equals(TASK_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		String serverMessage = "ScanAgent reported that the scan task: " + scanQueueTaskId
 									+ " had failed client-side for the following reason: " + message;
 		this.scanQueueService.failTask(scanQueueTaskId, serverMessage);
 		log.info(serverMessage);
-		retVal = true;
-		
-		return retVal;
+
+		return RestResponse.success(serverMessage);
 	}
 	
 	private String checkTaskKey(HttpServletRequest request, int scanQueueTaskId){

@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
@@ -95,7 +96,8 @@ public interface FindingService {
 	 * @param request
 	 * @return
 	 */
-	String checkRequestForFindingParameters(HttpServletRequest request);
+    @NotNull
+	String checkRequestForFindingParameters(@NotNull HttpServletRequest request);
 
 	/**
 	 * 

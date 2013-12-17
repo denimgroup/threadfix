@@ -120,10 +120,6 @@ public class HttpRestUtils {
 				System.err.println("Response stream was null");
 			}
 
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (HttpException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -162,15 +158,11 @@ public class HttpRestUtils {
 				return retVal;
 			}
 
-		} catch (FileNotFoundException e1) {
+		} catch (IOException e1) {
 			e1.printStackTrace();
-		} catch (HttpException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
-		return "There was an error and the POST request was not finished.";
+        return "There was an error and the POST request was not finished.";
 	}
 
 	public String httpGet(String urlStr) {
@@ -194,8 +186,6 @@ public class HttpRestUtils {
 			if (responseStream != null) {
 				return IOUtils.toString(responseStream);
 			}
-		} catch (HttpException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

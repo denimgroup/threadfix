@@ -21,13 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,111 +59,105 @@ public class PluginRestController extends RestController {
 	}
 
 	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
-	public @ResponseBody Object getMarkers(
+	public @ResponseBody RestResponse getMarkers(
 			HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for marker information for application with id = " + appId);
 		
 		String result = checkKey(request, "markers");
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
-			log.warn("Couldn't find the application with ID " + appId);
-			return "failure";
+            String message = "Couldn't find the application with ID " + appId;
+			log.warn(message);
+			return RestResponse.failure(message);
 		}
 		
-		return getMarkerCSV(application);
+		return RestResponse.success(application.getMarkers());
 	}
 	
 	@RequestMapping(value="/applications", method=RequestMethod.GET)
-	public @ResponseBody Object getApplicationList(HttpServletRequest request) {
+	public @ResponseBody RestResponse getApplicationList(HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
 		String result = checkKey(request, "markers");
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+            return RestResponse.failure(result);
 		}
 		
 		List<Application> applications = applicationService.loadAllActive();
 		
 		if (applications == null) {
-			log.warn("Couldn't find any active applications.");
-			return "failure";
+            String response = "Couldn't find any active applications.";
+			log.warn(response);
+			RestResponse.failure(response);
 		}
-		return getApplicationCSV(applications);
+		return RestResponse.success(getApplicationInfo(applications));
 	}
 	
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
-	public @ResponseBody Object getEndpoints(@PathVariable int appId,
+	public @ResponseBody RestResponse getEndpoints(@PathVariable int appId,
 			HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
 		String result = checkKey(request, "markers");
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
-			log.warn("Couldn't find the application.");
-			return "failure";
+            String message = "Couldn't find the application.";
+			log.warn(message);
+			return RestResponse.failure(message);
 		}
 		
 		EndpointGenerator generator =
 				EndpointDatabaseFactory.getDatabase(application.getProjectConfig());
 		
 		if (generator != null) {
-			return getEndpointCSV(generator);
+			return RestResponse.success(generator.generateEndpoints());
 		} else {
-			return "failure";
+			return RestResponse.failure("Unable to create an EndpointGenerator.");
 		}
 	}
+
+    static class AppInfo {
+        AppInfo(Application application) {
+            applicationId = application.getId().toString();
+            organizationName = application.getOrganization().getName();
+            applicationName = application.getName();
+        }
+
+        public String getApplicationId() {
+            return applicationId;
+        }
+
+        public String getOrganizationName() {
+            return organizationName;
+        }
+
+        public String getApplicationName() {
+            return applicationName;
+        }
+
+        String applicationId, organizationName, applicationName;
+    }
 	
-	private String getEndpointCSV(EndpointGenerator generator) {
-		StringBuilder builder = new StringBuilder();
-		
-		Collection<Endpoint> endpoints = generator.generateEndpoints();
-		
-        for (Endpoint endpoint : endpoints) {
-            if (endpoint != null) {
-                builder.append(endpoint.getCSVLine()).append("\n");
-            }
-		}
-		
-		return builder.toString();
-	}
-	
-	private String getMarkerCSV(Application application) {
-		StringBuilder builder = new StringBuilder();
-		
-		for (Vulnerability vulnerability : application.getVulnerabilities()) {
-			if (vulnerability != null) {
-				builder.append(vulnerability.getMarkerCSVLine()).append("\n");
-			}
-		}
-		return builder.toString();
-	}
-	
-	private String getApplicationCSV(List<Application> applications) {
-		StringBuilder builder = new StringBuilder();
+	private Iterable<AppInfo> getApplicationInfo(List<Application> applications) {
+		List<AppInfo> infoList = new ArrayList<>();
 
 		for (Application application: applications) {
 			if (application != null && application.getOrganization() != null && application.getId() != null) {
-				builder.append(application.getOrganization().getName())
-					.append("/")
-					.append(application.getName())
-					.append(",")
-					.append(application.getId())
-					.append("\n");
+                infoList.add(new AppInfo(application));
 			}
 		}
 		
-		return builder.toString();
+		return infoList;
 	}
-	
 }

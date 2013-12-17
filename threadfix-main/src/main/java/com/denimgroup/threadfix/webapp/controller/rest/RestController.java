@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
 import java.util.HashSet;
 import java.util.Set;

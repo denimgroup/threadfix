@@ -10,8 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.webapp.controller.OrganizationRestController;
-import com.denimgroup.threadfix.webapp.controller.RestController;
+import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 
 /**
  * Tests the OrganizationRestController methods.
@@ -48,13 +48,13 @@ public class RestOrganizationTests extends BaseRestTest {
 		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 		
 		String response = httpPost(creationUrl, new String[] {"apiKey", "name"}, new String[] {GOOD_API_KEY, getRandomString(2000)});
-		assertTrue(response.equals(OrganizationRestController.CREATION_FAILED));
+		assertTrue(response.equals(TeamRestController.CREATION_FAILED));
 		
 		response = httpPost(creationUrl, new String[] {"apiKey", "name"}, new String[] {GOOD_API_KEY, ""});
-		assertTrue(response.equals(OrganizationRestController.CREATION_FAILED));
+		assertTrue(response.equals(TeamRestController.CREATION_FAILED));
 		
 		response = httpPost(creationUrl, new String[] {"apiKey", "name"}, new String[] {GOOD_API_KEY, "   			"});
-		assertTrue(response.equals(OrganizationRestController.CREATION_FAILED));
+		assertTrue(response.equals(TeamRestController.CREATION_FAILED));
 		
 		// If this test is failing, make sure that this text is still present in the controller.
 		String nameError = "\"name\" parameter was not present, new Team creation failed.";
@@ -83,7 +83,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		String error = httpGet(baseLookupUrl + "1" + apiKeySegment + BAD_API_KEY);
 		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 		
-		if (httpGet(lookupUrl).equals(OrganizationRestController.LOOKUP_FAILED)) {
+		if (httpGet(lookupUrl).equals(TeamRestController.LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/new", 
 					new String[] {"apiKey", "name"}, 
 					new String[] {GOOD_API_KEY, "Normal Team Name"});
@@ -93,7 +93,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		
 		assertTrue(orgString != null);
 		
-		if (orgString.equals(OrganizationRestController.LOOKUP_FAILED)) {
+		if (orgString.equals(TeamRestController.LOOKUP_FAILED)) {
 			assertTrue(false);
 		}
 		
@@ -102,7 +102,7 @@ public class RestOrganizationTests extends BaseRestTest {
 		
 		// Bad ID
 		String badLookupUrl = baseLookupUrl + "100000000" + apiKeySegment + GOOD_API_KEY;
-		assertTrue(httpGet(badLookupUrl).equals(OrganizationRestController.LOOKUP_FAILED));
+		assertTrue(httpGet(badLookupUrl).equals(TeamRestController.LOOKUP_FAILED));
 	}
 	
 	/**

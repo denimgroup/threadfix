@@ -1,8 +1,7 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.RestFailureResponse;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -24,7 +22,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 
 @Controller
 @RequestMapping("/rest/teams")
-public class OrganizationRestController extends RestController {
+public class TeamRestController extends RestController {
 
 	private OrganizationService organizationService;
 	private ApplicationService applicationService;
@@ -44,10 +42,10 @@ public class OrganizationRestController extends RestController {
 	}
 	
 	@Autowired
-	public OrganizationRestController(OrganizationService organizationService,
-			APIKeyService apiKeyService,
-			ApplicationCriticalityService applicationCriticalityService,
-			ApplicationService applicationService) {
+	public TeamRestController(OrganizationService organizationService,
+                              APIKeyService apiKeyService,
+                              ApplicationCriticalityService applicationCriticalityService,
+                              ApplicationService applicationService) {
 		super(apiKeyService);
 		this.organizationService = organizationService;
 		this.applicationService = applicationService;
@@ -55,42 +53,39 @@ public class OrganizationRestController extends RestController {
 	}
 
 	@RequestMapping(headers = "Accept=application/json", value="/{teamID}", method = RequestMethod.GET)
-	public @ResponseBody Object teamIDLookup(@PathVariable("teamID") int teamId,
+	public @ResponseBody RestResponse teamIDLookup(@PathVariable("teamID") int teamId,
 			HttpServletRequest request) {
 		log.info("Received REST request for Team with ID " + teamId + ".");
 
 		String result = checkKey(request, DETAIL);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 
 		Organization org = organizationService.loadOrganization(teamId);
 
 		if (org == null) {
 			log.warn("Team lookup failed for ID " + teamId + ".");
-			return LOOKUP_FAILED;
+			return RestResponse.failure(LOOKUP_FAILED);
 		} else {
 			log.info("REST request for Team with ID " + teamId
 					+ " completed successfully.");
-			return org;
+			return RestResponse.success(org);
 		}
 	}
 	
 	/**
 	 * Create a new application with the supplied name and URL. 
 	 * The rest of the configuration is done through other methods.
-	 * @param request
-	 * @param teamId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{teamId}/applications/new", method=RequestMethod.POST)
-	public @ResponseBody Object newApplication(HttpServletRequest request,
+	public @ResponseBody RestResponse newApplication(HttpServletRequest request,
 			@PathVariable("teamId") int teamId) {
 		log.info("Received REST request for a new Application.");
 
 		String result = checkKey(request, NEW);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		// By not using @RequestParam notations, we can catch the error in the code
@@ -100,7 +95,7 @@ public class OrganizationRestController extends RestController {
 		
 		if (name == null) {
 			log.warn("Call to New Application was missing the name parameter.");
-			return CREATION_FAILED;
+			return RestResponse.failure(CREATION_FAILED);
 		}
 		
 		if (url != null) {
@@ -109,7 +104,7 @@ public class OrganizationRestController extends RestController {
 				new URL(url);
 			} catch (MalformedURLException e) {
 				log.warn("The supplied URL was not formatted correctly.");
-				return CREATION_FAILED;
+				return RestResponse.failure(CREATION_FAILED);
 			}
 		}
 		
@@ -117,7 +112,7 @@ public class OrganizationRestController extends RestController {
 		
 		if (organization == null) {
 			log.warn("Invalid Team ID.");
-			return CREATION_FAILED;
+			return RestResponse.failure(CREATION_FAILED);
 		}
 		
 		Application application = new Application();
@@ -134,11 +129,11 @@ public class OrganizationRestController extends RestController {
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application);
 			log.info("Application creation was successful. Returning application.");
-			return application;
+			return RestResponse.success(application);
 		} else {
 			//	TODO - We could really use some better debug here
 			log.warn("Something was invalid.");
-			return(new RestFailureResponse("Problems creating application."));
+			return RestResponse.failure("Problems creating application.");
 		}
 	}
 	
@@ -151,14 +146,14 @@ public class OrganizationRestController extends RestController {
 
 		String result = checkKey(request, LOOKUP);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 
 		Organization org = organizationService.loadOrganization(teamName);
 
 		if (org == null) {
 			log.warn("Team lookup failed for ID " + teamName + ".");
-			return(new RestFailureResponse("No team found with name '" + teamName + "'"));
+			return RestResponse.failure("No team found with name '" + teamName + "'");
 		} else {
 			log.info("REST request for Team with ID " + teamName
 					+ " completed successfully.");
@@ -166,13 +161,14 @@ public class OrganizationRestController extends RestController {
 		}
 	}
 
-	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST)
-	public @ResponseBody Object newTeam(HttpServletRequest request) {
+	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST,
+            produces = "application/json; charset=utf-8")
+	public @ResponseBody RestResponse newTeam(HttpServletRequest request) {
 		log.info("Received REST request for new Team.");
 
 		String result = checkKey(request, NEW);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 
 		if (request.getParameter("name") != null) {
@@ -183,34 +179,32 @@ public class OrganizationRestController extends RestController {
 			if (organizationService.isValidOrganization(organization)) {
 				organizationService.storeOrganization(organization);
 				log.info("Successfully created new Team.");
-				return organization;
+				return RestResponse.success(organization);
 			} else {
 				log.info(CREATION_FAILED);
-				return CREATION_FAILED;
+				return RestResponse.failure(CREATION_FAILED);
 			}
 			
 		} else {
 			log.warn("\"name\" parameter was not present, new Team creation failed.");
-			return "\"name\" parameter was not present, new Team creation failed.";
+			return RestResponse.failure("\"name\" parameter was not present, new Team creation failed.");
 		}
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public @ResponseBody Object teamList(HttpServletRequest request) {
+	public @ResponseBody RestResponse teamList(HttpServletRequest request) {
 		log.info("Received REST request for Team list.");
 		
 		String result = checkKey(request, INDEX);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
-		
-		List<Organization> organizations = organizationService.loadAllActive();
 
-		return organizations;
+		return RestResponse.success(organizationService.loadAllActive());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")
-	public @ResponseBody Object alsoTeamList(HttpServletRequest request) {
+	public @ResponseBody RestResponse alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
 

@@ -1,7 +1,8 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,11 +32,13 @@ import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 @RequestMapping("/rest/applications")
 public class ApplicationRestController extends RestController {
 	
-	public static final String CREATION_FAILED = "New Application creation failed.";
-	public static final String LOOKUP_FAILED = "Application lookup failed.";
-	public static final String ADD_CHANNEL_FAILED = "Adding an Application Channel failed.";
-	public static final String SET_WAF_FAILED = "Call to setWaf failed.";
-	public static final String CHANNEL_LOOKUP_FAILED = "Application Channel lookup failed.";
+	public static final String
+            CREATION_FAILED = "New Application creation failed.",
+            APPLICATION_LOOKUP_FAILED = "Application lookup failed. Check your ID.",
+            WAF_LOOKUP_FAILED = "WAF lookup failed. Check your ID.",
+            ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
+            SET_WAF_FAILED = "Call to setWaf failed.",
+            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type";
 	
 	private ApplicationService applicationService;
 	private DocumentService documentService;
@@ -85,37 +88,31 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Return details about a specific application.
-	 * @param request
-	 * @param appId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}", method=RequestMethod.GET)
-	public @ResponseBody Object applicationDetail(HttpServletRequest request,
+	public @ResponseBody RestResponse applicationDetail(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for Applications with id = " + appId + ".");
 
 		String result = checkKey(request, DETAIL);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
-			log.warn(LOOKUP_FAILED);
-			return LOOKUP_FAILED;
+			log.warn(APPLICATION_LOOKUP_FAILED);
+			return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		}
-		return application;
+		return RestResponse.success(application);
 	}
 	
 	/**
 	 * Set scan parameters
-	 * @param request
-	 * @param appId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/attachFile", method=RequestMethod.POST)
-	public @ResponseBody Object attachFile(HttpServletRequest request,
+	public @ResponseBody RestResponse attachFile(HttpServletRequest request,
 			@PathVariable("appId") int appId,
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("filename") String filename) {
@@ -123,7 +120,7 @@ public class ApplicationRestController extends RestController {
 		
 		String result = checkKey(request, ATTACH_FILE);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		if(filename != null) {
@@ -132,31 +129,27 @@ public class ApplicationRestController extends RestController {
 			documentService.saveFileToApp(appId, file);
 		}
 		
-		//	TODO - Make this response better.
-		return "OK";
+		return RestResponse.success("Document was successfully uploaded.");
 	}
 	
 	/**
 	 * Set scan parameters
-	 * @param request
-	 * @param appId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/setParameters", method=RequestMethod.POST)
-	public @ResponseBody Object setParameters(HttpServletRequest request,
+	public @ResponseBody RestResponse setParameters(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request to set parameters for application with id = " + appId + ".");
 		
 		String result = checkKey(request, SET_PARAMS);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
-			log.warn(LOOKUP_FAILED);
-			return LOOKUP_FAILED;
+			log.warn(APPLICATION_LOOKUP_FAILED);
+			return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		}
 		
 		ScanParametersBean bean = new ScanParametersBean();
@@ -175,62 +168,60 @@ public class ApplicationRestController extends RestController {
 		
 		scanParametersService.saveConfiguration(application, bean);
 		
-		return application;
+		return RestResponse.success(application);
 	}
 	
 	/**
 	 * Return details about a specific application.
-	 * @param request
-	 * @param appName
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{teamId}/lookup", method=RequestMethod.GET)
-	public @ResponseBody Object applicationLookup(HttpServletRequest request,
+	public @ResponseBody RestResponse applicationLookup(HttpServletRequest request,
 			@PathVariable("teamId") String teamName) {		
 		String appName = request.getParameter("name");
 		String result = checkKey(request, LOOKUP);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}		
 		if (appName == null) {
-			return LOOKUP_FAILED;
+			return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		}		
 		log.info("Received REST request for Applications in team = " + teamName + ".");		
 		Organization org = organizationService.loadOrganization(teamName);				
 		if (org == null) {
-			log.warn(LOOKUP_FAILED);
-			return LOOKUP_FAILED;
+			log.warn(APPLICATION_LOOKUP_FAILED);
+            return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		}
 		
 		int teamId = org.getId();
 		Application application = applicationService.loadApplication(appName, teamId);	
 		
 		if (application == null) {
-			log.warn(LOOKUP_FAILED);
-			return LOOKUP_FAILED;
-		}
-		return application;
+			log.warn(APPLICATION_LOOKUP_FAILED);
+            return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
+		} else {
+		    return RestResponse.success(application);
+        }
 	}
 	
 	/**
 	 * Allows the user to upload a scan to an existing application channel.
-	 * @param appId
-	 * @param request
-	 * @param applicationId
-	 * @param file
 	 * @return Status response. We may change this to make it more useful.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
-	public @ResponseBody Object uploadScan(@PathVariable("appId") int appId, 
+	public @ResponseBody RestResponse uploadScan(@PathVariable("appId") int appId,
 			HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 
 		String result = checkKey(request, UPLOAD);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
+
+        if (myChannelId == null) {
+            return RestResponse.failure(SCAN_TYPE_LOOKUP_FAILED);
+        }
 		
 		String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
 		
@@ -238,23 +229,17 @@ public class ApplicationRestController extends RestController {
 		
 		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
 			Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
-			return scan;
-		} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
-			return "You attempted to upload an empty scan.";
+			return RestResponse.success(scan);
 		} else {
-			return "The scan upload attempt returned this message: " + returnValue.getScanCheckResult();
+			return RestResponse.failure(returnValue.getScanCheckResult().toString());
 		}
 	}
 	
 	/**
 	 * Overwrites the WAF for the application.
-	 * @param request
-	 * @param appId
-	 * @param wafId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/setWaf", method=RequestMethod.POST)
-	public @ResponseBody Object setWaf(HttpServletRequest request,
+	public @ResponseBody RestResponse setWaf(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		
 		String idString = request.getParameter("wafId");
@@ -272,25 +257,25 @@ public class ApplicationRestController extends RestController {
 			}
 		}
 		
-		if (wafId == null) {
-			log.warn("Received incomplete REST request to add a WAF");
-			return SET_WAF_FAILED;
-		}
-
 		String result = checkKey(request, SET_WAF);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
+
+        if (wafId == null) {
+            log.warn("Received incomplete REST request to add a WAF");
+            return RestResponse.failure(WAF_LOOKUP_FAILED);
+        }
 		
 		Application application = applicationService.loadApplication(appId);
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (application == null) {
-			log.warn("Invalid Application ID.");
-			return SET_WAF_FAILED;
+			log.warn(APPLICATION_LOOKUP_FAILED);
+			return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		} else if (waf == null) {
-			log.warn("Invalid WAF ID");
-			return SET_WAF_FAILED;
+			log.warn(WAF_LOOKUP_FAILED);
+			return RestResponse.failure(WAF_LOOKUP_FAILED);
 		} else {
 			
 			// Delete WAF rules if the WAF has changed
@@ -303,38 +288,34 @@ public class ApplicationRestController extends RestController {
 			application.setWaf(waf);
 			applicationService.updateWafRules(application, oldWafId);
 			applicationService.storeApplication(application);
-			return application;
+			return RestResponse.success(application);
 		}
 	}
 	
 	
 	/**
 	 * Set the URL for the application.
-	 * @param request
-	 * @param appId
-	 * @param wafId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/addUrl", method=RequestMethod.POST)
-	public @ResponseBody Object setUrl(HttpServletRequest request,
+	public @ResponseBody RestResponse setUrl(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		
 		String url = request.getParameter("url");
 
 		String result = checkKey(request, SET_URL);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		
 		Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
 			log.warn("Invalid Application ID.");
-			return SET_WAF_FAILED;
+			return RestResponse.failure(APPLICATION_LOOKUP_FAILED);
 		} else {
 			application.setUrl(url);
 			applicationService.storeApplication(application);
-			return application;
+			return RestResponse.success(application);
 		}
 	}
 }

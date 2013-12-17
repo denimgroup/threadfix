@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 
 @Service
@@ -253,11 +254,8 @@ public class FindingServiceImpl implements FindingService {
 	/**
 	 * 
 	 */
-	public String checkRequestForFindingParameters(HttpServletRequest request) {
-		if (request == null) {
-			return null;
-		}
-		
+    @NotNull
+    public String checkRequestForFindingParameters(@NotNull HttpServletRequest request) {
 		String longDescription = request.getParameter("longDescription");
 		if (longDescription == null || longDescription.trim().equals("") || 
 				longDescription.length() > Finding.LONG_DESCRIPTION_LENGTH) {

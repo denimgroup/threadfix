@@ -72,43 +72,28 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	}
 	
 	@Override
-	public int queueScan(int applicationId, String scannerType) {
-		int retVal = -2;
-		
+	public ScanQueueTask queueScan(int applicationId, String scannerType) {
+
+        ScanQueueTask task = null;
+
 		Application application = applicationDao.retrieveById(applicationId);
 		if(application != null) {
-			ScanQueueTask myTask = new ScanQueueTask();
-			myTask.setApplication(application);
-			Date now = new Date();
-			myTask.setCreateTime(now);
-			Calendar myCal = Calendar.getInstance();
-			//	TODO - Actually calculate the max finish time
-			myCal.add(Calendar.HOUR, 12);
-			myTask.setTimeoutTime(myCal.getTime());
-			myTask.setScanner(scannerType);
-			myTask.setStatus(ScanQueueTaskStatus.STATUS_QUEUED.getValue());
+			task = new ScanQueueTask(12);
+            task.setApplication(application);
+
+            task.setScanner(scannerType);
+            task.setTaskStatus(ScanQueueTaskStatus.STATUS_QUEUED);
 			//	TODO - See if we really need ScanAgentInfo here because that really only
 			//	matters once an agent "claims" the task to execute.
-			myTask.setScanAgentInfo("<Junk Scan Agent Info>");
-			
-			ScanStatus scanStatus = new ScanStatus();
-			scanStatus.setTimestamp(now);
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
-			scanStatus.setMessage("Scan queued at: " + format.format(now));
-			
-			scanStatus.setScanQueueTask(myTask);
-			
-			myTask.addScanStatus(scanStatus);
-			
-			
-			scanQueueTaskDao.saveOrUpdate(myTask);
-			retVal = myTask.getId();
-			log.info("Created ScanQueueTask with id: " + retVal);
+            task.setScanAgentInfo("<Junk Scan Agent Info>");
+
+			scanQueueTaskDao.saveOrUpdate(task);
+			log.info("Created ScanQueueTask with id: " + task.getId());
 		} else {
 			log.warn("Invalid applicationId of " + applicationId + " provided. No scan queued");
 		}
 		
-		return retVal;
+		return task;
 	}
 	
 	@Override
@@ -214,7 +199,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
                         //	Mark the task as having been assigned
                         //	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
                         task.setStartTime(new Date());
-                        task.setStatus(ScanQueueTaskStatus.STATUS_ASSIGNED.getValue());
+                        task.setTaskStatus(ScanQueueTaskStatus.STATUS_ASSIGNED);
 
                         ScanStatus status = new ScanStatus();
                         status.setScanQueueTask(task);
@@ -280,7 +265,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		status.setTimestamp(timestamp);
 		
 		task.setEndTime(timestamp);
-		task.setStatus(newStatus.getValue());
+		task.setTaskStatus(newStatus);
 		task.addScanStatus(status);
 		
 		this.scanQueueTaskDao.saveOrUpdate(task);

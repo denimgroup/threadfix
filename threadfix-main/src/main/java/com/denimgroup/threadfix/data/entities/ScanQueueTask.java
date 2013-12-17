@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -59,6 +61,19 @@ public class ScanQueueTask extends AuditableEntity {
 		
 		private int value;
 		private String description;
+
+        static ScanQueueTaskStatus getFromValue(int value) {
+            ScanQueueTaskStatus returnStatus = null;
+
+            for (ScanQueueTaskStatus status : values()) {
+                if (status.getValue() == value) {
+                    returnStatus = status;
+                    break;
+                }
+            }
+
+            return returnStatus;
+        }
 		
 		public int getValue() {
 			return this.value;
@@ -73,8 +88,26 @@ public class ScanQueueTask extends AuditableEntity {
 			this.description = description;
 		}
 	}
-	
-	
+
+    public ScanQueueTask(int numHoursTilTimeout) {
+        Date now = new Date();
+
+        setCreateTime(now);
+
+        Calendar myCal = Calendar.getInstance();
+        //	TODO - Actually calculate the max finish time
+        myCal.add(Calendar.HOUR, 12);
+        setTimeoutTime(myCal.getTime());
+
+        ScanStatus scanStatus = new ScanStatus();
+        scanStatus.setTimestamp(now);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
+        scanStatus.setMessage("Scan queued at: " + format.format(now));
+        scanStatus.setScanQueueTask(this);
+
+        addScanStatus(scanStatus);
+    }
+
 	public final static String SCANAGENT_CONFIG_FILE_EXTENSION = "scanagtcfg";
 	
 	private int taskId;
@@ -185,12 +218,22 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Column(nullable=false)
 	public int getStatus() {
-		return this.status;
+
+        return this.status;
 	}
 	
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
+    @Transient
+    public ScanQueueTaskStatus getTaskStatus() {
+        return ScanQueueTaskStatus.getFromValue(status);
+    }
+
+    public void setTaskStatus(ScanQueueTaskStatus status) {
+        setStatus(status.getValue());
+    }
 	
 	@Column
 	@Type(type="text")
@@ -218,16 +261,14 @@ public class ScanQueueTask extends AuditableEntity {
 	}
 	
 	public String showStatusString() {
-		
-		for (ScanQueueTaskStatus status : ScanQueueTaskStatus.values()) {
-			if (status.getValue() == this.status) {
-				return status.getDescription();
-			}
-		}
-		
-		return ScanQueueTaskStatus.STATUS_UNKNOWN.getDescription();
-		
-		
+
+        ScanQueueTaskStatus status = getTaskStatus();
+
+        if (status == null) {
+		    return ScanQueueTaskStatus.STATUS_UNKNOWN.getDescription();
+        } else {
+            return status.getDescription();
+        }
 	}
 	
 	/**
@@ -241,25 +282,7 @@ public class ScanQueueTask extends AuditableEntity {
 	 * @return true if the scanner name is valid, false if it is not valid
 	 */
 	public static boolean validateScanner(String proposedScanner) {
-//		boolean retVal = false;
-
         return (ScannerType.getScannerType(proposedScanner) != null);
-
-
-//		if (proposedScanner != null && proposedScanner.length() <= 32) {
-//			boolean foundBadChar = false;
-//			for (int i=0; i < proposedScanner.length(); ++i) {
-//				if (!Character.isLetterOrDigit(proposedScanner.charAt(i))) {
-//					foundBadChar = true;
-//					break;
-//				}
-//			}
-//			if(!foundBadChar) {
-//				retVal = true;
-//			}
-//		}
-//
-//		return retVal;
 	}
 	
 	/**
@@ -299,6 +322,5 @@ public class ScanQueueTask extends AuditableEntity {
 	public String getScannerShortName() {
 		return ScannerType.getShortName(getScanner());
 	}
-	
 
 }

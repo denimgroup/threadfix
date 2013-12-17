@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.webapp.controller.AddFindingRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 
 public class RestManualFindingTests extends BaseRestTest {
 

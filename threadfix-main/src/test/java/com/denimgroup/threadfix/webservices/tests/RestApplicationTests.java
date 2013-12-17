@@ -14,9 +14,9 @@ import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;
-import com.denimgroup.threadfix.webapp.controller.OrganizationRestController;
-import com.denimgroup.threadfix.webapp.controller.RestController;
+import com.denimgroup.threadfix.webapp.controller.rest.ApplicationRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 
 /**
  * Test the methods in ApplicationRestController 
@@ -54,13 +54,13 @@ public class RestApplicationTests extends BaseRestTest {
 				RestController.API_KEY_NOT_FOUND_ERROR));
 
 		if (httpGet(getTeamUrl)
-				.equals(OrganizationRestController.LOOKUP_FAILED)) {
+				.equals(TeamRestController.LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/new",
 					new String[] { "apiKey", "name" }, new String[] {
 							GOOD_API_KEY, getRandomString(10) });
 		}
 		if (httpGet(getTeamUrl)
-				.equals(OrganizationRestController.LOOKUP_FAILED)) {
+				.equals(TeamRestController.LOOKUP_FAILED)) {
 			assertTrue(false);
 		}
 
@@ -151,13 +151,13 @@ public class RestApplicationTests extends BaseRestTest {
 		String teamLookupUrl = BASE_URL + "/teams/1" + apiKeySegment
 				+ GOOD_API_KEY;
 		if (httpGet(teamLookupUrl).equals(
-				OrganizationRestController.LOOKUP_FAILED)) {
+				TeamRestController.LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/new",
 					new String[] { "apiKey", "name" }, new String[] {
 							GOOD_API_KEY, "Normal Team Name" });
 		}
 
-		if (httpGet(lookupUrl).equals(ApplicationRestController.LOOKUP_FAILED)) {
+		if (httpGet(lookupUrl).equals(ApplicationRestController.APPLICATION_LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/1/new", new String[] { "apiKey",
 					"name", "url" }, new String[] { GOOD_API_KEY,
 					getRandomString(20), "http://normal.url.com" });
@@ -177,7 +177,7 @@ public class RestApplicationTests extends BaseRestTest {
 		String badLookupUrl = baseLookupUrl + "100000000" + apiKeySegment
 				+ GOOD_API_KEY;
 		assertTrue(httpGet(badLookupUrl).equals(
-				ApplicationRestController.LOOKUP_FAILED));
+				ApplicationRestController.APPLICATION_LOOKUP_FAILED));
 	}
 
 	@Test

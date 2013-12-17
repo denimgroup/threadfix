@@ -182,6 +182,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Transient
+    @JsonIgnore
 	public String getUserName() {
 		return userName;
 	}
@@ -191,6 +192,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Transient
+    @JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -260,6 +262,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    @JsonIgnore
 	public List<ApplicationChannel> getChannelList() {
 		return channelList;
 	}
@@ -309,6 +312,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 256)
+    @JsonIgnore
 	public String getProjectRoot() {
 		return projectRoot;
 	}
@@ -318,6 +322,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 256)
+    @JsonIgnore
 	public String getRootPath() {
 		return rootPath;
 	}
@@ -347,6 +352,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "application")
+    @JsonIgnore
 	public List<VulnerabilityFilter> getFilters() {
 		return filters;
 	}
@@ -450,6 +456,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = ENUM_LENGTH)
+    @JsonIgnore
 	public String getFrameworkType() {
 		return frameworkType;
 	}
@@ -459,6 +466,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = ENUM_LENGTH)
+    @JsonIgnore
 	public String getSourceCodeAccessLevel() {
 		return sourceCodeAccessLevel;
 	}
@@ -477,6 +485,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
+    @JsonIgnore
 	public String getRepositoryFolder() {
 		return repositoryFolder;
 	}
@@ -486,11 +495,13 @@ public class Application extends AuditableEntity {
 	}
 
 	@Transient
+    @JsonIgnore
 	public FrameworkType getFrameworkTypeEnum() {
 		return FrameworkType.getFrameworkType(frameworkType);
 	}
 	
 	@Transient
+    @JsonIgnore
 	public SourceCodeAccessLevel getSourceCodeAccessLevelEnum() {
 		return SourceCodeAccessLevel.getSourceCodeAccessLevel(sourceCodeAccessLevel);
 	}
@@ -499,6 +510,7 @@ public class Application extends AuditableEntity {
     private static final String baseDirectory = "scratch/";
 
     @Transient
+    @JsonIgnore
     public ProjectConfig getProjectConfig() {
         return new ProjectConfig(getFrameworkTypeEnum(),
                 getSourceCodeAccessLevelEnum(),
@@ -508,6 +520,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
+    @JsonIgnore
     public File getWorkTree() {
 
         File applicationDirectory = new File(baseDirectory + getId());
@@ -531,5 +544,18 @@ public class Application extends AuditableEntity {
 
         return applicationDirectory;
     }
-	
+
+    @Transient
+    @JsonIgnore
+    public Iterable<VulnerabilityMarker> getMarkers() {
+        List<VulnerabilityMarker> markers = new ArrayList<>();
+
+        for (Vulnerability vulnerability : getVulnerabilities()) {
+            if (vulnerability != null) {
+                markers.add(vulnerability.toVulnerabilityMarker());
+            }
+        }
+
+        return markers;
+    }
 }

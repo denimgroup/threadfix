@@ -14,9 +14,9 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.webapp.controller.ApplicationRestController;
-import com.denimgroup.threadfix.webapp.controller.RestController;
-import com.denimgroup.threadfix.webapp.controller.WafRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.ApplicationRestController;
+import com.denimgroup.threadfix.webapp.controller.rest.RestController;
+import com.denimgroup.threadfix.webapp.controller.rest.WafRestController;
 
 public class RestWafTests extends BaseRestTest {
 

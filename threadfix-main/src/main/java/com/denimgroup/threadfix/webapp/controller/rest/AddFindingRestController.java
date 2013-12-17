@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.webapp.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,34 +44,31 @@ public class AddFindingRestController extends RestController {
 	/**
 	 * Create a new manual finding.
 	 * 
-	 * @param request
-	 * @param teamId
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.POST)
-	public @ResponseBody Object createFinding(HttpServletRequest request,
+	public @ResponseBody RestResponse createFinding(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for a new Finding.");
 
 		String result = checkKey(request, NEW);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return result;
+			return RestResponse.failure(result);
 		}
 		// By not using @RequestParam notations, we can catch the error in the code
 		// and provide better error messages.
 		 
 		String checkResult = findingService.checkRequestForFindingParameters(request);
-		if (checkResult == null || !checkResult.equals(PASSED_CHECK)) {
-			return checkResult;
-		}
+		if (!checkResult.equals(PASSED_CHECK)) {
+            return RestResponse.failure(checkResult);
+        }
 		
 		Finding finding = findingService.parseFindingFromRequest(request);
 		boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 		
 		if (mergeResult) {
-			return finding;
+			return RestResponse.success(finding);
 		} else {
-			return "There was an error merging the new Finding.";
+			return RestResponse.failure("There was an error merging the new Finding.");
 		}
 	}
 }
