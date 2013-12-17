@@ -87,9 +87,10 @@ public final class ScanAgentMain {
 			try {
 				CommandLine cmd = parser.parse( options, args);
 				PropertiesConfiguration config = ConfigurationUtils.getPropertiesFile();
-				if (config == null)
+				if (config == null) {
+                    log.error("Was unable to find scanagent property file.");
 					return;
-//				config.setAutoSave(true);
+                }
 
 				if (cmd.hasOption("help")) {
 					HelpFormatter formatter = new HelpFormatter();
@@ -97,7 +98,7 @@ public final class ScanAgentMain {
 					
 				} else if (cmd.hasOption("s")) {
 					
-					ConfigurationUtils.configSystemInfo(config);
+					ConfigurationUtils.configSystemInfo();
 					
 				} else if (cmd.hasOption("cs")) {
 					String[] scanArgs = cmd.getOptionValues("cs");
@@ -106,7 +107,7 @@ public final class ScanAgentMain {
 					}
 					ScannerType scannerType = isValidScannerType(scanArgs[0]);
 					if (scannerType != null) {
-						ConfigurationUtils.configScannerType(scannerType, config);
+						ConfigurationUtils.configScannerType(scannerType);
 					} else {
 						println("Not correct scanner. See -printScannerOptions for details.");
 					}

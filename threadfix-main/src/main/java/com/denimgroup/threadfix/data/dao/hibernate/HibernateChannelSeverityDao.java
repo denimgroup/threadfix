@@ -73,6 +73,7 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
 	@Override
 	public void saveOrUpdate(ChannelSeverity channelSeverity) {
+        sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
 	}
 }

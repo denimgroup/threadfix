@@ -35,6 +35,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
+import java.util.Calendar;
+
 /**
  * 
  * @author mcollins
@@ -95,7 +97,8 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
 	    	} else if ("netsparker".equals(qName)) {
-	    		date = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+//	    		date = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+                date = getCalendar(atts.getValue("generated"));
 	    	}
 	    }
 
@@ -178,7 +181,8 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if ("netsparker".equals(qName)) {
-	    		testDate = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+//	    		testDate = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+                testDate = getCalendar(atts.getValue("generated"));
 	    		if (testDate != null)
 	    			hasDate = true;
 	    		correctFormat = true;
@@ -196,4 +200,12 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 	public String getType() {
 		return ScannerType.NETSPARKER.getFullName();
 	}
+
+    private Calendar getCalendar(String dateString) {
+        Calendar result = null;
+        result = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", dateString);
+        if (result == null)
+            result = getCalendarFromString("dd/MM/yyyy hh:mm:ss", dateString);
+        return result;
+    }
 }

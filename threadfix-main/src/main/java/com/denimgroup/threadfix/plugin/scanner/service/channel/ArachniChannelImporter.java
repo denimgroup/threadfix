@@ -102,6 +102,28 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		severityMap.put("Found an HTML object.", "INFORMATIONAL");
 		severityMap.put("Private IP address disclosure.", "LOW");
 		severityMap.put("Disclosed US Social Security Number.", "HIGH");
+        //Fixes bug 444
+        severityMap.put("Code injection (php://input wrapper)", "HIGH");
+        severityMap.put("File Inclusion", "HIGH");
+        severityMap.put("Remote File Inclusion", "HIGH");
+        severityMap.put("Session fixation", "HIGH");
+        severityMap.put("Source code disclosure", "HIGH");
+        severityMap.put("Blind SQL Injection (differential analysis)", "HIGH");
+        severityMap.put("Cross-Site Scripting in event tag of HTML element", "HIGH");
+        severityMap.put("Cross-Site Scripting in HTML 'script' tag", "HIGH");
+        severityMap.put("Cross-Site Scripting (XSS) in HTML tag", "HIGH");
+        severityMap.put("A backdoor file exists on the server", "HIGH");
+        severityMap.put("Backup file", "MEDIUM");
+        severityMap.put("Common directory", "MEDIUM");
+        severityMap.put("Common sensitive file", "LOW");
+        severityMap.put("Directory listing", "LOW");
+        severityMap.put("Misconfiguration in LIMIT directive of .htaccess file", "HIGH");
+        severityMap.put("Publicly writable directory", "HIGH");
+        severityMap.put("Interesting response", "INFORMATIONAL");
+        severityMap.put("Exposed localstart.asp page", "LOW");
+        severityMap.put("Access restriction bypass via X-Forwarded-For", "HIGH");
+        severityMap.put("HTTP TRACE", "MEDIUM");
+
 	}
 
 	public ArachniChannelImporter() {

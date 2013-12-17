@@ -23,15 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.scanner;
 
+import com.denimgroup.threadfix.data.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 
 /**
  * This class allows us to use autowired beans.
@@ -49,4 +43,6 @@ public class DaoHolder extends SpringBeanAutowiringSupport {
 	public ApplicationDao applicationDao;
 	@Autowired
 	public ApplicationChannelDao applicationChannelDao;
+    @Autowired
+    public GenericSeverityDao genericSeverityDao;
 }

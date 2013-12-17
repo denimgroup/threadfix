@@ -40,13 +40,14 @@
 			<thead>
 				<tr>
 					<th class="long first">Channel Type</th>
-					<th class="centered last">Number updated</th>
+					<th class="centered">Vulnerabilites updated</th>
+                    <th class="centered last">Severities updated</th>
 				</tr>
 			</thead>
 			<tbody id="wafTableBody">
 			<c:if test="${ empty resultList }">
 				<tr class="bodyRow">
-					<td colspan="5" style="text-align:center;">No Channel Vulnerabilities updated.</td>
+					<td colspan="5" style="text-align:center;">No Channel Types updated.</td>
 				</tr>
 			</c:if>
 			<c:forEach var="result" items="${ resultList }" varStatus="status">
@@ -54,9 +55,12 @@
 					<td class="details" id="name${ status.count }">
 						<c:out value="${ result[0] }"/>
 					</td>
-					<td class="centered" id="numUpdated${ status.count }">
+					<td class="centered" id="vulnsUpdated${ status.count }">
 						<c:out value="${ result[1] }"/>
 					</td>
+                    <td class="centered last" id="sevsUpdated${ status.count }">
+                        <c:out value="${ result[2] }"/>
+                    </td>
 				</tr>
 			</c:forEach>
 			</tbody>

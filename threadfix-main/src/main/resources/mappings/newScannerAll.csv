@@ -1,0 +1,13 @@
+type.info,,,
+New Scanner Test,www.newscannertest.com,1.1,Export Info lalalala
+type.vulnerabilities,,,
+Content type incorrectly stated,8389632,173,
+Directory listing,6291712,548,
+HTML does not specify charset,8389120,173,
+Cross-site scripting (reflected),2097920,79,
+SQL injection,1049088,89,
+type.severities,,,
+Information,Information,1,1
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2

@@ -381,6 +381,35 @@ function createDTAndRefresh(url) {
     return false;
 }
 
+function editDTAndRefresh(url, dtId) {
+    $.ajax({
+        type : "POST",
+        url : url,
+        data : $('#editDefectTrackerForm' + dtId).serializeArray(),
+        contentType : "application/x-www-form-urlencoded",
+        dataType : "text",
+        success : function(text) {
+            if ($.trim(text).slice(0,22) === "<body id=\"formErrors\">") {
+                $('#dtFormDiv' + dtId).html(text);
+            } else {$("#nameInput").focus();
+                try {
+                    var json = $.parseJSON($.trim(text));
+                    if (json.isJSONRedirect) {
+                        window.location.href = json.redirectURL;
+                    }
+                } catch (e) {
+                    history.go(0);
+                }
+            }
+        },
+        error : function (xhr, ajaxOptions, thrownError){
+            history.go(0);
+        }
+    });
+    modalFocusTimeout();
+    return false;
+}
+
 function deleteWaf(url) {
 	if (confirm('Are you sure you want to delete this WAF?'))
 		return basicPost(url, '#deleteForm', '#defectTableDiv');

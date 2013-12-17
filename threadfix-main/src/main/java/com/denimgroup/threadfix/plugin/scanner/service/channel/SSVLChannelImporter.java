@@ -164,17 +164,17 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				}
 			
 				Finding finding = constructFinding(findingMap);
-				if (!dataFlowElementList.isEmpty()) {
-					finding.setIsStatic(true);
-					finding.setDataFlowElements(dataFlowElementList);
-					dataFlowElementList = new ArrayList<>();
-				}
-				
-				if (description != null) {
-					finding.setLongDescription(description);
-				}
-				
-				add(finding);
+                if (finding != null) {
+                    if (!dataFlowElementList.isEmpty()) {
+                        finding.setIsStatic(true);
+                        finding.setDataFlowElements(dataFlowElementList);
+                        dataFlowElementList = new ArrayList<>();
+                    }
+                    if (description != null) {
+                        finding.setLongDescription(description);
+                    }
+                    add(finding);
+                }
 				findingMap = new HashMap<>();
 				description = null;
 			}

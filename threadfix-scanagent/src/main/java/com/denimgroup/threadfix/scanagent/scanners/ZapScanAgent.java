@@ -224,19 +224,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	    String path = System.getProperty("java.home")
 	            + separator + "bin" + separator + "java";
 	    
-//	    String starter;
-//	    System.out.println("starter init: ");
-//		try {
-//			System.out.println("scanagent.properties: " + ZapScanAgent.class.getClassLoader().getResource("scanagent.properties").toURI());
-//			System.out.println("zapStarter.jar: " + ZapScanAgent.class.getClassLoader().getResource("zapStarter.jar"));
-//			File file = new File(ZapScanAgent.class.getClassLoader().getResource("zapStarter.jar").toString());
-//			starter = file.getAbsolutePath();
-//		} catch (URISyntaxException e1) {
-//			log.error("Problems reading jar file: " + e1.getMessage(), e1);
-//			return false;
-//		}
-//		System.out.println("starter: " + starter);
-	    ProcessBuilder processBuilder = 
+	    ProcessBuilder processBuilder =
 	            new ProcessBuilder(path, "-jar", 
 	            		"zapStarter.jar",
 	            zapExecutablePath,

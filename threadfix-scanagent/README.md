@@ -1,6 +1,14 @@
 # Introduction #
 ThreadFix scan agents can be used to automate the process of scanning applications and feeding the results of this scanning into ThreadFix.
 
+# Supported Scanners #
+
+Scanners currently supported by the ThreadFix Scan Agent include:
+
+* OWASP ZAP
+* IBM Rational AppScan
+* Acunetix WVS
+
 # How the Scan Agent Works #
 
 The scan agent communicates with the ThreadFix server to retrieve scanning tasks and to upload the results of scanning tasks performed on the scan agent. This sequence of events roughly looks like:
@@ -36,7 +44,7 @@ ThreadFix and scan agents can be deployed in a number of configurations:
 
 TODO
 
-# Installation and Configuratino #
+# Installation and Configuration #
 
 ## Installation ##
 
@@ -54,7 +62,7 @@ Configuration for ThreadFix scan agents is handled in the scanagent.properties p
 If you have questions or feedback on ThreadFix, please reach out via:
 
  * [ThreadFix Google Group](https://groups.google.com/forum/?fromgroups#!forum/threadfix) - For general discussion about ThreadFix and questions/comments about scripting ThreadFix and interactions with different tools.
- * [ThreadFix Google Code Issue Tracker](https://code.google.com/p/threadfix/issues/list) - For bugs or features requests for ThreadFix scan agents or the ThreadFix server and API.
+ * [GitHub Issue Tracker](https://github.com/denimgroup/threadfix/issues) - For bugs or features requests for ThreadFix scan agents or the ThreadFix server and API.
 
 # References #
 

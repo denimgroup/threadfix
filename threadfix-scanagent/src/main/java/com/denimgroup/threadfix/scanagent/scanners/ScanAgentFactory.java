@@ -56,14 +56,12 @@ public class ScanAgentFactory {
 			case ZAPROXY:
 				agent = ZapScanAgent.getInstance(scanner, workDir);
 				break;
+            case APPSCAN_DYNAMIC:
+                agent = AppScanScanAgent.getInstance(scanner, workDir);
+                break;
 			default: break;
 		}
 		
-//		if (ScannerType.ACUNETIX_WVS.getFullName().equalsIgnoreCase(scanner.getName()))
-//			agent = AcunetixScanAgent.getInstance(scanner, workDir, scanAgentRunner);
-//		else if (ScannerType.ZAPROXY.getFullName().equalsIgnoreCase(scanner.getName()))
-//			agent = ZapScanAgent.getInstance(scanner, workDir, scanAgentRunner);
-
 		return agent;
 	}
 	

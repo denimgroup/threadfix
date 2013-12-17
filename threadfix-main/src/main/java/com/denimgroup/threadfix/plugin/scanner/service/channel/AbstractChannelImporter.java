@@ -48,6 +48,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -226,7 +227,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 *            The URL location of the vulnerability.
 	 * @param param
 	 *            The vulnerable parameter (optional)
-	 * @throws NoSuchAlgorithmException
+	 * @throws java.security.NoSuchAlgorithmException
 	 *             Thrown if the MD5 algorithm cannot be found.
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
@@ -263,7 +264,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
 	 */
-	
+    @Nullable
 	protected Finding constructFinding(Map<FindingKey, String> findingMap) {
 		if (findingMap == null || findingMap.size() == 0) {
 			return null;
@@ -286,6 +287,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param channelSeverityCode
 	 * @return
 	 */
+    @Nullable
 	protected Finding constructFinding(String url, String parameter,
 			String channelVulnerabilityCode, String channelSeverityCode) {
 		return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, null);
@@ -302,6 +304,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @param cweCode
 	 * @return
 	 */
+    @Nullable
 	protected Finding constructFinding(String url, String parameter,
     		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
@@ -438,7 +441,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * @return the correct severity from the DB.
 	 */
 	protected ChannelSeverity getChannelSeverity(String code) {
-		if (channelType == null || code == null || channelSeverityDao == null) {
+        // Will need to reload channelType again if this channelType is new
+        if (channelType == null)
+            channelType = channelTypeDao.retrieveByName(getType());
+        if (channelType == null || code == null || channelSeverityDao == null) {
 			return null;
 		}
 
@@ -466,7 +472,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 */
 
 	protected ChannelVulnerability getChannelVulnerability(String code) {
-		if (channelType == null || code == null || channelVulnerabilityDao == null) {
+        // Will need to reload channelType again if this channelType is new
+        if (channelType == null)
+            channelType = channelTypeDao.retrieveByName(getType());
+        if (channelType == null || code == null || channelVulnerabilityDao == null) {
 			return null;
 		}
 		

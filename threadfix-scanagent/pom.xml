@@ -67,15 +67,15 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
-	</repositories>
- 
+    </repositories>
+
   <organization>
   	<name>Denim Group, Ltd.</name>
   	<url>http://www.denimgroup.com/</url>
   </organization>
   
   <issueManagement>
-  	<url>https://code.google.com/p/threadfix/issues/list</url>
+  	<url>https://github.com/denimgroup/threadfix/issues</url>
   </issueManagement>
   
   <dependencies>

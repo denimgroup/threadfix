@@ -193,7 +193,10 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		
 	    		Finding finding = constructFinding(currentPath, null, 
 	    				currentChannelVulnCode, currentSeverityCode);
-	    		finding.setSourceFileLocation(currentPath);
+
+                if (finding == null) return;
+
+                finding.setSourceFileLocation(currentPath);
 	    		
 	    		if (atts.getValue("trace") == null) {
 	    			DataFlowElement element = new DataFlowElement(currentPath, lineNumber, null);

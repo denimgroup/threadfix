@@ -196,9 +196,9 @@
 
     <url>http://www.denimgroup.com/threadfix/</url>
     <scm>
-        <url>https://code.google.com/p/threadfix/</url>
+        <url>https://github.com/denimgroup/threadfix</url>
     </scm>
     <issueManagement>
-        <system>https://code.google.com/p/threadfix/issues/list</system>
+        <system>https://github.com/denimgroup/threadfix/issues</system>
     </issueManagement>
  </project>

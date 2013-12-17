@@ -8,6 +8,7 @@
     	<pattern>/configuration/severityFilter/set*</pattern>
     	<pattern>/configuration/defecttrackers/new*</pattern>
     	<pattern>/configuration/defecttrackers/*/edit*</pattern>
+        <pattern>/configuration/defecttrackers/*/edit/ajax*</pattern>
     	<pattern>/configuration/defecttrackers/*/delete*</pattern>
     	<pattern>/configuration/keys/*/edit*</pattern>
     	<pattern>/configuration/keys/new*</pattern>
