@@ -48,7 +48,7 @@ public abstract class BasePage {
 	public BasePage(WebDriver webdriver){
 		driver =  (RemoteWebDriver) webdriver;
 		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
-		
+		driver.manage().window().maximize();
 		log.debug("Loading " + this.getClass().toString());
 	}
 	/*--------------click functions--------------*/

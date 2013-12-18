@@ -109,6 +109,7 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+
     public TeamIndexPage clickDeleteButton() {
         clickEditOrganizationLink();
         sleep(500);

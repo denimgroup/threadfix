@@ -59,7 +59,7 @@ public class TeamTests extends BaseTest {
 	}
 	
 
-	
+
 	@Test
 	public void testCreateTeam(){
 		String newOrgName = "testCreateOrganization";
@@ -128,8 +128,6 @@ public class TeamTests extends BaseTest {
 		assertTrue("The organization name was not cropped correctly.", teamIndexPage.isTeamPresent(orgName));
 		
 		// Test name duplication checking
-		
-		
 		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
 													.clickAddTeamButton()
 													.setTeamName(orgName)
@@ -260,8 +258,8 @@ public class TeamTests extends BaseTest {
 
         TeamDetailPage teamDetailPage = teamIndexPage
 								.expandTeamRowByIndex(indexMap.get(team1))
-								.addNewApplication(team1, appName, "", "Low")
-								.saveApplication(team1)
+								.addNewApplication(indexMap.get(team1), appName, "", "Low")
+								.saveApplication(indexMap.get(team1))
 								.clickOrganizationHeaderLink()
 								.expandTeamRowByIndex(indexMap.get(team1))
 								.clickViewAppLink(appName,indexMap.get(team1))
@@ -269,23 +267,24 @@ public class TeamTests extends BaseTest {
 								.setTeam(team2)
 								.clickUpdateApplicationButton()
 								.clickOrganizationHeaderLink()
-								.clickViewTeamLink(team1);
+								.clickViewTeamLink(indexMap.get(team1));
 		
 		Boolean oneBool = teamDetailPage.isAppPresent(appName);
 
         teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
-				.clickViewTeamLink(team2);
+				.clickViewTeamLink(indexMap.get(team2));
 		
 		Boolean twoBool = teamDetailPage.isAppPresent(appName);
 
-
         teamDetailPage.clickOrganizationHeaderLink()
-					.clickViewTeamLink(team1)
-					.clickDeleteButton()
-					.clickOrganizationHeaderLink()
-					.clickViewTeamLink(team2)
-					.clickDeleteButton()
-					.logout();
+					.clickViewTeamLink(indexMap.get(team1))
+					.clickDeleteButton().clickOrganizationHeaderLink();
+
+        indexMap = teamIndexPage.getTeamToIndexMap();
+
+        teamIndexPage.clickViewTeamLink(indexMap.get(team2))
+				.clickDeleteButton()
+				.logout();
 		
 		assertTrue("app was not switched properly", !oneBool && twoBool);
 	}
