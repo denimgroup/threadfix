@@ -59,6 +59,7 @@ public abstract class BasePage {
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
 		waitForElement(driver.findElementById("login"));
+        sleep(3000);
         /*
         sleep(3000);
 		driver.navigate().refresh();
@@ -103,8 +104,6 @@ public abstract class BasePage {
 	
 	public void clickUserTab(){
 		driver.findElementById("tabUserAnchor").click();
-//		sleep(4000);
-//		waitForElement(driver.findElementById("configurationHeader"));
 	}
 	
 	
@@ -127,7 +126,7 @@ public abstract class BasePage {
 	public RemoteProvidersIndexPage clickRemoteProvidersLink(){
 		clickConfigTab();
 		driver.findElementById("remoteProvidersLink").click();
-		sleep(4000);
+		sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	

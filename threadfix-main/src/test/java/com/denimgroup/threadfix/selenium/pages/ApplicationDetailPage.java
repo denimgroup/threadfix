@@ -84,8 +84,7 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickTestConnection() {
 		driver.findElementById("jsonLink").click();
-//		waitForElement(driver.findElementById("jsonResult"));
-		sleep(5000);
+        waitForElement(driver.findElementById("jsonResult"));
 		return new ApplicationDetailPage(driver);
 	}
 

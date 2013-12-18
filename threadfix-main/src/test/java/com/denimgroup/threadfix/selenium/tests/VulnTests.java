@@ -29,36 +29,28 @@ public class VulnTests extends BaseTest {
 	private final static int BUG = 1;
 	private final static int TFS = 2;
 	
-//	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
-//	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;
-	private static String JIRA_USERNAME = null;
-	private static String JIRA_PASSWORD = null;
-	private static String JIRA_URL = null;
-	private static String JIRA_PROJECTNAME = null;
-	private static String BUGZILLA_USERNAME = null;
-	private static String BUGZILLA_PASSWORD = null;
-	private static String BUGZILLA_URL = null;
-	private static String BUGZILLA_PROJECTNAME = "For ThreadFix";
-	private static String TFS_USERNAME = null;
-	private static String TFS_PASSWORD = null;
-	private static String TFS_URL = null;
-	private static String TFS_PROJECTNAME = null;
+	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
+	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;
+	private static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
+	private static final String JIRA_PASSWORD = System.getProperty("JIRA_PASSWORD");
+	private static final String JIRA_URL = System.getProperty("JIRA_URL");
+	private static final String JIRA_PROJECTNAME = System.getProperty("JIRA_PROJECTNAME");
+	private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
+	private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
+	private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
+	private static final String BUGZILLA_PROJECTNAME = "For ThreadFix";
+	private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
+	private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
+	private static final String TFS_URL = System.getProperty("TFS_URL");
+	private static final String TFS_PROJECTNAME = System.getProperty("TFS_PROJECTNAME");
 	
 	@Before
 	public void init() {
 		super.init();
-		assignVars();
 		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 		}
-	
-//	public static URL getScanFilePath(String category, String scannerName,
-//			String fileName) {
-//		String string = "/SupportingFiles/" + category + "/" + scannerName + "/"
-//				+ fileName;
-//
-//		return ClassLoader.getSystemResource(string);// .getFile();
-//	}
+
 	
 	@After
 	public void shutDown() {
@@ -78,7 +70,7 @@ public class VulnTests extends BaseTest {
 		ad = ad.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-89")
+				.selectMergeDefect("THREAD-157")
 				.clickMergeDefectSubmit();
 		
 		//verify
@@ -114,7 +106,6 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-	@Ignore
 	@Test
 	public void mergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
@@ -135,7 +126,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-89")
+				.selectMergeDefect("THREAD-157")
 				.clickMergeDefectSubmit();
 
 		//verify
@@ -191,14 +182,14 @@ public class VulnTests extends BaseTest {
 		ad = ad.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-89")
+				.selectMergeDefect("THREAD-156")
 				.clickMergeDefectSubmit();
 
 		//change merge
 		ad = ad.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-88")
+				.selectMergeDefect("THREAD-155")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -259,7 +250,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-89")
+				.selectMergeDefect("THREAD-150")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -267,7 +258,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-88")
+				.selectMergeDefect("THREAD-107")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -333,7 +324,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-89")
+				.selectMergeDefect("THREAD-115")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -341,7 +332,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(5)
 				.clickVulnCheckBox(6)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-88")
+				.selectMergeDefect("THREAD-140")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -349,7 +340,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-86")
+				.selectMergeDefect("THREAD-141")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -400,6 +391,7 @@ public class VulnTests extends BaseTest {
 
 		ad.logout();
 		destroy();
+
 	}
 	@Ignore
 	@Test
@@ -477,7 +469,7 @@ public class VulnTests extends BaseTest {
 																	.enterType(null, dt)
 																	.enterURL(null, dturl)
 																	.clickSaveNewDefectTracker();
-		
+
 		//attach defect Tracker
 		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 																			.expandTeamRowByIndex(teamName)
@@ -485,8 +477,9 @@ public class VulnTests extends BaseTest {
 																			.addDefectTracker(dtName, uName, pWord, pName);
 		//import scan
 		applicationDetailPage.clickRemoteProvidersLink()
-							.clickRemoteProvidersLink()
-							.clickRemoteProvidersLink()
+                            .clickRemoteProvidersLink()
+                            .clickRemoteProvidersLink()
+                            .clickRemoteProvidersLink()
 							.clickConfigureWhiteHat()
 							.setWhiteHatAPI(whKey)
 							.saveWhiteHat()
@@ -514,55 +507,6 @@ public class VulnTests extends BaseTest {
 				.clickDeleteButton(dtName)
 				.logout();
 	}
-	
-	private void assignVars() {
-		String tmp = System.getProperty("JIRA_USERNAME");
-		if (tmp != null) {
-			JIRA_USERNAME = tmp;
-		}
-		tmp = System.getProperty("JIRA_PASSWORD");
-		if (tmp != null) {
-			JIRA_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("JIRA_URL");
-		if (tmp != null) {
-			JIRA_URL = tmp;
-		}
-		tmp = System.getProperty("JIRAPROJECTNAME");
-		if (tmp != null) {
-			JIRA_PROJECTNAME = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_USERNAME");
-		if (tmp != null) {
-			BUGZILLA_USERNAME = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_PASSWORD");
-		if (tmp != null) {
-			BUGZILLA_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_URL");
-		if (tmp != null) {
-			BUGZILLA_URL = tmp;
-		}
-		tmp = System.getProperty("BUGZILLAPROJECTNAME");
-		if (tmp != null) {
-			BUGZILLA_PROJECTNAME = tmp;
-		}
-		tmp = System.getProperty("TFS_USERNAME");
-		if (tmp != null) {
-			TFS_USERNAME = tmp;
-		}
-		tmp = System.getProperty("TFS_PASSWORD");
-		if (tmp != null) {
-			TFS_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("TFS_URL");
-		if (tmp != null) {
-			TFS_URL = tmp;
-		}
-		tmp = System.getProperty("TFS_PROJNAME");
-		if (tmp != null) {
-			TFS_PROJECTNAME = tmp;
-		}
-	}
+
+
 }
