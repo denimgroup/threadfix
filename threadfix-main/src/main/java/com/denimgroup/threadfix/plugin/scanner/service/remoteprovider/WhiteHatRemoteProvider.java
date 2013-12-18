@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -359,7 +360,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		map.put(FindingKey.PARAMETER, null);
 	    		dateStatus = new DateStatus();
 	    		creatingVuln = true;
-	    		Calendar testedDate = getCalendarFromString("yyyy-MM-dd", atts.getValue("tested"));
+	    		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", atts.getValue("tested"));
 	    		testedDate.set(Calendar.HOUR_OF_DAY, 0);
 	    		testedDate.set(Calendar.MINUTE, 0);
 	    		testedDate.set(Calendar.SECOND, 0);

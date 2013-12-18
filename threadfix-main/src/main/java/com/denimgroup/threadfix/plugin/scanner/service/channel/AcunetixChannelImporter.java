@@ -2,8 +2,8 @@
 //
 //     Copyright (c) 2009-2013 Denim Group, Ltd.
 //
-//     The contents of this file are subject to the Mozilla Public License
-//     Version 2.0 (the "License"); you may not use this file except in
+//     The contents of this fileName are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this fileName except in
 //     compliance with the License. You may obtain a copy of the License at
 //     http://www.mozilla.org/MPL/
 //
@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.scanner.service.channel;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.xml.sax.Attributes;
@@ -117,7 +118,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		getSeverityText = false;
 	    	} else if (getDateText) {
 	    		String temp = getBuilderText();
-	    		date = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", temp);
+	    		date = DateUtils.getCalendarFromString("dd/MM/yyyy, hh:mm:ss", temp);
 	    		getDateText = false;
 	    	}
 	    	
@@ -198,7 +199,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    
 	    public void endElement(String uri, String name, String qName) {
 	    	if (getDateText) {
-	    		testDate = getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getBuilderText());
+	    		testDate = DateUtils.getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getBuilderText());
 	    		hasDate = testDate != null;
 	    		getDateText = false;
 	    	}

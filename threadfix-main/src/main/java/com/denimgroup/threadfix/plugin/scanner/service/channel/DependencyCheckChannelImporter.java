@@ -27,6 +27,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
+	    			date = DateUtils.getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
 	    		}
 	    		getDate = false;
 	    	}
@@ -206,7 +207,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
+	    			testDate = DateUtils.getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
 	    		}
 	    		
 	    		hasDate = testDate != null;

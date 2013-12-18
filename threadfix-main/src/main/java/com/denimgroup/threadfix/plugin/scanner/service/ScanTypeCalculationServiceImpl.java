@@ -39,6 +39,9 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.denimgroup.threadfix.plugin.scanner.service.channel.CheckMarxChannelImporter;
+import com.denimgroup.threadfix.service.util.IntegerUtils;
+import com.denimgroup.threadfix.service.util.ZipFileUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -67,16 +70,6 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private ApplicationChannelDao applicationChannelDao;
 	private ChannelTypeDao channelTypeDao;
 	private boolean loadedDaos = false;
-	
-//	@Autowired
-//	public ScanTypeCalculationServiceImpl(ChannelTypeDao channelTypeDao,
-//			ApplicationChannelDao applicationChannelDao,
-//			ApplicationDao applicationDao) {
-//		this.applicationDao = applicationDao;
-//		this.applicationChannelDao = applicationChannelDao;
-//		this.channelTypeDao = channelTypeDao;
-//		
-//	}
 	
 	private void checkDaos() {
 		if (!loadedDaos) {
@@ -112,36 +105,16 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private String figureOutZip(String fileName) {
 		
 		String result = null;
-		ZipFile zipFile = null;
-		try {
-			zipFile = new ZipFile(fileName);
-			
+		try (ZipFile zipFile = new ZipFile(fileName)) {
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ScannerType.FORTIFY.getFullName();
-			} else {
-				for (Enumeration<?> entries = zipFile.entries(); entries.hasMoreElements();) {
-					Object entry = entries.nextElement();
-					if (entry != null && entry instanceof ZipEntry) {
-						String name = ((ZipEntry) entry).getName();
-						if (name != null && name.endsWith("issue_index.js")) {
-							result = ScannerType.SKIPFISH.getFullName();
-							break;
-						}
-					}
-				}
+			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
+				result = ScannerType.SKIPFISH.getFullName();
 			}
 		} catch (FileNotFoundException e) {
 			log.warn("Unable to find zip file.", e);
 		} catch (IOException e) {
 			log.warn("Exception encountered while trying to identify zip file.", e);
-		} finally {
-			if (zipFile != null) {
-				try {
-					zipFile.close();
-				} catch (IOException e) {
-					log.warn("IOException encountered while trying to close the zip file.", e);
-				}
-			}
 		}
 		
 		return result;
@@ -183,6 +156,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.ZAPROXY.getFullName(), "report", "alertitem");
 		addToMap(ScannerType.ZAPROXY.getFullName(), "OWASPZAPReport", "site", "alerts");
 		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
+        addToMap(CheckMarxChannelImporter.SCANNER_NAME, CheckMarxChannelImporter.ROOT_NODE_NAME);
 	}
 	
 	private static void addToMap(String name, String... tags) {
@@ -246,13 +220,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		
 		ChannelType type = null;
 		
-		Integer channelId = -1;
+		Integer channelId = null;
 		if (channelIdString != null && !channelIdString.trim().isEmpty()) {
-			try {
-				channelId = Integer.valueOf(channelIdString);
-			} catch (NumberFormatException e) {
-				log.error("Provided channelId of '" + channelIdString + "' was not null and was not a number.", e);
-			}
+			channelId = IntegerUtils.getIntegerOrNull(channelIdString);
 		}
 		
 		if (channelId == null || channelId == -1) {
@@ -331,48 +301,28 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	}
 	
 	private String saveFile(String inputFileName, MultipartFile file) {
-		InputStream stream = null;
-		try {
-			stream = file.getInputStream();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		if (stream == null) {
-			log.warn("Failed to retrieve an InputStream from the file upload.");
-			return null;
-		}
-		
-		File diskFile = new File(inputFileName);
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(diskFile);
+        String returnValue = null;
 
-			byte[] buf = new byte[1024];
-			int len = 0;
+		try (InputStream stream = file.getInputStream()) {
 
-			while ((len = stream.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
+            File diskFile = new File(inputFileName);
+            try (FileOutputStream out = new FileOutputStream(diskFile)) {
+                byte[] buf = new byte[1024];
+                int len;
 
-			out.close();
+                while ((len = stream.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+
+                returnValue = inputFileName;
+
+            } catch (IOException e) {
+                log.warn("Writing the file stream to disk encountered an IOException.", e);
+            }
 		} catch (IOException e) {
-			log.warn("Writing the file stream to disk encountered an IOException.", e);
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				log.warn("IOException encountered while attempting to close a stream.", e);
-			}
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					log.warn("IOException encountered while attempting to close a stream.", e);
-				}
-			}
+            log.warn("Failed to retrieve an InputStream from the file upload.", e);
 		}
-		
-		return inputFileName;
+
+		return returnValue;
 	}
 }

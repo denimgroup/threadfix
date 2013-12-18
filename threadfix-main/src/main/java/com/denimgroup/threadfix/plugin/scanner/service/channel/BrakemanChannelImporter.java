@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.commons.io.IOUtils;
@@ -80,13 +81,13 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			JSONObject jsonObject = new JSONObject(jsonString);
 			JSONObject scanInfo = jsonObject.getJSONObject("scan_info");
 			String dateString = scanInfo.getString("timestamp");
-			return getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy",dateString);
+			return DateUtils.getCalendarFromString("EEE MMM dd hh:mm:ss Z yyyy", dateString);
 		} catch (JSONException e) {
 			try {
 				JSONObject jsonObject = new JSONObject(jsonString);
 				JSONObject scanInfo = jsonObject.getJSONObject("scan_info");
 				String dateString = scanInfo.getString("start_time");
-				return getCalendarFromString("yyyy-MM-dd hh:mm:ss Z",dateString);	
+				return DateUtils.getCalendarFromString("yyyy-MM-dd hh:mm:ss Z", dateString);
 			} catch (JSONException f){
 				log.warn("JSON input was probably version 1.", f);
 				return null;

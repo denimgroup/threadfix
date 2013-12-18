@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.xml.sax.Attributes;
@@ -154,8 +155,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
 	    	} else if ("issues".equals(qName)) {
-	    		date = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", 
-	    				atts.getValue("exportTime"));
+	    		date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
 	    	} else if ("request".equals(qName)) {
 	    		getBackupParameter = true;
 	    	}
@@ -273,8 +273,8 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name, String qName, Attributes atts) 
 	    		throws SAXException {	    	
 	    	if ("issues".equals(qName)) {
-	    		testDate = getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", 
-	    				atts.getValue("exportTime"));
+	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy",
+                        atts.getValue("exportTime"));
 	    		if (testDate != null)
 	    			hasDate = true;
 	    		correctFormat = atts.getValue("burpVersion") != null;

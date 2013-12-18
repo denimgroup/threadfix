@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.scanner.service.channel;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.xml.sax.Attributes;
@@ -203,9 +204,9 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
     private Calendar getCalendar(String dateString) {
         Calendar result = null;
-        result = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", dateString);
+        result = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss a", dateString);
         if (result == null)
-            result = getCalendarFromString("dd/MM/yyyy hh:mm:ss", dateString);
+            result = DateUtils.getCalendarFromString("dd/MM/yyyy hh:mm:ss", dateString);
         return result;
     }
 }

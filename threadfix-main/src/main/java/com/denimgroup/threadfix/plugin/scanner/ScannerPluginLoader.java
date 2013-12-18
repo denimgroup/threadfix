@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
+import com.denimgroup.threadfix.service.util.ResourceUtils;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
@@ -19,8 +20,7 @@ public class ScannerPluginLoader {
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 
 		try {
-            URL url = ScannerPluginLoader.class.getClassLoader()
-                    .getResource("scanners.jar");
+            URL url = ResourceUtils.getUrl("scanners.jar");
 
             if (url != null) {
 			    pm.addPluginsFrom(url.toURI());

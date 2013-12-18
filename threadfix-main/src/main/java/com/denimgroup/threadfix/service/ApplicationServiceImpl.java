@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.service.util.IntegerUtils;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -568,12 +569,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private Integer getCweId(TableSortBean bean) {
 		if (bean.getCweFilter() != null && !bean.getCweFilter().trim().equals("")) {
 			String cwe = bean.getCweFilter().trim();
-			
-			try {
-				return Integer.valueOf(cwe);
-			} catch (NumberFormatException e) {
-				log.warn("Invalid string submitted for CWE ID.", e);
-			}
+			return IntegerUtils.getIntegerOrNull(cwe);
 		}
 		
 		return null;

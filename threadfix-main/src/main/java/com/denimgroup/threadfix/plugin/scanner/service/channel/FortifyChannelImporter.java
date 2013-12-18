@@ -610,8 +610,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    	} else if ("CreatedTS".equals(qName) && atts.getValue("date") != null
 		    			&& atts.getValue("time") != null) {
 		    		String dateString = atts.getValue("date") + " " + atts.getValue("time");
-		    		date = getCalendarFromString("yyyy-MM-dd hh:mm:ss", 
-		    				dateString);
+		    		date = DateUtils.getCalendarFromString("yyyy-MM-dd hh:mm:ss", dateString);
 		    	}
 	    	} else {
 	    		if ("Node".equals(qName)) {
@@ -799,8 +798,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	if (testDate == null && "CreatedTS".equals(qName) 
 	    			&& atts.getValue("date") != null
 	    			&& atts.getValue("time") != null) {
-	    		testDate = getCalendarFromString("yyyy-MM-dd hh:mm:ss", 
-	    				atts.getValue("date") + " " + atts.getValue("time"));
+	    		testDate = DateUtils.getCalendarFromString("yyyy-MM-dd hh:mm:ss",
+                        atts.getValue("date") + " " + atts.getValue("time"));
 	    	}
 	    	
 	    	if ("Vulnerability".equals(qName)) {
@@ -841,8 +840,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		if (stringTime != null) {
 	    			int index = stringTime.indexOf('.');
 	    			if (index != -1) {
-		    			resultTime = getCalendarFromString("yyyy-MM-dd'T'hh:mm:ss", 
-		    					stringTime.substring(0,index));
+		    			resultTime = DateUtils.getCalendarFromString("yyyy-MM-dd'T'hh:mm:ss",
+                                stringTime.substring(0, index));
 	    			}
 	    		}
 	    		getDate = false;

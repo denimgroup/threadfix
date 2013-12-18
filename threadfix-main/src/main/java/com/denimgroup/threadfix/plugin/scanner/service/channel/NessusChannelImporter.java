@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,7 +232,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 	    		if (tempDateString != null) {
-	    			date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
+	    			date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
 	    		}
 	    		getDate = false;
 	    	} else if (getFindings) {
@@ -328,7 +329,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
-	    		testDate = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
 	    		
 	    		hasDate = testDate != null;
 	    		

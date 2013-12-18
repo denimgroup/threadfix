@@ -200,7 +200,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+	    			date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
 	    		}
 	    		getDate = false;
 	    	} 
@@ -264,7 +264,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+	    			testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
 	    		}
 	    		
 	    		hasDate = testDate != null;

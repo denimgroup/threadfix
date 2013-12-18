@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.denimgroup.threadfix.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,7 +262,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentNativeId = getBuilderText();
 	    		getIdentifierText = false;
 	    	} else if (getDate) {
-	    		date = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
+	    		date = DateUtils.getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
 	    		getDate = false;
 	    	} else if (getDataFlowLine) {
 	    		currentDataFlowLineText = getBuilderText();
@@ -382,7 +383,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    @Override
 	    public void endElement(String uri, String name, String qName) {
  			if (getDate) {
-	    		testDate = getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
+	    		testDate = DateUtils.getCalendarFromString("EEE, MMM dd, yyyy hh:mm:ss aa", getBuilderText());
 	    		getDate = false;
 	    		hasDate = true;
 	    	}

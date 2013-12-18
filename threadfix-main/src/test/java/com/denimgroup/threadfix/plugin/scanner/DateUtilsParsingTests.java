@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.plugin.scanner.service.channel.DateUtils;
+import com.denimgroup.threadfix.service.util.DateUtils;
 
 public class DateUtilsParsingTests {
 

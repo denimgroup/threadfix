@@ -35,6 +35,7 @@ import java.util.Map;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.service.util.ResourceUtils;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
@@ -113,8 +114,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		if (folderName != null && names != null) {
 			try {
 
-                URL url = TFSDefectTracker.class.getClassLoader()
-                        .getResource(folderName);
+                URL url = ResourceUtils.getUrl(folderName);
 
                 if (url != null) {
                     String base = url.toURI().getPath()

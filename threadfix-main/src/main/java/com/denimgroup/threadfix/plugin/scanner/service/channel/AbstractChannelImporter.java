@@ -732,7 +732,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		String dateString = getRegexResult(httpTrafficString, "Date: ([^\n]+)");
 		
 		if (dateString != null && !dateString.isEmpty()) {
-			return getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
+			return DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
 		} else {
 			return null;
 		}
