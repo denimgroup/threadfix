@@ -6,7 +6,7 @@ import datetime, re
 env.hosts = ['server ip']
 env.user = 'username'
 env.password = 'password'
-source_code_loc='https://code.google.com/p/threadfix'
+source_code_loc='https://github.com/denimgroup/threadfix.git'
 local_working_folder_loc = '/path/to/file' #where fabfile is running from
 server_base_loc = '/home/denimgroup/artifacts' #where to deploy to
 local_path = 'threadfix/src/main/resources' #path to .deploy files
