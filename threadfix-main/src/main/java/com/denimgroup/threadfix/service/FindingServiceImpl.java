@@ -30,7 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.denimgroup.threadfix.service.util.IntegerUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

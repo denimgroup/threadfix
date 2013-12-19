@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service.util;
+package com.denimgroup.threadfix.plugin.scanner.service.util;
 
 import org.apache.commons.io.IOUtils;
 

@@ -1,11 +1,10 @@
 package com.denimgroup.threadfix.plugin;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
-import com.denimgroup.threadfix.service.util.ResourceUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;

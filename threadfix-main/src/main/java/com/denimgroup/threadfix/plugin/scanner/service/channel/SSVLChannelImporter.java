@@ -39,8 +39,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import com.denimgroup.threadfix.service.util.DateUtils;
-import com.denimgroup.threadfix.service.util.ResourceUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;

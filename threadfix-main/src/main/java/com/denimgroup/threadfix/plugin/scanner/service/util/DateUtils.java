@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.util;
+package com.denimgroup.threadfix.plugin.scanner.service.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

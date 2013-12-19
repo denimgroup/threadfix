@@ -31,17 +31,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import com.denimgroup.threadfix.plugin.scanner.service.channel.CheckMarxChannelImporter;
-import com.denimgroup.threadfix.service.util.IntegerUtils;
-import com.denimgroup.threadfix.service.util.ZipFileUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.ZipFileUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.web.multipart.MultipartFile;

@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.denimgroup.threadfix.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.commons.io.IOUtils;

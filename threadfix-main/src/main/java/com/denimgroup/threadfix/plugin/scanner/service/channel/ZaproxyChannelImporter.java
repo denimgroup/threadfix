@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.denimgroup.threadfix.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;

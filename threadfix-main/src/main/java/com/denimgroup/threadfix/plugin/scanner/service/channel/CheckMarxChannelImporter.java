@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.plugin.scanner.service.channel;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.util.DateUtils;
-import com.denimgroup.threadfix.service.util.IntegerUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -171,7 +171,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
                 switch (qName) {
                     case LINE:      lineNumber = getBuilderText(); break;
                     case CODE:      lineText   = getBuilderText(); break;
-                    case FILE_NAME: fileName = getBuilderText(); break;
+                    case FILE_NAME: fileName   = getBuilderText(); break;
                     case NAME:      lineText   = getBuilderText(); break;
                 }
                 getText = false;
@@ -223,8 +223,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
                 throws SAXException {
             if (ROOT_NODE_NAME.equals(qName)) {
                 testDate = DateUtils.getCalendarFromString(format, atts.getValue(SCAN_START));
-                if (testDate != null)
-                    hasDate = true;
+                hasDate = testDate != null;
                 correctFormat = true;
 
                 log.info("CheckMarx scan is from version " + atts.getValue(VERSION_ATTRIBUTE));

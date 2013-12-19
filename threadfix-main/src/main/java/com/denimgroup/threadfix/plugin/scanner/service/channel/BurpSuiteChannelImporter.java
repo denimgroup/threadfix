@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-import com.denimgroup.threadfix.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.xml.sax.Attributes;
