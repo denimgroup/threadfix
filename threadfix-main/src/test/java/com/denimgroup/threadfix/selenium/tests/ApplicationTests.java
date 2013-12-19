@@ -340,7 +340,7 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteButton()
 										.logout();
 	}
-    //@Ignore
+
 	@Test
 	public void testAddWafAtApplicationCreationTimeAndDelete() {              //left off
 		String wafName = "appCreateTimeWaf1";
@@ -397,7 +397,7 @@ public class ApplicationTests extends BaseTest {
 		loginPage = wafDetailPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
 		
 	}
-	//@Ignore
+
 	@Test
 	public void testSwitchWafs() {
 		//TODO
@@ -457,7 +457,7 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteWaf(wafName2)
 										.logout();
 	}
-	//@Ignore
+
 	@Test
 	public void longNameDeformTest(){
 		String appName = getRandomString(60);
@@ -534,7 +534,7 @@ public class ApplicationTests extends BaseTest {
 	}
 
     //Test is ignored because it is testing features that do not exist in this version(2.0M2)
-    //@Ignore
+    @Ignore
 	@Test
 	public void viewBasicPermissableUsers(){
 		String teamName = getRandomString(8);
@@ -564,7 +564,7 @@ public class ApplicationTests extends BaseTest {
 	}
 
     //Test is ignored because it is testing features that do not exist in this version(2.0M2)
-    //@Ignore
+    @Ignore
 	@Test
 	public void addAppOnlyUserView(){
 		String teamName = getRandomString(8);
@@ -620,7 +620,7 @@ public class ApplicationTests extends BaseTest {
 	}
 
     //Test is ignored because it is testing features that do not exist in this version(2.0M2)
-    //@Ignore
+    @Ignore
 	@Test
 	public void addAppAllUserView(){
 		String teamName = getRandomString(8);
@@ -675,7 +675,7 @@ public class ApplicationTests extends BaseTest {
 	}
 
     //Test is ignored because it is testing features that do not exist in this version(2.0M2)
-    //@Ignore
+    @Ignore
 	@Test
 	public void addUserNoPermUserView(){
 		String teamName = getRandomString(8);

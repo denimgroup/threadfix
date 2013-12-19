@@ -70,11 +70,13 @@ public class TeamTests extends BaseTest {
 		teamIndexPage = teamIndexPage.clickAddTeamButton()
 								.setTeamName(newOrgName)
 								.addNewTeam();
-		assertTrue("The validation is not present",teamIndexPage.isCreateValidtionPresent(newOrgName));
+
+		assertTrue("The validation is not present", teamIndexPage.isCreateValidtionPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 
 		teamIndexPage = teamIndexPage.clickViewTeamLink(newOrgName)
 									.clickDeleteButton();
+
 		assertFalse("The organization was still present after attempted deletion.", teamIndexPage.isTeamPresent(newOrgName));
 	
 		loginPage = teamIndexPage.logout();
@@ -162,6 +164,10 @@ public class TeamTests extends BaseTest {
 													.clickEditOrganizationLink()
 													.setNameInput(editedOrgName)
 													.clickUpdateButtonValid();
+
+        TeamIndexCache.getCache().deleteTeamWithName(newOrgName);
+        TeamIndexCache.getCache().addTeamWithName(editedOrgName);
+
 		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedOrgName));
 		
 		teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
@@ -254,35 +260,31 @@ public class TeamTests extends BaseTest {
 								.setTeamName(team2)
 								.addNewTeam();
 
-        Map<String, Integer> indexMap = teamIndexPage.getTeamToIndexMap();
-
         TeamDetailPage teamDetailPage = teamIndexPage
-								.expandTeamRowByIndex(indexMap.get(team1))
-								.addNewApplication(indexMap.get(team1), appName, "", "Low")
-								.saveApplication(indexMap.get(team1))
+								.expandTeamRowByIndex(team1)
+								.addNewApplication(team1, appName, "", "Low")
+								.saveApplication(team1)
 								.clickOrganizationHeaderLink()
-								.expandTeamRowByIndex(indexMap.get(team1))
-								.clickViewAppLink(appName,indexMap.get(team1))
+								.expandTeamRowByIndex(team1)
+								.clickViewAppLink(appName,team1)
 								.clickEditDeleteBtn()
 								.setTeam(team2)
 								.clickUpdateApplicationButton()
 								.clickOrganizationHeaderLink()
-								.clickViewTeamLink(indexMap.get(team1));
+								.clickViewTeamLink(team1);
 		
 		Boolean oneBool = teamDetailPage.isAppPresent(appName);
 
         teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
-				.clickViewTeamLink(indexMap.get(team2));
+				.clickViewTeamLink(team2);
 		
 		Boolean twoBool = teamDetailPage.isAppPresent(appName);
 
         teamDetailPage.clickOrganizationHeaderLink()
-					.clickViewTeamLink(indexMap.get(team1))
+					.clickViewTeamLink(team1)
 					.clickDeleteButton().clickOrganizationHeaderLink();
 
-        indexMap = teamIndexPage.getTeamToIndexMap();
-
-        teamIndexPage.clickViewTeamLink(indexMap.get(team2))
+        teamIndexPage.clickViewTeamLink(team2)
 				.clickDeleteButton()
 				.logout();
 		

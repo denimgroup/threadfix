@@ -90,7 +90,7 @@ public class DefectTrackerTests extends BaseTest {
 		if (tmp != null) {
 			JIRA_URL = tmp;
 		}
-		tmp = System.getProperty("JIRAPROJECTNAME");
+		tmp = System.getProperty("JIRA_PROJECTNAME");
 		if (tmp != null) {
 			JIRA_PROJECTNAME = tmp;
 		}

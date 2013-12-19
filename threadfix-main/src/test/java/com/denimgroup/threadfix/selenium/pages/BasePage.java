@@ -23,8 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,10 +74,36 @@ public abstract class BasePage {
 		*/
 		return new LoginPage(driver);
 	}
-	
+
+    public List<String> getList() {
+        System.out.println("List!");
+        List<String> teamIndexMap = new ArrayList<>();
+
+        for (int j = 1; j <= getNumTeamRows(); j++) {
+            WebElement element = driver.findElementById("teamName" + j);
+            teamIndexMap.add(element.getText());
+        }
+
+        return teamIndexMap;
+    }
+
+    public int getNumTeamRows() {
+        if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
+            return driver.findElementsByClassName("pointer").size();
+        }
+        return 0;
+    }
+
 	public TeamIndexPage clickOrganizationHeaderLink() {
-			driver.findElementById("orgHeader").click();
+            driver.findElementById("orgHeader").click();
 			sleep(2000);
+
+            TeamIndexCache cache = TeamIndexCache.getCache();
+
+            if (!cache.isInitialized()) {
+                cache.initialize(getList());
+            }
+
 			return new TeamIndexPage(driver);
 	}
 	

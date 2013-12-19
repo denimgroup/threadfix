@@ -123,6 +123,7 @@ public abstract class BaseTest {
 	
 	@Before
 	public void init() {
+        TeamIndexCache.getCache().clear();
 	}
 
 	@After

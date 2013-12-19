@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -113,6 +114,12 @@ public class TeamDetailPage extends BasePage {
     public TeamIndexPage clickDeleteButton() {
         clickEditOrganizationLink();
         sleep(500);
+        TeamIndexCache cache = TeamIndexCache.getCache();
+
+        String teamToDelete = driver.findElementById("name").getText();
+        teamToDelete = teamToDelete.replace(" Action","");
+        cache.deleteTeamWithName(teamToDelete);
+
         driver.findElementById("deleteLink").click();
 
         Alert alert = driver.switchTo().alert();
