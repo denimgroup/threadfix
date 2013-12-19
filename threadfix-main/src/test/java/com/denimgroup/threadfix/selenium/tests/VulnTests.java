@@ -34,11 +34,11 @@ public class VulnTests extends BaseTest {
 	private static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
 	private static final String JIRA_PASSWORD = System.getProperty("JIRA_PASSWORD");
 	private static final String JIRA_URL = System.getProperty("JIRA_URL");
-	private static final String JIRA_PROJECTNAME = System.getProperty("JIRA_PROJECTNAME");
+	private static final String JIRAPROJECTNAME = System.getProperty("JIRAPROJECTNAME");
 	private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
 	private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
 	private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
-	private static final String BUGZILLA_PROJECTNAME = "For ThreadFix";
+	private static final String BUGZILLAPROJECTNAME = "For ThreadFix";
 	private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
 	private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
 	private static final String TFS_URL = System.getProperty("TFS_URL");
@@ -431,14 +431,14 @@ public class VulnTests extends BaseTest {
 				dturl = JIRA_URL;
 				uName = JIRA_USERNAME;
 				pWord = JIRA_PASSWORD;
-				pName = JIRA_PROJECTNAME;
+				pName = JIRAPROJECTNAME;
 				break;
 			case BUG:
 				dt = "Bugzilla";
 				dturl = BUGZILLA_URL;
 				uName = BUGZILLA_USERNAME;
 				pWord = BUGZILLA_PASSWORD;
-				pName = BUGZILLA_PROJECTNAME;
+				pName = BUGZILLAPROJECTNAME;
 				break;
 			case TFS:
 				dt = "Microsoft TFS";

@@ -47,18 +47,18 @@ public class DefectTrackerTests extends BaseTest {
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
 	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;
-	private static String JIRA_USERNAME = null;
-	private static String JIRA_PASSWORD = null;
-	private static String JIRA_URL = null;
-	private static String JIRA_PROJECTNAME = null;
-	private static String BUGZILLA_USERNAME = null;
-	private static String BUGZILLA_PASSWORD = null;
-	private static String BUGZILLA_URL = null;
-	private static String BUGZILLA_PROJECTNAME = "For ThreadFix";
-	private static String TFS_USERNAME = null;
-	private static String TFS_PASSWORD = null;
-	private static String TFS_URL = null;
-	private static String TFS_PROJECTNAME = null;
+    private static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
+    private static final String JIRA_PASSWORD = System.getProperty("JIRA_PASSWORD");
+    private static final String JIRA_URL = System.getProperty("JIRA_URL");
+    private static final String JIRAPROJECTNAME = System.getProperty("JIRAPROJECTNAME");
+    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
+    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
+    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
+    private static final String BUGZILLAPROJECTNAME = "For ThreadFix";
+    private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
+    private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
+    private static final String TFS_URL = System.getProperty("TFS_URL");
+    private static final String TFS_PROJECTNAME = System.getProperty("TFS_PROJECTNAME");
 
 	String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
@@ -72,61 +72,11 @@ public class DefectTrackerTests extends BaseTest {
 	@Before
 	public void init() {
 		super.init();
-		driver = (RemoteWebDriver) super.getDriver();
+        driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
-		assignVars();
 	}
 
-	private void assignVars() {
-		String tmp = System.getProperty("JIRA_USERNAME");
-		if (tmp != null) {
-			JIRA_USERNAME = tmp;
-		}
-		tmp = System.getProperty("JIRA_PASSWORD");
-		if (tmp != null) {
-			JIRA_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("JIRA_URL");
-		if (tmp != null) {
-			JIRA_URL = tmp;
-		}
-		tmp = System.getProperty("JIRA_PROJECTNAME");
-		if (tmp != null) {
-			JIRA_PROJECTNAME = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_USERNAME");
-		if (tmp != null) {
-			BUGZILLA_USERNAME = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_PASSWORD");
-		if (tmp != null) {
-			BUGZILLA_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_URL");
-		if (tmp != null) {
-			BUGZILLA_URL = tmp;
-		}
-		tmp = System.getProperty("BUGZILLAPROJECTNAME");
-		if (tmp != null) {
-			BUGZILLA_PROJECTNAME = tmp;
-		}
-		tmp = System.getProperty("TFS_USERNAME");
-		if (tmp != null) {
-			TFS_USERNAME = tmp;
-		}
-		tmp = System.getProperty("TFS_PASSWORD");
-		if (tmp != null) {
-			TFS_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("TFS_URL");
-		if (tmp != null) {
-			TFS_URL = tmp;
-		}
-		tmp = System.getProperty("TFS_PROJNAME");
-		if (tmp != null) {
-			TFS_PROJECTNAME = tmp;
-		}
-	}
+
 
 	// old numbering scheme is being used for edit and delete buttons waiting
 	// for that change
@@ -629,8 +579,8 @@ public class DefectTrackerTests extends BaseTest {
 		assertFalse("BUGZILLA_URL is not assigned from system properties",
 				BUGZILLA_URL == null);
 		assertFalse(
-				"BUGZILLA_PROJECTNAME is not assigned from system properties",
-				BUGZILLA_PROJECTNAME == null);
+				"BUGZILLAPROJECTNAME is not assigned from system properties",
+				BUGZILLAPROJECTNAME == null);
 
 		String newDefectTrackerName = "testEditDefectTracker"
 				+ getRandomString(10);
@@ -663,7 +613,7 @@ public class DefectTrackerTests extends BaseTest {
 				.saveApplication(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME,
-						BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
+						BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn()
@@ -747,8 +697,8 @@ public class DefectTrackerTests extends BaseTest {
 				JIRA_USERNAME == null);
 		assertFalse("JIRA_URL is not assigned from system properties",
 				JIRA_URL == null);
-		assertFalse("JIRA_PROJECTNAME is not assigned from system properties",
-				JIRA_PROJECTNAME == null);
+		assertFalse("JIRAPROJECTNAME is not assigned from system properties",
+				JIRAPROJECTNAME == null);
 
 		String newDefectTrackerName = "testEditDefectTracker"
 				+ getRandomString(10);
@@ -781,7 +731,7 @@ public class DefectTrackerTests extends BaseTest {
 				.saveApplication(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(newDefectTrackerName, JIRA_USERNAME,
-						JIRA_PASSWORD, JIRA_PROJECTNAME);
+						JIRA_PASSWORD, JIRAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn()
@@ -850,7 +800,7 @@ public class DefectTrackerTests extends BaseTest {
 		assertFalse("JIRA_PASSWORD is not assigned from system properties",JIRA_PASSWORD == null);
 		assertFalse("JIRA_USERNAME is not assigned from system properties",JIRA_USERNAME == null);
 		assertFalse("JIRA_URL is not assigned from system properties",JIRA_URL == null);
-		assertFalse("JIRA_PROJECTNAME is not assigned from system properties",JIRA_PROJECTNAME == null);
+		assertFalse("JIRAPROJECTNAME is not assigned from system properties",JIRAPROJECTNAME == null);
 
 		String newDefectTrackerNameOne = "testEditDefectTracker1" + getRandomString(3);
 		String newDefectTrackerNameTwo = "testEditDefectTracker2" + getRandomString(3);
@@ -880,7 +830,7 @@ public class DefectTrackerTests extends BaseTest {
 																			.addNewApplication(teamName, appName, urlText, "Low")
 																			.saveApplication(teamName)
 																			.clickViewAppLink(appName, teamName)
-																			.addDefectTracker(newDefectTrackerNameOne, JIRA_USERNAME,JIRA_PASSWORD, JIRA_PROJECTNAME);
+																			.addDefectTracker(newDefectTrackerNameOne, JIRA_USERNAME,JIRA_PASSWORD, JIRAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
@@ -892,7 +842,7 @@ public class DefectTrackerTests extends BaseTest {
 													.clickOrganizationHeaderLink()
 													.expandTeamRowByIndex(teamName)
 													.clickViewAppLink(appName, teamName)
-													.editDefectTracker(newDefectTrackerNameTwo, JIRA_USERNAME, JIRA_PASSWORD, JIRA_PROJECTNAME);
+													.editDefectTracker(newDefectTrackerNameTwo, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);
 
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
