@@ -22,6 +22,14 @@
 //
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	
 	private HttpRestUtils util = new HttpRestUtils();
@@ -115,7 +123,56 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
 		return result;
 	}
-	
+        public String getAllTeamsPrettyPrint() {
+                final String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
+
+                final ObjectMapper objectMapper = new ObjectMapper();
+
+                final List<Map<String, Object>> teamsData;
+
+                try {
+                        teamsData = objectMapper.readValue(result, new TypeReference<List<Map<String, Object>>>() {});
+                } catch (final IOException e) {
+                        e.printStackTrace();
+                        return "There was an error parsing JSON response.";
+                }
+
+                if (teamsData.isEmpty()) {
+                        return "These aren't the droids you're looking for.";
+                } else {
+                        final StringBuilder outputBuilder = new StringBuilder();
+
+                        for (final Map<String, Object> teamData : teamsData) {
+                                final Boolean teamActive = (Boolean) teamData.get("active");
+                                @SuppressWarnings("unchecked")
+                                final List<Map<String, Object>> applications = (List<Map<String, Object>>) teamData.get("applications");
+
+                                if (teamActive && !applications.isEmpty()) {
+                                        final String teamName = (String) teamData.get("name");
+
+                                        for (final Map<String, Object> application : applications) {
+                                                final Boolean applicationActive = (Boolean) application.get("active");
+
+                                                if (applicationActive) {
+                                                        final String applicationName = (String) application.get("name");
+                                                        final Integer id = (Integer) application.get("id");
+
+                                                        outputBuilder.append(teamName);
+                                                        outputBuilder.append(";");
+                                                        outputBuilder.append(applicationName);
+                                                        outputBuilder.append(";");
+                                                        outputBuilder.append(id);
+                                                        outputBuilder.append("\n");
+                                                }
+                                        }
+                                }
+                        }
+
+                        outputBuilder.setLength(outputBuilder.length() - 1);
+                        return outputBuilder.toString();
+                }
+        }	
+
 	public String searchForApplicationById(String id) {
 		String result = util.httpGet(util.getUrl() + "/applications/" + id +
 				"?apiKey=" + util.getKey());
