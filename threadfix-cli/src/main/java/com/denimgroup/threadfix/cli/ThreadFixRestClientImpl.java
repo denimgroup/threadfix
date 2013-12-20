@@ -23,12 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.json.JSONException;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	
@@ -58,7 +61,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {"apiKey",      "name", "url"},
 				new String[] { util.getKey(), name,   url});
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String setParameters(String appId, String frameworkType, String repositoryUrl) {
@@ -66,7 +69,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {"apiKey",      "frameworkType", "repositoryUrl"},
 				new String[] { util.getKey(), frameworkType,   repositoryUrl});
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String createTeam(String name) {
@@ -74,14 +77,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {"apiKey",      "name"},
 				new String[] { util.getKey(), name});
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String getRules(String wafId) {
 		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId + "/rules" +
 				"?apiKey=" + util.getKey());
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 
 	public String searchForWafByName(String name) {
@@ -89,14 +92,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String searchForWafById(String wafId) {
 		String result = util.httpGet(util.getUrl() + "/wafs/" + wafId +
 				"?apiKey=" + util.getKey());
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String createWaf(String name, String type) {
@@ -104,7 +107,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {"apiKey",      "name", "type"},
 				new String[] { util.getKey(), name,   type});
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	/**
@@ -121,63 +124,64 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
 	public String getAllTeams() {
 		String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
-		return result;
+		return getErrorMessageOrObject(result);
 	}
-        public String getAllTeamsPrettyPrint() {
-                final String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
+    
+    public String getAllTeamsPrettyPrint() {
+        final String result = util.httpGet(util.getUrl() + "/teams/?apiKey=" + util.getKey());
 
-                final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
 
-                final List<Map<String, Object>> teamsData;
+        final List<Map<String, Object>> teamsData;
 
-                try {
-                        teamsData = objectMapper.readValue(result, new TypeReference<List<Map<String, Object>>>() {});
-                } catch (final IOException e) {
-                        e.printStackTrace();
-                        return "There was an error parsing JSON response.";
-                }
+        try {
+            teamsData = objectMapper.readValue(result, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return "There was an error parsing JSON response.";
+        }
 
-                if (teamsData.isEmpty()) {
-                        return "These aren't the droids you're looking for.";
-                } else {
-                        final StringBuilder outputBuilder = new StringBuilder();
+        if (teamsData.isEmpty()) {
+            return "These aren't the droids you're looking for.";
+        } else {
+            final StringBuilder outputBuilder = new StringBuilder();
 
-                        for (final Map<String, Object> teamData : teamsData) {
-                                final Boolean teamActive = (Boolean) teamData.get("active");
-                                @SuppressWarnings("unchecked")
-                                final List<Map<String, Object>> applications = (List<Map<String, Object>>) teamData.get("applications");
+            for (final Map<String, Object> teamData : teamsData) {
+                final Boolean teamActive = (Boolean) teamData.get("active");
+                @SuppressWarnings("unchecked")
+                final List<Map<String, Object>> applications = (List<Map<String, Object>>) teamData.get("applications");
 
-                                if (teamActive && !applications.isEmpty()) {
-                                        final String teamName = (String) teamData.get("name");
+                if (teamActive && !applications.isEmpty()) {
+                    final String teamName = (String) teamData.get("name");
 
-                                        for (final Map<String, Object> application : applications) {
-                                                final Boolean applicationActive = (Boolean) application.get("active");
+                    for (final Map<String, Object> application : applications) {
+                        final Boolean applicationActive = (Boolean) application.get("active");
 
-                                                if (applicationActive) {
-                                                        final String applicationName = (String) application.get("name");
-                                                        final Integer id = (Integer) application.get("id");
+                        if (applicationActive) {
+                            final String applicationName = (String) application.get("name");
+                            final Integer id = (Integer) application.get("id");
 
-                                                        outputBuilder.append(teamName);
-                                                        outputBuilder.append(";");
-                                                        outputBuilder.append(applicationName);
-                                                        outputBuilder.append(";");
-                                                        outputBuilder.append(id);
-                                                        outputBuilder.append("\n");
-                                                }
-                                        }
-                                }
+                            outputBuilder.append(teamName);
+                            outputBuilder.append(";");
+                            outputBuilder.append(applicationName);
+                            outputBuilder.append(";");
+                            outputBuilder.append(id);
+                            outputBuilder.append("\n");
                         }
-
-                        outputBuilder.setLength(outputBuilder.length() - 1);
-                        return outputBuilder.toString();
+                    }
                 }
-        }	
+            }
+
+            outputBuilder.setLength(outputBuilder.length() - 1);
+            return outputBuilder.toString();
+        }
+    }	
 
 	public String searchForApplicationById(String id) {
 		String result = util.httpGet(util.getUrl() + "/applications/" + id +
 				"?apiKey=" + util.getKey());
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 
 	public String searchForApplicationByName(String name, String teamName) {
@@ -185,23 +189,23 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String searchForTeamById(String id) {
 		String result = util.httpGet(util.getUrl() + "/teams/" + id +
 				"?apiKey=" + util.getKey());
 		
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String searchForTeamByName(String name) {
 		String result = util.httpGet(util.getUrl() + "/teams/lookup" +
 				"?apiKey=" + util.getKey() +
 				"&name=" + name);
-		
-		return result;
-	}
+
+        return getErrorMessageOrObject(result);
+    }
 	
 	public void setKey(String key) {
 		util.setKey(key);
@@ -221,31 +225,31 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	
 	public String uploadScan(String applicationId, String filePath) {
 		String result = util.httpPostFile(util.getUrl() + "/applications/" + applicationId + "/upload",
-				filePath,
-				new String[] { "apiKey"       },
-				new String[] {  util.getKey() });
-		return result;
+                filePath,
+                new String[]{"apiKey"},
+                new String[]{util.getKey()});
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String queueScan(String applicationId, String scannerType) {
 		String result = util.httpPost(util.getUrl() + "/tasks/queueScan",
 				new String[] { "apiKey",       "applicationId",		"scannerType" },
 				new String[] {  util.getKey(), applicationId, scannerType });
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 
 	public String addAppUrl(String appId, String url) {
 		String result = util.httpPost(util.getUrl() + "/applications/" + appId + "/addUrl",
 				new String[] { "apiKey",       "url" },
 				new String[] {  util.getKey(),  url});
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String requestTask(String scanners, String agentConfig) {
 		String result = util.httpPost(util.getUrl() + "/tasks/requestTask",
 				new String[] { "apiKey",			"scanners",		"agentConfig" },
 				new String[] { util.getKey(), 		scanners,		agentConfig });
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	/**
@@ -256,9 +260,9 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 */
 	public String taskStatusUpdate(String scanQueueTaskId, String message) {
 		String result = util.httpPost(util.getUrl() + "/tasks/taskStatusUpdate",
-				new String[] { "apiKey",		"scanQueueTaskId",	"message" },
-				new String[] { util.getKey(),	scanQueueTaskId,	message });
-		return result;
+                new String[]{"apiKey", "scanQueueTaskId", "message"},
+                new String[]{util.getKey(), scanQueueTaskId, message});
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String setTaskConfig(String appId, String scannerType, String filePath) {
@@ -266,7 +270,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String[] paramNames 	= { "apiKey",		"appId", 	"scannerType" };
 		String[] paramValues 	= {  util.getKey(),	appId,		scannerType };
 		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	/**
@@ -279,15 +283,15 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String url = util.getUrl() + "/tasks/completeTask";
 		String[] paramNames 	= { "apiKey",		"scanQueueTaskId", "secureTaskKey" };
 		String[] paramValues 	= {  util.getKey(),	scanQueueTaskId,   secureTaskKey };
-		String result = util.httpPostFile(url, filePath, paramNames, paramValues );
-		return result;
+		String result = util.httpPostFile(url, filePath, paramNames, paramValues);
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String failTask(String scanQueueTaskId, String message, String secureTaskKey) {
 		String result = util.httpPost(util.getUrl() + "/tasks/failTask",
 				new String[] { "apiKey",		"scanQueueTaskId",	"message", "secureTaskKey" },
 				new String[] { util.getKey(),	scanQueueTaskId,	message,    secureTaskKey });
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 
 	public String addDynamicFinding(String applicationId, String vulnType, String severity,
@@ -301,7 +305,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {  util.getKey(), vulnType, severity,
 								nativeId, parameter, longDescription,
 								fullUrl, path });
-		return result;
+		return getErrorMessageOrObject(result);
 	}
 	
 	public String addStaticFinding(String applicationId, String vulnType, String severity,
@@ -315,7 +319,25 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] {  util.getKey(), vulnType, severity,
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber });
-		return result;
+		return getErrorMessageOrObject(result);
 	}
+
+    private String getErrorMessageOrObject(String restResponse) {
+        try {
+            JSONObject response = new JSONObject(restResponse);
+
+            if (response.getBoolean("success")) {
+                return response.getJSONObject("object").toString(2);
+            } else {
+                return "Received error from server: " + response.getString("message");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "There was an error parsing the JSON response: \n" + restResponse;
+    }
+
 
 }

@@ -138,7 +138,7 @@ public class TeamRestController extends RestController {
 	}
 	
 	@RequestMapping(headers = "Accept=application/json", value="/lookup", method = RequestMethod.GET)
-	public @ResponseBody Object teamNameLookup(HttpServletRequest request) {
+	public @ResponseBody RestResponse teamNameLookup(HttpServletRequest request) {
 		
 		String teamName = request.getParameter("name");
 		
@@ -157,7 +157,7 @@ public class TeamRestController extends RestController {
 		} else {
 			log.info("REST request for Team with ID " + teamName
 					+ " completed successfully.");
-			return org;
+			return RestResponse.success(org);
 		}
 	}
 
