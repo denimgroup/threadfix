@@ -2,11 +2,21 @@
 
 <head>
 	<title>Scan Queue</title>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan_page.js"></script>
 </head>
 
 <body>
 	<h2>Scan Queue</h2>
-	
+
+    <c:if test="${ not empty successMessage }">
+        <div class="alert alert-success">
+            <button class="close" data-dismiss="alert" type="button">x</button>
+            <c:out value="${ successMessage }"/>
+        </div>
+    </c:if>
+
+    <%@ include file="/WEB-INF/views/errorMessage.jsp"%>
+
 	<div id="helpText">
 		The scan queue is a list of scans ThreadFix has been asked to coordinate.<br/>
 	</div>
@@ -22,6 +32,9 @@
 					<th>Created Time</th>
 					<th>Start Time</th>
 					<th>End Time</th>
+                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                        <th class="centered last"></th>
+                    </security:authorize>
 				</tr>
 			</thead>
 			<tbody>
@@ -47,8 +60,17 @@
 						<td><c:out value="${scanQueueTask.scanner}" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.createTime }" type="both" dateStyle="short" timeStyle="short" /></td>
 						<td><fmt:formatDate value="${ scanQueueTask.startTime }" type="both" dateStyle="short" timeStyle="short" /></td>
-						<td><fmt:formatDate value="${ scanQueueTask.endTime }" type="both" dateStyle="short" timeStyle="short" /></td>					
-					</tr>
+						<td><fmt:formatDate value="${ scanQueueTask.endTime }" type="both" dateStyle="short" timeStyle="short" /></td>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                            <td class="centered">
+                                <spring:url value="/configuration/scanqueue/scanQueueTask/{taskId}/delete" var="deleteUrl">
+                                    <spring:param name="taskId" value="${ scanQueueTask.id }"/>
+                                </spring:url>
+                                <a class="btn btn-danger scanQueueDelete" data-delete-form="deleteForm${ scanQueueTask.id }">Delete</a>
+                                <form id="deleteForm${ scanQueueTask.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }"></form>
+                            </td>
+                        </security:authorize>
+                    </tr>
 				
 				</c:forEach>
 			</tbody>

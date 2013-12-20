@@ -29,10 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
@@ -42,7 +39,8 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanQueueService;
 
 @Controller
-@RequestMapping("/configuration/scanqueue")
+@RequestMapping("configuration/scanqueue")
+@SessionAttributes(value= {"scanQueueTaskList", "scanQueueTask"})
 public class ScanQueueTaskController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScanQueueTaskController.class);
@@ -61,8 +59,8 @@ public class ScanQueueTaskController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(HttpServletRequest request, Model model) {
 		model.addAttribute("scanQueueTaskList", scanQueueService.loadAll());
-		
-		
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+        model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
 		return "config/scanqueue/index";
 	}
 	
@@ -112,8 +110,6 @@ public class ScanQueueTaskController {
 		}
 		ScanQueueTask task = scanQueueService.loadTaskById(taskId);
 		if (task == null) {
-			ControllerUtils.addSuccessMessage(request,
-					"The task was successfully added to the application.");
 			model.addAttribute("commentError", "The task submitted was invalid");
 			model.addAttribute("contentPage", "applications/tabs/scanQueueTab.jsp");
 			return "ajaxFailureHarness";
@@ -129,5 +125,35 @@ public class ScanQueueTaskController {
 		
 		return "redirect:/organizations/" + orgId + "/applications/" + appId;
 	}
+
+    @RequestMapping(value = "/scanQueueTask/{taskId}/delete", method = RequestMethod.POST)
+    public String deleteScanQueueTaskFromIndex(@PathVariable("taskId") int taskId,
+                                      HttpServletRequest request, Model model) {
+
+        log.info("Start deleting scan task " + taskId + " from index ");
+
+        ScanQueueTask task = scanQueueService.loadTaskById(taskId);
+        if (task == null || task.getApplication() == null) {
+            ControllerUtils.addErrorMessage(request, "The task submitted was invalid");
+            return "redirect:/configuration/scanqueue";
+        }
+
+        int orgId = task.getApplication().getOrganization().getId();
+        int appId = task.getApplication().getId();
+
+        if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+            return "403";
+        }
+        String ret = scanQueueService.deleteTask(task);
+        if (ret != null) {
+            ControllerUtils.addErrorMessage(request, ret);
+        } else {
+            ControllerUtils.addSuccessMessage(request,
+                    "Task ID " + taskId + " was successfully deleted");
+        }
+        log.info("Ended deleting scan task " + taskId + " from index ");
+
+        return "redirect:/configuration/scanqueue/";
+    }
 	
 }

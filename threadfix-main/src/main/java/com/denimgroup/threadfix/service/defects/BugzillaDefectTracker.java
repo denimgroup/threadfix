@@ -452,7 +452,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return BAD_CONFIGURATION;
 			}
 		}
-		if(productList == ""){
+		if("".equals(productList)){
 			setLastError("There were problems communicating with the Bugzilla server.");
 			return "Authentication failed";
 		}
