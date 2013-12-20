@@ -18,6 +18,7 @@ public interface ThreadFixRestClient {
     public String createWaf(String name, String type);
     public String addWaf(String appId, String wafId);
     public String getAllTeams();
+    public String getAllTeamsPrettyPrint();
     public String searchForApplicationById(String id);
     public String searchForApplicationByName(String name, String teamName);
     public String searchForTeamById(String id);
