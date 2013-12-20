@@ -84,7 +84,6 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 		SEVERITIES_MAP.put("ACESEC08", "High");		
 	}
 
-	@Autowired
 	public CatNetChannelImporter() {
 		super(ScannerType.CAT_NET.getFullName());
 

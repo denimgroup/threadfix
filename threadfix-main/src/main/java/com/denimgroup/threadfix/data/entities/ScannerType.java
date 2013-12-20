@@ -7,6 +7,7 @@ public enum ScannerType {
 	BRAKEMAN("brakeman", "Brakeman"),
 	BURPSUITE("burp", "Burp Suite"),
 	CAT_NET("catnet", "Microsoft CAT.NET"),
+    CHECKMARX("checkmarx", "CheckMarx"),
 	DEPENDENCY_CHECK("dependencycheck", "Dependency Check"),
 	FINDBUGS("findbugs", "FindBugs"),
 	FORTIFY("fortify", "Fortify 360"),

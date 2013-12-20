@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.plugin.scanner.service.channel;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
@@ -57,7 +58,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
         return SCANNER_NAME;
     }
 
-    public static final String SCANNER_NAME = "CheckMarx",
+    public static final String SCANNER_NAME = ScannerType.CHECKMARX.getFullName(),
             ROOT_NODE_NAME = "CxXMLResults";
     private static final String SCAN_START = "ScanStart",
             VERSION_ATTRIBUTE = "CheckmarxVersion",
