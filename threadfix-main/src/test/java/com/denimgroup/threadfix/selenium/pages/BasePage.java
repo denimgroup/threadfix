@@ -104,6 +104,9 @@ public abstract class BasePage {
                 cache.initialize(getList());
             }
 
+            System.out.println("\nCache is initialized.");
+            cache.printList();
+
 			return new TeamIndexPage(driver);
 	}
 	

@@ -141,6 +141,9 @@ public class TeamIndexPage extends BasePage {
         teamName = teamName.substring(7,(teamName.length()-31));
         cache.addTeamWithName(teamName);
 
+        System.out.println("\nAdding to TeamIndexCache: " + teamName);
+        cache.printList();
+
 		sleep(1000);
 
 		return setPage();

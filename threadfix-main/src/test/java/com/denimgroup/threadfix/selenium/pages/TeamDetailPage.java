@@ -122,6 +122,9 @@ public class TeamDetailPage extends BasePage {
 
         driver.findElementById("deleteLink").click();
 
+        System.out.println("\nRemoving from TeamIndexCache: " + teamToDelete);
+        cache.printList();
+
         Alert alert = driver.switchTo().alert();
         alert.accept();
 

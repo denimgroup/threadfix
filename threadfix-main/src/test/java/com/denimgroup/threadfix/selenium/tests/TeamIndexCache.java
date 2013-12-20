@@ -61,7 +61,6 @@ public class TeamIndexCache {
 
     public void printList(){
         int i = 0;
-        System.out.println("Adding to TeamIndexCache.");
         while (i < this.getSize()){
             System.out.println(list.get(i));
             i++;
