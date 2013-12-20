@@ -23,30 +23,34 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.rest;
 
+import com.google.gson.Gson;
+
 public class ThreadFixApplicationService {
 
 	public static ApplicationsMap getApplications() {
-		String csvString = getApplicationCSV();
+        Application[] applications = getApplicationCSV();
 		
         ApplicationsMap map = new ApplicationsMap();
-		
-		String[] lines = csvString.split("\n");
-		
-		for (String line : lines) {
-			String[] components = line.split(",");
-			if (components.length == 2) {
-                String[] teamAppArray = components[0].split("/");
-                if (teamAppArray.length == 2) {
-                    map.addApp(teamAppArray[0], teamAppArray[1], components[1]);
-                }
-			}
+
+		for (Application application : applications) {
+            map.addApp(application.organizationName, application.applicationName, application.applicationId);
 		}
 		
 		return map;
 	}
-	
-	private static String getApplicationCSV() {
-		return RestUtils.getFromSettings().getApplications();
+
+    @SuppressWarnings("unchecked")
+	private static Application[] getApplicationCSV() {
+
+        Object object = RestUtils.getFromSettings().getApplications();
+
+        System.out.println(object);
+
+        if (object == null) {
+            return new Application[]{};
+        } else {
+		    return new Gson().fromJson(object.toString(), Application[].class);
+        }
 	}
 
 }

@@ -55,28 +55,35 @@ public class RestUtils {
 	}
 
     @Nullable
-	public String getMarkers(String appId) {
+	public VulnerabilityMarker[] getMarkers(String appId) {
 
-        RestResponse response = httpGet(url +
+        StreamAndStatus streamAndStatus = httpGetInternal(url +
                 Constants.MARKERS_URL_SEGMENT + appId +
                 Constants.API_KEY_QUERY_START + key);
 
-        if (response.status == 200) {
-            return response.text;
-        } else {
+        if (streamAndStatus == null) {
             return null;
+        } else {
+            MarkersResponse response = MarkersResponse.getResponse(getString(streamAndStatus.stream),
+                    streamAndStatus.status);
+
+            if (response.status == 200 && response.success) {
+                return response.object;
+            } else {
+                return null;
+            }
         }
 	}
 
     @Nullable
-	public String getApplications() {
+	public Object getApplications() {
 		RestResponse response = httpGet(url +
                 Constants.APPLICATIONS_URL_SEGMENT +
                 Constants.API_KEY_QUERY_START + key);
-		if(response.status != 200 || response.text.contains("<html lang=\"en\">")){
+		if (response.status != 200 || !response.success) {
 			return null;
 		} else {
-		    return response.text;
+		    return response.object;
         }
 	}
 
@@ -91,33 +98,53 @@ public class RestUtils {
                 Constants.MARKERS_URL_SEGMENT + "0" +
                 Constants.API_KEY_QUERY_START + key);
     }
+
+    static class StreamAndStatus {
+        InputStream stream;
+        int status;
+
+        StreamAndStatus(InputStream stream, int status) {
+            this.stream = stream;
+            this.status = status;
+        }
+    }
+
+    private static StreamAndStatus httpGetInternal(String urlString) {
+        System.out.println("Requesting " + urlString);
+
+        Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        GetMethod get = new GetMethod(urlString);
+
+        HttpClient client = new HttpClient();
+        try {
+            int status = client.executeMethod(get);
+            if (status != 200) {
+                System.out.println("Status was " + status + ", was expecting 200.");
+            }
+
+            InputStream responseStream = get.getResponseBodyAsStream();
+
+            if (responseStream != null) {
+                return new StreamAndStatus(responseStream, status);
+            }
+        } catch (HttpException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 	
 	private static RestResponse httpGet(String urlStr) {
-		
-		System.out.println("Requesting " + urlStr);
-		
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
-		GetMethod get = new GetMethod(urlStr);
-		
-		HttpClient client = new HttpClient();
-		try {
-			int status = client.executeMethod(get);
-			if (status != 200) {
-				System.out.println("Status was " + status + ", was expecting 200.");
-			}
-			
-			InputStream responseStream = get.getResponseBodyAsStream();
-			
-			if (responseStream != null) {
-				return new RestResponse(getString(responseStream), status);
-			}
-		} catch (HttpException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		StreamAndStatus status = httpGetInternal(urlStr);
 
-		return new RestResponse("", -1);
+        if (status == null) {
+            return RestResponse.getResponse("", -1);
+        } else {
+            return RestResponse.getResponse(getString(status.stream), status.status);
+        }
+
 	}
 
     private static String getString(InputStream stream) {

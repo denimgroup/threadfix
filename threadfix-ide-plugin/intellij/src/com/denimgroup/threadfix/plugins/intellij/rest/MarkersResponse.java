@@ -4,23 +4,20 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by mac on 12/13/13.
+ * Created by mac on 12/20/13.
  */
-public class RestResponse {
+public class MarkersResponse {
 
-    public static RestResponse getResponse(@NotNull String text, int status) {
+    public static MarkersResponse getResponse(@NotNull String text, int status) {
 
-        RestResponse response = null;
+        MarkersResponse response = null;
 
         if (!text.trim().isEmpty()) {
-            response = new Gson().fromJson(text, RestResponse.class);
-            System.out.println(response.success);
-            System.out.println(response.message);
-            System.out.println(response.object);
+            response = new Gson().fromJson(text, MarkersResponse.class);
         }
 
         if (response == null) {
-            response = new RestResponse(null, status, false, "The response deserialization failed.");
+            response = new MarkersResponse(null, status, false, "The response deserialization failed.");
         } else {
             response.status = status;
         }
@@ -28,12 +25,12 @@ public class RestResponse {
         return response;
     }
 
-    public Object object;
+    public VulnerabilityMarker[] object;
     public String message;
     public int status;
     public boolean success;
 
-    private RestResponse(Object object, int status, boolean success, String message) {
+    private MarkersResponse(VulnerabilityMarker[] object, int status, boolean success, String message) {
         this.object = object;
         this.status = status;
         this.success = success;
@@ -49,6 +46,4 @@ public class RestResponse {
                 ", success=" + success +
                 '}';
     }
-
-
 }

@@ -97,7 +97,7 @@ public class ConfigDialog {
 
     private static boolean isValidUrl(String url) {
         RestResponse response = RestUtils.test(url);
-        return response.status == 200 && response.text.trim().startsWith(Constants.AUTHENTICATION_FAIL_STRING);
+        return response.status == 200 && response.message.trim().startsWith(Constants.AUTHENTICATION_FAIL_STRING);
     }
 
     private static String getValidApiKey(AnActionEvent e, String url) {
@@ -147,6 +147,6 @@ public class ConfigDialog {
 
     private static boolean isValid(String url, String apiKey) {
         RestResponse response = RestUtils.test(url, apiKey);
-        return response.status == 200 && response.text.startsWith(Constants.REST_FAILURE_STRING);
+        return response.status == 200 && response.message.startsWith(Constants.APP_LOOKUP_FAILURE_STRING);
     }
 }
