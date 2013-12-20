@@ -135,9 +135,12 @@ public class TeamIndexPage extends BasePage {
 		driver.findElementById("submitTeamModal").click();
 		waitForElement(driver.findElementById("teamName"+cnt));
 
-        cache.addTeamWithName(driver.findElementById("teamName" + cnt).getText());
-
 		waitForElement(driver.findElementByClassName("alert-success"));
+
+        String teamName = driver.findElementByClassName("alert-success").getText();
+        teamName = teamName.substring(7,(teamName.length()-31));
+        cache.addTeamWithName(teamName);
+
 		sleep(1000);
 
 		return setPage();
@@ -480,7 +483,7 @@ public class TeamIndexPage extends BasePage {
         sleep(4000);
 		return new TeamDetailPage(driver);
 	}
-	
+
 	public int modalNumber(String teamName, String appName){
 		String s = driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).getAttribute("href");
 		Pattern pattern = Pattern.compile("#uploadScan([0-9]+)$");

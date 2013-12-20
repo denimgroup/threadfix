@@ -24,7 +24,8 @@ public class DashboardTests extends BaseTest{
 		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
-	
+
+    @Ignore
 	@Test
 	public void linkNavigationTest(){
 		String teamName = "linkNavTeam" + getRandomString(3);
