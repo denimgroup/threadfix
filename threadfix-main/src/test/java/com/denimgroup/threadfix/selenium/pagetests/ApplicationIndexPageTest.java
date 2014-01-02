@@ -35,7 +35,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 //		assertTrue(build);
 //		dashboardPage.logout();
 //	}
-	
+
+
 	@Test
 	public void addTeamBtnTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
@@ -53,7 +54,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(p + " | "+ c,click && present);
 		ti.logout();
 	}
-	
+
+
 	@Test
 	public void expandAllBtnTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
@@ -107,7 +109,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(p + " | "+ c,click && present);
 		ti.logout();
 	}
-	
+
+
 	@Test
 	public void viewTeamLinkTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
@@ -125,7 +128,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(p + " | "+ c,click && present);
 		ti.logout();
 	}
-	
+
+
 	@Test
 	public void uploadScanBtnTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByIndex(teamName);
@@ -144,7 +148,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(p + " | "+ c,click && present);
 		ti.logout();
 	}
-	
+
+
 	@Test
 	public void appLinkTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().expandTeamRowByIndex(teamName);
@@ -162,7 +167,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(p + " | "+ c,click && present);
 		ti.logout();
 	}
-	
+
+
 	@Test
 	public void addTeamModalTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().clickAddTeamButton();
@@ -203,7 +209,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 				modalPresent && namePresent && nameFunc && closePresent && closeClick && addPresent && addClick);
 		ti.clickCloseAddTeamModal().logout();
 	}
-	
+
+
 	@Test
 	public void addApplicationModalTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().clickAddNewApplication(teamName);

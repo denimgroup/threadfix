@@ -62,6 +62,7 @@ public class TeamIndexCache {
     public void printList(){
         int i = 0;
         while (i < this.getSize()){
+            System.out.print("[" + i + "]");
             System.out.println(list.get(i));
             i++;
         }
