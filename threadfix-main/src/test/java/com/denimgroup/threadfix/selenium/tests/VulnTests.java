@@ -456,6 +456,8 @@ public class VulnTests extends BaseTest {
 				.clickAddTeamButton()
 				.setTeamName(teamName)
 				.addNewTeam();
+
+        sleep(2000);
 		
 		//add app
 		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)

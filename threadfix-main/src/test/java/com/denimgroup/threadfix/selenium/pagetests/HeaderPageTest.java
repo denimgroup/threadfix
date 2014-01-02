@@ -59,9 +59,9 @@ public class HeaderPageTest extends PageBaseTest {
 
 	private  DashboardPage dashboardPage;
 	private  boolean build;
-	private  String teamName = getRandomString(8);;
-	private  String wafName = getRandomString(8);;
-	private  String appName = getRandomString(8);;
+	private  String teamName = getRandomString(8);
+	private  String wafName = getRandomString(8);
+	private  String appName = getRandomString(8);
 		
 	@Before
 	public void init() {
@@ -166,27 +166,30 @@ public class HeaderPageTest extends PageBaseTest {
 		UserIndexPage ui = rem.clickManageUsersLink();
 		present.put(PAGE_LIST[i], ui.isDashboardMenuLinkPresent());
 		clickable.put(PAGE_LIST[i++], ui.isDashboardMenuLinkClickable());
-		
+
+        //Feature not available this build, 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
 		present.put(PAGE_LIST[i], up.isDashboardMenuLinkPresent());
 		clickable.put(PAGE_LIST[i++], up.isDashboardMenuLinkClickable());
 		
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
 		present.put(PAGE_LIST[i], role.isDashboardMenuLinkPresent());
-		clickable.put(PAGE_LIST[i++], role.isDashboardMenuLinkClickable());
+		clickable.put(PAGE_LIST[i++], role.isDashboardMenuLinkClickable());*/
 		
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
+		//ErrorLogPage ep = role.clickViewLogsLink();
+        ErrorLogPage ep = ui.clickViewLogsLink();
 		present.put(PAGE_LIST[i], ep.isDashboardMenuLinkPresent());
 		clickable.put(PAGE_LIST[i++], ep.isDashboardMenuLinkClickable());
-		
+
+        //Feature not available this build, 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+		/*ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		present.put(PAGE_LIST[i], cd.isDashboardMenuLinkPresent());
-		clickable.put(PAGE_LIST[i++], cd.isDashboardMenuLinkClickable());
-		
+		clickable.put(PAGE_LIST[i++], cd.isDashboardMenuLinkClickable());*/
+		dashboardPage = ep.clickDashboardLink();
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "DashBoard menu link is not present on ")
@@ -286,27 +289,30 @@ public class HeaderPageTest extends PageBaseTest {
 		UserIndexPage ui = rem.clickManageUsersLink();
 		clickable.put(PAGE_LIST[i], ui.isApplicationMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ui.isApplicationMenuLinkPresent());
-		
+
+        //Feature is not available this build, 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
 		clickable.put(PAGE_LIST[i], up.isApplicationMenuLinkClickable());
 		present.put(PAGE_LIST[i++], up.isApplicationMenuLinkPresent());
 		
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
 		clickable.put(PAGE_LIST[i], role.isApplicationMenuLinkClickable());
-		present.put(PAGE_LIST[i++], role.isApplicationMenuLinkPresent());
+		present.put(PAGE_LIST[i++], role.isApplicationMenuLinkPresent());*/
 		
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
-		clickable.put(PAGE_LIST[i], ep.isApplicationMenuLinkClickable());
+		//ErrorLogPage ep = role.clickViewLogsLink();
+		ErrorLogPage ep = ui.clickViewLogsLink();
+        clickable.put(PAGE_LIST[i], ep.isApplicationMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ep.isApplicationMenuLinkPresent());
-		
+
+        //Feature not available this build, 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+		/*ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		clickable.put(PAGE_LIST[i], cd.isApplicationMenuLinkClickable());
-		present.put(PAGE_LIST[i++], cd.isApplicationMenuLinkPresent());
-		
+		present.put(PAGE_LIST[i++], cd.isApplicationMenuLinkPresent());*/
+		dashboardPage = ep.clickDashboardLink();
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Application menu link is not present on ")
@@ -408,27 +414,31 @@ public class HeaderPageTest extends PageBaseTest {
 		UserIndexPage ui = rem.clickManageUsersLink();
 		clickable.put(PAGE_LIST[i], ui.isScansMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ui.isScansMenuLinkPresent());
-		
+
+        //These feature is not available in this build 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
 		clickable.put(PAGE_LIST[i], up.isScansMenuLinkClickable());
 		present.put(PAGE_LIST[i++], up.isScansMenuLinkPresent());
 		
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
 		clickable.put(PAGE_LIST[i], role.isScansMenuLinkClickable());
-		present.put(PAGE_LIST[i++], role.isScansMenuLinkPresent());
+		present.put(PAGE_LIST[i++], role.isScansMenuLinkPresent());*/
 		
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
+		//ErrorLogPage ep = role.clickViewLogsLink();
+        ErrorLogPage ep = ui.clickViewLogsLink();
 		clickable.put(PAGE_LIST[i], ep.isScansMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ep.isScansMenuLinkPresent());
-		
+
+        //These feature is not available in this build 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+/*		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		clickable.put(PAGE_LIST[i], cd.isScansMenuLinkClickable());
-		present.put(PAGE_LIST[i++], cd.isScansMenuLinkPresent());
-		
+		present.put(PAGE_LIST[i++], cd.isScansMenuLinkPresent());*/
+
+        dashboardPage = ep.clickDashboardLink();
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Scans menu link is not present on ")
@@ -528,28 +538,32 @@ public class HeaderPageTest extends PageBaseTest {
 		UserIndexPage ui = rem.clickManageUsersLink();
 		clickable.put(PAGE_LIST[i], ui.isReportsMenuLinkClickable());
 		present.put(PAGE_LIST[i++], ui.isReportsMenuLinkPresent());
-		
-		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
-		clickable.put(PAGE_LIST[i], up.isReportsMenuLinkClickable());
-		present.put(PAGE_LIST[i++], up.isReportsMenuLinkPresent());
-		
+
+        //These feature is not available in this build 2.0M2
+        //user permissions
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
+		clickable.put(PAGE_LIST[i], up.isScansMenuLinkClickable());
+		present.put(PAGE_LIST[i++], up.isScansMenuLinkPresent());
+
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
-		clickable.put(PAGE_LIST[i], role.isReportsMenuLinkClickable());
-		present.put(PAGE_LIST[i++], role.isReportsMenuLinkPresent());
-		
-		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
-		clickable.put(PAGE_LIST[i], ep.isReportsMenuLinkClickable());
-		present.put(PAGE_LIST[i++], ep.isReportsMenuLinkPresent());
-		
-		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
-		clickable.put(PAGE_LIST[i], cd.isReportsMenuLinkClickable());
-		present.put(PAGE_LIST[i++], cd.isReportsMenuLinkPresent());
-		
-		dashboardPage.logout();
+		clickable.put(PAGE_LIST[i], role.isScansMenuLinkClickable());
+		present.put(PAGE_LIST[i++], role.isScansMenuLinkPresent());*/
+
+        //logs
+        //ErrorLogPage ep = role.clickViewLogsLink();
+        ErrorLogPage ep = ui.clickViewLogsLink();
+        clickable.put(PAGE_LIST[i], ep.isScansMenuLinkClickable());
+        present.put(PAGE_LIST[i++], ep.isScansMenuLinkPresent());
+
+        //These feature is not available in this build 2.0M2
+        //configure defaults
+        /*ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+		clickable.put(PAGE_LIST[i], cd.isScansMenuLinkClickable());
+		present.put(PAGE_LIST[i++], cd.isScansMenuLinkPresent());*/
+
+        dashboardPage = ep.clickDashboardLink();
+        dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Reports menu link is not present on ")
 		.concat(mapCheck(clickable,"Reports menu link is not clickable on "));
@@ -793,9 +807,10 @@ public class HeaderPageTest extends PageBaseTest {
 		logoutPresent.put(PAGE_LIST[i], ui.isLogoutLinkPresent());
 		logoutClickable.put(PAGE_LIST[i], ui.isLogoutMenuLinkClickable());
 		menuPresent.put(PAGE_LIST[i++], ui.isUserDropDownPresent());
-		
+
+        //Feature not available in this build, 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
 		clickable.put(PAGE_LIST[i], up.isUsersMenuLinkClickable());
 		present.put(PAGE_LIST[i], up.isUsersMenuLinkPresent());
 		up.clickUserTab();
@@ -818,10 +833,11 @@ public class HeaderPageTest extends PageBaseTest {
 		helpClickable.put(PAGE_LIST[i], role.isToggleHelpMenuLinkClickable());
 		logoutPresent.put(PAGE_LIST[i], role.isLogoutLinkPresent());
 		logoutClickable.put(PAGE_LIST[i], role.isLogoutMenuLinkClickable());
-		menuPresent.put(PAGE_LIST[i++], role.isUserDropDownPresent());
+		menuPresent.put(PAGE_LIST[i++], role.isUserDropDownPresent());*/
 		
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
+		//ErrorLogPage ep = role.clickViewLogsLink();
+        ErrorLogPage ep = ui.clickViewLogsLink();
 		clickable.put(PAGE_LIST[i], ep.isUsersMenuLinkClickable());
 		present.put(PAGE_LIST[i], ep.isUsersMenuLinkPresent());
 		ep.clickUserTab();
@@ -832,9 +848,10 @@ public class HeaderPageTest extends PageBaseTest {
 		logoutPresent.put(PAGE_LIST[i], ep.isLogoutLinkPresent());
 		logoutClickable.put(PAGE_LIST[i], ep.isLogoutMenuLinkClickable());
 		menuPresent.put(PAGE_LIST[i++], ep.isUserDropDownPresent());
-		
+
+        //Feature not available in this build, 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+		/*ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		clickable.put(PAGE_LIST[i], cd.isUsersMenuLinkClickable());
 		present.put(PAGE_LIST[i], cd.isUsersMenuLinkPresent());
 		cd.clickUserTab();
@@ -845,7 +862,8 @@ public class HeaderPageTest extends PageBaseTest {
 		logoutPresent.put(PAGE_LIST[i], cd.isLogoutLinkPresent());
 		logoutClickable.put(PAGE_LIST[i], cd.isLogoutMenuLinkClickable());
 		menuPresent.put(PAGE_LIST[i++], cd.isUserDropDownPresent());
-		cd.clickUserTab();
+		cd.clickUserTab();*/
+        dashboardPage = ep.clickDashboardLink();
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Users menu link is not present on ")
@@ -898,12 +916,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], dashboardPage.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], dashboardPage.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], dashboardPage.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+		//rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+		//roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], dashboardPage.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], dashboardPage.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
+		//Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+		//defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		dashboardPage.clickConfigTab();
 		
 		//Applications Index
@@ -921,12 +941,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ti.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ti.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ti.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ti.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ti.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ti.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ti.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ti.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ti.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ti.clickConfigTab();
 		
 		//Team Detail
@@ -944,12 +966,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], td.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], td.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], td.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], td.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], td.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], td.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], td.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], td.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], td.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		td.clickConfigTab();
 		
 		//Application Detail
@@ -969,12 +993,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ad.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ad.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ad.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ad.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ad.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ad.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ad.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ad.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ad.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ad.clickConfigTab();
 		
 		//Scan Index
@@ -992,12 +1018,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], si.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], si.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], si.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], si.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], si.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], si.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], si.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], si.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], si.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		si.clickConfigTab();
 		
 		//Scan Detail
@@ -1015,12 +1043,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], sd.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], sd.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], sd.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], sd.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], sd.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], sd.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], sd.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], sd.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], sd.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		sd.clickConfigTab();
 		
 		//Finding Detail
@@ -1038,12 +1068,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], fe.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], fe.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], fe.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], fe.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], fe.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], fe.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], fe.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], fe.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], fe.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		fe.clickConfigTab();
 		
 		//Vuln Detail
@@ -1061,12 +1093,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], vd.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], vd.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], vd.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], vd.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], vd.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], vd.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], vd.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], vd.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], vd.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		vd.clickConfigTab();
 		
 		//Merge Finding Page
@@ -1084,12 +1118,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], mf.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], mf.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], mf.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], mf.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], mf.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], mf.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], mf.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], mf.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], mf.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		mf.clickConfigTab();
 		
 		//Reports Index
@@ -1107,12 +1143,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ri.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ri.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ri.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ri.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ri.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ri.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ri.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ri.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ri.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ri.clickConfigTab();
 		
 		//Change Password
@@ -1130,12 +1168,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], pc.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], pc.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], pc.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], pc.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], pc.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], pc.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], pc.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], pc.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], pc.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		pc.clickConfigTab();
 		
 		//Api key index
@@ -1153,12 +1193,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ai.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ai.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ai.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ai.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ai.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ai.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ai.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ai.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ai.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ai.clickConfigTab();
 		
 		//waf index
@@ -1176,12 +1218,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], wi.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], wi.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], wi.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], wi.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], wi.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], wi.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], wi.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], wi.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], wi.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		wi.clickConfigTab();
 		
 		//waf rules
@@ -1199,12 +1243,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], wr.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], wr.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], wr.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], wr.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], wr.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], wr.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], wr.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], wr.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], wr.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		wr.clickConfigTab();
 		
 		//defect Trackers
@@ -1222,12 +1268,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], di.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], di.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], di.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], di.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], di.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], di.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], di.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], di.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], di.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		di.clickConfigTab();
 		
 		//remote providers
@@ -1245,12 +1293,14 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], rem.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], rem.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], rem.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], rem.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], rem.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], rem.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], rem.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], rem.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], rem.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		rem.clickConfigTab();
 		
 		//user index
@@ -1268,16 +1318,19 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ui.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ui.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ui.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ui.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ui.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ui.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ui.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ui.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ui.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ui.clickConfigTab();
-		
+
+        //Feature not available this build, 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+		/*UserPermissionsPage up = ui.clickEditPermissions("user");
 		clickable.put(PAGE_LIST[i], up.isConfigMenuLinkClickable());
 		present.put(PAGE_LIST[i], up.isConfigMenuLinkPresent());
 		up.clickConfigTab();
@@ -1320,10 +1373,11 @@ public class HeaderPageTest extends PageBaseTest {
 		errorClickable.put(PAGE_LIST[i], role.isLogsMenuLinkClickable());
 		defaultsPresent.put(PAGE_LIST[i], role.isConfigureDefaultsLinkPresent());
 		defaultsClickable.put(PAGE_LIST[i++], role.isConfigureDefaultsMenuLinkClickable());
-		role.clickConfigTab();
+		role.clickConfigTab();*/
 		
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
+		//ErrorLogPage ep = role.clickViewLogsLink();
+        ErrorLogPage ep = ui.clickViewLogsLink();
 		clickable.put(PAGE_LIST[i], ep.isConfigMenuLinkClickable());
 		present.put(PAGE_LIST[i], ep.isConfigMenuLinkPresent());
 		ep.clickConfigTab();
@@ -1337,16 +1391,19 @@ public class HeaderPageTest extends PageBaseTest {
 		rpClickable.put(PAGE_LIST[i], ep.isRemoteProvidersMenuLinkClickable());
 		userPresent.put(PAGE_LIST[i], ep.isManageUsersLinkPresent());
 		userClickable.put(PAGE_LIST[i], ep.isManageUsersMenuLinkClickable());
-		rolePresent.put(PAGE_LIST[i], ep.isManageRolesLinkPresent());
-		roleClickable.put(PAGE_LIST[i], ep.isManageRolesMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //rolePresent.put(PAGE_LIST[i], dashboardPage.isManageRolesLinkPresent());
+        //roleClickable.put(PAGE_LIST[i], dashboardPage.isManageRolesMenuLinkClickable());
 		errorPresent.put(PAGE_LIST[i], ep.isLogsLinkPresent());
 		errorClickable.put(PAGE_LIST[i], ep.isLogsMenuLinkClickable());
-		defaultsPresent.put(PAGE_LIST[i], ep.isConfigureDefaultsLinkPresent());
-		defaultsClickable.put(PAGE_LIST[i++], ep.isConfigureDefaultsMenuLinkClickable());
+        //Feature not available this build, 2.0M2
+        //defaultsPresent.put(PAGE_LIST[i], dashboardPage.isConfigureDefaultsLinkPresent());
+        //defaultsClickable.put(PAGE_LIST[i++], dashboardPage.isConfigureDefaultsMenuLinkClickable());
 		ep.clickConfigTab();
-		
+
+        //Feature is not available this build, 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+		/*ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		clickable.put(PAGE_LIST[i], cd.isConfigMenuLinkClickable());
 		present.put(PAGE_LIST[i], cd.isConfigMenuLinkPresent());
 		cd.clickConfigTab();
@@ -1366,8 +1423,8 @@ public class HeaderPageTest extends PageBaseTest {
 		errorClickable.put(PAGE_LIST[i], cd.isLogsMenuLinkClickable());
 		defaultsPresent.put(PAGE_LIST[i], cd.isConfigureDefaultsLinkPresent());
 		defaultsPresent.put(PAGE_LIST[i++], cd.isConfigureDefaultsMenuLinkClickable());
-		cd.clickConfigTab();
-		
+		cd.clickConfigTab();*/
+		dashboardPage = ep.clickDashboardLink();
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Config menu link is not present on ")
@@ -1483,27 +1540,32 @@ public class HeaderPageTest extends PageBaseTest {
 		UserIndexPage ui = rem.clickManageUsersLink();
 		clickable.put(PAGE_LIST[i], ui.isLogoPresent());
 		present.put(PAGE_LIST[i++], ui.isLogoPresent());
-		
+
+        //These feature is not available in this build 2.0M2
 		//user permissions
-		UserPermissionsPage up = ui.clickEditPermissions("user");
+/*		UserPermissionsPage up = ui.clickEditPermissions("user");
 		clickable.put(PAGE_LIST[i], up.isLogoPresent());
 		present.put(PAGE_LIST[i++], up.isLogoPresent());
 		
 		//roles index
 		RolesIndexPage role = up.clickManageRolesLink();
 		clickable.put(PAGE_LIST[i], role.isLogoPresent());
-		present.put(PAGE_LIST[i++], role.isLogoPresent());
-		
+		present.put(PAGE_LIST[i++], role.isLogoPresent());*/
+
 		//logs
-		ErrorLogPage ep = role.clickViewLogsLink();
+        //ErrorLogPage ep = role.clickViewLogsLink();
+		ErrorLogPage ep = ui.clickViewLogsLink();
 		clickable.put(PAGE_LIST[i], ep.isLogoPresent());
 		present.put(PAGE_LIST[i++], ep.isDashboardMenuLinkPresent());
-		
+
+        //These feature is not available in this build 2.0M2
 		//configure defaults
-		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
+/*		ConfigureDefaultsPage cd = ep.clickConfigureDefaultsLink();
 		clickable.put(PAGE_LIST[i], cd.isLogoPresent());
-		present.put(PAGE_LIST[i++], cd.isLogoPresent());
-		
+		present.put(PAGE_LIST[i++], cd.isLogoPresent());*/
+
+        dashboardPage = ep.clickDashboardLink();
+
 		dashboardPage.logout();
 		
 		String alert = mapCheck(present, "Logo is not present on ")
