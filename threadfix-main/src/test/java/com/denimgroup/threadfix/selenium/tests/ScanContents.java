@@ -469,9 +469,9 @@ public class ScanContents extends BaseTest{
 		if (urlFromCommandLine != null) {
 			return urlFromCommandLine + string;
 		}
-        System.out.println("FILE:");
+        /*System.out.println("FILE:");
         System.out.println(string);
-        System.out.println("END");
+        System.out.println("END");*/
 		return ScanTests.class.getClassLoader().getResource(string).getPath();
 	}
 	

@@ -55,14 +55,18 @@ public class DashboardPageTests extends PageBaseTest {
 	public void shutdown(){
 		super.shutDown();
 	}
-	
+
+    //Expand on this!
 	@Test
 	public void monthBurndownGraphPresentTest(){
-		assertTrue("6 month burndown graph section is not present",dashboardPage.is6MonthGraphPresent());
+        dashboardPage.clickDashboardLink();
+		assertTrue("6 month burndown graph section is not present", dashboardPage.is6MonthGraphPresent());
 	}
-	
+
+    //Expand on this!
 	@Test
 	public void top10GraphPresentTest(){
-		assertTrue("Top 10 graph section is not present",dashboardPage.isTop10GraphPresent());
+        dashboardPage.clickDashboardLink();
+		assertTrue("Top 10 graph section is not present", dashboardPage.isTop10GraphPresent());
 	}
 }

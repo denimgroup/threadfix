@@ -26,11 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 public class WafIndexPage extends BasePage {
@@ -73,16 +69,8 @@ public class WafIndexPage extends BasePage {
 		driver.findElementsByLinkText("Rules").get(getIndex(wafName)).click();
 		return new WafRulesPage(driver);
 	}
-/*
-	public WafIndexPage clickDeleteWaf(int i){
-		driver.findElementById("deleteWaf"+i).click();
-		handleAlert();
-		return new WafIndexPage(driver);
-	}
-	*/
+
 	public WafIndexPage clickDeleteWaf(String wafName){
-		//System.out.println("Wafname = " + wafName);
-		//System.out.println("Index is " + getIndex(wafName));
 		clickEditWaf(wafName);
 		driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)).click();
 		handleAlert();
@@ -103,17 +91,11 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage clickCreateWaf(){
-        sleep(5000);
+        //sleep(4000);
 		driver.findElementById("submitWafModal").click();
-/*		try{
-		waitForInvisibleElement(driver.findElementById("createWaf"));
-		}catch(TimeoutException e){
-			driver.findElementById("submitWafModal").click();
-			sleep(3000);
-			waitForInvisibleElement(driver.findElementById("createWaf"));
-		}catch(StaleElementReferenceException e){
-			
-		}*/
+        if (!(driver.findElementByClassName("alert-success").isDisplayed())) {
+            sleep(4000);
+        }
 		return new WafIndexPage(driver);
 	}
 	
@@ -129,6 +111,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public boolean isNamePresent(String wafName){
+        //sleep(3000);
 		for (int j = 1; j <= getNumRows(); j++) {
 			if(driver.findElementById("wafName" + j).getText().trim().equals(wafName.trim())){
 				return true;
@@ -142,15 +125,9 @@ public class WafIndexPage extends BasePage {
 		return driver.findElementByClassName("alert-success").getText().contains(wafName);
 	}
 	
-	
-/*	public WafIndexPage clickEditWaf(int i){
-		driver.findElementById("editWafModalButton"+i).click();
-		waitForElement(driver.findElementByClassName("modal"));
-		return new WafIndexPage(driver);
-	}*/
-	
 	public WafIndexPage clickEditWaf(String wafName){
-		driver.findElementById("editWafModalButton"+(getIndex(wafName)+1)).click();
+        int temp = getIndex(wafName) + 1;
+		driver.findElementById("editWafModalButton"+temp).click();
 		waitForElement(driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)));
 		return new WafIndexPage(driver);
 	}
@@ -167,8 +144,8 @@ public class WafIndexPage extends BasePage {
 		driver.findElementByLinkText("Update WAF").click();
 		try{
 			waitForInvisibleElement(driver.findElementById("deleteWaf"+(getIndex(oldWafName)+1)));
-		}catch(StaleElementReferenceException e){
-			
+		}catch(NoSuchElementException | StaleElementReferenceException e){
+			System.out.println("Waf name was updated.");
 		}
 		sleep(1000);
 		return new WafIndexPage(driver);

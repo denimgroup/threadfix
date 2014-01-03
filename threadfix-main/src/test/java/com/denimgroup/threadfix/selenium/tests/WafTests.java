@@ -139,7 +139,6 @@ public class WafTests extends BaseTest {
 	}
 	
 	//Create Imperva Waf
-	
 	@Test
 	public void testCreateWafImperva(){
 		String newWafName = "testCreateImpervaWaf" + getRandomString(5);
@@ -165,11 +164,8 @@ public class WafTests extends BaseTest {
 
 		
 	}
-	
-	
-	
+
 	//Create BIG-IP ASM Waf
-	
 	@Test
 	public void testCreateWafBigIp(){
 		String newWafName = "testCreateBigIpWaf" + getRandomString(5);
@@ -193,11 +189,8 @@ public class WafTests extends BaseTest {
 		loginPage = wafIndexPage.clickWafsHeaderLink().logout();
 		
 	}
-	
-	
-	
+
 	//Create DenyAllrWeb Waf
-			
 	@Test
 	public void testCreateWafDenyAllrWeb(){
 		String newWafName = "testCreateDenyAllrWebWaf" + getRandomString(5);
@@ -235,11 +228,10 @@ public class WafTests extends BaseTest {
 		WafIndexPage wafIndexPage = loginPage.login("user", "password").clickWafsHeaderLink();		
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink();
-		//does not currently prompt an error should be uncommented when that is fixed
+
 		// Test empty and whitespace input
 		wafIndexPage = wafIndexPage.setNewNameInput(emptyString);
 		wafIndexPage = wafIndexPage.clickCreateWafInvalid();
-//		log.debug("Output is '" + wafIndexPage.getNameErrorsText() + "'");
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		wafIndexPage = wafIndexPage.setNewNameInput(whiteSpaceString);
@@ -247,9 +239,8 @@ public class WafTests extends BaseTest {
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		wafIndexPage = wafIndexPage
-								.setNewNameInput(longInput);
-		wafIndexPage = wafIndexPage.clickCreateWaf();
+		wafIndexPage = wafIndexPage.setNewNameInput(longInput).clickCreateWaf();
+		//wafIndexPage = wafIndexPage.clickCreateWaf();
 		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking
@@ -264,14 +255,9 @@ public class WafTests extends BaseTest {
 		
 		// Delete and logout
 		loginPage = wafIndexPage.clickCloseCreateWafModal().clickDeleteWaf(wafName).logout();
-		
-		
 	}
 
-	
 	//Create Snort Waf, attach it to an application and generate rules
-
-	
 	@Test
 	public void testEditWaf(){
 		String newOrgName = "testEditWaf";
@@ -310,11 +296,7 @@ public class WafTests extends BaseTest {
 	
 		loginPage = wafIndexPage.logout();
 	}
-	
-	
-	/////////////////////////////////////////////////
-	
-	
+
 	//Create mod-Security Waf and generate rules
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
@@ -326,70 +308,46 @@ public class WafTests extends BaseTest {
 
 		//set up an organization
 		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-									.clickAddTeamButton()
-									.setTeamName(orgName)
-									.addNewTeam()
-									.clickOrganizationHeaderLink()
-									.addNewApplication(orgName, appName, urlText, "Low")
-									.saveApplication(orgName);
+			.clickAddTeamButton()
+            .setTeamName(orgName)
+            .addNewTeam()
+            .clickOrganizationHeaderLink()
+            .addNewApplication(orgName, appName, urlText, "Low")
+            .saveApplication(orgName);
+
 		applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
-				.clickConfigureWhiteHat()
-				.setWhiteHatAPI(whKey)
-				.saveWhiteHat()
-				.clickEditMapping(rtApp)
-				.setTeamMapping(rtApp, orgName)
-				.setAppMapping(rtApp, appName)
-				.clickSaveMapping(rtApp)
-				.clickImportScan(rtApp);
-//		organizationIndexPage.populateAppList(orgName);
-//		
-//		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
-//		
-//		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
-//			if (mapEntry.getValue() != null){
-//				File appScanFile = null;
-//
-//				if (System.getProperty("scanFileBaseLocation") == null) {
-//					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-//				} else {
-//					appScanFile = new File(mapEntry.getValue());
-//				}
-//
-//				assertTrue("The test file did not exist.", appScanFile.exists());
-//			} else {
-//				continue;
-//			}
-//			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
-//					 									.setFileInput(mapEntry.getValue())
-//					 									.submitScan();
-//		}
-		
-		
-		//Creating a new Waf
+			.clickConfigureWhiteHat()
+			.setWhiteHatAPI(whKey)
+			.saveWhiteHat()
+			.clickEditMapping(rtApp)
+			.setTeamMapping(rtApp, orgName)
+			.setAppMapping(rtApp, appName)
+			.clickSaveMapping(rtApp)
+			.clickImportScan(rtApp);
 		
 		String newWafName = "testCreateModSecWaf1";
 		String type = "mod_security";
 
 		wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
-				.clickAddWafLink()
-				.createNewWaf(newWafName, type)
-				.clickCreateWaf();
+            .clickAddWafLink()
+            .createNewWaf(newWafName, type)
+            .clickCreateWaf();
 
 		assertTrue("Waf Page did not save the name correctly.", wafIndexPage.isNamePresent(newWafName));
 
 		//Add waf to application
 		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-				 .expandTeamRowByIndex(orgName)
-				 .clickViewAppLink(appName,orgName)
-				 .clickEditDeleteBtn()
-				 .clickAddWaf()
-				 .addWaf(newWafName);
+             .expandTeamRowByIndex(orgName)
+             .clickViewAppLink(appName, orgName)
+             .clickEditDeleteBtn()
+             .clickAddWaf()
+             .addWaf(newWafName);
 
 
 		//Generating  Deny waf Rules
 		applicationDetailPage.clickWafsHeaderLink()
-							.clickRules(newWafName)
-							.setWafDirectiveSelect("deny");
+            .clickRules(newWafName)
+            .setWafDirectiveSelect("deny");
 							
 		WafRulesPage WafRulesPage = new WafRulesPage(driver);	
 		WafRulesPage.setWafDirectiveSelect("deny");
@@ -428,6 +386,7 @@ public class WafTests extends BaseTest {
 				.clickDeleteWaf(newWafName);
 		
 	}
+
 	@Test
 	public void longWafNameEditModalHeaderTest(){
 		String wafName = getRandomString(1024);
@@ -445,6 +404,7 @@ public class WafTests extends BaseTest {
 		assertTrue("Waf edit header was too wide",width == 400);
 		
 	}
+
 	// Generate Snort Waf Rules
 	@Test
 	public void attachWafToaNewApp() throws MalformedURLException {
@@ -609,7 +569,8 @@ public class WafTests extends BaseTest {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
 								.createNewWaf(wafName,type1)
-								.clickCreateWaf()
+								.clickCreateWaf();
+        wafIndexPage.clickWafsHeaderLink()
 								.clickAddWafLink()
 								.createNewWaf(wafNameDuplicateTest,type1)
 								.clickCreateWaf();
