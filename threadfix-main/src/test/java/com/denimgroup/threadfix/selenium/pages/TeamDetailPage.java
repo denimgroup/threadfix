@@ -249,11 +249,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isEditDeleteLinkPresent(){
-        return driver.findElementById("teamModalButton1").isDisplayed();
+        return driver.findElementById("teamModalButton").isDisplayed();
     }
 
     public boolean isEditDeleteLinkClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("teamModalButton1")) != null;
+        return ExpectedConditions.elementToBeClickable(By.id("teamModalButton")) != null;
     }
 
     public boolean isEditDeleteModalPresent(){

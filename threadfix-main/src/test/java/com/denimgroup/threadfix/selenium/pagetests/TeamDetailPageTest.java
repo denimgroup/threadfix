@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
@@ -47,20 +48,16 @@ public class TeamDetailPageTest extends PageBaseTest {
 		boolean actionClick = teamdetailPage.isActionBtnClickable();
 		boolean edLinkPresent = teamdetailPage.isEditDeleteLinkPresent();
 		boolean edLinkClick = teamdetailPage.isEditDeleteLinkClickable();
-		boolean permLinkPresent = teamdetailPage.ispermUsersLinkPresent();
-		boolean permLinkClick = teamdetailPage.ispermUsersLinkClickable();
 		teamdetailPage.logout();
 		String ap,ac,ep,ec,pp,pc;
-		ap = ac = ep = ec = pp = pc = "";
+		ap = ac = ep = ec = "";
 		if(!actionPresent){ap = "Action button was not present";}
 		if(!actionClick){ac = "Action button was not clickable";}
 		if(!edLinkPresent){ep = "Edit Delete link was not present";}
 		if(!edLinkClick){ec = "Edit Delete link was not clickable";}
-		if(!permLinkPresent){pp = "User Permissions Link was not present";}
-		if(!permLinkClick){pc = "User Permissions Link was not clickable";}
 		
-		assertTrue(ap + " | "+ ac + " | "+ ep + " | "+ ec + " | "+ pp + " | "+ pc,
-				actionPresent && actionClick && edLinkPresent && edLinkClick && permLinkPresent && permLinkClick);
+		assertTrue(ap + " | "+ ac + " | "+ ep + " | "+ ec,
+				actionPresent && actionClick && edLinkPresent && edLinkClick);
 	}
 	
 	@Test
@@ -94,7 +91,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 				&& closePresent && closeClick && savePresent && saveClick);
 		
 	}
-	
+	@Ignore // permissions are being tested, should not test for current setup
 	@Test
 	public void permUsersModalTest(){
 		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickUserPermLink();
@@ -108,7 +105,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 		String ep,ec,cp,cc;
 		ep = ec = cp = cc = "";
 		if(!editPresent){ep = "Edit Perm Link was not present";}
-		if(!editClick){ec = "Edit Perm Linke was not clickable";}
+		if(!editClick){ec = "Edit Perm Link was not clickable";}
 		if(!closePresent){cp = "Close button was not present";}
 		if(!closeClick){cc = "Close button was not clickable";}
 		assertTrue(ep + " | "+ ec + " | "+ cp + " | "+ cc,

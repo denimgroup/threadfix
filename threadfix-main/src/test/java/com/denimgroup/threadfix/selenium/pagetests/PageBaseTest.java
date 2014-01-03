@@ -79,19 +79,19 @@ public class PageBaseTest {
 		return params;
 	}
 	
-//	@Before
-//	public void before() {
-//	}
-//
-//	@After
-//	public void after() {
-//
-//	}
-//	@Ignore
-//	@Test
-//	public void blank(){
-//		assertTrue(true);
-//	}
+	@Before
+	public void before() {
+	}
+
+	@After
+	public void after() {
+        driver.quit();
+	}
+
+	@Test
+	public void blank(){
+		assertTrue(true);
+	}
 	
 	
 	public PageBaseTest(String browser){
