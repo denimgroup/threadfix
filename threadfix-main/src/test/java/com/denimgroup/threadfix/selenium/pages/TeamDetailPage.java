@@ -237,11 +237,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isActionBtnPresent(){
-        return driver.findElementById("actionButton1").isDisplayed();
+        return driver.findElementById("actionButton").isDisplayed();
     }
 
     public boolean isActionBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("actionButton1")) != null;
+        return ExpectedConditions.elementToBeClickable(By.id("actionButton")) != null;
     }
 
     public boolean isActionDropDownPresnt(){
