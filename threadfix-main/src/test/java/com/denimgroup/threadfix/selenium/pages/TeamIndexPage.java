@@ -636,7 +636,6 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isAPCriticalityCorrect(String teamName){
->>>>>>> Stashed changes
 //		Select sel = new Select(driver.findElementById(getAppModalId(teamName)).findElement(By.id("criticalityId")));
 //		for(int i=0; i<sel.getOptions().size(); i++)
 //			System.out.println("option"+i+" "+sel.getOptions().get(i));
