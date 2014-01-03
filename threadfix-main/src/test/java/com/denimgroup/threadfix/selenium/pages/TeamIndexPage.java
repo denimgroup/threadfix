@@ -478,161 +478,165 @@ public class TeamIndexPage extends BasePage {
         int teamIndex = getIndex(teamName);
         driver.findElementById("organizationLink" + teamIndex).click();
         sleep(4000);
-        return new TeamDetailPage(driver);
-    }
+		return new TeamDetailPage(driver);
+	}
 
-    public int modalNumber(String teamName, String appName){
-        String s = driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).getAttribute("href");
-        Pattern pattern = Pattern.compile("#uploadScan([0-9]+)$");
-        Matcher matcher = pattern.matcher(s);
-        if(matcher.find()){
-            return  Integer.parseInt(matcher.group(1));
-        }
-        return -1;
-    }
+	public int modalNumber(String teamName, String appName){
+		String s = driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).getAttribute("href");
+		Pattern pattern = Pattern.compile("#uploadScan([0-9]+)$");
+		Matcher matcher = pattern.matcher(s);
+		if(matcher.find()){
+			return  Integer.parseInt(matcher.group(1));
+		}
+		return -1;
+	}
+	
+	public boolean isAddTeamBtnPresent(){
+		return driver.findElementById("addTeamModalButton").isDisplayed();	
+	}
+	
+	public boolean isAddTeamBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("addTeamModalButton")) != null;
+	}
+	
+	public boolean isExpandAllBtnPresent(){
+		return driver.findElementById("expandAllButton").isDisplayed();	
+	}
+	
+	public boolean isExpandAllBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("expandAllButton")) != null;
+	}
+	
+	public boolean isCollapseAllBtnPresent(){
+		return driver.findElementById("collapseAllButton").isDisplayed();	
+	}
+	
+	public boolean isCollapseAllBtnClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("collapseAllButton")) != null;
+	}
+	
+	public boolean isAddAppBtnPresent(String teamName){
+		return driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).isDisplayed();	
+	}
+	
+	public boolean isAddAppBtnClickable(String teamName){
+		return ExpectedConditions.elementToBeClickable(
+                driver.findElementById("addApplicationModalButton" + getIndex(teamName))) != null;
 
-    public boolean isAddTeamBtnPresent(){
-        return driver.findElementById("addTeamModalButton").isDisplayed();
-    }
-
-    public boolean isAddTeamBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("addTeamModalButton")) != null;
-    }
-
-    public boolean isExpandAllBtnPresent(){
-        return driver.findElementById("expandAllButton").isDisplayed();
-    }
-
-    public boolean isExpandAllBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("expandAllButton")) != null;
-    }
-
-    public boolean isCollapseAllBtnPresent(){
-        return driver.findElementById("collapseAllButton").isDisplayed();
-    }
-
-    public boolean isCollapseAllBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("collapseAllButton")) != null;
-    }
-
-    public boolean isAddAppBtnPresent(String teamName){
-        return driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).isDisplayed();
-    }
-
-    public boolean isAddAppBtnClickable(String teamName){
-        return ExpectedConditions.elementToBeClickable(By.id(
-                driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("id"))) != null;
-    }
-
-    public boolean isViewTeamLinkPresent(String teamName){
-        return driver.findElementsByLinkText("View Team").get(getIndex(teamName)).isDisplayed();
-    }
-
-    public boolean isViewTeamLinkClickable(String teamName){
-        return ExpectedConditions.elementToBeClickable(By.id(
-                driver.findElementsByLinkText("View Team").get(getIndex(teamName)).getAttribute("id"))) != null;
-    }
-
-    public boolean isAppLinkPresent(String appName){
-        return driver.findElementByLinkText(appName).isDisplayed();
-    }
-
-    public boolean isAppLinkClickable(String appName){
-        return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
-    }
-
-    public boolean isUploadScanPresent(String teamName, String appName){;
-        return driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).isDisplayed();
-    }
-
-    public boolean isUploadScanClickable(String teamName, String appName){
-        return ExpectedConditions.elementToBeClickable(By.linkText("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1))) != null;
-    }
-
-    public boolean isAddTeamModalPresent(){
-        return driver.findElementById("myTeamModal").isDisplayed();
-    }
-
-    public boolean isATNameFieldPresent(){
-        return driver.findElementById("teamNameInput").isDisplayed();
-    }
-
-    public boolean isATNameFieldFunctional(){
-        int limit = Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength"));
-        String s = getRandomString(limit+10);
-        driver.findElementById("teamNameInput").sendKeys(s);
-        String v = driver.findElementById("teamNameInput").getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isCloseATButtonPresent(){
-        return driver.findElementById("closeTeamModalButton").isDisplayed();
-    }
-
-    public boolean isCloseATButtonClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("closeTeamModalButton")) != null;
-    }
-
-    public boolean isAddTeamATButtonPresent(){
-        return driver.findElementById("submitTeamModal").isDisplayed();
-    }
-
-    public boolean isAddTeamATButtonClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("submitTeamModal")) != null;
-    }
-
-    public boolean isAddAppModalPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName)).isDisplayed();
-    }
-
-    public boolean isAPNameFieldPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName)).findElement(By.id("nameInput")).isDisplayed();
-    }
-
-    public boolean isAPNameFieldFunctional(String teamName){
-        int limit = Integer.parseInt(
-                driver.findElementsById("nameInput").get(getIndex(teamName)).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
+        /*return ExpectedConditions.elementToBeClickable(By.id(
+                driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("id"))) != null;*/
+	}
+	
+	public boolean isViewTeamLinkPresent(String teamName){
+		return driver.findElementById("organizationLink" + getIndex(teamName)).isDisplayed();
+	}
+	
+	public boolean isViewTeamLinkClickable(String teamName){
+		return ExpectedConditions.elementToBeClickable(
+                driver.findElementById("organizationLink" + getIndex(teamName))) != null;
+	}
+	
+	public boolean isAppLinkPresent(String appName){
+		return driver.findElementByLinkText(appName).isDisplayed();
+	}
+	
+	public boolean isAppLinkClickable(String appName){
+		return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
+	}
+	
+	public boolean isUploadScanPresent(String teamName, String appName){;
+		return driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).isDisplayed();
+	}
+	
+	public boolean isUploadScanClickable(String teamName, String appName){
+		return ExpectedConditions.elementToBeClickable(By.linkText("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1))) != null;
+	}
+	
+	public boolean isAddTeamModalPresent(){
+		return driver.findElementById("myTeamModal").isDisplayed();
+	}
+	
+	public boolean isATNameFieldPresent(){
+		return driver.findElementById("teamNameInput").isDisplayed();
+	}
+	
+	public boolean isATNameFieldFunctional(){
+		int limit = Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength"));
+		String s = getRandomString(limit+10);
+		driver.findElementById("teamNameInput").sendKeys(s);
+		String v = driver.findElementById("teamNameInput").getAttribute("value");
+		return v.equals(s.substring(0, limit));
+	}
+	
+	public boolean isCloseATButtonPresent(){
+		return driver.findElementById("closeTeamModalButton").isDisplayed();
+	}
+	
+	public boolean isCloseATButtonClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("closeTeamModalButton")) != null;
+	}
+	
+	public boolean isAddTeamATButtonPresent(){
+		return driver.findElementById("submitTeamModal").isDisplayed();
+	}
+	
+	public boolean isAddTeamATButtonClickable(){
+		return ExpectedConditions.elementToBeClickable(By.id("submitTeamModal")) != null;
+	}
+	
+	public boolean isAddAppModalPresent(String teamName){
+		return driver.findElementById(getAppModalId(teamName)).isDisplayed();
+	}
+	
+	public boolean isAPNameFieldPresent(String teamName){
+		return  driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
+	}
+	
+	public boolean isAPNameFieldFunctional(String teamName){
+		int limit = Integer.parseInt(driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName)))
+                .getAttribute("maxlength"));
+		
+		String s = getRandomString(limit+10);
 //		System.out.println(teamName + " : " + getIndex(teamName));
-        driver.findElementsById("nameInput").get(getIndex(teamName)).sendKeys(s);
-        String v = driver.findElementsById("nameInput").get(getIndex(teamName)).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isURLFieldPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName)).findElement(By.id("urlInput")).isDisplayed();
-    }
-
-    public boolean isURlFieldFunctional(String teamName){
-        int limit = Integer.parseInt(
-                driver.findElementsById("urlInput").get(getIndex(teamName)).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
-        driver.findElementsById("urlInput").get(getIndex(teamName)).sendKeys(s);
-        String v = driver.findElementsById("urlInput").get(getIndex(teamName)).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isAPIDFieldPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName)).findElement(By.id("uniqueIdInput")).isDisplayed();
-    }
-
-    public boolean isAPIDFieldFunctional(String teamName){
-        int limit = Integer.parseInt(
-                driver.findElementsById("uniqueIdInput").get(getIndex(teamName)).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
-        driver.findElementsById("uniqueIdInput").get(getIndex(teamName)).sendKeys(s);
-        String v = driver.findElementsById("uniqueIdInput").get(getIndex(teamName)).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isAPCriticalityPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName)).findElement(By.id("criticalityId")).isDisplayed();
-    }
-
-    public boolean isAPCriticalityCorrect(String teamName){
+        driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName))).sendKeys(s);
+		String v = driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName))).getAttribute("value");
+		return v.equals(s.substring(0, limit));
+	}
+	
+	public boolean isURLFieldPresent(String teamName){
+        return driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
+	}
+	
+	public boolean isURlFieldFunctional(String teamName){
+		int limit = Integer.parseInt(driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName)))
+                .getAttribute("maxlength"));
+		
+		String s = getRandomString(limit+10);
+        driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName))).sendKeys(s);
+		String v = driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName))).getAttribute("value");
+		return v.equals(s.substring(0, limit));
+	}
+	
+	public boolean isAPIDFieldPresent(String teamName){
+        return driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
+	}
+	
+	public boolean isAPIDFieldFunctional(String teamName){
+		int limit = Integer.parseInt(driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName)))
+                .getAttribute("maxlength"));
+		
+		String s = getRandomString(limit+10);
+        driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).sendKeys(s);
+		String v = driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).getAttribute("value");
+		return v.equals(s.substring(0, limit));
+	}
+	
+	public boolean isAPCriticalityPresent(String teamName){
+        return driver.findElementById("criticalityId" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
+	}
+	
+	public boolean isAPCriticalityCorrect(String teamName){
+>>>>>>> Stashed changes
 //		Select sel = new Select(driver.findElementById(getAppModalId(teamName)).findElement(By.id("criticalityId")));
 //		for(int i=0; i<sel.getOptions().size(); i++)
 //			System.out.println("option"+i+" "+sel.getOptions().get(i));

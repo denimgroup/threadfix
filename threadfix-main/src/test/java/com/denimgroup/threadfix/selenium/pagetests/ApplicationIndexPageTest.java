@@ -36,7 +36,6 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 //		dashboardPage.logout();
 //	}
 
-
 	@Test
 	public void addTeamBtnTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
