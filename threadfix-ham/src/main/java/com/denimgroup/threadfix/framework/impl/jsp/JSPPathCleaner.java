@@ -10,17 +10,13 @@ import java.util.List;
 
 public class JSPPathCleaner extends DefaultPathCleaner {
 
-    private final String jspRoot;
-
     public JSPPathCleaner(List<PartialMapping> partialMappings) {
-        super(partialMappings);
-        jspRoot = CommonPathFinder.findOrParseProjectRoot(
-                partialMappings, ".jsp");
+        super(CommonPathFinder.findOrParseProjectRoot(partialMappings, ".jsp"),
+                CommonPathFinder.findOrParseUrlPath(partialMappings, ".jsp"));
     }
 
     public JSPPathCleaner(String staticRoot, String dynamicRoot) {
         super(staticRoot, dynamicRoot);
-        jspRoot = "";
     }
 
     @Nullable
@@ -28,12 +24,12 @@ public class JSPPathCleaner extends DefaultPathCleaner {
     public String getDynamicPathFromStaticPath(@NotNull String filePath) {
         String cleanedPath = filePath;
 
-        if (jspRoot != null) {
+        if (staticRoot != null) {
             if (cleanedPath.contains("\\")) {
                 cleanedPath = cleanedPath.replace('\\', '/');
             }
 
-            String localRoot = jspRoot;
+            String localRoot = staticRoot;
 
             if (!cleanedPath.startsWith(localRoot) &&
                     cleanedPath.indexOf("/") != 0) {
@@ -53,11 +49,30 @@ public class JSPPathCleaner extends DefaultPathCleaner {
         return cleanedPath;
     }
 
+    @Override
+    public String cleanDynamicPath(@NotNull String urlPath) {
+        String cleanedPath = urlPath;
+
+        if (cleanedPath.contains("\\")) {
+            cleanedPath = cleanedPath.replace('\\', '/');
+        }
+
+        if (dynamicRoot != null && cleanedPath.startsWith(dynamicRoot)) {
+            cleanedPath = cleanedPath.substring(dynamicRoot.length());
+        }
+
+        if (cleanedPath.indexOf("/") != 0) {
+            cleanedPath = "/" + cleanedPath;
+        }
+
+        return cleanedPath;
+    }
+
     @NotNull
     @Override
     public String toString() {
-        return "[JSP PathCleaner jspRoot=" + jspRoot + ", dynamicRoot=" +
-                dynamicRoot + ", staticRoot=" + staticRoot + "]";
+        return "[JSP PathCleaner dynamicRoot = " +
+                dynamicRoot + ", staticRoot = " + staticRoot + "]";
     }
 
 }

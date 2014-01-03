@@ -66,4 +66,18 @@
 			</tbody>
 		</table>
 	</c:if>
+
+    <h2 style="padding-bottom: 15px;">Supported Scanners</h2>
+    <c:if test="${ not empty supportedScanners }">
+        <ul>
+            <c:forEach var="supporterScanner" items="${ supportedScanners }" varStatus="status">
+                <li style="list-style: square outside none;"><c:out value="${ supporterScanner }"/></li>
+            </c:forEach>
+        </ul>
+    </c:if>
+    <c:if test="${ empty supportedScanners }">
+        <div class="alert alert-error">
+            No scanner importers were found. Please check that scanners.jar is present.
+        </div>
+    </c:if>
 </body>

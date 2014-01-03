@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.commons.codec.binary.Base64;
@@ -246,7 +247,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 					dateString = dateString.substring(0,dateString.length() - 5);
 				}
 	    		
-	    		Calendar calendar = getCalendarFromString(DATE_FORMAT_WITH_T, dateString);
+	    		Calendar calendar = DateUtils.getCalendarFromString(DATE_FORMAT_WITH_T, dateString);
 	    		dateMap.put(currentBuildId, calendar);
 	    	}
 	    }
@@ -266,9 +267,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    @Override
 		public void startElement (String uri, String name, String qName, Attributes atts) {
 	    	if ("detailedreport".equals(qName)) {
-	    		date = getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("last_update_time"));
+	    		date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("last_update_time"));
 	    		if (date == null) {
-					date = getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("generation_date"));
+					date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("generation_date"));
 				}
 	    	}
 	    	

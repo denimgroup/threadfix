@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.plugin.scanner.service.channel;
 import org.xml.sax.helpers.DefaultHandler;
 
 public abstract class HandlerWithBuilder extends DefaultHandler {
-	private StringBuilder builder = new StringBuilder();
+	protected StringBuilder builder = new StringBuilder();
 
 	protected void addTextToBuilder(char ch[], int start, int length) {
 		builder.append(ch, start, length);

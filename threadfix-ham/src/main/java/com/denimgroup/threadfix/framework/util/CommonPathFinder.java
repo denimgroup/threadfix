@@ -60,10 +60,15 @@ public class CommonPathFinder {
 
 	@Nullable
     public static String findOrParseUrlPath(List<PartialMapping> partialMappings) {
-		return parseRoot(getUrlPaths(partialMappings));
+		return findOrParseUrlPath(partialMappings, null);
 	}
-	
-	@Nullable
+
+    @Nullable
+    public static String findOrParseUrlPath(List<PartialMapping> partialMappings, String extension) {
+        return parseRoot(getUrlPaths(partialMappings, extension));
+    }
+
+    @Nullable
     public static String findOrParseProjectRootFromDirectory(File rootFile, String fileExtension) {
 		return parseRoot(getFilePathsFromDirectory(rootFile, fileExtension));
 	}
@@ -106,7 +111,8 @@ public class CommonPathFinder {
 	}
 
 	@NotNull
-    private static List<String> getUrlPaths(@Nullable List<PartialMapping> partialMappings) {
+    private static List<String> getUrlPaths(@Nullable List<PartialMapping> partialMappings,
+                                            @Nullable String extension) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -114,7 +120,8 @@ public class CommonPathFinder {
 		List<String> returnStrings = new ArrayList<>();
 
 		for (PartialMapping partialMapping : partialMappings) {
-			if (partialMapping != null && partialMapping.getDynamicPath() != null) {
+			if (partialMapping != null && partialMapping.getDynamicPath() != null &&
+                    (extension == null || partialMapping.getDynamicPath().endsWith(extension))) {
 				returnStrings.add(partialMapping.getDynamicPath());
 			}
 		}
