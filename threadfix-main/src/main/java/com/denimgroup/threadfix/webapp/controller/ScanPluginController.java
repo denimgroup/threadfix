@@ -53,32 +53,36 @@ public class ScanPluginController {
 	}
 	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
+	public String index(Model model) {
 		
 		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
+        model.addAttribute("supportedScanners", channelVulnerabilityService.getSupportedScanners());
 		
 		return "scanplugin/channelVulnUpdate";
 	}
 
 	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
-	public String doUpdate(Model model, HttpServletRequest request) {
+	public String doUpdate(Model model) {
 		log.info("Start updating Channel Vulnerabilities");
 		List<String[]> channelVulnUpdateResults = new ArrayList<>();
 		
 		try {
 			channelVulnUpdateResults = channelVulnerabilityService.updateChannelVulnerabilities();
 		} catch (URISyntaxException e) {
-			model.addAttribute("errorMessage", "There was error when reading files.");
-		}
-		catch (IOException e) {
-			model.addAttribute("errorMessage", "There was error when updating Channel Vulnerability.");
+            String message = "There was error when reading files.";
+			model.addAttribute("errorMessage", message);
+            log.warn(message, e);
+		} catch (IOException e) {
+            String message = "There was error when updating Channel Vulnerabilities from the scanners jar.";
+            model.addAttribute("errorMessage", message);
+            log.warn(message, e);
 		}
 		
 		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
-		
 		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
-		
 		model.addAttribute("resultList", channelVulnUpdateResults);
+        model.addAttribute("supportedScanners", channelVulnerabilityService.getSupportedScanners());
+
 		log.info("Ended updating Channel Vulnerabilities");
 		return "scanplugin/channelVulnUpdate";
 	}

@@ -1,0 +1,8 @@
+type.info,,,
+CheckMarx,http://www.checkmarx.com,7.8, Download it from the site
+type.vulnerabilities,,
+type.severities,,,
+Information,Information,1,1
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2

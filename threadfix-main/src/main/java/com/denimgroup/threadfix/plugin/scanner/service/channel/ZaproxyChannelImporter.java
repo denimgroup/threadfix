@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +118,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	if ("report".equals(qName)) {
 	    		getDate = true;
 	    	} else if ("OWASPZAPReport".equals(qName)) {
-	    		date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
+	    		date = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
 	    	} else if ("uri".equals(qName)) {
 	    		getUri = true;
 	    	} else if ("alert".equals(qName)) {
@@ -180,7 +181,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
 	    			tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-	    			date = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+	    			date = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 	    		}
 	    		getDate = false;
 	    	} else if (getCweId) {
@@ -243,7 +244,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
 	    			tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-	    			testDate = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+	    			testDate = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 	    		
 	    			if (testDate != null) {
 	    				hasDate = true;
@@ -268,7 +269,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 				String anchorString = "Report generated at ";
 				if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
 					tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-					testDate = getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+					testDate = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
 
 					if (testDate != null) {
 						hasDate = true;

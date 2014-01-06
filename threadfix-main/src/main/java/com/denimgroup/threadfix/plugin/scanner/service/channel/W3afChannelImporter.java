@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.xml.sax.Attributes;
@@ -140,7 +141,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) {	    	
 	    	if ("w3afrun".equals(qName))
-	    		date = getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+	    		date = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
 	    		    	
 	    	if ("vulnerability".equals(qName) && atts.getValue("url") != null && 
 	    			!atts.getValue("url").isEmpty()) {
@@ -208,7 +209,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if (!correctFormat && "w3afrun".equals(qName)) {
 	    		correctFormat = true;
-	    		testDate = getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
 	    		hasDate = testDate != null;
 	    	}
 	    }

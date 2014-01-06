@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.commons.codec.binary.Base64;
@@ -256,7 +257,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			Calendar mapDate = null;
 
 			if (app.getNativeId().equals(map.get("webAppName")) && map.get("date") != null) {
-				mapDate = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
+				mapDate = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
 				if (app.getLastImportTime() == null || mapDate.after(app.getLastImportTime())) {
 					scanIds.add(map.get("id"));
 				}
@@ -532,7 +533,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", tempDateString);
+	    			date = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", tempDateString);
 	    		}
 	    		getDate = false;
 	    	} else if (getUri) {

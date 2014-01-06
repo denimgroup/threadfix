@@ -46,6 +46,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -732,7 +733,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		String dateString = getRegexResult(httpTrafficString, "Date: ([^\n]+)");
 		
 		if (dateString != null && !dateString.isEmpty()) {
-			return getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
+			return DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
 		} else {
 			return null;
 		}

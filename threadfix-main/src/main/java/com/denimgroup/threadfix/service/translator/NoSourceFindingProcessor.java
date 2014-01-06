@@ -51,21 +51,30 @@ class NoSourceFindingProcessor implements FindingProcessor {
 
 	@Override
 	public void process(@NotNull Finding finding) {
-        if (finding.getSurfaceLocation() != null &&
-                finding.getSurfaceLocation().getPath() != null) {
-            finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(
-                    finding.getSurfaceLocation().getPath()));
-        }
 
-        if (finding.getSourceFileLocation() != null) {
-            finding.setCalculatedFilePath(cleaner.cleanStaticPath(
-                    finding.getSourceFileLocation()));
-        }
+        if (finding.getIsStatic()) {
+            if (finding.getSourceFileLocation() != null) {
+                finding.setCalculatedFilePath(cleaner.cleanStaticPath(
+                        finding.getSourceFileLocation()));
+            }
 
-        if (finding.getCalculatedUrlPath() == null ||
-                finding.getCalculatedUrlPath().equals(finding.getCalculatedFilePath())) {
-            finding.setCalculatedUrlPath(cleaner.getDynamicPathFromStaticPath(
-                    finding.getCalculatedFilePath()));
+            if (finding.getCalculatedUrlPath() == null ||
+                    finding.getCalculatedUrlPath().equals(finding.getCalculatedFilePath())) {
+                finding.setCalculatedUrlPath(cleaner.getDynamicPathFromStaticPath(
+                        finding.getCalculatedFilePath()));
+            }
+        } else {
+            if (finding.getSurfaceLocation() != null &&
+                    finding.getSurfaceLocation().getPath() != null) {
+                finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(
+                        finding.getSurfaceLocation().getPath()));
+            }
+
+            // TODO create getStaticPathFromDynamic for symmetry's sake
+            if (finding.getSourceFileLocation() != null) {
+                finding.setCalculatedFilePath(cleaner.cleanStaticPath(
+                        finding.getSourceFileLocation()));
+            }
         }
 	}
 

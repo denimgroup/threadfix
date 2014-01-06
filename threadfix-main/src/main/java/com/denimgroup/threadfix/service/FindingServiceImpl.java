@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -101,33 +102,29 @@ public class FindingServiceImpl implements FindingService {
 
 				// Try to parse an ID from the string and use that
 				ChannelVulnerability newChannelVuln = null;
-				try {
-					Integer requestedId = Integer.valueOf(finding.getChannelVulnerability().getCode());
 
-					if (requestedId != null) {
-						wasNumeric = true;
-						String cweName = null;
-						ChannelType manualType = null;
-						GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
-						if (genericVulnerability != null) {
-							cweName = genericVulnerability.getName();
-							if (cweName != null) {
-								manualType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
-								if (manualType != null) {
-									newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
-								}
-							}
-						}
+                Integer requestedId = IntegerUtils.getIntegerOrNull(finding.getChannelVulnerability().getCode());
 
-						if (newChannelVuln != null) {
-							// id lookup success, set the name to the actual name instead of the id.
-							finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
-						}
-					}
+                if (requestedId != null) {
+                    wasNumeric = true;
+                    String cweName = null;
+                    ChannelType manualType = null;
+                    GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
+                    if (genericVulnerability != null) {
+                        cweName = genericVulnerability.getName();
+                        if (cweName != null) {
+                            manualType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
+                            if (manualType != null) {
+                                newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
+                            }
+                        }
+                    }
 
-				} catch (NumberFormatException e) {
-					log.info("The code passed in was not a valid manual name and was not a number.");
-				}
+                    if (newChannelVuln != null) {
+                        // id lookup success, set the name to the actual name instead of the id.
+                        finding.getChannelVulnerability().setCode(newChannelVuln.getCode());
+                    }
+                }
 
 				if (newChannelVuln == null) {
 					// ID lookup failed
@@ -209,7 +206,7 @@ public class FindingServiceImpl implements FindingService {
 		}
 		
 		String severity = request.getParameter("severity");
-		channelSeverity.setId(getInt(severity));
+		channelSeverity.setId(IntegerUtils.getPrimitive(severity));
 		finding.setChannelSeverity(channelSeverity);
 		
 		String nativeId = request.getParameter("nativeId");
@@ -231,8 +228,8 @@ public class FindingServiceImpl implements FindingService {
 			
 			finding.setIsStatic(true);
 			
-			DataFlowElement element = new DataFlowElement(filePath, getInt(lineNumber), lineText, 0);
-			element.setColumnNumber(getInt(column));
+			DataFlowElement element = new DataFlowElement(filePath, IntegerUtils.getPrimitive(lineNumber), lineText, 0);
+			element.setColumnNumber(IntegerUtils.getPrimitive(column));
 			finding.setDataFlowElements(new ArrayList<DataFlowElement>());
 			finding.getDataFlowElements().add(element);
 		} else {
@@ -278,22 +275,6 @@ public class FindingServiceImpl implements FindingService {
 		}
 		
 		return AddFindingRestController.PASSED_CHECK;
-	}
-	
-	/**
-	 * This method just wraps the try / catch MalformedURLException of Integer.valueOf
-	 * to ease String parsing.
-	 * @param intString
-	 * @return
-	 */
-	private int getInt(String intString) {
-		try {
-			return Integer.valueOf(intString);
-		} catch (NumberFormatException e) {
-			log.warn("Tried to parse an integer out of a user-supplied String but failed.");
-		}
-		
-		return -1;
 	}
 	
 	/**
