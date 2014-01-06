@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.spring.DispatcherServletParser;
+import com.denimgroup.threadfix.framework.impl.spring.SpringConfigurationChecker;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -169,38 +170,8 @@ public class ServletMappings {
         log.info("About to guess application type from web.xml.");
 
         for (ClassMapping mapping : servlets) {
-            if (mapping.getClassWithPackage().equals(
-                        "org.springframework.web.servlet.DispatcherServlet")) {
-                // Spring. Let's look for mvc:annotation-driven in the servlet config
-
-                List<File> configFiles = new ArrayList<>();
-
-                if (mapping.getContextConfigLocation() != null &&
-                         mapping.getContextConfigLocation().trim().contains("\n")) {
-                    // There may be multiple configuration files. We have to run through all of them
-                    // and look for spring mvc stuff because we don't know which will have the config beforehand.
-                    String[] strings = mapping.getContextConfigLocation().split("\n");
-
-                    for (String string : strings) {
-                        List<File> files = projectDirectory.findFiles(string.trim());
-                        configFiles.addAll(files);
-                    }
-                } else {
-                    configFiles.addAll(projectDirectory.findFiles(mapping.getContextConfigLocation().trim()));
-                }
-
-                configFiles.add(projectDirectory.findFile(mapping.getServletName() + "-servlet.xml"));
-
-                for (File configFile : configFiles) {
-                    log.info("Checking config file " + configFile);
-                    if (DispatcherServletParser.usesSpringMvcAnnotations(configFile)) {
-                        log.info("Dispatcher servlet configuration parsing found Spring MVC configuration.");
-                        frameworkType = FrameworkType.SPRING_MVC;
-                        break;
-                    } else if (configFile == null) {
-                        log.info("Unable to locate configuration file.");
-                    }
-                }
+            if (SpringConfigurationChecker.check(projectDirectory, mapping)) {
+                frameworkType = FrameworkType.SPRING_MVC;
             }
         }
 

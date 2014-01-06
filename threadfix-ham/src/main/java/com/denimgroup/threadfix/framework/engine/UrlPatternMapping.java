@@ -25,15 +25,29 @@ package com.denimgroup.threadfix.framework.engine;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class UrlPatternMapping {
 
     @NotNull
 	private String servletName, urlPattern;
 
-	public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern) {
-		this.servletName = servletName.trim();
-		this.urlPattern = urlPattern.trim();
-	}
+    @NotNull
+    private Map<String, String> params;
+
+    public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern) {
+        this.servletName = servletName.trim();
+        this.urlPattern = urlPattern.trim();
+        this.params = new HashMap<>();
+    }
+
+    public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern,
+            @NotNull Map<String, String> params) {
+        this.servletName = servletName.trim();
+        this.urlPattern = urlPattern.trim();
+        this.params = params;
+    }
 
     @NotNull
 	public String getServletName() {

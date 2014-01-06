@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.impl.spring.SpringConfigurationChecker;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -52,6 +54,18 @@ public class ServletMappingTests {
     ////////////////////////////////////////////////////////////////
     ///////////////////////////// Tests ////////////////////////////
     ////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testWebXmlParserForContextClass() {
+        ProjectDirectory directory = new ProjectDirectory(new File(TestConstants.getFolderName("spring-mvc-ajax")));
+        ServletMappings mappings = WebXMLParser.getServletMappings(directory.findWebXML(),directory);
+        for (ClassMapping classMapping : mappings.getClassMappings()) {
+            if (classMapping.getClassWithPackage().equals(SpringConfigurationChecker.DISPATCHER_SERVLET)) {
+                assertTrue("missing context class", "org.springframework.web.context.support.AnnotationConfigWebApplicationContext".equals(classMapping.getContextClass()));
+                assertTrue("missing context location", "com.codetutr.springconfig".equals(classMapping.getContextConfigLocation()));
+            }
+        }
+    }
     
 	@Test
     public void testURLToClassMapping() throws IOException {
@@ -125,7 +139,7 @@ public class ServletMappingTests {
 	
 	@Test(expected=NullPointerException.class)
 	public void testClassMappingNullArgs() {
-		new ClassMapping(null, null, null);
+		new ClassMapping(null, null, null, null);
 	}
 
 	@Test(expected=NullPointerException.class)
@@ -162,7 +176,7 @@ public class ServletMappingTests {
     	List<ClassMapping> mappings = new ArrayList<>();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {
-    		mappings.add(new ClassMapping(strings[i], strings[i + 1], null));
+    		mappings.add(new ClassMapping(strings[i], strings[i + 1], null, null));
     	}
     	
     	return mappings;

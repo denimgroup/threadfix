@@ -60,7 +60,7 @@ class WebXMLParser {
 			SAXParser saxParser = factory.newSAXParser();
 
 			saxParser.parse(file, parser);
-		} catch (@NotNull IOException | SAXException | ParserConfigurationException e) {
+		} catch (IOException | SAXException | ParserConfigurationException e) {
 			log.warn("Encountered exception while parsing mappings.", e);
 		}
 		
@@ -77,11 +77,15 @@ class WebXMLParser {
         List<UrlPatternMapping> mappings = new ArrayList<>();
 		
 		@Nullable
-        String servletName = null, urlPattern = null, servletClass = null, contextConfigLocation = null;
+        String servletName = null, urlPattern = null,
+                servletClass = null,
+                contextConfigLocation = null,
+                contextClass = null;
 		@NotNull
         StringBuilder builder = new StringBuilder();
 		
 		boolean getContextConfigLocation = false,
+                getContextClass = false,
 				grabText = false;
 		
 		private static final String 
@@ -92,7 +96,8 @@ class WebXMLParser {
 			SERVLET_CLASS = "servlet-class", 
 			PARAM_NAME = "param-name", 
 			PARAM_VALUE = "param-value",
-			CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
+			CONTEXT_CONFIG_LOCATION = "contextConfigLocation",
+            CONTEXT_CLASS = "contextClass";
 	
 		@NotNull
         private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
@@ -124,22 +129,28 @@ class WebXMLParser {
 					break;
 				case SERVLET:
 					if (servletName != null && servletClass != null) {
-						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation));
+						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation, contextClass));
 						contextConfigLocation = null;
+                        contextClass = null;
 					}
 					break;
 				case PARAM_VALUE: 
 					if (getContextConfigLocation) {
 						contextConfigLocation = getBuilderText();
-						getContextConfigLocation = false;
-					}
+					} else if (getContextClass) {
+                        contextClass = getBuilderText();
+                    }
 					break;
 				case PARAM_NAME:
-					if (CONTEXT_CONFIG_LOCATION.equals(getBuilderText())) {
+                    String text = getBuilderText();
+					if (CONTEXT_CONFIG_LOCATION.equals(text)) {
 						getContextConfigLocation = true;
-					}
+					} else if (CONTEXT_CLASS.equals(text)) {
+                        getContextClass = true;
+                    }
 					break;
 			}
+            grabText = false;
 		}
 
 		@Override
