@@ -60,6 +60,9 @@ public abstract class AbstractDefectTracker {
 	 * 
 	 * @param vulnerabilities
 	 * @param metadata
+     *
+     * TODO return a better type than String
+     *
 	 * @return the native ID of the new defect. ThreadFix will handle the rest.
 	 */
 	public abstract String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
@@ -95,6 +98,9 @@ public abstract class AbstractDefectTracker {
 	/**
 	 * Return a list of available product names. The credentials and URL need to be set
 	 * for this method to work.
+     *
+     * TODO Avoid strings where other types are more appropriate
+     * We should create wrapper object with collection and error message
 	 * 
 	 * @return a comma separated string of available product names
 	 */

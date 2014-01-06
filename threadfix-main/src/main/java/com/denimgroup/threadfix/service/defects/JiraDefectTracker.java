@@ -128,7 +128,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 	
 	private boolean hasXSeraphLoginReason() {
-		URL url = null;
+		URL url;
 		try {
 			url = new URL(getUrlWithRest() + "user?username=" + getUsername());
 		} catch (MalformedURLException e) {
@@ -207,12 +207,28 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 											getUsername(),getUsername(),getPassword());
 		
 		try {
-			boolean valid = response != null && RestUtils.getJSONObject(response) != null && 
-					RestUtils.getJSONObject(response).getString("name").equals(getUsername());
+            boolean valid = false;
+            String reason = null;
+
+            if (response == null) {
+                reason = "Null response was received from Jira server.";
+            } else if (RestUtils.getJSONObject(response) == null) {
+                reason = "The REST response was not a valid JSON object.";
+
+                // TODO this is dodgy--perhaps this is causing the error in GitHub issue 136?
+            } else if (!RestUtils.getJSONObject(response).getString("name").equals(getUsername())) {
+                String name = RestUtils.getJSONObject(response).getString("name");
+                reason = "The returned name (" + name + ") did not match the username.";
+            } else {
+                valid = true;
+                System.out.println(RestUtils.getJSONObject(response).getString("name"));
+            }
+
 			if (valid) {
 				log.info("JIRA Credentials are valid.");
 			} else {
-				log.info("JIRA Credentials are invalid.");
+				log.info("JIRA Credentials are invalid. Reason: " + reason);
+                lastError = reason;
 			}
 			
 			if (hasXSeraphLoginReason()) {
@@ -221,7 +237,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 						
 			return valid;
 		} catch (JSONException e) {
-			log.warn("JIRA credentials check did not return JSON, something is wrong.", e);
+            lastError = "JIRA credentials check did not return JSON, something is wrong.";
+			log.warn(lastError, e);
 			return false;
 		}
 	}
@@ -359,8 +376,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;
 		try {
-			if (result != null && RestUtils.getJSONObject(result) != null &&
-					RestUtils.getJSONObject(result).getString("key") != null) {
+			if (result != null && RestUtils.getJSONObject(result) != null) {
 				id = RestUtils.getJSONObject(result).getString("key");
 			}
 		} catch (JSONException e) {
@@ -425,7 +441,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public String getTrackerError() {
 		log.info("Attempting to find the reason that JIRA integration failed.");
 		
-		String reason = null;
+		String reason;
 		
 		if (!hasValidUrl()) {
 			reason =  "The JIRA url was incorrect.";
@@ -444,7 +460,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public String getBugURL(String endpointURL, String bugID) {
-		String returnString = endpointURL;
+		String returnString;
 		
 		if (endpointURL.endsWith("rest/api/2/")) {
 			returnString = endpointURL.replace("rest/api/2/", "browse/" + bugID);
@@ -464,19 +480,18 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword());
 		List<Defect> defectList = new ArrayList<>();
 		try {
-		String str = RestUtils.getJSONObject(result).getString("issues");
-		
-		JSONArray returnArray = RestUtils.getJSONArray(str);
-		
-		for (int i = 0; i < returnArray.length(); i++) {
-			
-				Defect d = new Defect();
-				d.setNativeId(returnArray.getJSONObject(i).getString("key"));
-				defectList.add(d);
-		}
-			} catch (JSONException e) {
-				log.warn("JSON parsing failed when trying to get defect list.");
-			}
+            String issuesString = RestUtils.getJSONObject(result).getString("issues");
+
+            JSONArray returnArray = RestUtils.getJSONArray(issuesString);
+
+            for (int i = 0; i < returnArray.length(); i++) {
+                Defect defect = new Defect();
+                defect.setNativeId(returnArray.getJSONObject(i).getString("key"));
+                defectList.add(defect);
+            }
+        } catch (JSONException e) {
+            log.warn("JSON parsing failed when trying to get defect list.");
+        }
 					
 		return defectList;
 	}
