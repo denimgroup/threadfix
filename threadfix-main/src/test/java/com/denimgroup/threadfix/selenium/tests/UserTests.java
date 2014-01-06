@@ -399,6 +399,7 @@ public class UserTests extends BaseTest {
 
 		userIndexPage.logout();
 	}
+
 	//If this test fails it can cascade and cause several other tests to fail
 	@Ignore
 	@Test
