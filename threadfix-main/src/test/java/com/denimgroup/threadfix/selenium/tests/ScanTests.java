@@ -185,6 +185,7 @@ public class ScanTests extends BaseTest {
 							.clickDeleteButton()
 							.logout();
 	}
+
     @Ignore
 	@Test
 	public void microsoftCatNetScan() {
@@ -196,6 +197,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 //		assertTrue(true);
 	}
+
     @Ignore
 	@Test
 	public void findBugsScan() {
@@ -206,6 +208,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void ibmAppscanScan() {
@@ -215,6 +218,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void netsparkerScan(){
@@ -224,7 +228,6 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
-	
 
 	@Test
 	public void skipFishScan(){
@@ -234,6 +237,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void ntoSpiderScan() {
@@ -243,6 +247,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void ntoSpiderScan6() {
@@ -264,6 +269,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);		
 	}
+
     @Ignore
 	@Test
 	public void zaproxyScan() {
@@ -272,6 +278,7 @@ public class ScanTests extends BaseTest {
 
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void nessusScan() {
@@ -290,7 +297,6 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);		
 	}
-	
 
 	@Test
 	public void webInspectScan() {
@@ -299,6 +305,7 @@ public class ScanTests extends BaseTest {
 
 		runScanTest(key,expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void brakeManScan() {
@@ -309,6 +316,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 
 	}
+
     @Ignore
 	@Test
 	public void fortify360Scan() {
@@ -318,6 +326,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void acunetixScan() {
@@ -327,6 +336,7 @@ public class ScanTests extends BaseTest {
 		
 		runScanTest(key, expectedResults);
 	}
+
     @Ignore
 	@Test
 	public void burpScan() {

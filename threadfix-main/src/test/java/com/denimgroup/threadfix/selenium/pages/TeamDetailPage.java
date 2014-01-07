@@ -128,6 +128,7 @@ public class TeamDetailPage extends BasePage {
         Alert alert = driver.switchTo().alert();
         alert.accept();
 
+        sleep(1000);
         return new TeamIndexPage(driver);
     }
 

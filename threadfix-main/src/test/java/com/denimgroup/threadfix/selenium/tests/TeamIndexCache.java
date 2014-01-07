@@ -35,6 +35,7 @@ public class TeamIndexCache {
     public void initialize(List<String> initialList) {
         list = initialList;
         initialized = true;
+        Collections.sort(list);
     }
 
     public void addTeamWithName(String teamName) {
@@ -48,6 +49,13 @@ public class TeamIndexCache {
 
     public int getSize() {
         return list.size();
+    }
+
+    public String getElement(int index){
+        if (index > 0) {
+            return list.get(index - 1);
+        }
+        return "";
     }
 
     public boolean isPresent(String teamName){

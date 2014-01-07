@@ -92,7 +92,7 @@ public class ApplicationTests extends BaseTest {
 										.logout();
 		
 	}
-	//@Ignore
+
 	@Test 
 	public void testCreateBasicApplicationValidation() {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
@@ -183,7 +183,7 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteButton()
 										.logout();
 	}
-	//@Ignore
+
 	@Test
 	public void testEditBasicApplication() {
 		String orgName = "testCreateApplicationOrg21";
@@ -234,9 +234,9 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteButton()
 										.logout();
 	}
+
 	//validation on edit is not implemented yet
-    //@Ignore
-	@Test 
+	@Test
 	public void testEditBasicApplicationValidation() {
         String teamName = "testEditBasicApplicationValidationTeam" + getRandomString(3);
 		String appName2 = "testApp23";
@@ -491,7 +491,9 @@ public class ApplicationTests extends BaseTest {
 	public void sameAppNameMultipleTeams(){
 		String appName = getRandomString(10);
 		String teamName1 = getRandomString(10);
+        teamName1 = "Sl7lNK4bkP";
 		String teamName2 = getRandomString(10);
+        teamName2 = "GzaQhl83Nx";
 		applicationDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
@@ -522,7 +524,7 @@ public class ApplicationTests extends BaseTest {
 		 applicationDetailPage.clickOrganizationHeaderLink()
 			.clickViewTeamLink(teamName1)
 			.clickDeleteButton()
-			.clickOrganizationHeaderLink()
+            .clickOrganizationHeaderLink()
 			.clickViewTeamLink(teamName2)
 			.clickDeleteButton()
 			.logout();

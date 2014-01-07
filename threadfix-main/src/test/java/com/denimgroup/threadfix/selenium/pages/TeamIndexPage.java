@@ -135,11 +135,15 @@ public class TeamIndexPage extends BasePage {
         driver.findElementById("submitTeamModal").click();
         waitForElement(driver.findElementById("teamName"+cnt));
         waitForElement(driver.findElementByClassName("alert-success"));
+
         String teamName = driver.findElementByClassName("alert-success").getText();
         teamName = teamName.substring(7,(teamName.length()-31));
-        cache.addTeamWithName(teamName);
-        sleep(1000);
 
+        System.out.println("Adding to TeamIndexCache: " + teamName);
+        cache.addTeamWithName(teamName);
+        cache.printList();
+
+        sleep(1000);
         return setPage();
     }
 
@@ -455,7 +459,12 @@ public class TeamIndexPage extends BasePage {
 
     public boolean isTeamPresent(String teamName) {
         TeamIndexCache cache = TeamIndexCache.getCache();
-        return cache.isPresent(teamName);
+        int index = cache.getIndex(teamName);
+        if (index > 0) {
+            String toCompare = driver.findElementById("teamName" + index).getText();
+            return (teamName.equals(toCompare));
+        }
+        return false;
     }
 
     public boolean isCreateValidtionPresent(String teamName) {
@@ -474,9 +483,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamDetailPage clickViewTeamLink(String teamName) {
-        TeamIndexCache cache = TeamIndexCache.getCache();
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("organizationLink" + teamIndex).click();
+        driver.findElementById("organizationLink" + getIndex(teamName)).click();
         sleep(4000);
 		return new TeamDetailPage(driver);
 	}
