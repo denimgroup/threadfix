@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import static org.junit.Assert.assertTrue;
 
@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.impl.spring.SpringConfigurationChecker;
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
+import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
+import com.denimgroup.threadfix.framework.engine.framework.UrlPatternMapping;
+import com.denimgroup.threadfix.framework.engine.framework.WebXMLParser;
+import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -58,9 +63,9 @@ public class ServletMappingTests {
     @Test
     public void testWebXmlParserForContextClass() {
         ProjectDirectory directory = new ProjectDirectory(new File(TestConstants.getFolderName("spring-mvc-ajax")));
-        ServletMappings mappings = WebXMLParser.getServletMappings(directory.findWebXML(),directory);
+        ServletMappings mappings = WebXMLParser.getServletMappings(directory.findWebXML(), directory);
         for (ClassMapping classMapping : mappings.getClassMappings()) {
-            if (classMapping.getClassWithPackage().equals(SpringConfigurationChecker.DISPATCHER_SERVLET)) {
+            if (classMapping.getClassWithPackage().equals(SpringServletConfigurationChecker.DISPATCHER_SERVLET)) {
                 assertTrue("missing context class", "org.springframework.web.context.support.AnnotationConfigWebApplicationContext".equals(classMapping.getContextClass()));
                 assertTrue("missing context location", "com.codetutr.springconfig".equals(classMapping.getContextConfigLocation()));
             }

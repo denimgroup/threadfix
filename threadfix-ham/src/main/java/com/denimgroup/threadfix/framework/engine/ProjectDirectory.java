@@ -52,6 +52,11 @@ public class ProjectDirectory {
 		this.directory = directory;
 		fileMap = buildMaps(directory);
 	}
+
+    @NotNull
+    public File getDirectory() {
+        return directory;
+    }
 	
 	@NotNull
 	public String getDirectoryPath() {

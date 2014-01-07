@@ -1,8 +1,7 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import com.denimgroup.threadfix.framework.engine.ClassMapping;
+import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,14 +12,14 @@ import java.util.List;
 /**
  * Created by mac on 1/6/14.
  */
-public class SpringConfigurationChecker {
+public class SpringServletConfigurationChecker {
 
     public static final String DISPATCHER_SERVLET = "org.springframework.web.servlet.DispatcherServlet",
         CONFIG_CLASS = "org.springframework.web.context.support.AnnotationConfigWebApplicationContext";
 
-    private static final SanitizedLogger log = new SanitizedLogger("SpringConfigurationChecker");
+    private static final SanitizedLogger log = new SanitizedLogger("SpringServletConfigurationChecker");
 
-    public static boolean check(ProjectDirectory projectDirectory, @NotNull ClassMapping mapping) {
+    public static boolean checkServletConfig(ProjectDirectory projectDirectory, @NotNull ClassMapping mapping) {
         boolean result = false;
 
         if (mapping.getClassWithPackage().equals(DISPATCHER_SERVLET)) {

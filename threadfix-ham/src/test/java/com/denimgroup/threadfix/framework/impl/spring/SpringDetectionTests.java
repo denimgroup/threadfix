@@ -1,7 +1,7 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class SpringDetectionTests {
 
     void testTypeDetection(String location) {
         FrameworkType type = FrameworkCalculator.getType(new File(location));
-        assertTrue("Didn't find Spring.", type == FrameworkType.SPRING_MVC);
+        assertTrue("Didn't find Spring. Got: " + type, type == FrameworkType.SPRING_MVC);
     }
 
 }

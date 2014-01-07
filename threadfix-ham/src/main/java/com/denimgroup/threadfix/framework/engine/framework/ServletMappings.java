@@ -21,15 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.impl.spring.DispatcherServletParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringConfigurationChecker;
+import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -170,7 +169,7 @@ public class ServletMappings {
         log.info("About to guess application type from web.xml.");
 
         for (ClassMapping mapping : servlets) {
-            if (SpringConfigurationChecker.check(projectDirectory, mapping)) {
+            if (SpringServletConfigurationChecker.checkServletConfig(projectDirectory, mapping)) {
                 frameworkType = FrameworkType.SPRING_MVC;
             }
         }

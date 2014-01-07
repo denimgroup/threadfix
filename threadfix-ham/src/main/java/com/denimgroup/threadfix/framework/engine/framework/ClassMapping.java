@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

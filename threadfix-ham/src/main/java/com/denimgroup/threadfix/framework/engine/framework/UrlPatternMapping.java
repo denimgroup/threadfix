@@ -21,7 +21,7 @@
 //Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,13 +40,6 @@ class UrlPatternMapping {
         this.servletName = servletName.trim();
         this.urlPattern = urlPattern.trim();
         this.params = new HashMap<>();
-    }
-
-    public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern,
-            @NotNull Map<String, String> params) {
-        this.servletName = servletName.trim();
-        this.urlPattern = urlPattern.trim();
-        this.params = params;
     }
 
     @NotNull

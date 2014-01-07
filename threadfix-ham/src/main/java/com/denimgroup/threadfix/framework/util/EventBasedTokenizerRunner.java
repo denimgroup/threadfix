@@ -70,7 +70,7 @@ public class EventBasedTokenizerRunner {
 				tokenizer.ordinaryChar('<');
 				tokenizer.wordChars(':', ':');
 				
-				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && !eventTokenizer.done()) {
 					eventTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
 				}
 				

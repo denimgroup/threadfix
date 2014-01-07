@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;

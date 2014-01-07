@@ -96,8 +96,13 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		
 		return lineNumToParamMap;
 	}
-	
-	@Override
+
+    @Override
+    public boolean done() {
+        return false;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (pageState) {
 			case START:

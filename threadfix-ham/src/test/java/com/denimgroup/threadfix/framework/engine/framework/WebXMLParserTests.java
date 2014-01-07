@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import static com.denimgroup.threadfix.framework.TestConstants.BODGEIT_SOURCE_LOCATION;
 import static com.denimgroup.threadfix.framework.TestConstants.BODGEIT_WEB_XML;
@@ -10,12 +10,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.engine.ServletMappings;
-import com.denimgroup.threadfix.framework.engine.WebXMLParser;
+import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
+import com.denimgroup.threadfix.framework.engine.framework.WebXMLParser;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class WebXMLParserTests {

@@ -27,7 +27,7 @@ import java.io.File;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
-import com.denimgroup.threadfix.framework.engine.ServletMappings;
+import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 

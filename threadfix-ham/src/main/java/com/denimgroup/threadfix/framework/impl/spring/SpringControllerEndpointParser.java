@@ -99,8 +99,13 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 		this.rootFilePath = rootFilePath;
 		this.entityMappings = entityMappings;
 	}
-	
-	@Override
+
+    @Override
+    public boolean done() {
+        return false;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, String stringValue) {
 		switch (phase) {
 			case ANNOTATION: parseAnnotation(type, lineNumber, stringValue); break;

@@ -46,6 +46,8 @@ public interface EventBasedTokenizer {
 		CLOSE_PAREN = ')',
 		OPEN_CURLY = '{',
 		CLOSE_CURLY = '}';
+
+    boolean done();
 	
 	void processToken(int type, int lineNumber, String stringValue);
 
