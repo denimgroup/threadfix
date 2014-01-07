@@ -9,9 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mac on 1/6/14.
- */
 public class SpringServletConfigurationChecker {
 
     public static final String DISPATCHER_SERVLET = "org.springframework.web.servlet.DispatcherServlet",

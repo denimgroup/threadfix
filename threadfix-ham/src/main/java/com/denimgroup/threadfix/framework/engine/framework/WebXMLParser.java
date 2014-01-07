@@ -150,6 +150,7 @@ class WebXMLParser {
                         getContextClass = true;
                     }
 					break;
+                default:
 			}
             grabText = false;
 		}

@@ -101,8 +101,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	}
 
     @Override
-    public boolean done() {
-        return false;
+    public boolean shouldContinue() {
+        return true;
     }
 
     @Override

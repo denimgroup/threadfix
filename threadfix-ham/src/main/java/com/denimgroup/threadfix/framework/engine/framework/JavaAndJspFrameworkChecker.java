@@ -11,9 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Collection;
 
-/**
- * Created by mac on 1/7/14.
- */
 public class JavaAndJspFrameworkChecker extends FrameworkChecker {
 
     @NotNull

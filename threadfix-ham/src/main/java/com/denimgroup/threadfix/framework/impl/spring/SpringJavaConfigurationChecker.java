@@ -7,9 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.StreamTokenizer;
 
-/**
- * Created by mac on 1/7/14.
- */
 public class SpringJavaConfigurationChecker {
 
     public static boolean checkJavaFile(@NotNull File file) {
@@ -30,15 +27,15 @@ public class SpringJavaConfigurationChecker {
 
         boolean hasConfiguration = false, hasEnableWebMvc = false, hasExtends = false,
                 isWebMvcConfigurationSupportSubclass = false,
-                done = false, arroba = false, passedClass = false;
+                shouldContinue = true, arroba = false, beforeClass = true;
 
         public boolean isWebMvc() {
             return isWebMvcConfigurationSupportSubclass || (hasConfiguration && hasEnableWebMvc);
         }
 
         @Override
-        public boolean done() {
-            return done;
+        public boolean shouldContinue() {
+            return shouldContinue;
         }
 
         @Override
@@ -49,16 +46,17 @@ public class SpringJavaConfigurationChecker {
                     case "Configuration": hasConfiguration = arroba; break;
                     case "EnableWebMvc":  hasEnableWebMvc  = arroba; break;
                     case "extends":       hasExtends       = true;   break;
-                    case "class":         passedClass      = true;   break;
+                    case "class":         beforeClass      = false;  break;
                     case "WebMvcConfigurationSupport":
                         isWebMvcConfigurationSupportSubclass = hasExtends;
                         break;
+                    default:
                 }
                 arroba = false;
             } else if (type == ARROBA) {
                 arroba = true;
             } else if (type == OPEN_CURLY) {
-                done = passedClass;
+                shouldContinue = beforeClass;
             }
         }
     }

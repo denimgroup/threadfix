@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
+import java.io.File;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -48,9 +49,10 @@ public class JSPDataFlowParser implements ParameterParser {
 	
 	public JSPDataFlowParser(@NotNull ProjectConfig projectConfig) {
 		this.sourceCodeAccessLevel = projectConfig.getSourceCodeAccessLevel();
-		
-		if (projectConfig.getRootFile() != null) {
-			jspMappings = new JSPMappings(projectConfig.getRootFile());
+
+        File rootFile = projectConfig.getRootFile();
+		if (rootFile != null) {
+			jspMappings = new JSPMappings(rootFile);
 		} else {
 			jspMappings = null;
 		}
@@ -82,7 +84,7 @@ public class JSPDataFlowParser implements ParameterParser {
         List<CodePoint> codePoints = query.getCodePoints();
 
         if (codePoints != null) {
-            for (CodePoint element : query.getCodePoints()) {
+            for (CodePoint element : codePoints) {
                 if (element != null && element.getLineText() != null) {
                     String test = RegexUtils.getRegexResult(element.getLineText(),
                             REQUEST_GET_PARAM_STRING_ASSIGN);
@@ -105,17 +107,17 @@ public class JSPDataFlowParser implements ParameterParser {
 		} else {
 			
 			String staticInformation = query.getStaticPath();
+            List<CodePoint> codePoints = query.getCodePoints();
 			
-			if (staticInformation == null && query.getCodePoints() != null &&
-					query.getCodePoints().size() > 1) {
-				staticInformation = query.getCodePoints().get(0).getSourceFileName();
+			if (staticInformation == null && codePoints != null && codePoints.size() > 1) {
+				staticInformation = codePoints.get(0).getSourceFileName();
 			}
 			
 			if (staticInformation != null &&
 					jspMappings.getEndpoint(staticInformation) != null) {
 				JSPEndpoint endpoint = jspMappings.getEndpoint(staticInformation);
 				if (endpoint != null) {
-					test = endpoint.getParameterName(query.getCodePoints());
+					test = endpoint.getParameterName(codePoints);
 				}
 			}
 			

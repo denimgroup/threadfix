@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class NoDotDirectoryFileFilter implements IOFileFilter {
 	
 	@NotNull
-    public static IOFileFilter INSTANCE = new NoDotDirectoryFileFilter();
+    public final static IOFileFilter INSTANCE = new NoDotDirectoryFileFilter();
 	
 	private NoDotDirectoryFileFilter(){}
 	
