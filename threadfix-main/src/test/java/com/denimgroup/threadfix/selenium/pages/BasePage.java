@@ -61,7 +61,7 @@ public abstract class BasePage {
 		sleep(2000);
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
-		waitForElement(driver.findElementById("login"));
+//		waitForElement(driver.findElementById("login"));
         sleep(3000);
         /*
         sleep(3000);

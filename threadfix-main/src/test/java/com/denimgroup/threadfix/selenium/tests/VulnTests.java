@@ -450,6 +450,15 @@ public class VulnTests extends BaseTest {
 			default:
 				return false;
 		}
+
+        //System Properties have been set
+        System.out.println("System properties have been set:");
+        System.out.println(dt);
+        System.out.println(dturl);
+        System.out.println(uName);
+        System.out.println(pWord);
+        System.out.println(pName);
+
 		//add team
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
