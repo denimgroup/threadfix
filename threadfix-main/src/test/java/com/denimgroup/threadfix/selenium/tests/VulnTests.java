@@ -12,6 +12,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import sun.util.logging.resources.logging;
 
 public class VulnTests extends BaseTest {
 	public VulnTests(String browser) {
@@ -100,10 +101,13 @@ public class VulnTests extends BaseTest {
 		//verify
 		ad = ad.clickExpandAllVulns();
 
+
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
 
+        //do something to setup the application to logout
+        ad.clickOrganizationHeaderLink();
 
-		ad.logout();
+        ad.logout();
 		destroy();
 	}
 	@Test
@@ -159,6 +163,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -216,7 +221,8 @@ public class VulnTests extends BaseTest {
 				.clickMergeDefectSubmit();
 
 		//change merge
-		ad = ad.clickVulnCheckBox(1)
+		ad = ad.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("4")
 				.clickMergeDefectSubmit();
@@ -225,6 +231,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -258,7 +265,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-107")
+				.selectMergeDefect("THREAD-157")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -516,7 +523,7 @@ public class VulnTests extends BaseTest {
 				.clickRemoveWhiteHatConfig()
 				.clickDefectTrackersLink()
 				.clickDeleteButton(dtName)
-				.logout();
+                .logout();
 	}
 
 
