@@ -136,7 +136,7 @@ public abstract class BasePage {
 	
 	public void clickUserTab(){
 		driver.findElementById("tabUserAnchor").click();
-        sleep(4000);
+        sleep(3000);
 	}
 	
 	
@@ -165,8 +165,8 @@ public abstract class BasePage {
 	public UserChangePasswordPage clickChangePasswordLink(){
 		clickUserTab();
 		driver.findElementById("changePasswordLink").click();
-        sleep(4000);
-        //waitForElement(driver.findElementById("currentPasswordInput"));
+        sleep(6000);
+        waitForElement(driver.findElementById("currentPasswordInput"));
         return new UserChangePasswordPage(driver);
 	}
 	

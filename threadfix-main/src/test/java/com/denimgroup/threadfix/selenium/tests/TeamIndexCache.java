@@ -35,12 +35,12 @@ public class TeamIndexCache {
     public void initialize(List<String> initialList) {
         list = initialList;
         initialized = true;
-        Collections.sort(list);
+        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
     }
 
     public void addTeamWithName(String teamName) {
         list.add(teamName);
-        Collections.sort(list);
+        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
     }
 
     public void deleteTeamWithName(String teamName) {

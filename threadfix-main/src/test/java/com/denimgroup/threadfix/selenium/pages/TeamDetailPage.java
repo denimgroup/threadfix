@@ -56,6 +56,7 @@ public class TeamDetailPage extends BasePage {
     public String getOrgName() {
         return driver.findElementById("name").getText();
     }
+
     public TeamDetailPage clickActionButton(){
         driver.findElementById("actionButton").click();
         sleep(2000);

@@ -491,9 +491,7 @@ public class ApplicationTests extends BaseTest {
 	public void sameAppNameMultipleTeams(){
 		String appName = getRandomString(10);
 		String teamName1 = getRandomString(10);
-        teamName1 = "Sl7lNK4bkP";
 		String teamName2 = getRandomString(10);
-        teamName2 = "GzaQhl83Nx";
 		applicationDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()

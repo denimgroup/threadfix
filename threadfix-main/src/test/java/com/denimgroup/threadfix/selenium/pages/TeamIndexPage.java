@@ -459,10 +459,8 @@ public class TeamIndexPage extends BasePage {
 
     public boolean isTeamPresent(String teamName) {
         TeamIndexCache cache = TeamIndexCache.getCache();
-        int index = cache.getIndex(teamName);
-        if (index > 0) {
-            String toCompare = driver.findElementById("teamName" + index).getText();
-            return (teamName.equals(toCompare));
+        if (cache.getIndex(teamName) > 0) {
+            return (teamName.equals(driver.findElementById("teamName" + cache.getIndex(teamName)).getText()));
         }
         return false;
     }
