@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TeamIndexCache {
-
+    private static final String CASE_SENSITIVE = System.getProperty("CASE_SENSITIVE");
     private static TeamIndexCache INSTANCE = null;
 
     private TeamIndexCache(){}
@@ -35,12 +36,20 @@ public class TeamIndexCache {
     public void initialize(List<String> initialList) {
         list = initialList;
         initialized = true;
-        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        if (CASE_SENSITIVE != null) {
+            Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        } else {
+            Collections.sort(list);
+        }
     }
 
     public void addTeamWithName(String teamName) {
         list.add(teamName);
-        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        if (CASE_SENSITIVE != null) {
+            Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        } else {
+            Collections.sort(list);
+        }
     }
 
     public void deleteTeamWithName(String teamName) {
