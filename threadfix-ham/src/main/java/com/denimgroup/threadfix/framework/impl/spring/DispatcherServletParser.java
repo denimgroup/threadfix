@@ -45,7 +45,7 @@ public class DispatcherServletParser {
 			
 				String line = reader.readLine();
 				while (line != null) {
-					if (line.contains("mvc:annotation-driven")) {
+					if (line.contains("annotation-driven")) {
 						returnValue = true;
 						break;
 					}
@@ -58,7 +58,7 @@ public class DispatcherServletParser {
 		}
 		
 		if (!returnValue) {
-			log.info("mvc:annotation-driven was not found, the annotations are not supported.");
+			log.info("annotation-driven was not found, the annotations are not supported.");
 		}
 		
 		return returnValue;

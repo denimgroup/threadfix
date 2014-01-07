@@ -1,8 +1,8 @@
 package com.denimgroup.threadfix.framework.engine.framework;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +17,15 @@ public class FrameworkCalculator {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
 
-    private Set<FrameworkChecker> frameworkCheckers = new HashSet<>();
+    private Collection<FrameworkChecker> frameworkCheckers = new ArrayList<>();
 
     private static FrameworkCalculator INSTANCE = new FrameworkCalculator();
 
     static {
-        register(new WebXmlFrameworkChecker());
-        register(new SpringJavaFrameworkChecker());
+        // TODO detect language first and use that to narrow down the frameworks
+        // TODO incorporate python code
+        // TODO add .NET code
+        register(new JavaAndJspFrameworkChecker());
     }
 
     public static void register(FrameworkChecker checker) {
