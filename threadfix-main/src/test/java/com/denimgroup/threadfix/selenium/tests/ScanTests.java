@@ -294,7 +294,6 @@ public class ScanTests extends BaseTest {
 		String key = "Arachni";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);		
 	}
 
@@ -353,8 +352,6 @@ public class ScanTests extends BaseTest {
 		
 		String orgName = scannerName + getRandomString(10);
 		String appName = scannerName + getRandomString(10);
-		
-		//teamIndexPage.sleep(200);
 
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 													 .clickAddTeamButton()

@@ -94,9 +94,9 @@ public class DocumentTests extends BaseTest {
 								.expandTeamRowByIndex(teamName)
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
-		
+
 			teamIndexPage.populateAppList(teamName);
-			
+
 			applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
 		
 		// create an org and an app and upload the documents, then delete everything

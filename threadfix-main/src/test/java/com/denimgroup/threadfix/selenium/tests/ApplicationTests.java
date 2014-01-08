@@ -368,11 +368,10 @@ public class ApplicationTests extends BaseTest {
 										.clickEditDeleteBtn()
 										.clickAddWaf()
 										.addWaf(wafName);
-		
-//		assertTrue("The WAF was not added correctly.", 
-//				applicationDetailPage.getWafText().equals(wafName));	
+
 		// Check that it also appears on the WAF page.
-		wafDetailPage = applicationDetailPage.clickWafsHeaderLink()
+		wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                                            .clickWafsHeaderLink()
 											.clickRules(wafName);
 		
 		assertTrue("The WAF was not added correctly.", 
@@ -380,7 +379,8 @@ public class ApplicationTests extends BaseTest {
 		
 		// Attempt to delete the WAF and ensure that it is a failure because the Application is still there
 		// If the page goes elsewhere, this call will fail.
-		wafIndexPage = wafDetailPage.clickWafsHeaderLink()
+		wafIndexPage = wafDetailPage.clickOrganizationHeaderLink()
+                                .clickWafsHeaderLink()
 								.clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.

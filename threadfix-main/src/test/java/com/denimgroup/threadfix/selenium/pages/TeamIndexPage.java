@@ -66,7 +66,6 @@ public class TeamIndexPage extends BasePage {
         return 0;
     }
 
-
     public int getNumAppRows(Integer index) {
         if (!(driver.findElementById("teamAppTableDiv" + (index))
                 .getText().contains("No applications found."))) {
@@ -86,18 +85,6 @@ public class TeamIndexPage extends BasePage {
 
         return teamIndexMap;
     }
-
-    /*public List<String> getList() {
-        System.out.println("List!");
-        List<String> teamIndexMap = new ArrayList<>();
-
-        for (int j = 1; j <= getNumTeamRows(); j++) {
-            WebElement element = driver.findElementById("teamName" + j);
-            teamIndexMap.add(element.getText());
-        }
-
-        return teamIndexMap;
-    }*/
 
     public int getIndex(String teamName) {
         TeamIndexCache cache = TeamIndexCache.getCache();
@@ -139,8 +126,8 @@ public class TeamIndexPage extends BasePage {
         String teamName = driver.findElementByClassName("alert-success").getText();
         teamName = teamName.substring(7,(teamName.length()-31));
 
-        System.out.println("Adding to TeamIndexCache: " + teamName);
         cache.addTeamWithName(teamName);
+        System.out.println("\nAdding to TeamIndexCache: " + teamName);
         cache.printList();
 
         sleep(1000);
@@ -157,18 +144,6 @@ public class TeamIndexPage extends BasePage {
     public TeamIndexPage expandTeamRowByIndex(String teamName) {
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
         driver.findElementById("teamName" + teamIndex).click();
-        try{
-            populateAppList(teamIndex);
-        }catch(NoSuchElementException e){
-            //e.printStackTrace();
-        }
-        return setPage();
-    }
-
-    @Deprecated
-    public TeamIndexPage expandTeamRowByIndex(Integer teamIndex) {
-        //driver.findElementById("teamName" + (teamIndex + 1)).click();
-        driver.findElementById("teamName" + (teamIndex)).click();
         try{
             populateAppList(teamIndex);
         }catch(NoSuchElementException e){
@@ -198,7 +173,6 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamAddedToTable(String teamName) {
-        //return getIndex(name) != -1;
         Map<String, Integer> teamIndexMap = getTeamToIndexMap();
         return teamAddedToTable(teamIndexMap.get(teamName));
     }
@@ -353,8 +327,7 @@ public class TeamIndexPage extends BasePage {
     }
 
 
-    public TeamIndexPage addNewApplication(String teamName, String appName,
-                                           String url, String critic) {
+    public TeamIndexPage addNewApplication(String teamName, String appName,String url, String critic) {
         clickAddNewApplication(teamName);
         setApplicationName(appName, teamName);
         setApplicationUrl(url, teamName);
@@ -412,7 +385,6 @@ public class TeamIndexPage extends BasePage {
         }
         waitForElement(driver.findElementById("nameText"));
         waitForInvisibleElement(driver.findElementByClassName("alert-success"));
-        //waitForElement(driver.findElementById("anyid"));
         return new ApplicationDetailPage(driver);
 
     }
@@ -521,15 +493,12 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isAddAppBtnPresent(String teamName){
-		return driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).isDisplayed();	
+        return driver.findElementById("addApplicationModalButton" + getIndex(teamName)).isDisplayed();
 	}
 	
 	public boolean isAddAppBtnClickable(String teamName){
 		return ExpectedConditions.elementToBeClickable(
                 driver.findElementById("addApplicationModalButton" + getIndex(teamName))) != null;
-
-        /*return ExpectedConditions.elementToBeClickable(By.id(
-                driver.findElementsByLinkText("Add Application").get(getIndex(teamName)).getAttribute("id"))) != null;*/
 	}
 	
 	public boolean isViewTeamLinkPresent(String teamName){

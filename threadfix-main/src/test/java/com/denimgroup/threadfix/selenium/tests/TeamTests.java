@@ -248,9 +248,9 @@ public class TeamTests extends BaseTest {
 	
 	@Test
 	public void switchAppTeam(){
-		String team1 = getRandomString(8);
+        String team1 = getRandomString(8);
 		String team2 = getRandomString(8);
-		String appName = getRandomString(8);
+        String appName = getRandomString(8);
 
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
 								.clickAddTeamButton()

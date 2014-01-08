@@ -73,6 +73,7 @@ public class TeamIndexCache {
 
     public Integer getIndex(String teamName) {
         assertTrue(list != null);
+        System.out.println("\nLooking for: " + teamName + " in cache.\n");
         return (Collections.binarySearch(list, teamName) + 1);
     }
 

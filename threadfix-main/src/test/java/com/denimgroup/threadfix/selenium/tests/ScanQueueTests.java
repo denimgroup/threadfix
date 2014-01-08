@@ -72,9 +72,9 @@ public class ScanQueueTests extends BaseTest {
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
 		
-			teamIndexPage.populateAppList(teamName);
+		teamIndexPage.populateAppList(teamName);
 			
-			applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+		applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
 		
 		// create an org and an app and add scan queue task, then delete everything
 		for (Entry<String, String> mapEntry : scansMap.entrySet()) {

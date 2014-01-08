@@ -104,8 +104,8 @@ public abstract class BasePage {
                 cache.initialize(getList());
             }
 
-            System.out.println("\nCache is initialized or Applications link clicked.");
-            cache.printList();
+            /*System.out.println("\nCache is initialized or Applications link clicked.");
+            cache.printList();*/
 
 			return new TeamIndexPage(driver);
 	}
@@ -131,7 +131,7 @@ public abstract class BasePage {
 	
 	public void clickConfigTab(){
 		driver.findElementById("tabConfigAnchor").click();
-		sleep(2000);
+		sleep(3000);
 	}
 	
 	public void clickUserTab(){
