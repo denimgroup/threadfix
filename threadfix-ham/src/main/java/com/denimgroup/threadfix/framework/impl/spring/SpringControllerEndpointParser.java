@@ -206,6 +206,9 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 					annotationState = AnnotationState.VALUE;
 				} else if (stringValue != null && stringValue.equals(METHOD)) {
 					annotationState = AnnotationState.METHOD;
+                } else if (stringValue != null && stringValue.equals(CLASS)) {
+                    inClass = true;
+                    annotationState = AnnotationState.START;
 				} else if (type == DOUBLE_QUOTE) {
 					// If it immediately starts with a quoted value, use it
 					if (inClass) {

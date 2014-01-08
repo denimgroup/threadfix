@@ -108,6 +108,17 @@ public class SpringControllerEndpointParserTests {
     }
 
     @Test
+    public void testCityController() {
+        File cityController = ResourceManager.getSpringFile("CityController.java");
+
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(cityController,
+                new SpringEntityMappings(
+                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
+
+        assertTrue("Size was " + endpoints.size() + " instead of 6.", endpoints.size() == 6);
+    }
+
+    @Test
     public void testAllFrameworks() {
         for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
             EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName("spring/" + app)));
