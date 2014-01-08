@@ -78,7 +78,8 @@ public class VulnTests extends BaseTest {
 		ad = ad.clickExpandAllVulns();
 		
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
-		
+
+        ad.clickOrganizationHeaderLink();
 		
 		ad.logout();
 		destroy();
@@ -104,7 +105,6 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
 
-        //do something to setup the application to logout
         ad.clickOrganizationHeaderLink();
 
         ad.logout();
@@ -138,6 +138,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -201,6 +202,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -272,6 +274,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -305,8 +308,9 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
 
+        ad.clickOrganizationHeaderLink();
 
-		ad.logout();
+   		ad.logout();
 		
 		destroy();
 	}
@@ -354,6 +358,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 6);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -395,6 +400,7 @@ public class VulnTests extends BaseTest {
 
 		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 6);
 
+        ad.clickOrganizationHeaderLink();
 
 		ad.logout();
 		destroy();
@@ -419,6 +425,7 @@ public class VulnTests extends BaseTest {
 				.clickSubmitDefectLink()
 				.submitDefect();
 		assertTrue("defect was not submitted",ad.getAlert().contains("The Defect was submitted to the tracker."));
+        ad.clickOrganizationHeaderLink();
 		ad.logout();
 		destroy();
 		
@@ -457,14 +464,6 @@ public class VulnTests extends BaseTest {
 			default:
 				return false;
 		}
-
-        //System Properties have been set
-        System.out.println("System properties have been set:");
-        System.out.println(dt);
-        System.out.println(dturl);
-        System.out.println(uName);
-        System.out.println(pWord);
-        System.out.println(pName);
 
 		//add team
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
@@ -523,6 +522,7 @@ public class VulnTests extends BaseTest {
 				.clickRemoveWhiteHatConfig()
 				.clickDefectTrackersLink()
 				.clickDeleteButton(dtName)
+                .clickOrganizationHeaderLink()
                 .logout();
 	}
 
