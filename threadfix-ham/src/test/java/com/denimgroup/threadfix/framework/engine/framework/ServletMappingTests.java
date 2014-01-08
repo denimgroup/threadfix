@@ -149,7 +149,7 @@ public class ServletMappingTests {
 
 	@Test(expected=NullPointerException.class)
 	public void testServletMappingNulls() {
-        new ServletMappings(null, null, null);
+        new ServletMappings(null, null, null, null);
 	}
 
     ////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ public class ServletMappingTests {
     ////////////////////////////////////////////////////////////////
 
     private ServletMappings getTestMappings() throws IOException {
-        return new ServletMappings(sampleServletMappings, sampleServlets, new ProjectDirectory(File.createTempFile("test", "test")));
+        return new ServletMappings(sampleServletMappings, sampleServlets, new ProjectDirectory(File.createTempFile("test", "test")), null);
     }
 
     @NotNull

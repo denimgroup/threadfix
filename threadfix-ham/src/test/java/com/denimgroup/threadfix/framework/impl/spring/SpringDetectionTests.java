@@ -9,9 +9,6 @@ import java.io.File;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by mac on 1/6/14.
- */
 public class SpringDetectionTests {
 
     @Test
@@ -39,9 +36,49 @@ public class SpringDetectionTests {
         testTypeDetection(TestConstants.getFolderName("spring-mvc-chat"));
     }
 
+    String[] apps = {
+            "atmosphere-spring-mvc",
+            "blog",
+            "blog-spring",
+            "BookExchange",
+            "classifiedsMVC",
+            "CRM_Demo",
+            "denarius",
+            "documentmanager",
+            "dogphone-spring-mongo",
+            "EchoWeb",
+            "exhubs",
+            "mvc-calculator",
+            "MvcXmlFree",
+            "spring-guestbook",
+            "spring-mvc-ajax",
+            "spring-mvc-chat",
+            "spring-mvc-examples",
+            "spring-mvc-inventory",
+            "spring-mvc-movies",
+            "spring-mvc-scribe-experiment",
+            "spring-mvc-showcase",
+            "spring-mvc-with-no-xml-experiment",
+            "spring-wiki",
+            "spring3-mvc-cities",
+            "SpringUserAuthSample",
+            "stonewall",
+            "ticketline-spring",
+            "Timeline",
+            "todomvc",
+            "WebCalculator",
+            "woofer" };
+
+    @Test
+    public void testTheOtherWebapps() {
+        for (String app : apps) {
+            testTypeDetection(TestConstants.getFolderName("spring/" + app));
+        }
+    }
+
     void testTypeDetection(String location) {
         FrameworkType type = FrameworkCalculator.getType(new File(location));
-        assertTrue("Didn't find Spring. Got: " + type, type == FrameworkType.SPRING_MVC);
+        assertTrue("Didn't find Spring in " + location + ". Got: " + type, type == FrameworkType.SPRING_MVC);
     }
 
 }

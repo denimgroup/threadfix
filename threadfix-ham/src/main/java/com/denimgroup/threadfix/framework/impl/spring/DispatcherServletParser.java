@@ -42,7 +42,7 @@ public class DispatcherServletParser {
 			
 				String line = reader.readLine();
 				while (line != null) {
-					if (line.contains("annotation-driven")) {
+					if (line.contains("annotation-driven") || line.contains("context:component-scan")) {
 						returnValue = true;
 						break;
 					}
