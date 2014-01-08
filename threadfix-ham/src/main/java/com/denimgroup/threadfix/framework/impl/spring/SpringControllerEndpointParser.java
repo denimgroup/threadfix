@@ -41,7 +41,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	
 	@NotNull
     private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
-	private int startLineNumber = 0, curlyBraceCount = 0, lastSymbol = 0;
+	private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
 	private boolean inClass = false;
 	@Nullable
     private String classEndpoint = null, currentMapping = null, lastValue = null,
@@ -107,10 +107,16 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @Override
 	public void processToken(int type, int lineNumber, String stringValue) {
+        if (type == CLOSE_PAREN) {
+            openParenCount++;
+        } else if (type == OPEN_PAREN) {
+            openParenCount--;
+        }
+
 		switch (phase) {
 			case ANNOTATION: parseAnnotation(type, lineNumber, stringValue); break;
-			case SIGNATURE:  parseSignature(type, stringValue);  break;
-			case METHOD:     parseMethod(type, lineNumber);     break;
+			case SIGNATURE:  parseSignature(type, stringValue);              break;
+			case METHOD:     parseMethod(type, lineNumber);                  break;
 		}
 	}
 	
@@ -119,12 +125,10 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	}
 	
 	private void parseSignature(int type, @Nullable String stringValue) {
-		
-		if (lastSymbol == CLOSE_PAREN && type == OPEN_CURLY) {
+
+		if (openParenCount == 0 && type == OPEN_CURLY) {
 			curlyBraceCount = 1;
 			phase = Phase.METHOD;
-		} else {
-			lastSymbol = type;
 		}
 		
 		switch (signatureState) {

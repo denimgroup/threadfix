@@ -23,11 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Set;
 
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -52,7 +54,7 @@ public class SpringControllerEndpointParserTests {
 	};
 
 	@Test
-	public void testClassAnnotation() {
+	public void testClassRequestParamAnnotation() {
 		SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
 		
 		File file = ResourceManager.getSpringFile(TestConstants.SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING);
@@ -60,7 +62,6 @@ public class SpringControllerEndpointParserTests {
 		Set<? extends Endpoint> endpoints =
 				SpringControllerEndpointParser.parse(file, mappings);
 		
-		assertTrue("File wasn't found", file != null);
 		assertTrue("File didn't exist at " + file.getAbsolutePath(), file.exists());
 		
 		for (String[] test : expected) {
@@ -93,7 +94,26 @@ public class SpringControllerEndpointParserTests {
 							test[2] + "," + test[3], matches);
 			
 		}
-		
 	}
+
+    @Test
+    public void testMathController() {
+        File mathController = ResourceManager.getSpringFile("MathController.java");
+
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(mathController,
+                new SpringEntityMappings(
+                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
+
+        assertTrue("Size was " + endpoints.size() + " instead of 1.", endpoints.size() == 1);
+    }
+
+    @Test
+    public void testAllFrameworks() {
+        for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
+            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName("spring/" + app)));
+            assertFalse("No endpoints found in app " + app + ".", mappings.generateEndpoints().isEmpty());
+        }
+    }
+
 
 }
