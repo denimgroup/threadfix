@@ -61,7 +61,12 @@ class JSPIncludeParser implements EventBasedTokenizer {
 		return parser.returnFiles;
 	}
 
-	@Override
+    @Override
+    public boolean shouldContinue() {
+        return true;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch (currentState) {
 			case START:

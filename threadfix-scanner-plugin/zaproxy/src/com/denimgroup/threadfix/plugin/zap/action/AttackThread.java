@@ -185,7 +185,7 @@ public class AttackThread extends Thread {
             }
 
             if (msg.getResponseHeader().isEmpty()) {
-                logger.info("Reponse header was empty.");
+                logger.info("Response header was empty.");
                 return null;
             }
 

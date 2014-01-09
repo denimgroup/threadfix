@@ -52,6 +52,11 @@ public class ProjectDirectory {
 		this.directory = directory;
 		fileMap = buildMaps(directory);
 	}
+
+    @NotNull
+    public File getDirectory() {
+        return directory;
+    }
 	
 	@NotNull
 	public String getDirectoryPath() {
@@ -68,6 +73,11 @@ public class ProjectDirectory {
 		
 		return returnMap;
 	}
+
+    @Override
+    public String toString() {
+        return directory.toString();
+    }
 	
 	private void recurseMap(@NotNull File currentDirectory, @NotNull Map<String, Set<String>> map) {
 		if (!currentDirectory.isDirectory() || !currentDirectory.exists()) {

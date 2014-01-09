@@ -188,7 +188,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		
 		for (String stringMap : stringMaps) {
 			String[] matches = stringMap.split("-");
-			if (matches != null && matches.length == 2) {
+			if (matches.length == 2) {
 				try {
 					if (matches[0].matches("^[0-9]+$") &&
 							matches[1].matches("^[0-9]+$")) {

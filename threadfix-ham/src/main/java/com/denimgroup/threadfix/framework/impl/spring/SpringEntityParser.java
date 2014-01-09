@@ -51,8 +51,13 @@ public class SpringEntityParser implements EventBasedTokenizer {
 	}
 	@NotNull
     private State state = State.START;
-	
-	@Override
+
+    @Override
+    public boolean shouldContinue() {
+        return true;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch(state) {
 		case START:

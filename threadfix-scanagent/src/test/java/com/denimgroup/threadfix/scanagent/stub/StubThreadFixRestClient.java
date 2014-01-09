@@ -69,6 +69,11 @@ public class StubThreadFixRestClient implements ThreadFixRestClient {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public String getAllTeamsPrettyPrint() {
+        return null;
+    }
+
     @Nullable
     @Override
     public String searchForApplicationById(String id) {

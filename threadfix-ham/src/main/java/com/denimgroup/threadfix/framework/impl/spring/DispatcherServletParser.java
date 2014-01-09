@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
@@ -41,11 +38,11 @@ public class DispatcherServletParser {
 		
 		if (file.exists()) {
 
-			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
 			
 				String line = reader.readLine();
 				while (line != null) {
-					if (line.contains("mvc:annotation-driven")) {
+					if (line.contains("annotation-driven") || line.contains("context:component-scan")) {
 						returnValue = true;
 						break;
 					}
@@ -58,7 +55,7 @@ public class DispatcherServletParser {
 		}
 		
 		if (!returnValue) {
-			log.info("mvc:annotation-driven was not found, the annotations are not supported.");
+			log.info("annotation-driven was not found, the annotations are not supported.");
 		}
 		
 		return returnValue;

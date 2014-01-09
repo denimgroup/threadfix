@@ -55,6 +55,12 @@ public class CommandLineParser {
 				.withDescription("Fetches a list of ThreadFix teams and applications.")
 				.create("t");
 		options.addOption(teams);
+
+                final Option teamsPrettyPrint = OptionBuilder.withLongOpt("teamsPrettyPrint")
+                                .withDescription("Fetches a human readable list of ThreadFix teams, applications, and application IDs.")
+                                .create("tpp");
+                options.addOption(teamsPrettyPrint);
+
 		options.addOption(new Option("help", "Print this message" ));
 		
 		Option set = OptionBuilder.withArgName("property> <value")
@@ -261,7 +267,11 @@ public class CommandLineParser {
 			} else if (cmd.hasOption("teams")) {
 				println("Getting all teams.");
 				println(client.getAllTeams());
-				
+			
+                        } else if (cmd.hasOption("tpp")) {
+                                println("Getting all teams and applications in pretty print.");
+                                println(client.getAllTeamsPrettyPrint());
+	
 			} else if (cmd.hasOption("q")) {
 				String[] queueArgs = cmd.getOptionValues("q");
 				if (queueArgs.length != 2) {

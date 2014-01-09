@@ -21,23 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class ClassMapping {
+public class ClassMapping {
 
 	@NotNull
     private final String servletName, classWithPackage;
 
     @Nullable
-    private final String contextConfigLocation;
+    private final String contextConfigLocation, contextClass;
 	
 	private static final String CLASSPATH_START = "classpath:";
 	
-	public ClassMapping(@NotNull String servletName, @NotNull String classWithPackage, @Nullable String contextConfigLocation) {
+	public ClassMapping(@NotNull String servletName, @NotNull String classWithPackage,
+                        @Nullable String contextConfigLocation,
+                        @Nullable String contextClass) {
 
+        this.contextClass = contextClass;
 		this.servletName = servletName.trim();
 		this.classWithPackage = classWithPackage.trim();
 
@@ -62,6 +65,11 @@ class ClassMapping {
     public String getContextConfigLocation() {
 		return contextConfigLocation;
 	}
+
+    @Nullable
+    public String getContextClass() {
+        return contextClass;
+    }
 	
 	@NotNull
     @Override

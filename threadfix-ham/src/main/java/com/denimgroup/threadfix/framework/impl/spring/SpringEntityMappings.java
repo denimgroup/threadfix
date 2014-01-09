@@ -174,10 +174,10 @@ class SpringEntityMappings {
 		
 		while (superClassMap.size() != lastSize) {
 			lastSize = superClassMap.size();
-			for (String key : superClassMap.keySet()) {
-				if (done.contains(superClassMap.get(key))) {
-					fieldMap.get(key).addAll(fieldMap.get(superClassMap.get(key)));
-					done.add(key);
+			for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
+				if (done.contains(entry.getValue())) {
+					fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
+					done.add(entry.getKey());
 				}
 			}
 			superClassMap.keySet().removeAll(done);

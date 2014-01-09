@@ -21,20 +21,17 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.engine;
+package com.denimgroup.threadfix.framework.engine.framework;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,11 +57,14 @@ class WebXMLParser {
 			SAXParser saxParser = factory.newSAXParser();
 
 			saxParser.parse(file, parser);
-		} catch (@NotNull IOException | SAXException | ParserConfigurationException e) {
+		} catch (IOException | SAXException | ParserConfigurationException e) {
 			log.warn("Encountered exception while parsing mappings.", e);
 		}
 		
-		return new ServletMappings(parser.mappings, parser.servlets, projectDirectory);
+		return new ServletMappings(parser.mappings,
+                parser.servlets,
+                projectDirectory,
+                parser.contextParams);
 	}
 	
 	// this class is private static so that it doesn't share state with its parent class
@@ -75,25 +75,33 @@ class WebXMLParser {
         List<ClassMapping> servlets = new ArrayList<>();
 		@NotNull
         List<UrlPatternMapping> mappings = new ArrayList<>();
+        @NotNull
+        Map<String, String> contextParams = new HashMap<>();
 		
 		@Nullable
-        String servletName = null, urlPattern = null, servletClass = null, contextConfigLocation = null;
+        String servletName = null, urlPattern = null,
+                servletClass = null,
+                contextConfigLocation = null,
+                contextClass = null;
 		@NotNull
         StringBuilder builder = new StringBuilder();
 		
 		boolean getContextConfigLocation = false,
+                getContextClass = false,
 				grabText = false;
-		
-		private static final String 
+
+		private static final String
 			SERVLET_MAPPING = "servlet-mapping",
 			SERVLET = "servlet",
-			SERVLET_NAME = "servlet-name", 
-			URL_PATTERN = "url-pattern", 
-			SERVLET_CLASS = "servlet-class", 
-			PARAM_NAME = "param-name", 
+			SERVLET_NAME = "servlet-name",
+			URL_PATTERN = "url-pattern",
+			SERVLET_CLASS = "servlet-class",
+			PARAM_NAME = "param-name",
 			PARAM_VALUE = "param-value",
-			CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
-	
+			CONTEXT_CONFIG_LOCATION = "contextConfigLocation",
+            CONTEXT_CLASS = "contextClass",
+            CONTEXT_PARAM = "context-param";
+
 		@NotNull
         private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
 			new String[] { SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
@@ -124,22 +132,41 @@ class WebXMLParser {
 					break;
 				case SERVLET:
 					if (servletName != null && servletClass != null) {
-						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation));
+						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation, contextClass));
 						contextConfigLocation = null;
+                        contextClass = null;
 					}
 					break;
+                case CONTEXT_PARAM:
+                    if (contextConfigLocation != null) {
+                        contextParams.put(CONTEXT_CONFIG_LOCATION, contextConfigLocation);
+                        contextConfigLocation = null;
+                    }
+                    if (contextClass != null) {
+                        contextParams.put(CONTEXT_CLASS, contextClass);
+                        contextClass = null;
+                    }
+                    break;
 				case PARAM_VALUE: 
 					if (getContextConfigLocation) {
 						contextConfigLocation = getBuilderText();
-						getContextConfigLocation = false;
-					}
+                        getContextConfigLocation = false;
+					} else if (getContextClass) {
+                        contextClass = getBuilderText();
+                        getContextClass = false;
+                    }
 					break;
 				case PARAM_NAME:
-					if (CONTEXT_CONFIG_LOCATION.equals(getBuilderText())) {
+                    String text = getBuilderText();
+					if (CONTEXT_CONFIG_LOCATION.equals(text)) {
 						getContextConfigLocation = true;
-					}
+					} else if (CONTEXT_CLASS.equals(text)) {
+                        getContextClass = true;
+                    }
 					break;
+                default:
 			}
+            grabText = false;
 		}
 
 		@Override
