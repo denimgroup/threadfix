@@ -74,6 +74,34 @@ public class TeamIndexPage extends BasePage {
         return 0;
     }
 
+    public int getIndexSlow(String teamName) {
+        System.out.println("Using slow map!");
+        int i = -1;
+        List<WebElement> names = new ArrayList<WebElement>();
+        for (int j = 1; j <= getNumTeamRows(); j++) {
+            names.add(driver.findElementById("teamName" + j));
+        }
+        for (WebElement name : names) {
+            i++;
+            String text = name.getText().trim();
+            if (text.equals(teamName.trim())) {
+                return i;
+            }
+        }
+        names = new ArrayList<WebElement>();
+        for (int j = 1; j <= getNumTeamRows(); j++) {
+            names.add(driver.findElementById("teamName" + j));
+        }
+        for (WebElement name : names) {
+            i++;
+            String text = name.getText().trim();
+            if (text.equals(teamName.trim())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Deprecated
     public Map<String, Integer> getTeamToIndexMap() {
         System.out.println("Map!");
@@ -89,6 +117,9 @@ public class TeamIndexPage extends BasePage {
 
     public int getIndex(String teamName) {
         TeamIndexCache cache = TeamIndexCache.getCache();
+        if (cache.getIndex(teamName) < 0) {
+            return getIndexSlow(teamName) + 1;
+        }
         return cache.getIndex(teamName);
     }
 
@@ -143,7 +174,7 @@ public class TeamIndexPage extends BasePage {
 
 
     public TeamIndexPage expandTeamRowByIndex(String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("teamName" + teamIndex).click();
         try{
             populateAppList(teamIndex);
@@ -155,8 +186,7 @@ public class TeamIndexPage extends BasePage {
 
     @Deprecated
     public void populateAppList(String teamName) {
-        TeamIndexCache cache = TeamIndexCache.getCache();
-        populateAppList(cache.getIndex(teamName));
+        populateAppList(getIndex(teamName));
     }
 
     public void populateAppList(Integer index){
@@ -174,8 +204,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamAddedToTable(String teamName) {
-        TeamIndexCache cache = TeamIndexCache.getCache();
-        return teamAddedToTable(cache.getIndex(teamName));
+        return teamAddedToTable(getIndex(teamName));
     }
 
     public boolean teamAddedToTable(Integer index) {
@@ -186,7 +215,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         populateAppList(teamIndex);
         apps.get(getAppIndex(appName)).click();
         waitForElement(driver.findElementById("actionButton1"));
@@ -195,14 +224,14 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage clickAddNewApplication(String teamName) {
         appModalId = getAppModalId(teamName);
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("addApplicationModalButton" + teamIndex).click();
         waitForElement(driver.findElementById(appModalId));
         return setPage();
     }
 
     public String getAppModalId(String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         String appModalIdHref = driver.findElementById("addApplicationModalButton" + teamIndex).getAttribute("href");
         String appModalId = appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
         return appModalId;
@@ -216,35 +245,35 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage setApplicationName(String appName, String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).clear();
         driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).sendKeys(appName);
         return setPage();
     }
 
     public TeamIndexPage setApplicationUrl(String url, String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("urlInput" + getAppModalIdNumber(teamIndex)).clear();
         driver.findElementById("urlInput" + getAppModalIdNumber(teamIndex)).sendKeys(url);
         return setPage();
     }
 
     public TeamIndexPage setApplicationCritic(String critic, String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         new Select(driver.findElementById("criticalityId" + getAppModalIdNumber(teamIndex)))
                 .selectByVisibleText(critic);
         return setPage();
     }
 
     public TeamIndexPage saveApplication(String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("submitAppModal" + getAppModalIdNumber(teamIndex)).click();
         sleep(6000);
         return setPage();
     }
 
     public TeamIndexPage saveApplicationInvalid(String teamName) {
-        int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
+        int teamIndex = getIndex(teamName);
         driver.findElementById("submitAppModal" + getAppModalIdNumber(teamIndex)).click();
         return new TeamIndexPage(driver);
     }
@@ -366,9 +395,9 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isTeamPresent(String teamName) {
-        TeamIndexCache cache = TeamIndexCache.getCache();
-        if (cache.getIndex(teamName) > 0) {
-            return (teamName.equals(driver.findElementById("teamName" + cache.getIndex(teamName)).getText()));
+        int teamIndex = getIndex(teamName);
+        if (teamIndex > 0) {
+            return (teamName.equals(driver.findElementById("teamName" + teamIndex).getText()));
         }
         return false;
     }
