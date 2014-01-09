@@ -677,9 +677,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
+        sleep(10000);
 		driver.findElementById("expandAllVulns").click();
-		sleep(4000);
-//		waitForElement(driver.findElementById("vulnName1"));
+		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
 	}
 
