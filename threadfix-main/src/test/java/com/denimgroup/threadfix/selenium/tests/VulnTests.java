@@ -83,7 +83,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
-//	@Ignore
+
 	@Test
 	public void mergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -464,6 +464,15 @@ public class VulnTests extends BaseTest {
 			default:
 				return false;
 		}
+
+        System.out.println("defect tracker app name: " + defectTrackerAppName);
+        System.out.println("defect Tracker URL: " + defectTrackerURL);
+        System.out.println("Username: " + userName);
+        System.out.println("password: " + password);
+        System.out.println("project name: " + projectName);
+        System.out.println("white hat appName: " + whiteHatAppName);
+        System.out.println( "defect tracker type: " + dtType);
+
 
 		//add team
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
