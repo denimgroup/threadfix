@@ -12,7 +12,6 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import sun.util.logging.resources.logging;
 
 public class VulnTests extends BaseTest {
 	public VulnTests(String browser) {
@@ -24,7 +23,7 @@ public class VulnTests extends BaseTest {
 	private static LoginPage loginPage;
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
-	private String dtName = getRandomString(8);
+	private String defectTrackerName = getRandomString(8);
 	
 	private final static int JIRA = 0;
 	private final static int BUG = 1;
@@ -110,6 +109,7 @@ public class VulnTests extends BaseTest {
         ad.logout();
 		destroy();
 	}
+    @Ignore
 	@Test
 	public void mergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
@@ -432,34 +432,34 @@ public class VulnTests extends BaseTest {
 	}
 	
 	private boolean build(int dtType){
-		String dt = "";
-		String dturl = "";
-		String uName = "";
-		String pWord = "";
-		String pName = "";
-		String rtApp = "Demo Site BE";
-		String whKey = System.getProperty("WHITEHAT_KEY");
+		String defectTrackerAppName = "";
+		String defectTrackerURL = "";
+		String userName = "";
+		String password = "";
+		String projectName = "";
+		String whiteHatAppName = "Demo Site BE";
+		String whiteHatKey = System.getProperty("WHITEHAT_KEY");
 		switch(dtType){
 			case JIRA:
-				dt = "Jira";
-				dturl = JIRA_URL;
-				uName = JIRA_USERNAME;
-				pWord = JIRA_PASSWORD;
-				pName = JIRAPROJECTNAME;
+				defectTrackerAppName = "Jira";
+				defectTrackerURL = JIRA_URL;
+				userName = JIRA_USERNAME;
+				password = JIRA_PASSWORD;
+				projectName = JIRAPROJECTNAME;
 				break;
 			case BUG:
-				dt = "Bugzilla";
-				dturl = BUGZILLA_URL;
-				uName = BUGZILLA_USERNAME;
-				pWord = BUGZILLA_PASSWORD;
-				pName = BUGZILLAPROJECTNAME;
+				defectTrackerAppName = "Bugzilla";
+				defectTrackerURL = BUGZILLA_URL;
+				userName = BUGZILLA_USERNAME;
+				password = BUGZILLA_PASSWORD;
+				projectName = BUGZILLAPROJECTNAME;
 				break;
 			case TFS:
-				dt = "Microsoft TFS";
-				dturl = TFS_URL;
-				uName = TFS_USERNAME;
-				pWord = TFS_PASSWORD;
-				pName = TFS_PROJECTNAME;
+				defectTrackerAppName = "Microsoft TFS";
+				defectTrackerURL = TFS_URL;
+				userName = TFS_USERNAME;
+				password = TFS_PASSWORD;
+				projectName = TFS_PROJECTNAME;
 				break;
 			default:
 				return false;
@@ -482,29 +482,29 @@ public class VulnTests extends BaseTest {
 		//add defect Tracker
 		DefectTrackerIndexPage defectTrackerIndexPage = teamIndexPage.clickDefectTrackersLink()
 																	.clickAddDefectTrackerButton()
-																	.enterName(null, dtName)
-																	.enterType(null, dt)
-																	.enterURL(null, dturl)
+																	.enterName(null, defectTrackerName)
+																	.enterType(null, defectTrackerAppName)
+																	.enterURL(null, defectTrackerURL)
 																	.clickSaveNewDefectTracker();
 
 		//attach defect Tracker
 		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 																			.expandTeamRowByIndex(teamName)
 																			.clickViewAppLink(appName, teamName)
-																			.addDefectTracker(dtName, uName, pWord, pName);
+																			.addDefectTracker(defectTrackerName, userName, password, projectName);
 		//import scan
 		applicationDetailPage.clickRemoteProvidersLink()
                             .clickRemoteProvidersLink()
                             .clickRemoteProvidersLink()
                             .clickRemoteProvidersLink()
 							.clickConfigureWhiteHat()
-							.setWhiteHatAPI(whKey)
+							.setWhiteHatAPI(whiteHatKey)
 							.saveWhiteHat()
-							.clickEditMapping(rtApp)
-							.setTeamMapping(rtApp, teamName)
-							.setAppMapping(rtApp, appName)
-							.clickSaveMapping(rtApp)
-							.clickImportScan(rtApp)
+							.clickEditMapping(whiteHatAppName)
+							.setTeamMapping(whiteHatAppName, teamName)
+							.setAppMapping(whiteHatAppName, appName)
+							.clickSaveMapping(whiteHatAppName)
+							.clickImportScan(whiteHatAppName)
 							.clickOrganizationHeaderLink()
 							.logout();
 
@@ -521,7 +521,7 @@ public class VulnTests extends BaseTest {
 				.clickRemoteProvidersLink()
 				.clickRemoveWhiteHatConfig()
 				.clickDefectTrackersLink()
-				.clickDeleteButton(dtName)
+				.clickDeleteButton(defectTrackerName)
                 .clickOrganizationHeaderLink()
                 .logout();
 	}

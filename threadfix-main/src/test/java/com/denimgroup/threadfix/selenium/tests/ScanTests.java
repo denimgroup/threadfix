@@ -138,7 +138,7 @@ public class ScanTests extends BaseTest {
 								.expandTeamRowByIndex(teamName)
 								.addNewApplication(teamName, appName, "http://" + appName, "Low")
 								.saveApplication(teamName);
-		
+
 			teamIndexPage.populateAppList(teamName);
 			
 			applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);

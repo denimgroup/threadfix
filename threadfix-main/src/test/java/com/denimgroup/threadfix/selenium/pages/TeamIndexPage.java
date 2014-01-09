@@ -189,7 +189,7 @@ public class TeamIndexPage extends BasePage {
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
         populateAppList(teamIndex);
         apps.get(getAppIndex(appName)).click();
-        sleep(2000);
+        waitForElement(driver.findElementById("actionButton1"));
         return new ApplicationDetailPage(driver);
     }
 
