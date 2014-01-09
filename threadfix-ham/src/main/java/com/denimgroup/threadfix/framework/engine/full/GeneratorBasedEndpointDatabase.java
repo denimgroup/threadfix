@@ -165,8 +165,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             }
         }
 
-        if (resultingSet.isEmpty() && query.getCodePoints() != null) {
-            resultingSet = getFromCodePoints(query.getCodePoints());
+        List<CodePoint> codePoints = query.getCodePoints();
+        if (resultingSet.isEmpty() && codePoints != null) {
+            resultingSet = getFromCodePoints(codePoints);
         }
 
 		return resultingSet;
@@ -177,12 +178,16 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         Set<Endpoint> results = new HashSet<>();
 
         top: for (CodePoint codePoint : codePoints) {
-            if (codePoint != null && codePoint.getSourceFileName() != null) {
+            if (codePoint != null) {
                 String sourceFileKey = null;
 
-                for (String key : staticMap.keySet()) {
-                    if (key.endsWith(codePoint.getSourceFileName())) {
-                        sourceFileKey = key;
+                String sourceFileName = codePoint.getSourceFileName();
+
+                if (sourceFileName != null) {
+                    for (String key : staticMap.keySet()) {
+                        if (key.endsWith(sourceFileName)) {
+                            sourceFileKey = key;
+                        }
                     }
                 }
 

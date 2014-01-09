@@ -23,11 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.filefilter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
+import java.io.*;
 import java.util.Set;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -55,7 +51,7 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 		boolean hasArroba = false;
 		
 		if (file != null && file.exists() && file.isFile() && file.getName().endsWith(".java")) {
-			try (Reader reader = new FileReader(file)) {
+			try (Reader reader = new InputStreamReader(new FileInputStream(file),"UTF-8")) {
 			
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
 				tokenizer.slashSlashComments(true);

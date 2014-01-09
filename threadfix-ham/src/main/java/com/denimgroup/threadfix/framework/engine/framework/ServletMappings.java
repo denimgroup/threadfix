@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.engine.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
@@ -51,6 +52,9 @@ public class ServletMappings {
 	
 	@NotNull
     private final ProjectDirectory projectDirectory;
+
+    @NotNull
+    private final Map<String, String> contextParams;
 	
 	@NotNull
     private UrlPatternMapping defaultServlet = new UrlPatternMapping(DEFAULT_SERVLET,"/");
@@ -64,10 +68,12 @@ public class ServletMappings {
 	
 	public ServletMappings(@NotNull List<UrlPatternMapping> servletMappings,
                            @NotNull List<ClassMapping> servlets,
-                           @NotNull ProjectDirectory projectDirectory) {
+                           @NotNull ProjectDirectory projectDirectory,
+                           @NotNull Map<String, String> contextParams) {
 		this.allServletMappings = servletMappings;
 		this.servlets = servlets;
 		this.projectDirectory = projectDirectory;
+        this.contextParams = contextParams;
 		
 		sortMappings();
 	}
@@ -169,7 +175,7 @@ public class ServletMappings {
         log.info("About to guess application type from web.xml.");
 
         for (ClassMapping mapping : servlets) {
-            if (SpringServletConfigurationChecker.checkServletConfig(projectDirectory, mapping)) {
+            if (SpringServletConfigurationChecker.checkServletConfig(projectDirectory, mapping, contextParams)) {
                 frameworkType = FrameworkType.SPRING_MVC;
             }
         }

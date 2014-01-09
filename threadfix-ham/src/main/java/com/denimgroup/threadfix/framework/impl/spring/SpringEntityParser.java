@@ -53,8 +53,8 @@ public class SpringEntityParser implements EventBasedTokenizer {
     private State state = State.START;
 
     @Override
-    public boolean done() {
-        return false;
+    public boolean shouldContinue() {
+        return true;
     }
 
     @Override

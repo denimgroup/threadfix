@@ -80,11 +80,11 @@ class JSPEndpoint extends AbstractEndpoint {
 			@NotNull Map<Integer, List<String>> parameterMap) {
 		Integer returnValue = Integer.MAX_VALUE;
 		
-        for (Integer integer : parameterMap.keySet()) {
-            if (integer < returnValue &&
-                    parameterMap.get(integer) != null &&
-                    parameterMap.get(integer).contains(parameterName)) {
-                returnValue = integer;
+        for (Map.Entry<Integer, List<String>> entry : parameterMap.entrySet()) {
+            if (entry.getKey() < returnValue &&
+                    entry.getValue() != null &&
+                    entry.getValue().contains(parameterName)) {
+                returnValue = entry.getKey();
             }
         }
 
