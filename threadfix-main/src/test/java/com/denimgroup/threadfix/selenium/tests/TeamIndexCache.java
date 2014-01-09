@@ -44,7 +44,7 @@ public class TeamIndexCache {
     }
 
     public void addTeamWithName(String teamName) {
-        list.add(teamName);
+        list.add(teamName.trim());
         if (CASE_SENSITIVE != null) {
             Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
         } else {
@@ -53,28 +53,21 @@ public class TeamIndexCache {
     }
 
     public void deleteTeamWithName(String teamName) {
-        list.remove(teamName);
+        list.remove(teamName.trim());
     }
 
     public int getSize() {
         return list.size();
     }
 
-    public String getElement(int index){
-        if (index > 0) {
-            return list.get(index - 1);
-        }
-        return "";
-    }
-
-    public boolean isPresent(String teamName){
-        return list.contains(teamName);
-    }
-
     public Integer getIndex(String teamName) {
         assertTrue(list != null);
-        System.out.println("\nLooking for: " + teamName + " in cache.\n");
-        return (Collections.binarySearch(list, teamName) + 1);
+        int index = Collections.binarySearch(list, teamName.trim());
+        if(index < 0) {
+            System.out.println(teamName + " not found in cache. Returned Value: " + index);
+            this.printList();
+        }
+        return (Collections.binarySearch(list, teamName.trim()) + 1);
     }
 
     public void printList(){

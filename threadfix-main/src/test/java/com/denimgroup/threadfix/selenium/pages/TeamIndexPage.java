@@ -74,6 +74,7 @@ public class TeamIndexPage extends BasePage {
         return 0;
     }
 
+    @Deprecated
     public Map<String, Integer> getTeamToIndexMap() {
         System.out.println("Map!");
         Map<String, Integer> teamIndexMap = new HashMap<>();
@@ -154,8 +155,8 @@ public class TeamIndexPage extends BasePage {
 
     @Deprecated
     public void populateAppList(String teamName) {
-        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
-        populateAppList(teamIndexMap.get(teamName));
+        TeamIndexCache cache = TeamIndexCache.getCache();
+        populateAppList(cache.getIndex(teamName));
     }
 
     public void populateAppList(Integer index){
@@ -173,8 +174,8 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamAddedToTable(String teamName) {
-        Map<String, Integer> teamIndexMap = getTeamToIndexMap();
-        return teamAddedToTable(teamIndexMap.get(teamName));
+        TeamIndexCache cache = TeamIndexCache.getCache();
+        return teamAddedToTable(cache.getIndex(teamName));
     }
 
     public boolean teamAddedToTable(Integer index) {
@@ -192,28 +193,10 @@ public class TeamIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    @Deprecated
-    public ApplicationDetailPage clickViewAppLink(String appName, Integer index) {
-        populateAppList(index);
-        apps.get(getAppIndex(appName)).click();
-        sleep(2000);
-        return new ApplicationDetailPage(driver);
-    }
-
-
     public TeamIndexPage clickAddNewApplication(String teamName) {
         appModalId = getAppModalId(teamName);
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
         driver.findElementById("addApplicationModalButton" + teamIndex).click();
-        waitForElement(driver.findElementById(appModalId));
-        return setPage();
-    }
-
-    @Deprecated
-    public TeamIndexPage clickAddNewApplication(Integer index) {
-        appModalId = getAppModalId(index);
-        driver.findElementById("addApplicationModalButton" + index).click();
-        //sleep(5000);
         waitForElement(driver.findElementById(appModalId));
         return setPage();
     }
@@ -225,14 +208,6 @@ public class TeamIndexPage extends BasePage {
         return appModalId;
     }
 
-    @Deprecated
-    public String getAppModalId(Integer index) {
-        String appModalIdHref = driver.findElementById("addApplicationModalButton" + index).getAttribute("href");
-        //String appModalId = appModalIdHref.substring(36);
-        String appModalId = appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
-        return appModalId;
-    }
-
     public String getAppModalIdNumber(Integer index) {
         String appModalIdHref = driver.findElementById("addApplicationModalButton" + index).getAttribute("href");
         //String appModalIdNumber = appModalIdHref.substring(46);
@@ -240,24 +215,10 @@ public class TeamIndexPage extends BasePage {
         return appModalIdNumber;
     }
 
-    @Deprecated
-    public  TeamIndexPage setApplicationName(String appName, Integer index) {
-        driver.findElementById("nameInput" + getAppModalIdNumber(index)).clear();
-        driver.findElementById("nameInput" + getAppModalIdNumber(index)).sendKeys(appName);
-        return setPage();
-    }
-
     public TeamIndexPage setApplicationName(String appName, String teamName) {
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
         driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).clear();
         driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).sendKeys(appName);
-        return setPage();
-    }
-
-    @Deprecated
-    public TeamIndexPage setApplicationUrl(String url, Integer index) {
-        driver.findElementById("urlInput" + getAppModalIdNumber(index)).clear();
-        driver.findElementById("urlInput" + getAppModalIdNumber(index)).sendKeys(url);
         return setPage();
     }
 
@@ -268,27 +229,12 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    @Deprecated
-    public TeamIndexPage setApplicationCritic(String critic, Integer index) {
-        new Select(driver.findElementById("criticalityId" + getAppModalIdNumber(index)))
-                .selectByVisibleText(critic);
-        return setPage();
-    }
-
     public TeamIndexPage setApplicationCritic(String critic, String teamName) {
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
         new Select(driver.findElementById("criticalityId" + getAppModalIdNumber(teamIndex)))
                 .selectByVisibleText(critic);
         return setPage();
     }
-
-    @Deprecated
-    public TeamIndexPage saveApplication(Integer index) {
-        driver.findElementById("submitAppModal" + getAppModalIdNumber(index)).click();
-        sleep(6000);
-        return setPage();
-    }
-
 
     public TeamIndexPage saveApplication(String teamName) {
         int teamIndex = TeamIndexCache.getCache().getIndex(teamName);
@@ -317,15 +263,6 @@ public class TeamIndexPage extends BasePage {
         sleep(1000);
         return new TeamIndexPage(driver);
     }
-    @Deprecated
-    public TeamIndexPage addNewApplication(Integer index, String appName, String url, String critic) {
-        clickAddNewApplication(index);
-        setApplicationName(appName, index);
-        setApplicationUrl(url, index);
-        setApplicationCritic(critic, index);
-        return setPage();
-    }
-
 
     public TeamIndexPage addNewApplication(String teamName, String appName,String url, String critic) {
         clickAddNewApplication(teamName);
@@ -333,7 +270,6 @@ public class TeamIndexPage extends BasePage {
         setApplicationUrl(url, teamName);
         setApplicationCritic(critic, teamName);
         return setPage();
-
     }
 
     public String getNameErrorMessage() {
@@ -443,13 +379,6 @@ public class TeamIndexPage extends BasePage {
                 .getText()
                 .contains(
                         "Team " + teamName + " has been created successfully.");
-    }
-
-    @Deprecated
-    public TeamDetailPage clickViewTeamLink(Integer index) {
-        driver.findElementById("organizationLink" + index).click();
-        sleep(4000);
-        return new TeamDetailPage(driver);
     }
 
     public TeamDetailPage clickViewTeamLink(String teamName) {

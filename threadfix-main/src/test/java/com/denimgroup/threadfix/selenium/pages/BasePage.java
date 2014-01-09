@@ -76,7 +76,6 @@ public abstract class BasePage {
 	}
 
     public List<String> getList() {
-        System.out.println("List!");
         List<String> teamIndexMap = new ArrayList<>();
 
         for (int j = 1; j <= getNumTeamRows(); j++) {
