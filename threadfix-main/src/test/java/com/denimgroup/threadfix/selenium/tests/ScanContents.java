@@ -464,14 +464,13 @@ public class ScanContents extends BaseTest{
 	}
 	
 	public static String getScanFilePath(String category, String scannerName, String fileName) {
-		String string = "SupportingFiles/" + category  + "/" + scannerName + "/" + fileName;
+        String pathSeparator = System.getProperty("file.separator");
+		String string = "SupportingFiles"+ pathSeparator + category  + pathSeparator + scannerName +
+                pathSeparator + fileName;
 		String urlFromCommandLine = System.getProperty("scanFileBaseLocation");
 		if (urlFromCommandLine != null) {
 			return urlFromCommandLine + string;
 		}
-        /*System.out.println("FILE:");
-        System.out.println(string);
-        System.out.println("END");*/
 		return ScanTests.class.getClassLoader().getResource(string).getPath();
 	}
 	

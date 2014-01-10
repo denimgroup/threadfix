@@ -491,21 +491,9 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage submitScan(){
-//		int scanCnt = scanCount();
-//		int timer = 0;
 		driver.findElementById("submitScanModal"+modalNumber()).click();
-//		waitForInvisibleElement(driver.findElementById("scanForm"+modalNumber()));
 		sleep(5000);
 		waitForScanUpload(0);
-//		waitForElement(driver.findElementById("scanTabLink"));
-//		while(scanCnt != scanCnt+1){
-//			scanCnt = scanCount();
-//			sleep(100);
-//			if(timer>=100){
-//				break;
-//			}
-//			timer++;
-//		}
         sleep(7000);
 		return new ApplicationDetailPage(driver);
 	}
