@@ -67,7 +67,8 @@
                 <enabled>true</enabled>
                 <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
-            <url>file://${project.basedir}${file.separator}lib</url>
+            <!-- this will be resolved by the internal poms so they need to look up one level.-->
+            <url>file://${project.basedir}${file.separator}..${file.separator}lib</url>
         </repository>
         <repository>
             <id>jboss-public-repository-group</id>
