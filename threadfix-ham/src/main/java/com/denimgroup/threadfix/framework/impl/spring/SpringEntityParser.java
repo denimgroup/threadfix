@@ -92,7 +92,8 @@ public class SpringEntityParser implements EventBasedTokenizer {
 			}
 			break;
 		case PARAM_TYPE:
-			if (currentParamType != null && stringValue != null && stringValue.startsWith("get")) {
+			if (currentParamType != null && stringValue != null && stringValue.startsWith("get") &&
+                    stringValue.length() > 3) { // this is to avoid errors with methods named "get"
 				fieldMappings.add(new BeanField(currentParamType, stringValue));
 			}
 			state = State.START;

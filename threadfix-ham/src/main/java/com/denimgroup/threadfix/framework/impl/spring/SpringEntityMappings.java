@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +45,10 @@ class SpringEntityMappings {
         fieldMap = new HashMap<>();
 
 		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
+
+            // TODO make more efficient--we're making a pass over all Java files
 			modelFiles = FileUtils.listFiles(rootDirectory,
-					SpringEntityFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
 		
             generateMap();
 		} else {
