@@ -98,23 +98,13 @@ public class SpringControllerEndpointParserTests {
 
     @Test
     public void testMathController() {
-        File mathController = ResourceManager.getSpringFile("MathController.java");
-
-        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(mathController,
-                new SpringEntityMappings(
-                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
-
+        Set<SpringControllerEndpoint> endpoints = parseEndpoints("MathController.java", "spring/mvc-calculator");
         assertTrue("Size was " + endpoints.size() + " instead of 1.", endpoints.size() == 1);
     }
 
     @Test
     public void testCityController() {
-        File cityController = ResourceManager.getSpringFile("CityController.java");
-
-        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(cityController,
-                new SpringEntityMappings(
-                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
-
+        Set<SpringControllerEndpoint> endpoints = parseEndpoints("CityController.java", "spring/mvc-calculator");
         assertTrue("Size was " + endpoints.size() + " instead of 6.", endpoints.size() == 6);
     }
 
@@ -127,14 +117,16 @@ public class SpringControllerEndpointParserTests {
     }
 
     @Test
+    public void testModelBindingRecognition() {
+        for (Endpoint endpoint : parseEndpoints("ProjectsController.java", "spring/ticketline-spring")) {
+            assertTrue("Couldn't find name in " + endpoint.getUrlPath(), endpoint.getParameters().contains("name"));
+            assertTrue("Couldn't find description in " + endpoint.getUrlPath(), endpoint.getParameters().contains("description"));
+        }
+    }
+
+    @Test
     public void testRequestParamParsing() {
-        File cityController = ResourceManager.getSpringFile("ParamsController.java");
-
-        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(cityController,
-                new SpringEntityMappings(
-                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
-
-        for (Endpoint endpoint : endpoints) {
+        for (Endpoint endpoint : parseEndpoints("ParamsController.java", "spring/mvc-calculator")) {
             assertTrue("Found no parameters for method " + endpoint.getUrlPath(), endpoint.getParameters().size() > 0);
             assertTrue("Endpoint param was " + endpoint.getParameters().iterator().next() +
                     " instead of integer for method " + endpoint.getUrlPath(),
@@ -151,6 +143,11 @@ public class SpringControllerEndpointParserTests {
                 System.out.println(endpoint.getCSVLine());
             }
         }
+    }
+
+    Set<SpringControllerEndpoint> parseEndpoints(String controllerName, String rootFolderName) {
+        return SpringControllerEndpointParser.parse(ResourceManager.getSpringFile(controllerName),
+                new SpringEntityMappings(new File(TestConstants.getFolderName(rootFolderName))));
     }
 
 

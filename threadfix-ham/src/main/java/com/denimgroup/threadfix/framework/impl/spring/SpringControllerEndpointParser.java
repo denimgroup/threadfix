@@ -42,11 +42,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	@NotNull
     private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
 	private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
-	private boolean inClass = false, afterOpenParen = false;;
+	private boolean inClass = false, afterOpenParen = false;
 
 	@Nullable
     private String classEndpoint = null, currentMapping = null, lastValue = null,
-            secondToLastValue = null;
+            secondToLastValue = null, lastParam, lastParamType;
 
     @NotNull
     private final String rootFilePath;
@@ -137,8 +137,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 				if (type == ARROBA) {
 					setState(SignatureState.ARROBA);
 				} else if (stringValue != null && stringValue.equals(BINDING_RESULT) &&
-                        secondToLastValue != null && lastValue != null) {
-					currentModelObject = new BeanField(secondToLastValue, lastValue); // should be type and variable name
+                        lastParamType != null && lastParam != null) {
+					currentModelObject = new BeanField(lastParamType, lastParam); // should be type and variable name
 				}
 				break;
 			case ARROBA:
@@ -180,7 +180,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 }
                 break;
             case GET_VARIABLE_NAME:
-                if (openParenCount == -1) {
+                if (openParenCount == -1) { // this means we're not in an annotation
                     if (type == COMMA || type == CLOSE_PAREN) {
                         currentParameters.add(lastValue);
                         setState(SignatureState.START);
@@ -191,6 +191,13 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 break;
 
 		}
+
+        // TODO tighten this up a bit
+        if (openParenCount == -1 && type == COMMA) {
+            lastParam = lastValue;
+            lastParamType = secondToLastValue;
+        }
+
 		if (stringValue != null) {
 			secondToLastValue = lastValue;
 			lastValue = stringValue;
