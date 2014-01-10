@@ -42,7 +42,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	@NotNull
     private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
 	private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
-	private boolean inClass = false;
+	private boolean inClass = false, afterOpenParen = false;;
+
 	@Nullable
     private String classEndpoint = null, currentMapping = null, lastValue = null,
             secondToLastValue = null;
@@ -84,7 +85,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	}
 	
 	private enum SignatureState {
-		START, ARROBA, REQUEST_PARAM
+		START, ARROBA, REQUEST_PARAM, GET_ANNOTATION_VALUE, ANNOTATION_PARAMS, VALUE, GET_VARIABLE_NAME
 	}
 	
 	@NotNull
@@ -107,17 +108,17 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @Override
 	public void processToken(int type, int lineNumber, String stringValue) {
-        if (type == CLOSE_PAREN) {
-            openParenCount++;
-        } else if (type == OPEN_PAREN) {
-            openParenCount--;
-        }
-
 		switch (phase) {
 			case ANNOTATION: parseAnnotation(type, lineNumber, stringValue); break;
 			case SIGNATURE:  parseSignature(type, stringValue);              break;
 			case METHOD:     parseMethod(type, lineNumber);                  break;
 		}
+
+        if (type == CLOSE_PAREN) {
+            openParenCount++;
+        } else if (type == OPEN_PAREN) {
+            openParenCount--;
+        }
 	}
 	
 	private void setState(SignatureState state) {
@@ -149,21 +150,46 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 				}
 				break;
 			case REQUEST_PARAM:
-				if (type == DOUBLE_QUOTE) {
-					currentParameters.add(stringValue);
-				} else if (type != COMMA && type != CLOSE_PAREN) {
-					lastValue = stringValue;
-				} else if (type == COMMA) {
-					currentParameters.add(lastValue);
-					lastValue = null;
-					setState(SignatureState.START);
-				} else { // type must be CLOSE_PAREN
-					if (lastValue != null) {
-						currentParameters.add(lastValue);
-						lastValue = null;
-					}
-				}
+				if (type == OPEN_PAREN) {
+                    setState(SignatureState.GET_ANNOTATION_VALUE);
+                } else {
+                    setState(SignatureState.GET_VARIABLE_NAME);
+                }
 				break;
+            case GET_ANNOTATION_VALUE:
+                if (type == DOUBLE_QUOTE) {
+                    currentParameters.add(stringValue);
+                    setState(SignatureState.START);
+                } else {
+                    setState(SignatureState.ANNOTATION_PARAMS);
+                }
+                break;
+            case ANNOTATION_PARAMS:
+                if (stringValue != null && stringValue.equals("value")) {
+                    setState(SignatureState.VALUE);
+                } else if (type == CLOSE_PAREN) {
+                    setState(SignatureState.GET_VARIABLE_NAME);
+                }
+                break;
+            case VALUE:
+                if (type == DOUBLE_QUOTE) {
+                    currentParameters.add(stringValue);
+                    setState(SignatureState.START);
+                } else if (type != EQUALS) {
+                    setState(SignatureState.GET_VARIABLE_NAME);
+                }
+                break;
+            case GET_VARIABLE_NAME:
+                if (openParenCount == -1) {
+                    if (type == COMMA || type == CLOSE_PAREN) {
+                        currentParameters.add(lastValue);
+                        setState(SignatureState.START);
+                    } else {
+                        lastValue = stringValue;
+                    }
+                }
+                break;
+
 		}
 		if (stringValue != null) {
 			secondToLastValue = lastValue;
@@ -209,7 +235,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 } else if (stringValue != null && stringValue.equals(CLASS)) {
                     inClass = true;
                     annotationState = AnnotationState.START;
-				} else if (type == DOUBLE_QUOTE) {
+				} else if (afterOpenParen && type == DOUBLE_QUOTE) {
 					// If it immediately starts with a quoted value, use it
 					if (inClass) {
 						currentMapping = stringValue;
@@ -222,6 +248,9 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 				} else if (type == CLOSE_PAREN){
 					annotationState = AnnotationState.ANNOTATION_END;
 				}
+
+                afterOpenParen = type == OPEN_PAREN;
+
 				break;
 			case VALUE:
 				if (stringValue != null) {
@@ -271,11 +300,23 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 	private void addEndpoint(int endLineNumber) {
 		if (classEndpoint != null) {
 			if (currentMapping != null) {
-				currentMapping = classEndpoint + currentMapping;
+                if (classEndpoint.endsWith("/") || currentMapping.startsWith("/")) {
+                    currentMapping = classEndpoint + currentMapping;
+                } else {
+                    currentMapping = classEndpoint + "/" + currentMapping;
+                }
 			} else {
 				currentMapping = classEndpoint;
 			}
 		}
+
+        while (currentMapping != null && currentMapping.contains("//")) {
+            currentMapping = currentMapping.replace("//","/");
+        }
+
+        if (currentMapping != null && currentMapping.indexOf('/') != 0) {
+            currentMapping = "/" + currentMapping;
+        }
 		
 		// It's ok to add a default method here because we must be past the class-level annotation
 		if (classMethods.isEmpty()) {

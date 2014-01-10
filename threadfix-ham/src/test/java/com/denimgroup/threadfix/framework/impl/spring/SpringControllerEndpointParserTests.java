@@ -126,5 +126,32 @@ public class SpringControllerEndpointParserTests {
         }
     }
 
+    @Test
+    public void testRequestParamParsing() {
+        File cityController = ResourceManager.getSpringFile("ParamsController.java");
+
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(cityController,
+                new SpringEntityMappings(
+                        new File(TestConstants.getFolderName("spring/mvc-calculator"))));
+
+        for (Endpoint endpoint : endpoints) {
+            assertTrue("Found no parameters for method " + endpoint.getUrlPath(), endpoint.getParameters().size() > 0);
+            assertTrue("Endpoint param was " + endpoint.getParameters().iterator().next() +
+                    " instead of integer for method " + endpoint.getUrlPath(),
+                    endpoint.getParameters().iterator().next().equals("integer"));
+        }
+    }
+
+    @Test
+    public void writeCsvFile() {
+        for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
+            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName("spring/" + app)));
+            for (Endpoint endpoint : mappings.generateEndpoints()) {
+                System.out.print(app + ",");
+                System.out.println(endpoint.getCSVLine());
+            }
+        }
+    }
+
 
 }
