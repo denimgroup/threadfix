@@ -61,7 +61,7 @@ public class ParamsController {
     }
 
     @RequestMapping(value = "/10", method = RequestMethod.GET)
-    public String home10(@RequestParam(required = false, defaultValue="test2", value="integer") Integer integer, Model model) {
+    public String home10(@RequestParam(required = false, defaultValue="test2", value = "integer") Integer integer547, Model model) {
         SecurityContextHolder.getContext().getAuthentication().getName();
         return "config/index";
     }
@@ -82,5 +82,13 @@ public class ParamsController {
     public String home13(@RequestParam @MaskFormat("###-####-###") String integer, Model model) {
         SecurityContextHolder.getContext().getAuthentication().getName();
         return "config/index";
+    }
+
+    @RequestMapping(value = "/14", method = RequestMethod.GET)
+    public String twitterCallback(
+            @RequestParam(value = "integer", required = false) String oauthToken,
+            Model model) throws JsonParseException, JsonMappingException, IOException {
+
+        return "index";
     }
 }

@@ -39,62 +39,62 @@ import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 
 public class SpringControllerEndpointParserTests {
-	
-	@NotNull
-    String[][] expected = {
-			{"/owners/new", "GET",  "45", "49" },
-			{"/owners/new", "POST", "52", "60" },
-			{"/owners/find", "GET", "63", "66" },
-			{"/owners",      "GET", "69", "92" },
-			{"/owners/{id}/edit", "GET", "95", "99"},
-			{"/owners/{id}/edit", "PUT", "102", "110"},
-			{"/owners/{id}", "POST", "119", "123"}, // with no explicit method, it refers to the class annotation
-			{"/owners/multiple/methods", "GET", "126", "130"},
-			{"/owners/multiple/methods", "POST", "126", "130"},
-	};
 
-	@Test
-	public void testClassRequestParamAnnotation() {
-		SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
-		
-		File file = ResourceManager.getSpringFile(TestConstants.SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING);
-		
-		Set<? extends Endpoint> endpoints =
-				SpringControllerEndpointParser.parse(file, mappings);
-		
-		assertTrue("File didn't exist at " + file.getAbsolutePath(), file.exists());
-		
-		for (String[] test : expected) {
-			boolean matches = false;
-			
-			int start = Integer.valueOf(test[2]);
-			int end   = Integer.valueOf(test[3]);
-			
-			for (Endpoint endpoint : endpoints) {
-				if (endpoint.getUrlPath().equals(test[0])) {
-					if (endpoint.getHttpMethods().contains(test[1])) {
+    @NotNull
+    String[][] expected = {
+            {"/owners/new", "GET",  "45", "49" },
+            {"/owners/new", "POST", "52", "60" },
+            {"/owners/find", "GET", "63", "66" },
+            {"/owners",      "GET", "69", "92" },
+            {"/owners/{id}/edit", "GET", "95", "99"},
+            {"/owners/{id}/edit", "PUT", "102", "110"},
+            {"/owners/{id}", "POST", "119", "123"}, // with no explicit method, it refers to the class annotation
+            {"/owners/multiple/methods", "GET", "126", "130"},
+            {"/owners/multiple/methods", "POST", "126", "130"},
+    };
+
+    @Test
+    public void testClassRequestParamAnnotation() {
+        SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
+
+        File file = ResourceManager.getSpringFile(TestConstants.SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING);
+
+        Set<? extends Endpoint> endpoints =
+                SpringControllerEndpointParser.parse(file, mappings);
+
+        assertTrue("File didn't exist at " + file.getAbsolutePath(), file.exists());
+
+        for (String[] test : expected) {
+            boolean matches = false;
+
+            int start = Integer.valueOf(test[2]);
+            int end   = Integer.valueOf(test[3]);
+
+            for (Endpoint endpoint : endpoints) {
+                if (endpoint.getUrlPath().equals(test[0])) {
+                    if (endpoint.getHttpMethods().contains(test[1])) {
                         matches = true;
 
-						for (int i = start; i < end; i ++) {
-							if (!endpoint.matchesLineNumber(i)) {
+                        for (int i = start; i < end; i ++) {
+                            if (!endpoint.matchesLineNumber(i)) {
                                 System.out.println("Broke on " + i);
                                 matches = false;
                                 break;
-							}
-						}
+                            }
+                        }
 
                         if (!matches) {
-						    break;
+                            break;
                         }
-					}
-				}
-			}
-			
-			assertTrue(" Unable to match for " + test[0] + "," + test[1] + "," +
-							test[2] + "," + test[3], matches);
-			
-		}
-	}
+                    }
+                }
+            }
+
+            assertTrue(" Unable to match for " + test[0] + "," + test[1] + "," +
+                    test[2] + "," + test[3], matches);
+
+        }
+    }
 
     @Test
     public void testMathController() {
