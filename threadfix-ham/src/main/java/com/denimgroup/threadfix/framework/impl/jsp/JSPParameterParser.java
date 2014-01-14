@@ -62,7 +62,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	@Nullable
     private String varName = null;
 	
-	private JSPParameterParser() {}
+	JSPParameterParser() {}
 	
 	private enum State {
 		START, STRING, VAR_NAME, EQUALS, GET_PARAMETER, NO_VARIABLE, ADDED_TO_STRINGS_TABLE
@@ -80,7 +80,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	}
 	
 	@NotNull
-    private Map<Integer, List<String>> buildParametersMap() {
+    Map<Integer, List<String>> buildParametersMap() {
 		Map<Integer, List<String>> lineNumToParamMap = new HashMap<>();
 		
 		for (String key : parameterToLineNumbersMap.keySet()) {

@@ -24,15 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -142,4 +134,9 @@ public class SpringControllerMappings implements EndpointGenerator {
 		
 		return builder.toString();
 	}
+
+    @Override
+    public Iterator<Endpoint> iterator() {
+        return generateEndpoints().iterator();
+    }
 }

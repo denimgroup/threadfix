@@ -52,9 +52,9 @@ public class EventBasedTokenizerRunner {
 	 *  <p>return parser.results;
 	 * </code>
 	 * @param file
-	 * @param eventTokenizer
+	 * @param eventBasedTokenizers
 	 */
-	public static void run(@Nullable File file, @NotNull EventBasedTokenizer eventTokenizer) {
+	public static void run(@Nullable File file, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
 
 		if (file != null && file.exists() && file.isFile()) {
 			try (Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8")) {
@@ -64,9 +64,17 @@ public class EventBasedTokenizerRunner {
 				tokenizer.slashStarComments(true);
 				tokenizer.ordinaryChar('<');
 				tokenizer.wordChars(':', ':');
-				
-				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && eventTokenizer.shouldContinue()) {
-					eventTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+
+                // stop only if all of the tokenizers return false from shouldContinue();
+                boolean keepGoing = true;
+				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && keepGoing) {
+                    keepGoing = false;
+                    for (EventBasedTokenizer eventBasedTokenizer : eventBasedTokenizers) {
+                        eventBasedTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+                        if (!keepGoing) {
+                            keepGoing = eventBasedTokenizer.shouldContinue();
+                        }
+                    }
 				}
 				
 			} catch (FileNotFoundException e) {
