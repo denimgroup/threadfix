@@ -34,27 +34,38 @@ import java.util.*;
 
 class SpringEntityMappings {
 
+    // This should be done by the end of the constructor
 	@NotNull
-    private final Collection<File> modelFiles;
+    private final Collection<SpringEntityParser> entityParsers;
 	
 	@NotNull
-    private final Map<String, BeanFieldSet> fieldMap;
-	
+    private final Map<String, BeanFieldSet> fieldMap = new HashMap<>();
+
+    // This version will parse all the Java files in the directory.
 	@SuppressWarnings("unchecked")
 	public SpringEntityMappings(@NotNull File rootDirectory) {
-        fieldMap = new HashMap<>();
+
+        entityParsers = new ArrayList<>();
 
 		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 
-            // TODO make more efficient--we're making a pass over all Java files
-			modelFiles = FileUtils.listFiles(rootDirectory,
+			Collection<File> modelFiles = FileUtils.listFiles(rootDirectory,
                     new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+
+            for (File file: modelFiles) {
+                if (file != null && file.exists() && file.isFile()) {
+                    entityParsers.add(SpringEntityParser.parse(file));
+                }
+            }
 		
             generateMap();
-		} else {
-			modelFiles = Collections.emptyList();
 		}
 	}
+
+    public SpringEntityMappings(@NotNull Collection<SpringEntityParser> entityParsers) {
+        this.entityParsers = entityParsers;
+        generateMap();
+    }
 	
 	public BeanFieldSet getPossibleParametersForModelType(@NotNull BeanField beanField) {
 		return getPossibleParametersForModelType(beanField.getType());
@@ -188,20 +199,16 @@ class SpringEntityMappings {
 	}
 
 	private void addModelsToSuperClassAndFieldMaps(@NotNull Map<String, String> superClassMap) {
-		for (File file: modelFiles) {
-			if (file != null && file.exists() && file.isFile()) {
-				
-				SpringEntityParser entityParser = SpringEntityParser.parse(file);
-				
-				if (entityParser.getClassName() != null) {
-					
-					if (entityParser.getSuperClass() != null) {
-						superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
-					}
-					
-					fieldMap.put(entityParser.getClassName(), new BeanFieldSet(entityParser.getFieldMappings()));
-				}
-			}
+		for (SpringEntityParser entityParser : entityParsers) {
+
+            if (entityParser.getClassName() != null) {
+
+                if (entityParser.getSuperClass() != null) {
+                    superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
+                }
+
+                fieldMap.put(entityParser.getClassName(), new BeanFieldSet(entityParser.getFieldMappings()));
+            }
 		}
 	}
 	

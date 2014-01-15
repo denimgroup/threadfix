@@ -46,18 +46,35 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
+
+    @Nullable
+    private BeanField modelObject;
 	
-	public SpringControllerEndpoint(@NotNull String filePath, @NotNull String urlPath,
-            @NotNull Collection<String> methods, @NotNull Collection<String> parameters,
-			int startLineNumber, int endLineNumber) {
+	public SpringControllerEndpoint(@NotNull String filePath,
+                                    @NotNull String urlPath,
+            @NotNull Collection<String> methods,
+            @NotNull Collection<String> parameters,
+			int startLineNumber,
+            int endLineNumber,
+            @Nullable BeanField modelObject) {
+
 		this.rawFilePath     = filePath;
 		this.rawUrlPath      = urlPath;
 		this.startLineNumber = startLineNumber;
 		this.endLineNumber   = endLineNumber;
+
+        this.modelObject = modelObject;
 		
 		this.parameters = new HashSet<>(parameters);
 		this.methods    = getCleanedSet(methods);
 	}
+
+    void expandModelToParameters(@NotNull SpringEntityMappings entityMappings) {
+        if (modelObject != null) {
+            BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);
+            parameters.addAll(fields.getPossibleParameters());
+        }
+    }
 
     @NotNull
 	private Set<String> getCleanedSet(@NotNull Collection<String> methods) {

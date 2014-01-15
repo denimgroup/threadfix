@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.cli.endpoints;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +28,15 @@ public class EndpointMain {
 	}
 	
 	private static void listEndpoints(File rootFile) {
-		
-		EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
 
-		List<Endpoint> endpoints = database.generateEndpoints();
-		
+        List<Endpoint> endpoints = new ArrayList<>();
+
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
+
+        if (database != null) {
+            endpoints = database.generateEndpoints();
+        }
+
 		Collections.sort(endpoints);
 		
 		if (endpoints.isEmpty()) {

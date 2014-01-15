@@ -40,9 +40,10 @@ import java.util.TreeSet;
 class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @NotNull
-    private Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
+    Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
     private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
     private boolean inClass = false, afterOpenParen = false;
+    boolean hasControllerAnnotation = false;
 
     @Nullable
     private String classEndpoint = null, currentMapping = null, lastValue = null,
@@ -65,7 +66,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             PATH_VARIABLE = "PathVariable",
             REQUEST_MAPPING = "RequestMapping",
             CLASS = "class",
-            BINDING_RESULT = "BindingResult";
+            BINDING_RESULT = "BindingResult",
+            CONTROLLER = "Controller";
 
     @NotNull
     private Phase phase = Phase.ANNOTATION;
@@ -73,8 +75,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private AnnotationState annotationState = AnnotationState.START;
     private SignatureState signatureState = SignatureState.START;
 
-    @NotNull
-    private SpringEntityMappings entityMappings;
+    @Nullable
+    private SpringEntityMappings entityMappings = null;
 
     private enum Phase {
         ANNOTATION, SIGNATURE, METHOD
@@ -89,21 +91,30 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     }
 
     @NotNull
-    public static Set<SpringControllerEndpoint> parse(@NotNull File file, @NotNull SpringEntityMappings entityMappings) {
+    public static Set<SpringControllerEndpoint> parse(@NotNull File file, @Nullable SpringEntityMappings entityMappings) {
         SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
         EventBasedTokenizerRunner.run(file, parser);
         return parser.endpoints;
     }
 
+    SpringControllerEndpointParser(@NotNull String rootFilePath) {
+        this.rootFilePath = rootFilePath;
+    }
+
+    /**
+     * We figured it would be advantageous to
+     * @param rootFilePath
+     * @param entityMappings
+     */
     private SpringControllerEndpointParser(@NotNull String rootFilePath,
-                                           @NotNull SpringEntityMappings entityMappings) {
+                                           @Nullable SpringEntityMappings entityMappings) {
         this.rootFilePath = rootFilePath;
         this.entityMappings = entityMappings;
     }
 
     @Override
     public boolean shouldContinue() {
-        return true;
+        return !inClass || hasControllerAnnotation;
     }
 
     @Override
@@ -230,8 +241,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 }
                 break;
             case ARROBA:
-                if (stringValue != null && stringValue.equals(REQUEST_MAPPING)) {
+                if (REQUEST_MAPPING.equals(stringValue)) {
                     annotationState = AnnotationState.REQUEST_MAPPING;
+                } else if (CONTROLLER.equals(stringValue)) {
+                    hasControllerAnnotation = true;
+                    annotationState = AnnotationState.START;
                 } else {
                     annotationState = AnnotationState.START;
                 }
@@ -336,22 +350,25 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             methodMethods.addAll(classMethods);
         }
 
-        if (currentModelObject != null) {
+        SpringControllerEndpoint endpoint = new SpringControllerEndpoint(rootFilePath, currentMapping,
+                methodMethods,
+                currentParameters,
+                startLineNumber,
+                endLineNumber,
+                currentModelObject);
 
-            BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(currentModelObject);
-
-            currentParameters.addAll(fields.getPossibleParameters());
-            currentModelObject = null;
+        if (entityMappings != null) {
+            endpoint.expandModelToParameters(entityMappings);
         }
 
-        endpoints.add(new SpringControllerEndpoint(rootFilePath, currentMapping,
-                methodMethods, currentParameters,
-                startLineNumber, endLineNumber));
+        endpoints.add(endpoint);
+
         currentMapping = null;
         methodMethods = new ArrayList<>();
         startLineNumber = -1;
         curlyBraceCount = 0;
         currentParameters = new ArrayList<>();
+        currentModelObject = null;
     }
 
 }

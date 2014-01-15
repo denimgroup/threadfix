@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import java.io.File;
 import java.util.*;
 
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +39,7 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 public class SpringControllerMappings implements EndpointGenerator {
 	
 	@NotNull
-    private final Collection<File> controllerFiles;
+    private final Collection<File> javaFiles;
 	
 	@NotNull
     private final Map<String, Set<SpringControllerEndpoint>>
@@ -45,6 +47,9 @@ public class SpringControllerMappings implements EndpointGenerator {
 	
 	@NotNull
     private final File rootDirectory;
+
+    @NotNull
+    private List<SpringControllerEndpoint> endpointsList = new ArrayList<>();
 	
 	@SuppressWarnings("unchecked")
 	public SpringControllerMappings(@NotNull File rootDirectory) {
@@ -54,11 +59,11 @@ public class SpringControllerMappings implements EndpointGenerator {
         controllerToUrlsMap = new HashMap<>();
 
 		if (rootDirectory.exists()) {
-			controllerFiles = FileUtils.listFiles(rootDirectory,
-					SpringControllerFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+			javaFiles = FileUtils.listFiles(rootDirectory,
+                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
 		    generateMaps();
 		} else {
-			controllerFiles = Collections.emptyList();
+			javaFiles = Collections.emptyList();
 		}
 	}
 
@@ -81,33 +86,55 @@ public class SpringControllerMappings implements EndpointGenerator {
 	}
 	
 	private void generateMaps() {
-		SpringEntityMappings mappings = new SpringEntityMappings(rootDirectory);
-		
-		for (File file: controllerFiles) {
+        List<SpringEntityParser> springEntityParsers = new ArrayList<>();
+
+		for (File file: javaFiles) {
 			if (file != null && file.exists() && file.isFile() &&
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
-				
-				String fileNameWithoutRoot = FilePathUtils.getRelativePath(file, rootDirectory);
-				
-				if (fileNameWithoutRoot != null && fileNameWithoutRoot.indexOf("/") != 0) {
-					fileNameWithoutRoot = "/" + fileNameWithoutRoot;
-				}
-				
-				Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(file, mappings);
-				
-				for (SpringControllerEndpoint endpoint : endpoints) {
-					endpoint.setFileRoot(rootDirectory.getAbsolutePath());
-					String urlPath = endpoint.getCleanedUrlPath();
-					if (!urlToControllerMethodsMap.containsKey(urlPath)) {
-						urlToControllerMethodsMap.put(urlPath, new TreeSet<SpringControllerEndpoint>());
-					}
-					urlToControllerMethodsMap.get(endpoint.getCleanedUrlPath()).add(endpoint);
-				}
 
-				controllerToUrlsMap.put(fileNameWithoutRoot, endpoints);
+                SpringControllerEndpointParser endpointParser = new SpringControllerEndpointParser(file.getAbsolutePath());
+                SpringEntityParser entityParser = new SpringEntityParser();
+                EventBasedTokenizerRunner.run(file, entityParser, endpointParser);
+
+                springEntityParsers.add(entityParser);
+                addEndpointsToMaps(file, endpointParser);
 			}
 		}
+
+        SpringEntityMappings mappings = new SpringEntityMappings(springEntityParsers);
+
+        for (SpringControllerEndpoint endpoint : endpointsList) {
+            endpoint.expandModelToParameters(mappings);
+        }
 	}
+
+    private String getFileName(File file) {
+        String fileNameWithoutRoot = FilePathUtils.getRelativePath(file, rootDirectory);
+
+        if (fileNameWithoutRoot != null && fileNameWithoutRoot.indexOf("/") != 0) {
+            fileNameWithoutRoot = "/" + fileNameWithoutRoot;
+        }
+
+        return fileNameWithoutRoot;
+    }
+
+    private void addEndpointsToMaps(File file, SpringControllerEndpointParser endpointParser) {
+        if (endpointParser.hasControllerAnnotation) {
+
+            endpointsList.addAll(endpointParser.endpoints);
+
+            for (SpringControllerEndpoint endpoint : endpointParser.endpoints) {
+                endpoint.setFileRoot(rootDirectory.getAbsolutePath());
+                String urlPath = endpoint.getCleanedUrlPath();
+                if (!urlToControllerMethodsMap.containsKey(urlPath)) {
+                    urlToControllerMethodsMap.put(urlPath, new TreeSet<SpringControllerEndpoint>());
+                }
+                urlToControllerMethodsMap.get(endpoint.getCleanedUrlPath()).add(endpoint);
+            }
+
+            controllerToUrlsMap.put(getFileName(file), endpointParser.endpoints);
+        }
+    }
 
 	@NotNull
     @Override

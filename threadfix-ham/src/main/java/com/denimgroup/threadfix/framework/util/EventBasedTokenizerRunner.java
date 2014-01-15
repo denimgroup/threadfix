@@ -70,7 +70,9 @@ public class EventBasedTokenizerRunner {
 				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && keepGoing) {
                     keepGoing = false;
                     for (EventBasedTokenizer eventBasedTokenizer : eventBasedTokenizers) {
-                        eventBasedTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+                        if (eventBasedTokenizer.shouldContinue()) {
+                            eventBasedTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+                        }
                         if (!keepGoing) {
                             keepGoing = eventBasedTokenizer.shouldContinue();
                         }
