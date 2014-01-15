@@ -665,7 +665,8 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage clickExpandAllVulns(){
-        sleep(10000);
+        sleep(15000); //sleep is required for javascript to load
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("expandAllVulns")));
 		driver.findElementById("expandAllVulns").click();
 		waitForElement(driver.findElementById("vulnName1"));
 		return new ApplicationDetailPage(driver);
@@ -687,6 +688,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDefectActionBtn(){
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("actionButton1")));
         driver.findElementsById("actionButton1").get(1).click();
         return new ApplicationDetailPage(driver);
     }
