@@ -40,7 +40,6 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO figure out HTTP methods perhaps from form analysis
-// for now all will be GET
 public class JSPMappings implements EndpointGenerator {
 	
 	private static final SanitizedLogger LOG = new SanitizedLogger("JSPMappings");
@@ -48,6 +47,7 @@ public class JSPMappings implements EndpointGenerator {
 	private final Map<String, Set<String>> includeMap = new HashMap<>();
 	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
 	private final List<Endpoint> endpoints = new ArrayList<>();
+    private final ProjectDirectory projectDirectory;
 	@Nullable
     private final File projectRoot, jspRoot;
 	
@@ -56,6 +56,8 @@ public class JSPMappings implements EndpointGenerator {
 		if (rootFile.exists()) {
 
 			this.projectRoot = rootFile;
+
+            projectDirectory = new ProjectDirectory(rootFile);
 			
 			String jspRootString = CommonPathFinder.findOrParseProjectRootFromDirectory(rootFile, "jsp");
 
@@ -79,6 +81,7 @@ public class JSPMappings implements EndpointGenerator {
             addParametersFromIncludedFiles();
 
 		} else {
+            projectDirectory = null;
 			projectRoot = null;
 			jspRoot = null;
 		}
@@ -87,12 +90,12 @@ public class JSPMappings implements EndpointGenerator {
     void parseFile(File file) {
 
         if (projectRoot != null) {
-            // we will run both parsers on the same run
+            // we will use both parsers on the same run through the file
             String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
 
             JSPIncludeParser includeParser = new JSPIncludeParser(file);
             JSPParameterParser parameterParser = new JSPParameterParser();
-            EventBasedTokenizerRunner.run(file, includeParser, parameterParser);
+            EventBasedTokenizerRunner.run(file, parameterParser, includeParser);
 
             addToIncludes(staticPath, includeParser.returnFiles);
 
@@ -114,14 +117,12 @@ public class JSPMappings implements EndpointGenerator {
     }
 
     void addToIncludes(String staticPath, Set<File> includedFiles) {
-        if (projectRoot != null) {
-            ProjectDirectory directory = new ProjectDirectory(projectRoot);
-
+        if (projectRoot != null && projectDirectory != null) {
             if (!includedFiles.isEmpty()) {
                 Set<String> cleanedFilePaths = new HashSet<>();
 
                 for (File file : includedFiles) {
-                    String cleaned = directory.findCanonicalFilePath(file);
+                    String cleaned = projectDirectory.findCanonicalFilePath(file);
                     if (cleaned != null) {
                         cleanedFilePaths.add(cleaned);
                     }
