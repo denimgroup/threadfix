@@ -12,11 +12,14 @@ public class RestResponse {
 
         RestResponse response = null;
 
-        if (!text.trim().isEmpty()) {
+        if (!text.trim().isEmpty() && text.trim().indexOf('{') == 0) {
             response = new Gson().fromJson(text, RestResponse.class);
             System.out.println(response.success);
             System.out.println(response.message);
             System.out.println(response.object);
+        } else {
+            System.out.println("Invalid JSON object received: \n" + text);
+            System.out.println("Was this a pre-2.0M2 threadfix build?");
         }
 
         if (response == null) {

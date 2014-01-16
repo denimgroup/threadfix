@@ -12,8 +12,11 @@ public class MarkersResponse {
 
         MarkersResponse response = null;
 
-        if (!text.trim().isEmpty()) {
+        if (!text.trim().isEmpty() && text.trim().indexOf('{') == 0) {
             response = new Gson().fromJson(text, MarkersResponse.class);
+        } else {
+            System.out.println("Invalid JSON object received: \n" + text);
+            System.out.println("Was this a pre-2.0M2 threadfix build?");
         }
 
         if (response == null) {
