@@ -21,25 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Document;
+import com.denimgroup.threadfix.data.entities.ScheduledScan;
+import org.springframework.validation.BindingResult;
 
-/**
- * Basic DAO class for the Document entity.
- * 
- * @author stran
- */
-public interface DocumentDao {
+import java.util.List;
 
-	void saveOrUpdate(Document document);
+public interface ScheduledScanService {
 
-	Document retrieveById(Integer docId);
-	
-	Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension);
-
-	void delete(Document document);
-	
-
-
+    void validateScheduledDate(ScheduledScan scheduledScan, BindingResult result);
+    int saveScheduledScan(Integer appId, ScheduledScan scheduledScan);
+    String deleteScheduledScan(ScheduledScan scheduledScan);
+    List<ScheduledScan> loadAllScheduledScan();
+    ScheduledScan loadScheduledScanById(int scheduledScanId);
 }

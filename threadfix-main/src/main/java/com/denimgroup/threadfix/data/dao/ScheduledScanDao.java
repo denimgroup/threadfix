@@ -23,23 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Document;
+import com.denimgroup.threadfix.data.entities.ScheduledScan;
+
+import java.util.List;
 
 /**
- * Basic DAO class for the Document entity.
+ * Basic DAO class for the Scheduled Scan entity.
  * 
  * @author stran
  */
-public interface DocumentDao {
+public interface ScheduledScanDao {
 
-	void saveOrUpdate(Document document);
+	void saveOrUpdate(ScheduledScan scheduledScan);
 
-	Document retrieveById(Integer docId);
+    ScheduledScan retrieveById(Integer scheduledScanId);
 	
-	Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension);
+	void delete(ScheduledScan scheduledScan);
 
-	void delete(Document document);
-	
-
+    List<ScheduledScan> retrieveAll();
 
 }

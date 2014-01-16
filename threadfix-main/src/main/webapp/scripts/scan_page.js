@@ -20,6 +20,17 @@ var addScanDeletes = function() {
 			$(this).attr("data-has-function","1");
 		}
 	});
+
+    $(".scheduledScanDelete").each(function() {
+        if (!$(this).attr("data-has-function")) {
+            $(this).on("click", function() {
+                if (confirm("Are you sure you want to delete this scheduled scan?")) {
+                    $("#" + $(this).attr("data-delete-form")).submit();
+                }
+            });
+            $(this).attr("data-has-function","1");
+        }
+    });
 };
 
 addToDocumentReadyFunctions(addScanDeletes);

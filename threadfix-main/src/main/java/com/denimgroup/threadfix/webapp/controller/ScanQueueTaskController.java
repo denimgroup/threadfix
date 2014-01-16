@@ -110,16 +110,15 @@ public class ScanQueueTaskController {
 		}
 		ScanQueueTask task = scanQueueService.loadTaskById(taskId);
 		if (task == null) {
-			model.addAttribute("commentError", "The task submitted was invalid");
-			model.addAttribute("contentPage", "applications/tabs/scanQueueTab.jsp");
-			return "ajaxFailureHarness";
+            ControllerUtils.addErrorMessage(request, "The scan queue task submitted was invalid, unable to delete");
+            return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
 		String ret = scanQueueService.deleteTask(task);
 		if (ret != null) {
 			ControllerUtils.addErrorMessage(request, ret);
 		} else {
 			ControllerUtils.addSuccessMessage(request,
-					"Task ID " + taskId + " was successfully deleted");
+					"Scan Queue Task ID " + taskId + " was successfully deleted");
 		}
 		log.info("Ended deleting scan task from application " + appId);
 		
@@ -134,7 +133,7 @@ public class ScanQueueTaskController {
 
         ScanQueueTask task = scanQueueService.loadTaskById(taskId);
         if (task == null || task.getApplication() == null) {
-            ControllerUtils.addErrorMessage(request, "The task submitted was invalid");
+            ControllerUtils.addErrorMessage(request, "The Scan Queue Task submitted was invalid");
             return "redirect:/configuration/scanqueue";
         }
 

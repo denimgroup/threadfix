@@ -36,5 +36,6 @@ public interface QueueConstants {
 	static final String NORMAL_SCAN_TYPE = "Scan";
 	static final String DEFECT_TRACKER_VULN_UPDATE_TYPE = "Defect Tracker Vuln Update";
 	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";
+    static final String SCHEDULED_SCAN_TYPE = "Scheduled Scan";
 
 }

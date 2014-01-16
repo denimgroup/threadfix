@@ -73,4 +73,6 @@ public interface QueueSender {
 	 * @param id
 	 */
 	void addRemoteProviderImport(RemoteProviderType remoteProviderType);
+
+    void addScheduledScan(int appId, String scanner);
 }
