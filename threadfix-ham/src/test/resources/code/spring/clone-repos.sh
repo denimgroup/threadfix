@@ -31,6 +31,7 @@ git clone https://github.com/russellpwirtz/mvc-calculator.git
 git clone https://github.com/resco/spring-mvc-inventory.git
 git clone https://github.com/madchicken/blog-spring.git
 
-
-
+git clone https://github.com/SpringSource/spring-petclinic.git
+svn checkout http://bodgeit.googlecode.com/svn/trunk/ bodgeit-read-only
+svn checkout http://wavsep.googlecode.com/svn/trunk/ wavsep-read-only
 

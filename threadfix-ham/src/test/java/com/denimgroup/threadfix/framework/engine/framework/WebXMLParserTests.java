@@ -42,12 +42,14 @@ public class WebXMLParserTests {
     	
     	for (int i = 0; i < sourceLocations.length; i++) {
     		File projectDirectory = new File(sourceLocations[i]);
-    		assertTrue(projectDirectory != null && projectDirectory.exists());
+    		assertTrue(projectDirectory.exists());
     		
     		File file = new ProjectDirectory(projectDirectory).findWebXML();
+            assertTrue("File was null, check that " + projectDirectory + " is a valid directory.", file != null);
     		assertTrue(file.getName().equals("web.xml"));
     		
-    		assertTrue(file.getAbsolutePath().equals(webXMLLocations[i]));
+    		assertTrue(file.getAbsolutePath() + " wasn't " + webXMLLocations[i],
+                    file.getAbsolutePath().equals(webXMLLocations[i]));
     	}
     }
     
