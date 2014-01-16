@@ -1,3 +1,5 @@
+**NOTE**: If you wish to download the latest build of ThreadFix please visit [builds](https://code.google.com/p/threadfix/downloads/list). **DO NOT** "Download ZIP".   
+
 ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with
 vulnerability trending reports that show progress over time, giving them justification for their efforts.
 
@@ -33,4 +35,4 @@ ThreadFix is a platform with a number of components. Each subdirectory should ha
 * **threadfix-main** - Main ThreadFix server application. This is a Java-based Spring/Hibernate web application with associated web services. Other components of the ThreadFix platform call into the ThreadFix server.
 * **threadfix-scanagent** - External scan agent that can run automated application security scans on behalf of a ThreadFix server.
 * **threadfix-scanner-plugin** - Scanner plugins that can connect to a ThreadFix server and import an application's attack surface to improve the thoroughness of dynamic scanning. Also allows for exporting scan results directly into ThreadFix (rather than saving files and uploading them.)
-* **threadfix-updade** - Update scripts to upgrade the ThreadFix server database between versions.
+* **threadfix-update** - Update scripts to upgrade the ThreadFix server database between versions.

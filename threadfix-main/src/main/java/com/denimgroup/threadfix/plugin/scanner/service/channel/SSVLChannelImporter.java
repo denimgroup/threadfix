@@ -39,6 +39,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +105,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	    
 	    private void parseDate(Attributes atts) {
-	    	date = getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
+	    	date = DateUtils.getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
 	    }
 	    
 	    private void parseTypeAndSeverity(Attributes atts) {
@@ -194,7 +196,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		boolean valid = false;
 		
 		try {
-			URL schemaFile = getClass().getClassLoader().getResource("ssvl.xsd");
+			URL schemaFile = ResourceUtils.getUrl("ssvl.xsd");
 			Source xmlFile = new StreamSource(new File(inputFileName));
 			SchemaFactory schemaFactory = SchemaFactory
 			    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -259,7 +261,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    
 	    private void parseDate(Attributes atts) {
 	    	hasVulnerabilitiesTag = true;
-	    	testDate = getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
+	    	testDate = DateUtils.getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
 	    }
 	}
 

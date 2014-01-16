@@ -52,6 +52,11 @@ public class ProjectDirectory {
 		this.directory = directory;
 		fileMap = buildMaps(directory);
 	}
+
+    @NotNull
+    public File getDirectory() {
+        return directory;
+    }
 	
 	@NotNull
 	public String getDirectoryPath() {
@@ -68,6 +73,11 @@ public class ProjectDirectory {
 		
 		return returnMap;
 	}
+
+    @Override
+    public String toString() {
+        return directory.toString();
+    }
 	
 	private void recurseMap(@NotNull File currentDirectory, @NotNull Map<String, Set<String>> map) {
 		if (!currentDirectory.isDirectory() || !currentDirectory.exists()) {
@@ -285,6 +295,17 @@ public class ProjectDirectory {
 		
 		return returnString;
 	}
+
+    @Nullable
+    public String findCanonicalFilePath(@NotNull File file) {
+        String filePath = null;
+
+        if (file.exists() && file.getAbsolutePath().startsWith(directory.getAbsolutePath())) {
+            filePath = file.getAbsolutePath().substring(directory.getAbsolutePath().length());
+        }
+
+        return filePath;
+    }
 	
 	@Nullable
     private String findFilePath(String name, @NotNull String... pathSegments) {

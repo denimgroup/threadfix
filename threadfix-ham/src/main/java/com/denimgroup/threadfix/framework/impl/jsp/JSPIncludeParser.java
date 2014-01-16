@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import org.jetbrains.annotations.NotNull;
@@ -41,17 +42,19 @@ class JSPIncludeParser implements EventBasedTokenizer {
 	@NotNull
     private State currentState = State.START;
 	@NotNull
-    private Set<File> returnFiles = new HashSet<>();
-	private File inputFile;
-	
+    Set<File> returnFiles = new HashSet<>();
+
+    @NotNull
+    final File file;
+
 	private enum State {
 		START, JSP_INCLUDE, PAGE, EQUALS, OPEN_ANGLE, PERCENT, ARROBA, FILE
 	}
 	
 	private static final Pattern slashPattern = Pattern.compile("[\\\\/]");
 
-	private JSPIncludeParser(@NotNull File file) {
-		this.inputFile = file;
+	JSPIncludeParser(@NotNull File file) {
+        this.file = file;
 	}
 	
 	@NotNull
@@ -61,7 +64,12 @@ class JSPIncludeParser implements EventBasedTokenizer {
 		return parser.returnFiles;
 	}
 
-	@Override
+    @Override
+    public boolean shouldContinue() {
+        return true;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch (currentState) {
 			case START:
@@ -88,7 +96,7 @@ class JSPIncludeParser implements EventBasedTokenizer {
 				break;
 			case EQUALS:
 				if (type == DOUBLE_QUOTE && stringValue != null) {
-					returnFiles.add(getRelativeFile(stringValue, inputFile));
+					returnFiles.add(getRelativeFile(stringValue));
 				}
 				currentState = State.START;
 				break;
@@ -125,31 +133,31 @@ class JSPIncludeParser implements EventBasedTokenizer {
 				break;
 		}
 	}
-	
-	@NotNull
-    private static File getRelativeFile(String sval, @NotNull File inputFile) {
-		List<String>
-			inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(inputFile.getParent()))),
-			svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));
-		
-		if (svalPathSegments.size() > 0) {
-			for (String string : svalPathSegments) {
-				if ("..".equals(string)) {
-					inputFilePathSegments.remove(inputFilePathSegments.size() - 1);
-				} else if (string != null) {
-					inputFilePathSegments.add(string);
-				}
-			}
-		}
-		
-		StringBuilder builder = new StringBuilder();
-		for (String segment : inputFilePathSegments) {
-			builder.append(segment);
-			builder.append(File.separator);
-		}
-		
-		String resultingString = builder.substring(0, builder.length() - 1);
-		
-		return new File(resultingString);
-	}
+
+    @NotNull
+    private File getRelativeFile(String sval) {
+        List<String>
+                inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(file.getParent()))),
+                svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));
+
+        if (svalPathSegments.size() > 0) {
+            for (String string : svalPathSegments) {
+                if ("..".equals(string)) {
+                    inputFilePathSegments.remove(inputFilePathSegments.size() - 1);
+                } else if (string != null) {
+                    inputFilePathSegments.add(string);
+                }
+            }
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (String segment : inputFilePathSegments) {
+            builder.append(segment);
+            builder.append(File.separator);
+        }
+
+        String resultingString = builder.substring(0, builder.length() - 1);
+
+        return new File(resultingString);
+    }
 }

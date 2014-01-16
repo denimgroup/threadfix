@@ -131,9 +131,4 @@ public class SpringEntityMappingsTests {
 		assertTrue(fields.size() == 1);
 		assertTrue(fields.get(0).equals(new BeanField("Owner", "owner")));
 	}
-
-    @Test(expected= NullPointerException.class)
-    public void testNullConstructorArgument() {
-        new SpringEntityMappings(null);
-    }
 }

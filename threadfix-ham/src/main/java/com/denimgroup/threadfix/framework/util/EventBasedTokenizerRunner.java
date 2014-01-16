@@ -26,12 +26,7 @@ package com.denimgroup.threadfix.framework.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
+import java.io.*;
 
 
 /**
@@ -57,21 +52,31 @@ public class EventBasedTokenizerRunner {
 	 *  <p>return parser.results;
 	 * </code>
 	 * @param file
-	 * @param eventTokenizer
+	 * @param eventBasedTokenizers
 	 */
-	public static void run(@Nullable File file, @NotNull EventBasedTokenizer eventTokenizer) {
+	public static void run(@Nullable File file, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
 
 		if (file != null && file.exists() && file.isFile()) {
-			try (Reader reader = new FileReader(file)) {
+			try (Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8")) {
 			
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
 				tokenizer.slashSlashComments(true);
 				tokenizer.slashStarComments(true);
 				tokenizer.ordinaryChar('<');
 				tokenizer.wordChars(':', ':');
-				
-				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
-					eventTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+
+                // stop only if all of the tokenizers return false from shouldContinue();
+                boolean keepGoing = true;
+				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && keepGoing) {
+                    keepGoing = false;
+                    for (EventBasedTokenizer eventBasedTokenizer : eventBasedTokenizers) {
+                        if (eventBasedTokenizer.shouldContinue()) {
+                            eventBasedTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+                        }
+                        if (!keepGoing) {
+                            keepGoing = eventBasedTokenizer.shouldContinue();
+                        }
+                    }
 				}
 				
 			} catch (FileNotFoundException e) {

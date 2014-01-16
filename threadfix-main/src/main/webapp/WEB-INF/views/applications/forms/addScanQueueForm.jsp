@@ -26,7 +26,9 @@
 	</div>
 	<div class="modal-footer">
 		<button id="closeScanQueueForm${ application.id }" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button class="modalSubmit btn btn-primary" data-success-div="scanQueueDiv${ application.id }" 
-				id="addScanQueueButton${ application.id }" type="button">Submit</button>
+		<%--<button class="modalSubmit btn btn-primary" data-success-div="scanQueueDiv${ application.id }" --%>
+				<%--id="addScanQueueButton${ application.id }" type="button">Submit</button>--%>
+        <button id="addScanQueueButton${ application.id }" onclick="javascript:submitAjax('<c:out value="${addScanQueueTaskUrl }"/>','#scanQueueType',
+                '#noDocFound${ application.id }', '#scanFormDiv${ application.id }');return false;" class="btn btn-primary">Upload</button>
 	</div>
 </form>	

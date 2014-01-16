@@ -59,6 +59,9 @@ public class ScanAgentFactory {
             case APPSCAN_DYNAMIC:
                 agent = AppScanScanAgent.getInstance(scanner, workDir);
                 break;
+            case BURPSUITE:
+                agent = BurpScanAgent.getInstance(scanner, workDir);
+                break;
 			default: break;
 		}
 		

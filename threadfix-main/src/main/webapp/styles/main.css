@@ -299,7 +299,7 @@ div#passwordNag {
 	padding-bottom:10px; 
 	padding-top:10px;
 	font-size:8px; 
-	text-align:middle;
+	text-align:center;
 }
 	                                                                                                                                            
 a {
@@ -638,7 +638,7 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 .caret-down.expanded {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-bottom: 4px solid #0000000;
+    border-bottom: 4px solid #000000;
     border-top: 0px;
 }
 
@@ -718,19 +718,19 @@ select:focus, input[type="file"]:focus, input[type="radio"]:focus, input[type="c
 }
 
 [class^="icon-"], [class*=" icon-"] {
-	background-image: url("/threadfix/images/glyphicons-halflings.png");
+	background-image: url("../images/glyphicons-halflings.png");
 }
 
 [class^="icon-"].icon-white, [class*=" icon-"].icon-white {
-	background-image: url("/threadfix/images/glyphicons-halflings-white.png");
+	background-image: url("../images/glyphicons-halflings-white.png");
 }
 
 .no-top-border td {
-	border-top:0px;
+	border-top:0;
 }
 
 .table.table-bordered td.no-left-border, .table.table-bordered th.no-left-border {
-	border-left: 0px none;
+	border-left: 0 none;
 }
 
 .table.table-bordered td.thick-left, .table.table-bordered th.thick-left {

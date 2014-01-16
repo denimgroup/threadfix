@@ -6,16 +6,10 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class FrameworkCalculatorTests {
-	
-	@Test
-	public void petclinicTest() {
-		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
-		assertTrue("Didn't find Spring.", type == FrameworkType.SPRING_MVC);
-	}
 	
 	@Test
 	public void bodgeitTest() {

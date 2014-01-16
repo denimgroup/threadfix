@@ -51,8 +51,13 @@ public class SpringEntityParser implements EventBasedTokenizer {
 	}
 	@NotNull
     private State state = State.START;
-	
-	@Override
+
+    @Override
+    public boolean shouldContinue() {
+        return true;
+    }
+
+    @Override
 	public void processToken(int type, int lineNumber, @Nullable String stringValue) {
 		switch(state) {
 		case START:
@@ -87,7 +92,8 @@ public class SpringEntityParser implements EventBasedTokenizer {
 			}
 			break;
 		case PARAM_TYPE:
-			if (currentParamType != null && stringValue != null && stringValue.startsWith("get")) {
+			if (currentParamType != null && stringValue != null && stringValue.startsWith("get") &&
+                    stringValue.length() > 3) { // this is to avoid errors with methods named "get"
 				fieldMappings.add(new BeanField(currentParamType, stringValue));
 			}
 			state = State.START;

@@ -23,12 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import org.jetbrains.annotations.NotNull;
+
+import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
 
@@ -42,5 +43,16 @@ public class TestUtils {
 		
 		return mappings;
 	}
+
+    public static void compare(Collection<String> parsed, Collection<String> expected, String name) {
+        Set<String> paramsCopy = new HashSet<>(parsed),
+                expectedCopy = new HashSet<>(expected);
+
+        paramsCopy.removeAll(expected);
+        expectedCopy.removeAll(parsed);
+
+        assertTrue(name + " has extra strings " + expectedCopy, expectedCopy.size() == 0);
+        assertTrue(name + " were missing " + paramsCopy, paramsCopy.size() == 0);
+    }
 	
 }

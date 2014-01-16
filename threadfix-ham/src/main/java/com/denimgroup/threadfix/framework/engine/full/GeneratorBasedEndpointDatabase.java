@@ -23,12 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.full;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import org.jetbrains.annotations.NotNull;
@@ -165,8 +160,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             }
         }
 
-        if (resultingSet.isEmpty() && query.getCodePoints() != null) {
-            resultingSet = getFromCodePoints(query.getCodePoints());
+        List<CodePoint> codePoints = query.getCodePoints();
+        if (resultingSet.isEmpty() && codePoints != null) {
+            resultingSet = getFromCodePoints(codePoints);
         }
 
 		return resultingSet;
@@ -177,12 +173,16 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         Set<Endpoint> results = new HashSet<>();
 
         top: for (CodePoint codePoint : codePoints) {
-            if (codePoint != null && codePoint.getSourceFileName() != null) {
+            if (codePoint != null) {
                 String sourceFileKey = null;
 
-                for (String key : staticMap.keySet()) {
-                    if (key.endsWith(codePoint.getSourceFileName())) {
-                        sourceFileKey = key;
+                String sourceFileName = codePoint.getSourceFileName();
+
+                if (sourceFileName != null) {
+                    for (String key : staticMap.keySet()) {
+                        if (key.endsWith(sourceFileName)) {
+                            sourceFileKey = key;
+                        }
                     }
                 }
 
@@ -229,5 +229,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	public String toString() {
 		return frameworkType.toString() + " EndpointDatabase with " + endpoints.size() + " total records.";
 	}
-	
+
+    @Override
+    public Iterator<Endpoint> iterator() {
+        return endpoints.iterator();
+    }
 }

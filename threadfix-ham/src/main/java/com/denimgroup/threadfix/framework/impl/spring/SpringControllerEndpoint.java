@@ -39,25 +39,77 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	@NotNull
     private final String rawFilePath, rawUrlPath;
 	@NotNull
-    private final Set<String> methods, parameters;
+    private final Set<String> methods, parameters, pathParameters;
 	private final int startLineNumber, endLineNumber;
 	
 	@Nullable
     private String cleanedFilePath = null, cleanedUrlPath = null;
 	
 	private String fileRoot;
+
+    @Nullable
+    private BeanField modelObject;
+
+    @Nullable
+    private SpringDataBinderParser dataBinderParser = null;
 	
-	public SpringControllerEndpoint(@NotNull String filePath, @NotNull String urlPath,
-            @NotNull Collection<String> methods, @NotNull Collection<String> parameters,
-			int startLineNumber, int endLineNumber) {
+	public SpringControllerEndpoint(@NotNull String filePath,
+                                    @NotNull String urlPath,
+            @NotNull Collection<String> methods,
+            @NotNull Collection<String> parameters,
+            @NotNull Collection<String> pathParameters,
+			int startLineNumber,
+            int endLineNumber,
+            @Nullable BeanField modelObject) {
+
 		this.rawFilePath     = filePath;
 		this.rawUrlPath      = urlPath;
 		this.startLineNumber = startLineNumber;
 		this.endLineNumber   = endLineNumber;
+
+        this.modelObject = modelObject;
 		
 		this.parameters = new HashSet<>(parameters);
+        this.pathParameters = new HashSet<>(pathParameters);
 		this.methods    = getCleanedSet(methods);
 	}
+
+    void expandParameters(@NotNull SpringEntityMappings entityMappings,
+                          @Nullable SpringDataBinderParser globalDataBinderParser) {
+        if (modelObject != null) {
+            BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);
+            parameters.addAll(fields.getPossibleParameters());
+        }
+
+        Set<String> allowedParams = null, disallowedParams = null;
+
+        if (dataBinderParser != null) {
+            if (dataBinderParser.hasBlacklist) {
+                disallowedParams = dataBinderParser.parametersBlackList;
+            }
+            if (dataBinderParser.hasWhitelist) {
+                allowedParams = dataBinderParser.parametersWhiteList;
+            }
+        }
+
+        if (globalDataBinderParser != null) {
+            if (globalDataBinderParser.hasBlacklist && disallowedParams != null) {
+                disallowedParams = globalDataBinderParser.parametersBlackList;
+            }
+            if (globalDataBinderParser.hasWhitelist && allowedParams == null) {
+                allowedParams = globalDataBinderParser.parametersWhiteList;
+            }
+        }
+
+        if (disallowedParams != null) {
+            parameters.removeAll(disallowedParams);
+        }
+        if (allowedParams != null) {
+            parameters.retainAll(allowedParams);
+        }
+
+        parameters.addAll(pathParameters);
+    }
 
     @NotNull
 	private Set<String> getCleanedSet(@NotNull Collection<String> methods) {
@@ -100,6 +152,10 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public void setFileRoot(String fileRoot) {
 		this.fileRoot = fileRoot;
 	}
+
+    public void setDataBinderParser(@Nullable SpringDataBinderParser dataBinderParser) {
+        this.dataBinderParser = dataBinderParser;
+    }
 
 	@Nullable
     public String getCleanedUrlPath() {

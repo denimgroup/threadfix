@@ -31,10 +31,10 @@ public class DefaultPathCleaner implements PathCleaner {
 		}
 		
 		if (cleanedPath.contains("\\")) {
-			if (cleanedPath.indexOf("\\") != 0) {
-				cleanedPath = "\\" + cleanedPath;
-			}
-		} else if (cleanedPath.indexOf("/") != 0) {
+			cleanedPath = cleanedPath.replace('\\','/');
+		}
+
+        if (cleanedPath.indexOf("/") != 0) {
 			cleanedPath = "/" + cleanedPath;
 		}
 		

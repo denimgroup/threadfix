@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.annotations.NotNull;
@@ -33,25 +34,38 @@ import java.util.*;
 
 class SpringEntityMappings {
 
+    // This should be done by the end of the constructor
 	@NotNull
-    private final Collection<File> modelFiles;
+    private final Collection<SpringEntityParser> entityParsers;
 	
 	@NotNull
-    private final Map<String, BeanFieldSet> fieldMap;
-	
+    private final Map<String, BeanFieldSet> fieldMap = new HashMap<>();
+
+    // This version will parse all the Java files in the directory.
 	@SuppressWarnings("unchecked")
 	public SpringEntityMappings(@NotNull File rootDirectory) {
-        fieldMap = new HashMap<>();
+
+        entityParsers = new ArrayList<>();
 
 		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
-			modelFiles = FileUtils.listFiles(rootDirectory,
-					SpringEntityFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+
+			Collection<File> modelFiles = FileUtils.listFiles(rootDirectory,
+                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+
+            for (File file: modelFiles) {
+                if (file != null && file.exists() && file.isFile()) {
+                    entityParsers.add(SpringEntityParser.parse(file));
+                }
+            }
 		
             generateMap();
-		} else {
-			modelFiles = Collections.emptyList();
 		}
 	}
+
+    public SpringEntityMappings(@NotNull Collection<SpringEntityParser> entityParsers) {
+        this.entityParsers = entityParsers;
+        generateMap();
+    }
 	
 	public BeanFieldSet getPossibleParametersForModelType(@NotNull BeanField beanField) {
 		return getPossibleParametersForModelType(beanField.getType());
@@ -174,10 +188,10 @@ class SpringEntityMappings {
 		
 		while (superClassMap.size() != lastSize) {
 			lastSize = superClassMap.size();
-			for (String key : superClassMap.keySet()) {
-				if (done.contains(superClassMap.get(key))) {
-					fieldMap.get(key).addAll(fieldMap.get(superClassMap.get(key)));
-					done.add(key);
+			for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
+				if (done.contains(entry.getValue())) {
+					fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
+					done.add(entry.getKey());
 				}
 			}
 			superClassMap.keySet().removeAll(done);
@@ -185,20 +199,16 @@ class SpringEntityMappings {
 	}
 
 	private void addModelsToSuperClassAndFieldMaps(@NotNull Map<String, String> superClassMap) {
-		for (File file: modelFiles) {
-			if (file != null && file.exists() && file.isFile()) {
-				
-				SpringEntityParser entityParser = SpringEntityParser.parse(file);
-				
-				if (entityParser.getClassName() != null) {
-					
-					if (entityParser.getSuperClass() != null) {
-						superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
-					}
-					
-					fieldMap.put(entityParser.getClassName(), new BeanFieldSet(entityParser.getFieldMappings()));
-				}
-			}
+		for (SpringEntityParser entityParser : entityParsers) {
+
+            if (entityParser.getClassName() != null) {
+
+                if (entityParser.getSuperClass() != null) {
+                    superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
+                }
+
+                fieldMap.put(entityParser.getClassName(), new BeanFieldSet(entityParser.getFieldMappings()));
+            }
 		}
 	}
 	

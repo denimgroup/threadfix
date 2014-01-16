@@ -37,7 +37,7 @@
 						</a>
 						</div>
 				  	 </div>
-					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="userConfigurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
 						
 						<security:authentication var="principal" property="principal" />
 						<c:if test="${ not principal.isLdapUser }">
@@ -59,7 +59,7 @@
 					</ul>
 				   </div>
 				</td>
-				<td id="tab-config" style="width: 30px;padding-left:0px;">
+				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
 					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">

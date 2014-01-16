@@ -106,7 +106,8 @@ public class Scan extends BaseEntity {
             ScannerType.FORTIFY.getFullName(),
             ScannerType.VERACODE.getFullName(),
             ScannerType.CAT_NET.getFullName(),
-            ScannerType.BRAKEMAN.getFullName());
+            ScannerType.BRAKEMAN.getFullName(),
+            ScannerType.CHECKMARX.getFullName());
 	private static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
 	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 	

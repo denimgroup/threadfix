@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.denimgroup.threadfix.framework.engine.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
@@ -25,12 +25,13 @@ public class EndpointDatabaseFactory {
 
         EndpointDatabase database = null;
 
-        if (projectConfig.getRootFile() != null) {
-            if (projectConfig.getFrameworkType() != null &&
-                    projectConfig.getFrameworkType() != FrameworkType.DETECT) {
-                database = getDatabase(projectConfig.getRootFile(), projectConfig.getFrameworkType());
+        File rootFile = projectConfig.getRootFile();
+
+        if (rootFile != null) {
+            if (projectConfig.getFrameworkType() != FrameworkType.DETECT) {
+                database = getDatabase(rootFile, projectConfig.getFrameworkType());
             } else {
-                database = getDatabase(projectConfig.getRootFile());
+                database = getDatabase(rootFile);
             }
         }
 

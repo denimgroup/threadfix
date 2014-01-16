@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.engine;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -66,7 +67,8 @@ public class ProjectDirectoryTests {
 			};
 		
 		for (Object[] test : tests) {
-			int numResults = springDirectory.findFiles((String) test[0]).size();
+            List<File> results = springDirectory.findFiles((String) test[0]);
+			int numResults = results.size();
 			assertTrue("Found " + numResults + " results instead of " + test[1] + " for " + test[0],
 					numResults == (int) test[1]);
 		}
