@@ -50,7 +50,8 @@ public class TestConstants {
 		SPRING_VISIT_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "VisitController.java",
 		SPRING_MODELS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/model/",
 		SPRING_OWNER_MODEL = "Owner.java",
-		SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING = "ControllerWithClassAnnotation.java.txt"
+		SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING = "ControllerWithClassAnnotation.java.txt",
+        THREADFIX_SOURCE_ROOT = "/Users/mcollins/Documents/Git/threadfix"
 		;
 
     public static String getFolderName(String name) {

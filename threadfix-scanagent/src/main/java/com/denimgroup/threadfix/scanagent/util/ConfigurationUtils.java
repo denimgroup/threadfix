@@ -141,6 +141,14 @@ public class ConfigurationUtils {
 		return true;
 	}
 
+    public static boolean isFile(String path) {
+        File file = new File(path);
+        if (!file.exists() || !file.isFile()) {
+            return false;
+        }
+        return true;
+    }
+
 	public static boolean checkHomeParam(@NotNull ScannerType scannerType, @NotNull String home) {
 
 		String osName = System.getProperty("os.name");
@@ -179,36 +187,40 @@ public class ConfigurationUtils {
 
 		System.out.println("Start configuration for " + scannerType.getFullName());
 		Scanner scan = new Scanner();
-		scan.setName(scannerType.getFullName());
-		java.util.Scanner in = null;
-		try {
-			in = new java.util.Scanner(System.in);
-			// Input scanner home
-			boolean isValidHomeDir = false;
-			while (!isValidHomeDir) {
-				System.out.print("Input " + scannerType.getFullName() + " home directory (is where " + getExeFile(scannerType) +" located): ");
-				String home = in.nextLine();
-				String separator = System.getProperty("file.separator");
-				if (!home.endsWith(separator)) {
-					 home = home + separator;
-				}
-				if (checkHomeParam(scannerType, home)) {
-					isValidHomeDir = true;
-					scan.setHomeDir(home);
-				} else {
-					System.out.println(scannerType.getFullName() + " home directory is invalid!");
-				}
-			}
-			
-			// Input scanner version
-			System.out.print("Input " + scannerType.getFullName() + " version: ");
-			scan.setVersion(in.nextLine());
-			
-			inputMoreScanInfo(scannerType, scan, in);
-		
-			saveScannerType(scan);
-			
-		} finally {
+        scan.setName(scannerType.getFullName());
+        java.util.Scanner in = null;
+        try {
+            in = new java.util.Scanner(System.in);
+
+            if (scannerType == ScannerType.BURPSUITE) {
+                inputBurpRunFile(scan,in);
+            } else {
+                // Input scanner home
+                boolean isValidHomeDir = false;
+                while (!isValidHomeDir) {
+                    System.out.print("Input " + scannerType.getFullName() + " home directory (is where " + getExeFile(scannerType) +" located): ");
+                    String home = in.nextLine();
+                    String separator = System.getProperty("file.separator");
+                    if (!home.endsWith(separator)) {
+                        home = home + separator;
+                    }
+                    if (checkHomeParam(scannerType, home)) {
+                        isValidHomeDir = true;
+                        scan.setHomeDir(home);
+                    } else {
+                        System.out.println(scannerType.getFullName() + " home directory is invalid!");
+                    }
+                }
+            }
+            // Input scanner version
+            System.out.print("Input " + scannerType.getFullName() + " version: ");
+            scan.setVersion(in.nextLine());
+
+            inputMoreScanInfo(scannerType, scan, in);
+
+            saveScannerType(scan);
+
+        } finally {
 			if (in != null) {
 				in.close();
 			}
@@ -216,6 +228,20 @@ public class ConfigurationUtils {
 		System.out.println("Ended configuration for " + scannerType.getFullName() + ". Congratulations!");
 		System.out.println("Run '-r' to execute scan queue task from Threadfix server.");
 	}
+
+    private static void inputBurpRunFile( @NotNull Scanner scan, @NotNull java.util.Scanner in) {
+        boolean isValidPath = false;
+        while (!isValidPath) {
+            System.out.print("Input full path for Burp Suite jar file (Ex: C:\\Burp\\burp.jar): ");
+            String fileName = in.nextLine();
+            if (isFile(fileName)) {
+                isValidPath = true;
+                scan.setHomeDir(fileName);
+            } else {
+                System.out.println("Burp Suite jar file is invalid!");
+            }
+        }
+    }
 
 	private static void inputMoreScanInfo(@NotNull ScannerType scannerType,
                                           @NotNull Scanner scan,

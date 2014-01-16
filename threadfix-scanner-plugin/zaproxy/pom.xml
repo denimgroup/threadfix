@@ -4,9 +4,8 @@
 
     <parent>
         <groupId>com.denimgroup.threadfix</groupId>
-        <artifactId>master-pom</artifactId>
+        <artifactId>scanner-intermediate-pom</artifactId>
         <version>2.0M1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>Zap-Plugin</artifactId>

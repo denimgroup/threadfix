@@ -67,6 +67,7 @@
                 <enabled>true</enabled>
                 <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
+            <!-- this will be resolved by the internal poms so they need to look up one level.-->
             <url>file://${project.basedir}${file.separator}..${file.separator}lib</url>
         </repository>
         <repository>

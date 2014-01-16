@@ -37,7 +37,7 @@ class BeanField {
     private String getParameterKey(@NotNull String methodCall) {
 		String propertyName = methodCall;
 		
-		if (methodCall.startsWith("get")) {
+		if (methodCall.startsWith("get") && methodCall.length() > 3) {
 			// transform from bean accessor to parameter name
 			propertyName = methodCall.substring(3);
 			propertyName = propertyName.substring(0,1).toLowerCase() + propertyName.substring(1);

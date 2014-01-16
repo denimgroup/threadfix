@@ -24,15 +24,10 @@
 package com.denimgroup.threadfix.framework.impl.jsp;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,14 +40,14 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO figure out HTTP methods perhaps from form analysis
-// for now all will be GET
 public class JSPMappings implements EndpointGenerator {
 	
-	private final SanitizedLogger log = new SanitizedLogger("JSPMappings");
+	private static final SanitizedLogger LOG = new SanitizedLogger("JSPMappings");
 	
-	private final Map<String, Set<File>> includeMap = new HashMap<>();
+	private final Map<String, Set<String>> includeMap = new HashMap<>();
 	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
 	private final List<Endpoint> endpoints = new ArrayList<>();
+    private final ProjectDirectory projectDirectory;
 	@Nullable
     private final File projectRoot, jspRoot;
 	
@@ -61,10 +56,12 @@ public class JSPMappings implements EndpointGenerator {
 		if (rootFile.exists()) {
 
 			this.projectRoot = rootFile;
+
+            projectDirectory = new ProjectDirectory(rootFile);
 			
 			String jspRootString = CommonPathFinder.findOrParseProjectRootFromDirectory(rootFile, "jsp");
-			
-			log.info("Calculated JSP root to be: " + jspRootString);
+
+            LOG.info("Calculated JSP root to be: " + jspRootString);
 			
 			if (jspRootString == null) {
 				jspRoot = projectRoot;
@@ -74,53 +71,85 @@ public class JSPMappings implements EndpointGenerator {
 			
 			Collection<File> jspFiles = FileUtils.listFiles(
 					rootFile, JSPFileFilter.INSTANCE, NoDotDirectoryFileFilter.INSTANCE);
-			
-			log.info("Found " + jspFiles.size() + " JSP files.");
-	
+
+            LOG.info("Found " + jspFiles.size() + " JSP files.");
+
 			for (File file : jspFiles) {
-				Set<File> files = JSPIncludeParser.parse(file);
-				if (!files.isEmpty()) {
-					includeMap.put(FilePathUtils.getRelativePath(file, rootFile), files);
-				}
+				parseFile(file);
 			}
-			
-			for (File file : jspFiles) {
-				Endpoint endpoint = getEndpoint(file);
-				if (endpoint != null) {
-					endpoints.add(endpoint);
-				}
-			}
+
+            addParametersFromIncludedFiles();
+
 		} else {
+            projectDirectory = null;
 			projectRoot = null;
 			jspRoot = null;
 		}
 	}
 	
-	@Nullable
-    Endpoint getEndpoint(File file) {
-		Map<Integer, List<String>> parserResults = JSPParameterParser.parse(file);
+    void parseFile(File file) {
 
-        String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
+        if (projectRoot != null) {
+            // we will use both parsers on the same run through the file
+            String staticPath = FilePathUtils.getRelativePath(file, projectRoot);
 
+            JSPIncludeParser includeParser = new JSPIncludeParser(file);
+            JSPParameterParser parameterParser = new JSPParameterParser();
+            EventBasedTokenizerRunner.run(file, parameterParser, includeParser);
+
+            addToIncludes(staticPath, includeParser.returnFiles);
+
+            createEndpoint(staticPath, file, parameterParser.buildParametersMap());
+        }
+	}
+
+    void createEndpoint(String staticPath, File file, Map<Integer, List<String>> parserResults) {
         JSPEndpoint endpoint = new JSPEndpoint(
-                getOr(staticPath, ""),
-                getOr(FilePathUtils.getRelativePath(file, jspRoot), ""),
+                getInputOrEmptyString(staticPath),
+                getInputOrEmptyString(FilePathUtils.getRelativePath(file, jspRoot)),
                 new HashSet<>(Arrays.asList("GET", "POST")),
                 parserResults
-                );
+        );
 
         jspEndpointMap.put(staticPath, endpoint);
 
-		return endpoint;
-	}
+        endpoints.add(endpoint);
+    }
+
+    void addToIncludes(String staticPath, Set<File> includedFiles) {
+        if (projectRoot != null && projectDirectory != null) {
+            if (!includedFiles.isEmpty()) {
+                Set<String> cleanedFilePaths = new HashSet<>();
+
+                for (File file : includedFiles) {
+                    String cleaned = projectDirectory.findCanonicalFilePath(file);
+                    if (cleaned != null) {
+                        cleanedFilePaths.add(cleaned);
+                    }
+                }
+
+                includeMap.put(staticPath, cleanedFilePaths);
+            }
+        }
+    }
+
+    void addParametersFromIncludedFiles() {
+        for (Map.Entry<String, JSPEndpoint> endpointEntry : jspEndpointMap.entrySet()) {
+            if (endpointEntry != null && endpointEntry.getKey() != null &&
+                    includeMap.get(endpointEntry.getKey()) != null) {
+                for (String fileKey : includeMap.get(endpointEntry.getKey())) {
+                    if (jspEndpointMap.containsKey(fileKey)) {
+                        endpointEntry.getValue().getParameters().addAll(
+                                jspEndpointMap.get(fileKey).getParameters());
+                    }
+                }
+            }
+        }
+    }
 
     @NotNull
-    private String getOr(@Nullable String input, @NotNull String or) {
-        if (input == null) {
-            return or;
-        } else {
-            return input;
-        }
+    private String getInputOrEmptyString(@Nullable String input) {
+        return input == null ? "" : input;
     }
 	
 	public JSPEndpoint getEndpoint(String staticPath) {
@@ -143,4 +172,9 @@ public class JSPMappings implements EndpointGenerator {
 	public List<Endpoint> generateEndpoints() {
 		return endpoints;
 	}
+
+    @Override
+    public Iterator<Endpoint> iterator() {
+        return endpoints.iterator();
+    }
 }

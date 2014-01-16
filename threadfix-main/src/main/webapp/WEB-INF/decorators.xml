@@ -58,6 +58,8 @@
     	<pattern>/organizations/*/applications/*/documents/*/download*</pattern>
     	<pattern>/organizations/*/applications/*/scanTab*</pattern>
     	<pattern>/organizations/*/applications/*/scanQueueTab*</pattern>
+        <pattern>/organizations/*/applications/*/scheduledScanTab*</pattern>
+        <pattern>/organizations/*/applications/*/scheduledScans/addScheduledScan*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
     	<pattern>/organizations/*/filters/readOnly*</pattern>

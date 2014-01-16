@@ -3,6 +3,8 @@ threadfix-scanagent/threadfix.log
 bin
 *.DS_Store
 
+*.iml
+
 .classpath
 .settings
 .idea/

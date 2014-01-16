@@ -23,12 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.full;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import org.jetbrains.annotations.NotNull;
@@ -234,5 +229,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	public String toString() {
 		return frameworkType.toString() + " EndpointDatabase with " + endpoints.size() + " total records.";
 	}
-	
+
+    @Override
+    public Iterator<Endpoint> iterator() {
+        return endpoints.iterator();
+    }
 }

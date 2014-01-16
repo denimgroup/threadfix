@@ -26,11 +26,11 @@ package com.denimgroup.threadfix.framework.impl.jsp;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -39,61 +39,64 @@ import com.denimgroup.threadfix.framework.impl.jsp.JSPIncludeParser;
 
 // TODO add more tests
 public class JSPIncludeParserTests {
-	
-	@NotNull
-    static Map<String, Set<String>> samples = new HashMap<>();
-	@NotNull
-    static String[][] sampleStrings = {
-		{ // this tests the <%@ include file="include.jsp"%> style
-			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/Case49-LFI-ContextStream-FilenameContext-UnixTraversalValidation-OSPath-DefaultFullInput-SlashPathReq-Read.jsp",
-			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/inclusion-logic.jsp",
-			TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/include.jsp"
-		},
-		{ // This tests the <jsp:include page="/header.jsp"/> style
-			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/basket.jsp",
-			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/header.jsp",
-			TestConstants.BODGEIT_SOURCE_LOCATION + "/root/footer.jsp",
-		}
-	};
-	
-	static {
-		for (String[] stringSet : sampleStrings) {
-			add(stringSet);
-		}
-	}
-	
-	private static void add(@NotNull String[] stuff) {
-		Set<String> strings = new HashSet<>();
-		for (int i = 1; i < stuff.length; i++) {
-			strings.add(stuff[i]);
-		}
-		samples.put(stuff[0], strings);
-	}
 
 	@Test
-	public void testSamples() {
-		for (String key : samples.keySet()) {
-			Set<File> includedFiles = JSPIncludeParser.parse(new File(key));
-			Set<String> filePaths = new HashSet<>();
-			for (File file : includedFiles) {
-				filePaths.add(file.getAbsolutePath());
-			}
-			
-			compare(filePaths, samples.get(key));
-		}
+	public void testPercentArrobaFormat() {
+        String file = TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/Case49-LFI-ContextStream-FilenameContext-UnixTraversalValidation-OSPath-DefaultFullInput-SlashPathReq-Read.jsp";
+
+        String[] files = {
+                TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/inclusion-logic.jsp",
+                TestConstants.WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/active/LFI-Detection-Evaluation-GET-404Error/include.jsp"
+        };
+
+        Set<File> includedFiles = JSPIncludeParser.parse(new File(file));
+
+        compare(includedFiles, Arrays.asList(files));
 	}
+
+    @Test
+    public void testJspIncludeFormat() {
+        String file = TestConstants.BODGEIT_SOURCE_LOCATION + "/root/basket.jsp";
+
+        String[] files = {
+                TestConstants.BODGEIT_SOURCE_LOCATION + "/root/header.jsp",
+                TestConstants.BODGEIT_SOURCE_LOCATION + "/root/footer.jsp",
+        };
+
+        Set<File> includedFiles = JSPIncludeParser.parse(new File(file));
+
+        compare(includedFiles, Arrays.asList(files));
+    }
+
+    // Since header.jsp is in every page, the debug parameter should also be in every page.
+    @Test
+    public void testParameters() {
+        EndpointGenerator generator = new JSPMappings(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
+
+        for (Endpoint endpoint : generator) {
+
+            // footer.jsp and init.jsp don't have debug, but all the others should.
+            if (!endpoint.getFilePath().equals("/root/footer.jsp") && !endpoint.getFilePath().equals("/root/init.jsp"))
+                assertTrue("Endpoint " + endpoint.getFilePath() + " didn't have the debug parameter",
+                    endpoint.getParameters().contains("debug"));
+        }
+    }
 	
 	@Test
 	public void testFakeFile() {
 		assertTrue("failure.", JSPIncludeParser.parse(new File(TestConstants.FAKE_FILE)).isEmpty());
 	}
 
-	private void compare(@NotNull Set<String> results, @NotNull Set<String> expected) {
-		Set<String> resultsCopy = new HashSet<>(results);
+	private void compare(@NotNull Collection<File> results, @NotNull Collection<String> expected) {
+		Set<String> resultsCopy = new HashSet<>();
 		Set<String> expectedCopy = new HashSet<>(expected);
+
+        for (File file : results) {
+            resultsCopy.add(file.getAbsolutePath());
+        }
 		
-		resultsCopy.removeAll(expected);
-		expectedCopy.removeAll(results);
+		expectedCopy.removeAll(resultsCopy);
+        resultsCopy.removeAll(expected);
 
 		assertTrue("There were more results than expected: " + resultsCopy, resultsCopy.isEmpty());
 		assertTrue("The results were missing some entries: " + expectedCopy, expectedCopy.isEmpty());

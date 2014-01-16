@@ -59,6 +59,7 @@ public class Application extends AuditableEntity {
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 	private List<ScanQueueTask> scanQueueTasks;
+    private List<ScheduledScan> scheduledScans;
 
 	public static final int 
 		NAME_LENGTH = 60,
@@ -277,7 +278,16 @@ public class Application extends AuditableEntity {
 		this.scanQueueTasks = scanQueueTasks;
 	}
 
-	@OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    public List<ScheduledScan> getScheduledScans() {
+        return scheduledScans;
+    }
+
+    public void setScheduledScans(List<ScheduledScan> scheduledScans) {
+        this.scheduledScans = scheduledScans;
+    }
+
+    @OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
 	@JsonIgnore
 	public List<Scan> getScans() {

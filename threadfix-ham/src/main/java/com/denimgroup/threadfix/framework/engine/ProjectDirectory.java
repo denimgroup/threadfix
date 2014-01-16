@@ -295,6 +295,17 @@ public class ProjectDirectory {
 		
 		return returnString;
 	}
+
+    @Nullable
+    public String findCanonicalFilePath(@NotNull File file) {
+        String filePath = null;
+
+        if (file.exists() && file.getAbsolutePath().startsWith(directory.getAbsolutePath())) {
+            filePath = file.getAbsolutePath().substring(directory.getAbsolutePath().length());
+        }
+
+        return filePath;
+    }
 	
 	@Nullable
     private String findFilePath(String name, @NotNull String... pathSegments) {

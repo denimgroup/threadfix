@@ -14,8 +14,11 @@ public class ApplicationDialog {
         Map<String, String> applicationMap = getApplicationMap();
         String resultId = null;
         Object[] possibilities = applicationMap.keySet().toArray();
-
-        if (possibilities.length != 0) {
+//        JOptionPane.showMessageDialog(view,possibilities.length);
+        if (possibilities.length != 0 && possibilities[0].toString().startsWith("Authentication failed")) {
+            JOptionPane.showMessageDialog(view,possibilities[0].toString());
+        }
+        else if (possibilities.length != 0) {
 	        ImageIcon icon = new ImageIcon("images/middle.gif");
 	        Object idResult = JOptionPane.showInputDialog(
                     view,

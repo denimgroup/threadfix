@@ -1,3 +1,5 @@
+**NOTE**: If you wish to download the latest build of ThreadFix please visit [builds](https://code.google.com/p/threadfix/downloads/list). **DO NOT** "Download ZIP".   
+
 ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with
 vulnerability trending reports that show progress over time, giving them justification for their efforts.
 
