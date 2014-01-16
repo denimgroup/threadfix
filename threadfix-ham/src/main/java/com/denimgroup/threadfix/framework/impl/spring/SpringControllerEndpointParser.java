@@ -42,7 +42,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     @NotNull
     Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
     private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
-    private boolean inClass = false, afterOpenParen = false;
+    private boolean inClass = false, afterOpenParen = false, isPathParameter;
     boolean hasControllerAnnotation = false;
 
     @Nullable
@@ -57,7 +57,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private List<String>
             classMethods  = new ArrayList<>(),
             methodMethods = new ArrayList<>(),
-            currentParameters = new ArrayList<>();
+            currentParameters = new ArrayList<>(),
+            currentPathParameters = new ArrayList<>();
 
     private static final String
             VALUE = "value",
@@ -101,11 +102,6 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         this.rootFilePath = rootFilePath;
     }
 
-    /**
-     * We figured it would be advantageous to
-     * @param rootFilePath
-     * @param entityMappings
-     */
     private SpringControllerEndpointParser(@NotNull String rootFilePath,
                                            @Nullable SpringEntityMappings entityMappings) {
         this.rootFilePath = rootFilePath;
@@ -156,6 +152,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 if (stringValue != null &&
                         (stringValue.equals(REQUEST_PARAM) || stringValue.equals(PATH_VARIABLE))) {
                     setState(SignatureState.REQUEST_PARAM);
+                    isPathParameter = stringValue.equals(PATH_VARIABLE);
                 } else {
                     setState(SignatureState.START);
                 }
@@ -169,7 +166,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                 break;
             case GET_ANNOTATION_VALUE:
                 if (type == DOUBLE_QUOTE) {
-                    currentParameters.add(stringValue);
+                    if (isPathParameter) {
+                        currentParameters.add(stringValue);
+                    } else {
+                        currentPathParameters.add(stringValue);
+                    }
                     setState(SignatureState.START);
                 } else if ("value".equals(stringValue)) {
                     setState(SignatureState.VALUE);
@@ -353,12 +354,13 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         SpringControllerEndpoint endpoint = new SpringControllerEndpoint(rootFilePath, currentMapping,
                 methodMethods,
                 currentParameters,
+                currentPathParameters,
                 startLineNumber,
                 endLineNumber,
                 currentModelObject);
 
         if (entityMappings != null) {
-            endpoint.expandModelToParameters(entityMappings);
+            endpoint.expandParameters(entityMappings, null);
         }
 
         endpoints.add(endpoint);
@@ -368,6 +370,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         startLineNumber = -1;
         curlyBraceCount = 0;
         currentParameters = new ArrayList<>();
+        currentPathParameters = new ArrayList<>();
         currentModelObject = null;
     }
 

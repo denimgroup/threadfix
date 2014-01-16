@@ -88,23 +88,30 @@ public class SpringControllerMappings implements EndpointGenerator {
 	private void generateMaps() {
         List<SpringEntityParser> springEntityParsers = new ArrayList<>();
 
+        SpringDataBinderParser globalDataBinderParser = null;
+
 		for (File file: javaFiles) {
 			if (file != null && file.exists() && file.isFile() &&
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
 
                 SpringControllerEndpointParser endpointParser = new SpringControllerEndpointParser(file.getAbsolutePath());
                 SpringEntityParser entityParser = new SpringEntityParser();
-                EventBasedTokenizerRunner.run(file, entityParser, endpointParser);
+                SpringDataBinderParser dataBinderParser = new SpringDataBinderParser();
+                EventBasedTokenizerRunner.run(file, entityParser, endpointParser, dataBinderParser);
 
                 springEntityParsers.add(entityParser);
-                addEndpointsToMaps(file, endpointParser);
+                addEndpointsToMaps(file, endpointParser, dataBinderParser);
+
+                if (dataBinderParser.isGlobal) {
+                    globalDataBinderParser = dataBinderParser;
+                }
 			}
 		}
 
         SpringEntityMappings mappings = new SpringEntityMappings(springEntityParsers);
 
         for (SpringControllerEndpoint endpoint : endpointsList) {
-            endpoint.expandModelToParameters(mappings);
+            endpoint.expandParameters(mappings, globalDataBinderParser);
         }
 	}
 
@@ -118,13 +125,15 @@ public class SpringControllerMappings implements EndpointGenerator {
         return fileNameWithoutRoot;
     }
 
-    private void addEndpointsToMaps(File file, SpringControllerEndpointParser endpointParser) {
+    private void addEndpointsToMaps(File file, SpringControllerEndpointParser endpointParser,
+                                    SpringDataBinderParser dataBinderParser) {
         if (endpointParser.hasControllerAnnotation) {
 
             endpointsList.addAll(endpointParser.endpoints);
 
             for (SpringControllerEndpoint endpoint : endpointParser.endpoints) {
                 endpoint.setFileRoot(rootDirectory.getAbsolutePath());
+                endpoint.setDataBinderParser(dataBinderParser);
                 String urlPath = endpoint.getCleanedUrlPath();
                 if (!urlToControllerMethodsMap.containsKey(urlPath)) {
                     urlToControllerMethodsMap.put(urlPath, new TreeSet<SpringControllerEndpoint>());

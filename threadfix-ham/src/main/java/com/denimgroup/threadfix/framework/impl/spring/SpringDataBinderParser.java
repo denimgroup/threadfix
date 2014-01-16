@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by mcollins on 1/15/14.
+ * This class parses out DataBinder.setAllowedFields and DataBinder.setDisallowedFields calls.
  */
 // TODO handle @InitBinder on objects (probably) (but not for now)
 public class SpringDataBinderParser implements EventBasedTokenizer {
@@ -32,7 +32,8 @@ public class SpringDataBinderParser implements EventBasedTokenizer {
 
 
     enum State {
-        BEFORE_CLASS_BODY, ARROBA_BEFORE_CLASS, IN_CLASS_BODY, ARROBA, IN_PARAMS, GET_NEXT_STRING, METHOD_BODY, GET_WHITELIST, GET_BLACKLIST
+        BEFORE_CLASS_BODY, ARROBA_BEFORE_CLASS, IN_CLASS_BODY, ARROBA,
+        IN_PARAMS, GET_NEXT_STRING, METHOD_BODY, GET_WHITELIST, GET_BLACKLIST
     }
 
     State currentState = State.BEFORE_CLASS_BODY;
