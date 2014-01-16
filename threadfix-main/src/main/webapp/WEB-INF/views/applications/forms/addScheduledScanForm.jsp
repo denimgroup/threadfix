@@ -13,8 +13,8 @@
             <tr class="left-align">
                 <td style="padding:5px;">Frequency</td>
                 <td style="padding:5px;">
-                    <form:select style="width:243px;" path="frequency"
-                                 id="frequency${application.id}"
+                    <form:select style="width:243px;" path="frequency" onchange="changeAbilityOfDaySelection()"
+                                 id="frequency"
                                  items="${ frequencyTypes }"
                                  itemValue="description"
                                  itemLabel="description"/>
@@ -36,24 +36,15 @@
                                  items="${ periodTypes }"
                                  itemValue="period"
                                  itemLabel="period">
-                        <%--<c:forEach items="${periodTypes}" var="period">--%>
-                            <%--<option value="${period.period}">${period.period}</option>--%>
-                        <%--</c:forEach>--%>
                     </form:select>
 
                     <form:select style="margin-bottom:0px; width:110px;" name="selectedDay"
-                                 id="selectedDay${application.id}"
-                            path="day">
+                                 id="selectedDay"
+                                 path="day" disabled="true">
                         <form:option value="" label="Select Day"/>
                         <form:options items="${ scheduledDays }" itemLabel="day" itemValue="day"/>
-                        <%--<c:forEach items="${scheduledDays}" var="dayInWeek">--%>
-                            <%--<option value="${dayInWeek.day}">${dayInWeek.day}</option>--%>
-                        <%--</c:forEach>--%>
                     </form:select>
                     <form:errors path="dateError" cssClass="errors" />
-                    <%--<form:errors path="minute" cssClass="errors" />--%>
-                    <%--<form:errors path="period" cssClass="errors" />--%>
-                    <%--<form:errors path="day" cssClass="errors" />--%>
                 </td>
             </tr>
 

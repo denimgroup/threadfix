@@ -82,12 +82,13 @@ public class ScheduledScanScheduler {
         log.info("Loading all Scheduled Scans from database");
         List<ScheduledScan> scheduledScans = scheduledScanService.loadAllScheduledScan();
         log.info("Got " + scheduledScans.size() + " Scheduled Scans");
-        log.info("------- Scheduling Jobs ----------------");
 
+        log.info("------- Scheduling Jobs ----------------");
         for (ScheduledScan scheduledScan: scheduledScans) {
             addScheduledScan(scheduledScan);
         }
         log.info("------- End Scheduling Jobs ----------------");
+
         try {
             scheduler.start();
         } catch (SchedulerException scheEx) {
