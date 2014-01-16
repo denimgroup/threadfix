@@ -63,6 +63,11 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public FilterPage clickEditTeamFilters() {
+        driver.findElementById("editfiltersButton1").click();
+        waitForElement(driver.findElementById("createNewKeyModalButton"));
+        return new FilterPage(driver);
+    }
 
     public TeamDetailPage clickEditOrganizationLink() {
         clickActionButton();
@@ -297,6 +302,12 @@ public class TeamDetailPage extends BasePage {
         //          driver.findElementById("teamNameInput").sendKeys(s);
         //          String v = driver.findElementById("teamNameInput").getAttribute("value");
         //          return v.equals(s.substring(0, limit));
+    }
+
+    public boolean isTeamNameDisplayedCorrectly(String teamName) {
+        String pageName = driver.findElementById("name").getText();
+        pageName = pageName.replaceAll("(.*) Action$", "$1");
+        return teamName.equals(pageName);
     }
 
     public boolean ispermUsersLinkPresent(){

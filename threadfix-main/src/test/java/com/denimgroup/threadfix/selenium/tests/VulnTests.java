@@ -109,6 +109,7 @@ public class VulnTests extends BaseTest {
         ad.logout();
 		destroy();
 	}
+
     @Ignore
 	@Test
 	public void mergeSingleVulnTFS(){
@@ -143,6 +144,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
+
 	@Test
 	public void mergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
@@ -169,6 +171,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
+
 	@Ignore
 	@Test
 	public void mergeMultiVulnTFS(){
@@ -238,6 +241,7 @@ public class VulnTests extends BaseTest {
 		ad.logout();
 		destroy();
 	}
+
 	@Ignore
 	@Test
 	public void changeMergeSingleVulnTFS(){
@@ -314,6 +318,7 @@ public class VulnTests extends BaseTest {
 		
 		destroy();
 	}
+
 	@Ignore
 	@Test
 	public void changeMergeMultiVulnTFS(){

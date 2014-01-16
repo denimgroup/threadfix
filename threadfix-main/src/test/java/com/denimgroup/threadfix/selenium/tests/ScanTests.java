@@ -127,7 +127,6 @@ public class ScanTests extends BaseTest {
 		int scanCnt  = 0;
 //		int vulnCnt = 0;
 
-		
 		// log in
 		teamIndexPage = loginPage.login("user", "password")
 								.clickOrganizationHeaderLink()
@@ -229,6 +228,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 	}
 
+    @Ignore
 	@Test
 	public void skipFishScan(){
 		String key = "Skipfish";
@@ -289,6 +289,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 	}
 
+    @Ignore
 	@Test
 	public void arachniScan() {
 		String key = "Arachni";
@@ -297,6 +298,7 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 	}
 
+    @Ignore
 	@Test
 	public void webInspectScan() {
 		String key = "WebInspect";
@@ -345,8 +347,7 @@ public class ScanTests extends BaseTest {
 
 		runScanTest(key, expectedResults);
 	}
-	
-	
+
 	public void runScanTest(String scannerName, String[][] expectedResults) {
 		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		

@@ -503,6 +503,7 @@ public class UserTests extends BaseTest {
 		
 		
 	}
+
 	// If this test fails with the defaults changed it could cause the other user tests to fail
 	@Ignore
 	@Test
@@ -693,7 +694,5 @@ public class UserTests extends BaseTest {
 		
 		
 	}
-	
-	
-	
+
 }

@@ -26,15 +26,13 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.selenium.pages.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 import java.util.Map;
 
@@ -50,15 +48,14 @@ public class TeamTests extends BaseTest {
 	
 	private TeamIndexPage teamIndexPage;
 	private TeamDetailPage teamDetailPage;
-	
+    private ApplicationDetailPage applicationDetailPage;
+
 	@Before
 	public void init() {
 		super.init();
 		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
-	
-
 
 	@Test
 	public void testCreateTeam(){
@@ -81,6 +78,58 @@ public class TeamTests extends BaseTest {
 	
 		loginPage = teamIndexPage.logout();
 	}
+
+    @Test
+    public void testExpandAndCollapseIndividualTeam(){
+        String teamName = getRandomString(8);
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .expandTeamRowByIndex(teamName);
+
+        assertTrue("Team info was not expanded properly.", teamIndexPage.isTeamExpanded(teamName));
+
+        teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName);
+
+        assertFalse("Team info was not collapsed properly.", teamIndexPage.isTeamExpanded(teamName));
+
+        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
+                .clickDeleteButton();
+
+        loginPage = teamIndexPage.logout();
+    }
+
+    @Test
+    public void testExpandAndCollapseAllTeams(){
+        String teamName1 = getRandomString(8);
+        String teamName2 = getRandomString(8);
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName1)
+                .addNewTeam()
+                .clickAddTeamButton()
+                .setTeamName(teamName2)
+                .addNewTeam()
+                .expandAllTeams();
+
+        assertTrue("All teams were not expanded properly.", teamIndexPage.areAllTeamsExpanded());
+
+        teamIndexPage = teamIndexPage.collapseAllTeams();
+
+         assertFalse("All teams were not collapsed properly.", teamIndexPage.areAllTeamsCollapsed());
+
+        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName1)
+                .clickDeleteButton()
+                .clickViewTeamLink(teamName2)
+                .clickDeleteButton();
+
+        loginPage = teamIndexPage.logout();
+    }
 	
 	@Test
 	public void longTeamNameEditModalHeader(){
@@ -179,6 +228,58 @@ public class TeamTests extends BaseTest {
 	
 		loginPage = teamIndexPage.logout();
 	}
+
+    @Test
+    public void testViewMore() {
+        String teamName = getRandomString(8);
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        teamDetailPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .clickViewTeamLink(teamName);
+
+        assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
+
+        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
+                .clickDeleteButton();
+
+        loginPage = teamIndexPage.logout();
+    }
+
+    // TODO Wait for the graphs to have id's, then test
+    @Ignore
+    @Test
+    public void testTeamGraphs() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .addNewApplication(teamName, appName, "", "Low")
+                .saveApplication(teamName)
+                .clickUploadScan(appName,teamName)
+                .setFileInput("test")
+                .clickUploadScanButton(teamName, appName);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName);
+
+        assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName,appName));
+
+        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
+                .clickDeleteButton();
+
+        loginPage = teamIndexPage.logout();
+
+    }
 
 	//selenium issue
 	@Ignore

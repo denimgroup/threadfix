@@ -330,7 +330,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage clearWhiteHat(){
-		driver.findElementById("clearConfig3").click();
+		driver.findElementById("clearConfig1").click();
 		handleAlert();
 		return new RemoteProvidersIndexPage(driver);
 	}

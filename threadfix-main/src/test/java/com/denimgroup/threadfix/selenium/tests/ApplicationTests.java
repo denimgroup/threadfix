@@ -57,7 +57,7 @@ public class ApplicationTests extends BaseTest {
 		driver = (RemoteWebDriver) super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
-	//@Ignore
+
 	@Test 
 	public void testCreateBasicApplication() {
 		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);

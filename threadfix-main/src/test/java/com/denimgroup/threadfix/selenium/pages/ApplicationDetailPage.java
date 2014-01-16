@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -393,24 +394,6 @@ public class ApplicationDetailPage extends BasePage {
 		waitForElement(driver.findElementById("expandAllVulns"));
 		return new ApplicationDetailPage(driver);
 	}
-	
-
-//	public ApplicationDetailPage waitForScans() {
-//
-//		ApplicationDetailPage returnPage = this;
-//
-//		String appName = getNameText();
-//
-//		returnPage = returnPage.clickTeamLink()
-//				.clickTextLinkInApplicationsTableBody(appName);
-//
-//		while (!isElementPresent("ajaxVulnTable")) {
-//			returnPage = returnPage.clickTeamLink()
-//					.clickTextLinkInApplicationsTableBody(appName);
-//			sleep(2000);
-//		}
-//		return returnPage;
-//	}
 
 	public ApplicationDetailPage clickEditWaf() {
 		driver.findElementById("editWafButton").click();
@@ -485,8 +468,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 	
 	public ApplicationDetailPage setFileInput(String file) {
-		WebElement test = driver.findElementById("fileInput"+modalNumber());
-        test.sendKeys(file);
+		driver.findElementById("fileInput"+modalNumber()).sendKeys(file);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -870,4 +852,28 @@ public class ApplicationDetailPage extends BasePage {
         new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
         return new ApplicationDetailPage(driver);
         }
+
+    public boolean vulnerabilitiesFiltered(String level, String expected) {
+        return specificVulnerabilityCount(level).equals(expected);
+    }
+
+    public String specificVulnerabilityCount(String level) {
+        List<WebElement> headers = driver.findElementsByClassName("vulnSectionHeader");
+
+        for (WebElement header : headers) {
+            if (header.getText().contains(level)) {
+                String count = header.getText();
+                count = count.substring(count.length() - 2,count.length() - 1);
+                return count;
+            }
+        }
+
+        return "0";
+    }
+
+    public FilterPage clickEditVulnerabilityFilters() {
+        driver.findElementById("editVulnerabilityFiltersButton").click();
+        return new FilterPage(driver);
+    }
+
 }

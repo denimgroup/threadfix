@@ -464,9 +464,9 @@ public class ScanContents extends BaseTest{
 	}
 	
 	public static String getScanFilePath(String category, String scannerName, String fileName) {
-        String pathSeparator = System.getProperty("file.separator");
-		String string = "SupportingFiles"+ pathSeparator + category  + pathSeparator + scannerName +
-                pathSeparator + fileName;
+        String fileSeparator = System.getProperty("file.separator");
+		String string = "SupportingFiles"+ fileSeparator + category  + fileSeparator + scannerName +
+                fileSeparator + fileName;
 		String urlFromCommandLine = System.getProperty("scanFileBaseLocation");
 		if (urlFromCommandLine != null) {
 			return urlFromCommandLine + string;

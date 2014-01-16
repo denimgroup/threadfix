@@ -25,10 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,7 +126,7 @@ public class TeamIndexPage extends BasePage {
             i++;
             String text = app.getText().trim();
             if(text.equals(appName.trim())){
-                return i;
+                return i + 1;
             }
         }
         return -1;
@@ -184,7 +181,16 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    @Deprecated
+    public TeamIndexPage expandAllTeams() {
+        driver.findElementById("expandAllButton").click();
+        return setPage();
+    }
+
+    public TeamIndexPage collapseAllTeams() {
+        driver.findElementById("collapseAllButton").click();
+        return setPage();
+    }
+
     public void populateAppList(String teamName) {
         populateAppList(getIndex(teamName));
     }
@@ -217,7 +223,7 @@ public class TeamIndexPage extends BasePage {
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
         int teamIndex = getIndex(teamName);
         populateAppList(teamIndex);
-        apps.get(getAppIndex(appName)).click();
+        apps.get(getAppIndex(appName) - 1).click();
         waitForElement(driver.findElementById("actionButton1"));
         return new ApplicationDetailPage(driver);
     }
@@ -315,7 +321,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage clickUploadScan(String appName,String teamName) {
         modalNum = modalNumber(teamName,appName);
-        driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).click();
+        driver.findElementById("uploadScanModalLink"+(getIndex(teamName))+"-"+(getAppIndex(appName))).click();
         waitForElement(driver.findElementById("uploadScan"+modalNum));
         return setPage();
     }
@@ -327,17 +333,8 @@ public class TeamIndexPage extends BasePage {
         return page;
     }
 
-    public TeamIndexPage setFileInput(String file, String teamName, String appName) {
-        //driver.findElementById("fileInput"+modalNumber()).click();
+    public TeamIndexPage setFileInput(String file) {
         driver.findElementById("fileInput"+modalNum).sendKeys(file);
-		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
-				.size(); i++)
-			if (driver.findElementById("applicationLink" + i).getText()
-					.equals(appName)) {
-				driver.findElementById("fileInput" + i).clear();
-				driver.findElementById("fileInput" + i).sendKeys(file);
-				break;
-			}*/
         return setPage();
     }
 
@@ -417,7 +414,11 @@ public class TeamIndexPage extends BasePage {
 	}
 
 	public int modalNumber(String teamName, String appName){
-		String s = driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).getAttribute("href");
+        int teamIndex = getIndex(teamName);
+        populateAppList(teamIndex);
+        int appIndex = getAppIndex(appName);
+
+		String s = driver.findElementById("uploadScanModalLink" + teamIndex + "-" + appIndex).getAttribute("href");
 		Pattern pattern = Pattern.compile("#uploadScan([0-9]+)$");
 		Matcher matcher = pattern.matcher(s);
 		if(matcher.find()){
@@ -433,7 +434,29 @@ public class TeamIndexPage extends BasePage {
 	public boolean isAddTeamBtnClickable(){
 		return ExpectedConditions.elementToBeClickable(By.id("addTeamModalButton")) != null;
 	}
-	
+
+    public boolean isTeamExpanded(String teamName){
+        return driver.findElementById("teamAppTableDiv" + getIndex(teamName)).isDisplayed();
+    }
+
+    public boolean areAllTeamsExpanded() {
+        for (int i = 1; i <= getNumTeamRows(); i++){
+            if (!(driver.findElementById("teamAppTableDiv" + i).isDisplayed())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean areAllTeamsCollapsed() {
+        for (int i = 1; i <= getNumTeamRows(); i++){
+            if (driver.findElementById("teamAppTableDiv" + i).isDisplayed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 	public boolean isExpandAllBtnPresent(){
 		return driver.findElementById("expandAllButton").isDisplayed();	
 	}
@@ -477,12 +500,19 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isUploadScanPresent(String teamName, String appName){;
-		return driver.findElementById("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1)).isDisplayed();
+		return driver.findElementById("uploadScanModalLink"+(getIndex(teamName))+"-"+(getAppIndex(appName))).isDisplayed();
 	}
 	
 	public boolean isUploadScanClickable(String teamName, String appName){
-		return ExpectedConditions.elementToBeClickable(By.linkText("uploadScanModalLink"+(getIndex(teamName)+1)+"-"+(getAppIndex(appName)+1))) != null;
+		return ExpectedConditions.elementToBeClickable(By.linkText("uploadScanModalLink"+(getIndex(teamName))+"-"+(getAppIndex(appName)))) != null;
 	}
+
+    // TODO this needs to be changed so that it will use the img id and not a path
+    public boolean isGraphDisplayed(String teamName, String appName) {
+        modalNum = modalNumber(teamName, appName);
+        String temp = "/threadfix/jasperimage/pointInTim" + modalNum + "/img_0_0_0";
+        return driver.findElementByXPath(temp).isDisplayed();
+    }
 	
 	public boolean isAddTeamModalPresent(){
 		return driver.findElementById("myTeamModal").isDisplayed();
@@ -598,6 +628,29 @@ public class TeamIndexPage extends BasePage {
         return ExpectedConditions.elementToBeClickable(By.id(getAppModalId(teamName))) != null;
     }
 
+    public boolean teamVulnerabilitiesFiltered(String teamName, String level) {
+        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals("0");
+    }
 
+    // TODO possibly wait for tags
+    public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level) {
+        getApplicationSpecificVulnerability(teamName, appName, level);
+        return true;
+    }
+
+    public String getApplicationSpecificVulnerability(String teamName, String appName, String level) {
+        populateAppList(teamName);
+        int appIndex = getAppIndex(appName);
+        WebElement appTable = driver.findElementById("teamAppTable" + getIndex(teamName));
+
+        List<WebElement> rows = appTable.findElements(By.className("app-row"));
+        WebElement cell = rows.get(appIndex - 1).findElement(By.id("num" + level + "Vulns" + getIndex(teamName)));
+
+        return cell.getText();
+    }
+
+    public boolean severityChanged(String teamName, String level, String expected) {
+        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals(expected);
+    }
 
 }
