@@ -36,6 +36,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
+import com.denimgroup.threadfix.plugin.eclipse.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.rest.VulnerabilityMarkerService;
 import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
@@ -71,8 +72,9 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 
 		if (dialog.open() == Window.OK) {
 			SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
-			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
-			while(threadFixApplicationMap.get("Authentication failed")!=null){
+			ApplicationsMap threadFixApplicationMap = ThreadFixService.getApplications();
+			
+			while (threadFixApplicationMap.getTeams().isEmpty()) {
 				dialog = new ConfigDialog(window.getShell(),
 						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
 
@@ -87,6 +89,7 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 					break;
 				}
 			}
+			
 			if(!cancelled){
 				MessageDialog.openInformation(
 						window.getShell(), "ThreadFix Vulnerability Import", "Importing ThreadFix Vulnerabilities.");

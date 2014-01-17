@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.action;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
@@ -34,6 +33,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ApplicationDialog;
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
+import com.denimgroup.threadfix.plugin.eclipse.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
 
@@ -66,8 +66,8 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 			System.out.println("Saved ThreadFix information successfully.");
 			
 			// Get application info
-			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
-			while(threadFixApplicationMap.get("Authentication failed")!=null){
+			ApplicationsMap threadFixApplicationMap = ThreadFixService.getApplications();
+			while (threadFixApplicationMap.getTeams().isEmpty()){
 				dialog = new ConfigDialog(window.getShell(),
 						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
 
@@ -82,7 +82,7 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 					break;
 				}
 			}
-			if(!cancelled){
+			if (!cancelled) {
 				Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
 				
 				ApplicationDialog appDialog = new ApplicationDialog(window.getShell(),
