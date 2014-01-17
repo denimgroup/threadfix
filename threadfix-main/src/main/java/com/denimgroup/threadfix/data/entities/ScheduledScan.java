@@ -106,7 +106,7 @@ public class ScheduledScan extends AuditableEntity {
 
         public static DayInWeek getDay(String keyword) {
             for (DayInWeek t: values()) {
-                if (keyword.equalsIgnoreCase(t.getDay())) {
+                if (keyword != null && keyword.equalsIgnoreCase(t.getDay())) {
                     return t;
                 }
             }
