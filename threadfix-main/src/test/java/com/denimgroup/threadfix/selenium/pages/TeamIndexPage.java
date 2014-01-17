@@ -451,10 +451,10 @@ public class TeamIndexPage extends BasePage {
     public boolean areAllTeamsCollapsed() {
         for (int i = 1; i <= getNumTeamRows(); i++){
             if (driver.findElementById("teamAppTableDiv" + i).isDisplayed()) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 	public boolean isExpandAllBtnPresent(){
@@ -628,14 +628,13 @@ public class TeamIndexPage extends BasePage {
         return ExpectedConditions.elementToBeClickable(By.id(getAppModalId(teamName))) != null;
     }
 
-    public boolean teamVulnerabilitiesFiltered(String teamName, String level) {
-        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals("0");
+    public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {
+        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals(expected);
     }
 
-    // TODO possibly wait for tags
-    public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level) {
-        getApplicationSpecificVulnerability(teamName, appName, level);
-        return true;
+    // TODO (redo) possibly with tags
+    public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level,String expected) {
+        return getApplicationSpecificVulnerability(teamName, appName, level).equals(expected);
     }
 
     public String getApplicationSpecificVulnerability(String teamName, String appName, String level) {
@@ -649,6 +648,7 @@ public class TeamIndexPage extends BasePage {
         return cell.getText();
     }
 
+    @Deprecated
     public boolean severityChanged(String teamName, String level, String expected) {
         return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals(expected);
     }

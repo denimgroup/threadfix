@@ -31,14 +31,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TeamDetailPage extends BasePage {
+    private List<String> apps = new ArrayList<>();
 
     //     private WebElement orgName;
     private WebElement applicationsTableBody;
@@ -158,6 +155,7 @@ public class TeamDetailPage extends BasePage {
         }
     }
 
+    //TODO possible deletion, not being used and there might be better alternative methods
     public Map<String, Integer> getVulnCountForApps() {
         Map<String, Integer> map = new HashMap<>();
 
@@ -197,6 +195,31 @@ public class TeamDetailPage extends BasePage {
             return  matcher.group(1);
         }
         return "";
+    }
+
+    public void populateAppList(){
+        int i = 1;
+        if (apps.isEmpty()){
+            try {
+                while(driver.findElementById("appLink"+ i).isDisplayed()){
+                    apps.add(driver.findElementById("appLink" + i).getText());
+                    i++;
+                }
+            }catch(NoSuchElementException e) {
+                System.out.println("Done getting app list.");
+            }
+        }
+    }
+
+    public int getAppIndex(String appName) {
+        int i = 0;
+        for (String app : apps) {
+            i++;
+            if (app.equals(appName)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public int getIndex(String teamName) {
@@ -241,6 +264,11 @@ public class TeamDetailPage extends BasePage {
             }
         }
         return false;
+    }
+
+    public boolean applicationVulnerabilitiesFiltered(String appName, String level,String expected) {
+        populateAppList();
+        return driver.findElementById("app" + level + "Vulns" + getAppIndex(appName)).getText().equals(expected);
     }
 
     public boolean isActionBtnPresent(){
