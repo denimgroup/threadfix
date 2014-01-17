@@ -411,6 +411,7 @@ public class VulnTests extends BaseTest {
 		destroy();
 
 	}
+
 	@Ignore
 	@Test
 	public void changeMergeMultiDiffVulnTFS(){
@@ -418,6 +419,7 @@ public class VulnTests extends BaseTest {
 		//merge here
 		destroy();
 	}
+
 	@Test
 	public void submitBlankDefect(){
 		assertTrue("blank defect",build(JIRA));

@@ -67,7 +67,6 @@ public class FilterTests extends BaseTest{
         driver.quit();
     }
 
-    // TODO in progress
     @Test
     public void testApplicationFilters() {
         String teamName = getRandomString(8);
@@ -118,15 +117,21 @@ public class FilterTests extends BaseTest{
                 .expandTeamRowByIndex(teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
-                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Medium"));
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "High", "2"));
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
-                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Info"));
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Medium", "0"));
+        assertTrue("Vulnerabilities were not filtered properly on team index page.",
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Info", "0"));
 
 
         applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on application detail page.",
                 applicationDetailPage.vulnerabilitiesFiltered("High", "2"));
+        assertTrue("Vulnerabilities were not filtered properly on application detail page.",
+                applicationDetailPage.vulnerabilitiesFiltered("Medium", "0"));
+        assertTrue("Vulnerabilities were not filtered properly on application detail page.",
+                applicationDetailPage.vulnerabilitiesFiltered("Info", "0"));
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
@@ -173,14 +178,96 @@ public class FilterTests extends BaseTest{
 
         teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
 
-        assertTrue("The filter was not implemented correctly.", teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium"));
-        assertTrue("The filter was not implemented correctly.", teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info"));
+        //TODO possible method name change...keep conventions
+        assertTrue("The filter was not implemented correctly.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
+        assertTrue("The filter was not implemented correctly.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info","0"));
+        assertTrue("The severity filter was not set properly.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, severity, "2"));
 
-        assertTrue("The severity filter was not set properly.", teamIndexPage.severityChanged(teamName, severity, "2"));
+        teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
+        assertTrue("The filter was not implemented correctly",
+                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Medium", "0"));
+        assertTrue("The filter was not implemented correctly",
+                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Info", "0"));
+        assertTrue("The severity filter was implemented correctly",
+                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "High", "2"));
+
+        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
                 .clickDeleteButton();
 
         loginPage = teamIndexPage.logout();
+    }
+
+    //TODO Finish up this test
+    @Test
+    public void testGlobalFilters() {
+        String teamName = getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
+        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
+                + fileSeparator + "testaspnet.xml";
+
+        String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
+        String severity = "High";
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .addNewApplication(teamName, appName1, "", "Low")
+                .saveApplication(teamName)
+                .clickUploadScan(appName1, teamName)
+                .setFileInput(file)
+                .clickUploadScanButton(teamName, appName1);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.addNewApplication(teamName, appName2, "", "Low")
+                .saveApplication(teamName)
+                .clickUploadScan(appName2, teamName)
+                .setFileInput(file)
+                .clickUploadScanButton(teamName, appName2);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+    }
+
+    //TODO finish this up testing the affects of multiple layers of filters
+    @Ignore
+    @Test
+    public void layeredFilterTest() {
+        String teamName = getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
+        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
+                + fileSeparator + "testaspnet.xml";
+
+        String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
+        String severity = "High";
+
+        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .addNewApplication(teamName, appName1, "", "Low")
+                .saveApplication(teamName)
+                .clickUploadScan(appName1, teamName)
+                .setFileInput(file)
+                .clickUploadScanButton(teamName, appName1);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.addNewApplication(teamName, appName2, "", "Low")
+                .saveApplication(teamName)
+                .clickUploadScan(appName2, teamName)
+                .setFileInput(file)
+                .clickUploadScanButton(teamName, appName2);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
     }
 }

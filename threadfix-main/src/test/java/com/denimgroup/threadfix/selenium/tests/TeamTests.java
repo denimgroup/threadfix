@@ -102,6 +102,8 @@ public class TeamTests extends BaseTest {
         loginPage = teamIndexPage.logout();
     }
 
+    // TODO possible deletion due to tables having a height of zero, the aren't 'not displayed'
+    @Ignore
     @Test
     public void testExpandAndCollapseAllTeams(){
         String teamName1 = getRandomString(8);
@@ -121,7 +123,7 @@ public class TeamTests extends BaseTest {
 
         teamIndexPage = teamIndexPage.collapseAllTeams();
 
-         assertFalse("All teams were not collapsed properly.", teamIndexPage.areAllTeamsCollapsed());
+         assertTrue("All teams were not collapsed properly.", teamIndexPage.areAllTeamsCollapsed());
 
         teamIndexPage = teamIndexPage.clickViewTeamLink(teamName1)
                 .clickDeleteButton()
