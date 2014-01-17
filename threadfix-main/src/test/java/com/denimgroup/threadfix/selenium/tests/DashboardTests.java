@@ -4,8 +4,9 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+
 
 public class DashboardTests extends BaseTest{
 
@@ -14,24 +15,30 @@ public class DashboardTests extends BaseTest{
 		// TODO Auto-generated constructor stub
 	}
 
-	private static LoginPage loginPage;
+    private static LoginPage loginPage;
 	private RemoteWebDriver driver;
 	private DashboardPage dashboardPage;
+
+    String teamName = "linkNavTeam" + getRandomString(3);
+    String appName = "linkNavAPP" + getRandomString(3);
+    String urlText = "http://testurl.com";
 	
 	@Before
 	public void init() {
 		super.init();
-		driver = (RemoteWebDriver) super.getDriver();
+		driver = (RemoteWebDriver)super.getDriver();
 		loginPage = LoginPage.open(driver);
 	}
+    @After
+    public void shutdown(){
+        cleanUpApplicaitons();
+        driver.quit();
+    }
 
-    @Ignore
+
 	@Test
-	public void linkNavigationTest(){
-		String teamName = "linkNavTeam" + getRandomString(3);
-		String appName = "linkNavAPP" + getRandomString(3);
-		String urlText = "http://testurl.com";
-		
+	public void dashboardGraphsTest(){
+
 		dashboardPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
@@ -46,22 +53,45 @@ public class DashboardTests extends BaseTest{
 				.submitScan()
 				.clickDashboardLink();
 
+        //check if the graphs are present
 		assertTrue("6 month vuln graph is not displayed",dashboardPage.is6MonthGraphPresent());
 		assertTrue("Top 10 graph is not displayed",dashboardPage.isTop10GraphPresent());
-		
-//		applicationDetailPage = dashboardPage.clickLatestUploadApp();
-//		
-//		assertTrue("Did not navigate to correct Application page",applicationDetailPage.getH2Tag().trim().contains(appName));
-//		
-//		ScanDetailPage scanDetailPage = applicationDetailPage.clickDashboardLink()
-//															.clickLatestUploadScan();
-//		
-//		assertTrue("Did not navigate to correct Scan Detail Page",scanDetailPage.getScanHeader().contains("FindBugs"));
-//		
-//		ReportsIndexPage reportIndexPage = scanDetailPage.clickDashboardLink()
-//														.click6MonthViewMore();
-//		
-//		reportIndexPage.getCurrentReport();
+
+        dashboardPage.logout();
+
 
 	}
+    @Test
+    public void dashboardApplicationLoadTest(){
+        dashboardPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam()
+                .expandTeamRowByIndex(teamName)
+                .addNewApplication(teamName, appName, urlText, "Low")
+                .saveApplication(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickUploadScanLink()
+                .setFileInput(ScanContents.SCAN_FILE_MAP.get("Skipfish"))
+                .submitScan()
+                .clickDashboardLink();
+
+        dashboardPage.click6MonthViewMore().clickDashboardLink();
+
+        dashboardPage.clickTop10ViewMore().clickDashboardLink();
+
+        dashboardPage.logout();
+
+    }
+
+    public void cleanUpApplicaitons(){
+        loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickDeleteButton()
+                .clickOrganizationHeaderLink()
+                .logout();
+
+    }
 }

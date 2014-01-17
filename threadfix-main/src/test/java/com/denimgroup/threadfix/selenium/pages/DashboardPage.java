@@ -29,7 +29,7 @@ public class DashboardPage extends BasePage{
 	}
 	
 	public ApplicationDetailPage clickLatestUploadApp(){
-		driver.findElementById("application1").click();
+		driver.findElementById("scanApplicationLink1").click();
 		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
