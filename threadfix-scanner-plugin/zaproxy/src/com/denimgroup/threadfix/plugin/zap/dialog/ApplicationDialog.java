@@ -6,11 +6,14 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import com.denimgroup.threadfix.plugin.zap.rest.Application;
+import com.denimgroup.threadfix.plugin.zap.rest.ApplicationsRestResponse;
+import com.denimgroup.threadfix.plugin.zap.rest.RestResponse;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.zaproxy.zap.extension.threadfix.ThreadFixPropertiesManager;
 
-import com.denimgroup.threadfix.plugin.zap.action.RestUtils;
+import com.denimgroup.threadfix.plugin.zap.rest.RestUtils;
 
 public class ApplicationDialog {
 
@@ -49,14 +52,17 @@ public class ApplicationDialog {
     }
 
     public static Map<String, String> getApplicationMap() {
-        String baseResult = RestUtils.getApplications();
+        RestResponse baseResult = RestUtils.getApplications();
 
         Map<String, String> returnMap = new HashMap<>();
 
-        for (String line : baseResult.split("\n")) {
-            if (line != null && line.split(",").length == 2) {
-                String[] parts = line.split(",");
-                returnMap.put(parts[0], parts[1]);
+        if (baseResult != null && baseResult.wasSuccessful()) {
+            ApplicationsRestResponse appsResponse = new ApplicationsRestResponse(baseResult);
+
+            for (Application app : appsResponse.getApplications()) {
+                if (app != null && app.getCombinedName() != null && app.getId() != null) {
+                    returnMap.put(app.getCombinedName(), app.getId());
+                }
             }
         }
 

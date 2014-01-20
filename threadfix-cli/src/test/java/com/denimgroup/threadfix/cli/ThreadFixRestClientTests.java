@@ -1,5 +1,9 @@
 package com.denimgroup.threadfix.cli;
 
+import com.denimgroup.threadfix.properties.PropertiesManager;
+import com.denimgroup.threadfix.remote.HttpRestUtils;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -8,6 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Created with IntelliJ IDEA.
  * User: stran
@@ -15,7 +23,7 @@ import java.util.Random;
  * Time: 10:08 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ThreadFixRestClientTests extends TestCase {
+public class ThreadFixRestClientTests {
 
     private static final int TEAM_ID = 1;
     private static final String TEAM_NAME = "team";
@@ -107,10 +115,7 @@ public class ThreadFixRestClientTests extends TestCase {
     public void testGetAllTeams() {
         ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
         String teamsRet = client.getAllTeams();
-        HttpRestUtils utils = new HttpRestUtils();
-
-        assertNotNull(utils.getJSONArray(teamsRet));
-
+        assertNotNull(UtilTest.getJSONObject(teamsRet));
     }
 
     @Test
@@ -150,8 +155,8 @@ public class ThreadFixRestClientTests extends TestCase {
         ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
         client.setKey(UtilTest.API_KEY);
 
-        HttpRestUtils utils = new HttpRestUtils();
-        assertEquals(UtilTest.API_KEY, utils.getKey());
+        PropertiesManager manager = PropertiesManager.getInstance();
+        assertEquals(UtilTest.API_KEY, manager.getKey());
     }
 
     @Test
@@ -159,24 +164,8 @@ public class ThreadFixRestClientTests extends TestCase {
         ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
         client.setUrl(UtilTest.URL);
 
-        HttpRestUtils utils = new HttpRestUtils();
-        assertEquals(UtilTest.URL, utils.getUrl());
-    }
-
-    @Test
-    public void testSetMemoryKey() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setMemoryKey(UtilTest.API_KEY);
-
-        assertTrue(true);
-    }
-
-    @Test
-    public void testSetMemoryUrl() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setMemoryUrl(UtilTest.URL);
-
-        assertTrue(true);
+        PropertiesManager manager = PropertiesManager.getInstance();
+        assertEquals(UtilTest.URL, manager.getKey());
     }
 
     @Test

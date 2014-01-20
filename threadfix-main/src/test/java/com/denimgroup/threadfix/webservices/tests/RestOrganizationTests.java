@@ -3,8 +3,8 @@ package com.denimgroup.threadfix.webservices.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
-import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

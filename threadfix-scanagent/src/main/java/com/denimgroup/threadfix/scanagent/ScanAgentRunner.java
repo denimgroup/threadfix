@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.scanagent;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;

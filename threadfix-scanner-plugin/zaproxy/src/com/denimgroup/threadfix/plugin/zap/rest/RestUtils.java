@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.zap.action;
+package com.denimgroup.threadfix.plugin.zap.rest;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
+import com.denimgroup.threadfix.plugin.zap.action.ReportGenerator;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -26,7 +27,6 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.zaproxy.zap.extension.threadfix.ThreadFixPropertiesManager;
 
@@ -63,19 +63,15 @@ public class RestUtils {
         return ThreadFixPropertiesManager.getAppId();
     }
 
-    public static String getApplications() {
-        String result = httpGet(getUrl() + "/code/applications/?apiKey=" + getKey());
-
-        return result;
+    public static RestResponse getApplications() {
+        return httpGet(getUrl() + "/code/applications/?apiKey=" + getKey());
     }
 
-    public static String getEndpoints() {
-        String result = httpGet(getUrl() + "/code/applications/" + getApplicationId() + "/endpoints?apiKey=" + getKey());
-
-        return result;
+    public static RestResponse getEndpoints() {
+        return httpGet(getUrl() + "/code/applications/" + getApplicationId() + "/endpoints?apiKey=" + getKey());
     }
 
-    public static String httpGet(String urlStr) {
+    public static RestResponse httpGet(String urlStr) {
 
         System.out.println("Requesting " + urlStr);
 
@@ -91,13 +87,11 @@ public class RestUtils {
 
             InputStream responseStream = get.getResponseBodyAsStream();
 
-            if (responseStream != null) {
-                return IOUtils.toString(responseStream);
-            }
+            return new RestResponse(responseStream, status);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "There was an error and the GET request was not finished.";
+        return new RestResponse(null, -2);
     }
 
     private static int httpPostFile(String request, File file, String[] paramNames,
@@ -172,9 +166,7 @@ public class RestUtils {
                         new AcceptAllTrustManager[] { acceptAllTrustManager },
                         null);
                 return context;
-            } catch (KeyManagementException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
+            } catch (KeyManagementException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             return null;

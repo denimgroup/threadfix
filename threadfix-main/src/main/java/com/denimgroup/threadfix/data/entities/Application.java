@@ -41,6 +41,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.remote.response.AppInfo;
 import com.denimgroup.threadfix.service.repository.GitService;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.eclipse.jgit.lib.Repository;
@@ -557,5 +558,15 @@ public class Application extends AuditableEntity {
         }
 
         return markers;
+    }
+
+    public AppInfo getAppInfo() {
+        AppInfo info = new AppInfo();
+
+        info.applicationId    = getId().toString();
+        info.organizationName = getOrganization().getName();
+        info.applicationName  = getName();
+
+        return info;
     }
 }

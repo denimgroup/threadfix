@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.scanagent.stub;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.scanagent.ScanAgentRunnerTests;
 import org.jetbrains.annotations.Nullable;
 

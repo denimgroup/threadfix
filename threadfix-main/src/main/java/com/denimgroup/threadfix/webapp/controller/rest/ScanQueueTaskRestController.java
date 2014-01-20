@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 import org.springframework.beans.factory.annotation.Autowired;

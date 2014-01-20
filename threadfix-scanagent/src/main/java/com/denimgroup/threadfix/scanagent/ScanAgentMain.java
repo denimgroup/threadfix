@@ -35,7 +35,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
 import org.jetbrains.annotations.NotNull;

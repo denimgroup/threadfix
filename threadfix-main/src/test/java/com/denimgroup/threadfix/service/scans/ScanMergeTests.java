@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;

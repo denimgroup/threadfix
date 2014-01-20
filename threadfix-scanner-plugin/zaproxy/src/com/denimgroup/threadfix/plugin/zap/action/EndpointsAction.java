@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JMenuItem;
 
+import com.denimgroup.threadfix.plugin.zap.rest.RestUtils;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;

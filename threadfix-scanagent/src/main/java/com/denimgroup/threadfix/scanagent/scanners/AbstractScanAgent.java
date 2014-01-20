@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.scanagent.scanners;
 
 import java.io.File;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import org.apache.commons.configuration.Configuration;
 
 import com.denimgroup.threadfix.data.entities.TaskConfig;

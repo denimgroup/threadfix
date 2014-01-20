@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;

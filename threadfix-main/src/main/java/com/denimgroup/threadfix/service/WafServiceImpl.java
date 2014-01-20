@@ -197,7 +197,7 @@ public class WafServiceImpl implements WafService {
 		
 		List<WafRule> rules = loadCurrentRules(waf);
 		
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		
 		String prefix = null, suffix = null;
 		String name = waf.getWafType().getName();

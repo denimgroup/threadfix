@@ -54,10 +54,10 @@ public class MultipartUtility {
      * @param value field value
      */
     public void addFormField(String name, String value) {
-        writer.append("--" + boundary).append(LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"" + name + "\"")
+        writer.append("--").append(boundary).append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"").append(name).append("\"")
                 .append(LINE_FEED);
-        writer.append("Content-Type: text/plain; charset=" + charset).append(
+        writer.append("Content-Type: text/plain; charset=").append(charset).append(
                 LINE_FEED);
         writer.append(LINE_FEED);
         writer.append(value).append(LINE_FEED);
@@ -73,17 +73,11 @@ public class MultipartUtility {
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
         String fileName = uploadFile.getName();
-        writer.append("--" + boundary).append(LINE_FEED);
-        writer.append(
-                "Content-Disposition: form-data; name=\"" + fieldName
-                        + "\"; filename=\"" + fileName + "\"")
+        writer.append("--").append(boundary).append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"").append(fieldName).append("\"; filename=\"").append(fileName).append("\"")
                 .append(LINE_FEED);
-        writer.append(
-                "Content-Type: "
-                        + URLConnection.guessContentTypeFromName(fileName))
+        writer.append("Content-Type: ").append(URLConnection.guessContentTypeFromName(fileName))
                 .append(LINE_FEED);
-//        writer.append("Content-Type: application/octet-stream; charset=ISO-8859-1").append(
-//                LINE_FEED);
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.flush();
@@ -107,7 +101,7 @@ public class MultipartUtility {
      * @param value - value of the header field
      */
     public void addHeaderField(String name, String value) {
-        writer.append(name + ": " + value).append(LINE_FEED);
+        writer.append(name).append(": ").append(value).append(LINE_FEED);
         writer.flush();
     }
 
@@ -121,7 +115,7 @@ public class MultipartUtility {
         List<String> response = new ArrayList<String>();
 
         writer.append(LINE_FEED).flush();
-        writer.append("--" + boundary + "--").append(LINE_FEED);
+        writer.append("--").append(boundary).append("--").append(LINE_FEED);
         writer.close();
 
         // checks server's status code first

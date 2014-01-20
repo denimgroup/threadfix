@@ -1,7 +1,6 @@
 package com.denimgroup.threadfix.cli;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,13 +14,7 @@ public class UtilTest {
     public static final String URL = "http://localhost:8080/threadfix/rest";
     public static final String API_KEY = "N5bfcd6L00QLR5jdsaA76YEtkZ7LEWotk43AjOkfmoo";
 
-    public static JSONObject getJSONObject(String responseContents) {
-        if (responseContents == null)
-            return null;
-        try {
-            return new JSONObject(responseContents);
-        } catch (JSONException e) {
-            return null;
-        }
+    public static Object getJSONObject(String responseContents) {
+        return new Gson().fromJson(responseContents, Object.class);
     }
 }

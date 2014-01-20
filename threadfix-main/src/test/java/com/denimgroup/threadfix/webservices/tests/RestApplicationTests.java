@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
-import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;

@@ -17,8 +17,8 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
-import com.denimgroup.threadfix.cli.ThreadFixRestClient;
-import com.denimgroup.threadfix.cli.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;

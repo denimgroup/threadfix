@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.remote.response.AppInfo;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,35 +128,13 @@ public class PluginRestController extends RestController {
 			return RestResponse.failure("Unable to create an EndpointGenerator.");
 		}
 	}
-
-    static class AppInfo {
-        AppInfo(Application application) {
-            applicationId = application.getId().toString();
-            organizationName = application.getOrganization().getName();
-            applicationName = application.getName();
-        }
-
-        public String getApplicationId() {
-            return applicationId;
-        }
-
-        public String getOrganizationName() {
-            return organizationName;
-        }
-
-        public String getApplicationName() {
-            return applicationName;
-        }
-
-        String applicationId, organizationName, applicationName;
-    }
 	
 	private Iterable<AppInfo> getApplicationInfo(List<Application> applications) {
 		List<AppInfo> infoList = new ArrayList<>();
 
 		for (Application application: applications) {
 			if (application != null && application.getOrganization() != null && application.getId() != null) {
-                infoList.add(new AppInfo(application));
+                infoList.add(application.getAppInfo());
 			}
 		}
 		

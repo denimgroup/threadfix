@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.cli;
+package com.denimgroup.threadfix.remote;
 
 /**
  * Created with IntelliJ IDEA.
