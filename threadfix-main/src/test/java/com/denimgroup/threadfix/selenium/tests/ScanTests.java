@@ -170,7 +170,6 @@ public class ScanTests extends BaseTest {
 			String tempName = mapEntry.getKey();
 			if(mapEntry.getKey().equals("NTO Spider6")){
 				tempName = "NTO Spider";
-				
 			}
 			assertTrue("Scan Channel is not present " + mapEntry.getKey(),applicationDetailPage.isScanChannelPresent(tempName));
 			assertTrue("Scan count is incorrect after uploading "+mapEntry.getKey(), scanCnt == applicationDetailPage.scanCount());
@@ -388,7 +387,7 @@ public class ScanTests extends BaseTest {
 					continue outer;
 				}
 			}
-            sleep(10000);
+            sleep(20000);
 			assertTrue("Didn't find a vuln: " + expectedResults[i][0] 
 					+ ", " + expectedResults[i][1]
 					+ ", " + expectedResults[i][2]

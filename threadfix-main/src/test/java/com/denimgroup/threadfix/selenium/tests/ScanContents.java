@@ -140,6 +140,7 @@ public class ScanContents extends BaseTest{
 			{XSS, "High", "/demo/XSS-reflected2.php", "username"},
 			{SOURCE_CODE_INCLUDE, "Medium", "/demo/OSCommandInjection2.php", "fileName"},
 			{CONFIGURATION, "Low", "/demo/", ""},
+            {CONFIGURATION, "Low", "/demo/", ""},
 			{FORCED_BROWSING, "Low", "/demo/LDAPInjection.php", ""},
 			{FORCED_BROWSING, "Low", "/demo/PredictableResource.php.bak", ""},
 			{INFORMATION_EXPOSURE, "Low", "/demo/", ""},
@@ -203,6 +204,7 @@ public class ScanContents extends BaseTest{
 			{"Privacy Violation", "Medium", "/subscribe.aspx", ""},
 			{"Privacy Violation", "Medium", "/survey_questions.aspx", ""},
 			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
+            {"Use of Insufficiently Random Values", "Low" , "", ""},
 		};
 	
 	public final static String[][] ntoSix = new String [][] {
@@ -231,6 +233,13 @@ public class ScanContents extends BaseTest{
 		{"Cross-Site Request Forgery (CSRF)", "Low", "/Register.asp", "N/A"},
 		{"Exposure of Backup File to an Unauthorized Control Sphere", "Low", "/login.asp", "N/A"},
 		{"Information Exposure", "Low", "/showthread.asp", "N/A"},
+        {"Improper Encoding or Escaping of Output", "Info", "/", "Unnamed"},
+        {"Improper Encoding or Escaping of Output", "Info", "/Default.asp", "Unnamed"},
+        {"Improper Encoding or Escaping of Output", "Info", "/Login.asp", "RetURL"},
+        {"Improper Encoding or Escaping of Output", "Info", "/Register.asp", "RetURL"},
+        {"Improper Encoding or Escaping of Output", "Info", "/Search.asp", "Unnamed"},
+        {"Improper Encoding or Escaping of Output", "Info", "/Search.asp", "tfSearch"},
+        {"Improper Encoding or Escaping of Output", "Info", "/login.asp", "Unnamed"},
 	};
 	
 	public final static String[][] w3afResults = new String[] [] { 
@@ -250,12 +259,10 @@ public class ScanContents extends BaseTest{
 	};
 	
 	public final static String[][] zapProxyResults = new String [][] {
-			{DIRECTORY_LISTING, "High", "/demo/DirectoryIndexing/", ""},
-			{XSS, "Medium", "/demo/EvalInjection2.php", "command"},
-			{XSS, "Medium", "/demo/XPathInjection2.php", "password"},
-			{XSS, "Medium", "/demo/XPathInjection2.php", "username"},
-			{XSS, "Medium", "/demo/XSS-reflected2.php", "username"},
-			{SQLI, "Medium", "/demo/SQLI2.php", "username"},
+			{XSS, "High", "/demo/EvalInjection2.php", "command"},
+			{XSS, "High", "/demo/XPathInjection2.php", "username"},
+			{SQLI, "High", "/demo/SQLI2.php", "username"},
+            {DIRECTORY_LISTING, "Medium", "/demo/DirectoryIndexing/", ""},
 		};
 	
 	public final static String[][] nessusResults = new String [][] {
@@ -409,6 +416,7 @@ public class ScanContents extends BaseTest{
 			{FILES_ACCESSIBLE, "Info", "/web.config", ""},
 			{INFO_LEAK_BROWSER_CACHE, "Info", "/login.aspx", ""},
 			{INFO_LEAK_BROWSER_CACHE, "Info", "/signup.aspx", ""},
+            {INFO_LEAK_BROWSER_CACHE, "Info", "/Web Server", ""},
 		};
 	
 	public final static String[][] burpResults = new String [][] {
@@ -428,6 +436,7 @@ public class ScanContents extends BaseTest{
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/OSCommandInjection.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/OSCommandInjection2.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/PathTraversal.php", ""},
+            {FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/PathTraversal.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/PredictableResource.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/SQLI.php", ""},
 			{FAILURE_TO_HANDLE_ENCODING, "Info", "/demo/SQLI2.php", ""},
