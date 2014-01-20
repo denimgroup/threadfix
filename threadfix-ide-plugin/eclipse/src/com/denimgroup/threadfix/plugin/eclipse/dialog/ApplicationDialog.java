@@ -104,7 +104,6 @@ public class ApplicationDialog extends TitleAreaDialog {
 			for (String app : appIdMap.getApps(team)) {
 				TreeItem appItem = new TreeItem(teamItem, 0);
 				String id = appIdMap.getId(team, app);
-				
 				appItem.setText(app);
 				appItem.setData(app, id);
 				if (alreadyChecked.contains(id)) {
@@ -115,8 +114,9 @@ public class ApplicationDialog extends TitleAreaDialog {
 					all = false;
 				}
 			}
-			
-			if (any && !all) {
+			if (all) {
+				teamItem.setChecked(true);
+			} else if (any) {
 				teamItem.setChecked(true);
 				teamItem.setGrayed(true);
 			}
