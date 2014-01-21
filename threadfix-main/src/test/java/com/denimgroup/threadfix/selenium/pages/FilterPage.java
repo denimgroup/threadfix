@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -38,6 +40,7 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage setVulnerabilityType(String vulnerabilityType) {
+        waitForElement(driver.findElementById("sourceGenericVulnerability.name"));
         driver.findElementById("sourceGenericVulnerability.name").sendKeys(vulnerabilityType);
         return new FilterPage(driver);
     }
@@ -53,8 +56,14 @@ public class FilterPage extends BasePage {
         return new FilterPage(driver);
     }
 
-    public FilterPage closeSuccessNotification() {
-        driver.findElementByClassName("close").click();
+    public FilterPage deleteFilter() {
+        driver.findElementById("edit1").findElement(By.className("btn")).click();
+        driver.findElementById("deleteButton").click();
+
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+
+        waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
 
@@ -69,6 +78,11 @@ public class FilterPage extends BasePage {
         if (driver.findElementById("enabledBox").getAttribute("checked") != null) {
             driver.findElementById("enabledBox").click();
         }
+        return new FilterPage(driver);
+    }
+
+    public FilterPage closeSuccessNotification() {
+        driver.findElementByClassName("close").click();
         return new FilterPage(driver);
     }
 

@@ -137,9 +137,7 @@ public abstract class BasePage {
 		driver.findElementById("tabUserAnchor").click();
         sleep(3000);
 	}
-	
-	
-	
+
 	public ApiKeysIndexPage clickApiKeysLink(){
 		clickConfigTab();
 		driver.findElementById("apiKeysLink").click();
@@ -175,6 +173,13 @@ public abstract class BasePage {
 		sleep(3000);
 		return new UserIndexPage(driver);
 	}
+
+    public FilterPage clickManageFiltersLink() {
+        clickConfigTab();
+        driver.findElementById("vulnFiltersLink").click();
+        sleep(3000);
+        return new FilterPage(driver);
+    }
 	
 	public RolesIndexPage clickManageRolesLink(){
 		clickConfigTab();

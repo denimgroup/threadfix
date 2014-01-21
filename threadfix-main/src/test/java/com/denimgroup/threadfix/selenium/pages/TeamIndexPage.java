@@ -629,7 +629,8 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {
-        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals(expected);
+        String temp = driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText();
+        return temp.equals(expected);
     }
 
     // TODO (redo) possibly with tags
