@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
-import com.denimgroup.threadfix.remote.response.AppInfo;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.repository.GitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,12 +40,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/rest/code")
@@ -61,7 +58,7 @@ public class PluginRestController extends RestController {
 	}
 
 	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse getMarkers(
+	public @ResponseBody RestResponse<VulnerabilityMarker[]> getMarkers(
 			HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for marker information for application with id = " + appId);
@@ -83,7 +80,7 @@ public class PluginRestController extends RestController {
 	}
 	
 	@RequestMapping(value="/applications", method=RequestMethod.GET)
-	public @ResponseBody RestResponse getApplicationList(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
 		String result = checkKey(request, "markers");
@@ -102,7 +99,7 @@ public class PluginRestController extends RestController {
 	}
 	
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
-	public @ResponseBody RestResponse getEndpoints(@PathVariable int appId,
+	public @ResponseBody RestResponse<Endpoint[]> getEndpoints(@PathVariable int appId,
 			HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
@@ -120,24 +117,33 @@ public class PluginRestController extends RestController {
 		}
 		
 		EndpointGenerator generator =
-				EndpointDatabaseFactory.getDatabase(application.getProjectConfig());
+				EndpointDatabaseFactory.getDatabase(getProjectConfig(application));
 		
 		if (generator != null) {
-			return RestResponse.success(generator.generateEndpoints());
+            List<Endpoint> endpoints = generator.generateEndpoints();
+			return RestResponse.success(endpoints.toArray(new Endpoint[endpoints.size()]));
 		} else {
 			return RestResponse.failure("Unable to create an EndpointGenerator.");
 		}
 	}
+
+    public ProjectConfig getProjectConfig(Application application) {
+        return new ProjectConfig(application.getFrameworkTypeEnum(),
+                application.getSourceCodeAccessLevelEnum(),
+                GitService.getWorkTree(application),
+                application.getProjectRoot()
+        );
+    }
 	
-	private Iterable<AppInfo> getApplicationInfo(List<Application> applications) {
-		List<AppInfo> infoList = new ArrayList<>();
+	private Application.Info[] getApplicationInfo(List<Application> applications) {
+		List<Application.Info> infoList = new ArrayList<>();
 
 		for (Application application: applications) {
 			if (application != null && application.getOrganization() != null && application.getId() != null) {
-                infoList.add(application.getAppInfo());
+                infoList.add(application.getInfo());
 			}
 		}
 		
-		return infoList;
+		return infoList.toArray(new Application.Info[infoList.size()]);
 	}
 }

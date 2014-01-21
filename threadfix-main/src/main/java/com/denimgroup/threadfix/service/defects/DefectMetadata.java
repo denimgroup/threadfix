@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.service.defects;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * @author bbeverly

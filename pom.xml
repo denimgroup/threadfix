@@ -103,6 +103,7 @@
     </build>
 
     <modules>
+        <module>threadfix-entities</module>
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
         <module>threadfix-main</module>

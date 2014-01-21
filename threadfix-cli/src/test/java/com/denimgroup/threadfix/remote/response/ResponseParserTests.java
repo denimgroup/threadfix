@@ -1,6 +1,9 @@
 package com.denimgroup.threadfix.remote.response;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import org.junit.Test;
+
+import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -16,7 +19,7 @@ public class ResponseParserTests {
     public void testAppInfoParsing() {
         String testString = "{\"object\":[{\"applicationId\":\"1\",\"organizationName\":\"test\",\"applicationName\":\"test\"},{\"applicationId\":\"2\",\"organizationName\":\"test\",\"applicationName\":\"test2\"},{\"applicationId\":\"3\",\"organizationName\":\"team2\",\"applicationName\":\"testteam2\"}],\"message\":null,\"success\":true}";
 
-        ApplicationsResponse response = ResponseParser.getRestResponse(testString, 200, ApplicationsResponse.class);
+        RestResponse<Application.Info[]> response = ResponseParser.getRestResponse(testString, 200, Application.Info[].class);
 
         assertFalse("Response was null.", response == null);
 
@@ -36,7 +39,7 @@ public class ResponseParserTests {
         String testString = "{\"object\":\"This is some test text.\",\"message\":null,\"success\":true}";
         String objectString = "\"This is some test text.\"";
 
-        StringResponse response = ResponseParser.getRestResponse(testString, 200, StringResponse.class);
+        RestResponse<String> response = ResponseParser.getRestResponse(testString, 200, String.class);
 
         assertFalse("Response was null.", response == null);
 

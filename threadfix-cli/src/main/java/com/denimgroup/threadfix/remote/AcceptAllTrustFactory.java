@@ -42,7 +42,9 @@ public class AcceptAllTrustFactory implements ProtocolSocketFactory {
                     new AcceptAllTrustManager[] { acceptAllTrustManager },
                     null);
             return context;
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return null;

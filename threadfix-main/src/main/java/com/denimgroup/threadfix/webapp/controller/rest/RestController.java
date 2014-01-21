@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * This class provides the checkKey method and log implementation to each REST Controller.

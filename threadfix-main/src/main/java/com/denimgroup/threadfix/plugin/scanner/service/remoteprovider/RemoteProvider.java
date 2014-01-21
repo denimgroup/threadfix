@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.plugin.scanner.service.channel.AbstractChannelImporter;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {

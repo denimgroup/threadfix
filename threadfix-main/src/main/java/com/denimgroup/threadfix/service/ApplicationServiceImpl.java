@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;

@@ -32,14 +32,16 @@ import java.util.List;
 import java.util.Map;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
-	
-	private PropertiesManager manager = PropertiesManager.getInstance();
+
+    final HttpRestUtils httpRestUtils;
+    final PropertiesManager propertiesManager;
 
 	/**
 	 * Default constructor that will read configuration from a local .properties file
 	 */
 	public ThreadFixRestClientImpl() {
-		
+        propertiesManager = new PropertiesManager();
+        httpRestUtils = new HttpRestUtils(propertiesManager);
 	}
 	
 	/**
@@ -49,60 +51,46 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 * @param apiKey API key to use when accessing the ThreadFix server
 	 */
 	public ThreadFixRestClientImpl(String url, String apiKey) {
-        setMemoryKey(apiKey);
-        setMemoryUrl(url);
+        propertiesManager = new PropertiesManager();
+        propertiesManager.setMemoryKey(apiKey);
+        propertiesManager.setMemoryUrl(url);
+        httpRestUtils = new HttpRestUtils(propertiesManager);
 	}
 	
 	public String createApplication(String teamId, String name, String url) {
-        return HttpRestUtils.httpPost(manager.getUrl() + "/teams/" + teamId + "/applications/new",
-                new String[] {"apiKey",      "name", "url"},
-                new String[] { manager.getKey(), name,   url});
+        return httpRestUtils.httpPost("/teams/" + teamId + "/applications/new",
+                new String[] { "name", "url"},
+                new String[] {  name,   url});
 	}
 	
 	public String setParameters(String appId, String frameworkType, String repositoryUrl) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/applications/" + appId + "/setParameters",
-				new String[] {"apiKey",      "frameworkType", "repositoryUrl"},
-				new String[] { manager.getKey(), frameworkType,   repositoryUrl});
-		
-		return result;
+		return httpRestUtils.httpPost("/applications/" + appId + "/setParameters",
+				new String[] {"frameworkType", "repositoryUrl"},
+				new String[] { frameworkType,   repositoryUrl});
 	}
 	
 	public String createTeam(String name) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/teams/new",
-				new String[] {"apiKey",      "name"},
-				new String[] { manager.getKey(), name});
-		
-		return result;
+		return httpRestUtils.httpPost("/teams/new",
+				new String[] {"name"},
+				new String[] { name });
 	}
 	
 	public String getRules(String wafId) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/wafs/" + wafId + "/rules" +
-				"?apiKey=" + manager.getKey());
-		
-		return result;
+		return httpRestUtils.httpGet("/wafs/" + wafId + "/rules");
 	}
 
 	public String searchForWafByName(String name) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/wafs/lookup" +
-				"?apiKey=" + manager.getKey() +
-				"&name=" + name);
-		
-		return result;
+		return httpRestUtils.httpGet("/wafs/lookup", "&name=" + name);
 	}
 	
 	public String searchForWafById(String wafId) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/wafs/" + wafId +
-				"?apiKey=" + manager.getKey());
-		
-		return result;
+		return httpRestUtils.httpGet("/wafs/" + wafId);
 	}
 	
 	public String createWaf(String name, String type) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/wafs/new",
-				new String[] {"apiKey",      "name", "type"},
-				new String[] { manager.getKey(), name,   type});
-		
-		return result;
+		return httpRestUtils.httpPost("/wafs/new",
+				new String[] {"name", "type"},
+				new String[] { name,   type});
 	}
 	
 	/**
@@ -118,11 +106,11 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 
 	public String getAllTeams() {
-		return HttpRestUtils.httpGet(manager.getUrl() + "/teams/?apiKey=" + manager.getKey());
+		return httpRestUtils.httpGet("/teams/");
 	}
     
     public String getAllTeamsPrettyPrint() {
-        final String result = HttpRestUtils.httpGet(manager.getUrl() + "/teams/?apiKey=" + manager.getKey());
+        final String result = httpRestUtils.httpGet("/teams/");
 
         final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -172,78 +160,59 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
     }	
 
 	public String searchForApplicationById(String id) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/applications/" + id +
-				"?apiKey=" + manager.getKey());
-		
-		return result;
+		return httpRestUtils.httpGet("/applications/" + id);
 	}
 
 	public String searchForApplicationByName(String name, String teamName) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/applications/" + teamName + "/lookup" +
-				"?apiKey=" + manager.getKey() +
+		return httpRestUtils.httpGet("/applications/" + teamName + "/lookup",
 				"&name=" + name);
-		
-		return result;
 	}
 	
 	public String searchForTeamById(String id) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/teams/" + id +
-				"?apiKey=" + manager.getKey());
-		
-		return result;
+		return httpRestUtils.httpGet("/teams/" + id);
 	}
 	
 	public String searchForTeamByName(String name) {
-		String result = HttpRestUtils.httpGet(manager.getUrl() + "/teams/lookup" +
-				"?apiKey=" + manager.getKey() +
-				"&name=" + name);
-
-        return result;
+		return httpRestUtils.httpGet("/teams/lookup", "&name=" + name);
     }
 	
 	public void setKey(String key) {
-		manager.setKey(key);
+        propertiesManager.setKey(key);
 	}
 
 	public void setUrl(String url) {
-        manager.setUrl(url);
+        propertiesManager.setUrl(url);
 	}
 	
 	public void setMemoryKey(String key) {
-        manager.setMemoryKey(key);
+        propertiesManager.setMemoryKey(key);
 	}
 	
 	public void setMemoryUrl(String url) {
-        manager.setMemoryUrl(url);
+        propertiesManager.setMemoryUrl(url);
 	}
 	
 	public String uploadScan(String applicationId, String filePath) {
-		String result = HttpRestUtils.httpPostFile(manager.getUrl() + "/applications/" + applicationId + "/upload",
-                filePath,
-                new String[]{"apiKey"},
-                new String[]{manager.getKey()});
-		return result;
+		return httpRestUtils.httpPostFile("/applications/" + applicationId + "/upload",
+                filePath, new String[]{}, new String[]{});
 	}
 	
 	public String queueScan(String applicationId, String scannerType) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/tasks/queueScan",
-				new String[] { "apiKey",       "applicationId",		"scannerType" },
-				new String[] {  manager.getKey(), applicationId, scannerType });
-		return result;
+		return httpRestUtils.httpPost("/tasks/queueScan",
+				new String[] { "applicationId", "scannerType" },
+				new String[] { applicationId, scannerType });
 	}
 
 	public String addAppUrl(String appId, String url) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/applications/" + appId + "/addUrl",
-				new String[] { "apiKey",       "url" },
-				new String[] {  manager.getKey(),  url});
-		return result;
+		return httpRestUtils.httpPost("/applications/" + appId + "/addUrl",
+				new String[] {"url"},
+				new String[] { url });
 	}
 	
 	public String requestTask(String scanners, String agentConfig) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/tasks/requestTask",
-				new String[] { "apiKey",			"scanners",		"agentConfig" },
-				new String[] { manager.getKey(), 		scanners,		agentConfig });
-		return result;
+		return httpRestUtils.httpPost("/tasks/requestTask",
+				new String[] {"scanners", "agentConfig" },
+				new String[] { scanners, agentConfig });
 	}
 	
 	/**
@@ -253,18 +222,16 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 * @return
 	 */
 	public String taskStatusUpdate(String scanQueueTaskId, String message) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/tasks/taskStatusUpdate",
-                new String[]{"apiKey", "scanQueueTaskId", "message"},
-                new String[]{manager.getKey(), scanQueueTaskId, message});
-		return result;
+		return httpRestUtils.httpPost("/tasks/taskStatusUpdate",
+                new String[]{"scanQueueTaskId", "message"},
+                new String[]{ scanQueueTaskId, message});
 	}
 	
 	public String setTaskConfig(String appId, String scannerType, String filePath) {
-		String url = manager.getUrl() + "/tasks/setTaskConfig";
-		String[] paramNames 	= { "apiKey",		"appId", 	"scannerType" };
-		String[] paramValues 	= {  manager.getKey(),	appId,		scannerType };
-		String result = HttpRestUtils.httpPostFile(url, filePath, paramNames, paramValues );
-		return result;
+		String url = "/tasks/setTaskConfig";
+		String[] paramNames 	= {	"appId", "scannerType" };
+		String[] paramValues 	= { appId, scannerType };
+		return httpRestUtils.httpPostFile(url, filePath, paramNames, paramValues );
 	}
 	
 	/**
@@ -274,46 +241,42 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 * @return
 	 */
 	public String completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
-		String url = manager.getUrl() + "/tasks/completeTask";
-		String[] paramNames 	= { "apiKey",		"scanQueueTaskId", "secureTaskKey" };
-		String[] paramValues 	= {  manager.getKey(),	scanQueueTaskId,   secureTaskKey };
-		String result = HttpRestUtils.httpPostFile(url, filePath, paramNames, paramValues);
-        return result;
+		String url = "/tasks/completeTask";
+		String[] paramNames 	= {	"scanQueueTaskId", "secureTaskKey" };
+		String[] paramValues 	= {  scanQueueTaskId,   secureTaskKey };
+	    return httpRestUtils.httpPostFile(url, filePath, paramNames, paramValues);
 	}
 	
 	public String failTask(String scanQueueTaskId, String message, String secureTaskKey) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/tasks/failTask",
-				new String[] { "apiKey",		"scanQueueTaskId",	"message", "secureTaskKey" },
-				new String[] { manager.getKey(),	scanQueueTaskId,	message,    secureTaskKey });
-        return result;
+		return httpRestUtils.httpPost("/tasks/failTask",
+				new String[] {"scanQueueTaskId", "message", "secureTaskKey" },
+				new String[] { scanQueueTaskId,	  message,   secureTaskKey });
 	}
 
 	public String addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/applications/" + applicationId +
+		return httpRestUtils.httpPost("/applications/" + applicationId +
 					"/addFinding",
-				new String[] { "apiKey", "vulnType", "severity",
+				new String[] {"vulnType", "severity",
 								"nativeId", "parameter", "longDescription",
 								"fullUrl", "path" },
-				new String[] {  manager.getKey(), vulnType, severity,
+				new String[] {  vulnType, severity,
 								nativeId, parameter, longDescription,
 								fullUrl, path });
-        return result;
 	}
 	
 	public String addStaticFinding(String applicationId, String vulnType, String severity,
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
-		String result = HttpRestUtils.httpPost(manager.getUrl() + "/applications/" + applicationId +
+		return httpRestUtils.httpPost("/applications/" + applicationId +
 				"/addFinding",
-				new String[] { "apiKey", "vulnType", "severity",
+				new String[] {"vulnType", "severity",
 								"nativeId", "parameter", "longDescription",
 								"filePath", "column", "lineText", "lineNumber"},
-				new String[] {  manager.getKey(), vulnType, severity,
+				new String[] {  vulnType, severity,
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber });
-		return result;
 	}
 
 }

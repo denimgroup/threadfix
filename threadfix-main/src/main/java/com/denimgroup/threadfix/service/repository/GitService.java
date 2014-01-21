@@ -26,6 +26,9 @@ package com.denimgroup.threadfix.service.repository;
 import java.io.File;
 import java.io.IOException;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
@@ -41,6 +44,8 @@ import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
+import javax.persistence.Transient;
 
 public class GitService {
 	
@@ -124,5 +129,33 @@ public class GitService {
 
 		return null;
 	}
+
+    // TODO move this somewhere central
+    private static final String baseDirectory = "scratch/";
+
+    // TODO move to some sort of repository manager instead of tying to the Git implementation.
+    public static File getWorkTree(Application application) {
+
+        File applicationDirectory = new File(baseDirectory + application.getId());
+
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
+            Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
+
+            if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
+                return repo.getWorkTree();
+            } else {
+                return applicationDirectory;
+            }
+        } else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
+            File file = new File(application.getRepositoryFolder().trim());
+            if (!file.exists() || !file.isDirectory()) {
+                return applicationDirectory;
+            } else {
+                return file;
+            }
+        }
+
+        return applicationDirectory;
+    }
 	
 }

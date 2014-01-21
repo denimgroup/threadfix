@@ -80,7 +80,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.PermissionUtils;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 
 /**

@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
 

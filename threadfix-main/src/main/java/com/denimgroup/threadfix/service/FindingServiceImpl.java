@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import org.springframework.beans.factory.annotation.Autowired;

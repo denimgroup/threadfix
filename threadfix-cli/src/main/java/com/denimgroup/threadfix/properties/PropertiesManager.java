@@ -10,15 +10,6 @@ public class PropertiesManager {
     private String key = null;
     private Properties properties;
 
-    private static final PropertiesManager INSTANCE = new PropertiesManager();
-
-    private PropertiesManager(){}
-
-    // this allows us to switch implementations later
-    public static PropertiesManager getInstance() {
-        return INSTANCE;
-    }
-
     public void setUrl(String url) {
         writeProperty("url", url);
     }
@@ -117,12 +108,10 @@ public class PropertiesManager {
 
     private void writeProperties() {
         FileOutputStream out = null;
-        try {
+        try  {
             out = new FileOutputStream("threadfix.properties");
             properties.store(out, "Writing.");
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -130,8 +119,8 @@ public class PropertiesManager {
                 if (out != null) {
                     out.close();
                 }
-            } catch(IOException e) {
-                e.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
         }
     }

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.remote;
 
-import com.denimgroup.threadfix.remote.response.AbstractRestResponse;
+import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.ResponseParser;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.commons.httpclient.HttpClient;
@@ -42,20 +42,32 @@ import java.io.InputStream;
 
 public class HttpRestUtils {
 
-    private HttpRestUtils(){}
+    public static final String API_KEY_SEGMENT = "?apiKey=";
 
-	public static String httpPostFile(String request, String fileName, String[] paramNames, String[] paramVals) {
+    final PropertiesManager propertiesManager;
+
+    public HttpRestUtils(PropertiesManager manager) {
+        this.propertiesManager = manager;
+    }
+
+    public HttpRestUtils() {
+        this.propertiesManager = new PropertiesManager();
+    }
+
+	public String httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
-		return httpPostFile(request, file, paramNames,
+		return httpPostFile(path, file, paramNames,
 				paramVals);
 	}
 	
-	private static String httpPostFile(String request, File file, String[] paramNames, String[] paramVals) {
+	private String httpPostFile(String path, File file, String[] paramNames, String[] paramVals) {
 		
 		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
-		PostMethod filePost = new PostMethod(request);
+        String completeUrl = makePostUrl(path);
+
+		PostMethod filePost = new PostMethod(completeUrl);
 		
 		filePost.setRequestHeader("Accept", "application/json");
 		
@@ -74,7 +86,7 @@ public class HttpRestUtils {
 			HttpClient client = new HttpClient();
 			int status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Request for '" + request + "' status was " + status + ", not 200 as expected.");
+				System.err.println("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
 			}
 			
 			InputStream responseStream = filePost.getResponseBodyAsStream();
@@ -92,11 +104,11 @@ public class HttpRestUtils {
 		return "There was an error and the POST request was not finished.";
 	}
 
-    public static String httpPost(String urlString,
+    public String httpPost(String path,
                            String[] paramNames,
                            String[] paramVals) {
 
-        RestResponse response = httpPost(urlString, paramNames, paramVals, RestResponse.class);
+        RestResponse response = httpPost(path, paramNames, paramVals, RestResponse.class);
 
         if (response.success) {
             return response.getObjectAsJsonString();
@@ -105,19 +117,21 @@ public class HttpRestUtils {
         }
     }
 
-    public static <T extends AbstractRestResponse> T httpPost(String urlStr,
+    public <T> RestResponse<T> httpPost(String path,
                                               String[] paramNames,
                                               String[] paramVals,
                                               Class<T> targetClass) {
 
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
-		PostMethod post = new PostMethod(urlStr);
+        String urlString = makePostUrl(path);
+
+		PostMethod post = new PostMethod(path);
 		
 		post.setRequestHeader("Accept", "application/json");
 
         int responseCode = -1;
-        T response;
+        RestResponse<T> response;
 
 		try {
 			for (int i = 0; i < paramNames.length; i++) {
@@ -125,11 +139,13 @@ public class HttpRestUtils {
 					post.addParameter(paramNames[i], paramVals[i]);
 				}
 			}
+
+            addApiKey(post);
 			
 			HttpClient client = new HttpClient();
 			responseCode = client.executeMethod(post);
 			if (responseCode != 200) {
-				System.err.println("Request for '" + urlStr + "' status was " + responseCode + ", not 200 as expected.");
+				System.err.println("Request for '" + urlString + "' status was " + responseCode + ", not 200 as expected.");
 			}
 			
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
@@ -138,15 +154,18 @@ public class HttpRestUtils {
 			e1.printStackTrace();
             response = ResponseParser.getErrorResponse(
                     "There was an error and the POST request was not finished.",
-                    responseCode,
-                    targetClass);
+                    responseCode);
 		}
 
         return response;
 	}
 
-    public static String httpGet(String urlString) {
-        RestResponse response = httpGet(urlString, RestResponse.class);
+    public String httpGet(String path) {
+        return httpGet(path, "");
+    }
+
+    public String httpGet(String path, String params) {
+        RestResponse response = httpGet(path, params, RestResponse.class);
 
         if (response.success) {
             return response.getObjectAsJsonString();
@@ -155,19 +174,21 @@ public class HttpRestUtils {
         }
     }
 
-	public static <T extends AbstractRestResponse> T httpGet(String urlStr, Class<T> targetClass) {
-		
-		System.out.println("Requesting " + urlStr);
+	public <T> RestResponse<T> httpGet(String path, String params, Class<T> targetClass) {
+
+        String urlString = makeGetUrl(path, params);
+
+		System.out.println("Requesting " + urlString);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
-		GetMethod get = new GetMethod(urlStr);
+		GetMethod get = new GetMethod(urlString);
 		
 		get.setRequestHeader("Accept", "application/json");
 		
 		HttpClient client = new HttpClient();
 
         int status = -1;
-        T response;
+        RestResponse<T> response;
 
 		try {
 			status = client.executeMethod(get);
@@ -180,10 +201,25 @@ public class HttpRestUtils {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-            response = ResponseParser.getErrorResponse("There was an error and the GET request was not finished.", status, targetClass);
+            response = ResponseParser.getErrorResponse("There was an error and the GET request was not finished.", status);
 		}
 
 		return response;
 	}
-	
+
+    private String makeGetUrl(String path, String params) {
+        String baseUrl = propertiesManager.getUrl();
+        String apiKey  = propertiesManager.getKey();
+
+        return baseUrl + path + API_KEY_SEGMENT + apiKey + "&" + params;
+    }
+
+    private String makePostUrl(String path) {
+        String baseUrl = propertiesManager.getUrl();
+        return baseUrl + path;
+    }
+
+    private void addApiKey(PostMethod post) {
+        post.addParameter("apiKey", propertiesManager.getKey());
+    }
 }

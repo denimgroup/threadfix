@@ -6,34 +6,38 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 
 public class ResponseParser {
 
-    public static <T extends AbstractRestResponse> T getRestResponse(String responseString, int responseCode, Class<T> target) {
+    private static <T> Type getTypeReference() {
+        return new TypeReference<RestResponse<T>>(){}.getType();
+    }
 
-        T response = null;
+    // TODO remove the double JSON read for efficiency
+    // I still think this will be IO-bound in most cases
+    public static <T> RestResponse<T> getRestResponse(String responseString, int responseCode, Class<T> internalClass) {
+        RestResponse<T> response = new RestResponse<T>();
 
         if (responseString != null && responseString.trim().indexOf('{') == 0) {
             try {
-                response = new Gson().fromJson(responseString, target);
+                Gson gson = new Gson();
+                response = gson.fromJson(responseString, getTypeReference()); // turn everything into an object
+                String innerJson = gson.toJson(response.object); // turn the inner object back into a string
+                // turn the inner object into the correctly typed object
+                response.object = gson.fromJson(innerJson, internalClass);
             } catch (JsonSyntaxException e) {
                 System.out.println("Encountered JsonSyntaxException");
                 e.printStackTrace();
             }
         }
 
-        if (response == null) {
-            response = instantiateOrNull(target);
-        }
-
-        if (response != null) {
-            response.responseCode = responseCode;
-        }
+        response.responseCode = responseCode;
 
         return response;
     }
 
-    public static <T extends AbstractRestResponse> T getRestResponse(InputStream responseStream, int responseCode, Class<T> target) {
+    public static <T> RestResponse<T> getRestResponse(InputStream responseStream, int responseCode, Class<T> target) {
         String inputString = null;
 
         try {
@@ -45,24 +49,12 @@ public class ResponseParser {
         return getRestResponse(inputString, responseCode, target);
     }
 
-    private static <T extends AbstractRestResponse> T instantiateOrNull(Class<T> target) {
-        try {
-            return target.newInstance();
-        } catch (InstantiationException | IllegalAccessException e1) {
-            // It's important to have a no-arg constructor
-            e1.printStackTrace();
-            return null;
-        }
-    }
+    public static <T> RestResponse<T> getErrorResponse(String errorText, int responseCode) {
+        RestResponse<T> instance = new RestResponse<T>();
 
-    public static <T extends AbstractRestResponse> T getErrorResponse(String errorText, int responseCode, Class<T> target) {
-        T instance = instantiateOrNull(target);
-
-        if (instance != null) {
-            instance.message = errorText;
-            instance.responseCode = responseCode;
-            instance.success = false;
-        }
+        instance.message = errorText;
+        instance.responseCode = responseCode;
+        instance.success = false;
 
         return instance;
     }

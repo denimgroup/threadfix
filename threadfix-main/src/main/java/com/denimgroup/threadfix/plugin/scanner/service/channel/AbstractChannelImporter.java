@@ -67,7 +67,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
 import com.denimgroup.threadfix.plugin.scanner.DaoHolder;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 

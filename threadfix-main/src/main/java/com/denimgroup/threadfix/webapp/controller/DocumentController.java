@@ -46,7 +46,7 @@ import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/documents")

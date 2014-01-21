@@ -41,7 +41,7 @@ public class CommandLineParser {
 	
 	private static ThreadFixRestClient client = new ThreadFixRestClientImpl();
 	
-	private static final Map<String, String[]> scanOptions = new HashMap<>();
+	private static final Map<String, String[]> scanOptions = new HashMap<String, String[]>();
 		
 	static {
 		scanOptions.put("Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" });

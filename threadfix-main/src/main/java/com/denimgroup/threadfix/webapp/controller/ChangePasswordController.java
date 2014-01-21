@@ -19,10 +19,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 

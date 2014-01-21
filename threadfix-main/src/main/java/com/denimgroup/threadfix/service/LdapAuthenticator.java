@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.security.core.Authentication;
 
 import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;

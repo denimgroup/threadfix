@@ -41,7 +41,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;

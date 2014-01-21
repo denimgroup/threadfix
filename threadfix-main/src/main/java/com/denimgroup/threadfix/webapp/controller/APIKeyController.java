@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller
