@@ -69,7 +69,7 @@ public class FilterTests extends BaseTest{
         driver.quit();
     }
 
-    // TODO Finish this
+    // TODO test if you can edit an existing filter and ensure the results are correct
     @Ignore
     @Test
     public void testEditVulnerabilityFilterTest() {

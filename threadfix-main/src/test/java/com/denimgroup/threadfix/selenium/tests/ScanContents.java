@@ -34,17 +34,17 @@ public class ScanContents extends BaseTest{
 
 	
 	public final static String[][] catnetResults = {
-			{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "email"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtMessage"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/ContactUs.aspx", "txtSubject"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtCardNumber"},
-			{ XSS, "Critical", "/ZigguratUtilityWeb/Message.aspx", "Msg"},
-			{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtPassword"},
-			{ SQLI, "Critical", "/ZigguratUtilityWeb/LoginPage.aspx", "txtUsername"},
-			{ SQLI, "Critical", "/ZigguratUtilityWeb/MakePayment.aspx", "txtAmount"},
-			{ SQLI, "Critical", "/ZigguratUtilityWeb/ViewStatement.aspx", "StatementID"},
+			{ XSS, "Critical", "/ContactUs.aspx.cs", "email"},
+			{ XSS, "Critical", "/ContactUs.aspx.cs", "txtMessage"},
+			{ XSS, "Critical", "/ContactUs.aspx.cs", "txtSubject"},
+			{ XSS, "Critical", "/MakePayment.aspx.cs", "txtAmount"},
+			{ XSS, "Critical", "/MakePayment.aspx.cs", "txtAmount"},
+			{ XSS, "Critical", "/MakePayment.aspx.cs", "txtCardNumber"},
+			{ XSS, "Critical", "/Message.aspx", "Msg"},
+			{ SQLI, "Critical", "/LoginPage.aspx.cs", "txtPassword"},
+			{ SQLI, "Critical", "/LoginPage.aspx.cs", "txtUsername"},
+			{ SQLI, "Critical", "/MakePayment.aspx.cs", "txtAmount"},
+			{ SQLI, "Critical", "/ViewStatement.aspx.cs", "StatementID"},
 		};
 	
 	public final static String[][] findBugsResults = new String[][] {
@@ -130,32 +130,32 @@ public class ScanContents extends BaseTest{
 	};
 	
 	public final static String[][] netsparkerResults = new String[] [] {
-			{CODE_INJECTION, "Critical", "/demo/EvalInjection2.php", "command"},
-			{OS_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
-			{RESOURCE_INJECTION, "High", "/demo/OSCommandInjection2.php", "fileName"},
-			{XSS, "High", "/demo/EvalInjection2.php", "command"},
-			{XSS, "High", "/demo/SQLI2.php", "username"},
-			{XSS, "High", "/demo/XPathInjection2.php", "password"},
-			{XSS, "High", "/demo/XPathInjection2.php", "username"},
-			{XSS, "High", "/demo/XSS-reflected2.php", "username"},
-			{SOURCE_CODE_INCLUDE, "Medium", "/demo/OSCommandInjection2.php", "fileName"},
-			{CONFIGURATION, "Low", "/demo/", ""},
-            {CONFIGURATION, "Low", "/demo/", ""},
-			{FORCED_BROWSING, "Low", "/demo/LDAPInjection.php", ""},
-			{FORCED_BROWSING, "Low", "/demo/PredictableResource.php.bak", ""},
-			{INFORMATION_EXPOSURE, "Low", "/demo/", ""},
-			{INFORMATION_EXPOSURE, "Low", "/demo/PredictableResource.php", ""},
-			{INFO_EXPOSURE_ERROR_MESSAGE, "Low", "/demo/SQLI2.php", "username"},
-			{INFORMATION_EXPOSURE, "Info", "/demo/EvalInjection2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/FormatString2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/LDAPInjection2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/OSCommandInjection2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/PathTraversal.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/SQLI2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/XPathInjection2.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/XSS-cookie.php", ""},
-			{INFORMATION_EXPOSURE, "Info", "/demo/XSS-reflected2.php", ""},
-			{"Information Exposure Through Directory Listing", "Info", "/demo/DirectoryIndexing/", ""},
+			{CODE_INJECTION, "Critical", "/EvalInjection2.php", "command"},
+			{OS_INJECTION, "Critical", "/OSCommandInjection2.php", "fileName"},
+			{RESOURCE_INJECTION, "High", "/OSCommandInjection2.php", "fileName"},
+			{XSS, "High", "/EvalInjection2.php", "command"},
+			{XSS, "High", "/SQLI2.php", "username"},
+			{XSS, "High", "/XPathInjection2.php", "password"},
+			{XSS, "High", "/XPathInjection2.php", "username"},
+			{XSS, "High", "/XSS-reflected2.php", "username"},
+			{SOURCE_CODE_INCLUDE, "Medium", "/OSCommandInjection2.php", "fileName"},
+			{CONFIGURATION, "Low", "/", ""},
+            {CONFIGURATION, "Low", "/", ""},
+			{FORCED_BROWSING, "Low", "/LDAPInjection.php", ""},
+			{FORCED_BROWSING, "Low", "/PredictableResource.php.bak", ""},
+			{INFORMATION_EXPOSURE, "Low", "/", ""},
+			{INFORMATION_EXPOSURE, "Low", "/PredictableResource.php", ""},
+			{INFO_EXPOSURE_ERROR_MESSAGE, "Low", "/SQLI2.php", "username"},
+			{INFORMATION_EXPOSURE, "Info", "/EvalInjection2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/FormatString2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/LDAPInjection2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/OSCommandInjection2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/PathTraversal.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/SQLI2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/XPathInjection2.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/XSS-cookie.php", ""},
+			{INFORMATION_EXPOSURE, "Info", "/XSS-reflected2.php", ""},
+			{"Information Exposure Through Directory Listing", "Info", "/DirectoryIndexing/", ""},
 	};
 	
 	public final static String[][] skipfishResults = new String [][] {
@@ -184,7 +184,7 @@ public class ScanContents extends BaseTest{
 	
 	
 	public final static String[][] ntospiderResults = new String [][] {
-			{"Improper Authentication", "Critical", "/bank/login.aspx", ""},
+			{"Improper Authentication", "Critical", "/bank/login.aspx", "N/A"},
 			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/bank/login.aspx", "passw"},
 			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/bank/login.aspx", "uid"},
 			{"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/subscribe.aspx", "txtEmail"},
@@ -192,19 +192,19 @@ public class ScanContents extends BaseTest{
 			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/comment.aspx", "name"},
 			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/notfound.aspx", "aspxerrorpath"},
 			{"Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)", "High", "/search.aspx", "txtSearch"},
-			{"Information Exposure Through Directory Listing", "Medium", "/bank/", ""},
-			{"Privacy Violation", "Medium", "/", ""},
-			{"Privacy Violation", "Medium", "/bank/login.aspx", ""},
-			{"Privacy Violation", "Medium", "/comment.aspx", ""},
-			{"Privacy Violation", "Medium", "/default.aspx", ""},
-			{"Privacy Violation", "Medium", "/disclaimer.htm", ""},
-			{"Privacy Violation", "Medium", "/feedback.aspx", ""},
-			{"Privacy Violation", "Medium", "/notfound.aspx", ""},
-			{"Privacy Violation", "Medium", "/search.aspx", ""},
-			{"Privacy Violation", "Medium", "/subscribe.aspx", ""},
-			{"Privacy Violation", "Medium", "/survey_questions.aspx", ""},
-			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", ""},
-            {"Use of Insufficiently Random Values", "Low" , "", ""},
+			{"Information Exposure Through Directory Listing", "Medium", "/bank/", "N/A"},
+			{"Privacy Violation", "Medium", "/", "N/A"},
+			{"Privacy Violation", "Medium", "/bank/login.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/comment.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/default.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/disclaimer.htm", "N/A"},
+			{"Privacy Violation", "Medium", "/feedback.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/notfound.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/search.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/subscribe.aspx", "N/A"},
+			{"Privacy Violation", "Medium", "/survey_questions.aspx", "N/A"},
+			{"Information Exposure Through Environmental Variables", "Low", "/aaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbthbbbbbbbbbbbbb.bbbbbbb", "N/A"},
+            {"Use of Insufficiently Random Values", "Low" , "", "N/A"},
 		};
 	
 	public final static String[][] ntoSix = new String [][] {
@@ -259,23 +259,23 @@ public class ScanContents extends BaseTest{
 	};
 	
 	public final static String[][] zapProxyResults = new String [][] {
-			{XSS, "High", "/demo/EvalInjection2.php", "command"},
-			{XSS, "High", "/demo/XPathInjection2.php", "username"},
-			{SQLI, "High", "/demo/SQLI2.php", "username"},
-            {DIRECTORY_LISTING, "Medium", "/demo/DirectoryIndexing/", ""},
+			{XSS, "High", "/EvalInjection2.php", "command"},
+			{XSS, "High", "/XPathInjection2.php", "username"},
+			{SQLI, "High", "/SQLI2.php", "username"},
+            {DIRECTORY_LISTING, "Medium", "/DirectoryIndexing/", ""},
 		};
 	
 	public final static String[][] nessusResults = new String [][] {
-			{OS_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
-			{SQLI, "Critical", "/demo/SQLI2.php", "username"},
-			{FORCED_BROWSING, "Medium", "/demo/PredictableResource.php.bak", ""},
-			{EXTERNAL_FILEPATH_CONTROL, "Medium", "/demo/OSCommandInjection2.php", "fileName"},
-			{XSS, "Medium", "/demo/EvalInjection2.php", "command"},
-			{XSS, "Medium", "/demo/XPathInjection2.php", "password"},
-			{XSS, "Medium", "/demo/XSS-cookie.php", "cookie"},
-			{XSS, "Medium", "/demo/XSS-reflected2.php", "username"},
-			{SESSION_FIXATION, "Medium", "/demo/XSS-reflected2.php", "username"},
-			{DIRECTORY_LISTING, "Low", "/demo/DirectoryIndexing/", ""},
+			{OS_INJECTION, "Critical", "/OSCommandInjection2.php", "fileName"},
+			{SQLI, "Critical", "/SQLI2.php", "username"},
+			{FORCED_BROWSING, "Medium", "/PredictableResource.php.bak", ""},
+			{EXTERNAL_FILEPATH_CONTROL, "Medium", "/OSCommandInjection2.php", "fileName"},
+			{XSS, "Medium", "/EvalInjection2.php", "command"},
+			{XSS, "Medium", "/XPathInjection2.php", "password"},
+			{XSS, "Medium", "/XSS-cookie.php", "cookie"},
+			{XSS, "Medium", "/XSS-reflected2.php", "username"},
+			{SESSION_FIXATION, "Medium", "/XSS-reflected2.php", "username"},
+			{DIRECTORY_LISTING, "Low", "/DirectoryIndexing/", ""},
 		};
 	
 	public final static String[][] arachniResults = new String [][] {
@@ -322,34 +322,34 @@ public class ScanContents extends BaseTest{
 	};
 	
 	public final static String[][] brakemanResults = new String [][] {
-			{XSS, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/index.html", "User.new"},
-			{XSS, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/results.html", "null"},
-			{OS_INJECTION, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
-			{OS_INJECTION, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
-			{OS_INJECTION, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
+			{XSS, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/index.html.erb", "User.new"},
+			{XSS, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/results.html.erb", "null"},
+			{OS_INJECTION, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
+			{OS_INJECTION, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
+			{OS_INJECTION, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user][:password]"},
 			
 			
-			{SQLI, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:query]"},
-			{OPEN_REDIRECT, "Critical", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params"},
-			{CSRF, "High", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/application_controller.rb", "null"},
+			{SQLI, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:query]"},
+			{OPEN_REDIRECT, "Critical", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params"},
+			{CSRF, "High", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/application_controller.rb", "null"},
 			
 			
-			{EXTERNAL_CONTROL_OF_PARAM, "High", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "params[:post]"},
-			{EXTERNAL_CONTROL_OF_PARAM, "High", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "params[:post]"},
-			{EXTERNAL_CONTROL_OF_PARAM, "High", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user]"},
+			{EXTERNAL_CONTROL_OF_PARAM, "High", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "params[:post]"},
+			{EXTERNAL_CONTROL_OF_PARAM, "High", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "params[:post]"},
+			{EXTERNAL_CONTROL_OF_PARAM, "High", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user]"},
 			
-			{EXTERNAL_CONTROL_OF_PARAM, "High", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user]"},
+			{EXTERNAL_CONTROL_OF_PARAM, "High", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "params[:user]"},
 			
 			
-			{ARGUMENT_INJECTION, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb", "null"},
+			{ARGUMENT_INJECTION, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb", "null"},
 			
-			{ARGUMENT_INJECTION, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb", "null"},
+			{ARGUMENT_INJECTION, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb", "null"},
 			
-			{FORCED_BROWSING, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/config/routes.rb", "null"},
-			{EXTERNAL_CONTROL_OF_PARAM, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/post, user.rb", "null"},
+			{FORCED_BROWSING, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/config/routes.rb", "null"},
+			{EXTERNAL_CONTROL_OF_PARAM, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/post, user.rb", "null"},
 			
-			{OPEN_REDIRECT, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "Post.find(params[:id])"},
-			{OPEN_REDIRECT, "Medium", "/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "User.find(params[:id])"},
+			{OPEN_REDIRECT, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb", "Post.find(params[:id])"},
+			{OPEN_REDIRECT, "Medium", "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb", "User.find(params[:id])"},
 		};
 	
 	public final static String[][] fortify360Results = new String [][] {

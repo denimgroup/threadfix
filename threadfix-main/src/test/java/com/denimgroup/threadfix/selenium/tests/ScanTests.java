@@ -184,91 +184,75 @@ public class ScanTests extends BaseTest {
 							.logout();
 	}
 
-   // @Ignore
 	@Test
 	public void microsoftCatNetScan() {
 		String key = "Microsoft CAT.NET";
 		String[][] expectedResults = resultsMap.get(key);
-		
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
+    // Note, none of the vulnerabilities are getting mapped. They are being ignored. As a result this test will
+    // fail because there are no vulnerabilities.
 	@Test
 	public void findBugsScan() {
-		
 		String key = "FindBugs";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void ibmAppscanScan() {
 		String key = "IBM Rational AppScan";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void netsparkerScan(){
 		String key = "Mavituna Security Netsparker";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
- //   @Ignore
 	@Test
 	public void skipFishScan(){
 		String key = "Skipfish";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
-	@Test
+    // Note, for some reason we are able to upload the same scan twice with no problem
+    @Test
 	public void ntoSpiderScan() {
 		String key = "NTO Spider";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
+    // Note, for some reason we are able to upload the same scan twice with no problem
 	@Test
 	public void ntoSpiderScan6() {
-		
 		String key = "NTO Spider6";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
-	
-//    @Ignore
+
+    // Note, issue when auto-merging bugs from scan the more severe finding is not taking priority
 	@Test
 	public void w3afScan() {
-		
 		String key = "w3af";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);		
 	}
 
-//    @Ignore
 	@Test
 	public void zaproxyScan() {
 		String key = "OWASP Zed Attack Proxy";
@@ -277,17 +261,14 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void nessusScan() {
 		String key = "Nessus";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);		
 	}
 
-//    @Ignore
 	@Test
 	public void arachniScan() {
 		String key = "Arachni";
@@ -296,7 +277,6 @@ public class ScanTests extends BaseTest {
 		runScanTest(key, expectedResults);		
 	}
 
-//    @Ignore
 	@Test
 	public void webInspectScan() {
 		String key = "WebInspect";
@@ -305,43 +285,35 @@ public class ScanTests extends BaseTest {
 		runScanTest(key,expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void brakeManScan() {
 		String key = "Brakeman";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
-		runScanTest(key, expectedResults);		
-
+		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void fortify360Scan() {
 		String key = "Fortify 360";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
+    // Issue when auto-merging bugs from scan the more severe finding is not taking priority
 	@Test
 	public void acunetixScan() {
 		String key = "Acunetix WVS";
 		String[][] expectedResults = resultsMap.get(key);
 
-		
 		runScanTest(key, expectedResults);
 	}
 
-//    @Ignore
 	@Test
 	public void burpScan() {
 		String key = "Burp Suite";
 		String[][] expectedResults = resultsMap.get(key);
-
 
 		runScanTest(key, expectedResults);
 	}
@@ -351,6 +323,8 @@ public class ScanTests extends BaseTest {
 		
 		String orgName = scannerName + getRandomString(10);
 		String appName = scannerName + getRandomString(10);
+
+        System.out.println(fileMap.get(scannerName));
 
 		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 													 .clickAddTeamButton()
@@ -363,6 +337,8 @@ public class ScanTests extends BaseTest {
 													 .setFileInput(fileMap.get(scannerName))
 													 .submitScan()
 													 .clickExpandAllVulns();
+
+        System.out.println(fileMap.get(scannerName));
 		
 		assertTrue("The vuln counts don't match.", applicationDetailPage.getVulnCount(expectedResults.length));
 		
