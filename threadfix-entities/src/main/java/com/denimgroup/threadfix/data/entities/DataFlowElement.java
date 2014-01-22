@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.framework.engine.CodePoint;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -31,7 +30,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "DataFlowElement")
-public class DataFlowElement extends BaseEntity implements Comparable<DataFlowElement>, CodePoint {
+public class DataFlowElement extends BaseEntity implements Comparable<DataFlowElement> {
 
 	private static final long serialVersionUID = 1709906845656363680L;
 

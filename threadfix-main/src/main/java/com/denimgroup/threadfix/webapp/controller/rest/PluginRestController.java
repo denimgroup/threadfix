@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -99,7 +99,7 @@ public class PluginRestController extends RestController {
 	}
 	
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Endpoint[]> getEndpoints(@PathVariable int appId,
+	public @ResponseBody RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
 			HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
 		
@@ -121,7 +121,9 @@ public class PluginRestController extends RestController {
 		
 		if (generator != null) {
             List<Endpoint> endpoints = generator.generateEndpoints();
-			return RestResponse.success(endpoints.toArray(new Endpoint[endpoints.size()]));
+
+
+			return RestResponse.success(getEndpointInfo(endpoints));
 		} else {
 			return RestResponse.failure("Unable to create an EndpointGenerator.");
 		}
@@ -146,4 +148,14 @@ public class PluginRestController extends RestController {
 		
 		return infoList.toArray(new Application.Info[infoList.size()]);
 	}
+
+    private Endpoint.Info[] getEndpointInfo(List<Endpoint> endpoints) {
+        Endpoint.Info[] endpointsInfos = new Endpoint.Info[endpoints.size()];
+
+        for (int i = 0; i < endpoints.size(); i++) {
+            endpointsInfos[i] = Endpoint.Info.fromEndpoint(endpoints.get(i));
+        }
+
+        return endpointsInfos;
+    }
 }

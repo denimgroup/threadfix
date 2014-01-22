@@ -2,8 +2,8 @@ package com.denimgroup.threadfix.framework.engine.cleaner;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 import org.jetbrains.annotations.NotNull;

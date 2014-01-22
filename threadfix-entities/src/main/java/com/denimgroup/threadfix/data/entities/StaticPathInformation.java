@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
+
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

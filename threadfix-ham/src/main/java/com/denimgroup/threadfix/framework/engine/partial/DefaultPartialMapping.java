@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.framework.engine.partial;
 
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

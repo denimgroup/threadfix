@@ -24,11 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.jetbrains.annotations.NotNull;
 
 public class Task {
 
-    @NotNull
 	private String taskType;
 	private TaskConfig taskConfig;
     private int taskId;
@@ -38,7 +36,7 @@ public class Task {
 		
 	}
 	
-	public Task(int taskId, @NotNull String taskType, TaskConfig taskConfig) {
+	public Task(int taskId, String taskType, TaskConfig taskConfig) {
 		this.taskId = taskId;
 		this.taskType = taskType;
 		this.taskConfig = taskConfig;
@@ -56,7 +54,7 @@ public class Task {
 		return(this.taskType);
 	}
 	
-	public void setTaskType(@NotNull String taskType) {
+	public void setTaskType(String taskType) {
 		this.taskType = taskType;
 	}
 	

@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>threadfix-entities</artifactId>
+    <description>This module contains domain classes used by all of the other modules.</description>
 
     <build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -18,7 +19,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
@@ -29,6 +29,21 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.annotations</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -64,11 +79,6 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>${codehaus.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>threadfix-ham</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

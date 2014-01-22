@@ -1,7 +1,7 @@
 package com.denimgroup.threadfix.framework.engine.framework;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.impl.spring.SpringJavaConfigurationChecker;
 import org.apache.commons.io.FileUtils;

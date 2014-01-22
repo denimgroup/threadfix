@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.remote.response;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
@@ -10,8 +11,28 @@ import java.lang.reflect.Type;
 
 public class ResponseParser {
 
+    private static final SanitizedLogger LOGGER = new SanitizedLogger(ResponseParser.class);
+
     private static <T> Type getTypeReference() {
         return new TypeReference<RestResponse<T>>(){}.getType();
+    }
+
+    public static RestResponse<String> getStringRestResponse(String responseString, int responseCode) {
+        RestResponse<String> response = new RestResponse<String>();
+
+        if (responseString != null && responseString.trim().indexOf('{') == 0) {
+            try {
+                Gson gson = new Gson();
+                response = gson.fromJson(responseString, getTypeReference()); // turn everything into an object
+                response.object = gson.toJson(response.object);
+            } catch (JsonSyntaxException e) {
+                LOGGER.error("Encountered JsonSyntaxException", e);
+            }
+        }
+
+        response.responseCode = responseCode;
+
+        return response;
     }
 
     // TODO remove the double JSON read for efficiency
@@ -27,8 +48,7 @@ public class ResponseParser {
                 // turn the inner object into the correctly typed object
                 response.object = gson.fromJson(innerJson, internalClass);
             } catch (JsonSyntaxException e) {
-                System.out.println("Encountered JsonSyntaxException");
-                e.printStackTrace();
+                LOGGER.error("Encountered JsonSyntaxException", e);
             }
         }
 
@@ -43,7 +63,7 @@ public class ResponseParser {
         try {
             inputString = IOUtils.toString(responseStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Encountered IOException", e);
         }
 
         return getRestResponse(inputString, responseCode, target);

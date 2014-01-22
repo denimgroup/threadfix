@@ -25,9 +25,10 @@ package com.denimgroup.threadfix.service.translator;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +45,7 @@ class NoSourceFindingProcessor implements FindingProcessor {
 	public NoSourceFindingProcessor(FrameworkType frameworkType,
 			Scan scan) {
 		this.cleaner = PathCleanerFactory.getPathCleaner(frameworkType,
-				scan.toPartialMappingList());
+                ThreadFixInterface.toPartialMappingList(scan));
 
         log.info("NoSourceFindingProcessor with cleaner = " + cleaner);
 	}

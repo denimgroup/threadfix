@@ -65,7 +65,7 @@ public class ImportAction extends JMenuItem {
 
                         ZapPropertiesManager manager = ZapPropertiesManager.INSTANCE;
 
-                        RestResponse<Scan> response = new PluginClient(manager)
+                        RestResponse<Object> response = new PluginClient(manager)
                                     .uploadScan(manager.getAppId(), file);
 
                         int responseCode = response.responseCode;

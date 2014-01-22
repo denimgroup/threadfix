@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -430,17 +429,5 @@ public class Scan extends BaseEntity {
 	@Transient
 	public boolean isStatic() {
 		return STATIC.equals(getScannerType());
-	}
-	
-	public List<PartialMapping> toPartialMappingList() {
-		List<PartialMapping> results = new ArrayList<PartialMapping>();
-		
-		if (getFindings() != null) {
-			for (Finding finding : getFindings()) {
-				results.add(finding.toPartialMapping());
-			}
-		}
-		
-		return results;
 	}
 }

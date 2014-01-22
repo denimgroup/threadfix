@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.remote;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.ResponseParser;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -34,17 +35,18 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class HttpRestUtils {
 
     public static final String API_KEY_SEGMENT = "?apiKey=";
 
     final PropertiesManager propertiesManager;
+
+    private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
     public HttpRestUtils(PropertiesManager manager) {
         this.propertiesManager = manager;
@@ -54,30 +56,33 @@ public class HttpRestUtils {
         this.propertiesManager = new PropertiesManager();
     }
 
+    @NotNull
 	public String httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
 		return httpPostFile(path, file, paramNames, paramVals, Object.class).getObjectAsJsonString();
 	}
-	
+
+    @NotNull
 	public <T> RestResponse<T> httpPostFile(String path, File file,
                                             String[] paramNames, String[] paramVals,
                                             Class<T> targetClass) {
-		
+
 		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
 
 		PostMethod filePost = new PostMethod(completeUrl);
-		
+
 		filePost.setRequestHeader("Accept", "application/json");
 
         RestResponse<T> response;
         int status = -1;
-		
+
 		try {
-			Part[] parts = new Part[paramNames.length + 1];
+			Part[] parts = new Part[paramNames.length + 2];
 			parts[paramNames.length] = new FilePart("file", file);
+            parts[paramNames.length + 1] = new StringPart("apiKey", propertiesManager.getKey());
 
 			for (int i = 0; i < paramNames.length; i++) {
 				parts[i] = new StringPart(paramNames[i], paramVals[i]);
@@ -85,18 +90,18 @@ public class HttpRestUtils {
 
 			filePost.setRequestEntity(new MultipartRequestEntity(parts,
 					filePost.getParams()));
-			
+
 			filePost.setContentChunked(true);
 			HttpClient client = new HttpClient();
             status = client.executeMethod(filePost);
 			if (status != 200) {
-				System.err.println("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
+                LOGGER.warn("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
 			}
-			
+
             response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
 
         } catch (IOException e1) {
-            e1.printStackTrace();
+            LOGGER.error("There was an error and the POST request was not finished.", e1);
             response = ResponseParser.getErrorResponse(
                     "There was an error and the POST request was not finished.",
                     status);
@@ -105,6 +110,7 @@ public class HttpRestUtils {
         return response;
     }
 
+    @NotNull
     public String httpPost(String path,
                            String[] paramNames,
                            String[] paramVals) {
@@ -118,6 +124,7 @@ public class HttpRestUtils {
         }
     }
 
+    @NotNull
     public <T> RestResponse<T> httpPost(String path,
                                               String[] paramNames,
                                               String[] paramVals,
@@ -128,7 +135,7 @@ public class HttpRestUtils {
         String urlString = makePostUrl(path);
 
 		PostMethod post = new PostMethod(path);
-		
+
 		post.setRequestHeader("Accept", "application/json");
 
         int responseCode = -1;
@@ -142,13 +149,13 @@ public class HttpRestUtils {
 			}
 
             addApiKey(post);
-			
+
 			HttpClient client = new HttpClient();
 			responseCode = client.executeMethod(post);
 			if (responseCode != 200) {
-				System.err.println("Request for '" + urlString + "' status was " + responseCode + ", not 200 as expected.");
+                LOGGER.warn("Request for '" + urlString + "' status was " + responseCode + ", not 200 as expected.");
 			}
-			
+
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
 
 		} catch (IOException e1) {
@@ -161,10 +168,12 @@ public class HttpRestUtils {
         return response;
 	}
 
+    @NotNull
     public String httpGet(String path) {
         return httpGet(path, "");
     }
 
+    @NotNull
     public String httpGet(String path, String params) {
         RestResponse response = httpGet(path, params, RestResponse.class);
 
@@ -175,17 +184,18 @@ public class HttpRestUtils {
         }
     }
 
+    @NotNull
 	public <T> RestResponse<T> httpGet(String path, String params, Class<T> targetClass) {
 
         String urlString = makeGetUrl(path, params);
 
-		System.out.println("Requesting " + urlString);
-		
+		LOGGER.info("Requesting " + urlString);
+
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlString);
-		
+
 		get.setRequestHeader("Accept", "application/json");
-		
+
 		HttpClient client = new HttpClient();
 
         int status = -1;
@@ -195,9 +205,9 @@ public class HttpRestUtils {
 			status = client.executeMethod(get);
 
 			if (status != 200) {
-				System.err.println("Status was not 200.");
+                LOGGER.error("Status was not 200. It was " + status);
 			}
-			
+
             response = ResponseParser.getRestResponse(get.getResponseBodyAsStream(), status, targetClass);
 
 		} catch (IOException e) {
@@ -208,15 +218,36 @@ public class HttpRestUtils {
 		return response;
 	}
 
+    @NotNull
     private String makeGetUrl(String path, String params) {
         String baseUrl = propertiesManager.getUrl();
         String apiKey  = propertiesManager.getKey();
 
-        return baseUrl + path + API_KEY_SEGMENT + apiKey + "&" + params;
+        LOGGER.debug("Building GET url with path " + path + " and base url " + baseUrl);
+
+        if (baseUrl.endsWith("/rest") && path.charAt(0) != '/') {
+            baseUrl = baseUrl + "/";
+        }
+
+        String finishedUrl = baseUrl + path + API_KEY_SEGMENT + apiKey + "&" + params;
+
+        LOGGER.debug("Returning " + finishedUrl);
+
+        return finishedUrl;
     }
 
+    @NotNull
     private String makePostUrl(String path) {
         String baseUrl = propertiesManager.getUrl();
+
+        LOGGER.debug("Building POST url with path " + path + " and base url " + baseUrl);
+
+        if (baseUrl.endsWith("/rest") && path.charAt(0) != '/') {
+            baseUrl = baseUrl + "/";
+        }
+
+        LOGGER.debug("Returning " + baseUrl + path);
+
         return baseUrl + path;
     }
 

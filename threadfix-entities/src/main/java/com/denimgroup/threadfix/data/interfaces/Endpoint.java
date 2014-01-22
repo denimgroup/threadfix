@@ -21,8 +21,33 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.enums;
+package com.denimgroup.threadfix.data.interfaces;
 
-public enum InformationSourceType {
-	STATIC, DYNAMIC, MANUAL
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
+
+public interface Endpoint extends Comparable<Endpoint> {
+
+    @NotNull
+	Set<String> getParameters();
+
+    @NotNull
+	Set<String> getHttpMethods();
+
+    @NotNull
+	String getUrlPath();
+
+    @NotNull
+	String getFilePath();
+
+    @NotNull
+	String getCSVLine();
+	
+	int getStartingLineNumber();
+	
+	int getLineNumberForParameter(String parameter);
+	
+	boolean matchesLineNumber(int lineNumber);
+	
 }

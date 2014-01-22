@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.swing.JMenuItem;
 
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.remote.PluginClient;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
@@ -43,16 +43,16 @@ public class EndpointsAction extends JMenuItem {
                 if (configured) {
 	                logger.info("Got application id, about to generate XML and use REST call.");
 	
-	                Endpoint[] endpoints = new PluginClient(ZapPropertiesManager.INSTANCE)
+	                Endpoint.Info[] endpoints = new PluginClient(ZapPropertiesManager.INSTANCE)
                             .getEndpoints(ZapPropertiesManager.INSTANCE.getAppId());
 	                
-	                if (endpoints == null || endpoints.length == 0) {
+	                if (endpoints.length == 0) {
 	                	view.showWarningDialog("Failed to retrieve endpoints from ThreadFix. Check your key and url.");
 	                } else {
 	
 	                	logger.info("Got " + endpoints.length + " endpoints.");
 	
-		                for (Endpoint endpoint : endpoints) {
+		                for (Endpoint.Info endpoint : endpoints) {
 		                    if (endpoint != null) {
 
 		                    	String urlPath = endpoint.getUrlPath();

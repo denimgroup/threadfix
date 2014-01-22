@@ -1,8 +1,8 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import org.junit.Test;
 
 import java.io.File;

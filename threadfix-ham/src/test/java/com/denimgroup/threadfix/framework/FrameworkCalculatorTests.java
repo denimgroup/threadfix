@@ -4,10 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class FrameworkCalculatorTests {
 	
