@@ -3,8 +3,6 @@ package com.denimgroup.threadfix.remote.response;
 import com.denimgroup.threadfix.data.entities.Application;
 import org.junit.Test;
 
-import java.util.List;
-
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 

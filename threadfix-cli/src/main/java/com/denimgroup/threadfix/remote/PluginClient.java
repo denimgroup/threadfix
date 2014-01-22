@@ -1,12 +1,15 @@
 package com.denimgroup.threadfix.remote;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.framework.engine.full.Endpoint;
 import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 // TODO use unchecked exceptions for stuff like the threadfix server not being found or the wrong data coming back.
 public class PluginClient {
@@ -22,6 +25,10 @@ public class PluginClient {
         httpRestUtils = new HttpRestUtils(propertiesManager);
     }
 
+    public PluginClient(PropertiesManager manager) {
+        httpRestUtils = new HttpRestUtils(manager);
+    }
+
     @Nullable
     public Application.Info[] getThreadFixApplications() {
         return getItem("code/applications", Application.Info[].class);
@@ -35,6 +42,11 @@ public class PluginClient {
     @Nullable
     public Endpoint[] getEndpoints(String appId) {
         return getItem("/applications/{appId}/endpoints" + appId, Endpoint[].class);
+    }
+
+    public RestResponse<Scan> uploadScan(String appId, File inputFile) {
+        return httpRestUtils.httpPostFile("/applications/" + appId + "/upload",
+                inputFile, new String[]{}, new String[]{}, Scan.class);
     }
 
     @Nullable

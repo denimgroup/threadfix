@@ -1,5 +1,6 @@
 package org.zaproxy.zap.extension.threadfix;
 
+import com.denimgroup.threadfix.properties.PropertiesManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -11,9 +12,13 @@ import java.util.Properties;
 /**
  * Created by mac on 9/23/13.
  */
-public class ThreadFixPropertiesManager {
+public class ZapPropertiesManager extends PropertiesManager {
 
-    private static final Logger logger = Logger.getLogger(ThreadFixPropertiesManager.class);
+    private static final Logger logger = Logger.getLogger(ZapPropertiesManager.class);
+
+    public static final ZapPropertiesManager INSTANCE = new ZapPropertiesManager();
+
+    private ZapPropertiesManager(){}
 
     private static final String
             FILE_NAME = "threadfix.properties",
@@ -22,18 +27,19 @@ public class ThreadFixPropertiesManager {
             APP_ID_KEY = "application-id",
             SAVE_MESSAGE = "Saving ZAP properties.";
 
-    public static String getKey() {
+    @Override
+    public String getKey() {
         String key = getProperties().getProperty(API_KEY_KEY);
         logger.info("returning api key " + key);
         return key;
     }
 
-    public static String getAppId() {
-        String id = getProperties().getProperty(APP_ID_KEY);
-        return id;
+    public String getAppId() {
+        return getProperties().getProperty(APP_ID_KEY);
     }
 
-    public static String getUrl() {
+    @Override
+    public String getUrl() {
         String url = getProperties().getProperty(URL_KEY);
         if (url == null) {
             url = "http://localhost:8080/threadfix/rest";

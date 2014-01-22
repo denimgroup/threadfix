@@ -56,11 +56,12 @@ public class HttpRestUtils {
 
 	public String httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
-		return httpPostFile(path, file, paramNames,
-				paramVals);
+		return httpPostFile(path, file, paramNames, paramVals, Object.class).getObjectAsJsonString();
 	}
 	
-	private String httpPostFile(String path, File file, String[] paramNames, String[] paramVals) {
+	public <T> RestResponse<T> httpPostFile(String path, File file,
+                                            String[] paramNames, String[] paramVals,
+                                            Class<T> targetClass) {
 		
 		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
@@ -70,6 +71,9 @@ public class HttpRestUtils {
 		PostMethod filePost = new PostMethod(completeUrl);
 		
 		filePost.setRequestHeader("Accept", "application/json");
+
+        RestResponse<T> response;
+        int status = -1;
 		
 		try {
 			Part[] parts = new Part[paramNames.length + 1];
@@ -84,25 +88,22 @@ public class HttpRestUtils {
 			
 			filePost.setContentChunked(true);
 			HttpClient client = new HttpClient();
-			int status = client.executeMethod(filePost);
+            status = client.executeMethod(filePost);
 			if (status != 200) {
 				System.err.println("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
 			}
 			
-			InputStream responseStream = filePost.getResponseBodyAsStream();
-			
-			if (responseStream != null) {
-				return IOUtils.toString(responseStream);
-			} else {
-				System.err.println("Response stream was null");
-			}
+            response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            response = ResponseParser.getErrorResponse(
+                    "There was an error and the POST request was not finished.",
+                    status);
+        }
 
-		return "There was an error and the POST request was not finished.";
-	}
+        return response;
+    }
 
     public String httpPost(String path,
                            String[] paramNames,
