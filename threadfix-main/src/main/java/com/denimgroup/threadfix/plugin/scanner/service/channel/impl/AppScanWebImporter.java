@@ -21,27 +21,19 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
+
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.VulnerabilityMap;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * Imports the results of a dynamic AppScan scan.

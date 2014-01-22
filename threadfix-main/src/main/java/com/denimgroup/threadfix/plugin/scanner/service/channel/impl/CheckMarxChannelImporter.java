@@ -21,12 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;

@@ -1,26 +1,21 @@
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * This class currently handles JSON output from either the flat JSONArray version

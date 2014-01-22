@@ -21,37 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipFile;
-
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipFile;
 
 /**
  * Parses the Skipfish output file. The zip upload will go look at the relevant request.dat file and try to

@@ -21,8 +21,24 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,43 +48,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
-import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
-
 @PluginImplementation
 public class SSVLChannelImporter extends AbstractChannelImporter {
-	
+
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
 
 	@Autowired
 	public SSVLChannelImporter() {
 		super(ScannerType.MANUAL.getFullName());
 	}
-	
+
 	@Override
 	public Scan parseInput() {
 		return parseSAXInput(new SSVLChannelImporterSAXParser());
 	}
-	
+
 	public class SSVLChannelImporterSAXParser extends HandlerWithBuilder {
 		
 		private boolean getText = false;

@@ -21,22 +21,21 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
-
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -44,7 +43,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
  */
 @PluginImplementation
 public class NTOSpiderChannelImporter extends AbstractChannelImporter {
-	
+
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
 		tagMap.put("vulntype",      FindingKey.VULN_CODE);
@@ -52,8 +51,8 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		tagMap.put("parametername", FindingKey.PARAMETER);
 		tagMap.put("normalizedurl", FindingKey.PATH);
 	}
-	
-	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate", 
+
+	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate",
 			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
 			VULN_SUMMARY = "VulnSummary";
 
@@ -65,7 +64,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	public Scan parseInput() {
 		return parseSAXInput(new NTOSaxParser());
 	}
-	
+
 	public class NTOSaxParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;

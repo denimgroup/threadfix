@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
-import com.denimgroup.threadfix.plugin.scanner.service.remoteprovider.RemoteProvider;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.impl.remoteprovider.RemoteProvider;
 
 public class RemoteProviderFactory {
 	

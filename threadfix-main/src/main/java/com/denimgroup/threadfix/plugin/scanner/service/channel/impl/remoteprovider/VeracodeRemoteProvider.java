@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.remoteprovider;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl.remoteprovider;
 
 import java.io.IOException;
 import java.io.InputStream;

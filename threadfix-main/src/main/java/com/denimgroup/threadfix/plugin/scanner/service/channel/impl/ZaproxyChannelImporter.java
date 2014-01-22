@@ -21,25 +21,24 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
-
-import java.util.AbstractMap.SimpleEntry;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 
@@ -49,7 +48,7 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
-	
+
 	private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
 	private static void addToSet(String[] array, String key) {
 		alternativesMap.add(new SimpleEntry<>(array,  key));
@@ -60,7 +59,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		addToSet(new String[] {"cross", "site", "scripting"},  XSS);
 		addToSet(new String[] {"xss"},  XSS);
 	}
-	
+
 	@Autowired
 	public ZaproxyChannelImporter() {
 		super(ScannerType.ZAPROXY.getFullName());
@@ -70,7 +69,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	public Scan parseInput() {
 		return parseSAXInput(new ZaproxySAXParser());
 	}
-	
+
 	private String getAlternative(String possibility) {
 		String lower = possibility.toLowerCase();
 		MAP: for (Entry<String[], String> entry : alternativesMap) {
@@ -84,7 +83,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 		}
 		return null;
 	}
-	
+
 	public class ZaproxySAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
 		private Boolean getUri                = false;

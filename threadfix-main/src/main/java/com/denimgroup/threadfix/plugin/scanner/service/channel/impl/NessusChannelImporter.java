@@ -21,7 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
+
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,18 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * TODO import more scans and make sure parameters and paths 

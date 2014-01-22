@@ -21,23 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel;
-
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
 
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
