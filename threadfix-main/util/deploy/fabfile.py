@@ -3,12 +3,12 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 import datetime, re
 
-#env.hosts = ['server ip']
+env.hosts = 'localhost'
 env.password = 'password'
 env.user = 'denimgroup'
 
 local_working_folder_loc = '/var/lib/jenkins/workspace/ThreadFix_Regression' #where fabfile is running from
-server_base_loc = '/opt/threadfix' #where to deploy to
+server_base_loc = '/var/lib/tomcat7/webapps' #where to deploy to
 
 #path to .deploy files
 local_path = 'threadfix-main/src/main/resources'
@@ -46,32 +46,27 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix-main' % local_working_folder_loc):
-        res = local('mvn package -DskipTests -P mysql')
+    with lcd('%s' % local_working_folder_loc):
+        res = local('mvn install -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
 # moves the WAR file to the remote server, updates the database and restarts tomcat 
 @task
+@runs_once
 def deploy_war():
-    folder_name = now.year*100000000 + now.month*1000000 + now.day*10000 + now.hour*100 + now.minute
-    server_target_loc = server_base_loc + '/' +  str(folder_name)
-    with settings(warn_only=True):
-        local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
-    local('sudo mv %s/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
-    with cd(server_target_loc):
-        local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
-        local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
-    local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
-    local('sudo cp %s/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
+    with settings(warn_only=True):
+        local('sudo rm -rf %s/threadfix-2.0M1-SNAPSHOT' % (server_base_loc))
+    local('sudo mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s' % (local_working_folder_loc, server_base_loc))
+    local('sudo cp %s/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_base_loc))
     local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
 @task
 def verify_site():
     with settings(warn_only = True):
-        str = run('curl -I https://localhost:443/threadfix/login.jsp')
+        str = local('curl -I https://localhost:443/threadfix/login.jsp')
     testing = re.match('HTTP/1.1 200', str)
     if testing:
         print("Successful launch verified using HTTP response.")
@@ -98,4 +93,4 @@ def deploy():
     exchange_files()
     build_war()
     deploy_war()
-    verify_site()
+    #verify_site()
