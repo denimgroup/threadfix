@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel.impl.remoteprovider;
+package com.denimgroup.threadfix.plugin.scanner.service.removable.impl.remoteprovider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.impl.HandlerWithBuilder;
+import com.denimgroup.threadfix.plugin.scanner.service.removable.impl.HandlerWithBuilder;
 import com.denimgroup.threadfix.service.ScanUtils;
 
 @PluginImplementation

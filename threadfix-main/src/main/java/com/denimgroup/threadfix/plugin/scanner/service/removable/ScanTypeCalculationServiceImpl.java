@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service;
+package com.denimgroup.threadfix.plugin.scanner.service.removable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +37,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
-import com.denimgroup.threadfix.plugin.scanner.service.channel.impl.CheckMarxChannelImporter;
+import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.plugin.scanner.service.removable.impl.CheckMarxChannelImporter;
 import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import com.denimgroup.threadfix.plugin.scanner.service.util.ZipFileUtils;
 import net.xeoh.plugins.base.annotations.PluginImplementation;

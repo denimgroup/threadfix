@@ -2,8 +2,8 @@
 //
 //     Copyright (c) 2009-2013 Denim Group, Ltd.
 //
-//     The contents of this fileName are subject to the Mozilla Public License
-//     Version 2.0 (the "License"); you may not use this fileName except in
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
 //     compliance with the License. You may obtain a copy of the License at
 //     http://www.mozilla.org/MPL/
 //
@@ -21,8 +21,9 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
+package com.denimgroup.threadfix.plugin.scanner.service.removable.impl;
 
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -32,43 +33,46 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.Calendar;
 
 /**
  * 
  * @author mcollins
+ *
  */
 @PluginImplementation
-public class AcunetixChannelImporter extends AbstractChannelImporter {
-	
-	@Override
-	public String getType() {
-		return ScannerType.ACUNETIX_WVS.getFullName();
-	}
-	
-	public AcunetixChannelImporter() {
-		super(ScannerType.ACUNETIX_WVS.getFullName());
+public class NetsparkerChannelImporter extends AbstractChannelImporter {
+
+	public NetsparkerChannelImporter() {
+		super(ScannerType.NETSPARKER.getFullName());
 	}
 
-	String detailsPattern = "input <b><font color=\"dark\">([^<]+)</font>";
-	String pathPattern = "(.*) \\([a-z0-9]{25,50}\\)";
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.denimgroup.threadfix.service.channel.ChannelImporter#parseInput()
+	 */
 	@Override
 	public Scan parseInput() {
-		return parseSAXInput(new AcunetixSAXParser());
+		return parseSAXInput(new NetsparkerSAXParser());
 	}
-	
-	public class AcunetixSAXParser extends HandlerWithBuilder {
-		private boolean getChannelVulnText    = false;
-		private boolean getUrlText            = false;
-		private boolean getParamText          = false;
-		private boolean getSeverityText       = false;
-		private boolean getDateText           = false;
+
+	public class NetsparkerSAXParser extends HandlerWithBuilder {
+		private Boolean getChannelVulnText    = false;
+		private Boolean getUrlText            = false;
+		private Boolean getParamText          = false;
+		private Boolean getSeverityText       = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
-		
+				
+		private String host = null;
+	    
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -84,57 +88,51 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	switch (qName) {
-		    	case "Name"      : getChannelVulnText = true; break;
-		    	case "Affects"   : getUrlText = true;         break;
-		    	case "Details"   : getParamText = true;       break;
-		    	case "Severity"  : getSeverityText = true;    break;
-		    	case "StartTime" : getDateText = true;        break;
+	    	if ("type".equals(qName)) {
+	    		getChannelVulnText = true;
+	    	} else if ("url".equals(qName)) {
+	    		getUrlText = true;
+	    	} else if ("vulnerableparameter".equals(qName)) {
+	    		getParamText = true;
+	    	} else if ("severity".equals(qName)) {
+	    		getSeverityText = true;
+	    	} else if ("netsparker".equals(qName)) {
+//	    		date = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+                date = getCalendar(atts.getValue("generated"));
 	    	}
 	    }
 
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	
 	    	if (getChannelVulnText) {
 	    		currentChannelVulnCode = getBuilderText();
 	    		getChannelVulnText = false;
 	    	} else if (getUrlText) {
-	    		currentUrlText = getBuilderText();
-	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
-	    			String possibleString = getRegexResult(currentUrlText, pathPattern);
-	    			if (possibleString != null) {
-	    				currentUrlText = possibleString;
-	    			}
-	    		}
+	    		if (host == null)
+	    			host = getBuilderText();
+	    		else
+		    		currentUrlText = getBuilderText();
 	    		getUrlText = false;
 	    	} else if (getParamText) {
-	    		String text = getBuilderText();
-	    		currentParameter = getRegexResult(text, detailsPattern);
+	    		currentParameter = getBuilderText();
 	    		getParamText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
-	    	} else if (getDateText) {
-	    		String temp = getBuilderText();
-	    		date = DateUtils.getCalendarFromString("dd/MM/yyyy, hh:mm:ss", temp);
-	    		getDateText = false;
 	    	}
 	    	
-	    	
-	    	if ("ReportItem".equals(qName)) {
-	    		
-	    		if (currentChannelVulnCode.startsWith("GHDB")) {
-	    			currentChannelVulnCode = "Google Hacking Database vulnerability found.";
-	    		}
-	    		
-	    		if (currentChannelVulnCode.endsWith(" (verified)")) {
-	    			currentChannelVulnCode = currentChannelVulnCode.replace(" (verified)", "");
-	    		}
-	    		
+	    	if ("vulnerability".equals(qName)) {
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
 	    				currentChannelVulnCode, currentSeverityCode);
 	    		
+	    		// The old XML format didn't include severities. As severities are required
+	    		// for vulnerabilities to show on the application page, let's assign medium 
+	    		// severity. This is only known to affect beta versions of Netsparker.
+	    		if (finding != null && finding.getChannelSeverity() == null) {
+	    			ChannelSeverity mediumChannelSeverity = channelSeverityDao.retrieveByCode(channelType, "Medium");
+	    			finding.setChannelSeverity(mediumChannelSeverity);
+	    		}
+
 	    		add(finding);
 	    		
 	    		currentChannelVulnCode = null;
@@ -146,29 +144,28 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getDateText) {
-	    		addTextToBuilder(ch,start,length);
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText) {
+	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
 	}
 
 	@Override
 	public ScanCheckResultBean checkFile() {
-		return testSAXInput(new AcunetixSAXValidator());
+		return testSAXInput(new NetsparkerSAXValidator());
 	}
 	
-	public class AcunetixSAXValidator extends HandlerWithBuilder {
+	public class NetsparkerSAXValidator extends DefaultHandler {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
-		private boolean getDateText = false;
 		
 	    private void setTestStatus() {	    	
 	    	if (!correctFormat)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings)
+	    	if (ScanImportStatus.SUCCESSFUL_SCAN == testStatus && !hasFindings)
 	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
@@ -183,32 +180,32 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    }
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if ("ScanGroup".equals(qName)) {
+	    	if ("netsparker".equals(qName)) {
+//	    		testDate = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+                testDate = getCalendar(atts.getValue("generated"));
+	    		if (testDate != null)
+	    			hasDate = true;
 	    		correctFormat = true;
-	    	} else if ("StartTime".equals(qName)) {
-	    		getDateText = true;
 	    	}
 	    	
-	    	if ("ReportItem".equals(qName)) {
+	    	if ("vulnerability".equals(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
 	    		throw new SAXException(FILE_CHECK_COMPLETED);
 	    	}
 	    }
-	    
-	    public void endElement(String uri, String name, String qName) {
-	    	if (getDateText) {
-	    		testDate = DateUtils.getCalendarFromString("dd/MM/yyyy, hh:mm:ss", getBuilderText());
-	    		hasDate = testDate != null;
-	    		getDateText = false;
-	    	}
-	    }
-	    
-	    public void characters (char ch[], int start, int length)
-	    {
-	    	if (getDateText) {
-	    		addTextToBuilder(ch,start,length);
-	    	}
-	    }
 	}
+
+	@Override
+	public String getType() {
+		return ScannerType.NETSPARKER.getFullName();
+	}
+
+    private Calendar getCalendar(String dateString) {
+        Calendar result = null;
+        result = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss a", dateString);
+        if (result == null)
+            result = DateUtils.getCalendarFromString("dd/MM/yyyy hh:mm:ss", dateString);
+        return result;
+    }
 }

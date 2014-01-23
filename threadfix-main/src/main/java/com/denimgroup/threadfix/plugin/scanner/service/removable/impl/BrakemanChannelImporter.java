@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
+package com.denimgroup.threadfix.plugin.scanner.service.removable.impl;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;

@@ -21,16 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.plugin.scanner.service.channel.impl;
+package com.denimgroup.threadfix.plugin.scanner.service.removable.impl;
 
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -43,67 +42,30 @@ import java.util.Map;
  * @author mcollins
  */
 @PluginImplementation
-public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
-	
-	@Override
-	public String getType() {
-		return ScannerType.APPSCAN_ENTERPRISE.getFullName();
-	}
-	
+public class NTOSpiderChannelImporter extends AbstractChannelImporter {
+
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
-		tagMap.put("issue_type_name", FindingKey.VULN_CODE);
-		tagMap.put("issue_severity", FindingKey.SEVERITY_CODE);
-		tagMap.put("security_entity_element", FindingKey.PARAMETER);
-		tagMap.put("test_url", FindingKey.PATH);
-		tagMap.put("issue_id", FindingKey.NATIVE_ID);
+		tagMap.put("vulntype",      FindingKey.VULN_CODE);
+		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
+		tagMap.put("parametername", FindingKey.PARAMETER);
+		tagMap.put("normalizedurl", FindingKey.PATH);
 	}
 
-	public AppScanEnterpriseChannelImporter() {
-		super(ScannerType.APPSCAN_DYNAMIC.getFullName());
-	}
-	
-	/**
-	 * This is added so we can use retrieveByName on the AppScan vulnerability mappings.
-	 */
-	@Override
-	protected ChannelVulnerability getChannelVulnerability(String code) {
-		if (channelType == null || code == null || channelVulnerabilityDao == null)
-			return null;
-		
-		if (channelVulnerabilityMap == null)
-			initializeMaps();
+	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate",
+			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
+			VULN_SUMMARY = "VulnSummary";
 
-		if (channelVulnerabilityMap == null)
-			return null;
-
-		if (channelVulnerabilityMap.containsKey(code)) {
-			return channelVulnerabilityMap.get(code);
-		} else {
-			ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByName(channelType, code);
-			if (vuln == null) {
-				if (channelType != null)
-					log.warn("A " + channelType.getName() + " channel vulnerability with code "
-						+ StringEscapeUtils.escapeHtml(code) + " was requested but not found.");
-				return null;
-			} else {
-				if (channelVulnerabilityDao.hasMappings(vuln.getId())) {
-					log.info("The " + channelType.getName() + " channel vulnerability with code "
-						+ StringEscapeUtils.escapeHtml(code) + " has no generic mapping.");
-				}
-			}
-
-			channelVulnerabilityMap.put(code, vuln);
-			return vuln;
-		}
+	public NTOSpiderChannelImporter() {
+		super(ScannerType.NTO_SPIDER.getFullName());
 	}
 
 	@Override
 	public Scan parseInput() {
-		return parseSAXInput(new AppScanEnterpriseSAXParser());
+		return parseSAXInput(new NTOSaxParser());
 	}
-	
-	public class AppScanEnterpriseSAXParser extends HandlerWithBuilder {
+
+	public class NTOSaxParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
@@ -111,7 +73,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 		private FindingKey itemKey = null;
 	
 		private Map<FindingKey, String> findingMap = null;
-					    
+		
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -127,33 +89,44 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	if ("row".equals(qName)) {
+	    	if (date == null && SCAN_DATE.equalsIgnoreCase(qName)) {
+	    		getDate = true;
+	    	} else if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
-	    	} else if (inFinding && tagMap.containsKey(qName)) {
-	    		itemKey = tagMap.get(qName);
+	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
+	    		itemKey = tagMap.get(qName.toLowerCase());
 	    	}
 	    }
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if ("row".equals(qName)) {
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
+	    		
+	    		if (findingMap.get(FindingKey.PARAMETER) != null && 
+	    				findingMap.get(FindingKey.PARAMETER).equals(N_A)) {
+	    			findingMap.remove(FindingKey.PARAMETER);
+	    		}
+	    		
 	    		Finding finding = constructFinding(findingMap);
-
-                if (finding != null) {
-                    finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
-                    add(finding);
-                }
+	    		
+	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
-	    		
 	    		if (currentItem != null && findingMap.get(itemKey) == null) {
 	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
-	    	} 
+	    	} else if (getDate) {
+	    		String tempDateString = getBuilderText();
+
+	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+	    			date = DateUtils.getCalendarFromString(DATE_PATTERN, tempDateString);
+	    		}
+	    		getDate = false;
+	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length) {
@@ -165,28 +138,24 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public ScanCheckResultBean checkFile() {
-		return testSAXInput(new AppScanEnterpriseSAXValidator());
+		return testSAXInput(new NTOSaxValidator());
 	}
 	
-	public class AppScanEnterpriseSAXValidator extends HandlerWithBuilder {
-		
-		private boolean report = false, control = false, row = false;
-		
+	public class NTOSaxValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
+		private boolean hasDate = false;
 		private boolean correctFormat = false;
+		private boolean getDate = false;
 		
 	    private void setTestStatus() {
-	    	correctFormat = report && control && row;
-	    	
 	    	if (!correctFormat)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	
-	    	if (testStatus == null) {
-	    		if (!hasFindings)
-		    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    		else 
-	    			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
-	    	}
+	    	else if (hasDate)
+	    		testStatus = checkTestDate();
+	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings)
+	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+	    	else if (testStatus == null)
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
@@ -197,21 +166,46 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	setTestStatus();
 	    }
 
+	    @Override
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
-	    	if ("report".equals(qName)) {
-	    		report = true;
+	    	if (VULN_LIST.equalsIgnoreCase(qName) || VULN_SUMMARY.equalsIgnoreCase(qName)) {
+	    		correctFormat = true;
 	    	}
 	    	
-	    	if ("control".equals(qName)) {
-	    		control = true;
+	    	if (testDate == null && SCAN_DATE.equalsIgnoreCase(qName)) {
+	    		getDate = true;
+	    	}
+	    }
+	    
+	    @Override
+	    public void endElement (String uri, String name, String qName) throws SAXException { 	
+	    	if (getDate) {
+	    		String tempDateString = getBuilderText();
+
+	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+	    			testDate = DateUtils.getCalendarFromString(DATE_PATTERN, tempDateString);
+	    		}
+	    		
+	    		hasDate = testDate != null;
+	    		getDate = false;
 	    	}
 	    	
-	    	if ("row".equals(qName)) {
-	    		row = true;
+	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
 	    		throw new SAXException(FILE_CHECK_COMPLETED);
 	    	}
 	    }
+	    
+	    public void characters (char ch[], int start, int length) {
+	    	if (getDate) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
+	    }
+	}
+
+	@Override
+	public String getType() {
+		return ScannerType.NTO_SPIDER.getFullName();
 	}
 }
