@@ -3,13 +3,16 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 import datetime, re
 
-env.hosts = ['server ip']
-env.user = 'username'
+#env.hosts = ['server ip']
 env.password = 'password'
-source_code_loc='https://github.com/denimgroup/threadfix.git'
-local_working_folder_loc = '/path/to/file' #where fabfile is running from
-server_base_loc = '/home/denimgroup/artifacts' #where to deploy to
-local_path = 'threadfix/src/main/resources' #path to .deploy files
+env.user = 'denimgroup'
+
+source_code_loc='https://code.google.com/p/threadfix'
+local_working_folder_loc = '/var/lib/jenkins/workspace/ThreadFix_Regression' #where fabfile is running from
+server_base_loc = '/opt/threadfix' #where to deploy to
+
+#path to .deploy files
+local_path = 'threadfix/threadfix-main/src/main/resources'
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
@@ -32,10 +35,11 @@ def clone_code():
 @runs_once
 def exchange_files():
     with settings(warn_only = True):
-        res1 = local('mv %s%s/log4j.xml.deploy %s%s/log4j.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-        res2 = local('mv %s%s/jdbc.properties.deploy %s%s/jdbc.properties' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-        res3 = local('mv %s/%s/applicationContext-scheduling.xml.deploy %s/%s/applicationContext-scheduling.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-    res = res1 and res2 and res3
+        res1 = local('mv %s/%s/log4j.xml.deploy %s/%s/log4j.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
+        res2 = local('sed "s/hibernate.hbm2ddl.auto=update/hibernate.hbm2ddl.auto=create/g" %s/%s/jdbc.properties.mysql -i' % (local_working_folder_loc, local_path))
+        res3 = local('mv %s/%s/jdbc.properties.mysql %s/%s/jdbc.properties' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
+        res4 = local('mv %s/%s/applicationContext-scheduling.xml.deploy %s/%s/applicationContext-scheduling.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
+    res = res1 and res2 and res3 and res4
     if res.failed and confirm('Deploy files were not found. Abort recommended. Abort?'):
         abort('Aborting because deploy files not found.')
 
@@ -43,8 +47,8 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix' % local_working_folder_loc):
-        res = local('mvn clean install')
+    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
+        res = local('mvn package -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
@@ -53,22 +57,22 @@ def build_war():
 def deploy_war():
     folder_name = now.year*100000000 + now.month*1000000 + now.day*10000 + now.hour*100 + now.minute
     server_target_loc = server_base_loc + '/' +  str(folder_name)
-    with cd(server_base_loc):
-        run('mkdir %s' % str(folder_name))
-    put('%s/threadfix/target/threadfix-2.0M1-SNAPSHOT.war' % local_working_folder_loc, server_target_loc)
-    with cd(server_target_loc):        
-        run('unzip -q threadfix-2.0M1-SNAPSHOT.war -d threadfix') #unzip the WAR file
-    run('sudo service tomcat6 stop')   #stop tomcat
-    run('mv -f %s/threadfix/WEB-INF/classes/threadfix-backup.script /var/lib/tomcat6/database/threadfix.script' % server_target_loc)
-    run('rm -f /var/lib/tomcat6/database/threadfix.log') 
-    run('sudo ln -fs %s/threadfix /var/lib/tomcat6/webapps' % server_target_loc) #update symlink in webapps
-    run('sudo service tomcat6 start')  #start tomcat
+    with settings(warn_only=True):
+        local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
+    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
+    with cd(server_target_loc):
+        local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
+        local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
+    local('sudo service tomcat7 stop')   #stop tomcat
+    local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
+    local('sudo cp %s/threadfix/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
+    local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
 @task
 def verify_site():
     with settings(warn_only = True):
-        str = run('curl -I http://threadfix01:8080/threadfix/login.jsp')
+        str = run('curl -I https://localhost:443/threadfix/login.jsp')
     testing = re.match('HTTP/1.1 200', str)
     if testing:
         print("Successful launch verified using HTTP response.")
@@ -92,8 +96,6 @@ def slow_deploy():
 
 @task(default=True)
 def deploy():
-    remove_old_code()
-    clone_code()
     exchange_files()
     build_war()
     deploy_war()

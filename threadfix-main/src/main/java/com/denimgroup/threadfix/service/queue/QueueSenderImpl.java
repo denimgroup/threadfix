@@ -75,7 +75,6 @@ public class QueueSenderImpl implements QueueSender {
 	 */
 	@Override
 	public void startDefectTrackerSync() {
-        System.out.println("In here");
 		send(QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE);
 	}
 

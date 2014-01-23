@@ -35,3 +35,12 @@ var addScanDeletes = function() {
 
 addToDocumentReadyFunctions(addScanDeletes);
 addToModalRefreshFunctions(addScanDeletes);
+
+function changeAbilityOfDaySelection()
+{
+    if (document.getElementById("frequency").value === "Weekly") {
+        document.getElementById("selectedDay").disabled=false;
+    } else {
+        document.getElementById("selectedDay").disabled=true;
+    }
+}
