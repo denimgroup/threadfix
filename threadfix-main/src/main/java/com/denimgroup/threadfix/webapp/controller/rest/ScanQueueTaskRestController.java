@@ -61,7 +61,7 @@ public class ScanQueueTaskRestController extends RestController {
 	
 	/**
 	 * Queue a new scan
-	 * 
+	 *
 	 * @param applicationId
 	 * @param scannerType
 	 * @return
@@ -86,7 +86,8 @@ public class ScanQueueTaskRestController extends RestController {
 	
 	/**
 	 * TODO - Add scanner versions and OS/version to the incoming parameters
-	 * 
+	 * TODO move to CLI library
+     *
 	 * @param request
 	 * @param scanners comma-separated list of scanners available from the agent
 	 * @param agentConfig information about the agent's environment
@@ -112,7 +113,14 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		return RestResponse.success(retVal);
 	}
-	
+
+    /**
+     *
+     * @param request
+     * @param scanQueueTaskId
+     * @param message
+     * @return
+     */
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
 	public @ResponseBody RestResponse taskStatusUpdate(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,

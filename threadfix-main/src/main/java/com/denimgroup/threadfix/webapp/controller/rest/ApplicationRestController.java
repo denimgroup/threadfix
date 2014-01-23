@@ -89,9 +89,12 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Return details about a specific application.
+     *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForApplicationById(String)
+     *
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse applicationDetail(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> applicationDetail(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for Applications with id = " + appId + ".");
 
@@ -111,9 +114,14 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Set scan parameters
+     *
+     * TODO add to ThreadFixRestClient
+     *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#
+     *
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/attachFile", method=RequestMethod.POST)
-	public @ResponseBody RestResponse attachFile(HttpServletRequest request,
+	public @ResponseBody RestResponse<String> attachFile(HttpServletRequest request,
 			@PathVariable("appId") int appId,
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("filename") String filename) {
@@ -135,9 +143,10 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Set scan parameters
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#setParameters(String, String, String)
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/setParameters", method=RequestMethod.POST)
-	public @ResponseBody RestResponse setParameters(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> setParameters(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request to set parameters for application with id = " + appId + ".");
 		
@@ -174,9 +183,10 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Return details about a specific application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForApplicationByName(String, String)
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{teamId}/lookup", method=RequestMethod.GET)
-	public @ResponseBody RestResponse applicationLookup(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> applicationLookup(HttpServletRequest request,
 			@PathVariable("teamId") String teamName) {		
 		String appName = request.getParameter("name");
 		String result = checkKey(request, LOOKUP);
@@ -206,6 +216,9 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Allows the user to upload a scan to an existing application channel.
+     *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#uploadScan(String, String)
+     *
 	 * @return Status response. We may change this to make it more useful.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
@@ -238,9 +251,11 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Overwrites the WAF for the application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addWaf(String, String)
+     *
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/setWaf", method=RequestMethod.POST)
-	public @ResponseBody RestResponse setWaf(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> setWaf(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		
 		String idString = request.getParameter("wafId");
@@ -296,9 +311,11 @@ public class ApplicationRestController extends RestController {
 	
 	/**
 	 * Set the URL for the application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addAppUrl(String, String)
+     *
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/addUrl", method=RequestMethod.POST)
-	public @ResponseBody RestResponse setUrl(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> setUrl(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		
 		String url = request.getParameter("url");

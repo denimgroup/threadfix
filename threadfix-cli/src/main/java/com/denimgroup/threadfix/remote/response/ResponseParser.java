@@ -20,24 +20,6 @@ public class ResponseParser {
         return new TypeReference<RestResponse<T>>(){}.getType();
     }
 
-    public static RestResponse<String> getStringRestResponse(String responseString, int responseCode) {
-        RestResponse<String> response = new RestResponse<String>();
-
-        if (responseString != null && responseString.trim().indexOf('{') == 0) {
-            try {
-                Gson gson = new Gson();
-                response = gson.fromJson(responseString, getTypeReference()); // turn everything into an object
-                response.object = gson.toJson(response.object);
-            } catch (JsonSyntaxException e) {
-                LOGGER.error("Encountered JsonSyntaxException", e);
-            }
-        }
-
-        response.responseCode = responseCode;
-
-        return response;
-    }
-
     private static Gson getGson() {
         GsonBuilder gsonB = new GsonBuilder();
         gsonB.registerTypeAdapter(Calendar.class, new CalendarSerializer());
@@ -50,7 +32,7 @@ public class ResponseParser {
     @SuppressWarnings("unchecked") // the JSON String preservation broke this
     public static <T> RestResponse<T> getRestResponse(String responseString, int responseCode, Class<T> internalClass) {
 
-        LOGGER.info("Parsing from " + responseString);
+        LOGGER.info("Parsing response for type " + internalClass.getCanonicalName());
 
         RestResponse<T> response = new RestResponse<T>();
 
@@ -61,10 +43,13 @@ public class ResponseParser {
                 String innerJson = gson.toJson(response.object); // turn the inner object back into a string
 
                 if (response.object instanceof String) {
+                    // No need to do any more work
                     response.object = (T) innerJson;
+                    LOGGER.info("Parsed inner object as JSON String correctly.");
                 } else {
                     // turn the inner object into the correctly typed object
                     response.object = gson.fromJson(innerJson, internalClass);
+                    LOGGER.info("Parsed result into " + internalClass.getName() + " correctly.");
                 }
             } catch (JsonSyntaxException e) {
                 LOGGER.error("Encountered JsonSyntaxException", e);
@@ -72,6 +57,8 @@ public class ResponseParser {
         }
 
         response.responseCode = responseCode;
+
+        LOGGER.info("Setting response code to " + responseCode + ".");
 
         return response;
     }

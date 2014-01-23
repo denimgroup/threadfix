@@ -8,7 +8,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,33 +27,33 @@ public class HttpRestUtilsTests {
      *      + There APPLICATION_ID in ThreadFix server, and not yet any scans are imported
      *      +  There is correct xml scan result FILE_PATH
      */
-
-    @Test
-    public void testHttpPostFile() {
-        String ret = TestUtils.getRestUtils().httpPostFile(TestUtils.URL + "/applications/" + APPLICATION_ID + "/upload",
-                FILE_PATH,
-                new String[] {  },
-                new String[] {  });
-
-        assertNotNull(TestUtils.getJSONObject(ret));
-    }
-
-    @Test
-    public void testHttpPost() {
-        String ret = TestUtils.getRestUtils().httpPost(TestUtils.URL + "/applications/" + APPLICATION_ID + "/addUrl",
-                new String[] { "apiKey",       "url" },
-                new String[] {  TestUtils.API_KEY,  TestUtils.URL});
-
-        assertNotNull(TestUtils.getJSONObject(ret));
-    }
-
-    @Test
-    public void testHttpGet() {
-        String ret = TestUtils.getRestUtils().httpGet(TestUtils.URL + "/applications/" + APPLICATION_ID +
-                "?apiKey=" + TestUtils.API_KEY);
-
-        assertNotNull(TestUtils.getJSONObject(ret));
-    }
+//
+//    @Test
+//    public void testHttpPostFile() {
+//        String ret = TestUtils.getRestUtils().httpPostFile(TestUtils.URL + "/applications/" + APPLICATION_ID + "/upload",
+//                FILE_PATH,
+//                new String[] {  },
+//                new String[] {  });
+//
+//        assertNotNull(TestUtils.getJSONObject(ret));
+//    }
+//
+//    @Test
+//    public void testHttpPost() {
+//        String ret = TestUtils.getRestUtils().httpPost(TestUtils.URL + "/applications/" + APPLICATION_ID + "/addUrl",
+//                new String[] { "apiKey",       "url" },
+//                new String[] {  TestUtils.API_KEY,  TestUtils.URL});
+//
+//        assertNotNull(TestUtils.getJSONObject(ret));
+//    }
+//
+//    @Test
+//    public void testHttpGet() {
+//        String ret = TestUtils.getRestUtils().httpGet(TestUtils.URL + "/applications/" + APPLICATION_ID +
+//                "?apiKey=" + TestUtils.API_KEY);
+//
+//        assertNotNull(TestUtils.getJSONObject(ret));
+//    }
 
     @Test
     public void testSetUrl() {

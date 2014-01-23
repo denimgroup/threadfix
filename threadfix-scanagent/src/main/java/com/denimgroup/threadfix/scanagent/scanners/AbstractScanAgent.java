@@ -24,15 +24,15 @@
 
 package com.denimgroup.threadfix.scanagent.scanners;
 
-import java.io.File;
-
-import com.denimgroup.threadfix.remote.ThreadFixRestClient;
-import org.apache.commons.configuration.Configuration;
-
 import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 public abstract class AbstractScanAgent {
 
@@ -73,8 +73,13 @@ public abstract class AbstractScanAgent {
 //		this.scanAgentRunner.sendStatusUpdate(this.currentTaskId, message);
 
         log.debug("Sending server update for taskId: " + this.currentTaskId + " of: " + message);
-        String result = getTfClient().taskStatusUpdate(String.valueOf(this.currentTaskId), message);
-        log.debug("Server response from task update was: " + result);
+        RestResponse<String> result = getTfClient().taskStatusUpdate(String.valueOf(this.currentTaskId), message);
+        if (result.success) {
+            log.debug("Server response from task update was: " + result.getObjectAsJsonString());
+        } else {
+            log.error("Failed to update task on server. This could indicate connection problem. The error was: " + result.message);
+        }
+
 	}
 	
 	public abstract boolean readConfig(@NotNull Configuration config);

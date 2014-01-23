@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,8 +54,14 @@ public class TeamRestController extends RestController {
 		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForTeamById(String)
+     * @param teamId
+     * @param request
+     * @return
+     */
 	@RequestMapping(headers = "Accept=application/json", value="/{teamID}", method = RequestMethod.GET)
-	public @ResponseBody RestResponse teamIDLookup(@PathVariable("teamID") int teamId,
+	public @ResponseBody RestResponse<Organization> teamIDLookup(@PathVariable("teamID") int teamId,
 			HttpServletRequest request) {
 		log.info("Received REST request for Team with ID " + teamId + ".");
 
@@ -76,11 +83,12 @@ public class TeamRestController extends RestController {
 	}
 	
 	/**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#createApplication(String, String, String)
 	 * Create a new application with the supplied name and URL. 
 	 * The rest of the configuration is done through other methods.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{teamId}/applications/new", method=RequestMethod.POST)
-	public @ResponseBody RestResponse newApplication(HttpServletRequest request,
+	public @ResponseBody RestResponse<Application> newApplication(HttpServletRequest request,
 			@PathVariable("teamId") int teamId) {
 		log.info("Received REST request for a new Application.");
 
@@ -137,7 +145,12 @@ public class TeamRestController extends RestController {
 			return RestResponse.failure("Problems creating application.");
 		}
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForTeamByName(String)
+     * @param request
+     * @return
+     */
 	@RequestMapping(headers = "Accept=application/json", value="/lookup", method = RequestMethod.GET)
 	public @ResponseBody RestResponse teamNameLookup(HttpServletRequest request) {
 		
@@ -162,9 +175,14 @@ public class TeamRestController extends RestController {
 		}
 	}
 
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#createTeam(String)
+     * @param request
+     * @return
+     */
 	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST,
             produces = "application/json; charset=utf-8")
-	public @ResponseBody RestResponse newTeam(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Organization> newTeam(HttpServletRequest request) {
 		log.info("Received REST request for new Team.");
 
 		String result = checkKey(request, NEW);
@@ -191,9 +209,14 @@ public class TeamRestController extends RestController {
 			return RestResponse.failure("\"name\" parameter was not present, new Team creation failed.");
 		}
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#getAllTeams()
+     * @param request
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public @ResponseBody RestResponse teamList(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Organization[]> teamList(HttpServletRequest request) {
 		log.info("Received REST request for Team list.");
 		
 		String result = checkKey(request, INDEX);
@@ -201,7 +224,13 @@ public class TeamRestController extends RestController {
 			return RestResponse.failure(result);
 		}
 
-		return RestResponse.success(organizationService.loadAllActive());
+        List<Organization> organizations = organizationService.loadAllActive();
+
+        if (organizations == null) {
+            return RestResponse.failure("No organizations found.");
+        } else {
+            return RestResponse.success(organizations.toArray(new Organization[organizations.size()]));
+        }
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")

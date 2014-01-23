@@ -57,6 +57,13 @@ public class PluginRestController extends RestController {
 		this.applicationService = applicationService;
 	}
 
+    /**
+     *
+     * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
+     * @param request
+     * @param appId
+     * @return
+     */
 	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<VulnerabilityMarker[]> getMarkers(
 			HttpServletRequest request,
@@ -78,7 +85,13 @@ public class PluginRestController extends RestController {
 		
 		return RestResponse.success(application.getMarkers());
 	}
-	
+
+    /**
+     *
+     * @see com.denimgroup.threadfix.remote.PluginClient#getThreadFixApplications()
+     * @param request
+     * @return
+     */
 	@RequestMapping(value="/applications", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
 		log.info("Received REST request for application CSV list");
@@ -97,7 +110,13 @@ public class PluginRestController extends RestController {
 		}
 		return RestResponse.success(getApplicationInfo(applications));
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.PluginClient#getEndpoints(String)
+     * @param appId
+     * @param request
+     * @return
+     */
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
 			HttpServletRequest request) {

@@ -23,13 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.remote;
 
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.properties.PropertiesManager;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
@@ -57,91 +56,83 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         httpRestUtils = new HttpRestUtils(propertiesManager);
 	}
 	
-	public String createApplication(String teamId, String name, String url) {
+	public RestResponse<Application> createApplication(String teamId, String name, String url) {
         return httpRestUtils.httpPost("/teams/" + teamId + "/applications/new",
                 new String[] { "name", "url"},
-                new String[] {  name,   url});
+                new String[] {  name,   url},
+                Application.class);
 	}
 	
-	public String setParameters(String appId, String frameworkType, String repositoryUrl) {
+	public RestResponse<Application> setParameters(String appId, String frameworkType, String repositoryUrl) {
 		return httpRestUtils.httpPost("/applications/" + appId + "/setParameters",
 				new String[] {"frameworkType", "repositoryUrl"},
-				new String[] { frameworkType,   repositoryUrl});
+				new String[] { frameworkType,   repositoryUrl},
+                Application.class);
 	}
 	
-	public String createTeam(String name) {
+	public RestResponse<Organization> createTeam(String name) {
 		return httpRestUtils.httpPost("/teams/new",
 				new String[] {"name"},
-				new String[] { name });
+				new String[] { name },
+                Organization.class);
 	}
 	
-	public String getRules(String wafId) {
-		return httpRestUtils.httpGet("/wafs/" + wafId + "/rules");
+	public RestResponse<String> getRules(String wafId) {
+		return httpRestUtils.httpGet("/wafs/" + wafId + "/rules", String.class);
 	}
 
-	public String searchForWafByName(String name) {
-		return httpRestUtils.httpGet("/wafs/lookup", "&name=" + name);
+	public RestResponse<Waf> searchForWafByName(String name) {
+		return httpRestUtils.httpGet("/wafs/lookup", "&name=" + name, Waf.class);
 	}
 	
-	public String searchForWafById(String wafId) {
-		return httpRestUtils.httpGet("/wafs/" + wafId);
+	public RestResponse<Waf> searchForWafById(String wafId) {
+		return httpRestUtils.httpGet("/wafs/" + wafId, Waf.class);
 	}
 	
-	public String createWaf(String name, String type) {
+	public RestResponse<Waf> createWaf(String name, String type) {
 		return httpRestUtils.httpPost("/wafs/new",
 				new String[] {"name", "type"},
-				new String[] { name,   type});
+				new String[] { name,   type},
+                Waf.class);
 	}
 	
 	/**
 	 * TODO - Actually implement this method.
 	 * 
-	 * @param appId
-	 * @param wafId
-	 * @return
+	 *
+     * @param appId
+     * @param wafId
+     * @return
 	 */
-	public String addWaf(String appId, String wafId) {
+	public RestResponse<Application> addWaf(String appId, String wafId) {
 		// TODO Auto-generated method stub
-		return null;
+		return RestResponse.failure("Unimplemented method.");
 	}
 
-	public String getAllTeams() {
-		return httpRestUtils.httpGet("/teams/");
+	public RestResponse<Organization[]> getAllTeams() {
+		return httpRestUtils.httpGet("/teams/", Organization[].class);
 	}
     
-    public String getAllTeamsPrettyPrint() {
-        final String result = httpRestUtils.httpGet("/teams/");
+    public RestResponse<String> getAllTeamsPrettyPrint() {
+        final RestResponse<Organization[]> teams = getAllTeams();
 
-        final ObjectMapper objectMapper = new ObjectMapper();
+        if (teams.success && teams.object.length > 0) {
+            StringBuilder outputBuilder = new StringBuilder();
 
-        final List<Map<String, Object>> teamsData;
+            for (Organization team : teams.object) {
+                Boolean teamActive = team.isActive();
 
-        try {
-            teamsData = objectMapper.readValue(result, new TypeReference<List<Map<String, Object>>>() {});
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return "There was an error parsing JSON response.";
-        }
+                List<Application> applications = team.getApplications();
 
-        if (teamsData.isEmpty()) {
-            return "These aren't the droids you're looking for.";
-        } else {
-            final StringBuilder outputBuilder = new StringBuilder();
+                if (team.isActive() && !applications.isEmpty()) {
+                    String teamName = team.getName();
 
-            for (final Map<String, Object> teamData : teamsData) {
-                final Boolean teamActive = (Boolean) teamData.get("active");
-                @SuppressWarnings("unchecked")
-                final List<Map<String, Object>> applications = (List<Map<String, Object>>) teamData.get("applications");
-
-                if (teamActive && !applications.isEmpty()) {
-                    final String teamName = (String) teamData.get("name");
-
-                    for (final Map<String, Object> application : applications) {
-                        final Boolean applicationActive = (Boolean) application.get("active");
+                    for (Application application : applications) {
+                        boolean applicationActive = application.isActive();
 
                         if (applicationActive) {
-                            final String applicationName = (String) application.get("name");
-                            final Integer id = (Integer) application.get("id");
+                            String applicationName = application.getName();
+                            Integer id = application.getId();
 
                             outputBuilder.append(teamName);
                             outputBuilder.append(";");
@@ -155,25 +146,27 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
             }
 
             outputBuilder.setLength(outputBuilder.length() - 1);
-            return outputBuilder.toString();
+            return RestResponse.success(outputBuilder.toString());
+        } else {
+            return RestResponse.failure("No Teams found.");
         }
     }	
 
-	public String searchForApplicationById(String id) {
-		return httpRestUtils.httpGet("/applications/" + id);
+	public RestResponse<Application> searchForApplicationById(String id) {
+		return httpRestUtils.httpGet("/applications/" + id, Application.class);
 	}
 
-	public String searchForApplicationByName(String name, String teamName) {
+	public RestResponse<Application> searchForApplicationByName(String name, String teamName) {
 		return httpRestUtils.httpGet("/applications/" + teamName + "/lookup",
-				"&name=" + name);
+				"&name=" + name, Application.class);
 	}
 	
-	public String searchForTeamById(String id) {
-		return httpRestUtils.httpGet("/teams/" + id);
+	public RestResponse<Organization> searchForTeamById(String id) {
+		return httpRestUtils.httpGet("/teams/" + id, Organization.class);
 	}
 	
-	public String searchForTeamByName(String name) {
-		return httpRestUtils.httpGet("/teams/lookup", "&name=" + name);
+	public RestResponse<Organization> searchForTeamByName(String name) {
+		return httpRestUtils.httpGet("/teams/lookup", "&name=" + name, Organization.class);
     }
 	
 	public void setKey(String key) {
@@ -192,27 +185,28 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager.setMemoryUrl(url);
 	}
 	
-	public String uploadScan(String applicationId, String filePath) {
+	public RestResponse<Scan> uploadScan(String applicationId, String filePath) {
 		return httpRestUtils.httpPostFile("/applications/" + applicationId + "/upload",
-                filePath, new String[]{}, new String[]{});
+                new File(filePath), new String[]{}, new String[]{}, Scan.class);
 	}
 	
-	public String queueScan(String applicationId, String scannerType) {
+	public RestResponse<Object> queueScan(String applicationId, String scannerType) {
 		return httpRestUtils.httpPost("/tasks/queueScan",
 				new String[] { "applicationId", "scannerType" },
 				new String[] { applicationId, scannerType });
 	}
 
-	public String addAppUrl(String appId, String url) {
+	public RestResponse<Application> addAppUrl(String appId, String url) {
 		return httpRestUtils.httpPost("/applications/" + appId + "/addUrl",
 				new String[] {"url"},
-				new String[] { url });
+				new String[] { url },
+                Application.class);
 	}
 	
-	public String requestTask(String scanners, String agentConfig) {
+	public RestResponse<String> requestTask(String scanners, String agentConfig) {
 		return httpRestUtils.httpPost("/tasks/requestTask",
 				new String[] {"scanners", "agentConfig" },
-				new String[] { scanners, agentConfig });
+				new String[] { scanners, agentConfig }, String.class);
 	}
 	
 	/**
@@ -221,17 +215,17 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 * @param message
 	 * @return
 	 */
-	public String taskStatusUpdate(String scanQueueTaskId, String message) {
+	public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message) {
 		return httpRestUtils.httpPost("/tasks/taskStatusUpdate",
                 new String[]{"scanQueueTaskId", "message"},
-                new String[]{ scanQueueTaskId, message});
+                new String[]{ scanQueueTaskId, message}, String.class);
 	}
 	
-	public String setTaskConfig(String appId, String scannerType, String filePath) {
+	public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath) {
 		String url = "/tasks/setTaskConfig";
 		String[] paramNames 	= {	"appId", "scannerType" };
 		String[] paramValues 	= { appId, scannerType };
-		return httpRestUtils.httpPostFile(url, filePath, paramNames, paramValues );
+		return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
 	
 	/**
@@ -240,20 +234,20 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 * @param secureTaskKey
 	 * @return
 	 */
-	public String completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
+	public RestResponse<String> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
 		String url = "/tasks/completeTask";
 		String[] paramNames 	= {	"scanQueueTaskId", "secureTaskKey" };
 		String[] paramValues 	= {  scanQueueTaskId,   secureTaskKey };
-	    return httpRestUtils.httpPostFile(url, filePath, paramNames, paramValues);
+	    return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
 	
-	public String failTask(String scanQueueTaskId, String message, String secureTaskKey) {
+	public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey) {
 		return httpRestUtils.httpPost("/tasks/failTask",
 				new String[] {"scanQueueTaskId", "message", "secureTaskKey" },
-				new String[] { scanQueueTaskId,	  message,   secureTaskKey });
+				new String[] { scanQueueTaskId,	  message,   secureTaskKey }, String.class);
 	}
 
-	public String addDynamicFinding(String applicationId, String vulnType, String severity,
+	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
 		return httpRestUtils.httpPost("/applications/" + applicationId +
@@ -263,10 +257,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								"fullUrl", "path" },
 				new String[] {  vulnType, severity,
 								nativeId, parameter, longDescription,
-								fullUrl, path });
+								fullUrl, path }, Finding.class);
 	}
 	
-	public String addStaticFinding(String applicationId, String vulnType, String severity,
+	public RestResponse<Finding> addStaticFinding(String applicationId, String vulnType, String severity,
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
 		return httpRestUtils.httpPost("/applications/" + applicationId +
@@ -276,7 +270,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								"filePath", "column", "lineText", "lineNumber"},
 				new String[] {  vulnType, severity,
 								nativeId, parameter, longDescription,
-								filePath, column, lineText, lineNumber });
+								filePath, column, lineText, lineNumber }, Finding.class);
 	}
 
 }

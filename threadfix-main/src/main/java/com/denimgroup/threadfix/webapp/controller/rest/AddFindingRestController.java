@@ -44,10 +44,10 @@ public class AddFindingRestController extends RestController {
 	
 	/**
 	 * Create a new manual finding.
-	 * 
+	 * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addDynamicFinding()
 	 */
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.POST)
-	public @ResponseBody RestResponse createFinding(HttpServletRequest request,
+	public @ResponseBody RestResponse<Finding> createFinding(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for a new Finding.");
 

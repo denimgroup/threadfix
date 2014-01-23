@@ -53,15 +53,19 @@ public class WafRestController extends RestController {
 		this.wafService = wafService;
 		this.logParserService = logParserService;
 	}
-	
+
 	// TODO figure out if there is an easier way to make Spring respond to both
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.GET)
-	public @ResponseBody RestResponse wafIndexNoSlash(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Waf[]> wafIndexNoSlash(HttpServletRequest request) {
 		return wafIndex(request);
 	}
-	
+
+    /**
+     * @param request
+     * @return
+     */
 	@RequestMapping(headers="Accept=application/json", value="/", method=RequestMethod.GET)
-	public @ResponseBody RestResponse wafIndex(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Waf[]> wafIndex(HttpServletRequest request) {
 		log.info("Received REST request for WAFs");
 
 		String result = checkKey(request, INDEX);
@@ -71,14 +75,22 @@ public class WafRestController extends RestController {
 		
 		List<Waf> wafs = wafService.loadAll();
 		
-		if (wafs == null) {
+		if (wafs == null || wafs.isEmpty()) {
 			log.warn("wafService.loadAll() returned null.");
-		}
-		return RestResponse.success(wafs);
+            return RestResponse.failure("No WAFs found.");
+		} else {
+            return RestResponse.success(wafs.toArray(new Waf[wafs.size()]));
+        }
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForWafById(String)
+     * @param request
+     * @param wafId
+     * @return
+     */
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse wafDetail(HttpServletRequest request,
+	public @ResponseBody RestResponse<Waf> wafDetail(HttpServletRequest request,
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for WAF with ID = " + wafId + ".");
 
@@ -92,12 +104,18 @@ public class WafRestController extends RestController {
 		if (waf == null) {
 			log.warn("Invalid WAF ID.");
 			return RestResponse.failure(LOOKUP_FAILED);
-		}
-		return RestResponse.success(waf);
+		} else {
+            return RestResponse.success(waf);
+        }
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForWafByName(String)
+     * @param request
+     * @return
+     */
 	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody RestResponse wafLookup(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Waf> wafLookup(HttpServletRequest request) {
 		
 		if (request.getParameter("name") == null) {
 			log.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
@@ -127,7 +145,7 @@ public class WafRestController extends RestController {
 	 * Returns the current set of rules from the WAF, generating new ones if none are present.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/rules", method=RequestMethod.GET)
-	public @ResponseBody RestResponse getRules(HttpServletRequest request,
+	public @ResponseBody RestResponse<String> getRules(HttpServletRequest request,
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for rules from WAF with ID = " + wafId + ".");
 
@@ -147,7 +165,7 @@ public class WafRestController extends RestController {
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
-	public @ResponseBody RestResponse newWaf(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Waf> newWaf(HttpServletRequest request) {
 		log.info("Received REST request for a new WAF.");
 		
 		String result = checkKey(request, NEW);

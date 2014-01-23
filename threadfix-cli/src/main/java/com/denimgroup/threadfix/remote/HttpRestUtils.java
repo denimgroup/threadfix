@@ -57,9 +57,9 @@ public class HttpRestUtils {
     }
 
     @NotNull
-	public String httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
+	public RestResponse<Object> httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
 		File file = new File(fileName);
-		return httpPostFile(path, file, paramNames, paramVals, Object.class).getObjectAsJsonString();
+        return httpPostFile(path, file, paramNames, paramVals, Object.class);
 	}
 
     @NotNull
@@ -94,6 +94,7 @@ public class HttpRestUtils {
 			filePost.setContentChunked(true);
 			HttpClient client = new HttpClient();
             status = client.executeMethod(filePost);
+
 			if (status != 200) {
                 LOGGER.warn("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
 			}
@@ -111,17 +112,11 @@ public class HttpRestUtils {
     }
 
     @NotNull
-    public String httpPost(String path,
+    public RestResponse<Object> httpPost(String path,
                            String[] paramNames,
                            String[] paramVals) {
 
-        RestResponse response = httpPost(path, paramNames, paramVals, RestResponse.class);
-
-        if (response.success) {
-            return response.getObjectAsJsonString();
-        } else {
-            return response.message;
-        }
+        return httpPost(path, paramNames, paramVals, Object.class);
     }
 
     @NotNull
@@ -169,19 +164,18 @@ public class HttpRestUtils {
 	}
 
     @NotNull
-    public String httpGet(String path) {
+    public RestResponse<Object> httpGet(String path) {
         return httpGet(path, "");
     }
 
     @NotNull
-    public String httpGet(String path, String params) {
-        RestResponse response = httpGet(path, params, RestResponse.class);
+    public <T> RestResponse<T> httpGet(String path, Class<T> targetClass) {
+        return httpGet(path, "", targetClass);
+    }
 
-        if (response.success) {
-            return response.getObjectAsJsonString();
-        } else {
-            return response.message;
-        }
+    @NotNull
+    public RestResponse<Object> httpGet(String path, String params) {
+        return httpGet(path, params, Object.class);
     }
 
     @NotNull

@@ -1,7 +1,8 @@
 package com.denimgroup.threadfix.scanagent;
 
-import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.data.entities.Task;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.scanners.AbstractScanAgent;
@@ -256,8 +257,16 @@ public class ScanAgentRunner {
 
                     log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
 
-                    String result = getTfClient().completeTask(String.valueOf(theTask.getTaskId()), taskResult.getAbsolutePath(), theTask.getSecureTaskKey());
-                    log.info("Result of completion attempt was: " + result);
+                    RestResponse<String> result = getTfClient().completeTask(
+                            String.valueOf(theTask.getTaskId()),
+                            taskResult.getAbsolutePath(),
+                            theTask.getSecureTaskKey());
+
+                    if (result.success) {
+                        log.info("Successfully sent task completion update: " + result.getObjectAsJsonString());
+                    } else {
+                        log.error("Failed to update server on task completion. Message: " + result.message);
+                    }
                 } else {
                     //	TODO - Look at better ways to get some sort of reason the scan wasn't successful
                     //	The only way we can report back right now is if an uncaught exception occurs which is
