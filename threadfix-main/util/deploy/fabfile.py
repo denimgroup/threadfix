@@ -4,7 +4,7 @@ from fabric.contrib.console import confirm
 import datetime, re
 
 env.hosts = 'localhost'
-env.password = 'password'
+#env.password = 'password'
 env.user = 'denimgroup'
 
 local_working_folder_loc = '/var/lib/jenkins/workspace/ThreadFix_Regression' #where fabfile is running from
