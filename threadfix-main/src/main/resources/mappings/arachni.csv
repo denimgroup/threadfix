@@ -9,6 +9,7 @@ Source code disclosure,Source code disclosure,540
 Blind SQL Injection (differential analysis),Blind SQL Injection (differential analysis),89
 Cross-Site Scripting in event tag of HTML element,Cross-Site Scripting in event tag of HTML element,79
 Cross-Site Scripting in HTML 'script' tag,Cross-Site Scripting in HTML 'script' tag,79
+Cross-Site Scripting in HTML \'script\' tag,Cross-Site Scripting in HTML \'script\' tag,79
 Cross-Site Scripting (XSS) in HTML tag,Cross-Site Scripting (XSS) in HTML tag,79
 A backdoor file exists on the server,A backdoor file exists on the server,200
 Backup file,Backup file,530

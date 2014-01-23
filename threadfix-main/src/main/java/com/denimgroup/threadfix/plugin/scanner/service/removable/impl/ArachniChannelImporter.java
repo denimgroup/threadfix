@@ -111,6 +111,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
         severityMap.put("Blind SQL Injection (differential analysis)", "HIGH");
         severityMap.put("Cross-Site Scripting in event tag of HTML element", "HIGH");
         severityMap.put("Cross-Site Scripting in HTML 'script' tag", "HIGH");
+        severityMap.put("Cross-Site Scripting in HTML \\'script\\' tag", "HIGH");
         severityMap.put("Cross-Site Scripting (XSS) in HTML tag", "HIGH");
         severityMap.put("A backdoor file exists on the server", "HIGH");
         severityMap.put("Backup file", "MEDIUM");
