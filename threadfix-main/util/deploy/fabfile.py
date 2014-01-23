@@ -7,12 +7,11 @@ import datetime, re
 env.password = 'password'
 env.user = 'denimgroup'
 
-source_code_loc='https://code.google.com/p/threadfix'
 local_working_folder_loc = '/var/lib/jenkins/workspace/ThreadFix_Regression' #where fabfile is running from
 server_base_loc = '/opt/threadfix' #where to deploy to
 
 #path to .deploy files
-local_path = 'threadfix/threadfix-main/src/main/resources'
+local_path = 'threadfix-main/src/main/resources'
 now = datetime.datetime.now()
 
 # removes the old version of the source code locally
