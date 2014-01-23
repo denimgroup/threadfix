@@ -30,12 +30,10 @@ import com.denimgroup.threadfix.service.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledScanService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.bouncycastle.util.Strings;
-import org.quartz.JobDetail;
-import org.quartz.CronTrigger;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import org.quartz.*;
+import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -130,7 +128,7 @@ public class ScheduledScanScheduler {
         String groupName = createGroupName(scheduledScan);
         String jobName = createJobName(scheduledScan);
         try {
-            scheduler.deleteJob(jobName, groupName);
+            scheduler.deleteJob( new JobKey(jobName, groupName));
             log.info(groupName + "." + jobName + " was successfully deleted from scheduler");
         } catch (SchedulerException e) {
             log.error("Error when deleting job from scheduler", e);
@@ -144,7 +142,7 @@ public class ScheduledScanScheduler {
         String groupName = createGroupName(scheduledScan);
         String jobName = createJobName(scheduledScan);
 
-        JobDetail job = new JobDetail(jobName, groupName, ScheduledScanJob.class);
+        JobDetail job = new JobDetailImpl(jobName, groupName, ScheduledScanJob.class);
         job.getJobDataMap().put("appId", scheduledScan.getApplication().getId());
         job.getJobDataMap().put("scanner", scheduledScan.getScanner());
         job.getJobDataMap().put("queueSender", queueSender);
@@ -153,7 +151,7 @@ public class ScheduledScanScheduler {
             if (cronExpression == null)
                 return false;
 
-            CronTrigger trigger = new CronTrigger(jobName, groupName, jobName, groupName, cronExpression);
+            CronTrigger trigger = new CronTriggerImpl(jobName, groupName, jobName, groupName, cronExpression);
 
             scheduler.addJob(job, true);
             Date ft = scheduler.scheduleJob(trigger);
