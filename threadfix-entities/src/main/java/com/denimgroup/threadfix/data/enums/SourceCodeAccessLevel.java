@@ -23,9 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.enums;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public enum SourceCodeAccessLevel {
 	NONE("None"), DETECT("Detect"), PARTIAL("Partial"), FULL("Full");
 	
@@ -36,8 +33,7 @@ public enum SourceCodeAccessLevel {
 	private String displayName;
 	public String getDisplayName() { return displayName; }
 	
-	@NotNull
-    public static SourceCodeAccessLevel getSourceCodeAccessLevel(@Nullable String input) {
+    public static SourceCodeAccessLevel getSourceCodeAccessLevel(String input) {
 		SourceCodeAccessLevel returnAccessLevel = DETECT; // default access level
 		
 		if (input != null) {

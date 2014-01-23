@@ -49,5 +49,48 @@ public interface Endpoint extends Comparable<Endpoint> {
 	int getLineNumberForParameter(String parameter);
 	
 	boolean matchesLineNumber(int lineNumber);
+
+    public static class Info {
+        Set<String> parameters, httpMethods;
+
+        String urlPath, filePath, csvLine;
+
+        int startingLineNumber;
+
+        public static Info fromEndpoint(Endpoint endpoint) {
+            Info info = new Info();
+            info.parameters = endpoint.getParameters();
+            info.httpMethods = endpoint.getHttpMethods();
+            info.urlPath = endpoint.getUrlPath();
+            info.filePath = endpoint.getFilePath();
+            info.csvLine = endpoint.getCSVLine();
+            info.startingLineNumber = endpoint.getStartingLineNumber();
+            return info;
+        }
+
+        public Set<String> getParameters() {
+            return parameters;
+        }
+
+        public Set<String> getHttpMethods() {
+            return httpMethods;
+        }
+
+        public String getUrlPath() {
+            return urlPath;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
+
+        public String getCsvLine() {
+            return csvLine;
+        }
+
+        public int getStartingLineNumber() {
+            return startingLineNumber;
+        }
+    }
 	
 }

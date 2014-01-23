@@ -23,9 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.enums;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public enum FrameworkType {
 	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC");
 	
@@ -36,8 +33,7 @@ public enum FrameworkType {
 	private String displayName;
 	public String getDisplayName() { return displayName; }
 	
-	@NotNull
-    public static FrameworkType getFrameworkType(@Nullable String input) {
+    public static FrameworkType getFrameworkType(String input) {
 		FrameworkType type = DETECT; // default framework type
 		
 		if (input != null) {

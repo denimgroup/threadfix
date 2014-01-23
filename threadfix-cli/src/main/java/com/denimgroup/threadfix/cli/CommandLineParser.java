@@ -50,7 +50,7 @@ public class CommandLineParser {
 	}
 	
 	@SuppressWarnings("static-access")
-	public static final Options getOptions() {
+	public static Options getOptions() {
 		Options options = new Options();
 
 		Option teams = OptionBuilder.withLongOpt("teams")

@@ -209,7 +209,7 @@ public class ApplicationRestController extends RestController {
 	 * @return Status response. We may change this to make it more useful.
 	 */
 	@RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
-	public @ResponseBody RestResponse uploadScan(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Scan> uploadScan(@PathVariable("appId") int appId,
 			HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request to upload a scan to application " + appId + ".");
 

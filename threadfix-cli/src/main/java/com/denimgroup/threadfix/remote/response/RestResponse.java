@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class RestResponse<T> {
 
-    public String message = "Failed to parse REST response.";
+    public String message = "";
     public boolean success = false;
     public int responseCode = -1;
     public T object = null;

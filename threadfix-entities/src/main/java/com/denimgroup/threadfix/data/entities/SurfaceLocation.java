@@ -54,7 +54,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	private static final long serialVersionUID = -8999892961251231213L;
-	private final SanitizedLogger log = new SanitizedLogger(SurfaceLocation.class);
+	private final static SanitizedLogger LOGGER = new SanitizedLogger(SurfaceLocation.class);
 
 	private Finding finding;
 	
@@ -164,6 +164,7 @@ public class SurfaceLocation extends BaseEntity {
 	 *             invalid.
 	 */
 	@Transient
+    @JsonIgnore
 	public URL getUrl() {
 		if (url == null) {
 			try {
@@ -184,7 +185,7 @@ public class SurfaceLocation extends BaseEntity {
 					return null;
 				}
 			} catch (MalformedURLException e) {
-				log.error("Bad Surface Location URL with ID = " + this.getId(), e);
+				LOGGER.error("Bad Surface Location URL with ID = " + this.getId(), e);
 				throw new IllegalArgumentException(e);
 			}
 		}

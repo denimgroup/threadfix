@@ -47,8 +47,10 @@ public class AuditableEntity extends BaseEntity {
 
 	private boolean active = true;
 
+    // @JsonIgnore-ing things like this makes it easier to
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore
 	public Date getCreatedDate() {
 		return createdDate;
 	}
