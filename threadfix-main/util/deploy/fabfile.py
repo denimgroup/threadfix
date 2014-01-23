@@ -46,7 +46,7 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
+    with lcd('%s/threadfix-main' % local_working_folder_loc):
         res = local('mvn package -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
@@ -58,13 +58,13 @@ def deploy_war():
     server_target_loc = server_base_loc + '/' +  str(folder_name)
     with settings(warn_only=True):
         local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
-    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
+    local('sudo mv %s/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
     with cd(server_target_loc):
         local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
         local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
-    local('sudo cp %s/threadfix/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
+    local('sudo cp %s/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_target_loc))
     local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
