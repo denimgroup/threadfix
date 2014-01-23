@@ -59,7 +59,6 @@ def deploy_war():
     with settings(warn_only=True):
         local('sudo rm -rf %s/threadfix-2.0M1-SNAPSHOT' % (server_base_loc))
     local('sudo mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s' % (local_working_folder_loc, server_base_loc))
-    local('sudo cp %s/threadfix-main/src/main/java/ESAPI.properties %s/threadfix/WEB-INF/classes/ESAPI.properties' % (local_working_folder_loc, server_base_loc))
     local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
