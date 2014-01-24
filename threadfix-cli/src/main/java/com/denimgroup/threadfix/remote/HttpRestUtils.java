@@ -129,7 +129,7 @@ public class HttpRestUtils {
 
         String urlString = makePostUrl(path);
 
-		PostMethod post = new PostMethod(path);
+		PostMethod post = new PostMethod(urlString);
 
 		post.setRequestHeader("Accept", "application/json");
 
@@ -154,7 +154,7 @@ public class HttpRestUtils {
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
+            LOGGER.error("Encountered IOException while trying to post to " + path, e1);
             response = ResponseParser.getErrorResponse(
                     "There was an error and the POST request was not finished.",
                     responseCode);
@@ -205,7 +205,7 @@ public class HttpRestUtils {
             response = ResponseParser.getRestResponse(get.getResponseBodyAsStream(), status, targetClass);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+            LOGGER.error("Encountered IOException while trying to post to " + path, e);
             response = ResponseParser.getErrorResponse("There was an error and the GET request was not finished.", status);
 		}
 

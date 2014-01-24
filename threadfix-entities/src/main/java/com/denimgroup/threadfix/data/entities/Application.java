@@ -55,7 +55,9 @@ public class Application extends AuditableEntity {
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
 	private String name;
 	
-	String frameworkType, sourceCodeAccessLevel, repositoryFolder;
+	String frameworkType = FrameworkType.DETECT.toString(),
+            sourceCodeAccessLevel = SourceCodeAccessLevel.DETECT.toString(),
+            repositoryFolder;
 
     @URL(message = "{errors.url}")
     @Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -442,7 +444,6 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = ENUM_LENGTH)
-    @JsonIgnore
 	public String getFrameworkType() {
 		return frameworkType;
 	}

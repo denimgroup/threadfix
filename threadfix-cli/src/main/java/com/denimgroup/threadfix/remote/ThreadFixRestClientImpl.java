@@ -42,6 +42,11 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager = new PropertiesManager();
         httpRestUtils = new HttpRestUtils(propertiesManager);
 	}
+
+    public ThreadFixRestClientImpl(PropertiesManager manager) {
+        propertiesManager = manager;
+        httpRestUtils = new HttpRestUtils(propertiesManager);
+    }
 	
 	/**
 	 * Custom constructor for when you want to use the in-memory properties
@@ -97,16 +102,16 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 	
 	/**
-	 * TODO - Actually implement this method.
-	 * 
 	 *
      * @param appId
      * @param wafId
      * @return
 	 */
 	public RestResponse<Application> addWaf(String appId, String wafId) {
-		// TODO Auto-generated method stub
-		return RestResponse.failure("Unimplemented method.");
+        return httpRestUtils.httpPost("/applications/" + appId + "/setWaf",
+                new String[] {"wafId"},
+                new String[] { wafId },
+                Application.class);
 	}
 
 	public RestResponse<Organization[]> getAllTeams() {
@@ -120,8 +125,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
             StringBuilder outputBuilder = new StringBuilder();
 
             for (Organization team : teams.object) {
-                Boolean teamActive = team.isActive();
-
                 List<Application> applications = team.getApplications();
 
                 if (team.isActive() && !applications.isEmpty()) {
