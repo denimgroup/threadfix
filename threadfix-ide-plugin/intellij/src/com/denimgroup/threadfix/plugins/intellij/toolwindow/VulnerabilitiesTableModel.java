@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 
+import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
 import com.denimgroup.threadfix.plugins.intellij.markers.WorkspaceUtils;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -45,8 +45,8 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
     //       SETUP
     /////////////////////
 
-    private static final String[][] initialObjects = new String[][] { VulnerabilityMarker.getHeaders() };
-    private static final String[] headers = VulnerabilityMarker.getHeaders();
+    private static final String[][] initialObjects = new String[][] { MarkerUtils.getHeaders() };
+    private static final String[] headers = MarkerUtils.getHeaders();
     private VirtualFile[] files;
 
     private Project project = null;
@@ -88,9 +88,9 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
     public void doAction(int cellRow, int cellColumn) {
         if (cellRow != -1 && cellColumn != -1) {
             switch (cellColumn) {
-                case VulnerabilityMarker.CWE_ID_INDEX:
-                case VulnerabilityMarker.CWE_TEXT_INDEX: openCwe(cellRow); break;
-                case VulnerabilityMarker.DEFECT_URL_INDEX: openDefect(cellRow); break;
+                case MarkerUtils.CWE_ID_INDEX:
+                case MarkerUtils.CWE_TEXT_INDEX: openCwe(cellRow); break;
+                case MarkerUtils.DEFECT_URL_INDEX: openDefect(cellRow); break;
                 default: openFile(cellRow);
             }
         }
@@ -99,13 +99,13 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
     void openFile(int cellRow) {
         VirtualFile file = getVirtualFileAt(cellRow);
 
-        String stringLineNumber = getValueAt(cellRow, VulnerabilityMarker.LINE_NUMBER_INDEX).toString();
+        String stringLineNumber = getValueAt(cellRow, MarkerUtils.LINE_NUMBER_INDEX).toString();
 
         int lineNumber = 0;
 
         if (stringLineNumber.matches("^[0-9]+$")) {
             try {
-                lineNumber = Integer.valueOf(getValueAt(cellRow, VulnerabilityMarker.LINE_NUMBER_INDEX).toString());
+                lineNumber = Integer.valueOf(getValueAt(cellRow, MarkerUtils.LINE_NUMBER_INDEX).toString());
             } catch (NumberFormatException e) {
                 System.out.println("Got NumberFormatException for String " + stringLineNumber);
             }
@@ -117,12 +117,12 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
     }
 
     void openCwe(int cellRow) {
-        String address = Constants.CWE_ADDRESS_START + getValueAt(cellRow, VulnerabilityMarker.CWE_ID_INDEX);
+        String address = Constants.CWE_ADDRESS_START + getValueAt(cellRow, MarkerUtils.CWE_ID_INDEX);
         openAddressInWebBrowser(address);
     }
 
     void openDefect(int cellRow) {
-        String address = getValueAt(cellRow, VulnerabilityMarker.DEFECT_URL_INDEX).toString();
+        String address = getValueAt(cellRow, MarkerUtils.DEFECT_URL_INDEX).toString();
 
         // TODO maybe more checking, but URI should throw IllegalArgumentException for problematic URLs
         if (address != null && !address.trim().equals("")) {

@@ -45,7 +45,6 @@ public interface Constants {
             THREADFIX_ICON_NAME = "/icons/DG_logo_mark_13x13.png",
             MARKERS_URL_SEGMENT = "/code/markers/",
             APPLICATIONS_URL_SEGMENT = "/code/applications/",
-            API_KEY_QUERY_START = "?apiKey=",
             CWE_ADDRESS_START = "http://cwe.mitre.org/data/definitions/";
 
 }

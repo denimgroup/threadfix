@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
+import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -64,8 +64,8 @@ public class ThreadFixWindowFactory implements ToolWindowFactory {
         vulnsTable = new JBTable(getTableModel());
         vulnsTable.addMouseListener(new FileOpenerMouseListener(getTableModel()));
 
-        setIdColumnLength(VulnerabilityMarker.CWE_ID_INDEX);
-        setIdColumnLength(VulnerabilityMarker.LINE_NUMBER_INDEX);
+        setIdColumnLength(MarkerUtils.CWE_ID_INDEX);
+        setIdColumnLength(MarkerUtils.LINE_NUMBER_INDEX);
 
         getTableModel().fireTableDataChanged();
     }

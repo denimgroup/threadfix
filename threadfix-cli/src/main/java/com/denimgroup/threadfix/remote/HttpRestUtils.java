@@ -44,11 +44,12 @@ public class HttpRestUtils {
 
     public static final String API_KEY_SEGMENT = "?apiKey=";
 
+    @NotNull
     final PropertiesManager propertiesManager;
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
-    public HttpRestUtils(PropertiesManager manager) {
+    public HttpRestUtils(@NotNull PropertiesManager manager) {
         this.propertiesManager = manager;
     }
 
@@ -57,15 +58,19 @@ public class HttpRestUtils {
     }
 
     @NotNull
-	public RestResponse<Object> httpPostFile(String path, String fileName, String[] paramNames, String[] paramVals) {
+	public RestResponse<Object> httpPostFile(@NotNull String path, @NotNull String fileName,
+                                             @NotNull String[] paramNames,
+                                             @NotNull String[] paramVals) {
 		File file = new File(fileName);
         return httpPostFile(path, file, paramNames, paramVals, Object.class);
 	}
 
     @NotNull
-	public <T> RestResponse<T> httpPostFile(String path, File file,
-                                            String[] paramNames, String[] paramVals,
-                                            Class<T> targetClass) {
+	public <T> RestResponse<T> httpPostFile(@NotNull String path,
+                                            @NotNull File file,
+                                            @NotNull String[] paramNames,
+                                            @NotNull String[] paramVals,
+                                            @NotNull Class<T> targetClass) {
 
 		//	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
@@ -112,18 +117,18 @@ public class HttpRestUtils {
     }
 
     @NotNull
-    public RestResponse<Object> httpPost(String path,
-                           String[] paramNames,
-                           String[] paramVals) {
+    public RestResponse<Object> httpPost(@NotNull String path,
+                                         @NotNull String[] paramNames,
+                                         @NotNull String[] paramVals) {
 
         return httpPost(path, paramNames, paramVals, Object.class);
     }
 
     @NotNull
-    public <T> RestResponse<T> httpPost(String path,
-                                              String[] paramNames,
-                                              String[] paramVals,
-                                              Class<T> targetClass) {
+    public <T> RestResponse<T> httpPost(@NotNull String path,
+                                        @NotNull String[] paramNames,
+                                        @NotNull String[] paramVals,
+                                        @NotNull Class<T> targetClass) {
 
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
@@ -164,12 +169,12 @@ public class HttpRestUtils {
 	}
 
     @NotNull
-    public RestResponse<Object> httpGet(String path) {
+    public RestResponse<Object> httpGet(@NotNull String path) {
         return httpGet(path, "");
     }
 
     @NotNull
-    public <T> RestResponse<T> httpGet(String path, Class<T> targetClass) {
+    public <T> RestResponse<T> httpGet(@NotNull String path, @NotNull Class<T> targetClass) {
         return httpGet(path, "", targetClass);
     }
 
@@ -179,7 +184,8 @@ public class HttpRestUtils {
     }
 
     @NotNull
-	public <T> RestResponse<T> httpGet(String path, String params, Class<T> targetClass) {
+	public <T> RestResponse<T> httpGet(@NotNull String path, @NotNull String params,
+                                       @NotNull Class<T> targetClass) {
 
         String urlString = makeGetUrl(path, params);
 
@@ -213,7 +219,7 @@ public class HttpRestUtils {
 	}
 
     @NotNull
-    private String makeGetUrl(String path, String params) {
+    private String makeGetUrl(@NotNull String path, @NotNull String params) {
         String baseUrl = propertiesManager.getUrl();
         String apiKey  = propertiesManager.getKey();
 
@@ -231,7 +237,7 @@ public class HttpRestUtils {
     }
 
     @NotNull
-    private String makePostUrl(String path) {
+    private String makePostUrl(@NotNull String path) {
         String baseUrl = propertiesManager.getUrl();
 
         LOGGER.debug("Building POST url with path " + path + " and base url " + baseUrl);

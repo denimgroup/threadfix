@@ -24,9 +24,9 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
-import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
-import com.denimgroup.threadfix.plugins.intellij.rest.RestResponse;
+import com.denimgroup.threadfix.plugins.intellij.properties.IntelliJPropertiesManager;
 import com.denimgroup.threadfix.plugins.intellij.rest.RestUtils;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
@@ -57,12 +57,12 @@ public class ConfigDialog {
             apiKey = getValidApiKey(e, url);
 
             if (apiKey != null) {
-                PropertiesManager.setApiKey(apiKey);
-                PropertiesManager.setUrl(url);
+                IntelliJPropertiesManager.INSTANCE.setKey(apiKey);
+                IntelliJPropertiesManager.INSTANCE.setUrl(url);
 
                 apps = ApplicationsDialog.getApplications();
 
-                PropertiesManager.setApplicationKey(apps);
+                IntelliJPropertiesManager.INSTANCE.setApplicationKey(apps);
             }
         }
 
@@ -70,7 +70,7 @@ public class ConfigDialog {
     }
 
     private static String getValidUrl(AnActionEvent e) {
-        String configuredUrl = PropertiesManager.getUrl();
+        String configuredUrl = IntelliJPropertiesManager.INSTANCE.getUrl();
 
         if (configuredUrl == null) {
             configuredUrl = Constants.DEFAULT_URL;
@@ -96,12 +96,14 @@ public class ConfigDialog {
     }
 
     private static boolean isValidUrl(String url) {
-        RestResponse response = RestUtils.test(url);
-        return response.status == 200 && response.message.trim().startsWith(Constants.AUTHENTICATION_FAIL_STRING);
+        RestResponse<Object> response = RestUtils.test(url);
+        return !response.success &&
+                response.responseCode == 200 &&
+                response.message.trim().startsWith(Constants.AUTHENTICATION_FAIL_STRING);
     }
 
     private static String getValidApiKey(AnActionEvent e, String url) {
-        String propertiesKey = PropertiesManager.getApiKey();
+        String propertiesKey = IntelliJPropertiesManager.INSTANCE.getKey();
 
         String keyInput = getApiKey(e, Constants.API_KEY_MESSAGE_1, propertiesKey);
 
@@ -147,6 +149,8 @@ public class ConfigDialog {
 
     private static boolean isValid(String url, String apiKey) {
         RestResponse response = RestUtils.test(url, apiKey);
-        return response.status == 200 && response.message.startsWith(Constants.APP_LOOKUP_FAILURE_STRING);
+        return !response.success &&
+                response.responseCode == 200 &&
+                response.message.startsWith(Constants.APP_LOOKUP_FAILURE_STRING);
     }
 }

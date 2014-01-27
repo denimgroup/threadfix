@@ -23,32 +23,48 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.IconLoader;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mac
- * TODO flesh out and add real icon
  */
 class ThreadFixMarkerRenderer extends GutterIconRenderer {
 
-    private final StringBuilder text;
+    private final Set<String> descriptions = new TreeSet<String>();
     private final int lineNumber;
 
-    public ThreadFixMarkerRenderer(VulnerabilityMarker marker){
-        text = new StringBuilder(marker.toString());
-        lineNumber = marker.lineNumber;
+    String compiledText = null;
+
+    public ThreadFixMarkerRenderer(@NotNull VulnerabilityMarker marker){
+        descriptions.add(getInfo(marker));
+        lineNumber = MarkerUtils.getLineNumber(marker);
     }
 
     @Override
     public java.lang.String getTooltipText() {
-        return text.toString();
+        if (compiledText == null) {
+            StringBuilder builder = new StringBuilder();
+
+            if (descriptions.size() > 1) {
+                builder.append(descriptions.size()).append(" Vulnerabilities:");
+            } else {
+                builder.append("1 Vulnerability:");
+            }
+
+            for (String description : descriptions) {
+                builder.append('\n').append(description);
+            }
+
+            compiledText = builder.toString();
+        }
+        return compiledText;
     }
 
     public int getLineNumber() {
@@ -56,17 +72,30 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
     }
 
     public void addMarkerInfo(@NotNull VulnerabilityMarker marker) {
-        text.append('\n').append(marker.toString());
+        descriptions.add(getInfo(marker));
+    }
+
+    private static String getInfo(VulnerabilityMarker marker) {
+        StringBuilder builder = new StringBuilder(marker.getGenericVulnName());
+
+        if (marker.getParameter() != null) {
+            builder.append(" on variable ").append(marker.getParameter());
+        } else {
+            builder.append(" on page");
+        }
+
+        if (marker.getDefectId() != null) {
+            builder.append(" (Defect ID ").append(marker.getDefectId()).append(")");
+        }
+
+        return builder.toString();
     }
 
     // TODO change to a transparent png
     @NotNull
     @Override
     public Icon getIcon() {
-
-        Icon icon = IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);
-
-        return icon;
+        return IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);
     }
 
     @Override

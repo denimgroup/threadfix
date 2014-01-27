@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.properties;
 
+import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.intellij.ide.util.PropertiesComponent;
 
 import java.util.Arrays;
@@ -36,7 +37,11 @@ import java.util.Set;
  * Time: 2:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PropertiesManager {
+public class IntelliJPropertiesManager extends PropertiesManager {
+
+    public static final IntelliJPropertiesManager INSTANCE = new IntelliJPropertiesManager();
+
+    private IntelliJPropertiesManager(){}
 
     private static final String
             URL_KEY = "url",
@@ -45,49 +50,51 @@ public class PropertiesManager {
             LAST_RESPONSE_KEY = "lastResponse",
             COMMA = ",";
 
-    private PropertiesManager(){}
-
     private static String readFromProperties(String key) {
         return PropertiesComponent.getInstance().getValue(key);
     }
 
-    public static String getLastResponse() {
+    public String getLastResponse() {
         return readFromProperties(LAST_RESPONSE_KEY);
     }
 
-    public static String getUrl() {
+    @Override
+    public String getUrl() {
         return readFromProperties(URL_KEY);
     }
 
-    public static String getApiKey(){
+    @Override
+    public String getKey(){
         return readFromProperties(API_KEY);
     }
 
-    public static Set<String> getApplicationIds() {
+    public Set<String> getApplicationIds() {
         return toSet(readFromProperties(APPLICATION_KEY));
     }
 
-    private static void writeToProperties(String key, String value) {
+    private void writeToProperties(String key, String value) {
         PropertiesComponent.getInstance().setValue(key, value);
     }
 
-    public static void setUrl(String url) {
+    @Override
+    public void setUrl(String url) {
         writeToProperties(URL_KEY, url);
     }
 
-    public static void setApiKey(String apiKey) {
+    @Override
+    public void setKey(String apiKey) {
         writeToProperties(API_KEY, apiKey);
     }
 
-    public static void setLastResponse(String lastResponse) {
+    public void setLastResponse(String lastResponse) {
         writeToProperties(LAST_RESPONSE_KEY, lastResponse);
     }
 
-    public static void setApplicationKey(Set<String> applicationIds) {
+    public void setApplicationKey(Set<String> applicationIds) {
         writeToProperties(APPLICATION_KEY, toString(applicationIds));
     }
 
-    private static String toString(Set<String> input) {
+    private String toString(Set<String> input) {
         StringBuilder builder = new StringBuilder();
 
         for (String string : input) {
@@ -102,7 +109,7 @@ public class PropertiesManager {
         return builder.toString();
     }
 
-    private static Set<String> toSet(String input) {
+    private Set<String> toSet(String input) {
         if (input == null || input.trim().isEmpty()) {
             return new HashSet<String>();
         } else {
