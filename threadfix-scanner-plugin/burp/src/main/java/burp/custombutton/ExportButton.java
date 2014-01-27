@@ -3,8 +3,9 @@ package burp.custombutton;
 import burp.IBurpExtenderCallbacks;
 import burp.IScanIssue;
 import burp.dialog.ConfigurationDialogs;
+import burp.extention.BurpPropertiesManager;
 import burp.extention.RestUtils;
-import burp.extention.ThreadFixPropertiesManager;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,19 +29,18 @@ public class ExportButton extends JButton {
                 if (configured) {
                     File file = generateXml(callbacks);
                     if (file != null && file.exists()) {
-                        int responseCode = RestUtils.uploadScan(file);
-                        if (responseCode == 0) {
+                        RestResponse<Object> object = RestUtils.uploadScan(file);
+                        if (object.responseCode == 0) {
                             JOptionPane.showMessageDialog(view, "The response code was 0, indicating that the ThreadFix server " +
                                     "was unreachable. Make sure that the server is running and not blocked by the BURP " +
                                     "local proxy.", "Warning", JOptionPane.WARNING_MESSAGE);
-                        } else if (responseCode == -2) {
-                            JOptionPane.showMessageDialog(view, "The parameters were not saved correctly.",
-                                    "Warning", JOptionPane.WARNING_MESSAGE);
-                        } else if (responseCode != 200) {
-                            JOptionPane.showMessageDialog(view, "Scan upload failed: the HTTP response code was " + responseCode +
-                                    " and not 200.", "Warning", JOptionPane.WARNING_MESSAGE);
-                        } else {
+                        } else if (object.success) {
                             JOptionPane.showMessageDialog(view, "The scan was uploaded to ThreadFix successfully.");
+                        } else {
+                            JOptionPane.showMessageDialog(view, "The upload failed. The response code was " +
+                                    object.responseCode +
+                                    " and the error message was " +
+                                    object.message);
                         }
                     } else {
                         // file didn't exist
@@ -54,7 +54,7 @@ public class ExportButton extends JButton {
 
     private File generateXml(IBurpExtenderCallbacks callbacks) {
         File file = new File("burp_threadfix.xml");
-        IScanIssue[] issues = callbacks.getScanIssues(ThreadFixPropertiesManager.getTargetUrl());
+        IScanIssue[] issues = callbacks.getScanIssues(BurpPropertiesManager.getTargetUrl());
         callbacks.generateScanReport("XML", issues, file);
         return file;
 

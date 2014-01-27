@@ -1,6 +1,6 @@
 package burp.dialog;
 
-import burp.extention.ThreadFixPropertiesManager;
+import burp.extention.BurpPropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ public class UrlDialog {
         if (result == JOptionPane.OK_OPTION) {
             String url = urlField.getText();
             if (url != null && !url.isEmpty())
-                ThreadFixPropertiesManager.setTargetUrl(url);
+                BurpPropertiesManager.setTargetUrl(url);
             return url;
         } else {
             return null;

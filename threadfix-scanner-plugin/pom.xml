@@ -12,4 +12,21 @@
     <packaging>pom</packaging>
     <name>Scanner Intermediate POM</name>
     <version>2.0M1-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <!-- this will be resolved by the internal poms so they need to look up two levels.-->
+            <url>file://${project.basedir}${file.separator}..${file.separator}..${file.separator}lib</url>
+        </repository>
+    </repositories>
 </project>

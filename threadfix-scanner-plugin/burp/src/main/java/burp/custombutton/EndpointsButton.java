@@ -4,6 +4,7 @@ import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
 import burp.dialog.UrlDialog;
 import burp.extention.RestUtils;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,27 +34,23 @@ public class EndpointsButton extends JButton {
                 java.util.List<String> nodes = new ArrayList<>();
 
                 if (configured) {
-                    String csv = RestUtils.getEndpoints();
+                    Endpoint.Info[] endpoints = RestUtils.getEndpoints();
 
-                    if (csv == null || csv.trim().isEmpty()) {
+                    if (endpoints.length == 0) {
                         JOptionPane.showMessageDialog(view, "Failed to retrieve endpoints from ThreadFix. Check your key and url.",
                                 "Warning", JOptionPane.WARNING_MESSAGE);
                     } else {
-                        for (String line : csv.split("\n")) {
-                            if (line != null && line.contains(",")) {
-                                String endPoint = line.split(",")[1];
-                                if(endPoint.startsWith("/")){
-                                    endPoint = endPoint.substring(1);
+                        for (Endpoint.Info endpoint : endpoints) {
+                            if (endpoint != null) {
+                                String endpointPath = endpoint.getUrlPath();
+                                if(endpointPath.startsWith("/")){
+                                    endpointPath = endpointPath.substring(1);
                                 }
-                                endPoint.replaceAll(GENERIC_INT_SEGMENT, "1");
-                                nodes.add(endPoint);
-                                String params = line.split(",")[2];
-                                if(!params.equals("[]")){
-                                    params = params.substring(1,params.length()-1);
-                                    for(String p : params.split(" ")){
-                                        nodes.add(endPoint+"?"+p+"=true");
-//		                    			nodes.add(endPoint+"?"+p+"=1");
-                                    }
+                                endpointPath = endpointPath.replaceAll(GENERIC_INT_SEGMENT, "1");
+                                nodes.add(endpointPath);
+
+                                for (String parameter : endpoint.getParameters()) {
+                                    nodes.add(endpointPath + "?" + parameter + "=true");
                                 }
                             }
                         }
