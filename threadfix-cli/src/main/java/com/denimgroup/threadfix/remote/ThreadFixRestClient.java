@@ -37,11 +37,11 @@ public interface ThreadFixRestClient {
     public RestResponse<Scan> uploadScan(String applicationId, String filePath);
     public RestResponse<Application> addAppUrl(String appId, String url);
 
-    public RestResponse<Object> queueScan(String applicationId, String scannerType);
-    public RestResponse<String> requestTask(String scanners, String agentConfig);
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
+    public RestResponse<Task> requestTask(String scanners, String agentConfig);
     public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);
-    public RestResponse<String> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
+    public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
     public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey);
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,

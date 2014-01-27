@@ -23,33 +23,33 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.scanagent.scanners;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.entities.TaskConfig;
-import com.denimgroup.threadfix.scanagent.configuration.Scanner;
-import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class AcunetixScanAgent extends AbstractScanAgent {
 	
-	private static final Logger log = Logger.getLogger(AcunetixScanAgent.class);
+	private static final Logger LOG = Logger.getLogger(AcunetixScanAgent.class);
 	@NotNull
     private String acunetixExecutablePath;
 	private String loginSeqDir;
     @Nullable
 	private static AcunetixScanAgent instance = null;
-	private AcunetixScanAgent() {
-	}
+
+	private AcunetixScanAgent() {}
+
 	@Nullable
     public static AcunetixScanAgent getInstance(@NotNull Scanner scanner, @NotNull String workDir) {
 		if(instance == null) {
@@ -63,9 +63,8 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	
 	@Override
 	public boolean readConfig(@NotNull Configuration config) {
-		boolean retVal = false;
 		this.loginSeqDir = config.getString(ScannerType.ACUNETIX_WVS.getShortName() + ".loginSeqDir");
-		return retVal;
+        return loginSeqDir != null;
 	}
 
     @Nullable
@@ -76,7 +75,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		String[] args = setupArgs(config);
 		
-		log.debug("Going to attempt to run Acunetix with exe/args: " + Arrays.toString(args));
+		LOG.debug("Going to attempt to run Acunetix with exe/args: " + Arrays.toString(args));
 
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(this.getWorkDir()));
@@ -84,7 +83,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 		
 		try {
 			Process p = pb.start();
-			log.info("Acunetix started successfully. Begin scanning, this will take sometimes...");
+			LOG.info("Acunetix started successfully. Begin scanning, this will take sometimes...");
 			
 			InputStreamReader isr = new InputStreamReader(p.getInputStream());
 			BufferedReader br = new BufferedReader(isr);
@@ -92,21 +91,21 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 			String lineRead;
 			while((lineRead = br.readLine()) != null) {
 				String logMessage = "Acunetix out >>> " + lineRead;
-				log.debug(logMessage);
+				LOG.debug(logMessage);
 				this.sendStatusUpdate(logMessage);
 			}
 			
 			int returnCode = p.waitFor();
-			log.info("Acunetix process finished with exit code: " + returnCode);
+			LOG.info("Acunetix process finished with exit code: " + returnCode);
 			
 			String resultsFilename = this.getWorkDir() + File.separator + "export.xml";
 			retVal = new File(resultsFilename);
-			log.info("Returning results via file: " + retVal.getAbsolutePath());
+			LOG.info("Returning results via file: " + retVal.getAbsolutePath());
 			
 		} catch (IOException e) {
-			log.error("Problems starting Acunetix instance: " + e.getMessage(), e);
+			LOG.error("Problems starting Acunetix instance: " + e.getMessage(), e);
 		} catch (InterruptedException e) {
-			log.error("Problems waiting for Acunetix to finish: " + e.getMessage(), e);
+			LOG.error("Problems waiting for Acunetix to finish: " + e.getMessage(), e);
 		}
 		
 		return retVal;
@@ -114,12 +113,12 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 	
 	@Nullable
     private String[] setupArgs(@NotNull TaskConfig config) {
-		log.info("Setting up command-line arguments for Acunetix scan");
+		LOG.info("Setting up command-line arguments for Acunetix scan");
 		
 		String acunetixExecutable = this.acunetixExecutablePath + ConfigurationUtils.ACUNETIX_FILES[0];
-		log.debug("Acunetix executable should be located at: " + acunetixExecutable);
+		LOG.debug("Acunetix executable should be located at: " + acunetixExecutable);
 		String targetSite = config.getTargetUrlString();
-		log.debug("Site to scan: " + targetSite);
+		LOG.debug("Site to scan: " + targetSite);
 		
 		byte[] configFileBytes = config.getDataBlob("configFile");
 		
@@ -133,7 +132,7 @@ public class AcunetixScanAgent extends AbstractScanAgent {
 				args = new String[] { acunetixExecutable, "/Scan", targetSite, "/SaveFolder", 
 						this.getWorkDir(), "/Save", "/ExportXML", "/LoginSeq", "acunetixConfig" };
 			} catch (IOException e1) {
-				log.warn("Unable to save acunetix config file to working dir");
+				LOG.warn("Unable to save acunetix config file to working dir");
 				e1.printStackTrace();
 			}
 		}

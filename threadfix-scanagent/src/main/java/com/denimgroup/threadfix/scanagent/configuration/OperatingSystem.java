@@ -41,7 +41,6 @@ public class OperatingSystem {
 	@NotNull
     @Override
 	public String toString() {
-		String retVal = "OperatingSystem { name=" + name + ", version=" + version + " }";
-		return(retVal);
+        return "OperatingSystem { name=" + name + ", version=" + version + " }";
 	}
 }

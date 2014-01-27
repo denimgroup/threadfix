@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.scanagent.configuration;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,4 +101,15 @@ public class Scanner {
 		return "Scanner { name = " + name + ", version = " + version + ", home directory = " 
 						+ homeDir + ", host = " + host + ", port = " + port + " }";
 	}
+
+    public void saveInformation() {
+        ScannerType type = ScannerType.getScannerType(getName());
+        String name = type.getShortName();
+
+        ScanAgentPropertiesManager.writeProperty(name + ".scanName", type.getFullName());
+        ScanAgentPropertiesManager.writeProperty(name + ".scanVersion", getVersion());
+        ScanAgentPropertiesManager.writeProperty(name + ".scanExecutablePath", getHomeDir());
+        ScanAgentPropertiesManager.writeProperty(name + ".scanHost", getHost());
+        ScanAgentPropertiesManager.writeProperty(name + ".scanPort", String.valueOf(getPort()));
+    }
 }

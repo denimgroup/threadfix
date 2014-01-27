@@ -24,9 +24,11 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.Task;
+import com.denimgroup.threadfix.webapp.controller.rest.ScanQueueTaskConfigException;
+
+import java.util.List;
 
 public interface ScanQueueService {
 
@@ -38,7 +40,7 @@ public interface ScanQueueService {
 	
 	boolean taskStatusUpdate(int taskId, String message);
 	
-	Object requestTask(String scanners, String agentConfig, String secureTaskKey);
+	Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException;
 	
 	boolean completeTask(int scanQueueTaskId);
 	

@@ -1,40 +1,33 @@
 package com.denimgroup.threadfix.scanagent;
 
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.scanagent.configuration.OperatingSystem;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.scanners.AbstractScanAgent;
 import com.denimgroup.threadfix.scanagent.scanners.ScanAgentFactory;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationInfo;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
-import com.denimgroup.threadfix.scanagent.util.JsonUtils;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: stran
- * Date: 11/19/13
- * Time: 4:35 PM
- * To change this template use File | Settings | File Templates.
+ * TODO refactor out the configuration section
  */
 public class ScanAgentRunner {
 
     private static Logger log = Logger.getLogger(ScanAgentRunner.class);
 
-    private String threadFixServerUrl;
-    private String threadFixApiKey;
+    private String threadFixServerUrl, threadFixApiKey, agentConfig;
+
     private int pollIntervalInSeconds;
     private OperatingSystem operatingSystem;
     private List<Scanner> availableScanners;
@@ -43,19 +36,21 @@ public class ScanAgentRunner {
     private int numTasksAttempted = 0;
     private int maxTasks;
 
-    private String agentConfig;
     private ThreadFixRestClient tfClient;
 
     public ScanAgentRunner() {
-        cacheAgentConfig();
+        // TODO refactor this
+        this.tfClient = new ThreadFixRestClientImpl();
+        agentConfig = ConfigurationInfo.getAgentConfig();
+    }
+
+    // for testing
+    public void setTfClient(ThreadFixRestClient client) {
+        this.tfClient = client;
     }
 
     public ThreadFixRestClient getTfClient() {
         return tfClient;
-    }
-
-    public void setTfClient(ThreadFixRestClient tfClient) {
-        this.tfClient = tfClient;
     }
 
     public int getNumTasksAttempted() {
@@ -71,9 +66,10 @@ public class ScanAgentRunner {
 
         int numTasksRun = 0;
 
-        if (checkAndLogConfiguration())
+        if (checkAndLogConfiguration()) {
             //	Main polling loop
             pollAndRunTasks();
+        }
 
         log.info("Number of tasks run: " + getNumTasksAttempted());
     }
@@ -82,7 +78,12 @@ public class ScanAgentRunner {
 
         while(keepPolling()) {
             Task currentTask = requestTask();
-            doTask(currentTask);
+            if (currentTask != null) {
+                doTask(currentTask);
+            } else {
+                log.info("Got null task from requestTask()");
+            }
+
             try {
                 Thread.sleep(pollIntervalInSeconds * 1000);
             } catch (InterruptedException e) {
@@ -123,130 +124,48 @@ public class ScanAgentRunner {
         return(sb.toString());
     }
 
-    /**
-     * Get some data about the local agent configuration to help identify this
-     * agent to the server. This isn't intended to be a secure unique identifier,
-     * but is instead intended to provide some debugging support. This is then
-     * cached so it can be sent along with requests to the ThreadFix server.
-     */
-    private void cacheAgentConfig() {
-        StringBuilder sb = new StringBuilder();
-
-        String prefix;
-
-        //	Grab some OS/user/Java environment properties
-        sb.append(makeSystemPropertyString("os.arch"));
-        sb.append(makeSystemPropertyString("os.name"));
-        sb.append(makeSystemPropertyString("os.version"));
-        sb.append(makeSystemPropertyString("user.name"));
-        sb.append(makeSystemPropertyString("user.dir"));
-        sb.append(makeSystemPropertyString("user.home"));
-        sb.append(makeSystemPropertyString("java.home"));
-        sb.append(makeSystemPropertyString("java.vendor"));
-        sb.append(makeSystemPropertyString("java.version"));
-
-        //	Pull some info about the network configuration of the scan agent
-        Enumeration<NetworkInterface> nets = null;
-        try {
-            nets = NetworkInterface.getNetworkInterfaces();
-
-            for (NetworkInterface netint : Collections.list(nets)) {
-//	        	String interfaceName = netint.getDisplayName();
-                sb.append("NETWORK:");
-                sb.append(netint.getDisplayName());
-                sb.append("=");
-
-                prefix = "";
-                for(java.net.InterfaceAddress address : netint.getInterfaceAddresses()) {
-                    InetAddress inetAddress = address.getAddress();
-                    sb.append(prefix);
-                    sb.append(inetAddress.getHostAddress());
-                    prefix = ",";
-                }
-                sb.append("\n");
-            }
-        } catch (SocketException e) {
-            String message = "Problems checking network interfaces when trying to gather agent config: " + e.getMessage();
-            log.warn(message, e);
-            sb.append("\nERROR=");
-            sb.append(message);
-        }
-
-        this.agentConfig = sb.toString();
-
-        log.debug("About to dump agent config");
-        log.debug(this.agentConfig);
-    }
-
-    /**
-     * Grab a system property and return a string in the format:
-     * key=value\n
-     * (note the trailing newline)
-     *
-     * @param propertyName
-     * @return
-     */
-    @NotNull
-    private static String makeSystemPropertyString(@NotNull String propertyName) {
-        return propertyName + "=" + System.getProperty(propertyName) + "\n";
-    }
-
-    /**
-     *
-     * @return
-     */
     private String getAgentConfig() {
         return(this.agentConfig);
     }
 
-    /**
-     * TOFIX - Actually pull this from the ThreadFix server
-     * @return
-     */
     @Nullable
     private Task requestTask() {
-
         log.info("Requesting a new task");
         Task retVal = null;
 
-        log.info("Returning new task");
-
         String scannerList = makeScannerList(this.availableScanners);
-        if (scannerList == null || scannerList.isEmpty())
-            return retVal;
-        Object theReturn = getTfClient().requestTask(scannerList, this.getAgentConfig());
-        if(theReturn == null) {
-            log.warn("Got a null task back from the ThreadFix server.");
-        } else {
-            String sReturn = (String)theReturn;
-            if(sReturn.length() == 0) {
-                log.warn("Got an empty string back in lieu of a task from the ThreadFix server.");
+
+        if (!scannerList.isEmpty()) {
+
+            RestResponse<Task> response = getTfClient().requestTask(scannerList, this.getAgentConfig());
+
+            if (response.success) {
+                retVal = response.object;
+                log.info("Got Task successfully from server.");
             } else {
-                log.debug("Here's what we got back from the ThreadFix server: '" + sReturn + "'");
-                try {
-                    retVal = JsonUtils.convertJsonStringToTask(sReturn);
-                } catch (Exception e) {
-                    log.warn("Was unable to convert from Json string to Task.");
-                }
+                log.error("Encountered error while requesting task: " + response.message);
             }
         }
 
-        return(retVal);
+        return retVal;
     }
 
-    private void doTask(@Nullable Task theTask) {
+    private void doTask(@NotNull Task theTask) {
         File taskResult = null;
 
         this.numTasksAttempted++;
 
         try {
-            if(theTask == null) {
-                log.warn("Task(" + this.numTasksAttempted + ") was null. Not going to do anything for now.");
-            } else {
-                log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
+            log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
 
-                String taskType = theTask.getTaskType();
-                AbstractScanAgent theAgent = ScanAgentFactory.getScanAgent(getScanner(taskType), this.baseWorkDir);
+            String taskType = theTask.getTaskType();
+            AbstractScanAgent theAgent = ScanAgentFactory.getScanAgent(getScanner(taskType), this.baseWorkDir);
+
+            if (theAgent == null) {
+                log.error("Failed to retrieve a scan agent implementation for " + taskType + ".");
+
+            } else {
+
                 //	TODO - Clean up the gross way we handle these callbacks
                 theAgent.setCurrentTaskId(theTask.getTaskId());
                 theAgent.setTfClient(getTfClient());
@@ -255,15 +174,17 @@ public class ScanAgentRunner {
                     log.info("Task appears to have completed successfully: " + theTask);
                     log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
 
-                    log.debug("Attempting to complete task: " + theTask.getTaskId() + " with file: " + taskResult.getAbsolutePath());
+                    log.debug("Attempting to complete task: " + theTask.getTaskId() +
+                            " with file: " + taskResult.getAbsolutePath());
 
-                    RestResponse<String> result = getTfClient().completeTask(
+                    RestResponse<ScanQueueTask> result = getTfClient().completeTask(
                             String.valueOf(theTask.getTaskId()),
                             taskResult.getAbsolutePath(),
                             theTask.getSecureTaskKey());
 
                     if (result.success) {
-                        log.info("Successfully sent task completion update: " + result.getObjectAsJsonString());
+                        log.info("Successfully sent task completion update. Task status is now " +
+                                result.object.getTaskStatus());
                     } else {
                         log.error("Failed to update server on task completion. Message: " + result.message);
                     }
@@ -275,9 +196,9 @@ public class ScanAgentRunner {
                     tfClient.failTask(String.valueOf(theTask.getTaskId()), message, theTask.getSecureTaskKey());
                     log.warn(message);
                 }
-
-                log.info("Finished attempting task: " + theTask);
             }
+
+            log.info("Finished attempting task: " + theTask);
         } catch (Exception e) {
             String message = "Exception thrown while trying to run scan: " + e.getMessage();
             log.warn(message, e);

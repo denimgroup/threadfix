@@ -24,30 +24,24 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.dao.DocumentDao;
+import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.controller.rest.ScanQueueTaskConfigException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.DocumentDao;
-import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Document;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
-import com.denimgroup.threadfix.data.entities.ScanStatus;
-import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.data.entities.TaskConfig;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
@@ -129,7 +123,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	}
 	
 	@Override
-	public Object requestTask(String scanners, String agentConfig, String secureTaskKey) {
+	public Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException {
 		Task retVal = null;
 		
 		if(scanners == null) {
@@ -167,7 +161,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
                         if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
                             String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
                             log.warn(msg);
-                            return msg;
+                            throw new ScanQueueTaskConfigException(msg);
                         }
 
                         taskConfig.setTargetUrlString(task.getApplication().getUrl());

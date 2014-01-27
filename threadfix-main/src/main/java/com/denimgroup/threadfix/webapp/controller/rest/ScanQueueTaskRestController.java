@@ -1,10 +1,13 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.Task;
+import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
+import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
-import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask;
-import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.DocumentService;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.ScanQueueService;
-import com.denimgroup.threadfix.service.ScanService;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/rest/tasks/")
@@ -62,12 +57,13 @@ public class ScanQueueTaskRestController extends RestController {
 	/**
 	 * Queue a new scan
 	 *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#queueScan(String, String)
 	 * @param applicationId
 	 * @param scannerType
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="queueScan", method=RequestMethod.POST)
-	public @ResponseBody RestResponse queueScan(HttpServletRequest request,
+	public @ResponseBody RestResponse<ScanQueueTask> queueScan(HttpServletRequest request,
 			@RequestParam("applicationId") int applicationId,
 			@RequestParam("scannerType") String scannerType) {
 
@@ -88,17 +84,17 @@ public class ScanQueueTaskRestController extends RestController {
 	 * TODO - Add scanner versions and OS/version to the incoming parameters
 	 * TODO move to CLI library
      *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#requestTask(String, String)
 	 * @param request
 	 * @param scanners comma-separated list of scanners available from the agent
 	 * @param agentConfig information about the agent's environment
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="requestTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse requestTask(HttpServletRequest request,
+	public @ResponseBody RestResponse<Task> requestTask(HttpServletRequest request,
 			@RequestParam("scanners") String scanners,
 			@RequestParam("agentConfig") String agentConfig) {
-		Object retVal = null;
-		
+
 		log.info("Received a REST request to get a scan to run");
 		
 		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
@@ -108,13 +104,30 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		String secureTaskKey = this.apiKeyService.generateNewSecureRandomKey();
 
-        // TODO refactor
-		retVal = this.scanQueueService.requestTask(scanners, agentConfig, secureTaskKey);
-		
-		return RestResponse.success(retVal);
+        Task returnTask = null;
+        String errorMessage = null;
+
+        try {
+            returnTask = this.scanQueueService.requestTask(scanners, agentConfig, secureTaskKey);
+            if (returnTask == null) {
+                log.info("No exception was thrown and we didn't get a return task from ScanQueueService.requestTask.");
+                errorMessage = "No task found.";
+            }
+        } catch (ScanQueueTaskConfigException e) {
+            errorMessage = e.getMessage();
+            log.error("Exception thrown while trying to get task information.", e);
+        }
+
+        if (returnTask == null) {
+            return RestResponse.failure(errorMessage);
+        } else {
+            return RestResponse.success(returnTask);
+        }
 	}
 
     /**
+     *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#taskStatusUpdate(String, String)
      *
      * @param request
      * @param scanQueueTaskId
@@ -122,11 +135,10 @@ public class ScanQueueTaskRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
-	public @ResponseBody RestResponse taskStatusUpdate(HttpServletRequest request,
+	public @ResponseBody RestResponse<String> taskStatusUpdate(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
-		boolean retVal = false;
-		
+
 		log.info("Received a REST request to update the status of scan " + scanQueueTaskId);
 		
 		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
@@ -134,16 +146,22 @@ public class ScanQueueTaskRestController extends RestController {
 			return RestResponse.failure(result);
 		}
 		
-		retVal = this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message);
-		
-		return RestResponse.success(retVal);
+		if (this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message)) {
+            return RestResponse.success("Successfully updated ScanQueueTask");
+        } else {
+            return RestResponse.failure("Failed to update the ScanQueueTask");
+        }
 	}
-	
+
+    /**
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#setTaskConfig(String, String, String)
+     */
 	@RequestMapping(headers="Accept=application/json", value="setTaskConfig", method=RequestMethod.POST)
-	public @ResponseBody RestResponse setTaskConfig(HttpServletRequest request,
+	public @ResponseBody RestResponse<String> setTaskConfig(HttpServletRequest request,
 			@RequestParam("appId") int appId,
 			@RequestParam("scannerType") String scannerType,
 			@RequestParam("file") MultipartFile file) {
+
 		if(!ScanQueueTask.validateScanner(scannerType)) {
             String message = "Bad scanner type of: " + scannerType + " provided. Will not save scan config.";
 			log.warn(message);
@@ -162,11 +180,12 @@ public class ScanQueueTaskRestController extends RestController {
 	 *	Allows a remote ScanAgent to notify the server that a task has been completed successfully and
 	 *	provide the results from the scanning.
 	 *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#completeTask(String, String, String)
 	 *	@param scanQueueTaskId id for the ScanQueueTask
 	 *	@param file result file from the scanning operation
 	 */
 	@RequestMapping(headers="Accept=application/json", value="completeTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse completeTask(HttpServletRequest request,
+	public @ResponseBody RestResponse<ScanQueueTask> completeTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("file") MultipartFile file) {
 		
@@ -223,13 +242,14 @@ public class ScanQueueTaskRestController extends RestController {
 	
 	/**
 	 * Allows a remote ScanAgent to notify the server that a task has failed and provide a reason for the failure.
-	 * 
+	 *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#failTask(String, String, String)
 	 *	@param scanQueueTaskId id for the ScanQueueTask to fail
 	 *	@param message scanagent-provided reason for the scan failure
 	 *	@return true if the scan failure was accepted and noted, false if some sort of error occurred
 	 */
 	@RequestMapping(headers="Accept=application/json", value="failTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse failTask(HttpServletRequest request,
+	public @ResponseBody RestResponse<String> failTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
 

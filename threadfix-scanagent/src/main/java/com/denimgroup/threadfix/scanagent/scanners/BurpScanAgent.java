@@ -119,7 +119,7 @@ public class BurpScanAgent extends AbstractScanAgent {
 		String[] args = null;
 
         String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
-        String burpFile = System.getProperty("user.dir")+ File.separator + "burp-agent.jar;" + this.burpExecutableFile;
+        String burpFile = System.getProperty("user.dir")  + File.separator + "burp-agent.jar;" + this.burpExecutableFile;
 
         if (configFileBytes != null) {
 			String configFileName = this.getWorkDir() + File.separator + BurpExtender.STATE_FILE_NAME;

@@ -109,8 +109,8 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	 */
 	public RestResponse<Application> addWaf(String appId, String wafId) {
         return httpRestUtils.httpPost("/applications/" + appId + "/setWaf",
-                new String[] {"wafId"},
-                new String[] { wafId },
+                new String[]{"wafId"},
+                new String[]{wafId},
                 Application.class);
 	}
 
@@ -193,10 +193,11 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new File(filePath), new String[]{}, new String[]{}, Scan.class);
 	}
 	
-	public RestResponse<Object> queueScan(String applicationId, String scannerType) {
+	public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType) {
 		return httpRestUtils.httpPost("/tasks/queueScan",
 				new String[] { "applicationId", "scannerType" },
-				new String[] { applicationId, scannerType });
+				new String[] { applicationId, scannerType },
+                ScanQueueTask.class);
 	}
 
 	public RestResponse<Application> addAppUrl(String appId, String url) {
@@ -206,10 +207,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 Application.class);
 	}
 	
-	public RestResponse<String> requestTask(String scanners, String agentConfig) {
+	public RestResponse<Task> requestTask(String scanners, String agentConfig) {
 		return httpRestUtils.httpPost("/tasks/requestTask",
 				new String[] {"scanners", "agentConfig" },
-				new String[] { scanners, agentConfig }, String.class);
+				new String[] { scanners, agentConfig }, Task.class);
 	}
 	
 	/**
@@ -231,17 +232,11 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
 	
-	/**
-	 * TODO - Determine if we want to pass the scanQueueTaskId as a parameter or if we want to REST it up
-	 * @param filePath
-	 * @param secureTaskKey
-	 * @return
-	 */
-	public RestResponse<String> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
+	public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
 		String url = "/tasks/completeTask";
 		String[] paramNames 	= {	"scanQueueTaskId", "secureTaskKey" };
 		String[] paramValues 	= {  scanQueueTaskId,   secureTaskKey };
-	    return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
+	    return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, ScanQueueTask.class);
 	}
 	
 	public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey) {

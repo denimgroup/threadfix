@@ -128,7 +128,7 @@ public class StubThreadFixRestClient implements ThreadFixRestClient {
 
     @Nullable
     @Override
-    public RestResponse<Object> queueScan(String applicationId, String scannerType) {
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -140,17 +140,17 @@ public class StubThreadFixRestClient implements ThreadFixRestClient {
 
     @Nullable
     @Override
-    public RestResponse<String> requestTask(String scanners, String agentConfig) {
+    public RestResponse<Task> requestTask(String scanners, String agentConfig) {
         String retVal = null;
         if (this.url.equals(ScanAgentRunnerTests.RETURN_NULL_URL))
-            return RestResponse.success(retVal);
+            return RestResponse.success(null);
         else if (this.url.equals(ScanAgentRunnerTests.RETURN_ERROR_URL))
             retVal = "errorResponse";
         else if (this.url.equals(ScanAgentRunnerTests.RETURN_GOOD_URL))
             retVal = "{\"secureTaskKey\":\"k9UDPUdTn0gYYet6emMxFoMWuB4w1WQz4JjPF4uuZuA\",\"taskConfig\":{\"configParams\":{}," +
                     "\"targetUrlString\":\"http://localhost:8086/bodgeit/\",\"dataBlobs\":{}," +
                     "\"targetUrl\":\"http://localhost:8086/bodgeit/\"},\"taskId\":2,\"taskType\":\"OWASP Zed Attack Proxy\"}";
-        return RestResponse.success(retVal);
+        return RestResponse.failure(retVal);
     }
 
     @Nullable
@@ -167,7 +167,7 @@ public class StubThreadFixRestClient implements ThreadFixRestClient {
 
     @Nullable
     @Override
-    public RestResponse<String> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
+    public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

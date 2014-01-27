@@ -24,6 +24,17 @@
 
 package com.denimgroup.threadfix.scanagent.scanners;
 
+import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.zaproxy.clientapi.core.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -32,22 +43,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.zaproxy.clientapi.core.ApiResponse;
-import org.zaproxy.clientapi.core.ApiResponseElement;
-import org.zaproxy.clientapi.core.ApiResponseList;
-import org.zaproxy.clientapi.core.ClientApi;
-import org.zaproxy.clientapi.core.ClientApiException;
-
-import com.denimgroup.threadfix.data.entities.TaskConfig;
-import com.denimgroup.threadfix.scanagent.configuration.Scanner;
-import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
-import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 
 public class ZapScanAgent extends AbstractScanAgent {
 	private static final Logger log = Logger.getLogger(ZapScanAgent.class);
@@ -516,7 +511,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		}
 		return(retVal);
 	}
-	public void setZapHost(@NotNull String zapHost) {
+	public void setZapHost(String zapHost) {
 		this.zapHost = zapHost;
 	}
 	public void setZapPort(int zapPort) {

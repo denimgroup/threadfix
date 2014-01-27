@@ -49,7 +49,7 @@ public abstract class AbstractScanAgent {
 	
 	@NotNull
     public String getWorkDir() {
-		return(this.workDir);
+		return this.workDir;
 	}
 	
 	public void setCurrentTaskId(int currentTaskId) {
@@ -70,8 +70,6 @@ public abstract class AbstractScanAgent {
      * for server-side tracking and debugging - especially for long-running tasks.
      */
 	public void sendStatusUpdate(String message) {
-//		this.scanAgentRunner.sendStatusUpdate(this.currentTaskId, message);
-
         log.debug("Sending server update for taskId: " + this.currentTaskId + " of: " + message);
         RestResponse<String> result = getTfClient().taskStatusUpdate(String.valueOf(this.currentTaskId), message);
         if (result.success) {

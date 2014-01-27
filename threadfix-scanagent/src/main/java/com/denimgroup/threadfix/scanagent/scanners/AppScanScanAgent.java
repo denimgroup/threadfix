@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.scanagent.scanners;
 
-import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
@@ -61,8 +60,7 @@ public class AppScanScanAgent extends AbstractScanAgent {
 	
 	@Override
 	public boolean readConfig(@NotNull Configuration config) {
-		boolean retVal = false;
-		return retVal;
+		return false;
 	}
 
     @Nullable

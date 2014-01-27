@@ -23,19 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.scanagent.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.scanagent.ScanAgentConfigurationUnavailableException;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
-
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigurationUtils {
 	private static Logger log = Logger.getLogger(ConfigurationUtils.class);
@@ -46,49 +50,9 @@ public class ConfigurationUtils {
     public static String[] ACUNETIX_FILES = new String[]{"wvs_console.exe"};
     @NotNull
     public static String[] APP_SCAN_FILES = new String[]{"AppScanCMD.exe"};
-	
-	public static void saveUrlConfig(@NotNull String url) {
-//		log.info("Start saving url");
-		writeToFile(new String[]{"scanagent.threadFixServerUrl"}, new String[]{url});
-//		log.info("Ended saving url");
-	}
-	
-	public static void saveKeyConfig(@NotNull String key) {
-//		log.info("Start saving key");
-		writeToFile(new String[]{"scanagent.threadFixApiKey"}, new String[]{key});
-//		log.info("Ended saving key");
-	}
-	
-	public static void saveWorkDirectory(@NotNull String workdir) {
-//		log.info("Start saving working directory");
-		writeToFile(new String[]{"scanagent.baseWorkDir"}, new String[]{workdir});
-//		log.info("Ended saving working directory");
-	}
-	
-	public static void saveScannerType(@NotNull Scanner scan) {
-//		log.info("Start saving scanner type");
-		String[] names = new String[5];
-		String[] values = new String[5];
 
-		ScannerType type = ScannerType.getScannerType(scan.getName());
-		String name = type.getShortName();
-		names[0] = type.getShortName() + ".scanName";
-		values[0] = type.getFullName();
-		names[1] = name + ".scanVersion";
-		names[2] = name + ".scanExecutablePath";
-		names[3] = name + ".scanHost";
-		names[4] = name + ".scanPort";
-		values[1] = scan.getVersion();
-		values[2] = scan.getHomeDir();
-		values[3] = scan.getHost();
-		values[4] = String.valueOf(scan.getPort());
-		writeToFile(names, values);
-//		log.info("Ended saving scanner type");
-	}
-	
 	/**
 	 * Read all the scanner has been set up in scanagent properties file
-	 * @return
 	 */
 	@NotNull
     public static List<Scanner> readAllScanner() {
@@ -135,18 +99,12 @@ public class ConfigurationUtils {
 	
 	public static boolean isDirectory(String path) {
 		File file = new File(path);
-		if (!file.exists() || !file.isDirectory()) {
-			return false;
-		}
-		return true;
-	}
+        return file.exists() && file.isDirectory();
+    }
 
     public static boolean isFile(String path) {
         File file = new File(path);
-        if (!file.exists() || !file.isFile()) {
-            return false;
-        }
-        return true;
+        return file.exists() && file.isFile();
     }
 
 	public static boolean checkHomeParam(@NotNull ScannerType scannerType, @NotNull String home) {
@@ -186,14 +144,14 @@ public class ConfigurationUtils {
 	public static void configScannerType(@NotNull ScannerType scannerType) {
 
 		System.out.println("Start configuration for " + scannerType.getFullName());
-		Scanner scan = new Scanner();
-        scan.setName(scannerType.getFullName());
+		Scanner scanner = new Scanner();
+        scanner.setName(scannerType.getFullName());
         java.util.Scanner in = null;
         try {
             in = new java.util.Scanner(System.in);
 
             if (scannerType == ScannerType.BURPSUITE) {
-                inputBurpRunFile(scan,in);
+                inputBurpRunFile(scanner,in);
             } else {
                 // Input scanner home
                 boolean isValidHomeDir = false;
@@ -206,7 +164,7 @@ public class ConfigurationUtils {
                     }
                     if (checkHomeParam(scannerType, home)) {
                         isValidHomeDir = true;
-                        scan.setHomeDir(home);
+                        scanner.setHomeDir(home);
                     } else {
                         System.out.println(scannerType.getFullName() + " home directory is invalid!");
                     }
@@ -214,11 +172,11 @@ public class ConfigurationUtils {
             }
             // Input scanner version
             System.out.print("Input " + scannerType.getFullName() + " version: ");
-            scan.setVersion(in.nextLine());
+            scanner.setVersion(in.nextLine());
 
-            inputMoreScanInfo(scannerType, scan, in);
+            inputMoreScanInfo(scannerType, scanner, in);
 
-            saveScannerType(scan);
+            scanner.saveInformation();
 
         } finally {
 			if (in != null) {
@@ -292,17 +250,24 @@ public class ConfigurationUtils {
 	}
 
 	public static void configSystemInfo() {
-		System.out.println("Start configuration for server information.");
-		java.util.Scanner in = null;
-		try {
-			in = new java.util.Scanner(System.in);
-			// Input Threadfix base Url
-			System.out.print("Input ThreadFix base Url: ");
-			saveUrlConfig(in.nextLine());
-			
-			// Input ThreadFix API key
-			System.out.print("Input ThreadFix API key: ");
-			saveKeyConfig(in.nextLine());
+		System.out.println("Starting configuration dialog.");
+		try (java.util.Scanner in = new java.util.Scanner(System.in)) {
+
+            boolean keepGoing = true;
+            while (keepGoing) {
+                // Input Threadfix base Url
+                System.out.print("Input ThreadFix base URL (should end in /rest): ");
+                ScanAgentPropertiesManager.saveUrl(in.nextLine());
+
+                // Input ThreadFix API key
+                System.out.print("Input ThreadFix API key: ");
+                ScanAgentPropertiesManager.saveKey(in.nextLine());
+
+                keepGoing = ConfigurationUtils.hasInvalidServerConnection();
+                if (keepGoing) {
+                    System.out.println("The configuration given was invalid. Please try again.");
+                }
+            }
 			
 			// Input working directory
 			boolean isValidDir = false;
@@ -310,15 +275,11 @@ public class ConfigurationUtils {
 				System.out.print("Input working directory (is where to export scan result files): ");
 				String workdir = in.nextLine();
 				if (isDirectory(workdir)) {
-					saveWorkDirectory(workdir);
+					ScanAgentPropertiesManager.saveWorkDirectory(workdir);
 					isValidDir = true;
 				} else {
 					System.out.println("Directory is invalid.");
 				}
-			}
-		} finally {
-			if (in != null) {
-				in.close();
 			}
 		}
 		System.out.println("Ended configuration. Congratulations!");
@@ -339,16 +300,37 @@ public class ConfigurationUtils {
 		return exeName;
 	}
 	
-	@Nullable
+	@NotNull
     public static PropertiesConfiguration getPropertiesFile() {
 		try {
-            PropertiesConfiguration config =  new PropertiesConfiguration("scanagent.properties");
+            PropertiesConfiguration config = new PropertiesConfiguration("scanagent.properties");
             config.setAutoSave(true);
             return config;
 		} catch (ConfigurationException e) {
-			log.error("Problems reading configuration: " + e.getMessage(), e);
+            String message = "Problems reading configuration: " + e.getMessage();
+			log.error(message, e);
+            throw new ScanAgentConfigurationUnavailableException(message, e);
 		}
-		return null;
 	}
+
+    public static boolean hasInvalidServerConnection() {
+        ThreadFixRestClient client = new ThreadFixRestClientImpl(new ScanAgentPropertiesManager());
+
+        RestResponse<Organization[]> allTeams = client.getAllTeams();
+
+        if (allTeams.success && allTeams.responseCode == 200) {
+            return false;
+        } else {
+            log.error("Unable to connect to ThreadFix server. Message: " + allTeams.message);
+            return true;
+        }
+    }
+
+    public static boolean hasIncompleteProperties() {
+        PropertiesConfiguration configuration = getPropertiesFile();
+        return configuration.getString("scanagent.baseWorkDir", "").isEmpty() ||
+                configuration.getString("scanagent.threadFixServerUrl","").isEmpty() ||
+                configuration.getString("scanagent.threadFixApiKey","").isEmpty();
+    }
 
 }
