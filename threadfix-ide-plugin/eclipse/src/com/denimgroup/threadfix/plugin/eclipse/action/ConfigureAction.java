@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.plugin.eclipse.dialog.ApplicationDialog;
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
-import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
+import com.denimgroup.threadfix.plugin.eclipse.util.EclipsePropertiesManager;
 
 public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
@@ -56,24 +56,22 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		boolean cancelled = false;
 		// Get endpoint info
-		ConfigDialog dialog = new ConfigDialog(window.getShell(),
-				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),false);
+		ConfigDialog dialog = new ConfigDialog(window.getShell(),false);
 
 		dialog.create();
 
 		if (dialog.open() == Window.OK) {
-			SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+			EclipsePropertiesManager.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
 			System.out.println("Saved ThreadFix information successfully.");
 			
 			// Get application info
 			ApplicationsMap threadFixApplicationMap = ThreadFixService.getApplications();
 			while (threadFixApplicationMap.getTeams().isEmpty()){
-				dialog = new ConfigDialog(window.getShell(),
-						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
+				dialog = new ConfigDialog(window.getShell(), true);
 
 				dialog.create();
 				if (dialog.open() == Window.OK) {
-					SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+					EclipsePropertiesManager.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
 					System.out.println("Saved ThreadFix information successfully.");
 					threadFixApplicationMap = ThreadFixService.getApplications();
 				} else {
@@ -83,7 +81,7 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 				}
 			}
 			if (!cancelled) {
-				Set<String> configuredApps = SettingsUtils.getConfiguredApplications();
+				Set<String> configuredApps = EclipsePropertiesManager.getConfiguredApplications();
 				
 				ApplicationDialog appDialog = new ApplicationDialog(window.getShell(),
 						threadFixApplicationMap, configuredApps);
@@ -91,7 +89,7 @@ public class ConfigureAction implements IWorkbenchWindowActionDelegate {
 				appDialog.create();
 				
 				if (appDialog.open() == Window.OK) {
-					SettingsUtils.saveApplicationInfo(appDialog.getAppIds());
+					EclipsePropertiesManager.saveApplicationInfo(appDialog.getAppIds());
 					System.out.println("Saved successfully.");
 				} else {
 					System.out.println("Cancel was pressed.");

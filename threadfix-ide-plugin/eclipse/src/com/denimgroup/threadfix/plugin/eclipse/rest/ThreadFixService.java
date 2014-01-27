@@ -23,32 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.rest;
 
-import com.google.gson.Gson;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.plugin.eclipse.util.EclipsePropertiesManager;
+import com.denimgroup.threadfix.remote.PluginClient;
 
 public class ThreadFixService {
 
 	public static ApplicationsMap getApplications() {
-        Application[] applications = getApplicationCSV();
+        Application.Info[] applications = new PluginClient(EclipsePropertiesManager.INSTANCE).getThreadFixApplications();
 		
         ApplicationsMap map = new ApplicationsMap();
 
-		for (Application application : applications) {
+		for (Application.Info application : applications) {
             map.addApp(application.organizationName, application.applicationName, application.applicationId);
 		}
 		
 		return map;
-	}
-	
-	private static Application[] getApplicationCSV() {
-		Object object = RestUtils.getFromSettings().getApplications();
-
-        System.out.println(object);
-
-        if (object == null) {
-            return new Application[]{};
-        } else {
-		    return new Gson().fromJson(object.toString(), Application[].class);
-        }
 	}
 
 }

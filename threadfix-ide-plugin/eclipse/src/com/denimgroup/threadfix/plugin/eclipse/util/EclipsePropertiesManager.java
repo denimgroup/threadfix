@@ -31,7 +31,11 @@ import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.osgi.service.prefs.BackingStoreException;
 
-public class SettingsUtils {
+import com.denimgroup.threadfix.properties.PropertiesManager;
+
+public class EclipsePropertiesManager extends PropertiesManager {
+	
+	public static final EclipsePropertiesManager INSTANCE = new EclipsePropertiesManager();
 	
 	private final static String
 		URL_KEY = "url",
@@ -87,11 +91,21 @@ public class SettingsUtils {
 		}
 	}
 	
-	public static String getUrl() {
+	@Override
+	public String getUrl() {
+		return getUrlStatic();
+	}
+	
+	@Override
+	public String getKey() {
+		return getKeyStatic();
+	}
+	
+	public static String getUrlStatic() {
 		return getPreferences().get(URL_KEY, "");
 	}
 	
-	public static String getApiKey() {
+	public static String getKeyStatic() {
 		return getPreferences().get(API_KEY, "");
 	}
 	
