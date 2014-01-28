@@ -80,7 +80,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage clickEditLink(String roleName) {
-		sleep(1000);
+		sleep(5000);
 		editButtons.get(getIndex(roleName)).click();
 		sleep(1000);
 		return new DefectTrackerIndexPage(driver);
@@ -151,7 +151,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public DefectTrackerIndexPage clickCloseButton() {
-		driver.findElementById("closeNewDTModalButton").click();
+		driver.findElementById("closeDTModalButton").click();
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -165,8 +165,8 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage setNameInput(String text){
-		driver.findElementById("nameInput").clear();
-		driver.findElementById("nameInput").sendKeys(text);
+        driver.findElementsById("nameInput").get(names.size()).clear();
+        driver.findElementsById("nameInput").get(names.size()).sendKeys(text);
 		return new DefectTrackerIndexPage(driver);
 	}
 	
