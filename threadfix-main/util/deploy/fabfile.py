@@ -35,10 +35,10 @@ def clone_code():
 def exchange_files():
     with settings(warn_only = True):
         res1 = local('mv %s/%s/log4j.xml.deploy %s/%s/log4j.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-        res2 = local('sed "s/hibernate.hbm2ddl.auto=update/hibernate.hbm2ddl.auto=create/g" %s/%s/jdbc.properties.mysql -i' % (local_working_folder_loc, local_path))
+        #res2 = local('sed "s/hibernate.hbm2ddl.auto=update/hibernate.hbm2ddl.auto=create/g" %s/%s/jdbc.properties.mysql -i' % (local_working_folder_loc, local_path))
         res3 = local('mv %s/%s/jdbc.properties.mysql %s/%s/jdbc.properties' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
         res4 = local('mv %s/%s/applicationContext-scheduling.xml.deploy %s/%s/applicationContext-scheduling.xml' % (local_working_folder_loc, local_path, local_working_folder_loc, local_path))
-    res = res1 and res2 and res3 and res4
+    res = res1 and res3 and res4
     if res.failed and confirm('Deploy files were not found. Abort recommended. Abort?'):
         abort('Aborting because deploy files not found.')
 
@@ -58,7 +58,7 @@ def deploy_war():
     local('sudo service tomcat7 stop')   #stop tomcat
     with settings(warn_only=True):
         local('sudo rm -rf %s/threadfix-2.0M1-SNAPSHOT' % (server_base_loc))
-    local('sudo mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s' % (local_working_folder_loc, server_base_loc))
+    local('sudo mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s/threadfix.war' % (local_working_folder_loc, server_base_loc))
     local('sudo service tomcat7 start')  #start tomcat
 
 # verifies the login page
