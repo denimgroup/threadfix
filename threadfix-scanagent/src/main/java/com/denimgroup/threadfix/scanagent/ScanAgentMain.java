@@ -25,9 +25,9 @@
 package com.denimgroup.threadfix.scanagent;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationChecker;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationDialogs;
 import org.apache.commons.cli.*;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,7 +84,7 @@ public final class ScanAgentMain {
 
             } else if (cmd.hasOption("s")) {
 
-                ConfigurationUtils.configSystemInfo();
+                ConfigurationDialogs.configSystemInfo();
 
             } else if (cmd.hasOption("cs")) {
                 String[] scanArgs = cmd.getOptionValues("cs");
@@ -93,18 +93,22 @@ public final class ScanAgentMain {
                 }
                 ScannerType scannerType = isValidScannerType(scanArgs[0]);
                 if (scannerType != null) {
-                    ConfigurationUtils.configScannerType(scannerType);
+                    ConfigurationDialogs.configScannerType(scannerType);
                 } else {
                     LOG.info("Not correct scanner. See -printScannerOptions for details.");
                 }
 
             } else if (cmd.hasOption("r")) {
-                if (checkRequiredConfiguration()) {
+                if (ConfigurationChecker.hasIncompleteProperties() ||
+                        ConfigurationChecker.hasInvalidServerConnection()) {
+                    LOG.info("Configuration is invalid, running configuration dialog.");
+                    ConfigurationDialogs.configSystemInfo();
+                } else if (ConfigurationChecker.hasInvalidWorkDirectory()) {
+                    LOG.info("The working directory was invalid.");
+                    ConfigurationDialogs.configWorkDirectory();
+                } else {
                     LOG.info("Configuration is valid, let's continue");
                     runScanQueue();
-                } else {
-                    LOG.info("Configuration is invalid, running configuration dialog.");
-                    ConfigurationUtils.configSystemInfo();
                 }
 
             } else if (cmd.hasOption("printScannerOptions")) {
@@ -126,35 +130,15 @@ public final class ScanAgentMain {
         } catch (ScanAgentConfigurationUnavailableException e) {
             LOG.error("Unable to read from scanagent.properties.");
         }
-	}
-
-	private static boolean checkRequiredConfiguration() {
- 		if (ConfigurationUtils.hasIncompleteProperties()) {
-			LOG.error("Not found enough server configuration (ThreadFix URL, API Key or Working directory). " +
-                    "Please run '-s' to set up all of these information.");
-			return false;
-		} else if (ConfigurationUtils.hasInvalidServerConnection()) {
-            LOG.error("Unable to connect to the home ThreadFix server. " +
-                    "Please edit your configuration with -s or start the ThreadFix server.");
-            return false;
-        } else {
-            return true;
-        }
-	}
+    }
 
 	private static ScannerType isValidScannerType(@NotNull String scanner) {
 		return ScannerType.getScannerType(scanner);
 	}
 
 	private static void runScanQueue() {
-
         LOG.info("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
-		BasicConfigurator.configure();
-        LOG.debug("Logging configured and running");
-        LOG.info("Starting ThreadFix generic scan agent version " + SCAN_AGENT_VERSION);
-		
         new ScanAgentRunner().run();
-
         LOG.info("ThreadFix generic scan agent version " + SCAN_AGENT_VERSION + " stopping...");
 	}
 	

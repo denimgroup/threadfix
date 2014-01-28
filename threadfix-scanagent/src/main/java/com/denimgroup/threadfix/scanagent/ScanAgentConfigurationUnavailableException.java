@@ -5,6 +5,10 @@ package com.denimgroup.threadfix.scanagent;
  */
 public class ScanAgentConfigurationUnavailableException extends RuntimeException {
 
+    public ScanAgentConfigurationUnavailableException(String message) {
+        super(message);
+    }
+
     public ScanAgentConfigurationUnavailableException(String message, Throwable previous) {
         super(message, previous);
     }

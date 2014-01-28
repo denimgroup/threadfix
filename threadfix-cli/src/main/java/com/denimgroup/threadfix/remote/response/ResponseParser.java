@@ -32,7 +32,7 @@ public class ResponseParser {
     @SuppressWarnings("unchecked") // the JSON String preservation broke this
     public static <T> RestResponse<T> getRestResponse(String responseString, int responseCode, Class<T> internalClass) {
 
-        LOGGER.info("Parsing response for type " + internalClass.getCanonicalName());
+        LOGGER.debug("Parsing response for type " + internalClass.getCanonicalName());
 
         RestResponse<T> response = new RestResponse<T>();
 
@@ -45,11 +45,11 @@ public class ResponseParser {
                 if (response.object instanceof String) {
                     // No need to do any more work
                     response.object = (T) innerJson;
-                    LOGGER.info("Parsed inner object as JSON String correctly.");
+                    LOGGER.debug("Parsed inner object as JSON String correctly.");
                 } else {
                     // turn the inner object into the correctly typed object
                     response.object = gson.fromJson(innerJson, internalClass);
-                    LOGGER.info("Parsed result into " + internalClass.getName() + " correctly.");
+                    LOGGER.debug("Parsed result into " + internalClass.getName() + " correctly.");
                 }
             } catch (JsonSyntaxException e) {
                 LOGGER.error("Encountered JsonSyntaxException", e);
@@ -58,7 +58,7 @@ public class ResponseParser {
 
         response.responseCode = responseCode;
 
-        LOGGER.info("Setting response code to " + responseCode + ".");
+        LOGGER.debug("Setting response code to " + responseCode + ".");
 
         return response;
     }

@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.scanagent.scanners;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -52,7 +53,7 @@ public class AppScanScanAgent extends AbstractScanAgent {
 		if(instance == null) {
 			instance = new AppScanScanAgent();
 		}
-		instance.readConfig(ConfigurationUtils.getPropertiesFile());
+		instance.readConfig(ScanAgentPropertiesManager.getPropertiesFile());
 		instance.setWorkDir(workDir);
 		instance.setAppScanExecutablePath(scanner.getHomeDir());
 		return instance;

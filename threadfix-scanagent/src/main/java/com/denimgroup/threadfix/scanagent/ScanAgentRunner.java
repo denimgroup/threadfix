@@ -11,6 +11,7 @@ import com.denimgroup.threadfix.scanagent.scanners.AbstractScanAgent;
 import com.denimgroup.threadfix.scanagent.scanners.ScanAgentFactory;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationInfo;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -26,21 +27,21 @@ public class ScanAgentRunner {
 
     private static Logger log = Logger.getLogger(ScanAgentRunner.class);
 
-    private String threadFixServerUrl, threadFixApiKey, agentConfig;
+    private String agentConfig;
 
     private int pollIntervalInSeconds;
     private OperatingSystem operatingSystem;
     private List<Scanner> availableScanners;
     private String baseWorkDir;
 
-    private int numTasksAttempted = 0;
+    int numTasksAttempted = 0;
     private int maxTasks;
 
     private ThreadFixRestClient tfClient;
 
     public ScanAgentRunner() {
         // TODO refactor this
-        this.tfClient = new ThreadFixRestClientImpl();
+        this.tfClient = new ThreadFixRestClientImpl(new ScanAgentPropertiesManager());
         agentConfig = ConfigurationInfo.getAgentConfig();
     }
 
@@ -49,39 +50,47 @@ public class ScanAgentRunner {
         this.tfClient = client;
     }
 
-    public ThreadFixRestClient getTfClient() {
-        return tfClient;
-    }
-
-    public int getNumTasksAttempted() {
-        return numTasksAttempted;
-    }
-
     public void run() {
-        Configuration config = ConfigurationUtils.getPropertiesFile();
-        readConfiguration(config);
-        getTfClient().setUrl(this.threadFixServerUrl);
-        getTfClient().setKey(this.threadFixApiKey);
+        readConfiguration();
         log.info("Scan agent configured");
-
-        int numTasksRun = 0;
 
         if (checkAndLogConfiguration()) {
             //	Main polling loop
             pollAndRunTasks();
         }
 
-        log.info("Number of tasks run: " + getNumTasksAttempted());
+        log.info("Number of tasks run: " + numTasksAttempted);
     }
 
     private void pollAndRunTasks() {
+        String lastErrorMessage = null;
 
-        while(keepPolling()) {
-            Task currentTask = requestTask();
+        log.info("Configuration was OK, entering polling loop.");
+
+        while (keepPolling()) {
+            RestResponse<Task> taskResponse = requestTask();
+
+            Task currentTask = null;
+
+            if (taskResponse.success) {
+                currentTask = taskResponse.object;
+            }
+
             if (currentTask != null) {
+                log.info("Got task from ThreadFix server.");
                 doTask(currentTask);
+                lastErrorMessage = null;
             } else {
-                log.info("Got null task from requestTask()");
+                if (lastErrorMessage == null ||
+                        !lastErrorMessage.equals(taskResponse.message)) {
+                    log.info("Got first null task from requestTask(). Message: " +
+                            taskResponse.message);
+                    log.info("Switching to debug logging until something happens.");
+
+                    lastErrorMessage = taskResponse.message;
+                } else {
+                    log.debug("Got another null task from requestTask.");
+                }
             }
 
             try {
@@ -96,18 +105,11 @@ public class ScanAgentRunner {
     private boolean keepPolling() {
         boolean retVal = true;
 
-        if(this.maxTasks > 0) {
-            //	Only supposed to run for a limited number of times
-            if(this.numTasksAttempted >= this.maxTasks) {
-                //	We've reached the limit
-                retVal = false;
-            } else {
-                //	Haven't reached the limit
-                retVal = true;
-            }
+        if (this.maxTasks > 0) {
+            retVal = this.numTasksAttempted < this.maxTasks;
         }
 
-        return(retVal);
+        return retVal;
     }
 
     @NotNull
@@ -116,50 +118,40 @@ public class ScanAgentRunner {
         String prefix="";
 
         for(Scanner scanner : scanners) {
-            sb.append(prefix);
-            sb.append(scanner.getName());
+            sb.append(prefix).append(scanner.getName());
             prefix = ",";
         }
 
         return(sb.toString());
     }
 
-    private String getAgentConfig() {
-        return(this.agentConfig);
-    }
-
-    @Nullable
-    private Task requestTask() {
-        log.info("Requesting a new task");
-        Task retVal = null;
+    @NotNull
+    private RestResponse<Task> requestTask() {
+        log.debug("Requesting a new task");
+        RestResponse<Task> retVal;
 
         String scannerList = makeScannerList(this.availableScanners);
 
         if (!scannerList.isEmpty()) {
-
-            RestResponse<Task> response = getTfClient().requestTask(scannerList, this.getAgentConfig());
-
-            if (response.success) {
-                retVal = response.object;
-                log.info("Got Task successfully from server.");
-            } else {
-                log.error("Encountered error while requesting task: " + response.message);
-            }
+            retVal = tfClient.requestTask(scannerList, agentConfig);
+        } else {
+            retVal = RestResponse.failure("No scanners were configured.");
         }
 
         return retVal;
     }
 
-    private void doTask(@NotNull Task theTask) {
+    private void doTask(@NotNull Task task) {
         File taskResult = null;
 
         this.numTasksAttempted++;
 
         try {
-            log.info("Going to attempt task(" + this.numTasksAttempted + "): " + theTask);
+            log.info("Going to attempt task(" + this.numTasksAttempted + "): " + task);
 
-            String taskType = theTask.getTaskType();
-            AbstractScanAgent theAgent = ScanAgentFactory.getScanAgent(getScanner(taskType), this.baseWorkDir);
+            String taskType = task.getTaskType();
+            AbstractScanAgent theAgent =
+                    ScanAgentFactory.getScanAgent(getScanner(taskType), baseWorkDir);
 
             if (theAgent == null) {
                 log.error("Failed to retrieve a scan agent implementation for " + taskType + ".");
@@ -167,20 +159,20 @@ public class ScanAgentRunner {
             } else {
 
                 //	TODO - Clean up the gross way we handle these callbacks
-                theAgent.setCurrentTaskId(theTask.getTaskId());
-                theAgent.setTfClient(getTfClient());
-                taskResult = theAgent.doTask(theTask.getTaskConfig());
+                theAgent.setCurrentTaskId(task.getTaskId());
+                theAgent.setTfClient(tfClient);
+                taskResult = theAgent.doTask(task.getTaskConfig());
                 if(taskResult != null) {
-                    log.info("Task appears to have completed successfully: " + theTask);
+                    log.info("Task appears to have completed successfully: " + task);
                     log.info("Results from task should be located at: " + taskResult.getAbsolutePath());
 
-                    log.debug("Attempting to complete task: " + theTask.getTaskId() +
+                    log.debug("Attempting to complete task: " + task.getTaskId() +
                             " with file: " + taskResult.getAbsolutePath());
 
-                    RestResponse<ScanQueueTask> result = getTfClient().completeTask(
-                            String.valueOf(theTask.getTaskId()),
+                    RestResponse<ScanQueueTask> result = tfClient.completeTask(
+                            String.valueOf(task.getTaskId()),
                             taskResult.getAbsolutePath(),
-                            theTask.getSecureTaskKey());
+                            task.getSecureTaskKey());
 
                     if (result.success) {
                         log.info("Successfully sent task completion update. Task status is now " +
@@ -192,38 +184,33 @@ public class ScanAgentRunner {
                     //	TODO - Look at better ways to get some sort of reason the scan wasn't successful
                     //	The only way we can report back right now is if an uncaught exception occurs which is
                     //	(hopefully) a pretty rare situation.
-                    String message = "Task appears not to have completed successfully: " + theTask;
-                    tfClient.failTask(String.valueOf(theTask.getTaskId()), message, theTask.getSecureTaskKey());
+                    String message = "Task appears not to have completed successfully: " + task;
+                    tfClient.failTask(String.valueOf(task.getTaskId()), message, task.getSecureTaskKey());
                     log.warn(message);
                 }
             }
 
-            log.info("Finished attempting task: " + theTask);
+            log.info("Finished attempting task: " + task);
         } catch (Exception e) {
             String message = "Exception thrown while trying to run scan: " + e.getMessage();
             log.warn(message, e);
-            tfClient.failTask(String.valueOf(theTask.getTaskId()), message, theTask.getSecureTaskKey());
+            tfClient.failTask(String.valueOf(task.getTaskId()), message, task.getSecureTaskKey());
         }
 
     }
 
-    private void readConfiguration(@NotNull Configuration config) {
+    private void readConfiguration() {
+        this.baseWorkDir           = ScanAgentPropertiesManager.getWorkingDirectory();
+        this.pollIntervalInSeconds = ScanAgentPropertiesManager.getPollInterval();
+        this.maxTasks              = ScanAgentPropertiesManager.getMaxTasks();
 
-        this.threadFixServerUrl = config.getString("scanagent.threadFixServerUrl");
-        log.debug("scanagent.threadFixServerUrl=" + this.threadFixServerUrl);
+        this.operatingSystem = new OperatingSystem(System.getProperty("os.name"),
+                System.getProperty("os.version"));
 
-        this.threadFixApiKey = config.getString("scanagent.threadFixApiKey");;
-        this.baseWorkDir = config.getString("scanagent.baseWorkDir");;
+        this.availableScanners = ConfigurationUtils.readAllScanners();
 
-        this.pollIntervalInSeconds = config.getInt("scanagent.pollInterval");
         log.debug("scanagent.pollInterval=" + this.pollIntervalInSeconds);
-
-        this.maxTasks = config.getInt("scanagent.maxTasks");
         log.debug("scanagent.maxTasks=" + this.maxTasks);
-
-        this.operatingSystem = new OperatingSystem(System.getProperty("os.name"), System.getProperty("os.version"));
-
-        this.availableScanners = ConfigurationUtils.readAllScanner();
     }
 
     private boolean checkAndLogConfiguration() {

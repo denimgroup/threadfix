@@ -110,7 +110,7 @@ public class ConfigurationUtilsTests extends TestCase {
 
     @Test
     public void testReadAllScanner() {
-        List<Scanner> scans = ConfigurationUtils.readAllScanner();
+        List<Scanner> scans = ConfigurationUtils.readAllScanners();
         assertEquals(1, scans.size());
         assertEquals("OWASP Zed Attack Proxy", scans.get(0).getName());
     }
@@ -119,8 +119,8 @@ public class ConfigurationUtilsTests extends TestCase {
     public void testIsDirectory() {
         String good_dir = "C:\\Program Files (x86)";
         String bad_dir = "ZAPFolder";
-        boolean isDir = ConfigurationUtils.isDirectory(good_dir);
-        boolean isNotDir = ConfigurationUtils.isDirectory(bad_dir);
+        boolean isDir = ConfigurationChecker.isDirectory(good_dir);
+        boolean isNotDir = ConfigurationChecker.isDirectory(bad_dir);
         Assert.assertTrue(isDir);
         Assert.assertFalse(isNotDir);
 
@@ -131,9 +131,9 @@ public class ConfigurationUtilsTests extends TestCase {
         String good_zap_home = "C:\\Program Files (x86)\\OWASP\\Zed Attack Proxy\\";
         String bad_zap_home = "C:\\Program Files (x86)";
         String good_acunetix_home = "C:\\Program Files (x86)\\Acunetix\\Web Vulnerability Scanner 9\\";
-        boolean isGoodZap = ConfigurationUtils.checkHomeParam(ScannerType.ZAPROXY, good_zap_home);
-        boolean isBadZap = ConfigurationUtils.checkHomeParam(ScannerType.ZAPROXY, bad_zap_home);
-        boolean isGoodAcunetix = ConfigurationUtils.checkHomeParam(ScannerType.ACUNETIX_WVS, good_acunetix_home);
+        boolean isGoodZap = ConfigurationChecker.checkHomeParam(ScannerType.ZAPROXY, good_zap_home);
+        boolean isBadZap = ConfigurationChecker.checkHomeParam(ScannerType.ZAPROXY, bad_zap_home);
+        boolean isGoodAcunetix = ConfigurationChecker.checkHomeParam(ScannerType.ACUNETIX_WVS, good_acunetix_home);
 
         Assert.assertTrue(isGoodZap);
         Assert.assertFalse(isBadZap);
@@ -160,7 +160,7 @@ public class ConfigurationUtilsTests extends TestCase {
 
     @Test
     public void testGetPropertiesFile() {
-        Assert.assertNotNull(ConfigurationUtils.getPropertiesFile());
+        Assert.assertNotNull(ScanAgentPropertiesManager.getPropertiesFile());
     }
 
 }

@@ -189,7 +189,7 @@ public class HttpRestUtils {
 
         String urlString = makeGetUrl(path, params);
 
-		LOGGER.info("Requesting " + urlString);
+		LOGGER.debug("Requesting " + urlString);
 
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlString);

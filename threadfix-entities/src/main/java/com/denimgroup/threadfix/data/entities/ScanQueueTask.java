@@ -28,6 +28,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,6 +79,10 @@ public class ScanQueueTask extends AuditableEntity {
 			this.description = description;
 		}
 	}
+
+    public ScanQueueTask() {
+        this(12);
+    }
 
     public ScanQueueTask(int numHoursTilTimeout) {
         Date now = new Date();
@@ -168,6 +173,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
+    @JsonIgnore
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -178,6 +184,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
+    @JsonIgnore
 	public Date getStartTime() {
 		return startTime;
 	}
@@ -188,6 +195,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
+    @JsonIgnore
 	public Date getEndTime() {
 		return endTime;
 	}
@@ -198,6 +206,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
+    @JsonIgnore
 	public Date getTimeoutTime() {
 		return timeoutTime;
 	}

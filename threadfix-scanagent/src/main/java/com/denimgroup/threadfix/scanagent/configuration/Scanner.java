@@ -26,10 +26,13 @@ package com.denimgroup.threadfix.scanagent.configuration;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Scanner {
+
+    private static Logger log = Logger.getLogger(Scanner.class);
 
     @NotNull
 	private String name;
@@ -43,14 +46,15 @@ public class Scanner {
 	
 	public Scanner() {}
 	
-	public Scanner(@NotNull String name, @Nullable String version, @NotNull String homeDir, @Nullable String host, int port) {
+	public Scanner(@NotNull String name, @Nullable String version,
+                   @NotNull String homeDir, @Nullable String host, int port) {
 		this.name = name;
 		this.version = version;
 		this.homeDir = homeDir;
 		this.host = host;
 		this.port = port;
 	}
-	
+
 	@NotNull
     public String getName() {
 		return(name);
@@ -101,6 +105,33 @@ public class Scanner {
 		return "Scanner { name = " + name + ", version = " + version + ", home directory = " 
 						+ homeDir + ", host = " + host + ", port = " + port + " }";
 	}
+
+    public static Scanner getScannerFromConfiguration(ScannerType type) {
+        Scanner scanner = null;
+        String scanName = ScanAgentPropertiesManager.getFromProperties(type);
+        if (scanName != null && !scanName.isEmpty()) {
+
+            scanner = new Scanner();
+            scanner.setName(scanName);
+            scanner.setVersion(ScanAgentPropertiesManager.readProperty(
+                    type.getShortName() + ".scanVersion"));
+            scanner.setHomeDir(ScanAgentPropertiesManager.readProperty(
+                    type.getShortName() + ".scanExecutablePath"));
+            scanner.setHost(ScanAgentPropertiesManager.readProperty(
+                    type.getShortName() + ".scanHost"));
+
+            String portString = ScanAgentPropertiesManager.readProperty(
+                    type.getShortName() + ".scanPort");
+
+            if (portString != null && portString.matches("^[0-9]+$")) {
+                scanner.setPort(Integer.valueOf(portString));
+            } else {
+                log.info("No valid port configured for " + type.getShortName());
+            }
+        }
+
+        return scanner;
+    }
 
     public void saveInformation() {
         ScannerType type = ScannerType.getScannerType(getName());

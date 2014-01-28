@@ -115,7 +115,7 @@ public class ScanQueueTaskRestController extends RestController {
             }
         } catch (ScanQueueTaskConfigException e) {
             errorMessage = e.getMessage();
-            log.error("Exception thrown while trying to get task information.", e);
+            log.error("Exception thrown while trying to get task information. Message: " + e.getMessage());
         }
 
         if (returnTask == null) {

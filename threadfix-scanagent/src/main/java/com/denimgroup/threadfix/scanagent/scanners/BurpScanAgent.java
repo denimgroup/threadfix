@@ -40,7 +40,7 @@ import java.util.Arrays;
 
 public class BurpScanAgent extends AbstractScanAgent {
 
-	private static final Logger log = Logger.getLogger(BurpScanAgent.class);
+	private static final Logger LOG = Logger.getLogger(BurpScanAgent.class);
 	@NotNull
     private String burpExecutableFile;
     @Nullable
@@ -70,7 +70,7 @@ public class BurpScanAgent extends AbstractScanAgent {
 		
 		String[] args = setupArgs(config);
 		
-		log.debug("Going to attempt to run Burp Suite with exe/args: " + Arrays.toString(args));
+		LOG.debug("Going to attempt to run Burp Suite with exe/args: " + Arrays.toString(args));
 
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(this.getWorkDir()));
@@ -78,7 +78,7 @@ public class BurpScanAgent extends AbstractScanAgent {
 		
 		try {
 			Process p = pb.start();
-			log.info("Burp Suite started successfully. Begin scanning, this will take sometimes...");
+			LOG.info("Burp Suite started successfully. Begin scanning, this will take sometimes...");
 			
 			InputStreamReader isr = new InputStreamReader(p.getInputStream());
 			BufferedReader br = new BufferedReader(isr);
@@ -86,21 +86,21 @@ public class BurpScanAgent extends AbstractScanAgent {
 			String lineRead;
 			while((lineRead = br.readLine()) != null) {
 				String logMessage = "Burp Suite out >>> " + lineRead;
-				log.debug(logMessage);
+				LOG.debug(logMessage);
 				this.sendStatusUpdate(logMessage);
 			}
 			
 			int returnCode = p.waitFor();
-			log.info("Burp Suite process finished with exit code: " + returnCode);
+			LOG.info("Burp Suite process finished with exit code: " + returnCode);
 			
 			String resultsFilename = this.getWorkDir() + File.separator + BurpExtender.EXPORT_RESULT_FILE_NAME;
 			retVal = new File(resultsFilename);
-			log.info("Returning results via file: " + retVal.getAbsolutePath());
+			LOG.info("Returning results via file: " + retVal.getAbsolutePath());
 			
 		} catch (IOException e) {
-			log.error("Problems starting Burp Suite instance: " + e.getMessage(), e);
+			LOG.error("Problems starting Burp Suite instance: " + e.getMessage(), e);
 		} catch (InterruptedException e) {
-			log.error("Problems waiting for Burp Suite to finish: " + e.getMessage(), e);
+			LOG.error("Problems waiting for Burp Suite to finish: " + e.getMessage(), e);
 		}
 		
 		return retVal;
@@ -108,11 +108,11 @@ public class BurpScanAgent extends AbstractScanAgent {
 	
 	@Nullable
     private String[] setupArgs(@NotNull TaskConfig config) {
-		log.info("Setting up command-line arguments for Burp Suite scan");
+		LOG.info("Setting up command-line arguments for Burp Suite scan");
 
-		log.debug("Burp Suite executable should be located at: " + this.burpExecutableFile);
+		LOG.debug("Burp Suite executable should be located at: " + this.burpExecutableFile);
 		String targetSite = config.getTargetUrlString();
-		log.debug("Site to scan: " + targetSite);
+		LOG.debug("Site to scan: " + targetSite);
 		
 		byte[] configFileBytes = config.getDataBlob("configFile");
 		
@@ -130,7 +130,7 @@ public class BurpScanAgent extends AbstractScanAgent {
                         "burp.StartBurp", BurpExtender.TARGET_URL, targetSite, BurpExtender.WORKING_DIRECTORY, this.getWorkDir(),
                         BurpExtender.STATE_FILE, BurpExtender.STATE_FILE_NAME};
 			} catch (IOException e1) {
-				log.warn("Unable to save acunetix config file to working dir");
+				LOG.warn("Unable to save acunetix config file to working dir");
 				e1.printStackTrace();
 			}
 		}
