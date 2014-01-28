@@ -35,7 +35,6 @@ import com.denimgroup.threadfix.data.entities.Document;
  * the AbstractGenericDao
  * 
  * @author stran
- * @see AbstractGenericDao
  */
 @Repository
 public class HibernateDocumentDao implements DocumentDao {

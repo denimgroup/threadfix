@@ -31,22 +31,12 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.JobStatus;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.ApplicationChannelService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.DefectService;
-import com.denimgroup.threadfix.service.JobStatusService;
-import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanMergeService;
@@ -70,6 +60,7 @@ public class QueueListener implements MessageListener {
 	private ApplicationChannelService applicationChannelService = null;
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
 	private RemoteProviderTypeService remoteProviderTypeService = null;
+    private ScanQueueService scanQueueService = null;
 
 	/**
 	 * @param scanMergeService
@@ -84,7 +75,8 @@ public class QueueListener implements MessageListener {
 			VulnerabilityService vulnerabilityService,
 			ApplicationChannelService applicationChannelService,
 			RemoteProviderApplicationService remoteProviderApplicationService,
-			RemoteProviderTypeService remoteProviderTypeService) {
+			RemoteProviderTypeService remoteProviderTypeService,
+            ScanQueueService scanQueueService) {
 		this.scanMergeService = scanMergeService;
 		this.jobStatusService = jobStatusService;
 		this.applicationService = applicationService;
@@ -93,6 +85,7 @@ public class QueueListener implements MessageListener {
 		this.applicationChannelService = applicationChannelService;
 		this.remoteProviderApplicationService = remoteProviderApplicationService;
 		this.remoteProviderTypeService = remoteProviderTypeService;
+        this.scanQueueService = scanQueueService;
 	}
 
 	/*
@@ -145,6 +138,10 @@ public class QueueListener implements MessageListener {
 						processRemoteProviderBulkImport(map.getInt("remoteProviderTypeId"),
 								map.getInt("jobStatusId"));
 						break;
+                    case QueueConstants.SCHEDULED_SCAN_TYPE:
+                        processScheduledScan(map.getInt("appId"),
+                                map.getString("scanner"));
+                        break;
 				}
 			}
 			
@@ -154,7 +151,9 @@ public class QueueListener implements MessageListener {
 		}
 	}
 
-	private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
+
+
+    private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
 		log.info("Remote Provider Bulk Import job received");
 		jobStatusService.updateJobStatus(jobStatusId, "Remote Provider Bulk Import job received");
 		
@@ -213,7 +212,7 @@ public class QueueListener implements MessageListener {
 	}
 
 	/**
-	 * @param vulnerabilities
+	 * @param vulnerabilityIds
 	 * @param summary
 	 * @param preamble
 	 * @param jobStatusId
@@ -322,6 +321,24 @@ public class QueueListener implements MessageListener {
 			closeJobStatus(jobStatusId, "Vulnerability update failed.");
 		}
 	}
+
+    /**
+     * @param appId
+     * @param scanner
+     */
+    @Transactional(readOnly=false)
+    private void processScheduledScan(int appId, String scanner) {
+        Application application = applicationService.loadApplication(appId);
+        if (application == null)
+            return;
+
+        ScanQueueTask scanTask = scanQueueService.queueScan(appId, scanner);
+        if (scanTask == null || scanTask.getId() < 0) {
+            log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
+        } else {
+            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + appId);
+        }
+    }
 
 	/**
 	 * @param status

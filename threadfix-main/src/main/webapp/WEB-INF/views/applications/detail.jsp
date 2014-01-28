@@ -139,6 +139,10 @@
 			<spring:param name="orgId" value="${ application.organization.id }"/>
 			<spring:param name="appId" value="${ application.id }"/>
 		</spring:url>
+        <spring:url value="/organizations/{orgId}/applications/{appId}/scheduledScanTab" var="scheduledScanTabUrl">
+            <spring:param name="orgId" value="${ application.organization.id }"/>
+            <spring:param name="appId" value="${ application.id }"/>
+        </spring:url>
 		<br>
 		<c:if test="${ not empty application.scans }">
 			<c:set var="activeVuln" value="active" />
@@ -198,10 +202,17 @@
 			<li class="pointer">
 				<a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
 					${ fn:length(application.scanQueueTasks) }
-					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Queue</c:if>
-					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scans Queue</c:if>
+					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Queue Task</c:if>
+					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Queue Tasks</c:if>
 				</a>
 			</li>
+            <li class="pointer">
+                <a data-toggle="tab" id="scheduledScanTabLink" onclick="javascript:switchTabs('<c:out value="${scheduledScanTabUrl }"/>');return false;">
+                    ${ fn:length(application.scheduledScans) }
+                    <c:if test="${ fn:length(application.scheduledScans) == 1 }">Scheduled Scan</c:if>
+                    <c:if test="${ fn:length(application.scheduledScans) != 1 }">Scheduled Scans</c:if>
+                </a>
+            </li>
 		</ul>
 		
 	    <div id="tabsDiv">

@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.scanagent.scanners;
 
-import burp.BurpExtender;
 import com.denimgroup.threadfix.data.entities.TaskConfig;
 import com.denimgroup.threadfix.scanagent.configuration.Scanner;
 import org.apache.commons.configuration.Configuration;
@@ -41,6 +40,12 @@ import java.util.Arrays;
 public class BurpScanAgent extends AbstractScanAgent {
 
 	private static final Logger LOG = Logger.getLogger(BurpScanAgent.class);
+    private static final String TARGET_URL = "target_url";
+    private static final String WORKING_DIRECTORY = "working_directory";
+    private static final String STATE_FILE = "state_file";
+    private static final String EXPORT_RESULT_FILE_NAME = "burp_scan_result.xml";
+    private static final String STATE_FILE_NAME = "application.state";
+
 	@NotNull
     private String burpExecutableFile;
     @Nullable
@@ -93,7 +98,7 @@ public class BurpScanAgent extends AbstractScanAgent {
 			int returnCode = p.waitFor();
 			LOG.info("Burp Suite process finished with exit code: " + returnCode);
 			
-			String resultsFilename = this.getWorkDir() + File.separator + BurpExtender.EXPORT_RESULT_FILE_NAME;
+			String resultsFilename = this.getWorkDir() + File.separator + EXPORT_RESULT_FILE_NAME;
 			retVal = new File(resultsFilename);
 			LOG.info("Returning results via file: " + retVal.getAbsolutePath());
 			
@@ -118,17 +123,17 @@ public class BurpScanAgent extends AbstractScanAgent {
 		
 		String[] args = null;
 
-        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
+        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
         String burpFile = System.getProperty("user.dir")  + File.separator + "burp-agent.jar;" + this.burpExecutableFile;
 
         if (configFileBytes != null) {
-			String configFileName = this.getWorkDir() + File.separator + BurpExtender.STATE_FILE_NAME;
+			String configFileName = this.getWorkDir() + File.separator + STATE_FILE_NAME;
 
 			try {
 				FileUtils.writeByteArrayToFile(new File(configFileName), configFileBytes);
                 args = new String[]{javaHome, "-Djava.awt.headless=true", "-Xmx1024m", "-classpath", burpFile,
-                        "burp.StartBurp", BurpExtender.TARGET_URL, targetSite, BurpExtender.WORKING_DIRECTORY, this.getWorkDir(),
-                        BurpExtender.STATE_FILE, BurpExtender.STATE_FILE_NAME};
+                        "burp.StartBurp", TARGET_URL, targetSite, WORKING_DIRECTORY, this.getWorkDir(),
+                        STATE_FILE, STATE_FILE_NAME};
 			} catch (IOException e1) {
 				LOG.warn("Unable to save acunetix config file to working dir");
 				e1.printStackTrace();
@@ -137,7 +142,7 @@ public class BurpScanAgent extends AbstractScanAgent {
 
 		if (args == null)
             args = new String[]{javaHome, "-Djava.awt.headless=true", "-Xmx1024m", "-classpath", burpFile,
-                    "burp.StartBurp", BurpExtender.TARGET_URL, targetSite, BurpExtender.WORKING_DIRECTORY, this.getWorkDir()};
+                    "burp.StartBurp", TARGET_URL, targetSite, WORKING_DIRECTORY, this.getWorkDir()};
 		
 		return args;
 	}

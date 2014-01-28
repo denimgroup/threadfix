@@ -212,7 +212,26 @@ public class QueueSenderImpl implements QueueSender {
 		sendMap(remoteProviderImportMap);
 	}
 
-	private void send(String message) {
+    @Override
+    public void addScheduledScan(int appId, String scanner) {
+        if (appId < 0)
+            return;
+
+        MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+        try {
+            scheduledScanMap.setInt("appId", appId);
+            scheduledScanMap.setString("type", QueueConstants.SCHEDULED_SCAN_TYPE);
+            scheduledScanMap.setString("scanner", scanner);
+        } catch (JMSException e) {
+            log.error(jmsErrorString);
+            e.printStackTrace();
+        }
+
+        sendMap(scheduledScanMap);
+    }
+
+    private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}
 

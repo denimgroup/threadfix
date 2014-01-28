@@ -32,9 +32,6 @@ import com.denimgroup.threadfix.data.entities.Document;
  */
 public interface DocumentDao {
 
-	/**
-	 * @param finding
-	 */
 	void saveOrUpdate(Document document);
 
 	Document retrieveById(Integer docId);
