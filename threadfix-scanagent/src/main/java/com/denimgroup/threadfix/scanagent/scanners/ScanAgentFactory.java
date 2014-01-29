@@ -48,22 +48,17 @@ public class ScanAgentFactory {
     public static AbstractScanAgent getScanAgent(@NotNull Scanner scanner, @NotNull String workDir) {
 
 		AbstractScanAgent agent = null;
-		
-		switch (ScannerType.getScannerType(scanner.getName())) {
-			case ACUNETIX_WVS: 
-				agent = AcunetixScanAgent.getInstance(scanner, workDir);
-				break;
-			case ZAPROXY:
-				agent = ZapScanAgent.getInstance(scanner, workDir);
-				break;
-            case APPSCAN_DYNAMIC:
-                agent = AppScanScanAgent.getInstance(scanner, workDir);
-                break;
-            case BURPSUITE:
-                agent = BurpScanAgent.getInstance(scanner, workDir);
-                break;
-			default: break;
-		}
+
+        ScannerType scannerType = ScannerType.getScannerType(scanner.getName());
+        if (scannerType == ScannerType.ACUNETIX_WVS) {
+            agent = AcunetixScanAgent.getInstance(scanner, workDir);
+        } else if (scannerType == ScannerType.ZAPROXY) {
+            agent = ZapScanAgent.getInstance(scanner, workDir);
+        } else if (scannerType == ScannerType.APPSCAN_DYNAMIC) {
+            agent = AppScanScanAgent.getInstance(scanner, workDir);
+        } else if (scannerType == ScannerType.BURPSUITE) {
+            agent = BurpScanAgent.getInstance(scanner, workDir);
+        }
 		
 		return agent;
 	}

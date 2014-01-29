@@ -34,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.service.ExceptionLogService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * TODO decide whether or not to include more information for ResourceNotFoundException

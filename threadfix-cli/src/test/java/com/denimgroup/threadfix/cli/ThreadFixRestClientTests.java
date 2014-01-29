@@ -1,33 +1,22 @@
 package com.denimgroup.threadfix.cli;
 
-import junit.framework.TestCase;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Created with IntelliJ IDEA.
- * User: stran
- * Date: 11/22/13
- * Time: 10:08 AM
- * To change this template use File | Settings | File Templates.
- */
-public class ThreadFixRestClientTests extends TestCase {
+public class ThreadFixRestClientTests {
 
-    private static final int TEAM_ID = 1;
-    private static final String TEAM_NAME = "team";
-    private static final int APPLICATION_ID = 1;
-    private static final String APPLICATION_NAME = "app";
-    private static final int WAF_ID = 1;
-    private static final String WAF_NAME = "waf1";
-    private static final String MOD_SECURITY = "mod_security";
-    private static final String FILE_PATH = "C:\\Users\\stran\\Desktop\\CLIJTest\\ZAPRESULTS.xml";
-    private static final String ACUNETIX = "Acunetix WVS";
-    private static final String ACUNETIX_CONFIG_FILE = "C:\\Users\\stran\\Desktop\\CLIJTest\\acunetixConfig";
-    private static final String TASK_ID = "3";
+    String dummyUrl = "http://test.com";
 
     /**
      * !!!!!!! ATTENTION: Before running these testcases, please making sure:
@@ -39,212 +28,219 @@ public class ThreadFixRestClientTests extends TestCase {
      *      + There's config file ACUNETIX_CONFIG_FILE
      */
 
-    @Test
-    public void testCreateApplication() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        Random randomGenerator = new Random();
-        String appRet = client.createApplication(String.valueOf(TEAM_ID), "appFromRest" + randomGenerator.nextInt(100),
-                "http://www.test.com");
-
-        assertNotNull(UtilTest.getJSONObject(appRet));
+    private ThreadFixRestClient getClient() {
+        return new ThreadFixRestClientImpl(new TestUtils());
     }
 
-    @Test
-    public void testSetParameters() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String appRet = client.setParameters(String.valueOf(APPLICATION_ID), "DETECT", "http://repositoryUrl.com");
 
-        assertNotNull(UtilTest.getJSONObject(appRet));
+    private RestResponse<Organization> createTeam(String name) {
+        return getClient().createTeam(name);
+    }
+
+    private Integer getTeamId(String name) {
+        RestResponse<Organization> teamResponse = createTeam(name);
+
+        assertTrue("Rest Response was a failure. message was: " + teamResponse.message,
+                teamResponse.success);
+        assertNotNull("The returned team object was null.", teamResponse.object);
+
+        return teamResponse.object.getId();
+    }
+
+    private RestResponse<Application> createApplication(String teamId, String name, String url) {
+        return getClient().createApplication(teamId, name, url);
+    }
+
+    private Integer getApplicationId(String teamName, String name, String url) {
+        RestResponse<Application> teamResponse = createApplication(
+                getTeamId(teamName).toString(), name, url);
+
+        assertTrue("Rest Response was a failure. message was: " + teamResponse.message,
+                teamResponse.success);
+        assertNotNull("The returned application object was null.", teamResponse.object);
+
+        return teamResponse.object.getId();
+    }
+
+    private RestResponse<Waf> createWaf(String name, String type) {
+        return getClient().createWaf(name, type);
+    }
+
+    private Integer getWafId(String name, String type) {
+        RestResponse<Waf> wafsResponse = createWaf(name, type);
+
+        assertTrue("Rest Response was a failure. message was: " + wafsResponse.message,
+                wafsResponse.success);
+        assertNotNull("The returned application object was null.", wafsResponse.object);
+
+        return wafsResponse.object.getId();
     }
 
     @Test
     public void testCreateTeam() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        Random randomGenerator = new Random();
-        String teamRet = client.createTeam("teamFromRest" + randomGenerator.nextInt(100));
+        String name = TestUtils.getName();
 
-        assertNotNull(UtilTest.getJSONObject(teamRet));
+        RestResponse<Organization> organizationResponse = createTeam(name);
+
+        assertTrue(organizationResponse.object.getName().equals(name));
     }
 
     @Test
-    public void testGetRules() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String rulesRet = client.getRules(String.valueOf(WAF_ID));
+    public void testSearchForTeamById() {
+        String name = TestUtils.getName();
 
-        assertNotNull(rulesRet);
+        String teamId = getTeamId(name).toString();
+
+        RestResponse<Organization> organizationResponse = getClient().searchForTeamById(teamId);
+
+        assertEquals("Names didn't match.", organizationResponse.object.getName(), name);
     }
 
     @Test
-    public void testSearchForWafByName() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String wafRet = client.searchForWafByName(WAF_NAME);
+    public void testSearchForTeamByName() {
+        String name = TestUtils.getName();
 
-        assertNotNull(UtilTest.getJSONObject(wafRet));
+        Integer teamId = getTeamId(name);
+
+        RestResponse<Organization> organizationResponse = getClient().searchForTeamByName(name);
+
+        assertEquals("Ids didn't match", organizationResponse.object.getId(), teamId);
     }
 
     @Test
-    public void testSearchForWafById() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String wafRet = client.searchForWafById(String.valueOf(WAF_ID));
+    public void testGetAllTeams() {
 
-        assertNotNull(UtilTest.getJSONObject(wafRet));
+        String name = TestUtils.getName();
+
+        Integer teamId = getTeamId(name);
+
+        RestResponse<Organization[]> teamsResponse = getClient().getAllTeams();
+
+        assertTrue("Rest Response was a failure. message was: " + teamsResponse.message,
+                teamsResponse.success);
+
+        boolean foundIt = false;
+
+        for (Organization organization : teamsResponse.object) {
+            if (organization.getId().equals(teamId)) {
+                assertTrue(organization.getName().equals(name));
+                foundIt = true;
+            }
+        }
+
+        assertTrue("Didn't find the team in the teams list.", foundIt);
+    }
+
+    @Test
+    public void testCreateApplication() {
+        String appName = TestUtils.getName(), teamName = TestUtils.getName();
+
+        RestResponse<Application> response =
+                createApplication(getTeamId(teamName).toString(), appName, dummyUrl);
+
+        assertNotNull("Response was null.", response.object);
+        assertTrue("Application name was incorrect: " + response.object.getName() +
+                " instead of " + appName, response.object.getName().equals(appName));
+        assertTrue("Application URL was not correct.", response.object.getUrl().equals(dummyUrl));
+    }
+
+
+    @Test
+    public void testSearchForApplicationById() {
+        String name = TestUtils.getName(), teamName = TestUtils.getName();
+
+        String idString = getApplicationId(teamName, name, dummyUrl).toString();
+
+        RestResponse<Application> appResponse = getClient().searchForApplicationById(idString);
+
+        assertTrue("Rest Response was a failure. message was: " + appResponse.message,
+                appResponse.success);
+
+        assertNotNull(appResponse.object);
+        assertEquals("Names didn't match.", appResponse.object.getName(), name);
+    }
+
+    @Test
+    public void testSearchForApplicationByName() {
+        String name = TestUtils.getName(), teamName = TestUtils.getName();
+
+        String idString = getApplicationId(teamName, name, dummyUrl).toString();
+
+        RestResponse<Application> appResponse = getClient().searchForApplicationByName(name, teamName);
+
+        assertTrue("Rest Response was a failure. message was: " + appResponse.message,
+                appResponse.success);
+
+        assertNotNull(appResponse.object);
+        assertEquals("Names didn't match.", appResponse.object.getId().toString(), idString);
+    }
+
+    @Test
+    public void testSetParameters() {
+        String appName = TestUtils.getName(), teamName = TestUtils.getName(),
+                url = "http://www.test.com";
+
+        FrameworkType type = FrameworkType.SPRING_MVC;
+
+        RestResponse<Application> appRet = getClient().setParameters(
+                getApplicationId(teamName, appName, url).toString(),
+                type.toString(),
+                "http://repositoryUrl.com");
+
+        Application app = appRet.object;
+
+        assertTrue("Test was a failure.", appRet.success);
+        assertNotNull("Returned Application was null.", app);
+        assertTrue("Application frameworkType was " + app.getFrameworkType() + " instead of " +
+                type.getDisplayName(), app.getFrameworkTypeEnum() == type);
     }
 
     @Test
     public void testCreateWaf() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String wafRet = client.createWaf("waf2", MOD_SECURITY);
+        String name = TestUtils.getName();
 
-        assertNotNull(UtilTest.getJSONObject(wafRet));
+        RestResponse<Waf> wafRestResponse = createWaf(name, WafType.BIG_IP_ASM);
+
+        assertTrue("Names weren't equal.", wafRestResponse.object.getName().equals(name));
+    }
+
+    @Test
+    public void testSearchForWafByName() {
+        String name = TestUtils.getName();
+
+        Integer wafId = getWafId(name, WafType.DENY_ALL_RWEB);
+
+        RestResponse<Waf> wafRestResponse = getClient().searchForWafByName(name);
+
+        assertEquals("Names weren't equal.", wafRestResponse.object.getId(), wafId);
+    }
+
+    @Test
+    public void testSearchForWafById() {
+        String name = TestUtils.getName();
+
+        Integer wafId = getWafId(name, WafType.DENY_ALL_RWEB);
+
+        RestResponse<Waf> wafRestResponse = getClient().searchForWafById(wafId.toString());
+
+        assertTrue(wafRestResponse.object.getName().equals(name));
     }
 
     @Test
     public void testAddWaf() {
 
+        String wafName = TestUtils.getName(), appName = TestUtils.getName(), teamName = TestUtils.getName();
+
+        String appId = getApplicationId(teamName, appName, dummyUrl).toString();
+        String wafId = getWafId(wafName, WafType.MOD_SECURITY).toString();
+
+        RestResponse<Application> response = getClient().addWaf(appId, wafId);
+
+        assertTrue("Response was a failure. Message: " + response.message, response.success);
+        assertEquals("Application ID didn't match.", response.object.getId().toString(), appId);
+        assertEquals("WAF ID didn't match.", response.object.getWaf().getId().toString(), wafId);
     }
 
-    @Test
-    public void testGetAllTeams() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String teamsRet = client.getAllTeams();
-        HttpRestUtils utils = new HttpRestUtils();
-
-        assertNotNull(utils.getJSONArray(teamsRet));
-
-    }
-
-    @Test
-    public void testSearchForApplicationById() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String appRet = client.searchForApplicationById(String.valueOf(APPLICATION_ID));
-
-        assertNotNull(UtilTest.getJSONObject(appRet));
-    }
-
-    @Test
-    public void testSearchForApplicationByName() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String appRet = client.searchForApplicationByName(APPLICATION_NAME, TEAM_NAME);
-
-        assertNotNull(UtilTest.getJSONObject(appRet));
-    }
-
-    @Test
-    public void testSearchForTeamById() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String teamRet = client.searchForTeamById(String.valueOf(TEAM_ID));
-
-        assertNotNull(UtilTest.getJSONObject(teamRet));
-    }
-
-    @Test
-    public void testSearchForTeamByName() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String teamRet = client.searchForTeamByName(TEAM_NAME);
-
-        assertNotNull(UtilTest.getJSONObject(teamRet));
-    }
-
-    @Test
-    public void testSetKey() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setKey(UtilTest.API_KEY);
-
-        HttpRestUtils utils = new HttpRestUtils();
-        assertEquals(UtilTest.API_KEY, utils.getKey());
-    }
-
-    @Test
-    public void testSetUrl() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setUrl(UtilTest.URL);
-
-        HttpRestUtils utils = new HttpRestUtils();
-        assertEquals(UtilTest.URL, utils.getUrl());
-    }
-
-    @Test
-    public void testSetMemoryKey() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setMemoryKey(UtilTest.API_KEY);
-
-        assertTrue(true);
-    }
-
-    @Test
-    public void testSetMemoryUrl() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        client.setMemoryUrl(UtilTest.URL);
-
-        assertTrue(true);
-    }
-
-    @Test
-    public void testUploadScan() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String scanRet = client.uploadScan(String.valueOf(APPLICATION_ID), FILE_PATH);
-
-        assertNotNull(UtilTest.getJSONObject(scanRet));
-    }
-
-    @Test
-    public void testQueueScan() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        Object obj = client.queueScan(String.valueOf(APPLICATION_ID),ACUNETIX );
-
-        assertTrue(Integer.valueOf(String.valueOf(obj)) > 0);
-    }
-
-    @Test
-    public void testAddAppUrl() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String appRet = client.addAppUrl(String.valueOf(APPLICATION_ID), "http://urlfromrest.com");
-
-        assertNotNull(UtilTest.getJSONObject(appRet));
-    }
-
-    @Test
-    public void testRequestTask() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String taskRet = client.requestTask(ACUNETIX,"Windows 7 User stran");
-
-        assertNotNull(UtilTest.getJSONObject(taskRet));
-
-    }
-
-    @Test
-    public void testTaskStatusUpdate() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String statusRet = client.taskStatusUpdate(TASK_ID, "updatefromtest");
-
-        assertTrue(Boolean.valueOf(statusRet));
-    }
-
-    @Test
-    public void testSetTaskConfig() {
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(UtilTest.URL, UtilTest.API_KEY);
-        String setTaskRet = client.setTaskConfig(String.valueOf(APPLICATION_ID), ACUNETIX, ACUNETIX_CONFIG_FILE);
-
-        assertTrue(Boolean.valueOf(setTaskRet));
-    }
-
-    @Test
-    public void testCompleteTask() {
-    }
-
-    @Test
-    public void testFailTask() {
-
-    }
-
-    @Test
-    public void testAddDynamicFinding() {
-
-    }
-
-    @Test
-    public void testAddStaticFinding() {
-
-    }
+    // TODO write tests for the scan agent methods.
 
 }

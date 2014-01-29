@@ -24,10 +24,8 @@
 package com.denimgroup.threadfix.plugin.eclipse.dialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -42,22 +40,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.denimgroup.threadfix.plugin.eclipse.rest.ApplicationsMap;
+
 public class ApplicationDialog extends TitleAreaDialog {
 	
 	private List<TreeItem> treeNodes = new ArrayList<TreeItem>();
 
 	private Set<String> appIds = null;
 
-	private final Map<String, String> appIdMap;
-	private final Map<String, List<List<String>>> appTeamMap;
+	private final ApplicationsMap appIdMap;
 	private final Set<String> alreadyChecked;
 
-	public ApplicationDialog(Shell parentShell, Map<String, String> appIdMap,
+	public ApplicationDialog(Shell parentShell, ApplicationsMap threadFixApplicationMap,
 			Set<String> alreadyChecked) {
 		super(parentShell);
-		this.appIdMap = appIdMap;
+		this.appIdMap = threadFixApplicationMap;
 		this.alreadyChecked = alreadyChecked;
-		appTeamMap = organizeAppsByTeam();
 	}
 
 	@Override
@@ -78,11 +76,14 @@ public class ApplicationDialog extends TitleAreaDialog {
 		return area;
 	}
 	
-	private void  createApplicationSelectionTree(Composite container){
-		Tree tree = new Tree (container, SWT.BORDER | SWT.CHECK);
-	    tree.addListener(SWT.Selection, new Listener() {
+	private void createApplicationSelectionTree(Composite container){
+		Tree tree = new Tree(container, SWT.BORDER | SWT.CHECK);
+		
+		Listener listener = new Listener() {
 	        @Override
 			public void handleEvent(Event event) {
+	        	System.out.println("SWT.Selection");
+	        	System.out.println("detail = " + event.detail);
 	            if (event.detail == SWT.CHECK) {
 	                TreeItem item = (TreeItem) event.item;
 	                boolean checked = item.getChecked();
@@ -90,42 +91,36 @@ public class ApplicationDialog extends TitleAreaDialog {
 	                checkPath(item.getParentItem(), checked, false);
 	            }
 	        }
-	    });
-		for(String Team : appTeamMap.keySet()){
+	    };
+	    tree.addListener(SWT.Selection, listener);
+	    
+		for (String team : appIdMap.getTeams()) {
 			TreeItem teamItem = new TreeItem (tree, 0);
-			teamItem.setText (Team);
-			for(List<String> app : appTeamMap.get(Team)){
-				TreeItem appItem = new TreeItem(teamItem,0);
-				appItem.setText(app.get(0));
-				appItem.setData(app.get(0),app.get(1));
-				if (alreadyChecked.contains(app.get(1)) && !appItem.getChecked()) {
-					appItem.setChecked(true);
-					treeNodes.add(appItem);
-				}
-			}
-		}
-	}
+			teamItem.setText(team);
+			
+			teamItem.addListener(SWT.Selection, listener);
 	
-	private Map<String,List<List<String>>> organizeAppsByTeam(){
-		Map<String,List<List<String>>> teamMap = new HashMap<>();
-		for(String teamApp : appIdMap.keySet()){
-			String[] comps = teamApp.split("/");
-			if(comps.length==2){
-				List<List<String>> temp = teamMap.get(comps[0]);
-				List<String> sub = new ArrayList<>();
-				sub.add(comps[1]);
-				sub.add(appIdMap.get(teamApp));
-				if(temp!=null){
-					temp.add(sub);
-				
-				}else{
-					temp = new ArrayList<>();
-					temp.add(sub);
+			boolean any = false, all = true;
+			for (String app : appIdMap.getApps(team)) {
+				TreeItem appItem = new TreeItem(teamItem, 0);
+				String id = appIdMap.getId(team, app);
+				appItem.setText(app);
+				appItem.setData(app, id);
+				if (alreadyChecked.contains(id)) {
+					appItem.setChecked(true);
+					any = true;
+					treeNodes.add(appItem);
+				} else {
+					all = false;
 				}
-				teamMap.put(comps[0], temp);
+			}
+			if (all) {
+				teamItem.setChecked(true);
+			} else if (any) {
+				teamItem.setChecked(true);
+				teamItem.setGrayed(true);
 			}
 		}
-		return teamMap;
 	}
 
 	@Override
@@ -139,10 +134,10 @@ public class ApplicationDialog extends TitleAreaDialog {
 		appIds = getAppIdsFromTreeNodes();
 	}
 	
-	private Set<String> getAppIdsFromTreeNodes(){
+	private Set<String> getAppIdsFromTreeNodes() {
 		Set<String> returnSet = new HashSet<String>();
-		for(TreeItem node : treeNodes){
-			if (node.getChecked()){
+		for(TreeItem node : treeNodes) {
+			if (node.getChecked()) {
 				returnSet.add((String) node.getData(node.getText()));
 			}
 		}
@@ -188,8 +183,7 @@ public class ApplicationDialog extends TitleAreaDialog {
 	    item.setGrayed(false);
 	    item.setChecked(checked);
 	    treeNodes.add(item);
-	    TreeItem[] items = item.getItems();
-	    for (TreeItem item2 : items) {
+	    for (TreeItem item2 : item.getItems()) {
 	        checkItems(item2, checked);
 	    }
 	}

@@ -23,24 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.scanner.service.removable.impl.remoteprovider;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.plugin.scanner.service.removable.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.plugin.scanner.service.removable.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.List;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
 	
@@ -48,7 +47,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 		super(channelTypeName);
 	}
 
-	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
+	protected final SanitizedLogger LOG = new SanitizedLogger(this.getClass());
 	
 	protected RemoteProviderType remoteProviderType;
 	
@@ -63,22 +62,22 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	// These are to make AbstractChannelImporter happy while still getting all of the utility methods from it.
 	@Override
 	public Scan parseInput() {
-		log.warn("parseInput() called in a Remote Provider. This should never happen.");
+		LOG.warn("parseInput() called in a Remote Provider. This should never happen.");
 		return null;
 	}
 
 	@Override
 	public ScanCheckResultBean checkFile() {
-		log.warn("checkFile() called in a Remote Provider. This should never happen.");
+		LOG.warn("checkFile() called in a Remote Provider. This should never happen.");
 		return null;
 	}
 	
 	protected void parse(InputStream inputStream, DefaultHandler handler) {
 		if (inputStream == null) {
-			log.error("Null inputStream argument. Can't continue.");
+			LOG.error("Null inputStream argument. Can't continue.");
 			return;
 		} else if (handler == null) {
-			log.error("Null handler argument. Can't continue.");
+			LOG.error("Null handler argument. Can't continue.");
 			return;
 		}
 		
@@ -94,7 +93,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 			source.setEncoding("UTF-8");
 			xmlReader.parse(source);
 		} catch (SAXException | IOException e) {
-			log.warn("Exception encountered while attempting to parse XML.", e);
+			LOG.warn("Exception encountered while attempting to parse XML.", e);
 			e.printStackTrace();
 		} finally {
 			try {

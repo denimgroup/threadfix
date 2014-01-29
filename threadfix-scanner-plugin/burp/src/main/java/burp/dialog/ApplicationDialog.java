@@ -1,7 +1,8 @@
 package burp.dialog;
 
+import burp.extention.BurpPropertiesManager;
 import burp.extention.RestUtils;
-import burp.extention.ThreadFixPropertiesManager;
+import com.denimgroup.threadfix.data.entities.Application;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ public class ApplicationDialog {
         Map<String, String> applicationMap = getApplicationMap();
         String resultId = null;
         Object[] possibilities = applicationMap.keySet().toArray();
-//        JOptionPane.showMessageDialog(view,possibilities.length);
+
         if (possibilities.length != 0 && possibilities[0].toString().startsWith("Authentication failed")) {
             JOptionPane.showMessageDialog(view,possibilities[0].toString());
         }
@@ -27,12 +28,12 @@ public class ApplicationDialog {
 	                JOptionPane.PLAIN_MESSAGE,
 	                icon,
 	                possibilities,
-	                ThreadFixPropertiesManager.getAppId());
+	                BurpPropertiesManager.getAppId());
 	        
 	        if (idResult != null && !idResult.toString().trim().isEmpty() ) {
 	        	// Got a valid result
 	        	resultId = applicationMap.get(idResult);
-	        	ThreadFixPropertiesManager.setAppId(resultId);
+	        	BurpPropertiesManager.setAppId(resultId);
 	        }
         } else {
             JOptionPane.showMessageDialog(view, "Failed while trying to get a list of applications from ThreadFix.",
@@ -43,15 +44,15 @@ public class ApplicationDialog {
     }
 
     public static Map<String, String> getApplicationMap() {
-        String baseResult = RestUtils.getApplications();
+        Application.Info[] infos = RestUtils.getApplications();
+
         Map<String, String> returnMap = new HashMap<>();
 
-        for (String line : baseResult.split("\n")) {
-            if (line != null && line.split(",").length == 2) {
-                String[] parts = line.split(",");
-                returnMap.put(parts[0], parts[1]);
-            }
+        for (Application.Info info : infos) {
+                returnMap.put(info.getOrganizationName() + "/" + info.getApplicationName(),
+                        info.getApplicationId());
         }
+
         return returnMap;
     }
 

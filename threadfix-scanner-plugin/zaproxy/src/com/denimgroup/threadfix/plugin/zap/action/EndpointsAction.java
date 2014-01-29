@@ -4,15 +4,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JMenuItem;
 
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.remote.PluginClient;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
 
 import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
 import com.denimgroup.threadfix.plugin.zap.dialog.UrlDialog;
+import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class EndpointsAction extends JMenuItem {
 
@@ -39,30 +43,35 @@ public class EndpointsAction extends JMenuItem {
                 if (configured) {
 	                logger.info("Got application id, about to generate XML and use REST call.");
 	
-	                String csv = RestUtils.getEndpoints();
+	                Endpoint.Info[] endpoints = new PluginClient(ZapPropertiesManager.INSTANCE)
+                            .getEndpoints(ZapPropertiesManager.INSTANCE.getAppId());
 	                
-	                if (csv == null || csv.trim().isEmpty()) {
+	                if (endpoints.length == 0) {
 	                	view.showWarningDialog("Failed to retrieve endpoints from ThreadFix. Check your key and url.");
 	                } else {
 	
-	                	logger.info(csv);
+	                	logger.info("Got " + endpoints.length + " endpoints.");
 	
-		                for (String line : csv.split("\n")) {
-		                    if (line != null && line.contains(",")) {
-		                    	String endPoint = line.split(",")[1];
-		                    	if(endPoint.startsWith("/")){
-		                    		endPoint = endPoint.substring(1);
+		                for (Endpoint.Info endpoint : endpoints) {
+		                    if (endpoint != null) {
+
+		                    	String urlPath = endpoint.getUrlPath();
+
+		                    	if (urlPath.startsWith("/")) {
+		                    		urlPath = urlPath.substring(1);
 		                    	}
-		                    	endPoint.replaceAll(GENERIC_INT_SEGMENT, "1");
-		                    	nodes.add(endPoint);
-		                    	String params = line.split(",")[2];
-		                    	if(!params.equals("[]")){
-		                    		params = params.substring(1,params.length()-1);
-		                    		for(String p : params.split(" ")){
-		                    			nodes.add(endPoint+"?"+p+"=true");
-//		                    			nodes.add(endPoint+"?"+p+"=1");
-		                    		}
-		                    	}
+
+                                urlPath = urlPath.replaceAll(GENERIC_INT_SEGMENT, "1");
+
+		                    	nodes.add(urlPath);
+
+		                    	Set<String> params = endpoint.getParameters();
+
+                                if (!params.isEmpty()) {
+                                    for(String parameter : params){
+                                        nodes.add(urlPath + "?" + parameter + "=true");
+                                    }
+                                }
 		                    }
 		                }
 		                

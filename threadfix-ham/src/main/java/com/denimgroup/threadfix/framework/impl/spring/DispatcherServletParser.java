@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import java.io.*;
 
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
 public class DispatcherServletParser {

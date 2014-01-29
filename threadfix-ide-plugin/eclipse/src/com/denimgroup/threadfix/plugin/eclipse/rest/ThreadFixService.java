@@ -23,30 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.eclipse.rest;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.plugin.eclipse.util.EclipsePropertiesManager;
+import com.denimgroup.threadfix.remote.PluginClient;
 
 public class ThreadFixService {
 
-	public static Map<String, String> getApplications() {
-		String csvString = getApplicationCSV();
+	public static ApplicationsMap getApplications() {
+        Application.Info[] applications = new PluginClient(EclipsePropertiesManager.INSTANCE).getThreadFixApplications();
 		
-		Map<String, String> map = new HashMap<>();
-		
-		String[] lines = csvString.split("\n");
-		
-		for (String line : lines) {
-			String[] components = line.split(",");
-			if (components.length == 2) {
-				map.put(components[0], components[1]);
-			}
+        ApplicationsMap map = new ApplicationsMap();
+
+		for (Application.Info application : applications) {
+            map.addApp(application.organizationName, application.applicationName, application.applicationId);
 		}
 		
 		return map;
-	}
-	
-	private static String getApplicationCSV() {
-		return RestUtils.getFromSettings().getApplications();
 	}
 
 }

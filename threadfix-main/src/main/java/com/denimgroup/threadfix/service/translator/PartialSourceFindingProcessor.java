@@ -23,9 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 
 import com.denimgroup.threadfix.data.entities.Application;
@@ -55,12 +56,12 @@ class PartialSourceFindingProcessor implements FindingProcessor {
 	public PartialSourceFindingProcessor(@NotNull ProjectConfig projectConfig,
 			@NotNull Scan scan) {
         PathCleaner cleaner = PathCleanerFactory.getPathCleaner(
-                projectConfig.getFrameworkType(), scan.toPartialMappingList());
+                projectConfig.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
 
         noSourceProcessor = new NoSourceFindingProcessor(cleaner);
 
 		database = PartialMappingsDatabaseFactory.getPartialMappingsDatabase(
-				scan.toPartialMappingList(), projectConfig.getFrameworkType());
+				ThreadFixInterface.toPartialMappingList(scan), projectConfig.getFrameworkType());
 		
 		parameterParser = ParameterParserFactory.getParameterParser(projectConfig);
 
@@ -73,7 +74,7 @@ class PartialSourceFindingProcessor implements FindingProcessor {
 		if (database != null && application.getScans() != null) {
 			for (Scan scan : application.getScans()) {
 				if (scan != null) {
-					database.addMappings(scan.toPartialMappingList());
+					database.addMappings(ThreadFixInterface.toPartialMappingList(scan));
 				}
 			}
 		}
@@ -81,7 +82,7 @@ class PartialSourceFindingProcessor implements FindingProcessor {
 	
 	@Override
 	public void process(@NotNull Finding finding) {
-		PartialMapping query = finding.toPartialMapping();
+		PartialMapping query = ThreadFixInterface.toPartialMapping(finding);
 		
 		PartialMapping endpoint = null;
 
@@ -90,7 +91,7 @@ class PartialSourceFindingProcessor implements FindingProcessor {
         }
 
         if (parameterParser != null && finding.getSurfaceLocation() != null) {
-            String parameter = parameterParser.parse(finding.toEndpointQuery());
+            String parameter = parameterParser.parse(ThreadFixInterface.toEndpointQuery(finding));
             finding.getSurfaceLocation().setParameter(parameter);
         }
 		

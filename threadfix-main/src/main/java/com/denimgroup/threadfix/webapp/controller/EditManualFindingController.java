@@ -24,7 +24,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/manual/{findingId}")

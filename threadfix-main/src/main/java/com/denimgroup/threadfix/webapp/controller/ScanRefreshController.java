@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/progress/{numScans}")

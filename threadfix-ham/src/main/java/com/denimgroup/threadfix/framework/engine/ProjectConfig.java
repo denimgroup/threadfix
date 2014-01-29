@@ -2,8 +2,8 @@ package com.denimgroup.threadfix.framework.engine;
 
 import java.io.File;
 
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

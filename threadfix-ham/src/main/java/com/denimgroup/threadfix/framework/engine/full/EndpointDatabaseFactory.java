@@ -4,15 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
-import com.denimgroup.threadfix.plugins.intellij.properties.PropertiesManager;
+import com.denimgroup.threadfix.plugins.intellij.properties.IntelliJPropertiesManager;
 import com.denimgroup.threadfix.plugins.intellij.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugins.intellij.rest.ThreadFixApplicationService;
 import com.intellij.ui.CheckedTreeNode;
@@ -46,7 +46,7 @@ class ApplicationsDialog {
 
     private ApplicationsDialog(){
         this.applicationsMap = ThreadFixApplicationService.getApplications();
-        this.currentIds = PropertiesManager.getApplicationIds();
+        this.currentIds = IntelliJPropertiesManager.INSTANCE.getApplicationIds();
     }
 
     public static Set<String> getApplications() {

@@ -28,7 +28,7 @@ public interface Constants {
     public static final String
             DEFAULT_URL = "http://localhost:8080/threadfix/rest",
             AUTHENTICATION_FAIL_STRING = "Authentication fail",
-            REST_FAILURE_STRING = "failure",
+            APP_LOOKUP_FAILURE_STRING = "Couldn't find the application with ID 0",
             REST_URL_EXTENSION_STRING = "/rest",
             API_KEY_TITLE = "ThreadFix API Key",
             API_KEY_MESSAGE_1 = "What is your ThreadFix API Key?",
@@ -45,7 +45,6 @@ public interface Constants {
             THREADFIX_ICON_NAME = "/icons/DG_logo_mark_13x13.png",
             MARKERS_URL_SEGMENT = "/code/markers/",
             APPLICATIONS_URL_SEGMENT = "/code/applications/",
-            API_KEY_QUERY_START = "?apiKey=",
             CWE_ADDRESS_START = "http://cwe.mitre.org/data/definitions/";
 
 }

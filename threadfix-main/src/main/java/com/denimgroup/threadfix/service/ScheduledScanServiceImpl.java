@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ScheduledScanDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,6 @@ public class ScheduledScanServiceImpl implements ScheduledScanService {
 		this.applicationDao = applicationDao;
         this.scheduledScanDao = scheduledScanDao;
 	}
-
 
     @Override
     public void validateScheduledDate(ScheduledScan scheduledScan, BindingResult result) {
@@ -77,7 +77,6 @@ public class ScheduledScanServiceImpl implements ScheduledScanService {
         if (ScheduledScan.ScheduledFrequencyType.getFrequency(frequency) == ScheduledScan.ScheduledFrequencyType.WEEKLY
                 && ScheduledScan.DayInWeek.getDay(day)==null) {
             result.rejectValue("dateError", null, null, "Select day from list");
-            return;
         }
     }
 

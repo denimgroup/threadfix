@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanQueueService;
 
 @Controller
@@ -82,9 +82,9 @@ public class ScanQueueTaskController {
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
-		int ret = scanQueueService.queueScan(appId, scanQueueType);
+		ScanQueueTask task = scanQueueService.queueScan(appId, scanQueueType);
 		
-		if (ret < 0) {
+		if (task == null) {
 			ControllerUtils.addErrorMessage(request,
 					"There was something wrong when we tried adding task...");
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
@@ -92,7 +92,7 @@ public class ScanQueueTaskController {
 		}
 		
 		ControllerUtils.addSuccessMessage(request,
-				"Task ID " + ret + " was successfully added to the application.");
+				"Task ID " + task.getId() + " was successfully added to the application.");
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		log.info("Ended adding scan task to application " + appId);
 		return "ajaxRedirectHarness";

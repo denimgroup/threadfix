@@ -30,7 +30,7 @@ import java.io.File;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 public class SpringControllerMappingsTests {
 	

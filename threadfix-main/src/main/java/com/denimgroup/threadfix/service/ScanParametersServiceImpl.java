@@ -29,8 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
 
 @Service

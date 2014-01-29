@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 // TODO maybe move into saveOrUpdate and call it a day
 // Not sure yet though because ensureCorrectRelationships might not be what we want in all cases

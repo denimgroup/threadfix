@@ -41,7 +41,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 // TODO split into a service? This is all in the controller layer.
 @Controller

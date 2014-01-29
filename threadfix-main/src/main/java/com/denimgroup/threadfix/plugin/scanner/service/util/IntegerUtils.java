@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.plugin.scanner.service.util;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * Created by mac on 12/18/13.

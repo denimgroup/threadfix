@@ -27,11 +27,15 @@ import java.io.File;
 
 import javax.swing.JMenuItem;
 
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.remote.PluginClient;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
 
 import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
+import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class ImportAction extends JMenuItem {
 
@@ -57,7 +61,15 @@ public class ImportAction extends JMenuItem {
 	                
 	                if (file != null && file.exists()) {
 	                	logger.info("About to try to upload.");
-		                int responseCode = RestUtils.uploadScan(file);
+
+
+                        ZapPropertiesManager manager = ZapPropertiesManager.INSTANCE;
+
+                        RestResponse<Object> response = new PluginClient(manager)
+                                    .uploadScan(manager.getAppId(), file);
+
+                        int responseCode = response.responseCode;
+
 		                if (responseCode == 0) {
 		                    view.showWarningDialog("The response code was 0, indicating that the ThreadFix server " +
 		                            "was unreachable. Make sure that the server is running and not blocked by the ZAP " +

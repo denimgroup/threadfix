@@ -41,7 +41,7 @@ import com.denimgroup.threadfix.data.entities.SurveyRanking;
 import com.denimgroup.threadfix.data.entities.SurveyResult;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.SurveyService;
 
 @Controller

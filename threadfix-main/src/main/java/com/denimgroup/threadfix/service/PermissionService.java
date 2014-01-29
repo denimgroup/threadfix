@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.service;
 import java.util.List;
 import java.util.Set;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import net.xeoh.plugins.base.Plugin;
 
 import org.springframework.ui.Model;

@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
-import org.zaproxy.zap.extension.threadfix.ThreadFixPropertiesManager;
+import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class ParametersDialog {
 
@@ -20,9 +20,9 @@ public class ParametersDialog {
     public static boolean show(ViewDelegate view) {
         logger.info("Attempting to show dialog.");
         JTextField urlField = new JTextField(40);
-        urlField.setText(ThreadFixPropertiesManager.getUrl());
+        urlField.setText(ZapPropertiesManager.INSTANCE.getUrl());
         JTextField keyField = new JTextField(40);
-        keyField.setText(ThreadFixPropertiesManager.getKey());
+        keyField.setText(ZapPropertiesManager.INSTANCE.getKey());
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -60,7 +60,7 @@ public class ParametersDialog {
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
         if (result == JOptionPane.OK_OPTION) {
-            ThreadFixPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
+            ZapPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
             logger.info("Got properties and saved.");
             return true;
         } else {

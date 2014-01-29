@@ -22,7 +22,7 @@
 	
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
-	<bean class="com.denimgroup.threadfix.data.entities.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
+	<bean class="com.denimgroup.threadfix.webapp.config.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
 		
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">

@@ -31,12 +31,11 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 public class SpringControllerEndpointParserTests {
 

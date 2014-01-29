@@ -25,12 +25,11 @@ package com.denimgroup.threadfix.framework;
 
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.InformationSourceType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.InformationSourceType;
-import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 public class EnumTests {
 	

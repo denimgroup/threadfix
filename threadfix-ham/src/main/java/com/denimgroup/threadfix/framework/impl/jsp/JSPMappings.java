@@ -28,16 +28,16 @@ import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO figure out HTTP methods perhaps from form analysis
 public class JSPMappings implements EndpointGenerator {

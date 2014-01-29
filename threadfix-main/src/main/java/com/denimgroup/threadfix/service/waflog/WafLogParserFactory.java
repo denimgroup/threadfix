@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service.waflog;
 import com.denimgroup.threadfix.data.dao.SecurityEventDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * @author mcollins

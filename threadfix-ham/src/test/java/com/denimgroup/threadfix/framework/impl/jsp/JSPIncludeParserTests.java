@@ -28,14 +28,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.*;
 
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.impl.jsp.JSPIncludeParser;
 
 // TODO add more tests
 public class JSPIncludeParserTests {

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFactory;
 import com.denimgroup.threadfix.plugins.intellij.toolwindow.VulnerabilitiesTableModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -42,6 +42,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -70,17 +71,57 @@ public class MarkerUtils {
 
         for (VulnerabilityMarker marker : markers) {
 
-            if (map.containsKey(marker.getShortClassName())) {
-                if (addRenderer) {
-                    MarkupModel model = getMarkupModel(map, marker.getShortClassName(), project);
-                    addRenderers(marker, model);
-                }
+            if (map.containsKey(getShortClassName(marker))) {
 
-                // TODO clean up
-                tableModel.setVirtualFileAt(tableModel.getRowCount(),
-                        map.get(marker.getShortClassName()).iterator().next());
-                tableModel.addRow(marker.toStringArray());
+                String shortClassName = getShortClassName(marker);
+
+                if (shortClassName != null) {
+                    if (addRenderer) {
+                        MarkupModel model = getMarkupModel(map, shortClassName, project);
+                        addRenderers(marker, model);
+                    }
+
+                    // TODO clean up
+                    tableModel.setVirtualFileAt(tableModel.getRowCount(),
+                            map.get(shortClassName).iterator().next());
+                    tableModel.addRow(toStringArray(marker));
+                }
             }
+        }
+    }
+
+    public static String[] getHeaders() {
+        return new String[] { "Resource", "Line Number", "Parameter", "CWE ID", "CWE Name (double click to open)", "Defect URL (double click to open)" };
+    }
+
+    public static final int
+            LINE_NUMBER_INDEX = 1,
+            CWE_ID_INDEX = 3,
+            CWE_TEXT_INDEX = 4,
+            DEFECT_URL_INDEX = 5;
+
+    public static String[] toStringArray(VulnerabilityMarker marker) {
+        return new String[] {marker.getFilePath(),
+                marker.getLineNumber(),
+                marker.getParameter(),
+                marker.getGenericVulnId(),
+                marker.getGenericVulnName(),
+                marker.getDefectUrl() };
+    }
+
+    @Nullable
+    public static String getShortClassName(VulnerabilityMarker marker) {
+
+        String[] classNameParts = null;
+
+        if (marker != null && marker.getFilePath() != null) {
+            classNameParts = marker.getFilePath().split("/");
+        }
+
+        if (classNameParts != null && classNameParts.length > 0) {
+            return classNameParts[classNameParts.length - 1];
+        } else {
+            return null;
         }
     }
 
@@ -89,7 +130,8 @@ public class MarkerUtils {
         MarkupModel model = getMarkupModel(file, project, true);
 
         for (VulnerabilityMarker marker : markers) {
-            if (marker.getShortClassName().equals(file.getName())) {
+            String shortClassName = getShortClassName(marker);
+            if (shortClassName != null && shortClassName.equals(file.getName())) {
                 addRenderers(marker, model);
             }
         }
@@ -149,14 +191,16 @@ public class MarkerUtils {
 
         attributes.setBackgroundColor(color);
 
-        RangeHighlighter newHighlighter = documentMarkupModel.addLineHighlighter(marker.lineNumber, 500, attributes);
+        int markerLineNumber = getLineNumber(marker);
+
+        RangeHighlighter newHighlighter = documentMarkupModel.addLineHighlighter(markerLineNumber, 500, attributes);
 
         boolean newLine = true;
 
         for (RangeHighlighter highlighter : documentMarkupModel.getAllHighlighters()) {
             if (highlighter.getGutterIconRenderer() instanceof ThreadFixMarkerRenderer) {
                 ThreadFixMarkerRenderer renderer = ((ThreadFixMarkerRenderer) highlighter.getGutterIconRenderer());
-                if (renderer != null && marker.lineNumber == renderer.getLineNumber()) {
+                if (renderer != null && markerLineNumber == renderer.getLineNumber()) {
                     newLine = false;
                     renderer.addMarkerInfo(marker);
                     break;
@@ -181,7 +225,15 @@ public class MarkerUtils {
                 markupModel.removeHighlighter(highlighter);
             }
         }
-
     }
+
+    public static Integer getLineNumber(@NotNull VulnerabilityMarker marker) {
+        if (marker.getLineNumber() != null && marker.getLineNumber().matches("^[0-9]+$")) {
+            return Integer.valueOf(marker.getLineNumber());
+        } else {
+            return 0;
+        }
+    }
+
 
 }

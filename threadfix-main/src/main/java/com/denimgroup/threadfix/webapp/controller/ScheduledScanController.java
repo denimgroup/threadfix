@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledScanScheduler;
 import com.denimgroup.threadfix.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
