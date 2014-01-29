@@ -4,7 +4,9 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.Calendar;
@@ -23,6 +25,7 @@ public class ResponseParser {
         GsonBuilder gsonB = new GsonBuilder();
         gsonB.registerTypeAdapter(Calendar.class, new CalendarSerializer());
         gsonB.registerTypeAdapter(GregorianCalendar.class, new CalendarSerializer());
+        gsonB.registerTypeAdapter(byte[].class, new ByteToStringSerializer()); // needed for files.
         return gsonB.create();
     }
 
@@ -32,6 +35,7 @@ public class ResponseParser {
     public static <T> RestResponse<T> getRestResponse(String responseString, int responseCode, Class<T> internalClass) {
 
         LOGGER.debug("Parsing response for type " + internalClass.getCanonicalName());
+        //System.out.println(responseString);
 
         RestResponse<T> response = new RestResponse<T>();
 
@@ -63,7 +67,12 @@ public class ResponseParser {
     }
 
     public static <T> RestResponse<T> getRestResponse(InputStream responseStream, int responseCode, Class<T> target) {
-        String inputString = convertStreamToString(responseStream);
+        String inputString = null;
+        try {
+            inputString = IOUtils.toString(responseStream, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return getRestResponse(inputString, responseCode, target);
     }
@@ -80,6 +89,8 @@ public class ResponseParser {
 
     // from https://weblogs.java.net/blog/pat/archive/2004/10/stupid_scanner_1.html
     private static String convertStreamToString(InputStream inputStream) {
+
+
         Scanner s = new Scanner(inputStream, "UTF-8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }

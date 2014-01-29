@@ -31,4 +31,8 @@ public class RestResponse<T> {
         return new Gson().toJson(object);
     }
 
+    public String toString() {
+        return getObjectAsJsonString();
+    }
+
 }

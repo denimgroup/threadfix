@@ -1,18 +1,14 @@
 package com.denimgroup.threadfix.cli;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ThreadFixRestClientTests {
 
@@ -239,6 +235,17 @@ public class ThreadFixRestClientTests {
         assertTrue("Response was a failure. Message: " + response.message, response.success);
         assertEquals("Application ID didn't match.", response.object.getId().toString(), appId);
         assertEquals("WAF ID didn't match.", response.object.getWaf().getId().toString(), wafId);
+    }
+
+    @Ignore
+    @Test
+    public void testTask() {
+        String scannerList = "OWASP Zed Attack Proxy";
+        ThreadFixRestClient client = new ThreadFixRestClientImpl(new TestUtils());
+
+        RestResponse<Task> response = client.requestTask(scannerList, "");
+
+        assertTrue(response != null && response.object != null);
     }
 
     // TODO write tests for the scan agent methods.
