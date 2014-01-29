@@ -30,14 +30,14 @@ import java.util.Map;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ServletMappings {
-	
+
 	private static final SanitizedLogger log = new SanitizedLogger("ServletMappings");
-	
+
 	public final static String DEFAULT_SERVLET = "Default Servlet";
 	
 	@NotNull

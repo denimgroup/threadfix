@@ -26,9 +26,9 @@ package com.denimgroup.threadfix.framework.filefilter;
 import java.io.*;
 import java.util.Set;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.filefilter.IOFileFilter;
 
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.quartz.Job;
 import org.quartz.JobDataMap;

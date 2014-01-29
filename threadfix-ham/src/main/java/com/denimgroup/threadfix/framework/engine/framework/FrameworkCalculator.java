@@ -6,9 +6,8 @@ import java.util.Collection;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
-
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO make this more generic
 public class FrameworkCalculator {

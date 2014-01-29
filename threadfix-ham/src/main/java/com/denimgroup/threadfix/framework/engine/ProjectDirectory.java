@@ -32,11 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO make more error resistant
 public class ProjectDirectory {
