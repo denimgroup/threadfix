@@ -107,6 +107,7 @@ public class JobStatus extends BaseEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore // TODO figure out a better adapter for this
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -117,6 +118,7 @@ public class JobStatus extends BaseEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore // TODO figure out a better adapter for this
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -126,6 +128,7 @@ public class JobStatus extends BaseEntity {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore // TODO figure out a better adapter for this
 	public Date getEndDate() {
 		return endDate;
 	}

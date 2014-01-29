@@ -52,6 +52,7 @@ public class ScanStatus extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore
 	public Date getTimestamp() {
 		return timestamp;
 	}
