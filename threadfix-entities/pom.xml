@@ -44,11 +44,6 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>${persistence.version}</version>
@@ -57,12 +52,6 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${validation-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>${hibernate.version}</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -76,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <artifactId>jackson-core-asl</artifactId>
             <version>${codehaus.jackson.version}</version>
         </dependency>
     </dependencies>

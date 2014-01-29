@@ -25,12 +25,12 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,13 +44,12 @@ public class SurfaceLocation extends BaseEntity {
 	public static final int QUERY_LENGTH = 255;
 	
 	public static final Set<String> REQUEST_METHODS;
-	
+
 	static {
-		REQUEST_METHODS = new HashSet<String>();
-		
-		for (RequestMethod requestMethod : RequestMethod.values()) {
-			REQUEST_METHODS.add(requestMethod.toString());
-		}
+		String[] args = {"POST", "GET", "DELETE", "OPTIONS",
+                "PUT", "HEAD", "TRACE"};
+
+        REQUEST_METHODS = new HashSet<String>(Arrays.asList(args));
 	}
 
 	private static final long serialVersionUID = -8999892961251231213L;

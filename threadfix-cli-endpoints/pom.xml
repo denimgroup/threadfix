@@ -44,29 +44,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commons.io.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${commons.lang.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>${persistence.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.denimgroup.threadfix</groupId>
 			<artifactId>threadfix-ham</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
 		</dependency>
 	</dependencies>
 

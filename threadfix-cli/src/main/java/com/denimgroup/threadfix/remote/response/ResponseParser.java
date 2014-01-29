@@ -4,13 +4,12 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 public class ResponseParser {
 
@@ -64,13 +63,7 @@ public class ResponseParser {
     }
 
     public static <T> RestResponse<T> getRestResponse(InputStream responseStream, int responseCode, Class<T> target) {
-        String inputString = null;
-
-        try {
-            inputString = IOUtils.toString(responseStream);
-        } catch (IOException e) {
-            LOGGER.error("Encountered IOException", e);
-        }
+        String inputString = convertStreamToString(responseStream);
 
         return getRestResponse(inputString, responseCode, target);
     }
@@ -83,6 +76,12 @@ public class ResponseParser {
         instance.success = false;
 
         return instance;
+    }
+
+    // from https://weblogs.java.net/blog/pat/archive/2004/10/stupid_scanner_1.html
+    private static String convertStreamToString(InputStream inputStream) {
+        Scanner s = new Scanner(inputStream, "UTF-8").useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
 }
