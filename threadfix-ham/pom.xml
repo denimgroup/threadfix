@@ -10,6 +10,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>threadfix-ham</artifactId>
 	<name>threadfix-ham</name>
+    <description>
+        HAM stands for Hybrid Analysis Mapping. The module originated in research done for DHS to
+        improve static-to-dynamic vulnerabilty matching. It is now a generalized system primarily for
+        parsing source code into Endpoint objects and performing lookups based on partial information.
+
+        This code is most easily accessed by creating an EndpointDatabase with
+        EndpointDatabaseFactory.getDatabase. The database can be searched using queries created with
+        EndpointQueryBuilder.
+    </description>
+
 	<build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
 		<sourceDirectory>src/main/java</sourceDirectory>

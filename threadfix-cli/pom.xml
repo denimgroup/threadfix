@@ -9,8 +9,22 @@
     </parent>
 
 	<artifactId>threadfix-cli</artifactId>
+    <description>
+        This module contains library classes for accessing the ThreadFix REST API.
 
-	<build>
+        The ThreadFix IDE plugins use this library to retrieve application and vulnerability
+        marker information, and in the ThreadFix scanner plugins to get endpoint information and
+        upload scans to ThreadFix applications.
+
+        The easiest way to start using the library is with the PluginClient or ThreadFixRestClient
+        classes. Both have constructors that take a PropertiesManager instance, which holds the ThreadFix
+        API key and url information. The default PropertiesManager implementation stores these properties
+        in threadfix.properties, but the ThreadFix plugins extend the default PropertiesManager class
+        to override this behavior for the target platform.
+    </description>
+
+
+    <build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>

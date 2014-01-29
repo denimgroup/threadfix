@@ -10,6 +10,12 @@
 
     <artifactId>scanner-intermediate-pom</artifactId>
     <packaging>pom</packaging>
+    <description>
+        The child modules of this pom are used to build the scanner plugins that interface with ThreadFix.
+
+        These scanner plugins can initialize a scanner's spider with a complete list of an application's
+        endpoints by using the HAM library to parse them from the source code.
+    </description>
     <name>Scanner Intermediate POM</name>
 
     <repositories>

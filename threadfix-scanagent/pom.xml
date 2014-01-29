@@ -11,7 +11,11 @@
     <groupId>threadfix-scanagent</groupId>
     <artifactId>threadfix-scanagent</artifactId>
     <name>ThreadFix Scan Agent</name>
-    <description>Scan agent for the ThreadFix application vulnerability management platform</description>
+    <description>
+        The scan agent can be used to automate the process of running scanner tools and
+        uploading the results to ThreadFix. To configure you will need to set up Scan Queue tasks
+        in ThreadFix using the remote APIs or the web UI in the Application page.
+    </description>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
