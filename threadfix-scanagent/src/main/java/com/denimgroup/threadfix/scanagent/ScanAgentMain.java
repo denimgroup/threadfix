@@ -43,24 +43,22 @@ public final class ScanAgentMain {
 		Options options = new Options();
 		
 		options.addOption(new Option("help", "Print this message" ));
-		options.addOption(new Option("printScannerOptions", "Prints available scanner type options"));
+		options.addOption(new Option("printScannerOptions", "Prints available scanner options"));
 		
-		Option runScanQueueTask = OptionBuilder.withLongOpt("runScanQueueTask")
+		Option runScanQueueTask = OptionBuilder
 				.withDescription("Request all scan queue tasks from ThreadFix server and execute them")
-				.withLongOpt("run")
 				.create("r");
 		options.addOption(runScanQueueTask);
 		
-		Option set = OptionBuilder.withLongOpt("set")
-				.withDescription("Set the ThreadFix base url, ThreadFix API key or Working directory properties")
+		Option set = OptionBuilder
+				.withDescription("Configure ThreadFix base url, ThreadFix API key and Working directory properties")
 				.create("s");
 		options.addOption(set); 
 		
-		Option configureScan = OptionBuilder.withArgName("scannerType")
+		Option configureScan = OptionBuilder.withArgName("ScannerName")
 				.withValueSeparator(' ')
 				.hasArgs(1)
-				.withLongOpt("configureScan")
-				.withDescription("Configure scan information")
+				.withDescription("Configure scanner information")
 				.create("cs");
 		options.addOption(configureScan);				
 		
