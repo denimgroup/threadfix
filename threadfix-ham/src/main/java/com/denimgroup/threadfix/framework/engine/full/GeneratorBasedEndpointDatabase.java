@@ -137,11 +137,11 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         }
 
         if (query.getHttpMethod() != null) {
-            resultSets.add(getValueOrEmptySet(query.getHttpMethod(), httpMethodMap));
+            resultSets.add(getValueOrEmptySetWithSimpleKey(query.getHttpMethod(), httpMethodMap));
         }
 
         if (query.getParameter() != null) {
-            resultSets.add(getValueOrEmptySet(query.getParameter(), parameterMap));
+            resultSets.add(getValueOrEmptySetWithSimpleKey(query.getParameter(), parameterMap));
         }
 
         if (resultSets.size() > 0) {
@@ -201,9 +201,32 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
         return results;
     }
-	
-	@NotNull
+
+    @NotNull
     private Set<Endpoint> getValueOrEmptySet(@Nullable String key,
+                                             @NotNull Map<String, Set<Endpoint>> map) {
+        if (key == null)
+            return new HashSet<>();
+
+        String keyFS = key.replace("\\","/");
+
+        for (Map.Entry<String,Set<Endpoint>> entry: map.entrySet()) {
+            String keyEntry = entry.getKey();
+            String keyEntryFS = keyEntry.replace("\\","/");
+
+            if ((keyEntry.isEmpty() && !key.isEmpty())
+                    || (key.isEmpty() && !keyEntry.isEmpty()))
+                return new HashSet<>();
+
+            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+                return new HashSet<>(entry.getValue());
+        }
+
+        return new HashSet<>();
+    }
+
+	@NotNull
+    private Set<Endpoint> getValueOrEmptySetWithSimpleKey(@Nullable String key,
                                              @NotNull Map<String, Set<Endpoint>> map) {
 		if (key != null && map.containsKey(key) && map.get(key) != null) {
 			return new HashSet<>(map.get(key));
