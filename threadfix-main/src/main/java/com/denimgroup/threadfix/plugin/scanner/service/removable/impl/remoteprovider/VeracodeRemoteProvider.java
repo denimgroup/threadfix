@@ -107,10 +107,14 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			if (buildId == null || buildId.trim().equals("")) {
 				LOG.warn("Build ID was null or empty. This should never happen.");
 				continue; // we failed.
-			} else if (parser.dateMap.get(buildId).before(remoteProviderApplication.getLastImportTime())) {
-				LOG.info("Build ID " + buildId + " was scanned before the most recent scan in ThreadFix.");
-				continue;
-			}
+            } else if (parser.dateMap.get(buildId) != null && parser.dateMap.get(buildId)
+                    .before(remoteProviderApplication.getLastImportTime())) {
+                log.info("Build ID " + buildId + " was scanned before the most recent scan in ThreadFix.");
+                continue;
+            } else if (parser.dateMap.get(buildId)== null) {
+                log.info("Build ID " + buildId + " was null.");
+                continue;
+            }
 				
 			LOG.warn("Importing scan for build ID " + buildId + " and application " + appName);
 	
