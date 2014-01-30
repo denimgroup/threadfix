@@ -129,7 +129,9 @@
 					<td class="inputValue">
 						<form:select id="projectList" path="projectName">
 							<c:if test="${ not empty application.projectName }">
-								<option value="${ application.projectName }"><c:out value="${ application.projectName }"/></option>
+								<option value="<c:out value="${ application.projectName }"/>">
+								    <c:out value="${ application.projectName }"/>
+                                </option>
 							</c:if>
 						</form:select>
 					</td>
