@@ -3,7 +3,7 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 import datetime, re
 
-env.hosts = 'localhost'
+env.hosts = ['localhost']
 #env.password = 'password'
 env.user = 'denimgroup'
 
@@ -55,11 +55,11 @@ def build_war():
 @task
 @runs_once
 def deploy_war():
-    local('sudo service tomcat7 stop')   #stop tomcat
+    sudo('service tomcat7 stop')   #stop tomcat
     with settings(warn_only=True):
-        local('sudo rm -rf %s/threadfix-2.0M1-SNAPSHOT' % (server_base_loc))
-    local('sudo mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s/threadfix.war' % (local_working_folder_loc, server_base_loc))
-    local('sudo service tomcat7 start')  #start tomcat
+        sudo('rm -rf %s/threadfix-2.0M1-SNAPSHOT' % (server_base_loc))
+    sudo('mv %s/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s/threadfix.war' % (local_working_folder_loc, server_base_loc))
+    sudo('service tomcat7 start')  #start tomcat
 
 # verifies the login page
 @task
