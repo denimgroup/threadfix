@@ -5,8 +5,8 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
-import com.denimgroup.threadfix.importer.util.ZipFileUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
-// TODO make this actually work lolololol
 @Service
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
@@ -58,14 +55,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
      */
     @Override
     public List<String[]> updateChannelVulnerabilities() throws IOException, URISyntaxException {
-
-        List<String[]> resultList = null;
-
-        try (ZipFile zipFile = getScannerPluginZipFileOrNull()) {
-            if (zipFile != null) {
-                resultList = updateAllScanners(zipFile);
-            }
-        }
+        List<String[]> resultList = updateAllScanners();
 
         updateUpdatedDate();
 
@@ -109,27 +99,37 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         defaultConfigurationDao.saveOrUpdate(config);
     }
 
-    private List<String[]> updateAllScanners(ZipFile zipFile) {
+    private List<String[]> updateAllScanners() {
 
-        List<String[]> returnValue = new ArrayList<>();
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry e = entries.nextElement();
-            if (e.getName().endsWith(".csv")) {
-                try {
-                    InputStream zis = zipFile.getInputStream(e);
-                    if (zis != null) {
-                        log.info("Start updating file " + e.getName());
-                        String[] temp = updateScanner(zis);
-                        if (temp != null)
-                            returnValue.add(temp);
+        List<String[]> scannerResults = new ArrayList<>();
+
+        File mappingsFolder = ResourceUtils.getResource("mappings");
+
+        if (mappingsFolder == null || !mappingsFolder.exists() || mappingsFolder.isFile()) {
+            throw new IllegalStateException("Mappings folder was not found. " +
+                    "This means the application was assembled incorrectly.");
+        }
+
+        File[] files = mappingsFolder.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().endsWith(".csv")) {
+                    log.info("Updating file " + file.getName());
+                    try (InputStream stream = new FileInputStream(file)) {
+                        String[] scannerUpdateResult = updateScanner(stream);
+                        if (scannerUpdateResult != null) {
+                            scannerResults.add(scannerUpdateResult);
+                        }
+                    } catch (IOException e) {
+                        log.error("Encountered IOException while trying to read from scanner CSV file.", e);
                     }
-                } catch (IOException ex) {
-                    log.error("Error when trying to read file from scanners.jar", ex);
                 }
             }
+
         }
-        return returnValue;
+
+        return scannerResults;
     }
 
     enum State { TYPE, VULNS, SEVERITIES, NONE }
@@ -340,22 +340,6 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         return channelType;
     }
 
-    private ZipFile getScannerPluginZipFileOrNull() {
-        ZipFile returnFile = null;
-
-        File file = ResourceUtils.getResource("scanners.jar");
-
-        if (file != null) {
-            try {
-                returnFile = new ZipFile(file.getAbsolutePath());
-            } catch (IOException e) {
-                log.warn("IOException encountered while trying to open a zip file.");
-            }
-        }
-
-        return returnFile;
-    }
-
     @Override
     public ScanPluginCheckBean checkPluginJar() {
         DefaultConfiguration configuration = getDefaultConfiguration();
@@ -378,17 +362,15 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     private Calendar getPluginTimestamp() {
         Calendar returnDate = null;
 
-        try (ZipFile zipFile = getScannerPluginZipFileOrNull()) {
+        try (InputStream versionFileStream = new FileInputStream(ResourceUtils.getResource("mappings/version.txt"))) {
 
-            if (zipFile != null) {
-                String result = ZipFileUtils.getFileString("version.txt", zipFile);
+            String result = IOUtils.toString(versionFileStream);
 
-                if (result != null && !result.trim().isEmpty()) {
-                    returnDate = getCalendarFromString(result.trim());
-                }
+            if (result != null && !result.trim().isEmpty()) {
+                returnDate = getCalendarFromString(result.trim());
             }
         } catch (IOException e) {
-            log.info("IOException thrown while attempting to close zip file.", e);
+            log.info("IOException thrown while attempting to read version file.", e);
         }
 
         return returnDate;
