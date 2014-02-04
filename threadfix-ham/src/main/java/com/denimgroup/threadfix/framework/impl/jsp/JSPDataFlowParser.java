@@ -23,10 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
-import java.io.File;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
@@ -35,6 +31,10 @@ import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class JSPDataFlowParser implements ParameterParser {
 	
@@ -114,7 +114,7 @@ public class JSPDataFlowParser implements ParameterParser {
 			}
 
             JSPEndpoint endpoint = jspMappings.getEndpoint(staticInformation);
-			if (endpoint != null) {
+			if (endpoint != null && codePoints != null) {
 				test = endpoint.getParameterName(codePoints);
 			}
 			
