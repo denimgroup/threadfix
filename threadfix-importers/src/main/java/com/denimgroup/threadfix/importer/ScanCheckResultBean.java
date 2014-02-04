@@ -1,8 +1,6 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.importer;
 
 import java.util.Calendar;
-
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
 
 public class ScanCheckResultBean {
 

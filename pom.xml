@@ -110,6 +110,7 @@
         <module>threadfix-entities</module>
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
+        <module>threadfix-importers</module>
         <module>threadfix-main</module>
         <module>threadfix-cli-endpoints</module>
         <module>threadfix-scanagent</module>
