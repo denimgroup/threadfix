@@ -62,7 +62,7 @@
 </table>
 <c:if test="${ canModifyVulnerabilities }">
 		<div style="margin-top:10px;margin-bottom:7px;">
-			<a id="uploadDocVulnModalLink${ vulnerability.id }" href="#uploadDocVuln${ vulnerability.id }" role="button" class="btn" data-toggle="modal">Upload</a>
+			<a id="uploadDocVulnModalLink${ vulnerability.id }" href="#uploadDocVuln${ vulnerability.id }" role="button" class="btn" data-toggle="modal">Add File</a>
 			<%@ include file="/WEB-INF/views/applications/modals/uploadDocVulnModal.jsp" %>
 		</div>	
 </c:if>
