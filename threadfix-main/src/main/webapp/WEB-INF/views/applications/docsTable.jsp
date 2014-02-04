@@ -17,7 +17,7 @@
 	<tbody id="wafTableBody">
 	<c:if test="${ empty vulnerability.documents }">
 		<tr class="bodyRow">
-			<td colspan="6" style="text-align:center;">No documents found.</td>
+			<td colspan="7" style="text-align:center;">No files found.</td>
 		</tr>
 	</c:if>
 	<c:forEach var="document" items="${ vulnerability.documents }" varStatus="status">
@@ -53,7 +53,7 @@
 					<spring:param name="appId" value="${ vulnerability.application.id }"/>
 					<spring:param name="docId" value="${ document.id }"/>
 				</spring:url>
-				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View Document</a>
+				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View File</a>
 			</td>
 			</c:if>
 		</tr>

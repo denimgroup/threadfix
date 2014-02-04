@@ -23,7 +23,7 @@
 	<tbody id="wafTableBody">
 	<c:if test="${ empty application.documents }">
 		<tr class="bodyRow">
-			<td colspan="5" style="text-align:center;">No documents found.</td>
+			<td colspan="6" style="text-align:center;">No files found.</td>
 		</tr>
 	</c:if>
 	<c:forEach var="document" items="${ application.documents }" varStatus="status">
@@ -59,7 +59,7 @@
 					<spring:param name="appId" value="${ document.application.id }"/>
 					<spring:param name="docId" value="${ document.id }"/>
 				</spring:url>
-				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View Document</a>
+				<a href="<c:out value="${ viewUrl }"/>" target="_blank">View File</a>
 			</td>
 		</tr>
 	</c:forEach>

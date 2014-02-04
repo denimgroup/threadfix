@@ -19,7 +19,7 @@
 	<tbody id="wafTableBody">
 	<c:if test="${ empty application.scans }">
 		<tr class="bodyRow">
-			<td colspan="4" style="text-align:center;">No scans found.</td>
+			<td colspan="6" style="text-align:center;">No scans found.</td>
 		</tr>
 	</c:if>
 	<c:forEach var="scan" items="${ application.scans }" varStatus="status">

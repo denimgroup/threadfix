@@ -195,8 +195,8 @@
 			<li class="pointer ${ activeDoc }">
 				<a data-toggle="tab" id="docsTabLink" onclick="javascript:switchTabs('<c:out value="${docsTabUrl }"/>');return false;">
 					${ fn:length(application.documents) } 
-					<c:if test="${ fn:length(application.documents) == 1 }">Document</c:if>
-					<c:if test="${ fn:length(application.documents) != 1 }">Documents</c:if>
+					<c:if test="${ fn:length(application.documents) == 1 }">File</c:if>
+					<c:if test="${ fn:length(application.documents) != 1 }">Files</c:if>
 				</a>
 			</li>
 			<li class="pointer">

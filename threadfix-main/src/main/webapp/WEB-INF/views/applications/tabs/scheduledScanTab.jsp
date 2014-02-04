@@ -15,6 +15,11 @@
 				</tr>
 			</thead>
 			<tbody>
+            <c:if test="${ empty application.scheduledScans }">
+                <tr class="bodyRow">
+                    <td colspan="5" style="text-align:center;">No Scheduled Scans found.</td>
+                </tr>
+            </c:if>
 				<c:forEach items="${application.scheduledScans}" var="scheduledScan" varStatus="status">
 					<tr class="bodyRow">
 						<td><c:out value="${scheduledScan.id}" /></td>
