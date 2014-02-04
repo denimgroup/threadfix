@@ -60,7 +60,7 @@ class JSPIncludeParser implements EventBasedTokenizer {
 	@NotNull
     public static Set<File> parse(@NotNull File file) {
 		JSPIncludeParser parser = new JSPIncludeParser(file);
-		EventBasedTokenizerRunner.run(file, parser);
+		EventBasedTokenizerRunner.run(file, false, parser);
 		return parser.returnFiles;
 	}
 

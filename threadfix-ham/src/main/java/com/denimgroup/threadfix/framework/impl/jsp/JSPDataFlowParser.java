@@ -63,7 +63,7 @@ public class JSPDataFlowParser implements ParameterParser {
 		String parameter = null;
 		
 		if (query.getCodePoints() != null) {
-			if (sourceCodeAccessLevel != SourceCodeAccessLevel.FULL) {
+			if (sourceCodeAccessLevel == SourceCodeAccessLevel.FULL) {
 				parameter = parseWithSource(query);
 			} else {
 				parameter = parseNoSource(query);
@@ -112,13 +112,10 @@ public class JSPDataFlowParser implements ParameterParser {
 			if (staticInformation == null && codePoints != null && codePoints.size() > 1) {
 				staticInformation = codePoints.get(0).getSourceFileName();
 			}
-			
-			if (staticInformation != null &&
-					jspMappings.getEndpoint(staticInformation) != null) {
-				JSPEndpoint endpoint = jspMappings.getEndpoint(staticInformation);
-				if (endpoint != null) {
-					test = endpoint.getParameterName(codePoints);
-				}
+
+            JSPEndpoint endpoint = jspMappings.getEndpoint(staticInformation);
+			if (endpoint != null) {
+				test = endpoint.getParameterName(codePoints);
 			}
 			
 			// if we didn't get a result, do the dumb regex parsing

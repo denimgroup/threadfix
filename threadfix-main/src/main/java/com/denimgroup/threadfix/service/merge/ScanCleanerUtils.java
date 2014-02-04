@@ -30,15 +30,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 // TODO maybe move into saveOrUpdate and call it a day
@@ -130,10 +126,12 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 					finding.getVulnerability().getFindings().add(finding);
 				}
 				finding.getVulnerability().setApplication(
-						finding.getScan().getApplication());
+                        finding.getScan().getApplication());
+
 				if (finding.getVulnerability().getId() == null) {
 					vulnerabilityDao.saveOrUpdate(finding.getVulnerability());
 				}
+                finding.getScan().getApplication().addVulnerability(finding.getVulnerability());
 
 				if ((finding.getVulnerability().getOpenTime() == null)
 						|| (finding.getVulnerability().getOpenTime()
@@ -156,7 +154,7 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 					+ "This probably means there is a bug in the ThreadFix parser.");
 		}
 	}
-	
+
 	/**
 	 * This method makes sure that the scan's findings don't have any database-incompatible field lengths
 	 * 

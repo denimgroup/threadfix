@@ -216,7 +216,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
             if ((keyEntry.isEmpty() && !key.isEmpty())
                     || (key.isEmpty() && !keyEntry.isEmpty()))
-                return new HashSet<>();
+                continue;
 
             if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
                 return new HashSet<>(entry.getValue());

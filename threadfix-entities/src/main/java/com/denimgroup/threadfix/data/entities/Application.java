@@ -546,4 +546,10 @@ public class Application extends AuditableEntity {
 
         return info;
     }
+
+    @Transient
+    public void addVulnerability(Vulnerability vuln) {
+        if (!this.getVulnerabilities().contains(vuln))
+            this.getVulnerabilities().add(vuln);
+    }
 }

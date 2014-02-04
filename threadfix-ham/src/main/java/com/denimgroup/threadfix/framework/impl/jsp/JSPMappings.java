@@ -95,7 +95,7 @@ public class JSPMappings implements EndpointGenerator {
 
             JSPIncludeParser includeParser = new JSPIncludeParser(file);
             JSPParameterParser parameterParser = new JSPParameterParser();
-            EventBasedTokenizerRunner.run(file, parameterParser, includeParser);
+            EventBasedTokenizerRunner.run(file, false, parameterParser, includeParser);
 
             addToIncludes(staticPath, includeParser.returnFiles);
 
@@ -153,14 +153,29 @@ public class JSPMappings implements EndpointGenerator {
     }
 	
 	public JSPEndpoint getEndpoint(String staticPath) {
-		
-		String key = staticPath; // TODO determine whether we need to clean or not
-		
-		if (key != null && !key.startsWith("/")) {
-			key = "/" + key;
+
+        if (staticPath == null)
+            return null;
+
+		String key = staticPath;
+        String keyFS = key.replace("\\","/");
+		if (!keyFS.startsWith("/")) {
+            keyFS = "/" + keyFS;
 		}
+
+        for (Map.Entry<String, JSPEndpoint> entry: jspEndpointMap.entrySet()) {
+            String keyEntry = entry.getKey();
+            String keyEntryFS = keyEntry.replace("\\","/");
+
+            if ((keyEntry.isEmpty() && !key.isEmpty())
+                    || (key.isEmpty() && !keyEntry.isEmpty()))
+                continue;
+
+            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+                return entry.getValue();
+        }
 		
-		return jspEndpointMap.get(key);
+		return null;
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {
