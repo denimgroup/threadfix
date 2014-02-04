@@ -17,6 +17,13 @@ public class DefaultConfiguration extends BaseEntity {
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
 	
 	private Calendar lastScannerMappingsUpdate;
+
+    public static DefaultConfiguration getInitialConfig() {
+        DefaultConfiguration config = new DefaultConfiguration();
+        config.setDefaultRoleId(1);
+        config.setGlobalGroupEnabled(true);
+        return config;
+    }
 	
 	@Column
 	public Integer getDefaultRoleId() {

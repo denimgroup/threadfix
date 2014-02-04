@@ -1,13 +1,12 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import java.util.List;
 
 @Service
 public class DefaultConfigServiceImpl implements DefaultConfigService {
@@ -21,10 +20,7 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 	public DefaultConfiguration loadCurrentConfiguration() {
 		List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();
 		if (list.size() == 0) {
-			DefaultConfiguration config = new DefaultConfiguration();
-			config.setDefaultRoleId(1);
-			config.setGlobalGroupEnabled(true);
-			return config;
+            return DefaultConfiguration.getInitialConfig();
 		}
 		
 		if (list.size() > 1) {

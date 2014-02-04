@@ -23,38 +23,37 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/scanplugin")
 public class ScanPluginController {
 
-	private ChannelVulnerabilityService channelVulnerabilityService = null;
+	private ScannerMappingsUpdaterService scannerMappingsUpdaterService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(ScanPluginController.class);
 
 	@Autowired
-	public ScanPluginController(ChannelVulnerabilityService channelVulnerabilityService) {
-		this.channelVulnerabilityService = channelVulnerabilityService;
+	public ScanPluginController(ScannerMappingsUpdaterService scannerMappingsUpdaterService) {
+		this.scannerMappingsUpdaterService = scannerMappingsUpdaterService;
 	}
 	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
 		
-		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
-        model.addAttribute("supportedScanners", channelVulnerabilityService.getSupportedScanners());
+		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
+        model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 		
 		return "scanplugin/channelVulnUpdate";
 	}
@@ -65,7 +64,7 @@ public class ScanPluginController {
 		List<String[]> channelVulnUpdateResults = new ArrayList<>();
 		
 		try {
-			channelVulnUpdateResults = channelVulnerabilityService.updateChannelVulnerabilities();
+			channelVulnUpdateResults = scannerMappingsUpdaterService.updateChannelVulnerabilities();
 		} catch (URISyntaxException e) {
             String message = "There was error when reading files.";
 			model.addAttribute("errorMessage", message);
@@ -77,9 +76,9 @@ public class ScanPluginController {
 		}
 		
 		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
-		model.addAttribute("pluginCheckBean", channelVulnerabilityService.checkPluginJar());
+		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
 		model.addAttribute("resultList", channelVulnUpdateResults);
-        model.addAttribute("supportedScanners", channelVulnerabilityService.getSupportedScanners());
+        model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 
 		log.info("Ended updating Channel Vulnerabilities");
 		return "scanplugin/channelVulnUpdate";
