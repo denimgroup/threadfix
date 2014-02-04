@@ -57,7 +57,7 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 			VULN_SUMMARY = "VulnSummary";
 
 	public NTOSpiderChannelImporter() {
-		super(ScannerType.NTO_SPIDER.getFullName());
+		super(ScannerType.NTO_SPIDER);
 	}
 
 	@Override
@@ -202,10 +202,5 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.NTO_SPIDER.getFullName();
 	}
 }

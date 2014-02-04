@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -45,11 +46,6 @@ import java.util.regex.Pattern;
  */
 class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
-	@Override
-	public String getType() {
-		return ScannerType.APPSCAN_SOURCE.getFullName();
-	}
-	
 	private static final Map<String, String> REGEX_MAP = new HashMap<>();
 	static {
 		REGEX_MAP.put("System.Data.Common.DbDataReader.get_Item", 
@@ -70,7 +66,7 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	}
 
 	public AppScanSourceChannelImporter() {
-		super(ScannerType.APPSCAN_SOURCE.getFullName());
+		super(ScannerType.APPSCAN_SOURCE);
 	}
 
 	@Override
@@ -219,7 +215,7 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
     			if (entry != null && entry.getKey() != null &&
                         line != null &&
     					line.contains(entry.getKey())) {
-    				String possibleParameter = getRegexResult(line, entry.getValue());
+    				String possibleParameter = RegexUtils.getRegexResult(line, entry.getValue());
     				if (possibleParameter != null) {
     					return possibleParameter;
     				}

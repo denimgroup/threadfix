@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -50,9 +49,8 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 		tagMap.put("name", FindingKey.CVE);
 	}
 
-	@Autowired
 	public DependencyCheckChannelImporter() {
-		super(ScannerType.MANUAL.getFullName());
+		super(ScannerType.MANUAL);
 	}
 	
 	@Override
@@ -220,10 +218,5 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.DEPENDENCY_CHECK.getFullName();
 	}
 }

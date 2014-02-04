@@ -44,11 +44,6 @@ import java.util.Map;
  */
 class ArachniChannelImporter extends AbstractChannelImporter {
 	
-	@Override
-	public String getType() {
-		return ScannerType.ARACHNI.getFullName();
-	}
-	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
 		tagMap.put("name", FindingKey.VULN_CODE);
@@ -128,7 +123,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	}
 
 	public ArachniChannelImporter() {
-		super(ScannerType.ARACHNI.getFullName());
+		super(ScannerType.ARACHNI);
 	}
 
 	@Override

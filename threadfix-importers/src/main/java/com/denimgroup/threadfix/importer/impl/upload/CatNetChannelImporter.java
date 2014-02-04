@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -47,12 +48,7 @@ import java.util.Map;
  */
 // TODO improve by running lots of scans through it and adapting
 class CatNetChannelImporter extends AbstractChannelImporter {
-	
-	@Override
-	public String getType() {
-		return ScannerType.CAT_NET.getFullName();
-	}
-	
+
 	// this hash is used to keep track of how many times a line has been parsed.
 	private Map<String, Integer> paramMap;
 
@@ -83,7 +79,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	}
 
 	public CatNetChannelImporter() {
-		super(ScannerType.CAT_NET.getFullName());
+		super(ScannerType.CAT_NET);
 
 		paramMap = new HashMap<>();
 	}
@@ -201,7 +197,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 			String regexResult = null;
 
 			while (true) {
-				regexResult = getRegexResult(editedLineText, regex);
+				regexResult = RegexUtils.getRegexResult(editedLineText, regex);
 				if (regexResult != null && editedLineText.contains(regexResult)) {
 					retVals.add(regexResult);
 					editedLineText = editedLineText.substring(editedLineText.indexOf(regexResult) + regexResult.length());

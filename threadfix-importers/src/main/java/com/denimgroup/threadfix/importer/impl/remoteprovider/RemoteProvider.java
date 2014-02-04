@@ -26,8 +26,9 @@ package com.denimgroup.threadfix.importer.impl.remoteprovider;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -43,8 +44,8 @@ import java.util.List;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
 	
-	public RemoteProvider(String channelTypeName) {
-		super(channelTypeName);
+	public RemoteProvider(ScannerType scannerType) {
+		super(scannerType);
 	}
 
 	protected final SanitizedLogger LOG = new SanitizedLogger(this.getClass());

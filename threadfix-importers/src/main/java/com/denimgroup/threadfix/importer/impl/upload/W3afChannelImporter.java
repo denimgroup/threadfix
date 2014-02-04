@@ -50,7 +50,7 @@ class W3afChannelImporter extends AbstractChannelImporter {
 	public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
 	
 	public W3afChannelImporter() {
-		super(ScannerType.W3AF.getFullName());
+		super(ScannerType.W3AF);
 	}
 
 	/*
@@ -211,10 +211,5 @@ class W3afChannelImporter extends AbstractChannelImporter {
 	    		hasDate = testDate != null;
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.W3AF.getFullName();
 	}
 }

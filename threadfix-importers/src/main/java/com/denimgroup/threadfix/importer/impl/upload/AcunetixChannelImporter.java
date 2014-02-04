@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -40,13 +41,8 @@ import org.xml.sax.SAXException;
  */
 class AcunetixChannelImporter extends AbstractChannelImporter {
 	
-	@Override
-	public String getType() {
-		return ScannerType.ACUNETIX_WVS.getFullName();
-	}
-	
 	public AcunetixChannelImporter() {
-		super(ScannerType.ACUNETIX_WVS.getFullName());
+		super(ScannerType.ACUNETIX_WVS);
 	}
 
 	String detailsPattern = "input <b><font color=\"dark\">([^<]+)</font>";
@@ -102,7 +98,7 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    	} else if (getUrlText) {
 	    		currentUrlText = getBuilderText();
 	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
-	    			String possibleString = getRegexResult(currentUrlText, pathPattern);
+	    			String possibleString = RegexUtils.getRegexResult(currentUrlText, pathPattern);
 	    			if (possibleString != null) {
 	    				currentUrlText = possibleString;
 	    			}
@@ -110,7 +106,7 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getBuilderText();
-	    		currentParameter = getRegexResult(text, detailsPattern);
+	    		currentParameter = RegexUtils.getRegexResult(text, detailsPattern);
 	    		getParamText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();

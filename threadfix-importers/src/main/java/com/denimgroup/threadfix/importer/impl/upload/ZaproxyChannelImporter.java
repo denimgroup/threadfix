@@ -60,7 +60,7 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	}
 
 	public ZaproxyChannelImporter() {
-		super(ScannerType.ZAPROXY.getFullName());
+		super(ScannerType.ZAPROXY);
 	}
 
 	@Override
@@ -291,10 +291,5 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.ZAPROXY.getFullName();
 	}
 }

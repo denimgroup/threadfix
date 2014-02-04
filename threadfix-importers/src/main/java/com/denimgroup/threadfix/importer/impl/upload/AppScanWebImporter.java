@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -43,13 +44,8 @@ import java.util.Map;
  */
 class AppScanWebImporter extends AbstractChannelImporter {
 
-	@Override
-	public String getType() {
-		return ScannerType.APPSCAN_DYNAMIC.getFullName();
-	}
-	
 	public AppScanWebImporter() {
-		super(ScannerType.APPSCAN_DYNAMIC.getFullName());
+		super(ScannerType.APPSCAN_DYNAMIC);
 	}
 
 	/*
@@ -241,7 +237,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    	} else if ("OriginalHttpTraffic".equals(qName)) {
 	    		if (date == null) {
-	    			date = attemptToParseDateFromHTTPResponse(requestText);
+	    			date = DateUtils.attemptToParseDateFromHTTPResponse(requestText);
 	    		}
 	    		currentHttpMethod = parseHttpMethodFromHttpResponse(requestText);
 	    		grabDate = false;
@@ -335,7 +331,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    	}
 	    	
 	    	if (!hasDate && "OriginalHttpTraffic".equals(qName)) {
-	    		testDate = attemptToParseDateFromHTTPResponse(requestText);
+	    		testDate = DateUtils.attemptToParseDateFromHTTPResponse(requestText);
 	    		grabDate = false;
 	    		if (testDate != null)
 	    			hasDate = true;

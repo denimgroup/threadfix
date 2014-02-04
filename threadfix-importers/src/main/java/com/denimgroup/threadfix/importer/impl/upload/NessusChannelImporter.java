@@ -31,7 +31,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -76,9 +76,8 @@ class NessusChannelImporter extends AbstractChannelImporter {
 		PARAM_PARSE_MAP.put("26194", INPUT_NAME_COLON_PARAM_REGEX);
 	}
 
-	@Autowired
 	public NessusChannelImporter() {
-		super(ScannerType.NESSUS.getFullName());
+		super(ScannerType.NESSUS);
 	}
 
 	@Override
@@ -188,8 +187,8 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    				continue;
 	    			}
 	    			
-	    			param = getRegexResult(line,infoLineParamRegex);
-	    			path = getRegexResult(line,infoLinePathRegex);
+	    			param = RegexUtils.getRegexResult(line, infoLineParamRegex);
+	    			path = RegexUtils.getRegexResult(line,infoLinePathRegex);
 	    			
 	    			if (path != null && host != null && !path.startsWith("http"))
 	    				path = host + path;
@@ -341,10 +340,5 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.NESSUS.getFullName();
 	}
 }

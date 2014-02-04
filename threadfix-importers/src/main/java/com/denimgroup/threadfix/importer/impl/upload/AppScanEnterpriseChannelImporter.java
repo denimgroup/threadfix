@@ -44,12 +44,7 @@ import java.util.Map;
  * @author mcollins
  */
 class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
-	
-	@Override
-	public String getType() {
-		return ScannerType.APPSCAN_ENTERPRISE.getFullName();
-	}
-	
+
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
 		tagMap.put("issue_type_name", FindingKey.VULN_CODE);
@@ -60,9 +55,9 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	}
 
 	public AppScanEnterpriseChannelImporter() {
-		super(ScannerType.APPSCAN_DYNAMIC.getFullName());
+		super(ScannerType.APPSCAN_DYNAMIC);
 	}
-	
+
 	/**
 	 * This is added so we can use retrieveByName on the AppScan vulnerability mappings.
 	 */

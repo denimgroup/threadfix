@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -49,7 +50,7 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	private String bestPractices = "Best Practices";
 		
 	public WebInspectChannelImporter() {
-		super(ScannerType.WEBINSPECT.getFullName());
+		super(ScannerType.WEBINSPECT);
 	}
 
 	/*
@@ -195,7 +196,7 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if (grabDate && "RawResponse".equals(qName)) {
 	    		grabDate = false;
-	    		date = attemptToParseDateFromHTTPResponse(currentResponseText);
+	    		date = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
 	    		currentResponseText = "";
 	    	}
 	    }
@@ -269,7 +270,7 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if (!hasDate && grabDate && "RawResponse".equals(qName)) {
 	    		grabDate = false;
-	    		testDate = attemptToParseDateFromHTTPResponse(currentResponseText);
+	    		testDate = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
 	    		hasDate = testDate != null;
 	    		currentResponseText = "";
 	    		if (hasDate && hasFindings && correctFormat) {
@@ -285,10 +286,5 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.WEBINSPECT.getFullName();
 	}
 }

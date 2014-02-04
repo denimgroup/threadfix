@@ -39,11 +39,6 @@ import java.util.*;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
-	@Override
-	public String getType() {
-		return ScannerType.VERACODE.getFullName();
-	}
-	
 	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
 	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 	
@@ -55,7 +50,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	private String username = null;
 
 	public VeracodeRemoteProvider() {
-		super(ScannerType.VERACODE.getFullName());
+		super(ScannerType.VERACODE);
 	}
 
 	@Override

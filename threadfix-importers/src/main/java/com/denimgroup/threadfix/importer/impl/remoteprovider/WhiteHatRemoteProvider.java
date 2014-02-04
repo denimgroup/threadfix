@@ -45,10 +45,6 @@ import java.util.*;
 
 public class WhiteHatRemoteProvider extends RemoteProvider {
 
-	@Override
-	public String getType() {
-		return ScannerType.SENTINEL.getFullName();
-	}
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
 	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
 	private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_site=";
@@ -59,7 +55,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
 	public WhiteHatRemoteProvider() {
-		super(ScannerType.SENTINEL.getFullName());
+		super(ScannerType.SENTINEL);
 	}
 
 	@Override

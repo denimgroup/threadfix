@@ -90,5 +90,26 @@ public class DateUtils {
 
         return result;
     }
+
+    /**
+     *
+     * HTTP traffic all follows a pattern, so if you can see an HTTP response then you
+     * can parse out the date the request was made. This method does that.
+     * @param httpTrafficString
+     * @return
+     */
+    public static Calendar attemptToParseDateFromHTTPResponse(String httpTrafficString) {
+        if (httpTrafficString == null) {
+            return null;
+        }
+
+        String dateString = RegexUtils.getRegexResult(httpTrafficString, "Date: ([^\n]+)");
+
+        if (dateString != null && !dateString.isEmpty()) {
+            return DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
+        } else {
+            return null;
+        }
+    }
 	
 }

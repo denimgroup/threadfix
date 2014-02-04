@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -48,11 +49,6 @@ import java.util.HashMap;
  */
 class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
-	@Override
-	public String getType() {
-		return ScannerType.BURPSUITE.getFullName();
-	}
-	
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
@@ -65,7 +61,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	}
 
 	public BurpSuiteChannelImporter() {
-		super(ScannerType.BURPSUITE.getFullName());
+		super(ScannerType.BURPSUITE);
 		
 		doSAXExceptionCheck = false;
 	}
@@ -171,8 +167,8 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getUrlText) {
 	    		currentUrlText = getBuilderText();
 	    		if (currentUrlText != null) {
-		    		currentParameter = getRegexResult(currentUrlText, "\\[(.*) parameter\\]");
-		    		currentUrlText = getRegexResult(currentUrlText, "^([^\\[]+)");
+		    		currentParameter = RegexUtils.getRegexResult(currentUrlText, "\\[(.*) parameter\\]");
+		    		currentUrlText = RegexUtils.getRegexResult(currentUrlText, "^([^\\[]+)");
 		    		if (currentUrlText != null)
 		    			currentUrlText = currentUrlText.trim();
 		    	}
@@ -194,7 +190,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		
 	    		if (tempURL != null && tempURL.contains("=") 
 	    				&& tempURL.indexOf('=') == tempURL.lastIndexOf('=')) {
-	    			currentBackupParameter = getRegexResult(tempURL, "\\?(.*?)=");
+	    			currentBackupParameter = RegexUtils.getRegexResult(tempURL, "\\?(.*?)=");
 	    		}
 	    		
 	    		getBackupParameter = false;

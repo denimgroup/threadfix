@@ -46,13 +46,7 @@ public interface ChannelImporter {
 	 */
 	@Transactional
 	Scan parseInput();
-	
-	/**
-	 * This method should return the ChannelType name
-	 * @return
-	 */
-	String getType();
-	
+
 	/**
 	 * Before files go on the queue, they need to be checked to make sure they are valid.
 	 * 

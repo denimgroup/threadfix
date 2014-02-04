@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
@@ -104,7 +105,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	}
 	
 	public FortifyChannelImporter() {
-		super(ScannerType.FORTIFY.getFullName());
+		super(ScannerType.FORTIFY);
 		doSAXExceptionCheck = false;
 	}
 
@@ -376,8 +377,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	    				String line = snippetMap.get(dataFlowElementMap.snippet);
 	    				
 	    				if (FACT_REGEX_MAP.containsKey(dataFlowElementMap.fact)) {
-	    					currentParameter = getRegexResult(line, 
-	    							FACT_REGEX_MAP.get(dataFlowElementMap.fact));
+	    					currentParameter = RegexUtils.getRegexResult(line,                                    FACT_REGEX_MAP.get(dataFlowElementMap.fact));
 	    				}
 	    				
 	    				// Try to get it out by simply looking at the column and grabbing 
@@ -390,7 +390,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	    						if (currentParameter == null) {
 	        						currentParameter = fragment.trim().replaceFirst("\\);$", "");
 	        						if (!currentParameter.equals(
-	        								getRegexResult(currentParameter, "^([a-zA-Z_0-9]+)$"))) {
+	        								RegexUtils.getRegexResult(currentParameter, "^([a-zA-Z_0-9]+)$"))) {
 	        							currentParameter = null;
 	        						}
 	        					}
@@ -422,7 +422,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 					}
 					
 					if (!paramParsed && dataFlowElementMap.snippet != null) {
-						lastLineVariable = getRegexResult(snippetMap.get(dataFlowElementMap.snippet), "^([^=]+)=");
+						lastLineVariable = RegexUtils.getRegexResult(snippetMap.get(dataFlowElementMap.snippet), "^([^=]+)=");
 						if (lastLineVariable != null) {
 							lastLineVariable = lastLineVariable.trim();
 						}
@@ -449,12 +449,12 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 			
 			String parameter = null;
 			
-			String functionName = getRegexResult(action, "^([^?\\(\\[]*)");
+			String functionName = RegexUtils.getRegexResult(action, "^([^?\\(\\[]*)");
 			if (functionName == null){
 				return null;
 			}
 			
-			String argument = getRegexResult(action, functionName + "\\(\"?([^\"]+\"?)\\)");
+			String argument = RegexUtils.getRegexResult(action, functionName + "\\(\"?([^\"]+\"?)\\)");
 			
 			if ("main".equals(functionName)) {
 				paramParsed = true;
@@ -469,7 +469,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 
 			boolean isObjectOfCall = argument.startsWith("this");
 			
-			String strippedNumbers = getRegexResult(argument, "^([0-9]+)");
+			String strippedNumbers = RegexUtils.getRegexResult(argument, "^([0-9]+)");
 			
 			if (argument.contains(" : return")) {
 				tookOutReturn = true;
@@ -480,11 +480,11 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 			if (argument != null) {
 				
 				if (SPECIAL_REGEX_MAP.containsKey(functionName)) {
-					parameter = getRegexResult(line,SPECIAL_REGEX_MAP.get(functionName));
+					parameter = RegexUtils.getRegexResult(line, SPECIAL_REGEX_MAP.get(functionName));
 				}
 				
 				if (parameter == null && isObjectOfCall) {
-					parameter = getRegexResult(line, "([a-zA-Z0-9_\\[]+\\]?)\\." + functionName);
+					parameter = RegexUtils.getRegexResult(line, "([a-zA-Z0-9_\\[]+\\]?)\\." + functionName);
 				} else if (number != -1) {
 					if (line.contains(functionName)) {
 						String commas = "";
@@ -494,11 +494,11 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 						
 						String paramRegex = "([^,\\)]+)";
 						
-						parameter = getRegexResult(line, functionName + "\\(" + commas + paramRegex);
+						parameter = RegexUtils.getRegexResult(line, functionName + "\\(" + commas + paramRegex);
 						
 						if (tookOutReturn) {
-							String testParameter = getRegexResult(parameter, 
-									"\\([ ]*([a-zA-Z0-9_]+)(?:\\.Text)?[ ]*\\)?$");
+							String testParameter = RegexUtils.getRegexResult(parameter,
+                                    "\\([ ]*([a-zA-Z0-9_]+)(?:\\.Text)?[ ]*\\)?$");
 							if (testParameter != null) {
 								parameter = testParameter;
 							}
@@ -511,7 +511,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 							regex = "[^\\+]*\\+" + regex;
 						}
 						regex = "^[^=]+= ?" + regex;
-						String result = getRegexResult(line,regex);
+						String result = RegexUtils.getRegexResult(line, regex);
 						
 						if (result != null && !result.startsWith("\"")
 								&& !result.trim().equals("")) {
@@ -529,13 +529,13 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 			
 			// This section checks to see if the result is a call to getParameter()
 			// if it is, then we can get a valid web parameter out of it.
-			String requestParameter = getRegexResult(parameter, 
-					".getParameter\\(\"?([a-zA-Z0-9_]+)\"?\\)");
+			String requestParameter = RegexUtils.getRegexResult(parameter,
+                    ".getParameter\\(\"?([a-zA-Z0-9_]+)\"?\\)");
 			
 			// also try GET[] or POST[]
 			if (requestParameter == null) {
-				requestParameter = getRegexResult(parameter, 
-				"(?:GET|POST)\\[\"([a-zA-Z0-9_]+)\"\\]");
+				requestParameter = RegexUtils.getRegexResult(parameter,
+                        "(?:GET|POST)\\[\"([a-zA-Z0-9_]+)\"\\]");
 			}
 			
 			if (requestParameter != null && !requestParameter.trim().equals("")) {
@@ -872,10 +872,5 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 				this.action = other.action;
 
 		}
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.FORTIFY.getFullName();
 	}
 }

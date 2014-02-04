@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -74,7 +76,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 	private Calendar date;
 		
 	public SkipfishChannelImporter() {
-		super(ScannerType.SKIPFISH.getFullName());
+		super(ScannerType.SKIPFISH);
 	}
 
 	/*
@@ -251,7 +253,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 				if (extraObject != null && extraObject instanceof String) {
 					if (((String) extraObject).startsWith("response suggests arithmetic evaluation on server side")) {
 						if (((String) url).contains("-") && ((String) url).contains("?"))
-							param = getRegexResult((String) url, REGEX_START + "-");
+							param = RegexUtils.getRegexResult((String) url, REGEX_START + "-");
 					}
 				}
 				
@@ -259,7 +261,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 					for (int index = 0; index < SKIPFISH_PAYLOADS.length; index ++) {
 						// If it has the payload, find the correct parameter and save it.
 						if (param == null && ((String) url).contains(SKIPFISH_PAYLOADS[index]))
-							param = getRegexResult((String) url, REGEX_START + SKIPFISH_PAYLOAD_REGEXES[index]);
+							param = RegexUtils.getRegexResult((String) url, REGEX_START + SKIPFISH_PAYLOAD_REGEXES[index]);
 					}
 					path = ((String) url).substring(0, ((String) url).indexOf('?'));
 				} else if (zipFile != null && param == null)
@@ -389,7 +391,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 			log.warn("Closing an inputStream failed in attemptToParseDate() in SkipfishChannelImporter.", e);
 		}
 		
-		date = attemptToParseDateFromHTTPResponse(responseString);
+		date = DateUtils.attemptToParseDateFromHTTPResponse(responseString);
 		return date;
 	}
 	
@@ -410,7 +412,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 			log.warn("Closing an inputStream failed in attemptToParseHostFromHTMLRequest() in SkipfishChannelImporter.", e);
 		}
 		
-		return getRegexResult(requestString, "Host: ([^\\n\\r]+)");
+		return RegexUtils.getRegexResult(requestString, "Host: ([^\\n\\r]+)");
 	}
 	
 	private String getStringFromInputStream(InputStream stream) {
@@ -512,10 +514,5 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 				}
 			}
 		}
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.SKIPFISH.getFullName();
 	}
 }

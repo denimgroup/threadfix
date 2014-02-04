@@ -53,7 +53,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
 
 	public SSVLChannelImporter() {
-		super(ScannerType.MANUAL.getFullName());
+		super(ScannerType.MANUAL);
 	}
 
 	@Override
@@ -255,10 +255,5 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	    	hasVulnerabilitiesTag = true;
 	    	testDate = DateUtils.getCalendarFromString(DATE_PATTERN, atts.getValue("ExportTimestamp"));
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.MANUAL.getFullName();
 	}
 }

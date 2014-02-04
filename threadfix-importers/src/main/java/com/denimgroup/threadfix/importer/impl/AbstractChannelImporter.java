@@ -105,12 +105,18 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
     @Autowired
 	protected GenericVulnerabilityDao genericVulnerabilityDao;
 
-	public AbstractChannelImporter(@NotNull String channelTypeName) {
-        if (channelTypeDao == null) {
-            throw new IllegalStateException("Programming error: Spring is configured incorrectly.");
+    protected String channelTypeCode;
+
+	public AbstractChannelImporter(@NotNull ScannerType channelTypeName) {
+	    this.channelTypeCode = channelTypeName.getFullName();
+    }
+
+    protected ChannelType getChannelType() {
+        if (channelType == null) {
+            channelType = channelTypeDao.retrieveByName(channelTypeCode);
         }
-		this.channelType = channelTypeDao.retrieveByName(channelTypeName);
-	}
+        return channelType;
+    }
 
 	protected String inputFileName;
 	
@@ -183,13 +189,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			log.warn("Zip file deletion failed, calling deleteOnExit()");
 			diskZipFile.deleteOnExit();
 		}
-	}
-
-	/**
-	 * @param channelTypeCode
-	 */
-	protected void setChannelType(String channelTypeCode) {
-		channelType = channelTypeDao.retrieveByName(channelTypeCode);
 	}
 
 	/**
@@ -346,7 +345,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
                 // Create new Channel Vulnerability
                 if (channelVulnerability == null) {
                     channelVulnerability = new ChannelVulnerability();
-                    channelVulnerability.setChannelType(this.channelType);
+                    channelVulnerability.setChannelType(getChannelType());
                     channelVulnerability.setCode(channelVulnerabilityCode);
                     channelVulnerability.setName(channelVulnerabilityCode);
                     channelVulnerability.setFindings(Arrays.asList(finding));
@@ -361,7 +360,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
             }
         } else if (channelVulnerability == null) {
             channelVulnerability = new ChannelVulnerability();
-            channelVulnerability.setChannelType(this.channelType);
+            channelVulnerability.setChannelType(getChannelType());
             channelVulnerability.setCode(channelVulnerabilityCode);
             channelVulnerability.setName(channelVulnerabilityCode);
             channelVulnerability.setFindings(Arrays.asList(finding));
@@ -379,32 +378,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		return finding;
     }
 
-	/**
-	 * Utility to prevent declaring a bunch of Matchers and Patterns.
-	 * 
-	 * @param targetString
-	 * @param regex
-	 * @return result of applying Regex
-	 */
-	protected String getRegexResult(String targetString, String regex) {
-		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
-			log.warn("getRegexResult got null or empty input.");
-			return null;
-		}
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(targetString);
-
-		if (matcher.find()) {
-			return matcher.group(1);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * @param stream
-	 */
 	protected void closeInputStream(InputStream stream) {
 		if (stream != null) {
 			try {
@@ -419,14 +392,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * If the channelType is set and the severity code is in the DB this method
 	 * will pull it up.
 	 * 
-	 * @param code
 	 * @return the correct severity from the DB.
 	 */
 	protected ChannelSeverity getChannelSeverity(String code) {
-        // Will need to reload channelType again if this channelType is new
-        if (channelType == null)
-            channelType = channelTypeDao.retrieveByName(getType());
-        if (channelType == null || code == null || channelSeverityDao == null) {
+        if (getChannelType() == null || code == null || channelSeverityDao == null) {
 			return null;
 		}
 
@@ -436,7 +405,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 
 		ChannelSeverity severity = channelSeverityMap.get(code);
 		if (severity == null) {
-			severity = channelSeverityDao.retrieveByCode(channelType, code);
+			severity = channelSeverityDao.retrieveByCode(getChannelType(), code);
 			if (severity != null) {
 				channelSeverityMap.put(code, severity);
 			}
@@ -454,10 +423,7 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 */
 
 	protected ChannelVulnerability getChannelVulnerability(String code) {
-        // Will need to reload channelType again if this channelType is new
-        if (channelType == null)
-            channelType = channelTypeDao.retrieveByName(getType());
-        if (channelType == null || code == null || channelVulnerabilityDao == null) {
+        if (getChannelType() == null || code == null || channelVulnerabilityDao == null) {
 			return null;
 		}
 		
@@ -472,16 +438,16 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		if (channelVulnerabilityMap.containsKey(code)) {
 			return channelVulnerabilityMap.get(code);
 		} else {
-			ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByCode(channelType, code);
+			ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByCode(getChannelType(), code);
 			if (vuln == null) {
-				if (channelType != null) {
-					log.warn("A " + channelType.getName() + " channel vulnerability with code "
+				if (getChannelType() != null) {
+					log.warn("A " + getChannelType().getName() + " channel vulnerability with code "
 						+ StringEscapeUtils.escapeHtml4(code) + " was requested but not found.");
 				}
 				return null;
 			} else {
 				if (channelVulnerabilityDao.hasMappings(vuln.getId())) {
-					log.info("The " + channelType.getName() + " channel vulnerability with code "
+					log.info("The " + getChannelType().getName() + " channel vulnerability with code "
 						+ StringEscapeUtils.escapeHtml4(code) + " has no generic mapping.");
 				}
 			}
@@ -698,26 +664,4 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		
 		return ScanImportStatus.SUCCESSFUL_SCAN;
 	}
-
-	/**
-	 * 
-	 * HTTP traffic all follows a pattern, so if you can see an HTTP response then you
-	 * can parse out the date the request was made. This method does that.
-	 * @param httpTrafficString
-	 * @return
-	 */
-	protected Calendar attemptToParseDateFromHTTPResponse(String httpTrafficString) {
-		if (httpTrafficString == null) {
-			return null;
-		}
-		
-		String dateString = getRegexResult(httpTrafficString, "Date: ([^\n]+)");
-		
-		if (dateString != null && !dateString.isEmpty()) {
-			return DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss zzz", dateString);
-		} else {
-			return null;
-		}
-	}
-
 }

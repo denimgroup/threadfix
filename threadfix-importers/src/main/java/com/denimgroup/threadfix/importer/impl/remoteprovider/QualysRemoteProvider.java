@@ -138,7 +138,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	}
 	
 	public QualysRemoteProvider() {
-		super(ScannerType.QUALYSGUARD_WAS.getFullName());
+		super(ScannerType.QUALYSGUARD_WAS);
 	}
 
 	@Override

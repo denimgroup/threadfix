@@ -25,11 +25,6 @@ import java.util.*;
  */
 class BrakemanChannelImporter extends AbstractChannelImporter {
 
-	@Override
-	public String getType() {
-		return ScannerType.BRAKEMAN.getFullName();
-	}
-	
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
@@ -67,7 +62,7 @@ class BrakemanChannelImporter extends AbstractChannelImporter {
 	}
 
 	public BrakemanChannelImporter() {
-		super(ScannerType.BRAKEMAN.getFullName());
+		super(ScannerType.BRAKEMAN);
 	}
 	
 	public Calendar getDate(String jsonString) {

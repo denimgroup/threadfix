@@ -50,17 +50,8 @@ import java.util.Locale;
  */
 class CheckMarxChannelImporter extends AbstractChannelImporter {
 
-    public static void main(String[] args) {
-        System.out.println(DateUtils.getCalendarFromString(format, "17-Dec-2013 10:39"));
-    }
+    public static final String ROOT_NODE_NAME = "CxXMLResults";
 
-    @Override
-    public String getType() {
-        return SCANNER_NAME;
-    }
-
-    public static final String SCANNER_NAME = ScannerType.CHECKMARX.getFullName(),
-            ROOT_NODE_NAME = "CxXMLResults";
     private static final String SCAN_START = "ScanStart",
             VERSION_ATTRIBUTE = "CheckmarxVersion",
             NAME_ATTRIBUTE = "name",
@@ -79,7 +70,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
     static final SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm", Locale.US);
 
     public CheckMarxChannelImporter() {
-        super(SCANNER_NAME);
+        super(ScannerType.CHECKMARX);
     }
 
     @Override

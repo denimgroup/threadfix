@@ -46,7 +46,7 @@ import java.util.Calendar;
 class NetsparkerChannelImporter extends AbstractChannelImporter {
 
 	public NetsparkerChannelImporter() {
-		super(ScannerType.NETSPARKER.getFullName());
+		super(ScannerType.NETSPARKER);
 	}
 
 	/*
@@ -194,11 +194,6 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		throw new SAXException(FILE_CHECK_COMPLETED);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.NETSPARKER.getFullName();
 	}
 
     private Calendar getCalendar(String dateString) {

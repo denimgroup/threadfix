@@ -45,7 +45,7 @@ import java.util.List;
 class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	public FindBugsChannelImporter() {
-		super(ScannerType.FINDBUGS.getFullName());
+		super(ScannerType.FINDBUGS);
 	}
 
 	@Override
@@ -239,10 +239,5 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		throw new SAXException(FILE_CHECK_COMPLETED);
 	    	}
 	    }
-	}
-
-	@Override
-	public String getType() {
-		return ScannerType.FINDBUGS.getFullName();
 	}
 }
