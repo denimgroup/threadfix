@@ -30,24 +30,19 @@ public final class ScanUtils {
 	public static boolean isBadXml(InputStream inputStream) {
 		try {
 			readSAXInput(new DefaultHandler(), inputStream);
-		} catch (SAXException e) {
-			STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage());
-			return true;
-		} catch (IOException e) {
-			STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage());
-			return true;
+            return false;
+		} catch (SAXException | IOException e) {
+			STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
 		} finally {
 			closeInputStream(inputStream);
 		}
 
-		return false;
+		return true;
 	}
 	
 	/**
 	 * This method with one argument sets up the SAXParser and inputStream correctly
 	 * and executes the parsing. With two it adds a completion code and exception handling.
-	 * @param handler
-	 * @param completionCode
 	 */
 	public static void readSAXInput(DefaultHandler handler, String completionCode, InputStream stream) {
 		try {

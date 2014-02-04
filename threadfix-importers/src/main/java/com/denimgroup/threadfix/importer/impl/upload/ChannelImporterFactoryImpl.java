@@ -55,6 +55,10 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
             case VERACODE:
         }
 
+        if (channelImporter != null) {
+            channelImporter.setChannel(applicationChannel);
+        }
+
         return channelImporter;
     }
 

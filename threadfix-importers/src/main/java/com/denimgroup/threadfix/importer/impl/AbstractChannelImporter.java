@@ -153,7 +153,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			this.inputStream = new FileInputStream(fileName);
 			this.inputFileName = new File(fileName).getAbsolutePath();
 		} catch (FileNotFoundException e) {
-			log.warn("It appears that the scan file did not save correctly and is therefore not available to the scan file parser",e);
+			log.warn("It appears that the scan file did not save correctly and is " +
+                    "therefore not available to the scan file parser", e);
 		}
 	}
 	
@@ -545,10 +546,8 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 			vulnName = finding.getChannelVulnerability().getName();
 		}
 
-		String nativeId = hashFindingInfo(vulnName, finding.getSurfaceLocation().getPath(), finding
+		return hashFindingInfo(vulnName, finding.getSurfaceLocation().getPath(), finding
 				.getSurfaceLocation().getParameter());
-		
-		return nativeId;
 	}
 	
 	/**

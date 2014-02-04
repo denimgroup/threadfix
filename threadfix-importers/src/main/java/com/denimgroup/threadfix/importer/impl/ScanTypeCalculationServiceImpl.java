@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.importer.util.ZipFileUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.Attributes;
@@ -52,29 +53,42 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	
 	private final SanitizedLogger log = new SanitizedLogger(ScanTypeCalculationService.class);
 
+    public static final String TEMP_FILE_NAME = "tempFile";
+
+    @Autowired
 	private ApplicationDao applicationDao;
+    @Autowired
 	private ApplicationChannelDao applicationChannelDao;
+    @Autowired
 	private ChannelTypeDao channelTypeDao;
-	private boolean loadedDaos = false;
-	
+
 	private String getScannerType(MultipartFile file) {
-		
-		String returnString = null;
-		saveFile("tempFile",file);
-		
-		if (ScanUtils.isZip("tempFile")) {
-			returnString = figureOutZip("tempFile");
-		} else if (file.getOriginalFilename().endsWith("json")){
-			//probably brakeman
-			returnString = ScannerType.BRAKEMAN.getFullName();
-		} else {
-			returnString = figureOutXml("tempFile");
-		}
-		
-		deleteFile("tempFile");
-		
-		return returnString;
+
+		saveFile(TEMP_FILE_NAME,file);
+
+        String returnValue = getScannerType(file.getOriginalFilename(), TEMP_FILE_NAME);
+
+        deleteFile(TEMP_FILE_NAME);
+
+        return returnValue;
 	}
+
+    // package access is for testing
+    // the two arguments are needed to reconcile MultipartFile / File difference
+    String getScannerType(String originalName, String fileName) {
+        String returnString = null;
+
+        if (ScanUtils.isZip(fileName)) {
+            returnString = figureOutZip(fileName);
+        } else if (originalName.endsWith("json")){
+            //probably brakeman
+            returnString = ScannerType.BRAKEMAN.getFullName();
+        } else {
+            returnString = figureOutXml(fileName);
+        }
+
+        return returnString;
+    }
 	
 	// We currently only have zip files for skipfish and fortify
 	// if we support a few more it would be worth a more modular style
@@ -117,7 +131,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.APPSCAN_DYNAMIC.getFullName(), "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
 		addToMap(ScannerType.ARACHNI.getFullName(), "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
 		addToMap(ScannerType.BURPSUITE.getFullName(), "issues", "issue", "serialNumber", "type", "name", "host", "path");
-		addToMap(ScannerType.NETSPARKER.getFullName(), "netsparker", "target", "url", "scantime", "vulnerability", "url", "type", "severity");
+		addToMap(ScannerType.NETSPARKER.getFullName(), "netsparker");
 		addToMap(ScannerType.CAT_NET.getFullName(), "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
 		addToMap(ScannerType.W3AF.getFullName(), "w3afrun");
 		addToMap(ScannerType.NESSUS.getFullName(), "NessusClientData_v2");
