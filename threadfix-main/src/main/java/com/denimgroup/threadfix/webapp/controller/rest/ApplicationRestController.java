@@ -1,33 +1,21 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.DocumentService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.ScanParametersService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/rest/applications")

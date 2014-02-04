@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -38,7 +37,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-@PluginImplementation
 public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override

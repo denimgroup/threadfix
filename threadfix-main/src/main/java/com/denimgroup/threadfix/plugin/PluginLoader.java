@@ -1,14 +1,14 @@
 package com.denimgroup.threadfix.plugin;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.ResourceUtils;
+import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
+
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
 
 public class PluginLoader {
 	

@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.importer.impl.remoteprovider;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;

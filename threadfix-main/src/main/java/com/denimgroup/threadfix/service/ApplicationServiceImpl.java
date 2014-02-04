@@ -23,15 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.*;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
+import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.webapp.controller.TableSortBean;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,27 +38,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.DefectDao;
-import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
-import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.WafDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.webapp.controller.TableSortBean;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = false)

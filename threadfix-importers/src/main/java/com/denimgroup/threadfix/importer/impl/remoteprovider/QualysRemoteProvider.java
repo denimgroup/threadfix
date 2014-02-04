@@ -24,9 +24,8 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.DateUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -45,10 +44,8 @@ import java.util.*;
  * @author mcollins
  *
  */
-@PluginImplementation
 public class QualysRemoteProvider extends RemoteProvider {
 	
-	@Override
 	public String getType() {
 		return ScannerType.QUALYSGUARD_WAS.getFullName();
 	}

@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugin.scanner;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.importer.util.DateUtils;
+import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.junit.Test;
-
-import com.denimgroup.threadfix.plugin.scanner.service.util.DateUtils;
+import static org.junit.Assert.assertTrue;
 
 public class DateUtilsParsingTests {
 

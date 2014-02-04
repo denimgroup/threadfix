@@ -23,11 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+
 import java.util.Calendar;
 import java.util.List;
-
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 
 /**
  * @author bbeverly
@@ -57,7 +57,6 @@ public interface ScanService {
 	 * 
 	 * @param channelId
 	 * @param fileName
-	 * @param queueSender
 	 */
 	void addFileToQueue(Integer channelId, String fileName, Calendar calendar);
 	
@@ -73,7 +72,6 @@ public interface ScanService {
 	/**
 	 * 
 	 * @param channelId
-	 * @param file
 	 * @return
 	 */
 	Integer saveEmptyScanAndGetId(Integer channelId, String fileName);
@@ -121,7 +119,6 @@ public interface ScanService {
 	int getScanCount();
 	
 	/**
-	 * @param authenticatedAppIds 
 	 */
 	List<Scan> getTableScans(Integer page);
 

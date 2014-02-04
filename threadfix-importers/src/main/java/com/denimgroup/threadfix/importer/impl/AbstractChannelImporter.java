@@ -28,16 +28,16 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.ChannelImporter;
-import com.denimgroup.threadfix.importer.DaoHolder;
-import com.denimgroup.threadfix.importer.ScanCheckResultBean;
-import com.denimgroup.threadfix.importer.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ChannelImporter;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -55,7 +55,10 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
- * 
+ *
+ * WARNING: Do not reference this class outside of this plugin. It is subject to change
+ * without notice.
+ *
  * This class has a lot of methods that reduce code duplication and make writing
  * new importers much easier. The convenience methods are SAX-based.
  * To quickly write a new SAX importer, subclass DefaultHandler and pass a new instance
@@ -93,25 +96,20 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	protected Map<String, ChannelSeverity> channelSeverityMap;
 	protected Map<String, ChannelVulnerability> channelVulnerabilityMap;
 
+    @Autowired
 	protected ChannelVulnerabilityDao channelVulnerabilityDao;
+    @Autowired
 	protected ChannelSeverityDao channelSeverityDao;
+    @Autowired
 	protected ChannelTypeDao channelTypeDao;
+    @Autowired
 	protected GenericVulnerabilityDao genericVulnerabilityDao;
-	
-	/**
-	 * This constructor wires genericVulnerabilityDao, channelTypeDao, channelVulnerabilityDao, and channelSeverityDao.
-	 * It also wires the appropriate channelType object. Subclasses just need to pass the name of the channel.
-	 * @param channelTypeName
-	 */
+
 	public AbstractChannelImporter(@NotNull String channelTypeName) {
-		DaoHolder daoHolder = new DaoHolder();
-		
-		this.genericVulnerabilityDao = daoHolder.genericVulnerabilityDao;
-		this.channelTypeDao = daoHolder.channelTypeDao;
-		this.channelVulnerabilityDao = daoHolder.channelVulnerabilityDao;
-		this.channelSeverityDao = daoHolder.channelSeverityDao;
-		
-		this.channelType = daoHolder.channelTypeDao.retrieveByName(channelTypeName);
+        if (channelTypeDao == null) {
+            throw new IllegalStateException("Programming error: Spring is configured incorrectly.");
+        }
+		this.channelType = channelTypeDao.retrieveByName(channelTypeName);
 	}
 
 	protected String inputFileName;

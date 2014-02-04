@@ -27,14 +27,12 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.impl.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -45,7 +43,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-@PluginImplementation
 public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	@Override
@@ -60,9 +57,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	
 	private List<Calendar> scanDateList = null;
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
-	
 
-	@Autowired
 	public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL.getFullName());
 	}
