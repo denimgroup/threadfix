@@ -202,8 +202,8 @@
 			<li class="pointer">
 				<a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
 					${ fn:length(application.scanQueueTasks) }
-					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Queue Task</c:if>
-					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Queue Tasks</c:if>
+					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Agent Task</c:if>
+					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Agent Tasks</c:if>
 				</a>
 			</li>
             <li class="pointer">

@@ -2,7 +2,7 @@
 
 <c:if test="${ canManageApplications && fn:length(scannerTypeList) > 0 }">
 	<div style="margin-top:10px;margin-bottom:7px;">
-		<a id="addScanQueueLink${ application.id }" href="#addScanQueue${ application.id }" role="button" class="btn" data-toggle="modal">Add New</a>
+		<a id="addScanQueueLink${ application.id }" href="#addScanQueue${ application.id }" role="button" class="btn" data-toggle="modal">Add New Task</a>
 	</div>	
 </c:if>
 
