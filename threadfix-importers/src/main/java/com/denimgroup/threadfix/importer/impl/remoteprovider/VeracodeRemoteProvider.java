@@ -167,7 +167,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+            LOG.error("Encountered MalformedURLException in getUrl in VeracodeRemoteProvider.", e);
 			return null;
 		}
 
@@ -177,11 +177,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 			setupAuthorization(m_connect, username, password);
 
-			InputStream is = m_connect.getInputStream();
-			
-			return is;
+			return m_connect.getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+            LOG.error("Encountered IOException in getUrl in VeracodeRemoteProvider.", e);
 		}
 		return null;
 	}

@@ -24,17 +24,15 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -314,12 +312,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 				return responseStream;
 			}
 
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (HttpException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException e1) {
+            log.error("Encountered IOException while making request to Veracode.", e1);
 		}
 
 		LOG.warn("There was an error and the POST request was not finished.");
@@ -351,10 +345,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 			if (responseStream != null) {
 				return responseStream;
 			}
-		} catch (HttpException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Encountered IOException while making request to Veracode.", e);
 		}
 		return null;
 	}

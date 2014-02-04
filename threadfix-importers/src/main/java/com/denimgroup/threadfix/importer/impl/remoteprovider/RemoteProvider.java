@@ -49,7 +49,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	}
 
 	protected final SanitizedLogger LOG = new SanitizedLogger(this.getClass());
-	
+
 	protected RemoteProviderType remoteProviderType;
 	
 	public abstract List<Scan> getScans(RemoteProviderApplication remoteProviderApplication);
@@ -100,7 +100,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 			try {
                 inputStream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                LOG.error("Failed to close the input stream in RemoteProvider.", e);
 			}
 		}
 	}

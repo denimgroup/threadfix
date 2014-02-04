@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -157,7 +158,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 			}
 			issuesString += buffer;
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("Encountered IOException while writing to file.", e);
 		}
 
 		List<?> result = null;
@@ -172,7 +173,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 			reader.close();
 			
 		} catch (IOException e1) {
-			e1.printStackTrace();
+            log.error("Encountered IOException while trying to map the Skipfish JSON Object.", e1);
 		}
 
         return result;
@@ -331,7 +332,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		try {
 			requestInputStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("Encountered IOException while trying to close the input stream.", e);
 		}
 		
 		if (requestString == null)
@@ -414,22 +415,18 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		
 		return RegexUtils.getRegexResult(requestString, "Host: ([^\\n\\r]+)");
 	}
-	
+
+    @Nullable
 	private String getStringFromInputStream(InputStream stream) {
-		Writer writer = new StringWriter();
-		String returnValue = null;
-		
 		try {
-			IOUtils.copy(stream, writer, "UTF-8");
-			returnValue = writer.toString();
-			writer.close();
+		    return IOUtils.toString(inputStream);
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("Encountered IOException while trying to read the input stream.", e);
 		} finally {
 			closeInputStream(stream);
 		}
 		
-		return returnValue;
+		return null;
 	}
 
 	// This method looks to see if the zip file contains the folder containing everything,

@@ -61,11 +61,10 @@ class W3afChannelImporter extends AbstractChannelImporter {
 	 */
 	@Override
 	public Scan parseInput() {
-		
 		try {
 			removeTagFromInputStream("httpresponse");
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("Encountered IOException while trying to remove the httpresponse tag.", e);
 		}
 		
 		return parseSAXInput(new W3afSAXParser());
@@ -173,7 +172,7 @@ class W3afChannelImporter extends AbstractChannelImporter {
 		try {
 			removeTagFromInputStream("httpresponse");
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("Encountered IOException while trying to remove teh httpresponse tag", e);
 		}
 		
 		return testSAXInput(new W3afSAXValidator());

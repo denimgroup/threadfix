@@ -53,10 +53,10 @@ public final class ScanUtils {
 		try {
 			readSAXInput(handler, stream);
 		} catch (IOException e) {
-			e.printStackTrace();
+            STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.", e);
 		} catch (SAXException e) {
 			if (!e.getMessage().equals(completionCode))
-				e.printStackTrace();
+                STATIC_LOGGER.error("Encountered SAXException while trying to read the SAX input.", e);
 		} finally {
 			closeInputStream(stream);
 		}
@@ -97,23 +97,13 @@ public final class ScanUtils {
 	}
 	
 	public static boolean isZip(String fileName) {
-		RandomAccessFile file = null;
-		try {
-			file = new RandomAccessFile(new File(fileName), "r");  
+		try (RandomAccessFile file = new RandomAccessFile(new File(fileName), "r")) {
 			// these are the magic bytes for a zip file
 	        return file.readInt() == 0x504B0304;
 		} catch (FileNotFoundException e) {
 			STATIC_LOGGER.warn("The file was not found. Check the usage of this method.", e);
 		} catch (IOException e) {
-			STATIC_LOGGER.warn("IOException. Weird.", e);
-		} finally {
-			if (file != null) {
-				try {
-					file.close();
-				} catch (IOException e) {
-					STATIC_LOGGER.error("Encountered IOException when attempting to close a file.", e);
-				}
-			}
+			STATIC_LOGGER.warn("Encountered IOException while trying to figure out whether the file is a zip file.", e);
 		}
 		
 		return false;

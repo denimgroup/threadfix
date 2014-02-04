@@ -27,11 +27,10 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -178,10 +177,8 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			}
 			
 			responseStream = get.getResponseBodyAsStream();
-		} catch (HttpException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+            LOG.error("Encountered IOException in httpGet in WhiteHatRemoteProvider.", e);
 		}
 		return responseStream;
 	}
