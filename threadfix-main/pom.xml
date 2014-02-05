@@ -112,7 +112,7 @@
 				<version>${maven-surefire.version}</version>
 				<executions>
 					<execution>
-						<id>selenium-test</id>
+						<id>default-test</id>
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
@@ -131,12 +131,14 @@
                             </systemProperties>
 							<includes>
 								<include>**/*Tests.java</include>
+                                <include>**/*Test.java</include>
 							</includes>
 							<excludes>
 								<exclude>**/*Rest*.java</exclude>
 								<exclude>**/service/repository/*.java</exclude>
 								<exclude>**/service/scans/*.java</exclude>
 								<exclude>**/plugin/scanner/*.java</exclude>
+                                <exclude>**/webservices/test/*.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>
