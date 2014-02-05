@@ -110,19 +110,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire.version}</version>
-				<configuration>
-					<skip>false</skip>
-					<systemProperties>
-						<property>
-							<name>url</name>
-							<value>${fileName}</value>
-						</property>
-						<property>
-							<name>scanFileBaseLocation</name>
-							<value>${fileName}</value>
-						</property>
-					</systemProperties>
-				</configuration>
 				<executions>
 					<execution>
 						<id>selenium-test</id>
@@ -132,6 +119,16 @@
 						</goals>
 						<configuration>
 							<skip>false</skip>
+                            <systemProperties>
+                                <property>
+                                    <name>url</name>
+                                    <value>${fileName}</value>
+                                </property>
+                                <property>
+                                    <name>scanFileBaseLocation</name>
+                                    <value>${fileName}</value>
+                                </property>
+                            </systemProperties>
 							<includes>
 								<include>**/*Tests.java</include>
 							</includes>
