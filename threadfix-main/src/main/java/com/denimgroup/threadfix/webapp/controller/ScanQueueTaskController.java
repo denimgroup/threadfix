@@ -93,7 +93,7 @@ public class ScanQueueTaskController {
 		}
 		
 		ControllerUtils.addSuccessMessage(request,
-				"New Scan Agent Task with ID " + task.getId() + " was successfully added to application and ready to be requested from Scan Agent.");
+				"An one time " + scanQueueType + " Scan has been added to Scan Agent queue");
         ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		log.info("Ended adding scan agent task to application " + appId);
@@ -112,7 +112,7 @@ public class ScanQueueTaskController {
 		}
 		ScanQueueTask task = scanQueueService.loadTaskById(taskId);
 		if (task == null) {
-            ControllerUtils.addErrorMessage(request, "The scan agent task submitted was invalid, unable to delete");
+            ControllerUtils.addErrorMessage(request, "The one time scan submitted was invalid, unable to delete");
             ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
             return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
@@ -121,7 +121,7 @@ public class ScanQueueTaskController {
 			ControllerUtils.addErrorMessage(request, ret);
 		} else {
 			ControllerUtils.addSuccessMessage(request,
-					"Scan Agent Task with ID " + taskId + " was successfully deleted");
+					"One time " + task.getScanner() + " Scan has been deleted from Scan Agent queue");
 		}
         ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
 		log.info("Ended deleting scan agent task from application " + appId);
@@ -137,7 +137,7 @@ public class ScanQueueTaskController {
 
         ScanQueueTask task = scanQueueService.loadTaskById(taskId);
         if (task == null || task.getApplication() == null) {
-            ControllerUtils.addErrorMessage(request, "The Scan Queue Task submitted was invalid");
+            ControllerUtils.addErrorMessage(request, "The one time scan submitted was invalid");
             return "redirect:/configuration/scanqueue";
         }
 
@@ -152,7 +152,7 @@ public class ScanQueueTaskController {
             ControllerUtils.addErrorMessage(request, ret);
         } else {
             ControllerUtils.addSuccessMessage(request,
-                    "Scan Agent Task with ID " + taskId + " was successfully deleted");
+                    "One time " + task.getScanner() + " Scan has been deleted from Scan Agent queue");
         }
         log.info("Ended deleting scan agent task " + taskId + " from index ");
 

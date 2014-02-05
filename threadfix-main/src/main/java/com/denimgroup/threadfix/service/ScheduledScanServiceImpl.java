@@ -99,6 +99,8 @@ public class ScheduledScanServiceImpl implements ScheduledScanService {
 
     @Override
     public String deleteScheduledScan(ScheduledScan scheduledScan) {
+        log.info("Deleting scheduled Scan " + scheduledScan.getScanner() + " of application with id "
+                + scheduledScan.getApplication().getId());
         Application application = applicationDao.retrieveById(scheduledScan.getApplication().getId());
         if (application == null) {
             return "ScheduledScan couldn't be deleted. Unable to find application for this task.";
