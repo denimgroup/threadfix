@@ -11,6 +11,7 @@ import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
@@ -18,7 +19,6 @@ import java.io.File;
 public class CommandLineMain {
 
     private static AnnotationConfigApplicationContext context = null;
-
 
     public static AnnotationConfigApplicationContext getContext() {
         if (context == null) {
@@ -40,6 +40,7 @@ public class CommandLineMain {
     @Autowired
     ChannelTypeDao channelTypeDao;
 
+    @Transactional(readOnly = true)
     public void springyMain(String[] args) {
         if (check(args)) {
             File scanFile = new File(args[0]);
@@ -52,12 +53,7 @@ public class CommandLineMain {
                 ScanCheckResultBean resultBean = bridge.testScan(scannerType, scanFile);
 
                 if (resultBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN) {
-                    Scan result = bridge.getScan(scannerType, scanFile);
-
-                    for (Finding finding : result.getFindings()) {
-                        System.out.println("Finding: " + finding);
-                    }
-
+                    System.out.println(getCSVLine(bridge.getScan(scannerType, scanFile)));
                 } else {
                     System.out.println("Scan check failed and returned the following status: " + resultBean.getScanCheckResult());
                 }
@@ -85,6 +81,26 @@ public class CommandLineMain {
 
         return true;
     }
+
+    // Format is channel vuln code, channel vuln name, CWE, severity, file, path, parameter
+    // TODO make this more configurable.
+    private static String getCSVLine(Scan scan) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Finding finding : scan) {
+            builder.append(finding.getChannelVulnerability().getCode()).append(',');
+            builder.append(finding.getChannelVulnerability().getName()).append(',');
+            builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');
+            builder.append(finding.getChannelSeverity().getName()).append(',');
+            builder.append(finding.getSourceFileLocation()).append(',');
+            builder.append(finding.getSurfaceLocation().getPath()).append(',');
+            builder.append(finding.getSurfaceLocation().getParameter());
+            builder.append("\n");
+        }
+
+        return builder.toString();
+    }
+
 
 
 }

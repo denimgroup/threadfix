@@ -32,7 +32,6 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
     public ScannerType getType(File file) {
 
         if (scanTypeCalculationService == null) {
-
             throw new IllegalStateException("Spring is not configured correctly. Fix the code.");
         }
 
@@ -45,7 +44,6 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
         importer.setFileName(inputFile.getAbsolutePath());
 
         return importer.checkFile();
-
     }
 
     @Transactional
@@ -100,6 +98,13 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
             field = AbstractChannelImporter.class.getDeclaredField("channelSeverityDao");
             field.setAccessible(true);
             field.set(importer, channelSeverityDao);
+
+            if (importer instanceof AbstractChannelImporter) {
+                ((AbstractChannelImporter) importer).shouldDeleteAfterParsing = false;
+            } else {
+                throw new IllegalStateException("All channel importers need to extend " +
+                        "AbstractChannelImporter for this module to work.");
+            }
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();

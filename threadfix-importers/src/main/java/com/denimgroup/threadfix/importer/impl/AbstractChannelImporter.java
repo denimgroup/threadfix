@@ -94,6 +94,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	protected Map<String, ChannelSeverity> channelSeverityMap;
 	protected Map<String, ChannelVulnerability> channelVulnerabilityMap;
 
+    public boolean shouldDeleteAfterParsing = true;
+
     @Autowired
 	protected ChannelVulnerabilityDao channelVulnerabilityDao;
     @Autowired
@@ -574,7 +576,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 			log.warn("SAX Parsing did not find any Findings.");
 		}
 		
-		if (inputFileName != null) {
+		if (shouldDeleteAfterParsing) {
 			deleteScanFile();
 		}
 				
