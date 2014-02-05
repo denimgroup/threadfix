@@ -15,7 +15,7 @@
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 
-<spring:url value="{appId}/falsePositives/mark" var="fpUrl">
+<spring:url value="{appId}/closed/falsePositives/mark" var="fpUrl">
 	<spring:param name="appId" value="${ application.id }"/>
 </spring:url>
 

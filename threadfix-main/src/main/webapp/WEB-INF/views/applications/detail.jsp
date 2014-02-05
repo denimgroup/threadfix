@@ -144,21 +144,26 @@
             <spring:param name="appId" value="${ application.id }"/>
         </spring:url>
 		<br>
-		<c:if test="${ not empty application.scans }">
-			<c:set var="activeVuln" value="active" />
-		</c:if>
-		<c:if test="${ empty application.scans }">
-			<c:set var="activeDoc" value="active" />
-		</c:if>	
+
+    <c:choose>
+        <c:when test="${activeTab == 'scan_tab'}"><c:set var="scanTab" value="active" /></c:when>
+        <c:when test="${activeTab == 'file_tab'}"><c:set var="fileTab" value="active" /></c:when>
+        <c:when test="${activeTab == 'scan_agent_task_tab'}"><c:set var="scanAgentTaskTab" value="active" /></c:when>
+        <c:when test="${activeTab == 'scheduled_scan_tab'}"><c:set var="scheduledScanTab" value="active" /></c:when>
+        <c:when test="${activeTab == 'closed_vuln_tab'}"><c:set var="closedVulnTab" value="active" /></c:when>
+        <c:when test="${activeTab == 'false_positive_tab'}"><c:set var="falsePositiveTab" value="active" /></c:when>
+        <c:otherwise><c:set var="activeVulnTab" value="active" /></c:otherwise>
+    </c:choose>
+
 		<ul class="nav nav-tabs margin-top">
-			<li class="pointer ${ activeVuln }">
+			<li class="pointer ${ activeVulnTab }">
 				<a data-toggle="tab" id="vulnTabLink" onclick="javascript:switchTabs('<c:out value="${vulnTabUrl }"/>');return false;">
 					${ fn:escapeXml(numVulns) } 
 					<c:if test="${ numVulns == 1 }">Vulnerability</c:if>
 					<c:if test="${ numVulns != 1 }">Vulnerabilities</c:if>
 				</a>
 			</li>
-			<li class="pointer">
+			<li class="pointer ${ scanTab }">
 				<a data-toggle="tab" id="scanTabLink" onclick="javascript:switchTabs('<c:out value="${scanTabUrl }"/>');return false;">
 					${ fn:length(application.scans) }
 					<c:if test="${ fn:length(application.scans) == 1 }">Scan</c:if>
@@ -166,7 +171,7 @@
 				</a>
 			</li>
 			<c:if test="${ numClosedVulns != 0 }">
-				<li class="pointer">
+				<li class="pointer ${ closedVulnTab }">
 					<a data-toggle="tab" id="closedVulnTabLink" onclick="javascript:switchTabs('<c:out value="${closedTabUrl }"/>');return false;">
 						${fn:escapeXml(numClosedVulns) } Closed 
 						<c:if test="${fn:escapeXml(numClosedVulns) == 1}"> Vulnerability</c:if>
@@ -184,7 +189,7 @@
 				</li>
 			</c:if>
 			<c:if test="${ falsePositiveCount != 0 }">
-				<li class="pointer">
+				<li class="pointer ${ falsePositiveTab }">
 					<a data-toggle="tab" id="falsePositiveTabLink" onclick="javascript:switchTabs('<c:out value="${falsePositiveTabUrl }"/>');return false;">
 						${fn:escapeXml(falsePositiveCount) } False 
 						<c:if test="${fn:escapeXml(falsePositiveCount) == 1}">Positive</c:if>
@@ -192,21 +197,21 @@
 					</a>
 				</li>
 			</c:if>
-			<li class="pointer ${ activeDoc }">
+			<li class="pointer ${ fileTab }">
 				<a data-toggle="tab" id="docsTabLink" onclick="javascript:switchTabs('<c:out value="${docsTabUrl }"/>');return false;">
 					${ fn:length(application.documents) } 
 					<c:if test="${ fn:length(application.documents) == 1 }">File</c:if>
 					<c:if test="${ fn:length(application.documents) != 1 }">Files</c:if>
 				</a>
 			</li>
-			<li class="pointer">
+			<li class="pointer ${ scanAgentTaskTab }">
 				<a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
 					${ fn:length(application.scanQueueTasks) }
 					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Agent Task</c:if>
 					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Agent Tasks</c:if>
 				</a>
 			</li>
-            <li class="pointer">
+            <li class="pointer ${ scheduledScanTab }">
                 <a data-toggle="tab" id="scheduledScanTabLink" onclick="javascript:switchTabs('<c:out value="${scheduledScanTabUrl }"/>');return false;">
                     ${ fn:length(application.scheduledScans) }
                     <c:if test="${ fn:length(application.scheduledScans) == 1 }">Scheduled Scan</c:if>
@@ -216,12 +221,27 @@
 		</ul>
 		
 	    <div id="tabsDiv">
-	    	<c:if test="${ not empty application.scans }">
-				<%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
-			</c:if>
-	    	<c:if test="${ empty application.scans }">
-				<%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
-			</c:if>			
+            <c:choose>
+                <c:when test="${scanTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
+                </c:when>
+                <c:when test="${fileTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
+                </c:when>
+                <c:when test="${scanAgentTaskTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
+                </c:when>
+                <c:when test="${scheduledScanTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
+                </c:when>
+                <c:when test="${closedVulnTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/closedTab.jsp" %>
+                </c:when>
+                <c:when test="${falsePositiveTab == 'active'}">
+                    <%@ include file="/WEB-INF/views/applications/tabs/falsePositiveTab.jsp" %>
+                </c:when>
+                <c:otherwise> <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %> </c:otherwise>
+            </c:choose>
 		</div>
 	
 	<div id="addWaf" class="modal hide fade" tabindex="-1"

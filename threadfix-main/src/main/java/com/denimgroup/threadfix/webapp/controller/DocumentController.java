@@ -89,6 +89,7 @@ public class DocumentController {
 		}else {
 			ControllerUtils.addSuccessMessage(request, 
 					"The file was successfully added to the application.");
+            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
 			return mav;		
@@ -148,9 +149,6 @@ public class DocumentController {
 		}
 		
 		String contentType = document.getContentType();
-//		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
-//			contentType = "text/plain";
-//		}
 		response.setContentType(contentType);
 		if(contentType.equals(documentService.getContentTypeService().getDefaultType())){
 			response.addHeader("Content-Disposition", "attachment; filename=\""+document.getName()+"."+document.getType()+"\"");
@@ -226,9 +224,14 @@ public class DocumentController {
 			else
 				return "redirect:/";
 		}
-		
+        boolean deleteFromApp = false;
+        if (document.getApplication() != null && document.getApplication().getId() != null )
+            deleteFromApp = true;
 		String urlReturn = documentService.deleteDocument(document);
         ControllerUtils.addSuccessMessage(request, "The file was successfully deleted.");
+        if (deleteFromApp)
+            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
+
 		return urlReturn;
 	}
 	

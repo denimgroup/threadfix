@@ -100,18 +100,24 @@ public class ScheduledScanController {
 		if (scheduledScanId < 0) {
 			ControllerUtils.addErrorMessage(request,
 					"Adding Scheduled Scan was failed.");
+            ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 			return "ajaxFailureHarness";
 		}
 
         //Add new job to scheduler
-        if (scheduledScanScheduler.addScheduledScan(scheduledScan))
+        String successMsg = "";
+        if (scheduledScanScheduler.addScheduledScan(scheduledScan)) {
+            successMsg = "New Scheduled Scan with ID " + scheduledScanId +
+                    " was successfully added to application and ThreadFix scheduler";
             log.info("Successfully added new scheduled scan to scheduler");
-        else
+        } else {
+            successMsg = "New Scheduled Scan with ID " + scheduledScanId + " was successfully added to application," +
+                    " but failed to ThreadFix scheduler";
             log.warn("Failed to add new scheduled scan to scheduler");
-
-		ControllerUtils.addSuccessMessage(request,
-				"Scheduled Scan ID " + scheduledScanId + " was successfully added to the application.");
+        }
+		ControllerUtils.addSuccessMessage(request, successMsg);
+        ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 		log.info("Ended adding scheduled scan to application " + appId);
 		return "ajaxRedirectHarness";
@@ -130,22 +136,28 @@ public class ScheduledScanController {
         ScheduledScan scheduledScan = scheduledScanService.loadScheduledScanById(scheduledScanId);
         if (scheduledScan == null) {
             ControllerUtils.addErrorMessage(request, "The scheduled scan submitted was invalid, unable to delete");
+            ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
             return "redirect:/organizations/" + orgId + "/applications/" + appId;
         }
 
+        String successMsg = "";
         //Remove job from scheduler
-        if (scheduledScanScheduler.removeScheduledScan(scheduledScan))
+        if (scheduledScanScheduler.removeScheduledScan(scheduledScan)) {
+            successMsg = "Scheduled Scan with ID " + scheduledScanId + " " +
+                    "was successfully deleted from application and ThreadFix scheduler";
             log.info("Successfully deleted scheduled scan from scheduler");
-        else
+        } else {
+            successMsg = "Scheduled Scan with ID " + scheduledScanId + " " +
+                    "was successfully deleted from application but failed to delete from ThreadFix scheduler";
             log.warn("Failed to delete scheduled scan from scheduler");
-
+        }
         String ret = scheduledScanService.deleteScheduledScan(scheduledScan);
         if (ret != null) {
             ControllerUtils.addErrorMessage(request, ret);
         } else {
-            ControllerUtils.addSuccessMessage(request,
-                    "Scheduled scan ID " + scheduledScanId + " was successfully deleted");
+            ControllerUtils.addSuccessMessage(request, successMsg);
         }
+        ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
         log.info("Ended deleting scheduled scan from application with Id " + appId);
 
         return "redirect:/organizations/" + orgId + "/applications/" + appId;

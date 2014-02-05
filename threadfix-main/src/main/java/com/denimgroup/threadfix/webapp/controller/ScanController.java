@@ -127,6 +127,7 @@ public class ScanController {
 		}
 		
 		ControllerUtils.addSuccessMessage(request, "The scan was successfully deleted.");
+        ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_TAB);
 		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
 	}
 	
