@@ -107,7 +107,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
 	public AbstractChannelImporter(@NotNull ScannerType channelTypeName) {
 	    this.channelTypeCode = channelTypeName.getFullName();
-        log.info("In modified constructor.");
     }
 
     protected ChannelType getChannelType() {
@@ -117,6 +116,11 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             }
 
             channelType = channelTypeDao.retrieveByName(channelTypeCode);
+
+            if (channelType == null) {
+                throw new IllegalStateException("The database is not set up correctly: there was no entry for " +
+                        channelTypeCode);
+            }
         }
         return channelType;
     }
@@ -589,6 +593,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		log.debug("Starting SAX Test.");
 
         if (channelTypeDao == null) {
+            log.error("Spring configuration didn't have an entry for ChannelTypeDao.");
             return new ScanCheckResultBean(ScanImportStatus.CONFIGURATION_ERROR);
         }
 		

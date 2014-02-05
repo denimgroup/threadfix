@@ -89,6 +89,18 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
         return returnString;
     }
+
+    @Override
+    public ScannerType getScannerType(File inputFile) {
+        ScannerType type = null;
+
+        if (inputFile.exists() && !inputFile.isDirectory()) {
+            String scannerName = getScannerType(inputFile.getAbsolutePath(), inputFile.getAbsolutePath());
+            type = ScannerType.getScannerType(scannerName);
+        }
+
+        return type;
+    }
 	
 	// We currently only have zip files for skipfish and fortify
 	// if we support a few more it would be worth a more modular style

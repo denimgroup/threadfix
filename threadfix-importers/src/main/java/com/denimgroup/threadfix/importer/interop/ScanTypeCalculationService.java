@@ -23,12 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.interop;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 public interface ScanTypeCalculationService {
 
+    /**
+     * This handles a lot of plumbing for us.
+     */
 	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
 
 	String saveFile(Integer channelId, MultipartFile file);
+
+    /**
+     * For non-webapp environments.
+     */
+    ScannerType getScannerType(File inputFile);
 
 }
