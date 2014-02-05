@@ -31,7 +31,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
-import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -39,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
@@ -72,7 +72,7 @@ import java.util.zip.ZipFile;
  * 
  */
 @Transactional(readOnly = true)
-public abstract class AbstractChannelImporter implements ChannelImporter {
+public abstract class AbstractChannelImporter extends SpringBeanAutowiringSupport implements ChannelImporter {
 	
 	// this.getClass() will turn into the individual importer name at runtime.
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
@@ -107,10 +107,15 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 
 	public AbstractChannelImporter(@NotNull ScannerType channelTypeName) {
 	    this.channelTypeCode = channelTypeName.getFullName();
+        log.info("In modified constructor.");
     }
 
     protected ChannelType getChannelType() {
         if (channelType == null) {
+            if (channelTypeDao == null) {
+                throw new IllegalStateException("Spring is incorrectly configured, and scans cannot continue.");
+            }
+
             channelType = channelTypeDao.retrieveByName(channelTypeCode);
         }
         return channelType;
@@ -582,6 +587,10 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 */
 	protected ScanCheckResultBean testSAXInput(DefaultHandler handler) {
 		log.debug("Starting SAX Test.");
+
+        if (channelTypeDao == null) {
+            return new ScanCheckResultBean(ScanImportStatus.CONFIGURATION_ERROR);
+        }
 		
 		if (inputStream == null) {
 			log.warn(ScanImportStatus.NULL_INPUT_ERROR.toString());

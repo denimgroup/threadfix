@@ -33,7 +33,8 @@ public enum ScanImportStatus {
 	OTHER_ERROR("The scan file encountered an unknown error."),
 	BADLY_FORMED_XML("The XML was not well-formed and could not be parsed."),
 	MORE_RECENT_SCAN_ON_QUEUE("There was a more recent scan for this application and scanner on the queue."),
-	FAILED_XSD("The XML document did not pass the check against its XSD. Please edit it, check against the XSD, and try again.");
+	FAILED_XSD("The XML document did not pass the check against its XSD. Please edit it, check against the XSD, and try again."),
+    CONFIGURATION_ERROR("The scanner plugin was incorrectly configured and could not complete the import. Please contact the developers.");
 	
 	ScanImportStatus(String messageText) {
 		this.stringValue = messageText;
