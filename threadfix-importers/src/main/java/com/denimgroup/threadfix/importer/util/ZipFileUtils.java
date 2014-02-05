@@ -1,7 +1,5 @@
 package com.denimgroup.threadfix.importer.util;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -35,16 +33,4 @@ public class ZipFileUtils {
             return zipFile.getInputStream(entry);
         }
     }
-
-    public static String getFileString(String name, ZipFile zipFile) throws IOException {
-
-        InputStream stream = getFileStream(name, zipFile);
-
-        if (stream == null) {
-            return null;
-        } else {
-            return IOUtils.toString(stream);
-        }
-    }
-
 }

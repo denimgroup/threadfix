@@ -1,8 +1,10 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -17,6 +19,7 @@ public class ResourceUtils {
      * @param fileName the file name
      * @return the File or null if an error occurs or it cannot be found
      */
+    @Nullable
     public static File getResource(String fileName) {
 
         File returnFile = null;
@@ -31,6 +34,11 @@ public class ResourceUtils {
         }
 
         return returnFile;
+    }
+
+    @Nullable
+    public static InputStream getResourceAsStream(String fileName) {
+        return ResourceUtils.class.getResourceAsStream(fileName);
     }
 
     public static URL getUrl(String fileName) {

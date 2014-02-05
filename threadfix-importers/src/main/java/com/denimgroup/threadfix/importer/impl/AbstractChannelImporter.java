@@ -48,8 +48,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -263,11 +261,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 *
 	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
-	 * @param url
-	 * @param parameter
-	 * @param channelVulnerabilityCode
-	 * @param channelSeverityCode
-	 * @return
 	 */
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
@@ -279,12 +272,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 *
 	 * This method can be used to construct a finding out of the
 	 * important common information that findings have.
-	 * @param url
-	 * @param parameter
-	 * @param channelVulnerabilityCode
-	 * @param channelSeverityCode
-	 * @param cweCode
-	 * @return
 	 */
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
@@ -458,16 +445,11 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 		}
 	}
 
-	// TODO remove
-	// return the parsed date object, or the null if parsing fails.
-	public Calendar getCalendarFromString(String formatString, String dateString) {
-		return DateUtils.getCalendarFromString(formatString, dateString);
-	}
-	
 	/*
 	 * These methods help you deal with zip files. unpackZipStream() parses your inputStream
 	 * and stores it in zipFile, and then you can access file from it with the correct path
 	 * using this method.
+	 * TODO take these methods out
 	 */
 	protected InputStream getFileFromZip(String fileName) {
 		if (zipFile == null || fileName == null || fileName.trim().equals("")) {
@@ -532,9 +514,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	
 	/**
 	 * Hash the vulnerability name and the path and the parameter strings into a native ID.
-	 * 
-	 * @param finding
-	 * @return
 	 */
 	protected String getNativeId(Finding finding) {
 		if (finding == null || finding.getSurfaceLocation() == null) {
@@ -557,8 +536,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * It relies on the fact that there is a common instance variable named saxFindingList that
 	 * the handlers are putting their Findings in, and the variable date that the parsers are putting
 	 * the date in.
-	 * @param handler
-	 * @return
 	 */
 	protected Scan parseSAXInput(DefaultHandler handler) {
 		log.debug("Starting SAX Parsing.");
@@ -602,8 +579,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * It relies on the fact that there is a common instance variable named saxFindingList that
 	 * the handlers are putting their Findings in, and the variable date that the parsers are putting
 	 * the date in.
-	 * @param handler
-	 * @return
 	 */
 	protected ScanCheckResultBean testSAXInput(DefaultHandler handler) {
 		log.debug("Starting SAX Test.");
@@ -639,7 +614,6 @@ public abstract class AbstractChannelImporter implements ChannelImporter {
 	 * 
 	 * It returns either a duplicate, old scan, or unidentified error,
 	 * or a success code.
-	 * @return
 	 */
 	protected ScanImportStatus checkTestDate() {
 		if (applicationChannel == null || testDate == null) {

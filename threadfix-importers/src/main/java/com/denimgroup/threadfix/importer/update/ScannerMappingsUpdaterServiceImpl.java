@@ -103,30 +103,22 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
         List<String[]> scannerResults = new ArrayList<>();
 
-        File mappingsFolder = ResourceUtils.getResource("mappings");
+        for (ScannerType type : ScannerType.values()) {
 
-        if (mappingsFolder == null || !mappingsFolder.exists() || mappingsFolder.isFile()) {
-            throw new IllegalStateException("Mappings folder was not found. " +
-                    "This means the application was assembled incorrectly.");
-        }
+            String filePath = "/mappings/" + type.getShortName() + ".csv";
 
-        File[] files = mappingsFolder.listFiles();
+            try (InputStream scannerStream = ResourceUtils.getResourceAsStream(filePath)) {
 
-        if (files != null) {
-            for (File file : files) {
-                if (file.getName().endsWith(".csv")) {
-                    log.info("Updating file " + file.getName());
-                    try (InputStream stream = new FileInputStream(file)) {
-                        String[] scannerUpdateResult = updateScanner(stream);
-                        if (scannerUpdateResult != null) {
-                            scannerResults.add(scannerUpdateResult);
-                        }
-                    } catch (IOException e) {
-                        log.error("Encountered IOException while trying to read from scanner CSV file.", e);
+                if (scannerStream != null) {
+                    log.info("Updating file " + filePath);
+                    String[] scannerUpdateResult = updateScanner(scannerStream);
+                    if (scannerUpdateResult != null) {
+                        scannerResults.add(scannerUpdateResult);
                     }
                 }
+            } catch (IOException e) {
+                log.error("Encountered IOException while trying to read the mappings file for " + type);
             }
-
         }
 
         return scannerResults;
@@ -362,7 +354,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     private Calendar getPluginTimestamp() {
         Calendar returnDate = null;
 
-        try (InputStream versionFileStream = new FileInputStream(ResourceUtils.getResource("mappings/version.txt"))) {
+        try (InputStream versionFileStream = ResourceUtils.getResourceAsStream("/mappings/version.txt")) {
 
             String result = IOUtils.toString(versionFileStream);
 
