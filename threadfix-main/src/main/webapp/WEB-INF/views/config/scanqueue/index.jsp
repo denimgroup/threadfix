@@ -1,12 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Scan Queue</title>
+	<title>Scan Agent Tasks</title>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan_page.js"></script>
 </head>
 
 <body>
-	<h2>Scan Queue</h2>
+	<h2>Scan Agent Tasks</h2>
 
     <c:if test="${ not empty successMessage }">
         <div class="alert alert-success">

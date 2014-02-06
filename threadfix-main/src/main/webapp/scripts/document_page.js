@@ -2,7 +2,7 @@ var addDocFunctions = function() {
 	$(".docDelete").each(function() {
 		if (!$(this).attr("data-has-function")) {
 			$(this).on("click", function() {
-				if (confirm("Are you sure you want to delete this document?")) {
+				if (confirm("Are you sure you want to delete this file?")) {
 					$("#" + $(this).attr("data-delete-form")).submit();
 				}
 			});

@@ -78,7 +78,7 @@ public class ScanQueueTaskController {
 			@RequestParam("scanQueueType") String scanQueueType,
 			HttpServletRequest request, Model model) {
 		
-		log.info("Start adding scan task to application " + appId);
+		log.info("Start adding scan agent task to application " + appId);
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
@@ -86,15 +86,17 @@ public class ScanQueueTaskController {
 		
 		if (task == null) {
 			ControllerUtils.addErrorMessage(request,
-					"There was something wrong when we tried adding task...");
+					"There was something wrong when we tried adding scan agent task...");
+            ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 			return "ajaxFailureHarness";
 		}
 		
 		ControllerUtils.addSuccessMessage(request,
-				"Task ID " + task.getId() + " was successfully added to the application.");
+				"An one time " + scanQueueType + " Scan has been added to Scan Agent queue");
+        ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
 		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-		log.info("Ended adding scan task to application " + appId);
+		log.info("Ended adding scan agent task to application " + appId);
 		return "ajaxRedirectHarness";
 	}
 
@@ -104,13 +106,14 @@ public class ScanQueueTaskController {
 			@PathVariable("taskId") int taskId,
 			HttpServletRequest request, Model model) {
 		
-		log.info("Start deleting scan task from application " + appId);
+		log.info("Start deleting scan agent task from application " + appId);
 		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
 		ScanQueueTask task = scanQueueService.loadTaskById(taskId);
 		if (task == null) {
-            ControllerUtils.addErrorMessage(request, "The scan queue task submitted was invalid, unable to delete");
+            ControllerUtils.addErrorMessage(request, "The one time scan submitted was invalid, unable to delete");
+            ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
             return "redirect:/organizations/" + orgId + "/applications/" + appId;
 		}
 		String ret = scanQueueService.deleteTask(task);
@@ -118,9 +121,10 @@ public class ScanQueueTaskController {
 			ControllerUtils.addErrorMessage(request, ret);
 		} else {
 			ControllerUtils.addSuccessMessage(request,
-					"Scan Queue Task ID " + taskId + " was successfully deleted");
+					"One time " + task.getScanner() + " Scan has been deleted from Scan Agent queue");
 		}
-		log.info("Ended deleting scan task from application " + appId);
+        ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_AGENT_TASK_TAB);
+		log.info("Ended deleting scan agent task from application " + appId);
 		
 		return "redirect:/organizations/" + orgId + "/applications/" + appId;
 	}
@@ -129,11 +133,11 @@ public class ScanQueueTaskController {
     public String deleteScanQueueTaskFromIndex(@PathVariable("taskId") int taskId,
                                       HttpServletRequest request, Model model) {
 
-        log.info("Start deleting scan task " + taskId + " from index ");
+        log.info("Start deleting scan agent task " + taskId + " from index ");
 
         ScanQueueTask task = scanQueueService.loadTaskById(taskId);
         if (task == null || task.getApplication() == null) {
-            ControllerUtils.addErrorMessage(request, "The Scan Queue Task submitted was invalid");
+            ControllerUtils.addErrorMessage(request, "The one time scan submitted was invalid");
             return "redirect:/configuration/scanqueue";
         }
 
@@ -148,9 +152,9 @@ public class ScanQueueTaskController {
             ControllerUtils.addErrorMessage(request, ret);
         } else {
             ControllerUtils.addSuccessMessage(request,
-                    "Task ID " + taskId + " was successfully deleted");
+                    "One time " + task.getScanner() + " Scan has been deleted from Scan Agent queue");
         }
-        log.info("Ended deleting scan task " + taskId + " from index ");
+        log.info("Ended deleting scan agent task " + taskId + " from index ");
 
         return "redirect:/configuration/scanqueue/";
     }

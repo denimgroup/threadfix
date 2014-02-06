@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Scan Queue Item</title>
+	<title>Scan Agent Task</title>
 </head>
 
 <body>
@@ -18,10 +18,10 @@
     <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scanQueueTask.application.organization.name }"/></a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scanQueueTask.application.name }"/></a><span class="divider">/</span></li>
-    <li class="active">Task ID <c:out value="${scanQueueTask.id}" /></li>
+    <li class="active">Scan Agent Task ID <c:out value="${scanQueueTask.id}" /></li>
 </ul>
 
-	<h2>Scan Queue Item</h2>
+	<h2>Scan Agent Task</h2>
 	
 	<div id="helpText">
 		This shows detail about a specific queued scan.<br/>
