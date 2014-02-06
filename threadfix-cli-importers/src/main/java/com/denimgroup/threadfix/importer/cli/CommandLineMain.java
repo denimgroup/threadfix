@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.importer.cli;
 
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -12,21 +11,10 @@ public class CommandLineMain {
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(CommandLineMain.class);
 
-    private static AnnotationConfigApplicationContext context = null;
-
-    public static AnnotationConfigApplicationContext getContext() {
-        if (context == null) {
-            context = new AnnotationConfigApplicationContext();
-            context.register(SpringConfiguration.class);
-            context.refresh();
-        }
-        return context;
-    }
-
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-        CommandLineMain main = getContext().getBean(CommandLineMain.class);
+        CommandLineMain main = SpringConfiguration.getContext().getBean(CommandLineMain.class);
 
         LOGGER.info("Initialization finished in " + (System.currentTimeMillis() - startTime) + " ms");
 
@@ -37,7 +25,7 @@ public class CommandLineMain {
         if (check(args)) {
             long startTime = System.currentTimeMillis();
 
-            String output = getContext().getBean(ScanParser.class).readFile(args[0]);
+            String output = SpringConfiguration.getContext().getBean(ScanParser.class).readFile(args[0]);
 
             LOGGER.info("Scan parsing finished in " + (System.currentTimeMillis() - startTime) + " ms");
             System.out.println(output);
