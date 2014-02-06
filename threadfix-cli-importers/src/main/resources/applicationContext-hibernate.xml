@@ -10,12 +10,12 @@
             			   http://www.springframework.org/schema/tx
            				   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
     <!--
         Instructs Spring to perform declarative transaction management on
         annotated classes
     -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
-
     <tx:annotation-driven />
 
     <bean id="dmDataSource"
@@ -28,7 +28,7 @@
         <property name="properties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <!--<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>-->
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
             </props>
         </property>
@@ -42,8 +42,7 @@
         <property name="eventListeners">
             <map>
                 <entry key="merge">
-                    <bean
-                            class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
+                    <bean class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
                 </entry>
             </map>
         </property>
@@ -53,6 +52,5 @@
           class="org.springframework.orm.hibernate3.HibernateTransactionManager"
           p:sessionFactory-ref="sessionFactory" />
 
-    <bean
-            class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 </beans>

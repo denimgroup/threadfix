@@ -77,12 +77,12 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
         }
 
         // We have to inject dependencies in right now
-        // TODO fix this, it's dumb. Maybe move DAO impls into entities package?
+        // TODO fix this, reflection = dirty. Maybe move DAO impls into entities package?
 
         try {
 
             Field field = AbstractChannelImporter.class.getDeclaredField("channelVulnerabilityDao");
-            field.setAccessible(true);
+            field.setAccessible(true); // this is probably not a good idea
             field.set(importer, channelVulnerabilityDao);
 
             field = AbstractChannelImporter.class.getDeclaredField("channelTypeDao");
