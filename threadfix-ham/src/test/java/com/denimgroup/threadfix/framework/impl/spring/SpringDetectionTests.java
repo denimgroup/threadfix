@@ -39,7 +39,6 @@ public class SpringDetectionTests {
     public static final String[] ALL_SPRING_APPS = {
             "atmosphere-spring-mvc",
             "blog",
-            "blog-spring",
             "BookExchange",
             "classifiedsMVC",
             "CRM_Demo",
@@ -72,7 +71,7 @@ public class SpringDetectionTests {
     @Test
     public void testTheOtherWebapps() {
         for (String app : ALL_SPRING_APPS) {
-            testTypeDetection(TestConstants.getFolderName("spring/" + app));
+            testTypeDetection(TestConstants.getFolderName(app));
         }
     }
 
