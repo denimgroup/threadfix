@@ -13,7 +13,6 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,6 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
     @Autowired
     protected GenericVulnerabilityDao genericVulnerabilityDao;
 
-    @NotNull
     public ChannelImporter getImporter(ScannerType type) {
 
         ApplicationChannel channel = new ApplicationChannel();
