@@ -1,22 +1,16 @@
 package com.denimgroup.threadfix.importer.cli;
 
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
-import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
-import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
 @Component
 public class CommandLineMain {
+
+    private static final SanitizedLogger LOGGER = new SanitizedLogger(CommandLineMain.class);
 
     private static AnnotationConfigApplicationContext context = null;
 
@@ -29,35 +23,24 @@ public class CommandLineMain {
         return context;
     }
 
-    // Bootstrap Spring components
     public static void main(String[] args) {
-        getContext().getBean(CommandLineMain.class).springyMain(args);
+        long startTime = System.currentTimeMillis();
+
+        CommandLineMain main = getContext().getBean(CommandLineMain.class);
+
+        LOGGER.info("Initialization finished in " + (System.currentTimeMillis() - startTime) + " ms");
+
+        main.mainWithSpring(args);
     }
 
-    @Autowired
-    ThreadFixBridge bridge;
-
-    @Autowired
-    ChannelTypeDao channelTypeDao;
-
-    @Transactional(readOnly = true)
-    public void springyMain(String[] args) {
+    public void mainWithSpring(String[] args) {
         if (check(args)) {
-            File scanFile = new File(args[0]);
+            long startTime = System.currentTimeMillis();
 
-            ScannerType scannerType = bridge.getType(scanFile);
+            String output = getContext().getBean(ScanParser.class).readFile(args[0]);
 
-            if (scannerType == null) {
-                System.out.println("Unable to determine the scan type of the file.");
-            } else {
-                ScanCheckResultBean resultBean = bridge.testScan(scannerType, scanFile);
-
-                if (resultBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN) {
-                    System.out.println(getCSVLine(bridge.getScan(scannerType, scanFile)));
-                } else {
-                    System.out.println("Scan check failed and returned the following status: " + resultBean.getScanCheckResult());
-                }
-            }
+            LOGGER.info("Scan parsing finished in " + (System.currentTimeMillis() - startTime) + " ms");
+            System.out.println(output);
         }
     }
 
@@ -81,26 +64,4 @@ public class CommandLineMain {
 
         return true;
     }
-
-    // Format is channel vuln code, channel vuln name, CWE, severity, file, path, parameter
-    // TODO make this more configurable.
-    private static String getCSVLine(Scan scan) {
-        StringBuilder builder = new StringBuilder();
-
-        for (Finding finding : scan) {
-            builder.append(finding.getChannelVulnerability().getCode()).append(',');
-            builder.append(finding.getChannelVulnerability().getName()).append(',');
-            builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');
-            builder.append(finding.getChannelSeverity().getName()).append(',');
-            builder.append(finding.getSourceFileLocation()).append(',');
-            builder.append(finding.getSurfaceLocation().getPath()).append(',');
-            builder.append(finding.getSurfaceLocation().getParameter());
-            builder.append("\n");
-        }
-
-        return builder.toString();
-    }
-
-
-
 }

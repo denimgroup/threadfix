@@ -16,7 +16,6 @@ import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -46,7 +45,6 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
         return importer.checkFile();
     }
 
-    @Transactional
     public Scan getScan(ScannerType type, File inputFile) {
         ChannelImporter importer = getImporter(type);
 
