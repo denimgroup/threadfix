@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.SecurityEventService;
 
 @Controller

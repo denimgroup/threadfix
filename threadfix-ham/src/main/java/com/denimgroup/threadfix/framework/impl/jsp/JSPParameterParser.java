@@ -75,7 +75,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	@NotNull
     public static Map<Integer, List<String>> parse(File file) {
 		JSPParameterParser parser = new JSPParameterParser();
-		EventBasedTokenizerRunner.run(file, parser);
+		EventBasedTokenizerRunner.run(file, false, parser);
 		return parser.buildParametersMap();
 	}
 	

@@ -32,7 +32,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;

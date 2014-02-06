@@ -1,9 +1,8 @@
 package com.denimgroup.threadfix.plugins.intellij.action;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarkerService;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;

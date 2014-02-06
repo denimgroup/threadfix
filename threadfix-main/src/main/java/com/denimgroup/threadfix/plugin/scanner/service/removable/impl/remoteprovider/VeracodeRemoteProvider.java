@@ -75,7 +75,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null ||
 				remoteProviderApplication.getApplicationChannel() == null) {
-			log.error("Veracode getScan() called with invalid parameters. Returning null");
+			LOG.error("Veracode getScan() called with invalid parameters. Returning null");
 			return null;
 		}
 		
@@ -95,30 +95,34 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		}
 		
 		if (buildIds == null || buildIds.size() == 0) {
-			log.warn("No build IDs were parsed.");
+			LOG.warn("No build IDs were parsed.");
 			return null; // we failed.
 		} else {
-			log.warn("Retrieved build IDs " + buildIds + " for application " + appName);
+			LOG.warn("Retrieved build IDs " + buildIds + " for application " + appName);
 		}
 		
 		List<Scan> scans = new ArrayList<>();
 		
 		for (String buildId : buildIds) {
 			if (buildId == null || buildId.trim().equals("")) {
-				log.warn("Build ID was null or empty. This should never happen.");
+				LOG.warn("Build ID was null or empty. This should never happen.");
 				continue; // we failed.
-			} else if (parser.dateMap.get(buildId).before(remoteProviderApplication.getLastImportTime())) {
-				log.info("Build ID " + buildId + " was scanned before the most recent scan in ThreadFix.");
-				continue;
-			}
+            } else if (parser.dateMap.get(buildId) != null && parser.dateMap.get(buildId)
+                    .before(remoteProviderApplication.getLastImportTime())) {
+                log.info("Build ID " + buildId + " was scanned before the most recent scan in ThreadFix.");
+                continue;
+            } else if (parser.dateMap.get(buildId)== null) {
+                log.info("Build ID " + buildId + " was null.");
+                continue;
+            }
 				
-			log.warn("Importing scan for build ID " + buildId + " and application " + appName);
+			LOG.warn("Importing scan for build ID " + buildId + " and application " + appName);
 	
 			// This block tries to parse the scan corresponding to the build.
 			inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
 
 			if (inputStream == null) {
-				log.warn("Received a bad response from Veracode servers, returning null.");
+				LOG.warn("Received a bad response from Veracode servers, returning null.");
 				continue;
 			}
 			
@@ -126,14 +130,14 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			Scan resultScan = parseSAXInput(scanParser);
 			
 			if (resultScan == null) {
-				log.error("No scan was parsed, something is broken.");
+				LOG.error("No scan was parsed, something is broken.");
 				continue;
 			}
 			
 			resultScan.setImportTime(parser.dateMap.get(buildId));
 			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 			
-			log.info("Veracode scan (Build ID " + buildId + ") was successfully parsed.");
+			LOG.info("Veracode scan (Build ID " + buildId + ") was successfully parsed.");
 			
 			scans.add(resultScan);
 		}
@@ -145,11 +149,11 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public List<RemoteProviderApplication> fetchApplications() {
 		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
-			log.warn("Insufficient credentials.");
+			LOG.warn("Insufficient credentials.");
 			return null;
 		}
 		
-		log.info("Fetching Veracode applications.");
+		LOG.info("Fetching Veracode applications.");
 		
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
@@ -159,7 +163,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		stream = getUrl(GET_APP_BUILDS_URI,username,password);
 		
 		if (stream == null) {
-			log.warn("Got a bad response from Veracode. Check your username and password.");
+			LOG.warn("Got a bad response from Veracode. Check your username and password.");
 			return null;
 		}
 		
@@ -168,9 +172,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		parse(stream, parser);
 		
 		if (parser.list != null && parser.list.size() > 0) {
-			log.info("Number of Veracode applications found: " + parser.list.size());
+			LOG.info("Number of Veracode applications found: " + parser.list.size());
 		} else {
-			log.warn("No Veracode applications were found. Check your configuration.");
+			LOG.warn("No Veracode applications were found. Check your configuration.");
 		}
 		
 		return parser.list;
@@ -309,7 +313,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
     						try {
     							dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
     						} catch (NumberFormatException e) {
-    							log.error("Non-numeric value '" + atts.getValue("line") + "' found in Veracode results when trying to parse line number.", e);
+    							LOG.error("Non-numeric value '" + atts.getValue("line") + "' found in Veracode results when trying to parse line number.", e);
     						}
     						dataFlowElement.setSourceFileName(sourceFileLocation);
     						finding.setDataFlowElements(new ArrayList<DataFlowElement>());
@@ -327,13 +331,13 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    			atts.getValue("action").equals("Mitigation Accepted")) {
 	    		mitigationProposed = false;
 	    		lastFinding.setMarkedFalsePositive(true);
-	    		log.info("The false positive mitigation was accepted.");
+	    		LOG.info("The false positive mitigation was accepted.");
 	    	}
 	    	
 	    	if ("mitigation".equals(qName) && atts.getValue("action") != null
 	    			&& atts.getValue("action").equals("Mitigated as Potential False Positive")) {
 	    		mitigationProposed = true;
-	    		log.info("Found a Finding with false positive mitigation proposed.");
+	    		LOG.info("Found a Finding with false positive mitigation proposed.");
 	    	}
 	    }
 	    

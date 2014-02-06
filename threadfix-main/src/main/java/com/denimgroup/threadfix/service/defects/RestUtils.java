@@ -36,7 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * This class holds code for more easily interacting with HTTP-authenticated REST services.

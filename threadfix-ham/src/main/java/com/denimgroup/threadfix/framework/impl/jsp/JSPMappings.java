@@ -28,16 +28,16 @@ import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.NoDotDirectoryFileFilter;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
 
 // TODO figure out HTTP methods perhaps from form analysis
 public class JSPMappings implements EndpointGenerator {
@@ -95,7 +95,7 @@ public class JSPMappings implements EndpointGenerator {
 
             JSPIncludeParser includeParser = new JSPIncludeParser(file);
             JSPParameterParser parameterParser = new JSPParameterParser();
-            EventBasedTokenizerRunner.run(file, parameterParser, includeParser);
+            EventBasedTokenizerRunner.run(file, false, parameterParser, includeParser);
 
             addToIncludes(staticPath, includeParser.returnFiles);
 
@@ -153,14 +153,29 @@ public class JSPMappings implements EndpointGenerator {
     }
 	
 	public JSPEndpoint getEndpoint(String staticPath) {
-		
-		String key = staticPath; // TODO determine whether we need to clean or not
-		
-		if (key != null && !key.startsWith("/")) {
-			key = "/" + key;
+
+        if (staticPath == null)
+            return null;
+
+		String key = staticPath;
+        String keyFS = key.replace("\\","/");
+		if (!keyFS.startsWith("/")) {
+            keyFS = "/" + keyFS;
 		}
+
+        for (Map.Entry<String, JSPEndpoint> entry: jspEndpointMap.entrySet()) {
+            String keyEntry = entry.getKey();
+            String keyEntryFS = keyEntry.replace("\\","/");
+
+            if ((keyEntry.isEmpty() && !key.isEmpty())
+                    || (key.isEmpty() && !keyEntry.isEmpty()))
+                continue;
+
+            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+                return entry.getValue();
+        }
 		
-		return jspEndpointMap.get(key);
+		return null;
 	}
 	
 	public String getRelativePath(String dataFlowLocation) {

@@ -31,18 +31,16 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.JobStatus;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 
 /**
  * @author bbeverly
@@ -334,11 +332,12 @@ public class QueueListener implements MessageListener {
         if (application == null)
             return;
 
-        int scanTaskId = scanQueueService.queueScan(appId, scanner);
-        if (scanTaskId < 0)
+        ScanQueueTask scanTask = scanQueueService.queueScan(appId, scanner);
+        if (scanTask == null || scanTask.getId() < 0) {
             log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
-        else
-            log.info("Scan Queue Task ID " + scanTaskId + " was successfully added to the application with ID " + appId);
+        } else {
+            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + appId);
+        }
     }
 
 	/**

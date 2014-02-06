@@ -25,10 +25,13 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.service.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,24 +47,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
-import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
@@ -88,6 +76,7 @@ public class ApplicationsController {
 	private OrganizationService organizationService;
 	private UserService userService;
 	private ChannelVulnerabilityService channelVulnerabilityService;
+    private ChannelTypeService channelTypeService;
 
 	@Autowired
 	public ApplicationsController(ApplicationService applicationService,
@@ -98,7 +87,8 @@ public class ApplicationsController {
 			PermissionService permissionService,
 			OrganizationService organizationService,
 			UserService userService,
-			ChannelVulnerabilityService channelVulnerabilityService) {
+			ChannelVulnerabilityService channelVulnerabilityService,
+            ChannelTypeService channelTypeService) {
 		this.wafService = wafService;
 		this.applicationService = applicationService;
 		this.defectTrackerService = defectTrackerService;
@@ -108,6 +98,7 @@ public class ApplicationsController {
 		this.organizationService = organizationService;
 		this.userService = userService;
 		this.channelVulnerabilityService = channelVulnerabilityService;
+        this.channelTypeService = channelTypeService;
 	}
 
 	@InitBinder
@@ -155,7 +146,7 @@ public class ApplicationsController {
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
-		
+
 		Object checkForRefresh = ControllerUtils.getItem(request, "checkForRefresh");
 		Object numScansBeforeUpload = ControllerUtils.getItem(request, "numScansBeforeUpload");
 		model.addAttribute("numScansBeforeUpload", numScansBeforeUpload);
@@ -176,6 +167,7 @@ public class ApplicationsController {
 		model.addAttribute(new VulnerabilityCollectionModel());
 		model.addAttribute("successMessage", successMessage);
 		model.addAttribute("errorMessage", error);
+        model.addAttribute("activeTab", getActiveTab(request, falsePositiveCount, numClosedVulns));
 		model.addAttribute(application);
 		model.addAttribute("falsePositiveCount", falsePositiveCount);
 		model.addAttribute("numHiddenVulns", numHiddenVulns);
@@ -189,8 +181,36 @@ public class ApplicationsController {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
 		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+        addAttrForScheduledScanTab(model);
 		return "applications/detail";
 	}
+
+    private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
+        String activeTab = ControllerUtils.getActiveTab(request);
+        if (activeTab != null) {
+            if (activeTab.equals(ControllerUtils.FALSE_POSITIVE_TAB) && falsePositiveCount == 0)
+                return null;
+            if (activeTab.equals(ControllerUtils.CLOSED_VULN_TAB) && numClosedVulns == 0)
+                return null;
+        }
+
+        return activeTab;
+    }
+
+    private void addAttrForScheduledScanTab(Model model) {
+        List<String> scannerTypeList = new ArrayList<>();
+        List<ChannelType> channelTypeList = channelTypeService.getChannelTypeOptions(null);
+        for (ChannelType type: channelTypeList) {
+            scannerTypeList.add(type.getName());
+        }
+
+        Collections.sort(scannerTypeList);
+        model.addAttribute("scannerTypeList", scannerTypeList);
+        model.addAttribute("scheduledScan", new ScheduledScan());
+        model.addAttribute("frequencyTypes", ScheduledScan.ScheduledFrequencyType.values());
+        model.addAttribute("periodTypes", ScheduledScan.ScheduledPeriodType.values());
+        model.addAttribute("scheduledDays", ScheduledScan.DayInWeek.values());
+    }
 	
 	// TODO move this to a different spot so as to be less annoying
 	private void addDefectModelAttributes(Model model, int appId, int orgId) {

@@ -385,7 +385,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    				if (currentParameter == null &&
 	    						dataFlowElement.getColumnNumber() != 0) {
 	    					String fragment = line.substring(dataFlowElement.getColumnNumber() - 1);
-	    					if (fragment != null && fragment.trim().endsWith(");")) {
+	    					if (fragment.trim().endsWith(");")) {
 	    						
 	    						if (currentParameter == null) {
 	        						currentParameter = fragment.trim().replaceFirst("\\);$", "");
@@ -665,7 +665,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		
 	    		if (fullText != null && fullText.contains("\n")) {
 		    		String[] split = fullText.split("\n");
-		    		if (split != null && split.length > 3) {
+		    		if (split.length > 3) {
 		    			snippetMap.put(snippetId,split[3]);
 		    		}
 	    		}

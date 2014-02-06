@@ -24,30 +24,24 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.dao.DocumentDao;
+import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.controller.rest.ScanQueueTaskConfigException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.DocumentDao;
-import com.denimgroup.threadfix.data.dao.ScanQueueTaskDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Document;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask;
-import com.denimgroup.threadfix.data.entities.ScanQueueTask.ScanQueueTaskStatus;
-import com.denimgroup.threadfix.data.entities.ScanStatus;
-import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.data.entities.TaskConfig;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
@@ -72,43 +66,28 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	}
 	
 	@Override
-	public int queueScan(int applicationId, String scannerType) {
-		int retVal = -2;
-		
+	public ScanQueueTask queueScan(int applicationId, String scannerType) {
+
+        ScanQueueTask task = null;
+
 		Application application = applicationDao.retrieveById(applicationId);
 		if(application != null) {
-			ScanQueueTask myTask = new ScanQueueTask();
-			myTask.setApplication(application);
-			Date now = new Date();
-			myTask.setCreateTime(now);
-			Calendar myCal = Calendar.getInstance();
-			//	TODO - Actually calculate the max finish time
-			myCal.add(Calendar.HOUR, 12);
-			myTask.setTimeoutTime(myCal.getTime());
-			myTask.setScanner(scannerType);
-			myTask.setStatus(ScanQueueTaskStatus.STATUS_QUEUED.getValue());
+			task = new ScanQueueTask(12);
+            task.setApplication(application);
+
+            task.setScanner(scannerType);
+            task.setTaskStatus(ScanQueueTaskStatus.STATUS_QUEUED);
 			//	TODO - See if we really need ScanAgentInfo here because that really only
 			//	matters once an agent "claims" the task to execute.
-			myTask.setScanAgentInfo("<Junk Scan Agent Info>");
-			
-			ScanStatus scanStatus = new ScanStatus();
-			scanStatus.setTimestamp(now);
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy:HH:mm:SS Z");
-			scanStatus.setMessage("Scan queued at: " + format.format(now));
-			
-			scanStatus.setScanQueueTask(myTask);
-			
-			myTask.addScanStatus(scanStatus);
-			
-			
-			scanQueueTaskDao.saveOrUpdate(myTask);
-			retVal = myTask.getId();
-			log.info("Created ScanQueueTask with id: " + retVal);
+            task.setScanAgentInfo("<Junk Scan Agent Info>");
+
+			scanQueueTaskDao.saveOrUpdate(task);
+			log.info("Created ScanQueueTask with id: " + task.getId());
 		} else {
 			log.warn("Invalid applicationId of " + applicationId + " provided. No scan queued");
 		}
 		
-		return retVal;
+		return task;
 	}
 	
 	@Override
@@ -144,7 +123,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 	}
 	
 	@Override
-	public Object requestTask(String scanners, String agentConfig, String secureTaskKey) {
+	public Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException {
 		Task retVal = null;
 		
 		if(scanners == null) {
@@ -182,7 +161,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
                         if (task.getApplication().getUrl() == null || task.getApplication().getUrl().isEmpty()) {
                             String msg = "URL for application " + task.getApplication().getId() + " needs to be set.";
                             log.warn(msg);
-                            return msg;
+                            throw new ScanQueueTaskConfigException(msg);
                         }
 
                         taskConfig.setTargetUrlString(task.getApplication().getUrl());
@@ -214,7 +193,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
                         //	Mark the task as having been assigned
                         //	TODO - Make sure we're doing everything we need here to set this up to run (end time?)
                         task.setStartTime(new Date());
-                        task.setStatus(ScanQueueTaskStatus.STATUS_ASSIGNED.getValue());
+                        task.setTaskStatus(ScanQueueTaskStatus.STATUS_ASSIGNED);
 
                         ScanStatus status = new ScanStatus();
                         status.setScanQueueTask(task);
@@ -280,7 +259,7 @@ public class ScanQueueServiceImpl implements ScanQueueService {
 		status.setTimestamp(timestamp);
 		
 		task.setEndTime(timestamp);
-		task.setStatus(newStatus.getValue());
+		task.setTaskStatus(newStatus);
 		task.addScanStatus(status);
 		
 		this.scanQueueTaskDao.saveOrUpdate(task);

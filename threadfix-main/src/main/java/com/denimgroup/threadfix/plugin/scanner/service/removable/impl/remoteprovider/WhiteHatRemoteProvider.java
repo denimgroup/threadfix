@@ -78,14 +78,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	@Override
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
-		log.info("Retrieving a WhiteHat scan.");
+		LOG.info("Retrieving a WhiteHat scan.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
 		
 		InputStream labelSiteIdStream = httpGet(SITES_URL + "?key=" + apiKey);
 		
 		if (labelSiteIdStream == null) {
-			log.warn("Received a bad response from WhiteHat servers, returning null.");
+			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
 			return null;
 		}
 		
@@ -97,20 +97,20 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		String siteId = parser.map.get(appName);
 		if (siteId == null) {
-			log.warn("No build ID was parsed.");
+			LOG.warn("No build ID was parsed.");
 			return null; // we failed.
 		} else {
-			log.info("Retrieved build ID " + siteId + " for application " + appName);
+			LOG.info("Retrieved build ID " + siteId + " for application " + appName);
 		}
 		
 		String url = VULNS_URL + "?key=" + apiKey + EXTRA_PARAMS + siteId;
 		
-		log.info("Requesting site ID " + siteId);
+		LOG.info("Requesting site ID " + siteId);
 
 		inputStream = httpGet(url);
 		
 		if (inputStream == null) {
-			log.warn("Received a bad response from WhiteHat servers, returning null.");
+			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
 			return null;
 		}
 
@@ -118,14 +118,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		List<Scan> scans = parseSAXInputWhiteHat(scanParser);
 		
 		if (scans == null || scans.size() == 0) {
-			log.warn("No scan was parsed, returning null.");
+			LOG.warn("No scan was parsed, returning null.");
 			return null;
 		}
 		
 		for (Scan resultScan : scans)
 			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 		
-		log.info("WhiteHat "+ scans.size() +" scans successfully parsed.");
+		LOG.info("WhiteHat "+ scans.size() +" scans successfully parsed.");
 		
 		return filterScans(scans);
 	}
@@ -168,7 +168,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
 		if (remoteProviderType == null || remoteProviderType.getApiKey() == null) {
-			log.warn("Insufficient credentials.");
+			LOG.warn("Insufficient credentials.");
 			return null;
 		}
 		
@@ -192,7 +192,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				log.warn("Request status was not 200. It was " + status);
+				LOG.warn("Request status was not 200. It was " + status);
 			}
 			
 			responseStream = get.getResponseBodyAsStream();
@@ -210,7 +210,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 * @return
 	 */
 	private List<Scan> parseSAXInputWhiteHat(DefaultHandler handler) {
-		log.debug("Starting WhiteHat SAX Parsing.");
+		LOG.debug("Starting WhiteHat SAX Parsing.");
 		
 		if (inputStream == null)
 			return null;
@@ -257,16 +257,16 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		scan.setApplicationChannel(applicationChannel);
 		
 		if ((date != null) && (date.getTime() != null)) {
-			log.debug("SAX Parser found the scan date: " + date.getTime().toString());
+			LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
 			scan.setImportTime(date);
 		} else {
-			log.warn("SAX Parser did not find the date.");
+			LOG.warn("SAX Parser did not find the date.");
 		}
 
 		if (scan.getFindings() != null && scan.getFindings().size() != 0)
-			log.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
+			LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
 		else
-			log.warn("SAX Parsing did not find any Findings.");
+			LOG.warn("SAX Parsing did not find any Findings.");
 		
 		return scan;
 	}
@@ -329,7 +329,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			Finding finding = constructFinding(map);
 			
 			if (finding == null) {
-				log.warn("Finding was null.");
+				LOG.warn("Finding was null.");
 			} else {
 				String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
 				finding.setNativeId(nativeId);
@@ -393,7 +393,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				URL url = new URL(fullUrl);
 				return url.getPath();
 			} catch (MalformedURLException e) {
-				log.warn("Tried to parse a URL out of a url in Attack Vector String but failed.");
+				LOG.warn("Tried to parse a URL out of a url in Attack Vector String but failed.");
 			}
 	    	return null;
 	    }

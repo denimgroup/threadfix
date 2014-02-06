@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.denimgroup.threadfix.plugin.eclipse.util.EclipsePropertiesManager;
+
 public class ConfigDialog extends TitleAreaDialog {
 	private Text urlTextInput;
 	private Text apiKeyTextInput;
@@ -41,13 +43,8 @@ public class ConfigDialog extends TitleAreaDialog {
 	private String apiKey;
 	private boolean invalid;
 
-	private final String initialUrl, initialApiKey;
-
-	public ConfigDialog(Shell parentShell, String initialApiKey,
-			String initialUrl,boolean invalid) {
+	public ConfigDialog(Shell parentShell, boolean invalid) {
 		super(parentShell);
-		this.initialApiKey = initialApiKey;
-		this.initialUrl = initialUrl;
 		this.invalid = invalid;
 	}
 
@@ -85,7 +82,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		dataFirstName.horizontalAlignment = GridData.FILL;
 		urlTextInput = new Text(container, SWT.BORDER);
 		urlTextInput.setLayoutData(dataFirstName);
-		urlTextInput.setText(initialUrl);
+		urlTextInput.setText(EclipsePropertiesManager.getUrlStatic());
 
 	}
 
@@ -98,7 +95,7 @@ public class ConfigDialog extends TitleAreaDialog {
 		dataLastName.horizontalAlignment = GridData.FILL;
 		apiKeyTextInput = new Text(container, SWT.BORDER);
 		apiKeyTextInput.setLayoutData(dataLastName);
-		apiKeyTextInput.setText(initialApiKey);
+		apiKeyTextInput.setText(EclipsePropertiesManager.getKeyStatic());
 	}
 
 	@Override

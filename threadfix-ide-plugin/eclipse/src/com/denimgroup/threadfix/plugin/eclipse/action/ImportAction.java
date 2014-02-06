@@ -35,11 +35,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugin.eclipse.dialog.ConfigDialog;
+import com.denimgroup.threadfix.plugin.eclipse.rest.ApplicationsMap;
 import com.denimgroup.threadfix.plugin.eclipse.rest.ThreadFixService;
 import com.denimgroup.threadfix.plugin.eclipse.rest.VulnerabilityMarkerService;
-import com.denimgroup.threadfix.plugin.eclipse.util.SettingsUtils;
-import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarker;
+import com.denimgroup.threadfix.plugin.eclipse.util.EclipsePropertiesManager;
 import com.denimgroup.threadfix.plugin.eclipse.util.VulnerabilityMarkerUtils;
 import com.denimgroup.threadfix.plugin.eclipse.util.WorkspaceUtils;
 import com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;
@@ -64,21 +65,20 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		boolean cancelled = false;
-		ConfigDialog dialog = new ConfigDialog(window.getShell(),
-				SettingsUtils.getApiKey(), SettingsUtils.getUrl(),false);
+		ConfigDialog dialog = new ConfigDialog(window.getShell(), false);
 
 		dialog.create();
 
 		if (dialog.open() == Window.OK) {
-			SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
-			Map<String, String> threadFixApplicationMap = ThreadFixService.getApplications();
-			while(threadFixApplicationMap.get("Authentication failed")!=null){
-				dialog = new ConfigDialog(window.getShell(),
-						SettingsUtils.getApiKey(), SettingsUtils.getUrl(),true);
+			EclipsePropertiesManager.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+			ApplicationsMap threadFixApplicationMap = ThreadFixService.getApplications();
+			
+			while (threadFixApplicationMap.getTeams().isEmpty()) {
+				dialog = new ConfigDialog(window.getShell(), true);
 
 				dialog.create();
 				if (dialog.open() == Window.OK) {
-					SettingsUtils.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
+					EclipsePropertiesManager.saveThreadFixInfo(dialog.getUrl(), dialog.getApiKey());
 					System.out.println("Saved ThreadFix information successfully.");
 					threadFixApplicationMap = ThreadFixService.getApplications();
 				} else {
@@ -87,6 +87,7 @@ public class ImportAction implements IWorkbenchWindowActionDelegate {
 					break;
 				}
 			}
+			
 			if(!cancelled){
 				MessageDialog.openInformation(
 						window.getShell(), "ThreadFix Vulnerability Import", "Importing ThreadFix Vulnerabilities.");

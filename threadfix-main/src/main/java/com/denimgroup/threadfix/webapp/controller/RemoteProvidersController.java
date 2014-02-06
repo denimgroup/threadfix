@@ -51,7 +51,7 @@ import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 @Controller
 @RequestMapping("configuration/remoteproviders")

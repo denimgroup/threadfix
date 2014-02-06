@@ -17,6 +17,11 @@
 				</tr>
 			</thead>
 			<tbody>
+            <c:if test="${ empty application.scanQueueTasks }">
+                <tr class="bodyRow">
+                    <td colspan="7" style="text-align:center;">No Scan Agent Tasks found.</td>
+                </tr>
+            </c:if>
 				<c:forEach items="${application.scanQueueTasks}" var="scanQueueTask" varStatus="status">
 					<tr class="bodyRow">
 						<td>

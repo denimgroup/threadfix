@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.plugin.scanner.service.util;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import java.io.File;
 import java.net.URISyntaxException;

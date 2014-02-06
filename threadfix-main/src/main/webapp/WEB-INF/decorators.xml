@@ -43,6 +43,7 @@
     	<pattern>/organizations/*/applications/*/closedTab*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositiveTab*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/mark*</pattern>
+        <pattern>/organizations/*/applications/*/closed/falsePositives/mark*</pattern>
     	<pattern>/organizations/*/applications/*/falsePositives/unmark*</pattern>
     	<pattern>/organizations/*/applications/*/hiddenTab*</pattern>
     	<pattern>/organizations/*/applications/*/hidden/table*</pattern>

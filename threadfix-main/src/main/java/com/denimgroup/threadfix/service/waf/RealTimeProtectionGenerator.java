@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * 

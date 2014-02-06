@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/threadfix-cli.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-api-1.1.jar"/>

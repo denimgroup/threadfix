@@ -39,7 +39,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 public class ChannelMerger extends SpringBeanAutowiringSupport {
 	

@@ -25,7 +25,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 
 @Controller

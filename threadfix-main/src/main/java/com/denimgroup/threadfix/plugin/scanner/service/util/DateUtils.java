@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.Nullable;
 
 public class DateUtils {

@@ -31,7 +31,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * An abstract class providing a base implementation of a defect tracker. This

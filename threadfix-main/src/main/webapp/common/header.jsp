@@ -76,7 +76,7 @@
 						    </li>
 					    </security:authorize>
 					    <li class="normalLinks">
-						    	<a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Queue</a>
+						    	<a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
 						</li>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">

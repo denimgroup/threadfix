@@ -26,15 +26,11 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledScanService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.bouncycastle.util.Strings;
-import org.quartz.JobDetail;
-import org.quartz.CronTrigger;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

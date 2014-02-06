@@ -1,6 +1,6 @@
 package burp.dialog;
 
-import burp.extention.ThreadFixPropertiesManager;
+import burp.extention.BurpPropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +9,9 @@ public class ParametersDialog {
 
     public static boolean show(Component view) {
         JTextField urlField = new JTextField(40);
-        urlField.setText(ThreadFixPropertiesManager.getUrl());
+        urlField.setText(BurpPropertiesManager.getUrlStatic());
         JTextField keyField = new JTextField(40);
-        keyField.setText(ThreadFixPropertiesManager.getKey());
+        keyField.setText(BurpPropertiesManager.getKeyStatic());
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -47,7 +47,7 @@ public class ParametersDialog {
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
         if (result == JOptionPane.OK_OPTION) {
-            ThreadFixPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
+            BurpPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
             return true;
         } else {
             return false;

@@ -23,10 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.action;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.dialog.ConfigDialog;
 import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
-import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarkerService;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -47,7 +47,7 @@ public class ImportAction extends AnAction {
         if (ConfigDialog.show(e)) {
             System.out.println(Constants.IMPORT_MARKERS_MESSAGE);
 
-            List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getMarkers();
+            List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getAllMarkers();
 
             MarkerUtils.createMarkers(markers, e.getData(PlatformDataKeys.PROJECT));
 

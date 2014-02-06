@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.security.authentication.AuthenticationProvider;
 
 import net.xeoh.plugins.base.Plugin;

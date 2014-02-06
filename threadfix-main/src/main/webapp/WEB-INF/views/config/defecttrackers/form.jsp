@@ -31,14 +31,14 @@
 		To set up the Defect Tracker, enter the RPC endpoint address of your tracker instance.
 	</div>
 	
-<spring:url value="" var="emptyUrl"></spring:url>	
+<spring:url value="" var="emptyUrl"/>
 <form:form modelAttribute="defectTracker" method="post" action="${ fn:escapeXml(emptyUrl) }">
 	<table class="dataTable">
 		<tbody>
 			    <tr>
 					<td>Name:</td>
 					<td class="inputValue">
-						<form:input id="nameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
+						<form:input id="nameInput${status.count}" path="name" cssClass="focus" size="50" maxlength="50"/>
 					</td>
 					<td style="padding-left: 5px">
 						<form:errors path="name" cssClass="errors" />

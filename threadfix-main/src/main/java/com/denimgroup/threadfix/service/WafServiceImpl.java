@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 import java.util.Calendar;
 import java.util.List;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -197,7 +198,7 @@ public class WafServiceImpl implements WafService {
 		
 		List<WafRule> rules = loadCurrentRules(waf);
 		
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		
 		String prefix = null, suffix = null;
 		String name = waf.getWafType().getName();

@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes

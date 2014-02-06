@@ -24,30 +24,23 @@
 
 package com.denimgroup.threadfix.scanagent.scanners;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
-
+import com.denimgroup.threadfix.data.entities.TaskConfig;
+import com.denimgroup.threadfix.scanagent.configuration.Scanner;
+import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
+import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.zaproxy.clientapi.core.ApiResponse;
-import org.zaproxy.clientapi.core.ApiResponseElement;
-import org.zaproxy.clientapi.core.ApiResponseList;
-import org.zaproxy.clientapi.core.ClientApi;
-import org.zaproxy.clientapi.core.ClientApiException;
+import org.zaproxy.clientapi.core.*;
 
-import com.denimgroup.threadfix.data.entities.TaskConfig;
-import com.denimgroup.threadfix.scanagent.configuration.Scanner;
-import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
-import com.denimgroup.threadfix.scanagent.util.ZipFileUtils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 
 public class ZapScanAgent extends AbstractScanAgent {
 	private static final Logger log = Logger.getLogger(ZapScanAgent.class);
@@ -77,7 +70,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		if(instance == null) {
 			instance = new ZapScanAgent();
 		}
-		instance.readConfig(ConfigurationUtils.getPropertiesFile());
+		instance.readConfig(ScanAgentPropertiesManager.getPropertiesFile());
 		instance.setWorkDir(workDir);
 		instance.setZapExecutablePath(scanner.getHomeDir());
 		instance.setZapHost(scanner.getHost());
@@ -191,8 +184,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 				log.warn(message);
 				sendStatusUpdate(message);
 			}			
-		}
-		finally {
+		} finally {
 			stopZap(zap);
 		}
 		log.info("Finished attempting to do ZAP task with config: " + theConfig);
@@ -203,12 +195,12 @@ public class ZapScanAgent extends AbstractScanAgent {
 	public boolean readConfig(@NotNull Configuration config) {
 		boolean retVal = false;
 		
-		this.maxSpiderWaitInSeconds = config.getInt("zap.maxSpiderWaitInSeconds");
-		this.maxScanWaitInSeconds = config.getInt("zap.maxScanWaitInSeconds");
+		this.maxSpiderWaitInSeconds  = config.getInt("zap.maxSpiderWaitInSeconds");
+		this.maxScanWaitInSeconds    = config.getInt("zap.maxScanWaitInSeconds");
 		this.spiderPollWaitInSeconds = config.getInt("zap.spiderPollWaitInSeconds");
-		this.scanPollWaitInSeconds = config.getInt("zap.scanPollWaitInSeconds");
+		this.scanPollWaitInSeconds   = config.getInt("zap.scanPollWaitInSeconds");
 		//	TODO rename this to reflect that it is in seconds (also requires change to .properties file)
-		this.zapStartupWaitTime = config.getInt("zap.zapStartupWaitTime");
+		this.zapStartupWaitTime      = config.getInt("zap.zapStartupWaitTime");
 		
 		//	TODO - Perform some input validation on the supplied properties so this retVal means something
 		retVal = true;
@@ -255,9 +247,12 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		try {
 			result = zap.core.shutdown();
-			if(didCallSucceed(result)) {
+
+            CallResponse callResponse = getCallResponse(result);
+
+            if (callResponse == CallResponse.OK) {
 				log.info("ZAP shutdown appears to have been successful");
-			} else if(didCallFail(result)) {
+			} else if (callResponse == CallResponse.FAIL) {
 				log.info("ZAP shutdown request appears to have failed");
 			} else {
 				log.warn("Got unexpected result from ZAP shutdown request");
@@ -268,28 +263,14 @@ public class ZapScanAgent extends AbstractScanAgent {
 		log.info("Finished shutting down ZAP instance");
 	}
 
-	
-	/**
-	 * @return
-	 */
 	@Nullable
     private String attemptRetrieveResults() {
-		String retVal = null;
-		
-		try {
-			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
-			retVal = openUrlViaProxy(proxy);
-			if(retVal != null) {
-				log.debug("Length of response file from ZAP is: " + retVal.length());
-			} else {
-				log.warn("Got a null response file from ZAP");
-			}
-		} catch (Exception e) {
-			log.error("Problems retrieving ZAP result. There's might something wrong with zap host/port, " +
-					"please check them again and use '-cs zap' to config zap information");
-		}
-		
-		return(retVal);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.zapHost, this.zapPort));
+        String retVal = openUrlViaProxy(proxy);
+
+        log.debug("Length of response file from ZAP is: " + retVal.length());
+
+        return (retVal);
 	}
 	
 	/**
@@ -299,30 +280,33 @@ public class ZapScanAgent extends AbstractScanAgent {
 	 * List of Strings containing the individual chunks of the response.
 	 * 
 	 * TODO - Look through and clean up if necessary
-	 * TODO - Clean up the massive Exception being thrown
-	 * 
-	 * @param proxy
-	 * @return
-	 * @throws Exception
+	 *
 	 */
     @NotNull
-    private static String openUrlViaProxy (@NotNull Proxy proxy) throws Exception {
+    private static String openUrlViaProxy (@NotNull Proxy proxy) {
     	StringBuilder response = new StringBuilder();
-        URL url = new URL("http://zap/OTHER/core/other/xmlreport/");
-        HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
-        uc.connect();
-        
-        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
 
-        String inputLine;
+        try {
+            URL url = new URL("http://zap/OTHER/core/other/xmlreport/");
+            HttpURLConnection uc = (HttpURLConnection) url.openConnection(proxy);
+            uc.connect();
 
-        while ((inputLine = in.readLine()) != null) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
+            }
+
+            in.close();
+        } catch (IOException e) {
+            log.error("Problems retrieving ZAP result. There's might something wrong with zap host/port, " +
+                    "please check them again and use '-cs zap' to config zap information", e);
         }
 
-        in.close();
         return response.toString();
-}
+    }
 	
 	private boolean attemptRunScan(@NotNull TaskConfig theConfig, @NotNull ClientApi zap) {
 		boolean retVal = false;
@@ -333,8 +317,10 @@ public class ZapScanAgent extends AbstractScanAgent {
 			
 			response = zap.ascan.scan(theConfig.getTargetUrlString(), "true", "false");
 			log.info("Call to start scan returned successfull. Checking to see if scan actually started");
-			
-			if(didCallSucceed(response)) {
+
+            CallResponse callResponse = getCallResponse(response);
+
+            if (callResponse == CallResponse.OK) {
 				log.info("Attempt to start scan was successful");
 				
 				// Now wait for the spider to finish
@@ -378,13 +364,12 @@ public class ZapScanAgent extends AbstractScanAgent {
 					}
 				}
 				
-			} else if(didCallFail(response)) {
+			} else if (callResponse == CallResponse.FAIL) {
 				log.warn("Attempt to start scan was NOT succcessful");
 			} else {
 				log.warn("Got an ApiResponse we didn't expect: " + response.toString(0));
 			}
-			
-			
+
 		} catch (ClientApiException e) {
 			log.error("Problems communicating with ZAP:" + e.getMessage(), e);
 		}
@@ -402,8 +387,10 @@ public class ZapScanAgent extends AbstractScanAgent {
 			
 			response = zap.spider.scan(theConfig.getTargetUrlString());
 			log.info("Call to start spider returned successfully. Checking to see if spider actually started.");
-			
-			if(didCallSucceed(response)) {
+
+            CallResponse callResponse = getCallResponse(response);
+
+			if (callResponse == CallResponse.OK) {
 				log.info("Attempt to start spider was succcessful");
 				
 				//	Now wait for the spider to finish
@@ -450,7 +437,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 					
 				}
 				
-			} else if(didCallFail(response)) {
+			} else if (callResponse == CallResponse.FAIL) {
 				log.warn("Attempt to start spider was NOT succcessful");
 			} else {
 				log.warn("Got an ApiResponse we didn't expect: " + response.toString(0));
@@ -463,33 +450,28 @@ public class ZapScanAgent extends AbstractScanAgent {
 		
 		return(retVal);
 	}
+
+    enum CallResponse {
+        OK, FAIL, UNKNOWN
+    }
 	
 	/**
 	 * 	TOFIX - This is kind of gross, but the ZAP Java API is a little goofy here so we have to compensate a bit.
-	 * @param response
-	 * @return
 	 */
-	private static boolean didCallSucceed(@Nullable ApiResponse response) {
-		boolean retVal = false;
-		if(response != null && "OK".equals(extractResponseString(response))) {
-			retVal = true;
-		}
-		return(retVal);
+	private static CallResponse getCallResponse(@Nullable ApiResponse response) {
+		CallResponse callResponse = CallResponse.UNKNOWN;
+
+        String responseString = extractResponseString(response);
+
+        switch (responseString) {
+            case "FAIL": callResponse = CallResponse.FAIL; break;
+            case "OK"  : callResponse = CallResponse.OK;   break;
+            default: break;
+        }
+
+        return callResponse;
 	}
-	
-	/**
-	 * 	TOFIX - This is kind of gross, but the ZAP Java API is a little goofy here so we have to compensate a bit.
-	 * @param response
-	 * @return
-	 */
-	private static boolean didCallFail(@Nullable ApiResponse response) {
-		boolean retVal = false;
-		if(response != null && "FAIL".equals(extractResponseString(response))) {
-			retVal = true;
-		}
-		return(retVal);
-	}
-	
+
 	/**
 	 * 	TOFIX - This is kind of gross, but the ZAP Java API is a little goofy here so we have to compensate a bit.
 	 * @param response
@@ -498,7 +480,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 	@Nullable
     private static String extractResponseString(@Nullable ApiResponse response) {
 		String retVal = null;
-		if(response != null && response instanceof ApiResponseElement) {
+		if (response != null && response instanceof ApiResponseElement) {
 			retVal = ((ApiResponseElement)response).getValue();
 		}
 		return(retVal);
@@ -516,7 +498,7 @@ public class ZapScanAgent extends AbstractScanAgent {
 		}
 		return(retVal);
 	}
-	public void setZapHost(@NotNull String zapHost) {
+	public void setZapHost(String zapHost) {
 		this.zapHost = zapHost;
 	}
 	public void setZapPort(int zapPort) {

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

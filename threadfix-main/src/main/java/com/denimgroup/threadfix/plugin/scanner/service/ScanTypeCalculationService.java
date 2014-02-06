@@ -30,8 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ScanTypeCalculationService extends Plugin {
 
 	Integer calculateScanType(int appId, MultipartFile file, String channelIdString);
-	
-//	String getScannerType(MultipartFile file);
 
 	String saveFile(Integer channelId, MultipartFile file);
 

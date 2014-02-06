@@ -23,17 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-
-import org.junit.Test;
-
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
 
 public class EndpointDatabaseFactoryTests {
 	

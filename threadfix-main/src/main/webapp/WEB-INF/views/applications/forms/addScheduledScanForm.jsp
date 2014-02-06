@@ -41,7 +41,7 @@
                     <form:select style="margin-bottom:0px; width:110px;" name="selectedDay"
                                  id="selectedDay"
                                  path="day" disabled="true">
-                        <form:option value="" label="Select Day"/>
+                        <%--<form:option value="" label="Select Day"/>--%>
                         <form:options items="${ scheduledDays }" itemLabel="day" itemValue="day"/>
                     </form:select>
                     <form:errors path="dateError" cssClass="errors" />

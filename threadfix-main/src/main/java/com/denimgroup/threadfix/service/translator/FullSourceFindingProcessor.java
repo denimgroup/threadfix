@@ -26,14 +26,15 @@ package com.denimgroup.threadfix.service.translator;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
-import com.denimgroup.threadfix.framework.engine.full.Endpoint;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +53,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
 	
 	public FullSourceFindingProcessor(ProjectConfig config, Scan scan) {
         PathCleaner cleaner = PathCleanerFactory.getPathCleaner(
-				config.getFrameworkType(), scan.toPartialMappingList());
+				config.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
 		
 		noSourceProcessor = new NoSourceFindingProcessor(cleaner);
 		
@@ -74,13 +75,13 @@ class FullSourceFindingProcessor implements FindingProcessor {
 
         if (parameterParser != null) {
             if (finding.getSurfaceLocation() != null) {
-                parameter = parameterParser.parse(finding.toEndpointQuery());
+                parameter = parameterParser.parse(ThreadFixInterface.toEndpointQuery(finding));
                 finding.getSurfaceLocation().setParameter(parameter);
             }
         }
 
         if (database != null) {
-            endpoint = database.findBestMatch(finding.toEndpointQuery());
+            endpoint = database.findBestMatch(ThreadFixInterface.toEndpointQuery(finding));
         }
 
 		if (endpoint != null) {

@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

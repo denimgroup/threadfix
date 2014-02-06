@@ -23,9 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.rest;
 
+import com.denimgroup.threadfix.data.entities.Application;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class ApplicationsMap {
 
@@ -38,17 +41,19 @@ public class ApplicationsMap {
         }
     }
 
-    void addApp(String team, String app, String id) {
-        addTeam(team);
-        map.get(team).put(app, id);
+    void addApp(Application.Info applicationInfo) {
+        addTeam(applicationInfo.organizationName);
+        map.get(applicationInfo.organizationName).put(
+                applicationInfo.applicationName,
+                applicationInfo.applicationId);
     }
 
     public Set<String> getTeams() {
-        return map.keySet();
+        return new TreeSet<String>(map.keySet());
     }
 
     public Set<String> getApps(String team) {
-        return map.get(team).keySet();
+        return new TreeSet<String>(map.get(team).keySet());
     }
 
     public String getId(String team, String app) {

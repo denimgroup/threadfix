@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.plugin.scanner.service.channel;
 public enum ScanImportStatus {
 	SUCCESSFUL_SCAN("Valid Scan file."),
 	OLD_SCAN_ERROR("A newer scan from this scanner has been uploaded."),
-	EMPTY_SCAN_ERROR("Scan file is empty."),
+	EMPTY_SCAN_ERROR("The scan file contained 0 results."),
 	DUPLICATE_ERROR("Scan file has already been uploaded."),
 	WRONG_FORMAT_ERROR("Scan file is in the wrong format."),
 	NULL_INPUT_ERROR("The scan could not be completed because there was null input"),

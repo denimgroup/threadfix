@@ -43,7 +43,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;

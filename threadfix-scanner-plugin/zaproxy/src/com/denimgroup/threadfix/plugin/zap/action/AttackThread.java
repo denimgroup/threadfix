@@ -64,14 +64,10 @@ public class AttackThread extends Thread {
     public void run() {
         stopAttack = false;
         try {
-            SiteNode startNode = null;
+            SiteNode startNode = accessNode(this.url);
             String urlString = url.toString();
 
             logger.info("Starting at url : " + urlString);
-
-            if (startNode == null) {
-                startNode = this.accessNode(this.url);
-            }
 
             if (startNode == null) {
                 logger.debug("Failed to access URL " + urlString);
@@ -90,7 +86,6 @@ public class AttackThread extends Thread {
             if (extAscan == null) {
                 logger.error("No active scanner");
                 extension.notifyProgress(Progress.FAILED);
-                return;
             } else {
                 extension.notifyProgress(Progress.ASCAN);
                 extAscan.onHttpRequestSend(startNode.getHistoryReference().getHttpMessage());
@@ -165,7 +160,6 @@ public class AttackThread extends Thread {
         if (stopAttack) {
             logger.debug("Attack stopped manually");
             extension.notifyProgress(Progress.STOPPED);
-            return;
         }
     }
 
@@ -221,9 +215,4 @@ public class AttackThread extends Thread {
         }
         return httpSender;
     }
-
-    public void stopAttack() {
-        this.stopAttack = true;
-    }
-
 }

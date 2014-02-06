@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;

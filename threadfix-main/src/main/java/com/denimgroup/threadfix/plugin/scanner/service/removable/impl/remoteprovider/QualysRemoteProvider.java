@@ -158,7 +158,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
 				remoteProviderApplication.getRemoteProviderType() == null) {
-			log.error("Null input to Qualys getScan(), returning null.");
+			LOG.error("Null input to Qualys getScan(), returning null.");
 			return null;
 		}
 		
@@ -168,7 +168,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		List<String> scanIds = mostRecentScanForApp(remoteProviderApplication);
 		
 		if (scanIds == null || scanIds.size() == 0) {
-			log.warn("No valid scans were found.");
+			LOG.warn("No valid scans were found.");
 			return null;
 		}
 		
@@ -178,7 +178,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			inputStream = httpGet(getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId);
 			
 			if (inputStream == null) {
-				log.warn("Got a bad response from Qualys servers for scan ID " + scanId + ". Trying the next scan.");
+				LOG.warn("Got a bad response from Qualys servers for scan ID " + scanId + ". Trying the next scan.");
 				continue;
 			}
 	
@@ -186,11 +186,11 @@ public class QualysRemoteProvider extends RemoteProvider {
 			Scan resultScan = parseSAXInput(scanParser);
 			
 			if (resultScan != null) {
-				log.info("The Qualys scan import for scan ID " + scanId + " was successful.");
+				LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
 				resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 				scanList.add(resultScan);
 			} else {
-				log.warn("The Qualys scan import for scan ID " + scanId + " failed!!");
+				LOG.warn("The Qualys scan import for scan ID " + scanId + " failed!!");
 			}
 		}
 		
@@ -201,11 +201,11 @@ public class QualysRemoteProvider extends RemoteProvider {
 	public List<RemoteProviderApplication> fetchApplications() {
 		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
-			log.error("Insufficient credentials given to Qualys fetchApplications().");
+			LOG.error("Insufficient credentials given to Qualys fetchApplications().");
 			return null;
 		}
 		
-		log.info("Fetching Qualys applications.");
+		LOG.info("Fetching Qualys applications.");
 		
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
@@ -217,7 +217,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		stream = httpPost(getAppsUrl(remoteProviderType),new String[]{},new String[]{});
 		
 		if (stream == null) {
-			log.warn("Response from Qualys servers was null, check your credentials.");
+			LOG.warn("Response from Qualys servers was null, check your credentials.");
 			return null;
 		}
 		
@@ -226,9 +226,9 @@ public class QualysRemoteProvider extends RemoteProvider {
 		parse(stream, parser);
 		
 		if (parser.list != null && parser.list.size() > 0) {
-			log.info("Number of Qualys applications: " + parser.list.size());
+			LOG.info("Number of Qualys applications: " + parser.list.size());
 		} else {
-			log.warn("No Qualys applications were found. Check your configuration.");
+			LOG.warn("No Qualys applications were found. Check your configuration.");
 		}
 		
 		return parser.list;
@@ -264,7 +264,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			}
 		}
 		
-		log.info("Returning scan IDs " + scanIds + " for application " + app.getNativeId());
+		LOG.info("Returning scan IDs " + scanIds + " for application " + app.getNativeId());
 
 		return scanIds;
 	}
@@ -317,8 +317,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 			int status = client.executeMethod(post);
 
 			if (status != 200) {
-				log.warn("Status was not 200.");
-				log.warn("Status : " + status);
+				LOG.warn("Status was not 200.");
+				LOG.warn("Status : " + status);
 			}
 			
 			InputStream responseStream = post.getResponseBodyAsStream();
@@ -335,7 +335,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			e.printStackTrace();
 		}
 
-		log.warn("There was an error and the POST request was not finished.");
+		LOG.warn("There was an error and the POST request was not finished.");
 		return null;
 	}
 	
@@ -355,8 +355,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {
-				log.warn("Status was not 200.");
-				log.warn("Status : " + status);
+				LOG.warn("Status was not 200.");
+				LOG.warn("Status : " + status);
 			}
 			
 			InputStream responseStream = get.getResponseBodyAsStream();

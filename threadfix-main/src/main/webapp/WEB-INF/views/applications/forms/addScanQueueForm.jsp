@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div class="modal-header">
-	<h4 id="myModalLabel">Add Scan Task to Queue</h4>
+	<h4 id="myModalLabel">Add Scan Agent Task to Queue</h4>
 </div>
 
 <spring:url value="/configuration/scanqueue/organizations/{orgId}/applications/{applicationId}/addScanQueueTask" var="addScanQueueTaskUrl">

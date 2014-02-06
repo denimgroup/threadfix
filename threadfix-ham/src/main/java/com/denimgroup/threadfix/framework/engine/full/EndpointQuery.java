@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.framework.engine.full;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
-import com.denimgroup.threadfix.framework.enums.InformationSourceType;
 import org.jetbrains.annotations.Nullable;
 
 public interface EndpointQuery {
@@ -47,6 +47,6 @@ public interface EndpointQuery {
 	List<CodePoint> getCodePoints();
 
     @Nullable
-	InformationSourceType getInformationSourceType();
+    InformationSourceType getInformationSourceType();
 	
 }

@@ -29,6 +29,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -41,8 +43,6 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.SourceCodeAccessLevel;
 
 public class SpringParameterParsingTests {
 	

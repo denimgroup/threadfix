@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.scanagent;
 
 import com.denimgroup.threadfix.scanagent.stub.StubThreadFixRestClient;
 import com.denimgroup.threadfix.scanagent.util.ConfigurationUtils;
+import com.denimgroup.threadfix.scanagent.util.ScanAgentPropertiesManager;
 import junit.framework.TestCase;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +20,7 @@ import org.junit.Test;
  */
 public class ScanAgentRunnerTests extends TestCase {
     @Nullable
-    private static PropertiesConfiguration config = ConfigurationUtils.getPropertiesFile();
+    private static PropertiesConfiguration config = ScanAgentPropertiesManager.getPropertiesFile();
 
     public static final String RETURN_NULL_URL = "nullUrl";
     public static final String RETURN_ERROR_URL = "errorUrl";
@@ -51,7 +52,7 @@ public class ScanAgentRunnerTests extends TestCase {
         runner.setTfClient(new StubThreadFixRestClient());
         runner.run();
 
-        Assert.assertEquals(maxTasks, runner.getNumTasksAttempted());
+        Assert.assertEquals(maxTasks, runner.numTasksAttempted);
     }
 
     @Test
@@ -62,7 +63,7 @@ public class ScanAgentRunnerTests extends TestCase {
         runner.setTfClient(new StubThreadFixRestClient());
         runner.run();
 
-        Assert.assertEquals(maxTasks, runner.getNumTasksAttempted());
+        Assert.assertEquals(maxTasks, runner.numTasksAttempted);
     }
 
     @Test
@@ -73,7 +74,7 @@ public class ScanAgentRunnerTests extends TestCase {
         runner.setTfClient(new StubThreadFixRestClient());
         runner.run();
 
-        Assert.assertEquals(maxTasks, runner.getNumTasksAttempted());
+        Assert.assertEquals(maxTasks, runner.numTasksAttempted);
     }
 
 

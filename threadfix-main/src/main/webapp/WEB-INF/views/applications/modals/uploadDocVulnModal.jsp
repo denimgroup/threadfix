@@ -5,7 +5,7 @@
 	<div class="modal-header">
 		<h4 style="text-align:left;" id="myModalLabel">
 			<span style="max-width:400px; display:inline-block; float:left" class="ellipsis">Vulnerability <c:out value="${ vulnerability.id } "/></span>
-			&nbsp;Document Upload
+			&nbsp;File Upload
 		</h4>
 	</div>
 	<div id="docVulnFormDiv${ vulnerability.id }">

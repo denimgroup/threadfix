@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.framework;
 
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -9,7 +10,6 @@ import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMappingDatabase;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMappingsDatabaseFactory;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class PartialMappingTests {
 	

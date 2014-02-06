@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.service.LogParserService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller

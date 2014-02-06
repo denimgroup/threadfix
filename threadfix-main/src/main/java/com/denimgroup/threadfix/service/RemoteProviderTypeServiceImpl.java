@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;

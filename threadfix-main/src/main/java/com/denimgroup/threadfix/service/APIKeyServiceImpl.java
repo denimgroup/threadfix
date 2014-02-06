@@ -28,6 +28,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.List;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.ws.commons.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

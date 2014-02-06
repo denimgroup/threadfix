@@ -47,7 +47,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller

@@ -10,13 +10,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
-import com.denimgroup.threadfix.framework.engine.framework.WebXMLParser;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
 
 public class WebXMLParserTests {
 

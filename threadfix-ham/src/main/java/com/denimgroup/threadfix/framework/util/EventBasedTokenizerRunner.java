@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.util;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,8 +34,8 @@ import java.io.*;
  * This class abstracts all of the exception catching and logging and opening up a
  * file reader on the given file.
  * 
- * <p>See also: {@link EventBasedTokenizer}
- * <p>See also: {@link EventBasedTokenizerRunner#run}
+ * <p>See also: {@link com.denimgroup.threadfix.framework.util.EventBasedTokenizer}
+ * <p>See also: {@link com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner#run}
  * @author mcollins
  *
  */
@@ -54,16 +55,21 @@ public class EventBasedTokenizerRunner {
 	 * @param file
 	 * @param eventBasedTokenizers
 	 */
-	public static void run(@Nullable File file, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
+    public static void run(@Nullable File file, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
+        run(file, true, eventBasedTokenizers);
+    }
+	public static void run(@Nullable File file, boolean javaComments, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
 
 		if (file != null && file.exists() && file.isFile()) {
 			try (Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8")) {
 			
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
-				tokenizer.slashSlashComments(true);
-				tokenizer.slashStarComments(true);
+                tokenizer.slashSlashComments(javaComments);
+                tokenizer.slashStarComments(javaComments);
 				tokenizer.ordinaryChar('<');
 				tokenizer.wordChars(':', ':');
+                if (!javaComments)
+                    tokenizer.ordinaryChar('/');
 
                 // stop only if all of the tokenizers return false from shouldContinue();
                 boolean keepGoing = true;

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,7 +40,7 @@ import org.springframework.stereotype.Service;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.ThreadFixUserDetails;
+import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
 import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;

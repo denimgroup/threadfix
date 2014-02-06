@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.service.JobStatusService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * @author bbeverly

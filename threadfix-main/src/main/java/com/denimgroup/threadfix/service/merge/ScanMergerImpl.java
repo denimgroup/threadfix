@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.translator.PathGuesser;
 
 @Service

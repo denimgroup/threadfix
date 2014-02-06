@@ -46,7 +46,7 @@ import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/documents")
@@ -81,15 +81,15 @@ public class DocumentController {
 		String fileName = documentService.saveFileToApp(appId, file);
 		
 		if (fileName == null || fileName.equals("")) {
-			log.warn("Saving the document have failed. Returning to document upload page.");
+			log.warn("Saving the file have failed. Returning to file upload page.");
 			ModelAndView mav = new ModelAndView("ajaxFailureHarness");
-			mav.addObject("message","Unable to save the document to the application.");
+			mav.addObject("message","Unable to save the file to the application.");
 			mav.addObject("contentPage","applications/forms/uploadDocForm.jsp");
 			return mav;
 		}else {
 			ControllerUtils.addSuccessMessage(request, 
-					"The document was successfully added to the application.");
-//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+					"The file was successfully added to the application.");
+            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
 			return mav;		
@@ -109,13 +109,14 @@ public class DocumentController {
 		String fileName = documentService.saveFileToVuln(vulnId, file);
 		System.out.println(file.getContentType());
 		if (fileName == null || fileName.equals("")) {
-			log.warn("Saving the document have failed. Returning to document upload page.");
+			log.warn("Saving the document have failed. Returning to file upload page.");
 			ModelAndView mav = new ModelAndView("ajaxFailureHarness");
-			mav.addObject("message","Unable to save the document to the vulnerability.");
+			mav.addObject("message","Unable to save the file to the vulnerability.");
 			mav.addObject("contentPage","applications/forms/uploadDocVulnForm.jsp");
 			return mav;
 		}else {
-//			ControllerUtils.addItem(request, "checkForRefresh", 1);		
+            ControllerUtils.addSuccessMessage(request,
+                    "The file was successfully added to the vulnerability.");
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnId);
 			return mav;		
@@ -148,9 +149,6 @@ public class DocumentController {
 		}
 		
 		String contentType = document.getContentType();
-//		if (contentType == null || contentType.contains("htm") || contentType.contains("js")) {
-//			contentType = "text/plain";
-//		}
 		response.setContentType(contentType);
 		if(contentType.equals(documentService.getContentTypeService().getDefaultType())){
 			response.addHeader("Content-Disposition", "attachment; filename=\""+document.getName()+"."+document.getType()+"\"");
@@ -226,9 +224,14 @@ public class DocumentController {
 			else
 				return "redirect:/";
 		}
-		
+        boolean deleteFromApp = false;
+        if (document.getApplication() != null && document.getApplication().getId() != null )
+            deleteFromApp = true;
 		String urlReturn = documentService.deleteDocument(document);
-		
+        ControllerUtils.addSuccessMessage(request, "The file was successfully deleted.");
+        if (deleteFromApp)
+            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
+
 		return urlReturn;
 	}
 	

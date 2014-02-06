@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.full;
 
-import java.util.*;
-
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.InformationSourceType;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import com.denimgroup.threadfix.framework.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.enums.InformationSourceType;
-import com.denimgroup.threadfix.framework.util.SanitizedLogger;
+import java.util.*;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
@@ -137,11 +137,11 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         }
 
         if (query.getHttpMethod() != null) {
-            resultSets.add(getValueOrEmptySet(query.getHttpMethod(), httpMethodMap));
+            resultSets.add(getValueOrEmptySetWithSimpleKey(query.getHttpMethod(), httpMethodMap));
         }
 
         if (query.getParameter() != null) {
-            resultSets.add(getValueOrEmptySet(query.getParameter(), parameterMap));
+            resultSets.add(getValueOrEmptySetWithSimpleKey(query.getParameter(), parameterMap));
         }
 
         if (resultSets.size() > 0) {
@@ -201,9 +201,32 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
         return results;
     }
-	
-	@NotNull
+
+    @NotNull
     private Set<Endpoint> getValueOrEmptySet(@Nullable String key,
+                                             @NotNull Map<String, Set<Endpoint>> map) {
+        if (key == null)
+            return new HashSet<>();
+
+        String keyFS = key.replace("\\","/");
+
+        for (Map.Entry<String,Set<Endpoint>> entry: map.entrySet()) {
+            String keyEntry = entry.getKey();
+            String keyEntryFS = keyEntry.replace("\\","/");
+
+            if ((keyEntry.isEmpty() && !key.isEmpty())
+                    || (key.isEmpty() && !keyEntry.isEmpty()))
+                continue;
+
+            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+                return new HashSet<>(entry.getValue());
+        }
+
+        return new HashSet<>();
+    }
+
+	@NotNull
+    private Set<Endpoint> getValueOrEmptySetWithSimpleKey(@Nullable String key,
                                              @NotNull Map<String, Set<Endpoint>> map) {
 		if (key != null && map.containsKey(key) && map.get(key) != null) {
 			return new HashSet<>(map.get(key));

@@ -32,7 +32,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.JobStatusService;
-import com.denimgroup.threadfix.service.SanitizedLogger;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * This class is used to remove all the logging code from the merging code.
