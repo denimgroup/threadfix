@@ -1,12 +1,13 @@
 package com.denimgroup.threadfix.importer.parser;
 
-import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 
 import static com.denimgroup.threadfix.importer.TestConstants.*;
 import static junit.framework.Assert.assertNotNull;
 
+// TODO move all the tests to this format.
 public class NetsparkerTests {
 
     public final static String[][] netsparkerResults = new String[] [] {
@@ -39,10 +40,8 @@ public class NetsparkerTests {
 
     @Test
     public void firstTest() {
-        Scan scan = Initializer.getScanParser().getScan(ScanLocationManager.getRoot() +
+        ScanComparisonUtils.compare(netsparkerResults, ScanLocationManager.getRoot() +
                 "Dynamic/NetSparker/netsparker-demo-site.xml");
-
-        assertNotNull(scan);
     }
 
 }

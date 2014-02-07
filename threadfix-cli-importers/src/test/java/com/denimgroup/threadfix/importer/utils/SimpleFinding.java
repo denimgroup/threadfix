@@ -13,17 +13,40 @@ public class SimpleFinding {
 
     public SimpleFinding(String[] array) {
         assertTrue(array.length == 4);
-        this.vulnType = array[0];
-        this.severity = array[1];
-        this.path = array[2];
-        this.parameter = array[3];
+        vulnType = array[0];
+        severity = array[1];
+        path = array[2];
+        parameter = array[3].equals("") ? null : array[3];
     }
 
+    // This class assumes that every finding will have severity and vulnerability mappings.
+    // This is probably a good thing.
     public boolean matches(Finding finding) {
-        return finding.getSurfaceLocation().getParameter().equals(parameter) &&
+        if (finding == null) {
+            throw new IllegalArgumentException("Got a null finding. Fix the code.");
+        } else if (finding.getSurfaceLocation() == null) {
+            throw new IllegalArgumentException("Got a finding without a surface location.");
+        }
+
+        return matchesParameter(finding) &&
                 finding.getSurfaceLocation().getPath().equals(path) &&
                 finding.getChannelSeverity().getSeverityMap().getGenericSeverity().getName().equals(severity) &&
                 finding.getChannelVulnerability().getGenericVulnerability().getName().equals(vulnType);
     }
 
+    private boolean matchesParameter(Finding finding) {
+        return (finding.getSurfaceLocation().getParameter() == null && parameter == null) ||
+                    (finding.getSurfaceLocation().getParameter() != null &&
+                finding.getSurfaceLocation().getParameter().equals(parameter));
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleFinding{" +
+                "vulnType='" + vulnType + '\'' +
+                ", severity='" + severity + '\'' +
+                ", path='" + path + '\'' +
+                ", parameter='" + parameter + '\'' +
+                '}';
+    }
 }

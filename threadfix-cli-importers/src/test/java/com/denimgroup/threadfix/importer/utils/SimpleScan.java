@@ -15,10 +15,6 @@ public class SimpleScan implements Iterable<SimpleFinding> {
         this.simpleFindings = simpleFindings;
     }
 
-    public List<SimpleFinding> getSimpleFindings() {
-        return simpleFindings;
-    }
-
     public static SimpleScan fromStringArray(String[][] strings) {
         List<SimpleFinding> findings = new ArrayList<>();
         for (String[] line : strings) {
