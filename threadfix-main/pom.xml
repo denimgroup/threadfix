@@ -611,7 +611,7 @@
             </build>
         </profile>
         <profile>
-            <id>mysql-hsqldb</id>
+            <id>hsqldb-qa</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
