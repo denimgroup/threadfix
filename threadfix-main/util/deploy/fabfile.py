@@ -54,7 +54,7 @@ def build_war():
 # moves the WAR file to the remote server, updates the database and restarts tomcat 
 @task
 @runs_once
-def deploy_war():
+def deploy_war(profile, qaprofile):
     sudo('service tomcat7 stop')   #stop tomcat
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
