@@ -45,7 +45,7 @@ def exchange_files():
 # creates the WAR file from the source code
 @task
 @runs_once
-def build_war():
+def build_war(profile, qaprofile):
     with lcd('%s' % local_working_folder_loc):
         res = local('mvn install -DskipTests -P %s,%s' % profile, qaprofile)
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
@@ -54,7 +54,7 @@ def build_war():
 # moves the WAR file to the remote server, updates the database and restarts tomcat 
 @task
 @runs_once
-def deploy_war(profile, qaprofile):
+def deploy_war():
     sudo('service tomcat7 stop')   #stop tomcat
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
