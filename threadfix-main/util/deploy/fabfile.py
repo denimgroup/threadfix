@@ -88,7 +88,7 @@ def slow_deploy():
                             verify_site()
 
 @task(default=True)
-def deploy(profile):
+def deploy(profile, qaprofile):
 
     env.profile = profile
     env.qaprofile = qaprofile
