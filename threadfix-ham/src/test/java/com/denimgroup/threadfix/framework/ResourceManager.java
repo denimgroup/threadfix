@@ -27,14 +27,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import static org.junit.Assert.assertTrue;
+
 public class ResourceManager {
 
 	@NotNull
     public static File getFile(String name) {
-		//URL url = ResourceManager.class.getClassLoader().getResource(name);
-		return new File("threadfix-ham/target/test-classes/" + name);//url.toString());
-	}
-	
+		File file = new File("threadfix-ham/target/test-classes/" + name);
+        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
+
+        return file;
+    }
+
 	@NotNull
     public static File getSpringFile(String name) {
 		return getFile("code/spring/" + name);

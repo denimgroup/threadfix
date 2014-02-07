@@ -24,6 +24,10 @@
 package com.denimgroup.threadfix.framework;
 
 
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+
 public class TestConstants {
 	private TestConstants(){}
 	
@@ -55,6 +59,12 @@ public class TestConstants {
 		;
 
     public static String getFolderName(String name) {
-        return testRoot + name;
+        String folderName = testRoot + name;
+
+        assertTrue("Folder " + folderName + " wasn't found on the filesystem. Fix your configuration.",
+                new File(folderName).exists());
+
+        return folderName;
     }
+
 }
