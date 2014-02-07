@@ -47,7 +47,7 @@ def exchange_files():
 @runs_once
 def build_war():
     with lcd('%s' % local_working_folder_loc):
-        res = local('mvn install -DskipTests -P mysql')
+        res = local('mvn install -DskipTests -P %s' % profile)
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
@@ -88,8 +88,11 @@ def slow_deploy():
                             verify_site()
 
 @task(default=True)
-def deploy():
+def deploy(profile):
+
+    env.profile = profile
+
     #exchange_files()
-    build_war()
+    build_war(profile)
     deploy_war()
     #verify_site()
