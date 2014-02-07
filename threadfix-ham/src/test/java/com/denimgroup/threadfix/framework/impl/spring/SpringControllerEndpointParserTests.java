@@ -31,6 +31,7 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.ResourceManager;
@@ -97,27 +98,27 @@ public class SpringControllerEndpointParserTests {
 
     @Test
     public void testMathController() {
-        Set<SpringControllerEndpoint> endpoints = parseEndpoints("MathController.java", "spring/mvc-calculator");
+        Set<SpringControllerEndpoint> endpoints = parseEndpoints("MathController.java", "mvc-calculator");
         assertTrue("Size was " + endpoints.size() + " instead of 1.", endpoints.size() == 1);
     }
 
     @Test
     public void testCityController() {
-        Set<SpringControllerEndpoint> endpoints = parseEndpoints("CityController.java", "spring/mvc-calculator");
+        Set<SpringControllerEndpoint> endpoints = parseEndpoints("CityController.java", "mvc-calculator");
         assertTrue("Size was " + endpoints.size() + " instead of 6.", endpoints.size() == 6);
     }
 
     @Test
     public void testAllFrameworks() {
         for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
-            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName("spring/" + app)));
+            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName(app)));
             assertFalse("No endpoints found in app " + app + ".", mappings.generateEndpoints().isEmpty());
         }
     }
 
     @Test
     public void testModelBindingRecognition() {
-        for (Endpoint endpoint : parseEndpoints("ProjectsController.java", "spring/ticketline-spring")) {
+        for (Endpoint endpoint : parseEndpoints("ProjectsController.java", "ticketline-spring")) {
             assertTrue("Couldn't find name in " + endpoint.getUrlPath(), endpoint.getParameters().contains("name"));
             assertTrue("Couldn't find description in " + endpoint.getUrlPath(), endpoint.getParameters().contains("description"));
         }
@@ -125,7 +126,7 @@ public class SpringControllerEndpointParserTests {
 
     @Test
     public void testRequestParamParsing() {
-        for (Endpoint endpoint : parseEndpoints("ParamsController.java", "spring/mvc-calculator")) {
+        for (Endpoint endpoint : parseEndpoints("ParamsController.java", "mvc-calculator")) {
             assertTrue("Found no parameters for method " + endpoint.getUrlPath(), endpoint.getParameters().size() > 0);
             assertTrue("Endpoint param was " + endpoint.getParameters().iterator().next() +
                     " instead of integer for method " + endpoint.getUrlPath(),
@@ -134,9 +135,10 @@ public class SpringControllerEndpointParserTests {
     }
 
     @Test
+    @Ignore
     public void writeCsvFile() {
         for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
-            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName("spring/" + app)));
+            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName(app)));
             for (Endpoint endpoint : mappings.generateEndpoints()) {
                 System.out.print(app + ",");
                 System.out.println(endpoint.getCSVLine());
