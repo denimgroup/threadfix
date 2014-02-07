@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.service.WafService;
 public class WafRestController extends RestController {
 	
 	public static final String CREATION_FAILED = "New WAF creation failed.";
+    public static final String NOT_FOUND_WAF = "Invalid WAF type requested.";
 	public static final String LOOKUP_FAILED = "WAF Lookup failed.";
 	
 	private WafService wafService;
@@ -185,7 +186,7 @@ public class WafRestController extends RestController {
 		
 		if (wafType == null) {
 			log.warn("Invalid WAF type requested.");
-			return RestResponse.failure(CREATION_FAILED);
+			return RestResponse.failure(NOT_FOUND_WAF);
 		}
 		
 		if (!name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {
