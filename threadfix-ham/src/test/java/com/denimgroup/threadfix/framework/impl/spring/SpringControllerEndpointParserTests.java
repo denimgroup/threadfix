@@ -31,6 +31,7 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.ResourceManager;
@@ -134,6 +135,7 @@ public class SpringControllerEndpointParserTests {
     }
 
     @Test
+    @Ignore
     public void writeCsvFile() {
         for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
             EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName(app)));

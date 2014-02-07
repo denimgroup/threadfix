@@ -53,7 +53,6 @@ public class SpringDetectionTests {
             "spring-mvc-ajax",
             "spring-mvc-chat",
             "spring-mvc-examples",
-            "spring-mvc-inventory",
             "spring-mvc-movies",
             "spring-mvc-scribe-experiment",
             "spring-mvc-showcase",
