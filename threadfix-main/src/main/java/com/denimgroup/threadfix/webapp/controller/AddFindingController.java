@@ -23,8 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +138,8 @@ public class AddFindingController {
 	public String staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model) {
+			SessionStatus status, ModelMap model,
+            HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
@@ -158,6 +162,7 @@ public class AddFindingController {
 				return returnForm(model, appId);
 			} else {
 				status.setComplete();
+                ControllerUtils.addSuccessMessage(request, "A new static manual finding has been added to application");
 				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 				return "ajaxRedirectHarness";
 			}
@@ -168,7 +173,8 @@ public class AddFindingController {
 	public String dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model) {
+			SessionStatus status, ModelMap model,
+            HttpServletRequest request) {
 		
 		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
@@ -181,6 +187,15 @@ public class AddFindingController {
 			return returnForm(model, appId);
 		} else {
 			finding.setIsStatic(false);
+
+            if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null) {
+                try {
+                    URL resultURL = new URL(finding.getSurfaceLocation().getPath());
+                    finding.getSurfaceLocation().setUrl(resultURL);
+                } catch (MalformedURLException e) {
+                    log.info("Path of '" + finding.getSurfaceLocation().getPath() + "' was not given in URL format, leaving it as it was.");
+                }
+            }
 			boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 			
 			if (!mergeResult) {
@@ -190,6 +205,7 @@ public class AddFindingController {
 				return returnForm(model, appId);
 			} else {
 				status.setComplete();
+                ControllerUtils.addSuccessMessage(request, "A new dynamic manual finding has been added to application");
 				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 				return "ajaxRedirectHarness";
 			}

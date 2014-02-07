@@ -80,10 +80,12 @@ public class FindingServiceImpl implements FindingService {
 				(finding.getChannelVulnerability().getCode().isEmpty()))) {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
 		} else {
-			String code = finding.getChannelVulnerability().getCode();
-			finding.getChannelVulnerability().setCode(code.substring(0, code.indexOf("(CWE")).trim());
-			
-			if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
+            String code = finding.getChannelVulnerability().getCode();
+            if (code.indexOf("(CWE")<0)
+                finding.getChannelVulnerability().setCode(code.trim());
+            else finding.getChannelVulnerability().setCode(code.substring(0, code.indexOf("(CWE")).trim());
+
+            if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
 
 				boolean wasNumeric = false;
 
