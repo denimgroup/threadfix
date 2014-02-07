@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,22 +43,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(OrganizationService.class);
 
+    @Autowired
 	private OrganizationDao organizationDao = null;
+    @Autowired
 	private ApplicationService applicationService = null;
+    @Autowired(required = false)
+    @Nullable
 	private PermissionService permissionService = null;
+    @Autowired
 	private AccessControlMapService accessControlMapService = null;
 
-	@Autowired
-	public OrganizationServiceImpl(OrganizationDao organizationDao, 
-			AccessControlMapService accessControlMapService, 
-			PermissionService permissionService,
-			ApplicationService applicationService) {
-		this.organizationDao = organizationDao;
-		this.accessControlMapService = accessControlMapService;
-		this.applicationService = applicationService;
-		this.permissionService = permissionService;
-	}
-	
 	@Override
 	public List<Organization> loadAllActive() {
 		return organizationDao.retrieveAllActive();

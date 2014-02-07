@@ -38,6 +38,7 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.hibernate.SessionFactory;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -57,29 +58,21 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
-	private SessionFactory sessionFactory = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private ScanDao scanDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
-	private OrganizationDao organizationDao = null;
-	private ApplicationDao applicationDao = null;
-	private PermissionService permissionService = null;
-	
-	/**
-	 * @param sessionFactory
-	 */
+    @Autowired
+    private SessionFactory sessionFactory = null;
 	@Autowired
-	public ReportsServiceImpl(SessionFactory sessionFactory, ChannelTypeDao channelTypeDao,
-			PermissionService permissionService, OrganizationDao organizationDao,
-			ScanDao scanDao, VulnerabilityDao vulnerabilityDao, ApplicationDao applicationDao) {
-		this.sessionFactory = sessionFactory;
-		this.channelTypeDao = channelTypeDao;
-		this.scanDao = scanDao;
-		this.organizationDao = organizationDao;
-		this.permissionService = permissionService;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationDao = applicationDao;
-	}
+    private ChannelTypeDao channelTypeDao = null;
+	@Autowired
+    private ScanDao scanDao = null;
+	@Autowired
+    private VulnerabilityDao vulnerabilityDao = null;
+	@Autowired
+    private OrganizationDao organizationDao = null;
+	@Autowired
+    private ApplicationDao applicationDao = null;
+	@Autowired(required=false)
+    @Nullable
+    private PermissionService permissionService = null;
 
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters,
@@ -503,7 +496,19 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<>();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+		Set<Integer> teamIds = null;
+        if (permissionService == null) {
+            teamIds = new HashSet<>();
+            List<Organization> organizations = organizationDao.retrieveAllActive();
+
+            if (organizations != null) {
+                for (Organization organization : organizations) {
+                    teamIds.add(organization.getId());
+                }
+            }
+        } else {
+            permissionService.getAuthenticatedTeamIds();
+        }
 
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {
