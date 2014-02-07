@@ -213,7 +213,7 @@ public class CommandLineParser {
 				
 			} else if (cmd.hasOption("sw")) {
 				String[] searchArgs = cmd.getOptionValues("sw");
-				if (searchArgs.length != 4) {
+				if (searchArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
 				if ("id".equals(searchArgs[0])) {
