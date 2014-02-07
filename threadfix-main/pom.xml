@@ -146,11 +146,6 @@
 			<artifactId>com.microsoft.tfs.sdk</artifactId>
 			<version>${tfs-library.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>net.xeoh.plugins.base</groupId>
-			<artifactId>jspf.core</artifactId>
-			<version>${jspf.version}</version>
-		</dependency>
 	    <dependency>
 	        <groupId>org.springframework.ldap</groupId>
 	        <artifactId>spring-ldap-core-tiger</artifactId>

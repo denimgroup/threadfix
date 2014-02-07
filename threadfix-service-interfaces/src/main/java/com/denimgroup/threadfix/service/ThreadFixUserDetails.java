@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.config;
+package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import org.springframework.security.core.GrantedAuthority;

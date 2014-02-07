@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -23,10 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.EnterpriseTest;
+import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,23 +39,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author dshannon
@@ -99,7 +92,7 @@ public class UsersController {
 			user.setIsDeletable(userService.canDelete(user));
 			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
 		}
-		model.addAttribute("ldap_plugin",LdapServiceDelegateFactory.isEnterprise());
+		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
 		model.addAttribute("users", users);
 		
 		User user = new User();

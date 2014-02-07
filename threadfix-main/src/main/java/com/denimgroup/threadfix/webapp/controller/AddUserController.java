@@ -23,12 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.EnterpriseTest;
+import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,21 +38,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.validator.UserValidator;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/users/new")
@@ -62,9 +55,6 @@ public class AddUserController {
 	private RoleService roleService = null;
 	private boolean ldapPluginInstalled = false;
 	
-	@Autowired
-	private PermissionService permissionService;
-	
 	private final SanitizedLogger log = new SanitizedLogger(AddUserController.class);
 
 	@Autowired
@@ -72,23 +62,23 @@ public class AddUserController {
 			UserService userService, RoleService roleService) {
 		this.roleService = roleService;
 		this.userService = userService;
-		ldapPluginInstalled = LdapServiceDelegateFactory.isEnterprise();
+		ldapPluginInstalled = EnterpriseTest.isEnterprise();
 	}
 	
 	public AddUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		if(ldapPluginInstalled && permissionService.isEnterprise()){
+		if(ldapPluginInstalled && EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
-		}else if(ldapPluginInstalled){
+		} else if (ldapPluginInstalled) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "isLdapUser");
-		}else if(permissionService.isEnterprise()){
+		} else if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess");
-		}else{
+		} else {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess");
 		}

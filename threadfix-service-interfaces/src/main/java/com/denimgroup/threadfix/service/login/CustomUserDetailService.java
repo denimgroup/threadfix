@@ -21,14 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.login;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
+import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.ThreadFixUserDetails;
+import com.denimgroup.threadfix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -59,8 +60,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		if (user == null) {
 			return null;
 		}
-		
-		
+
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 		
 		Map<Integer, Set<Permission>> orgMap = null;
@@ -91,12 +91,6 @@ public class CustomUserDetailService implements UserDetailsService {
 				
 				if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
 					grantedAuthorities.add(new SimpleGrantedAuthority(Permission.CAN_GENERATE_REPORTS.getText()));
-				}
-			} else if(LdapServiceDelegateFactory.isEnterprise()) {
-				for (Permission permission : Permission.values()) {
-					if (permission != Permission.CAN_MANAGE_ROLES) {
-						grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
-					}
 				}
 			} else {
 				for (Permission permission : Permission.values()) {

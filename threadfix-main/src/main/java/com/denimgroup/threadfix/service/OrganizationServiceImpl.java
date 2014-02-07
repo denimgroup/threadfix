@@ -23,22 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -128,12 +124,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	@Override
 	public List<Organization> loadAllActiveFilter() {
-		if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
+		if (!EnterpriseTest.isEnterprise() || PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
-		
+
+        if (permissionService == null) {
+            throw new IllegalStateException("EnterpriseTest.isEnterprise returned true but permissionService is null. " +
+                    "Fix the code.");
+        }
+
 		Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
 		
-		Set<Integer> teamIds = null;
+		Set<Integer> teamIds;
 		
 		if (ids == null || ids.isEmpty()) {
 			teamIds = new HashSet<>();
