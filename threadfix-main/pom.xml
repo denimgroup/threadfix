@@ -465,6 +465,11 @@
             <artifactId>threadfix-entities</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-importers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
             <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-ham</artifactId>

@@ -23,28 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.interop.ChannelImporter;
+import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.merge.FindingMatcher;
+import com.denimgroup.threadfix.service.merge.ScanMerger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.plugin.scanner.ChannelImporterFactory;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
-import com.denimgroup.threadfix.service.merge.FindingMatcher;
-import com.denimgroup.threadfix.service.merge.ScanMerger;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -60,6 +54,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private JobStatusService jobStatusService = null;
 	private ScanMerger scanMerger = null;
 	private VulnerabilityFilterService vulnerabilityFilterService = null;
+    private ChannelImporterFactory channelImporterFactory = null;
 
 	@Autowired
 	public ScanMergeServiceImpl(ScanDao scanDao,
@@ -67,13 +62,15 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			UserDao userDao,
 			ScanMerger scanMerger,
 			VulnerabilityFilterService vulnerabilityFilterService,
-			JobStatusService jobStatusService) {
+			JobStatusService jobStatusService,
+            ChannelImporterFactory channelImporterFactory) {
 		this.scanDao = scanDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.userDao = userDao;
 		this.vulnerabilityFilterService = vulnerabilityFilterService;
 		this.jobStatusService = jobStatusService;
 		this.scanMerger = scanMerger;
+        this.channelImporterFactory = channelImporterFactory;
 	}
 
 	@Override
@@ -223,7 +220,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	
 		// pick the appropriate parser
-		ChannelImporter importer = ChannelImporterFactory.getChannelImporter(applicationChannel);
+		ChannelImporter importer = channelImporterFactory.getChannelImporter(applicationChannel);
 	
 		if (importer == null) {
 			log.warn("Unable to find suitable ChannelImporter implementation for "
