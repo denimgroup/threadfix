@@ -89,7 +89,7 @@ def slow_deploy():
 
 @task(default=True)
 def deploy():
-    exchange_files()
+    #exchange_files()
     build_war()
     deploy_war()
     #verify_site()
