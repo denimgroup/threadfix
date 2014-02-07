@@ -47,7 +47,7 @@ def exchange_files():
 @runs_once
 def build_war():
     with lcd('%s' % local_working_folder_loc):
-        res = local('mvn install -DskipTests -P %s' % profile)
+        res = local('mvn install -DskipTests -P %s,%s' % profile, qaprofile)
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
@@ -91,8 +91,9 @@ def slow_deploy():
 def deploy(profile):
 
     env.profile = profile
+    env.qaprofile = qaprofile
 
     #exchange_files()
-    build_war(profile)
+    build_war(profile, qaprofile)
     deploy_war()
     #verify_site()
