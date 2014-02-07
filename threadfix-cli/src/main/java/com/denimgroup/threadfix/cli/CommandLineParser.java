@@ -97,8 +97,11 @@ public class CommandLineParser {
 				if (createArgs.length != 3) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-                LOGGER.info("Creating an Application with the name " + createArgs[1] + ".");
-                printOutput(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
+                if (isInteger(createArgs[0])) {
+                    LOGGER.info("Creating an Application with the name " + createArgs[1] + ".");
+                    printOutput(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
+                } else
+                    LOGGER.warn("TeamId is not integer, not doing anything.");
 
 			} else if (cmd.hasOption("printScanOptions")) {
 				for (Entry<String, String[]> entry : scanOptions.entrySet()) {
@@ -109,37 +112,39 @@ public class CommandLineParser {
 				}
 				
 			} else if (cmd.hasOption("sp")) {
-				String[] parameterArgs = cmd.getOptionValues("sp");
-				if (! (parameterArgs.length == 2 || parameterArgs.length == 3)) {
-					throw new ParseException("Wrong number of arguments.");
-				}
-				
-				// appId> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
-				
-				String
-					appId = parameterArgs[0],
-					frameworkType = parameterArgs[1],
-					repositoryUrl = null;
-				
-				if (parameterArgs.length == 3) {
-					repositoryUrl = parameterArgs[2];
-				}
-				
-				if (!appId.matches("^[0-9]+$")) {
-					throw new ParseException("Application ID must be an integer value");
-				}
-				
-				if (!containsCaseIgnore(scanOptions.get("Framework Type"), frameworkType)) {
-					frameworkType = "DETECT";
-				} else {
-					frameworkType = upperCaseAndUnderscore(frameworkType);
-				}
+                String[] parameterArgs = cmd.getOptionValues("sp");
+                if (! (parameterArgs.length == 2 || parameterArgs.length == 3)) {
+                    throw new ParseException("Wrong number of arguments.");
+                }
 
-                LOGGER.info("Setting parameters for application " + appId + " to " +
-                        "Framework Type: " + frameworkType);
-				
-				// TODO return a success message instead of the (mostly irrelevant) application information.
-                printOutput(client.setParameters(appId, frameworkType, repositoryUrl));
+                // appId> <sourceCodeAccessLevel> <frameworkType> <repositoryUrl
+                String
+                        appId = parameterArgs[0],
+                        frameworkType = parameterArgs[1],
+                        repositoryUrl = null;
+                if (isInteger(appId)) {
+                    if (parameterArgs.length == 3) {
+                        repositoryUrl = parameterArgs[2];
+                    }
+
+                    if (!appId.matches("^[0-9]+$")) {
+                        throw new ParseException("Application ID must be an integer value");
+                    }
+
+                    if (!containsCaseIgnore(scanOptions.get("Framework Type"), frameworkType)) {
+                        frameworkType = "DETECT";
+                    } else {
+                        frameworkType = upperCaseAndUnderscore(frameworkType);
+                    }
+
+                    LOGGER.info("Setting parameters for application " + appId + " to " +
+                            "Framework Type: " + frameworkType);
+
+                    // TODO return a success message instead of the (mostly irrelevant) application information.
+                    printOutput(client.setParameters(appId, frameworkType, repositoryUrl));
+
+                } else
+                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
 				
 			} else if (cmd.hasOption("teams")) {
                 LOGGER.info("Getting all teams.");
@@ -154,8 +159,11 @@ public class CommandLineParser {
 				if (queueArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-                LOGGER.info("Queueing a scan.");
-				System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
+                if (isInteger(queueArgs[0])) {
+                    LOGGER.info("Queueing a scan.");
+                    System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
+                } else
+                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
 
 			} else if (cmd.hasOption("au")) {
 				String[] addUrlArgs = cmd.getOptionValues("au");
@@ -170,17 +178,23 @@ public class CommandLineParser {
 				if(setTaskConfigArgs.length != 3) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-                LOGGER.info("Setting task config");
-				System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
+                if (isInteger(setTaskConfigArgs[0])) {
+                    LOGGER.info("Setting task config");
+                    System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
+                } else
+                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
 			} else if (cmd.hasOption("u")) {
 				String[] uploadArgs = cmd.getOptionValues("u");
 				// Upload a scan
 				if (uploadArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-                LOGGER.info("Uploading " + uploadArgs[1] +
-                        " to Application " + uploadArgs[0] + ".");
-                printOutput(client.uploadScan(uploadArgs[0], uploadArgs[1]));
+                if (isInteger(uploadArgs[0])){
+                    LOGGER.info("Uploading " + uploadArgs[1] +
+                            " to Application " + uploadArgs[0] + ".");
+                    printOutput(client.uploadScan(uploadArgs[0], uploadArgs[1]));
+                } else
+                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
 
 			} else if (cmd.hasOption("st")) {
 				String[] searchArgs = cmd.getOptionValues("st");
@@ -237,9 +251,11 @@ public class CommandLineParser {
 				if (ruleArgs.length != 1) {
 					throw new ParseException("Wrong number of arguments.'");
 				}
-                LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
-                printOutput(client.getRules(ruleArgs[0]));
-				
+                if (isInteger(ruleArgs[0])) {
+                    LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
+                    printOutput(client.getRules(ruleArgs[0]));
+                } else
+                    LOGGER.warn("WafId is not integer, not doing anything.");
 			} else {
 				throw new ParseException("No arguments found.");
 			}
@@ -250,7 +266,18 @@ public class CommandLineParser {
 			formatter.printHelp("java -jar tfcli.jar", options);
 		}
 	}
-	
+
+    private static boolean isInteger(String inputStr) {
+        if (inputStr == null)
+            return false;
+        try {
+            Integer.parseInt(inputStr);
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
 	private static <T> void printOutput(RestResponse<T> response) {
 
         if (response.success) {
