@@ -1,21 +1,14 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import net.xeoh.plugins.base.Plugin;
-
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Waf;
+import java.util.List;
+import java.util.Set;
 
-public interface PermissionService extends Plugin {
+public interface PermissionService {
 	
 	boolean isEnterprise();
 
@@ -37,10 +30,6 @@ public interface PermissionService extends Plugin {
 	
 	/**
 	 * 
-	 * @param model
-	 * @param orgId
-	 * @param appId
-	 * @param permissions
 	 */
 	void addPermissions(ModelAndView modelAndView, Integer orgId, Integer appId, Permission... permissions);
 	

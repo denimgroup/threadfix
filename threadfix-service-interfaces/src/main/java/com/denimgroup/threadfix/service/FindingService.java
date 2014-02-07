@@ -23,16 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.BindingResult;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.webapp.controller.TableSortBean;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author bbeverly

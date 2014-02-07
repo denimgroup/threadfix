@@ -23,15 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.validation.BindingResult;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.webapp.controller.TableSortBean;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import org.springframework.validation.BindingResult;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author bbeverly

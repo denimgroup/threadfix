@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.webapp.controller.rest;
+package com.denimgroup.threadfix.service;
 
 /**
  * Created by mac on 1/27/14.

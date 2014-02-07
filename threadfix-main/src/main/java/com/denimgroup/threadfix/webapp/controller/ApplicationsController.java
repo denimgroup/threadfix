@@ -32,6 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +58,7 @@ import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
-import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
+import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 
 @Controller

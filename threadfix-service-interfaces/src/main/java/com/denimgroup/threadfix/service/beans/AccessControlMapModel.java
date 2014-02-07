@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.webapp.viewmodels;
+package com.denimgroup.threadfix.service.beans;
 
 import java.util.List;
 

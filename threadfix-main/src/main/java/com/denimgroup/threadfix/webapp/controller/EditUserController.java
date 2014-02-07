@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +52,7 @@ import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}/edit")
@@ -154,8 +155,8 @@ public class EditUserController {
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			ControllerUtils.addSuccessMessage(request, 
-					"User " + user.getName() + " has been edited successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "User " + user.getName() + " has been edited successfully.");
 			
 			model.addAttribute("contentPage", "/configuration/users");
 			return "ajaxRedirectHarness";

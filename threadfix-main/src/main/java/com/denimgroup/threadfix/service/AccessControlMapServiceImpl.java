@@ -21,7 +21,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 
 @Service
 public class AccessControlMapServiceImpl implements AccessControlMapService {

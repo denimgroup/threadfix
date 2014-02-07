@@ -23,13 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
+import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,12 +37,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
+import java.util.*;
 
 /**
  * @author cleclair
@@ -57,6 +51,9 @@ public class CustomUserDetailService implements UserDetailsService {
 	
 	@Autowired
 	private UserService userService;
+
+    @Autowired
+    private PermissionService permissionService;
 	
 	public UserDetails loadUser(User user) {
 		if (user == null) {
@@ -77,7 +74,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		// Transfer the set of permissions that the user has to GrantedAuthority objects
 		if (id != null) {
 			
-			if (PermissionServiceDelegateFactory.isEnterprise()) {
+			if (permissionService != null) { // then we've autowired the dependency in successfully
 			
 				Set<Permission> permissions = userService.getGlobalPermissions(id);
 			
@@ -95,13 +92,13 @@ public class CustomUserDetailService implements UserDetailsService {
 				if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
 					grantedAuthorities.add(new SimpleGrantedAuthority(Permission.CAN_GENERATE_REPORTS.getText()));
 				}
-			}else if(LdapServiceDelegateFactory.isEnterprise()){
+			} else if(LdapServiceDelegateFactory.isEnterprise()) {
 				for (Permission permission : Permission.values()) {
 					if (permission != Permission.CAN_MANAGE_ROLES) {
 						grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
 					}
 				}
-			}else {
+			} else {
 				for (Permission permission : Permission.values()) {
 					if (permission != Permission.CAN_MANAGE_ROLES && permission != Permission.ENTERPRISE) {
 						grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));

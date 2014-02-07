@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -116,8 +117,8 @@ public class EditOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
 			
-			ControllerUtils.addSuccessMessage(request, 
-					"Team " + organization.getName() + " has been edited successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "Team " + organization.getName() + " has been edited successfully.");
 			
 			model.addAttribute("contentPage", "/organizations/" + String.valueOf(orgId));
 			return "ajaxRedirectHarness";

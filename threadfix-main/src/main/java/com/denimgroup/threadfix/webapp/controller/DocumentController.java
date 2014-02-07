@@ -31,6 +31,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,8 +88,8 @@ public class DocumentController {
 			mav.addObject("contentPage","applications/forms/uploadDocForm.jsp");
 			return mav;
 		}else {
-			ControllerUtils.addSuccessMessage(request, 
-					"The file was successfully added to the application.");
+			ControllerUtils.addSuccessMessage(request,
+                    "The file was successfully added to the application.");
             ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);

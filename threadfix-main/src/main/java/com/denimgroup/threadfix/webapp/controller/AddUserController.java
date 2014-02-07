@@ -28,6 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -119,8 +120,8 @@ public class AddUserController {
 			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
 					", the ID " + user.getId());
 			status.setComplete();
-			ControllerUtils.addSuccessMessage(request, 
-					"User " + user.getName() + " has been created successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "User " + user.getName() + " has been created successfully.");
 			model.addAttribute("contentPage", "/configuration/users");
 			return "ajaxRedirectHarness";
 		}

@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.viewmodels;
+package com.denimgroup.threadfix.service.beans;
 
 import com.denimgroup.threadfix.data.entities.Application;
 

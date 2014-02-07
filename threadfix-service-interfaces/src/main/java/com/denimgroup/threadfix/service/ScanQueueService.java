@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.webapp.controller.rest.ScanQueueTaskConfigException;
 
 import java.util.List;
 

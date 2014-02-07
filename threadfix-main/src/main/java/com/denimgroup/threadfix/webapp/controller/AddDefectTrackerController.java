@@ -28,6 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,8 +150,8 @@ public class AddDefectTrackerController {
 			String referrer = request.getHeader("referer");
 			if (referrer.contains("configuration/defecttrackers")) {
 				model.addAttribute("contentPage", "/configuration/defecttrackers");
-				ControllerUtils.addSuccessMessage(request, 
-						"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
+				ControllerUtils.addSuccessMessage(request,
+                        "Defect Tracker " + defectTracker.getName() + " has been created successfully.");
 				return "ajaxRedirectHarness";
 			} else {
 			

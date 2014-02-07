@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledScanScheduler;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +95,7 @@ public class ScheduledScanController {
         int scheduledScanId = scheduledScanService.saveScheduledScan(appId, scheduledScan);
 		if (scheduledScanId < 0) {
 			ControllerUtils.addErrorMessage(request,
-					"Adding Scheduled Scan was failed.");
+                    "Adding Scheduled Scan was failed.");
             ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 			return "ajaxFailureHarness";

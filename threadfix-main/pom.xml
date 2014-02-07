@@ -467,6 +467,11 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-service-interfaces</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-importers</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -525,6 +530,18 @@
 				<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
 			</properties>
 		</profile>
+
+        <!-- Enterprise profile turns on enterprise dependency -->
+        <profile>
+            <id>enterprise</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.denimgroup.threadfix</groupId>
+                    <artifactId>threadfix-enterprise</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
 	</profiles>
 
 </project>

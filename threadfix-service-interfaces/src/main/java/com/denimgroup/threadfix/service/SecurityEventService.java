@@ -23,10 +23,31 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
+import com.denimgroup.threadfix.data.entities.SecurityEvent;
 
-public interface ScanParametersService {
-	boolean saveConfiguration(Integer appId, ScanParametersBean scanParametersBean);
-	boolean saveConfiguration(Application application, ScanParametersBean scanParametersBean);
+import java.util.List;
+
+/**
+ * @author bbeverly
+ * 
+ */
+public interface SecurityEventService {
+
+	/**
+	 * @return
+	 */
+	List<SecurityEvent> loadAll();
+
+	/**
+	 * @param securityEvent
+	 * @return
+	 */
+	SecurityEvent loadSecurityEvent(int securityEvent);
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	SecurityEvent loadSecurityEvent(String name);
+
 }

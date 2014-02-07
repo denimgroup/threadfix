@@ -1,10 +1,10 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+
+import java.util.List;
 
 public interface AccessControlMapService {
 

@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,7 +50,7 @@ import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 
 /**
  * @author dshannon

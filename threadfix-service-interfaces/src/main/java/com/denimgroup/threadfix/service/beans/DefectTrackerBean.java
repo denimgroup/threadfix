@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.service.beans;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.service.util;
 
 import javax.servlet.http.HttpServletRequest;
 
