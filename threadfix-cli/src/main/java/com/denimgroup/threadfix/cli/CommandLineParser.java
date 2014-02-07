@@ -101,7 +101,7 @@ public class CommandLineParser {
                     LOGGER.info("Creating an Application with the name " + createArgs[1] + ".");
                     printOutput(client.createApplication(createArgs[0], createArgs[1], createArgs[2]));
                 } else
-                    LOGGER.warn("TeamId is not integer, not doing anything.");
+                    LOGGER.warn("TeamId is not number, not doing anything.");
 
 			} else if (cmd.hasOption("printScanOptions")) {
 				for (Entry<String, String[]> entry : scanOptions.entrySet()) {
@@ -144,7 +144,7 @@ public class CommandLineParser {
                     printOutput(client.setParameters(appId, frameworkType, repositoryUrl));
 
                 } else
-                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
+                    LOGGER.warn("ApplicationId is not number, not doing anything.");
 				
 			} else if (cmd.hasOption("teams")) {
                 LOGGER.info("Getting all teams.");
@@ -163,7 +163,7 @@ public class CommandLineParser {
                     LOGGER.info("Queueing a scan.");
                     System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
                 } else
-                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
+                    LOGGER.warn("ApplicationId is not number, not doing anything.");
 
 			} else if (cmd.hasOption("au")) {
 				String[] addUrlArgs = cmd.getOptionValues("au");
@@ -182,7 +182,7 @@ public class CommandLineParser {
                     LOGGER.info("Setting task config");
                     System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
                 } else
-                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
+                    LOGGER.warn("ApplicationId is not number, not doing anything.");
 			} else if (cmd.hasOption("u")) {
 				String[] uploadArgs = cmd.getOptionValues("u");
 				// Upload a scan
@@ -194,7 +194,7 @@ public class CommandLineParser {
                             " to Application " + uploadArgs[0] + ".");
                     printOutput(client.uploadScan(uploadArgs[0], uploadArgs[1]));
                 } else
-                    LOGGER.warn("ApplicationId is not integer, not doing anything.");
+                    LOGGER.warn("ApplicationId is not number, not doing anything.");
 
 			} else if (cmd.hasOption("st")) {
 				String[] searchArgs = cmd.getOptionValues("st");
@@ -233,8 +233,11 @@ public class CommandLineParser {
 						System.out.println("Wrong number of arguments.");
 						return;
 					}
-                    LOGGER.info("Searching for application with the id " + searchArgs[1] + ".");
-					System.out.println(client.searchForApplicationById(searchArgs[1]));
+                    if (isInteger(searchArgs[1])){
+                        LOGGER.info("Searching for application with the id " + searchArgs[1] + ".");
+                        System.out.println(client.searchForApplicationById(searchArgs[1]));
+                    } else
+                        LOGGER.warn("ApplicationId is not number, not doing anything.");
 				} else if ("name".equals(searchArgs[0])) {
 					if (searchArgs.length != 3) {
 						System.out.println("Wrong number of arguments. You need to input application name and team name as well.");
@@ -255,7 +258,7 @@ public class CommandLineParser {
                     LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
                     printOutput(client.getRules(ruleArgs[0]));
                 } else
-                    LOGGER.warn("WafId is not integer, not doing anything.");
+                    LOGGER.warn("WafId is not number, not doing anything.");
 			} else {
 				throw new ParseException("No arguments found.");
 			}
