@@ -167,9 +167,9 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             case GET_ANNOTATION_VALUE:
                 if (type == DOUBLE_QUOTE) {
                     if (isPathParameter) {
-                        currentParameters.add(stringValue);
-                    } else {
                         currentPathParameters.add(stringValue);
+                    } else {
+                        currentParameters.add(stringValue);
                     }
                     setState(SignatureState.START);
                 } else if ("value".equals(stringValue)) {

@@ -4,11 +4,13 @@ import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.TestUtils;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -61,23 +63,36 @@ public class SpringDataBinderTests {
 
     @Test
     public void testIntegration() {
+        if (!new File(TestConstants.THREADFIX_SOURCE_ROOT).exists()) {
+            throw new IllegalStateException("The ThreadFix source folder was not found at " +
+                    TestConstants.THREADFIX_SOURCE_ROOT);
+        }
+
         SpringEntityMappings threadfixMappings =
                 new SpringEntityMappings(new File(TestConstants.THREADFIX_SOURCE_ROOT));
 
         Set<SpringControllerEndpoint> endpointSet =
                 SpringControllerEndpointParser.parse(editAppController, threadfixMappings);
 
+        // we have to initialize the databinder and add to the endpoints
+        SpringDataBinderParser dataBinderParser = new SpringDataBinderParser();
+        EventBasedTokenizerRunner.run(editAppController, dataBinderParser);
+
         Set<String> acceptableParameters = new HashSet<>(Arrays.asList("name", "url", "defectTracker.id", "userName",
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id", "orgId", "appId",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder"));
 
         for (SpringControllerEndpoint endpoint : endpointSet) {
+
+            endpoint.setDataBinderParser(dataBinderParser);
+            endpoint.expandParameters(threadfixMappings, null);
+
             for (String parameter : endpoint.getParameters()) {
                 assertTrue(parameter + " wasn't included in set. Endpoint: " + endpoint,
                         acceptableParameters.contains(parameter));
             }
-            assertTrue(endpoint.getParameters().contains("appId"));
-            assertTrue(endpoint.getParameters().contains("orgId"));
+            assertTrue("Parameters didn't include appId", endpoint.getParameters().contains("appId"));
+            assertTrue("Parameters didn't include orgId", endpoint.getParameters().contains("orgId"));
         }
     }
 }

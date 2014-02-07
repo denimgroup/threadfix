@@ -23,20 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.ResourceManager;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.ResourceManager;
-import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SpringControllerEndpointParserTests {
 
@@ -134,8 +132,6 @@ public class SpringControllerEndpointParserTests {
         }
     }
 
-    @Test
-    @Ignore
     public void writeCsvFile() {
         for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
             EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName(app)));
