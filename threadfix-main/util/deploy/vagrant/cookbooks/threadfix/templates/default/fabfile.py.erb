@@ -54,9 +54,9 @@ def deploy_war():
     server_target_loc = server_base_loc + '/' +  str(folder_name)
     with settings(warn_only=True):
         local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
-    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-2.0M1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
+    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-2.0M2-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
     with cd(server_target_loc):        
-        local('sudo unzip -q %s/threadfix-2.0M1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
+        local('sudo unzip -q %s/threadfix-2.0M2-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
         local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps
