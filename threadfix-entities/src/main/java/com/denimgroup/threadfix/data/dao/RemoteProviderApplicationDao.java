@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -21,12 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
+package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public interface RemoteProviderApplicationDao {
 	
