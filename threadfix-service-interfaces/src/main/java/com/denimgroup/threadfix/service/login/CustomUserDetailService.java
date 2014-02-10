@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.UserService;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,9 +54,10 @@ public class CustomUserDetailService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
-    @Autowired
+    @Autowired(required = false)
+    @Nullable
     private PermissionService permissionService;
-	
+
 	public UserDetails loadUser(User user) {
 		if (user == null) {
 			return null;

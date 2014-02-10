@@ -1,11 +1,11 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.EnterpriseTest;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,19 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/roles")
@@ -36,19 +29,10 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 public class RolesController {
 
 	private final SanitizedLogger log = new SanitizedLogger(RolesController.class);
-	
+
+    @Autowired
 	private RoleService roleService;
-	@Autowired
-	private PermissionService permissionService;
-	
-	@Autowired
-	public RolesController(RoleService roleService) {
-		this.roleService = roleService;
-	}
-	
-	
-	public RolesController(){}
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
@@ -56,7 +40,7 @@ public class RolesController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		if(permissionService.isEnterprise()){
+		if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
 		}
 	}

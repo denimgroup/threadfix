@@ -23,20 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,16 +45,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
-import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.VulnerabilityService;
-import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/reports")
@@ -69,33 +67,22 @@ public class ReportsController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
 
+    @Autowired
 	private OrganizationService organizationService;
-	private PermissionService permissionService;
+    @Autowired
 	private ReportsService reportsService;
+    @Autowired
 	private VulnerabilityService vulnerabilityService;
 	
 	private SecureRandom random;
-	
-	@Autowired
-	public ReportsController(OrganizationService organizationService,
-			VulnerabilityService vulnerabilityService,
-			PermissionService permissionService,
-			ReportsService reportsService) {
-		this.organizationService = organizationService;
-		this.permissionService = permissionService;
-		this.vulnerabilityService = vulnerabilityService;
-		this.reportsService = reportsService;
-	}
 
-	public ReportsController(){}
-	
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
 		List<Organization> returnList = new ArrayList<>();
 
 		for (Organization org : organizationList) {
-			List<Application> validApps = permissionService.filterApps(org);
+			List<Application> validApps = PermissionUtils.filterApps(org);
 			if (validApps != null && !validApps.isEmpty()) {
 				org.setActiveApplications(validApps);
 				returnList.add(org);

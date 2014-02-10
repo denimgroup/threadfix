@@ -28,14 +28,22 @@ public class ApplicationRestController extends RestController {
             ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
             SET_WAF_FAILED = "Call to setWaf failed.",
             SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type";
-	
+
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private DocumentService documentService;
+    @Autowired
 	private ScanService scanService;
+    @Autowired
 	private ScanParametersService scanParametersService;
+    @Autowired
 	private ScanTypeCalculationService scanTypeCalculationService;
+    @Autowired
 	private ScanMergeService scanMergeService;
+    @Autowired
 	private WafService wafService;
+    @Autowired
 	private OrganizationService organizationService;
 	
 	private final static String DETAIL = "applicationDetail", 
@@ -52,29 +60,7 @@ public class ApplicationRestController extends RestController {
 		restrictedMethods.add(NEW);
 		restrictedMethods.add(SET_WAF);
 	}
-	
-	@Autowired
-	public ApplicationRestController(APIKeyService apiKeyService, 
-			ApplicationService applicationService,
-			DocumentService documentService,
-			OrganizationService organizationService,
-			ScanService scanService, 
-			ScanMergeService scanMergeService,
-			ScanTypeCalculationService scanTypeCalculationService, 
-			WafService wafService,
-			ScanParametersService scanParametersService) {
-		super(apiKeyService);
-		this.organizationService = organizationService;
-		this.apiKeyService = apiKeyService;
-		this.applicationService = applicationService;
-		this.documentService = documentService;
-		this.scanTypeCalculationService = scanTypeCalculationService;
-		this.scanService = scanService;
-		this.scanMergeService = scanMergeService;
-		this.wafService = wafService;
-		this.scanParametersService = scanParametersService;
-	}
-	
+
 	/**
 	 * Return details about a specific application.
      *

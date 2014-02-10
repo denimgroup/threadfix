@@ -28,12 +28,12 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -51,37 +51,27 @@ import java.util.List;
 @RequestMapping("configuration/remoteproviders")
 @SessionAttributes(value= {"remoteProviderType", "remoteProviderApplication"})
 public class RemoteProvidersController {
-	
-	public RemoteProvidersController(){}
-	
-	private final SanitizedLogger log = new SanitizedLogger(RemoteProvidersController.class);
-	
-	private RemoteProviderTypeService remoteProviderTypeService;
-	private PermissionService permissionService;
-	private RemoteProviderApplicationService remoteProviderApplicationService;
-	private OrganizationService organizationService;
-	
-	@Autowired
-	public RemoteProvidersController(RemoteProviderTypeService remoteProviderTypeService,
-			RemoteProviderApplicationService remoteProviderApplicationService,
-			PermissionService permissionService, OrganizationService organizationService) {
-		this.remoteProviderTypeService = remoteProviderTypeService;
-		this.remoteProviderApplicationService = remoteProviderApplicationService;
-		this.organizationService = organizationService;
-		this.permissionService = permissionService;
-	}
 
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("apiKey", "username",
+	private final SanitizedLogger log = new SanitizedLogger(RemoteProvidersController.class);
+
+    @Autowired
+    private RemoteProviderTypeService remoteProviderTypeService;
+    @Autowired
+    private RemoteProviderApplicationService remoteProviderApplicationService;
+    @Autowired
+	private OrganizationService organizationService;
+
+    @InitBinder
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        dataBinder.setAllowedFields("apiKey", "username",
                 "password", "application.id", "application.organization.id", "isEuropean");
-	}
-	
+    }
+
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
 		log.info("Processing request for Remote Provider index.");
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
-		
+
 		for (RemoteProviderType type : typeList) {
 			if (type != null && type.getApiKey() != null) {
 				type.setApiKey(mask(type.getApiKey()));
@@ -90,17 +80,17 @@ public class RemoteProvidersController {
 
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
-		permissionService.filterApps(typeList);
-		
+		PermissionUtils.filterApps(typeList);
+
 		model.addAttribute("remoteProviders", typeList);
 		model.addAttribute("remoteProviderType", new RemoteProviderType());
 		model.addAttribute("remoteProviderApplication", new RemoteProviderApplication());
 		model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
-		
-		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
 		return "config/remoteproviders/index";
 	}
-	
+
 	private String mask(String input) {
 		if (input != null) {
 			if (input.length() > 5) {
@@ -158,7 +148,7 @@ public class RemoteProvidersController {
 		if (remoteProviderApplication.getApplication().getId() == null ||
 				remoteProviderApplication.getApplication().getOrganization() == null ||
 				remoteProviderApplication.getApplication().getOrganization().getId() == null ||
-				!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS,
+				!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS,
 						remoteProviderApplication.getApplication().getOrganization().getId(),
 						remoteProviderApplication.getApplication().getId())) {
 			return "403";
@@ -298,7 +288,7 @@ public class RemoteProvidersController {
 		
 		log.info("Processing request for paginating Remote Application .");
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
-		permissionService.filterApps(typeList);
+        PermissionUtils.filterApps(typeList);
 		for (RemoteProviderType rp : typeList) {
 			if (rp.getId() == rpAppId) {
 				int numApps = 0;

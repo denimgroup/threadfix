@@ -23,35 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
@@ -60,24 +48,14 @@ public class AddFindingController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(AddFindingController.class);
 
+    @Autowired
 	private ApplicationService applicationService;
-	private PermissionService permissionService;
+    @Autowired
 	private ManualFindingService manualFindingService;
+    @Autowired
 	private ChannelVulnerabilityService channelVulnerabilityService;
+    @Autowired
 	private FindingService findingService;
-
-	@Autowired
-	public AddFindingController(ApplicationService applicationService,
-			ManualFindingService manualFindingService,
-			ChannelVulnerabilityService channelVulnerabilityService,
-			FindingService findingService,
-			PermissionService organizationService) {
-		this.applicationService = applicationService;
-		this.manualFindingService = manualFindingService;
-		this.permissionService = organizationService;
-		this.channelVulnerabilityService = channelVulnerabilityService;
-		this.findingService = findingService;
-	}
 
 	@ModelAttribute
 	public List<ChannelSeverity> populateChannelSeverity() {
@@ -108,7 +86,7 @@ public class AddFindingController {
 	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -137,7 +115,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -170,7 +148,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -205,7 +183,7 @@ public class AddFindingController {
 		if (cVulnList == null)
 			return "";
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (ChannelVulnerability gVuln : cVulnList) {
 			if (gVuln == null || gVuln.getName() == null || gVuln.getName().trim().equals(""))
 				continue;
@@ -222,7 +200,7 @@ public class AddFindingController {
 		if (sourceFileList == null || sourceFileList.size() == 0)
 			return "";
 
-		StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 		for (String sourceFile : sourceFileList) {
 			if (sourceFile == null || sourceFile.equals(""))
 				continue;

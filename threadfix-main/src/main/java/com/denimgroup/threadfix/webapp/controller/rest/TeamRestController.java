@@ -1,12 +1,12 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
+import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,20 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
+import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 @Controller
 @RequestMapping("/rest/teams")
 public class TeamRestController extends RestController {
-
+    @Autowired
 	private OrganizationService organizationService;
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private ApplicationCriticalityService applicationCriticalityService;
 	
 	public static final String CREATION_FAILED = "New Team creation failed.";
@@ -41,17 +40,6 @@ public class TeamRestController extends RestController {
 	// TODO finalize which methods need to be restricted
 	static {
 		restrictedMethods.add(NEW);
-	}
-	
-	@Autowired
-	public TeamRestController(OrganizationService organizationService,
-                              APIKeyService apiKeyService,
-                              ApplicationCriticalityService applicationCriticalityService,
-                              ApplicationService applicationService) {
-		super(apiKeyService);
-		this.organizationService = organizationService;
-		this.applicationService = applicationService;
-		this.applicationCriticalityService = applicationCriticalityService;
 	}
 
     /**

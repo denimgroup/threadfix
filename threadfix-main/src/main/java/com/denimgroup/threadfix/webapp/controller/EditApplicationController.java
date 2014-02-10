@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,30 +48,18 @@ import java.util.List;
 @SessionAttributes({"application", "scanParametersBean"})
 public class EditApplicationController {
 	
-	public EditApplicationController(){}
-
 	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
-	
+
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private DefectTrackerService defectTrackerService;
+    @Autowired
 	private WafService wafService;
-	private PermissionService permissionService;
-	private ApplicationCriticalityService applicationCriticalityService = null;
+    @Autowired
+	private ApplicationCriticalityService applicationCriticalityService;
+    @Autowired
 	private OrganizationService organizationService;
-	
-	@Autowired
-	public EditApplicationController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService, WafService wafService,
-			PermissionService permissionService,
-			ApplicationCriticalityService applicationCriticalityService,
-			OrganizationService organizationService) {
-		this.applicationService = applicationService;
-		this.defectTrackerService = defectTrackerService;
-		this.wafService = wafService;
-		this.permissionService = permissionService;
-		this.applicationCriticalityService = applicationCriticalityService;
-		this.organizationService = organizationService;
-	}
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -111,7 +100,7 @@ public class EditApplicationController {
 			BindingResult result, SessionStatus status, Model model,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -138,7 +127,7 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
+            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
 			
 			if (application.getWaf() != null && application.getWaf().getId() == null) {
@@ -150,10 +139,10 @@ public class EditApplicationController {
 				application.setDefectTracker(null);
 			}
             model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
-					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
+			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
+                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
 			
-			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, appId));
 			
 			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
@@ -166,8 +155,8 @@ public class EditApplicationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
-			
-			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
+
+            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 					Permission.CAN_UPLOAD_SCANS,
 					Permission.CAN_MODIFY_VULNERABILITIES,
 					Permission.CAN_SUBMIT_DEFECTS,
@@ -193,7 +182,7 @@ public class EditApplicationController {
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -246,7 +235,7 @@ public class EditApplicationController {
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -261,21 +250,21 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
+            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
 			
-			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
 			
-			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, appId));
 			
 			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
 			return "ajaxFailureHarness";
 			
 		} else {
-			
-			permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
+
+            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 			
 			applicationService.storeApplication(application);
 			

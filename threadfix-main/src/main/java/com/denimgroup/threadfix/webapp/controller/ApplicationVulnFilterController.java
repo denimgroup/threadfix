@@ -23,47 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.GenericSeverityService;
-import com.denimgroup.threadfix.service.GenericVulnerabilityService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SeverityFilterService;
-import com.denimgroup.threadfix.service.VulnerabilityFilterService;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/filters")
 @SessionAttributes("vulnerabilityFilter")
 public class ApplicationVulnFilterController extends AbstractVulnFilterController {
-	
-	@Autowired
-	public ApplicationVulnFilterController(
-			PermissionService permissionService,
-			SeverityFilterService severityFilterService,
-			OrganizationService organizationService,
-			VulnerabilityFilterService vulnerabilityFilterService,
-			ApplicationService applicationService,
-			GenericVulnerabilityService genericVulnerabilityService,
-			GenericSeverityService genericSeverityService) {
-		super(permissionService, severityFilterService, organizationService, vulnerabilityFilterService,
-				applicationService, genericVulnerabilityService, genericSeverityService);
-	}
-	
+
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id");

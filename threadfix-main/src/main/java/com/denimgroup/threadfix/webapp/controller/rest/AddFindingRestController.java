@@ -28,20 +28,13 @@ public class AddFindingRestController extends RestController {
 			"set to a valid CWE vulnerability name.";
 	public static final String PASSED_CHECK = "The request passed the check for Finding parameters.";
 
+    @Autowired
 	private ManualFindingService manualFindingService;
+    @Autowired
 	private FindingService findingService;
 	
 	private final static String NEW = "newFinding";
 
-	@Autowired
-	public AddFindingRestController(APIKeyService apiKeyService, 
-			ManualFindingService manualFindingService,
-			FindingService findingService) {
-		super(apiKeyService);
-		this.manualFindingService = manualFindingService;
-		this.findingService = findingService;
-	}
-	
 	/**
 	 * Create a new manual finding.
 	 * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addDynamicFinding()

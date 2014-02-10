@@ -23,18 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,32 +42,25 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.WafService;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/wafs")
 @SessionAttributes({"newWaf","waf"})
 public class WafsController {
 
-	private WafService wafService = null;
-	private PermissionService permissionService = null;
-	
-	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
+    @Autowired
+	private WafService wafService;
 
-	@Autowired
-	public WafsController(PermissionService permissionService,
-			WafService wafService) {
-		this.wafService = wafService;
-		this.permissionService = permissionService;
-	}
-	
-	public WafsController(){}
+	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -83,7 +72,7 @@ public class WafsController {
 		model.addAttribute("wafPage", true);
 		model.addAttribute("createWafUrl", "wafs/new/ajax");
 		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
-		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		return "wafs/index";
 	}
 
@@ -101,7 +90,7 @@ public class WafsController {
 		boolean canSeeRules;
 
 		if (waf.getApplications() != null && !waf.getApplications().isEmpty()) {
-			canSeeRules = permissionService.canSeeRules(waf);
+			canSeeRules = PermissionUtils.canSeeRules(waf);
 		} else {
 			canSeeRules = true;
 		}
@@ -121,14 +110,14 @@ public class WafsController {
 		mav.addObject("wafTypeList", wafService.loadAllWafTypes());
 		
 		if (waf.getApplications() != null && waf.getApplications().size() != 0) {
-			boolean globalAccess = permissionService.isAuthorized(Permission.READ_ACCESS, null,null);
+			boolean globalAccess = PermissionUtils.isAuthorized(Permission.READ_ACCESS, null,null);
 			if (globalAccess) {
 				mav.addObject("apps", waf.getApplications());
 			} else {
 				List<Application> apps = new ArrayList<>();
 				
-				Set<Integer> authenticatedAppIds = permissionService.getAuthenticatedAppIds();
-				Set<Integer> authenticatedTeamIds = permissionService.getAuthenticatedTeamIds();
+				Set<Integer> authenticatedAppIds = PermissionUtils.getAuthenticatedAppIds();
+				Set<Integer> authenticatedTeamIds = PermissionUtils.getAuthenticatedTeamIds();
 				for (Application app : waf.getApplications()) {
 
                     boolean authenticatedAppId = authenticatedAppIds != null && app != null &&
@@ -171,9 +160,9 @@ public class WafsController {
 		}
 
 		mav.addObject(waf);
-		
-		permissionService.addPermissions(mav, null, null, 
-				Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
+
+        PermissionUtils.addPermissions(mav, null, null,
+                Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
 		
 		mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
 		

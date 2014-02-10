@@ -54,12 +54,19 @@ public class ScanServiceImpl implements ScanService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanService");
 
-    @Autowired private ScanDao scanDao = null;
-    @Autowired private ApplicationChannelDao applicationChannelDao = null;
-    @Autowired private EmptyScanDao emptyScanDao = null;
-    @Autowired private QueueSender queueSender = null;
-    @Autowired(required=false) @Nullable private PermissionService permissionService = null;
-    @Autowired private ChannelImporterFactory channelImporterFactory = null;
+    @Autowired
+    private ScanDao scanDao = null;
+    @Autowired
+    private ApplicationChannelDao applicationChannelDao = null;
+    @Autowired
+    private EmptyScanDao emptyScanDao = null;
+    @Autowired
+    private QueueSender queueSender = null;
+    @Autowired(required=false)
+    @Nullable
+    private PermissionService permissionService = null;
+    @Autowired
+    private ChannelImporterFactory channelImporterFactory = null;
 
 	@Override
 	public List<Scan> loadAll() {

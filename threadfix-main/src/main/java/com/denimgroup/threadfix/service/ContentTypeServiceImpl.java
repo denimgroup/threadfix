@@ -3,8 +3,6 @@ package com.denimgroup.threadfix.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 public class ContentTypeServiceImpl implements ContentTypeService {
 	private boolean strictWhiteList;
@@ -91,7 +89,6 @@ public class ContentTypeServiceImpl implements ContentTypeService {
 		
 	}
 	
-	@Autowired
 	public ContentTypeServiceImpl() {
 		strictWhiteList = false;
 		defaultType = "application/octet-stream";
@@ -138,11 +135,4 @@ public class ContentTypeServiceImpl implements ContentTypeService {
 		return defaultType;
 	}
 	
-//	private void setDefaultType(String newDefaultType){
-//		defaultType = newDefaultType;
-//	}
-//	
-//	private void setStrictWhiteList(boolean strictWL){
-//		strictWhiteList = strictWL;
-//	}
 }
