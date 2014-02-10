@@ -23,8 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,30 +40,17 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.DefectTracker;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers")
 @SessionAttributes({"defectTracker","editDefectTracker"})
 public class DefectTrackersController {
 	
-	DefectTrackersController(){}
-
+    @Autowired
 	private DefectTrackerService defectTrackerService;
-	private PermissionService permissionService;
-	
-	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
-	@Autowired
-	public DefectTrackersController(PermissionService permissionService,
-			DefectTrackerService defectTrackerService) {
-		this.defectTrackerService = defectTrackerService;
-		this.permissionService = permissionService;
-	}
+	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -73,7 +64,7 @@ public class DefectTrackersController {
 		model.addAttribute("editDefectTracker", new DefectTracker());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
-		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 	}
 
 	@RequestMapping("/{defectTrackerId}")
@@ -87,7 +78,7 @@ public class DefectTrackersController {
 		
 		ModelAndView mav = new ModelAndView("config/defecttrackers/detail");
 		mav.addObject(defectTracker);
-		permissionService.addPermissions(mav, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
+        PermissionUtils.addPermissions(mav, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
 		return mav;
 	}
 	

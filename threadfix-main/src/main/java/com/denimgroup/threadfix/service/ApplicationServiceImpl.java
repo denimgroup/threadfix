@@ -28,9 +28,11 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.webapp.controller.TableSortBean;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.jetbrains.annotations.Nullable;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,43 +58,24 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private String invalidCredentials = "The User / password combination " +
 			"(or possibly the Defect Tracker endpoint URL)";
 
-	private ApplicationDao applicationDao = null;
-	private DefectTrackerDao defectTrackerDao = null;
-	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
-	private WafRuleDao wafRuleDao = null;
-	private WafDao wafDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
-	private AccessControlMapService accessControlMapService;
-	private ApplicationCriticalityDao applicationCriticalityDao = null;
-	private DefectDao defectDao = null;
-	private PermissionService permissionService = null;
-	private ScanMergeService scanMergeService = null;
-	private ScanQueueService scanQueueService;
+	@Autowired private ApplicationDao applicationDao;
+	@Autowired private DefectTrackerDao defectTrackerDao;
+	@Autowired private RemoteProviderApplicationDao remoteProviderApplicationDao;
+	@Autowired private WafRuleDao wafRuleDao;
+	@Autowired private WafDao wafDao;
+	@Autowired private VulnerabilityDao vulnerabilityDao;
+	@Autowired private AccessControlMapService accessControlMapService;
+	@Autowired private ApplicationCriticalityDao applicationCriticalityDao;
+	@Autowired private DefectDao defectDao;
+	@Autowired private ScanMergeService scanMergeService;
 
-	@Autowired
-	public ApplicationServiceImpl(ApplicationDao applicationDao,
-			DefectTrackerDao defectTrackerDao,
-			RemoteProviderApplicationDao remoteProviderApplicationDao,
-			PermissionService permissionService, WafRuleDao wafRuleDao,
-			AccessControlMapService accessControlMapService,
-			VulnerabilityDao vulnerabilityDao, WafDao wafDao,
-			ApplicationCriticalityDao applicationCriticalityDao,
-			DefectDao defectDao,
-			ScanMergeService scanMergeService,
-			ScanQueueService scanQueueService) {
-		this.applicationDao = applicationDao;
-		this.defectTrackerDao = defectTrackerDao;
-		this.accessControlMapService = accessControlMapService;
-		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
-		this.permissionService = permissionService;
-		this.wafRuleDao = wafRuleDao;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.wafDao = wafDao;
-		this.applicationCriticalityDao = applicationCriticalityDao;
-		this.defectDao = defectDao;
-		this.scanMergeService = scanMergeService;
-		this.scanQueueService = scanQueueService;
-	}
+    @Nullable
+	@Autowired(required = false)
+    private PermissionService permissionService;
+
+    @Nullable
+	@Autowired(required = false)
+    private ScanQueueService scanQueueService;
 
 	@Override
 	public List<Application> loadAllActive() {
@@ -147,8 +130,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 				accessControlMapService.deactivate(map);
 			}
 		}
-		
-		if (application.getScanQueueTasks() != null) {
+
+        if (scanQueueService != null && application.getScanQueueTasks() != null) {
 			for (ScanQueueTask task : application.getScanQueueTasks())
 				scanQueueService.deactivateTask(task);
 				
@@ -357,8 +340,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
-		
-		if (application.getOrganization() != null) {
+
+        if (permissionService == null) { // not enterprise, which means everyone is admin
+            canManageDefectTrackers = true;
+            canManageWafs = true;
+        } else if (application.getOrganization() != null) {
 			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			
@@ -470,8 +456,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
-		
-		if (application.getOrganization() != null) {
+
+        if (permissionService == null) { // not enterprise, which means everyone is admin
+            canManageDefectTrackers = true;
+            canManageWafs = true;
+        } if (application.getOrganization() != null) {
 			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			

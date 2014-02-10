@@ -23,65 +23,30 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.report;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import com.denimgroup.threadfix.data.dao.*;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
 import org.hibernate.SessionFactory;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.OrganizationDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
-import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.PermissionUtils;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author mcollins
@@ -93,29 +58,21 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
-	private SessionFactory sessionFactory = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private ScanDao scanDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
-	private OrganizationDao organizationDao = null;
-	private ApplicationDao applicationDao = null;
-	private PermissionService permissionService = null;
-	
-	/**
-	 * @param sessionFactory
-	 */
+    @Autowired
+    private SessionFactory sessionFactory = null;
 	@Autowired
-	public ReportsServiceImpl(SessionFactory sessionFactory, ChannelTypeDao channelTypeDao,
-			PermissionService permissionService, OrganizationDao organizationDao,
-			ScanDao scanDao, VulnerabilityDao vulnerabilityDao, ApplicationDao applicationDao) {
-		this.sessionFactory = sessionFactory;
-		this.channelTypeDao = channelTypeDao;
-		this.scanDao = scanDao;
-		this.organizationDao = organizationDao;
-		this.permissionService = permissionService;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationDao = applicationDao;
-	}
+    private ChannelTypeDao channelTypeDao = null;
+	@Autowired
+    private ScanDao scanDao = null;
+	@Autowired
+    private VulnerabilityDao vulnerabilityDao = null;
+	@Autowired
+    private OrganizationDao organizationDao = null;
+	@Autowired
+    private ApplicationDao applicationDao = null;
+	@Autowired(required=false)
+    @Nullable
+    private PermissionService permissionService = null;
 
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters,
@@ -539,7 +496,19 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
 		List<Integer> applicationIdList = new ArrayList<>();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+		Set<Integer> teamIds = null;
+        if (permissionService == null) {
+            teamIds = new HashSet<>();
+            List<Organization> organizations = organizationDao.retrieveAllActive();
+
+            if (organizations != null) {
+                for (Organization organization : organizations) {
+                    teamIds.add(organization.getId());
+                }
+            }
+        } else {
+            permissionService.getAuthenticatedTeamIds();
+        }
 
 		if (reportParameters.getOrganizationId() < 0) {
 			if (reportParameters.getApplicationId() < 0) {

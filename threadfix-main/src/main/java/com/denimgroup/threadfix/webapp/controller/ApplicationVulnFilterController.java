@@ -23,47 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-
-import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.GenericSeverityService;
-import com.denimgroup.threadfix.service.GenericVulnerabilityService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.SeverityFilterService;
-import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/filters")
 @SessionAttributes("vulnerabilityFilter")
 public class ApplicationVulnFilterController extends AbstractVulnFilterController {
-	
-	@Autowired
-	public ApplicationVulnFilterController(
-			PermissionService permissionService,
-			SeverityFilterService severityFilterService,
-			OrganizationService organizationService,
-			VulnerabilityFilterService vulnerabilityFilterService,
-			ApplicationService applicationService,
-			GenericVulnerabilityService genericVulnerabilityService,
-			GenericSeverityService genericSeverityService) {
-		super(permissionService, severityFilterService, organizationService, vulnerabilityFilterService,
-				applicationService, genericVulnerabilityService, genericSeverityService);
-	}
-	
+
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id");
@@ -80,13 +52,12 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String submitNew(@PathVariable int orgId, @PathVariable int appId,
+	public String submitNew(@PathVariable int appId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model,
-			HttpServletRequest request) {
-		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, request, -1, appId);
+			Model model) {
+		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
@@ -96,17 +67,15 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model,
-			HttpServletRequest request) {
-		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, request, -1, appId, filterId);
+			Model model) {
+		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId, filterId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
 	public String submitDelete(
 			@PathVariable int appId,
 			@PathVariable int filterId,
-			Model model,
-			HttpServletRequest request) {
-		return submitDeleteBackend(model, request, -1, appId, filterId);
+			Model model) {
+		return submitDeleteBackend(model, -1, appId, filterId);
 	}
 }

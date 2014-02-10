@@ -1,13 +1,13 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.APIKeyService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.denimgroup.threadfix.data.entities.APIKey;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class provides the checkKey method and log implementation to each REST Controller.
@@ -23,18 +23,9 @@ public abstract class RestController {
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
 	public final static String RESTRICTED_URL_ERROR = "The requested URL is restricted for your API Key.";
 
-	// We need this constructor to ensure that the api key service is set correctly
-	protected APIKeyService apiKeyService = null;
-	
-	/**
-	 * Autowire an APIKeyService in here so you can use checkKey() to authenticate
-	 * @param apiKeyService
-	 */
-	public RestController(APIKeyService apiKeyService) {
-		this.apiKeyService = apiKeyService;
-	}
-	
-	
+	@Autowired
+	protected APIKeyService apiKeyService;
+
 	/**
 	 * Implementing classes should add the names of restricted methods to this set
 	 * and use the checkRestriction method with the name of the requested method as

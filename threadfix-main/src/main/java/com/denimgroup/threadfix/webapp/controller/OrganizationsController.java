@@ -23,42 +23,28 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
-import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
-import com.denimgroup.threadfix.webapp.config.ThreadFixUserDetails;
-import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -75,32 +61,20 @@ public class OrganizationsController {
 		return applicationCriticalityService.loadAll();
 	}
 	
-	public OrganizationsController(){}
-	
 	private final SanitizedLogger log = new SanitizedLogger(OrganizationsController.class);
 
-	private OrganizationService organizationService = null;
-	private ReportsService reportsService = null;
-	private ApplicationService applicationService = null;
-	private ApplicationCriticalityService applicationCriticalityService = null;
-	private PermissionService permissionService = null;
-	private ChannelTypeService channelTypeService = null;
-	private UserService userService = null;
-	
-	@Autowired
-	public OrganizationsController(OrganizationService organizationService,
-			ChannelTypeService channelTypeService, PermissionService permissionService,
-			ReportsService reportsService, ApplicationService applicationService,
-			ApplicationCriticalityService applicationCriticalityService,
-			UserService userService) {
-		this.organizationService = organizationService;
-		this.applicationService = applicationService;
-		this.applicationCriticalityService = applicationCriticalityService;
-		this.permissionService = permissionService;
-		this.channelTypeService = channelTypeService;
-		this.reportsService = reportsService;
-		this.userService = userService;
-	}
+    @Autowired
+	private OrganizationService organizationService;
+    @Autowired
+	private ReportsService reportsService;
+    @Autowired
+	private ApplicationService applicationService;
+    @Autowired
+	private ApplicationCriticalityService applicationCriticalityService;
+    @Autowired
+	private ChannelTypeService channelTypeService;
+    @Autowired
+	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -120,7 +94,7 @@ public class OrganizationsController {
 		
 		if (organizations != null) {
 			for (Organization organization : organizations) {
-				organization.setApplications(permissionService.filterApps(organization));
+				organization.setApplications(PermissionUtils.filterApps(organization));
 			}
 		}
 
@@ -144,19 +118,19 @@ public class OrganizationsController {
 	public ModelAndView detail(@PathVariable("orgId") int orgId,
 			HttpServletRequest request) {
 		Organization organization = organizationService.loadOrganization(orgId);
-		List<Application> apps = permissionService.filterApps(organization);
+		List<Application> apps = PermissionUtils.filterApps(organization);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 			
-		} else if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,null) &&
+		} else if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,null) &&
 				(apps == null || apps.size() == 0)) {
 			
 			return new ModelAndView("403");
 			
 		} else {
 			ModelAndView mav = new ModelAndView("organizations/detail");
-			permissionService.addPermissions(mav, orgId, null,
+            PermissionUtils.addPermissions(mav, orgId, null,
 					Permission.CAN_MANAGE_APPLICATIONS,
 					Permission.CAN_MANAGE_TEAMS,
 					Permission.CAN_MODIFY_VULNERABILITIES,
@@ -168,7 +142,7 @@ public class OrganizationsController {
 			mav.addObject("application", new Application());
 			mav.addObject("applicationTypes", FrameworkType.values());
 			mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
-			if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
+			if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
 				mav.addObject("users", userService.getPermissibleUsers(orgId, null));
 			}
 			return mav;
@@ -210,7 +184,7 @@ public class OrganizationsController {
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 	public String deleteOrg(@PathVariable("orgId") int orgId, SessionStatus status,
 			HttpServletRequest request) {
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
 			return "403";
 		}
 			
@@ -234,7 +208,7 @@ public class OrganizationsController {
 	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
 		
@@ -269,7 +243,7 @@ public class OrganizationsController {
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
 		Organization org = null;
@@ -285,15 +259,15 @@ public class OrganizationsController {
 		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {
-			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
+            PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
 			
 			model.addAttribute("org",org);
             model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
 			
-			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, null));
 			
 			model.addAttribute("contentPage", "applications/forms/newApplicationForm.jsp");

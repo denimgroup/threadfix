@@ -18,7 +18,7 @@ public class ScanLocationManager {
             throw new IllegalStateException(ERROR_MESSAGE);
         }
 
-        // let's make sure it ends with /.
+        // let's make sure it ends with '/'.
         if (!root.endsWith("/")) {
             root = root + "/";
         }
@@ -34,7 +34,7 @@ public class ScanLocationManager {
 
         File rootFile = new File(ROOT);
         if (!rootFile.exists() || !rootFile.isDirectory()) {
-            throw new IllegalStateException("The file didn't exist or wasn't a directory.");
+            throw new IllegalStateException("The file " + rootFile.getAbsolutePath() + "didn't exist or wasn't a directory.");
         }
 
         return ROOT;

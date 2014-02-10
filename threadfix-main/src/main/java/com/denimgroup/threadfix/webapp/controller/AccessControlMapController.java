@@ -26,7 +26,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}")

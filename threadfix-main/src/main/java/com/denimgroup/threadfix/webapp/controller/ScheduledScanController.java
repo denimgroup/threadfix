@@ -24,10 +24,15 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.ScheduledScan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ChannelTypeService;
+import com.denimgroup.threadfix.service.ScheduledScanService;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledScanScheduler;
-import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,24 +52,13 @@ public class ScheduledScanController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScheduledScanController.class);
 
+    @Autowired
 	private ScheduledScanService scheduledScanService;
-    private ApplicationService applicationService;
-	private PermissionService permissionService;
+    @Autowired
     private ChannelTypeService channelTypeService;
 
     @Autowired
     private ScheduledScanScheduler scheduledScanScheduler;
-
-	@Autowired
-	public ScheduledScanController(ScheduledScanService scheduledScanService,
-                                   PermissionService permissionService,
-                                   ApplicationService applicationService,
-                                   ChannelTypeService channelTypeService) {
-		this.scheduledScanService = scheduledScanService;
-		this.permissionService = permissionService;
-        this.applicationService = applicationService;
-        this.channelTypeService = channelTypeService;
-	}
 	
 	@RequestMapping(value = "/addScheduledScan", method = RequestMethod.POST)
 	public String addScheduledScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
@@ -72,7 +66,7 @@ public class ScheduledScanController {
                                    BindingResult result,
                                    HttpServletRequest request, Model model) {
 		log.info("Start adding scheduled scan to application " + appId);
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
             return "403";
         }
         scheduledScanService.validateScheduledDate(scheduledScan, result);
@@ -94,7 +88,7 @@ public class ScheduledScanController {
         int scheduledScanId = scheduledScanService.saveScheduledScan(appId, scheduledScan);
 		if (scheduledScanId < 0) {
 			ControllerUtils.addErrorMessage(request,
-					"Adding Scheduled Scan was failed.");
+                    "Adding Scheduled Scan was failed.");
             ControllerUtils.setActiveTab(request, ControllerUtils.SCHEDULED_SCAN_TAB);
 			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
 			return "ajaxFailureHarness";
@@ -140,7 +134,7 @@ public class ScheduledScanController {
 			HttpServletRequest request, Model model) {
 		
 		log.info("Start deleting scheduled scan from application with id " + appId);
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
         ScheduledScan scheduledScan = scheduledScanService.loadScheduledScanById(scheduledScanId);

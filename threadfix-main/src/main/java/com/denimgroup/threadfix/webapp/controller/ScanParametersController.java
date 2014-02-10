@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +38,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.denimgroup.threadfix.service.ScanParametersService;
-import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
+import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/setParameters")

@@ -25,12 +25,11 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
-import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.repository.GitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,15 +46,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/rest/code")
 public class PluginRestController extends RestController {
-	
+
+    @Autowired
 	private ApplicationService applicationService;
-	
-	@Autowired
-	public PluginRestController(APIKeyService apiKeyService,
-			ApplicationService applicationService) {
-		super(apiKeyService);
-		this.applicationService = applicationService;
-	}
 
     /**
      *

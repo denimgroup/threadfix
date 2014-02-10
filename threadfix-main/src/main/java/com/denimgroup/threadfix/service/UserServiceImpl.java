@@ -23,24 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
+import com.denimgroup.threadfix.data.dao.RoleDao;
+import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
-import com.denimgroup.threadfix.data.dao.RoleDao;
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.plugin.permissions.PermissionServiceDelegateFactory;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -161,9 +154,7 @@ public class UserServiceImpl implements UserService {
 		User user = loadUser(userId);
 		
 		if (user != null && user.getHasGlobalGroupAccess() && user.getGlobalRole() != null) {
-			if(PermissionServiceDelegateFactory.isEnterprise()){
-				user.getGlobalRole().setEnterprise(true);
-			}
+            user.getGlobalRole().setEnterprise(EnterpriseTest.isEnterprise());
 			returnList.addAll(user.getGlobalRole().getPermissions());
 		}
 		

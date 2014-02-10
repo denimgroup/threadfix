@@ -23,11 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,20 +37,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.WafService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/wafs/{wafId}/edit")
@@ -56,23 +50,14 @@ import com.denimgroup.threadfix.service.WafService;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 public class EditWafController {
 	
-	public EditWafController(){}
-
+    @Autowired
 	private WafService wafService = null;
-	private PermissionService permissionService = null;
-	
+
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("name", "wafType.id");
-	}
-	
-	@Autowired
-	public EditWafController(WafService wafService,
-			PermissionService permissionService) {
-		this.wafService = wafService;
-		this.permissionService = permissionService;
 	}
 
 	@ModelAttribute
@@ -150,7 +135,7 @@ public class EditWafController {
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
 		model.addAttribute("successMessage", successMessage);
-		permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		model.addAttribute("contentPage", "wafs/wafsTable.jsp");
 		return "ajaxSuccessHarness";
 	}

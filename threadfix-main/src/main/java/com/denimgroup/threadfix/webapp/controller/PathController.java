@@ -23,50 +23,38 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.Node;
 import com.denimgroup.threadfix.webapp.viewmodels.PathTree;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/path")
 public class PathController {
 
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private ScanMergeService scanMergeService;
-	private PermissionService permissionService;
-	
-	private final SanitizedLogger log = new SanitizedLogger(PathController.class);
 
-	@Autowired
-	public PathController(PermissionService organizationService,
-			ApplicationService applicationService, ScanMergeService scanMergeService) {
-		this.applicationService = applicationService;
-		this.scanMergeService = scanMergeService;
-		this.permissionService = organizationService;
-	}
+	private final SanitizedLogger log = new SanitizedLogger(PathController.class);
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -82,7 +70,7 @@ public class PathController {
 	public ModelAndView viewScan(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -117,7 +105,7 @@ public class PathController {
 			@PathVariable("orgId") int orgId, @ModelAttribute Application application,
 			SessionStatus status) {
 
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		

@@ -23,27 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
@@ -52,7 +31,24 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers/new")
@@ -60,22 +56,17 @@ import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 public class AddDefectTrackerController {
 
+    @Autowired
 	private DefectTrackerService defectTrackerService;
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired(required = false)
+    @Nullable
 	private PermissionService permissionService;
 	
 	public AddDefectTrackerController(){}
 	
 	private final Log log = LogFactory.getLog(AddDefectTrackerController.class);
-
-	@Autowired
-	public AddDefectTrackerController(ApplicationService applicationService,
-			DefectTrackerService defectTrackerService, PermissionService permissionService) {
-		this.defectTrackerService = defectTrackerService;
-		this.applicationService = applicationService;
-		this.permissionService = permissionService;
-	
-	}
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -149,8 +140,8 @@ public class AddDefectTrackerController {
 			String referrer = request.getHeader("referer");
 			if (referrer.contains("configuration/defecttrackers")) {
 				model.addAttribute("contentPage", "/configuration/defecttrackers");
-				ControllerUtils.addSuccessMessage(request, 
-						"Defect Tracker " + defectTracker.getName() + " has been created successfully.");
+				ControllerUtils.addSuccessMessage(request,
+                        "Defect Tracker " + defectTracker.getName() + " has been created successfully.");
 				return "ajaxRedirectHarness";
 			} else {
 			
@@ -172,7 +163,11 @@ public class AddDefectTrackerController {
 				model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
 				model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 				model.addAttribute("defectTracker", new DefectTracker());
-				permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
+                if (permissionService != null) {
+				    permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
+                } else {
+                    model.addAttribute(Permission.CAN_MANAGE_DEFECT_TRACKERS.getCamelCase(), true);
+                }
 				return "ajaxSuccessHarness";
 			}
 		}

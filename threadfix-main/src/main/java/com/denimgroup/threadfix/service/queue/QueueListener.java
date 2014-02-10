@@ -23,24 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
-import java.util.List;
-
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
-
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
+import javax.jms.*;
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -52,41 +45,25 @@ public class QueueListener implements MessageListener {
 
 	protected final SanitizedLogger log = new SanitizedLogger(QueueListener.class);
 
+    @Autowired
 	private ScanMergeService scanMergeService;
+    @Autowired
 	private DefectService defectService;
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private JobStatusService jobStatusService;
+    @Autowired
 	private VulnerabilityService vulnerabilityService;
+    @Autowired
 	private ApplicationChannelService applicationChannelService = null;
+    @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
+    @Autowired
 	private RemoteProviderTypeService remoteProviderTypeService = null;
+    @Autowired(required=false)
+    @Nullable
     private ScanQueueService scanQueueService = null;
-
-	/**
-	 * @param scanMergeService
-	 * @param jobStatusService
-	 * @param applicationService
-	 * @param defectService
-	 * @param vulnerabilityService
-	 */
-	@Autowired
-	public QueueListener(ScanMergeService scanMergeService, JobStatusService jobStatusService,
-			ApplicationService applicationService, DefectService defectService,
-			VulnerabilityService vulnerabilityService,
-			ApplicationChannelService applicationChannelService,
-			RemoteProviderApplicationService remoteProviderApplicationService,
-			RemoteProviderTypeService remoteProviderTypeService,
-            ScanQueueService scanQueueService) {
-		this.scanMergeService = scanMergeService;
-		this.jobStatusService = jobStatusService;
-		this.applicationService = applicationService;
-		this.defectService = defectService;
-		this.vulnerabilityService = vulnerabilityService;
-		this.applicationChannelService = applicationChannelService;
-		this.remoteProviderApplicationService = remoteProviderApplicationService;
-		this.remoteProviderTypeService = remoteProviderTypeService;
-        this.scanQueueService = scanQueueService;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -212,10 +189,6 @@ public class QueueListener implements MessageListener {
 	}
 
 	/**
-	 * @param vulnerabilityIds
-	 * @param summary
-	 * @param preamble
-	 * @param jobStatusId
 	 */
 	private void processSubmitDefect(Object vulnerabilityIds, String summary, String preamble,
 			String component, String version, String severity, String priority,
@@ -250,9 +223,6 @@ public class QueueListener implements MessageListener {
 	}
 
 	/**
-	 * @param channelId
-	 * @param fileName
-	 * @param jobStatusId
 	 */
 	private void processScanRequest(Integer channelId, String fileName, Integer jobStatusId, String userName) {
 		// TODO Move the jobStatus updating to the importer to improve messages
@@ -328,6 +298,10 @@ public class QueueListener implements MessageListener {
      */
     @Transactional(readOnly=false)
     private void processScheduledScan(int appId, String scanner) {
+        if (scanQueueService == null) {
+            return;
+        }
+
         Application application = applicationService.loadApplication(appId);
         if (application == null)
             return;
@@ -348,7 +322,6 @@ public class QueueListener implements MessageListener {
 		
 		if (jobStatus != null) {
 			jobStatusService.closeJobStatus(jobStatus, status);
-			jobStatus = null;
 		}
 	}
 }

@@ -36,6 +36,7 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,28 +53,20 @@ import java.util.Set;
 public class ScanServiceImpl implements ScanService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanService");
-	
-	private ScanDao scanDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private EmptyScanDao emptyScanDao = null;
-	private QueueSender queueSender = null;
-	private PermissionService permissionService = null;
-    private ChannelImporterFactory channelImporterFactory = null;
 
-	@Autowired
-	public ScanServiceImpl(ScanDao scanDao,
-			ApplicationChannelDao applicationChannelDao,
-            ChannelImporterFactory channelImporterFactory,
-            EmptyScanDao emptyScanDao,
-			PermissionService permissionService,
-			QueueSender queueSender) {
-		this.scanDao = scanDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.channelImporterFactory = channelImporterFactory;
-        this.emptyScanDao = emptyScanDao;
-		this.queueSender = queueSender;
-		this.permissionService = permissionService;
-	}
+    @Autowired
+    private ScanDao scanDao = null;
+    @Autowired
+    private ApplicationChannelDao applicationChannelDao = null;
+    @Autowired
+    private EmptyScanDao emptyScanDao = null;
+    @Autowired
+    private QueueSender queueSender = null;
+    @Autowired(required=false)
+    @Nullable
+    private PermissionService permissionService = null;
+    @Autowired
+    private ChannelImporterFactory channelImporterFactory = null;
 
 	@Override
 	public List<Scan> loadAll() {
@@ -241,38 +234,51 @@ public class ScanServiceImpl implements ScanService {
 	
 	@Override
 	public List<Scan> loadMostRecentFiltered(int number) {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.retrieveMostRecent(number);
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.retrieveMostRecent(number, appIds, teamIds);
+
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.retrieveMostRecent(number);
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.retrieveMostRecent(number, appIds, teamIds);
+        } else {
+            return scanDao.retrieveMostRecent(number, null, null);
+        }
 	}
 	
 	@Override
 	public int getScanCount() {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.getScanCount();
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.getScanCount(appIds, teamIds);
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.getScanCount();
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.getScanCount(appIds, teamIds);
+        } else {
+            return scanDao.getScanCount(null, null);
+        }
 	}
 	
 	@Override
 	public List<Scan> getTableScans(Integer page) {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.getTableScans(page);
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.getTableScans(page, appIds, teamIds);
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.getTableScans(page);
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.getTableScans(page, appIds, teamIds);
+        } else {
+            return scanDao.getTableScans(page, null, null);
+        }
 	}
 	
 }

@@ -1,25 +1,20 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.EnterpriseTest;
+import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/defaults")
@@ -40,7 +35,7 @@ public class DefaultConfigController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		if (LdapServiceDelegateFactory.isEnterprise()){
+		if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
                     "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials");
 		} else {
@@ -55,7 +50,7 @@ public class DefaultConfigController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model, HttpServletRequest request) {
-		model.addAttribute("ldap_plugin",LdapServiceDelegateFactory.isEnterprise());
+		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
 		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		return "config/defaults";

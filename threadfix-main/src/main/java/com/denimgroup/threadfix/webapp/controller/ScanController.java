@@ -23,28 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.ScanDeleteService;
+import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ScanDeleteService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
@@ -52,23 +49,12 @@ public class ScanController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
 
+    @Autowired
 	private ScanService scanService;
+    @Autowired
 	private ScanDeleteService scanDeleteService;
+    @Autowired
 	private FindingService findingService;
-	private PermissionService permissionService;
-
-	@Autowired
-	public ScanController(ScanService scanService,
-			PermissionService organizationService,
-			ScanDeleteService scanDeleteService,
-			FindingService findingService) {
-		this.scanService = scanService;
-		this.permissionService = organizationService;
-		this.scanDeleteService = scanDeleteService;
-		this.findingService = findingService;
-	}
-	
-	public ScanController(){}
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -80,7 +66,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -115,7 +101,7 @@ public class ScanController {
 			@PathVariable("scanId") Integer scanId,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -138,7 +124,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
 		}
 		
@@ -178,7 +164,7 @@ public class ScanController {
 			@PathVariable("appId") Integer appId,
 			@PathVariable("orgId") Integer orgId) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
 		}
 		

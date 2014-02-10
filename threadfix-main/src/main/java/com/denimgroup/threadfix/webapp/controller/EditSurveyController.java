@@ -23,48 +23,36 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.SurveyAnswer;
+import com.denimgroup.threadfix.data.entities.SurveyRanking;
+import com.denimgroup.threadfix.data.entities.SurveyResult;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.SurveyService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.SurveyAnswer;
-import com.denimgroup.threadfix.data.entities.SurveyRanking;
-import com.denimgroup.threadfix.data.entities.SurveyResult;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.SurveyService;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/surveys/{resultId}/edit")
 @SessionAttributes("surveyResult")
 public class EditSurveyController {
 
+    @Autowired
 	private SurveyService surveyService = null;
-	private PermissionService permissionService = null;
-	
-	private final SanitizedLogger log = new SanitizedLogger(EditSurveyController.class);
 
-	@Autowired
-	public EditSurveyController(SurveyService surveyService,
-			PermissionService PermissionService) {
-		this.surveyService = surveyService;
-		this.permissionService = PermissionService;
-	}
+	private final SanitizedLogger log = new SanitizedLogger(EditSurveyController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView setupForm(@PathVariable("orgId") int orgId,
 			@PathVariable("resultId") int resultId) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return new ModelAndView("403");
 		}
 		
@@ -84,7 +72,7 @@ public class EditSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -117,7 +105,7 @@ public class EditSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

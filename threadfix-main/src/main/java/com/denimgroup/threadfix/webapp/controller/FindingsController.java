@@ -23,9 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.Calendar;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,34 +39,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.VulnerabilityService;
+import java.util.Calendar;
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}")
 public class FindingsController {
 	
-	public FindingsController(){}
-	
 	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
 
+    @Autowired
 	private FindingService findingService;
-	private PermissionService permissionService;
-	private VulnerabilityService vulnerabilityService;
-
 	@Autowired
-	public FindingsController(FindingService findingService,
-			PermissionService PermissionService,
-			VulnerabilityService vulnerabilityService) {
-		this.findingService = findingService;
-		this.permissionService = PermissionService;
-		this.vulnerabilityService = vulnerabilityService;
-	}
+    private VulnerabilityService vulnerabilityService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView finding(@PathVariable("findingId") int findingId,
@@ -70,7 +59,7 @@ public class FindingsController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -82,17 +71,17 @@ public class FindingsController {
 		
 		ModelAndView mav = new ModelAndView("scans/findingDetail");
 		mav.addObject(finding);
-		permissionService.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
+        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
 		return mav;
 	}
 
 	@RequestMapping(value = "merge", method = RequestMethod.GET)
 	public String merge(@PathVariable("findingId") int findingId,
-			@PathVariable("scanId") int scanId, Model model,
+			Model model,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		
@@ -121,18 +110,17 @@ public class FindingsController {
 	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
 	public String setVulnerability(@RequestParam(required = false) String vulnerabilityId,
 			@PathVariable("findingId") int findingId,
-			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, 
 			Model model) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			return "403";
 		}
 		
 		if (vulnerabilityId == null) {
 			model.addAttribute("errorMessage", "No Vulnerability was selected. Please select one and try again.");
-			return merge(findingId, scanId, model, orgId, appId);
+			return merge(findingId, model, orgId, appId);
 		}
 		
 		Finding finding = findingService.loadFinding(findingId);
@@ -142,7 +130,7 @@ public class FindingsController {
 			id = Integer.parseInt(vulnerabilityId);
 		} catch (NumberFormatException e) {
 			log.info("Bad vulnerabilityId provided '" + vulnerabilityId + "'. Should have been an integer");
-			return merge(findingId, scanId, model, orgId, appId);
+			return merge(findingId, model, orgId, appId);
 		}
 		
 		Vulnerability vulnerability = vulnerabilityService.loadVulnerability(id);

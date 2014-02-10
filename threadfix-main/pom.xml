@@ -146,11 +146,6 @@
 			<artifactId>com.microsoft.tfs.sdk</artifactId>
 			<version>${tfs-library.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>net.xeoh.plugins.base</groupId>
-			<artifactId>jspf.core</artifactId>
-			<version>${jspf.version}</version>
-		</dependency>
 	    <dependency>
 	        <groupId>org.springframework.ldap</groupId>
 	        <artifactId>spring-ldap-core-tiger</artifactId>
@@ -232,11 +227,6 @@
 					<groupId>org.springframework</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>${jdbc.groupId}</groupId>
-			<artifactId>${jdbc.artifactId}</artifactId>
-			<version>${jdbc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
@@ -467,6 +457,11 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-service-interfaces</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-importers</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -525,6 +520,18 @@
 				<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
 			</properties>
 		</profile>
+
+        <!-- Enterprise profile turns on enterprise dependency -->
+        <profile>
+            <id>enterprise</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.denimgroup.threadfix</groupId>
+                    <artifactId>threadfix-enterprise</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
 	</profiles>
 
 </project>
