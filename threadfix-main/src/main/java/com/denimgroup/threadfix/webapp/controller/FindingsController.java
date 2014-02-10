@@ -77,7 +77,7 @@ public class FindingsController {
 
 	@RequestMapping(value = "merge", method = RequestMethod.GET)
 	public String merge(@PathVariable("findingId") int findingId,
-			@PathVariable("scanId") int scanId, Model model,
+			Model model,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
@@ -110,7 +110,6 @@ public class FindingsController {
 	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
 	public String setVulnerability(@RequestParam(required = false) String vulnerabilityId,
 			@PathVariable("findingId") int findingId,
-			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, 
 			Model model) {
@@ -121,7 +120,7 @@ public class FindingsController {
 		
 		if (vulnerabilityId == null) {
 			model.addAttribute("errorMessage", "No Vulnerability was selected. Please select one and try again.");
-			return merge(findingId, scanId, model, orgId, appId);
+			return merge(findingId, model, orgId, appId);
 		}
 		
 		Finding finding = findingService.loadFinding(findingId);
@@ -131,7 +130,7 @@ public class FindingsController {
 			id = Integer.parseInt(vulnerabilityId);
 		} catch (NumberFormatException e) {
 			log.info("Bad vulnerabilityId provided '" + vulnerabilityId + "'. Should have been an integer");
-			return merge(findingId, scanId, model, orgId, appId);
+			return merge(findingId, model, orgId, appId);
 		}
 		
 		Vulnerability vulnerability = vulnerabilityService.loadVulnerability(id);

@@ -90,7 +90,7 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
 			Model model, HttpServletRequest request) {
-		if (PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -195,7 +195,7 @@ public class ApplicationsController {
 	
 	// TODO move this to a different spot so as to be less annoying
 	private void addDefectModelAttributes(Model model, int appId, int orgId) {
-		if (PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return;
 		}
 		
@@ -241,7 +241,7 @@ public class ApplicationsController {
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
 		
-		if (PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

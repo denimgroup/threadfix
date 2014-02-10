@@ -86,7 +86,7 @@ public class AddFindingController {
 	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId) {
 		
-		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return new ModelAndView("403");
 		}
 		
@@ -115,7 +115,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -148,7 +148,7 @@ public class AddFindingController {
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status, ModelMap model) {
 		
-		if (PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return "403";
 		}
 		

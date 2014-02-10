@@ -20,18 +20,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.owasp.esapi</groupId>
-            <artifactId>esapi</artifactId>
-            <version>${esapi.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.tfs.sdk</groupId>
-            <artifactId>com.microsoft.tfs.sdk</artifactId>
-            <version>${tfs-library.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>${apache.activemq.version}</version>
@@ -263,12 +251,6 @@
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-cli</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>threadfix-community</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

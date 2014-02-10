@@ -33,7 +33,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public abstract class AbstractVulnFilterController {
@@ -107,7 +106,7 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String indexBackend(Model model, int orgId, int appId) {
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -120,7 +119,7 @@ public abstract class AbstractVulnFilterController {
 	
 	public String tabBackend(Model model, int orgId, int appId) {
 		
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -137,17 +136,16 @@ public abstract class AbstractVulnFilterController {
 			BindingResult bindingResult,
 			SessionStatus status,
 			Model model,
-			HttpServletRequest request,
 			int orgId,
 			int appId) {
 
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
-		String responsePage = null;
+		String responsePage;
 		
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
@@ -174,18 +172,17 @@ public abstract class AbstractVulnFilterController {
 			BindingResult bindingResult,
 			SessionStatus status,
 			Model model,
-			HttpServletRequest request,
 			int orgId,
 			int appId,
 			int filterId) {
 		
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
-		String responsePage = null;
+		String responsePage;
 		
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilter = vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, filterId);
@@ -207,10 +204,9 @@ public abstract class AbstractVulnFilterController {
 		return responsePage;
 	}
 	
-	public String submitDeleteBackend(Model model,
-			HttpServletRequest request, int orgId, int appId, int filterId) {
+	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {
 
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		

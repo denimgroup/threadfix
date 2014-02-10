@@ -52,7 +52,7 @@ public class AddSurveyController {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
 			
-			if (PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+			if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 				return "403";
 			}
 			
@@ -78,7 +78,7 @@ public class AddSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -112,7 +112,7 @@ public class AddSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

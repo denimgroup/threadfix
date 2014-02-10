@@ -118,7 +118,7 @@ public class DocumentController {
 	public String detailDocument(Model model,@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletResponse response) throws SQLException, IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
@@ -156,10 +156,10 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value = "/{docId}/download", method = RequestMethod.POST)
-	public String downloadDocument(Model model,@PathVariable("orgId") Integer orgId, 
+	public String downloadDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletResponse response) throws SQLException, IOException {
 		
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
@@ -195,7 +195,7 @@ public class DocumentController {
 	public String deleteDocument(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletRequest request) throws SQLException, IOException {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";

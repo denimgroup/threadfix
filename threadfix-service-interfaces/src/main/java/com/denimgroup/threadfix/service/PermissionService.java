@@ -1,7 +1,6 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -65,7 +64,5 @@ public interface PermissionService {
 	 * @param providers
 	 */
 	void filterApps(List<RemoteProviderType> providers);
-	
-	void setLogger(SanitizedLogger log);
-	
+
 }

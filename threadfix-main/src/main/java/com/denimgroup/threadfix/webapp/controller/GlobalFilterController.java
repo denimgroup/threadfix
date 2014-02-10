@@ -31,8 +31,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequestMapping("/configuration/filters")
 @SessionAttributes({"vulnerabilityFilter", "severityFilter"})
@@ -55,25 +53,22 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 
 	@RequestMapping(value="/new", method = RequestMethod.POST)
 	public String submitNew(VulnerabilityFilter vulnerabilityFilter,
-			BindingResult bindingResult, SessionStatus status, Model model,
-			HttpServletRequest request) {
+			BindingResult bindingResult, SessionStatus status, Model model) {
 		return submitNewBackend(vulnerabilityFilter,
-				bindingResult, status, model, request, -1, -1);
+				bindingResult, status, model, -1, -1);
 	}
 
 	@RequestMapping(value="/{filterId}/edit", method = RequestMethod.POST)
 	public String submitEdit(VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
-			@PathVariable int filterId,
-			HttpServletRequest request) {
+			@PathVariable int filterId) {
 		return submitEditBackend(vulnerabilityFilter,
-				bindingResult, status, model, request,
+				bindingResult, status, model,
 				-1, -1, filterId);
 	}
 
 	@RequestMapping(value="/{filterId}/delete", method = RequestMethod.POST)
-	public String submitDelete(Model model, @PathVariable int filterId,
-			HttpServletRequest request) {
-		return submitDeleteBackend(model, request, -1, -1, filterId);
+	public String submitDelete(Model model, @PathVariable int filterId) {
+		return submitDeleteBackend(model, -1, -1, filterId);
 	}
 }

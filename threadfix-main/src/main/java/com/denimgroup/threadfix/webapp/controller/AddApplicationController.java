@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,9 +47,6 @@ public class AddApplicationController {
 
     @Autowired
 	private OrganizationService organizationService = null;
-    @Autowired(required = false)
-    @Nullable
-	private PermissionService permissionService= null;
     @Autowired
 	private ApplicationService applicationService = null;
     @Autowired
@@ -94,7 +91,7 @@ public class AddApplicationController {
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model) {
 		
-		if (permissionService != null && !permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
 		
@@ -108,13 +105,13 @@ public class AddApplicationController {
 		applicationService.validateAfterCreate(application, result);
 		
 		if (result.hasErrors()) {
-			permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS, 
+            PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
 			
-			model.addAttribute("canSetDefectTracker", permissionService.isAuthorized(
+			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
 			
-			model.addAttribute("canSetWaf", permissionService.isAuthorized(
+			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
 					Permission.CAN_MANAGE_WAFS, orgId, null));
 			
 			return "applications/form";
