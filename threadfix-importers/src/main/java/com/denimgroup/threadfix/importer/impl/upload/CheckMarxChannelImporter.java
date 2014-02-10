@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
-//     The contents of this fileName are subject to the Mozilla Public License
-//     Version 2.0 (the "License"); you may not use this fileName except in
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
 //     compliance with the License. You may obtain a copy of the License at
 //     http://www.mozilla.org/MPL/
 //
@@ -21,6 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
