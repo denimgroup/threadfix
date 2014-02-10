@@ -204,20 +204,22 @@
 					<c:if test="${ fn:length(application.documents) != 1 }">Files</c:if>
 				</a>
 			</li>
-			<li class="pointer ${ scanAgentTaskTab }">
-				<a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
-					${ fn:length(application.scanQueueTasks) }
-					<c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Agent Task</c:if>
-					<c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Agent Tasks</c:if>
-				</a>
-			</li>
-            <li class="pointer ${ scheduledScanTab }">
-                <a data-toggle="tab" id="scheduledScanTabLink" onclick="javascript:switchTabs('<c:out value="${scheduledScanTabUrl }"/>');return false;">
-                    ${ fn:length(application.scheduledScans) }
-                    <c:if test="${ fn:length(application.scheduledScans) == 1 }">Scheduled Scan</c:if>
-                    <c:if test="${ fn:length(application.scheduledScans) != 1 }">Scheduled Scans</c:if>
-                </a>
-            </li>
+            <c:if test="${ isEnterprise }">
+                <li class="pointer ${ scanAgentTaskTab }">
+                    <a data-toggle="tab" id="scanQueueTabLink" onclick="javascript:switchTabs('<c:out value="${scanQueueTabUrl }"/>');return false;">
+                        ${ fn:length(application.scanQueueTasks) }
+                        <c:if test="${ fn:length(application.scanQueueTasks) == 1 }">Scan Agent Task</c:if>
+                        <c:if test="${ fn:length(application.scanQueueTasks) != 1 }">Scan Agent Tasks</c:if>
+                    </a>
+                </li>
+                <li class="pointer ${ scheduledScanTab }">
+                    <a data-toggle="tab" id="scheduledScanTabLink" onclick="javascript:switchTabs('<c:out value="${scheduledScanTabUrl }"/>');return false;">
+                        ${ fn:length(application.scheduledScans) }
+                        <c:if test="${ fn:length(application.scheduledScans) == 1 }">Scheduled Scan</c:if>
+                        <c:if test="${ fn:length(application.scheduledScans) != 1 }">Scheduled Scans</c:if>
+                    </a>
+                </li>
+            </c:if>
 		</ul>
 		
 	    <div id="tabsDiv">

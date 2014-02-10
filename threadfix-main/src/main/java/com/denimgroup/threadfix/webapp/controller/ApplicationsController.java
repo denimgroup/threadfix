@@ -158,6 +158,7 @@ public class ApplicationsController {
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
 		model.addAttribute("teamList", organizationService.loadAllActive());
+        model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
 		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
