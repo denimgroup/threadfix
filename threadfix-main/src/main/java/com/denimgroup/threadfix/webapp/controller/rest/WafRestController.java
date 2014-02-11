@@ -173,7 +173,10 @@ public class WafRestController extends RestController {
 			return RestResponse.failure("Invalid WAF ID.");
 		}
 		wafService.generateWafRules(waf, waf.getLastWafRuleDirective());
-		return RestResponse.success(wafService.getAllRuleText(waf));
+        String ruleStr = wafService.getAllRuleText(waf);
+        if (ruleStr == null || ruleStr.isEmpty())
+            return RestResponse.failure("No Rules generated for WAF.");
+		else return RestResponse.success(wafService.getAllRuleText(waf));
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
