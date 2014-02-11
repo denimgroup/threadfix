@@ -40,7 +40,7 @@ public class SimpleFinding {
         vulnType = array[0];
         severity = array[1];
         path = array[2];
-        parameter = array[3].equals("") ? null : array[3];
+        parameter = array[3] == null || array[3].equals("") ? null : array[3];
     }
 
     // This class assumes that every finding will have severity and vulnerability mappings.
@@ -52,8 +52,7 @@ public class SimpleFinding {
             throw new IllegalArgumentException("Got a finding without a surface location.");
         }
 
-        return matchesParameter(finding) &&
-                finding.getSurfaceLocation().getPath().equals(path) &&
+        return matchesParameter(finding) && matchesPath(finding) &&
                 finding.getChannelSeverity().getSeverityMap().getGenericSeverity().getName().equals(severity) &&
                 finding.getChannelVulnerability().getGenericVulnerability().getName().equals(vulnType);
     }
@@ -62,6 +61,12 @@ public class SimpleFinding {
         return (finding.getSurfaceLocation().getParameter() == null && parameter == null) ||
                     (finding.getSurfaceLocation().getParameter() != null &&
                 finding.getSurfaceLocation().getParameter().equals(parameter));
+    }
+
+    private boolean matchesPath(Finding finding) {
+        return (finding.getSurfaceLocation().getPath() == null && path == null) ||
+                    (finding.getSurfaceLocation().getPath() != null &&
+                        finding.getSurfaceLocation().getPath().equals(path));
     }
 
     @Override
