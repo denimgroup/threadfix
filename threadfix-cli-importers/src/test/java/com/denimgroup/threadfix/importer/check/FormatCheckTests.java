@@ -21,17 +21,20 @@ import static org.junit.Assert.assertTrue;
 @Component
 public class FormatCheckTests {
 
+    StringBuilder builder;
+
+    Calendar minusOneYear = Calendar.getInstance();
+
+    {
+        minusOneYear.set(Calendar.YEAR, minusOneYear.get(Calendar.YEAR) - 1);
+    }
+
     @Test
     public void testFalseNegatives() {
-
         ThreadFixBridge threadFixBridge = SpringConfiguration.getContext().getBean(ThreadFixBridge.class);
         assertNotNull("Fix your autowiring, ThreadFixBridge instance was null.", threadFixBridge);
 
-
-        Calendar minusOneYear = Calendar.getInstance();
-        minusOneYear.set(Calendar.YEAR, minusOneYear.get(Calendar.YEAR) - 1);
-
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
 
         for (Map.Entry<ScannerType, Collection<String>> entry : FolderMappings.getEntries()) {
             Calendar mostRecent = null;
@@ -48,26 +51,30 @@ public class FormatCheckTests {
                 }
             }
 
-            if (mostRecent == null) {
-                builder.append("No date was found for scanner ")
-                        .append(entry.getKey())
-                        .append("\n");
-            } else if (mostRecent.before(minusOneYear)) {
-                builder.append("We only have outdated scans for ")
-                        .append(entry.getKey())
-                        .append(". The most recent was ")
-                        .append(format(mostRecent))
-                        .append("\n");
-            } else {
-                builder.append("Most recent scan for ")
-                        .append(entry.getKey())
-                        .append(" was ")
-                        .append(format(mostRecent))
-                        .append("\n");
-            }
+            addToBuilder(entry.getKey(), mostRecent);
         }
 
         System.out.println(builder);
+    }
+
+    private void addToBuilder(ScannerType type, Calendar recentDate) {
+        if (recentDate == null) {
+            builder.append("No date was found for scanner ")
+                    .append(type)
+                    .append("\n");
+        } else if (recentDate.before(minusOneYear)) {
+            builder.append("We only have outdated scans for ")
+                    .append(type)
+                    .append(". The most recent was ")
+                    .append(format(recentDate))
+                    .append("\n");
+        } else {
+            builder.append("Most recent scan for ")
+                    .append(type)
+                    .append(" was ")
+                    .append(format(recentDate))
+                    .append("\n");
+        }
     }
 
     public String format(Calendar calendar) {
