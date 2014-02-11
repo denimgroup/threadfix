@@ -31,6 +31,8 @@ public class FormatCheckTests {
         Calendar minusOneYear = Calendar.getInstance();
         minusOneYear.set(Calendar.YEAR, minusOneYear.get(Calendar.YEAR) - 1);
 
+        StringBuilder builder = new StringBuilder();
+
         for (Map.Entry<ScannerType, Collection<String>> entry : FolderMappings.getEntries()) {
             Calendar mostRecent = null;
             for (String file : entry.getValue()) {
@@ -47,14 +49,25 @@ public class FormatCheckTests {
             }
 
             if (mostRecent == null) {
-                System.out.println("No date was found for scanner " + entry.getKey());
+                builder.append("No date was found for scanner ")
+                        .append(entry.getKey())
+                        .append("\n");
             } else if (mostRecent.before(minusOneYear)) {
-                System.out.println("We only have outdated scans for " + entry.getKey() +
-                        ". The most recent was " + format(mostRecent));
+                builder.append("We only have outdated scans for ")
+                        .append(entry.getKey())
+                        .append(". The most recent was ")
+                        .append(format(mostRecent))
+                        .append("\n");
             } else {
-                System.out.println("Most recent scan for " + entry.getKey() + " was " + format(mostRecent));
+                builder.append("Most recent scan for ")
+                        .append(entry.getKey())
+                        .append(" was ")
+                        .append(format(mostRecent))
+                        .append("\n");
             }
         }
+
+        System.out.println(builder);
     }
 
     public String format(Calendar calendar) {
