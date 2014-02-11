@@ -507,7 +507,7 @@ public class ReportsServiceImpl implements ReportsService {
                 }
             }
         } else {
-            permissionService.getAuthenticatedTeamIds();
+            teamIds = permissionService.getAuthenticatedTeamIds();
         }
 
 		if (reportParameters.getOrganizationId() < 0) {
@@ -526,7 +526,7 @@ public class ReportsServiceImpl implements ReportsService {
 					applicationIdList.add(app.getId());
 				}
 				
-				Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+				Set<Integer> appIds = PermissionUtils.getAuthenticatedAppIds();
 				if (appIds != null && !appIds.isEmpty()) {
 					applicationIdList.addAll(appIds);
 				}
