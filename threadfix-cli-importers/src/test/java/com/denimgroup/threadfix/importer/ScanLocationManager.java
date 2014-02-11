@@ -25,22 +25,20 @@
 package com.denimgroup.threadfix.importer;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Created by mac on 2/6/14.
- */
 public class ScanLocationManager {
 
     private static final String
-            ERROR_MESSAGE = "We need the scan files to do the tests. Please set the system variable SCAN_FILE_LOCATION",
+            PROPERTY_NAME = "SCAN_FILE_LOCATION",
+            ERROR_MESSAGE = "We need the scan files to do the tests. Please set the system variable " + PROPERTY_NAME,
             ROOT = getRootInternal();
 
     private static String getRootInternal() {
-        String root =  "/Users/mcollins/documents/git/threadfix/threadfix-main/src/test/resources/SupportingFiles/";//System.getProperty("SCAN_FILE_LOCATION");
-
-        if (root == null) {
-            throw new IllegalStateException(ERROR_MESSAGE);
-        }
+        check();
+        String root = System.getProperty(PROPERTY_NAME);
 
         // let's make sure it ends with '/'.
         if (!root.endsWith("/")) {
@@ -51,10 +49,7 @@ public class ScanLocationManager {
     }
 
     public static String getRoot() {
-
-        if (ROOT == null) {
-            throw new IllegalStateException(ERROR_MESSAGE);
-        }
+        check();
 
         File rootFile = new File(ROOT);
         if (!rootFile.exists() || !rootFile.isDirectory()) {
@@ -62,6 +57,46 @@ public class ScanLocationManager {
         }
 
         return ROOT;
+    }
+
+    private static void check() {
+        if (System.getProperty(PROPERTY_NAME) == null) {
+            throw new IllegalStateException(ERROR_MESSAGE);
+        }
+    }
+
+    public static String getFile(String extension) {
+        check();
+        return getRoot() + extension;
+    }
+
+    public static Collection<String> getFilesInDirectory(String extension) {
+        check();
+        File directory = new File(getRoot() + extension);
+
+        if (!directory.exists() && directory.isDirectory()) {
+            throw new IllegalStateException("Tried to add an invalid file: " + directory.getAbsolutePath());
+        }
+
+        File[] files = directory.listFiles();
+
+        Set<String> returnFiles = new HashSet<>();
+
+        if (files == null) {
+            throw new IllegalStateException("File.listFiles() returned null for " + directory.getAbsolutePath() + ".");
+        }
+
+        for (File file : files) {
+            if (file.isFile() && !file.getName().startsWith(".")) {
+                returnFiles.add(file.getAbsolutePath());
+            }
+        }
+
+        if (returnFiles.isEmpty()) {
+            throw new IllegalStateException("No scan files found in " + directory.getAbsolutePath());
+        }
+
+        return returnFiles;
     }
 
 }

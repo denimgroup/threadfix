@@ -133,10 +133,18 @@ public class PermissionUtils {
     }
 
     public static Set<Integer> getAuthenticatedAppIds() {
-        return null;
+        if (getInstance().isCommunity()) {
+            return null;
+        } else {
+            return getInstance().permissionService.getAuthenticatedAppIds();
+        }
     }
 
     public static Set<Integer> getAuthenticatedTeamIds() {
-        return null;
+        if (getInstance().isCommunity()) {
+            return null;
+        } else {
+            return getInstance().permissionService.getAuthenticatedTeamIds();
+        }
     }
 }
