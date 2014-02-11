@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,16 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
@@ -40,11 +30,21 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.EmptyScan;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.plugin.scanner.ChannelImporterFactory;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ChannelImporter;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ChannelImporter;
+import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
 // TODO figure out this Transactional stuff
 // TODO make another service to hold the scan history controller stuff
@@ -53,25 +53,20 @@ import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 public class ScanServiceImpl implements ScanService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanService");
-	
-	private ScanDao scanDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private EmptyScanDao emptyScanDao = null;
-	private QueueSender queueSender = null;
-	private PermissionService permissionService = null;
 
-	@Autowired
-	public ScanServiceImpl(ScanDao scanDao,
-			ApplicationChannelDao applicationChannelDao,
-			EmptyScanDao emptyScanDao,
-			PermissionService permissionService,
-			QueueSender queueSender) {
-		this.scanDao = scanDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.emptyScanDao = emptyScanDao;
-		this.queueSender = queueSender;
-		this.permissionService = permissionService;
-	}
+    @Autowired
+    private ScanDao scanDao = null;
+    @Autowired
+    private ApplicationChannelDao applicationChannelDao = null;
+    @Autowired
+    private EmptyScanDao emptyScanDao = null;
+    @Autowired
+    private QueueSender queueSender = null;
+    @Autowired(required=false)
+    @Nullable
+    private PermissionService permissionService = null;
+    @Autowired
+    private ChannelImporterFactory channelImporterFactory = null;
 
 	@Override
 	public List<Scan> loadAll() {
@@ -119,7 +114,7 @@ public class ScanServiceImpl implements ScanService {
 			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
 		}
 		
-		ChannelImporter importer = ChannelImporterFactory.getChannelImporter(channel);
+		ChannelImporter importer = channelImporterFactory.getChannelImporter(channel);
 		
 		if (importer == null) {
 			log.warn("No importer could be loaded for the ApplicationChannel.");
@@ -239,38 +234,51 @@ public class ScanServiceImpl implements ScanService {
 	
 	@Override
 	public List<Scan> loadMostRecentFiltered(int number) {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.retrieveMostRecent(number);
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.retrieveMostRecent(number, appIds, teamIds);
+
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.retrieveMostRecent(number);
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.retrieveMostRecent(number, appIds, teamIds);
+        } else {
+            return scanDao.retrieveMostRecent(number, null, null);
+        }
 	}
 	
 	@Override
 	public int getScanCount() {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.getScanCount();
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.getScanCount(appIds, teamIds);
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.getScanCount();
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.getScanCount(appIds, teamIds);
+        } else {
+            return scanDao.getScanCount(null, null);
+        }
 	}
 	
 	@Override
 	public List<Scan> getTableScans(Integer page) {
-		if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
-			return scanDao.getTableScans(page);
-		}
-		
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
-		
-		return scanDao.getTableScans(page, appIds, teamIds);
+        if (permissionService != null) {
+            if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
+                return scanDao.getTableScans(page);
+            }
+
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            Set<Integer> teamIds = permissionService.getAuthenticatedTeamIds();
+
+            return scanDao.getTableScans(page, appIds, teamIds);
+        } else {
+            return scanDao.getTableScans(page, null, null);
+        }
 	}
 	
 }

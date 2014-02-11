@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,14 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.denimgroup.threadfix.data.entities.Document;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DocumentService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,11 +40,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Document;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.service.DocumentService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/documents")
@@ -55,19 +54,10 @@ public class DocumentController {
 	public static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
 			"scanner type for the file. Please choose one from the list.";
 
-	private PermissionService permissionService;
+    @Autowired
 	private DocumentService documentService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
-
-	@Autowired
-	public DocumentController(PermissionService permissionService,
-			DocumentService documentService) {
-		this.permissionService = permissionService;
-		this.documentService = documentService;
-	}
-	
-	public DocumentController(){}
 
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -75,7 +65,7 @@ public class DocumentController {
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("file") MultipartFile file) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
 			return new ModelAndView("403");
 		}				
 		String fileName = documentService.saveFileToApp(appId, file);
@@ -87,8 +77,8 @@ public class DocumentController {
 			mav.addObject("contentPage","applications/forms/uploadDocForm.jsp");
 			return mav;
 		}else {
-			ControllerUtils.addSuccessMessage(request, 
-					"The file was successfully added to the application.");
+			ControllerUtils.addSuccessMessage(request,
+                    "The file was successfully added to the application.");
             ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
@@ -103,7 +93,7 @@ public class DocumentController {
 			HttpServletRequest request,
 			@RequestParam("file") MultipartFile file) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		String fileName = documentService.saveFileToVuln(vulnId, file);
@@ -128,9 +118,9 @@ public class DocumentController {
 	public String detailDocument(Model model,@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletResponse response) throws SQLException, IOException {
 
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		
@@ -166,12 +156,12 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value = "/{docId}/download", method = RequestMethod.POST)
-	public String downloadDocument(Model model,@PathVariable("orgId") Integer orgId, 
+	public String downloadDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletResponse response) throws SQLException, IOException {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
 		
@@ -205,9 +195,9 @@ public class DocumentController {
 	public String deleteDocument(@PathVariable("orgId") Integer orgId, 
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+			HttpServletRequest request) throws SQLException, IOException {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
 		

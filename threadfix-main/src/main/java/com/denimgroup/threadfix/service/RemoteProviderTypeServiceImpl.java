@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -21,14 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
@@ -36,11 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.plugin.scanner.RemoteProviderFactory;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = false)
@@ -51,13 +47,16 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	private RemoteProviderTypeDao remoteProviderTypeDao;
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private ScanMergeService scanMergeService;
-	
+	private RemoteProviderFactory remoteProviderFactory;
+
 	@Autowired
 	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,
 			RemoteProviderApplicationService remoteProviderApplicationService,
-			ScanMergeService scanMergeService) {
+			ScanMergeService scanMergeService,
+            RemoteProviderFactory remoteProviderFactory) {
 		this.remoteProviderTypeDao = remoteProviderTypeDao;
 		this.scanMergeService = scanMergeService;
+        this.remoteProviderFactory = remoteProviderFactory;
 		this.remoteProviderApplicationService = remoteProviderApplicationService;
 	}
 	
@@ -132,7 +131,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			return ResponseCode.ERROR_OTHER;
 		}
 		
-		List<Scan> resultScans = RemoteProviderFactory.fetchScans(remoteProviderApplication);
+		List<Scan> resultScans = remoteProviderFactory.fetchScans(remoteProviderApplication);
 		
 		ResponseCode success = ResponseCode.ERROR_OTHER;
 		if (resultScans != null && resultScans.size() > 0) {

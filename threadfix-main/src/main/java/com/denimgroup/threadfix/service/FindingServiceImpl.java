@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,16 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.dao.*;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import org.jetbrains.annotations.NotNull;
-import com.denimgroup.threadfix.plugin.scanner.service.util.IntegerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,23 +38,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
-import com.denimgroup.threadfix.webapp.controller.TableSortBean;
+import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -95,10 +80,12 @@ public class FindingServiceImpl implements FindingService {
 				(finding.getChannelVulnerability().getCode().isEmpty()))) {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
 		} else {
-			String code = finding.getChannelVulnerability().getCode();
-			finding.getChannelVulnerability().setCode(code.substring(0, code.indexOf("(CWE")).trim());
-			
-			if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
+            String code = finding.getChannelVulnerability().getCode();
+            if (code.indexOf("(CWE")<0)
+                finding.getChannelVulnerability().setCode(code.trim());
+            else finding.getChannelVulnerability().setCode(code.substring(0, code.indexOf("(CWE")).trim());
+
+            if (!channelVulnerabilityDao.isValidManualName(finding.getChannelVulnerability().getCode())) {
 
 				boolean wasNumeric = false;
 

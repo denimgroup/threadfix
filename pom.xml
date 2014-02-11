@@ -5,7 +5,7 @@
 
     <groupId>com.denimgroup.threadfix</groupId>
     <artifactId>master-pom</artifactId>
-    <version>2.0M2-SNAPSHOT</version>
+    <version>2.0FINAL-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ThreadFix</name>
@@ -106,16 +106,43 @@
         </pluginManagement>
     </build>
 
-    <modules>
-        <module>threadfix-entities</module>
-        <module>threadfix-cli</module>
-        <module>threadfix-ham</module>
-        <module>threadfix-main</module>
-        <module>threadfix-cli-endpoints</module>
-        <module>threadfix-scanagent</module>
-        <module>threadfix-scanner-plugin/zaproxy</module>
-        <module>threadfix-scanner-plugin/burp</module>
-    </modules>
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>community</id>
+            <modules>
+                <module>threadfix-entities</module>
+                <module>threadfix-cli</module>
+                <module>threadfix-ham</module>
+                <module>threadfix-importers</module>
+                <module>threadfix-service-interfaces</module>
+                <module>threadfix-main</module>
+                <module>threadfix-scanner-plugin/zaproxy</module>
+                <module>threadfix-scanner-plugin/burp</module>
+                <module>threadfix-cli-endpoints</module>
+                <module>threadfix-cli-importers</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>enterprise</id>
+            <modules>
+                <module>threadfix-entities</module>
+                <module>threadfix-cli</module>
+                <module>threadfix-ham</module>
+                <module>threadfix-importers</module>
+                <module>threadfix-service-interfaces</module>
+                <module>threadfix-enterprise</module>
+                <module>threadfix-main</module>
+                <module>threadfix-scanagent</module>
+                <module>threadfix-scanner-plugin/zaproxy</module>
+                <module>threadfix-scanner-plugin/burp</module>
+                <module>threadfix-cli-endpoints</module>
+                <module>threadfix-cli-importers</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <properties>
         <db.name>stonemill</db.name>

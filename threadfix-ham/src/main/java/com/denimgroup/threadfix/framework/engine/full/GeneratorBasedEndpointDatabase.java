@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -216,7 +216,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
             if ((keyEntry.isEmpty() && !key.isEmpty())
                     || (key.isEmpty() && !keyEntry.isEmpty()))
-                continue;
+                return new HashSet<>();
 
             if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
                 return new HashSet<>(entry.getValue());

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -21,33 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.plugin.scanner.RemoteProviderFactory;
-import com.denimgroup.threadfix.service.queue.QueueSender;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = false)
@@ -60,17 +50,20 @@ public class RemoteProviderApplicationServiceImpl implements
 	private ApplicationDao applicationDao = null;
 	private ApplicationChannelDao applicationChannelDao = null;
 	private QueueSender queueSender = null;
+    private RemoteProviderFactory remoteProviderFactory = null;
 	
 	@Autowired
 	public RemoteProviderApplicationServiceImpl(
 			RemoteProviderApplicationDao remoteProviderApplicationDao,
 			ApplicationDao applicationDao,
 			QueueSender queueSender,
+            RemoteProviderFactory remoteProviderFactory,
 			ApplicationChannelDao applicationChannelDao) {
 		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
 		this.applicationDao = applicationDao;
 		this.applicationChannelDao = applicationChannelDao;
 		this.queueSender = queueSender;
+        this.remoteProviderFactory = remoteProviderFactory;
 	}
 	
 	@Override
@@ -93,7 +86,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	public void updateApplications(RemoteProviderType remoteProviderType) {
 
 		List<RemoteProviderApplication> newApps =
-				RemoteProviderFactory.fetchApplications(remoteProviderType);
+                remoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		// We can't use remoteProviderType.getRemoteProviderApplications()
 		// because the old session is closed
@@ -138,7 +131,7 @@ public class RemoteProviderApplicationServiceImpl implements
 		}
 		
 		List<RemoteProviderApplication> newApps =
-				RemoteProviderFactory.fetchApplications(remoteProviderType);
+                remoteProviderFactory.fetchApplications(remoteProviderType);
 		
 		if (newApps == null || newApps.size() == 0) {
 			return null;

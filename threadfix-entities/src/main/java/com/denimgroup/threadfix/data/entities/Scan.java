@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -31,7 +31,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "Scan")
-public class Scan extends BaseEntity {
+public class Scan extends BaseEntity implements Iterable<Finding> {
 
 	private static final long serialVersionUID = -8461350611851383656L;
 
@@ -334,7 +334,12 @@ public class Scan extends BaseEntity {
 		return new ScanTimeComparator();
 	}
 
-	static public class ScanTimeComparator implements Comparator<Scan> {
+    @Override
+    public Iterator<Finding> iterator() {
+        return findings == null ? new ArrayList<Finding>().iterator() : findings.iterator();
+    }
+
+    static public class ScanTimeComparator implements Comparator<Scan> {
 	
 		@Override
 		public int compare(Scan scan1, Scan scan2){

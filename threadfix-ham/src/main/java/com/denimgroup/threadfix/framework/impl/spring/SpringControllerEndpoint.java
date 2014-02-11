@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,13 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SpringControllerEndpoint extends AbstractEndpoint {
 	
@@ -74,7 +74,13 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		this.methods    = getCleanedSet(methods);
 	}
 
-    void expandParameters(@NotNull SpringEntityMappings entityMappings,
+    /**
+     * TODO change this API, the globalDataBinderParser is confusing
+     * Right now this method requires the local DataBinderParser to be set already
+     * @param entityMappings entity mappings from the application
+     * @param globalDataBinderParser can be null, if a databinderparser is set with the setter it will be used too
+     */
+    public void expandParameters(@NotNull SpringEntityMappings entityMappings,
                           @Nullable SpringDataBinderParser globalDataBinderParser) {
         if (modelObject != null) {
             BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);

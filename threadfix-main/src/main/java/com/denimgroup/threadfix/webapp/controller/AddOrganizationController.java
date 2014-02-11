@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -97,8 +98,8 @@ public class AddOrganizationController {
 			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
 					" and ID " + organization.getId());
 			
-			ControllerUtils.addSuccessMessage(request, 
-					"Team " + organization.getName() + " has been created successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "Team " + organization.getName() + " has been created successfully.");
 			
 			status.setComplete();
 			return "redirect:/organizations/teamTable";

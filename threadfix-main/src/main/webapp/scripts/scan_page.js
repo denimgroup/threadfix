@@ -38,9 +38,9 @@ addToModalRefreshFunctions(addScanDeletes);
 
 function changeAbilityOfDaySelection()
 {
-    if (document.getElementById("frequency").value === "Weekly") {
-        document.getElementById("selectedDay").disabled=false;
+    if ($("#frequency option:selected").text() === "Weekly") {
+        $("#selectedDay").attr("disabled", false);
     } else {
-        document.getElementById("selectedDay").disabled=true;
+        $("#selectedDay").attr("disabled", true);
     }
 }

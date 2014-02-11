@@ -35,7 +35,7 @@
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	<a id="addUserButton" class="modalSubmit btn btn-primary" data-success-div="tableDiv" 
-		data-form="nameAndPasswordForm${ user.id }"
-		data-form-div="editUserModal${ user.id }">Save Changes</a>
+    <button id="addUserButton${ user.id }" class="modalSubmit btn btn-primary btn-lg" data-success-div="tableDiv"
+       data-form="nameAndPasswordForm${ user.id }" disabled="disabled"
+       data-form-div="editUserModal${ user.id }">Save Changes</button>
 </div>

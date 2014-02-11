@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,22 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,22 +43,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(OrganizationService.class);
 
+    @Autowired
 	private OrganizationDao organizationDao = null;
+    @Autowired
 	private ApplicationService applicationService = null;
+    @Autowired(required = false)
+    @Nullable
 	private PermissionService permissionService = null;
+    @Autowired
 	private AccessControlMapService accessControlMapService = null;
 
-	@Autowired
-	public OrganizationServiceImpl(OrganizationDao organizationDao, 
-			AccessControlMapService accessControlMapService, 
-			PermissionService permissionService,
-			ApplicationService applicationService) {
-		this.organizationDao = organizationDao;
-		this.accessControlMapService = accessControlMapService;
-		this.applicationService = applicationService;
-		this.permissionService = permissionService;
-	}
-	
 	@Override
 	public List<Organization> loadAllActive() {
 		return organizationDao.retrieveAllActive();
@@ -128,12 +119,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 	
 	@Override
 	public List<Organization> loadAllActiveFilter() {
-		if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
+		if (!EnterpriseTest.isEnterprise() || PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
 			return loadAllActive();
-		
+
+        if (permissionService == null) {
+            throw new IllegalStateException("EnterpriseTest.isEnterprise returned true but permissionService is null. " +
+                    "Fix the code.");
+        }
+
 		Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
 		
-		Set<Integer> teamIds = null;
+		Set<Integer> teamIds;
 		
 		if (ids == null || ids.isEmpty()) {
 			teamIds = new HashSet<>();

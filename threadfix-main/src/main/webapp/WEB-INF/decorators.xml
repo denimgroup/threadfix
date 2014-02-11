@@ -63,6 +63,7 @@
         <pattern>/organizations/*/applications/*/scheduledScans/addScheduledScan*</pattern>
     	<pattern>/organizations/*/applications/*/docsTab*</pattern>
     	<pattern>/organizations/*/applications/*/vulnerabilities/*/addComment*</pattern>
+        <pattern>/organizations/*/applications/*/vulnerabilities/*/manual/*/edit*</pattern>
     	<pattern>/organizations/*/filters/readOnly*</pattern>
     	<pattern>/organizations/*/filters/new*</pattern>
     	<pattern>/organizations/*/filters/*/edit*</pattern>

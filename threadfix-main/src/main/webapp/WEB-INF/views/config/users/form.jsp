@@ -3,7 +3,7 @@
 <form:form id="nameAndPasswordForm${ user.id }" modelAttribute="user" name="user" action="${ fn:escapeXml(saveUrl) }">
 	<table class="dataTable">
 		<tr>
-			<td class="no-color">Name</td>
+			<td class="no-color">Username</td>
 			<td class="no-color">
 				<form:input id="nameInput${ status.count }" path="name" cssClass="focus" size="30" maxlength="25" value="${user.name}"/>
 			</td>
@@ -14,10 +14,13 @@
 		<tr>
 			<td class="no-color">Password</td>
 			<td class="no-color">
-				<form:password class="password${ status.count }" id="passwordInput${ status.count }" path="unencryptedPassword" />
+				<form:password class="password${ status.count }" id="passwordInput${ user.id }"
+                               path="unencryptedPassword"
+                        onchange="checkPasswordHandlers('${ user.id }')"/>
 			</td>
 			<td class="no-color" style="padding-left: 5px">
-				<form:errors path="password" cssClass="errors" />
+				<form:errors id="passwordInputError${ user.id }" path="password" cssClass="errors"/>
+                <span class="hide errors" id="passwordInputErrorSpan${ user.id }">Password has a minimum length of 12.</span>
 			</td>
 		</tr>
 		<tr>

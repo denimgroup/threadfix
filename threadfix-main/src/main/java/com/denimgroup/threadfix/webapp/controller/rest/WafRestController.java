@@ -1,35 +1,55 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.webapp.controller.rest;
-
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.LogParserService;
 import com.denimgroup.threadfix.service.WafService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/rest/wafs")
 public class WafRestController extends RestController {
 	
 	public static final String CREATION_FAILED = "New WAF creation failed.";
+    public static final String NOT_FOUND_WAF = "Invalid WAF type requested.";
 	public static final String LOOKUP_FAILED = "WAF Lookup failed.";
-	
+
+    @Autowired
 	private WafService wafService;
+    @Autowired
 	private LogParserService logParserService;
 	
 	private final static String INDEX = "wafIndex", 
@@ -44,14 +64,6 @@ public class WafRestController extends RestController {
 		restrictedMethods.add(NEW);
 		restrictedMethods.add(LOG);
 		restrictedMethods.add(RULES);
-	}
-	
-	@Autowired
-	public WafRestController(APIKeyService apiKeyService, 
-			WafService wafService, LogParserService logParserService) {
-		super(apiKeyService);
-		this.wafService = wafService;
-		this.logParserService = logParserService;
 	}
 
 	// TODO figure out if there is an easier way to make Spring respond to both
@@ -161,7 +173,10 @@ public class WafRestController extends RestController {
 			return RestResponse.failure("Invalid WAF ID.");
 		}
 		wafService.generateWafRules(waf, waf.getLastWafRuleDirective());
-		return RestResponse.success(wafService.getAllRuleText(waf));
+        String ruleStr = wafService.getAllRuleText(waf);
+        if (ruleStr == null || ruleStr.isEmpty())
+            return RestResponse.failure("No Rules generated for WAF.");
+		else return RestResponse.success(wafService.getAllRuleText(waf));
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
@@ -185,7 +200,7 @@ public class WafRestController extends RestController {
 		
 		if (wafType == null) {
 			log.warn("Invalid WAF type requested.");
-			return RestResponse.failure(CREATION_FAILED);
+			return RestResponse.failure(NOT_FOUND_WAF);
 		}
 		
 		if (!name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {

@@ -1,13 +1,37 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,45 +46,52 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/rest/tasks/")
 public class ScanQueueTaskRestController extends RestController {
 	
-	public final static String OPERATION_QUEUE_SCAN = "queueScan";
-	public final static String OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate";
-	public final static String OPERATION_COMPLETE_TASK = "completeTask";
-	public final static String OPERATION_FAIL_TASK = "failTask";
+	public final static String OPERATION_QUEUE_SCAN = "queueScan",
+	    OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate",
+        OPERATION_COMPLETE_TASK = "completeTask",
+        OPERATION_FAIL_TASK = "failTask",
+        OPERATION_REQUEST_TASK = "requestTask",
+        OPERATION_SET_TASK_CONFIG = "setTaskConfig";
+
 	public final static String TASK_KEY_SUCCESS = "Secure task key was accepted.";
 	public final static String TASK_KEY_NOT_FOUND_ERROR = "No secure task key found error.";
 	public final static String TASK_KEY_ERROR = "Secure task key was not recognized.";
-	
+
+    @Autowired
 	private DocumentService documentService;
+    @Autowired(required = false)
 	private ScanQueueService scanQueueService;
+    @Autowired
 	private ScanTypeCalculationService scanTypeCalculationService;
+    @Autowired
 	private ScanService scanService;
+    @Autowired
 	private ScanMergeService scanMergeService;
-	
-	@Autowired
-	public ScanQueueTaskRestController(APIKeyService apiKeyService,
-			DocumentService documentService,
-			ScanQueueService scanQueueService,
-			ScanTypeCalculationService scanTypeCalculationService,
-			ScanService scanService,
-			ScanMergeService scanMergeService) {
-		
-		super(apiKeyService);
-		
-		this.apiKeyService = apiKeyService;
-		this.documentService = documentService;
-		this.scanQueueService = scanQueueService;
-		this.scanTypeCalculationService = scanTypeCalculationService;
-		this.scanService = scanService;
-		this.scanMergeService = scanMergeService;
-	}
-	
+
+    private boolean checkKeyAndEnterprise(HttpServletRequest request, String methodName)
+            throws RestAuthenticationFailedException {
+        String result = checkKey(request, OPERATION_QUEUE_SCAN);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            throw new RestAuthenticationFailedException(result);
+        }
+
+        if (!EnterpriseTest.isEnterprise()) {
+            throw new RestAuthenticationFailedException(EnterpriseTest.ENTERPRISE_FEATURE_ERROR);
+        }
+
+        return true;
+    }
+
+    class RestAuthenticationFailedException extends Exception {
+        public RestAuthenticationFailedException(String message) {
+            super(message);
+        }
+    }
+
 	/**
 	 * Queue a new scan
 	 *
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#queueScan(String, String)
-	 * @param applicationId
-	 * @param scannerType
-	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="queueScan", method=RequestMethod.POST)
 	public @ResponseBody RestResponse<ScanQueueTask> queueScan(HttpServletRequest request,
@@ -70,10 +101,11 @@ public class ScanQueueTaskRestController extends RestController {
 		log.info("Received REST request for a queueing a new " + scannerType
 					+ " scan for applicationId " + applicationId);
 
-		String result = checkKey(request, OPERATION_QUEUE_SCAN);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
+        try {
+            checkKeyAndEnterprise(request, OPERATION_QUEUE_SCAN);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
 
 		ScanQueueTask task = scanQueueService.queueScan(applicationId, scannerType);
 		
@@ -96,12 +128,13 @@ public class ScanQueueTaskRestController extends RestController {
 			@RequestParam("agentConfig") String agentConfig) {
 
 		log.info("Received a REST request to get a scan to run");
-		
-		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
-		
+
+        try {
+            checkKeyAndEnterprise(request, OPERATION_REQUEST_TASK);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
+
 		String secureTaskKey = this.apiKeyService.generateNewSecureRandomKey();
 
         Task returnTask = null;
@@ -140,11 +173,12 @@ public class ScanQueueTaskRestController extends RestController {
 			@RequestParam("message") String message) {
 
 		log.info("Received a REST request to update the status of scan " + scanQueueTaskId);
-		
-		String result = checkKey(request, OPERATION_TASK_STATUS_UPDATE);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
+
+        try {
+            checkKeyAndEnterprise(request, OPERATION_TASK_STATUS_UPDATE);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
 		
 		if (this.scanQueueService.taskStatusUpdate(scanQueueTaskId, message)) {
             return RestResponse.success("Successfully updated ScanQueueTask");
@@ -161,6 +195,12 @@ public class ScanQueueTaskRestController extends RestController {
 			@RequestParam("appId") int appId,
 			@RequestParam("scannerType") String scannerType,
 			@RequestParam("file") MultipartFile file) {
+
+        try {
+            checkKeyAndEnterprise(request, OPERATION_SET_TASK_CONFIG);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
 
 		if(!ScanQueueTask.validateScanner(scannerType)) {
             String message = "Bad scanner type of: " + scannerType + " provided. Will not save scan config.";
@@ -191,12 +231,13 @@ public class ScanQueueTaskRestController extends RestController {
 		
 		log.info("Received REST request to complete scan queue task: " + scanQueueTaskId);
 
-		String result = checkKey(request, OPERATION_COMPLETE_TASK);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
+        try {
+            checkKeyAndEnterprise(request, OPERATION_COMPLETE_TASK);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
 		
-		result = checkTaskKey(request, scanQueueTaskId);
+		String result = checkTaskKey(request, scanQueueTaskId);
 		if (!result.equals(TASK_KEY_SUCCESS)) {
 			return RestResponse.failure(result);
 		}
@@ -254,13 +295,14 @@ public class ScanQueueTaskRestController extends RestController {
 			@RequestParam("message") String message) {
 
 		log.info("Received a REST request to fail for the scan " + scanQueueTaskId);
+
+        try {
+            checkKeyAndEnterprise(request, OPERATION_SET_TASK_CONFIG);
+        } catch (RestAuthenticationFailedException e) {
+            return RestResponse.failure(e.getMessage());
+        }
 		
-		String result = checkKey(request, OPERATION_FAIL_TASK);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
-		
-		result = checkTaskKey(request, scanQueueTaskId);
+		String result = checkTaskKey(request, scanQueueTaskId);
 		if (!result.equals(TASK_KEY_SUCCESS)) {
 			return RestResponse.failure(result);
 		}

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -212,6 +212,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
+    @JsonIgnore
 	public DefectTracker getDefectTracker() {
 		return defectTracker;
 	}
@@ -221,6 +222,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "application")
+    @JsonIgnore
 	public List<Defect> getDefectList() {
 		return defectList;
 	}
@@ -261,6 +263,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    @JsonIgnore
 	public List<ScanQueueTask> getScanQueueTasks() {
 		return(this.scanQueueTasks);
 	}
@@ -270,6 +273,7 @@ public class Application extends AuditableEntity {
 	}
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    @JsonIgnore
     public List<ScheduledScan> getScheduledScans() {
         return scheduledScans;
     }
@@ -301,6 +305,7 @@ public class Application extends AuditableEntity {
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@OrderBy("genericSeverity, genericVulnerability")
+    @JsonIgnore
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
@@ -330,6 +335,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "application")
+    @JsonIgnore
 	public List<RemoteProviderApplication> getRemoteProviderApplications() {
 		return remoteProviderApplications;
 	}

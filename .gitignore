@@ -10,5 +10,6 @@ bin
 .idea/
 *.DS_Store
 threadfix-enterprise
+threadfix-scanagent
 Build
 *.iml

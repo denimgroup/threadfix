@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,67 +23,43 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.GenericSeverityService;
-import com.denimgroup.threadfix.service.GenericVulnerabilityService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.SeverityFilterService;
-import com.denimgroup.threadfix.service.VulnerabilityFilterService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @SessionAttributes("severityFilter")
 public class SeverityFilterController {
-	
+
+    @Autowired
 	public SeverityFilterService severityFilterService;
+    @Autowired
 	public OrganizationService organizationService;
+    @Autowired
 	public ApplicationService applicationService;
+    @Autowired
 	public VulnerabilityFilterService vulnerabilityFilterService;
-	public PermissionService permissionService;
+    @Autowired
 	public GenericVulnerabilityService genericVulnerabilityService;
+    @Autowired
 	public GenericSeverityService genericSeverityService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(SeverityFilterController.class);
-	
-	@Autowired
-	public SeverityFilterController(
-			GenericSeverityService genericSeverityService,
-			GenericVulnerabilityService genericVulnerabilityService,
-			PermissionService permissionService,
-			VulnerabilityFilterService vulnerabilityFilterService,
-			OrganizationService organizationService,
-			ApplicationService applicationService,
-			SeverityFilterService severityFilterService) {
-		this.severityFilterService = severityFilterService;
-		this.vulnerabilityFilterService = vulnerabilityFilterService;
-		this.applicationService = applicationService;
-		this.organizationService = organizationService;
-		this.permissionService = permissionService;
-		this.genericSeverityService = genericSeverityService;
-		this.genericVulnerabilityService = genericVulnerabilityService;
-	}
+
 	
 	@ModelAttribute("genericVulnerabilities")
 	public List<GenericVulnerability> getGenericVulnerabilities() {
@@ -113,7 +89,7 @@ public class SeverityFilterController {
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request) {
 
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, null, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, null, null)) {
 			return "403";
 		}
 		
@@ -125,7 +101,7 @@ public class SeverityFilterController {
 			BindingResult bindingResult, SessionStatus status, Model model,
 			HttpServletRequest request, @PathVariable int orgId) {
 
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
 		
@@ -138,7 +114,7 @@ public class SeverityFilterController {
 			@PathVariable int appId, @PathVariable int orgId,
 			HttpServletRequest request) {
 
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
 		}
 		

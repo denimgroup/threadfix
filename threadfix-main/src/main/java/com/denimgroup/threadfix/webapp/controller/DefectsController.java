@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,30 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/defects")
@@ -58,19 +53,16 @@ public class DefectsController {
 	private final SanitizedLogger log = new SanitizedLogger(DefectsController.class);
 
 	private ApplicationService applicationService;
-	private PermissionService permissionService;
 	private QueueSender queueSender;
 	private VulnerabilityService vulnerabilityService;
 	private DefectService defectService;
 
 	@Autowired
 	public DefectsController(ApplicationService applicationService, 
-			PermissionService permissionService,
 			QueueSender queueSender,
 			VulnerabilityService vulnerabilityService,
 			DefectService defectService) {
 		this.queueSender = queueSender;
-		this.permissionService = permissionService;
 		this.applicationService = applicationService;
 		this.vulnerabilityService = vulnerabilityService;
 		this.defectService = defectService;
@@ -81,7 +73,7 @@ public class DefectsController {
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -116,7 +108,7 @@ public class DefectsController {
 			@PathVariable("appId") int appId,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -141,7 +133,7 @@ public class DefectsController {
 			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return "403";
 		}
 		

@@ -1,33 +1,45 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.webapp.controller.rest;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.webapp.controller.ScanCheckResultBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.DocumentService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.ScanParametersService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.beans.ScanParametersBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/rest/applications")
@@ -40,14 +52,22 @@ public class ApplicationRestController extends RestController {
             ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
             SET_WAF_FAILED = "Call to setWaf failed.",
             SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type";
-	
+
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private DocumentService documentService;
+    @Autowired
 	private ScanService scanService;
+    @Autowired
 	private ScanParametersService scanParametersService;
+    @Autowired
 	private ScanTypeCalculationService scanTypeCalculationService;
+    @Autowired
 	private ScanMergeService scanMergeService;
+    @Autowired
 	private WafService wafService;
+    @Autowired
 	private OrganizationService organizationService;
 	
 	private final static String DETAIL = "applicationDetail", 
@@ -64,29 +84,7 @@ public class ApplicationRestController extends RestController {
 		restrictedMethods.add(NEW);
 		restrictedMethods.add(SET_WAF);
 	}
-	
-	@Autowired
-	public ApplicationRestController(APIKeyService apiKeyService, 
-			ApplicationService applicationService,
-			DocumentService documentService,
-			OrganizationService organizationService,
-			ScanService scanService, 
-			ScanMergeService scanMergeService,
-			ScanTypeCalculationService scanTypeCalculationService, 
-			WafService wafService,
-			ScanParametersService scanParametersService) {
-		super(apiKeyService);
-		this.organizationService = organizationService;
-		this.apiKeyService = apiKeyService;
-		this.applicationService = applicationService;
-		this.documentService = documentService;
-		this.scanTypeCalculationService = scanTypeCalculationService;
-		this.scanService = scanService;
-		this.scanMergeService = scanMergeService;
-		this.wafService = wafService;
-		this.scanParametersService = scanParametersService;
-	}
-	
+
 	/**
 	 * Return details about a specific application.
      *

@@ -1,0 +1,4 @@
+dependency-reduced-pom.xml
+.project
+bin/
+logs/

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,10 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,24 +37,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.plugin.ldap.LdapServiceDelegateFactory;
-import com.denimgroup.threadfix.service.AccessControlMapService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.validator.UserValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.AccessControlMapModel;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}/edit")
@@ -63,10 +53,7 @@ public class EditUserController {
 	private RoleService roleService = null;
 	private AccessControlMapService accessControlMapService = null;
 	private boolean ldapPluginInstalled = false;
-	
-	@Autowired
-	private PermissionService permissionService;
-	
+
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
@@ -75,23 +62,23 @@ public class EditUserController {
 		this.userService = userService;
 		this.roleService = roleService;
 		this.accessControlMapService = accessControlMapService;
-		ldapPluginInstalled = LdapServiceDelegateFactory.isEnterprise();
+		ldapPluginInstalled = EnterpriseTest.isEnterprise();
 	}
 	
 	public EditUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		if(ldapPluginInstalled && permissionService.isEnterprise()){
+		if(ldapPluginInstalled && EnterpriseTest.isEnterprise()){
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
-		}else if(ldapPluginInstalled){
+		} else if(ldapPluginInstalled) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "isLdapUser");
-		}else if(permissionService.isEnterprise()){
+		} else if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess");
-		}else{
+		} else {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
 					"passwordConfirm", "hasGlobalGroupAccess");
 		}
@@ -154,8 +141,8 @@ public class EditUserController {
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			ControllerUtils.addSuccessMessage(request, 
-					"User " + user.getName() + " has been edited successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "User " + user.getName() + " has been edited successfully.");
 			
 			model.addAttribute("contentPage", "/configuration/users");
 			return "ajaxRedirectHarness";

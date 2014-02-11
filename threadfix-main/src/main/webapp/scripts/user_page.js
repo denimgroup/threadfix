@@ -38,6 +38,17 @@ var addPasswordHandlers = function() {
 	});
 };
 
+function checkPasswordHandlers(id) {
+    if ($("#passwordInput" + id).attr('value').length < 12){
+        $("#passwordInputErrorSpan" + id).show();
+        $("#passwordInputError" + id).hide();
+        $("#addUserButton" + id).attr("disabled","disabled");
+    } else {
+        $("#addUserButton" + id).removeAttr("disabled","");
+        $("#passwordInputErrorSpan" + id).hide();
+    }
+}
+
 addToDocumentReadyFunctions(addPasswordHandlers);
 
 function toggleAppSelect(id) {

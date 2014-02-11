@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,8 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ApplicationChannelService;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ChannelTypeService;
+import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,18 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.plugin.scanner.service.ScanTypeCalculationService;
-import com.denimgroup.threadfix.plugin.scanner.service.channel.ScanImportStatus;
-import com.denimgroup.threadfix.service.ApplicationChannelService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelTypeService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ScanService;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/upload")
@@ -54,37 +55,24 @@ public class UploadScanController {
 	public static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
 			"scanner type for the file. Please choose one from the list.";
 
+    @Autowired
 	private ScanService scanService;
+    @Autowired
 	private ScanTypeCalculationService scanTypeCalculationService;
+    @Autowired
 	private ChannelTypeService channelTypeService;
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private ApplicationChannelService applicationChannelService;
-	private PermissionService permissionService;
-	
-	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
-	@Autowired
-	public UploadScanController(ScanService scanService,
-			ChannelTypeService channelTypeService,
-			ScanTypeCalculationService scanTypeCalculationService,
-			PermissionService permissionService,
-			ApplicationService applicationService,
-			ApplicationChannelService applicationChannelService) {
-		this.scanService = scanService;
-		this.scanTypeCalculationService = scanTypeCalculationService;
-		this.permissionService = permissionService;
-		this.applicationService = applicationService;
-		this.channelTypeService = channelTypeService;
-		this.applicationChannelService = applicationChannelService;
-	}
-	
-	public UploadScanController(){}
+	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView uploadIndex(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -118,7 +106,7 @@ public class UploadScanController {
 			@PathVariable("orgId") int orgId, HttpServletRequest request,
 			@RequestParam("file") MultipartFile file) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -208,7 +196,7 @@ public class UploadScanController {
 			@PathVariable("emptyScanId") Integer emptyScanId,
 			HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return new ModelAndView("403");
 		}
 		
@@ -236,7 +224,7 @@ public class UploadScanController {
 			@PathVariable("appId") Integer appId, 
 			@PathVariable("emptyScanId") Integer emptyScanId) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
 			return "403";
 		}
 		

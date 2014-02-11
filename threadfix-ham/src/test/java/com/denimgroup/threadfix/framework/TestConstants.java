@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,10 +24,15 @@
 package com.denimgroup.threadfix.framework;
 
 
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+
 public class TestConstants {
 	private TestConstants(){}
-	
-	private static final String testRoot = "/Users/mac/scratch/projects/";
+
+    private static final String VARIABLE_NAME = "PROJECTS_ROOT",
+                        testRoot = System.getProperty(VARIABLE_NAME);
 
     // TODO move relevant files to the src/test/resources folder and use that
 	public static final String
@@ -51,10 +56,21 @@ public class TestConstants {
 		SPRING_MODELS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/model/",
 		SPRING_OWNER_MODEL = "Owner.java",
 		SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING = "ControllerWithClassAnnotation.java.txt",
-        THREADFIX_SOURCE_ROOT = "/Users/mcollins/Documents/Git/threadfix"
+        THREADFIX_SOURCE_ROOT = testRoot + "threadfix/"
 		;
 
     public static String getFolderName(String name) {
-        return testRoot + name;
+
+        if (testRoot == null) {
+            throw new IllegalStateException("System variable " + VARIABLE_NAME + " was null. Fix it.");
+        }
+
+        String folderName = testRoot + name;
+
+        assertTrue("Folder " + folderName + " wasn't found on the filesystem. Fix your configuration.",
+                new File(folderName).exists());
+
+        return folderName;
     }
+
 }

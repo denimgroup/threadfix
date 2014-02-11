@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,52 +23,36 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.SurveyService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.SurveyAnswer;
-import com.denimgroup.threadfix.data.entities.SurveyRanking;
-import com.denimgroup.threadfix.data.entities.SurveyResult;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.SurveyService;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/surveys/new")
 @SessionAttributes("surveyResult")
 public class AddSurveyController {
 
+    @Autowired
 	private SurveyService surveyService = null;
-	private PermissionService permissionService = null;
+    @Autowired
 	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddSurveyController.class);
-
-	@Autowired
-	public AddSurveyController(OrganizationService organizationService,
-			SurveyService surveyService, PermissionService permissionService) {
-		this.surveyService = surveyService;
-		this.permissionService = permissionService;
-		this.organizationService = organizationService;
-	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String selectSurvey(@PathVariable("orgId") int orgId, ModelMap model) {
 		Organization organization = organizationService.loadOrganization(orgId);
 		if (organization != null) {
 			
-			if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+			if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 				return "403";
 			}
 			
@@ -94,7 +78,7 @@ public class AddSurveyController {
 	public String saveResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, ModelMap model) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		
@@ -128,7 +112,7 @@ public class AddSurveyController {
 	public String submitResults(@PathVariable("orgId") int orgId,
 			@ModelAttribute SurveyResult surveyResult, Model model) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
 			return "403";
 		}
 		

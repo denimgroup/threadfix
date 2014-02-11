@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,49 +23,35 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.PermissionService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/modalEdit")
 @SessionAttributes("organization")
 public class EditOrganizationController {
-	
-	public EditOrganizationController(){}
 
+    @Autowired
 	private OrganizationService organizationService = null;
-	private PermissionService permissionService = null;
-	
+
 	private final SanitizedLogger log = new SanitizedLogger(EditOrganizationController.class);
 
-	@Autowired
-	public EditOrganizationController(PermissionService permissionService,
-			OrganizationService organizationService) {
-		this.organizationService = organizationService;
-		this.permissionService = permissionService;
-	}
-	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("name");
@@ -81,7 +67,7 @@ public class EditOrganizationController {
 			@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status, HttpServletRequest request) {
 		
-		if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
 				!organization.isActive()) {
 			return "403";
 		}
@@ -116,8 +102,8 @@ public class EditOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
 			
-			ControllerUtils.addSuccessMessage(request, 
-					"Team " + organization.getName() + " has been edited successfully.");
+			ControllerUtils.addSuccessMessage(request,
+                    "Team " + organization.getName() + " has been edited successfully.");
 			
 			model.addAttribute("contentPage", "/organizations/" + String.valueOf(orgId));
 			return "ajaxRedirectHarness";

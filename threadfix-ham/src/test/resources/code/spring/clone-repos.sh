@@ -28,7 +28,6 @@ git clone https://github.com/arunponnaiah/EchoWeb.git
 git clone https://github.com/loki2302/spring-mvc-scribe-experiment.git
 git clone https://github.com/bottleofrum/atmosphere-spring-mvc.git
 git clone https://github.com/russellpwirtz/mvc-calculator.git
-git clone https://github.com/resco/spring-mvc-inventory.git
 git clone https://github.com/madchicken/blog-spring.git
 
 git clone https://github.com/SpringSource/spring-petclinic.git

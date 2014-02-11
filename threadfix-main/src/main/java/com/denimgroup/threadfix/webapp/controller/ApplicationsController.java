@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,40 +23,36 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
+import com.denimgroup.threadfix.service.beans.ScanParametersBean;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.service.defects.ProjectMetadata;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
-import com.denimgroup.threadfix.webapp.viewmodels.ScanParametersBean;
-import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -67,39 +63,24 @@ public class ApplicationsController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
 
+    @Autowired
 	private FindingService findingService;
+    @Autowired
 	private ApplicationCriticalityService applicationCriticalityService;
+    @Autowired
 	private ApplicationService applicationService;
+    @Autowired
 	private DefectTrackerService defectTrackerService;
+    @Autowired
 	private WafService wafService;
-	private PermissionService permissionService;
+    @Autowired
 	private OrganizationService organizationService;
+    @Autowired
 	private UserService userService;
+    @Autowired
 	private ChannelVulnerabilityService channelVulnerabilityService;
+    @Autowired
     private ChannelTypeService channelTypeService;
-
-	@Autowired
-	public ApplicationsController(ApplicationService applicationService,
-			FindingService findingService,
-			ApplicationCriticalityService applicationCriticalityService,
-			WafService wafService,
-			DefectTrackerService defectTrackerService,
-			PermissionService permissionService,
-			OrganizationService organizationService,
-			UserService userService,
-			ChannelVulnerabilityService channelVulnerabilityService,
-            ChannelTypeService channelTypeService) {
-		this.wafService = wafService;
-		this.applicationService = applicationService;
-		this.defectTrackerService = defectTrackerService;
-		this.permissionService = permissionService;
-		this.findingService = findingService;
-		this.applicationCriticalityService = applicationCriticalityService;
-		this.organizationService = organizationService;
-		this.userService = userService;
-		this.channelVulnerabilityService = channelVulnerabilityService;
-        this.channelTypeService = channelTypeService;
-	}
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -109,7 +90,7 @@ public class ApplicationsController {
 	@RequestMapping("/{appId}")
 	public String detail(@PathVariable("orgId") Integer orgId, @PathVariable("appId") Integer appId,
 			Model model, HttpServletRequest request) {
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -133,8 +114,8 @@ public class ApplicationsController {
 		hiddenBean.setHidden(true);
 		
 		long numHiddenVulns = applicationService.getCount(appId, hiddenBean);
-		
-		permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
+
+        PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
 				Permission.CAN_MODIFY_VULNERABILITIES,
 				Permission.CAN_SUBMIT_DEFECTS,
@@ -177,7 +158,8 @@ public class ApplicationsController {
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
 		model.addAttribute("teamList", organizationService.loadAllActive());
-		if (permissionService.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
+        model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
+		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
 		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
@@ -214,7 +196,7 @@ public class ApplicationsController {
 	
 	// TODO move this to a different spot so as to be less annoying
 	private void addDefectModelAttributes(Model model, int appId, int orgId) {
-		if (!permissionService.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return;
 		}
 		
@@ -260,7 +242,7 @@ public class ApplicationsController {
 	public String processLinkDelete(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status) {
 		
-		if (!permissionService.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
 			return "403";
 		}
 		

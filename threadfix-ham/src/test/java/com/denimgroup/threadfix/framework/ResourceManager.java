@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2013 Denim Group, Ltd.
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -27,14 +27,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import static org.junit.Assert.assertTrue;
+
 public class ResourceManager {
 
 	@NotNull
     public static File getFile(String name) {
-		//URL url = ResourceManager.class.getClassLoader().getResource(name);
-		return new File("threadfix-ham/target/test-classes/" + name);//url.toString());
-	}
-	
+		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
+        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
+
+        return file;
+    }
+
 	@NotNull
     public static File getSpringFile(String name) {
 		return getFile("code/spring/" + name);

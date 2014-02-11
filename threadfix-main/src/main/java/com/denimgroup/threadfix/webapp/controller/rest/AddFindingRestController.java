@@ -1,3 +1,27 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,20 +52,13 @@ public class AddFindingRestController extends RestController {
 			"set to a valid CWE vulnerability name.";
 	public static final String PASSED_CHECK = "The request passed the check for Finding parameters.";
 
+    @Autowired
 	private ManualFindingService manualFindingService;
+    @Autowired
 	private FindingService findingService;
 	
 	private final static String NEW = "newFinding";
 
-	@Autowired
-	public AddFindingRestController(APIKeyService apiKeyService, 
-			ManualFindingService manualFindingService,
-			FindingService findingService) {
-		super(apiKeyService);
-		this.manualFindingService = manualFindingService;
-		this.findingService = findingService;
-	}
-	
 	/**
 	 * Create a new manual finding.
 	 * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addDynamicFinding()
