@@ -38,6 +38,31 @@ public class ScanSerializer {
                 "CWE Name, CWE Code, severity, file, path, parameter\n");
 
         for (Finding finding : scan) {
+            if (finding.getChannelVulnerability() == null) {
+                throw new NullPointerException("finding.getChannelVulnerability() returned null.");
+            }
+
+            if (finding.getChannelVulnerability().getGenericVulnerability() == null) {
+                throw new NullPointerException("Generic Vulnerability was null for channel vulnerability with code " +
+                        finding.getChannelVulnerability().getCode() + " and name " +
+                        finding.getChannelVulnerability().getName());
+            }
+
+            if (finding.getChannelSeverity() == null) {
+                throw new NullPointerException("Channel severity was null.");
+            }
+
+            if (finding.getChannelSeverity().getSeverityMap() == null ||
+                    finding.getChannelSeverity().getSeverityMap().getGenericSeverity() == null) {
+                throw new NullPointerException("Channel severity with code " + finding.getChannelSeverity().getCode()
+                        + " and name " + finding.getChannelSeverity().getName()
+                        + " didn't have a generic mapping.");
+            }
+
+            if (finding.getSurfaceLocation() == null) {
+                throw new NullPointerException("Surface Location was null.");
+            }
+
             builder.append(finding.getChannelVulnerability().getCode()).append(',');
             builder.append(finding.getChannelVulnerability().getName()).append(',');
             builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');

@@ -2,7 +2,7 @@ var lastReportId = 1;
 var lastFormatId = 1;
 
 function reload(url) { 
-	submitAjaxReport(url, '#reportForm', '#formDiv', '#successDiv', lastReportId, lastFormatId);
+	submitAjaxReport(url, '#reportForm', '#formDiv', '#successDiv', lastReportId, 1);
 }
 
 function selectReportType(url, reportId) {

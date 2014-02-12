@@ -22,34 +22,24 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.impl.upload;
+package com.denimgroup.threadfix.importer.parser;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.importer.interop.ChannelImporter;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
-import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
-import com.denimgroup.threadfix.importer.testutils.ScanFileUtils;
+import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TestConstants;
+import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 
-import static org.junit.Assert.assertTrue;
+public class DependencyCheckTests implements TestConstants {
 
-public class ArachniTests {
-
-    @InjectMocks
-    ChannelImporter importer = new ArachniChannelImporter();
+    // TODO fill in the rest
+    public final static String[][] resultsVersion1_1 = new String[][] {
+            {IMPROPER_AUTHENTICATION, "Medium", null, null},
+    };
 
     @Test
-    public void testArachniBasic() {
-
-        importer.setChannel(new ApplicationChannel());
-
-        importer.setFileName(ScanFileUtils.getFile("/Dynamic/Arachni/php-demo.xml"));
-
-        ScanCheckResultBean resultBean = importer.checkFile();
-
-        assertTrue("Result was " + resultBean.getScanCheckResult() + ", should have been success.",
-                resultBean.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN));
+    public void test1_1scan() {
+        ScanComparisonUtils.compare(resultsVersion1_1, ScanLocationManager.getRoot() +
+                "Static/DependencyCheck/DependencyCheck-Report-1.1.1.xml");
     }
 
 }

@@ -46,7 +46,7 @@
 						'	<option value="0">Select a Role</option>';
 						<c:forEach var="role" items="${roleList}">
 						options +=
-							'	<option value="${application.id}-${role.id}" >${role.displayName}</option>';
+							'	<option value="${application.id}-${role.id}" ><c:out value="${role.displayName}"/></option>';
 						</c:forEach>
 					options +=
 						'</select>' + 

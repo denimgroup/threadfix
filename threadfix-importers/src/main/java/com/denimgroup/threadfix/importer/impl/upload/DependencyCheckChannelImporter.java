@@ -23,15 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.Dependency;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -48,6 +47,8 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 		tagMap.put("severity", FindingKey.SEVERITY_CODE);
 		tagMap.put("name", FindingKey.CVE);
 	}
+
+    private static final String DEFAULT_VULN = "Configuration";
 
 	public DependencyCheckChannelImporter() {
 		super(ScannerType.MANUAL);
@@ -139,12 +140,25 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		findingMap.put(FindingKey.VULN_CODE, "Configuration");
 	    	} else {
 	    		String vulnCode = findingMap.get(FindingKey.VULN_CODE);
-	    		if (vulnCode.startsWith("CWE")) {
+	    		if (vulnCode.startsWith("CWE") && vulnCode.contains(" ")) {
 	    			int i = vulnCode.indexOf(" ");
 	    			if (i > 0) {
 	    				findingMap.put(FindingKey.VULN_CODE, vulnCode.substring(i+1));
 	    			}
-	    		}
+	    		} else if (vulnCode.matches("^CWE-[0-9]+$")) {
+                    String stringId = RegexUtils.getRegexResult(vulnCode, "^CWE-([0-9]+)$");
+
+                    Integer integerId = IntegerUtils.getIntegerOrNull(stringId);
+
+                    // This code works because of the 1-1 correspondence of manual channel text and cwe text
+                    if (integerId != null) {
+                        GenericVulnerability genericVulnerability =
+                                genericVulnerabilityDao.retrieveById(integerId);
+                        if (genericVulnerability != null) {
+                            findingMap.put(FindingKey.VULN_CODE, genericVulnerability.getName());
+                        }
+                    }
+                }
 	    	}
 	    }
 	}

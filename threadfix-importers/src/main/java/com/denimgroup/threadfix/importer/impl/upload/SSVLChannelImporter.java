@@ -189,6 +189,11 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 		
 		try {
 			URL schemaFile = ResourceUtils.getUrl("ssvl.xsd");
+
+            if (schemaFile == null) {
+                throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
+            }
+
 			Source xmlFile = new StreamSource(new File(inputFileName));
 			SchemaFactory schemaFactory = SchemaFactory
 			    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

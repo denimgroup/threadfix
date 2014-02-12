@@ -70,7 +70,7 @@ public class ScanQueueTaskRestController extends RestController {
 
     private boolean checkKeyAndEnterprise(HttpServletRequest request, String methodName)
             throws RestAuthenticationFailedException {
-        String result = checkKey(request, OPERATION_QUEUE_SCAN);
+        String result = checkKey(request, methodName);
         if (!result.equals(API_KEY_SUCCESS)) {
             throw new RestAuthenticationFailedException(result);
         }

@@ -57,4 +57,6 @@ public interface ReportsService {
 
 	String vulnerabilityList(Model model, ReportParameters reportParameters);
 
+    String getExportFileName(ReportParameters reportParameters);
+
 }

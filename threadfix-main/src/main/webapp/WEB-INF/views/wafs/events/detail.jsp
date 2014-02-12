@@ -16,18 +16,18 @@
 	</tr>
 	<tr>
 		<td>Type:</td>
-		<td>${securityEvent.attackType}</td>
+		<td><c:out value="${securityEvent.attackType}"/></td>
 	</tr>
 	<tr>
 		<td>Rule ID:</td>
-		<td>${securityEvent.wafRule.nativeId}</td>
+		<td><c:out value="${securityEvent.wafRule.nativeId}"/></td>
 	</tr>
 	<tr>
 		<td>Attacker IP</td>
-		<td>${securityEvent.attackerIP}</td>
+		<td><c:out value="${securityEvent.attackerIP}"/></td>
 	</tr>
 	<tr>
 		<td>Full text:</td>
-		<td>${securityEvent.logText}</td>
+		<td><c:out value="${securityEvent.logText}"/></td>
 	</tr>
 </table>

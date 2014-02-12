@@ -377,7 +377,7 @@ function reloadRight() {
 	submitAjaxReport('#rightReportForm', '#rightTileReport', '#rightViewMore');
 }
 
-function submitAjaxReport(formId,successDiv, viewMore) {
+function submitAjaxReport(formId, successDiv, viewMore) {
 	
 	$("#connectionUnavailableMessage").css("display", "none");
 	

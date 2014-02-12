@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.importer.utils;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.cli.ScanParser;
 import com.denimgroup.threadfix.importer.cli.ScanSerializer;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;

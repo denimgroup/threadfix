@@ -61,7 +61,7 @@ public class EndpointsButton extends JButton {
                     Endpoint.Info[] endpoints = RestUtils.getEndpoints();
 
                     if (endpoints.length == 0) {
-                        JOptionPane.showMessageDialog(view, "Failed to retrieve endpoints from ThreadFix. Check your key and url.",
+                        JOptionPane.showMessageDialog(view, "Did not retrieve any endpoints from ThreadFix. Check your application.",
                                 "Warning", JOptionPane.WARNING_MESSAGE);
                     } else {
                         for (Endpoint.Info endpoint : endpoints) {

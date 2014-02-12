@@ -220,11 +220,14 @@ public class ReportsServiceImpl implements ReportsService {
 					return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 				}
 			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperCWEReport(applicationIdList,vulnerabilityDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperCWEReport(applicationIdList,vulnerabilityDao));
 			} else if (reportFormat == ReportFormat.CHANNEL_COMPARISON_SUMMARY) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
 			} else {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
 			}
@@ -260,8 +263,11 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
+
+            String imagesPath = request.getContextPath() + "/jasperimage/" + mapKey + "/";
+
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"/threadfix/jasperimage/" + mapKey + "/");
+                    imagesPath);
 
 			exporter.exportReport();
 
@@ -507,7 +513,7 @@ public class ReportsServiceImpl implements ReportsService {
                 }
             }
         } else {
-            permissionService.getAuthenticatedTeamIds();
+            teamIds = permissionService.getAuthenticatedTeamIds();
         }
 
 		if (reportParameters.getOrganizationId() < 0) {
@@ -526,7 +532,7 @@ public class ReportsServiceImpl implements ReportsService {
 					applicationIdList.add(app.getId());
 				}
 				
-				Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+				Set<Integer> appIds = PermissionUtils.getAuthenticatedAppIds();
 				if (appIds != null && !appIds.isEmpty()) {
 					applicationIdList.addAll(appIds);
 				}
@@ -656,8 +662,36 @@ public class ReportsServiceImpl implements ReportsService {
 				
 		return "ajaxSuccessHarness";
 	}
-	
-	private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
+
+    @Override
+    public String getExportFileName(ReportParameters reportParameters) {
+        String reportFormat = reportParameters.getReportFormat().getFileName();
+        int index = reportFormat.indexOf(".");
+        if (index > 0)
+            reportFormat = reportFormat.substring(0,index);
+
+        String teamName = null;
+        if (reportParameters.getOrganizationId() < 0)
+            teamName = "All";
+        else {
+            Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
+            if (org != null)
+                teamName = org.getName();
+        }
+
+        String appName = null;
+        if (reportParameters.getApplicationId() < 0)
+            appName = "All";
+        else {
+            Application app = applicationDao.retrieveById(reportParameters.getApplicationId());
+            if (app != null)
+                appName = app.getName();
+        }
+
+        return reportFormat + "_" + teamName + "_" + appName;
+    }
+
+    private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
 		List<List<String>> rowParamsList = new ArrayList<>();
 		List<Application> applicationList = new ArrayList<>();
 

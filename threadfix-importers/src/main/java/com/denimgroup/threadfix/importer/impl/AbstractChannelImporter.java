@@ -490,6 +490,13 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	
 		diskZipFile = new File("temp-zip-file");
 
+        if (diskZipFile.exists()) {
+            if (!diskZipFile.delete()) {
+                System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
+            }
+        }
+
+
 		ZipFile zipFile = null;
 		FileOutputStream out = null;
 		try {
@@ -504,7 +511,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 			
 			zipFile = new ZipFile(diskZipFile);
 			
-			log.debug("Saved zip file to disk. Returning zip file.");
+			log.debug("Saved zip file to disk at " + diskZipFile.getAbsolutePath() + ". Returning zip file.");
 		} catch (ZipException e) {
 			log.warn("There was a ZipException while trying to save and open the file - probably not in a zip format.", e);
 		} catch (IOException e) {

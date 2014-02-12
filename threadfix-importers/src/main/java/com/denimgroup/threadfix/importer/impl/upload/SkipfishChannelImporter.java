@@ -419,7 +419,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
     @Nullable
 	private String getStringFromInputStream(InputStream stream) {
 		try {
-		    return IOUtils.toString(inputStream);
+		    return IOUtils.toString(stream);
 		} catch (IOException e) {
             log.error("Encountered IOException while trying to read the input stream.", e);
 		} finally {
