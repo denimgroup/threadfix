@@ -520,6 +520,64 @@
 				<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
 			</properties>
 		</profile>
+        <profile>
+            <id>mysql-qa</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>QA-Resource-Swap</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
+                                        <copy file="src/main/resources/jdbc.properties.mysql" tofile="target/classes/jdbc.properties" />
+                                        <copy file="src/main/resources/applicationContext-scheduling.xml.deploy" tofile="target/classes/applicationContext-scheduling.xml" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>hsqldb-qa</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>QA-Resource-Swap</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
+                                        <copy file="src/main/resources/jdbc.properties.deploy" tofile="target/classes/jdbc.properties" />
+                                        <copy file="src/main/resources/applicationContext-scheduling.xml.deploy" tofile="target/classes/applicationContext-scheduling.xml" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
         <!-- Enterprise profile turns on enterprise dependency -->
         <profile>
