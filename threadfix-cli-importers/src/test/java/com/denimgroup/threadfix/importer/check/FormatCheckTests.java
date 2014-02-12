@@ -24,8 +24,7 @@ public class FormatCheckTests {
     StringBuilder builder;
 
     Calendar minusOneYear = Calendar.getInstance();
-
-    {
+    { // subtract a year
         minusOneYear.set(Calendar.YEAR, minusOneYear.get(Calendar.YEAR) - 1);
     }
 

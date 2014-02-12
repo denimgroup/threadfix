@@ -220,11 +220,14 @@ public class ReportsServiceImpl implements ReportsService {
 					return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
 				}
 			} else if (reportFormat == ReportFormat.MONTHLY_PROGRESS_REPORT) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperMonthlyScanReport(applicationIdList,scanDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperMonthlyScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.VULNERABILITY_PROGRESS_BY_TYPE) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperCWEReport(applicationIdList,vulnerabilityDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperCWEReport(applicationIdList,vulnerabilityDao));
 			} else if (reportFormat == ReportFormat.CHANNEL_COMPARISON_SUMMARY) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
+                        new JasperScannerComparisonReport(applicationIdList, vulnerabilityDao));
 			} else {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
 			}
@@ -260,8 +263,11 @@ public class ReportsServiceImpl implements ReportsService {
 			exporter.setParameter(
 					JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
 					Boolean.TRUE);
+
+            String imagesPath = request.getContextPath() + "/jasperimage/" + mapKey + "/";
+
 			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-					"/threadfix/jasperimage/" + mapKey + "/");
+                    imagesPath);
 
 			exporter.exportReport();
 
