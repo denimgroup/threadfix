@@ -84,7 +84,7 @@ public class ScanSerializer {
         builder.append(finding.getChannelSeverity().getName()).append(',');
         builder.append(finding.getSourceFileLocation()).append(',');
         builder.append(finding.getSurfaceLocation().getPath()).append(',');
-        builder.append(finding.getSurfaceLocation().getParameter());
+        builder.append(finding.getSurfaceLocation().getParameter()).append(',');
         builder.append(getLineNumber(finding)).append(',');
         builder.append("\n");
     }

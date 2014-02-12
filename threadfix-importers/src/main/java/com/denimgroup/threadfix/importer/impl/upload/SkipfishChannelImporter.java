@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
@@ -88,54 +89,56 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 	 */
 	@Override
 	public Scan parseInput() {
-		InputStream samplesFileStream = getSampleFileInputStream();
+		try (InputStream samplesFileStream = getSampleFileInputStream()) {
 		
-		List<?> map = getArrayFromSamplesFile(samplesFileStream);
-		
-		try {
-			samplesFileStream.close();
-		} catch (IOException e) {
-			log.warn("The Skipfish samples.js fileStream wouldn't close.", e);
-		}
-		
-		if (map == null)
-			return null;
-		
-		List<Finding> findings = getFindingsFromMap(map);
+            List<?> map = getArrayFromSamplesFile(samplesFileStream);
 
-		Scan scan = new Scan();
-		scan.setFindings(findings);
+            if (map == null)
+                return null;
 
-		scan.setApplicationChannel(applicationChannel);
-		scan.setImportTime(date);
+            List<Finding> findings = getFindingsFromMap(map);
 
-		
-		deleteZipFile();
-		deleteScanFile();
+            Scan scan = new Scan();
+            scan.setFindings(findings);
 
-		return scan;
+            scan.setApplicationChannel(applicationChannel);
+            scan.setImportTime(date);
+
+            return scan;
+        } catch (IOException e) {
+            log.error("Encountered IOException while parsing Skipfish scan input.", e);
+        } finally {
+            deleteZipFile();
+            deleteScanFile();
+        }
+
+        return null;
 	}
 	
 	private InputStream getSampleFileInputStream() {
-		if (inputStream == null)
-			return null;
+		if (inputStream == null) {
+            throw new ScanFileUnavailableException("inputStream field was null. Unable to retrieve samples.js file.");
+        }
 		
 		zipFile = unpackZipStream();
-		if (zipFile == null)
-			return null;
+		if (zipFile == null) {
+            throw new ScanFileUnavailableException("unpackZipStream() returned null. Unable to retrieve samples.js file.");
+        }
 		
 		folderName = findFolderName(zipFile);
 		InputStream samplesFileStream;
 
-		if (folderName != null)
-			samplesFileStream = getFileFromZip(folderName + "/samples.js");
-		else
-			samplesFileStream = getFileFromZip("samples.js");
+		if (folderName != null) {
+            samplesFileStream = getFileFromZip(folderName + "/samples.js");
+        } else {
+            samplesFileStream = getFileFromZip("samples.js");
+        }
 
 		return samplesFileStream;	
 	}
 
 	// This method parses the examples.js file into a Java object using a JSON parser.
+    // TODO rewrite this using simpler techniques--just pass inputstream to json parser
 	private List<?> getArrayFromSamplesFile(
 			InputStream sampleFileInputStream) {
 		if (sampleFileInputStream == null)
@@ -375,45 +378,42 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 	}
 	
 	private Calendar attemptToParseDate(String responseDataAddress) {
-		if (zipFile == null)
-			return null;
+		if (zipFile == null) {
+            return null;
+        }
 		
-		InputStream requestInputStream = getFileFromZip(folderName + "/" + responseDataAddress + "/response.dat");
-		if (requestInputStream == null) 
-			return null;
-		
-		String responseString = getStringFromInputStream(requestInputStream);
-		if (responseString == null) 
-			return null;
-		
-		try {
-			requestInputStream.close();
+		try (InputStream requestInputStream = getFileFromZip(folderName + "/" + responseDataAddress + "/response.dat")) {
+            if (requestInputStream != null) {
+                String responseString = getStringFromInputStream(requestInputStream);
+                if (responseString != null) {
+                    // setting the date field makes this result available elsewhere
+                    date = DateUtils.attemptToParseDateFromHTTPResponse(responseString);
+                    return date;
+                }
+            }
 		} catch (IOException e) {
-			log.warn("Closing an inputStream failed in attemptToParseDate() in SkipfishChannelImporter.", e);
+			log.warn("Encountered IOException in attemptToParseDate() in SkipfishChannelImporter.", e);
 		}
-		
-		date = DateUtils.attemptToParseDateFromHTTPResponse(responseString);
-		return date;
+
+        return null;
 	}
 	
 	private String attemptToParseHostFromHTMLRequest(String requestDataAddress) {
 		if (zipFile == null)
 			return null;
 
-		// First we need to get the file from the correct directory.
-		InputStream requestInputStream = getFileFromZip(folderName + "/" + requestDataAddress + "/request.dat");
-		if (requestInputStream == null) return null;
-		
-		String requestString = getStringFromInputStream(requestInputStream);
-		if (requestString == null) return null;
-		
-		try {
-			requestInputStream.close();
+		try (InputStream requestInputStream = getFileFromZip(folderName + "/" + requestDataAddress + "/request.dat")) {
+            if (requestInputStream != null) {
+                String requestString = getStringFromInputStream(requestInputStream);
+                if (requestString != null) {
+                    return RegexUtils.getRegexResult(requestString, "Host: ([^\\n\\r]+)");
+                }
+            }
 		} catch (IOException e) {
-			log.warn("Closing an inputStream failed in attemptToParseHostFromHTMLRequest() in SkipfishChannelImporter.", e);
+			log.warn("IOException encountered in SkipfishChannelImporter.", e);
 		}
-		
-		return RegexUtils.getRegexResult(requestString, "Host: ([^\\n\\r]+)");
+
+        return null;
 	}
 
     @Nullable
@@ -446,39 +446,43 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public ScanCheckResultBean checkFile() {
-		ScanImportStatus returnValue = null;
-		
-		InputStream sampleFileInputStream = getSampleFileInputStream();
-		
-		if (sampleFileInputStream == null)
-			return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
-		
-		List<?> map = getArrayFromSamplesFile(sampleFileInputStream);
-		
-		if (map == null)
-			returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
-		
-		if (returnValue == null && map.size() == 0)
-			returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
-		
-		if (returnValue == null) {
-			checkMap(map);
-	
-	    	if (testDate != null)
-	    		returnValue = checkTestDate();
-		}
-		
-    	try {
-			sampleFileInputStream.close();
-		} catch (IOException e) {
-			log.warn("Closing an inputStream failed in checkFile() in SkipfishChannelImporter.", e);
-		}
-		
-		if (returnValue == null)
-			returnValue = ScanImportStatus.SUCCESSFUL_SCAN;
-		
-		deleteZipFile();
-		return new ScanCheckResultBean(returnValue, testDate);
+        try (InputStream sampleFileInputStream = getSampleFileInputStream()) {
+
+            ScanImportStatus returnValue = null;
+
+            if (sampleFileInputStream == null)
+                return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
+
+            List<?> map = getArrayFromSamplesFile(sampleFileInputStream);
+
+            if (map == null)
+                returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
+
+            if (returnValue == null && map.size() == 0)
+                returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
+
+            if (returnValue == null) {
+                checkMap(map);
+
+                if (testDate != null) {
+                    returnValue = checkTestDate();
+                }
+            }
+
+            if (returnValue == null) {
+                returnValue = ScanImportStatus.SUCCESSFUL_SCAN;
+            }
+
+            return new ScanCheckResultBean(returnValue, testDate);
+        } catch (IOException e) {
+            log.warn("IOException encountered in SkipfishChannelImporter.", e);
+            return new ScanCheckResultBean(ScanImportStatus.CONFIGURATION_ERROR, null);
+        } catch (ScanFileUnavailableException e) {
+            log.error("Unable to proceed because the scan file wasn't found.", e);
+            return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR, null);
+        } finally {
+            deleteZipFile();
+        }
 	}
 	
 	// For each category, find the channel vuln and severity and pass the other work off to another method.
