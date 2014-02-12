@@ -151,13 +151,13 @@ public class ReportsController {
 			
 			if (isPdf) {
 				response.setContentType("application/pdf");
-				fileName = "report_pdf.pdf";
+                fileName = reportsService.getExportFileName(reportParameters) + ".pdf";
 				if (reportCheckResultBean.getReportBytes() != null) {
 					in = new ByteArrayInputStream(reportCheckResultBean.getReportBytes());
 				}
 			} else {
 				response.setContentType("application/octet-stream");
-				fileName = "report_csv.csv";
+                fileName = reportsService.getExportFileName(reportParameters) + ".csv";
 				StringBuffer report = reportCheckResultBean.getReport();
 				if (report != null) {
 					String pageString = report.toString();
@@ -243,7 +243,8 @@ public class ReportsController {
 			return returnError(request, model, reportCheckResult);
 		}
 	}
-	
+
+
 	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
 	//	for the entire application (each class doesn't need to repeat this code)
 	private SecureRandom getRandomSource() {

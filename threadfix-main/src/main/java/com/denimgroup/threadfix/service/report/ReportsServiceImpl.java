@@ -662,8 +662,36 @@ public class ReportsServiceImpl implements ReportsService {
 				
 		return "ajaxSuccessHarness";
 	}
-	
-	private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
+
+    @Override
+    public String getExportFileName(ReportParameters reportParameters) {
+        String reportFormat = reportParameters.getReportFormat().getFileName();
+        int index = reportFormat.indexOf(".");
+        if (index > 0)
+            reportFormat = reportFormat.substring(0,index);
+
+        String teamName = null;
+        if (reportParameters.getOrganizationId() < 0)
+            teamName = "All";
+        else {
+            Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
+            if (org != null)
+                teamName = org.getName();
+        }
+
+        String appName = null;
+        if (reportParameters.getApplicationId() < 0)
+            appName = "All";
+        else {
+            Application app = applicationDao.retrieveById(reportParameters.getApplicationId());
+            if (app != null)
+                appName = app.getName();
+        }
+
+        return reportFormat + "_" + teamName + "_" + appName;
+    }
+
+    private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
 		List<List<String>> rowParamsList = new ArrayList<>();
 		List<Application> applicationList = new ArrayList<>();
 
