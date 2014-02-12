@@ -35,7 +35,10 @@
 		<security:intercept-url pattern="/images/*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/rest/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/**" access="ROLE_USER"/>
-		<security:form-login login-page="/login.jsp"/>
+		<security:form-login
+                login-page="/login.jsp"
+                default-target-url="/dashboard"
+                always-use-default-target="true"/>
 		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
 		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
