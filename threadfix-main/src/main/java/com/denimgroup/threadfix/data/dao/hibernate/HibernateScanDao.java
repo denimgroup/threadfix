@@ -23,43 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.DeletedCloseMap;
-import com.denimgroup.threadfix.data.entities.DeletedDataFlowElement;
-import com.denimgroup.threadfix.data.entities.DeletedFinding;
-import com.denimgroup.threadfix.data.entities.DeletedReopenMap;
-import com.denimgroup.threadfix.data.entities.DeletedRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.DeletedScan;
-import com.denimgroup.threadfix.data.entities.DeletedSurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
+import java.util.*;
 
 /**
  * Hibernate Scan DAO implementation. Most basic methods are implemented in the
  * AbstractGenericDao
  * 
  * @author mcollins
- * @see AbstractGenericDao
  */
 @Repository
 public class HibernateScanDao implements ScanDao {
@@ -372,11 +354,7 @@ public class HibernateScanDao implements ScanDao {
 		
 		Criteria result = addFiltering(baseCriteria, authenticatedTeamIds, authenticatedAppIds);
 		
-		if (result == null) {
-			return new ArrayList<>();
-		} else {
-			return baseCriteria.list();
-		}
+        return result.list();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -410,11 +388,7 @@ public class HibernateScanDao implements ScanDao {
 		
 		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
 		
-		if (filteredCriteria == null) {
-			return new ArrayList<>();
-		} else {
-			return criteria.list();
-		}
+        return filteredCriteria.list();
 	}
 	
 	@Override
@@ -436,11 +410,7 @@ public class HibernateScanDao implements ScanDao {
 		
 		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
 		
-		if (filteredCriteria == null) {
-			return 0;
-		} else {
-			return safeLongToInt((Long) filteredCriteria.uniqueResult());
-		}
+        return safeLongToInt((Long) filteredCriteria.uniqueResult());
 	}
 	
 	private Criteria getBaseScanCriteria() {
@@ -449,14 +419,15 @@ public class HibernateScanDao implements ScanDao {
 				.createAlias("application", "app")
 				.add(Restrictions.eq("app.active", true));
 	}
-	
+
+    @NotNull
 	private Criteria addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
 		
 		boolean useAppIds = appIds != null && !appIds.isEmpty(),
 				useTeamIds = teamIds != null && !teamIds.isEmpty();
 		
 		if (!useAppIds && !useTeamIds) {
-			return null;
+			return criteria;
 		}
 		
 		if (useAppIds && useTeamIds) {
