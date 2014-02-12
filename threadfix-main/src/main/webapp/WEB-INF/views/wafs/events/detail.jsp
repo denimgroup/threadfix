@@ -8,7 +8,7 @@
 </spring:url>
 <a id="viewSecEvents" href="${ fn:escapeXml(ruleUrl) }">Back to all Security Events for WafRule <c:out value="${ securityEvent.wafRule.nativeId }"/></a>
 
-<h3>Snort Alert Information</h3>
+<h3><c:out value="${securityEvent.wafRule.waf.wafType.name}"/> Information</h3>
 <table>
 	<tr>
 		<td>Date:</td>
