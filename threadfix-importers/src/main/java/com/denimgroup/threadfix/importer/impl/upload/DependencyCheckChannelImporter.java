@@ -100,6 +100,7 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("vulnerability".equals(qName)) {
 	    		updateVulnCode(findingMap);
+                findingMap.put(FindingKey.PATH, "Dependencies");
 	    		Finding finding = constructFinding(findingMap);
                 if (finding != null) {
                     Dependency dependency = new Dependency();
