@@ -152,7 +152,7 @@
 			<c:set var="answer" value="${surveyResult.questionAnswers[question.id]}" />
 			<c:set var="answerName" value="questionAnswers[${question.id}]" />
 			<tr class="section<c:out value="${ section.id }"/>  practice<c:out value="${ practice.id }"/>">
-				<td style="padding-top:7px;padding-left:8px"><b>${question.surveyQuestion}</b></td>
+				<td style="padding-top:7px;padding-left:8px"><b><c:out value="${question.surveyQuestion}"/></b></td>
 				<td style="text-align:center;padding-top:7px"><c:if test="${answer.answer}">X</c:if></td>
 				<td style="text-align:center;padding-top:7px"><c:if test="${!answer.answer}">X</c:if></td>
 				<td style="padding-top:7px"><c:out value="${answer.comment}"/></td>

@@ -92,7 +92,7 @@
 					<c:set var="answer" value="${surveyResult.questionAnswers[question.id]}" />
 					<c:set var="answerName" value="questionAnswers[${question.id}]" />
 					<tr class="section<c:out value="${ section.id }"/>  practice<c:out value="${ practice.id }"/>">
-						<td style="padding-left:8px"><b>${question.surveyQuestion}</b></td>
+						<td style="padding-left:8px"><b><c:out value="${question.surveyQuestion}"/></b></td>
 						<td style="text-align:center">
 							<input onchange="markEdited();" type="radio" name="<c:out value="${answerName}.answer" />" value="true"
 								<c:if test="${answer.answer}">checked="checked"</c:if> 

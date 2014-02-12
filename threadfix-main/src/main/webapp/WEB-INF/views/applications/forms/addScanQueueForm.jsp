@@ -20,7 +20,7 @@
 	&nbsp;&nbsp;Scan Type:&nbsp;&nbsp;&nbsp;   
 	<select id="scanQueueType" name="scanQueueType" >
 		<c:forEach items="${scannerTypeList}" var="type">
-    		<option value="${type}">${type}</option>
+    		<option value="<c:out value="${type}"/>"><c:out value="${type}"/></option>
 		</c:forEach>
 	</select>
 	</div>
