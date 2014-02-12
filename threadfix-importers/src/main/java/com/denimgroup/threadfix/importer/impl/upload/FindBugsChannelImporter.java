@@ -188,26 +188,31 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
 				return ScanImportStatus.OTHER_ERROR;
 			
 			List<Scan> scanList = applicationChannel.getScanList();
-			
-			for (Scan scan : scanList) {
-				if (scan != null && scan.getImportTime() != null) {
-					int result = scan.getImportTime().compareTo(testDate);
-					
-					if (result == 0) {
-						return ScanImportStatus.DUPLICATE_ERROR;
-					} else if (result > 0) {
-						return ScanImportStatus.OLD_SCAN_ERROR;
-					} else if (scan.getImportTime().getTimeInMillis() % 1000 == 0
-							&& (scan.getImportTime().getTimeInMillis() / 1000) ==
-							   (testDate.getTimeInMillis() / 1000)){
-						
-						// MySQL doesn't support milliseconds. FindBugs does. 
-						// This should make it work.
-						
-						return ScanImportStatus.DUPLICATE_ERROR;
-					}
-				}
-			}
+
+            if (scanList != null) {
+                for (Scan scan : scanList) {
+                    if (scan != null && scan.getImportTime() != null) {
+                        int result = scan.getImportTime().compareTo(testDate);
+
+                        if (result == 0) {
+                            return ScanImportStatus.DUPLICATE_ERROR;
+                        } else if (result > 0) {
+                            return ScanImportStatus.OLD_SCAN_ERROR;
+                        } else if (scan.getImportTime().getTimeInMillis() % 1000 == 0
+                                && (scan.getImportTime().getTimeInMillis() / 1000) ==
+                                (testDate.getTimeInMillis() / 1000)){
+
+                            // MySQL doesn't support milliseconds. FindBugs does.
+                            // This should make it work.
+
+                            return ScanImportStatus.DUPLICATE_ERROR;
+                        }
+                    }
+                }
+
+            }
+
+
 			
 			log.info("Scan time compare returning success.");
 			return ScanImportStatus.SUCCESSFUL_SCAN;

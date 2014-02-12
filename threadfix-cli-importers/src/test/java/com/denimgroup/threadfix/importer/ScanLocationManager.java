@@ -12,7 +12,7 @@ public class ScanLocationManager {
             ROOT = getRootInternal();
 
     private static String getRootInternal() {
-        String root =  "/Users/mcollins/documents/git/threadfix/threadfix-main/src/test/resources/SupportingFiles/";//System.getProperty("SCAN_FILE_LOCATION");
+        String root =  "/Users/denimgroup/git/threadfix/threadfix-main/src/test/resources/SupportingFiles/";//System.getProperty("SCAN_FILE_LOCATION");
 
         if (root == null) {
             throw new IllegalStateException(ERROR_MESSAGE);

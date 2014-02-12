@@ -28,10 +28,19 @@ public class SimpleFinding {
             throw new IllegalArgumentException("Got a finding without a surface location.");
         }
 
+        if (finding.getChannelVulnerability() == null) {
+            throw new IllegalArgumentException("finding.getChannelVulnerability() is Null");
+        }
+
+        try{
         return matchesParameter(finding) &&
                 finding.getSurfaceLocation().getPath().equals(path) &&
                 finding.getChannelSeverity().getSeverityMap().getGenericSeverity().getName().equals(severity) &&
                 finding.getChannelVulnerability().getGenericVulnerability().getName().equals(vulnType);
+        } catch (NullPointerException e) {
+            System.out.println("Null pointer caught");
+        }
+        return false;
     }
 
     private boolean matchesParameter(Finding finding) {

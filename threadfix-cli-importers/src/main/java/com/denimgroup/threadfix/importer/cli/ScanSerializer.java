@@ -13,17 +13,23 @@ public class ScanSerializer {
         builder.append("Scanner Vulnerability code, Scanner Vulnerability name, " +
                 "CWE Name, CWE Code, severity, file, path, parameter\n");
 
+
         for (Finding finding : scan) {
-            builder.append(finding.getChannelVulnerability().getCode()).append(',');
-            builder.append(finding.getChannelVulnerability().getName()).append(',');
-            builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');
-            builder.append(finding.getChannelVulnerability().getGenericVulnerability().getId()).append(',');
-            builder.append(finding.getChannelSeverity().getName()).append(',');
-            builder.append(finding.getSourceFileLocation()).append(',');
-            builder.append(finding.getSurfaceLocation().getPath()).append(',');
-            builder.append(finding.getSurfaceLocation().getParameter());
-            builder.append("\n");
+            try {
+                builder.append(finding.getChannelVulnerability().getCode()).append(',');
+                builder.append(finding.getChannelVulnerability().getName()).append(',');
+                builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');
+                builder.append(finding.getChannelVulnerability().getGenericVulnerability().getId()).append(',');
+                builder.append(finding.getChannelSeverity().getName()).append(',');
+                builder.append(finding.getSourceFileLocation()).append(',');
+                builder.append(finding.getSurfaceLocation().getPath()).append(',');
+                builder.append(finding.getSurfaceLocation().getParameter());
+                builder.append("\n");
+            } catch (NullPointerException e) {
+                System.out.println("Null Pointer Error while building string");
+            }
         }
+
 
         return builder.toString();
     }
