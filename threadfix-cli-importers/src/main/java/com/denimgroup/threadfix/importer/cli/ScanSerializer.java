@@ -40,6 +40,7 @@ public class ScanSerializer {
         builder.append("Scanner Vulnerability code, Scanner Vulnerability name, " +
                 "CWE Name, CWE Code, severity, file, path, parameter, line number\n");
 
+
         for (Finding finding : scan) {
             if (THROW_ERRORS) {
                 examineAndThrow(finding, builder);
@@ -47,6 +48,7 @@ public class ScanSerializer {
                 examineAndPrintDefaults(finding, builder);
             }
         }
+
 
         return builder.toString();
     }

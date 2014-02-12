@@ -40,6 +40,10 @@ public class ScanLocationManager {
         check();
         String root = System.getProperty(PROPERTY_NAME);
 
+        if (root == null) {
+            throw new IllegalStateException(ERROR_MESSAGE);
+        }
+
         // let's make sure it ends with '/'.
         if (!root.endsWith("/")) {
             root = root + "/";

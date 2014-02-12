@@ -28,9 +28,6 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Created by mac on 2/6/14.
- */
 public class SimpleFinding {
 
     private final String vulnType, severity, path, parameter;

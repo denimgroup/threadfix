@@ -36,7 +36,7 @@ public class NetsparkerTests {
 
     public final static String[][] netsparkerResults = new String[] [] {
             {CODE_INJECTION, "Critical", "/demo/EvalInjection2.php", "command"},
-            {OS_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
+            {OS_INJECTION, "Critical", "/demo/OSCommandInjection2Ø´.php", "fileName"},
             {RESOURCE_INJECTION, "High", "/demo/OSCommandInjection2.php", "fileName"},
             {XSS, "High", "/demo/EvalInjection2.php", "command"},
             {XSS, "High", "/demo/SQLI2.php", "username"},
@@ -63,7 +63,7 @@ public class NetsparkerTests {
     };
 
     @Test
-    public void firstTest() {
+    public void netSparkerScanTest() {
         ScanComparisonUtils.compare(netsparkerResults, ScanLocationManager.getRoot() +
                 "Dynamic/NetSparker/netsparker-demo-site.xml");
     }
