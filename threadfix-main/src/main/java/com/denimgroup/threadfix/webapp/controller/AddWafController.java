@@ -104,6 +104,8 @@ public class AddWafController {
 		}
 		
 		if (application != null) {
+            // remove any outdated vuln -> waf rule links
+            applicationService.updateWafRules(application, 0);
 			application.setWaf(waf);
 			applicationService.storeApplication(application);
 		}

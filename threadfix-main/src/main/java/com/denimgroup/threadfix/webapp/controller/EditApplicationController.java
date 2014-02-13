@@ -191,28 +191,34 @@ public class EditApplicationController {
 			if (databaseApplication == null) {
 				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
 			} else {
-				if (application.getWaf() != null && (application.getWaf().getId() == null ||
- 						application.getWaf().getId() == 0)) {
+
+                Integer newWafId = null;
+                if (application.getWaf() != null) {
+                    newWafId = application.getWaf().getId();
+                }
+
+				if (newWafId == null || newWafId == 0) {
+                    // remove any outdated vuln -> waf rule links
+                    applicationService.updateWafRules(databaseApplication, newWafId);
 					databaseApplication.setWaf(null);
 				}
 				
-				if (application.getWaf() != null && application.getWaf().getId() != null && application.getWaf().getId() != 0) {
-					Waf waf = wafService.loadWaf(application.getWaf().getId());
+				if (newWafId != null && newWafId != 0) {
+					Waf waf = wafService.loadWaf(newWafId);
 					
 					if (waf == null) {
 						result.rejectValue("waf.id", "errors.invalid",
 								new String [] { "WAF Choice" }, null);
 					} else {
+                        // remove any outdated vuln -> waf rule links
+                        applicationService.updateWafRules(databaseApplication, newWafId);
 						databaseApplication.setWaf(waf);
 					}
 				}
 				
 				applicationService.storeApplication(databaseApplication);
-				
 				String user = SecurityContextHolder.getContext().getAuthentication().getName();
-				
 				log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
-				
 				model.addAttribute("application", databaseApplication);
 			}
 		} else {
