@@ -53,8 +53,6 @@ public class DocumentTests extends BaseTest {
 	public TeamDetailPage teamDetailPage;
 	
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
-		
-	private static Map<String, String[][]> resultsMap = ScanContents.SCAN_RESULT_MAP;
 	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
 	
 	@Before
