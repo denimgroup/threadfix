@@ -450,13 +450,17 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 
             ScanImportStatus returnValue = null;
 
-            if (sampleFileInputStream == null)
+            if (sampleFileInputStream == null) {
+                log.error("Sample file input stream was null. Returning null.");
                 return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
+            }
 
             List<?> map = getArrayFromSamplesFile(sampleFileInputStream);
 
-            if (map == null)
+            if (map == null) {
+                log.error("Map returned from samples file was null. Returning WRONG_FORMAT_ERROR");
                 returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
+            }
 
             if (returnValue == null && map.size() == 0)
                 returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
