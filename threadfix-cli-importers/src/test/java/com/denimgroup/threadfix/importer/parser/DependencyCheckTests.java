@@ -33,7 +33,7 @@ public class DependencyCheckTests implements TestConstants {
 
     // TODO fill in the rest
     public final static String[][] resultsVersion1_1 = new String[][] {
-            {IMPROPER_AUTHENTICATION, "Medium", null, null},
+            {IMPROPER_AUTHENTICATION, "Medium", "Dependencies", null},
     };
 
     @Test

@@ -455,3 +455,14 @@ addToModalRefreshFunctions(showSuccessMessages);
 addToModalRefreshFunctions(addExpandsHandlers);
 addToModalRefreshFunctions(showSubmitLinks);
 addToModalRefreshFunctions(addAppPageEvents);
+
+function enterPressHandler(e) {
+    if (e.keyCode == 13) {
+        if ($("#jsonLink").css("display") !== "none") {
+            $("#submitDTModal").attr("no-fire-modalSubmit","1");
+            jsonTest($("#appDTDiv").attr("data-json-test-url"));
+            e.preventDefault();
+        }
+    }
+};
+

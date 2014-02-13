@@ -23,7 +23,7 @@
 				<td>Defect Tracker</td>
 				<td class="inputValue">
 					<c:if test="${ not empty defectTrackerList }">
-						<select style="margin:5px;" id="defectTrackerId" name="defectTracker.id">
+						<select style="margin:5px;" id="defectTrackerId" name="defectTracker.id" onkeypress="enterPressHandler(event)">
 							<option value="0">&lt;none&gt;</option>
 							<c:forEach items="${ defectTrackerList }" var="listDefectTracker">
 								<c:choose>
@@ -55,7 +55,7 @@
 			<tr class="left-align">
 				<td>Username</td>
 				<td class="inputValue">
-					<form:input style="margin:5px;" id="username" path="userName" size="50" maxlength="50"/>
+					<form:input style="margin:5px;" id="username" path="userName" size="50" maxlength="50" onkeypress="enterPressHandler(event)" />
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="userName" cssClass="errors" />
@@ -64,7 +64,7 @@
 			<tr class="left-align">
 				<td>Password</td>
 				<td class="inputValue">						
-					<form:password style="margin:5px;" id="password" showPassword="true" path="password" size="50" maxlength="50" />
+					<form:password style="margin:5px;" id="password" showPassword="true" path="password" size="50" maxlength="50" onkeypress="enterPressHandler(event)"/>
 				</td>
 				<td style="padding-left:5px" colspan="2" >
 					<form:errors path="password" cssClass="errors" />
@@ -89,7 +89,7 @@
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<a class="btn btn-primary" href="#" id="jsonLink">Test Connection</a>
 		<a id="submitDTModal" class="modalSubmit btn btn-primary"
-				style = "display:none"  
+				style = "display:none"
 				data-success-div="appDTDiv"
 				data-success-click="editApplicationModal">Add Defect Tracker</a>
 	</div>

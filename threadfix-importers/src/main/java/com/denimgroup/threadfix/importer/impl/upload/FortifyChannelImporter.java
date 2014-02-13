@@ -145,6 +145,8 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 				returnScan.setImportTime(auditXmlDate);
 			}
 		}
+
+        deleteZipFile();
 		
 		return returnScan;
 	}
@@ -741,20 +743,24 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	    
 	@Override
 	public ScanCheckResultBean checkFile() {
-		InputStream auditXmlStream = null;
-		InputStream fvdlInputStream = null;
+        try {
+            InputStream auditXmlStream = null;
+            InputStream fvdlInputStream = null;
 
-		zipFile = unpackZipStream();
-		auditXmlStream = getFileFromZip("audit.xml");
-		fvdlInputStream = getFileFromZip("audit.fvdl");
+            zipFile = unpackZipStream();
+            auditXmlStream = getFileFromZip("audit.xml");
+            fvdlInputStream = getFileFromZip("audit.fvdl");
 
-		if (zipFile == null || fvdlInputStream == null)
-			return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
-						
-		testDate = getTime(auditXmlStream);
-		
-		inputStream = fvdlInputStream;
-		return testSAXInput(new FortifySAXValidator());
+            if (zipFile == null || fvdlInputStream == null)
+                return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
+
+            testDate = getTime(auditXmlStream);
+
+            inputStream = fvdlInputStream;
+            return testSAXInput(new FortifySAXValidator());
+        } finally {
+            deleteZipFile();
+        }
 	}
 
 	public class FortifySAXValidator extends DefaultHandler {

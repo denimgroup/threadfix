@@ -460,7 +460,10 @@ function addModalSubmitEvents() {
 			form.keypress(function(e) {
 			    if (e.which == 13){
 			    	e.preventDefault();
-			    	submitFunction();
+                    if (!element.attr("no-fire-modalSubmit")) {
+                        submitFunction();
+                    }
+                    element.attr("no-fire-modalSubmit","");
 			    }
 			});
 			element.click(function() {

@@ -460,7 +460,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (permissionService == null) { // not enterprise, which means everyone is admin
             canManageDefectTrackers = true;
             canManageWafs = true;
-        } if (application.getOrganization() != null) {
+        } else if (application.getOrganization() != null) {
 			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			

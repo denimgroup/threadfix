@@ -65,11 +65,6 @@ public class ScanLocationManager {
         }
     }
 
-    public static String getFile(String extension) {
-        check();
-        return getRoot() + extension;
-    }
-
     public static Collection<String> getFilesInDirectory(String extension) {
         check();
         File directory = new File(getRoot() + extension);

@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
@@ -176,14 +177,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	public void deleteScanFile() {
 		
 		closeInputStream(inputStream);
-		
-		File file = new File(inputFileName);
-		if (file.exists()) {
-			if (!file.delete()) {
-				log.warn("Scan file deletion failed, calling deleteOnExit()");
-				file.deleteOnExit();
-			}
-		}
+
+        if (shouldDeleteAfterParsing) {
+            File file = new File(inputFileName);
+            if (file.exists()) {
+                if (!file.delete()) {
+                    log.warn("Scan file deletion failed, calling deleteOnExit()");
+                    file.deleteOnExit();
+                }
+            }
+        }
 	}
 
 	protected void deleteZipFile() {
@@ -464,7 +467,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 */
 	protected InputStream getFileFromZip(String fileName) {
 		if (zipFile == null || fileName == null || fileName.trim().equals("")) {
-			return null;
+            throw new ScanFileUnavailableException("zipFile was null or fileName died");
 		}
 		
 		InputStream inputStream = null;
@@ -483,19 +486,20 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	
 	protected ZipFile unpackZipStream() {
 		if (this.inputStream == null) {
-			return null;
+            throw new ScanFileUnavailableException("inputStream was null.");
 		}
 
 		log.debug("Attempting to unpack the zip stream.");
-	
-		diskZipFile = new File("temp-zip-file");
+
+        long timeStamp = new Date().getTime();
+
+		diskZipFile = new File("temp-zip-file" + timeStamp);
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
                 System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
             }
         }
-
 
 		ZipFile zipFile = null;
 		FileOutputStream out = null;

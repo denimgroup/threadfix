@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.importer.parser;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
@@ -36,6 +37,7 @@ public interface ThreadFixBridge  {
 
     public ScanCheckResultBean testScan(ScannerType type, File inputFile);
 
+    @Transactional
     public Scan getScan(ScannerType type, File inputFile);
 
 }
