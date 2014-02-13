@@ -177,14 +177,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	public void deleteScanFile() {
 		
 		closeInputStream(inputStream);
-		
-		File file = new File(inputFileName);
-		if (file.exists()) {
-			if (!file.delete()) {
-				log.warn("Scan file deletion failed, calling deleteOnExit()");
-				file.deleteOnExit();
-			}
-		}
+
+        if (shouldDeleteAfterParsing) {
+            File file = new File(inputFileName);
+            if (file.exists()) {
+                if (!file.delete()) {
+                    log.warn("Scan file deletion failed, calling deleteOnExit()");
+                    file.deleteOnExit();
+                }
+            }
+        }
 	}
 
 	protected void deleteZipFile() {
