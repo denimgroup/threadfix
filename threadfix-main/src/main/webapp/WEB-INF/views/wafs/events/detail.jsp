@@ -23,7 +23,7 @@
 		<td><c:out value="${securityEvent.wafRule.nativeId}"/></td>
 	</tr>
 	<tr>
-		<td>Attacker IP</td>
+		<td style="width:80px;">Attacker IP:</td>
 		<td><c:out value="${securityEvent.attackerIP}"/></td>
 	</tr>
 	<tr>
