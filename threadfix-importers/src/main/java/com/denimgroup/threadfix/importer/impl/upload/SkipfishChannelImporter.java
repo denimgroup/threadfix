@@ -30,12 +30,15 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
@@ -125,16 +128,9 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
             throw new ScanFileUnavailableException("unpackZipStream() returned null. Unable to retrieve samples.js file.");
         }
 		
-		folderName = findFolderName(zipFile);
-		InputStream samplesFileStream;
+		folderName = findFolderName(zipFile); // keep for now, unsure about this though
 
-		if (folderName != null) {
-            samplesFileStream = getFileFromZip(folderName + "/samples.js");
-        } else {
-            samplesFileStream = getFileFromZip("samples.js");
-        }
-
-		return samplesFileStream;	
+		return findSamplesFile(zipFile);
 	}
 
 	// This method parses the examples.js file into a Java object using a JSON parser.
@@ -422,18 +418,35 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		    return IOUtils.toString(stream);
 		} catch (IOException e) {
             log.error("Encountered IOException while trying to read the input stream.", e);
-		} finally {
-			closeInputStream(stream);
+            return null;
 		}
-		
-		return null;
 	}
+
+    // TODO refactor this class to make lookups simpler
+    // probably read everything and keep in-memory map of stuff we need
+    private InputStream findSamplesFile(@NotNull ZipFile zipFile) {
+        if (zipFile.entries() == null) {
+            throw new ScanFileUnavailableException("No zip entries were found in the zip file.");
+        }
+
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (entry.getName().endsWith("samples.js")) {
+                try {
+                    return zipFile.getInputStream(entry);
+                } catch (IOException e) {
+                    log.error("IOException thrown when reading entries from zip file.", e);
+                }
+            }
+        }
+
+        throw new ScanFileUnavailableException("Samples.js was not found in the zip file.");
+    }
 
 	// This method looks to see if the zip file contains the folder containing everything,
 	// and returns the name of the folder so that paths can be correctly constructed.
-	private String findFolderName(ZipFile zipFile) {
-		if (zipFile == null)
-			return null;
+	private String findFolderName(@NotNull ZipFile zipFile) {
 
 		if (zipFile.entries() != null && zipFile.entries().hasMoreElements()) {
 			String possibleMatch = zipFile.entries().nextElement().toString();

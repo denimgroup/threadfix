@@ -490,15 +490,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		}
 
 		log.debug("Attempting to unpack the zip stream.");
-	
-		diskZipFile = new File("temp-zip-file");
+
+        long timeStamp = new Date().getTime();
+
+		diskZipFile = new File("temp-zip-file" + timeStamp);
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
                 System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
             }
         }
-
 
 		ZipFile zipFile = null;
 		FileOutputStream out = null;
