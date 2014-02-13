@@ -2,12 +2,14 @@ package com.denimgroup.threadfix.importer.check;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
 import com.denimgroup.threadfix.importer.utils.FolderMappings;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,23 +32,27 @@ public class FormatCheckTests {
 
     @Test
     public void testFalseNegatives() {
-        ThreadFixBridge threadFixBridge = SpringConfiguration.getContext().getBean(ThreadFixBridge.class);
-        assertNotNull("Fix your autowiring, ThreadFixBridge instance was null.", threadFixBridge);
+        ThreadFixBridge threadFixBridge = getThreadFixBridge();
 
         builder = new StringBuilder();
 
         for (Map.Entry<ScannerType, Collection<String>> entry : FolderMappings.getEntries()) {
             Calendar mostRecent = null;
             for (String file : entry.getValue()) {
-                ScanCheckResultBean returnBean =
-                        threadFixBridge.testScan(entry.getKey(), new File(file));
+                try {
+                    ScanCheckResultBean returnBean =
+                            threadFixBridge.testScan(entry.getKey(), new File(file));
 
-                assertTrue("Got null return bean while testing " + file, returnBean != null);
-                assertTrue("Response status wasn't success for file " + file + ", it was " +
-                        returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+                    assertTrue("Got null return bean while testing " + file, returnBean != null);
+                    assertTrue("Response status wasn't success for file " + file + ", it was " +
+                            returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
 
-                if (mostRecent == null || mostRecent.before(returnBean.getTestDate())) {
-                    mostRecent = returnBean.getTestDate();
+                    if (mostRecent == null || mostRecent.before(returnBean.getTestDate())) {
+                        mostRecent = returnBean.getTestDate();
+                    }
+                } catch (ScanFileUnavailableException e) {
+                    e.printStackTrace();
+                    assertTrue("Response status wasn't success for file " + file + ". Encountered ScanFileUnavailableException.", false);
                 }
             }
 
@@ -54,6 +60,12 @@ public class FormatCheckTests {
         }
 
         System.out.println(builder);
+    }
+
+    private ThreadFixBridge getThreadFixBridge() {
+        ThreadFixBridge threadFixBridge = SpringConfiguration.getContext().getBean(ThreadFixBridge.class);
+        assertNotNull("Fix your autowiring, ThreadFixBridge instance was null.", threadFixBridge);
+        return threadFixBridge;
     }
 
     private void addToBuilder(ScannerType type, Calendar recentDate) {
@@ -78,6 +90,32 @@ public class FormatCheckTests {
 
     public String format(Calendar calendar) {
         return new SimpleDateFormat("MM/dd/yyyy").format(calendar.getTime());
+    }
+
+    /**
+     * Skipfish parsing used to work but only about half the time. This should ensure that if the problem
+     * exists in the code then it will fail at least one test.
+     */
+    @Test
+    @Transactional
+    public void runSkipFishLotsOfTimesToMakeSureItWorks() {
+
+        ThreadFixBridge threadFixBridge = getThreadFixBridge();
+
+        for (int i = 0; i < 100; i++) {
+            System.out.print('.');
+            for (String file : FolderMappings.getValue(ScannerType.SKIPFISH)) {
+                System.out.print('-');
+                ScanCheckResultBean returnBean =
+                        threadFixBridge.testScan(ScannerType.SKIPFISH, new File(file));
+
+                assertTrue("Got null return bean while testing " + file, returnBean != null);
+                assertTrue("Response status wasn't success for file " + file + ", it was " +
+                        returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+
+                threadFixBridge.getScan(ScannerType.SKIPFISH, new File(file));
+            }
+        }
     }
 
 }

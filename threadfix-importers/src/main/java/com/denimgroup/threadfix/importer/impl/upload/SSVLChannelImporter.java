@@ -203,7 +203,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 		    
 		    valid = true;
 		    
-		    System.out.println(xmlFile.getSystemId() + " is valid");
+		    log.info(xmlFile.getSystemId() + " is valid");
 		    
 		} catch (MalformedURLException e) {
 			log.error("Code contained an incorrect path to the XSD file.", e);

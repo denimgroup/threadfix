@@ -177,14 +177,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	public void deleteScanFile() {
 		
 		closeInputStream(inputStream);
-		
-		File file = new File(inputFileName);
-		if (file.exists()) {
-			if (!file.delete()) {
-				log.warn("Scan file deletion failed, calling deleteOnExit()");
-				file.deleteOnExit();
-			}
-		}
+
+        if (shouldDeleteAfterParsing) {
+            File file = new File(inputFileName);
+            if (file.exists()) {
+                if (!file.delete()) {
+                    log.warn("Scan file deletion failed, calling deleteOnExit()");
+                    file.deleteOnExit();
+                }
+            }
+        }
 	}
 
 	protected void deleteZipFile() {
@@ -488,15 +490,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		}
 
 		log.debug("Attempting to unpack the zip stream.");
-	
-		diskZipFile = new File("temp-zip-file");
+
+        long timeStamp = new Date().getTime();
+
+		diskZipFile = new File("temp-zip-file" + timeStamp);
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
                 System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
             }
         }
-
 
 		ZipFile zipFile = null;
 		FileOutputStream out = null;

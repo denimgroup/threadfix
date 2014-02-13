@@ -59,7 +59,7 @@ public class DateUtils {
      * @return resulting Calendar, or null if parsing fails for any reason
      */
     public static Calendar getCalendarFromString(SimpleDateFormat format, String dateString) {
-        log.info("Attempting to parse a calendar from " + dateString + " using " + format.toPattern());
+        log.debug("Attempting to parse a calendar from " + dateString + " using " + format.toPattern());
 
         Calendar result = null;
 
@@ -83,9 +83,9 @@ public class DateUtils {
         }
 
         if (result != null) {
-            log.info("Got " + format.format(result.getTime()));
+            log.debug("Got " + format.format(result.getTime()));
         } else {
-            log.info("Got null instead of a date.");
+            log.debug("Got null instead of a date.");
         }
 
         return result;
