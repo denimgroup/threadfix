@@ -380,8 +380,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         List<String> errorFieldList = new ArrayList<>();
         if (errorResponseMsg != null && RestUtils.getJSONObject(errorResponseMsg) != null) {
             String errorResponse = RestUtils.getJSONObject(errorResponseMsg).getString("errors");
+            if (errorResponse == null || errorResponse.isEmpty())
+                return errorFieldList;
             String[] errorList = errorResponse.split("\\\",\\\"");
             for (String error : errorList) {
+                if (error == null || error.isEmpty())
+                    continue;
                 String field = error.split("\\\":\\\"")[0];
                 field = field.replace("{","");
                 field = field.replace("\\","");
