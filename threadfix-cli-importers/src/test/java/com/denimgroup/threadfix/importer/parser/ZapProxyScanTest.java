@@ -1,13 +1,11 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 import static com.denimgroup.threadfix.importer.TestConstants.*;
-/**
- * Created by denimgroup on 2/10/14.
- */
-public class ZapProxyScanTest {
+public class ZapProxyScanTest extends TransactionalTest {
 
     public final static String[][] zapProxyResults = new String [][] {
             {DIRECTORY_LISTING, "High", "/demo/DirectoryIndexing/", ""},

@@ -1,13 +1,14 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 import static com.denimgroup.threadfix.importer.TestConstants.*;
 /**
  * Created by denimgroup on 2/10/14.
  */
-public class BurpScanTest {
+public class BurpScanTest extends TransactionalTest {
 
     public final static String[][] burpResults = new String [][] {
             {XSS, "High", "/demo/EvalInjection2.php", "command"},

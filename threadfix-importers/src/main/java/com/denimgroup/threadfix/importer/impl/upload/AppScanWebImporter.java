@@ -69,9 +69,9 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		private String requestText = null;
 		private String currentHttpMethod = null;
 		
-		private final Map<String, ChannelSeverity> severityMap;
-		private final Map<String, String> genericVulnMap;
-		private final Map<String, String> channelVulnNameMap;
+		private final Map<String, ChannelSeverity> severityMap = new HashMap<>();
+		private final Map<String, String> genericVulnMap = new HashMap<>();
+		private final Map<String, String> channelVulnNameMap = new HashMap<>();
 						
 		private boolean grabUrlText       = false;
 		private boolean grabSeverity      = false;
@@ -84,9 +84,6 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    	super();
 	    	
 	    	hosts = new ArrayList<>();
-	    	severityMap = new HashMap<>();
-	    	genericVulnMap = new HashMap<>();
-	    	channelVulnNameMap = new HashMap<>();
 	    }
 	    
 	    private void addChannelVulnsAndMappingsToDatabase() {
@@ -158,6 +155,10 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
+                    if (currentChannelSeverity == null) {
+                        // TODO fix this
+                    }
+
 		    	}
 		    	else if ("Entity".equals(qName))
 		    		currentParam = atts.getValue("Name");

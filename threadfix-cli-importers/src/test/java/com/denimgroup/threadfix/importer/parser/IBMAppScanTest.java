@@ -1,13 +1,14 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 import static com.denimgroup.threadfix.importer.TestConstants.*;
 /**
  * Created by denimgroup on 2/10/14.
  */
-public class IBMAppScanTest {
+public class IBMAppScanTest extends TransactionalTest {
 
     public final static String[][] ibmAppScanResults = new String[][] {
             { PATH_TRAVERSAL, "Critical", "/demo/OSCommandInjection2.php", "fileName"},

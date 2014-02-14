@@ -1,13 +1,14 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 import static com.denimgroup.threadfix.importer.TestConstants.*;
 /**
  * Created by denimgroup on 2/10/14.
  */
-public class AcunetixScanTest {
+public class AcunetixScanTest extends TransactionalTest {
 
     public final static String[][] acunetixResults = new String [][] {
             {XSS, "Critical", "/comments.aspx", "tbComment"},

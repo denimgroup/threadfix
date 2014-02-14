@@ -25,18 +25,18 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 
 import static com.denimgroup.threadfix.importer.TestConstants.*;
-import static junit.framework.Assert.assertNotNull;
 
 // TODO move all the tests to this format.
-public class NetsparkerTests {
+public class NetsparkerTests extends TransactionalTest {
 
     public final static String[][] netsparkerResults = new String[] [] {
             {CODE_INJECTION, "Critical", "/demo/EvalInjection2.php", "command"},
-            {OS_INJECTION, "Critical", "/demo/OSCommandInjection2Ø´.php", "fileName"},
+            {OS_INJECTION, "Critical", "/demo/OSCommandInjection2.php", "fileName"},
             {RESOURCE_INJECTION, "High", "/demo/OSCommandInjection2.php", "fileName"},
             {XSS, "High", "/demo/EvalInjection2.php", "command"},
             {XSS, "High", "/demo/SQLI2.php", "username"},

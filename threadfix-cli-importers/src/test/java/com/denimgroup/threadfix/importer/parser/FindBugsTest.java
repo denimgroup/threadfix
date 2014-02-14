@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 import static com.denimgroup.threadfix.importer.TestConstants.*;
@@ -8,7 +9,7 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
 /**
  * Created by denimgroup on 2/10/14.
  */
-public class FindBugsTest {
+public class FindBugsTest extends TransactionalTest {
 
     public final static String[][] findBugsResults = new String[] []{
             { XSS, "Critical", "securibench/micro/aliasing/Aliasing1.java", "name"},

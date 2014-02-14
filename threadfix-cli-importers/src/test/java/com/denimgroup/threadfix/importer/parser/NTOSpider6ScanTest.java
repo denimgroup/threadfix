@@ -1,13 +1,13 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
-import static com.denimgroup.threadfix.importer.TestConstants.*;
 /**
  * Created by denimgroup on 2/10/14.
  */
-public class NTOSpider6ScanTest {
+public class NTOSpider6ScanTest extends TransactionalTest {
 
     public final static String[][] ntoSix = new String [][] {
             {"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", "Critical", "/Login.asp", "tfUPass"},
