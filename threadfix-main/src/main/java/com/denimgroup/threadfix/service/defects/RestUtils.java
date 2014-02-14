@@ -51,6 +51,7 @@ public class RestUtils {
 	private RestUtils() {} // intentional, we shouldn't be instantiating this class.
 	
 	private static final SanitizedLogger log = new SanitizedLogger(RestUtils.class);
+    private static String postErrorResponse;
 	
 	//The following methods help with REST interfaces.
 	public static InputStream getUrl(String urlString, String username, String password) {
@@ -147,8 +148,8 @@ public class RestUtils {
 						log.warn("Error stream from HTTP connection was null");
 					} else {
 						log.warn("Error stream from HTTP connection was not null. Attempting to get response text.");
-						String postErrorResponse = IOUtils.toString(errorStream);
-						log.warn("Error text in response was '" + postErrorResponse + "'");
+                        setPostErrorResponse(IOUtils.toString(errorStream));
+						log.warn("Error text in response was '" + getPostErrorResponse() + "'");
 					}
 				} catch (IOException e2) {
 					log.warn("IOException encountered trying to read the reason for the previous IOException: "
@@ -239,4 +240,12 @@ public class RestUtils {
 			return null;
 		}
 	}
+
+    public static String getPostErrorResponse() {
+        return postErrorResponse;
+    }
+
+    public static void setPostErrorResponse(String postErrorResponse) {
+        RestUtils.postErrorResponse = postErrorResponse;
+    }
 }
