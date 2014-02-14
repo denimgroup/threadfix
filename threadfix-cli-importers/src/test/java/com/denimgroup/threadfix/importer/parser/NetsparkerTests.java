@@ -25,14 +25,14 @@
 package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 
 import static com.denimgroup.threadfix.importer.TestConstants.*;
-import static junit.framework.Assert.assertNotNull;
 
 // TODO move all the tests to this format.
-public class NetsparkerTests {
+public class NetsparkerTests extends TransactionalTest {
 
     public final static String[][] netsparkerResults = new String[] [] {
             {CODE_INJECTION, "Critical", "/demo/EvalInjection2.php", "command"},
@@ -63,7 +63,7 @@ public class NetsparkerTests {
     };
 
     @Test
-    public void firstTest() {
+    public void netSparkerScanTest() {
         ScanComparisonUtils.compare(netsparkerResults, ScanLocationManager.getRoot() +
                 "Dynamic/NetSparker/netsparker-demo-site.xml");
     }

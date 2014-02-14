@@ -27,6 +27,9 @@ package com.denimgroup.threadfix.importer.cli;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class ScanSerializer {
 
     // We only want to throw errors if we're testing. Otherwise let's have defaults.
@@ -35,23 +38,30 @@ public class ScanSerializer {
     // Format is channel vuln code, channel vuln name, CWE, severity, file, path, parameter
     // TODO make this more configurable.
     public static String toCSVString(Scan scan) {
+        Set<String> lines = new TreeSet<>();
+
         StringBuilder builder = new StringBuilder();
 
         builder.append("Scanner Vulnerability code, Scanner Vulnerability name, " +
                 "CWE Name, CWE Code, severity, file, path, parameter, line number\n");
 
+
         for (Finding finding : scan) {
             if (THROW_ERRORS) {
-                examineAndThrow(finding, builder);
+                examineAndThrow(finding, lines);
             } else {
-                examineAndPrintDefaults(finding, builder);
+                examineAndPrintDefaults(finding, lines);
             }
+        }
+
+        for (String line : lines) {
+            builder.append(line);
         }
 
         return builder.toString();
     }
 
-    private static void examineAndThrow(Finding finding, StringBuilder builder) {
+    private static void examineAndThrow(Finding finding, Set<String> strings) {
         if (finding.getChannelVulnerability() == null) {
             throw new NullPointerException("finding.getChannelVulnerability() returned null.");
         }
@@ -77,19 +87,18 @@ public class ScanSerializer {
             throw new NullPointerException("Surface Location was null.");
         }
 
-        builder.append(finding.getChannelVulnerability().getCode()).append(',');
-        builder.append(finding.getChannelVulnerability().getName()).append(',');
-        builder.append(finding.getChannelVulnerability().getGenericVulnerability().getName()).append(',');
-        builder.append(finding.getChannelVulnerability().getGenericVulnerability().getId()).append(',');
-        builder.append(finding.getChannelSeverity().getName()).append(',');
-        builder.append(finding.getSourceFileLocation()).append(',');
-        builder.append(finding.getSurfaceLocation().getPath()).append(',');
-        builder.append(finding.getSurfaceLocation().getParameter()).append(',');
-        builder.append(getLineNumber(finding)).append(',');
-        builder.append("\n");
+        strings.add(finding.getChannelVulnerability().getCode() + ',' +
+                finding.getChannelVulnerability().getName() + ',' +
+                finding.getChannelVulnerability().getGenericVulnerability().getName() + ',' +
+                finding.getChannelVulnerability().getGenericVulnerability().getId() + ',' +
+                finding.getChannelSeverity().getName() + ',' +
+                finding.getSourceFileLocation() + ',' +
+                finding.getSurfaceLocation().getPath() + ',' +
+                finding.getSurfaceLocation().getParameter() + ',' +
+                getLineNumber(finding) + ',' + "\n");
     }
 
-    private static void examineAndPrintDefaults(Finding finding, StringBuilder builder) {
+    private static void examineAndPrintDefaults(Finding finding, Set<String> strings) {
         StringBuilder innerBuilder = new StringBuilder();
 
         if (finding.getChannelVulnerability() == null) {
@@ -141,7 +150,7 @@ public class ScanSerializer {
         innerBuilder.append(getLineNumber(finding)).append(',');
         innerBuilder.append("\n");
 
-        builder.append(innerBuilder.toString());
+        strings.add(innerBuilder.toString());
     }
 
     private static String getLineNumber(Finding finding) {

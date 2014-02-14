@@ -28,9 +28,6 @@ import com.denimgroup.threadfix.data.entities.Finding;
 
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Created by mac on 2/6/14.
- */
 public class SimpleFinding {
 
     private final String vulnType, severity, path, parameter;
@@ -50,6 +47,18 @@ public class SimpleFinding {
             throw new IllegalArgumentException("Got a null finding. Fix the code.");
         } else if (finding.getSurfaceLocation() == null) {
             throw new IllegalArgumentException("Got a finding without a surface location.");
+        }
+
+        if (finding.getChannelSeverity() == null) {
+            throw new ScannerMappingsIncompleteException("Finding must have ChannelSeverity.");
+        } else if (finding.getChannelSeverity().getSeverityMap() == null) {
+            throw new ScannerMappingsIncompleteException("finding.getChannelSeverity().getSeverityMap() was null.");
+        } else if (finding.getChannelVulnerability() == null) {
+            throw new ScannerMappingsIncompleteException("Finding must have ChannelVulnerability.");
+        } else if (finding.getChannelVulnerability().getGenericVulnerability() == null) {
+            throw new IllegalArgumentException("Finding needs a mapping for ChannelVulnerability with code " +
+                    finding.getChannelVulnerability().getCode() +
+                    " and name " + finding.getChannelVulnerability().getName());
         }
 
         return matchesParameter(finding) && matchesPath(finding) &&

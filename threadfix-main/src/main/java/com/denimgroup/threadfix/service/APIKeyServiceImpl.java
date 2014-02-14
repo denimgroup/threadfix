@@ -23,19 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.APIKeyDao;
+import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.ws.commons.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.APIKeyDao;
-import com.denimgroup.threadfix.data.entities.APIKey;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -115,10 +114,8 @@ public class APIKeyServiceImpl implements APIKeyService {
 			newKey = newKey.replaceAll("[\\[!@#$%\\^&*\\(\\)=\\-+/]", "");
 			
 			return newKey;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+			log.error("Encountered error while generating API Key.", e);
 		}
 		
 		log.error("API Key Generation failed. Make sure the algorithm is supported.");
