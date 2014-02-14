@@ -352,38 +352,82 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				           projectsHash = getNameFieldMap("project","id");
 		
 		String description = makeDescription(vulnerabilities, metadata);
-		
-		//	TODO - Use a better JSON API to construct the JSON message. JSONObject.quote() is nice
-		//	and all, but...
-		String payload = "{ \"fields\": {" +
-				" \"project\": { \"id\": " + JSONObject.quote(projectsHash.get(getProjectName())) + " }," +
-				" \"summary\": " + JSONObject.quote(metadata.getDescription()) + "," +
-				" \"issuetype\": { \"id\": \"1\" }," +
-				" \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," +
-				" \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," +
-				" \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," +
-				" \"description\": " + JSONObject.quote(description);
-
-		if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
-			payload += "," + " \"components\": [ { \"id\": " + 
-					JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]";
-		}
-				
-		payload += " } }";
-		
-		payload = payload.replaceAll(newLineRegex, doubleSlashNewLine);
+        String payload = getPayload(null, projectsHash, metadata, priorityHash, description,componentsHash);
 				
 		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
 		String id = null;
 		try {
-			if (result != null && RestUtils.getJSONObject(result) != null) {
-				id = RestUtils.getJSONObject(result).getString("key");
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+            if (result != null && RestUtils.getJSONObject(result) != null) {
+                id = RestUtils.getJSONObject(result).getString("key");
+            } else {
+                // Trying to send request to Jira one more time, remove all error fields if any
+                String errorResponseMsg = RestUtils.getPostErrorResponse();
+                List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
+                log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
+                payload = getPayload(errorFieldList, projectsHash, metadata, priorityHash, description,componentsHash);
+                result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
+                if (result != null && RestUtils.getJSONObject(result) != null) {
+                    id = RestUtils.getJSONObject(result).getString("key");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
 		}
 		return id;
 	}
+
+    private List<String> getErrorFieldList(String errorResponseMsg) throws JSONException {
+        List<String> errorFieldList = new ArrayList<>();
+        if (errorResponseMsg != null && RestUtils.getJSONObject(errorResponseMsg) != null) {
+            String errorResponse = RestUtils.getJSONObject(errorResponseMsg).getString("errors");
+            if (errorResponse == null || errorResponse.isEmpty())
+                return errorFieldList;
+            String[] errorList = errorResponse.split("\\\",\\\"");
+            for (String error : errorList) {
+                if (error == null || error.isEmpty())
+                    continue;
+                String field = error.split("\\\":\\\"")[0];
+                field = field.replace("{","");
+                field = field.replace("\\","");
+                field = field.replace("\"","");
+                errorFieldList.add(field);
+            }
+        }
+        return errorFieldList;
+    }
+    private String getPayload(List<String> errorFieldList,
+                              Map<String,String> projectsHash,
+                              DefectMetadata metadata,
+                              Map<String,String> priorityHash,
+                              String description,
+                              Map<String,String> componentsHash) {
+        //	TODO - Use a better JSON API to construct the JSON message. JSONObject.quote() is nice
+        //	and all, but...
+        String payload = "{ \"fields\": {" +
+                ((isValidField(errorFieldList, "project"))? " \"project\": { \"id\": " + JSONObject.quote(projectsHash.get(getProjectName())) + " }," : "") +
+                ((isValidField(errorFieldList, "summary"))? " \"summary\": " + JSONObject.quote(metadata.getDescription()) + "," : "") +
+                ((isValidField(errorFieldList, "issuetype"))? " \"issuetype\": { \"id\": \"1\" }," : "") +
+                ((isValidField(errorFieldList, "assignee"))? " \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," : "") +
+                ((isValidField(errorFieldList, "reporter"))? " \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," : "") +
+                ((isValidField(errorFieldList, "priority"))? " \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," : "") +
+                ((isValidField(errorFieldList, "description"))? " \"description\": " + JSONObject.quote(description) : "");
+
+        if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
+            payload += ((isValidField(errorFieldList, "components"))? "," + " \"components\": [ { \"id\": " +
+                    JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]" : "");
+        }
+
+        payload += " } }";
+
+        payload = payload.replaceAll(newLineRegex, doubleSlashNewLine);
+        return payload;
+    }
+
+    private boolean isValidField(List<String> errorFieldList, String field) {
+        if (errorFieldList == null || errorFieldList.size() == 0)
+            return true;
+        return !errorFieldList.contains(field);
+    }
 
 	@Override
 	public Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList) {
