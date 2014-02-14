@@ -56,7 +56,7 @@ public class SimpleFinding {
         } else if (finding.getChannelVulnerability() == null) {
             throw new ScannerMappingsIncompleteException("Finding must have ChannelVulnerability.");
         } else if (finding.getChannelVulnerability().getGenericVulnerability() == null) {
-            throw new IllegalArgumentException("Finding needs a mapping for ChannelVulnerability with code " +
+            throw new ScannerMappingsIncompleteException("Finding needs a mapping for ChannelVulnerability with code " +
                     finding.getChannelVulnerability().getCode() +
                     " and name " + finding.getChannelVulnerability().getName());
         }
