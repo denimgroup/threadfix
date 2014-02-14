@@ -69,7 +69,7 @@
 						</a>
 						</div>
 				  	 </div>
-					<ul id="configurationHeader" class="dropdown-menu config-header" style="text-align:left;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 						    <li class="normalLinks">
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
