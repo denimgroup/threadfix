@@ -8,12 +8,11 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
 public class ZapProxyScanTest extends TransactionalTest {
 
     public final static String[][] zapProxyResults = new String [][] {
-            {DIRECTORY_LISTING, "High", "/demo/DirectoryIndexing/", ""},
-            {XSS, "Medium", "/demo/EvalInjection2.php", "command"},
-            {XSS, "Medium", "/demo/XPathInjection2.php", "password"},
-            {XSS, "Medium", "/demo/XPathInjection2.php", "username"},
-            {XSS, "Medium", "/demo/XSS-reflected2.php", "username"},
-            {SQLI, "Medium", "/demo/SQLI2.php", "username"},
+            {DIRECTORY_LISTING, "Medium", "/demo/DirectoryIndexing/", ""},
+            {XSS, "High", "/demo/EvalInjection2.php", "command"},
+            {XSS, "High", "/demo/XPathInjection2.php", "username"},
+            {SQLI, "High", "/demo/SQLI2.php", "username"},
+            {SQLI, "High", "/demo/SQLI2.php", "username"},
     };
 
     @Test

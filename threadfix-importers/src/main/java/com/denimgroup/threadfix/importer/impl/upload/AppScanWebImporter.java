@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.exception.SeverityNotFoundException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
@@ -77,7 +78,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		private boolean grabSeverity      = false;
 		private boolean grabCWE           = false;
 		private boolean grabIssueTypeName = false;
-		private boolean issueTypes        = true;
+		private boolean inIssueTypes = true;
 		private boolean grabDate          = false;
 
 	    public AppScanSAXParser () {
@@ -141,11 +142,11 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    	if ("Host".equals(qName))
 	    		hosts.add(atts.getValue(0));
 	    	
-	    	if (issueTypes) {
+	    	if (inIssueTypes) {
 	    		
 	    		switch (qName) {
 	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
-	    			case "Issue"     : issueTypes = false;                    break;
+	    			case "Issue"     : inIssueTypes = false;                    break;
 	    			case "Severity"  : grabSeverity = true;                   break;
 	    			case "link"      : grabCWE = true;                        break;
 	    			case "name"      : grabIssueTypeName = true;              break;
@@ -155,10 +156,6 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
-                    if (currentChannelSeverity == null) {
-                        // TODO fix this
-                    }
-
 		    	}
 		    	else if ("Entity".equals(qName))
 		    		currentParam = atts.getValue("Name");
@@ -206,6 +203,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 				throw new SAXException("Done Parsing.");
 	    	} else if ("IssueTypes".equals(qName)) {
 	    		addChannelVulnsAndMappingsToDatabase();
+                inIssueTypes = false;
 	    	} else if ("Issue".equals(qName)) {
 	    		Finding finding = new Finding();
 	    		SurfaceLocation location = new SurfaceLocation();
@@ -224,8 +222,9 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    		finding.setSurfaceLocation(location);
 	    		finding.setChannelVulnerability(currentChannelVuln);
-	    		finding.setChannelSeverity(currentChannelSeverity);
-	    		
+
+                finding.setChannelSeverity(currentChannelSeverity);
+
 	    		finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
 	    		
