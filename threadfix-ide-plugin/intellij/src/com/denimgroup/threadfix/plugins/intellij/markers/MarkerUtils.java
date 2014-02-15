@@ -69,8 +69,6 @@ public class MarkerUtils {
         tableModel.initVirtualFiles(markers.size());
         tableModel.setProject(project);
 
-        System.out.println("We have " + markers.size() + " markers.");
-
         for (VulnerabilityMarker marker : markers) {
 
             String shortClassName = getShortClassName(marker);
@@ -200,8 +198,6 @@ public class MarkerUtils {
         attributes.setBackgroundColor(color);
 
         int markerLineNumber = getLineNumber(marker);
-
-        System.out.println(markerLineNumber);
 
         RangeHighlighter newHighlighter = documentMarkupModel.addLineHighlighter(markerLineNumber, 500, attributes);
 

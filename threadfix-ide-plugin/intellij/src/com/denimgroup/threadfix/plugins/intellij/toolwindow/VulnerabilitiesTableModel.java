@@ -113,7 +113,8 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
                 System.out.println("Got NumberFormatException for String " + stringLineNumber);
             }
         } else {
-            System.out.println("Line number was not numeric.");
+            System.out.println("Line number was not numeric. This indicates an error in the ThreadFix code. " +
+                    "Please report this to the developers if you see it.");
         }
 
         WorkspaceUtils.openFile(project, file, lineNumber);
