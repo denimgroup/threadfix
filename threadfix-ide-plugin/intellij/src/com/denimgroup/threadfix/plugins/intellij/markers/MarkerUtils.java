@@ -69,23 +69,25 @@ public class MarkerUtils {
         tableModel.initVirtualFiles(markers.size());
         tableModel.setProject(project);
 
+        System.out.println("We have " + markers.size() + " markers.");
+
         for (VulnerabilityMarker marker : markers) {
 
-            if (map.containsKey(getShortClassName(marker))) {
+            String shortClassName = getShortClassName(marker);
 
-                String shortClassName = getShortClassName(marker);
+            if (map.containsKey(shortClassName)) {
 
-                if (shortClassName != null) {
-                    if (addRenderer) {
-                        MarkupModel model = getMarkupModel(map, shortClassName, project);
-                        addRenderers(marker, model);
-                    }
-
-                    // TODO clean up
-                    tableModel.setVirtualFileAt(tableModel.getRowCount(),
-                            map.get(shortClassName).iterator().next());
-                    tableModel.addRow(toStringArray(marker));
+                if (addRenderer) {
+                    MarkupModel model = getMarkupModel(map, shortClassName, project);
+                    addRenderers(marker, model);
                 }
+
+                // TODO clean up
+                tableModel.setVirtualFileAt(tableModel.getRowCount(),
+                        map.get(shortClassName).iterator().next());
+                tableModel.addRow(toStringArray(marker));
+            } else {
+                System.out.println("The file that wasn't found was " + shortClassName + ", full path was " + marker.getFilePath());
             }
         }
     }
@@ -101,8 +103,14 @@ public class MarkerUtils {
             DEFECT_URL_INDEX = 5;
 
     public static String[] toStringArray(VulnerabilityMarker marker) {
+        String lineNumber = marker.getLineNumber();
+
+        if (lineNumber != null && lineNumber.trim().equals("0")) {
+            lineNumber = "";
+        }
+
         return new String[] {marker.getFilePath(),
-                marker.getLineNumber(),
+                lineNumber,
                 marker.getParameter(),
                 marker.getGenericVulnId(),
                 marker.getGenericVulnName(),
@@ -193,6 +201,8 @@ public class MarkerUtils {
 
         int markerLineNumber = getLineNumber(marker);
 
+        System.out.println(markerLineNumber);
+
         RangeHighlighter newHighlighter = documentMarkupModel.addLineHighlighter(markerLineNumber, 500, attributes);
 
         boolean newLine = true;
@@ -229,7 +239,8 @@ public class MarkerUtils {
 
     public static Integer getLineNumber(@NotNull VulnerabilityMarker marker) {
         if (marker.getLineNumber() != null && marker.getLineNumber().matches("^[0-9]+$")) {
-            return Integer.valueOf(marker.getLineNumber());
+            Integer integer = Integer.valueOf(marker.getLineNumber());
+            return integer == 0 ? 0 : integer - 1; // somehow this got off by one.
         } else {
             return 0;
         }

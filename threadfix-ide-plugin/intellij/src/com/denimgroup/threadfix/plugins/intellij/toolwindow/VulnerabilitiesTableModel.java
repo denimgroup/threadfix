@@ -106,6 +106,9 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
         if (stringLineNumber.matches("^[0-9]+$")) {
             try {
                 lineNumber = Integer.valueOf(getValueAt(cellRow, MarkerUtils.LINE_NUMBER_INDEX).toString());
+                if (lineNumber > 1) {
+                    lineNumber--;
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Got NumberFormatException for String " + stringLineNumber);
             }

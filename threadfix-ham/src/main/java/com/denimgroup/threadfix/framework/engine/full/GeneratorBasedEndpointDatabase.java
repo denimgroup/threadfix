@@ -140,10 +140,6 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             resultSets.add(getValueOrEmptySetWithSimpleKey(query.getHttpMethod(), httpMethodMap));
         }
 
-        if (query.getParameter() != null) {
-            resultSets.add(getValueOrEmptySetWithSimpleKey(query.getParameter(), parameterMap));
-        }
-
         if (resultSets.size() > 0) {
             boolean assignedInitial = false;
 
@@ -157,6 +153,18 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
                     resultingSet.retainAll(endpoints);
                 }
+            }
+        }
+
+        if (query.getParameter() != null) {
+            Set<Endpoint> parameterEndpoints =
+                    getValueOrEmptySetWithSimpleKey(query.getParameter(), parameterMap);
+
+            // dynamic scan with a parameter that doesn't match any code is probably a false positive
+            // this code will just ignore the parameter lookup for now.
+            // TODO deal with false positives in a more effective manner
+            if (useStatic || !parameterEndpoints.isEmpty()) {
+                resultingSet.retainAll(parameterEndpoints);
             }
         }
 
