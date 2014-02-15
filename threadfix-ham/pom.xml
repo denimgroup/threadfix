@@ -45,6 +45,9 @@
                                 <include>**/*Tests.java</include>
                                 <include>**/*Test.java</include>
                             </includes>
+                            <excludes>
+                                <exclude>**/TransactionalTest.java</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
