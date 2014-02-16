@@ -2,13 +2,24 @@
 
 <head>
 	<title>Home</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams_page.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.form.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams-page.js"></script>
 </head>
 
 <body id="apps">
 	<h2>Applications</h2>
+
+    <div ng-controller="ApplicationsIndexController">
+        <div style="text-align: center">
+            {{ progressText }}
+        </div>
+
+        <div>
+            {{ output }} {{ lastApplication }}
+        </div>
+
+        <%@ include file="/WEB-INF/views/organizations/indexTable.jsp" %>
+    </div>
+
 
 	<spring:url value="/organizations/teamTable" var="tableUrl"/>
 	<div id="teamTable" data-url="<c:out value="${ tableUrl }"/>" style="margin-bottom:8px;margin-top:10px;">

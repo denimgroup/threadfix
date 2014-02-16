@@ -1,76 +1,67 @@
-<%@ include file="/common/taglibs.jsp"%>
-
-<div class="modal-header">
-	<h4 id="myModalLabel">New Application</h4>
-</div>
-<spring:url value="/organizations/{orgId}/modalAddApp" var="saveUrl">
-	<spring:param name="orgId" value="${ organization.id }"/>
-</spring:url>
-<form:form style="margin-bottom:0px;" id="myAppForm${ organization.id }" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
-	<div class="modal-body">
-		<table>
-			<tr class="left-align">
-				<td style="padding:5px;">Name</td> 
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="nameInput${organization.id}" path="name" cssClass="focus" size="50" maxlength="60" />
-				  	<form:errors path="name" cssClass="errors" />
+<script type="text/ng-template" id="newApplicationModal.html">
+    <div class="modal-header">
+        <h3>New Application</h3>
+    </div>
+    <div class="modal-body">
+        <table>
+            <tr class="left-align">
+                <td style="padding:5px;">Name</td>
+                <td style="padding:5px;">
+					<input ng-model="application.name"/>
 				</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">URL</td>
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="urlInput${organization.id}" path="url" size="50" maxlength="255" />
-				  	<form:errors path="url" cssClass="errors" />
+            </tr>
+            <tr class="left-align">
+                <td style="padding:5px;">URL</td>
+                <td style="padding:5px;">
+					<input ng-model="application.url"/>
 			  	</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Unique ID</td>
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="uniqueIdInput${organization.id}" path="uniqueId" size="50" maxlength="255" />
-				  	<form:errors path="uniqueId" cssClass="errors" />
+            </tr>
+            <tr class="left-align">
+                <td style="padding:5px;">Unique ID</td>
+                <td style="padding:5px;">
+                    <input style="margin-bottom:0px;" ng-model="application.uniqueId" id="uniqueIdInput{{ application.team.id }}" size="50" maxlength="255"
 			  	</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Team</td>
-				<td style="padding:5px;"><c:out value="${ organization.name }"/></td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Criticality</td>
-				<td style="padding:5px;">
-					<form:select style="margin-bottom:0px;" id="criticalityId${organization.id}" path="applicationCriticality.id">
-						<form:options items="${applicationCriticalityList}" itemValue="id" itemLabel="name"/>
-					</form:select>
-					<form:errors path="applicationCriticality.id" cssClass="errors" />
+            </tr>
+            <tr class="left-align">
+                <td style="padding:5px;">Team</td>
+                <td style="padding:5px;">{{ application.team.name }}</td>
+            </tr>
+            <tr class="left-align">
+                <td style="padding:5px;">Criticality</td>
+                <td style="padding:5px;">
+					<select style="margin-bottom:0px;" ng-model="application.applicationCriticality.id" id="criticalityId${organization.id}">
+					    <c:forEach items="${applicationCriticalityList}" var="applicationCriticality">
+						    <option value="<c:out value='${applicationCriticality.id}'/>"><c:out value='${applicationCriticality.name}'/></option>
+                        </c:forEach>
+					</select>
 				</td>
-			</tr>
-			<tr>
-				<td class="right-align" style="padding:5px;">Application Type</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:select path="frameworkType"
-                                 id="frameworkTypeSelect${organization.id}"
-						items="${ applicationTypes }"
-						itemLabel="displayName"/>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Application Type</td>
+                <td class="left-align"  style="padding:5px;">
+					<select ng-model="application.frameworkType.id" id="frameworkTypeSelect{{ application.team.id }}">
+					    <c:forEach items="${applicationTypes}" var="type">
+						    <option value="<c:out value='${type.id}'/>"><c:out value='${type.displayName}'/></option>
+                        </c:forEach>
+                    </select>
 				</td>
-			</tr>
-			<tr>
-				<td class="right-align" style="padding:5px;">Source Code URL:</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryUrl${organization.id}" maxlength="250" path="repositoryUrl"/>
-                    <form:errors path="repositoryUrl" cssClass="errors" />
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code URL:</td>
+                <td class="left-align"  style="padding:5px;">
+					<input id="repositoryUrl{{ application.team.id }}" maxlength="250" ng-model="application.repositoryUrl"/>
 				</td>
-			</tr>			
-			<tr>
-				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryFolder${organization.id}" maxlength="250" path="repositoryFolder"/>
-					<form:errors path="repositoryFolder" cssClass="errors" />
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Folder:</td>
+                <td class="left-align"  style="padding:5px;">
+					<input id="repositoryFolder{{ application.team.id }}" maxlength="250" ng-model="application.repositoryFolder"/>
 				</td>
-			</tr>
-		</table>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitAppModal${organization.id}" class="modalSubmit btn btn-primary"
-			data-success-div="teamTable" data-success-click="teamCaret${ organization.id }">Add Application</a>
-	</div>
-</form:form>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">Add Application</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

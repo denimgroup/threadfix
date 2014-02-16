@@ -848,3 +848,17 @@ div.box-shadow {
 	width:800px;
 	margin-left:-400px;
 }
+
+/* this is for angular / bootstrap compatibility */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+.applicationSection {
+    display:none;
+}
+
+.applicationSection.expanded {
+    min-height:250px;
+    display:block;
+}

@@ -56,7 +56,9 @@
 			<td class="centered expandableTrigger" id="numLowVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[1] }"/></td>
 			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.vulnerabilityReport[0] }"/></td>
 			<td class="expandableTrigger"></td>
-			<td> 
+			<td>
+
+                <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 				<a id="addApplicationModalButton${ status.count }" href="#myAppModal${ organization.id }"
 						role="button" class="btn" data-toggle="modal">
 					Add Application
@@ -121,8 +123,8 @@
 									<td class="centered" id="numLowVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[1] }"/></td>
 									<td class="centered" id="numInfoVulns${ status.count }"><c:out value="${ application.vulnerabilityReport[0] }"/></td>
 									<td class="centered" style="padding:5px;">
+                                        <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 										<a id="uploadScanModalLink${ status.count }-${ innerStatus.count }" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
-										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 									</td>
 								</tr>
 							</c:if>

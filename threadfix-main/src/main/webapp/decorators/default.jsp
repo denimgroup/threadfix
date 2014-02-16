@@ -9,15 +9,12 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/pagination.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/delete.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/header.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bootstrap.min.js" media="screen"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajax_replace.js"></script>
-	
-	<!--[if lt IE 7]>
+
+    <script data-require="angular.js@*" data-semver="1.2.12" src="http://code.angularjs.org/1.2.12/angular.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+
+
+    <!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/iepngfix_tilebg.js"></script>
 		
@@ -25,7 +22,8 @@
     
 	<decorator:head/>
 </head>
-<body <decorator:getProperty property="body.id" writeEntireProperty="true"/>
+<body ng-app='threadfix' ng-init='name="World"'
+      <decorator:getProperty property="body.id" writeEntireProperty="true"/>
 	  <decorator:getProperty property="body.class" writeEntireProperty="true"/>>
 	<div id="wrapper">
 		<div id="main">
@@ -36,6 +34,7 @@
 				<div class="center"><!-- --></div>
 			</div>
 			<div id="main-content">
+                Hello {{name}}!
 				<decorator:body/>
 			</div>			
 			<div class="bottom-corners corners">
