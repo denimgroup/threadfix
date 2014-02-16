@@ -12,8 +12,38 @@ var myAppModule = angular.module('threadfix', ['ui.bootstrap']).
             });
         };
 
+        threadfixAPIService.loadReport = function(team) {
+            return $http({
+                method: 'GET',
+                url: team.graphUrl
+            });
+        };
+
         return threadfixAPIService;
     });
+
+
+// For image tags and stuff
+myAppModule.directive('bindHtmlUnsafe', function( $compile ) {
+    return function( $scope, $element, $attrs ) {
+
+        var compile = function( newHTML ) { // Create re-useable compile function
+
+            newHTML = $compile(newHTML)($scope); // Compile html
+            $element.html('').append(newHTML);
+        };
+
+        var htmlName = $attrs.bindHtmlUnsafe; // Get the name of the variable
+        // Where the HTML is stored
+
+        $scope.$watch(htmlName, function( newHTML ) { // Watch for changes to
+            // the HTML
+            if(!newHTML) return;
+            compile(newHTML);   // Compile it
+        });
+
+    };
+});
 
 myAppModule.controller('NewApplicationModalController', function ($scope, $modalInstance, team) {
 
@@ -66,6 +96,8 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         } else {
             team.expanded = true;
         }
+
+        loadGraph(team);
     }
 
     $scope.openAppModal = function (team) {
@@ -88,5 +120,20 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+    var loadGraph = function(team) {
+        $scope.progressText = 'Loading ' + team.graphUrl;
+        threadfixAPIService.loadReport(team).
+            success(function(data, status, headers, config) {
+                $scope.progressText = 'Received ' + data;
+
+                // TODO figure out Jasper better, it's a terrible way to access the report images.
+                var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
+                team.report = matches[1];
+            }).
+            error(function(data, status, headers, config) {
+                $scope.progressText = "Failed to load report.";
+            });
+    }
 
 });

@@ -862,3 +862,9 @@ div.box-shadow {
     min-height:250px;
     display:block;
 }
+
+.tableReportDiv {
+    float:right;
+    margin-right:-20px;
+    margin-top:0px;
+}

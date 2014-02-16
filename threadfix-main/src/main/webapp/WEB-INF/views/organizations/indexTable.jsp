@@ -22,8 +22,12 @@
         </tr>
     </thead>
     <tbody>
+
+        <spring:url value="/getReport" var="reportUrl"/>
+
         <tr ng-repeat-start="team in teams" id="teamRow{{ team.id }}" class="pointer" data-target-div="teamInfoDiv{{ team.id }}"
-            data-caret-div="caret{{ team.id }}" data-report-div="reportDiv{{ team.id }}">
+                data-caret-div="caret{{ team.id }}" data-report-div="reportDiv{{ team.id }}"
+                ng-init="team.graphUrl='/organizations/' + team.id +'<c:out value='${reportUrl}'/>'">
             <td id="teamCaret{{ team.id }}" ng-click="toggle(team)">
                 <span ng-class="{ expanded: team.expanded }" class="caret-right"></span>
             </td>
@@ -45,10 +49,15 @@
                 <a style="text-decoration:none" id="organizationLink{{ $index }}" href="">View Team</a>
             </td>
         </tr>
+
+
         <tr ng-repeat-end class="grey-background">
             <td colspan="11">
+
                 <div collapse="!team.expanded" id="teamInfoDiv{{ team.id }}" class="collapse applicationSection" ng-class="{ expanded: team.expanded }">
-                    <div style="float:right;margin-right:-50px;margin-top:-40px;" id="reportDiv{{ team.id }}" data-url=""></div>
+                    <div bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}">
+                        Loading...
+                    </div>
 
                     <div ng-hide="team.applications">
                         No applications were found for this team.
