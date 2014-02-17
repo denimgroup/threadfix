@@ -35,6 +35,10 @@ import java.util.List;
 @Table(name = "Organization")
 public class Organization extends AuditableEntity {
 
+    // These are used for caching and will require frequent updates.
+    private Integer infoVulnCount = 0, lowVulnCount = 0, mediumVulnCount = 0,
+            highVulnCount = 0, criticalVulnCount = 0, totalVulnCount = 0;
+
 	private static final long serialVersionUID = 6734388139007659988L;
 	
 	private List<Application> activeApps;
@@ -111,30 +115,82 @@ public class Organization extends AuditableEntity {
 	/*
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
 	 */
-	@Transient
-	@JsonIgnore
-	public List<Integer> getVulnerabilityReport() {
+	public void updateVulnerabilityReport() {
 
-		int[] calculations = new int[6];
-		for (int i = 0; i < calculations.length; i++) {
-			calculations[i] = 0;
-		}
+        int info = 0, low = 0, medium = 0, high = 0, critical = 0, total = 0;
 
 		for (Application app : this.applications) {
-			if (app == null || !app.isActive())
-				continue;
-			
-			for (int i = 0; i < calculations.length; i++) {
-				calculations[i] += app.getVulnerabilityReport().get(i);
-			}
+			if (app != null && app.isActive()) {
+                info += app.getInfoVulnCount();
+                low += app.getLowVulnCount();
+                medium += app.getMediumVulnCount();
+                high += app.getHighVulnCount();
+                critical += app.getCriticalVulnCount();
+                total += app.getTotalVulnCount();
+            }
 		}
 
-		List<Integer> retVal = new ArrayList<Integer>();
-        for (int calculation : calculations) {
-            retVal.add(calculation);
-        }
-
-		return retVal;
+        setInfoVulnCount(info);
+        setLowVulnCount(low);
+        setMediumVulnCount(medium);
+        setHighVulnCount(high);
+        setCriticalVulnCount(critical);
+        setTotalVulnCount(total);
 	}
+
+    @Column
+    public Integer getTotalVulnCount() {
+        return totalVulnCount;
+    }
+
+    public void setTotalVulnCount(Integer totalVulnCount) {
+        this.totalVulnCount = totalVulnCount;
+    }
+
+    @Column
+    public Integer getInfoVulnCount() {
+        return infoVulnCount;
+    }
+
+    @Column
+    public void setInfoVulnCount(Integer infoVulnCount) {
+        this.infoVulnCount = infoVulnCount;
+    }
+
+    public Integer getLowVulnCount() {
+        return lowVulnCount;
+    }
+
+    @Column
+    public void setLowVulnCount(Integer lowVulnCount) {
+        this.lowVulnCount = lowVulnCount;
+    }
+
+    public Integer getMediumVulnCount() {
+        return mediumVulnCount;
+    }
+
+    @Column
+    public void setMediumVulnCount(Integer mediumVulnCount) {
+        this.mediumVulnCount = mediumVulnCount;
+    }
+
+    public Integer getHighVulnCount() {
+        return highVulnCount;
+    }
+
+    @Column
+    public void setHighVulnCount(Integer highVulnCount) {
+        this.highVulnCount = highVulnCount;
+    }
+
+    @Column
+    public Integer getCriticalVulnCount() {
+        return criticalVulnCount;
+    }
+
+    public void setCriticalVulnCount(Integer criticalVulnCount) {
+        this.criticalVulnCount = criticalVulnCount;
+    }
 
 }
