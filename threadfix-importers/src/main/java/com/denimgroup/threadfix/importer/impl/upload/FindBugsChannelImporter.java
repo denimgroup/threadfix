@@ -210,7 +210,7 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
                     }
                 }
             }
-			
+
 			log.info("Scan time compare returning success.");
 			return ScanImportStatus.SUCCESSFUL_SCAN;
 		}

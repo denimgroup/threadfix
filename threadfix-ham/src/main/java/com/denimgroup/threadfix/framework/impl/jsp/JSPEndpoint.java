@@ -148,7 +148,12 @@ class JSPEndpoint extends AbstractEndpoint {
 
 	@Override
 	public int getLineNumberForParameter(String parameter) {
-		return paramToLineMap.get(parameter);
+        Integer value = paramToLineMap.get(parameter);
+        if (value == null) {
+            return 0;
+        } else {
+		    return value;
+        }
 	}
 	
 	

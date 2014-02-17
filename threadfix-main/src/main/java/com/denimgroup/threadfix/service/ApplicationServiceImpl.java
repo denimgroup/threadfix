@@ -136,12 +136,34 @@ public class ApplicationServiceImpl implements ApplicationService {
 				scanQueueService.deactivateTask(task);
 				
 		}
+
+        // Delete WafRules attached with application
+        deleteWafRules(application);
+
 		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
 		applicationDao.saveOrUpdate(application);
 	}
+
+    private void deleteWafRules(Application application) {
+        if (application.getWaf() != null &&
+                application.getVulnerabilities() != null) {
+            for (Vulnerability vulnerability : application.getVulnerabilities()) {
+                if (vulnerability != null && vulnerability.getWafRules() != null) {
+                    // Since WAF Rules can only have one vulnerability, just delete them.
+                    for (WafRule wafRule : vulnerability.getWafRules()) {
+                        log.debug("Deleting WAF Rule with ID " + wafRule.getId()
+                                + " because it was attached to the Vulnerability with ID " + vulnerability.getId() +
+                                " of application with ID " + application.getId());
+                        wafRuleDao.delete(wafRule);
+                    }
+                }
+                vulnerability.setWafRules(new ArrayList<WafRule>());
+            }
+        }
+    }
 	
 	private String getNewName(Application application) {
 		if (application != null) {
@@ -284,9 +306,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 	
 	@Override
-	public void updateWafRules(Application application, Integer dbApplicationWafId) {
+	public void updateWafRules(Application application, Integer otherWafId) {
 		if (application == null || application.getId() == null ||
-				dbApplicationWafId == null) {
+				otherWafId == null) {
 			return;
 		}
 
@@ -294,7 +316,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (application.getWaf() == null ||
 				application.getVulnerabilities() != null &&
 				 application.getWaf().getId() != null &&
-				 !dbApplicationWafId.equals(application.getWaf().getId())) {
+				 !otherWafId.equals(application.getWaf().getId())) {
 			
 			// Database vulns are still in session, also the vulns themselves
 			// shouldn't have changed since we were only editing the information

@@ -31,10 +31,7 @@ import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Application")
@@ -512,7 +509,7 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonIgnore
     // this uses VulnerabilityMarker[] to ease JSON transitions
-    public VulnerabilityMarker[] getMarkers() {
+    public List<VulnerabilityMarker> getMarkers() {
         List<VulnerabilityMarker> markers = new ArrayList<VulnerabilityMarker>();
 
         for (Vulnerability vulnerability : getVulnerabilities()) {
@@ -521,7 +518,7 @@ public class Application extends AuditableEntity {
             }
         }
 
-        return markers.toArray(new VulnerabilityMarker[markers.size()]);
+        return markers;
     }
 
     public static class Info {
@@ -558,4 +555,5 @@ public class Application extends AuditableEntity {
         if (!this.getVulnerabilities().contains(vuln))
             this.getVulnerabilities().add(vuln);
     }
+
 }

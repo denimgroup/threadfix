@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.repository.GitService;
@@ -41,6 +42,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -53,9 +56,6 @@ public class PluginRestController extends RestController {
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
-     * @param request
-     * @param appId
-     * @return
      */
 	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<VulnerabilityMarker[]> getMarkers(
@@ -75,15 +75,17 @@ public class PluginRestController extends RestController {
 			log.warn(message);
 			return RestResponse.failure(message);
 		}
-		
-		return RestResponse.success(application.getMarkers());
+
+        List<VulnerabilityMarker> markers = application.getMarkers();
+
+        Collections.sort(markers, new VulnMarkerComparator());
+
+		return RestResponse.success(markers.toArray(new VulnerabilityMarker[markers.size()]));
 	}
 
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getThreadFixApplications()
-     * @param request
-     * @return
      */
 	@RequestMapping(value="/applications", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
@@ -106,9 +108,6 @@ public class PluginRestController extends RestController {
 
     /**
      * @see com.denimgroup.threadfix.remote.PluginClient#getEndpoints(String)
-     * @param appId
-     * @param request
-     * @return
      */
 	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
@@ -169,5 +168,42 @@ public class PluginRestController extends RestController {
         }
 
         return endpointsInfos;
+    }
+
+    // TODO rewrite / move
+    class VulnMarkerComparator implements Comparator<VulnerabilityMarker> {
+
+        @Override
+        public int compare(VulnerabilityMarker marker1, VulnerabilityMarker marker2) {
+            int score = 0;
+
+            score += nullSafeCompare(marker1.getFilePath(), marker2.getFilePath()) * 4;
+            score += nullSafeStringToIntCompare(marker1.getLineNumber(), marker2.getLineNumber()) * 2;
+            score += nullSafeStringToIntCompare(marker1.getGenericVulnId(), marker2.getGenericVulnId());
+
+            return score;
+        }
+
+        int nullSafeCompare(String a, String b) {
+            if (a == null) {
+                return b == null ? 0 : -1;
+            } else if (b == null) {
+                return 1;
+            } else {
+                return a.compareTo(b);
+            }
+        }
+
+
+        int nullSafeStringToIntCompare(String a, String b) {
+            if (a == null || IntegerUtils.getIntegerOrNull(a) == null) {
+                return b == null ? 0 : -1;
+            } else if (b == null || IntegerUtils.getIntegerOrNull(b) == null) {
+                return 1;
+            } else {
+                return IntegerUtils.getIntegerOrNull(a).compareTo(
+                        IntegerUtils.getIntegerOrNull(b));
+            }
+        }
     }
 }

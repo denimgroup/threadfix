@@ -12,4 +12,5 @@ bin
 threadfix-enterprise
 threadfix-scanagent
 Build
-*.iml
+netrc
+scanagent.properties

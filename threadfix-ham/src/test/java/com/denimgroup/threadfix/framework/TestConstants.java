@@ -31,8 +31,15 @@ import static org.junit.Assert.assertTrue;
 public class TestConstants {
 	private TestConstants(){}
 
+
     private static final String VARIABLE_NAME = "PROJECTS_ROOT",
                         testRoot = System.getProperty(VARIABLE_NAME);
+
+    static {
+        if (System.getProperty(VARIABLE_NAME) == null) {
+            throw new IllegalStateException("You must define " + VARIABLE_NAME);
+        }
+    }
 
     // TODO move relevant files to the src/test/resources folder and use that
 	public static final String

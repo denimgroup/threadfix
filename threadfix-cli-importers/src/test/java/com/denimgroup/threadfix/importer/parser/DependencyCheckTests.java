@@ -26,10 +26,11 @@ package com.denimgroup.threadfix.importer.parser;
 
 import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.TestConstants;
+import com.denimgroup.threadfix.importer.TransactionalTest;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
 
-public class DependencyCheckTests implements TestConstants {
+public class DependencyCheckTests extends TransactionalTest implements TestConstants {
 
     // TODO fill in the rest
     public final static String[][] resultsVersion1_1 = new String[][] {

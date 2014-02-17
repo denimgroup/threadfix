@@ -95,6 +95,8 @@ class FullSourceFindingProcessor implements FindingProcessor {
 			}
 			
 		} else {
+
+            // let's try without the parameter in order to degrade gracefully
 			noSourceProcessor.process(finding);
 		}
 	}

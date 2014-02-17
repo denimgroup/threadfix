@@ -19,6 +19,8 @@ Directory listing,Directory listing,548
 Misconfiguration in LIMIT directive of .htaccess file,Misconfiguration in LIMIT directive of .htaccess file,650
 Publicly writable directory,Publicly writable directory,650
 Interesting response,Interesting response,204
+Interesting server response.,Interesting server response.,204
 Exposed localstart.asp page,Exposed localstart.asp page,200
 Access restriction bypass via X-Forwarded-For,Access restriction bypass via X-Forwarded-For,285
 HTTP TRACE,HTTP TRACE,693
+Allowed HTTP methods,Allowed HTTP methods,16

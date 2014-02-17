@@ -135,16 +135,34 @@ public class JSPMappings implements EndpointGenerator {
 
     void addParametersFromIncludedFiles() {
         for (Map.Entry<String, JSPEndpoint> endpointEntry : jspEndpointMap.entrySet()) {
-            if (endpointEntry != null && endpointEntry.getKey() != null &&
-                    includeMap.get(endpointEntry.getKey()) != null) {
-                for (String fileKey : includeMap.get(endpointEntry.getKey())) {
-                    if (jspEndpointMap.containsKey(fileKey)) {
-                        endpointEntry.getValue().getParameters().addAll(
-                                jspEndpointMap.get(fileKey).getParameters());
-                    }
-                }
+            if (endpointEntry != null && endpointEntry.getKey() != null) {
+                endpointEntry.getValue().getParameters().addAll(
+                        getParametersFor(endpointEntry.getKey(),
+                                new HashSet<String>(), new HashSet<String>()));
             }
         }
+    }
+
+    // TODO memoize results
+    Set<String> getParametersFor(String key, Set<String> alreadyVisited,
+                                        Set<String> soFar) {
+
+        if (alreadyVisited.contains(key)) {
+            return soFar;
+        }
+
+        alreadyVisited.add(key);
+
+        Set<String> params = new HashSet<>();
+
+        if (includeMap.get(key) != null) {
+            for (String fileKey : includeMap.get(key)) {
+                params.addAll(jspEndpointMap.get(fileKey).getParameters());
+                params.addAll(getParametersFor(fileKey, alreadyVisited, soFar));
+            }
+        }
+
+        return params;
     }
 
     @NotNull

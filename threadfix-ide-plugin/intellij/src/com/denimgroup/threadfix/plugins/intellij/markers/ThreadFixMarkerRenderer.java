@@ -37,6 +37,8 @@ import java.util.TreeSet;
  */
 class ThreadFixMarkerRenderer extends GutterIconRenderer {
 
+    private static int count = 0;
+
     private final Set<String> descriptions = new TreeSet<String>();
     private final int lineNumber;
 
@@ -45,6 +47,7 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
     public ThreadFixMarkerRenderer(@NotNull VulnerabilityMarker marker){
         descriptions.add(getInfo(marker));
         lineNumber = MarkerUtils.getLineNumber(marker);
+        System.out.println(count++);
     }
 
     @Override

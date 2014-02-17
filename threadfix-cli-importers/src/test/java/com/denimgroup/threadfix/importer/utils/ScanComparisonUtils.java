@@ -29,9 +29,12 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.cli.ScanParser;
 import com.denimgroup.threadfix.importer.cli.ScanSerializer;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -41,13 +44,30 @@ public class ScanComparisonUtils {
     @Autowired
     ScanParser scanParser;
 
+    @Autowired
+    ScannerMappingsUpdaterService mappingsUpdaterService;
+
+    private boolean needsUpdating = true;
+
     public static void compare(String[][] array, String filePath) {
         // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
         SpringConfiguration.getContext().getBean(ScanComparisonUtils.class).compareInternal(array, filePath);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void compareInternal(String[][] array, String filePath) {
+        if (needsUpdating) {
+            try {
+                List<String[]> lists = mappingsUpdaterService.updateChannelVulnerabilities();
+                System.out.println("Updated mappings.");
+                for (String[] items : lists) {
+                    System.out.println(Arrays.asList(items));
+                }
+                needsUpdating = false;
+            } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
+                throw new IllegalStateException("Encountered error while updating channel vulns. Fix it.", e);
+            }
+        }
         compare(array, scanParser.getScan(filePath));
     }
 
@@ -55,19 +75,39 @@ public class ScanComparisonUtils {
     private void compare(String[][] array, Scan actual) {
         SimpleScan expected = SimpleScan.fromStringArray(array);
 
+        List<SimpleFinding> findingList = new ArrayList<>();
+        Set<String> mappingErrors = new HashSet<>();
+
         for (SimpleFinding simpleFinding : expected) {
             boolean foundOne = false;
 
             for (Finding finding : actual) {
-                if (simpleFinding.matches(finding)) {
-                    foundOne = true;
+                try {
+                    if (simpleFinding.matches(finding)) {
+                        foundOne = true;
+                    }
+                } catch (ScannerMappingsIncompleteException e) {
+                    mappingErrors.add(e.getMessage());
                 }
             }
+
             if (!foundOne) {
-                System.out.println(ScanSerializer.toCSVString(actual));
+                findingList.add(simpleFinding);
+            }
+        }
+
+        assertTrue("We don't allow mapping errors. Specifically: " + mappingErrors, mappingErrors.isEmpty());
+
+        if (!findingList.isEmpty()) {
+            System.out.println("\nMissing mappings for:");
+            for (SimpleFinding finding : findingList) {
+                System.out.println(finding);
             }
 
-            assertTrue("Didn't find match for finding " + simpleFinding, foundOne);
+            System.out.println("\nHere's the data we received:");
+            System.out.println(ScanSerializer.toCSVString(actual));
         }
+
+        assertTrue("Didn't find match for " + findingList.size() + " finding(s)", findingList.isEmpty());
     }
 }
