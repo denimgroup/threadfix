@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.selenium.pages.*;
 import org.junit.After;
 import org.junit.Before;
@@ -38,10 +39,6 @@ import com.denimgroup.threadfix.data.entities.Organization;
 
 
 public class FilterTests extends BaseTest{
-
-    public FilterTests(String browser){
-        super(browser);
-    }
 
     private RemoteWebDriver driver;
     private static LoginPage loginPage;
@@ -70,19 +67,13 @@ public class FilterTests extends BaseTest{
     }
 
     // TODO test if you can edit an existing filter and ensure the results are correct
-    @Ignore
-    @Test
-    public void testEditVulnerabilityFilterTest() {
-
-    }
 
     @Test
     public void testApplicationFilters() {
         String teamName = getRandomString(8);
         String appName1 = getRandomString(8);
         String appName2 = getRandomString(8);
-        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
-                + fileSeparator + "testaspnet.xml";
+        String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -153,8 +144,7 @@ public class FilterTests extends BaseTest{
     public void testTeamFilters() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
-        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
-                + fileSeparator + "testaspnet.xml";
+        String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -216,8 +206,7 @@ public class FilterTests extends BaseTest{
         String teamName2 = getRandomString(8);
         String appName1 = getRandomString(8);
         String appName2 = getRandomString(8);
-        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
-                + fileSeparator + "testaspnet.xml";
+        String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
 
@@ -284,8 +273,7 @@ public class FilterTests extends BaseTest{
     public void layeredFilterTest() {
         String teamName1 = getRandomString(8);
         String appName1 = getRandomString(8);
-        String file = fileBase + "SupportingFiles" + fileSeparator + "Dynamic" + fileSeparator + "Acunetix"
-                + fileSeparator + "testaspnet.xml";
+        String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType1 = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";

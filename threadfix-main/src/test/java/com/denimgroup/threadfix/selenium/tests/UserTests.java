@@ -39,11 +39,6 @@ import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class UserTests extends BaseTest {
 
-	public UserTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-
 	private RemoteWebDriver driver;
 	private UserChangePasswordPage changePasswordPage;
 	private static LoginPage loginPage;

@@ -29,10 +29,6 @@ import java.util.Map;
 
 
 public class ScanContents extends BaseTest{
-	public ScanContents(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 
 	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<>();
 	static {
@@ -54,8 +50,16 @@ public class ScanContents extends BaseTest{
 		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
 		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
 	}
+
+    public static String getScanFilePath(String scannerName) {
+        return SCAN_FILE_MAP.get(scannerName);
+    }
+
+    public static String getScanFilePath() {
+        return SCAN_FILE_MAP.get("Acunetix WVS");
+    }
 	
-	public static String getScanFilePath(String category, String scannerName, String fileName) {
+	private static String getScanFilePath(String category, String scannerName, String fileName) {
         String fileSeparator = System.getProperty("file.separator");
 		String string = "SupportingFiles"+ fileSeparator + category  + fileSeparator + scannerName +
                 fileSeparator + fileName;

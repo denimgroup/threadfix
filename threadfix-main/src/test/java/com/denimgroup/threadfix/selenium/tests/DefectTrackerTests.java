@@ -38,10 +38,6 @@ import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
 public class DefectTrackerTests extends BaseTest {
 
-	public DefectTrackerTests(String browser) {
-		super(browser);
-	}
-
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 

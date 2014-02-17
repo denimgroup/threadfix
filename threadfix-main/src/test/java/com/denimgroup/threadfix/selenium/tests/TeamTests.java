@@ -37,11 +37,6 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import java.util.Map;
 
 public class TeamTests extends BaseTest {
-	
-	public TeamTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;

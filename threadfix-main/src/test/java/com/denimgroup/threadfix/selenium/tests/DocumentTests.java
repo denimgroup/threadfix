@@ -39,12 +39,6 @@ import static org.junit.Assert.assertTrue;
 //@RunWith (MultiThreadedRunner.class)
 public class DocumentTests extends BaseTest {
 
-	public DocumentTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-
-
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;

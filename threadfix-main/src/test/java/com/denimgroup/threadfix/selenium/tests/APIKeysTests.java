@@ -40,10 +40,6 @@ public class APIKeysTests extends BaseTest {
 	
 	private WebDriver driver;
 	
-	public APIKeysTests(String browser) {
-		super(browser);
-	}
-	
 	private static LoginPage loginPage;
 	
 	@Before

@@ -50,10 +50,6 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 
 public class WafTests extends BaseTest {
-	public WafTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;

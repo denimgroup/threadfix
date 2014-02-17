@@ -14,10 +14,6 @@ import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class VulnTests extends BaseTest {
-	public VulnTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 	
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;

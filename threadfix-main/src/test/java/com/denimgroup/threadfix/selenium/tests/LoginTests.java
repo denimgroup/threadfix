@@ -40,11 +40,6 @@ public class LoginTests extends BaseTest{
 	private WebDriver driver;
 	private static LoginPage loginPage;
 	
-	public LoginTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Before
 	public void init() {
 		super.init();

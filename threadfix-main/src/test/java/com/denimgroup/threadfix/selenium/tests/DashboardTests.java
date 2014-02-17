@@ -34,11 +34,6 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 
 public class DashboardTests extends BaseTest{
 
-	public DashboardTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-
     private static LoginPage loginPage;
 	private RemoteWebDriver driver;
 	private DashboardPage dashboardPage;

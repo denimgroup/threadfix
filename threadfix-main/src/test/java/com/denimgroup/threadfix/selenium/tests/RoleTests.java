@@ -41,12 +41,6 @@ import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 
 public class RoleTests extends BaseTest {
 
-	public RoleTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-
-
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 

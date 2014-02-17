@@ -39,10 +39,6 @@ import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class ApplicationTests extends BaseTest {
-	public ApplicationTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
@@ -456,35 +452,6 @@ public class ApplicationTests extends BaseTest {
 										.clickDeleteWaf(wafName1)
 										.clickDeleteWaf(wafName2)
 										.logout();
-	}
-
-	@Test
-	public void longNameDeformTest(){
-		String appName = getRandomString(60);
-		String teamName = getRandomString(8);
-		applicationDetailPage = loginPage.login("user", "password")
-										.clickOrganizationHeaderLink()
-										.clickAddTeamButton()
-										.setTeamName(teamName)
-										.addNewTeam()
-										.expandTeamRowByIndex(teamName)
-										.addNewApplication(teamName, appName, "", "Low")
-										.saveApplication(teamName)
-										.clickOrganizationHeaderLink()
-										.expandTeamRowByIndex(teamName)
-										.addNewApplication(teamName, appName, "", "Low")
-										.saveApplication(teamName)
-										.clickOrganizationHeaderLink()
-										.expandTeamRowByIndex(teamName)
-										.clickViewAppLink(appName,teamName);
-		Boolean boo = applicationDetailPage.getNameWidth()<=400;
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-							.clickViewTeamLink(teamName)
-							.clickDeleteButton()
-							.logout();
-		
-		assertTrue("Application name was too long",boo);
 	}
 
 	@Test

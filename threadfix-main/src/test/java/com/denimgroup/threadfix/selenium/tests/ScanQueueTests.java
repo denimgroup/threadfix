@@ -36,11 +36,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ScanQueueTests extends BaseTest {
 
-	public ScanQueueTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
-
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;

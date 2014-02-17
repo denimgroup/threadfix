@@ -36,10 +36,6 @@ import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
 
 public class RemoteProvidersTests extends BaseTest {
-	public RemoteProvidersTests(String browser) {
-		super(browser);
-		// TODO Auto-generated constructor stub
-	}
 
 	private RemoteWebDriver driver;
 
