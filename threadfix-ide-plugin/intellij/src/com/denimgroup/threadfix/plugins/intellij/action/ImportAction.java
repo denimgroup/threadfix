@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.plugins.intellij.rest.VulnerabilityMarkerService
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.util.List;
 
@@ -42,10 +43,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ImportAction extends AnAction {
+
+    private static final Logger log = Logger.getInstance(ImportAction.class);
+
     public void actionPerformed(AnActionEvent e) {
 
         if (ConfigDialog.show(e)) {
-            System.out.println(Constants.IMPORT_MARKERS_MESSAGE);
+            log.info(Constants.IMPORT_MARKERS_MESSAGE);
 
             List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getAllMarkers();
 
@@ -54,7 +58,7 @@ public class ImportAction extends AnAction {
             new ShowAction().actionPerformed(e);
 
         } else {
-            System.out.println(Constants.CANCEL_PRESSED_MESSAGE);
+            log.info(Constants.CANCEL_PRESSED_MESSAGE);
         }
     }
 

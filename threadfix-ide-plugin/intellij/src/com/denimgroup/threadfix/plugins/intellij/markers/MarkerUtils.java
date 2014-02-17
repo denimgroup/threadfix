@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFacto
 import com.denimgroup.threadfix.plugins.intellij.toolwindow.VulnerabilitiesTableModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -52,6 +53,8 @@ import java.util.Set;
 public class MarkerUtils {
 
     private MarkerUtils(){}
+
+    private static final Logger log = Logger.getInstance(MarkerUtils.class);
 
     public static void createMarkers(Collection<VulnerabilityMarker> markers, Project project) {
         createMarkers(markers, project, true);
@@ -85,7 +88,7 @@ public class MarkerUtils {
                         map.get(shortClassName).iterator().next());
                 tableModel.addRow(toStringArray(marker));
             } else {
-                System.out.println("The file that wasn't found was " + shortClassName + ", full path was " + marker.getFilePath());
+                log.info("Failed to attach marker to class " + shortClassName + ", full path was " + marker.getFilePath());
             }
         }
     }

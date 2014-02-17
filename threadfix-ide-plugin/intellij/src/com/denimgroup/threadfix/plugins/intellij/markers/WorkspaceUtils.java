@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.markers;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -43,6 +44,8 @@ import java.util.*;
  */
 public class WorkspaceUtils {
 
+    private static final Logger log = Logger.getInstance(WorkspaceUtils.class);
+
     private WorkspaceUtils(){}
 
     public static void openFile(Project project, VirtualFile file, int lineNumber) {
@@ -59,10 +62,10 @@ public class WorkspaceUtils {
             if (file.isValid()) {
                 FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, offset), true);
             } else {
-                System.out.println("VirtualFile.isValid() returned false. Possibly trying to open a deleted file.");
+                log.error("VirtualFile.isValid() returned false. Possibly tried to open a deleted file.");
             }
         } else {
-            System.out.println("Unable to retrieve a Document for the VirtualFile " + file.getName() + ".");
+            log.error("Unable to retrieve a Document for the VirtualFile " + file.getName() + ".");
         }
     }
 
