@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 import com.denimgroup.threadfix.plugins.intellij.markers.MarkerUtils;
 import com.denimgroup.threadfix.plugins.intellij.markers.WorkspaceUtils;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -35,6 +36,8 @@ import java.io.IOException;
 import java.net.URI;
 
 public class VulnerabilitiesTableModel extends DefaultTableModel {
+
+    private static final Logger log = Logger.getInstance(VulnerabilitiesTableModel.class);
 
     public VulnerabilitiesTableModel() {
         super(initialObjects, headers);
@@ -110,10 +113,10 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
                     lineNumber--;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Got NumberFormatException for String " + stringLineNumber);
+                log.error("Got NumberFormatException for String " + stringLineNumber, e);
             }
         } else {
-            System.out.println("Line number was not numeric. This indicates an error in the ThreadFix code. " +
+            log.error("Line number (" + stringLineNumber + "was not numeric. This indicates an error in the ThreadFix code. " +
                     "Please report this to the developers if you see it.");
         }
 
@@ -142,14 +145,12 @@ public class VulnerabilitiesTableModel extends DefaultTableModel {
                 URI uri = URI.create(address);
                 desktop.browse(uri);
             } catch (IllegalArgumentException e) {
-                System.out.println("Encountered IllegalArgumentException passing " + address + "to the operating system.");
-                e.printStackTrace();
+                log.error("Encountered IllegalArgumentException passing " + address + "to the operating system.", e);
             } catch (IOException e) {
-                System.out.println("Encountered IOException trying to open " + address);
-                e.printStackTrace();
+                log.error("Encountered IOException trying to open " + address, e);
             }
         } else {
-            System.out.println("Desktop was null or browsing is not supported.");
+            log.error("Desktop was null or browsing is not supported.");
         }
     }
 }
