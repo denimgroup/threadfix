@@ -493,6 +493,10 @@ th.headerSortDown {
 	background-color:#FFF;
 }
 
+.white-inner-table thead tr th {
+    border-top:none;
+}
+
 .table th table th, .table td table td {
 	border-top:0px;
 }
@@ -875,4 +879,66 @@ div.box-shadow {
 
 .modal-form-table tr {
     text-align: left;
+}
+
+/* Defines a spinner */
+
+.spinner {
+    display: block;
+    width: 10px;
+    height: 10px;
+    position: relative;
+
+    margin-top:3px;
+    margin-right:4px;
+    float:left;
+
+    border: 2px solid rgba(255,255,255,255);
+    border-top-color: transparent;
+    border-radius: 100%;
+
+    -webkit-animation: spin 1s infinite linear;
+    -moz-animation: spin 1s infinite linear;
+    -ms-animation: spin 1s infinite linear;
+    -o-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+}
+
+.spinner:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -5px;
+    left: 0px;
+
+    border: 4px solid transparent;
+    border-bottom-color: rgba(255,255,255,255);
+
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+@-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+    to { -moz-transform: rotate(360deg); }
+}
+
+@-ms-keyframes spin {
+    to { -ms-transform: rotate(360deg); }
+}
+
+@-o-keyframes spin {
+    to { -o-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

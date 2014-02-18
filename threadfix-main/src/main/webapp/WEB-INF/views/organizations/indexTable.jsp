@@ -1,4 +1,13 @@
 
+<div style="padding-bottom:10px">
+    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+        <a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal"
+           data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
+    </security:authorize>
+    <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand()">Expand All</a>
+    <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
+</div>
+
 <table ng-show="teams" class="table table-hover white-inner-table">
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <thead>
@@ -17,7 +26,6 @@
         </tr>
     </thead>
     <tbody>
-
         <spring:url value="/getReport" var="reportUrl"/>
 
         <tr ng-repeat-start="team in teams" id="teamRow{{ team.id }}" class="pointer" data-target-div="teamInfoDiv{{ team.id }}"
@@ -29,12 +37,12 @@
             <td ng-click="toggle(team)" id="teamName{{ $index }}">
                 <div style="word-wrap: break-word;width:300px;text-align:left;">{{ team.name }}</div>
             </td>
-            <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numCriticalVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numHighVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numMediumVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numLowVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ $index }}">{{ team.vulnCounts[5] }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ $index }}">{{ team.totalVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numCriticalVulns{{ $index }}">{{ team.criticalVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numHighVulns{{ $index }}">{{ team.highVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numMediumVulns{{ $index }}">{{ team.mediumVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numLowVulns{{ $index }}">{{ team.lowVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ $index }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
                 <a id="addApplicationModalButton{{ $index }}" ng-click="openAppModal(team)" class="btn btn-default">
@@ -46,10 +54,13 @@
         </tr>
 
 
-        <tr ng-repeat-end class="grey-background">
+        <tr ng-repeat-end class="grey-background" ng-init="teamIndex=$index">
             <td colspan="11">
 
-                <div collapse="!team.expanded" id="teamInfoDiv{{ team.id }}" class="collapse applicationSection" ng-class="{ expanded: team.expanded }">
+                <div collapse="!team.expanded"
+                         id="teamInfoDiv{{ team.id }}"
+                         class="collapse applicationSection"
+                         ng-class="{ expanded: team.expanded }">
                     <div bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}">
                         Loading...
                     </div>
@@ -72,7 +83,7 @@
                                     <th style="width:110px;"></th>
                                 </tr>
                             </thead>
-                            <tr class="app-row" ng-repeat="app in team.applications | filter:app.active">
+                            <tr class="app-row" ng-repeat="app in team.applications | filter:app.active" ng-init="appIndex=$index">
                                 <td style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
                                         <a id="applicationLink{{ $index }}-" href="">
@@ -80,15 +91,19 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td class="centered" id="numTotalVulns{{ $index }}">1</td>
-                                <td class="centered" id="numCriticalVulns{{ $index }}">2</td>
-                                <td class="centered" id="numHighVulns{{ $index }}">3</td>
-                                <td class="centered" id="numMediumVulns{{ $index }}">4</td>
-                                <td class="centered" id="numLowVulns{{ $index }}">5</td>
-                                <td class="centered" id="numInfoVulns{{ $index }}">6</td>
+                                <td class="centered" id="numTotalVulns{{ $index }}">{{ app.totalVulnCount }}</td>
+                                <td class="centered" id="numCriticalVulns{{ $index }}">{{ app.criticalVulnCount }}</td>
+                                <td class="centered" id="numHighVulns{{ $index }}">{{ app.highVulnCount }}</td>
+                                <td class="centered" id="numMediumVulns{{ $index }}">{{ app.mediumVulnCount }}</td>
+                                <td class="centered" id="numLowVulns{{ $index }}">{{ app.lowVulnCount }}</td>
+                                <td class="centered" id="numInfoVulns{{ $index }}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
                                     <!-- TODO figure out nested indices -->
-                                    <a id="uploadScanModalLink{{ $index }}-" href="#uploadScan{{ app.id }}" role="button" class="btn" data-toggle="modal">Upload Scan</a>
+                                    <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}"
+                                       href="#uploadScan{{ app.id }}" role="button"
+                                       class="btn" data-toggle="modal">
+                                        Upload Scan
+                                    </a>
                                     <%--<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>--%>
                                 </td>
                             </tr>

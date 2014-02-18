@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
@@ -77,9 +78,10 @@ public class OrganizationsController {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
+	public String index(Model model) {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
+        model.addAttribute("applicationTypes", FrameworkType.values());
 		return "organizations/index";
 	}
 	
@@ -100,8 +102,6 @@ public class OrganizationsController {
 
 		// for quick start
 		model.addAttribute("channels", channelTypeService.getChannelTypeOptions(null));
-		
-		applicationService.generateVulnerabilityReports(organizations);
 		model.addAttribute(organizations);
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
@@ -131,12 +131,11 @@ public class OrganizationsController {
 		} else {
 			ModelAndView mav = new ModelAndView("organizations/detail");
             PermissionUtils.addPermissions(mav, orgId, null,
-					Permission.CAN_MANAGE_APPLICATIONS,
-					Permission.CAN_MANAGE_TEAMS,
-					Permission.CAN_MODIFY_VULNERABILITIES,
-					Permission.CAN_GENERATE_REPORTS,
-					Permission.CAN_MANAGE_USERS);
-			applicationService.generateVulnerabilityReports(organization);
+                    Permission.CAN_MANAGE_APPLICATIONS,
+                    Permission.CAN_MANAGE_TEAMS,
+                    Permission.CAN_MODIFY_VULNERABILITIES,
+                    Permission.CAN_GENERATE_REPORTS,
+                    Permission.CAN_MANAGE_USERS);
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
 			mav.addObject("application", new Application());
@@ -204,12 +203,13 @@ public class OrganizationsController {
 		}
 	}
 	
-	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
-	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
+	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
+        produces="application/json")
+	public @ResponseBody RestResponse<Application> submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-			return "403";
+			return RestResponse.failure("Permissions Failure");
 		}
 		
 		Organization team = organizationService.loadOrganization(orgId);
@@ -227,15 +227,13 @@ public class OrganizationsController {
 		if (submitResult.equals("Success")) {
 			if (detailPage) {
 				status.setComplete();
-				model.addAttribute("contentPage", "/organizations/" + orgId);
-				return "ajaxRedirectHarness";
-			} else {
-				return teamTable(model,request);
 			}
+
+            return RestResponse.success(application);
 		} else {
 			model.addAttribute("organization", team);
 			
-			return submitResult;
+			return RestResponse.failure(submitResult);
 		}
 	}
 	
@@ -246,7 +244,7 @@ public class OrganizationsController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
-		Organization org = null;
+		Organization org;
 		if (application.getOrganization() == null) {
 			org = organizationService.loadOrganization(orgId);
 			if (org != null) {
@@ -289,5 +287,5 @@ public class OrganizationsController {
 			return "Success";
 		}
 	}
-		
+
 }

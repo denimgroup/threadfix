@@ -2,6 +2,7 @@
 
 <head>
 	<title>Home</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/newApplicationModalController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams-page.js"></script>
 </head>
 
@@ -10,28 +11,21 @@
 
     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
         <div id="myTeamModal" class="modal hide fade" tabindex="-1"
-             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                 role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div ng-show='teams' id="formDiv">
                 <%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
             </div>
         </div>
     </security:authorize>
 
-    <div ng-controller="ApplicationsIndexController">
+    <!-- Get the CSRF token so we can use it everywhere -->
+    <spring:url value="/" var="emptyUrl"/>
+
+    <div ng-controller="ApplicationsIndexController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
         <div ng-hide='teams' style="text-align: center">
             {{ progressText }}
         </div>
         <%@ include file="/WEB-INF/views/organizations/indexTable.jsp" %>
     </div>
-
-
-	<spring:url value="/organizations/teamTable" var="tableUrl"/>
-	<div id="teamTable" data-url="<c:out value="${ tableUrl }"/>" style="margin-bottom:8px;margin-top:10px;">
-		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
-			<a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" 
-					data-toggle="modal">Add Team</a>
-		</security:authorize>
-	</div>
-	
 
 </body>
