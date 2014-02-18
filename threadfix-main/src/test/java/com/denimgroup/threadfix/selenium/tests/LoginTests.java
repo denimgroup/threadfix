@@ -34,7 +34,6 @@ import org.junit.runners.Parameterized;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
-@RunWith(Parameterized.class)
 public class LoginTests extends BaseTest{
 	
 	private WebDriver driver;

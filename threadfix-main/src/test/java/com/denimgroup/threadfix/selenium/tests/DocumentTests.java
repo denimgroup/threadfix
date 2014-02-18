@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
 
-//@RunWith (MultiThreadedRunner.class)
 public class DocumentTests extends BaseTest {
 
 	private RemoteWebDriver driver;

@@ -34,8 +34,6 @@ import org.openqa.selenium.WebDriver;
 import com.denimgroup.threadfix.selenium.pages.ApiKeysIndexPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
-//@RunWith (MultiThreadedRunner.class)
-@RunWith(Parameterized.class)
 public class APIKeysTests extends BaseTest {
 	
 	private WebDriver driver;
