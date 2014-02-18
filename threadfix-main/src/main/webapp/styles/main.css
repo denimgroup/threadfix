@@ -866,5 +866,13 @@ div.box-shadow {
 .tableReportDiv {
     float:right;
     margin-right:-20px;
-    margin-top:0px;
+    margin-top:0;
+}
+
+.modal-form-table tr td {
+    padding: 5px;
+}
+
+.modal-form-table tr {
+    text-align: left;
 }

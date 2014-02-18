@@ -1,10 +1,5 @@
 
-<div class="{{showTable}}" style="padding-bottom:10px">
-    <a class="btn" id="expandAllButton">Expand All</a>
-    <a class="btn" id="collapseAllButton">Collapse All</a>
-</div>
-
-<table ng-class="{showTable: $scope.teams.size < 0}" class="table table-hover white-inner-table">
+<table ng-show="teams" class="table table-hover white-inner-table">
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <thead>
         <tr>

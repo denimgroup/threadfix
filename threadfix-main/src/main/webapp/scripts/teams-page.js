@@ -48,9 +48,13 @@ myAppModule.directive('bindHtmlUnsafe', function( $compile ) {
 myAppModule.controller('NewApplicationModalController', function ($scope, $modalInstance, team) {
 
     $scope.application = {
-        team: team,
+        team: {
+            id: team.id,
+            name: team.name
+        },
+        url: 'http://',
         applicationCriticality: {
-            id: 1
+            id: 2
         },
         frameworkType: {
             id: 1
@@ -122,17 +126,24 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     };
 
     var loadGraph = function(team) {
-        $scope.progressText = 'Loading ' + team.graphUrl;
+
+        var failureDiv = '<div class="" style="margin-top:10px;margin-right:20px;width:300px;height:200px;text-align:center;line-height:150px;">Failed to load report.</div>';
+
         threadfixAPIService.loadReport(team).
             success(function(data, status, headers, config) {
-                $scope.progressText = 'Received ' + data;
 
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
-                team.report = matches[1];
+                if (matches !== null && matches[1] !== null) {
+                    team.report = matches[1];
+                } else {
+                    team.report = failureDiv;
+                }
             }).
             error(function(data, status, headers, config) {
-                $scope.progressText = "Failed to load report.";
+
+                // TODO improve error handling and pass something back to the users
+                team.report = failureDiv;
             });
     }
 
