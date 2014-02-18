@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.denimgroup.threadfix.plugins.intellij.toolwindow.ThreadFixWindowFactory;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,8 +38,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
  * To change this template use File | Settings | File Templates.
  */
 public class ClearAction extends AnAction {
+
+    private static final Logger log = Logger.getInstance(ClearAction.class);
+
     public void actionPerformed(AnActionEvent e) {
-        System.out.println(Constants.CLEAR_MARKERS_MESSAGE);
+        log.info(Constants.CLEAR_MARKERS_MESSAGE);
         MarkerUtils.removeMarkers(e);
 
         ThreadFixWindowFactory.getTableModel().clear();

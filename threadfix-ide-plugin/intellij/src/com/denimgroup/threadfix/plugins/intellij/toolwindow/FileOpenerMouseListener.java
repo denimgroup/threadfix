@@ -23,11 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.plugins.intellij.toolwindow;
 
+import com.intellij.openapi.diagnostic.Logger;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 class FileOpenerMouseListener implements MouseListener {
+
+    private static final Logger log = Logger.getInstance(FileOpenerMouseListener.class);
 
     private final VulnerabilitiesTableModel model;
 
@@ -43,7 +47,7 @@ class FileOpenerMouseListener implements MouseListener {
             final int row    = target.getSelectedRow();
             final int column = target.getSelectedColumn();
 
-            System.out.println("Got (" + row + ", " + column + ")");
+            log.debug("Received click event for (" + row + ", " + column + ")");
 
             model.doAction(row, column);
 

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.SimpleTextAttributes;
@@ -45,6 +46,8 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 class CheckBoxTreeWrapper {
+
+    private static final Logger log = Logger.getInstance(CheckBoxTreeWrapper.class);
 
     public static class Result {
         boolean success = false;
@@ -157,7 +160,7 @@ class CheckBoxTreeWrapper {
 
         Result result = dialog.showAndGetResult();
 
-        System.out.println("Result was " + result.success);
+        log.info("Result was " + result.success);
 
         return result;
     }

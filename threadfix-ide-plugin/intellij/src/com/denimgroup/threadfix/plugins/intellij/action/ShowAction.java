@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 
@@ -34,9 +35,12 @@ import com.intellij.openapi.wm.ToolWindowManager;
  * Created by mac on 12/12/13.
  */
 public class ShowAction extends AnAction {
+
+    private static final Logger log = Logger.getInstance(ShowAction.class);
+
     public void actionPerformed(AnActionEvent e) {
 
-        System.out.println(Constants.SHOW_TOOL_WINDOW_MESSAGE);
+        log.info(Constants.SHOW_TOOL_WINDOW_MESSAGE);
 
         Project project = e.getData(PlatformDataKeys.PROJECT);
 

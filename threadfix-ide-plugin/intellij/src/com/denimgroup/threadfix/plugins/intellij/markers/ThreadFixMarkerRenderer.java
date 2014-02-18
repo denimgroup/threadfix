@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.plugins.intellij.markers;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.IconLoader;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +38,6 @@ import java.util.TreeSet;
  */
 class ThreadFixMarkerRenderer extends GutterIconRenderer {
 
-    private static int count = 0;
-
     private final Set<String> descriptions = new TreeSet<String>();
     private final int lineNumber;
 
@@ -47,7 +46,6 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
     public ThreadFixMarkerRenderer(@NotNull VulnerabilityMarker marker){
         descriptions.add(getInfo(marker));
         lineNumber = MarkerUtils.getLineNumber(marker);
-        System.out.println(count++);
     }
 
     @Override
