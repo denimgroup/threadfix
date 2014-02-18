@@ -35,9 +35,17 @@ threadfixModule.factory('threadFixModalService', function($http) {
                 url: url,
                 data : data,
                 contentType : "application/x-www-form-urlencoded",
-                dataType : "text",
+                dataType : "text"
             });
         };
 
         return threadFixModalService;
     });
+
+threadfixModule.factory('focus', function ($rootScope, $timeout) {
+    return function(name) {
+        $timeout(function (){
+            $rootScope.$broadcast('focusOn', name);
+        });
+    }
+});

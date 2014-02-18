@@ -1,8 +1,7 @@
 
 <div style="padding-bottom:10px">
     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
-        <a id="addTeamModalButton" href="#myTeamModal" role="button" class="btn" data-toggle="modal"
-           data-default-show="<c:out value="${ showTeamModal }"/>">Add Team</a>
+        <a id="addTeamModalButton" ng-click="openTeamModal()" class="btn">Add Team</a>
     </security:authorize>
     <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand()">Expand All</a>
     <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
@@ -10,6 +9,7 @@
 
 <table ng-show="teams" class="table table-hover white-inner-table">
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+    <%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
     <thead>
         <tr>
             <th style="width:8px"></th>

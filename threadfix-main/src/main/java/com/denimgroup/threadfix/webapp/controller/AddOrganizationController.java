@@ -23,10 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,17 +36,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
@@ -73,23 +69,24 @@ public class AddOrganizationController {
 		dataBinder.setAllowedFields("name");
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public String newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
+	@RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
+            produces="application/json")
+	public @ResponseBody RestResponse<Organization> newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
 			SessionStatus status, Model model, HttpServletRequest request) {
 		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
 		if (result.hasErrors()) {
-			return "ajaxFailureHarness";
+			return RestResponse.failure("Failed to add the team.");
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
-				return "ajaxFailureHarness";
+				return RestResponse.failure("Failed to add the team.");
 			}
 			
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null) {
 				result.rejectValue("name", "errors.nameTaken");
-				return "ajaxFailureHarness";
+				return RestResponse.failure("Failed to add the team.");
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -102,7 +99,7 @@ public class AddOrganizationController {
                     "Team " + organization.getName() + " has been created successfully.");
 			
 			status.setComplete();
-			return "redirect:/organizations/teamTable";
+			return RestResponse.success(organization);
 		}
 	}
 }

@@ -4,6 +4,10 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
     $scope.progressText = 'Loading...';
 
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
+    };
+
     threadfixAPIService.getTeams().
         success(function(data, status, headers, config) {
             $scope.progressText = 'Got stuff.';
@@ -51,9 +55,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         modalInstance.result.then(function (newApplication) {
             team.applications.push(newApplication);
 
-            team.applications.sort(function(a,b) {
-                return a.name.localeCompare(b.name);
-            });
+            team.applications.sort(nameCompare);
 
             team.expanded = true;
             loadGraph(team);
@@ -101,6 +103,29 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     team.report = failureDiv;
                 });
         }
+    }
+
+    $scope.openTeamModal = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'newTeamModal.html',
+            controller: 'NewTeamModalController',
+            resolve: {
+                csrfToken: function() {
+                    return $scope.csrfToken;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (newTeam) {
+            $scope.teams.push(newTeam);
+
+            $scope.teams.sort(nameCompare);
+
+            $scope.successMessage = "Successfully added team " + newTeam.name;
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     }
 
 });

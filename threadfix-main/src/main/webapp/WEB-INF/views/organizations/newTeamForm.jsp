@@ -1,16 +1,41 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="newTeamModal.html">
+    <div class="modal-header">
+        <h4 id="myModalLabel">
+            New Team
+        </h4>
+    </div>
 
-<div class="modal-header">
-	<h4 id="myModalLabel">New Team</h4>
-</div>
-<spring:url value="/organizations/modalAdd" var="saveUrl"/>
-<form:form style="margin-bottom:0px;" id="organizationForm" modelAttribute="organization" method="post" autocomplete="off" action="${fn:escapeXml(saveUrl)}">
-	<div class="modal-body">
-		Name <form:input style="margin-bottom:0px;margin-left:5px;" id="teamNameInput" path="name" cssClass="focus clear-after-submit" size="50" maxlength="60" />
-			<form:errors path="name" cssClass="errors" />
-	</div>
-	<div class="modal-footer">
-		<button id="closeTeamModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitTeamModal" class="modalSubmit btn btn-primary" data-success-div="teamTable">Add Team</a>
-	</div>
-</form:form>
+    <form id="newTeamForm" name='form'>
+        <div class="modal-body input-group">
+
+            <table class="modal-form-table">
+                <tr class="left-align">
+                    <td>Name</td>
+                    <td>
+                        <input type='text' focus-on="open" name='name' ng-model="team.name" required/>
+                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <span style="float:left">{{ error }}</span>
+
+            <button class="btn" ng-click="cancel()">Close</button>
+            <button id="loadingButton"
+                    disabled="disabled"
+                    class="btn btn-primary"
+                    ng-show="loading">
+                <span class="spinner"></span>
+                Submitting
+            </button>
+            <button id="addApplicationButton"
+                    ng-class="{ disabled : form.$invalid }"
+                    class="btn btn-primary"
+                    ng-mouseenter="form.name.$dirty = true"
+                    ng-hide="loading"
+                    ng-click="ok(form.$valid)">Add Team</button>
+        </div>
+    </form>
+</script>

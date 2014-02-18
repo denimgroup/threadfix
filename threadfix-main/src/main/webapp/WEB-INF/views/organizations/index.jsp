@@ -3,6 +3,7 @@
 <head>
 	<title>Home</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/newApplicationModalController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/newTeamModalController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams-page.js"></script>
 </head>
 
