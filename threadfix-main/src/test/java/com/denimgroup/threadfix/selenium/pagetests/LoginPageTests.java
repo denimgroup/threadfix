@@ -36,11 +36,7 @@ import com.denimgroup.threadfix.selenium.pages.LoginPage;
 public class LoginPageTests extends PageBaseTest{
 	private WebDriver driver;
 	private static LoginPage loginPage;
-	
-	public LoginPageTests(String browser) {
-		super(browser);
-	}
-	
+
 	@Before
 	public void init() {
 		super.init();

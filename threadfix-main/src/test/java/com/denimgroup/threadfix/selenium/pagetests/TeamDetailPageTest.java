@@ -19,10 +19,6 @@ public class TeamDetailPageTest extends PageBaseTest {
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
 	
-	public TeamDetailPageTest(String browser) {
-		super(browser);
-	}
-	
 	@Before
 	public void init() {
 		super.init();

@@ -48,76 +48,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 
-@RunWith(Parameterized.class)
 public class PageBaseTest {
 	
 	private final  String USER = "user";
 	private final  String PASSWORD = "password";
-	protected final Log log = LogFactory.getLog(this.getClass());
 	private WebDriver driver;
-	
-	@Parameters
-	//@Parameters(name="Browser: {0}")
-	public static Collection<String[]> drivers() {
-		Collection<String[]> params = new ArrayList<String[]>();
-		String  ff = System.getProperty("FIREFOX");
-		String  chrome = System.getProperty("CHROME");
-		String  ie = System.getProperty("IE");
-		if(ff != null && ff.equals("true")){
-			String[] f = {"firefox"};
-			params.add(f);
-		}
-		if(chrome != null && chrome.equals("true")){
-			String[] c = {"chrome"};
-			params.add(c);
-		}
-		
-		if(ie != null && ie.equals("true")){
-			String[] e = {"IE"};
-			params.add(e);
-		}
-		return params;
-	}
-	
-//	@Before
-//	public void before() {
-//	}
-//
-//	@After
-//	public void after() {
-//        driver.quit();
-//	}
-//
-//	@Test
-//	public void blank(){
-//		assertTrue(true);
-//	}
-	
-	
-	public PageBaseTest(String browser){
-		if(browser.equals("chrome")){
-			String location = PageBaseTest.class.getClassLoader().getResource("Drivers").getPath();
-			if(System.getProperty("os.name").startsWith("Windows")){
-				location = location + "/chromedriver.exe";
-			}else{
-				location = location + "/chromedriver";
-			}
-			System.setProperty("webdriver.chrome.driver",location);
-			driver = new ChromeDriver();
 
-		}
-		
-		if(browser.equals("firefox")){
+	public PageBaseTest(){
 			driver = new FirefoxDriver();
-		}
-		
-		if(browser.equals("IE")){
-			String location = PageBaseTest.class.getClassLoader().getResource("Drivers").getFile();
-			location = location + "/IEDriverServer.exe";
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-			driver = new InternetExplorerDriver(capabilities); 
-		}
 	}
 	
 	
@@ -129,7 +67,6 @@ public class PageBaseTest {
 	}
 	
 	public WebDriver getDriver(){
-		log.debug("Getting Driver");
 		return driver;
 	}
 	

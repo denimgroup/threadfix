@@ -36,10 +36,6 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 
 public class DashboardPageTests extends PageBaseTest {
 
-	public DashboardPageTests(String browser) {
-		super(browser);
-	}
-
 //	private static LoginPage loginPage;
 //	private RemoteWebDriver driver;
 	private DashboardPage dashboardPage;

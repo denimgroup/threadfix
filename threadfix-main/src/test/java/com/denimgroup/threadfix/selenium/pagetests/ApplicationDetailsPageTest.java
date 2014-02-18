@@ -11,10 +11,6 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class ApplicationDetailsPageTest extends PageBaseTest {
 	
-	public ApplicationDetailsPageTest(String browser){
-		super(browser);
-	}
-	
 	private  DashboardPage dashboardPage;
 	private  boolean build;
 	private  String teamName = getRandomString(8);

@@ -9,10 +9,6 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class ApplicationIndexPageTest extends PageBaseTest {
 	
-	public ApplicationIndexPageTest(String browser){
-		super(browser);
-	}
-	
 	private  DashboardPage dashboardPage;
 	private  boolean build;
 	private  String teamName = getRandomString(8);
@@ -302,7 +298,7 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		String rtApp = "Demo Site BE";
 		String whKey = System.getProperty("WHITEHAT_KEY");
 		if(whKey == null){
-			return false;
+			whKey = "153473b2-5448-4b8d-b8ec-c70a9f4f13cf";
 		}
 		//add team
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink()
