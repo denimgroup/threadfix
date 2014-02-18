@@ -128,6 +128,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         return channelType;
     }
 
+    @Nullable
 	protected String inputFileName;
 	
 	protected ZipFile zipFile;
@@ -178,7 +179,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		
 		closeInputStream(inputStream);
 
-        if (shouldDeleteAfterParsing) {
+        if (shouldDeleteAfterParsing && inputFileName != null) {
             File file = new File(inputFileName);
             if (file.exists()) {
                 if (!file.delete()) {
@@ -221,8 +222,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 *            The URL location of the vulnerability.
 	 * @param param
 	 *            The vulnerable parameter (optional)
-	 * @throws java.security.NoSuchAlgorithmException
-	 *             Thrown if the MD5 algorithm cannot be found.
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
 	protected String hashFindingInfo(String type, String url, String param) {
@@ -420,7 +419,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 * If the channelType is set and the vulnerability code is in the DB this
 	 * method will pull it up.
 	 * 
-	 * @param code
+	 * @param code channel vulnerability's code
 	 * @return vulnerability from the DB
 	 */
 
@@ -507,7 +506,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
 			out = new FileOutputStream(diskZipFile);
 			byte buf[] = new byte[1024];
-			int len = 0;
+			int len;
 
 			while ((len = inputStream.read(buf)) > 0) {
 				out.write(buf, 0, len);
