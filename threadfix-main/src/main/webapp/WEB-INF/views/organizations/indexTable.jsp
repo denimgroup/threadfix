@@ -49,7 +49,7 @@
                     Add Application
                 </a>
             <td>
-                <a style="text-decoration:none" id="organizationLink{{ $index }}" href="">View Team</a>
+                <a style="text-decoration:none" id="organizationLink{{ $index }}" href="/organizations/{{ team.id }}{{ csrfToken }}">View Team</a>
             </td>
         </tr>
 
@@ -86,21 +86,22 @@
                             <tr class="app-row" ng-repeat="app in team.applications | filter:app.active" ng-init="appIndex=$index">
                                 <td style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
-                                        <a id="applicationLink{{ $index }}-" href="">
+                                        <a id="applicationLink{{ teamIndex }}-{{ appIndex}}"
+                                           href="/organizations/{{ team.id }}/applications/{{ app.id }}{{ csrfToken }}">
                                             {{ app.name }}
                                         </a>
                                     </div>
                                 </td>
-                                <td class="centered" id="numTotalVulns{{ $index }}">{{ app.totalVulnCount }}</td>
-                                <td class="centered" id="numCriticalVulns{{ $index }}">{{ app.criticalVulnCount }}</td>
-                                <td class="centered" id="numHighVulns{{ $index }}">{{ app.highVulnCount }}</td>
-                                <td class="centered" id="numMediumVulns{{ $index }}">{{ app.mediumVulnCount }}</td>
-                                <td class="centered" id="numLowVulns{{ $index }}">{{ app.lowVulnCount }}</td>
-                                <td class="centered" id="numInfoVulns{{ $index }}">{{ app.infoVulnCount }}</td>
+                                <td class="centered" id="numTotalVulns{{ teamIndex }}-{{ appIndex}}">{{ app.totalVulnCount }}</td>
+                                <td class="centered" id="numCriticalVulns{{ teamIndex }}-{{ appIndex}}">{{ app.criticalVulnCount }}</td>
+                                <td class="centered" id="numHighVulns{{ teamIndex }}-{{ appIndex}}">{{ app.highVulnCount }}</td>
+                                <td class="centered" id="numMediumVulns{{ teamIndex }}-{{ appIndex}}">{{ app.mediumVulnCount }}</td>
+                                <td class="centered" id="numLowVulns{{ teamIndex }}-{{ appIndex}}">{{ app.lowVulnCount }}</td>
+                                <td class="centered" id="numInfoVulns{{ teamIndex }}-{{ appIndex}}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
                                     <!-- TODO figure out nested indices -->
                                     <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}"
-                                       href="#uploadScan{{ app.id }}" role="button"
+                                       role="button"
                                        class="btn" data-toggle="modal">
                                         Upload Scan
                                     </a>

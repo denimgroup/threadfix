@@ -25,6 +25,17 @@
         <div ng-hide='teams' style="text-align: center">
             {{ progressText }}
         </div>
+
+        <div ng-show="successMessage" class="alert alert-success">
+            <button class="close" data-dismiss="alert" type="button">x</button>
+            {{ successMessage }}
+        </div>
+
+        <div ng-show="errorMessage" class="alert alert-success">
+            <button class="close" data-dismiss="alert" type="button">x</button>
+            {{ errorMessage }}
+        </div>
+
         <%@ include file="/WEB-INF/views/organizations/indexTable.jsp" %>
     </div>
 

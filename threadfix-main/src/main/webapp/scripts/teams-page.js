@@ -49,9 +49,17 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         });
 
         modalInstance.result.then(function (newApplication) {
+            team.applications.push(newApplication);
 
-            // TODO add REST call to create an application. We need REST-enabled endpoints.
-            $scope.lastApplication = newApplication;
+            team.applications.sort(function(a,b) {
+                return a.name.localeCompare(b.name);
+            });
+
+            team.expanded = true;
+            loadGraph(team);
+
+            $scope.successMessage = "Successfully added application " + newApplication.name;
+
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

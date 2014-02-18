@@ -28,8 +28,7 @@ myAppModule.controller('NewApplicationModalController', function ($scope, $modal
                     $scope.loading = false;
 
                     if (data.success) {
-                        team.applications.push(data.object)
-                        $modalInstance.close($scope.application);
+                        $modalInstance.close(data.object);
                     } else {
                         $scope.error = "Failure. Message was : " + data.message;
                     }
