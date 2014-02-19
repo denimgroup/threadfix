@@ -2,14 +2,12 @@ var threadfixModule = angular.module('threadfix')
 
 threadfixModule.factory('threadfixAPIService', function($http) {
 
-    var apiKey = "M4DpC1MLqK4YRG33DxHW4PaIM4FlvEowjlkbucERKg";
-
     var threadfixAPIService = {};
 
-    threadfixAPIService.getTeams = function() {
+    threadfixAPIService.getTeams = function(csrfToken) {
         return $http({
             method: 'GET',
-            url: '/rest/teams?apiKey=' + apiKey
+            url: '/organizations/jsonList' + csrfToken
         });
     };
 

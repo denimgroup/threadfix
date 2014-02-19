@@ -904,24 +904,39 @@ div.box-shadow {
     animation: spin 1s infinite linear;
 }
 
-.spinner:after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: -5px;
-    left: 0px;
-
-    border: 4px solid transparent;
-    border-bottom-color: rgba(255,255,255,255);
-
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
+.spinner.dark {
+    border: 2px solid rgba(0,0,0,0.5);
+    border-top-color: transparent;
 }
+
+.spinner-div {
+    padding-left:435px;
+    width:70px;
+}
+
+/* to add an arrow at the end uncomment these */
+/*.spinner:after {*/
+    /*content: '';*/
+    /*display: block;*/
+    /*width: 0;*/
+    /*height: 0;*/
+    /*position: absolute;*/
+    /*top: -5px;*/
+    /*left: 0px;*/
+
+    /*border: 4px solid transparent;*/
+    /*border-bottom-color: rgba(255,255,255,255);*/
+
+    /*-webkit-transform: rotate(45deg);*/
+    /*-moz-transform: rotate(45deg);*/
+    /*-ms-transform: rotate(45deg);*/
+    /*-o-transform: rotate(45deg);*/
+    /*transform: rotate(45deg);*/
+/*}*/
+
+/*.spinner.dark:after {*/
+    /*border-bottom-color: rgba(0,0,0,0.5);*/
+/*}*/
 
 @-webkit-keyframes spin {
     to { -webkit-transform: rotate(360deg); }

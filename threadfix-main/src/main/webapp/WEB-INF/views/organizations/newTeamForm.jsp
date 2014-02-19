@@ -12,7 +12,7 @@
                 <tr class="left-align">
                     <td>Name</td>
                     <td>
-                        <input type='text' focus-on="open" name='name' ng-model="team.name" required/>
+                        <input type='text' focus-on="open" name='name' ng-model="object.name" required/>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                     </td>
                 </tr>
@@ -22,7 +22,7 @@
         <div class="modal-footer">
             <span style="float:left">{{ error }}</span>
 
-            <button class="btn" ng-click="cancel()">Close</button>
+            <a class="btn" ng-click="cancel()">Close</a>
             <button id="loadingButton"
                     disabled="disabled"
                     class="btn btn-primary"

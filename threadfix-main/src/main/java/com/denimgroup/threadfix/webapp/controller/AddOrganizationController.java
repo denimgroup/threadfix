@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -48,16 +46,10 @@ import javax.validation.Valid;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 public class AddOrganizationController {
 
+    @Autowired
 	private OrganizationService organizationService = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(AddOrganizationController.class);
-
-	@Autowired
-	public AddOrganizationController(OrganizationService organizationService) {
-		this.organizationService = organizationService;
-	}
-	
-	public AddOrganizationController(){}
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -71,8 +63,9 @@ public class AddOrganizationController {
 	
 	@RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
-	public @ResponseBody RestResponse<Organization> newSubmit2(@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status, Model model, HttpServletRequest request) {
+	public @ResponseBody RestResponse<Organization> newSubmit2(@Valid @ModelAttribute Organization organization,
+                                                               BindingResult result, SessionStatus status,
+                                                               Model model) {
 		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
 		if (result.hasErrors()) {
 			return RestResponse.failure("Failed to add the team.");
@@ -86,7 +79,7 @@ public class AddOrganizationController {
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null) {
 				result.rejectValue("name", "errors.nameTaken");
-				return RestResponse.failure("Failed to add the team.");
+				return RestResponse.failure("That name was already taken.");
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -94,10 +87,7 @@ public class AddOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
 					" and ID " + organization.getId());
-			
-			ControllerUtils.addSuccessMessage(request,
-                    "Team " + organization.getName() + " has been created successfully.");
-			
+
 			status.setComplete();
 			return RestResponse.success(organization);
 		}

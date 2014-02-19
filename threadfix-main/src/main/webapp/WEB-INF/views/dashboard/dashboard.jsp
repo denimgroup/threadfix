@@ -8,7 +8,7 @@
 <body class="dashboard">
 	<h2>Dashboard</h2>
 	
-	<spring:url value="/organizations/withModal" var="teamsUrl"/>
+	<spring:url value="/organizations" var="teamsUrl"/>
 	
 	<c:if test="${ empty teams }">
 		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">

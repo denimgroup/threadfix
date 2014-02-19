@@ -1,10 +1,8 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('NewTeamModalController', function ($scope, $modalInstance, threadFixModalService, focus, csrfToken) {
+myAppModule.controller('GenericModalController', function ($scope, $modalInstance, threadFixModalService, object, url) {
 
-    focus("open");
-
-    $scope.team = {};
+    $scope.object = object;
 
     $scope.loading = false;
 
@@ -13,9 +11,7 @@ myAppModule.controller('NewTeamModalController', function ($scope, $modalInstanc
         if (valid) {
             $scope.loading = true;
 
-            var url = "/organizations/modalAdd" + csrfToken;
-
-            threadFixModalService.post(url, $scope.team).
+            threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
                     $scope.loading = false;
 

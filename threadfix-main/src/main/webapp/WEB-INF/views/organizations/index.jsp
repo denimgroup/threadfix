@@ -2,9 +2,7 @@
 
 <head>
 	<title>Home</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/newApplicationModalController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/newTeamModalController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teams-page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationsIndexController.js"></script>
 </head>
 
 <body id="apps">
@@ -20,20 +18,19 @@
     </security:authorize>
 
     <!-- Get the CSRF token so we can use it everywhere -->
-    <spring:url value="/" var="emptyUrl"/>
+    <spring:url value="" var="emptyUrl"/>
 
     <div ng-controller="ApplicationsIndexController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
-        <div ng-hide='teams' style="text-align: center">
-            {{ progressText }}
-        </div>
+
+        <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
         <div ng-show="successMessage" class="alert alert-success">
-            <button class="close" data-dismiss="alert" type="button">x</button>
+            <button class="close" ng-click="successMessage = false" type="button">x</button>
             {{ successMessage }}
         </div>
 
         <div ng-show="errorMessage" class="alert alert-success">
-            <button class="close" data-dismiss="alert" type="button">x</button>
+            <button class="close" data-dismiss="errorMessage = false" type="button">x</button>
             {{ errorMessage }}
         </div>
 

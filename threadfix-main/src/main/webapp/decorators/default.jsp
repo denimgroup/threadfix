@@ -17,13 +17,13 @@
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/threadfix-module.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/services.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/genericModalController.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
 
     <!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/iepngfix_tilebg.js"></script>
-		
-	<![endif]-->	
+	<![endif]-->
     
 	<decorator:head/>
 </head>
@@ -40,7 +40,7 @@
 				<div class="center"><!-- --></div>
 			</div>
 			<div id="main-content">
-                Hello {{name}}!
+                {{name}}
 				<decorator:body/>
 			</div>			
 			<div class="bottom-corners corners">
