@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('UploadScanController', function ($scope, $modalInstance, threadFixModalService, url, $upload) {
+myAppModule.controller('UploadScanController', function ($scope, $modalInstance, threadFixModalService, files, url, $upload) {
 
     $scope.uploading = false;
 
@@ -43,6 +43,10 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
             });
         }
     };
+
+    if (files) {
+        $scope.onFileSelect(files);
+    }
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');

@@ -64,9 +64,11 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         if (team.report == null) {
 
+            var url = '/organizations/' + team.id + '/getReport' + $scope.csrfToken;
+
             var failureDiv = '<div class="" style="margin-top:10px;margin-right:20px;width:300px;height:200px;text-align:center;line-height:150px;">Failed to load report.</div>';
 
-            threadfixAPIService.loadReport(team).
+            threadfixAPIService.loadReport(url).
                 success(function(data, status, headers, config) {
 
                     // TODO figure out Jasper better, it's a terrible way to access the report images.
@@ -167,14 +169,17 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             resolve: {
                 url: function() {
                     return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                },
+                files: function() {
+                    return false;
                 }
             }
         });
 
-        modalInstance.result.then(function (newTeam) {
+        modalInstance.result.then(function (updatedTeam) {
             $log.info("Successfully uploaded scan.");
             $log.successMessage = "Successfully uploaded scan.";
-            team = newTeam
+            updateTeam(team, updatedTeam);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -182,31 +187,41 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     }
 
     $scope.onFileSelect = function(team, app, $files) {
-        //$files: an array of files selected, each file has name, size, and type.
-        for (var i = 0; i < $files.length; i++) {
-            var file = $files[i];
-            $scope.upload = $upload.upload({
-                url: "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken,
-                method: "POST",
-                // headers: {'headerKey': 'headerValue'},
-                // withCredentials: true,
-                file: file
-                // file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
-                /* set file formData name for 'Content-Desposition' header. Default: 'file' */
-                //fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
-                /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-                //formDataAppender: function(formData, key, val){} //#40#issuecomment-28612000
-            }).progress(function(evt) {
-                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-            }).success(function(data, status, headers, config) {
-                if (data.success) {
-                    // TODO pass in team with new stats
-                    $scope.successMessage = "Scan was successfully uploaded to application " + app.name;
-                } else {
-                    $scope.errorMessage = "Scan upload was unsuccessful. Message was " + data.message;
+        var modalInstance = $modal.open({
+            templateUrl: 'uploadScanForm.html',
+            controller: 'UploadScanController',
+            resolve: {
+                url: function() {
+                    return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                },
+                files: function() {
+                    return $files;
                 }
-            });
-        }
+            }
+        });
+
+        modalInstance.result.then(function (updatedTeam) {
+            $log.info("Successfully uploaded scan.");
+            $log.successMessage = "Successfully uploaded scan.";
+            updateTeam(team, updatedTeam);
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     };
+
+    var updateTeam = function(oldTeam, newTeam) {
+
+        var index = $scope.teams.indexOf(oldTeam);
+        if (index > -1) { // let's hope it is
+            $scope.teams.splice(index, 1);
+        }
+
+        $scope.teams.push(newTeam);
+        $scope.teams.sort(nameCompare);
+
+        newTeam.expanded = true;
+        newTeam.report = null;
+        loadGraph(newTeam);
+    }
 
 });

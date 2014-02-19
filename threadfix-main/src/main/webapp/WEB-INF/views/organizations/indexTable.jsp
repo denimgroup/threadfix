@@ -26,11 +26,8 @@
         </tr>
     </thead>
     <tbody>
-        <spring:url value="/getReport" var="reportUrl"/>
-
         <tr ng-repeat-start="team in teams" id="teamRow{{ team.id }}" class="pointer" data-target-div="teamInfoDiv{{ team.id }}"
-                data-caret-div="caret{{ team.id }}" data-report-div="reportDiv{{ team.id }}"
-                ng-init="team.graphUrl='/organizations/' + team.id +'<c:out value='${reportUrl}'/>'">
+                data-caret-div="caret{{ team.id }}" data-report-div="reportDiv{{ team.id }}">
             <td id="teamCaret{{ team.id }}" ng-click="toggle(team)">
                 <span ng-class="{ expanded: team.expanded }" class="caret-right"></span>
             </td>

@@ -11,10 +11,10 @@ threadfixModule.factory('threadfixAPIService', function($http) {
         });
     };
 
-    threadfixAPIService.loadReport = function(team) {
+    threadfixAPIService.loadReport = function(url) {
         return $http({
             method: 'GET',
-            url: team.graphUrl
+            url: url
         });
     };
 
