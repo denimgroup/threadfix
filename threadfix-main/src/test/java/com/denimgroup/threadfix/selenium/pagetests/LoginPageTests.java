@@ -23,16 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pagetests;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
-import org.openqa.selenium.WebDriver;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
-@RunWith(Parameterized.class)
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class LoginPageTests extends PageBaseTest{
 	private WebDriver driver;
 	private static LoginPage loginPage;

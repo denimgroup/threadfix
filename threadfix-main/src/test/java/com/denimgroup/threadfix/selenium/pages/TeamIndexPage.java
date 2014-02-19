@@ -23,24 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TeamIndexPage extends BasePage {
@@ -74,7 +68,7 @@ public class TeamIndexPage extends BasePage {
     public int getIndexSlow(String teamName) {
         System.out.println("Using slow map!");
         int i = -1;
-        List<WebElement> names = new ArrayList<WebElement>();
+        List<WebElement> names = new ArrayList<>();
         for (int j = 1; j <= getNumTeamRows(); j++) {
             names.add(driver.findElementById("teamName" + j));
         }
@@ -85,7 +79,7 @@ public class TeamIndexPage extends BasePage {
                 return i;
             }
         }
-        names = new ArrayList<WebElement>();
+        names = new ArrayList<>();
         for (int j = 1; j <= getNumTeamRows(); j++) {
             names.add(driver.findElementById("teamName" + j));
         }
@@ -97,19 +91,6 @@ public class TeamIndexPage extends BasePage {
             }
         }
         return -1;
-    }
-
-    @Deprecated
-    public Map<String, Integer> getTeamToIndexMap() {
-        System.out.println("Map!");
-        Map<String, Integer> teamIndexMap = new HashMap<>();
-
-        for (int j = 1; j <= getNumTeamRows(); j++) {
-            WebElement element = driver.findElementById("teamName" + j);
-            teamIndexMap.put(element.getText(), j);
-        }
-
-        return teamIndexMap;
     }
 
     public int getIndex(String teamName) {
@@ -214,10 +195,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamAddedToTable(Integer index) {
-        if (driver.findElementById("teamName" + index) == null) {
-            return false;
-        }
-        return true;
+        return driver.findElementById("teamName" + index) != null;
     }
 
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
@@ -239,8 +217,7 @@ public class TeamIndexPage extends BasePage {
     public String getAppModalId(String teamName) {
         int teamIndex = getIndex(teamName);
         String appModalIdHref = driver.findElementById("addApplicationModalButton" + teamIndex).getAttribute("href");
-        String appModalId = appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
-        return appModalId;
+        return appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
     }
 
     public String getAppModalIdNumber(Integer index) {
@@ -264,10 +241,10 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    public TeamIndexPage setApplicationCritic(String critic, String teamName) {
+    public TeamIndexPage setApplicationCriticality(String criticality, String teamName) {
         int teamIndex = getIndex(teamName);
         new Select(driver.findElementById("criticalityId" + getAppModalIdNumber(teamIndex)))
-                .selectByVisibleText(critic);
+                .selectByVisibleText(criticality);
         return setPage();
     }
 
@@ -299,11 +276,11 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    public TeamIndexPage addNewApplication(String teamName, String appName,String url, String critic) {
+    public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
         clickAddNewApplication(teamName);
         setApplicationName(appName, teamName);
         setApplicationUrl(url, teamName);
-        setApplicationCritic(critic, teamName);
+        setApplicationCriticality(criticality, teamName);
         return setPage();
     }
 
@@ -340,66 +317,15 @@ public class TeamIndexPage extends BasePage {
 
     public ApplicationDetailPage clickUploadScanButton(String teamName, String appName) {
         driver.findElementById("submitScanModal"+modalNum).click();
-        try{
-            waitForInvisibleElement(driver.findElementById("uploadScan"+modalNum));
-        }catch(StaleElementReferenceException e){
-
-        }
-        waitForElement(driver.findElementById("nameText"));
-        waitForInvisibleElement(driver.findElementByClassName("alert-success"));
         return new ApplicationDetailPage(driver);
-
-    }
-
-    public ApplicationDetailPage clickUploadScanButton(String teamName, String appName,int cnt) {
-        driver.findElementById("submitScanModal"+modalNum).click();
-        int i = 0;
-        try{
-            waitForInvisibleElement(driver.findElementById("uploadScan"+modalNum));
-        }catch(StaleElementReferenceException e){
-
-        }
-        waitForElement(driver.findElementById("nameText"));
-//		waitForInvisibleElement(driver.findElementByClassName("alert-success"));
-        try{
-            while(!driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt))){
-                if(i==10){
-                    break;
-                }
-                i++;
-                sleep(500);
-            }
-        }catch(StaleElementReferenceException e){
-
-        }catch(UnhandledAlertException e){
-        }
-        //waitForElement(driver.findElementById("anyid"));
-        return new ApplicationDetailPage(driver);
-
-    }
-
-
-    public TeamIndexPage clickUploadScanButtonInvalid(String teamName, String appName) {
-        driver.findElementById("submitScanModal"+modalNum).click();
-		/*for (int i = 1; i <= driver.findElementsByClassName("right-align")
-				.size(); i++)
-			if (driver.findElementById("applicationLink" + i).getText()
-					.equals(appName)) {
-				driver.findElementById("submitScanModal" + i).click();
-				break;
-			}*/
-        return setPage();
     }
 
     public boolean isTeamPresent(String teamName) {
         int teamIndex = getIndex(teamName);
-        if (teamIndex > 0) {
-            return (teamName.equals(driver.findElementById("teamName" + teamIndex).getText()));
-        }
-        return false;
+        return teamIndex > 0 && (teamName.equals(driver.findElementById("teamName" + teamIndex).getText()));
     }
 
-    public boolean isCreateValidtionPresent(String teamName) {
+    public boolean isCreateValidationPresent(String teamName) {
         return driver
                 .findElementByClassName("alert-success")
                 .getText()
@@ -518,11 +444,11 @@ public class TeamIndexPage extends BasePage {
 		return driver.findElementById("myTeamModal").isDisplayed();
 	}
 	
-	public boolean isATNameFieldPresent(){
+	public boolean isTeamModalNameFieldPresent(){
 		return driver.findElementById("teamNameInput").isDisplayed();
 	}
 	
-	public boolean isATNameFieldFunctional(){
+	public boolean isTeamModalNameFieldFunctional(){
 		int limit = Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength"));
 		String s = getRandomString(limit+10);
 		driver.findElementById("teamNameInput").sendKeys(s);
@@ -530,19 +456,19 @@ public class TeamIndexPage extends BasePage {
 		return v.equals(s.substring(0, limit));
 	}
 	
-	public boolean isCloseATButtonPresent(){
+	public boolean isCloseTeamModalButtonPresent(){
 		return driver.findElementById("closeTeamModalButton").isDisplayed();
 	}
 	
-	public boolean isCloseATButtonClickable(){
+	public boolean isCloseTeamModalButtonClickable(){
 		return ExpectedConditions.elementToBeClickable(By.id("closeTeamModalButton")) != null;
 	}
 	
-	public boolean isAddTeamATButtonPresent(){
+	public boolean isAddTeamButtonPresent(){
 		return driver.findElementById("submitTeamModal").isDisplayed();
 	}
 	
-	public boolean isAddTeamATButtonClickable(){
+	public boolean isAddTeamButtonClickable(){
 		return ExpectedConditions.elementToBeClickable(By.id("submitTeamModal")) != null;
 	}
 	
@@ -550,8 +476,8 @@ public class TeamIndexPage extends BasePage {
 		return driver.findElementById(getAppModalId(teamName)).isDisplayed();
 	}
 	
-	public boolean isAPNameFieldPresent(String teamName){
-		return  driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
+	public boolean isAppNameFieldPresent(String teamName){
+		return driver.findElementById("nameInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
 	}
 	
 	public boolean isAPNameFieldFunctional(String teamName){
@@ -565,11 +491,11 @@ public class TeamIndexPage extends BasePage {
 		return v.equals(s.substring(0, limit));
 	}
 	
-	public boolean isURLFieldPresent(String teamName){
+	public boolean isUrlFieldPresent(String teamName){
         return driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
 	}
 	
-	public boolean isURlFieldFunctional(String teamName){
+	public boolean isUrlFieldFunctional(String teamName){
 		int limit = Integer.parseInt(driver.findElementById("urlInput" + getAppModalIdNumber(getIndex(teamName)))
                 .getAttribute("maxlength"));
 		
@@ -583,21 +509,21 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
 	}
 	
-	public boolean isAPIDFieldFunctional(String teamName){
+	public boolean isApplicationModalTeamIDFieldFunctional(String teamName){
 		int limit = Integer.parseInt(driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName)))
                 .getAttribute("maxlength"));
 		
 		String s = getRandomString(limit+10);
         driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).sendKeys(s);
-		String v = driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).getAttribute("value");
-		return v.equals(s.substring(0, limit));
+		String valueString = driver.findElementById("uniqueIdInput" + getAppModalIdNumber(getIndex(teamName))).getAttribute("value");
+		return valueString.equals(s.substring(0, limit));
 	}
 	
-	public boolean isAPCriticalityPresent(String teamName){
+	public boolean isApplicationModalCriticalityPresent(String teamName){
         return driver.findElementById("criticalityId" + getAppModalIdNumber(getIndex(teamName))).isDisplayed();
 	}
 	
-	public boolean isAPCriticalityCorrect(String teamName){
+	public boolean isApplicationModalCriticalityCorrect(String teamName){
 //		Select sel = new Select(driver.findElementById(getAppModalId(teamName)).findElement(By.id("criticalityId")));
 //		for(int i=0; i<sel.getOptions().size(); i++)
 //			System.out.println("option"+i+" "+sel.getOptions().get(i));
@@ -606,21 +532,21 @@ public class TeamIndexPage extends BasePage {
         return true;
     }
 
-    public boolean isCloseAPButtonPresent(String teamName){
+    public boolean isCloseApplicationModalButtonPresent(String teamName){
         return driver.findElementById(getAppModalId(teamName))
                 .findElement(By.className("modal-footer"))
                 .findElements(By.className("btn")).get(0).isDisplayed();
     }
 
-    @SuppressWarnings("static-access")
-    public boolean isCloseAPButtonClickable(String teamName){
+    // The static warning here means something is wrong
+    public boolean isCloseApplicationModalButtonClickable(String teamName){
         driver.findElementById(getAppModalId(teamName))
                 .findElement(By.className("modal-footer"))
                 .findElements(By.className("btn")).get(0);
         return ExpectedConditions.elementToBeClickable(By.id(getAppModalId(teamName)).className("modal-footer").className("btn")) != null;
     }
 
-    public boolean isAddTeamAPButtonPresent(String teamName){
+    public boolean isAddTeamAPButtonPresent(String teamName) {
         return driver.findElementById(getAppModalId(teamName)).isDisplayed();
     }
 
@@ -647,11 +573,6 @@ public class TeamIndexPage extends BasePage {
         WebElement cell = rows.get(appIndex - 1).findElement(By.id("num" + level + "Vulns" + getIndex(teamName)));
 
         return cell.getText();
-    }
-
-    @Deprecated
-    public boolean severityChanged(String teamName, String level, String expected) {
-        return driver.findElementById("num" + level + "Vulns" + getIndex(teamName)).getText().equals(expected);
     }
 
 }

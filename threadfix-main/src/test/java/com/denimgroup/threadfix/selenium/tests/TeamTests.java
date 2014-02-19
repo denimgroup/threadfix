@@ -34,8 +34,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Organization;
 
-import java.util.Map;
-
 public class TeamTests extends BaseTest {
 
 	private RemoteWebDriver driver;
@@ -63,7 +61,7 @@ public class TeamTests extends BaseTest {
 								.setTeamName(newOrgName)
 								.addNewTeam();
 
-		assertTrue("The validation is not present", teamIndexPage.isCreateValidtionPresent(newOrgName));
+		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 
 		teamIndexPage = teamIndexPage.clickViewTeamLink(newOrgName)

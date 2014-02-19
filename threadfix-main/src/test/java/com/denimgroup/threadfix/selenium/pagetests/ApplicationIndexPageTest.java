@@ -1,11 +1,12 @@
 package com.denimgroup.threadfix.selenium.pagetests;
 
-import org.junit.*;
-
-import static org.junit.Assert.*;
-
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class ApplicationIndexPageTest extends PageBaseTest {
 	
@@ -72,18 +73,8 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	@Test
 	public void collapseAllBtnTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink();
-		boolean click = ti.isCollapseAllBtnClickable();
-		boolean present = ti.isCollapseAllBtnPresent();
-		String c = "";
-		String p = "";
-		if(!click){
-			c = "Collapse All button is not clickable";
-		}
-		
-		if(!present){
-			p = "Collapse All button is not present";
-		}
-		assertTrue(p + " | "+ c,click && present);
+        assertTrue("Collapse All button is not present", ti.isCollapseAllBtnPresent());
+        assertTrue("Collapse All button is not clickable", ti.isCollapseAllBtnClickable());
 		ti.logout();
 	}
 	
@@ -168,12 +159,12 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	public void addTeamModalTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().clickAddTeamButton();
 		boolean modalPresent = ti.isAddTeamModalPresent();
-		boolean namePresent = ti.isATNameFieldPresent();
-		boolean nameFunc = ti.isATNameFieldFunctional();
-		boolean closePresent = ti.isCloseATButtonPresent();
-		boolean closeClick = ti.isCloseATButtonClickable();
-		boolean addPresent = ti.isAddTeamATButtonPresent();
-		boolean addClick = ti.isAddTeamATButtonClickable();
+		boolean namePresent = ti.isTeamModalNameFieldPresent();
+		boolean nameFunc = ti.isTeamModalNameFieldFunctional();
+		boolean closePresent = ti.isCloseTeamModalButtonPresent();
+		boolean closeClick = ti.isCloseTeamModalButtonClickable();
+		boolean addPresent = ti.isAddTeamButtonPresent();
+		boolean addClick = ti.isAddTeamButtonClickable();
 		String mp,np,nf,cp,cc,ap,ac;
 		mp = np = nf = cp = cc = ap = ac = "";
 		if(!modalPresent){
@@ -210,17 +201,17 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 	public void addApplicationModalTest(){
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink().clickAddNewApplication(teamName);
 		boolean modalPresent = ti.isAddAppModalPresent(teamName);
-		boolean namePresent = ti.isAPNameFieldPresent(teamName);
+		boolean namePresent = ti.isAppNameFieldPresent(teamName);
 		boolean nameFunc = ti.isAPNameFieldFunctional(teamName);
 //		boolean nameFunc = true;
-		boolean urlPresent = ti.isURLFieldPresent(teamName);
-		boolean urlFunc = ti.isURlFieldFunctional(teamName);
+		boolean urlPresent = ti.isUrlFieldPresent(teamName);
+		boolean urlFunc = ti.isUrlFieldFunctional(teamName);
 		boolean idPresent = ti.isAPIDFieldPresent(teamName);
-		boolean idFunc = ti.isAPIDFieldFunctional(teamName);
-		boolean critcPresent = ti.isAPCriticalityPresent(teamName);
-		boolean critcFunc = ti.isAPCriticalityCorrect(teamName);
-		boolean closePresent = ti.isCloseAPButtonPresent(teamName);
-		boolean closeClick = ti.isCloseAPButtonClickable(teamName);
+		boolean idFunc = ti.isApplicationModalTeamIDFieldFunctional(teamName);
+		boolean criticalityPresent = ti.isApplicationModalCriticalityPresent(teamName);
+		boolean criticalityFunc = ti.isApplicationModalCriticalityCorrect(teamName);
+		boolean closePresent = ti.isCloseApplicationModalButtonPresent(teamName);
+		boolean closeClick = ti.isCloseApplicationModalButtonClickable(teamName);
 		boolean addPresent = ti.isAddTeamAPButtonPresent(teamName);
 		boolean addClick = ti.isAddTeamAPButtonClickable(teamName);
 		String mp,np,nf,up,uf,ip,iff,cp,cf,clp,clc,ap,ac;
@@ -247,10 +238,10 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		if(!idFunc){
 			iff = "Add app id input is not functional";
 		}
-		if(!critcPresent){
+		if(!criticalityPresent){
 			cp = "Add app critc select is not present";
 		}
-		if(!critcFunc){
+		if(!criticalityFunc){
 			cf = "Add app critc select is not correct";
 		}
 		if(!closePresent){
@@ -268,7 +259,7 @@ public class ApplicationIndexPageTest extends PageBaseTest {
 		assertTrue(mp + " | "+ np + " | "+ nf + " | "+ up + " | "+ uf + " | "+ ip + " | "+ iff 
 				+ " | "+ cp + " | "+ cf + " | "+ clp + " | "+ clc + " | "+ ap + " | "+ ac,
 				modalPresent && namePresent && nameFunc && urlPresent && urlFunc && idPresent && idFunc 
-				&& critcPresent && critcFunc && closePresent && closeClick && addPresent && addClick);
+				&& criticalityPresent && criticalityFunc && closePresent && closeClick && addPresent && addClick);
 		ti.clickCloseAddAppModal(teamName).logout();
 	}
 	

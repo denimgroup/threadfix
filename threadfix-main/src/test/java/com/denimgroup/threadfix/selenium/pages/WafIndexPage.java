@@ -23,11 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WafIndexPage extends BasePage {
 
@@ -161,8 +161,6 @@ public class WafIndexPage extends BasePage {
 		return driver.findElementById("wafName" + row).getText();
 	}
 
-
-	
 	public WafIndexPage setNewNameInput(String name){
 		driver.findElementById("wafCreateNameInput").clear();
 		driver.findElementById("wafCreateNameInput").sendKeys(name);
@@ -177,9 +175,9 @@ public class WafIndexPage extends BasePage {
 	
 	
 	public WafIndexPage setType(String oldName,String type){
-		if(oldName==null){
+		if (oldName == null) {
 			new Select(driver.findElementsById("typeSelect").get(getNumRows())).selectByVisibleText(type);
-		}else{
+		} else {
 			new Select(driver.findElementsById("typeSelect").get(getIndex(oldName))).selectByVisibleText(type);
 		}
 		return new WafIndexPage(driver);
