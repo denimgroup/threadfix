@@ -22,12 +22,22 @@ threadfixModule.directive('bindHtmlUnsafe', function( $compile ) {
     };
 });
 
-threadfixModule.directive('focusOn', function() {
-    return function(scope, elem, attr) {
-        scope.$on('focusOn', function(e, name) {
-            if(name === attr.focusOn) {
-                elem[0].focus();
-            }
-        });
+threadfixModule.directive('focusOn', function($timeout, $parse) {
+    return {
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.focusOn);
+            scope.$watch(model, function(value) {
+                console.log('value=',value);
+                if(value === true) {
+                    $timeout(function() {
+                        element[0].focus();
+                    });
+                }
+            });
+            element.bind('blur', function() {
+                console.log('blur')
+                scope.$apply(model.assign(scope, false));
+            })
+        }
     };
 });

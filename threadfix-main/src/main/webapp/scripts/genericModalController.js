@@ -28,6 +28,8 @@ myAppModule.controller('GenericModalController', function ($scope, $modalInstanc
         }
     };
 
+    $scope.focusInput = true;
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

@@ -12,7 +12,7 @@
                 <tr class="left-align">
                     <td>Name</td>
                     <td>
-                        <input type='text' name='name' ng-model="object.name" required/>
+                        <input focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                     </td>
                 </tr>

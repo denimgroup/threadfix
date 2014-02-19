@@ -10,10 +10,8 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
 
-
     <script data-require="angular.js@*" data-semver="1.2.12" src="http://code.angularjs.org/1.2.12/angular.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
-
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/threadfix-module.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/services.js"></script>

@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, threadfixAPIService) {
+myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $rootScope, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -102,6 +102,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         });
 
         modalInstance.result.then(function (newTeam) {
+
             $scope.teams.push(newTeam);
 
             $scope.teams.sort(nameCompare);
@@ -140,6 +141,11 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         });
 
         modalInstance.result.then(function (newApplication) {
+
+            if (team.applications == null) {
+                team.applications = [];
+            }
+
             team.applications.push(newApplication);
 
             team.applications.sort(nameCompare);
