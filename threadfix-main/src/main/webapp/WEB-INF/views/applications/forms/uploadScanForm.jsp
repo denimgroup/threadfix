@@ -10,8 +10,8 @@
         <div ng-show="waiting" class="modal-loading"><div><span class="spinner dark"></span>Processing...</div></div><br>
 
         <div ng-show="!dropSupported">HTML5 Drop File is not supported!<br>
-            <div ng-show="errorMessage" class="alert alert-error">
-                <button class="close" ng-click="errorMessage = false" type="button">x</button>
+            <div ng-show="showError" class="alert alert-error">
+                <button class="close" ng-click="showError = false" type="button">x</button>
                 {{ errorMessage }}
             </div>
             <div ng-show="ready()">
@@ -21,8 +21,8 @@
         </div>
 
         <div ng-show="ready()" ng-show="dropSupported">
-            <div ng-show="errorMessage" class="alert alert-error">
-                <button class="close" ng-click="errorMessage = false" type="button">x</button>
+            <div ng-show="showError" class="alert alert-error">
+                <button class="close" ng-click="showError = false" type="button">x</button>
                 {{ errorMessage }}
             </div>
 

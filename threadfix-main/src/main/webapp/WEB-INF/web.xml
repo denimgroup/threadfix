@@ -150,6 +150,8 @@
         		protected-regex ^/organizations/[0-9]+/getReport$,
         		protected-regex ^/organizations/[0-9]+/modalEdit$,
 		    	protected-regex ^/organizations/[0-9]+/modalAddApp$,
+		    	protected-regex ^/organizations/jsonList$,
+                protected-regex ^/organizations/[0-9]+/applications/[0-9]+/upload/remote$
         		protected-regex ^/reports/ajax$,
         		protected-regex ^/scans/table$,
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,

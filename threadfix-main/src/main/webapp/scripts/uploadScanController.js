@@ -29,7 +29,7 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                 //formDataAppender: function(formData, key, val){} //#40#issuecomment-28612000
             }).progress(function(evt) {
                 $scope.uploadedPercent = parseInt(100.0 * evt.loaded / evt.total);
-                if ($scope.uploadedPercent == 100) {
+                if ($scope.uploading && $scope.uploadedPercent == 100) {
                     $scope.uploading = false;
                     $scope.waiting = true;
                 }
@@ -38,7 +38,9 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                     $modalInstance.close(data.object); // pass the team back up to update stats
                 } else {
                     $scope.errorMessage = data.message;
+                    $scope.showError = true;
                     $scope.waiting = false;
+                    $scope.uploading = false;
                 }
             });
         }
