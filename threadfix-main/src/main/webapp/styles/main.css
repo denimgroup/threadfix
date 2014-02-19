@@ -914,6 +914,26 @@ div.box-shadow {
     width:70px;
 }
 
+.modal-loading {
+    width:100%;
+    text-align:center;
+}
+
+.modal-loading div {
+    display:inline-block;
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    text-align: center;
+    height: 80px;
+}
+
+.drop-box.long-drop-box {
+    height:130px;
+}
+
 /* to add an arrow at the end uncomment these */
 /*.spinner:after {*/
     /*content: '';*/

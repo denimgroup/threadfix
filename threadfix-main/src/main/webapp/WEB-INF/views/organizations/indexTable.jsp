@@ -54,7 +54,8 @@
         </tr>
 
 
-        <tr ng-repeat-end class="grey-background" ng-init="teamIndex=$index">
+        <tr ng-file-drop-available="dropSupported=true"
+            ng-repeat-end class="grey-background" ng-init="teamIndex=$index">
             <td colspan="11">
 
                 <div collapse="!team.expanded"
@@ -83,7 +84,8 @@
                                     <th style="width:110px;"></th>
                                 </tr>
                             </thead>
-                            <tr class="app-row" ng-repeat="app in team.applications | filter:app.active" ng-init="appIndex=$index">
+                            <tr class="app-row" ng-repeat="app in team.applications | filter:app.active" ng-init="appIndex=$index"
+                                    ng-file-drop="onFileSelect(team, app, $files)">
                                 <td style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
                                         <a id="applicationLink{{ teamIndex }}-{{ appIndex}}"
@@ -100,12 +102,11 @@
                                 <td class="centered" id="numInfoVulns{{ teamIndex }}-{{ appIndex}}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
                                     <!-- TODO figure out nested indices -->
-                                    <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}"
-                                       role="button"
-                                       class="btn" data-toggle="modal">
+                                    <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}" class="btn"
+                                            ng-click="showUploadForm(team, app)">
                                         Upload Scan
                                     </a>
-                                    <%--<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>--%>
+                                    <%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
                                 </td>
                             </tr>
                         </table>

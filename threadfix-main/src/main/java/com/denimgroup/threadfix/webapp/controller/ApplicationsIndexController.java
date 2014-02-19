@@ -23,22 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +70,12 @@ public class ApplicationsIndexController {
 	private ReportsService reportsService;
     @Autowired
 	private ApplicationCriticalityService applicationCriticalityService;
+    @Autowired
+    private ScanTypeCalculationService scanTypeCalculationService;
+    @Autowired
+    private ScanService scanService;
+    @Autowired
+    private ScanMergeService scanMergeService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model) {
@@ -107,4 +116,39 @@ public class ApplicationsIndexController {
 			return new ModelAndView("reports/report");
 		}
 	}
+
+    /**
+     * Allows the user to upload a scan to an existing application channel.
+     *
+     * @return Team with updated stats.
+     */
+    @RequestMapping(headers="Accept=application/json", value="/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
+    public @ResponseBody RestResponse<Organization> uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
+                                                       HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+
+        log.info("Received REST request to upload a scan to application " + appId + ".");
+
+        Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
+
+        if (myChannelId == null) {
+            return RestResponse.failure("Failed to determine the scan type.");
+        }
+
+        String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
+
+        ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
+
+        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+
+            if (scan != null) {
+                Organization organization = organizationService.loadOrganization(orgId);
+                return RestResponse.success(organization);
+            } else {
+                return RestResponse.failure("Something went wrong while processing the scan.");
+            }
+        } else {
+            return RestResponse.failure(returnValue.getScanCheckResult().toString());
+        }
+    }
 }

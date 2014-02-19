@@ -3,6 +3,7 @@
 <head>
 	<title>Home</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationsIndexController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/uploadScanController.js"></script>
 </head>
 
 <body id="apps">
