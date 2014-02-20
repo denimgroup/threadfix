@@ -60,7 +60,11 @@ public class QueueListener implements MessageListener {
     @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
     @Autowired
+    private OrganizationService organizationService;
+    @Autowired
 	private RemoteProviderTypeService remoteProviderTypeService = null;
+    @Autowired
+    private QueueSender queueSender;
     @Autowired(required=false)
     @Nullable
     private ScanQueueService scanQueueService = null;
@@ -119,6 +123,8 @@ public class QueueListener implements MessageListener {
                         processScheduledScan(map.getInt("appId"),
                                 map.getString("scanner"));
                         break;
+                    case QueueConstants.STATISTICS_UPDATE:
+                        processStatisticsUpdate(map.getInt("appId"));
 				}
 			}
 			
@@ -128,7 +134,22 @@ public class QueueListener implements MessageListener {
 		}
 	}
 
+    private void processStatisticsUpdate(int appId) {
+        if (appId == -1) {
+            log.info("Processing statistics update for all apps.");
 
+            for (Organization organization : organizationService.loadAllActive()) {
+                for (Application app : organization.getActiveApplications()) {
+                    vulnerabilityService.updateVulnerabilityReport(app);
+                }
+            }
+        } else {
+            log.info("Processing statistics update for application with ID " + appId);
+            vulnerabilityService.updateVulnerabilityReport(
+                    applicationService.loadApplication(appId)
+            );
+        }
+    }
 
     private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
 		log.info("Remote Provider Bulk Import job received");
@@ -146,6 +167,8 @@ public class QueueListener implements MessageListener {
 		}
 		
 		log.info(message);
+
+        queueSender.updateAllCachedStatistics();
 		
 		jobStatusService.updateJobStatus(jobStatusId, message);
 	}
@@ -184,7 +207,9 @@ public class QueueListener implements MessageListener {
 			remoteProviderTypeService.decryptCredentials(remoteProviderApplication.getRemoteProviderType());
 			remoteProviderTypeService.importScansForApplications(remoteProviderApplication.getId());
 		}
-		
+
+        queueSender.updateAllCachedStatistics();
+
 		log.info("Completed requests for scan imports.");
 	}
 
@@ -255,6 +280,11 @@ public class QueueListener implements MessageListener {
 		} finally {
 			if (finished) {
 				closeJobStatus(jobStatusId, "Scan completed.");
+
+                if (appChannel != null && appChannel.getApplication() != null) {
+                    queueSender.updateCachedStatistics(appChannel.getApplication().getId());
+                }
+
 				if (fullLog) {
 					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
 						+ userName + " on Application " + appChannel.getApplication().getName()

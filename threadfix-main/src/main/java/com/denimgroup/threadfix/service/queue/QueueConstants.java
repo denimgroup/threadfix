@@ -38,4 +38,6 @@ public interface QueueConstants {
 	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";
     static final String SCHEDULED_SCAN_TYPE = "Scheduled Scan";
 
+    static final String STATISTICS_UPDATE = "Statistics Update";
+
 }

@@ -15,7 +15,7 @@
 </spring:url>
 
 <ul class="breadcrumb">
-    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+    <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scanQueueTask.application.organization.name }"/></a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scanQueueTask.application.name }"/></a><span class="divider">/</span></li>
     <li class="active">Scan Agent Task ID <c:out value="${scanQueueTask.id}" /></li>

@@ -47,31 +47,23 @@ import java.util.Map;
 public class ScanMergeServiceImpl implements ScanMergeService {
 
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
-	
-	private ScanDao scanDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private UserDao userDao = null;
-	private JobStatusService jobStatusService = null;
-	private ScanMerger scanMerger = null;
-	private VulnerabilityFilterService vulnerabilityFilterService = null;
-    private ChannelImporterFactory channelImporterFactory = null;
 
-	@Autowired
-	public ScanMergeServiceImpl(ScanDao scanDao,
-			ApplicationChannelDao applicationChannelDao,
-			UserDao userDao,
-			ScanMerger scanMerger,
-			VulnerabilityFilterService vulnerabilityFilterService,
-			JobStatusService jobStatusService,
-            ChannelImporterFactory channelImporterFactory) {
-		this.scanDao = scanDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.userDao = userDao;
-		this.vulnerabilityFilterService = vulnerabilityFilterService;
-		this.jobStatusService = jobStatusService;
-		this.scanMerger = scanMerger;
-        this.channelImporterFactory = channelImporterFactory;
-	}
+    @Autowired
+	private ScanDao scanDao;
+    @Autowired
+	private ApplicationChannelDao applicationChannelDao;
+    @Autowired
+	private UserDao userDao;
+    @Autowired
+	private JobStatusService jobStatusService;
+    @Autowired
+	private ScanMerger scanMerger;
+    @Autowired
+	private VulnerabilityFilterService vulnerabilityFilterService;
+    @Autowired
+    private ChannelImporterFactory channelImporterFactory;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
 
 	@Override
 	public Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
@@ -181,7 +173,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		
 		updateScanCounts(scan);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
-		
+
 		return true;
 	}
 
@@ -253,7 +245,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				applicationChannel.getApplication().getId());
 		
 		importer.deleteScanFile();
-		return scan;
+
+        vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
+
+        return scan;
 	}
 
 	private void updateJobStatus(Integer statusId, String statusString) {

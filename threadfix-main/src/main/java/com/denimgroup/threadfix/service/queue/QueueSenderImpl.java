@@ -23,12 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
-import java.util.Calendar;
-import java.util.List;
-
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.JobStatusService;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
@@ -36,10 +34,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.service.JobStatusService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -223,6 +221,35 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setInt("appId", appId);
             scheduledScanMap.setString("type", QueueConstants.SCHEDULED_SCAN_TYPE);
             scheduledScanMap.setString("scanner", scanner);
+        } catch (JMSException e) {
+            log.error(jmsErrorString);
+            e.printStackTrace();
+        }
+
+        sendMap(scheduledScanMap);
+    }
+
+    @Override
+    public void updateCachedStatistics(int appId) {
+        MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+        try {
+            scheduledScanMap.setInt("appId", appId);
+            scheduledScanMap.setString("type", QueueConstants.STATISTICS_UPDATE);
+        } catch (JMSException e) {
+            log.error(jmsErrorString);
+            e.printStackTrace();
+        }
+
+        sendMap(scheduledScanMap);
+    }
+
+    @Override
+    public void updateAllCachedStatistics() {
+        MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+        try {
+            scheduledScanMap.setString("type", QueueConstants.STATISTICS_UPDATE);
         } catch (JMSException e) {
             log.error(jmsErrorString);
             e.printStackTrace();

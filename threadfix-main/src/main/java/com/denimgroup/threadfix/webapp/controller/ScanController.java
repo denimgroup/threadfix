@@ -26,9 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.ScanDeleteService;
-import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -55,6 +53,10 @@ public class ScanController {
 	private ScanDeleteService scanDeleteService;
     @Autowired
 	private FindingService findingService;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private ApplicationService applicationService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -109,6 +111,8 @@ public class ScanController {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
 				scanDeleteService.deleteScan(scan);
+                vulnerabilityService.updateVulnerabilityReport(
+                        applicationService.loadApplication(appId));
 			}
 		}
 		

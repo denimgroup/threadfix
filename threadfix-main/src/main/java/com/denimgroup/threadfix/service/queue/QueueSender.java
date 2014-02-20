@@ -75,4 +75,9 @@ public interface QueueSender {
 	void addRemoteProviderImport(RemoteProviderType remoteProviderType);
 
     void addScheduledScan(int appId, String scanner);
+
+    void updateCachedStatistics(int appId);
+
+    void updateAllCachedStatistics();
+
 }

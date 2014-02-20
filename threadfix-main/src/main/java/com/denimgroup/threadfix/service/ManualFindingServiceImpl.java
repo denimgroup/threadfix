@@ -24,70 +24,43 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.*;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.merge.ApplicationMerger;
+import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.merge.ApplicationMerger;
-import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
-	
-	private ApplicationMerger applicationMerger = null;
-	private ScanDao scanDao = null;
-	private ChannelTypeDao channelTypeDao = null;
-	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
-	private ChannelSeverityDao channelSeverityDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private ApplicationDao applicationDao = null;
-	private UserDao userDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
 
-	@Autowired
-	public ManualFindingServiceImpl(ScanDao scanDao, ChannelTypeDao channelTypeDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			ChannelSeverityDao channelSeverityDao,
-			ApplicationChannelDao applicationChannelDao,
-			ApplicationDao applicationDao,
-			UserDao userDao,
-			VulnerabilityDao vulnerabilityDao,
-			ApplicationMerger applicationMerger) {
-		this.scanDao = scanDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.applicationDao = applicationDao;
-		this.userDao = userDao;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationMerger = applicationMerger;
-	}
+    @Autowired
+	private ApplicationMerger applicationMerger;
+    @Autowired
+	private ScanDao scanDao;
+    @Autowired
+	private ChannelTypeDao channelTypeDao;
+    @Autowired
+	private ChannelVulnerabilityDao channelVulnerabilityDao;
+    @Autowired
+	private ChannelSeverityDao channelSeverityDao;
+    @Autowired
+	private ApplicationChannelDao applicationChannelDao;
+    @Autowired
+	private ApplicationDao applicationDao;
+    @Autowired
+	private UserDao userDao;
+    @Autowired
+	private VulnerabilityDao vulnerabilityDao;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
 	
 	/**
 	 * Handle the Manual Finding edit submission. 
@@ -127,6 +100,10 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 				vulnerabilityDao.evict(oldFinding);
 			}
 		}
+
+        vulnerabilityService.updateVulnerabilityReport(
+                applicationDao.retrieveById(applicationId));
+
 		return result;
 	}
 	
@@ -178,7 +155,6 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			String path = finding.getSurfaceLocation().getPath();
 			if (path != null
 					&& scan.getApplication().getProjectRoot() != null
-					&& scan.getApplication().getProjectRoot().toLowerCase() != null
 					&& path.toLowerCase().contains(
 							scan.getApplication().getProjectRoot()
 									.toLowerCase())) {
@@ -201,6 +177,10 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 
 				finding.getScan().getApplication().getName());
+
+        vulnerabilityService.updateVulnerabilityReport(
+                applicationDao.retrieveById(applicationId));
+
 		return true;
 	}
 

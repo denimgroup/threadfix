@@ -9,66 +9,38 @@
 	<parameter name="appName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="orgName" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="hql">
-		<![CDATA[SELECT vulnerability.genericSeverity.name as severity, 
-						vulnerability.openTime as importTime, 
-						vulnerability.application.name as name
-				 FROM Vulnerability as vulnerability
-				 WHERE vulnerability.application.id IN ($P{appId}) AND
-				 vulnerability.active = true AND
-				 vulnerability.hidden = false AND
-				 vulnerability.isFalsePositive = false
-				 ORDER BY vulnerability.genericSeverity.name, vulnerability.application.name]]>
+		<![CDATA[
+		SELECT sum(application.infoVulnCount) as infoCount,
+                sum(application.lowVulnCount) as lowCount,
+                sum(application.mediumVulnCount) as mediumCount,
+                sum(application.highVulnCount) as highCount,
+                sum(application.criticalVulnCount) as criticalCount,
+                sum(application.totalVulnCount) as totalCount
+				 FROM Application as application
+				 WHERE application.id IN ($P{appId}) AND
+				 application.active = true
+		]]>
 	</queryString>
-	<field name="severity" class="java.lang.String"/>
-	<field name="importTime" class="java.util.Calendar"/>
-	<field name="name" class="java.lang.String"/>
-	<variable name="highCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="mediumCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Medium".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="criticalCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Critical".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="lowCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="infoCount" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer(1) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="totalCount" class="java.lang.Integer">
-		<variableExpression><![CDATA[$V{highCount} + $V{mediumCount} + $V{criticalCount} + $V{lowCount} + $V{infoCount}]]></variableExpression>
-	</variable>
-	<variable name="highAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["High".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="criticalAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Critical".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="mediumAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Medium".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="lowAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Low".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
-	</variable>
-	<variable name="infoAgeSum" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA["Info".equals($F{severity}) ? new Integer((new Long((new Date().getTime() - $F{importTime}.getTimeInMillis()) / (1000 * 3600 * 24))).intValue()) : new Integer(0)]]></variableExpression>
-	</variable>
+	<field name="infoCount" class="java.lang.Long"/>
+	<field name="lowCount" class="java.lang.Long"/>
+	<field name="mediumCount" class="java.lang.Long"/>
+	<field name="highCount" class="java.lang.Long"/>
+	<field name="criticalCount" class="java.lang.Long"/>
+	<field name="totalCount" class="java.lang.Long"/>
 	<variable name="criticalPercent" class="java.lang.String">
-		<variableExpression><![CDATA["" + ($V{criticalCount} != 0 ? (100 * $V{criticalCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+		<variableExpression><![CDATA["" + ($F{criticalCount} != 0 ? (100 * $F{criticalCount} / $F{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<variable name="highPercent" class="java.lang.String">
-		<variableExpression><![CDATA["" + ($V{highCount} != 0 ? (100 * $V{highCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+		<variableExpression><![CDATA["" + ($F{highCount} != 0 ? (100 * $F{highCount} / $F{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<variable name="mediumPercent" class="java.lang.String">
-		<variableExpression><![CDATA["" + ($V{mediumCount} != 0 ? (100 * $V{mediumCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+		<variableExpression><![CDATA["" + ($F{mediumCount} != 0 ? (100 * $F{mediumCount} / $F{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<variable name="lowPercent" class="java.lang.String">
-		<variableExpression><![CDATA["" + ($V{lowCount} != 0 ? (100 * $V{lowCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+		<variableExpression><![CDATA["" + ($F{lowCount} != 0 ? (100 * $F{lowCount} / $F{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<variable name="infoPercent" class="java.lang.String">
-		<variableExpression><![CDATA["" + ($V{infoCount} != 0 ? (100 * $V{infoCount} / $V{totalCount}) + "%" : "0%")]]></variableExpression>
+		<variableExpression><![CDATA["" + ($F{infoCount} != 0 ? (100 * $F{infoCount} / $F{totalCount}) + "%" : "0%")]]></variableExpression>
 	</variable>
 	<background>
 		<band/>
@@ -100,23 +72,23 @@
 				<pieDataset>
 					<pieSeries>
 						<keyExpression><![CDATA["Critical"]]></keyExpression>
-						<valueExpression><![CDATA[$V{criticalCount}]]></valueExpression>
+						<valueExpression><![CDATA[$F{criticalCount}]]></valueExpression>
 					</pieSeries>
 					<pieSeries>
 						<keyExpression><![CDATA["High"]]></keyExpression>
-						<valueExpression><![CDATA[$V{highCount}]]></valueExpression>
+						<valueExpression><![CDATA[$F{highCount}]]></valueExpression>
 					</pieSeries>
 					<pieSeries>
 						<keyExpression><![CDATA["Medium"]]></keyExpression>
-						<valueExpression><![CDATA[$V{mediumCount}]]></valueExpression>
+						<valueExpression><![CDATA[$F{mediumCount}]]></valueExpression>
 					</pieSeries>
 					<pieSeries>
 						<keyExpression><![CDATA["Low"]]></keyExpression>
-						<valueExpression><![CDATA[$V{lowCount}]]></valueExpression>
+						<valueExpression><![CDATA[$F{lowCount}]]></valueExpression>
 					</pieSeries>
 					<pieSeries>
 						<keyExpression><![CDATA["Info"]]></keyExpression>
-						<valueExpression><![CDATA[$V{infoCount}]]></valueExpression>
+						<valueExpression><![CDATA[$F{infoCount}]]></valueExpression>
 					</pieSeries>
 				</pieDataset>
 				<piePlot labelFormat="{0}">

@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "DeletedFinding")
@@ -35,7 +36,8 @@ public class DeletedFinding extends AuditableEntity {
 	private Vulnerability vulnerability;
 	
 	private Integer deletedScanId;
-	
+
+    @Size(max = Finding.LONG_DESCRIPTION_LENGTH)
 	private String longDescription;
 
 	private ChannelVulnerability channelVulnerability;
@@ -51,6 +53,8 @@ public class DeletedFinding extends AuditableEntity {
 	private boolean isMarkedFalsePositive = false;
 
 	private User user;
+
+    public DeletedFinding(){}
 	
 	public DeletedFinding(Finding originalFinding) {
 		if (originalFinding != null) {
