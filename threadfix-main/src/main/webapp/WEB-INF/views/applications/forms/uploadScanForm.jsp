@@ -5,15 +5,11 @@
         </h4>
     </div>
 
-    <div ng-file-drop-available="dropSupported=true" ng-class="{ 'drop-box' : ready(), 'long-drop-box' : errorMessage }" ng-file-drop="onFileSelect($files)" class="modal-body">
+    <div ng-file-drop-available="dropSupported=true" ng-class="{ 'drop-box' : ready(), 'long-drop-box' : alerts.length != 0 }" ng-file-drop="onFileSelect($files)" class="modal-body">
 
         <div ng-show="waiting" class="modal-loading"><div><span class="spinner dark"></span>Processing...</div></div><br>
 
         <div ng-show="!dropSupported">HTML5 Drop File is not supported!<br>
-            <div ng-show="showError" class="alert alert-error">
-                <button class="close" ng-click="showError = false" type="button">x</button>
-                {{ errorMessage }}
-            </div>
             <div ng-show="ready()">
                 Select File
                 <input type="file" ng-file-select="onFileSelect($files)">
@@ -21,11 +17,9 @@
         </div>
 
         <div ng-show="ready()" ng-show="dropSupported">
-            <div ng-show="showError" class="alert alert-error">
-                <button class="close" ng-click="showError = false" type="button">x</button>
-                {{ errorMessage }}
+            <div>
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
-
             Drag scan file here.
         </div>
 

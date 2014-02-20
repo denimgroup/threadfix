@@ -37,13 +37,19 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                 if (data.success) {
                     $modalInstance.close(data.object); // pass the team back up to update stats
                 } else {
-                    $scope.errorMessage = data.message;
+                    $scope.alerts = [{ type: 'danger', msg: data.message }];
                     $scope.showError = true;
                     $scope.waiting = false;
                     $scope.uploading = false;
                 }
             });
         }
+    };
+
+    $scope.alerts = [];
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
     };
 
     if (files) {
