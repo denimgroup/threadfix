@@ -30,6 +30,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
 
@@ -112,6 +113,10 @@ public class Application extends AuditableEntity {
 	private List<Integer> reportList = null;
 	private List<Finding> findingList = null;
 	private List<ApplicationChannel> uploadableChannels = null;
+
+    // These are used for caching and will require frequent updates.
+    private Integer infoVulnCount = 0, lowVulnCount = 0, mediumVulnCount = 0,
+            highVulnCount = 0, criticalVulnCount = 0, totalVulnCount = 0;
 
 	@Column(length = NAME_LENGTH, nullable = false)
 	public String getName() {
@@ -372,18 +377,71 @@ public class Application extends AuditableEntity {
 		this.applicationCriticality = applicationCriticality;
 	}
 	
-	/*
-	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
-	 */
-	@Transient
-	@JsonIgnore
-	public List<Integer> getVulnerabilityReport() {
-		return reportList;
-	}
-	
 	public void setVulnerabilityReport(List<Integer> vulnReport) {
 		this.reportList = vulnReport;
+
+        setInfoVulnCount(reportList.get(0));
+        setLowVulnCount(reportList.get(1));
+        setMediumVulnCount(reportList.get(2));
+        setHighVulnCount(reportList.get(3));
+        setCriticalVulnCount(reportList.get(4));
+        setTotalVulnCount(reportList.get(5));
 	}
+
+    @Column
+    public Integer getTotalVulnCount() {
+        return totalVulnCount == null ? 0 : totalVulnCount;
+    }
+
+    public void setTotalVulnCount(Integer totalVulnCount) {
+        this.totalVulnCount = totalVulnCount;
+    }
+
+    @Column
+    public Integer getInfoVulnCount() {
+        return infoVulnCount == null ? 0 : infoVulnCount;
+    }
+
+    @Column
+    public void setInfoVulnCount(Integer infoVulnCount) {
+        this.infoVulnCount = infoVulnCount;
+    }
+
+    public Integer getLowVulnCount() {
+        return lowVulnCount == null ? 0 : lowVulnCount;
+    }
+
+    @Column
+    public void setLowVulnCount(Integer lowVulnCount) {
+        this.lowVulnCount = lowVulnCount;
+    }
+
+    public Integer getMediumVulnCount() {
+        return mediumVulnCount == null ? 0 : mediumVulnCount;
+    }
+
+    @Column
+    public void setMediumVulnCount(Integer mediumVulnCount) {
+        this.mediumVulnCount = mediumVulnCount;
+    }
+
+    public Integer getHighVulnCount() {
+        return highVulnCount == null ? 0 : highVulnCount;
+    }
+
+    @Column
+    public void setHighVulnCount(Integer highVulnCount) {
+        this.highVulnCount = highVulnCount;
+    }
+
+    @Column
+    public Integer getCriticalVulnCount() {
+        return criticalVulnCount == null ? 0 : criticalVulnCount;
+    }
+
+    public void setCriticalVulnCount(Integer criticalVulnCount) {
+        this.criticalVulnCount = criticalVulnCount;
+    }
 
 	@Transient
 	@JsonIgnore

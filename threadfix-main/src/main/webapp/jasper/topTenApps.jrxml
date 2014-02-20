@@ -11,25 +11,22 @@
 	<queryString language="hql">
 		<![CDATA[SELECT 
 			application.name as name,
-			count(vulnerability) as vulnCount,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 1 and vulnerability.application = application) as info,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 2 and vulnerability.application = application) as low,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 3 and vulnerability.application = application) as medium,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 4 and vulnerability.application = application) as high,
-			(SELECT count(vulnerability) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = 5 and vulnerability.application = application) as critical
-				 FROM Application application join application.vulnerabilities as vulnerability
-				 where application.id in ($P{appId})
-				 	AND application.active = true
-				 	AND vulnerability.hidden = false and vulnerability.active = true and vulnerability.isFalsePositive = false
-			GROUP BY application.name
-			ORDER BY count(vulnerability) desc ]]>
+			application.totalVulnCount as vulnCount,
+			application.infoVulnCount as info,
+			application.lowVulnCount as low,
+			application.mediumVulnCount as medium,
+			application.highVulnCount as high,
+			application.criticalVulnCount as critical
+				 FROM Application application
+				 where application.id in ($P{appId}) AND application.active = true
+			ORDER BY application.totalVulnCount desc ]]>
 	</queryString>
 	<field name="name" class="java.lang.String"/>
-	<field name="info" class="java.lang.Long"/>
-	<field name="low" class="java.lang.Long"/>
-	<field name="medium" class="java.lang.Long"/>
-	<field name="high" class="java.lang.Long"/>
-	<field name="critical" class="java.lang.Long"/>
+	<field name="info" class="java.lang.Integer"/>
+	<field name="low" class="java.lang.Integer"/>
+	<field name="medium" class="java.lang.Integer"/>
+	<field name="high" class="java.lang.Integer"/>
+	<field name="critical" class="java.lang.Integer"/>
 	<summary>
 		<band height="250">
 			<stackedBarChart>

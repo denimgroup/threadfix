@@ -650,5 +650,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	public void generateVulnerabilityReport(Application application) {
 		application.setVulnerabilityReport(applicationDao.loadVulnerabilityReport(application));
-	}
+        application.getOrganization().updateVulnerabilityReport();
+
+    }
 }
