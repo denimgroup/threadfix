@@ -535,54 +535,8 @@
 
 	<profiles>
 		<!-- ================= Database Profiles ================= -->
-		<profile>
-			<id>hsqldb</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>environment</name>
-					<value>dev</value>
-				</property>
-			</activation>
-			<properties>
-				<!-- dependency settings -->
-				<jdbc.groupId>org.hsqldb</jdbc.groupId>
-				<jdbc.artifactId>hsqldb</jdbc.artifactId>
-				<jdbc.version>1.8.0.10</jdbc.version>
-
-				<!-- DbUnit settings -->
-				<dbunit.jdbc.driverClassName>org.hsqldb.jdbcDriver</dbunit.jdbc.driverClassName>
-				<dbunit.jdbc.url>jdbc:hsqldb:database/threadfix</dbunit.jdbc.url>
-				<dbunit.jdbc.username>sa</dbunit.jdbc.username>
-
-				<dbunit.dataTypeFactoryName>org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</dbunit.dataTypeFactoryName>
-			</properties>
-		</profile>
-		<profile>
-			<id>mysql</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-				<property>
-					<name>environment</name>
-					<value>dev</value>
-				</property>
-			</activation>
-			<properties>
-				<!-- dependency settings -->
-				<jdbc.groupId>mysql</jdbc.groupId>
-				<jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-				<jdbc.version>5.1.10</jdbc.version>
-
-				<!-- DbUnit settings -->
-				<dbunit.jdbc.driverClassName>com.mysql.jdbc.Driver</dbunit.jdbc.driverClassName>
-				<dbunit.jdbc.url>jdbc:mysql://localhost:3306/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8</dbunit.jdbc.url>
-				<dbunit.jdbc.username>smuser</dbunit.jdbc.username>
-
-				<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
-			</properties>
-		</profile>
         <profile>
-            <id>mysql-qa</id>
+            <id>mysql</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -611,7 +565,7 @@
             </build>
         </profile>
         <profile>
-            <id>hsqldb-qa</id>
+            <id>hsqldb</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
