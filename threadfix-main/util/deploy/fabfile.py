@@ -45,7 +45,7 @@ def exchange_files():
 # creates the WAR file from the source code
 @task
 @runs_once
-def build_war(profile, qaprofile):
+def build_war(profile):
     with lcd('%s' % local_working_folder_loc):
         res = local('mvn clean install -DskipTests -P %s' % profile)
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
@@ -88,12 +88,11 @@ def slow_deploy():
                             verify_site()
 
 @task(default=True)
-def deploy(profile, qaprofile):
+def deploy(profile):
 
     env.profile = profile
-    env.qaprofile = qaprofile
 
     #exchange_files()
-    build_war(profile, qaprofile)
+    build_war(profile)
     deploy_war()
     #verify_site()
