@@ -178,7 +178,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         modalInstance.result.then(function (updatedTeam) {
             $log.info("Successfully uploaded scan.");
-            $log.successMessage = "Successfully uploaded scan.";
+            $scope.successMessage = "Successfully uploaded scan.";
             updateTeam(team, updatedTeam);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -202,7 +202,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         modalInstance.result.then(function (updatedTeam) {
             $log.info("Successfully uploaded scan.");
-            $log.successMessage = "Successfully uploaded scan.";
+            $scope.successMessage = "Successfully uploaded scan.";
             updateTeam(team, updatedTeam);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
