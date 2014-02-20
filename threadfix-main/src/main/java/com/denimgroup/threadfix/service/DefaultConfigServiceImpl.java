@@ -69,10 +69,4 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         return !loadCurrentConfiguration().getHasCachedData();
     }
 
-    @Override
-    public void setReportCacheToDirty() {
-        DefaultConfiguration config = loadCurrentConfiguration();
-        config.setHasCachedData(false);
-        saveConfiguration(config);
-    }
 }
