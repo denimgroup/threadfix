@@ -37,7 +37,11 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                 if (data.success) {
                     $modalInstance.close(data.object); // pass the team back up to update stats
                 } else {
-                    $scope.alerts = [{ type: 'danger', msg: data.message }];
+                    if (!data.message) {
+                        $scope.alerts = [{ type: 'danger', msg: "Something went wrong communicating with the ThreadFix server. Try refreshing the page." }];
+                    } else {
+                        $scope.alerts = [{ type: 'danger', msg: data.message }];
+                    }
                     $scope.showError = true;
                     $scope.waiting = false;
                     $scope.uploading = false;
