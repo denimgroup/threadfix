@@ -761,6 +761,8 @@ div.box-shadow {
 	z-index:2;
 	float:left;
 	border-radius: 4px 4px 4px 4px;
+    height: 250px;
+    width: 422px;
 }
 
 #main-content .report-image table {

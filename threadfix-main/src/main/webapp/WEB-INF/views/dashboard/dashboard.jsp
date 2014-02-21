@@ -2,7 +2,7 @@
 
 <head>
 	<title>Dashboard</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboardController.js"></script>
 </head>
 
 <body class="dashboard">
@@ -28,8 +28,11 @@
 			</div>
 		</security:authorize>
 	</c:if>
-	
-	<div class="container-fluid">
+
+    <!-- Get the CSRF token so we can use it everywhere -->
+    <spring:url value="" var="emptyUrl"/>
+
+    <div ng-controller="DashboardController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'" class="container-fluid">
 		<c:if test="${ canGenerateReports }">
 			<div class="row-fluid">
 			    <div class="span6">
@@ -37,10 +40,16 @@
 			    	<h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
 			    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 			    	</h4>
-			    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
-					<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
 			    	<div id="leftTileReport">
-			    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+                        <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
+                        <div ng-hide="leftReport" ng-hide="leftReportFailed" class="team-report-wrapper report-image">
+                            <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                        </div>
+                        <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
+                            <div style="text-align: center; padding-top:120px;">
+                                Report Failed
+                            </div>
+                        </div>
 			    	</div>
 			    </div>
 			    
@@ -49,12 +58,15 @@
 			    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
 			    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 			    	</h4>
-			    	
-				    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
-						<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-				    	<div id="rightTileReport">
-				    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
-				    	</div>
+                    <div id="rightTileReport">
+                        <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
+                        <div ng-hide="rightReport" ng-hide="rightReportFailed" class="team-report-wrapper report-image">
+                            <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                        </div>
+                        <div ng-show="rightReportFailed" class="team-report-wrapper report-image">
+                            Report Failed
+                        </div>
+                    </div>
 			    </div>
 			</div>
 		</c:if>

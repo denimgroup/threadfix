@@ -23,8 +23,6 @@ threadfixModule.factory('threadfixAPIService', function($http) {
 
 threadfixModule.factory('threadFixModalService', function($http) {
 
-        var apiKey = "M4DpC1MLqK4YRG33DxHW4PaIM4FlvEowjlkbucERKg";
-
         var threadFixModalService = {};
 
         threadFixModalService.post = function(url, data) {

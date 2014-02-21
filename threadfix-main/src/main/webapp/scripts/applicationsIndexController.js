@@ -83,7 +83,8 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                 error(function(data, status, headers, config) {
 
                     // TODO improve error handling and pass something back to the users
-                    team.report = failureDiv;
+                    team.report = true;
+                    team.reportFailed = true;
                 });
         }
     }
