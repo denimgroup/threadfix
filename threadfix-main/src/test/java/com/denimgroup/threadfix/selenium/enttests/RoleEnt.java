@@ -22,24 +22,20 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.selenium.tests;
+package com.denimgroup.threadfix.selenium.enttests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
-import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class RoleTests extends BaseTest {
+public class RoleEnt extends BaseTest {
 
 	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
@@ -57,7 +53,6 @@ public class RoleTests extends BaseTest {
 	/**
 	 * Also tests delete
 	 */
-    @Ignore
 	@Test
 	public void testCreateRoleBasic() {
 		// needs to be alphabetically before "Admin" preset role
@@ -76,7 +71,7 @@ public class RoleTests extends BaseTest {
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(name));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name));
 	}
-	@Ignore
+
 	@Test
 	public void testEditRole() {
 		String name1 = "1" + getRandomString(15);
@@ -106,7 +101,7 @@ public class RoleTests extends BaseTest {
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name2));
 
 	}
-    @Ignore
+
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
@@ -151,7 +146,6 @@ public class RoleTests extends BaseTest {
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));
 	}
 
-    @Ignore
 	@Test
 	public void addApplicationOnly(){
 		String roleName = "appOnly" + getRandomString(10);
@@ -201,7 +195,6 @@ public class RoleTests extends BaseTest {
 	}
 
 
-    @Ignore
 	@Test
 	public void testSetPermissions() {
 		String name = "testName" + getRandomString(10);
@@ -258,8 +251,7 @@ public class RoleTests extends BaseTest {
 	
 	// these tests are to ensure that threadfix cannot enter a state with no users that
 	// have permissions to manage users / roles / groups
-	
-	@Ignore
+
 	@Test
 	public void testRemoveRolesFromUser() {
 		String admin = "Administrator";
@@ -306,7 +298,7 @@ public class RoleTests extends BaseTest {
 						.clickDeleteButton("RoleRemoval");
 		
 	}
-	@Ignore
+
 	@Test
 	public void testDeleteRoleWithUserAttached(){
 		String roleName = "test" + getRandomString(10);

@@ -138,6 +138,7 @@
 								<exclude>**/service/scans/*.java</exclude>
 								<exclude>**/plugin/scanner/*.java</exclude>
                                 <exclude>**/webservices/test/*.java</exclude>
+                                <exclude>**/enttests/*.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>
