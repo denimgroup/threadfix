@@ -20,6 +20,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/threadfix-module.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/services.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/genericModalController.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/headerController.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
 
     <!--[if lt IE 7]>
