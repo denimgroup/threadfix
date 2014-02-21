@@ -61,8 +61,11 @@
                          class="collapse applicationSection"
                          ng-class="{ expanded: team.expanded }">
                     <div ng-show="team.report" bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
-                    <div ng-hide="team.report" style="float:right; padding-top:115px; padding-right:90px;width:100px;">
+                    <div ng-hide="team.report" ng-hide="team.reportFailed" class="team-report-wrapper">
                         <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                    </div>
+                    <div ng-show="team.reportFailed" class="team-report-wrapper">
+                        Report Failed
                     </div>
 
                     <div ng-hide="team.applications">

@@ -76,7 +76,8 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     if (matches !== null && matches[1] !== null) {
                         team.report = matches[1];
                     } else {
-                        team.report = failureDiv;
+                        team.report = true;
+                        team.reportFailed = true;
                     }
                 }).
                 error(function(data, status, headers, config) {

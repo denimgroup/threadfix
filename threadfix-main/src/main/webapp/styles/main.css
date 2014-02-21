@@ -977,3 +977,10 @@ div.box-shadow {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+.team-report-wrapper {
+    float:right;
+    padding-top:115px;
+    padding-right:90px;
+    width:100px;
+}
