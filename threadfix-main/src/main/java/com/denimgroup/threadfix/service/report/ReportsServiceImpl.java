@@ -122,7 +122,9 @@ public class ReportsServiceImpl implements ReportsService {
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
 			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
-		}
+		} finally {
+            log.info("Finished generating report.");
+        }
 	}
 
 	@SuppressWarnings("resource")

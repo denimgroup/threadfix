@@ -9,6 +9,7 @@
 
 <table ng-show="teams" class="table table-hover white-inner-table">
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
     <thead>
         <tr>
@@ -59,8 +60,9 @@
                          id="teamInfoDiv{{ team.id }}"
                          class="collapse applicationSection"
                          ng-class="{ expanded: team.expanded }">
-                    <div bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}">
-                        Loading...
+                    <div ng-show="team.report" bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
+                    <div ng-hide="team.report" style="float:right; padding-top:115px; padding-right:90px;width:100px;">
+                        <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
 
                     <div ng-hide="team.applications">
@@ -98,22 +100,14 @@
                                 <td class="centered" id="numLowVulns{{ teamIndex }}-{{ appIndex}}">{{ app.lowVulnCount }}</td>
                                 <td class="centered" id="numInfoVulns{{ teamIndex }}-{{ appIndex}}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
-                                    <!-- TODO figure out nested indices -->
                                     <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}" class="btn"
                                             ng-click="showUploadForm(team, app)">
                                         Upload Scan
                                     </a>
-                                    <%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
                                 </td>
                             </tr>
                         </table>
 
-                    </div>
-                    <div id="myAppModal{{ team.id }}" class="modal hide fade" tabindex="-1"
-                         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div id="formDiv{{ team.id }}">
-                            <%--<%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>--%>
-                        </div>
                     </div>
                 </div>
             </td>
