@@ -145,12 +145,12 @@
 						</td>
 						<td class="ellipsis" style="max-width:200px;" id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
 						<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
-						<td id="appTotalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[5] }"/></td>
-						<td id="appCriticalVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[4] }"/></td>
-						<td id="appHighVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[3] }"/></td>
-						<td id="appMediumVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[2] }"/></td>
-						<td id="appLowVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[1] }"/></td>
-						<td id="appInfoVulns${ status.count }"><c:out value="${ app.vulnerabilityReport[0] }"/></td>
+						<td id="appTotalVulns${ status.count }"><c:out value="${ app.totalVulnCount }"/></td>
+						<td id="appCriticalVulns${ status.count }"><c:out value="${ app.criticalVulnCount }"/></td>
+						<td id="appHighVulns${ status.count }"><c:out value="${ app.highVulnCount }"/></td>
+						<td id="appMediumVulns${ status.count }"><c:out value="${ app.mediumVulnCount }"/></td>
+						<td id="appLowVulns${ status.count }"><c:out value="${ app.lowVulnCount }"/></td>
+						<td id="appInfoVulns${ status.count }"><c:out value="${ app.infoVulnCount }"/></td>
 					</tr>
 					</c:forEach>
 				</c:otherwise>
