@@ -38,7 +38,7 @@
 			    <div class="span6">
 			    	<spring:url value="/reports/9" var="reportsUrl"/>
 			    	<h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
-			    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+			    		<a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 			    	</h4>
 			    	<div id="leftTileReport">
                         <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
@@ -56,7 +56,7 @@
 			     <div class="span6">
 			     	<spring:url value="/reports/10" var="reportsUrl"/>
 			    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
-			    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+			    		<a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
 			    	</h4>
                     <div id="rightTileReport">
                         <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
