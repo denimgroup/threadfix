@@ -30,7 +30,7 @@
 				</security:authorize>
 				<td id="tab-user" style="width: 130px;">
 					<div class="dropdown normalLinks">
-					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabUserAnchor" href="#">
 							<i class="icon-user icon-white"></i> <security:authentication property="principal.username"/>
@@ -38,7 +38,7 @@
 						</a>
 						</div>
 				  	 </div>
-					<ul id="userConfigurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="userConfigurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
 						
 						<security:authentication var="principal" property="principal" />
 						<c:if test="${ not principal.isLdapUser }">
@@ -63,14 +63,14 @@
 				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
-					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabConfigAnchor" href="#">
 							<i class="icon-cog icon-white"></i>
 						</a>
 						</div>
 				  	 </div>
-					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 						    <li class="normalLinks">
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
