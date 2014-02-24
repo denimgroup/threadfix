@@ -4,6 +4,7 @@
 	<title><c:out value="${ application.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationDetailPageController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vulnTableController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
 </head>
 
 <body id="apps">
@@ -45,67 +46,45 @@
             </c:if>
         </div>
 
-        <c:if test="${ canGenerateReports }">
-            <div class="container-fluid">
+        <div ng-controller="ReportsController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'" class="container-fluid">
+            <c:if test="${ canGenerateReports }">
                 <div class="row-fluid">
                     <div class="span6">
-                        <h4>
-                            6 Month Vulnerability Burndown
-                            <c:if test="${ numVulns > 0 }">
-                                <spring:url value="/reports/9/{orgId}/{appId}" var="reportsUrl">
-                                    <spring:param name="orgId" value="${ application.organization.id }"/>
-                                    <spring:param name="appId" value="${ application.id }"/>
-                                </spring:url>
-                                <span style="font-size:12px;float:right;">
-                                    <a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
-                                </span>
-                            </c:if>
+                        <spring:url value="/reports/9" var="reportsUrl"/>
+                        <h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
+                            <a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
                         </h4>
-                        <c:if test="${ numVulns > 0 }">
-                            <spring:url value="/dashboard/leftReport" var="reportsUrl"/>
-                            <form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>">
-                                <input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
-                                <input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
-                            </form>
-                            <div id="leftTileReport">
-                                <%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+                        <div id="leftTileReport">
+                            <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
+                            <div ng-hide="leftReport" ng-hide="leftReportFailed" class="team-report-wrapper report-image">
+                                <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                             </div>
-                        </c:if>
-                        <c:if test="${ numVulns == 0 }">
-                            <%@ include file="/WEB-INF/views/reports/emptyReport.jspf" %>
-                        </c:if>
+                            <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
+                                <div style="text-align: center; padding-top:120px;">
+                                    Report Failed
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                     <div class="span6">
-                        <h4>
-                            Top 10 Vulnerabilities
-                            <c:if test="${ numVulns > 0 }">
-                                <spring:url value="/reports/3/{orgId}/{appId}" var="reportsUrl">
-                                    <spring:param name="orgId" value="${ application.organization.id }"/>
-                                    <spring:param name="appId" value="${ application.id }"/>
-                                </spring:url>
-                                <span style="font-size:12px;float:right;">
-                                    <a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a>
-                                </span>
-                            </c:if>
+                    <div class="span6">
+                        <spring:url value="/reports/10" var="reportsUrl"/>
+                        <h4>Top 10 Vulnerabilities<span style="font-size:12px;float:right;">
+                            <a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
                         </h4>
-                        <c:if test="${ numVulns > 0 }">
-                            <spring:url value="/dashboard/rightReport" var="reportsUrl"/>
-                            <form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>">
-                                <input style="display:none" name="orgId" value="<c:out value="${ application.organization.id }"/>"/>
-                                <input style="display:none" name="appId" value="<c:out value="${ application.id }"/>"/>
-                            </form>
-                            <div id="rightTileReport">
-                                <%@ include file="/WEB-INF/views/reports/loading.jspf" %>
+                        <div id="rightTileReport">
+                            <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
+                            <div ng-hide="rightReport" ng-hide="rightReportFailed" class="team-report-wrapper report-image">
+                                <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                             </div>
-                        </c:if>
-                        <c:if test="${ numVulns == 0 }">
-                            <%@ include file="/WEB-INF/views/reports/emptyReport.jspf" %>
-                        </c:if>
+                            <div ng-show="rightReportFailed" class="team-report-wrapper report-image">
+                                Report Failed
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </c:if>
+            </c:if>
+        </div>
 
             <spring:url value="/organizations/{orgId}/applications/{appId}/vulnTab" var="vulnTabUrl">
                 <spring:param name="orgId" value="${ application.organization.id }"/>
