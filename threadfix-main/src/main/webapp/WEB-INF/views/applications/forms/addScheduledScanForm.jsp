@@ -25,9 +25,27 @@
             <tr class="left-align">
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
-                    <form:input name="hour" style="margin-bottom:0px; width:22px;" id="hour${application.id}" size="1" maxlength="2" path="hour"/>
+                    <form:select name="hour" style="margin-bottom:0px; width:52px;" id="hour${application.id}" path="hour">
+                        <form:option value="0" label="0"/>
+                        <form:option value="1" label="1"/>
+                        <form:option value="2" label="2"/>
+                        <form:option value="3" label="3"/>
+                        <form:option value="4" label="4"/>
+                        <form:option value="5" label="5"/>
+                        <form:option value="6" label="6"/>
+                        <form:option value="7" label="7"/>
+                        <form:option value="8" label="8"/>
+                        <form:option value="9" label="9"/>
+                        <form:option value="10" label="10"/>
+                        <form:option value="11" label="11"/>
+                    </form:select>
                      :
-                    <form:input name="minute" style="margin-bottom:0px; width:22px;" id="minute${application.id}" size="1" maxlength="2" path="minute" />
+                        <form:select name="minute" style="margin-bottom:0px; width:52px;" id="minute${application.id}" path="minute">
+                            <form:option value="0" label="00"/>
+                            <form:option value="15" label="15"/>
+                            <form:option value="30" label="30"/>
+                            <form:option value="45" label="45"/>
+                        </form:select>
 
                     <form:select style="margin-bottom:0px; width:60px;"
                                  name="selectedPeriod"

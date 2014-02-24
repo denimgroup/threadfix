@@ -24,7 +24,11 @@
 					<tr class="bodyRow">
 						<td><c:out value="${scheduledScan.id}" /></td>
 						<td><c:out value="${scheduledScan.scanner}" /></td>
-                        <td><c:out value="${scheduledScan.day}" />&nbsp;<c:out value="${scheduledScan.hour}" />:<c:out value="${scheduledScan.minute}" />
+                        <c:set var="display0" value="" />
+                        <c:if test="${ scheduledScan.minute < 10 }">
+                            <c:set var="display0" value="0" />
+                        </c:if>
+                        <td><c:out value="${scheduledScan.day}" />&nbsp;<c:out value="${scheduledScan.hour}" />:<c:out value="${display0}" /><c:out value="${scheduledScan.minute}" />
                             &nbsp;<c:out value="${scheduledScan.period}" /></td>
                         <td><c:out value="${scheduledScan.frequency}" /></td>
 						<c:if test="${ canManageApplications }">
