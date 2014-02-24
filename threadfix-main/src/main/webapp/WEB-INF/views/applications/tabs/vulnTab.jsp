@@ -4,7 +4,9 @@
         <pagination total-items="vulns.length / 100" page="currentPage"></pagination>
     </div>
 
-    <table class="table sortable table-hover tf-colors" id="anyid">
+    <div ng-hide="vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <table ng-show="vulns" class="table sortable table-hover tf-colors" id="anyid">
         <thead>
             <tr>
                 <th style="width:8px;"></th>
@@ -29,8 +31,7 @@
                         error: vuln.severityName === 'Critical',
                         warning: vuln.severityName === 'High',
                         success: vuln.severityName === 'Medium',
-                        info: vuln.severityName === 'Low',
-                        info: vuln.severityName === 'Info'
+                        info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
                         }">
                     <td class="pointer">
                         <span id="caret{{ vuln.id }}" class="caret-right"></span>
