@@ -24,17 +24,23 @@
 
 package com.denimgroup.threadfix.remote.response;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 /**
  * This is the basic RestResponse which is returned by all the methods on the ThreadFix server side.
  */
 public class RestResponse<T> {
 
+    @JsonView(AllViews.TableRow.class)
     public String message = "";
+    @JsonView(AllViews.TableRow.class)
     public boolean success = false;
+    @JsonView(AllViews.TableRow.class)
     public int responseCode = -1;
+    @JsonView(AllViews.TableRow.class)
     public T object = null;
 
     public static <T> RestResponse<T> failure(String response) {

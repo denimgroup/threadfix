@@ -1,6 +1,6 @@
 var threadfixModule = angular.module('threadfix')
 
-threadfixModule.factory('threadfixAPIService', function($http) {
+threadfixModule.factory('threadfixAPIService', function($location, $http) {
 
     var threadfixAPIService = {};
 
@@ -17,6 +17,13 @@ threadfixModule.factory('threadfixAPIService', function($http) {
             url: url
         });
     };
+
+    threadfixAPIService.loadVulns = function(csrfToken) {
+        return $http({
+            method: 'GET',
+            url: $location.path() + "/vulns" + csrfToken
+        });
+    }
 
     return threadfixAPIService;
 });

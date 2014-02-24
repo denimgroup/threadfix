@@ -225,15 +225,15 @@ public class ApplicationsController {
 		model.addAttribute("projectMetadata", data);
 		model.addAttribute(new DefectViewModel());
 	}
-	
+
 	@RequestMapping("/{appId}/defectSubmission")
 	public String getDefectSubmissionForm(@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId, SessionStatus status, Model model) {
-		
+
 		addDefectModelAttributes(model, appId, orgId);
-		
+
 		model.addAttribute("contentPage", "defects/submitDefectForm.jsp");
-		
+
 		return "ajaxSuccessHarness";
 	}
 	
