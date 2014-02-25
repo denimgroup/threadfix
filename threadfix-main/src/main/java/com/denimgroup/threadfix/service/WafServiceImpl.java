@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,11 +38,6 @@ import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
 
@@ -125,10 +122,11 @@ public class WafServiceImpl implements WafService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void generateWafRules(Waf waf, WafRuleDirective directive) {
-		if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0
+	public List<WafRule> generateWafRules(Waf waf, WafRuleDirective directive, Application application) {
+        List<WafRule> newWafRuleList = null;
+        if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0
 				|| waf.getWafType() == null) {
-			return;
+			return newWafRuleList;
 		}
 		
 		WafRuleDirective editedDirective = directive;
@@ -144,21 +142,47 @@ public class WafServiceImpl implements WafService {
 			if (editedDirective == null) {
 				editedDirective = generator.getDefaultDirective(waf);
 			}
-			
-			List<WafRule> wafRuleList = generator.generateRules(waf, editedDirective);
-			waf.setWafRules(wafRuleList);
-			waf.setLastWafRuleDirective(editedDirective);
+
+            newWafRuleList = generator.generateRules(waf, editedDirective, application);
+            waf.addWafRules(newWafRuleList);
+            waf.setLastWafRuleDirective(editedDirective);
 			saveOrUpdateRules(waf, editedDirective);
 			storeWaf(waf);
 		}
+        return newWafRuleList;
 	}
+
+    /**
+     * Return updated rules for waf after generating new rules for application
+     * @param waf
+     * @param newWafRuleList
+     * @return
+     */
+    private List<WafRule> getUpdatedWafRuleList(Waf waf, List<WafRule> newWafRuleList) {
+        List<WafRule> oldList = waf.getWafRules();
+        if (oldList == null || oldList.size() == 0)
+            return newWafRuleList;
+        if (newWafRuleList == null || newWafRuleList.size()==0)
+            return oldList;
+        int updatedAppId = newWafRuleList.get(0).getVulnerability().getApplication().getId();
+        List<WafRule> removeList = new ArrayList<>();
+        for (WafRule rule : oldList) {
+            if (rule.getVulnerability().getApplication().getId() == updatedAppId)
+                removeList.add(rule);
+//                oldList.remove(rule);
+        }
+        oldList.removeAll(removeList);
+        oldList.addAll(newWafRuleList);
+        return oldList;
+    }
+
 
 	@Override
 	@Transactional(readOnly = false)
-	public void generateWafRules(Waf waf, String directiveName) {
+	public List<WafRule> generateWafRules(Waf waf, String directiveName, Application application) {
 		if (waf == null || waf.getId() == null || waf.getWafType() == null 
 				|| waf.getWafType().getId() == null)
-			return;
+			return null;
 		WafRuleDirective directive = null;
 		if (directiveName != null && !directiveName.isEmpty()) {
 			WafRuleDirective tempDirective = wafRuleDirectiveDao.retrieveByWafTypeIdAndDirective(
@@ -166,7 +190,7 @@ public class WafServiceImpl implements WafService {
 			if (tempDirective != null)
 				directive = tempDirective;
 		}
-		generateWafRules(waf, directive);
+		return generateWafRules(waf, directive, application);
 	}
 
 	/**
@@ -197,36 +221,68 @@ public class WafServiceImpl implements WafService {
 		}
 		
 		List<WafRule> rules = loadCurrentRules(waf);
-		
-		StringBuilder buffer = new StringBuilder();
-		
-		String prefix = null, suffix = null;
-		String name = waf.getWafType().getName();
-		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
-			prefix = RealTimeProtectionGenerator.getStart(name, rules);
-			suffix = RealTimeProtectionGenerator.getEnd(name, rules);
-		}
-		
-		if (prefix != null) {
-			buffer.append(prefix);
-		}
-		
-		if (rules != null) {
-			for (WafRule rule : rules) {
-				if (rule != null && rule.getIsNormalRule()) {
-					buffer.append(rule.getRule()).append('\n');
-				}
-			}
-		}
-		
-		if (suffix != null) {
-			buffer.append(suffix);
-		}
 
-		return buffer.toString();
+        return getRulesText(waf, rules);
+		
+//		StringBuilder buffer = new StringBuilder();
+//
+//		String prefix = null, suffix = null;
+//		String name = waf.getWafType().getName();
+//		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
+//			prefix = RealTimeProtectionGenerator.getStart(name, rules);
+//			suffix = RealTimeProtectionGenerator.getEnd(name, rules);
+//		}
+//
+//		if (prefix != null) {
+//			buffer.append(prefix);
+//		}
+//
+//		if (rules != null) {
+//			for (WafRule rule : rules) {
+//				if (rule != null && rule.getIsNormalRule()) {
+//					buffer.append(rule.getRule()).append('\n');
+//				}
+//			}
+//		}
+//
+//		if (suffix != null) {
+//			buffer.append(suffix);
+//		}
+//
+//		return buffer.toString();
 	}
-	
-	@Override
+
+    @Override
+    public String getRulesText(Waf waf, List<WafRule> rules) {
+        StringBuilder buffer = new StringBuilder();
+
+        String prefix = null, suffix = null;
+        String name = waf.getWafType().getName();
+        if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
+            prefix = RealTimeProtectionGenerator.getStart(name, rules);
+            suffix = RealTimeProtectionGenerator.getEnd(name, rules);
+        }
+
+        if (prefix != null) {
+            buffer.append(prefix);
+        }
+
+        if (rules != null) {
+            for (WafRule rule : rules) {
+                if (rule != null && rule.getIsNormalRule()) {
+                    buffer.append(rule.getRule()).append('\n');
+                }
+            }
+        }
+
+        if (suffix != null) {
+            buffer.append(suffix);
+        }
+
+        return buffer.toString();
+    }
+
+    @Override
 	public List<WafRule> loadCurrentRules(Waf waf) {
 		if (waf == null)
 			return null;
@@ -235,5 +291,18 @@ public class WafServiceImpl implements WafService {
 		else
 			return wafRuleDao.retrieveByWafAndDirective(waf, waf.getLastWafRuleDirective());
 	}
-	
+
+    @Override
+    public List<WafRule> getAppRules(Waf waf, Application application) {
+        List<WafRule> allRules = loadCurrentRules(waf);
+        if (waf==null || application == null)
+            return allRules;
+        List<WafRule> returnList = new ArrayList<>();
+        for (WafRule rule: allRules) {
+            if (rule.getVulnerability().getApplication().getId()==application.getId())
+                returnList.add(rule);
+        }
+        return returnList;
+    }
+
 }

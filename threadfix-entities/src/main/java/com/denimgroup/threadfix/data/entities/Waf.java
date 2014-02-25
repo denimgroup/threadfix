@@ -28,6 +28,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -120,5 +121,14 @@ public class Waf extends AuditableEntity {
 		}
 		return !hasActiveApplication;
 	}
+
+    public void addWafRules(List<WafRule> wafRuleList) {
+        if (getWafRules()==null)
+            setWafRules(new ArrayList<WafRule>());
+        for (WafRule rule: wafRuleList) {
+            if (!getWafRules().contains(rule))
+                getWafRules().add(rule);
+        }
+    }
 
 }

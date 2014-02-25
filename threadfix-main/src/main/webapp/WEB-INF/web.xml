@@ -155,6 +155,7 @@
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,
         		protected-regex ^/wafs/new/ajax$,
         		protected-regex ^/wafs/new/ajax/appPage$,
+                protected-regex ^/wafs/[0-9]+/rules$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/manual/[0-9]+/edit$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/getDefectsFromDefectTracker$,

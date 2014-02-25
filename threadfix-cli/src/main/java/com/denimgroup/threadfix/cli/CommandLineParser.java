@@ -251,12 +251,23 @@ public class CommandLineParser {
 			
 			} else if (cmd.hasOption("r")) {
 				String[] ruleArgs = cmd.getOptionValues("r");
-				if (ruleArgs.length != 1) {
+				if (ruleArgs.length != 1 && ruleArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.'");
 				}
                 if (isInteger(ruleArgs[0])) {
-                    LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
-                    printOutput(client.getRules(ruleArgs[0]));
+                    String appId = "-1";
+                    if (ruleArgs.length == 2) {
+                        if (isInteger(ruleArgs[1])) {
+                            appId = ruleArgs[1];
+                            LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + " for application with ID " + appId + ".");
+                        } else {
+                            LOGGER.warn("ApplicationId is not number, not doing anything.");
+                            return;
+                        }
+                    } else {
+                        LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
+                    }
+                    printOutput(client.getRules(ruleArgs[0], appId));
                 } else
                     LOGGER.warn("WafId is not number, not doing anything.");
 			} else {

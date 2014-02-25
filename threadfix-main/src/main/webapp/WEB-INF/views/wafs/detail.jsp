@@ -101,8 +101,17 @@
 			<spring:url value="/wafs/{wafId}/rules" var="generateRulesUrl">
 				<spring:param name="wafId" value="${ waf.id }"/>
 			</spring:url>
-			<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }">
-			<c:choose>
+			<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }" id="wafGenerateForm">
+                <select id="wafApplicationSelect" name="wafApplicationId">
+                    <option value="-2">Select Application</option>
+                    <option value="-1">All</option>
+                    <c:forEach var="app" items="${ apps }">
+                        <c:if test="${ app.active }">
+                            <option value="${ app.id }"><c:out value="${ app.organization.name }"/>/<c:out value="${ app.name }"/></option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+                <c:choose>
 				<c:when test="${ empty waf.wafType.wafRuleDirectives and empty lastDirective}">
 					No Directives Found.  
 				</c:when>
@@ -115,31 +124,13 @@
 					</select>
 				</c:otherwise>
 			</c:choose>
-			<input class="btn btn-primary" id="generateWafRulesButton" type="submit" value="Generate WAF Rules" />
+                <a id="generateWafRulesButton" class="modalSubmit btn btn-primary" data-success-div="ruleListDiv">Generate WAF Rules</a>
 			</form:form>
 		</c:if>
 		
-		<c:if test="${ not empty waf.wafRules }">
-		<h3>WAF Rule Statistics (click to see details):</h3>
-			<c:forEach var="wafRule" items="${ waf.wafRules }">
-				<spring:url value="/wafs/{wafId}/rules/{wafRuleId}" var="generateRulesUrl">
-					<spring:param name="wafId" value="${ waf.id }"/>
-					<spring:param name="wafRuleId" value="${ wafRule.id }"/>
-				</spring:url>
-				<a href="${ fn:escapeXml(generateRulesUrl) }"> <c:out value="${ wafRule.nativeId }"/> - fired <c:out value="${fn:length(wafRule.securityEvents)}" /> times</a>
-				<br/>
-			</c:forEach>
-		</c:if>
-		
-		<c:if test="${ not empty rulesText }">
-			<h3>WAF Rules:</h3>
-			<form id="form1" name="form1" method="post">
-				<input class="btn btn-primary" id="downloadWafRulesButton" type="submit" value="Download Waf Rules"/>
-			</form><br/>
-			<div id="wafrule">
-				<pre><c:out value="${ rulesText }"/></pre>	
-			</div>
-		</c:if>
+        <div id="ruleListDiv">
+            <%@ include file="/WEB-INF/views/wafs/detailRuleList.jsp" %>
+        </div>
 	</c:if>
-	
+
 </body>
