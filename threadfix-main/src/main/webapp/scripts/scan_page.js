@@ -44,3 +44,8 @@ function changeAbilityOfDaySelection()
         $("#selectedDay").attr("disabled", true);
     }
 }
+
+function changeToggleTextDisplay()
+{
+    $("#statisticsDivLink").text($("#statisticsDivLink").text() === "Show Statistics" ? "Hide Statistics" : "Show Statistics");
+}
