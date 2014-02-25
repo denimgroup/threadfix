@@ -145,6 +145,7 @@ function clearFilters(elementId, endPoint){
 	$("#locationFilterInput").val("");
 	$("#parameterFilterInput").val("");
 	$("#descriptionFilterInput").val("");
+    $("#cweFilterInput").val("");
 	if (elementId !== null && endPoint !== null) {
 		filter(elementId, endPoint);
 	}
