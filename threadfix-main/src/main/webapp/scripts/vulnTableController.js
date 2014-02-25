@@ -8,6 +8,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.csrfToken = $scope.$parent.csrfToken;
 
+    $scope.goToPage = function() {
+        $scope.page = $scope.pageInput;
+    }
+
     var getTableSortBean = function() {
         return {
             page: $scope.page
@@ -15,6 +19,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     }
 
     var refresh = function() {
+        $scope.loading = true;
         $http.post($window.location.pathname + "/table" + $scope.csrfToken,
                 getTableSortBean()).
             success(function(data, status, headers, config) {
@@ -22,16 +27,15 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
                 if (data.success) {
                     $scope.vulns = data.object;
-
-                    if ($scope.vulns.length == 0) {
-                        $scope.openTeamModal();
-                    }
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
+
+                $scope.loading = false;
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loading = false;
             });
     };
 

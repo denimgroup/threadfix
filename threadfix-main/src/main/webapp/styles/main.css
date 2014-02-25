@@ -523,8 +523,12 @@ table.bold-headers tr th {
 	vertical-align:middle;
 }
 
+.pagination.no-margin {
+    margin:0 0 0 0;!important
+}
+
 .pagination input {
-	margin-bottom:0px;
+	margin-bottom:0;
 }
 
 .table-hover tbody tr.expandable:hover table td, .table-hover tbody tr.expandable:hover table th {
