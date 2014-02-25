@@ -104,7 +104,7 @@
 			<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }" id="wafGenerateForm">
                 <select id="wafApplicationSelect" name="wafApplicationId">
                     <option value="-2">Select Application</option>
-                    <option value="-1">All</option>
+                    <option value="-1">All Applications</option>
                     <c:forEach var="app" items="${ apps }">
                         <c:if test="${ app.active }">
                             <option value="${ app.id }"><c:out value="${ app.organization.name }"/>/<c:out value="${ app.name }"/></option>
