@@ -32,14 +32,14 @@
                     <li><a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">Edit Vulnerability Filters</a></li>
                 </c:if>
                 <c:if test="${!canManageApplications }">
-                    <li><a id="viewApplicationModalButton" href="#viewApplicationModal" data-toggle="modal">Details	</a></li>
+                    <li><a id="viewApplicationModalButton">Details	</a></li>
                 </c:if>
                 <c:if test="${ canManageUsers && enterprise}">
-                    <li><a id="userListModelButton" href="#usersModal" data-toggle="modal">View Permissible Users</a></li>
+                    <li><a id="userListModelButton">View Permissible Users</a></li>
                 </c:if>
                 <c:if test="${ canUploadScans }">
-                    <li><a id="uploadScanModalLink" href="#uploadScan${ application.id }" data-toggle="modal">Upload Scan</a></li>
-                    <li><a id="addManualFindingModalLink" href="#addManualFindingModal" data-toggle="modal">Add Manual Finding</a></li>
+                    <li><a id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
+                    <li><a id="addManualFindingModalLink">Add Manual Finding</a></li>
                     <c:if test="${ not empty application.defectTracker }">
                         <spring:url value="/organizations/{orgId}/applications/{appId}/defects/update" var="updateDefectUrl">
                             <spring:param name="orgId" value="${ application.organization.id }"/>

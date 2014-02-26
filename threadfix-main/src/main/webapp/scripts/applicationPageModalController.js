@@ -57,8 +57,11 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         });
     };
 
-
     $scope.$on('fileDragged', function(event, $files) {
+        $scope.showUploadForm($files);
+    });
+
+    $scope.showUploadForm = function(files) {
         var modalInstance = $modal.open({
             templateUrl: 'uploadScanForm.html',
             controller: 'UploadScanController',
@@ -68,18 +71,18 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return "/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
                 },
                 files: function() {
-                    return $files;
+                    return files;
                 }
             }
         });
 
-        modalInstance.result.then(function (updatedTeam) {
+        modalInstance.result.then(function (scan) {
             $log.info("Successfully uploaded scan.");
             $rootScope.$broadcast('scanUploaded');
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    });
 
+    }
 
 })
