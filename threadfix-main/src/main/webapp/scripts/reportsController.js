@@ -52,13 +52,22 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
             });
     };
 
-
     $scope.$watch('csrfToken', function() {
-        if (!scope.empty) {
+        if (!$scope.empty) {
             loadReports();
         }
     });
 
+    $scope.$on('scanUploaded', function() {
+        $scope.loadingLeft = true;
+        $scope.leftReport = null;
+        $scope.loadingRight = true;
+        $scope.rightReport = null;
+        $scope.rightReportFailed = false;
+        $scope.leftReportFailed = false;
+        $scope.empty = false;
+        loadReports();
+    });
 
 
 });

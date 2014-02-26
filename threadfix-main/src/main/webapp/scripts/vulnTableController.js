@@ -8,6 +8,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.csrfToken = $scope.$parent.csrfToken;
 
+    $scope.heading = '0 Vulnerabilities';
+
     $scope.goToPage = function() {
         $scope.page = $scope.pageInput;
     }
@@ -26,7 +28,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
                 $scope.initialized = true;
 
                 if (data.success) {
-                    $scope.vulns = data.object;
+                    $scope.vulns = data.object.vulnerabilities;
+                    $scope.numVulns = data.object.numVulns;
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
@@ -43,5 +46,17 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.$watch('page', refresh); // TODO look at caching some of this
 
+    $scope.$watch('numVulns', function() {
+        if ($scope.numVulns === 1) {
+            $scope.heading = '1 Vulnerability'
+        } else {
+            $scope.heading = $scope.numVulns + ' Vulnerabilities'
+        }
+    });
+
+    $scope.$on('scanUploaded', function() {
+        $scope.empty = false;
+        refresh();
+    });
 
 });

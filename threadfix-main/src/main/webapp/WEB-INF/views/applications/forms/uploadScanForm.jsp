@@ -5,7 +5,10 @@
         </h4>
     </div>
 
-    <div ng-file-drop-available="dropSupported=true" ng-class="{ 'drop-box' : ready(), 'long-drop-box' : alerts.length != 0 }" ng-file-drop="onFileSelect($files)" class="modal-body">
+    <div ng-file-drop-available="dropSupported=true"
+         ng-class="{ 'drop-box' : ready(), 'long-drop-box' : alerts.length != 0 }"
+         ng-file-drop="onFileSelect($files)"
+         class="modal-body">
 
         <div ng-show="waiting" class="modal-loading"><div><span class="spinner dark"></span>Processing...</div></div><br>
 

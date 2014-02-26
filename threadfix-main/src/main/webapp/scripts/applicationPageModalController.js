@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationPageModalController', function($scope, $window, $log, $http, $modal) {
+myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal) {
 
     $scope.csrfToken = $scope.$parent.csrfToken;
 
@@ -56,5 +56,30 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $windo
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+
+    $scope.$on('fileDragged', function(event, $files) {
+        var modalInstance = $modal.open({
+            templateUrl: 'uploadScanForm.html',
+            controller: 'UploadScanController',
+            resolve: {
+                url: function() {
+                    var app = $scope.config.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                },
+                files: function() {
+                    return $files;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (updatedTeam) {
+            $log.info("Successfully uploaded scan.");
+            $rootScope.$broadcast('scanUploaded');
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    });
+
 
 })

@@ -6,6 +6,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationPageModalController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vulnTableController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/uploadScanController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modalControllerWithConfig.js"></script>
 </head>
 
@@ -15,8 +16,10 @@
     <spring:url value="" var="emptyUrl"/>
     <div ng-controller="ApplicationDetailPageController"
          ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
-         empty = <c:out value="${ numVulns }"/> === 0">
+         empty = <c:out value="${ numVulns }"/> === 0"
+         ng-file-drop="onFileSelect($files)">
 
+        <%@ include file="forms/uploadScanForm.jsp"%>
         <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
         <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
         <%--<%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>--%>
@@ -59,13 +62,7 @@
         <%--</c:choose>--%>
 
         <tabset style="margin-top:10px;">
-            <tab heading="
-            ${ fn:escapeXml(numVulns) }
-                        <c:if test="${ numVulns == 1 }">Vulnerability</c:if>
-                        <c:if test="${ numVulns != 1 }">Vulnerabilities</c:if>
-            ">
-                <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
-            </tab>
+            <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
             <tab heading="
                 ${ fn:length(application.scans) }
                         <c:if test="${ fn:length(application.scans) == 1 }">Scan</c:if>
