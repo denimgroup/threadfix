@@ -13,7 +13,9 @@
 
     <!-- Get the CSRF token so we can use it everywhere -->
     <spring:url value="" var="emptyUrl"/>
-    <div ng-controller="ApplicationDetailPageController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+    <div ng-controller="ApplicationDetailPageController"
+         ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
+         empty = <c:out value="${ numVulns }"/> === 0">
 
         <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
         <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
@@ -43,47 +45,7 @@
             </c:if>
         </div>
 
-        <div ng-controller="ReportsController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'" class="container-fluid">
-            <c:if test="${ canGenerateReports }">
-                <div class="row-fluid">
-                    <div class="span6">
-                        <spring:url value="/reports/9" var="reportsUrl"/>
-                        <h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
-                            <a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-                        </h4>
-                        <div id="leftTileReport">
-                            <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
-                            <div ng-hide="leftReport || leftReportFailed" class="team-report-wrapper report-image">
-                                <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
-                            </div>
-                            <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
-                                <div style="text-align: center; padding-top:120px;">
-                                    Report Failed
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="span6">
-                        <spring:url value="/reports/10" var="reportsUrl"/>
-                        <h4>Top 10 Vulnerabilities<span style="font-size:12px;float:right;">
-                            <a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-                        </h4>
-                        <div id="rightTileReport">
-                            <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
-                            <div ng-hide="rightReport || rightReportFailed" class="team-report-wrapper report-image">
-                                <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
-                            </div>
-                            <div ng-show="rightReportFailed" class="team-report-wrapper report-image">
-                                <div style="text-align: center; padding-top:120px;">
-                                    Report Failed
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </c:if>
-        </div>
+        <%@include file="reports.jspf"%>
 
         <!-- TODO Fix the active tab stuff -->
         <%--<c:choose>--%>

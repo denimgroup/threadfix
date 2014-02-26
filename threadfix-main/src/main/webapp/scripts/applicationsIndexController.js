@@ -9,6 +9,10 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         return a.name.localeCompare(b.name);
     };
 
+    $scope.active = function(app) {
+        return app.active;
+    }
+
     // since we need the csrfToken to make the request, we need to wait until it's initialized
     $scope.$watch('csrfToken', function() {
         threadfixAPIService.getTeams($scope.csrfToken).

@@ -33,6 +33,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $windo
                     return "/organizations/" + app.team.id + "/applications/" + app.id + "/edit" + $scope.csrfToken;
                 },
                 object: function () {
+                    var app = $scope.config.application;
+                    app.deleteUrl = "/organizations/" + app.team.id + "/applications/" + app.id + "/delete" + $scope.csrfToken
                     return $scope.config.application;
                 },
                 config: function() {

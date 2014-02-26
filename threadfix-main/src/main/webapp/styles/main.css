@@ -994,3 +994,8 @@ div.box-shadow {
     padding-right:90px;
     width:100px;
 }
+
+.team-report-wrapper .text {
+    text-align: center;
+    padding-top:120px;
+}

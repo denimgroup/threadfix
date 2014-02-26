@@ -2,15 +2,19 @@ var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ReportsController', function ($scope, $window, threadfixAPIService) {
 
-    $scope.loadingLeft = true;
-    $scope.loadingRight = true;
+    $scope.empty = $scope.$parent.empty;
+
+    if (!$scope.empty) {
+        $scope.loadingLeft = true;
+        $scope.loadingRight = true;
+    }
 
     $scope.appId  = $window.location.pathname.match(/([0-9]+)$/)[0];
     $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
 
     var query = $scope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
 
-    $scope.$watch('csrfToken', function() {
+    var loadReports = function() {
         threadfixAPIService.loadReport("/dashboard/leftReport" + query).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
@@ -46,6 +50,15 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
                 $scope.rightReportFailed = true;
                 $scope.loadingRight = false;
             });
+    };
+
+
+    $scope.$watch('csrfToken', function() {
+        if (!scope.empty) {
+            loadReports();
+        }
     });
+
+
 
 });

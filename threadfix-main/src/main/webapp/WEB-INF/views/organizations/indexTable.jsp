@@ -86,7 +86,7 @@
                                     <th style="width:110px;"></th>
                                 </tr>
                             </thead>
-                            <tr class="app-row" ng-repeat="app in team.applications | filter:app.active" ng-init="appIndex=$index"
+                            <tr class="app-row" ng-repeat="app in team.applications | filter:active" ng-init="appIndex=$index"
                                     ng-file-drop="onFileSelect(team, app, $files)">
                                 <td style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">

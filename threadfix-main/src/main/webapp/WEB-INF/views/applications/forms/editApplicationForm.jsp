@@ -3,7 +3,7 @@
 	<div class="modal-header">
 		<h4 id="myModalLabel">Edit Application
 			<span class="delete-span">
-				<a class="btn btn-danger header-button" id="deleteLink" href="{{ config.application.id }} + 'delete' + {{ csrfToken }}"
+				<a class="btn btn-danger header-button" id="deleteLink" href="{{ config.application.deleteUrl }}"
 						onclick="return confirm('Are you sure you want to delete the application?')">
 					Delete
 				</a>
@@ -47,7 +47,7 @@
                         </option>
 					</select>
 					<errors name="organization.id" cssClass="errors" />
-				</td>																
+				</td>
 			</tr>
 			<tr>
 				<td>Criticality</td>

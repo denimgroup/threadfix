@@ -8,7 +8,8 @@
         <span ng-show="loading" style="float:right" class="spinner dark"></span>
     </div>
 
-    <div ng-hide="vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+    <!-- TODO add DRAG SCAN HERE area-->
+    <div ng-hide="empty || vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
     <table ng-show="vulns" class="table sortable table-hover tf-colors" id="anyid">
         <thead>
