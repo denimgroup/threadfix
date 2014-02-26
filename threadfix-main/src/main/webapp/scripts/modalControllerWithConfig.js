@@ -1,7 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ModalControllerWithConfig', function ($scope, $modalInstance, threadFixModalService, object, config,
-                                                              url, buttonText) {
+myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, threadFixModalService, object, config, url, buttonText) {
 
     $scope.object = object;
 
@@ -34,6 +33,10 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $modalInst
     };
 
     $scope.focusInput = true;
+
+    $scope.switchTo = function(name) {
+        $rootScope.$broadcast('modalSwitch', name);
+    }
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');

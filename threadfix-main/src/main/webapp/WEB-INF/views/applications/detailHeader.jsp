@@ -21,7 +21,7 @@
             <ul class="dropdown-menu">
 
                 <c:if test="${canManageApplications }">
-                    <li><a id="editApplicationModalButton" ng-click="showEditModal()">Edit / Delete</a></li>
+                    <li><a class="pointer" id="editApplicationModalButton" ng-click="showEditModal()">Edit / Delete</a></li>
                 </c:if>
 
                 <c:if test="${canManageApplications }">
@@ -38,8 +38,8 @@
                     <li><a id="userListModelButton">View Permissible Users</a></li>
                 </c:if>
                 <c:if test="${ canUploadScans }">
-                    <li><a id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
-                    <li><a id="addManualFindingModalLink">Add Manual Finding</a></li>
+                    <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
+                    <li><a class="pointer" id="addManualFindingModalLink">Add Manual Finding</a></li>
                     <c:if test="${ not empty application.defectTracker }">
                         <spring:url value="/organizations/{orgId}/applications/{appId}/defects/update" var="updateDefectUrl">
                             <spring:param name="orgId" value="${ application.organization.id }"/>

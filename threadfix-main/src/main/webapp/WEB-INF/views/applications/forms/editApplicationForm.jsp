@@ -93,10 +93,16 @@
                 </td>
             </tr>
 			<tr id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
-				<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
+                <td>WAF</td>
+                <!-- TODO make this a link -->
+                <td ng-show="object.waf">{{ object.waf.name }}</td>
+                <td><button class="btn" ng-click="switchTo('addWaf')">Set WAF</button></td>
 			</tr>
 			<tr id="appWafDiv">
-				<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
+                <td>Defect Tracker</td>
+                <!-- TODO make this a link -->
+                <td ng-show="object.defectTracker">{{ object.defectTracker.name }}</td>
+                <td><button class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
 			
 		</table>

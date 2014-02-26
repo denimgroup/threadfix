@@ -159,16 +159,18 @@ public class EditApplicationController {
 	}
 	
 	@RequestMapping(value="/wafAjax", method = RequestMethod.POST)
-	public String processSubmitAjaxWaf(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Waf> processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You don't have permission to set the WAF for this application.");
 		}
-		
-		if(application != null && application.getId() != null) {
+
+        Waf waf = null;
+
+        if(application != null && application.getId() != null) {
 			Application databaseApplication = applicationService.loadApplication(application.getId());
 			if (databaseApplication == null) {
 				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
@@ -186,7 +188,7 @@ public class EditApplicationController {
 				}
 				
 				if (newWafId != null && newWafId != 0) {
-					Waf waf = wafService.loadWaf(newWafId);
+					waf = wafService.loadWaf(newWafId);
 					
 					if (waf == null) {
 						result.rejectValue("waf.id", "errors.invalid",
@@ -205,16 +207,14 @@ public class EditApplicationController {
 			}
 		} else {
 			result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
+            return RestResponse.failure("Unable to retrieve the application.");
 		}
 		
-		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "applications/forms/addWafForm.jsp");
-			return "ajaxFailureHarness";
+		if (result.hasErrors() || waf == null) {
+            return RestResponse.failure("Unable to add the WAF. Try again.");
 		} else {
-			model.addAttribute("addedWaf", true);
-			model.addAttribute("contentPage", "applications/wafRow.jsp");
-			return "ajaxSuccessHarness";
-		}
+		    return RestResponse.success(waf);
+        }
 	}
 	
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)

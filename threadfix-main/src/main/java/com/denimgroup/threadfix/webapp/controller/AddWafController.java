@@ -28,11 +28,10 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,7 +79,7 @@ public class AddWafController {
 	}
 
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
-	public String newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf, 
+	public @ResponseBody RestResponse<Waf> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
 			BindingResult result,
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
@@ -89,7 +88,7 @@ public class AddWafController {
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
 		if (!validationResult.equals("SUCCESS")) {
-			return validationResult;
+			return RestResponse.failure(validationResult);
 		}
 		
 		Application application = null;
@@ -109,11 +108,8 @@ public class AddWafController {
 			application.setWaf(waf);
 			applicationService.storeApplication(application);
 		}
-		model.addAttribute(application);
-		model.addAttribute("addedWaf", true);
-		model.addAttribute("contentPage", "applications/wafRow.jsp");
-		
-		return "ajaxSuccessHarness";
+
+        return RestResponse.success(waf);
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)

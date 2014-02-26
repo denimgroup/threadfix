@@ -2,16 +2,19 @@
     <div class="modal-header">
         <h4 id="myModalLabel">Add WAF</h4>
     </div>
-    <div id="addWafDivInForm" class="modal-body"
-        <table>
+    <div ng-form="form" id="addWafDivInForm" class="modal-body">
+        <table class="modal-form-table">
             <tr>
                 <td>WAF</td>
                 <td class="inputValue">
-                    <select style="margin:5px;" id="wafSelect" name="waf.id">
-                        <option value="0" label="<none>" />
-                        <option ng-repeat="waf in wafsList" value="{{ waf.id }}"> {{ waf.name }} </option>
+                    <select ng-model="object.waf.id" id="wafSelect" name="waf.id">
+                        <option ng-repeat="waf in config.wafList"
+                                ng-selected="object.waf.id === waf.id"
+                                value="{{ waf.id }}">
+                            {{ waf.name }}
+                        </option>
                     <select>
-                    <button class="btn" id="addWafButtonInModal" ng-click>Create New WAF</button>
+                    <button class="btn" id="addWafButtonInModal" ng-click="switchTo('addWaf')">Create New WAF</button>
                 </td>
             </tr>
         </table>
