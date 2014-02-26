@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pagetests;
 
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class LoginPageTests extends PageBaseTest{
+public class LoginPageTests extends BaseTest {
 	private WebDriver driver;
 	private static LoginPage loginPage;
 

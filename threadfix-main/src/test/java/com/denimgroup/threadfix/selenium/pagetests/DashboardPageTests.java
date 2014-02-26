@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pagetests;
 
 import static org.junit.Assert.*;
 
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ import org.junit.Test;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 //import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
-public class DashboardPageTests extends PageBaseTest {
+public class DashboardPageTests extends BaseTest {
 
 //	private static LoginPage loginPage;
 //	private RemoteWebDriver driver;
@@ -44,7 +45,7 @@ public class DashboardPageTests extends PageBaseTest {
 	public void init() {
 		super.init();
 //		driver = (RemoteWebDriver) super.getDriver();
-		dashboardPage = login();
+		dashboardPage = loginPage.login("user", "password");
 	}
 	
 	@After
