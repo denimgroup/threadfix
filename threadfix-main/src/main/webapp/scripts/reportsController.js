@@ -11,7 +11,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
     var query = $scope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
 
     $scope.$watch('csrfToken', function() {
-        threadfixAPIService.loadReport("/dashboard/leftReport/" + query).
+        threadfixAPIService.loadReport("/dashboard/leftReport" + query).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
@@ -20,14 +20,16 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
                 } else {
                     $scope.leftReportFailed = true;
                 }
+                $scope.loadingLeft = false;
             }).
             error(function(data, status, headers, config) {
 
                 // TODO improve error handling and pass something back to the users
                 $scope.leftReportFailed = true;
+                $scope.loadingLeft = false;
             });
 
-        threadfixAPIService.loadReport("/dashboard/rightReport/" + query).
+        threadfixAPIService.loadReport("/dashboard/rightReport" + query).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
@@ -36,11 +38,13 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
                 } else {
                     $scope.rightReportFailed = true;
                 }
+                $scope.loadingRight = false;
             }).
             error(function(data, status, headers, config) {
 
                 // TODO improve error handling and pass something back to the users
                 $scope.rightReportFailed = true;
+                $scope.loadingRight = false;
             });
     });
 

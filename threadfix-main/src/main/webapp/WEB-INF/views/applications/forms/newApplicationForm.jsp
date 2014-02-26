@@ -82,23 +82,6 @@
             </table>
 
         </div>
-        <div class="modal-footer">
-            <span class="errors" style="float:left">{{ error }}</span>
-
-            <a class="btn" ng-click="cancel()">Close</a>
-            <button id="loadingButton"
-                    disabled="disabled"
-                    class="btn btn-primary"
-                    ng-show="loading">
-                <span class="spinner"></span>
-                Submitting
-            </button>
-            <button id="addApplicationButton"
-                    ng-class="{ disabled : form.$invalid }"
-                    class="btn btn-primary"
-                    ng-mouseenter="form.name.$dirty = true"
-                    ng-hide="loading"
-                    ng-click="ok(form.$valid)">Add Application</button>
-        </div>
+        <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
     </form>
 </script>

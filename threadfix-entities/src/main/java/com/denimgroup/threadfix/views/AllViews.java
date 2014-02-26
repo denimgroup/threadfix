@@ -4,4 +4,6 @@ public class AllViews {
 
     public static class TableRow {}
 
+    public static class FormInfo {}
+
 }

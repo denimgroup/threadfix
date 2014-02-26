@@ -1,103 +1,105 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="editApplicationModal.html">
 
-<spring:url value="{appId}/edit" var="editUrl">
-	<spring:param name="appId" value="${ application.id }"/>
-</spring:url>
-<spring:url value="{appId}/delete" var="deleteUrl">
-	<spring:param name="appId" value="${ application.id }"/>
-</spring:url>
 	<div class="modal-header">
 		<h4 id="myModalLabel">Edit Application
 			<span class="delete-span">
-				<a class="btn btn-danger header-button" id="deleteLink" href="${ fn:escapeXml(deleteUrl) }" 
+				<a class="btn btn-danger header-button" id="deleteLink" href="{{ config.application.id }} + 'delete' + {{ csrfToken }}"
 						onclick="return confirm('Are you sure you want to delete the application?')">
 					Delete
 				</a>
 			</span>
 		</h4>
 	</div>
-	<spring:url value="/organizations/{orgId}/applications/{appId}/edit" var="editSaveUrl">
-		<spring:param name="orgId" value="${ application.organization.id }"/>
-		<spring:param name="appId" value="${ application.id }"/>
-	</spring:url>
-	<form:form style="margin-bottom:0px;" id="editAppForm" modelAttribute="application" method="post" autocomplete="off" action="${fn:escapeXml(editSaveUrl)}">
-	<div class="modal-body">
-		<table>
-			<tr class="left-align">
-				<td style="padding:5px;">Name</td> 
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="nameInput" path="name" cssClass="focus" size="50" maxlength="60" />
-				  	<form:errors path="name" cssClass="errors" />
-				</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">URL</td>
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="urlInput" path="url" size="50" maxlength="255" />
-				  	<form:errors path="url" cssClass="errors" />
-			  	</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Unique ID</td>
-				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="uniqueIdInput" path="uniqueId" size="50" maxlength="255" />
-				  	<form:errors path="uniqueId" cssClass="errors" />
-			  	</td>
-			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Team</td>
-				<td style="padding:5px;">
-					<form:select style="margin-bottom:0px;" id="organizationId" path="organization.id">
-						<form:options items="${teamList}" itemValue="id" itemLabel="name"/>
-					</form:select>
-					<form:errors path="organization.id" cssClass="errors" />
+	<div ng-form="form" class="modal-body">
+		<table class="modal-form-table">
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
+                </td>
+                <td>
+                    <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                </td>
+            </tr>
+            <tr>
+                <td>URL</td>
+                <td>
+                    <input type='url' name='url' ng-model="object.url"/>
+                    <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 200.</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Unique ID</td>
+                <td>
+                    <input name="uniqueId" type='text'
+                           ng-model="object.uniqueId"
+                           id="uniqueIdInput{{ object.team.id }}" size="50" maxlength="255"/>
+                </td>
+            </tr>
+			<tr>
+				<td>Team</td>
+				<td>
+					<select ng-model="object.team.id" id="organizationId" name="organization.id">
+						<option ng-selected="team.id === object.team.id"
+                                ng-repeat="team in config.teams"
+                                value="{{ team.id }}">
+                            {{ team.name }}
+                        </option>
+					</select>
+					<errors name="organization.id" cssClass="errors" />
 				</td>																
 			</tr>
-			<tr class="left-align">
-				<td style="padding:5px;">Criticality</td>
-				<td style="padding:5px;">
-					<form:select style="margin-bottom:0px;" id="criticalityId" path="applicationCriticality.id">
-						<form:options items="${applicationCriticalityList}" itemValue="id" itemLabel="name"/>
-					</form:select>
-					<form:errors path="applicationCriticality.id" cssClass="errors" />
+			<tr>
+				<td>Criticality</td>
+				<td>
+					<select ng-model="object.applicationCriticality.id" id="criticalityId" name="applicationCriticality.id">
+						<option ng-selected="criticality.id === object.applicationCriticality.id"
+                                ng-repeat="criticality in config.applicationCriticalityList"
+                                value="{{ criticality.id }}">
+                            {{ criticality.name }}
+                        </option>
+					</select>
 				</td>
 			</tr>
 			<tr>
-				<td class="right-align" style="padding:5px;">Application Type</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:select path="frameworkType" 
-						items="${ applicationTypes }"
-						itemLabel="displayName"/>
+				<td class="right-align">Application Type</td>
+				<td >
+					<select
+                            ng-model="object.frameworkType"
+                            name="frameworkType">
+                        <option ng-selected="type === object.frameworkType"
+                                ng-repeat="type in config.applicationTypes"
+                                value="{{ type }}">
+                            {{ type }}
+                        </option>
+                    </select>
 				</td>
 			</tr>
-			<tr>
-				<td class="right-align" style="padding:5px;">Source Code URL:</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryUrl" maxlength="250" path="repositoryUrl"/>
-                    <form:errors path="repositoryUrl" cssClass="errors" />
-				</td>
-			</tr>						
-			<tr>
-				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:input maxlength="250" path="repositoryFolder"/>
-					<form:errors path="repositoryFolder" cssClass="errors" />
-				</td>
-			</tr>
-			<spring:url value="/organizations/{orgId}/applications/jsontest" var="testUrl">
-				<spring:param name="orgId" value="${ application.organization.id }" />
-			</spring:url>
-			<tr class="left-align" id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
+            <tr>
+                <td class="right-align">Source Code URL</td>
+                <td >
+                    <input name="repositoryUrl"
+                           type='url' id="repositoryUrl"
+                           maxlength="250"
+                           ng-model="object.repositoryUrl"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align">Source Code Folder</td>
+                <td >
+                    <input name="repositoryFolder"
+                           type='text' id="repositoryFolder"
+                           maxlength="250" ng-model="object.repositoryFolder"/>
+                </td>
+            </tr>
+			<tr id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
 				<%@ include file="/WEB-INF/views/applications/defectTrackerRow.jsp" %>
 			</tr>
-			<tr class="left-align" id="appWafDiv">
+			<tr id="appWafDiv">
 				<%@ include file="/WEB-INF/views/applications/wafRow.jsp" %>
 			</tr>
 			
 		</table>
 	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitAppModal${ organization.id }" class="modalSubmit btn btn-primary" data-success-div="headerDiv">Save Changes</a>
-	</div>
-</form:form>
+    <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>

@@ -24,6 +24,10 @@
 
 package com.denimgroup.threadfix.service.util;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.SerializationConfig;
+
 import javax.servlet.http.HttpServletRequest;
 
 public final class ControllerUtils {
@@ -102,5 +106,12 @@ public final class ControllerUtils {
         if (activeTab != null)
             return activeTab.toString();
         else return null;
+    }
+
+    public static <T> ObjectWriter getObjectWriter(Class<T> targetClass) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
+
+        return mapper.writerWithView(targetClass);
     }
 }

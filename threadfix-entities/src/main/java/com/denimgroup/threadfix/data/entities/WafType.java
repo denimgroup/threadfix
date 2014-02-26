@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -56,6 +57,7 @@ public class WafType extends BaseEntity {
 
 
 	@Column(length = 50, nullable = false)
+    @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
 		return name;
 	}

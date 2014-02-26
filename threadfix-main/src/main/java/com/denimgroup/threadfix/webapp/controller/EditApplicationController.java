@@ -24,12 +24,14 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -94,11 +97,11 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws IOException {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return "403";
@@ -125,6 +128,8 @@ public class EditApplicationController {
 				&& !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
+
+        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
 		
 		if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
@@ -138,41 +143,18 @@ public class EditApplicationController {
 					application.getDefectTracker().getId() == null) {
 				application.setDefectTracker(null);
 			}
-            model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
-			
-			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, appId));
-			
-			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
-			return "ajaxFailureHarness";
+
+			return writer.writeValueAsString(RestResponse.failure(result.getAllErrors().toString()));
+
 		} else {
 			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
-//			applicationService.updateProjectRoot(application);
-			
+
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 
-            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
-					Permission.CAN_UPLOAD_SCANS,
-					Permission.CAN_MODIFY_VULNERABILITIES,
-					Permission.CAN_SUBMIT_DEFECTS,
-					Permission.CAN_VIEW_JOB_STATUSES,
-					Permission.CAN_GENERATE_REPORTS,
-					Permission.CAN_MANAGE_DEFECT_TRACKERS,
-					Permission.CAN_MANAGE_USERS);
-			
-			model.addAttribute("application", application);
-			model.addAttribute("finding", new Finding());
-			model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("contentPage", "applications/detailHeader.jsp");
-			ControllerUtils.addSuccessMessage(request,
-                    "The application was edited successfully.");
-			
-			return "ajaxSuccessHarness";
+            return writer.writeValueAsString(RestResponse.success(application));
 		}
 	}
 	

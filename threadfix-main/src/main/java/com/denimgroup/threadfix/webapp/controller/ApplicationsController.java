@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
 import com.denimgroup.threadfix.service.beans.ScanParametersBean;
@@ -36,9 +37,13 @@ import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,10 +54,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -166,6 +169,35 @@ public class ApplicationsController {
         addAttrForScheduledScanTab(model);
 		return "applications/detail";
 	}
+
+    private ObjectWriter getWriter() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
+
+        return mapper.writerWithView(AllViews.FormInfo.class);
+    }
+
+    /**
+     *
+     * @return objects in JSON format needed on the applications page.
+     */
+    @RequestMapping("{appId}/objects")
+    public @ResponseBody String getObjects(@PathVariable("appId") Integer appId) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("application", applicationService.loadApplication(appId));
+        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+        map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
+        map.put("wafList", wafService.loadAll());
+        map.put("wafTypeList", wafService.loadAllWafTypes());
+        map.put("applicationTypes", FrameworkType.values());
+        map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
+        map.put("teams", organizationService.loadAllActive());
+
+        String data = getWriter().writeValueAsString(RestResponse.success(map));
+
+        return data;
+    }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
         String activeTab = ControllerUtils.getActiveTab(request);

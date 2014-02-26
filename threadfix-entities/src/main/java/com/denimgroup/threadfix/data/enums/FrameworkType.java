@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.enums;
 
+import org.codehaus.jackson.map.annotate.JsonView;
+
 public enum FrameworkType {
 	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC");
 	
@@ -31,6 +33,7 @@ public enum FrameworkType {
 	}
 	
 	private String displayName;
+    @JsonView(Object.class)
 	public String getDisplayName() { return displayName; }
 	
     public static FrameworkType getFrameworkType(String input) {

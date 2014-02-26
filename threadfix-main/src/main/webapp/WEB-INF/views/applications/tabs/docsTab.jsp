@@ -1,11 +1,10 @@
-<%@ include file="/common/taglibs.jsp"%>
 
-	<c:if test="${ canManageApplications }">
-		<div style="margin-top:10px;margin-bottom:7px;">
-			<a id="uploadDocModalLink${ application.id }" href="#uploadDoc${ application.id }" role="button" class="btn" data-toggle="modal">Add File</a>
-			<%@ include file="/WEB-INF/views/applications/modals/uploadDocModal.jsp" %>
-		</div>	
-	</c:if>
+<c:if test="${ canManageApplications }">
+    <div style="margin-top:10px;margin-bottom:7px;">
+        <a id="uploadDocModalLink${ application.id }" href="#uploadDoc${ application.id }" role="button" class="btn" data-toggle="modal">Add File</a>
+        <%@ include file="/WEB-INF/views/applications/modals/uploadDocModal.jsp" %>
+    </div>
+</c:if>
 	
 <table class="table table-striped">
 	<thead>

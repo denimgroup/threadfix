@@ -140,6 +140,9 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                 },
                 object: function () {
                     return application;
+                },
+                buttonText: function() {
+                    return "Add Application";
                 }
             }
         });

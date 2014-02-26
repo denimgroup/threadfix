@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.remote.response;
 
-import com.denimgroup.threadfix.views.AllViews;
 import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -34,13 +33,13 @@ import org.codehaus.jackson.map.annotate.JsonView;
  */
 public class RestResponse<T> {
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(Object.class)
     public String message = "";
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(Object.class)
     public boolean success = false;
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(Object.class)
     public int responseCode = -1;
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(Object.class)
     public T object = null;
 
     public static <T> RestResponse<T> failure(String response) {

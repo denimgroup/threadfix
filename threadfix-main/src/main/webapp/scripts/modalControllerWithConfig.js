@@ -1,8 +1,11 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('GenericModalController', function ($scope, $modalInstance, threadFixModalService, object, url, buttonText) {
+myAppModule.controller('ModalControllerWithConfig', function ($scope, $modalInstance, threadFixModalService, object, config,
+                                                              url, buttonText) {
 
     $scope.object = object;
+
+    $scope.config = config;
 
     $scope.buttonText = buttonText;
 

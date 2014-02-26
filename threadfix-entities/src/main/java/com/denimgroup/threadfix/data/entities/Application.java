@@ -25,12 +25,13 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
 
@@ -119,6 +120,7 @@ public class Application extends AuditableEntity {
             highVulnCount = 0, criticalVulnCount = 0, totalVulnCount = 0;
 
 	@Column(length = NAME_LENGTH, nullable = false)
+    @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
 		return name;
 	}
@@ -128,6 +130,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
+    @JsonView(AllViews.FormInfo.class)
 	public String getUrl() {
 		return url;
 	}
@@ -214,8 +217,8 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
-    @JsonIgnore
-	public DefectTracker getDefectTracker() {
+    @JsonView(AllViews.FormInfo.class)
+    public DefectTracker getDefectTracker() {
 		return defectTracker;
 	}
 
@@ -246,6 +249,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
+    @JsonView(AllViews.FormInfo.class)
 	public Waf getWaf() {
 		return waf;
 	}
@@ -369,6 +373,7 @@ public class Application extends AuditableEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "applicationCriticalityId")
+    @JsonView(AllViews.FormInfo.class)
 	public ApplicationCriticality getApplicationCriticality() {
 		return applicationCriticality;
 	}
@@ -515,6 +520,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = ENUM_LENGTH)
+    @JsonView(AllViews.FormInfo.class)
 	public String getFrameworkType() {
 		return frameworkType;
 	}
@@ -534,6 +540,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
+    @JsonView(AllViews.FormInfo.class)
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -543,7 +550,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
 	public String getRepositoryFolder() {
 		return repositoryFolder;
 	}
@@ -612,6 +619,19 @@ public class Application extends AuditableEntity {
     public void addVulnerability(Vulnerability vuln) {
         if (!this.getVulnerabilities().contains(vuln))
             this.getVulnerabilities().add(vuln);
+    }
+
+    // TODO exclude from default ObjectMapper
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    private Map<String, Object> getTeam() {
+        Organization team = getOrganization();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", team.getId());
+        map.put("name", team.getName());
+
+        return map;
     }
 
 }

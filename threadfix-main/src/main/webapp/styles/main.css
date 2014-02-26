@@ -887,6 +887,10 @@ div.box-shadow {
     text-align: left;
 }
 
+.modal-form-table select {
+    margin-bottom:0;
+}
+
 /* Defines a spinner */
 
 .spinner {

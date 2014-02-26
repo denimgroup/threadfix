@@ -1,4 +1,4 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="createDefectTrackerModal.html">
 
 <spring:url value="/organizations/{orgId}/applications/{appId}/getDefectsFromDefectTracker" var="refreshUrl">
 	<spring:param name="orgId" value="${ application.organization.id }"/>
@@ -13,3 +13,4 @@
 		<%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
 	</div>
 </div>
+</script>

@@ -1,41 +1,27 @@
-<%@ include file="/common/taglibs.jsp"%>
-	
-<div class="modal-header">
-	<h4 id="myModalLabel">Create New WAF</h4>
-</div>
-<spring:url value="/{createWafUrl}" var="saveUrl">
-	<spring:param name="createWafUrl" value="${ createWafUrl }"/>
-</spring:url>
-<form:form id="wafForm" style="margin-bottom:0px;" modelAttribute="waf" method="post" action="${ fn:escapeXml(saveUrl) }">
-	<div class="modal-body">
+<script type="text/ng-template" id="createWafModal.html">
+    <div class="modal-header">
+        <h4 id="myModalLabel">Create New WAF</h4>
+    </div>
+	<div ng-form="form" class="modal-body">
 		<table class="dataTable">
 			<tbody>
 			    <tr>
 					<td class="">Name</td>
 					<td class="inputValue no-color">
-						<form:input style="margin:5px;" id="wafCreateNameInput" path="name" cssClass="focus" size="50" maxlength="50"/>
-					</td>
-					<td style="padding-left: 5px">
-						<form:errors path="name" cssClass="errors" />
+						<input focus-on="focusInput" style="margin:5px;" id="wafCreateNameInput" name="name" required size="50" maxlength="50"/>
+                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>Type</td>
 					<td class="inputValue no-color">
-						<form:select style="margin:5px;" id="typeSelect" path="wafType.id">
-							<form:options items="${ wafTypeList }" itemValue="id" itemLabel="name" />
-						</form:select>
-					</td>
-					<td class="no-color" style="padding-left: 5px">
-						<form:errors path="wafType.id" cssClass="errors" />
+						<select style="margin:5px;" id="typeSelect" name="wafType.id">
+							<option ng-repeat="type in wafTypeList" value="{{ type.id }}">{{ type.name }}</option>
+						</select>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div class="modal-footer">
-		<input type="hidden" name="applicationId" value="<c:out value="${ application.id }"/>">
-		<button id="closeCreateWafModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitWafModal" class="modalSubmit btn btn-primary" data-success-div="appWafDiv">Create WAF</a>
-	</div>
-</form:form>
+	<%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>

@@ -3,7 +3,7 @@
     <div ng-show="vulns" class="pagination no-margin" ng-show="numVulns > 100" >
         <pagination class="no-margin" total-items="numVulns / 10" max-size="5" page="page"></pagination>
 
-        <input  ng-enter="goToPage()" type="number" ng-model="pageInput"/>
+        <input  ng-enter="goToPage()" style="width:50px" type="number" ng-model="pageInput"/>
         <button class="btn" ng-click="goToPage()"> Go to Page </button>
         <span ng-show="loading" style="float:right" class="spinner dark"></span>
     </div>
