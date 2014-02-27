@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +37,8 @@ public abstract class BaseTest {
 	
 //	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	private WebDriver driver;
+	protected WebDriver driver;
+    protected LoginPage loginPage;
 
 	public BaseTest() {
 		DesiredCapabilities capability = new DesiredCapabilities();
@@ -54,6 +56,7 @@ public abstract class BaseTest {
 	@Before
 	public void init() {
         TeamIndexCache.getCache().clear();
+        loginPage = LoginPage.open(driver);
 	}
 
 	@After
@@ -63,8 +66,8 @@ public abstract class BaseTest {
 	
 	public WebDriver getDriver(){
 //		log.debug("Getting Driver");
-		return driver;
-	}
+        return driver;
+    }
 	
 	public void sleep(int num) {
 		try {

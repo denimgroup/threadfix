@@ -555,6 +555,7 @@
                                 <configuration>
                                     <tasks>
                                         <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
+                                        <delete file="target/classes/jdbc.properties"/>
                                         <copy file="src/main/resources/jdbc.properties.mysql" tofile="target/classes/jdbc.properties" />
                                         <copy file="src/main/resources/applicationContext-scheduling.xml.deploy" tofile="target/classes/applicationContext-scheduling.xml" />
                                     </tasks>
@@ -584,6 +585,7 @@
                                 <configuration>
                                     <tasks>
                                         <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
+                                        <delete file="target/classes/jdbc.properties"/>
                                         <copy file="src/main/resources/jdbc.properties.deploy" tofile="target/classes/jdbc.properties" />
                                         <copy file="src/main/resources/applicationContext-scheduling.xml.deploy" tofile="target/classes/applicationContext-scheduling.xml" />
                                     </tasks>

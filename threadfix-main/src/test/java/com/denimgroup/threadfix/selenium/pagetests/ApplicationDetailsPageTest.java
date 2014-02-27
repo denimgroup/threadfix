@@ -2,14 +2,11 @@ package com.denimgroup.threadfix.selenium.pagetests;
 
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import org.junit.*;
 
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-
-public class ApplicationDetailsPageTest extends PageBaseTest {
+public class ApplicationDetailsPageTest extends BaseTest {
 	
 	private  DashboardPage dashboardPage;
 	private  boolean build;
@@ -18,51 +15,28 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 	private  String wafName = getRandomString(8);
 	private  String dtName = getRandomString(8);
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
-	private static String BUGZILLA_USERNAME = null;
-	private static String BUGZILLA_PASSWORD = null;
-	private static String BUGZILLA_PROJECTNAME = "For ThreadFix";
+	private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
+	private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
+	private static final String BUGZILLAPROJECTNAME = System.getProperty("BUGZILLAPROJECTNAME");
+	private static final String whKey = System.getProperty("WHITEHAT_KEY");
+
 	
-	
-	
-	@Before
-	public void init() {
-		super.init();
-		String tmp = System.getProperty("BUGZILLA_USERNAME");
-		if (tmp != null) {
-			BUGZILLA_USERNAME = tmp;
-		}
-		tmp = System.getProperty("BUGZILLA_PASSWORD");
-		if (tmp != null) {
-			BUGZILLA_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("bugzillaProjectName");
-		if (tmp != null) {
-			BUGZILLA_PROJECTNAME = tmp;
-		}
-//		build = buildElements();
-	}
-	
-	@After
-	public  void cleanup(){
-//		destroyElements();
-		super.shutDown();
-	}
-	
+
 	@Test
 	public void pageBuild(){
-		assertTrue(true);
-//		dashboardPage.logout();
+        buildElements();
+		assertTrue("page was able to build database completely", true);
+		dashboardPage.logout();
 	}
 	
-	private  boolean buildElements(){
-		dashboardPage = login();
+	private boolean buildElements(){
 		String rtApp = "Demo Site BE";
 		String wafType = "mod_security";
 		String dtType = "Bugzilla";
-		String whKey = System.getProperty("WHITEHAT_KEY");
-		if(whKey == null){
-			return false;
-		}
+
+        //login
+        dashboardPage = loginPage.login("user", "password");
+
 		//add team
 		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink()
 										.clickAddTeamButton()
@@ -91,17 +65,13 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 										.setAppMapping(rtApp, appName)
 										.clickSaveMapping(rtApp)
 										.clickImportScan(rtApp);
-		sleep(5000);
-		//submit defect
-//		ap = ap.clickExpandAllVulns()
-//		.clickVulnCheckBox(1)
-//		.clickSubmitDefectLink();
-		
+
+
 
 		
 		//attach defectTracker
 		ap = ap.addDefectTracker(dtName, BUGZILLA_USERNAME,
-				BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
+				BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 		
 		sleep(5000);
 		//mark closed false positive
@@ -111,9 +81,10 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 		.clickExpandAllVulns()
 		.clickVulnCheckBox(1)
 		.clickMarkFalsePositiveLink();
-//		.addCommentToFirstVuln("comment");
+
 		
 		//add attach waf
+
 		dt.clickWafsHeaderLink()
 				.clickAddWafLink()
 				.createNewWaf(wafName, wafType)
@@ -125,16 +96,15 @@ public class ApplicationDetailsPageTest extends PageBaseTest {
 				.clickAddWaf()
 				.addWaf(wafName)
 				.logout();
-		
 
-//		dashboardPage = login();
-		
+
+        destroyElements();
 		return true;
 	}
 	
 	private void destroyElements(){
 		
-		dashboardPage = login();
+		dashboardPage = loginPage.login("user", "password");
 		
 		dashboardPage.clickOrganizationHeaderLink()
 					.clickViewTeamLink(teamName)

@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.selenium.pagetests;
 
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -11,7 +12,7 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
-public class TeamDetailPageTest extends PageBaseTest {
+public class TeamDetailPageTest extends BaseTest {
 	
 	private DashboardPage dashboardPage;
 	private TeamDetailPage teamdetailPage;
@@ -180,7 +181,7 @@ public class TeamDetailPageTest extends PageBaseTest {
 	}
 	
 	private  boolean buildElements(){
-		dashboardPage = login();
+		dashboardPage = loginPage.login("user", "password");
 		String rtApp = "Demo Site BE";
 		String whKey = System.getProperty("WHITEHAT_KEY");
 		if(whKey == null){
@@ -209,14 +210,14 @@ public class TeamDetailPageTest extends PageBaseTest {
 					.logout();
 		
 
-		dashboardPage = login();
+		dashboardPage = loginPage.login("user", "password");
 		
 		return true;
 	}
 	
 	private void destroyElements(){
 		
-		dashboardPage = login();
+		dashboardPage = loginPage.login("user", "password");
 		
 		dashboardPage.clickOrganizationHeaderLink()
 					.clickViewTeamLink(teamName)
