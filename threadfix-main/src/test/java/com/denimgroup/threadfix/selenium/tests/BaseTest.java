@@ -52,7 +52,6 @@ public abstract class BaseTest {
         driver = new FirefoxDriver(capability);
 	}
 
-	
 	@Before
 	public void init() {
         TeamIndexCache.getCache().clear();
@@ -61,7 +60,7 @@ public abstract class BaseTest {
 
 	@After
 	public void shutDown() {
-			driver.quit();
+        driver.quit();
 	}
 	
 	public WebDriver getDriver(){

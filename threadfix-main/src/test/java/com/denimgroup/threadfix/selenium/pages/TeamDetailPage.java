@@ -295,7 +295,7 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("teamModal").isDisplayed();
     }
 
-    public boolean EDDeletePresent(){
+    public boolean isDeleteTeamButtonPresent(){
         return driver.findElementById("deleteLink").isDisplayed();
     }
 
@@ -321,15 +321,6 @@ public class TeamDetailPage extends BasePage {
 
     public boolean EDNamePresent(){
         return driver.findElementById("teamNameInput").isDisplayed();
-    }
-
-    public boolean EDNameCorrect(){
-        return Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength")) == 60;
-        //          int limit = Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength"));
-        //          String s = getRandomString(limit+10);
-        //          driver.findElementById("teamNameInput").sendKeys(s);
-        //          String v = driver.findElementById("teamNameInput").getAttribute("value");
-        //          return v.equals(s.substring(0, limit));
     }
 
     public boolean isTeamNameDisplayedCorrectly(String teamName) {

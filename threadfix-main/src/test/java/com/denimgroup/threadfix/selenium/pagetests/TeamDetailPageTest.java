@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.selenium.pagetests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
@@ -15,15 +16,14 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 public class TeamDetailPageTest extends BaseTest {
 	
 	private DashboardPage dashboardPage;
-	private TeamDetailPage teamdetailPage;
-	private boolean build;
+    private TeamIndexPage teamIndexPage;
+	private TeamDetailPage teamDetailPage;
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
 	
 	@Before
 	public void init() {
 		super.init();
-		build = buildElements();
 	}
 	
 	@After
@@ -31,73 +31,56 @@ public class TeamDetailPageTest extends BaseTest {
 		destroyElements();
 		super.shutDown();
 	}
-	
-//	@Test
-//	public void buildUpTest(){
-//		assertTrue(build);
-//		dashboardPage.logout();
-//	}
-	
+
 	@Test
 	public void actionButtonTest(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickActionButton();
-		boolean actionPresent = teamdetailPage.isActionBtnPresent();
-		boolean actionClick = teamdetailPage.isActionBtnClickable();
-		boolean edLinkPresent = teamdetailPage.isEditDeleteLinkPresent();
-		boolean edLinkClick = teamdetailPage.isEditDeleteLinkClickable();
-		teamdetailPage.logout();
-		String ap,ac,ep,ec,pp,pc;
-		ap = ac = ep = ec = "";
-		if(!actionPresent){ap = "Action button was not present";}
-		if(!actionClick){ac = "Action button was not clickable";}
-		if(!edLinkPresent){ep = "Edit Delete link was not present";}
-		if(!edLinkClick){ec = "Edit Delete link was not clickable";}
-		
-		assertTrue(ap + " | "+ ac + " | "+ ep + " | "+ ec,
-				actionPresent && actionClick && edLinkPresent && edLinkClick);
+        assertTrue("Build did not work properly", buildElements());
+
+        teamDetailPage = dashboardPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickActionButton();
+
+        assertTrue("Action button was not present.", teamDetailPage.isActionBtnPresent());
+        assertTrue("Action button was not clickable.", teamDetailPage.isActionBtnClickable());
+        assertTrue("Edit/Delete Link was not present.", teamDetailPage.isEditDeleteLinkPresent());
+        assertTrue("Edit/Delete link was not clickable.", teamDetailPage.isEditDeleteLinkClickable());
+
+		teamDetailPage.logout();
 	}
 	
 	@Test
 	public void editDeleteModalTest(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickEditOrganizationLink();
-		boolean modalPresent = teamdetailPage.isEditDeleteModalPresent();
-		boolean deletePresent = teamdetailPage.EDDeletePresent();
-		boolean deleteClick = teamdetailPage.EDDeleteClickable();
-		boolean namePresent = teamdetailPage.EDNamePresent();
-		boolean nameCorrect = teamdetailPage.EDNameCorrect();
-		boolean closePresent = teamdetailPage.EDClosePresent();
-		boolean closeClick = teamdetailPage.EDCloseClickable();
-		boolean savePresent = teamdetailPage.EDSavePresent();
-		boolean saveClick = teamdetailPage.EDSaveClickable();
-		teamdetailPage = teamdetailPage.clickCloseEditModal();
-		teamdetailPage.logout();
-		String mp,dp,dc,np,nc,cp,cc,sp,sc;
-		mp = dp = dc = np = nc = cp = cc = sp = sc = "";
-		if(!modalPresent){mp = "Edit Delete Modal was not present";}
-		if(!deletePresent){dp = "Delete Button was not present";}
-		if(!deleteClick){dc = "Delete Button was not clickable";}
-		if(!namePresent){np = "Name input was not present";}
-		if(!nameCorrect){nc = "Name input was not correct";}
-		if(!closePresent){cp = "Close button was not present";}
-		if(!closeClick){cc = "Close button was not clickable";}
-		if(!savePresent){sp = "Save button was not present";}
-		if(!saveClick){sc = "Save button was not clickable";}
-		
-		assertTrue(mp + " | "+ dp + " | "+ dc + " | "+ np + " | "+ nc + " | "+ cp + " | "+ cc + " | "+ sp + " | "+ sc,
-				modalPresent && deletePresent && deleteClick && namePresent && nameCorrect 
-				&& closePresent && closeClick && savePresent && saveClick);
-		
+        assertTrue("Build did not work properly", buildElements());
+        teamDetailPage = dashboardPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickEditOrganizationLink();
+
+        assertTrue("Edit/Modal was not present.", teamDetailPage.isEditDeleteModalPresent());
+        assertTrue("Delete Button was not present.", teamDetailPage.isDeleteTeamButtonPresent());
+        assertTrue("Delete Button was not clickable.", teamDetailPage.EDDeleteClickable());
+        assertTrue("Name input was not present", teamDetailPage.EDNamePresent());
+
+		boolean closePresent = teamDetailPage.EDClosePresent();
+		boolean closeClick = teamDetailPage.EDCloseClickable();
+		boolean savePresent = teamDetailPage.EDSavePresent();
+		boolean saveClick = teamDetailPage.EDSaveClickable();
+
+		teamDetailPage = teamDetailPage.clickCloseEditModal();
+
+        teamDetailPage.logout();
 	}
+
 	@Ignore // permissions are being tested, should not test for current setup
 	@Test
 	public void permUsersModalTest(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickUserPermLink();
-		boolean editPresent = teamdetailPage.isPUEditPermLinkPresent();
-		boolean editClick = teamdetailPage.isPUEditPermLinkClickable();
-		boolean closePresent = teamdetailPage.isPUClosePresent();
-		boolean closeClick = teamdetailPage.isPUCloseClickable();
+        assertTrue("Build did not work properly", buildElements());
+		teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickUserPermLink();
+		boolean editPresent = teamDetailPage.isPUEditPermLinkPresent();
+		boolean editClick = teamDetailPage.isPUEditPermLinkClickable();
+		boolean closePresent = teamDetailPage.isPUClosePresent();
+		boolean closeClick = teamDetailPage.isPUCloseClickable();
 		
-		teamdetailPage.clickCloseUserPermModal().logout();
+		teamDetailPage.clickCloseUserPermModal().logout();
 		
 		String ep,ec,cp,cc;
 		ep = ec = cp = cc = "";
@@ -114,16 +97,17 @@ public class TeamDetailPageTest extends BaseTest {
 	
 	@Test
 	public void chartTest(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
+        assertTrue("Build did not work properly", buildElements());
+		teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
 		sleep(5000);
-		boolean llPresent = teamdetailPage.isleftViewMoreLinkPresent();
-		boolean llClick = teamdetailPage.isleftViewMoreLinkClickable();
-//		boolean rlPresent = teamdetailPage.isrightViewMoreLinkPresent();
+		boolean llPresent = teamDetailPage.isleftViewMoreLinkPresent();
+		boolean llClick = teamDetailPage.isleftViewMoreLinkClickable();
+//		boolean rlPresent = teamDetailPage.isrightViewMoreLinkPresent();
 		boolean rlPresent = true;
-		boolean rlClick = teamdetailPage.isrightViewMoreLinkClickable();
-		boolean lcPresent = teamdetailPage.is6MonthChartPresnt();
-		boolean rcPresent = teamdetailPage.isTop10ChartPresent();
-		teamdetailPage.logout();
+		boolean rlClick = teamDetailPage.isrightViewMoreLinkClickable();
+		boolean lcPresent = teamDetailPage.is6MonthChartPresnt();
+		boolean rcPresent = teamDetailPage.isTop10ChartPresent();
+		teamDetailPage.logout();
 		String lp,lc,rp,rc,lcp,rcp;
 		lp = lc = rp = rc = lcp = rcp = "";
 		if(!llPresent){lp = "Left view more link was not present";}
@@ -139,9 +123,10 @@ public class TeamDetailPageTest extends BaseTest {
 	
 	@Test
 	public void addApplicationButtonTest(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-		boolean addAppPresent = teamdetailPage.isAddAppBtnPresent();
-		boolean addAppClick = teamdetailPage.isAddAppBtnClickable();
+        assertTrue("Build did not work properly", buildElements());
+		teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
+		boolean addAppPresent = teamDetailPage.isAddAppBtnPresent();
+		boolean addAppClick = teamDetailPage.isAddAppBtnClickable();
 		String ap,ac;
 		ap = ac = "";
 		if(!addAppPresent){ap = "Add App button was not present";}
@@ -149,30 +134,16 @@ public class TeamDetailPageTest extends BaseTest {
 		
 		assertTrue(ap + " | " + ac, addAppPresent && addAppClick);
 		
-		teamdetailPage.logout();
+		teamDetailPage.logout();
 	}
-	
-//	@Test
-//	public void addApplicationModaltest(){
-//		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-//		boolean actionPresent = teamdetailPage.isActionBtnPresent();
-//		boolean actionClick = teamdetailPage.isActionBtnClickable();
-//		String ap,ac;
-//		ap = ac = "";
-//		if(!actionPresent){ap = "Action button was not present";}
-//		if(!actionClick){ap = "Action button was not clickable";}
-//		
-//		assertTrue(ap + " | "+ ac,actionPresent && actionClick);
-	
-//	teamdetailPage.logout();
-//	}
-	
+
 	@Test
 	public void applicationDetailLink(){
-		teamdetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-		boolean appLinkPresent = teamdetailPage.isAppLinkPresent(appName);
-		boolean appLinkClick = teamdetailPage.isAppLinkClickable(appName);
-		teamdetailPage.logout();
+        assertTrue("Build did not work properly", buildElements());
+		teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
+		boolean appLinkPresent = teamDetailPage.isAppLinkPresent(appName);
+		boolean appLinkClick = teamDetailPage.isAppLinkClickable(appName);
+		teamDetailPage.logout();
 		String ap,ac;
 		ap = ac = "";
 		if(!appLinkPresent){ap = "Link for app," + appName + " button was not present";}
@@ -182,33 +153,35 @@ public class TeamDetailPageTest extends BaseTest {
 	
 	private  boolean buildElements(){
 		dashboardPage = loginPage.login("user", "password");
-		String rtApp = "Demo Site BE";
-		String whKey = System.getProperty("WHITEHAT_KEY");
-		if(whKey == null){
+		String whiteHatApplication = "Demo Site BE";
+		String whiteHatKey = System.getProperty("WHITEHAT_KEY");
+
+        if(whiteHatKey == null){
 			return false;
 		}
-		//add team
-		TeamIndexPage ti = dashboardPage.clickOrganizationHeaderLink()
-										.clickAddTeamButton()
-										.setTeamName(teamName)
-										.addNewTeam();
-		//add app
-		ti = ti	.expandTeamRowByIndex(teamName)
-				.addNewApplication(teamName, appName, "", "Low")
-				.saveApplication(teamName);
-		
-		//import remoteProvider
-		ti.clickRemoteProvidersLink()
-					.clickConfigureWhiteHat()
-					.setWhiteHatAPI(whKey)
-					.saveWhiteHat()
-					.clickEditMapping(rtApp)
-					.setTeamMapping(rtApp, teamName)
-					.setAppMapping(rtApp, appName)
-					.clickSaveMapping(rtApp)
-					.clickImportScan(rtApp)
-					.logout();
-		
+
+		//Add Team
+		teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(teamName)
+                .addNewTeam();
+
+		//Add Application
+		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)
+                .addNewApplication(teamName, appName, "", "Low")
+                .saveApplication(teamName);
+
+		//Import RemoteProviders
+		teamIndexPage.clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(whiteHatKey)
+                .saveWhiteHat()
+                .clickEditMapping(whiteHatApplication)
+                .setTeamMapping(whiteHatApplication, teamName)
+                .setAppMapping(whiteHatApplication, appName)
+                .clickSaveMapping(whiteHatApplication)
+                .clickImportScan(whiteHatApplication)
+                .logout();
 
 		dashboardPage = loginPage.login("user", "password");
 		
@@ -216,15 +189,13 @@ public class TeamDetailPageTest extends BaseTest {
 	}
 	
 	private void destroyElements(){
-		
 		dashboardPage = loginPage.login("user", "password");
 		
 		dashboardPage.clickOrganizationHeaderLink()
-					.clickViewTeamLink(teamName)
-					.clickDeleteButton()
-					.clickRemoteProvidersLink()
-					.clickRemoveWhiteHatConfig()
-					.logout();
-		
+                .clickViewTeamLink(teamName)
+                .clickDeleteButton()
+                .clickRemoteProvidersLink()
+                .clickRemoveWhiteHatConfig()
+                .logout();
 	}
 }

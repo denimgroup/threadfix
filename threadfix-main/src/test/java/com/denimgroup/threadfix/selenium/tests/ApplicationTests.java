@@ -41,7 +41,6 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 public class ApplicationTests extends BaseTest {
 
 	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
 	private ApplicationDetailPage applicationDetailPage;
 	private TeamIndexPage teamIndexPage;
 	private WafIndexPage wafIndexPage;
@@ -51,7 +50,6 @@ public class ApplicationTests extends BaseTest {
 	public void init() {
 		super.init();
 		driver = (RemoteWebDriver) super.getDriver();
-		loginPage = LoginPage.open(driver);
 	}
 
 	@Test 
@@ -61,38 +59,38 @@ public class ApplicationTests extends BaseTest {
 		String urlText = "http://testurl.com";
 		
 		teamIndexPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
+				.clickOrganizationHeaderLink();
+
+        //Create Team & Application
+        teamIndexPage = teamIndexPage.clickAddTeamButton()
 				.setTeamName(teamName)
 				.addNewTeam()
 				.expandTeamRowByIndex(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication(teamName);		
-		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-											.expandTeamRowByIndex(teamName)
-											.clickViewAppLink(appName, teamName);
+				.saveApplication(teamName);
 
-		
+        assertTrue("The organization was not preserved correctly.", teamIndexPage.teamAddedToTable(teamName));
+
+        //Navigate to Application Detail Page
+		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByIndex(teamName)
+                .clickViewAppLink(appName, teamName);
+
 		assertTrue("The name was not preserved correctly.", applicationDetailPage.getNameText().contains(appName));
 		
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 		
-		assertTrue("The organization was not preserved correctly.", 
-				teamIndexPage.teamAddedToTable(teamName));
-		
-		//cleanup
-		loginPage = teamIndexPage.expandTeamRowByIndex(teamName)
-										.clickViewAppLink(appName, teamName)
-										.clickDeleteLink()
-										.clickDeleteButton()
-										.logout();
-		
+		//Cleanup
+		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickDeleteLink()
+                .clickDeleteButton();
 	}
 
 	@Test 
 	public void testCreateBasicApplicationValidation() {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
-		String appName = null;
+		String appName;
 		String urlText = "htnotaurl.com";
 		
 		StringBuilder stringBuilder = new StringBuilder("");

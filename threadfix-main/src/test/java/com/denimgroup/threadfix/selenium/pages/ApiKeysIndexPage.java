@@ -30,7 +30,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class ApiKeysIndexPage extends BasePage {
-
 	private List<WebElement> notes = new ArrayList<>();
 	//private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
 	private WebElement createNewKeyLink;
@@ -138,23 +137,23 @@ public class ApiKeysIndexPage extends BasePage {
 		return new ApiKeysIndexPage(driver);
 	}
 	
-	public boolean isCreateValidationPresent(){
+	public boolean isCreationSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully created.");
 	}
 	
-	public boolean isEditValidationPresent(){
+	public boolean isEditSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully edited.");
 	}
 	
-	public boolean isDeleteValidationPresent(){
+	public boolean isDeleteSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully deleted.");
 	}
 	
-	public boolean isNotePresent(String note){
+	public boolean isAPINotePresent(String note){
 		return getIndex(note) != -1;
 	}
 	
-	public boolean isRestricted(String note){
+	public boolean isAPIRestricted(String note){
 		return driver.findElementById("restricted"+(getIndex(note)+1)).getText().trim().contains("true");
 	}
 	
