@@ -143,12 +143,19 @@ public class OptionsHolder {
                 .create("u");
         options.addOption(upload);
 
-        Option getRules = OptionBuilder.withArgName("wafId> <applicationId")
-                .hasArgs(2)
+        Option getRules = OptionBuilder.withArgName("wafId")
+                .hasArg()
                 .withLongOpt("rules")
                 .withDescription("Gets WAF Rules and returns its JSON.")
                 .create("r");
         options.addOption(getRules);
+
+        Option getRulesForApp = OptionBuilder.withArgName("wafId> <applicationId")
+                .hasArgs(2)
+                .withLongOpt("rules-for-application")
+                .withDescription("Gets WAF Rules for an application and returns its JSON.")
+                .create("ra");
+        options.addOption(getRulesForApp);
 
         return options;
     }

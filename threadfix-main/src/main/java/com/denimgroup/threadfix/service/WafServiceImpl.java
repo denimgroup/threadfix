@@ -223,33 +223,6 @@ public class WafServiceImpl implements WafService {
 		List<WafRule> rules = loadCurrentRules(waf);
 
         return getRulesText(waf, rules);
-		
-//		StringBuilder buffer = new StringBuilder();
-//
-//		String prefix = null, suffix = null;
-//		String name = waf.getWafType().getName();
-//		if (RealTimeProtectionGenerator.hasStartAndEnd(name)) {
-//			prefix = RealTimeProtectionGenerator.getStart(name, rules);
-//			suffix = RealTimeProtectionGenerator.getEnd(name, rules);
-//		}
-//
-//		if (prefix != null) {
-//			buffer.append(prefix);
-//		}
-//
-//		if (rules != null) {
-//			for (WafRule rule : rules) {
-//				if (rule != null && rule.getIsNormalRule()) {
-//					buffer.append(rule.getRule()).append('\n');
-//				}
-//			}
-//		}
-//
-//		if (suffix != null) {
-//			buffer.append(suffix);
-//		}
-//
-//		return buffer.toString();
 	}
 
     @Override
