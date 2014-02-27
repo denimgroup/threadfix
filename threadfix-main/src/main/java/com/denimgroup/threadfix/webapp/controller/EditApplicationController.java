@@ -218,13 +218,13 @@ public class EditApplicationController {
 	}
 	
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
-	public String processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You are not authorized to manage this application.");
 		}
 		
 		if(!result.hasErrors()) {
@@ -238,17 +238,7 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
-					Permission.CAN_MANAGE_WAFS);
-			
-			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
-			
-			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, appId));
-			
-			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
-			return "ajaxFailureHarness";
+            return RestResponse.failure("Invalid data.");
 			
 		} else {
 
@@ -259,10 +249,8 @@ public class EditApplicationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
-			
-			model.addAttribute("addedDefectTracker", true);
-			model.addAttribute("contentPage", "applications/defectTrackerRow.jsp");
-			return "ajaxSuccessHarness";
+
+			return RestResponse.success(application.getDefectTracker());
 		}
 	}
 }

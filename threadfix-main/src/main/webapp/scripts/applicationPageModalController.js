@@ -16,6 +16,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    if (!$scope.config.wafList) {
                        $scope.config.wafList = [];
                    }
+                   if (!$scope.config.defectTrackerList) {
+                       $scope.config.defectTrackerList = [];
+                   }
                    $scope.config.application.organization = $scope.config.application.team;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);
@@ -30,8 +33,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     // Handle the complex modal interactions on the edit application modal
     $scope.$on('modalSwitch', function(event, name) {
+        $scope.currentModal.dismiss('modalChanged');
         if (name === 'addWaf') {
-            $scope.currentModal.dismiss('modalChanged');
             if (!$scope.config.wafList) {
                 $scope.config.wafList = [];
             }
@@ -41,8 +44,20 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 $scope.showAddWafModal();
             }
         } else if (name === 'createWaf') {
-            $scope.currentModal.dismiss('modalChanged');
             $scope.showCreateWafModal();
+
+        } else if (name === 'addDefectTracker') {
+            if (!$scope.config.defectTrackerList) {
+                $scope.config.defectTrackerList = [];
+            }
+            if ($scope.config.defectTrackerList.length === 0) {
+                $scope.showCreateDefectTrackerModal();
+            } else {
+                $scope.showAddDefectTrackerModal();
+            }
+
+        } else if (name === 'createDefectTracker') {
+            $scope.showCreateDefectTrackerModal();
         }
     });
 
@@ -80,6 +95,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         });
     };
 
+    // WAF methods
     $scope.showAddWafModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'addWafModal.html',
@@ -152,6 +168,89 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
     }
+
+    // Defect Tracker methods
+    $scope.showAddDefectTrackerModal = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'addDefectTrackerModal.html',
+            controller: 'AddDefectTrackerModalController',
+            resolve: {
+                csrfToken: function() {
+                    return $scope.csrfToken;
+                },
+                url: function() {
+                    var app = $scope.config.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/edit/addDTAjax" + $scope.csrfToken;
+                },
+                object: function () {
+
+                    var id = null;
+                    if ($scope.config.application.defectTracker) {
+                        id = $scope.config.application.defectTracker.id;
+                    }
+
+                    return {
+                        defectTrackerId: id
+                    };
+                },
+                config: function() {
+                    return $scope.config;
+                },
+                buttonText: function() {
+                    return "Add Defect Tracker";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (defectTracker) {
+            $scope.config.application.defectTracker = defectTracker;
+            $scope.successMessage = "Set waf to " + defectTracker.name;
+            $scope.showEditModal();
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
+    $scope.showCreateDefectTrackerModal = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'createDefectTrackerModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return "/configuration/defecttrackers/new" + $scope.csrfToken;
+                },
+                object: function () {
+                    return {
+                        defectTrackerType: {
+                            id: 1
+                        },
+                        applicationId: $scope.config.application.id
+                    };
+                },
+                config: function() {
+                    return $scope.config;
+                },
+                buttonText: function() {
+                    return "Create Defect Tracker";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (waf) {
+            $scope.config.wafs.push(waf);
+            $scope.config.application.waf = waf;
+            $scope.successMessage = "Successfully created waf " + waf.name;
+            $scope.showEditModal();
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
+
 
     // Handle fileDragged event and upload scan button clicks
     $scope.$on('fileDragged', function(event, $files) {

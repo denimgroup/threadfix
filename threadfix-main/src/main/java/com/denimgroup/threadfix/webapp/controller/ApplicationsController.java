@@ -292,45 +292,36 @@ public class ApplicationsController {
 
 	// TODO move this elsewhere?
 	@RequestMapping(value = "/jsontest", method = RequestMethod.POST)
-	public @ResponseBody String readJson(@RequestBody DefectTrackerBean bean) {
+	public @ResponseBody RestResponse<? extends Object> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
 		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
 				bean.getUserName(), bean.getPassword());
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
-			return "Authentication failed";
+			return RestResponse.failure("Authentication failed.");
 		}
 		String result = dt.getProductNames();
 		if (result == null || result.equals("Authentication failed")) {
-			return "{ \"message\" : \"Authentication failed\", " +
-					"\"error\" : " + JSONObject.quote(dt.getLastError())  + "}";
+			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
 
-		return "{ \"message\" : \"Authentication success\", " +
-				"\"names\" : " + JSONObject.quote(productSort(result))  + "}";
+		return RestResponse.success(productSort(result));
 	}
 	
-	private String productSort(String products) {
+	private String[] productSort(String products) {
 		if (products == null) {
-			return "Authentication failed";
+			return null;
 		}
 		String[] splitArray = products.split(",", 0);
 		
 		if (splitArray.length == 0) {
-			return "Authentication failed";
+			return null;
 		}
 		
 		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
-		StringBuilder result = new StringBuilder();
-		
-		for (String product : splitArray) {
-			if (product != null && !product.trim().equals("")) {
-				result.append(',').append(product);
-			}
-		}
-		
-		return result.substring(1);
+
+		return splitArray;
 	}
 	
 	@RequestMapping("/{appId}/getDefectsFromDefectTracker")

@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/uploadScanController.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modalControllerWithConfig.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/addDefectTrackerModalController.js"></script>
 </head>
 
 <body id="apps">
@@ -22,8 +23,8 @@
         <%@ include file="forms/uploadScanForm.jsp"%>
         <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
         <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
-        <%--<%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>--%>
-        <%--<%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>--%>
+        <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
+        <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
         <%--<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>--%>
         <%--<%@ include file="/WEB-INF/views/defects/mergeDefectModal.jsp" %>--%>
 
