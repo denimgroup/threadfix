@@ -105,8 +105,9 @@ public class DocumentTests extends BaseTest {
 				continue;
 			}
 			applicationDetailPage = applicationDetailPage.clickDocumentTab()
-														.setDocFileInput(mapEntry.getValue())
-														.submitDoc();
+                    .clickUploadDocLink()
+                    .setDocFileInput(mapEntry.getValue())
+                    .submitDoc();
 
 			applicationDetailPage = applicationDetailPage.clickDocumentTab();
 			docCnt++;
