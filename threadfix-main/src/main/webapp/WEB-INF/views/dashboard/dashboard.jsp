@@ -42,7 +42,7 @@
 			    	</h4>
 			    	<div id="leftTileReport">
                         <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
-                        <div ng-hide="leftReport" ng-hide="leftReportFailed" class="team-report-wrapper report-image">
+                        <div ng-hide="leftReport || leftReportFailed" class="team-report-wrapper report-image">
                             <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                         </div>
                         <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
@@ -60,16 +60,19 @@
 			    	</h4>
                     <div id="rightTileReport">
                         <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
-                        <div ng-hide="rightReport" ng-hide="rightReportFailed" class="team-report-wrapper report-image">
+                        <div ng-hide="rightReport || rightReportFailed" class="team-report-wrapper report-image">
                             <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                         </div>
                         <div ng-show="rightReportFailed" class="team-report-wrapper report-image">
-                            Report Failed
+                            <div style="text-align: center; padding-top:120px;">
+                                Report Failed
+                            </div>
                         </div>
                     </div>
 			    </div>
 			</div>
 		</c:if>
+
 	    
 	    <div class="row-fluid">
 	    	<div class="row-fluid" style="padding-top:20px;">

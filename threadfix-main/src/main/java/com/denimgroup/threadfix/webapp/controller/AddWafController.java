@@ -84,7 +84,7 @@ public class AddWafController {
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
 		model.addAttribute("createWafUrl", "/wafs/new/ajax/appPage");
-		
+
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
 		if (!validationResult.equals("SUCCESS")) {
@@ -93,9 +93,8 @@ public class AddWafController {
 		
 		Application application = null;
 		if (request.getParameter("applicationId") != null) {
-			Integer testId = null;
 			try {
-				testId = Integer.valueOf((String)request.getParameter("applicationId"));
+                Integer testId = Integer.valueOf(request.getParameter("applicationId"));
 				application = applicationService.loadApplication(testId);
 			} catch (NumberFormatException e) {
 				log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
@@ -148,13 +147,14 @@ public class AddWafController {
 				}
 			}
 			
-			if (waf.getWafType() == null)
+			if (waf.getWafType() == null) {
 				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
-			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
+            } else if (wafService.loadWafType(waf.getWafType().getId()) == null) {
 				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
-			else 
+            } else {
 				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
-			
+            }
+
 			if (result.hasErrors()) {
 				model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
 				return "ajaxFailureHarness";
