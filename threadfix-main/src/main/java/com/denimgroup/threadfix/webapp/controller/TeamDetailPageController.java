@@ -36,6 +36,8 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,7 +50,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mcollins
@@ -108,6 +113,31 @@ public class TeamDetailPageController {
             return mav;
         }
     }
+
+    @RequestMapping(value="/info", method=RequestMethod.GET)
+    public @ResponseBody String getInfo(@PathVariable int orgId) throws IOException {
+        final RestResponse<? extends Object> restResponse;
+
+        Organization organization = organizationService.loadOrganization(orgId);
+        List<Application> apps = PermissionUtils.filterApps(organization);
+
+        if (organization == null){
+            restResponse = RestResponse.failure("Unable to find the requested team.");
+        } else if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null) &&
+                (apps == null || apps.size() == 0)) {
+            restResponse = RestResponse.failure("You don't have permission to see that object.");
+        } else {
+            Map<String, Object> map = new HashMap<>();
+            map.put("team", organization);
+            map.put("applications", apps);
+            restResponse = RestResponse.success(map);
+        }
+
+        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
+
+        return writer.writeValueAsString(restResponse);
+    }
+
 
     @RequestMapping("/delete")
     @PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")

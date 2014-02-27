@@ -2,6 +2,7 @@ var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ReportsController', function ($scope, $window, threadfixAPIService) {
 
+    // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
 
     if (!$scope.empty) {
@@ -9,13 +10,8 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         $scope.loadingRight = true;
     }
 
-    $scope.appId  = $window.location.pathname.match(/([0-9]+)$/)[0];
-    $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
-
-    var query = $scope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
-
     var loadReports = function() {
-        threadfixAPIService.loadReport("/dashboard/leftReport" + query).
+        threadfixAPIService.loadReport("/dashboard/leftReport" + $scope.reportQuery).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
@@ -33,7 +29,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
                 $scope.loadingLeft = false;
             });
 
-        threadfixAPIService.loadReport("/dashboard/rightReport" + query).
+        threadfixAPIService.loadReport("/dashboard/rightReport" + $scope.reportQuery).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
@@ -53,6 +49,8 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
     };
 
     $scope.$watch('csrfToken', function() {
+        $scope.reportQuery = $scope.$parent.reportQuery;
+        $scope.rightReportTitle = $scope.$parent.rightReportTitle;
         if (!$scope.empty) {
             loadReports();
         }

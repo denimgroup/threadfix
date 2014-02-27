@@ -394,6 +394,7 @@ public class Application extends AuditableEntity {
 	}
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Integer getTotalVulnCount() {
         return totalVulnCount == null ? 0 : totalVulnCount;
     }
@@ -403,11 +404,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Integer getInfoVulnCount() {
         return infoVulnCount == null ? 0 : infoVulnCount;
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public void setInfoVulnCount(Integer infoVulnCount) {
         this.infoVulnCount = infoVulnCount;
     }
@@ -417,6 +420,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public void setLowVulnCount(Integer lowVulnCount) {
         this.lowVulnCount = lowVulnCount;
     }
@@ -426,6 +430,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public void setMediumVulnCount(Integer mediumVulnCount) {
         this.mediumVulnCount = mediumVulnCount;
     }
@@ -435,11 +440,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public void setHighVulnCount(Integer highVulnCount) {
         this.highVulnCount = highVulnCount;
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Integer getCriticalVulnCount() {
         return criticalVulnCount == null ? 0 : criticalVulnCount;
     }

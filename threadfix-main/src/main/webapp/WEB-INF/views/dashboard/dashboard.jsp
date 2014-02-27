@@ -3,6 +3,7 @@
 <head>
 	<title>Dashboard</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboardController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
 </head>
 
 <body class="dashboard">
@@ -33,47 +34,8 @@
     <spring:url value="" var="emptyUrl"/>
 
     <div ng-controller="DashboardController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'" class="container-fluid">
-		<c:if test="${ canGenerateReports }">
-			<div class="row-fluid">
-			    <div class="span6">
-			    	<spring:url value="/reports/9" var="reportsUrl"/>
-			    	<h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
-			    		<a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-			    	</h4>
-			    	<div id="leftTileReport">
-                        <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
-                        <div ng-hide="leftReport || leftReportFailed" class="team-report-wrapper report-image">
-                            <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
-                        </div>
-                        <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
-                            <div style="text-align: center; padding-top:120px;">
-                                Report Failed
-                            </div>
-                        </div>
-			    	</div>
-			    </div>
-			    
-			     <div class="span6">
-			     	<spring:url value="/reports/10" var="reportsUrl"/>
-			    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
-			    		<a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-			    	</h4>
-                    <div id="rightTileReport">
-                        <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
-                        <div ng-hide="rightReport || rightReportFailed" class="team-report-wrapper report-image">
-                            <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
-                        </div>
-                        <div ng-show="rightReportFailed" class="team-report-wrapper report-image">
-                            <div style="text-align: center; padding-top:120px;">
-                                Report Failed
-                            </div>
-                        </div>
-                    </div>
-			    </div>
-			</div>
-		</c:if>
+		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
 
-	    
 	    <div class="row-fluid">
 	    	<div class="row-fluid" style="padding-top:20px;">
 			     <div class="span6">

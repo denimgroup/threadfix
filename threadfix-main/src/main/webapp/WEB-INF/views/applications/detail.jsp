@@ -39,7 +39,9 @@
             </c:if>
         </div>
 
-        <%@include file="reports.jspf"%>
+        <div class="container-fluid">
+            <%@include file="reports.jspf"%>
+        </div>
 
         <!-- TODO Fix the active tab stuff -->
         <%--<c:choose>--%>
