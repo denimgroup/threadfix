@@ -548,14 +548,14 @@
                         <executions>
                             <execution>
                                 <id>QA-Resource-Swap</id>
-                                <phase>prepare-package</phase>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
                                         <delete file="target/classes/jdbc.properties"/>
+                                        <copy file="src/main/resources/log4j.xml.deploy" tofile="target/classes/log4j.xml" />
                                         <copy file="src/main/resources/jdbc.properties.mysql" tofile="target/classes/jdbc.properties" />
                                         <copy file="src/main/resources/applicationContext-scheduling.xml.deploy" tofile="target/classes/applicationContext-scheduling.xml" />
                                     </tasks>
@@ -578,7 +578,7 @@
                         <executions>
                             <execution>
                                 <id>QA-Resource-Swap</id>
-                                <phase>prepare-package</phase>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
