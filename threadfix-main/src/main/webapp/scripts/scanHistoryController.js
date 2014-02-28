@@ -25,7 +25,6 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
                 if (data.success) {
                     $scope.scans = data.object.scanList;
                     $scope.numScans = data.object.numScans;
-                    //$scope.teams.sort(nameCompare)
 
                     $scope.scans.forEach(setDate);
 
