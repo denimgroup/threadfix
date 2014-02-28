@@ -2,7 +2,7 @@
 
 <head>
 	<title>Scan History</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scanHistoryController.js"></script>
 </head>
 
 <body id="scans">
@@ -12,10 +12,9 @@
 		This page lists all of the scans that have been uploaded to ThreadFix.
 	</div>
 		
-	<spring:url value="/scans/table" var="tableUrl" />
-	<spring:url value="/login.jsp" var="loginUrl" />
-	<div id="toReplace" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
-			data-login-url="<c:out value="${ loginUrl }"/>">
+	<spring:url value="" var="emptyUrl" />
+	<div ng-controller="ScanHistoryController" ng-init="csrfToken = '<c:out value='${ emptyUrl }'/>'">
+        <!-- TODO re-add pagination -->
 		<table class="table">
 			<thead>
 				<tr>
@@ -32,10 +31,23 @@
 					<th></th>
 				</tr>
 			</thead>
-			<tbody id="wafTableBody">
-				<tr class="bodyRow">
+			<tbody>
+				<tr ng-hide="scans" class="bodyRow">
 					<td colspan="10" style="text-align: center;">Loading Scans.</td>
 				</tr>
+                <tr ng-show="scans" ng-repeat="scan in scans">
+                    <td>{{ scan.importTime }}</td>
+                    <td>{{ scan.app.name }}</td>
+                    <td>{{ scan.team.name }}</td>
+                    <td>{{ scan.scannerName }}</td>
+                    <td>{{ scan.numberTotalVulnerabilities }}</td>
+                    <td>{{ scan.numberHiddenVulnerabilities }}</td>
+                    <td>{{ scan.numberCriticalVulnerabilities }}</td>
+                    <td>{{ scan.numberHighVulnerabilities }}</td>
+                    <td>{{ scan.numberMediumVulnerabilities }}</td>
+                    <td>{{ scan.numberLowVulnerabilities }}</td>
+                    <td></td>
+                </tr>
 			</tbody>
 		</table>
 	</div>

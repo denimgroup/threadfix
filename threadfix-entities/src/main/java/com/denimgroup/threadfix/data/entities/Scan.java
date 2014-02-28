@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -112,7 +114,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Calendar getImportTime() {
+    @JsonView(AllViews.TableRow.class)
+    public Calendar getImportTime() {
 		return importTime;
 	}
 
@@ -251,7 +254,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-	public Integer getNumberTotalVulnerabilities() {
+    @JsonView(AllViews.TableRow.class)
+    public Integer getNumberTotalVulnerabilities() {
 		return numberTotalVulnerabilities;
 	}
 
@@ -355,6 +359,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Long getNumberInfoVulnerabilities() {
 		return numberInfoVulnerabilities;
 	}
@@ -364,6 +369,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Long getNumberLowVulnerabilities() {
 		return numberLowVulnerabilities;
 	}
@@ -373,6 +379,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Long getNumberMediumVulnerabilities() {
 		return numberMediumVulnerabilities;
 	}
@@ -382,6 +389,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Long getNumberHighVulnerabilities() {
 		return numberHighVulnerabilities;
 	}
@@ -391,7 +399,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-	public Long getNumberCriticalVulnerabilities() {
+    @JsonView(AllViews.TableRow.class)
+    public Long getNumberCriticalVulnerabilities() {
 		return numberCriticalVulnerabilities;
 	}
 
@@ -401,7 +410,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-	public Integer getNumberHiddenVulnerabilities() {
+    @JsonView(AllViews.TableRow.class)
+    public Integer getNumberHiddenVulnerabilities() {
 		if (numberHiddenVulnerabilities == null) {
 			return 0;
 		} else {
@@ -430,9 +440,42 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
 		return null;
 	}
-	
-	@Transient
+
+    @Transient
 	public boolean isStatic() {
 		return STATIC.equals(getScannerType());
 	}
+
+    // This should get serialized.
+    @JsonView(AllViews.TableRow.class)
+    @Transient
+    private String getType() {
+        String type = getApplicationChannel().getChannelType().getName();
+        if (ChannelType.DYNAMIC_TYPES.contains(type)) {
+            return ChannelType.DYNAMIC;
+        } else if (ChannelType.STATIC_TYPES.contains(type)) {
+            return ChannelType.STATIC;
+        } else {
+            return ChannelType.MIXED;
+        }
+    }
+
+    // TODO figure out JSON serialization better
+    @JsonView(AllViews.TableRow.class)
+    @Transient
+    private Application getApp() {
+        return getApplication();
+    }
+
+    @JsonView(AllViews.TableRow.class)
+    @Transient
+    private String getScannerName() {
+        return getApplicationChannel().getChannelType().getName();
+    }
+
+    @JsonView(AllViews.TableRow.class)
+    @Transient
+    private Organization getTeam() {
+        return getApplication().getOrganization();
+    }
 }

@@ -24,22 +24,24 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/scans")
@@ -65,48 +67,33 @@ public class ScanHistoryController {
 	public ModelAndView viewScans() {
 		log.info("Hit scan history page.");
 
-		ModelAndView mav = new ModelAndView("scans/history");
-		return mav;
+		return new ModelAndView("scans/history");
 	}
 	
-	@RequestMapping(value="/table",method = RequestMethod.POST)
-	public ModelAndView getScanTable(@RequestBody TableSortBean bean) {
+	@RequestMapping(value="/table/{pageNumber}", method = RequestMethod.POST)
+	public @ResponseBody String getScanTable(@PathVariable int pageNumber) throws IOException {
 
-		int page = 0, scanCount = 0, totalPages = 0;
-		
-		page = bean.getPage();
-		scanCount = scanService.getScanCount();
-		totalPages = (scanCount / 100) + 1;
+		int scanCount = scanService.getScanCount();
+		int totalPages = (scanCount / 100) + 1;
 		if (scanCount % 100 == 0) {
 			totalPages -= 1;
 		}
-		if (page > totalPages) page = totalPages;
-		if (page < 1) page = 1;
+		if (pageNumber > totalPages) {
+            pageNumber = totalPages;
+        }
+		if (pageNumber < 1) {
+            pageNumber = 1;
+        }
 		
-		List<Scan> scans = scanService.getTableScans(page);
-		
-		ModelAndView mav = new ModelAndView("scans/historyTable");
-		mav.addObject("scanList", scans);
-		mav.addObject("scanTypes", getTypes(scans));
-		mav.addObject("numPages", totalPages);
-		mav.addObject("page", page);
-		mav.addObject("numScans", scanCount);
-		return mav;
+		List<Scan> scans = scanService.getTableScans(pageNumber);
+
+        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
+
+        Map<String, Object> map = new HashMap<>();
+		map.put("scanList", scans);
+		map.put("numScans", scanCount);
+        return writer.writeValueAsString(RestResponse.success(map));
 	}
 	
-	private String[] getTypes(List<Scan> scanList) {
-		String[] types = new String[scanList.size()];
-		for (int i = 0; i < scanList.size(); i++) {
-			Scan scan = scanList.get(i);
-			String type = scan.getApplicationChannel().getChannelType().getName();
-			if (ChannelType.DYNAMIC_TYPES.contains(type)) {
-				types[i] = ChannelType.DYNAMIC;
-			} else if (ChannelType.STATIC_TYPES.contains(type)) {
-				types[i] = ChannelType.STATIC;
-			} else if (ChannelType.MIXED_TYPES.contains(type)) {
-				types[i] = ChannelType.MIXED;
-			}
-		}
-		return types;
-	}
+
 }

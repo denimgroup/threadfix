@@ -25,12 +25,10 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
-import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -103,9 +101,6 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 
-		Object successMessage = ControllerUtils.getSuccessMessage(request);
-		Object error = ControllerUtils.getErrorMessage(request);
-
 		TableSortBean falsePositiveBean = new TableSortBean();
 		falsePositiveBean.setFalsePositive(true);
 		
@@ -116,8 +111,6 @@ public class ApplicationsController {
 		TableSortBean hiddenBean = new TableSortBean();
 		hiddenBean.setHidden(true);
 		
-		long numHiddenVulns = applicationService.getCount(appId, hiddenBean);
-
         PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
 				Permission.CAN_MODIFY_VULNERABILITIES,
@@ -131,36 +124,16 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
-		Object checkForRefresh = ControllerUtils.getItem(request, "checkForRefresh");
-		Object numScansBeforeUpload = ControllerUtils.getItem(request, "numScansBeforeUpload");
-		model.addAttribute("numScansBeforeUpload", numScansBeforeUpload);
-		model.addAttribute("checkForRefresh", checkForRefresh);
-		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
-		model.addAttribute("manualSeverities", findingService.getManualSeverities());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);
-		model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
-		model.addAttribute("createWafUrl", "wafs/new/ajax/appPage");
 		model.addAttribute("newWaf", new Waf());
-		model.addAttribute("wafList", wafService.loadAll());
-		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
-		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new VulnerabilityCollectionModel());
-		model.addAttribute("successMessage", successMessage);
-		model.addAttribute("errorMessage", error);
         model.addAttribute("activeTab", getActiveTab(request, falsePositiveCount, numClosedVulns));
 		model.addAttribute(application);
-		model.addAttribute("falsePositiveCount", falsePositiveCount);
-		model.addAttribute("numHiddenVulns", numHiddenVulns);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
-		model.addAttribute("scanParametersBean", ScanParametersBean.getScanParametersBean(application));
-		model.addAttribute("applicationTypes", FrameworkType.values());
-		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
-		model.addAttribute("teamList", organizationService.loadAllActive());
         model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
 		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
