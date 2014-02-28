@@ -46,6 +46,7 @@ def exchange_files():
 @task
 @runs_once
 def build_war(profile):
+    print("profile is %s" % profile)
     with lcd('%s' % local_working_folder_loc):
         res = local('mvn help:active-profiles clean install -DskipTests -P %s' % profile)
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
