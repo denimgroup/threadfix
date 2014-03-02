@@ -1,12 +1,13 @@
 from __future__ import with_statement
 from fabric.api import *
 from fabric.contrib.console import confirm
+import os
 
 env.hosts = ['localhost']
 #env.password = 'password'
 env.user = 'denimgroup'
 
-local_working_folder_loc = '/var/lib/jenkins/workspace/ThreadFix_Regression' #where fabfile is running from
+local_working_folder_loc = os.getcwd() #where fabfile is running from
 server_base_loc = '/var/lib/tomcat7/webapps' #where to deploy to
 
 # creates the WAR file from the source code
