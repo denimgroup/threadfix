@@ -42,7 +42,16 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.updateApplications = function() {
-        $scope.applications = $scope.team.applications;
+        if ($scope.team.id === -1) {
+            $scope.application = {id: -1, name: "All"};
+            $scope.applications = [];
+        } else {
+            $scope.applications = $scope.team.applications;
+            if ($scope.applications[0].id !== -1) {
+                $scope.applications.unshift({id: -1, name: "All"});
+            }
+            $scope.application = $scope.applications[0];
+        }
     }
 
     $scope.clearApplications = function() {
@@ -55,33 +64,40 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.team = {
         id: -1
     };
-    $scope.organizationId = -1;
-    $scope.applicationId = 0;
+    $scope.application = {
+        id: -1
+    };
+
     $scope.reportId = 1;
     $scope.formatId = 1;
 
     $scope.getReportParameters = function() {
         return {
-            organizationId: $scope.organizationId,
-            applicationId: $scope.applicationId,
+            organizationId: $scope.team.id,
+            applicationId: $scope.application.id,
             reportId: $scope.reportId,
             formatId: $scope.formatId
         };
     };
 
-    var loadReports = function() {
-        $http.post("/reports/ajax" + $scope.csrfToken, $scope.getReportParameters()).
-            success(function(data, status, headers, config) {
-                $scope.reportHTML = data;
+    var loadReport = function() {
+        if ($scope.initialized) {
+            $http.post("/reports/ajax" + $scope.csrfToken, $scope.getReportParameters()).
+                success(function(data, status, headers, config) {
+                    $scope.reportHTML = data;
+                }).
+                error(function(data, status, headers, config) {
 
-            }).
-            error(function(data, status, headers, config) {
-
-                // TODO improve error handling and pass something back to the users
-                $scope.leftReportFailed = true;
-                $scope.loadingLeft = false;
-            });
+                    // TODO improve error handling and pass something back to the users
+                    $scope.leftReportFailed = true;
+                    $scope.loadingLeft = false;
+                });
+        }
     };
+
+    $scope.$watch('application', loadReport);
+    $scope.$watch('formatId', loadReport);
+    $scope.$watch('reportId', loadReport);
 
     $scope.$watch('csrfToken', function() {
         threadfixAPIService.getTeams($scope.csrfToken).
@@ -90,11 +106,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
                 if (data.success) {
                     $scope.teams = data.object;
+
                     $scope.teams.sort(nameCompare)
 
-                    if ($scope.teams.length == 0) {
-                        $scope.openTeamModal();
-                    }
+                    $scope.teams.unshift({id: -1, name: "All"});
+                    $scope.team = $scope.teams[0];
+
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
@@ -103,7 +120,11 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
 
-        loadReports();
+        $scope.initialized = true;
+
+        loadReport();
     });
 
+
+    
 });

@@ -2,8 +2,21 @@
 
 <body id="table">
 
-    <div id="reportDiv" ng-init="csvEnabled = '<c:if test="${ csvEnabled }">1</c:if>'; pdfEnabled = '<c:if test="${ csvEnabled }">1</c:if>'">
+    <span id="appDropDown">
+        <c:if test="${ csvEnabled }">
+            <a id="csvLink" class="btn btn-primary" ng-click="triggerCSVDownload()">
+                Export CSV
+            </a>
+        </c:if>
 
+        <c:if test="${ pdfEnabled }">
+            <a id="pdfLink" class="btn btn-primary" ng-click="triggerPDFDownload()">
+                Export PDF
+            </a>
+        </c:if>
+    </span>
+
+    <div id="reportDiv">
         <c:if test="${ showEmptyBox && empty jasperReport }">
             <%@include file="/WEB-INF/views/reports/emptyReport.jspf" %>
         </c:if>

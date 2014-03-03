@@ -26,31 +26,13 @@
 
         <span ng-show="teams">
             Team
-            <select id="teamSelect" ng-model="organizationId" ng-change="updateApplications()">
-                <option value="-1" ng-selected="{{ teams.length === -1 }}">All</option>
-                <option ng-repeat="team in teams" value="{{ team }}">
-                    {{ team.name }}
-                </option>
-            </select>
+            <select id="teamSelect" ng-model="team" ng-change="updateApplications()" ng-options="team.name for team in teams"></select>
 
             Application
-            <select id="applicationSelect" ng-model="applicationId">
-                <option value="-1" ng-selected="{{ applications.length === 0 }}">All</option>
-                <option ng-repeat="app in applications" value="{{ app.id }}">
-                    {{ app.name }}
-                </option>
+            <select ng-hide="applications" disabled="disabled">
+                <option>All</option>
             </select>
-        </span>
-
-
-        <span id="appDropDown">
-            <a id="csvLink" class="btn btn-primary" ng-click="triggerCSVDownload()">
-                Export CSV
-            </a>
-
-            <a id="pdfLink" ng-click="triggerPDFDownload()">
-                Export PDF
-            </a>
+            <select ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
         </span>
 
         <div id="successDiv">
