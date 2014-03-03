@@ -23,16 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.data.entities.Organization;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TeamTests extends BaseTest {
 
@@ -53,13 +56,11 @@ public class TeamTests extends BaseTest {
 	@Test
 	public void testCreateTeam(){
 		String newOrgName = "testCreateOrganization";
+
+        DatabaseUtils.createTeam(newOrgName);
 		
-		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+		teamIndexPage = loginPage.login("user", "testpassword").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
-		
-		teamIndexPage = teamIndexPage.clickAddTeamButton()
-								.setTeamName(newOrgName)
-								.addNewTeam();
 
 		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
