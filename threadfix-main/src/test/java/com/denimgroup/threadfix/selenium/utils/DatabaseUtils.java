@@ -1,70 +1,50 @@
 package com.denimgroup.threadfix.selenium.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Properties;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.remote.ThreadFixRestClient;
+import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mac on 3/3/14.
  */
 public class DatabaseUtils {
 
-    public static final String DRIVER_NAME, URL, USERNAME, PASSWORD;
-    private static final Connection dbConnection;
+    public static final String API_KEY, REST_URL;
+    public static final ThreadFixRestClient CLIENT;
 
     static {
-        Properties prop = new Properties();
+        API_KEY = System.getProperty("API_KEY");
+        REST_URL = System.getProperty("REST_URL");
 
-        try (InputStream input = DatabaseUtils.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
+        CLIENT = new ThreadFixRestClientImpl(REST_URL, API_KEY);
 
-            // load a properties file
-            prop.load(input);
-
-            // get the property value and print it out
-            DRIVER_NAME = prop.getProperty("jdbc.driverClassName");
-            URL         = prop.getProperty("jdbc.url");
-            USERNAME    = prop.getProperty("jdbc.username");
-            PASSWORD    = prop.getProperty("jdbc.password");
-
-            if (DRIVER_NAME == null) {
-                throw new IllegalStateException("Please set jdbc.driverClassName in jdbc.properties");
-            }
-            if (URL == null) {
-                throw new IllegalStateException("Please set jdbc.url in jdbc.properties");
-            }
-            if (USERNAME == null) {
-                throw new IllegalStateException("Please set jdbc.username in jdbc.properties");
-            }
-            if (PASSWORD == null) {
-                throw new IllegalStateException("Please set jdbc.password in jdbc.properties");
-            }
-
-            Class.forName(DRIVER_NAME);
-
-            dbConnection =
-                    DriverManager.getConnection(URL, USERNAME, PASSWORD);
-
-        } catch (IOException | ClassNotFoundException | SQLException ex) {
-            throw new IllegalStateException("IOException encountered on initialization", ex);
+        if (API_KEY == null) {
+            throw new IllegalStateException("API_KEY system variable was null.");
+        }
+        if (REST_URL == null) {
+            throw new IllegalStateException("REST_URL system variable was null.");
         }
     }
 
     public static void createTeam(String teamName) {
-        try {
-            PreparedStatement statement = dbConnection.prepareCall("INSERT INTO ORGANIZATION (name, active, createdDate, modifiedDate) VALUES (?, true, NOW(), NOW());");
-            statement.setString(1, teamName);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalStateException("IOException encountered on initialization", e);
-        }
+        RestResponse<Organization> response = CLIENT.createTeam(teamName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createApplication(String teamName, String appName) {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
+
+        RestResponse<Organization> response = CLIENT.searchForTeamByName(teamName);
+
+        assertTrue("Request for team was unsuccessful. Message: " + response.message, response.success);
+
+        RestResponse<Application> applicationRestResponse = CLIENT.createApplication(String.valueOf(response.object.getId()), appName, "http://test.com");
+
+        assertTrue("Response was unsuccessful. Message: " + applicationRestResponse.message, applicationRestResponse.success);
     }
 
 }

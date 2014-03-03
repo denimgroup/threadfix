@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -57,10 +56,12 @@ public class TeamTests extends BaseTest {
 	public void testCreateTeam(){
 		String newOrgName = "testCreateOrganization";
 
-        DatabaseUtils.createTeam(newOrgName);
-		
-		teamIndexPage = loginPage.login("user", "testpassword").clickOrganizationHeaderLink();
+		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
+
+        teamIndexPage = teamIndexPage.clickAddTeamButton()
+                .setTeamName(newOrgName)
+                .addNewTeam();
 
 		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
@@ -83,6 +84,8 @@ public class TeamTests extends BaseTest {
                 .setTeamName(teamName)
                 .addNewTeam()
                 .expandTeamRowByIndex(teamName);
+
+        // TODO use DatabaseUtils.createTeam(newOrgName); instead of page objects.
 
         assertTrue("Team info was not expanded properly.", teamIndexPage.isTeamExpanded(teamName));
 
