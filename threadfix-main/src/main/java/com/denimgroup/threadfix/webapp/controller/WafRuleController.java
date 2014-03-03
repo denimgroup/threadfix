@@ -24,7 +24,10 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,13 +45,15 @@ import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
 
 @Controller
-@RequestMapping("/wafs/{wafId}/rules")
+@RequestMapping("/wafs/{wafId}")
 public class WafRuleController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(WafRuleController.class);
 
 	private WafService wafService = null;
 	private WafRuleService wafRuleService = null;
+    @Autowired
+    private ApplicationService applicationService;
 
 	@Autowired
 	public WafRuleController(WafService wafService, WafRuleService wafRuleService) {
@@ -59,22 +64,40 @@ public class WafRuleController {
 	public WafRuleController(){}
 
 	@PreAuthorize("hasRole('ROLE_CAN_GENERATE_WAF_RULES')")
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/rules", method = RequestMethod.POST)
 	public String generateWafRulesForApps(@PathVariable("wafId") int wafId, 
-			@RequestParam("wafDirective") String wafDirective, ModelMap model) {
+			@RequestParam("wafDirective") String wafDirective,
+            @RequestParam("wafApplicationId") int wafAppId,
+            ModelMap model) {
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (waf == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("WAF", wafId));
 			throw new ResourceNotFoundException();
 		}
-		
-		wafService.generateWafRules(waf, wafDirective);
-		model.addAttribute(waf);
-		return "redirect:/wafs/" + String.valueOf(wafId);
+
+        Application application = null;
+        if (wafAppId != -1) {
+           application = applicationService.loadApplication(wafAppId);
+            if (application == null
+                    || application.getWaf() == null
+                    || application.getWaf().getId() != wafId) {
+                model.addAttribute("contentPage", "wafs/detailRuleList.jsp");
+                model.addAttribute("errorMessage", "Application is invalid");
+                return "ajaxSuccessHarness";
+            }
+        }
+
+        List<WafRule> newWafRuleList = wafService.generateWafRules(waf, wafDirective, application);
+        String rulesText = wafService.getRulesText(waf, newWafRuleList);
+        model.addAttribute(waf);
+        model.addAttribute("selectedAppId", wafAppId);
+        model.addAttribute("rulesText", rulesText);
+        model.addAttribute("contentPage", "wafs/detailRuleList.jsp");
+        return "ajaxSuccessHarness";
 	}
 
-	@RequestMapping("/{ruleId}")
+	@RequestMapping("/rule/{ruleId}")
 	public String viewRule(@PathVariable("wafId") int wafId, @PathVariable("ruleId") Integer ruleId, ModelMap model) {
 		WafRule wafRule = wafRuleService.loadWafRule(ruleId);
 		

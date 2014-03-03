@@ -78,6 +78,7 @@
     	<pattern>/wafs/new/ajax*</pattern>
     	<pattern>/wafs/new/ajax/appPage*</pattern>
     	<pattern>/wafs/*/edit/ajax*</pattern>
+        <pattern>/wafs/*/rules*</pattern>
     	<pattern>/configuration/remoteproviders/*/table*</pattern>
     	<pattern>/configuration/scanqueue/organizations/*/applications/*/scanQueueTask/*/delete*</pattern>
     	<pattern>/configuration/scanqueue/organizations/*/applications/*/addScanQueueTask*</pattern>

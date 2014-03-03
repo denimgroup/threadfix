@@ -41,23 +41,23 @@
 		</tr>
 	</thead>
 	<c:forEach var="organization" items="${ organizationList }" varStatus="status">
-		<tr id="teamRow${ organization.id }" class="pointer" data-target-div="teamInfoDiv${ organization.id}"
+		<tr id="teamRow<c:out value="${ organization.name }"/>" class="pointer" data-target-div="teamInfoDiv${ organization.id}"
 				data-caret-div="caret${ organization.id }" data-report-div="reportDiv${organization.id}">
-			<td id="teamCaret${ organization.id }" class="expandableTrigger">
-				<span id="caret${ organization.id }" class="caret-right"></span>
+			<td id="teamCaret<c:out value="${ organization.name }"/>" class="expandableTrigger">
+				<span id="caret<c:out value="${ organization.name }"/>" class="caret-right"></span>
 			</td>
-			<td class="expandableTrigger" id="teamName${ status.count }">
+			<td class="expandableTrigger" id="teamName<c:out value="${ organization.name }"/>">
 				<div style="word-wrap: break-word;width:300px;text-align:left;"><c:out value="${ organization.name }"/></div>
 			</td>
-			<td class="centered expandableTrigger" id="numTotalVulns${ status.count }"><c:out value="${ organization.totalVulnCount }"/></td>
-			<td class="centered expandableTrigger" id="numCriticalVulns${ status.count }"><c:out value="${ organization.criticalVulnCount }"/></td>
-			<td class="centered expandableTrigger" id="numHighVulns${ status.count }"><c:out value="${ organization.highVulnCount }"/></td>
-			<td class="centered expandableTrigger" id="numMediumVulns${ status.count }"><c:out value="${ organization.mediumVulnCount }"/></td>
-			<td class="centered expandableTrigger" id="numLowVulns${ status.count }"><c:out value="${ organization.lowVulnCount }"/></td>
-			<td class="centered expandableTrigger" id="numInfoVulns${ status.count }"><c:out value="${ organization.infoVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numTotalVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.totalVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numCriticalVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.criticalVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numHighVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.highVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numMediumVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.mediumVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numLowVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.lowVulnCount }"/></td>
+			<td class="centered expandableTrigger" id="numInfoVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.infoVulnCount }"/></td>
 			<td class="expandableTrigger"></td>
 			<td> 
-				<a id="addApplicationModalButton${ status.count }" href="#myAppModal${ organization.id }"
+				<a id="addApplicationModalButton<c:out value="${ organization.name }"/>" href="#myAppModal${ organization.id }"
 						role="button" class="btn" data-toggle="modal">
 					Add Application
 				</a>
@@ -65,7 +65,7 @@
 				<spring:url value="/organizations/{orgId}" var="organizationUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
 				</spring:url>
-				<a style="text-decoration:none" id="organizationLink${ status.count }" href="<c:out value="${ organizationUrl }"/>">View Team</a>
+				<a style="text-decoration:none" id="organizationLink<c:out value="${ organization.name }"/>" href="<c:out value="${ organizationUrl }"/>">View Team</a>
 			</td>
 		</tr>
 		<tr class="grey-background">
@@ -109,19 +109,19 @@
 								<tr class="app-row">
 									<td style="padding:5px;word-wrap: break-word;">
 										<div style="word-wrap: break-word;width:120px;text-align:left;">
-											<a id="applicationLink${ status.count }-${ innerStatus.count }" href="${ fn:escapeXml(appUrl) }">
+											<a id="applicationLink<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>" href="${ fn:escapeXml(appUrl) }">
 												<c:out value="${ application.name }"/>
 											</a>
 										</div>
 									</td>
-									<td class="centered" id="numTotalVulns${ status.count }"><c:out value="${ application.totalVulnCount }"/></td>
-									<td class="centered" id="numCriticalVulns${ status.count }"><c:out value="${ application.criticalVulnCount }"/></td>
-									<td class="centered" id="numHighVulns${ status.count }"><c:out value="${ application.highVulnCount }"/></td>
-									<td class="centered" id="numMediumVulns${ status.count }"><c:out value="${ application.mediumVulnCount }"/></td>
-									<td class="centered" id="numLowVulns${ status.count }"><c:out value="${ application.lowVulnCount }"/></td>
-									<td class="centered" id="numInfoVulns${ status.count }"><c:out value="${ application.infoVulnCount }"/></td>
+									<td class="centered" id="numTotalVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.totalVulnCount }"/></td>
+									<td class="centered" id="numCriticalVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.criticalVulnCount }"/></td>
+									<td class="centered" id="numHighVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.highVulnCount }"/></td>
+									<td class="centered" id="numMediumVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.mediumVulnCount }"/></td>
+									<td class="centered" id="numLowVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.lowVulnCount }"/></td>
+									<td class="centered" id="numInfoVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.infoVulnCount }"/></td>
 									<td class="centered" style="padding:5px;">
-										<a id="uploadScanModalLink${ status.count }-${ innerStatus.count }" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
+										<a id="uploadScanModalLink<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
 									</td>
 								</tr>

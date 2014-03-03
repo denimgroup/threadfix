@@ -14,15 +14,6 @@
 	<table>
 		<tbody>
 			<tr>
-				<%--<c:if test="${ not isStatic }">--%>
-					<%--<td style="padding:5px;">--%>
-						<%--<input id="dynamicRadioButton" type="radio" name="group" value="dynamic" checked>Dynamic--%>
-					<%--</td>--%>
-					<%--<td style="padding:5px;">--%>
-						<%--<input id="staticRadioButton" type="radio" name="group" value="static">Static--%>
-					<%--</td>--%>
-				<%--</c:if>--%>
-				<%--<c:if test="${ isStatic }">--%>
 					<td style="padding:5px;">
 						<input id="dynamicRadioButton" type="radio" name="group" value="dynamic"
                             <c:if test="${ not finding.isStatic }">
@@ -35,7 +26,6 @@
                                     checked
                                 </c:if> />Static
 					</td>
-				<%--</c:if>--%>
 			</tr>
 			<tr>
 				<td style="padding:5px;">CWE</td>

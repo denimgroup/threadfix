@@ -23,11 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -35,10 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -59,6 +54,8 @@ public class WafsController {
 
     @Autowired
 	private WafService wafService;
+    @Autowired
+    private ApplicationService applicationService;
 
 	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
@@ -140,6 +137,7 @@ public class WafsController {
 		if (canSeeRules) {
 			String rulesText = wafService.getAllRuleText(waf);
 			mav.addObject("rulesText", rulesText);
+            mav.addObject("selectedAppId", -1);
 			
 			WafRuleDirective lastDirective = null;
 			List<WafRuleDirective> directives = null;
@@ -160,10 +158,8 @@ public class WafsController {
 		}
 
 		mav.addObject(waf);
-
         PermissionUtils.addPermissions(mav, null, null,
                 Permission.CAN_MANAGE_WAFS, Permission.CAN_GENERATE_WAF_RULES);
-		
 		mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
 		
 		return mav;
@@ -190,24 +186,42 @@ public class WafsController {
 		}
 	}
 
-	@RequestMapping(value = "/{wafId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{wafId}/rules/download/app/{appId}", method = RequestMethod.POST)
 	public ModelAndView download(@PathVariable("wafId") int wafId,
+                                 @PathVariable("appId") int wafAppId,
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		Waf waf = wafService.loadWaf(wafId);
 		if (waf == null)
 			return null;
+        Application application = null;
+        if (wafAppId != -1) {
+            application = applicationService.loadApplication(wafAppId);
+            if (application == null
+                    || application.getWaf() == null
+                    || application.getWaf().getId() != wafId) {
+                return null;
+            }
+        }
+        List<WafRule> ruleList = new ArrayList<>();
 		if (waf.getWafRules() == null)
-			wafService.generateWafRules(waf, new WafRuleDirective());
-		
-		String pageString = wafService.getAllRuleText(waf);
+            ruleList = wafService.generateWafRules(waf, new WafRuleDirective(), application);
+		else {
+            ruleList = wafService.getAppRules(waf, application);
+        }
+		String pageString = wafService.getRulesText(waf, ruleList);
 		
 		if (pageString == null) {
 			return detail(wafId, request);
 		}
+        String appName = null;
+        if (application == null)
+            appName = "_AllApplications";
+        else
+            appName = "_" + application.getOrganization().getName() + "_" + application.getName();
 		
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=\"wafrules_" + wafId
-				+ ".txt\"");
+				+ appName + ".txt\"");
 		
 		ServletOutputStream out = response.getOutputStream();
 		InputStream in = new ByteArrayInputStream(pageString.getBytes("UTF-8"));

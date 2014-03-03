@@ -210,11 +210,14 @@ public abstract class RealTimeProtectionGenerator {
 	 * @param directive
 	 * @return
 	 */
-	public List<WafRule> generateRules(Waf waf, WafRuleDirective directive) {
+	public List<WafRule> generateRules(Waf waf, WafRuleDirective directive, Application app) {
 		if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0)
 			return new ArrayList<>();
-	
-		List<Application> applications = waf.getApplications();
+
+        List<Application> applications = new ArrayList<>();
+        if (app == null)
+		    applications = waf.getApplications();
+        else applications.add(app);
 		
 		if (applications == null) {
 			log.warn("No Applications found, no rules could be generated.");
@@ -233,11 +236,11 @@ public abstract class RealTimeProtectionGenerator {
 
 		List<WafRule> allRules = new ArrayList<>();
 
-		for (Application app : applications) {
-			if (app == null || !app.isActive())
+		for (Application application : applications) {
+			if (application == null || !application.isActive())
 				continue;
 			
-			List<WafRule> newRules = generateRules(app, directive);
+			List<WafRule> newRules = generateRules(application, directive);
 			if (newRules != null && newRules.size() != 0) {
 				for (WafRule newRule : newRules) {
 					if (newRule != null && newRule.getRule() != null) {

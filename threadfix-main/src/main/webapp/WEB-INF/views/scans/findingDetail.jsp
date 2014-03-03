@@ -65,6 +65,10 @@
 				<td class="bold">Severity</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
+            <tr>
+                <td class="bold">Description</td>
+                <td class="inputValue" style="max-width:500px;word-wrap: break-word;"><c:out value="${ finding.longDescription }"/></td>
+            </tr>
 			<c:if test="${ empty finding.dependency }">			
 				<tr>
 					<td class="bold">Path</td>

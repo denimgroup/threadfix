@@ -255,11 +255,27 @@ public class CommandLineParser {
 					throw new ParseException("Wrong number of arguments.'");
 				}
                 if (isInteger(ruleArgs[0])) {
-                    LOGGER.info("Downloading rules from WAF with ID " + ruleArgs[0] + ".");
-                    printOutput(client.getRules(ruleArgs[0]));
+                    LOGGER.info("Downloading all rules from WAF with ID " + ruleArgs[0] + ".");
+                    printOutput(client.getRules(ruleArgs[0], "-1"));
                 } else
                     LOGGER.warn("WafId is not number, not doing anything.");
-			} else {
+
+            } else if (cmd.hasOption("ra")) {
+                String[] ruleArgs = cmd.getOptionValues("ra");
+                if (ruleArgs.length != 2) {
+                    throw new ParseException("Wrong number of arguments.'");
+                }
+                if (isInteger(ruleArgs[0])) {
+                    if (isInteger(ruleArgs[1])) {
+                        LOGGER.info("Downloading all rules from WAF with ID " + ruleArgs[0] + " for application with ID " + ruleArgs[1] + ".");
+                        printOutput(client.getRules(ruleArgs[0], ruleArgs[1]));
+                    } else {
+                        LOGGER.warn("ApplicationId is not number, not doing anything.");
+                    }
+                } else
+                    LOGGER.warn("WafId is not number, not doing anything.");
+
+            } else {
 				throw new ParseException("No arguments found.");
 			}
 		
