@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false)
 	public User loadUser(String name) {
 		User user = userDao.retrieveByName(name);
 		if (user != null && user.getIsLdapUser()) {

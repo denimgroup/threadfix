@@ -55,3 +55,35 @@ threadfixModule.directive('ngEnter', function() {
         });
     };
 });
+
+threadfixModule.directive('passwordValidate', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function(viewValue) {
+
+                scope.pwdValidLength = (viewValue && viewValue.length >= 12 ? 'valid' : undefined);
+                scope.lengthRemaining = (viewValue && viewValue.length < 12 ? 12 - viewValue.length : undefined)
+
+                scope.matchError = (viewValue && scope.pwdValidLength && attrs.passwordValidate === viewValue);
+
+                scope.$watch(function() { return attrs.passwordValidate; }, function() {
+                    if (scope.pwdValidLength) {
+                        ctrl.$setValidity('matches', scope.pwdValidLength && attrs.passwordValidate === viewValue);
+                    }
+                })
+
+                if(scope.pwdValidLength) {
+                    ctrl.$setValidity('passwordLength', true);
+                    ctrl.$setValidity('matches', attrs.passwordValidate === viewValue);
+                    return viewValue;
+                } else {
+                    ctrl.$setValidity('matches', true);
+                    ctrl.$setValidity('passwordLength', false);
+                    return undefined;
+                }
+
+            });
+        }
+    };
+});
