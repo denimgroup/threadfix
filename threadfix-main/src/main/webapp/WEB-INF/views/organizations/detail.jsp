@@ -102,7 +102,7 @@
 	<h3 style="padding-top:5px;">Applications</h3>
 	<c:if test="${ canManageApplications }">
 		<div style="margin-top:10px;margin-bottom:7px;">
-			<a id="addApplicationModalButton${ organization.id }" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
+			<a id="addApplicationModalButton" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
 		</div>
 		<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -136,21 +136,21 @@
 				<c:otherwise>
 					<c:forEach var="app" items="${ apps }" varStatus="status">
 					<tr class="bodyRow">
-						<td style="max-width:200px;" class="ellipsis" id="appName${ status.count }">
+						<td style="max-width:200px;" class="ellipsis" id="appName<c:out value="${ app.name }"/>">
 							<spring:url value="{orgId}/applications/{appId}" var="appUrl">
 								<spring:param name="orgId" value="${ organization.id }"/>
 								<spring:param name="appId" value="${ app.id }"/>
 							</spring:url>
-							<a id="appLink${ status.count }" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
+							<a id="appLink<c:out value="${ app.name }"/>" href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
 						</td>
-						<td class="ellipsis" style="max-width:200px;" id="appUrl${ status.count }"><c:out value="${ app.url }"/></td>
-						<td id="appCriticality${ status.count }"><c:out value="${ app.applicationCriticality.name }"/></td>
-						<td id="appTotalVulns${ status.count }"><c:out value="${ app.totalVulnCount }"/></td>
-						<td id="appCriticalVulns${ status.count }"><c:out value="${ app.criticalVulnCount }"/></td>
-						<td id="appHighVulns${ status.count }"><c:out value="${ app.highVulnCount }"/></td>
-						<td id="appMediumVulns${ status.count }"><c:out value="${ app.mediumVulnCount }"/></td>
-						<td id="appLowVulns${ status.count }"><c:out value="${ app.lowVulnCount }"/></td>
-						<td id="appInfoVulns${ status.count }"><c:out value="${ app.infoVulnCount }"/></td>
+						<td class="ellipsis" style="max-width:200px;" id="appUrl<c:out value="${ app.name }"/>"><c:out value="${ app.url }"/></td>
+						<td id="appCriticality<c:out value="${ app.name }"/>"><c:out value="${ app.applicationCriticality.name }"/></td>
+						<td id="appTotalVulns<c:out value="${ app.name }"/>"><c:out value="${ app.totalVulnCount }"/></td>
+						<td id="appCriticalVulns<c:out value="${ app.name }"/>"><c:out value="${ app.criticalVulnCount }"/></td>
+						<td id="appHighVulns<c:out value="${ app.name }"/>"><c:out value="${ app.highVulnCount }"/></td>
+						<td id="appMediumVulns<c:out value="${ app.name }"/>"><c:out value="${ app.mediumVulnCount }"/></td>
+						<td id="appLowVulns<c:out value="${ app.name }"/>"><c:out value="${ app.lowVulnCount }"/></td>
+						<td id="appInfoVulns<c:out value="${ app.name }"/>"><c:out value="${ app.infoVulnCount }"/></td>
 					</tr>
 					</c:forEach>
 				</c:otherwise>
