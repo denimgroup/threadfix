@@ -80,17 +80,22 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         };
     };
 
+    $scope.loading = true;
+
     var loadReport = function() {
         if ($scope.initialized) {
+            $scope.loading = true;
             $http.post("/reports/ajax" + $scope.csrfToken, $scope.getReportParameters()).
                 success(function(data, status, headers, config) {
                     $scope.reportHTML = data;
+                    $scope.loading = false;
                 }).
                 error(function(data, status, headers, config) {
 
                     // TODO improve error handling and pass something back to the users
                     $scope.leftReportFailed = true;
                     $scope.loadingLeft = false;
+                    $scope.loading = false;
                 });
         }
     };
@@ -102,8 +107,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.$watch('csrfToken', function() {
         threadfixAPIService.getTeams($scope.csrfToken).
             success(function(data, status, headers, config) {
-                $scope.loading = false;
-
                 if (data.success) {
                     $scope.teams = data.object;
 

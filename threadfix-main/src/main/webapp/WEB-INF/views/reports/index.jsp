@@ -18,24 +18,25 @@
             <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>
         </tabset>
 
-        <select class="reportTypeSelect" id="reportSelect" ng-model="reportId">
-            <option ng-repeat="option in options" value="{{ option.id }}">
-                {{ option.name }}
-            </option>
-        </select>
-
         <span ng-show="teams">
+            <select style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
+                <option ng-repeat="option in options" value="{{ option.id }}">
+                    {{ option.name }}
+                </option>
+            </select>
+
             Team
-            <select id="teamSelect" ng-model="team" ng-change="updateApplications()" ng-options="team.name for team in teams"></select>
+            <select style="margin-bottom: 0" id="teamSelect" ng-model="team" ng-change="updateApplications()" ng-options="team.name for team in teams"></select>
 
             Application
-            <select ng-hide="applications" disabled="disabled">
+            <select style="margin-bottom: 0" ng-hide="applications" disabled="disabled">
                 <option>All</option>
             </select>
-            <select ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
+            <select style="margin-bottom: 0" ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
         </span>
+        <span style="float:right" ng-show="loading" class="spinner dark"></span>
 
-        <div id="successDiv">
+        <div style="margin-top: 10px" id="successDiv">
             <c:if test="${ not hasVulnerabilities }">
                 <div class="alert alert-danger" style="margin-top:10px">
                     <button class="close" data-dismiss="alert" type="button">�</button>
@@ -48,7 +49,6 @@
             <div ng-show="noDataFound">
                 <%@include file="/WEB-INF/views/reports/emptyReport.jspf" %>
             </div>
-            <div ng-show="loading" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
             <div ng-show="reportHTML" bind-html-unsafe="reportHTML">
 
             </div>
