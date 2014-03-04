@@ -231,8 +231,8 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
     public ApplicationDetailPage clickActionButton(){
-        waitForElement(driver.findElementById("actionButton1"));
-        driver.findElementById("actionButton1").click();
+        waitForElement(driver.findElementById("actionButton"));
+        driver.findElementById("actionButton").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -314,7 +314,7 @@ public class ApplicationDetailPage extends BasePage {
 	}
 
 	public String getUrlText() {
-		return driver.findElementById("urlText").getText().trim();
+		return driver.findElementById("urlInput").getText().trim();
 	}
 
 	public String getDefectTrackerText() {
@@ -348,6 +348,7 @@ public class ApplicationDetailPage extends BasePage {
 		return new TeamDetailPage(driver);
 	}
 
+    @Deprecated
 	public ApplicationDetailPage clickDetailsLink() {
 		clickEditDeleteBtn();
 		driver.findElementById("showDetailsLink").click();
@@ -430,14 +431,6 @@ public class ApplicationDetailPage extends BasePage {
 
 	public ApplicationDetailPage clickUpdateApplicationButton() {
 		driver.findElementById("submitAppModal").click();
-		try {
-			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
-		}catch(TimeoutException e){
-			driver.findElementById("submitAppModal").click();
-			waitForInvisibleElement(driver.findElementById("editApplicationModal"));
-		}catch(StaleElementReferenceException e){
-			e.printStackTrace();
-		}
 		return new ApplicationDetailPage(driver);
 	}
 

@@ -117,20 +117,9 @@ public class TeamDetailPage extends BasePage {
     public TeamIndexPage clickDeleteButton() {
         clickEditOrganizationLink();
         sleep(500);
-        TeamIndexCache cache = TeamIndexCache.getCache();
-
-        String teamToDelete = driver.findElementById("name").getText();
-        teamToDelete = teamToDelete.replace(" Action","");
-        cache.deleteTeamWithName(teamToDelete);
-
         driver.findElementById("deleteLink").click();
-
-        System.out.println("\nRemoving from TeamIndexCache: " + teamToDelete);
-        cache.printList();
-
         Alert alert = driver.switchTo().alert();
         alert.accept();
-
         sleep(1000);
         return new TeamIndexPage(driver);
     }

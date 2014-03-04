@@ -65,6 +65,7 @@ public class TeamIndexPage extends BasePage {
         return 0;
     }
 
+    @Deprecated
     public int getIndexSlow(String teamName) {
         System.out.println("Using slow map!");
         int i = -1;
@@ -93,6 +94,7 @@ public class TeamIndexPage extends BasePage {
         return -1;
     }
 
+    @Deprecated
     public int getIndex(String teamName) {
         TeamIndexCache cache = TeamIndexCache.getCache();
         if (cache.getIndex(teamName) < 0) {
@@ -101,6 +103,7 @@ public class TeamIndexPage extends BasePage {
         return cache.getIndex(teamName);
     }
 
+    @Deprecated
     public int getAppIndex(String appName){
         int i = -1;
         for(WebElement app : apps){
@@ -126,19 +129,11 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage addNewTeam() {
-        TeamIndexCache cache = TeamIndexCache.getCache();
-        int cnt = getNumTeamRows() + 1;
-
         driver.findElementById("submitTeamModal").click();
-        waitForElement(driver.findElementById("teamName"+cnt));
-        waitForElement(driver.findElementByClassName("alert-success"));
 
         String teamName = driver.findElementByClassName("alert-success").getText();
         teamName = teamName.substring(7,(teamName.length()-31));
-
-        cache.addTeamWithName(teamName);
-        System.out.println("\nAdding to TeamIndexCache: " + teamName);
-        cache.printList();
+        waitForElement(driver.findElementById("teamName"+teamName));
 
         sleep(1000);
         return setPage();
@@ -150,7 +145,7 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-
+    @Deprecated
     public TeamIndexPage expandTeamRowByIndex(String teamName) {
         int teamIndex = getIndex(teamName);
         driver.findElementById("teamName" + teamIndex).click();
@@ -159,6 +154,11 @@ public class TeamIndexPage extends BasePage {
         }catch(NoSuchElementException e){
             //e.printStackTrace();
         }
+        return setPage();
+    }
+
+    public TeamIndexPage expandTeamRowByName(String teamName) {
+        driver.findElementById("teamName" + teamName).click();
         return setPage();
     }
 
@@ -199,65 +199,51 @@ public class TeamIndexPage extends BasePage {
     }
 
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
-        int teamIndex = getIndex(teamName);
-        populateAppList(teamIndex);
-        apps.get(getAppIndex(appName) - 1).click();
-        waitForElement(driver.findElementById("actionButton1"));
+        driver.findElementById("applicationLink" + teamName + "-" + appName).click();
         return new ApplicationDetailPage(driver);
     }
 
     public TeamIndexPage clickAddNewApplication(String teamName) {
-        appModalId = getAppModalId(teamName);
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("addApplicationModalButton" + teamIndex).click();
-        waitForElement(driver.findElementById(appModalId));
+        driver.findElementById("addApplicationModalButton" + teamName).click();
         return setPage();
     }
 
     public String getAppModalId(String teamName) {
-        int teamIndex = getIndex(teamName);
-        String appModalIdHref = driver.findElementById("addApplicationModalButton" + teamIndex).getAttribute("href");
+        String appModalIdHref = driver.findElementById("addApplicationModalButton" + teamName).getAttribute("href");
         return appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
     }
 
     public String getAppModalIdNumber(Integer index) {
         String appModalIdHref = driver.findElementById("addApplicationModalButton" + index).getAttribute("href");
-        //String appModalIdNumber = appModalIdHref.substring(46);
         String appModalIdNumber = appModalIdHref.replaceAll(".*#myAppModal([0-9]+)$","$1");
         return appModalIdNumber;
     }
 
     public TeamIndexPage setApplicationName(String appName, String teamName) {
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).clear();
-        driver.findElementById("nameInput" + getAppModalIdNumber(teamIndex)).sendKeys(appName);
+        driver.findElementById("nameInput" + teamName).clear();
+        driver.findElementById("nameInput" + teamName).sendKeys(appName);
         return setPage();
     }
 
     public TeamIndexPage setApplicationUrl(String url, String teamName) {
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("urlInput" + getAppModalIdNumber(teamIndex)).clear();
-        driver.findElementById("urlInput" + getAppModalIdNumber(teamIndex)).sendKeys(url);
+        driver.findElementById("urlInput" + teamName).clear();
+        driver.findElementById("urlInput" + teamName).sendKeys(url);
         return setPage();
     }
 
     public TeamIndexPage setApplicationCriticality(String criticality, String teamName) {
-        int teamIndex = getIndex(teamName);
-        new Select(driver.findElementById("criticalityId" + getAppModalIdNumber(teamIndex)))
-                .selectByVisibleText(criticality);
+        new Select(driver.findElementById("criticalityId" + teamName)).selectByVisibleText(criticality);
         return setPage();
     }
 
     public TeamIndexPage saveApplication(String teamName) {
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("submitAppModal" + getAppModalIdNumber(teamIndex)).click();
+        driver.findElementById("submitAppModal" + teamName).click();
         sleep(6000);
         return setPage();
     }
 
     public TeamIndexPage saveApplicationInvalid(String teamName) {
-        int teamIndex = getIndex(teamName);
-        driver.findElementById("submitAppModal" + getAppModalIdNumber(teamIndex)).click();
+        driver.findElementById("submitAppModal" + teamName).click();
         return new TeamIndexPage(driver);
     }
 
@@ -334,7 +320,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamDetailPage clickViewTeamLink(String teamName) {
-        driver.findElementById("organizationLink" + getIndex(teamName)).click();
+        driver.findElementById("organizationLink" + teamName).click();
         sleep(4000);
 		return new TeamDetailPage(driver);
 	}

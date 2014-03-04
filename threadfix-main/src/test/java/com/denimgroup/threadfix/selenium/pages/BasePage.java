@@ -96,16 +96,6 @@ public abstract class BasePage {
 	public TeamIndexPage clickOrganizationHeaderLink() {
             driver.findElementById("orgHeader").click();
 			sleep(2000);
-
-            TeamIndexCache cache = TeamIndexCache.getCache();
-
-            if (!cache.isInitialized()) {
-                cache.initialize(getList());
-            }
-
-            /*System.out.println("\nCache is initialized or Applications link clicked.");
-            cache.printList();*/
-
 			return new TeamIndexPage(driver);
 	}
 	
