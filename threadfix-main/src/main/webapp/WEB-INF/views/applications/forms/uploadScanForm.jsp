@@ -45,13 +45,13 @@
 		</c:if>
 			<tr>
 				<td class="right-align" style="padding:5px;">File</td>
-				<td class="left-align" style="padding:5px;"><input id="fileInput${ application.id }" type="file" name="file" size="50" /></td>
+				<td class="left-align" style="padding:5px;"><input id="fileInput<c:out value="${ organization.name }"/>-${ application.name }" type="file" name="file" size="50" /></td>
 			</tr>
 		</table>
 	</div>
 	<div class="modal-footer">
 		<span style="float:left;font-size:8;" class="errors">Average file uploads take a few seconds but <br>larger files (2GB+) can take several minutes.</span>
 		<button id="closeScanModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button id="submitScanModal${ application.id }" onclick="javascript:submitAjaxScan('<c:out value="${uploadUrl }"/>','fileInput${ application.id }', '#scanFormDiv${ application.id }', 'noScanFound${ application.id }');return false;" class="btn btn-primary">Upload Scan</button>
+		<button id="submitScanModal<c:out value="${ organization.name }"/>-${ application.name }" onclick="javascript:submitAjaxScan('<c:out value="${uploadUrl }"/>','fileInput${ application.id }', '#scanFormDiv${ application.id }', 'noScanFound${ application.id }');return false;" class="btn btn-primary">Upload Scan</button>
 	</div>
 </form:form>
