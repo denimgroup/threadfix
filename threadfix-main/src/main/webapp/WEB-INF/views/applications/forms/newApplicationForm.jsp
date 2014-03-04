@@ -12,21 +12,21 @@
 			<tr class="left-align">
 				<td style="padding:5px;">Name</td> 
 				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="nameInput${organization.id}" path="name" cssClass="focus" size="50" maxlength="60" />
+					<form:input style="margin-bottom:0px;" id="nameInput${organization.name}" path="name" cssClass="focus" size="50" maxlength="60" />
 				  	<form:errors path="name" cssClass="errors" />
 				</td>
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">URL</td>
 				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="urlInput${organization.id}" path="url" size="50" maxlength="255" />
+					<form:input style="margin-bottom:0px;" id="urlInput${organization.name}" path="url" size="50" maxlength="255" />
 				  	<form:errors path="url" cssClass="errors" />
 			  	</td>
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Unique ID</td>
 				<td style="padding:5px;">
-					<form:input style="margin-bottom:0px;" id="uniqueIdInput${organization.id}" path="uniqueId" size="50" maxlength="255" />
+					<form:input style="margin-bottom:0px;" id="uniqueIdInput${organization.name}" path="uniqueId" size="50" maxlength="255" />
 				  	<form:errors path="uniqueId" cssClass="errors" />
 			  	</td>
 			</tr>
@@ -37,7 +37,7 @@
 			<tr class="left-align">
 				<td style="padding:5px;">Criticality</td>
 				<td style="padding:5px;">
-					<form:select style="margin-bottom:0px;" id="criticalityId${organization.id}" path="applicationCriticality.id">
+					<form:select style="margin-bottom:0px;" id="criticalityId${organization.name}" path="applicationCriticality.id">
 						<form:options items="${applicationCriticalityList}" itemValue="id" itemLabel="name"/>
 					</form:select>
 					<form:errors path="applicationCriticality.id" cssClass="errors" />
@@ -47,7 +47,7 @@
 				<td class="right-align" style="padding:5px;">Application Type</td>
 				<td class="left-align"  style="padding:5px;">
 					<form:select path="frameworkType"
-                                 id="frameworkTypeSelect${organization.id}"
+                                 id="frameworkTypeSelect${organization.name}"
 						items="${ applicationTypes }"
 						itemLabel="displayName"/>
 				</td>
@@ -55,14 +55,14 @@
 			<tr>
 				<td class="right-align" style="padding:5px;">Source Code URL:</td>
 				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryUrl${organization.id}" maxlength="250" path="repositoryUrl"/>
+					<form:input id="repositoryUrl${organization.name}" maxlength="250" path="repositoryUrl"/>
                     <form:errors path="repositoryUrl" cssClass="errors" />
 				</td>
 			</tr>			
 			<tr>
 				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
 				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryFolder${organization.id}" maxlength="250" path="repositoryFolder"/>
+					<form:input id="repositoryFolder${organization.name}" maxlength="250" path="repositoryFolder"/>
 					<form:errors path="repositoryFolder" cssClass="errors" />
 				</td>
 			</tr>
@@ -70,7 +70,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitAppModal${organization.id}" class="modalSubmit btn btn-primary"
-			data-success-div="teamTable" data-success-click="teamCaret${ organization.id }">Add Application</a>
+		<a id="submitAppModal<c:out value="${organization.name}"/>" class="modalSubmit btn btn-primary"
+			data-success-div="teamTable" data-success-click="teamCaret<c:out value="${organization.name}"/>">Add Application</a>
 	</div>
 </form:form>
