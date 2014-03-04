@@ -97,7 +97,6 @@ public class AddDefectTrackerController {
 		}
 		
 		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
 			return RestResponse.failure("Found some errors."); // TODO enhance the RestResponse class with those errors
 		} else {
 			
@@ -118,12 +117,12 @@ public class AddDefectTrackerController {
 				} else if (result.getFieldError("url").getDefaultMessage() != null &&
 						result.getFieldError("url").getDefaultMessage().equals(
 								AbstractDefectTracker.INVALID_CERTIFICATE)){
+                    // TODO fix this
 					model.addAttribute("showKeytoolLink", true);
 				}
 			}
 			
 			if (result.hasErrors()) {
-				model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
                 return RestResponse.failure("Found some errors."); // TODO enhance the RestResponse class with those errors
 			}
 			

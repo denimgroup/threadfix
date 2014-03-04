@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="createDefectTrackerModal.html">
+<script type="text/ng-template" id="newTrackerModal.html">
     <div class="modal-header">
         <h4 id="myModalLabel">New Defect Tracker</h4>
     </div>
@@ -27,12 +27,10 @@
                 <tr>
                     <td>Type</td>
                     <td>
-                        <select ng-model="object.defectTrackerTypeId" id="defectTrackerTypeSelect" name="defectTrackerType.id">
-                            <option ng-repeat="type in config.defectTrackerTypeList"
-                                    ng-selected="object.defectTrackerType.id === type.id"
-                                    value="{{ type.id }}">
-                                {{ type.name }}
-                            </option>
+                        <select ng-options="type.name for type in config.trackerTypes"
+                                ng-model="object.defectTrackerType"
+                                id="defectTrackerTypeSelect"
+                                name="defectTrackerType.id">
                         </select>
                     </td>
                     <td>

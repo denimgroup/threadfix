@@ -10,8 +10,8 @@
     <div ng-controller="ApiKeysController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
         <h2>API Keys</h2>
 
-        <%@include file="newForm.jsp" %>
-        <%@include file="editForm.jsp" %>
+        <%@ include file="newForm.jsp" %>
+        <%@ include file="editForm.jsp" %>
 
         <div id="helpText">
             ThreadFix API Keys are used to access the REST interface.<br/>

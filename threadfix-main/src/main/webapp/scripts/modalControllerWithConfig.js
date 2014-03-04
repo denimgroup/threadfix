@@ -1,6 +1,12 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, threadFixModalService, object, config, url, buttonText) {
+
+// this is a shim for optional dependencies
+myAppModule.value('deleteUrl', null);
+
+// TODO wrap this back into genericModalController and make config optional
+
+myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl) {
 
     $scope.object = object;
 
@@ -41,4 +47,17 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
+
+    $scope.showDeleteDialog = function(itemName) {
+        if (confirm("Are you sure you want to delete this " + itemName + "?")) {
+            $http.post(deleteUrl).
+                success(function(data, status, headers, config) {
+                    $modalInstance.close(false);
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.error = "Failure. HTTP status was " + status;
+                });
+        }
+    };
+
 });

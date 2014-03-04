@@ -3,7 +3,6 @@ var myAppModule = angular.module('threadfix')
 // this is a shim for optional dependencies
 myAppModule.value('deleteUrl', null);
 
-// Explanation of the $injector service here http://docs.angularjs.org/api/auto/service/$injector
 
 myAppModule.controller('GenericModalController', function ($scope, $modalInstance, $http, threadFixModalService, object, url, buttonText, deleteUrl) {
 

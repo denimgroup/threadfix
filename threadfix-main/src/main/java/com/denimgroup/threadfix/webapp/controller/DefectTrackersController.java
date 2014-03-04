@@ -26,21 +26,19 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/defecttrackers")
@@ -53,20 +51,12 @@ public class DefectTrackersController {
 	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
-		addModelAttributes(model);
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-		return "config/defecttrackers/index";
+	public String index(Model model) {
+        model.addAttribute(new DefectTracker());
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
+        return "config/defecttrackers/index";
 	}
 	
-	private void addModelAttributes(Model model) {
-		model.addAttribute(defectTrackerService.loadAllDefectTrackers());
-		model.addAttribute("editDefectTracker", new DefectTracker());
-		model.addAttribute("defectTracker", new DefectTracker());
-		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
-	}
-
 	@RequestMapping("/{defectTrackerId}")
 	public ModelAndView detail(@PathVariable("defectTrackerId") int defectTrackerId) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
@@ -82,26 +72,26 @@ public class DefectTrackersController {
 		return mav;
 	}
 	
-	/**
-	 * @param defectTrackerId
-	 * @param status
-	 * @return
-	 */
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 	@RequestMapping("/{defectTrackerId}/delete")
-	public String deleteTracker(@PathVariable("defectTrackerId") int defectTrackerId,
+	public @ResponseBody RestResponse<String> deleteTracker(@PathVariable("defectTrackerId") int defectTrackerId,
 			SessionStatus status, Model model) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		if (defectTracker != null) {
 			defectTrackerService.deleteById(defectTrackerId);
-			addModelAttributes(model);
-			model.addAttribute("successMessage", 
-					"Defect Tracker " + defectTracker.getName() + " has been deleted successfully.");
-			model.addAttribute("contentPage", "config/defecttrackers/trackersTable.jsp");
-			return "ajaxSuccessHarness";
+			return RestResponse.success("API key was successfully deleted.");
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("DefectTracker", defectTrackerId));
 			throw new ResourceNotFoundException();
 		}
+	}
+
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
+	@RequestMapping("/info")
+	public @ResponseBody RestResponse<Map<String, Object>> getList() {
+		Map<String, Object> map = new HashMap<>();
+        map.put("defectTrackerTypes", defectTrackerService.loadAllDefectTrackerTypes());
+        map.put("defectTrackers", defectTrackerService.loadAllDefectTrackers());
+        return RestResponse.success(map);
 	}
 }
