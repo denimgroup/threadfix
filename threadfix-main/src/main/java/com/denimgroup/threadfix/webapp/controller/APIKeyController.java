@@ -23,24 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.denimgroup.threadfix.data.entities.APIKey;
-import com.denimgroup.threadfix.service.APIKeyService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/configuration/keys")
@@ -77,9 +74,10 @@ public class APIKeyController {
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String newSubmit(HttpServletRequest request, @RequestParam String note,
-			Model model) {
-		
+	public @ResponseBody RestResponse<APIKey> newSubmit(HttpServletRequest request,
+                                                        @RequestParam String note) {
+
+        // checkboxes can be difficult
 		boolean restricted = request.getParameter("isRestrictedKey") != null;
 		
 		APIKey newAPIKey = apiKeyService.createAPIKey(note, restricted);
@@ -89,12 +87,20 @@ public class APIKeyController {
 		log.debug(currentUser + " has created an API key with the note " + note +
 				", and the ID " + newAPIKey.getId());
 		
-		return keyTable(model, "API key was successfully created.");
+		return RestResponse.success(newAPIKey);
+	}
+
+    // TODO authenticate
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody RestResponse<List<APIKey>> list() {
+        return RestResponse.success(apiKeyService.loadAll());
 	}
 	
 	@RequestMapping(value = "/{keyId}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("keyId") int keyId, Model model,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> delete(@PathVariable("keyId") int keyId) {
+
+        // TODO validate authentication
+
 		APIKey newAPIKey = apiKeyService.loadAPIKey(keyId);
 		
 		if (newAPIKey != null) {
@@ -104,11 +110,11 @@ public class APIKeyController {
 			throw new ResourceNotFoundException();
 		}
 		
-		return keyTable(model, "API key was successfully deleted.");
+		return RestResponse.success("API key was successfully deleted.");
 	}
 	
 	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.POST)
-	public String saveEdit(HttpServletRequest request, Model model,
+	public @ResponseBody RestResponse<APIKey> saveEdit(HttpServletRequest request,
 			@PathVariable("keyId") int keyId, @RequestParam String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
 		
@@ -118,19 +124,12 @@ public class APIKeyController {
 			apiKey.setNote(note);
 			apiKey.setIsRestrictedKey(restricted);
 			apiKeyService.storeAPIKey(apiKey);
-			
-			return keyTable(model, "API key was successfully edited.");
+
+            return RestResponse.success(apiKey);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
 			throw new ResourceNotFoundException();
 		}
 	}
-	
-	private String keyTable(Model model, String message) {
-		model.addAttribute("contentPage", "config/keys/keyTable.jsp");
-		model.addAttribute("apiKeyList", apiKeyService.loadAll());
-		model.addAttribute("apiKey", new APIKey());
-		model.addAttribute("successMessage", message);
-		return "ajaxSuccessHarness";
-	}
+
 }

@@ -1,6 +1,11 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('GenericModalController', function ($scope, $modalInstance, threadFixModalService, object, url, buttonText) {
+// this is a shim for optional dependencies
+myAppModule.value('deleteUrl', null);
+
+// Explanation of the $injector service here http://docs.angularjs.org/api/auto/service/$injector
+
+myAppModule.controller('GenericModalController', function ($scope, $modalInstance, $http, threadFixModalService, object, url, buttonText, deleteUrl) {
 
     $scope.object = object;
 
@@ -34,5 +39,17 @@ myAppModule.controller('GenericModalController', function ($scope, $modalInstanc
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+    };
+
+    $scope.showDeleteDialog = function(itemName) {
+        if (confirm("Are you sure you want to delete this " + itemName + "?")) {
+            $http.post(deleteUrl).
+                success(function(data, status, headers, config) {
+                    $modalInstance.close(false);
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.error = "Failure. HTTP status was " + status;
+                });
+        }
     };
 });
