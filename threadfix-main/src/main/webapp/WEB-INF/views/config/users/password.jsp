@@ -50,7 +50,7 @@
                 </tr>
                 </tbody>
             </table>
-            <input ng-class="{ disabled : form.$invalid }" style="margin-top:15px" class="btn btn-primary" id="updateUserButton" type="submit" value="Update Password" />
+            <input ng-disabled="form.$invalid" style="margin-top:15px" class="btn btn-primary" id="updateUserButton" type="submit" value="Update Password" />
 
 
         </form>
