@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('RemoteProvidersController', function($scope, $http, $modal, $log){
+module.controller('RemoteProvidersController', function($scope, $http, $modal, $log, $window){
 
     $scope.providers = [];
 
@@ -68,6 +68,22 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 if (data.success) {
                     $scope.successMessage = "ThreadFix is importing scans from " + provider.name +
                         " in the background. It may take a few minutes to finish the process.";
+                } else {
+                    $scope.errorMessage = "Error encountered: " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to delete team. HTTP status was " + status;
+            });
+    }
+
+    $scope.importScansApp = function(provider, app) {
+        var url = "/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/import" + $scope.csrfToken;
+
+        $http.get(url).
+            success(function(data, status, headers, config) {
+                if (data.success && confirm("ThreadFix imported scans successfully. Would you like to go to the application's page?")) {
+                    window.location.href = "/organizations/" + app.application.team.id + "/applications/" + app.application.id + $scope.csrfToken;
                 } else {
                     $scope.errorMessage = "Error encountered: " + data.message;
                 }

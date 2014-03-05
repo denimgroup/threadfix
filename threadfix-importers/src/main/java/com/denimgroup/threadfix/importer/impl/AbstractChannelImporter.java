@@ -178,7 +178,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		
 		closeInputStream(inputStream);
 
-        if (shouldDeleteAfterParsing) {
+        if (shouldDeleteAfterParsing && inputFileName != null) {
             File file = new File(inputFileName);
             if (file.exists()) {
                 if (!file.delete()) {

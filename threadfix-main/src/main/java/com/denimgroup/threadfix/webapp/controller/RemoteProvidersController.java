@@ -134,7 +134,7 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
-	public RestResponse<String> importScan(@PathVariable("typeId") int typeId,
+	public @ResponseBody RestResponse<String> importScan(@PathVariable("typeId") int typeId,
 			HttpServletRequest request, @PathVariable("appId") int appId) {
 		
 		log.info("Processing request for scan import.");

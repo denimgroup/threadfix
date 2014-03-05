@@ -136,7 +136,7 @@
                         </td>
                     </c:if>
                     <td>
-                        <a ng-show="app.application" class="btn" id="provider{{ provider.id }}import{{ $index }}" ng-click="importScansApp(app)">Import</a>
+                        <a ng-show="app.application" class="btn" id="provider{{ provider.id }}import{{ $index }}" ng-click="importScansApp(provider, app)">Import</a>
                     </td>
                 </tr>
             </tbody>
