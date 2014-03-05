@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
@@ -46,7 +47,9 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("configuration/remoteproviders")
@@ -238,7 +241,7 @@ public class RemoteProvidersController {
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
-	public String configureFinish(@PathVariable("typeId") int typeId,
+	public @ResponseBody RestResponse<RemoteProviderType> configureFinish(@PathVariable("typeId") int typeId,
 			HttpServletRequest request, Model model) {
 		
 		ResponseCode test = remoteProviderTypeService.checkConfiguration(
@@ -247,30 +250,25 @@ public class RemoteProvidersController {
 				request.getParameter("apiKey"), typeId);
 		
 		if (test.equals(ResponseCode.BAD_ID)) {
-			return "403";
+			return RestResponse.failure("Unable to find that Remote Provider Type.");
 		} else if (test.equals(ResponseCode.NO_APPS)) {
 			
 			String error = "We were unable to retrieve a list of applications using these credentials." +
 					" Please ensure that the credentials are valid and that there are applications " +
 					"available in the account.";
-			model.addAttribute("errorMessage", error);
-			model.addAttribute("remoteProviderType", remoteProviderTypeService.load(typeId));
-			model.addAttribute("contentPage", "config/remoteproviders/configure.jsp");
-			return "ajaxFailureHarness";
+            log.error(error);
+			return RestResponse.failure(error);
 		} else if (test.equals(ResponseCode.SUCCESS)) {
-			ControllerUtils.addSuccessMessage(request, "Applications successfully updated.");
-			model.addAttribute("contentPage", "/configuration/remoteproviders");
-			return "ajaxRedirectHarness";
+			return RestResponse.success(remoteProviderTypeService.load(typeId));
 		} else {
-			ControllerUtils.addErrorMessage(request, "An unidentified error occurred.");
-			model.addAttribute("contentPage", "/configuration/remoteproviders");
-			return "ajaxRedirectHarness";
+            log.warn("Response code was not success but we're still returning success. This shouldn't happen.");
+			return RestResponse.success(remoteProviderTypeService.load(typeId));
 		}
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
-	public String clearConfiguration(@PathVariable("typeId") int typeId,
+	public @ResponseBody RestResponse<RemoteProviderType> clearConfiguration(@PathVariable("typeId") int typeId,
 			HttpServletRequest request) {
 		
 		RemoteProviderType type = remoteProviderTypeService.load(typeId);
@@ -278,9 +276,21 @@ public class RemoteProvidersController {
 		if (type != null) {
 			remoteProviderTypeService.clearConfiguration(typeId);
 			ControllerUtils.addSuccessMessage(request, type.getName() + " configuration was cleared successfully.");
-		}
+            return RestResponse.success(remoteProviderTypeService.load(typeId));
+		} else {
+            return RestResponse.failure("Unable to find that Remote Provider Type");
+        }
+	}
 
-		return "redirect:/configuration/remoteproviders";
+	@RequestMapping(value="/getMap", method = RequestMethod.GET)
+	public @ResponseBody RestResponse<Map<String, Object>> list() {
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("remoteProviders", remoteProviderTypeService.loadAll());
+        map.put("teams", organizationService.loadAllActive());
+
+		return RestResponse.success(map);
 	}
 	
 	@RequestMapping(value="/{id}/table", method = RequestMethod.POST)

@@ -33,6 +33,8 @@
 
 <body ng-app='threadfix'
       <decorator:getProperty property="body.id" writeEntireProperty="true"/>
+      <decorator:getProperty property="body.ng-controller" writeEntireProperty="true"/>
+      <decorator:getProperty property="body.ng-init" writeEntireProperty="true"/>
 	  <decorator:getProperty property="body.class" writeEntireProperty="true"/>>
 	<div id="wrapper">
         <div id="main">

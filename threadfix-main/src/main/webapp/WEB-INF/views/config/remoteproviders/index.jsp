@@ -2,34 +2,62 @@
 
 <head>
 	<title>Remote Providers</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote_providers_page.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-providers-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-controller.js"></script>
 </head>
 
-<body>
-	<form:form modelAttribute="error" name="formErrors">
-		<form:errors cssClass="errors" />
-	</form:form>
-
+<spring:url value="" var="emptyUrl"/>
+<body ng-controller="RemoteProvidersController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
 	<h2>Remote Providers</h2>
 
-	<c:if test="${ not empty successMessage }">
-		<div class="alert alert-success">
-			<button class="close" data-dismiss="alert" type="button">×</button>
-			<c:out value="${ successMessage }"/>
-		</div>
-	</c:if>
-	
-	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
-	
-	<div id="helpText">
+    <%@ include file="/WEB-INF/views/config/remoteproviders/configure.jsp" %>
+
+    <div id="helpText">
 		Remote Providers are links to services which
 		import vulnerability data into ThreadFix.
 	</div>
-	
-	<div id="headerDiv">
-		<%@ include file="/WEB-INF/views/config/remoteproviders/typesTable.jsp" %>
-	</div>
+
+    <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <div ng-show="initialized" id="headerDiv">
+		<table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="medium first">Name</th>
+                <th class="medium">User name</th>
+                <c:if test="${ not canManageRemoteProviders }">
+                    <th class="medium last">API Key</th>
+                </c:if>
+                <c:if test="${ canManageRemoteProviders }">
+                    <th class="medium">API Key</th>
+                    <th class="medium last">Configure</th>
+                </c:if>
+            </tr>
+            </thead>
+            <tbody id="remoteProvidersTableBody">
+                <tr ng-show="providers.length === 0" class="bodyRow">
+                    <td colspan="4" style="text-align:center;"> No providers found.</td>
+                </tr>
+                <tr ng-repeat="provider in providers" class="bodyRow">
+                    <td id="name{{ $index }}">
+                        {{ provider.name }}
+                    </td>
+                    <td id="username{{ $index }}">
+                        {{ provider.username }}
+                    </td>
+                    <td id="apiKey{{ $index }}">
+                        {{ provider.apiKey }}
+                    </td>
+                    <c:if test="${ canManageRemoteProviders }">
+                        <td>
+                            <a id="configure{{ $index }}" class="btn" ng-click="configure(provider)">Configure</a>
+                        </td>
+                    </c:if>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
 	
 	<c:set var="appsPresent" value="false"/>
 	
