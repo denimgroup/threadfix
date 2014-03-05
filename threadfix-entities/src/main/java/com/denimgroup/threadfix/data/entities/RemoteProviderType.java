@@ -116,7 +116,8 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = API_KEY_LENGTH)
-	public String getEncryptedApiKey() {
+    @JsonIgnore
+    public String getEncryptedApiKey() {
 		return encryptedApiKey;
 	}
 
@@ -134,6 +135,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = USERNAME_LENGTH)
+    @JsonIgnore
 	public String getEncryptedUsername() {
 		return encryptedUsername;
 	}
@@ -143,6 +145,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = PASSWORD_LENGTH)
+    @JsonIgnore
 	public String getEncryptedPassword() {
 		return encryptedPassword;
 	}
@@ -153,7 +156,7 @@ public class RemoteProviderType extends BaseEntity  {
 
 	@ManyToOne
 	@JoinColumn(name = "channelTypeId")
-	@JsonIgnore
+    @JsonIgnore
 	public ChannelType getChannelType() {
 		return channelType;
 	}
@@ -189,6 +192,7 @@ public class RemoteProviderType extends BaseEntity  {
 		this.remoteProviderApplications = remoteProviderApplications;
 	}
 
+    @JsonIgnore
 	public boolean isEncrypted() {
 		return encrypted;
 	}

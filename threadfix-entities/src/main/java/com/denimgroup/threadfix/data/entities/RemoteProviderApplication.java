@@ -81,7 +81,6 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
-	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}

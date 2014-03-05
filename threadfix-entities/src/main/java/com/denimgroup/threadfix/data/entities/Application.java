@@ -612,6 +612,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
+    @JsonIgnore
     public Info getInfo() {
         Info info = new Info();
 
