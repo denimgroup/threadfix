@@ -20,8 +20,6 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                     $scope.providers = data.object.remoteProviders;
                     $scope.teams = data.object.teams;
 
-                    $scope.empty = $scope.providers.length === 0;
-
                     $scope.defectTrackerTypes = data.object.defectTrackerTypes;
 
                     $scope.providers.sort(nameCompare);
@@ -45,9 +43,9 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
             $http.post(url).
                 success(function(data, status, headers, config) {
                     if (data.success) {
-                        provider.username = data.object.username;
-                        provider.apiKey = data.object.apiKey;
-                        provider.password = data.object.password;
+                        provider.username = undefined;
+                        provider.apiKey = undefined;
+                        provider.password = undefined;
                         provider.remoteProviderApplications = undefined;
                     } else {
                         $scope.errorMessage = "Error encountered: " + data.message;
@@ -116,6 +114,8 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         });
 
         modalInstance.result.then(function (newTracker) {
+
+            provider.remoteProviderApplications = newTracker.remoteProviderApplications;
 
             $scope.successMessage = "Successfully edited tracker " + newTracker.name;
 
