@@ -26,16 +26,15 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
+
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class ApplicationTests extends BaseTest {
 
@@ -44,25 +43,18 @@ public class ApplicationTests extends BaseTest {
 	private WafIndexPage wafIndexPage;
 	private WafRulesPage wafDetailPage;
 
-	@Before
-	public void init() {
-		super.init();
-
-        teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-	}
-
 	@Test 
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
 		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
 		String appName = "testCreateBasicApplicationApp" + getRandomString(3);
 		String urlText = "http://testurl.com";
 
-        //Create Team & Application
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.expandTeamRowByName(teamName)
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        teamIndexPage.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
 				.saveApplication(teamName);
 
@@ -75,11 +67,13 @@ public class ApplicationTests extends BaseTest {
         String appName = "testCreateBasicApplicationApp" + getRandomString(3);
         String urlText = "http://testurl.com";
 
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
         //Create Team & Application
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByName(teamName)
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
                 .saveApplication(teamName);
 
@@ -98,7 +92,7 @@ public class ApplicationTests extends BaseTest {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
 		String appName;
 		String urlText = "htnotaurl.com";
-		
+
 		StringBuilder stringBuilder = new StringBuilder("");
 		for (int i = 0; i < Application.NAME_LENGTH + 50; i++) { stringBuilder.append('i'); }
 		String longInputName = stringBuilder.toString();
@@ -112,12 +106,14 @@ public class ApplicationTests extends BaseTest {
 		
 		String emptyString = "";
 		String whiteSpace = "     ";
+
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 		
 		//Team & Application set up...hopefully to be removed later
-		teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByName(teamName)
+		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, emptyString, emptyString, "Low")
                 .saveApplicationInvalid(teamName);
 		
@@ -180,11 +176,12 @@ public class ApplicationTests extends BaseTest {
 		String appName2 = "testCreateBasicApplicationApp" + getRandomString(3);
 		String urlText2 = "http://testurl.com352";
 
-		// set up an organization
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-				.addNewTeam()
-				.expandTeamRowByName(teamName)
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName1, urlText1, "Low")
 				.saveApplication(teamName);
 
@@ -212,11 +209,12 @@ public class ApplicationTests extends BaseTest {
         String appName2 = "testCreateBasicApplicationApp" + getRandomString(3);
         String urlText2 = "http://testurl.com352";
 
-        // set up an organization
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByName(teamName)
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName1, urlText1, "Low")
                 .saveApplication(teamName);
 
@@ -257,15 +255,17 @@ public class ApplicationTests extends BaseTest {
 		
 		String emptyString = "";
 		String whiteSpace = "     ";
+
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 		
 		//set up an organization,
 		//add an application for duplicate checking,
 		//add an application for normal testing,
 		// and Test a submission with no changes
-		teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByName(teamName)
+		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName2, validUrlText, "Low")
                 .saveApplication(teamName)
                 .clickOrganizationHeaderLink();
@@ -328,27 +328,28 @@ public class ApplicationTests extends BaseTest {
 	public void testAddWafAtApplicationCreationTimeAndDelete() {
 		String wafName = "appCreateTimeWaf1";
 		String type = "Snort";
-		String orgName = "appCreateTimeWafOrg2";
+		String teamName = "appCreateTimeWafOrg2";
 		String appName = "appCreateTimeWafName2";
 		String appUrl = "http://testurl.com";
+
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 		
 		wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
                 .clickCreateWaf();
 
-        teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(orgName)
-                .addNewTeam();
-
 		// Add Application with WAF
-		applicationDetailPage = teamIndexPage.expandTeamRowByName(orgName)
-                .addNewApplication(orgName, appName, appUrl, "Low")
-                .saveApplication(orgName)
+		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .addNewApplication(teamName, appName, appUrl, "Low")
+                .saveApplication(teamName)
                 .clickOrganizationHeaderLink()
-                .expandTeamRowByName(orgName)
-                .clickViewAppLink(appName, orgName)
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
                 .addWaf(wafName);
@@ -370,7 +371,7 @@ public class ApplicationTests extends BaseTest {
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
 		wafDetailPage = wafIndexPage.clickCloseWafModal(wafName)
                 .clickOrganizationHeaderLink()
-                .clickViewTeamLink(orgName)
+                .clickViewTeamLink(teamName)
                 .clickDeleteButton()
                 .clickWafsHeaderLink()
                 .clickRules(wafName);
@@ -389,9 +390,14 @@ public class ApplicationTests extends BaseTest {
 		String wafName2 = "secondWaf" + getRandomString(3);
 		String type1 = "Snort" ;
 		String type2 = "mod_security";
-		String orgName = "testSwitchWafs" + getRandomString(3);
+		String teamName = "testSwitchWafs" + getRandomString(3);
 		String appName = "switchWafApp" + getRandomString(3);
 		String appUrl = "http://testurl.com";
+
+        DatabaseUtils.createTeam(teamName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 		
 		//Create two WAFs
         wafIndexPage = teamIndexPage.clickWafsHeaderLink()
@@ -405,31 +411,28 @@ public class ApplicationTests extends BaseTest {
 
         //Create team & application
         teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(orgName)
-                .addNewTeam()
-                .expandTeamRowByName(orgName)
-                .addNewApplication(orgName, appName, appUrl, "Low")
-                .saveApplication(orgName)
+                .expandTeamRowByName(teamName)
+                .addNewApplication(teamName, appName, appUrl, "Low")
+                .saveApplication(teamName)
                 .clickOrganizationHeaderLink()
-                .expandTeamRowByName(orgName);
+                .expandTeamRowByName(teamName);
 
         //Create second application
-        applicationDetailPage = teamIndexPage.clickViewAppLink(appName,orgName)
+        applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
                 .clickEditDeleteBtn()
 				.clickAddWaf()
 				.addWaf(wafName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(orgName);
+                .expandTeamRowByName(teamName);
 
-        applicationDetailPage = teamIndexPage.clickViewAppLink(appName, orgName)
+        applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
 				.clickEditWaf()
                 .addWaf(wafName2)
                 .clickOrganizationHeaderLink()
-                .expandTeamRowByName(orgName)
-                .clickViewAppLink(appName, orgName)
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn();
 								
 		assertTrue("The edit didn't change the application's WAF.",
@@ -442,14 +445,11 @@ public class ApplicationTests extends BaseTest {
 		String teamName1 = getRandomString(8);
 		String teamName2 = getRandomString(8);
 
-        //Set up two teams
-		teamIndexPage = teamIndexPage.clickAddTeamButton()
-				.setTeamName(teamName1)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName2)
-				.addNewTeam();
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createTeam(teamName2);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 
         //Add an app with same name to both teams
         applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
