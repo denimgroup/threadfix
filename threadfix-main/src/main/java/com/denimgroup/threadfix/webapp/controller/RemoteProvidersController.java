@@ -33,7 +33,6 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,57 +272,5 @@ public class RemoteProvidersController {
         map.put("teams", organizationService.loadAllActive());
 
 		return RestResponse.success(map);
-	}
-	
-	@RequestMapping(value="/{id}/table", method = RequestMethod.POST)
-	public String paginate(@PathVariable("id") int rpAppId, @RequestBody TableSortBean bean,
-			Model model) {
-		
-		log.info("Processing request for paginating Remote Application .");
-		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
-        PermissionUtils.filterApps(typeList);
-		for (RemoteProviderType rp : typeList) {
-			if (rp.getId() == rpAppId) {
-				int numApps = 0;
-				
-				if (rp.getFilteredApplications() != null) {
-					numApps = rp.getFilteredApplications().size();
-				} else {
-					
-				}
-				
-				int lastIndex = bean.getPage()*100>=numApps ? numApps : bean.getPage()*100;
-				rp.setFilteredApplications(rp.getFilteredApplications().subList((bean.getPage()-1)*100, lastIndex));
-				
-				model.addAttribute("remoteProvider", rp);
-				
-				long numPages = numApps / 100;
-				if (numApps % 100 == 0) {
-					numPages -= 1;
-				}
-				model.addAttribute("numPages", numPages);
-				model.addAttribute("numApps", numApps);
-				
-				if (bean.getPage() > numPages) {
-					bean.setPage((int) (numPages + 1));
-				}
-				
-				if (bean.getPage() < 1) {
-					bean.setPage(1);
-				}
-				break;
-			}
-		}
-		
-		model.addAttribute("page", bean.getPage());
-		model.addAttribute(Permission.CAN_MANAGE_REMOTE_PROVIDERS.getCamelCase(), true);
-		model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
-		
-		bean.setOpen(true);
-		bean.setFalsePositive(false);
-		bean.setHidden(false);
-		
-		
-		return "config/remoteproviders/rpAppTable";
 	}
 }

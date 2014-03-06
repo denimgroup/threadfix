@@ -89,14 +89,13 @@
             </c:if>
         </h2>
 
-        <pagination ng-show="provider.remoteProviderApplications"
-                    total-items="provider.remoteProviderApplications.length"
-                    page="provider.page"
-                    max-size="maxSize"
-                    class="pagination-sm"
-                    boundary-links="true"
-                    rotate="false"
-                    num-pages="provider.remoteProviderApplications.length / 100"></pagination>
+        <div ng-show="provider.remoteProviderApplications" class="pagination" ng-init="provider.page = 1">
+            <pagination class="no-margin"
+                        total-items="provider.remoteProviderApplications.length / 10"
+                        max-size="5"
+                        page="provider.page"
+                        ng-click="paginate(provider)"></pagination>
+        </div>
 
         <table ng-show="provider.remoteProviderApplications" class="table table-striped" style="table-layout:fixed;">
             <thead>
@@ -112,7 +111,7 @@
             </thead>
             <tbody>
 
-                <tr ng-repeat="app in provider.remoteProviderApplications">
+                <tr ng-repeat="app in provider.displayApps">
                     <td id="provider{{ provider.id }}appid{{ app.id }}">
                         {{ app.nativeId }}
                     </td>

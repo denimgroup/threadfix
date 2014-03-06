@@ -23,6 +23,9 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                     $scope.defectTrackerTypes = data.object.defectTrackerTypes;
 
                     $scope.providers.sort(nameCompare);
+
+                    $scope.providers.forEach($scope.paginate)
+
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -34,6 +37,22 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
     });
+
+    $scope.paginate = function(provider) {
+        if (provider.remoteProviderApplications) {
+            if (!provider.page) {
+                provider.page = 1;
+            }
+
+            var targetPage = provider.page - 1;
+
+            if (provider.remoteProviderApplications.length > (provider.page * 100)) {
+                provider.displayApps = provider.remoteProviderApplications.slice(targetPage * 100, 100 * provider.page)
+            } else {
+                provider.displayApps = provider.remoteProviderApplications.slice(targetPage * 100)
+            }
+        }
+    }
 
     $scope.clearConfiguration = function(provider) {
 
