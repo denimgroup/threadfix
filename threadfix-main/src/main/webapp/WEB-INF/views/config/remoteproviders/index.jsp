@@ -161,7 +161,16 @@
                         </td>
                     </c:if>
                     <td>
-                        <a ng-show="app.application" class="btn" id="provider{{ provider.id }}import{{ $index }}" ng-click="importScansApp(provider, app)">Import</a>
+                        <a ng-show="app.application && !app.importingScans"
+                           class="btn"
+                           id="provider{{ provider.id }}import{{ $index }}"
+                           ng-click="importScansApp(provider, app)">
+                            Import
+                        </a>
+                        <a ng-show="app.importingScans" class="btn disabled">
+                            <span class="spinner dark"></span>
+                            Importing Scans
+                        </a>
                     </td>
                 </tr>
             </tbody>
