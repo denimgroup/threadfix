@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -35,10 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,9 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/wafs")
@@ -63,18 +59,22 @@ public class WafsController {
 	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
-		List<Waf> wafs = wafService.loadAll();
-		model.addAttribute(wafs);
+	public String index(Model model) {
 		model.addAttribute("newWaf", new Waf());
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
-		model.addAttribute("createWafUrl", "wafs/new/ajax");
-		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		return "wafs/index";
 	}
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> map() {
+        Map<String, Object> responseMap = new HashMap<>();
+
+        responseMap.put("wafs", wafService.loadAll());
+        responseMap.put("wafTypes", wafService.loadAllWafTypes());
+
+        return RestResponse.success(responseMap);
+    }
 
 	@RequestMapping("/{wafId}")
 	public ModelAndView detail(@PathVariable("wafId") int wafId,
