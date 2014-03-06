@@ -265,7 +265,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isActionBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("actionButton")) != null;
+        return isClickable("actionButton");
     }
 
     public boolean isActionDropDownPresnt(){
@@ -277,7 +277,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isEditDeleteLinkClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("teamModalButton")) != null;
+        return isClickable("teamModalButton");
     }
 
     public boolean isEditDeleteModalPresent(){
@@ -289,7 +289,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean EDDeleteClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("deleteLink")) != null;
+        return isClickable("deleteLink");
     }
 
     public boolean EDClosePresent(){
@@ -297,7 +297,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean EDCloseClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("closeTeamModalButton")) != null;
+        return isClickable("closeTeamModalButton");
     }
 
     public boolean EDSavePresent(){
@@ -305,7 +305,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean EDSaveClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("submitTeamModal")) != null;
+        return isClickable("submitTeamModal");
     }
 
     public boolean EDNamePresent(){
@@ -323,7 +323,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean ispermUsersLinkClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("userListModelButton")) != null;
+        return isClickable("userListModelButton");
     }
 
     public boolean isPermUserModalPresent(){
@@ -337,13 +337,14 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isPUEditPermLinkClickable(){
         //TODO switch to use user name to check right link
-        return ExpectedConditions.elementToBeClickable(By.id("editPermissions1")) != null;
+        return isClickable("editPermissions1");
     }
 
     public boolean isPUClosePresent(){
         return driver.findElementById("usersModal").findElement(By.className("btn")).isDisplayed();
     }
 
+    //correct to work with classes and stuff expectedConditions
     @SuppressWarnings("static-access")
     public boolean isPUCloseClickable(){
         return ExpectedConditions.elementToBeClickable(By.id("usersModal").className("btn")) != null;
@@ -354,7 +355,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isleftViewMoreLinkClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("leftViewMore")) != null;
+        return isClickable("leftViewMore");
     }
 
     public boolean is6MonthChartPresnt(){
@@ -366,7 +367,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isrightViewMoreLinkClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("rightViewMore")) != null;
+        return isClickable("rightViewMore");
     }
 
     public boolean isTop10ChartPresent(){
@@ -378,7 +379,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAddAppBtnClickable(){
-        return ExpectedConditions.elementToBeClickable(By.linkText("Add Application")) != null;
+        return isClickable("Add Application");
     }
 
     public boolean isAppLinkPresent(String appName){
@@ -454,6 +455,7 @@ public class TeamDetailPage extends BasePage {
                 .findElements(By.className("btn")).get(0).isDisplayed();
     }
 
+    //needs to be fixed with expectedConditions
     @SuppressWarnings("static-access")
     public boolean isCloseAPButtonClickable(){
         driver.findElementById(getAppModalId())
@@ -467,7 +469,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAddTeamAPButtonClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id(getAppModalId())) != null;
+        return isClickable(getAppModalId());
     }
 
     public TeamDetailPage clickUserPermLink() {

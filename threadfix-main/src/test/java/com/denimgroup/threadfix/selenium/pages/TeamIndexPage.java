@@ -334,7 +334,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isAddTeamBtnClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("addTeamModalButton")) != null;
+        return isClickable("addTeamModalButton");
 	}
 
     public boolean isTeamExpanded(String teamName){
@@ -364,7 +364,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isExpandAllBtnClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("expandAllButton")) != null;
+        return isClickable("expandAllButton");
 	}
 	
 	public boolean isCollapseAllBtnPresent(){
@@ -372,7 +372,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isCollapseAllBtnClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("collapseAllButton")) != null;
+        return isClickable("collapseAllButton");
 	}
 	
 	public boolean isAddAppBtnPresent(String teamName){
@@ -435,7 +435,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isCloseTeamModalButtonClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("closeTeamModalButton")) != null;
+        return isClickable("closeTeamModalButton");
 	}
 	
 	public boolean isAddTeamButtonPresent(){
@@ -443,7 +443,7 @@ public class TeamIndexPage extends BasePage {
 	}
 	
 	public boolean isAddTeamButtonClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("submitTeamModal")) != null;
+        return isClickable("submitTeamModal");
 	}
 	
 	public boolean isAddAppModalPresent(String teamName){

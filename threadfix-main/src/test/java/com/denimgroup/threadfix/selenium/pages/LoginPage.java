@@ -106,7 +106,7 @@ public class LoginPage extends BasePage {
 	}
 	
 	public boolean isLoginButtonClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("login")) != null;
+        return isClickable("login");
 	}
 	
 	public boolean isRememberMeCheckBoxPresent(){
