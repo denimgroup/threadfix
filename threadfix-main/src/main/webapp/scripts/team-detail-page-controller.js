@@ -17,7 +17,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.$watch('csrfToken', function() {
         $scope.reportQuery = $scope.csrfToken + "&orgId=" + $scope.teamId;
-        $scope.teams = $http.get($scope.teamId + "/info" + $scope.csrfToken).
+        $http.get($scope.teamId + "/info" + $scope.csrfToken).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.team = data.object.team;
@@ -34,6 +34,36 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             });
     });
 
+    $scope.openEditModal = function() {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'editTeamModal.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return "/organizations/" + $scope.team.id + "/edit" + $scope.csrfToken;
+                },
+                object: function () {
+                    return $scope.team;
+                },
+                buttonText: function() {
+                    return "Save Changes";
+                }
+            }
+        });
+
+        modalInstance.result.then(function (newApplication) {
+
+            $scope.applications.push(newApplication);
+
+            $scope.applications.sort(nameCompare);
+
+            $scope.successMessage = "Successfully added application " + newApplication.name;
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
 
     $scope.openAppModal = function() {
 
