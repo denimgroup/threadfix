@@ -128,8 +128,10 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
 
         $http.get(url).
             success(function(data, status, headers, config) {
-                if (data.success && confirm("ThreadFix imported scans successfully. Would you like to go to the application's page?")) {
-                    window.location.href = "/organizations/" + app.application.team.id + "/applications/" + app.application.id + $scope.csrfToken;
+                if (data.success) {
+                    if (confirm("ThreadFix imported scans successfully. Would you like to go to the application's page?")) {
+                        window.location.href = "/organizations/" + app.application.team.id + "/applications/" + app.application.id + $scope.csrfToken;
+                    }
                 } else {
                     provider.errorMessage = "Error encountered: " + data.message;
                 }
