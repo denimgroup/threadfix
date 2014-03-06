@@ -148,8 +148,7 @@ public abstract class BasePage {
 	
 	public DefectTrackerIndexPage clickDefectTrackersLink(){
 		clickConfigTab();
-        WebElement defectLink = driver.findElementById("defectTrackersLink");
-        defectLink.click();
+        driver.findElementById("defectTrackersLink").click();
 		sleep(4000);
 		return new DefectTrackerIndexPage(driver);
 	}
