@@ -2,7 +2,7 @@
 
 <head>
 	<title>Scan History</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scanHistoryController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-history-controller.js"></script>
 </head>
 
 <body id="scans">

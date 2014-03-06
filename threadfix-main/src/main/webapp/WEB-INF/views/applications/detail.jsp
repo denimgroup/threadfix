@@ -2,13 +2,13 @@
 
 <head>
 	<title><c:out value="${ application.name }"/></title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationDetailPageController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applicationPageModalController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vulnTableController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/uploadScanController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modalControllerWithConfig.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/addDefectTrackerModalController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-detail-page-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-page-modal-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
 </head>
 
 <!-- Get the CSRF token so we can use it everywhere -->

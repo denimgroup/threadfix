@@ -2,8 +2,8 @@
 
 <head>
 	<title>Dashboard</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboardController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 </head>
 
 <body class="dashboard">

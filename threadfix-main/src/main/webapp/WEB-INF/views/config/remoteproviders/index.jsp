@@ -4,7 +4,7 @@
 	<title>Remote Providers</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-providers-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modalControllerWithConfig.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
 <spring:url value="" var="emptyUrl"/>

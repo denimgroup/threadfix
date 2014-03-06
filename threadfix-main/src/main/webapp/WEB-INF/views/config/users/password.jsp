@@ -2,7 +2,7 @@
 
 <head>
 	<title>Password Change</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/focusController.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/focus-controller.js"></script>
 </head>
 
 <body id="config">

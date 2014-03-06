@@ -2,8 +2,8 @@
 
 <head>
 	<title><c:out value="${ organization.name }"/></title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/teamDetailPageController.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reportsController.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/team-detail-page-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 </head>
 
 <body id="apps">
@@ -26,7 +26,7 @@
                     <ul class="dropdown-menu">
                         <c:if test="${ canManageTeams }">
                             <li>
-                                <a id="teamModalButton" href="#teamModal" data-toggle="modal">Edit / Delete</a>
+                                <a id="teamModalButton" ng-click="openEditModal">Edit / Delete</a>
                             </li>
                         </c:if>
                         <c:if test="${ canModifyVulnerabilities }">

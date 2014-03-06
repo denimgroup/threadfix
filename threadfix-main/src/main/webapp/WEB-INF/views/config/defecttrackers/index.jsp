@@ -3,7 +3,7 @@
 <head>
 	<title>Defect Trackers</title>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/defect-trackers-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modalControllerWithConfig.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
 <body id="config">
