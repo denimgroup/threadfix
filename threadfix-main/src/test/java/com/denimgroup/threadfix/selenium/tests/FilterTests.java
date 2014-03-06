@@ -55,7 +55,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName)
                 .clickUploadScan(appName1, teamName)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName, appName1);
+                .clickUploadScanButton(appName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
@@ -63,7 +63,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName)
                 .clickUploadScan(appName2, teamName)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName, appName2);
+                .clickUploadScanButton(appName2);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
@@ -127,7 +127,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName)
                 .clickUploadScan(appName, teamName)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName, appName);
+                .clickUploadScanButton(appName);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
@@ -192,7 +192,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName1)
                 .clickUploadScan(appName1, teamName1)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName1, appName1);
+                .clickUploadScanButton(appName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
@@ -200,7 +200,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName2)
                 .clickUploadScan(appName2, teamName2)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName2, appName2);
+                .clickUploadScanButton(appName2);
 
         FilterPage globalFilterPage = applicationDetailPage.clickOrganizationHeaderLink().clickManageFiltersLink();
 
@@ -259,7 +259,7 @@ public class FilterTests extends BaseTest{
                 .saveApplication(teamName1)
                 .clickUploadScan(appName1, teamName1)
                 .setFileInput(file)
-                .clickUploadScanButton(teamName1, appName1);
+                .clickUploadScanButton(appName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 

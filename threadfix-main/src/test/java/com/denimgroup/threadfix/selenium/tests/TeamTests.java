@@ -265,7 +265,7 @@ public class TeamTests extends BaseTest {
                 .saveApplication(teamName)
                 .clickUploadScan(appName,teamName)
                 .setFileInput("test")
-                .clickUploadScanButton(teamName, appName);
+                .clickUploadScanButton(appName);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 

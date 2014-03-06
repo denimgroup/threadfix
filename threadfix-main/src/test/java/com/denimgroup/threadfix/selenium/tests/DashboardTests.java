@@ -68,8 +68,8 @@ public class DashboardTests extends BaseTest{
 				.saveApplication(teamName)
 				.clickViewAppLink(appName, teamName)
 				.clickUploadScanLink()
-				.setFileInput(ScanContents.SCAN_FILE_MAP.get("FindBugs"))
-				.submitScan()
+				.setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("FindBugs"))
+				.submitScan(appName)
 				.clickDashboardLink();
 
         //check if the graphs are present
@@ -92,8 +92,8 @@ public class DashboardTests extends BaseTest{
                 .saveApplication(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickUploadScanLink()
-                .setFileInput(ScanContents.SCAN_FILE_MAP.get("Skipfish"))
-                .submitScan()
+                .setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"))
+                .submitScan(appName)
                 .clickDashboardLink();
 
         dashboardPage.click6MonthViewMore().clickDashboardLink();
