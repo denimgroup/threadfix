@@ -1,68 +1,36 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="newVulnerabilityFilterForm.html">
+    <div class="modal-header">
+        <h4 id="myModalLabel">
+            New Filter
+        </h4>
+    </div>
+    <div ng-form="form" ng-enter="ok(form.$valid)" class="modal-body">
 
-<c:choose>
-	<c:when test="${ type == 'Application' }">
-		<spring:url value="/organizations/{orgId}/applications/{appId}/filters/new" var="newFilterUrl">
-			<spring:param name="orgId" value="${vulnerabilityFilter.application.organization.id}"/>
-			<spring:param name="appId" value="${vulnerabilityFilter.application.id}"/>
-		</spring:url>
-	</c:when>
-	<c:when test="${ type == 'Organization' }">
-		<spring:url value="/organizations/{orgId}/filters/new" var="newFilterUrl">
-			<spring:param name="orgId" value="${vulnerabilityFilter.organization.id}"/>
-		</spring:url>
-	</c:when>
-	<c:otherwise>
-		<spring:url value="/configuration/filters/new" var="newFilterUrl"/>
-	</c:otherwise>
-</c:choose>
+        <table class="modal-form-table">
+            <tr>
+                <td>Source Vulnerability Type</td>
+                <td>
+                    <input required style="z-index:4000;width:320px"
+                           type="text"
+                           name = "sourceGenericVulnerability.name"
+                           ng-model="object.sourceGenericVulnerability.name"
+                           typeahead="(vulnerability.name + ' (CWE ' + vulnerability.id + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
+                           class="form-control"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Target Severity Type
+                </td>
+                <td>
+                    <select required style="width:320px" name="targetGenericSeverity.id" ng-model="object.targetGenericSeverity.id">
+                        <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="severity.id"> {{ severity.name }} </option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div style="height:300px"></div>
 
-<form:form id="newFilterForm" 
-		style="margin-bottom:0px;" 
-		modelAttribute="vulnerabilityFilter" 
-		method="post" 
-		action="${ fn:escapeXml(newFilterUrl) }">
-	<div class="modal-body">
-	<table class="table noBorders">
-		<tbody>
-			<tr>
-				<td>Source Vulnerability Type</td>
-				<td>
-					<c:set var="autocompleteJson" value='["'/>
-					<c:set var="quote" value='"'/>					
-					<c:forEach items="${ genericVulnerabilities }" var="genericVulnerability">
-						<c:set var="autocompleteJson" 
-						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(genericVulnerability.name, '\\\\', '&#92;') } (CWE ${ genericVulnerability.id})"/>		
-					</c:forEach>
-					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
-					
-					<form:input style="width:320px"
-							class="addAutocomplete" 
-							path="sourceGenericVulnerability.name" 
-							data-provide="typeahead"
-							data-source ="${ autocompleteJson }"/>
-				</td>
-				<td><form:errors path="sourceGenericVulnerability.name" cssClass="errors" /></td>
-			</tr>
-			<tr>
-				<td>Target Severity Type</td>
-				<td>
-					<form:select style="width:320px"
-						path="targetGenericSeverity.id" 
-						items="${ genericSeverities }" 
-						itemLabel="name"
-						itemValue="id"
-						/>
-				</td>
-				<td><form:errors path="targetGenericSeverity.id" cssClass="errors" /></td>
-			</tr>
-		</tbody>
-	</table>
-	</div>
-	<div class="modal-footer">
-		<button id="closeNewFilterFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitFilterModalCreate" class="modalSubmit btn btn-primary" data-success-div="tableDiv" data-form-div="newFilterForm">
-			Add Filter
-		</a>
-	</div>
-</form:form>
+    </div>
+    <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>

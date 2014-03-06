@@ -60,7 +60,7 @@
                          id="teamInfoDiv{{ team.id }}"
                          class="collapse applicationSection"
                          ng-class="{ expanded: team.expanded }">
-                    <div ng-show="team.report" bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
+                    <div ng-show="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
                     <div ng-hide="team.report" ng-hide="team.reportFailed" class="team-report-wrapper">
                         <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>

@@ -999,3 +999,16 @@ div.box-shadow {
     text-align: center;
     padding-top:120px;
 }
+
+div.filter-modal.modal ul {
+    z-index: 1100;
+
+}
+
+div.filter-modal.modal {
+    margin-left:-450px;
+    width: 900px;
+    max-width:900px;
+    overflow: auto;
+    text-align:left;
+}

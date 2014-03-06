@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractVulnFilterController {
 
@@ -53,8 +56,10 @@ public abstract class AbstractVulnFilterController {
 	private final SanitizedLogger log = new SanitizedLogger(AbstractVulnFilterController.class);
 	private static final String
 		SUCCESS_MESSAGE = "Vulnerability Filter settings saved successfully.",
-		FAILURE_MESSAGE = "Vulnerability Filter settings were not saved successfully.";
-	
+		FAILURE_MESSAGE = "Vulnerability Filter settings were not saved successfully.",
+        AUTHORIZATION_FAILED = "You are not authorized to perform actions on this filter.";
+
+
 	@ModelAttribute("genericVulnerabilities")
 	public List<GenericVulnerability> getGenericVulnerabilities() {
 		return genericVulnerabilityService.loadAll();
@@ -116,6 +121,23 @@ public abstract class AbstractVulnFilterController {
 		model.addAttribute("type", getType(orgId, appId));
 		return "filters/index";
 	}
+
+	public RestResponse<Map<String, Object>> mapBackend(int orgId, int appId) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return RestResponse.failure("You don't have permission to edit these filters.");
+		}
+
+        Map<String, Object> map = new HashMap<>();
+
+		map.put("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
+        map.put("severityFilter", getSeverityFilter(orgId, appId));
+        map.put("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
+        map.put("type", getType(orgId, appId));
+        map.put("genericSeverities", getGenericSeverities());
+        map.put("genericVulnerabilities", getGenericVulnerabilities());
+
+		return RestResponse.success(map);
+	}
 	
 	public String tabBackend(Model model, int orgId, int appId) {
 		
@@ -131,77 +153,62 @@ public abstract class AbstractVulnFilterController {
 		return "ajaxSuccessHarness";
 	}
 
-	public String submitNewBackend(
+	public RestResponse<VulnerabilityFilter> submitNewBackend(
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model,
 			int orgId,
 			int appId) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
-		
-		String responsePage;
-		
+
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
 		}
 		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("contentPage", "filters/newForm.jsp");
-			responsePage = "ajaxFailureHarness";
 			log.warn(FAILURE_MESSAGE);
+            return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
 		} else {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
-			responsePage = returnSuccess(model, orgId, appId);
-			model.addAttribute("successMessage", SUCCESS_MESSAGE);
 			log.info(SUCCESS_MESSAGE);
+            return RestResponse.success(vulnerabilityFilter);
 		}
-		
-		model.addAttribute("type", getType(orgId, appId));
-		return responsePage;
 	}
 
-	public String submitEditBackend(
+	public RestResponse<VulnerabilityFilter> submitEditBackend(
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
 			SessionStatus status,
-			Model model,
 			int orgId,
 			int appId,
 			int filterId) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 		
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 		
-		String responsePage;
-		
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilter = vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, filterId);
 		}
-		
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("contentPage", "filters/editForm.jsp");
-			model.addAttribute("type", getType(orgId, appId));
-			responsePage = "ajaxFailureHarness";
-			log.warn(FAILURE_MESSAGE);
-		} else {
-			vulnerabilityFilter.setId(filterId);
-			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
-			status.setComplete();
-			responsePage = returnSuccess(model, orgId, appId);
-			model.addAttribute("successMessage", SUCCESS_MESSAGE);
-		}
-		
-		return responsePage;
+
+        if (bindingResult.hasErrors()) {
+            log.warn(FAILURE_MESSAGE);
+            return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
+        } else {
+            vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
+            status.setComplete();
+            vulnerabilityFilter.setId(filterId);
+            log.info(SUCCESS_MESSAGE);
+            return RestResponse.success(vulnerabilityFilter);
+        }
 	}
 	
 	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {

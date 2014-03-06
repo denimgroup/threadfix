@@ -7,7 +7,7 @@
                         <a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
-                    <div ng-show="leftReport" bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
+                    <div ng-show="leftReport" tf-bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
                     <div ng-hide="empty || leftReport || leftReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
@@ -30,7 +30,7 @@
                     <a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
                 </h4>
                 <div id="rightTileReport">
-                    <div ng-show="rightReport" bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
+                    <div ng-show="rightReport" tf-bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
                     <div ng-hide="empty || rightReport || rightReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>

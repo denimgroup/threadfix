@@ -49,7 +49,7 @@
             <div ng-show="noDataFound">
                 <%@include file="/WEB-INF/views/reports/emptyReport.jspf" %>
             </div>
-            <div ng-show="reportHTML" bind-html-unsafe="reportHTML">
+            <div ng-show="reportHTML" tf-bind-html-unsafe="reportHTML">
 
             </div>
         </div>
