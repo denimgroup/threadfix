@@ -434,9 +434,8 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage submitScan(String appName) {
         driver.findElementById("submitScanModal-" + appName).click();
-        sleep(5000);
         waitForScanUpload(0);
-        sleep(7000);
+        sleep(15000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -448,6 +447,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    @Deprecated
     public void waitForScanUpload(int timer) {
         if (timer == 20) {
             throw new NoSuchElementException("Unable to locate element: {\"method\":\"id\",\"selector\":\"scanTabLink\"}");

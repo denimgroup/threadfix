@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class DashboardPage extends BasePage{
 
@@ -34,14 +35,21 @@ public class DashboardPage extends BasePage{
 
 	}
 	
-	public boolean is6MonthGraphPresent(){
-		return driver.findElementById("leftTileReport").isDisplayed();
+	public boolean is6MonthGraphNoDataFound(){
+        return "No data found".equals(driver.findElementById("leftTileReport")
+                .findElement(By.className("report-image")).getText().trim());
 	}
 	
-	public boolean isTop10GraphPresent(){
-		return driver.findElementById("rightTileReport").isDisplayed();
-	}
-	
+	public boolean isTop10GraphNoDataFound(){
+        return "No data found".equals(driver.findElementById("rightTileReport")
+                .findElement(By.className("report-image")).getText().trim());
+    }
+
+    public boolean isRecentUploadsNoScanFound() {
+        return "No scans found.".equals(driver.findElementById("wafTableBody")
+                .findElement(By.className("thick-left")).getText().trim());
+    }
+
 	public ReportsIndexPage click6MonthViewMore(){
 		driver.findElementById("leftViewMore").click();
 		return new ReportsIndexPage(driver);

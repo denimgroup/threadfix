@@ -23,94 +23,63 @@
 ////////////////////////////////////////////////////////////////////////
 
 package com.denimgroup.threadfix.selenium.tests;
+
 import static org.junit.Assert.*;
-
 import org.junit.*;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class DashboardTests extends BaseTest{
 
-    private static LoginPage loginPage;
-	private RemoteWebDriver driver;
 	private DashboardPage dashboardPage;
 
-    String teamName = "linkNavTeam" + getRandomString(3);
-    String appName = "linkNavAPP" + getRandomString(3);
-    String urlText = "http://testurl.com";
-	
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-    @After
-    public void shutdown(){
-        cleanUpApplicaitons();
-        driver.quit();
-    }
-
-
 	@Test
-	public void dashboardGraphsTest(){
+	public void dashboardGraphsDisplayTest(){
+        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
+        String appName = "dashboardGraphTestApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
 		dashboardPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.expandTeamRowByIndex(teamName)
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.clickUploadScanLink()
-				.setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("FindBugs"))
+				.setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"))
 				.submitScan(appName)
 				.clickDashboardLink();
 
-        //check if the graphs are present
-		assertTrue("6 month vuln graph is not displayed",dashboardPage.is6MonthGraphPresent());
-		assertTrue("Top 10 graph is not displayed",dashboardPage.isTop10GraphPresent());
-
-        dashboardPage.logout();
-
-
+		assertFalse("6 month vulnerability graph is not displayed", dashboardPage.is6MonthGraphNoDataFound());
+		assertFalse("Top 10 vulnerabilities graph is not displayed", dashboardPage.isTop10GraphNoDataFound());
 	}
+
     @Test
-    public void dashboardApplicationLoadTest(){
+    public void dashboardRecentCommentsDisplayTest(){
+        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
+        String appName = "dashboardGraphTestApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
         dashboardPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByIndex(teamName)
-                .addNewApplication(teamName, appName, urlText, "Low")
-                .saveApplication(teamName)
+                .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickUploadScanLink()
-                .setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"))
+                .setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"))
                 .submitScan(appName)
                 .clickDashboardLink();
 
-        dashboardPage.click6MonthViewMore().clickDashboardLink();
-
-        dashboardPage.clickTop10ViewMore().clickDashboardLink();
-
-        dashboardPage.logout();
-
+        assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
 
-    public void cleanUpApplicaitons(){
-        loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton()
-                .clickOrganizationHeaderLink()
-                .logout();
-
+    //TODO
+    @Ignore
+    @Test
+    public void dashboardRecentUploadsDisplayTest() {
     }
+
 }
