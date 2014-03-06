@@ -76,13 +76,12 @@
                 Update Applications
             </a>
 
-            <c:if test="${ remoteProvider.hasConfiguredApplications }">
-                <a class="btn header-button" id="updateApps{{ provider.id }}"
-                   style="font-size:60%;padding-left:10px;padding-right:8px;"
-                   ng-click="importAllScans(provider)">
-                    Import All Scans
-                </a>
-            </c:if>
+            <a class="btn header-button"
+                    id="updateApps{{ provider.id }}"
+                    style="font-size:60%;padding-left:10px;padding-right:8px;"
+                    ng-click="importAllScans(provider)">
+                Import All Scans
+            </a>
 
             <c:if test="${ canManageRemoteProviders }">
                 <button id="clearConfig{{ provider.id }}" ng-click="clearConfiguration(provider)" class="btn btn-primary" type="submit">Clear Configuration</button>
@@ -117,14 +116,14 @@
                     </td>
                     <td id="provider{{ provider.id }}tfteamname{{ $index }}">
                         <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
-                            <a ng-click="goToTeam(app.application.organization)">
+                            <a class="pointer" ng-click="goToTeam(app.application.team)">
                                 {{ app.application.team.name }}
                             </a>
                         </div>
                     </td>
                     <td id="provider{{ provider.id }}tfappname{{ $index }}">
                         <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
-                            <a ng-click="goToApp(app.application)">
+                            <a class="pointer" ng-click="goToApp(app.application)">
                                 {{ app.application.name }}
                             </a>
                         </div>

@@ -76,6 +76,14 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         }
     };
 
+    $scope.goToApp = function(app) {
+        window.location.href = "/organizations/" + app.team.id + "/applications/" + app.id + $scope.csrfToken;
+    };
+
+    $scope.goToTeam = function(team) {
+        window.location.href = "/organizations/" + team.id + $scope.csrfToken;
+    };
+
     $scope.importAllScans = function(provider) {
 
         var url = "/configuration/remoteproviders/" + provider.id + "/importAll" + $scope.csrfToken;
