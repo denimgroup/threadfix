@@ -93,12 +93,10 @@ public interface RemoteProviderApplicationService {
 
 	/**
 	 * 
-	 * @param result
 	 * @param remoteProviderApplication
 	 * @param appId
 	 * @return
 	 */
-	String deleteMapping(BindingResult result,
-			RemoteProviderApplication remoteProviderApplication,
+	String deleteMapping(RemoteProviderApplication remoteProviderApplication,
 			int appId);
 }

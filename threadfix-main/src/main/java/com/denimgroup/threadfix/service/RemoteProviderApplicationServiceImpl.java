@@ -289,8 +289,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 
 	@Override
-	public String deleteMapping(BindingResult result,
-			RemoteProviderApplication remoteProviderApplication,
+	public String deleteMapping(RemoteProviderApplication remoteProviderApplication,
 			int appId) {
 
 		Application application = applicationDao.retrieveById(appId);

@@ -77,6 +77,7 @@
             </a>
 
             <a class="btn header-button"
+                    ng-show="provider.showImportAll"
                     id="updateApps{{ provider.id }}"
                     style="font-size:60%;padding-left:10px;padding-right:8px;"
                     ng-click="importAllScans(provider)">

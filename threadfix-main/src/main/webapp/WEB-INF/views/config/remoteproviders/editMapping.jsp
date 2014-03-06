@@ -6,7 +6,7 @@
             <span ng-show="config.showDelete" class="delete-span">
                 <a class="btn btn-danger header-button deleteLink"
                         id="deleteLink${ remoteProviderApplication.id }"
-                        ng-click="showDeleteDialog()">
+                        ng-click="showDeleteDialog('mapping')">
                     Delete
                 </a>
             </span>

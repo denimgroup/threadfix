@@ -12,6 +12,12 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         return a.name.localeCompare(b.name);
     };
 
+    var calculateShowImportAll = function(provider) {
+        provider.showImportAll = provider.remoteProviderApplications.filter(function(app) {
+            return app.application
+        }).length > 0;
+    };
+
     $scope.$watch('csrfToken', function() {
         $http.get('/configuration/remoteproviders/getMap' + $scope.csrfToken).
             success(function(data, status, headers, config) {
@@ -25,6 +31,9 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                     $scope.providers.sort(nameCompare);
 
                     $scope.providers.forEach($scope.paginate)
+
+                    $scope.providers.forEach(calculateShowImportAll);
+
 
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -88,13 +97,15 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
 
         var url = "/configuration/remoteproviders/" + provider.id + "/importAll" + $scope.csrfToken;
 
-        $http.post(url).
+        $http.get(url).
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.successMessage = "ThreadFix is importing scans from " + provider.name +
+
+                    // TODO better progress indicators
+                    provider.successMessage = "ThreadFix is importing scans from " + provider.name +
                         " in the background. It may take a few minutes to finish the process.";
                 } else {
-                    $scope.errorMessage = "Error encountered: " + data.message;
+                    provider.errorMessage = "Error encountered: " + data.message;
                 }
             }).
             error(function(data, status, headers, config) {
@@ -209,6 +220,8 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         modalInstance.result.then(function (editedApp) {
 
             app.application = editedApp.application;
+
+            calculateShowImportAll(provider);
 
             $scope.successMessage = "Successfully edited tracker " + editedApp.name;
 

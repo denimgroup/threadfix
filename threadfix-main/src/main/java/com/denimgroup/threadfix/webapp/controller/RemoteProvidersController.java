@@ -42,7 +42,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -123,7 +122,7 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/importAll", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<String> importAllScans(@PathVariable("typeId") int typeId, HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> importAllScans(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for RemoteProviderType bulk import.");
 		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
 		
@@ -133,8 +132,7 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<String> importScan(@PathVariable("typeId") int typeId,
-			HttpServletRequest request, @PathVariable("appId") int appId) {
+	public @ResponseBody RestResponse<String> importScan(@PathVariable("appId") int appId) {
 		
 		log.info("Processing request for scan import.");
 		RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationService.load(appId);
@@ -201,29 +199,21 @@ public class RemoteProvidersController {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/apps/{rpAppId}/delete/{appId}")
-	public RestResponse<RemoteProviderApplication> deleteAppConfiguration(@PathVariable("typeId") int typeId, @PathVariable("rpAppId") int rpAppId,
-			@PathVariable("appId") int appId,
-			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication,
-			BindingResult result, SessionStatus status,
-			Model model, HttpServletRequest request) {
-		if (result.hasErrors()) {
-			return RestResponse.failure("Errors: " + result.getAllErrors());
-		} else {
-						
-			RemoteProviderApplication dbRemoteProviderApplication =
-					remoteProviderApplicationService.load(rpAppId);
-			
-			remoteProviderApplicationService.deleteMapping(result, dbRemoteProviderApplication, appId);
+	@RequestMapping(value="/{typeId}/apps/{rpAppId}/delete/{appId}", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<RemoteProviderApplication> deleteAppConfiguration(@PathVariable("typeId") int typeId, @PathVariable("rpAppId") int rpAppId,
+			@PathVariable("appId") int appId) {
+        RemoteProviderApplication dbRemoteProviderApplication =
+                remoteProviderApplicationService.load(rpAppId);
 
-			return RestResponse.success(dbRemoteProviderApplication);
-		}
+        remoteProviderApplicationService.deleteMapping(dbRemoteProviderApplication, appId);
+
+        return RestResponse.success(dbRemoteProviderApplication);
 	}
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderType> configureFinish(@PathVariable("typeId") int typeId,
-			HttpServletRequest request, Model model) {
+			HttpServletRequest request) {
 		
 		ResponseCode test = remoteProviderTypeService.checkConfiguration(
 				request.getParameter("username"),
