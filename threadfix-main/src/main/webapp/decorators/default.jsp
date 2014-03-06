@@ -35,7 +35,8 @@
       <decorator:getProperty property="body.id" writeEntireProperty="true"/>
       <decorator:getProperty property="body.ng-controller" writeEntireProperty="true"/>
       <decorator:getProperty property="body.ng-init" writeEntireProperty="true"/>
-	  <decorator:getProperty property="body.class" writeEntireProperty="true"/>>
+	  <decorator:getProperty property="body.class" writeEntireProperty="true"/>
+	  <decorator:getProperty property="body.ng-file-drop" writeEntireProperty="true"/>>
 	<div id="wrapper">
         <div id="main">
 			<jsp:include page="/common/header.jsp"/>

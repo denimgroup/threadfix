@@ -11,14 +11,16 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/addDefectTrackerModalController.js"></script>
 </head>
 
-<body id="apps">
-
-    <!-- Get the CSRF token so we can use it everywhere -->
-    <spring:url value="" var="emptyUrl"/>
-    <div ng-controller="ApplicationDetailPageController"
-         ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
+<!-- Get the CSRF token so we can use it everywhere -->
+<spring:url value="" var="emptyUrl"/>
+<body ng-controller="ApplicationDetailPageController"
+      ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
          empty = <c:out value="${ numVulns }"/> === 0"
-         ng-file-drop="onFileSelect($files)">
+      ng-file-drop="onFileSelect($files)"
+      id="apps">
+
+
+    <div>
 
         <%@ include file="forms/uploadScanForm.jsp"%>
         <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
