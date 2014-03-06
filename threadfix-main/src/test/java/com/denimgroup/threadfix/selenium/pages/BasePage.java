@@ -37,6 +37,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -95,7 +96,18 @@ public abstract class BasePage {
 
 	public TeamIndexPage clickOrganizationHeaderLink() {
             driver.findElementById("orgHeader").click();
-			sleep(2000);
+			/*sleep(2000);
+
+            TeamIndexCache cache = TeamIndexCache.getCache();
+
+            if (!cache.isInitialized()) {
+                cache.initialize(getList());
+            }
+*/
+            /*System.out.println("\nCache is initialized or Applications link clicked.");
+            cache.printList();*/
+
+
 			return new TeamIndexPage(driver);
 	}
 	
@@ -206,8 +218,9 @@ public abstract class BasePage {
 			return false;
 		}
 	}
-	
-	public String getH2Tag() {
+
+
+    public String getH2Tag() {
 		return driver.findElementByTagName("h2").getText();
 	}
 
@@ -220,7 +233,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isDashboardMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("dashboardHeader")) != null;
+        return isClickable("dashboardHeader");
 	}
 	
 	public boolean isApplicationMenuLinkPresent(){
@@ -228,7 +241,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isApplicationMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("orgHeader")) != null;
+        return isClickable("orgHeader");
 	}
 	
 	public boolean isScansMenuLinkPresent(){
@@ -236,7 +249,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isScansMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("scansHeader")) != null;
+        return isClickable("scansHeader");
 	}
 	
 	public boolean isReportsMenuLinkPresent(){
@@ -244,7 +257,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isReportsMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("reportsHeader")) != null;
+        return isClickable("reportsHeader");
 	}
 	
 	public boolean isUsersMenuLinkPresent(){
@@ -252,7 +265,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isUsersMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("tabUserAnchor")) != null;
+        return isClickable("tabUserAnchor");
 	}
 	
 	public boolean isConfigMenuLinkPresent(){
@@ -260,7 +273,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isConfigMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("tabConfigAnchor")) != null;
+        return isClickable("tabConfigAnchor");
 	}
 	
 	public boolean isLogoPresent(){
@@ -268,7 +281,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isLogoClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("logo")) != null;
+        return isClickable("logo");
 	}
 	
 	public boolean isApiKeysLinkPresent(){
@@ -276,7 +289,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isApiKeysMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("apiKeysLink")) != null;
+        return isClickable("apiKeysLink");
 	}
 	
 	public boolean isWafsLinkPresent(){
@@ -284,7 +297,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isWafsMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("wafsLink")) != null;
+        return isClickable("wafsLink");
 	}
 	
 	public boolean isDefectTrackerLinkPresent(){
@@ -292,7 +305,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isDefectTrackerMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("defectTrackersLink")) != null;
+        return isClickable("defectTrackersLink");
 	}
 	
 	public boolean isRemoteProvidersLinkPresent(){
@@ -300,7 +313,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isRemoteProvidersMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("remoteProvidersLink")) != null;
+        return isClickable("remoteProvidersLink");
 	}
 	
 	public boolean isManageUsersLinkPresent(){
@@ -308,7 +321,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isManageUsersMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("manageUsersLink")) != null;
+        return isClickable("manageUsersLink");
 	}
 	
 	public boolean isManageRolesLinkPresent(){
@@ -316,15 +329,23 @@ public abstract class BasePage {
 	}
 	
 	public boolean isManageRolesMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("manageRolesLink")) != null;
+        return isClickable("manageRolesLink");
 	}
-	
+
+    public boolean isManageFiltersMenuLinkPresent(){
+        return driver.findElementById("vulnFiltersLink").isDisplayed();
+    }
+
+    public boolean isManageFiltersMenuLinkClickable(){
+        return isClickable("vulnFiltersLink");
+    }
+
 	public boolean isLogsLinkPresent(){
 		return driver.findElementById("viewLogsLink").isDisplayed();
 	}
 	
 	public boolean isLogsMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("viewLogsLink")) != null;
+        return isClickable("viewLogsLink");
 	}
 	
 	public boolean isConfigureDefaultsLinkPresent(){
@@ -332,11 +353,11 @@ public abstract class BasePage {
 	}
 	
 	public boolean isConfigureDefaultsMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("configureDefaultsLink")) != null;
+        return isClickable("configureDefaultsLink");
 	}
 	
 	public boolean isConfigDropDownPresent(){
-		return driver.findElementById("tab-config").findElement(By.id("ConfigurationHeader")).isDisplayed();
+		return driver.findElementById("configurationHeader").isDisplayed();
 	}
 	
 	public boolean isChangePasswordLinkPresent(){
@@ -344,7 +365,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isChangePasswordMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("changePasswordLink")) != null;
+        return isClickable("changePasswordLink");
 	}
 	
 	public boolean isToggleHelpLinkPresent(){
@@ -352,7 +373,7 @@ public abstract class BasePage {
 	}
 	
 	public boolean isToggleHelpMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("toggleHelpLink")) != null;
+        return isClickable("toggleHelpLink");
 	}
 	
 	public boolean isLogoutLinkPresent(){
@@ -360,17 +381,24 @@ public abstract class BasePage {
 	}
 	
 	public boolean isLogoutMenuLinkClickable(){
-		return ExpectedConditions.elementToBeClickable(By.id("logoutLink")) != null;
+        return isClickable("logoutLink");
 	}
 	
 	public boolean isUserDropDownPresent(){
-		return true;
-//		return driver.findElementById("tab-user").findElement(By.id("ConfigurationHeader")).isDisplayed();
+        return driver.findElementById("userConfigurationHeader").isDisplayed();
 	}
-	
-	
-	
-	/*--------------helper functions--------------*/
+
+    // wrapper method for testing expected condition
+    public boolean isClickable(String elementID) {
+        ExpectedCondition<WebElement> condition = ExpectedConditions.elementToBeClickable(
+                driver.findElementById(elementID)) ;
+
+        return condition.apply(driver) != null;
+
+    }
+
+
+    /*--------------helper functions--------------*/
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);

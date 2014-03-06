@@ -111,7 +111,7 @@ public class ApplicationTests extends BaseTest {
 
         teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
-		
+
 		//Team & Application set up...hopefully to be removed later
 		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, emptyString, emptyString, "Low")
