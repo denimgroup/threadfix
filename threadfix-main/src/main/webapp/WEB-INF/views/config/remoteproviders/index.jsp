@@ -64,30 +64,56 @@
 
     <div ng-repeat="provider in providers">
 
+        <h2 ng-show="provider.remoteProviderApplications" style="padding-top:15px">
+            {{ provider.name }} Applications
+
+            <a ng-hide="provider.updatingApps"
+               class="btn header-button"
+               id="updateApps{{ provider.id }}"
+               style="font-size:60%;padding-left:10px;padding-right:8px;"
+               ng-click="updateApplications(provider)">
+                Update Applications
+            </a>
+            <a ng-show="provider.updatingApps" class="disabled btn header-button">
+                <span class="spinner dark"></span>
+                Updating Applications
+            </a>
+
+            <a ng-show="provider.showImportAll && !provider.importingScans"
+               class="btn header-button"
+               id="updateApps{{ provider.id }}"
+               style="font-size:60%;padding-left:10px;padding-right:8px;"
+               ng-click="importAllScans(provider)">
+                Import All Scans
+            </a>
+            <a ng-show="provider.importingScans" class="disabled btn header-button">
+                <span class="spinner dark"></span>
+                Importing Scans
+            </a>
+
+            <c:if test="${ canManageRemoteProviders }">
+                <button ng-hide="provider.clearingConfiguration"
+                        id="clearConfig{{ provider.id }}"
+                        ng-click="clearConfiguration(provider)"
+                        class="btn btn-primary"
+                        type="submit">
+                    Clear Configuration
+                </button>
+                <a ng-show="provider.clearingConfiguration" class="disabled btn btn-primary">
+                    <span class="spinner"></span>
+                    Clearing Configuration
+                </a>
+            </c:if>
+        </h2>
+
         <div ng-show="provider.successMessage" class="alert alert-success">
             <button class="close" ng-click="provider.successMessage = undefined" type="button">&times;</button>
             {{ provider.successMessage }}
         </div>
-
-        <h2 ng-show="provider.remoteProviderApplications" style="padding-top:15px">
-            {{ provider.name }} Applications
-
-            <a class="btn header-button" id="updateApps{{ provider.id }}" style="font-size:60%;padding-left:10px;padding-right:8px;" ng-click="updateApplications(provider)">
-                Update Applications
-            </a>
-
-            <a class="btn header-button"
-                    ng-show="provider.showImportAll"
-                    id="updateApps{{ provider.id }}"
-                    style="font-size:60%;padding-left:10px;padding-right:8px;"
-                    ng-click="importAllScans(provider)">
-                Import All Scans
-            </a>
-
-            <c:if test="${ canManageRemoteProviders }">
-                <button id="clearConfig{{ provider.id }}" ng-click="clearConfiguration(provider)" class="btn btn-primary" type="submit">Clear Configuration</button>
-            </c:if>
-        </h2>
+        <div ng-show="provider.errorMessage" class="alert alert-danger">
+            <button class="close" ng-click="provider.errorMessage = undefined" type="button">&times;</button>
+            {{ provider.errorMessage }}
+        </div>
 
         <div ng-show="provider.remoteProviderApplications" class="pagination" ng-init="provider.page = 1">
             <pagination class="no-margin"

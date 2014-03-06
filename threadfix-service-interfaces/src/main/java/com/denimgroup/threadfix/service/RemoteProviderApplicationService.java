@@ -49,7 +49,7 @@ public interface RemoteProviderApplicationService {
 	 * 
 	 * @param remoteProviderType
 	 */
-	void updateApplications(RemoteProviderType remoteProviderType);
+    List<RemoteProviderApplication> updateApplications(RemoteProviderType remoteProviderType);
 	
 	/**
 	 * 
@@ -77,7 +77,7 @@ public interface RemoteProviderApplicationService {
 	 * @param remoteProviderApplication
 	 * @param application
 	 */
-	String processApp(BindingResult result, RemoteProviderApplication remoteProviderApplication, Application application);
+	String processApp(int remoteProviderApplicationId, int applicationId);
 
 	/**
 	 * 

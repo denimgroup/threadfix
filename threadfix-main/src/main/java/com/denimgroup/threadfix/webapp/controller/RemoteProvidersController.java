@@ -39,12 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,9 +94,8 @@ public class RemoteProvidersController {
 	private String mask(String input) {
 		if (input != null) {
 			if (input.length() > 5) {
-				String replaced = input.replace(input.substring(0,input.length() - 4),
-						RemoteProviderTypeService.API_KEY_PREFIX);
-				return replaced;
+                return input.replace(input.substring(0,input.length() - 4),
+                        RemoteProviderTypeService.API_KEY_PREFIX);
 			} else {
 				// should never get here, but let's not return the info anyway
 				return RemoteProviderTypeService.API_KEY_PREFIX;
@@ -109,17 +106,19 @@ public class RemoteProvidersController {
 	}
 	
 	@RequestMapping(value="/{typeId}/update", method = RequestMethod.GET)
-	public RestResponse<List<RemoteProviderApplication>> updateApps(@PathVariable("typeId") int typeId, HttpServletRequest request) {
+	public @ResponseBody RestResponse<List<RemoteProviderApplication>> updateApps(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for RemoteProviderType update.");
 		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
-		remoteProviderApplicationService.updateApplications(remoteProviderType);
-		remoteProviderTypeService.store(remoteProviderType);
-		
-		ControllerUtils.addSuccessMessage(request, "ThreadFix updated applications from " +
-				remoteProviderType + ".");
-		
-		return RestResponse.success(remoteProviderType.getFilteredApplications());
-	}
+
+        if (remoteProviderType == null) {
+            return RestResponse.failure("The requested Remote Provider type was not found.");
+        } else {
+            List<RemoteProviderApplication> returnApps = remoteProviderApplicationService.updateApplications(remoteProviderType);
+            remoteProviderTypeService.store(remoteProviderType);
+
+            return RestResponse.success(returnApps);
+        }
+    }
 	
 	@RequestMapping(value="/{typeId}/importAll", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<String> importAllScans(@PathVariable("typeId") int typeId) {
@@ -171,31 +170,19 @@ public class RemoteProvidersController {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/apps/{appId}/edit", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(@PathVariable("appId") int appId,
-			@Valid @ModelAttribute RemoteProviderApplication remoteProviderApplication,
-			BindingResult result) {
+	@RequestMapping(value="/{typeId}/apps/{remoteProviderApplicationId}/edit", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(
+            @PathVariable int typeId,
+            @PathVariable int remoteProviderApplicationId,
+            @RequestParam("application.id") int applicationId) {
 
-        if (result.hasErrors() || remoteProviderApplication.getApplication() == null) {
-			return RestResponse.failure("Errors: " + result.getAllErrors());
-		} else {
-			
-			RemoteProviderApplication dbRemoteProviderApplication =
-					remoteProviderApplicationService.load(appId);
-			
-			if (dbRemoteProviderApplication != null) {
-				remoteProviderApplication.setId(appId);
-				remoteProviderApplication.setRemoteProviderType(dbRemoteProviderApplication.getRemoteProviderType());
-			}
-			
-			String errMsg = remoteProviderApplicationService.processApp(result, dbRemoteProviderApplication, remoteProviderApplication.getApplication());
-			
-			if (errMsg != null && !errMsg.isEmpty()) {
-				return RestResponse.failure(errMsg);
-			}
+        String errMsg = remoteProviderApplicationService.processApp(remoteProviderApplicationId, applicationId);
 
-			return RestResponse.success(remoteProviderApplicationService.load(appId));
-		}
+        if (errMsg != null && !errMsg.isEmpty()) {
+            return RestResponse.failure(errMsg);
+        }
+
+		return RestResponse.success(remoteProviderApplicationService.load(remoteProviderApplicationId));
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
