@@ -36,14 +36,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="vuln in vulns" class="bodyRow pointer" ng-class="{
+                <tr ng-click="expand(vuln)" ng-repeat-start="vuln in vulns" class="bodyRow pointer" ng-class="{
                         error: vuln.severityName === 'Critical',
                         warning: vuln.severityName === 'High',
                         success: vuln.severityName === 'Medium',
                         info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
                         }">
                     <td class="pointer">
-                        <span id="caret{{ vuln.id }}" class="caret-right"></span>
+                        <span ng-class="{ expanded: team.expanded }" id="caret{{ vuln.id }}" class="caret-right"></span>
                     </td>
                     <td class="pointer" id="severity{{ $index }}"> {{ vuln.severityName }} </td>
                     <td class="pointer" id="type{{ $index }}">
@@ -84,82 +84,66 @@
                             <%--</c:if>--%>
                         <%--</td>--%>
                     <%--</c:if>--%>
-                    <!-- TODO merged Findings -->
-                    <%--<td class="expandableTrigger">--%>
-                        <%--<c:if test="${fn:length(vulnerability.findings) > 1 }">--%>
-                            <%--<div id="findingIcon{{ $index }}"  class="tooltip-container" data-placement="left" title="<c:out value=""/> Findings" style="text-align:left;">--%>
-                                <%--<img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />--%>
-                            <%--</div>--%>
-                        <%--</c:if>--%>
-                    <%--</td>--%>
-                    <!-- TODO vuln link -->
-                    <%--<td>--%>
-                        <%--<spring:url value="{appId}/vulnerabilities/{vulnerabilityId}" var="vulnerabilityUrl">--%>
-                            <%--<spring:param name="appId" value="${ application.id }" />--%>
-                            <%--<spring:param name="vulnerabilityId" value="${ vulnerability.id }" />--%>
-                        <%--</spring:url>--%>
-                        <%--<a id="vulnName${index}" href="${ fn:escapeXml(vulnerabilityUrl) }">--%>
-                            <%--View More--%>
-                        <%--</a>--%>
-                    <%--</td>--%>
+                    <td class="expandableTrigger">
+                        <div ng-show="vuln.findings.length > 1" id="findingIcon{{ $index }}" class="tooltip-container" data-placement="left" title="{{ vuln.findings.length }} Findings" style="text-align:left;">
+                            <img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />
+                        </div>
+                    </td>
+                    <td>
+                        <a id="vulnName${index}" ng-click="goTo(vuln)">
+                            View More
+                        </a>
+                    </td>
                 </tr>
 
-                <!-- TODO deal with expandables -->
-                <%--<tr class="bodyRow <c:out value="${ color }"/> expandable ${ rowClass } ${ hideClass }">--%>
-                    <%--<c:set var="numColumns" value="8"/>--%>
-                    <%--<c:if test="${ not empty application.defectTracker }">--%>
-                        <%--<c:set var="numColumns" value="9"/>--%>
-                    <%--</c:if>--%>
-                    <%--<td colspan="<c:out value="${ numColumns }"/>">--%>
-                        <%--<div id="vulnInfoDiv${vulnerability.id}" class="collapse">--%>
-                            <%--<div class="left-tile">--%>
-                                <%--<c:if test="${not empty vulnerability.findings}">--%>
-                                    <%--<h4>Scan History</h4>--%>
-                                    <%--<div class="report-image" style="width:422px;margin-bottom:20px;background-color:#FFF;padding:0px;">--%>
-                                        <%--<table class="table" style="margin-bottom:0px;">--%>
-                                            <%--<thead class="table">--%>
-                                            <%--<tr class="left-align">--%>
-                                                <%--<th class="first">Channel</th>--%>
-                                                <%--<th>Scan Date</th>--%>
-                                                <%--<th class="last">User</th>--%>
-                                            <%--</tr>--%>
-                                            <%--</thead>--%>
-                                            <%--<tbody>--%>
-                                            <%--<c:forEach var="finding" items="${ vulnerability.findings }" varStatus="status">--%>
-                                                <%--<tr class="left-align bodyRow">--%>
-                                                    <%--<td id="scan${ status.count }ChannelType"><c:out--%>
-                                                            <%--value="${ finding.scan.applicationChannel.channelType.name }" /></td>--%>
-                                                    <%--<td id="scan${ status.count }ImportTime"><fmt:formatDate value="${ finding.scan.importTime.time }"--%>
-                                                                                                             <%--type="both" dateStyle="short" timeStyle="medium" /></td>--%>
-                                                    <%--<td id="scan${ status.count }ChannelType${ status.count }"><c:if test="${ not empty finding.scan.user }">--%>
-                                                        <%--<!-- Got info from scan, the normal case -->--%>
-                                                        <%--<c:out value="${ finding.scan.user.name}" />--%>
-                                                    <%--</c:if> <c:if--%>
-                                                            <%--test="${ empty finding.scan.user and not empty finding.user }">--%>
-                                                        <%--<!-- Got info from finding, probably a manual scan -->--%>
-                                                        <%--<c:out value="${ finding.user.name}" />--%>
-                                                    <%--</c:if> <c:if test="${ empty finding.scan.user and empty finding.user }">--%>
-                                                        <%--No user found. Probably a remote scan.--%>
-                                                    <%--</c:if></td>--%>
-                                                <%--</tr>--%>
-                                            <%--</c:forEach>--%>
-                                            <%--</tbody>--%>
-                                        <%--</table>--%>
-                                    <%--</div>--%>
-                                <%--</c:if>--%>
-                            <%--</div>--%>
+                <tr ng-repeat-end ng-show="vuln.expanded" class="bodyRow expandable" ng-class="{
+                        error: vuln.severityName === 'Critical',
+                        warning: vuln.severityName === 'High',
+                        success: vuln.severityName === 'Medium',
+                        info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
+                        }">
+                    <c:set var="numColumns" value="8"/>
+                    <c:if test="${ not empty application.defectTracker }">
+                        <c:set var="numColumns" value="9"/>
+                    </c:if>
+                    <td colspan="<c:out value="${ numColumns }"/>">
+                        <div id="vulnInfoDiv">
+                            <div class="left-tile">
+                                <h4>Scan History</h4>
+                                <div class="vuln-table-box" style="width:422px;margin-bottom:20px;background-color:#FFF;padding:0px;">
+                                    <table class="table" style="margin-bottom:0px;">
+                                        <thead class="table">
+                                            <tr class="left-align">
+                                                <th class="first">Channel</th>
+                                                <th>Scan Date</th>
+                                                <th class="last">User</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="finding in vuln.findings" class="left-align bodyRow">
+                                                <td id="scan{{ $index }}ChannelType"> {{ finding.scannerName }} </td>
+                                                <td id="scan{{ $index }}ImportTime"> {{ finding.importTime }} </td>
+                                                <td id="scan{{ $index }}ChannelType{{ $index }}">
+                                                    <div ng-show="finding.scanOrManualUser"> {{ finding.scanOrManualUser.name }}</div>
+                                                    <div ng-hide="finding.scanOrManualUser"> No user found. Probably a remote scan.</div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-                            <%--<div class="right-tile">--%>
-                                <%--<h4>Comments</h4>--%>
-                                <%--<div class="report-image" id="commentDiv${ vulnerability.id }" style="width:450px;margin-bottom:10px;">--%>
-                                    <%--<%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>--%>
-                                <%--</div>--%>
-                                <%--<br>--%>
-                                <%--<%@include file="/WEB-INF/views/applications/modals/vulnCommentModal.jsp"%>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                    <%--</td>--%>
-                <%--</tr>--%>
+                            <div class="right-tile">
+                                <h4>Comments</h4>
+                                <div class="vuln-table-box" id="commentDiv${ vulnerability.id }" style="width:450px;margin-bottom:10px;">
+                                    <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
+                                </div>
+                                <br>
+                                <%@include file="/WEB-INF/views/applications/modals/vulnCommentModal.jsp"%>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
 

@@ -14,6 +14,16 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $scope.page = $scope.pageInput;
     }
 
+    var setDate = function(finding) {
+        var time = new Date(finding.importTime)
+        finding.importTime = (time.getMonth() + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes());
+    }
+
+    $scope.expand = function(vuln) {
+        vuln.expanded = !vuln.expanded
+        vuln.findings.forEach(setDate);
+    }
+
     var getTableSortBean = function() {
         return {
             page: $scope.page

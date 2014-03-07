@@ -23,11 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -238,6 +241,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	
 	@ManyToOne
 	@JoinColumn(name = "userId")
+    @JsonView(AllViews.TableRow.class)
 	public User getUser() {
 		return user;
 	}
@@ -282,5 +286,28 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
 	}
+
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    private String getScannerName() {
+        return getScan().getApplicationChannel().getChannelType().getName();
+    }
+
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    private Calendar getImportTime() {
+        return getScan().getImportTime();
+    }
+
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    private User getScanOrManualUser() {
+        if (getScan().getUser() != null) {
+            return getScan().getUser();
+        } else {
+            return getUser();
+        }
+    }
+
 
 }

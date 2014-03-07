@@ -769,8 +769,20 @@ div.box-shadow {
     width: 422px;
 }
 
+#main-content .vuln-table-box {
+	border: 2px #DDDDDD solid;
+	z-index:2;
+	float:left;
+	border-radius: 4px 4px 4px 4px;
+    width: 422px;
+}
+
+#main-content .vuln-table-box table {
+    margin-bottom:0;
+}
+
 #main-content .report-image table {
-	margin-bottom:0px;
+	margin-bottom:0;
 }
 
 .vuln-comment-word-wrap {
