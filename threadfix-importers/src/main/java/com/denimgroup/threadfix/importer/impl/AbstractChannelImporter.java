@@ -337,37 +337,29 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
-        // Create new Vulnerability Map
-        if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null)
-                && cweCode != null && !cweCode.isEmpty()) {
+        if (channelVulnerability == null) {
+            channelVulnerability = new ChannelVulnerability();
+            channelVulnerability.setChannelType(getChannelType());
+            channelVulnerability.setCode(channelVulnerabilityCode);
+            channelVulnerability.setName(channelVulnerabilityCode);
+            channelVulnerability.setFindings(Arrays.asList(finding));
+        }
 
+        // Create new Vulnerability Map
+        if ((channelVulnerability.getVulnerabilityMaps() == null)
+                && cweCode != null && !cweCode.isEmpty()) {
             GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
             if (genericVuln != null) {
-                // Create new Channel Vulnerability
-                if (channelVulnerability == null) {
-                    channelVulnerability = new ChannelVulnerability();
-                    channelVulnerability.setChannelType(getChannelType());
-                    channelVulnerability.setCode(channelVulnerabilityCode);
-                    channelVulnerability.setName(channelVulnerabilityCode);
-                    channelVulnerability.setFindings(Arrays.asList(finding));
-                }
                 // Create new Vulnerability Map and hook to Channel Vulnerability
                 VulnerabilityMap vulnMap = new VulnerabilityMap();
                 vulnMap.setChannelVulnerability(channelVulnerability);
                 vulnMap.setGenericVulnerability(genericVuln);
                 vulnMap.setMappable(true);
                 channelVulnerability.setVulnerabilityMaps(Arrays.asList(vulnMap));
-                channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
             }
-        } else if (channelVulnerability == null) {
-            channelVulnerability = new ChannelVulnerability();
-            channelVulnerability.setChannelType(getChannelType());
-            channelVulnerability.setCode(channelVulnerabilityCode);
-            channelVulnerability.setName(channelVulnerabilityCode);
-            channelVulnerability.setFindings(Arrays.asList(finding));
-            channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         }
 
+        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         finding.setChannelVulnerability(channelVulnerability);
 		
 		ChannelSeverity channelSeverity = null;
