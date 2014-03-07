@@ -2,13 +2,12 @@
 
 <head>
 	<title>Manage Users</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-modal-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-page-controller.js"></script>
 </head>
 
-<body id="config">
-	<form:form modelAttribute="error" name="formErrors">
-		<form:errors cssClass="errors" />
-	</form:form>
+<spring:url value="" var="emptyUrl"/>
+<body id="config" ng-controller="UserPageController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
 
 	<h2>Manage Users</h2>
 	
@@ -18,8 +17,11 @@
 	
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
-	
-	<a id="newUserModalLink" href="#newUserModal" role="button" class="btn" data-toggle="modal">Add User</a>
+    <%@ include file="/WEB-INF/views/config/users/form.jsp" %>
+
+    <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Add User</a>
 
 	<table class="table table-striped">
 		<thead>
@@ -27,28 +29,19 @@
 				<th class="medium first">User</th>
 				<th class="short">Edit / Delete</th>
 				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-				<th class="short">Edit Permissions</th>
+				    <th class="short">Edit Permissions</th>
 				</security:authorize>
 			</tr>
 		</thead>
 		<tbody id="userTableBody">
-		<c:forEach var="user" items="${ users }" varStatus="status">
-			<tr class="bodyRow">
-				<td id="name${ status.count }">
-					<c:out value="${ user.name }"/>
+			<tr ng-repeat="user in users" class="bodyRow">
+				<td id="name{{ user.name }}">
+					{{ user.name }}
 				</td>
 				<td>
-					<a id="editUserModal${ status.count }Link" 
-							href="#editUserModal${ user.id }" 
-							role="button" 
-							class="btn" 
-							data-toggle="modal">
+					<a id="editUserModal${ status.count }Link" class="btn" ng-click="openEditModal(user)">
 						Edit / Delete
 					</a>
-					<div id="editUserModal${ user.id }" class="modal hide fade" tabindex="-1"
-							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<%@ include file="/WEB-INF/views/config/users/editUserForm.jsp" %>
-					</div>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 				<td id="name${ status.count }">
@@ -59,13 +52,6 @@
 				</td>
 				</security:authorize>
 			</tr>
-		</c:forEach>
 		</tbody>
 	</table>
-	
-	<div id="newUserModal" class="modal hide fade" tabindex="-1"
-			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<%@ include file="/WEB-INF/views/config/users/newUserForm.jsp" %>
-	</div>
-
 </body>

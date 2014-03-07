@@ -26,9 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.AccessControlMapService;
+import com.denimgroup.threadfix.service.EnterpriseTest;
+import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -90,7 +92,7 @@ public class EditUserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
+	public @ResponseBody RestResponse<User> processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
 			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
 		
 		userService.applyChanges(user, userId);
@@ -103,19 +105,13 @@ public class EditUserController {
 		}
 		
 		if (result.hasErrors()) {
-			model.addAttribute("accessControlMapModel", getMapModel(userId));
-			model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
-			model.addAttribute("contentPage", "config/users/editUserForm.jsp");
-			return "ajaxFailureHarness";
+			return RestResponse.failure("Error: " + result.getAllErrors());
 		} else {
 
 			User databaseUser = userService.loadUser(user.getName());
 			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
 				result.rejectValue("name", "errors.nameTaken");
-				model.addAttribute("accessControlMapModel", getMapModel(userId));
-				model.addAttribute("maps",accessControlMapService.loadAllMapsForUser(userId));
-				model.addAttribute("contentPage", "config/users/editUserForm.jsp");
-				return "ajaxFailureHarness";
+                return RestResponse.failure("Error: " + result.getAllErrors());
 			}
 			
 			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
@@ -133,26 +129,14 @@ public class EditUserController {
 				user.setGlobalRole(null);
 			}
 			userService.storeUser(user);
-			status.setComplete();
-			
+
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			ControllerUtils.addSuccessMessage(request,
-                    "User " + user.getName() + " has been edited successfully.");
-			
-			model.addAttribute("contentPage", "/configuration/users");
-			return "ajaxRedirectHarness";
+			return RestResponse.success(user);
 		}
 	}
-	
-	private AccessControlMapModel getMapModel(Integer userId) {
-		AccessControlMapModel map = new AccessControlMapModel();
-		map.setUserId(userId);
-		return map;
-	}
-
 }

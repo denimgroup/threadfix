@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
@@ -113,6 +114,20 @@ public class UsersController {
 		
 		return "config/users/index";
 	}
+
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<List<User>> list() {
+        List<User> users = userService.loadAllUsers();
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        for (User user : users) {
+            user.setIsDeletable(userService.canDelete(user));
+            user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
+        }
+
+        return RestResponse.success(users);
+    }
 
 	@RequestMapping("/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId, 

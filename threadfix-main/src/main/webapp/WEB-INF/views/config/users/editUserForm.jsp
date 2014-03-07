@@ -8,17 +8,7 @@
 		<h4 id="myModalLabel">
 			Edit User <c:out value="${ user.name }"/>
 			<span class="delete-span">
-				<c:choose>
-					<c:when test="${ not user.isDeletable }">
-						<input class="btn btn-danger" id="delete${ status.count }" type="submit" value="Delete" onclick="javascript:alert('You cannot delete this account because doing so would leave the system without users with the ability to manage either users or roles.'); return false;"/>
-					</c:when>
-					<c:when test="${ user.isThisUser }">
-						<input class="btn btn-danger" id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('This is your account. Are you sure you want to remove yourself from the system?')"/>
-					</c:when>
-					<c:otherwise>
-						<input class="btn btn-danger" id="delete${ status.count }" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this User?')"/>
-					</c:otherwise>
-				</c:choose>
+                <input class="btn btn-danger" id="delete{{ user.name }}" type="submit" value="Delete" ng-click="clickedDeleteButton()"/>
 			</span>
 		</h4>
 	</div>

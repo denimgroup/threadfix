@@ -112,10 +112,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void createUser(User user) {
+	public Integer createUser(User user) {
 		User newUser = getDefaultUser(user);
         encryptPassword(newUser);
 		userDao.saveOrUpdate(newUser);
+        return newUser.getId();
 	}
 
 	private void encryptPassword(User user) {
