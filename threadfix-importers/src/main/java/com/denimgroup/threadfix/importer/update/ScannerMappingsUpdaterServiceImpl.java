@@ -312,7 +312,9 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
                 log.warn("Unable to find Generic Severity for SeverityId " + genericSeverityId);
                 return false;
             }
-            SeverityMap map = new SeverityMap();
+            SeverityMap map = cs.getSeverityMap();
+            if (map == null)
+                map = new SeverityMap();
             map.setChannelSeverity(cs);
             map.setGenericSeverity(gs);
             cs.setSeverityMap(map);
