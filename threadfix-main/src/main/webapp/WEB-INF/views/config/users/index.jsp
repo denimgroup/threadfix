@@ -39,7 +39,7 @@
 				</td>
 				<td>
 					<a id="editUserModal${ status.count }Link"
-							href="#editUserModal${ user.id }"
+							href="#editUserModal<c:out value='${ user.name.replaceAll(" ", "-") }'/>"
 							role="button"
 							class="btn"
 							data-toggle="modal">
