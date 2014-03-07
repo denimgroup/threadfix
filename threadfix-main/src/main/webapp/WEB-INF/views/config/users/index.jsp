@@ -11,14 +11,14 @@
 	</form:form>
 
 	<h2>Manage Users</h2>
-	
+
 	<div id="helpText">
 		Here you can create, edit, and delete users.
 	</div>
-	
+
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
-	
+
 	<a id="newUserModalLink" href="#newUserModal" role="button" class="btn" data-toggle="modal">Add User</a>
 
 	<table class="table table-striped">
@@ -38,10 +38,10 @@
 					<c:out value="${ user.name }"/>
 				</td>
 				<td>
-					<a id="editUserModal${ status.count }Link" 
-							href="#editUserModal${ user.id }" 
-							role="button" 
-							class="btn" 
+					<a id="editUserModal${ status.count }Link"
+							href="#editUserModal${ user.id }"
+							role="button"
+							class="btn"
 							data-toggle="modal">
 						Edit / Delete
 					</a>
@@ -62,7 +62,7 @@
 		</c:forEach>
 		</tbody>
 	</table>
-	
+
 	<div id="newUserModal" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<%@ include file="/WEB-INF/views/config/users/newUserForm.jsp" %>
