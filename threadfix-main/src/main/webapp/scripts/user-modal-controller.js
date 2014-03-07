@@ -49,10 +49,13 @@ myAppModule.controller('UserModalController', function ($scope, $modalInstance, 
         $modalInstance.dismiss('cancel');
     };
 
-    var makeDeleteRequest = function() {
+    var makeDeleteRequest = function(logout) {
         $http.post(deleteUrl).
             success(function(data, status, headers, config) {
                 $modalInstance.close(false);
+                if (logout) {
+                    window.location.href = '/j_spring_security_logout'
+                }
             }).
             error(function(data, status, headers, config) {
                 $scope.error = "Failure. HTTP status was " + status;
@@ -64,7 +67,7 @@ myAppModule.controller('UserModalController', function ($scope, $modalInstance, 
             alert("You cannot delete this account because doing so would leave the system without users with the ability to manage either users or roles.");
         } else if ($scope.user.isThisUser) {
             if (confirm('This is your account. Are you sure you want to remove yourself from the system?')) {
-                makeDeleteRequest();
+                makeDeleteRequest(true);
             }
         } else {
             if (confirm('Are you sure you want to delete this user?')) {
