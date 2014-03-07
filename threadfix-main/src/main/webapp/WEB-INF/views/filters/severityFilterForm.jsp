@@ -10,7 +10,6 @@
 </div>
 
 <div ng-form="form" class="modal-body">
-
     <table class="table noBorders">
         <tbody>
             <tr>

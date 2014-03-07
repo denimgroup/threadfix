@@ -32,6 +32,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/organizations/{orgId}/filters")
 @SessionAttributes("vulnerabilityFilter")
@@ -59,6 +61,11 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 			SessionStatus status) {
 		return submitNewBackend(vulnerabilityFilter, bindingResult, status, orgId, -1);
 	}
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int orgId) {
+        return mapBackend(orgId, -1);
+    }
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<VulnerabilityFilter> submitEdit(

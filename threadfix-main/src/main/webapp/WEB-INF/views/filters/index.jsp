@@ -34,24 +34,6 @@
             ThreadFix Vulnerability Filters are used to sort data.<br/>
         </div>
 
-        <ul ng-hide="type === 'Global'" class="nav nav-tabs margin-top">
-            <li class="pointer">
-                <a data-toggle="tab" class="filterTab" id="applicationTabLink" href="#" data-url="<c:out value="${ appTabUrl }"/>">
-                    Application Filters
-                </a>
-            </li>
-            <li class="<c:if test="${ type == 'Organization' }">active</c:if> pointer">
-                <a data-toggle="tab" class="filterTab" id="teamTabLink" href="#" data-url="<c:out value="${ orgTabUrl }"/>">
-                    Team Filters
-                </a>
-            </li>
-            <li class="<c:if test="${ type == 'Global' }">active</c:if> pointer">
-                <a data-toggle="tab" class="filterTab" id="globalTabLink" href="#" data-url="<c:out value="${ globalTabUrl }"/>">
-                    Global Filters
-                </a>
-            </li>
-        </ul>
-
         <tabset ng-hide="type === 'Global'">
             <tab ng-click="setTab('Applications')" ng-show="type === 'Application'" heading="Application Filters"></tab>
             <tab ng-click="setTab('Organization')" heading="Team Filters"></tab>

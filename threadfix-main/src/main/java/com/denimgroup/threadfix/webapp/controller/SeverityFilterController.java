@@ -85,7 +85,7 @@ public class SeverityFilterController {
 				"showCritical", "id", "global", "enabled", "organization.id", "application.id");
 	}
 	
-	@RequestMapping(value = "/configuration/severityFilter/set", method = RequestMethod.POST)
+	@RequestMapping(value = "/configuration/filters/severityFilter/set", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<SeverityFilter> setGlobalSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult) {
 
@@ -96,7 +96,7 @@ public class SeverityFilterController {
 		return doSet(severityFilter, bindingResult, -1, -1);
 	}
 
-	@RequestMapping(value = "/organizations/{orgId}/severityFilter/set", method = RequestMethod.POST)
+	@RequestMapping(value = "/organizations/{orgId}/filters/severityFilter/set", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<SeverityFilter> setApplicationSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, @PathVariable int orgId) {
 
@@ -107,7 +107,7 @@ public class SeverityFilterController {
 		return doSet(severityFilter, bindingResult, orgId, -1);
 	}
 
-	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/severityFilter/set", method = RequestMethod.POST)
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/filters/severityFilter/set", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<SeverityFilter> setTeamSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			@PathVariable int appId, @PathVariable int orgId,

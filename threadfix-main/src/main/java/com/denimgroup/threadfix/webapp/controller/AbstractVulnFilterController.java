@@ -78,10 +78,10 @@ public abstract class AbstractVulnFilterController {
 	}
 	
 	public String getType(int orgId, int appId) {
-		if (orgId != -1) {
-			return "Organization";
-		} else if (appId != -1) {
+		if (appId != -1) {
 			return "Application";
+		} else if (orgId != -1) {
+			return "Organization";
 		} else {
 			return "Global";
 		}
@@ -129,12 +129,24 @@ public abstract class AbstractVulnFilterController {
 
         Map<String, Object> map = new HashMap<>();
 
+        String type = getType(orgId, appId);
+
 		map.put("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
-        map.put("severityFilter", getSeverityFilter(orgId, appId));
-        map.put("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
-        map.put("type", getType(orgId, appId));
+        map.put("globalSeverityFilter", getSeverityFilter(-1, -1));
+        map.put("globalVulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(-1, -1));
+        map.put("type", type);
         map.put("genericSeverities", getGenericSeverities());
         map.put("genericVulnerabilities", getGenericVulnerabilities());
+
+        if (!type.equals("Global")) {
+            map.put("teamSeverityFilter", getSeverityFilter(orgId, -1));
+            map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
+        }
+
+        if (type.equals("Application")) {
+            map.put("applicationSeverityFilter", getSeverityFilter(orgId, appId));
+            map.put("applicationVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
+        }
 
 		return RestResponse.success(map);
 	}

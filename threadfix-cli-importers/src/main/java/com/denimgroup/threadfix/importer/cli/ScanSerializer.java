@@ -101,6 +101,8 @@ public class ScanSerializer {
     private static void examineAndPrintDefaults(Finding finding, Set<String> strings) {
         StringBuilder innerBuilder = new StringBuilder();
 
+        innerBuilder.append(finding.getNativeId()).append(',');
+
         if (finding.getChannelVulnerability() == null) {
             System.out.println("Got a channel vulnerability with no generic vulnerability.");
             return;
@@ -108,7 +110,6 @@ public class ScanSerializer {
             innerBuilder.append(finding.getChannelVulnerability().getCode()).append(',');
             innerBuilder.append(finding.getChannelVulnerability().getName()).append(',');
         }
-
 
         if (finding.getChannelVulnerability().getGenericVulnerability() == null) {
             System.out.println("Generic Vulnerability was null for channel vulnerability with code " +
