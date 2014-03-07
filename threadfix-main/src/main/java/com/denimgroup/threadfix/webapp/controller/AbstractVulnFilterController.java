@@ -203,9 +203,9 @@ public abstract class AbstractVulnFilterController {
             log.warn(FAILURE_MESSAGE);
             return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
         } else {
+            vulnerabilityFilter.setId(filterId);
             vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
             status.setComplete();
-            vulnerabilityFilter.setId(filterId);
             log.info(SUCCESS_MESSAGE);
             return RestResponse.success(vulnerabilityFilter);
         }

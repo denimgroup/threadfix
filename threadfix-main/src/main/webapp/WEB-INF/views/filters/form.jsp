@@ -1,7 +1,15 @@
-<script type="text/ng-template" id="newVulnerabilityFilterForm.html">
+<script type="text/ng-template" id="vulnerabilityFilterForm.html">
     <div class="modal-header">
         <h4 id="myModalLabel">
-            New Filter
+            {{ config.title }}
+
+            <span ng-show="config.showDelete" class="delete-span">
+				<a id="deleteButton"
+                   ng-click="showDeleteDialog('filter')"
+                   class="apiKeyDeleteButton btn btn-danger header-button"
+                   type="submit">Delete</a>
+			</span>
+
         </h4>
     </div>
     <div ng-form="form" ng-enter="ok(form.$valid)" class="modal-body">
@@ -24,7 +32,7 @@
                 </td>
                 <td>
                     <select required style="width:320px" name="targetGenericSeverity.id" ng-model="object.targetGenericSeverity.id">
-                        <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="severity.id"> {{ severity.name }} </option>
+                        <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="{{ severity.id }}"> {{ severity.name }} </option>
                     </select>
                 </td>
             </tr>

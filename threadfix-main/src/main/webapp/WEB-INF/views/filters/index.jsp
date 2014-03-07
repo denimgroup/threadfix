@@ -13,7 +13,7 @@
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
     <div ng-show="initialized">
-        <%@ include file="/WEB-INF/views/filters/editForm.jsp"%>
+        <%@ include file="/WEB-INF/views/filters/form.jsp"%>
 
         <ul ng-show="type !== 'Global'" class="breadcrumb">
             <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
