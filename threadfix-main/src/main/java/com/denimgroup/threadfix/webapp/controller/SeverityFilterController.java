@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,66 +86,56 @@ public class SeverityFilterController {
 	}
 	
 	@RequestMapping(value = "/configuration/severityFilter/set", method = RequestMethod.POST)
-	public String setGlobalSeverityFilters(SeverityFilter severityFilter,
-			BindingResult bindingResult, SessionStatus status, Model model,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<SeverityFilter> setGlobalSeverityFilters(SeverityFilter severityFilter,
+			BindingResult bindingResult) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, null, null)) {
-			return "403";
+			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
-		
-		return doSet(severityFilter, bindingResult, status, model, -1, -1, request);
+
+		return doSet(severityFilter, bindingResult, -1, -1);
 	}
-	
+
 	@RequestMapping(value = "/organizations/{orgId}/severityFilter/set", method = RequestMethod.POST)
-	public String setApplicationSeverityFilters(SeverityFilter severityFilter,
-			BindingResult bindingResult, SessionStatus status, Model model,
-			HttpServletRequest request, @PathVariable int orgId) {
+	public @ResponseBody RestResponse<SeverityFilter> setApplicationSeverityFilters(SeverityFilter severityFilter,
+			BindingResult bindingResult, @PathVariable int orgId) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-			return "403";
+			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
-		
-		return doSet(severityFilter, bindingResult, status, model, orgId, -1, request);
+
+		return doSet(severityFilter, bindingResult, orgId, -1);
 	}
-	
+
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/severityFilter/set", method = RequestMethod.POST)
-	public String setTeamSeverityFilters(SeverityFilter severityFilter,
+	public @ResponseBody RestResponse<SeverityFilter> setTeamSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, SessionStatus status, Model model,
 			@PathVariable int appId, @PathVariable int orgId,
 			HttpServletRequest request) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
-		
-		return doSet(severityFilter, bindingResult, status, model, orgId, appId, request);
+
+		return doSet(severityFilter, bindingResult, orgId, appId);
 	}
 	
-	private String doSet(SeverityFilter severityFilter,
-			BindingResult bindingResult, SessionStatus status, Model model,
-			int orgId, int appId,
-			HttpServletRequest request) {
-		
-		String returnPage = null;
+	private RestResponse<SeverityFilter> doSet(SeverityFilter severityFilter,
+			BindingResult bindingResult, int orgId, int appId) {
 		
 		if (bindingResult.hasErrors()) {
-			
-			model.addAttribute("contentPage", "filters/severityFilterForm.jsp");
-			returnPage = "ajaxFailureHarness";
 			log.warn("Severity Filter settings were not saved successfully.");
-			
+
+            return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
+
 		} else {
 			updateSeverityFilter(severityFilter, orgId, appId);
 			severityFilterService.clean(severityFilter, orgId, appId);
 			severityFilterService.save(severityFilter, orgId, appId);
 			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
 			
-			log.info("Severity Filter settings saved successfully.");
-			returnPage = returnSuccess(model, orgId, appId);
+	    	return RestResponse.success(severityFilter);
 		}
-		
-		return returnPage;
 	}
 	
 	private void updateSeverityFilter(SeverityFilter severityFilter, int orgId, int appId) {
@@ -163,25 +154,6 @@ public class SeverityFilterController {
 				severityFilter.setApplication(null);
 				severityFilter.setOrganization(organizationService.loadOrganization(orgId));
 			}
-		}
-	}
-	
-	public String returnSuccess(Model model, int orgId, int appId) {
-		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
-		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
-		model.addAttribute("type", getType(orgId, appId));
-		model.addAttribute("severitySuccessMessage", "Severity Filter settings saved successfully.");
-		model.addAttribute("contentPage", "filters/tab.jsp");
-		return "ajaxSuccessHarness";
-	}
-	
-	public String getType(int orgId, int appId) {
-		if (orgId == -1 && appId == -1) {
-			return "Global";
-		} else if (appId != -1) {
-			return "Application";
-		} else {
-			return "Organization";
 		}
 	}
 }
